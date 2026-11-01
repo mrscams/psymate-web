@@ -1,6 +1,6 @@
 # Référence de l'API PsyMate
 
-Généré depuis le contrat OpenAPI (`PsyMate API`, info.version 0.6.0). 86 chemins, 151 schémas.
+Généré depuis le contrat OpenAPI (`PsyMate API`, info.version 0.9.0). 86 chemins, 151 schémas.
 
 Toutes les routes `/api/**` exigent une session (cookie posé par `POST /api/auth/login`), sauf celles marquées publiques dans leur description (`/api/auth/*`, `/api/public/**`, `/api/me/appeal`, `/api/me/export`). Erreurs : `application/problem+json` avec `code` et `errors[]`.
 

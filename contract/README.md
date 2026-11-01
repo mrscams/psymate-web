@@ -3,8 +3,8 @@
 `openapi.yaml` est la copie du contrat OpenAPI 3 généré par `psymate-api` (springdoc) à partir des contrôleurs.
 Il décrit **toutes** les routes `/api/**` et `/api/public/**` du backend V1 : 86 chemins, 99 opérations, 151 schémas, chaque opération avec son résumé, sa description (qui peut appeler, préconditions, limites, pagination), ses paramètres, ses réponses et la liste des codes d'erreur (`code`) à gérer ; `info.description` donne les conventions transverses (session, routes publiques, format d'erreur, débit, dates).
 
-- Source de vérité : `psymate-api/contract/openapi.yaml`, branche `worktree-M7-09` (PR #39, documentation complète du contrat, commit `e7aa9eb`), à remplacer par `main` dès la fusion.
-- Le champ `info.version` vaut `0.6.0` : c'est le **dernier tag posé**, pas un numéro de version du fichier.
+- Source de vérité : `psymate-api/contract/openapi.yaml`, `main` (tag `contract-v0.9.0`, documentation complète du contrat, M7-09).
+- Le champ `info.version` vaut `0.9.0` : c'est le **dernier tag posé**, pas un numéro de version du fichier.
   Les tags `contract-vX.Y.Z` du dépôt API marquent les jalons de contenu attendus par le frontend :
 
 | Tag | Couvre | Écrans web concernés |
