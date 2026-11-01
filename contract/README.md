@@ -1,9 +1,9 @@
 # Contrat d'API PsyMate (copie pour le frontend)
 
 `openapi.yaml` est la copie du contrat OpenAPI 3 généré par `psymate-api` (springdoc) à partir des contrôleurs.
-Il décrit **toutes** les routes `/api/**` et `/api/public/**` du backend V1 : 86 chemins, 99 opérations, 142 schémas.
+Il décrit **toutes** les routes `/api/**` et `/api/public/**` du backend V1 : 86 chemins, 99 opérations, 151 schémas, chaque opération avec son résumé, sa description (qui peut appeler, préconditions, limites, pagination), ses paramètres, ses réponses et la liste des codes d'erreur (`code`) à gérer ; `info.description` donne les conventions transverses (session, routes publiques, format d'erreur, débit, dates).
 
-- Source de vérité : `psymate-api/contract/openapi.yaml` sur `main` (commit `adaec30`, backend V1 complet).
+- Source de vérité : `psymate-api/contract/openapi.yaml`, branche `worktree-M7-09` (PR #39, documentation complète du contrat, commit `e7aa9eb`), à remplacer par `main` dès la fusion.
 - Le champ `info.version` vaut `0.6.0` : c'est le **dernier tag posé**, pas un numéro de version du fichier.
   Les tags `contract-vX.Y.Z` du dépôt API marquent les jalons de contenu attendus par le frontend :
 
@@ -30,4 +30,4 @@ Conventions du backend (voir `psymate-api/CLAUDE.md`) : JSON camelCase, erreurs 
 cp ../psymate-api/contract/openapi.yaml contract/openapi.yaml
 ```
 
-puis regénérer `docs/api-reference.md` (script `tools/api-reference.py`, voir ce dossier). Ne jamais éditer `openapi.yaml` à la main : il est regénéré côté API et vérifié par sa CI.
+puis regénérer `docs/api-reference.md` et `docs/api.html` : `curl http://localhost:8080/v3/api-docs -o /tmp/openapi.json && node tools/api-reference.mjs /tmp/openapi.json` (API locale lancée). Ne jamais éditer `openapi.yaml` à la main : il est regénéré côté API et vérifié par sa CI.

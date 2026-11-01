@@ -36,10 +36,12 @@ for (const [path, item] of Object.entries(doc.paths)) {
 }
 
 let md = `# Référence de l'API PsyMate\n\nGénéré depuis le contrat OpenAPI (\`${doc.info.title}\`, info.version ${doc.info.version}). ${Object.keys(doc.paths).length} chemins, ${Object.keys(schemas).length} schémas.\n\nToutes les routes \`/api/**\` exigent une session (cookie posé par \`POST /api/auth/login\`), sauf celles marquées publiques dans leur description (\`/api/auth/*\`, \`/api/public/**\`, \`/api/me/appeal\`, \`/api/me/export\`). Erreurs : \`application/problem+json\` avec \`code\` et \`errors[]\`.\n\n## Sommaire\n\n`;
-for (const tag of [...byTag.keys()].sort()) md += `- [${tag}](#${tag.toLowerCase()}) (${byTag.get(tag).length})\n`;
+const anchor = (t) =>
+  t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 -]/g, "").trim().replace(/\s+/g, "-");
+for (const tag of [...byTag.keys()].sort()) md += `- [${tag}](#tag-${anchor(tag)}) (${byTag.get(tag).length})\n`;
 
 for (const tag of [...byTag.keys()].sort()) {
-  md += `\n## ${tag}\n`;
+  md += `\n## <a id="tag-${anchor(tag)}"></a>${tag}\n`;
   for (const { path, method, op } of byTag.get(tag).sort((a, b) => a.path.localeCompare(b.path))) {
     md += `\n### \`${method.toUpperCase()} ${path}\`\n\n`;
     if (op.summary) md += `**${esc(op.summary)}**\n\n`;
