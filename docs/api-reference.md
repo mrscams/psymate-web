@@ -1,6 +1,6 @@
 # Référence de l'API PsyMate
 
-Généré depuis le contrat OpenAPI (`PsyMate API`, info.version 0.9.0). 86 chemins, 151 schémas.
+Généré depuis le contrat OpenAPI (`PsyMate API`, info.version 0.11.0). 89 chemins, 155 schémas.
 
 Toutes les routes `/api/**` exigent une session (cookie posé par `POST /api/auth/login`), sauf celles marquées publiques dans leur description (`/api/auth/*`, `/api/public/**`, `/api/me/appeal`, `/api/me/export`). Erreurs : `application/problem+json` avec `code` et `errors[]`.
 
@@ -10,7 +10,7 @@ Toutes les routes `/api/**` exigent une session (cookie posé par `POST /api/aut
 - [Administration : praticiens](#tag-administration-praticiens) (4)
 - [Administration : vocabulaire de l'annuaire](#tag-administration-vocabulaire-de-lannuaire) (3)
 - [Administration : vérifications](#tag-administration-verifications) (6)
-- [Annuaire public](#tag-annuaire-public) (2)
+- [Annuaire public](#tag-annuaire-public) (3)
 - [Authentification](#tag-authentification) (13)
 - [Chronologie](#tag-chronologie) (2)
 - [Contact public](#tag-contact-public) (1)
@@ -26,6 +26,7 @@ Toutes les routes `/api/**` exigent une session (cookie posé par `POST /api/aut
 - [Recherche](#tag-recherche) (1)
 - [Recours](#tag-recours) (3)
 - [Séances](#tag-seances) (4)
+- [Sécurité du compte](#tag-securite-du-compte) (2)
 - [Tags](#tag-tags) (4)
 - [Vocabulaire](#tag-vocabulaire) (3)
 - [Vocabulaire de l'annuaire](#tag-vocabulaire-de-lannuaire) (1)
@@ -373,7 +374,7 @@ operationId : `getAdminDocumentUrl`
 
 **Recherche les praticiens publiés de l'annuaire**
 
-Public, sans session ; limité à 60 requêtes par minute et par IP (429 RATE_LIMITED). Ne rend que les profils publiés. Les filtres se cumulent ; pour modalities, audiences et languages une fiche est retenue si elle a au moins une des valeurs demandées. Réponse paginée par page de 20 (page, totalPages) ; au plus 500 fiches sont examinées avant pagination, total et facettes portent sur ce lot. 200 avec Cache-Control: max-age=60, public.
+Public, sans session ; limité à 60 requêtes par minute et par IP (429 RATE_LIMITED). Ne rend que les profils publiés d'un praticien approuvé (suspendu, clos ou rejeté : ni listé, ni trouvé par q, ni compté). Les filtres se cumulent ; pour specialties, modalities, audiences et languages une fiche est retenue si elle a au moins une des valeurs demandées. Réponse paginée par page de 20 (page, totalPages) ; au plus 500 fiches sont examinées avant pagination : total et compteurs de toutes les facettes sont exacts jusqu'à 500 fiches, au-delà ils portent sur les 500 premières dans l'ordre du tri (G Q48). La facette specialties ignore le filtre specialties (compteur d'un code = résultats qu'il donnerait seul). 200 avec Cache-Control: max-age=60, public.
 
 operationId : `searchPublicDirectory`
 
@@ -385,6 +386,7 @@ operationId : `searchPublicDirectory`
 | `lng` | query | number (double) | non | Longitude du point de recherche en degrés, de -180 à 180 ; va avec lat. |
 | `radiusKm` | query | number (double) | non | Rayon de recherche en kilomètres autour de lat et lng, de 0 (exclu) à 1000. Défaut : 25. Sans effet quand lat et lng sont absents. |
 | `professions` | query | string[] | non | Professions retenues parmi psychologist, psychiatrist, coach : valeurs séparées par des virgules ou paramètre répété, 20 au plus. Absent : toutes. |
+| `specialties` | query | string[] | non | Spécialités retenues (codes actifs de GET /api/public/directory/vocabulary) : valeurs séparées par des virgules ou paramètre répété, 20 au plus. Une fiche est retenue si elle a au moins une des spécialités. Code inconnu ou désactivé : 422. Absent : toutes. |
 | `modalities` | query | string[] | non | Modalités retenues parmi in_person, video, home : valeurs séparées par des virgules ou paramètre répété, 20 au plus. Absent : toutes. |
 | `audiences` | query | string[] | non | Publics accueillis retenus (codes de GET /api/vocabulary/directory) : valeurs séparées par des virgules ou paramètre répété, 20 au plus. Absent : tous. |
 | `languages` | query | string[] | non | Langues retenues, codes ISO 639-1 : valeurs séparées par des virgules ou paramètre répété, 20 au plus. Absent : toutes. |
@@ -395,7 +397,8 @@ operationId : `searchPublicDirectory`
 | Réponse | Contenu | Description |
 | --- | --- | --- |
 | 200 | [SearchResult](#schema-searchresult) (*/*) | Page de résultats avec facettes. |
-| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVALID_PARAMETERS : errors[] {field, message} (pas de code par champ) ; champs : sort (hors relevance, distance, name), q et city (plus de 100 caractères), lat et lng (l'un sans l'autre, ou hors de -90 à 90 et -180 à 180), radiusKm (hors de 0 exclu à 1000), professions, modalities, audiences, languages (plus de 20 valeurs), page (inférieure à 1), ou tout paramètre dont la valeur n'a pas le bon type (nombre, booléen). |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVALID_PARAMETERS : errors[] {field, message} (pas de code par champ) ; champs : sort (hors relevance, distance, name), q et city (plus de 100 caractères), lat et lng (l'un sans l'autre, ou hors de -90 à 90 et -180 à 180), radiusKm (hors de 0 exclu à 1000), professions, specialties, modalities, audiences, languages (plus de 20 valeurs), page (inférieure à 1), ou tout paramètre dont la valeur n'a pas le bon type (nombre, booléen). |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED : errors[] {field, code, message}, avec le champ specialties et le code INVALID_VALUE pour chaque code qui n'est pas une spécialité active de la liste fermée (GET /api/public/directory/vocabulary). |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ### `GET /api/public/directory/practitioners/{slug}`
@@ -416,13 +419,26 @@ operationId : `getPublicPractitionerProfile`
 | 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PROFILE_NOT_FOUND : aucun profil publié avec cette adresse. |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
+### `GET /api/public/directory/vocabulary`
+
+**Liste les valeurs de l'annuaire public (libellés et codes des filtres)**
+
+Public, sans session ; limité à 60 requêtes par minute et par IP (429 RATE_LIMITED). Même contenu que GET /api/vocabulary/directory (réservé aux praticiens) : spécialités et publics actifs, modalités et langues, avec leurs libellés français et anglais ; les codes sont ceux des filtres de GET /api/public/directory. Listes complètes, non paginées. Aucune donnée de praticien ni de patient. 200 avec Cache-Control: max-age=60, public.
+
+operationId : `getPublicDirectoryVocabulary`
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [DirectoryVocabularyDto](#schema-directoryvocabularydto) (*/*) | Listes fermées de l'annuaire. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : au-delà de 60 requêtes par minute et par IP. |
+
 ## <a id="tag-authentification"></a>Authentification
 
 ### `POST /api/auth/email/change`
 
-**Corrige l'adresse d'un compte non confirmé**
+**Change l'e-mail de connexion (session) ou corrige celui d'un compte non confirmé**
 
-Public : sans session, l'appelant prouve son identité par email + password. Réponse 202 dans tous les cas (compte inconnu, mot de passe faux, compte déjà confirmé, nouvelle adresse déjà prise, limite atteinte : aucune différence visible). Seul un compte en email_pending change d'adresse ; un nouveau lien de confirmation part à la nouvelle adresse (1 changement ou renvoi par minute, 5 par jour). Les mots de passe faux comptent dans le verrou e-mail + IP du login : 5 échecs, 423 pendant 15 min.
+Deux variantes, même route. Avec une session (compte confirmé : docs_pending, under_review, needs_more ou approved) : corps { newEmail, password }, le compte est celui de la session (email est ignoré). Le mot de passe est vérifié : faux, il donne 422 INVALID_PASSWORD et compte dans un verrou propre au compte (5 échecs, 423 pendant 15 min, quelle que soit l'IP). Sinon la réponse est 202 dans tous les cas : un lien de confirmation (24 h, usage unique) part à la NOUVELLE adresse, et si cette adresse appartient déjà à un compte elle reçoit à la place l'e-mail « vous avez déjà un compte », sans que la réponse diffère. L'ancienne adresse reste valide pour se connecter jusqu'à la confirmation par POST /api/auth/email/confirm ; une nouvelle demande invalide le lien précédent (1 par minute, 5 par jour, au-delà rien ne part). Sans session (variante publique, compte email_pending) : corps { email, password, newEmail } ; réponse 202 dans tous les cas (compte inconnu, mot de passe faux, compte déjà confirmé, nouvelle adresse déjà prise, limite atteinte : aucune différence visible) ; seul un compte en email_pending change d'adresse, un nouveau lien de confirmation part à la nouvelle adresse (1 changement ou renvoi par minute, 5 par jour) ; les mots de passe faux comptent dans le verrou e-mail + IP du login (5 échecs, 423 pendant 15 min).
 
 operationId : `changeEmail`
 
@@ -431,14 +447,14 @@ Corps (`application/json`) : [EmailChangeRequest](#schema-emailchangerequest)
 | Réponse | Contenu | Description |
 | --- | --- | --- |
 | 202 | — | Demande acceptée ; l'adresse n'est changée que si les conditions sont réunies. |
-| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : INVALID_FIELD (email, password ou newEmail absent, newEmail mal formé, champ trop long). |
-| 423 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | ACCOUNT_LOCKED : verrouillage e-mail + IP après 5 mots de passe faux (15 min) ; retryAfterSeconds et en-tête Retry-After. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : INVALID_FIELD (password ou newEmail absent, email absent sans session, newEmail mal formé, champ trop long) ; INVALID_PASSWORD (champ password, variante avec session : mot de passe faux). |
+| 423 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | ACCOUNT_LOCKED : verrouillage après 5 mots de passe faux (15 min), par compte avec session, par e-mail + IP sans ; retryAfterSeconds et en-tête Retry-After. |
 
 ### `POST /api/auth/email/confirm`
 
-**Confirme l'adresse e-mail et ouvre une session**
+**Confirme un lien reçu par e-mail : adresse du compte ou changement d'adresse**
 
-Public. Consomme le jeton reçu par e-mail (usage unique, valable 24 h) : le compte passe de email_pending à docs_pending, la confirmation est journalisée et une session est ouverte (cookie SESSION HttpOnly posé dans la réponse, 12 h d'inactivité). Un jeton déjà utilisé, expiré, inconnu ou remplacé par un renvoi donne 410.
+Public. Consomme le jeton reçu par e-mail (usage unique, valable 24 h). Jeton d'inscription : le compte passe de email_pending à docs_pending, la confirmation est journalisée et une session est ouverte (cookie SESSION HttpOnly posé dans la réponse, 12 h d'inactivité). Jeton de changement d'adresse (POST /api/auth/email/change) : l'adresse de connexion bascule vers la nouvelle (l'ancienne ne permet plus de se connecter), email_changed est journalisé, les sessions du compte sont révoquées sauf celle qui porte l'appel si elle appartient à ce compte (aucune session n'est ouverte), et l'ancienne adresse reçoit un e-mail d'information. Un jeton déjà utilisé, expiré, inconnu ou remplacé par un renvoi donne 410.
 
 operationId : `confirmEmail`
 
@@ -446,7 +462,7 @@ Corps (`application/json`) : [EmailConfirmRequest](#schema-emailconfirmrequest)
 
 | Réponse | Contenu | Description |
 | --- | --- | --- |
-| 204 | — | Adresse confirmée, session ouverte (cookie SESSION). |
+| 204 | — | Adresse confirmée ; pour une inscription, session ouverte (cookie SESSION), pour un changement d'adresse aucune session n'est ouverte. |
 | 410 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | TOKEN_INVALID_OR_EXPIRED : jeton inconnu, déjà utilisé, expiré ou remplacé. |
 | 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : INVALID_FIELD (token absent, vide ou de plus de 200 caractères). |
 
@@ -498,16 +514,16 @@ operationId : `logout`
 
 ### `GET /api/auth/me`
 
-**Praticien connecté (identité, profession, statut de vérification)**
+**Praticien connecté (identité, profession, statut, rôle, 2FA)**
 
-Session praticien, y compris tant que l'e-mail n'est pas confirmé. Renvoie les valeurs mémorisées dans la session, sans relire la base : le statut de vérification peut être en retard, utiliser GET /api/auth/session pour l'état à jour.
+Session praticien, y compris tant que l'e-mail n'est pas confirmé. L'identité et le statut de vérification sont ceux mémorisés dans la session : le statut peut être en retard, utiliser GET /api/auth/session pour l'état à jour. Le rôle, twoFactorEnabled et passwordChangeRequired sont relus en base à chaque appel, pour que le shell web sache d'emblée si le compte est administrateur, si la double authentification est active et si un changement de mot de passe est imposé. Ces trois champs sont en lecture seule : aucun corps de requête ne les accepte.
 
 operationId : `me`
 
 | Réponse | Contenu | Description |
 | --- | --- | --- |
 | 200 | [MeResponse](#schema-meresponse) (*/*) | Praticien de la session courante. |
-| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué) ; INVALID_CREDENTIALS : le compte de la session n'existe plus. |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ### `POST /api/auth/password-reset/confirm`
@@ -1171,7 +1187,7 @@ operationId : `listPatients`
 | 200 | [PatientPage](#schema-patientpage) (*/*) | Page de patients. |
 | 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
-| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED : paramètre invalide, errors[] {field, message} avec field = sort (valeur autre que name, created, updated) ou cursor (curseur illisible). |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED : paramètre invalide, errors[] {field, code, message} avec field = sort (INVALID_VALUE : valeur autre que name, created, updated) ou cursor (INVALID_FORMAT : curseur illisible). |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ### `POST /api/patients`
@@ -1190,7 +1206,7 @@ Corps (`application/json`) : [CreatePatientRequest](#schema-createpatientrequest
 | 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
 | 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | FLAG_ALREADY_ACTIVE : la même nature de drapeau est présente deux fois. |
-| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED : errors[] {field, message} avec field = displayName (obligatoire), birthDate (future ou de plus de 120 ans), flags[i].kind (nature inconnue), flags[i].reason (obligatoire pour watch), tags[i] (libellé vide) ; TAG_IS_EMOTION : un libellé de tags correspond à une émotion ; TAG_UNKNOWN : un libellé de tags n'existe pas encore (créer le tag d'abord). |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED : errors[] {field, code, message} avec field = displayName (REQUIRED si absent ou vide, TOO_LONG au-delà de 120 caractères), firstName et lastName (TOO_LONG au-delà de 120 caractères), birthDate (INVALID_DATE : future ou de plus de 120 ans ; INVALID_FORMAT : date illisible), pronoun (INVALID_VALUE : hors elle, il, iel, neutre, casse tolérée et enregistrée en minuscules), flags[i].kind (REQUIRED si absente, INVALID_VALUE si inconnue), flags[i].reason (REQUIRED pour watch), tags[i] (REQUIRED si libellé vide) ; TAG_IS_EMOTION : un libellé de tags correspond à une émotion (même code dans errors[0]) ; TAG_UNKNOWN : un libellé de tags n'existe pas encore (créer le tag d'abord ; même code dans errors[0]). |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ### `GET /api/patients/{id}`
@@ -1234,7 +1250,7 @@ Corps (`application/json`) : object
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_FORBIDDEN : patient d'un autre praticien. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
 | 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : aucun patient avec cet identifiant. |
 | 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED : patient archivé, restaurer d'abord. |
-| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED : errors[] {field, message} avec field = nom de la clé inconnue ou non modifiable, displayName (vide), birthDate (format invalide, future ou de plus de 120 ans), context ou followUp (objet attendu). |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED : errors[] {field, code, message} avec field = nom de la clé inconnue ou non modifiable (UNKNOWN_FIELD), displayName (REQUIRED si vide, TOO_LONG au-delà de 120 caractères), firstName et lastName (TOO_LONG), pronoun (INVALID_VALUE : hors elle, il, iel, neutre, casse tolérée et enregistrée en minuscules ; ces quatre champs ne sont pas revalidés quand la valeur envoyée est celle de la fiche), birthDate (INVALID_FORMAT si illisible, INVALID_DATE si future ou de plus de 120 ans), context ou followUp (INVALID_FORMAT : objet attendu). |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ### `DELETE /api/patients/{id}`
@@ -1278,7 +1294,7 @@ Corps (`application/json`) : [FlagRequest](#schema-flagrequest)
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_FORBIDDEN : patient d'un autre praticien. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
 | 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : aucun patient avec cet identifiant. |
 | 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED : patient archivé ; FLAG_ALREADY_ACTIVE : ce drapeau est déjà actif. |
-| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED : errors[] {field, message} avec field = flag.kind (nature inconnue ou absente) ou flag.reason (obligatoire pour watch). |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED : errors[] {field, code, message} avec field = flag.kind (REQUIRED si absente, INVALID_VALUE si inconnue) ou flag.reason (REQUIRED pour watch). |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ### `DELETE /api/patients/{id}/flags/{kind}`
@@ -1301,7 +1317,7 @@ operationId : `clearPatientFlag`
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_FORBIDDEN : patient d'un autre praticien. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
 | 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : aucun patient avec cet identifiant ; FLAG_NOT_ACTIVE : ce drapeau n'est pas actif sur le patient. |
 | 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED : patient archivé, restaurer d'abord. |
-| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED : errors[] {field, message} avec field = kind (nature de drapeau inconnue). |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED : errors[] {field, code, message} avec field = kind (INVALID_VALUE : nature de drapeau inconnue). |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ### `POST /api/patients/{id}/restore`
@@ -1345,7 +1361,7 @@ Corps (`application/json`) : [TagsRequest](#schema-tagsrequest)
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_FORBIDDEN : patient d'un autre praticien. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
 | 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : aucun patient avec cet identifiant. |
 | 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED : patient archivé, restaurer d'abord. |
-| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED : libellé vide, errors[] {field, message} avec field = tags[i] ; TAG_IS_EMOTION : le libellé correspond à une émotion (utiliser l'émotion) ; TAG_UNKNOWN : le tag n'existe pas (le créer d'abord par POST /api/tags). |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED : libellé vide, errors[] {field, code, message} avec field = tags[i] et code REQUIRED ; TAG_IS_EMOTION : le libellé correspond à une émotion (utiliser l'émotion) ; TAG_UNKNOWN : le tag n'existe pas (le créer d'abord par POST /api/tags) ; errors[0] porte alors le même code. |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ### `GET /api/patients/{id}/versions`
@@ -1709,6 +1725,44 @@ Corps (`application/json`) : [CloseSessionRequest](#schema-closesessionrequest)
 | 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SESSION_INVALID : l'entrée désignée n'est pas une séance (code racine, errors[0].field = sessionId) ; VALIDATION_FAILED avec errors[] : durationMin OUT_OF_RANGE (hors 1 à 600) ou INVALID_FORMAT, UNKNOWN_FIELD si authorType ou submissionId est envoyé. |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
+## <a id="tag-securite-du-compte"></a>Sécurité du compte
+
+### `GET /api/me/security`
+
+**Sessions actives et connexion précédente du praticien connecté**
+
+Session praticien. Liste les sessions non expirées du praticien (jamais celles d'un autre compte), la plus récemment utilisée d'abord, avec l'appareil déduit de l'User-Agent, les dates d'ouverture, de dernier appel et d'expiration, et current sur la session qui porte l'appel ; lastLogin donne la connexion précédente (la dernière connexion réussie antérieure à l'ouverture de la session courante, null à la première connexion ou pour une session ouverte avant cette fonction). Aucune adresse IP, aucun User-Agent brut ni identifiant du cookie n'est rendu. Les sessions ouvertes avant cette fonction et les anciennes connexions ont device = null. La ville n'est pas renseignée en V1 : city vaut toujours null. Révoquer une session : POST /api/me/sessions/{id}/revoke.
+
+operationId : `getMeSecurity`
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [MeSecurityResponse](#schema-mesecurityresponse) (*/*) | Sécurité du compte. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `POST /api/me/sessions/{id}/revoke`
+
+**Révoque une autre session du praticien**
+
+Session praticien. Ferme la session désignée (id lu dans GET /api/me/security) : une requête avec son ancien cookie reçoit aussitôt 401. L'opération est consignée (session_revoked). 404 si l'id est inconnu, malformé, expiré ou appartient à un autre compte (même réponse dans tous les cas) ; 409 si c'est la session courante : utiliser POST /api/auth/logout.
+
+operationId : `revokeSession`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant opaque d'une session de GET /api/me/security. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 204 | — | Session révoquée. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SESSION_NOT_FOUND : session inconnue, expirée ou d'un autre compte. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | CURRENT_SESSION : c'est la session qui porte l'appel, utiliser POST /api/auth/logout. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
 ## <a id="tag-tags"></a>Tags
 
 ### `GET /api/tags`
@@ -1845,7 +1899,7 @@ operationId : `linkTypes`
 
 **Liste les valeurs admises pour remplir le profil d'annuaire**
 
-Session praticien. Rend les spécialités et publics actifs (administrables), les modalités et les langues proposées ; les codes sont ceux à envoyer dans le profil (PUT /api/me/profile) et dans les filtres de l'annuaire public. Listes complètes, non paginées.
+Session praticien. Rend les spécialités et publics actifs (administrables), les modalités et les langues proposées ; les codes sont ceux à envoyer dans le profil (PUT /api/me/profile) et dans les filtres de l'annuaire public. Listes complètes, non paginées. Le même contenu est servi sans session par GET /api/public/directory/vocabulary.
 
 operationId : `get_1`
 
@@ -2225,6 +2279,20 @@ Médicament en cours.
 | `prescriber` | string | non | Prescripteur ; null si non saisi. |
 | `since` | string (date-time) | non | Début de l'entrée (occurred_from), UTC ISO 8601. |
 
+### <a id="schema-activesessionresponse"></a>ActiveSessionResponse
+
+Une session active du praticien (un appareil connecté).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `city` | string | non | Ville déduite de l'adresse IP. Non renseignée en V1 : aucune géolocalisation, toujours null. |
+| `createdAt` | string (date-time) | non | Ouverture de la session (UTC). |
+| `current` | boolean | non | Vrai pour la session qui porte cet appel ; une seule par réponse. |
+| `device` | string | non | Appareil déduit de l'User-Agent à la connexion : navigateur et système, par exemple « Chrome · Windows » (jamais l'en-tête brut). null pour une session ouverte avant cette fonction ou dont l'en-tête n'est pas reconnu. |
+| `expiresAt` | string (date-time) | non | Expiration de la session si elle n'est plus utilisée (UTC) : 12 h après le dernier appel, 30 jours avec « rester connecté » (G Q6). Chaque appel la repousse. |
+| `id` | string (uuid) | non | Identifiant opaque de la session, à passer à POST /api/me/sessions/{id}/revoke. Ce n'est pas l'identifiant du cookie de session et il ne permet pas de s'authentifier. |
+| `lastAccessAt` | string (date-time) | non | Dernier appel authentifié de la session (UTC). |
+
 ### <a id="schema-activesituationdto"></a>ActiveSituationDto
 
 Situation en cours (occurred_to nul).
@@ -2502,16 +2570,16 @@ Création d'un patient dans le cabinet du praticien connecté.
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `birthDate` | string (date) | non | Date de naissance AAAA-MM-JJ ; doit être passée et de moins de 120 ans (422 VALIDATION_FAILED sinon). |
+| `birthDate` | string (date) | non | Date de naissance AAAA-MM-JJ ; doit être passée et de moins de 120 ans (422 INVALID_DATE sinon). |
 | `context` | object | non | Contexte de vie : objet JSON libre ; null = objet vide. |
-| `displayName` | string | oui | Nom affiché ; obligatoire, non vide après suppression des espaces. |
+| `displayName` | string | oui | Nom affiché ; obligatoire (422 REQUIRED), non vide après suppression des espaces, 120 caractères au plus (422 TOO_LONG). |
 | `email` | string | non | Adresse e-mail, texte libre ; vide ou null = non renseignée. |
-| `firstName` | string | non | Prénom ; vide ou null = non renseigné. |
+| `firstName` | string | non | Prénom ; vide ou null = non renseigné ; 120 caractères au plus (422 TOO_LONG). |
 | `flags` | [FlagRequest](#schema-flagrequest)[] | non | Drapeaux à poser dès la création ; un seul par nature (409 FLAG_ALREADY_ACTIVE sinon) ; null = aucun. |
 | `followUp` | object | non | Cadre du suivi : objet JSON libre ; null = objet vide. |
-| `lastName` | string | non | Nom de famille ; vide ou null = non renseigné. |
+| `lastName` | string | non | Nom de famille ; vide ou null = non renseigné ; 120 caractères au plus (422 TOO_LONG). |
 | `phone` | string | non | Téléphone, texte libre ; vide ou null = non renseigné. |
-| `pronoun` | string | non | Pronom d'adresse libre ; vide ou null = non renseigné. |
+| `pronoun` | `elle` \| `il` \| `iel` \| `neutre` | non | Pronom d'adresse : elle, il, iel ou neutre (422 INVALID_VALUE sinon). La casse et les espaces de bord sont tolérés ("Elle" est accepté) ; la valeur est enregistrée en minuscules. Vide ou null = non renseigné. |
 | `tags` | string[] | non | Libellés de tags existants à associer (mêmes règles que PUT /api/patients/{id}/tags) ; null = aucun. |
 
 ### <a id="schema-createrequest"></a>CreateRequest
@@ -2624,12 +2692,12 @@ Brouillons et séance ouverte.
 
 ### <a id="schema-emailchangerequest"></a>EmailChangeRequest
 
-Correction de l'adresse e-mail d'un compte non confirmé ; le mot de passe prouve l'identité de l'appelant (aucune session).
+Changement d'adresse e-mail. Sans session (compte non confirmé) : email, password et newEmail. Avec une session (compte confirmé) : password et newEmail seulement, le compte est celui de la session et email est ignoré. Le mot de passe prouve l'identité de l'appelant.
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `email` | string | oui | Adresse e-mail actuelle du compte (254 caractères au maximum). |
-| `newEmail` | string (email) | oui | Nouvelle adresse e-mail qui recevra le lien de confirmation (254 caractères au maximum). |
+| `email` | string | non | Adresse e-mail actuelle du compte (254 caractères au maximum). Obligatoire sans session ; ignorée avec une session. |
+| `newEmail` | string (email) | oui | Nouvelle adresse e-mail qui recevra le lien de confirmation (254 caractères au maximum). L'adresse actuelle ne change qu'à la confirmation. |
 | `password` | string | oui | Mot de passe actuel du compte (200 caractères au maximum). |
 
 ### <a id="schema-emailconfirmrequest"></a>EmailConfirmRequest
@@ -2967,7 +3035,7 @@ Nombre de résultats pour une valeur d'une facette.
 
 ### <a id="schema-facets"></a>Facets
 
-Facettes calculées sur le lot filtré (500 fiches au plus), chacune triée par nombre décroissant.
+Facettes calculées sur le lot filtré, chacune triée par nombre décroissant ; la facette specialties ignore le filtre specialties. Les compteurs de toutes les facettes sont exacts jusqu'à 500 fiches examinées ; au-delà, ils portent sur les 500 premières dans l'ordre du tri (G Q48).
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
@@ -2975,6 +3043,7 @@ Facettes calculées sur le lot filtré (500 fiches au plus), chacune triée par 
 | `languages` | [FacetCount](#schema-facetcount)[] | non | Répartition par langue (ISO 639-1). |
 | `modalities` | [FacetCount](#schema-facetcount)[] | non | Répartition par modalité (in_person, video, home). |
 | `professions` | [FacetCount](#schema-facetcount)[] | non | Répartition par profession (psychologist, psychiatrist, coach). |
+| `specialties` | [SpecialtyFacetCount](#schema-specialtyfacetcount)[] | non | Répartition par spécialité active de la liste fermée, avec libellés. Calculée sans le filtre specialties (les autres filtres s'appliquent) : le compteur d'un code est le nombre de résultats qu'il donnerait seul. |
 
 ### <a id="schema-feelingpointdto"></a>FeelingPointDto
 
@@ -3020,7 +3089,7 @@ Une erreur de champ dans errors[] (422, 400 de paramètre, 409 ENTRY_ARCHIVED de
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `code` | string | non | Code stable de l'erreur de champ, à tester par le client : INVALID_FIELD, REQUIRED, OUT_OF_RANGE, TOO_LONG, UNKNOWN_EMOTION… (liste sur chaque opération). Absent dans les modules patients, vocabulary (tags, émotions) et directory (profil, annuaire public, contact), dont les erreurs de champ ne portent que field et message. |
+| `code` | string | non | Code stable de l'erreur de champ, à tester par le client : INVALID_FIELD, REQUIRED, OUT_OF_RANGE, TOO_LONG, INVALID_VALUE, INVALID_DATE, INVALID_FORMAT, UNKNOWN_FIELD, UNKNOWN_EMOTION… (liste sur chaque opération). Absent dans les modules vocabulary (tags, émotions) et directory (profil, annuaire public, contact), dont les erreurs de champ ne portent que field et message. |
 | `field` | string | oui | Chemin du champ fautif dans le corps envoyé (notation pointée pour les objets imbriqués, ex. feeling.emotionCode) ; chaîne vide si l'erreur ne vise aucun champ précis. |
 | `message` | string | oui | Message lisible, dans la langue d'Accept-Language (français par défaut). |
 
@@ -3040,7 +3109,7 @@ Drapeau à poser sur un patient (à la création ou via POST /flags).
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `kind` | `watch` \| `risk` \| `shared_care` | oui | Nature du drapeau : watch = à surveiller, risk = risque, shared_care = suivi partagé. Toute autre valeur est refusée (422 VALIDATION_FAILED). |
+| `kind` | `watch` \| `risk` \| `shared_care` | oui | Nature du drapeau : watch = à surveiller, risk = risque, shared_care = suivi partagé. Toute autre valeur est refusée (422 INVALID_VALUE), l'absence aussi (422 REQUIRED). |
 | `reason` | string | non | Raison libre ; obligatoire (non vide) pour watch, facultative pour risk et shared_care. |
 
 ### <a id="schema-graphdto"></a>GraphDto
@@ -3147,6 +3216,16 @@ Ligne du journal d'administration : une décision ou un événement de sécurit�
 | `source` | `security_event` \| `verification_decision` | non | Table d'origine de la ligne : security_event (événement de sécurité) ou verification_decision (décision d'administration). |
 | `summary` | string | non | Résumé lisible : le champ summary des détails s'il existe, sinon le message de la décision, sinon le type d'événement. |
 
+### <a id="schema-lastloginresponse"></a>LastLoginResponse
+
+Connexion précédente du praticien (antérieure à la session courante).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `at` | string (date-time) | non | Date de la connexion (UTC). |
+| `city` | string | non | Ville déduite de l'adresse IP. Non renseignée en V1 : aucune géolocalisation, toujours null. |
+| `device` | string | non | Appareil déduit de l'User-Agent, par exemple « Firefox · Linux ». null pour une connexion antérieure à cette fonction ou dont l'en-tête n'est pas reconnu. |
+
 ### <a id="schema-linkdto"></a>LinkDto
 
 Lien entre deux entrées d'un même patient, vu depuis une entrée de référence (l'entrée de l'URL ; la source du lien pour un changement de type).
@@ -3210,9 +3289,21 @@ Praticien connecté, tel qu'ouvert par la session.
 | `displayName` | string | non | Nom affiché (précédé de Dr pour un psychiatre). |
 | `email` | string | non | Adresse e-mail du compte. |
 | `id` | string (uuid) | non | Identifiant du praticien. |
+| `passwordChangeRequired` | boolean | non | Vrai tant que le mot de passe à usage unique d'un compte créé par make admin n'a pas été remplacé via POST /api/auth/password/change (G Q5) ; faux sinon. Lecture seule. |
 | `profession` | `psychologist` \| `psychiatrist` \| `coach` | non | Profession : psychologist, psychiatrist ou coach. |
+| `role` | `practitioner` \| `admin` | non | Rôle du compte, relu en base : admin pour un administrateur, practitioner pour tous les autres. Lecture seule. |
 | `tenantId` | string (uuid) | non | Identifiant du cabinet (tenant) du praticien ; toutes ses données y sont rattachées. |
+| `twoFactorEnabled` | boolean | non | Vrai si la double authentification est active (activation vérifiée par POST /api/me/2fa/verify, pas encore désactivée). Lecture seule. |
 | `verificationStatus` | `email_pending` \| `docs_pending` \| `under_review` \| `approved` \| `needs_more` \| `rejected` \| `suspended` \| `closed` | non | Statut de vérification du praticien lors de l'ouverture de la session : email_pending, docs_pending, under_review, approved, needs_more, rejected, suspended ou closed (GET /api/auth/session le relit à jour). |
+
+### <a id="schema-mesecurityresponse"></a>MeSecurityResponse
+
+Sécurité du compte : sessions actives et dernière connexion.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `lastLogin` | [LastLoginResponse](#schema-lastloginresponse) | non | Connexion précédente : la dernière connexion réussie (POST /api/auth/login) antérieure à l'ouverture de la session courante, sans compter celle-ci. null à la toute première connexion du compte (une session ouverte par confirmation d'e-mail n'est pas une connexion et lit la dernière connexion antérieure) ou pour une session ouverte avant cette fonction. |
+| `sessions` | [ActiveSessionResponse](#schema-activesessionresponse)[] | non | Sessions non expirées du praticien (les siennes uniquement), la plus récemment utilisée d'abord. Contient toujours la session courante. |
 
 ### <a id="schema-mergeemotionrequest"></a>MergeEmotionRequest
 
@@ -3734,6 +3825,17 @@ Entrée saisie depuis la dernière séance clôturée.
 | `title` | string | non | Titre de la version courante ; null si l'entrée n'a pas de titre. |
 | `type` | `note` \| `event` \| `situation` \| `feeling` \| `medication` | non | Type d'entrée. |
 | `visibility` | `private` \| `clinical` | non | Visibilité : private = réservée au praticien, clinical = dossier clinique. |
+
+### <a id="schema-specialtyfacetcount"></a>SpecialtyFacetCount
+
+Nombre de résultats pour une spécialité de la liste fermée.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `code` | string | non | Code de la spécialité, à renvoyer dans le filtre specialties. |
+| `count` | integer (int64) | non | Nombre de fiches qui auraient ce code seul, tous les autres filtres appliqués sauf specialties. Exact jusqu'à 500 fiches examinées ; au-delà, il porte sur les 500 premières dans l'ordre du tri (G Q48). |
+| `labelEn` | string | non | Libellé en anglais ; peut être null pour une entrée ajoutée sans. |
+| `labelFr` | string | non | Libellé en français. |
 
 ### <a id="schema-startsessionrequest"></a>StartSessionRequest
 
