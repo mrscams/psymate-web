@@ -2,7 +2,7 @@
 // Génère docs/api-reference.md (Markdown par tag) et docs/api.html (Redoc) à partir du contrat OpenAPI.
 // Usage : node tools/api-reference.mjs <openapi.json>
 //   Le JSON s'obtient depuis l'API locale : curl http://localhost:8080/v3/api-docs -o /tmp/openapi.json
-//   (contract/openapi.yaml est le même contrat ; Node n'a pas de parseur YAML sans dépendance.)
+//   (docs/contract/openapi.yaml est le même contrat ; Node n'a pas de parseur YAML sans dépendance.)
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 
 const src = process.argv[2];
