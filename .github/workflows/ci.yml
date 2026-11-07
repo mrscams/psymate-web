@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Un nouveau push sur la même branche ou PR annule l'exécution devenue obsolète.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # lint → check:tokens → test → build (C « Décisions d'outillage », handbook §12).
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Version de pnpm lue dans package.json (packageManager).
+      - uses: pnpm/action-setup@v6
+      # Node 24 figé (G Q50) : même version que .nvmrc, engines.node et devEngines.runtime.
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Lint (ESLint, frontières, couleurs, fixtures, Prettier)
+        run: pnpm lint
+      - name: Contraste des tokens
+        run: pnpm check:tokens
+      - name: Tests unitaires et de composants (Vitest)
+        run: pnpm test
+      - name: Build (FR et EN)
+        run: pnpm build
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+          retention-days: 3
+
+  # e2e Playwright contre l'API réelle : psymate-api + Postgres en Docker, seed small.
+  # psymate-api ne publie pas encore d'image : le job la construit depuis son dépôt (branche main).
+  # Secret requis : PSYMATE_API_READ_TOKEN (lecture seule du dépôt privé mrscams/psymate-api).
+  e2e:
+    needs: checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: mrscams/psymate-api
+          ref: main
+          path: psymate-api
+          token: ${{ secrets.PSYMATE_API_READ_TOKEN }}
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: psymate-api/pom.xml
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Postgres et Mailpit (docker compose de psymate-api)
+        working-directory: psymate-api
+        run: docker compose up -d --wait
+      - name: Build de l'API
+        working-directory: psymate-api
+        run: ./mvnw -B -q -DskipTests -Dspotless.check.skip=true package
+      - name: Démarrage de l'API (profil local)
+        working-directory: psymate-api
+        run: |
+          nohup java -jar target/psymate-api-*-SNAPSHOT.jar --spring.profiles.active=local > api.log 2>&1 &
+          timeout 180 bash -c 'until curl -sf http://localhost:8080/actuator/health; do sleep 3; done'
+      - name: Seed small
+        working-directory: psymate-api
+        run: make seed SIZE=small
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: e2e (Playwright + axe-core)
+        run: pnpm exec playwright test
+
+      - if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-report
+          path: |
+            playwright-report/
+            test-results/
+            psymate-api/api.log
+          retention-days: 7
