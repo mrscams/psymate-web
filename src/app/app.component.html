@@ -1,0 +1,24 @@
+<header class="app-header">
+  <span class="brand" i18n="Nom du produit@@app.brand">PsyMate</span>
+  <nav
+    aria-label="Langue"
+    i18n-aria-label="Étiquette de la navigation de langue@@app.localeNav.label"
+  >
+    <a
+      class="locale-switch"
+      [href]="switchHref()"
+      [attr.hreflang]="other"
+      [attr.lang]="other"
+      i18n="Lien vers l'autre langue, écrit dans cette autre langue@@app.localeSwitch"
+      >English</a
+    >
+  </nav>
+</header>
+
+<main class="app-main">
+  <h1 i18n="Titre de la page d'accueil provisoire@@app.home.title">Bienvenue dans PsyMate</h1>
+  <p i18n="Texte de la page d'accueil provisoire@@app.home.body">
+    Le socle de l'application est en place. Les écrans arrivent avec les prochaines tâches.
+  </p>
+  <router-outlet />
+</main>

@@ -1,14 +1,4 @@
 import { Routes } from '@angular/router';
 
-export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'caseload' },
-  {
-    path: 'caseload',
-    loadComponent: () => import('./caseload/caseload').then((m) => m.Caseload),
-  },
-  {
-    path: 'patients/:id',
-    loadComponent: () => import('./patient-detail/patient-detail').then((m) => m.PatientDetail),
-  },
-  { path: '**', redirectTo: 'caseload' },
-];
+// Une entrée lazy par feature (loadChildren vers features/<x>/index.ts) + gardes, à partir de M0-07.
+export const routes: Routes = [];

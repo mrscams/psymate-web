@@ -1,0 +1,41 @@
+:host {
+  display: block;
+  min-height: 100%;
+  background: var(--surface-ground);
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: var(--surface-raised);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.brand {
+  font: var(--mat-sys-title-medium);
+  color: var(--text-primary);
+}
+
+.locale-switch {
+  color: var(--primary);
+}
+
+.app-main {
+  max-width: 960px;
+  margin: 24px auto;
+  padding: 24px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+
+  h1 {
+    margin-top: 0;
+    font: var(--mat-sys-headline-small);
+  }
+
+  p {
+    color: var(--text-secondary);
+  }
+}

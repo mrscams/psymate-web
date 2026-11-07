@@ -1,0 +1,96 @@
+/*
+ * Tokens de couleur PsyMate : palette Nordique.
+ * Source : docs/Etude-couleurs-Nordique.md §8 (variables CSS) et §6 (mode sombre, contraste doux).
+ *
+ * Seule source de vérité des couleurs : lue par le thème Angular Material (src/theme/material.scss),
+ * par les composants maison et, plus tard, par Cytoscape et ECharts.
+ * Ne pas « ajuster » une valeur : pnpm check:tokens vérifie chaque couple déclaré
+ * (tools/check-tokens.mjs), et aucune couleur en dur n'est permise ailleurs (règle no-hardcoded-color).
+ *
+ * Thèmes : clair par défaut (:root), [data-theme="dark"], [data-theme="soft"] (clair, fond adouci).
+ * Le choix du thème (préférence système, réglage praticien) appartient au ThemeService (M0-09, M6-04).
+ */
+
+:root {
+  color-scheme: light;
+
+  --surface-ground: #eef1f6;
+  --surface-raised: #ffffff;
+  --surface-sunken: #e4e8f0;
+  --border-subtle: #d6dce6;
+  --border-strong: #b9c2d1;
+  --text-primary: #1e2633;
+  --text-secondary: #5a6679;
+  --text-disabled: #8a94a6;
+  --primary: #3a63c2;
+  --primary-hover: #2c4c99;
+  --primary-tint: #e3eaf8;
+  --primary-on: #ffffff;
+  --feeling: #8b7bd6;
+  --feeling-tint: #ece8f8;
+  --feeling-text: #4e3f9e;
+  --entry-note: #7f8ea8;
+  --entry-event: #3a63c2;
+  --entry-situation: #2f4f73;
+  --entry-feeling: #8b7bd6;
+  --entry-session: #3e8e7e;
+  --entry-medication: #b07a2a;
+  --emotion-joy: #d9a426;
+  --emotion-trust: #3e8e7e;
+  --emotion-fear: #7a68c9;
+  --emotion-surprise: #2e9aa8;
+  --emotion-sadness: #3c66a6;
+  --emotion-disgust: #6e7f3e;
+  --emotion-anger: #b8463c;
+  --emotion-anticipation: #d07a2c;
+  --danger: #9a2f22;
+  --danger-bg: #fbe9e7;
+  --warning: #7a5a12;
+  --warning-bg: #fbf1dc;
+  --success: #1e6b45;
+  --success-bg: #e4f2ea;
+  --flag: #b8862e;
+  --flag-bg: #fbf1dc;
+  --link: #8a94a6;
+  --link-proposed: #b9c2d1;
+  --search-highlight: #fbf1dc;
+
+  /* Typographie (étude §2, fiche 01) : Inter pour l'interface, JetBrains Mono pour dates et identifiants. */
+  --font-ui: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --surface-ground: #151a22;
+  --surface-raised: #1e2530;
+  --surface-sunken: #283040;
+  --border-subtle: #334052;
+  --border-strong: #4a586e;
+  --text-primary: #e6eaf2;
+  --text-secondary: #a3adc0;
+  --text-disabled: #6f7a90;
+  --primary: #7a9be8;
+  --primary-hover: #9db4e6;
+  --primary-tint: #243457;
+  /*
+   * L'étude ne donne pas primary-on en sombre ; le blanc sur #7A9BE8 ferait 2,7:1.
+   * Texte foncé (neutre 90 de l'échelle, §3) : 6,4:1. Décision M0-06, à confirmer en M6-04.
+   */
+  --primary-on: #151a22;
+  --feeling: #a99be6;
+  --feeling-tint: #2f2a4e;
+  --feeling-text: #cfc6f2;
+  --entry-note: #9da9be;
+  --entry-event: #7a9be8;
+  --entry-situation: #7f9cc2;
+  --entry-feeling: #a99be6;
+  --entry-session: #6bb5a5;
+  --entry-medication: #d6a24e;
+}
+
+:root[data-theme='soft'] {
+  --surface-ground: #f3f4f7;
+  --border-subtle: #dde1e8;
+}
