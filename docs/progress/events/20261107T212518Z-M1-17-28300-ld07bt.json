@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-07T21:25:18.677Z",
+  "task": "M1-17",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 8 fusionnee (squash a4ae94e) : /mon-compte/securite, panneau 2FA (QR, codes de secours), /premiere-connexion admin, features/admin provisoire ; CI verte (checks + 47 e2e, 1 ignore)",
+  "notes": "Dependance ajoutee : qrcode-generator 1.5.2. Rebase apres M1-18 : fr.xlf regenere, en.xlf reuni (671 unites). Panneau 480 px au lieu de 560 (SidePanelService). Lot 1 complet.",
+  "next": "Lot 4 (M5-04 ∥ M5-05, features account/profile et public) et lot 2 (M1-06 patients) peuvent demarrer depuis main ; lot 6 (M7-07) debloque par M1-17",
+  "pr": "https://github.com/mrscams/psymate-web/pull/8",
+  "branch": "main",
+  "checkout": "psymate-web"
+}

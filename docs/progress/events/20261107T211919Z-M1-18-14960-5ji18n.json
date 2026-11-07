@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-07T21:19:19.032Z",
+  "task": "M1-18",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 7 fusionnee (squash ae072a4) : /confirmer-email (attente, lien, expire) et /compte-suspendu (export, recours) ; CI verte (checks + 38 e2e, 1 ignore)",
+  "notes": "Le scenario e2e de suspension exige un admin local (PSYMATE_E2E_ADMIN_EMAIL / _PASSWORD / _TOTP_SECRET) et s ignore en CI. Pas de GET /api/me/suspension ni /appeal dans le contrat : motif et etat du recours non affichables apres rechargement.",
+  "next": "M1-17 (PR 8) puis fin du lot 1 ; lot 4 (M5-04 ∥ M5-05) et lot 2 (M1-06) possibles",
+  "pr": "https://github.com/mrscams/psymate-web/pull/7",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
