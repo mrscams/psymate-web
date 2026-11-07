@@ -89,7 +89,7 @@ G l'emporte sur tout autre document ; le contrat l'emporte sur une fiche.
 - pnpm build
 - pnpm e2e : Playwright contre l'API réelle (docker : API + Postgres, seed small)
 - pnpm contract:pull : copie docs/contract/openapi.yaml au tag CONTRACT_TAG et régénère src/app/api
-- Suivi d'avancement : dans ../psymate-api, make log TASK=… AGENT=frontend-feature-dev STATUS=… SUMMARY="…" PR=…
+- pnpm progress:log --task <ID> --agent frontend-feature-dev --status <done|review|blocked|merged> --summary "…" [--pr … --notes … --next …] : enregistre l'avancement (skill progress-log, copie du suivi D9 de psymate-api dans docs/progress) ; pnpm progress : regénère docs/progress/index.html
 
 ## Architecture (règles non négociables, handbook §11)
 - Une feature par contexte (auth, patients, patient-shell, overview, timeline, graph, entries, search, capture, account, public, admin), lazy, avec un index.ts public. Aucun import de l'intérieur d'une autre feature. admin n'importe jamais une feature patient.
@@ -119,7 +119,7 @@ Tests : Vitest pour les stores (service de données simulé) et les composants (
 - Travailler hors de la feature indiquée dans ta tâche.
 
 ## Fin de tâche
-pnpm lint, pnpm check:tokens, pnpm test, pnpm build verts ; les e2e de la tâche verts en local ; PR ouverte avec le template (ID, critères de la fiche cochés un par un, tests ajoutés, dépendances npm ajoutées listées, écarts fiche ↔ contrat constatés) ; puis make log dans ../psymate-api avec le fichier d'événement commité là-bas.
+pnpm lint, pnpm check:tokens, pnpm test, pnpm build verts ; les e2e de la tâche verts en local ; PR ouverte avec le template (ID, critères de la fiche cochés un par un, tests ajoutés, dépendances npm ajoutées listées, écarts fiche ↔ contrat constatés) ; puis pnpm progress:log (skill progress-log) avec le fichier d'événement commité dans la branche. Jamais d'édition de docs/progress/index.html ni d'un événement existant.
 ```
 
 ## 2.4 Créer `.claude/settings.json`
@@ -173,7 +173,7 @@ Pendant :
 - Un seul fichier importe src/app/api : data/<x>.api.ts. Les composants ne voient que des signaux et des méthodes de store.
 - Chaque critère d'acceptation de la fiche devient un test (Vitest ou Playwright). Chaque bloc de données a ses trois états.
 
-À la fin : pnpm lint, pnpm check:tokens, pnpm test, pnpm build verts, les e2e de la tâche verts (API locale : make up && make run dans ../psymate-api, make seed SIZE=small), puis une PR via gh pr create avec le template : ID de la tâche, critères cochés un par un, tests ajoutés, dépendances npm ajoutées (ou « aucune »), écarts fiche ↔ contrat constatés, décisions prises quand la documentation était ambiguë. Puis make -C ../psymate-api log TASK=<ID> AGENT=frontend-feature-dev STATUS=done SUMMARY="…" PR=<url>.
+À la fin : pnpm lint, pnpm check:tokens, pnpm test, pnpm build verts, les e2e de la tâche verts (API locale : make up && make run dans ../psymate-api, make seed SIZE=small), puis une PR via gh pr create avec le template : ID de la tâche, critères cochés un par un, tests ajoutés, dépendances npm ajoutées (ou « aucune »), écarts fiche ↔ contrat constatés, décisions prises quand la documentation était ambiguë. Puis pnpm progress:log --task <ID> --agent frontend-feature-dev --status done --summary "…" --pr <url> (skill progress-log), et commite le fichier d'événement créé dans docs/progress/events/.
 ```
 
 `.claude/agents/reviewer.md` :
@@ -225,7 +225,7 @@ Puis collez le prompt du lot. L'agent travaille dans `.claude/worktrees/<ID>/` s
 2. Lisez vous-même trois choses dans la PR : le test e2e (il raconte ce que fait l'écran), la liste des écarts fiche ↔ contrat, le diff de `package.json` s'il y en a un.
 3. Ouvrez l'écran en local (`pnpm start`) et comparez à la maquette `.html`.
 4. Fusionnez en squash : `gh pr merge <numéro> --squash --delete-branch`. Quittez l'agent, acceptez la suppression du worktree.
-5. `make -C ../psymate-api log TASK=<ID> AGENT=claude STATUS=merged SUMMARY="PR … fusionnée"`.
+5. `pnpm progress:log --task <ID> --agent claude --status merged --summary "PR … fusionnée"` (le suivi est dans `docs/progress/` depuis le 7 novembre 2026, copie de celui de psymate-api ; `pnpm progress` regénère la page).
 
 **Règle d'or** : on ne lance une tâche que quand **toutes** ses dépendances (colonne « Dépend de », révisée par C10) sont fusionnées. Un seul agent par feature à la fois.
 

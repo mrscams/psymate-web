@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-07T10:35:00.000Z",
+  "task": "M0-08",
+  "agent": "claude",
+  "status": "done",
+  "summary": "Volet web de M0-08 : CLAUDE.md, .claude/settings.json (hooks Prettier et Stop), agents frontend-feature-dev et reviewer, .gitignore (runbook H Partie 2)",
+  "notes": "Hook Stop conditionne a pnpm-lock.yaml (et non package.json) pour ne pas bloquer avant M0-06. Non pousse.",
+  "next": "M0-06",
+  "branch": "m0-08-web-preparation",
+  "checkout": "psymate-web"
+}

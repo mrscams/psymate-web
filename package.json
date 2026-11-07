@@ -24,6 +24,8 @@
     "check:tokens": "node tools/check-tokens.mjs",
     "extract-i18n": "ng extract-i18n",
     "contract:pull": "node tools/contract-pull.mjs",
+    "progress": "node tools/progress/progress.mjs build",
+    "progress:log": "node tools/progress/progress.mjs add",
     "e2e": "ng build && playwright test"
   },
   "dependencies": {

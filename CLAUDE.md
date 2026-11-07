@@ -14,7 +14,7 @@ G l'emporte sur tout autre document ; le contrat l'emporte sur une fiche.
 - pnpm build
 - pnpm e2e : Playwright contre l'API réelle (docker : API + Postgres, seed small)
 - pnpm contract:pull : copie docs/contract/openapi.yaml au tag CONTRACT_TAG et régénère src/app/api
-- Suivi d'avancement : dans ../psymate-api, make log TASK=… AGENT=frontend-feature-dev STATUS=… SUMMARY="…" PR=…
+- pnpm progress:log --task <ID> --agent frontend-feature-dev --status <done|review|blocked|merged> --summary "…" [--pr … --notes … --next …] : enregistre l'avancement (skill progress-log) ; pnpm progress : regénère docs/progress/index.html
 
 ## Architecture (règles non négociables, handbook §11)
 - Une feature par contexte (auth, patients, patient-shell, overview, timeline, graph, entries, search, capture, account, public, admin), lazy, avec un index.ts public. Aucun import de l'intérieur d'une autre feature. admin n'importe jamais une feature patient.
@@ -44,4 +44,4 @@ Tests : Vitest pour les stores (service de données simulé) et les composants (
 - Travailler hors de la feature indiquée dans ta tâche.
 
 ## Fin de tâche
-pnpm lint, pnpm check:tokens, pnpm test, pnpm build verts ; les e2e de la tâche verts en local ; PR ouverte avec le template (ID, critères de la fiche cochés un par un, tests ajoutés, dépendances npm ajoutées listées, écarts fiche ↔ contrat constatés) ; puis make log dans ../psymate-api avec le fichier d'événement commité là-bas.
+pnpm lint, pnpm check:tokens, pnpm test, pnpm build verts ; les e2e de la tâche verts en local ; PR ouverte avec le template (ID, critères de la fiche cochés un par un, tests ajoutés, dépendances npm ajoutées listées, écarts fiche ↔ contrat constatés) ; puis pnpm progress:log (skill progress-log) avec le fichier d'événement commité dans la branche. Jamais d'édition de docs/progress/index.html ni d'un événement existant.

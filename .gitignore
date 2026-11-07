@@ -51,6 +51,11 @@ Thumbs.db
 .env
 .env.*
 
+# Suivi d'avancement : la page est dérivée des événements (pnpm progress), seuls les événements sont commités
+docs/progress/index.html
+docs/progress/.lock/
+docs/progress/events/*.tmp
+
 # Playwright
 /playwright-report/
 /test-results/

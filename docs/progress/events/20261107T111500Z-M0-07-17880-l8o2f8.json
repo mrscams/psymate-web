@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-07T11:15:00.000Z",
+  "task": "M0-07",
+  "agent": "reviewer",
+  "status": "review",
+  "summary": "Relecture M0-07 : aucun bloquant ; frontieres, couches, contrat (403 documentes), i18n, a11y conformes",
+  "notes": "A annoncer : @ngrx/signals 22.0.1, @openapitools/openapi-generator-cli 2.42.0 (generateur 7.26.0). Hors perimetre justifie : page provisoire features/patients, app.component, e2e/support. URLs localhost en dur dans e2e/support/accounts.ts.",
+  "branch": "claude/youthful-varahamihira-a7560c",
+  "checkout": "psymate-web"
+}
