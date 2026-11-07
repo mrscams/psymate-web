@@ -8854,42 +8854,6 @@
         </context-group>
         <note priority="1" from="description">Site web dans l&apos;aperçu</note>
       </trans-unit>
-      <trans-unit id="patients.overview.title" datatype="html">
-        <source>Vue d&apos;ensemble</source>
-        <target state="translated">Overview</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/overview-placeholder.page.ts</context>
-          <context context-type="linenumber">13,14</context>
-        </context-group>
-        <note priority="1" from="description">Titre provisoire de la vue d&apos;ensemble</note>
-      </trans-unit>
-      <trans-unit id="patients.overview.placeholder" datatype="html">
-        <source> La vue d&apos;ensemble du dossier s&apos;affichera ici. </source>
-        <target state="translated">The record overview will appear here.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/overview-placeholder.page.ts</context>
-          <context context-type="linenumber">15,19</context>
-        </context-group>
-        <note priority="1" from="description">Texte provisoire de la vue d&apos;ensemble</note>
-      </trans-unit>
-      <trans-unit id="patients.overview.sheetLink" datatype="html">
-        <source>Modifier la fiche</source>
-        <target state="translated">Edit the record</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/overview-placeholder.page.ts</context>
-          <context context-type="linenumber">21,23</context>
-        </context-group>
-        <note priority="1" from="description">Lien vers la fiche</note>
-      </trans-unit>
-      <trans-unit id="patients.overview.listLink" datatype="html">
-        <source>Retour à la liste</source>
-        <target state="translated">Back to the list</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/overview-placeholder.page.ts</context>
-          <context context-type="linenumber">24,30</context>
-        </context-group>
-        <note priority="1" from="description">Lien vers la liste</note>
-      </trans-unit>
       <trans-unit id="patients.form.crumbs" datatype="html">
         <source>Fil d&apos;Ariane</source>
         <target state="translated">Breadcrumb</target>
@@ -9573,15 +9537,6 @@
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet de la fiche</note>
       </trans-unit>
-      <trans-unit id="patients.overview.pageTitle" datatype="html">
-        <source>Vue d&apos;ensemble · PsyMate</source>
-        <target state="translated">Overview · PsyMate</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/patients.routes.ts</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-        <note priority="1" from="description">Titre d&apos;onglet provisoire de la vue d&apos;ensemble</note>
-      </trans-unit>
       <trans-unit id="patients.form.flag.watch.help" datatype="html">
         <source>Avec une raison, visible dans l&apos;en-tête et la liste.</source>
         <target state="translated">With a reason, shown in the header and the list.</target>
@@ -10153,6 +10108,305 @@
         </context-group>
         <note priority="1" from="description">Valeur vide dans l&apos;historique</note>
       </trans-unit>
+      <trans-unit id="patientShell.flag.watch" datatype="html">
+        <source>À surveiller</source>
+        <target state="translated">Watch</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">Drapeau dans l&apos;en-tête patient</note>
+      </trans-unit>
+      <trans-unit id="patientShell.flag.risk" datatype="html">
+        <source>Risque</source>
+        <target state="translated">Risk</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">Drapeau dans l&apos;en-tête patient</note>
+      </trans-unit>
+      <trans-unit id="patientShell.flag.sharedCare" datatype="html">
+        <source>Suivi conjoint</source>
+        <target state="translated">Shared care</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Drapeau dans l&apos;en-tête patient</note>
+      </trans-unit>
+      <trans-unit id="patientShell.tab.overview" datatype="html">
+        <source>Vue d&apos;ensemble</source>
+        <target state="translated">Overview</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">Onglet du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientShell.tab.timeline" datatype="html">
+        <source>Timeline</source>
+        <target state="translated">Timeline</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">Onglet du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientShell.tab.graph" datatype="html">
+        <source>Graphe</source>
+        <target state="translated">Graph</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">Onglet du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientShell.tab.search" datatype="html">
+        <source>Recherche</source>
+        <target state="translated">Search</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">Recherche dans le dossier</note>
+      </trans-unit>
+      <trans-unit id="patientShell.error.forbidden.title" datatype="html">
+        <source>Ce dossier n&apos;est pas le vôtre</source>
+        <target state="translated">This record is not yours</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du dossier, patient d&apos;un autre praticien</note>
+      </trans-unit>
+      <trans-unit id="patientShell.error.forbidden.message" datatype="html">
+        <source>Il appartient à un autre praticien : vous ne pouvez ni le lire ni y écrire.</source>
+        <target state="translated">It belongs to another practitioner: you can neither read it nor write to it.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du dossier, patient d&apos;un autre praticien</note>
+      </trans-unit>
+      <trans-unit id="patientShell.error.notFound.title" datatype="html">
+        <source>Ce dossier n&apos;existe pas</source>
+        <target state="translated">This record does not exist</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du dossier introuvable</note>
+      </trans-unit>
+      <trans-unit id="patientShell.error.notFound.message" datatype="html">
+        <source>Le lien est peut-être incomplet ; retrouvez le dossier depuis la liste.</source>
+        <target state="translated">The link may be incomplete; find the record from the list.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du dossier introuvable</note>
+      </trans-unit>
+      <trans-unit id="patientShell.session.alreadyOpen" datatype="html">
+        <source>Une séance est déjà ouverte pour ce dossier : l&apos;en-tête a été mis à jour.</source>
+        <target state="translated">A session is already open for this record: the header has been updated.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Toast, séance déjà ouverte ailleurs</note>
+      </trans-unit>
+      <trans-unit id="patientShell.session.alreadyClosed" datatype="html">
+        <source>Cette séance est déjà clôturée : l&apos;en-tête a été mis à jour.</source>
+        <target state="translated">This session is already closed: the header has been updated.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Toast, séance déjà clôturée ailleurs</note>
+      </trans-unit>
+      <trans-unit id="patientShell.session.failed" datatype="html">
+        <source>L&apos;action sur la séance n&apos;a pas abouti. Réessayez.</source>
+        <target state="translated">The session action did not go through. Try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <note priority="1" from="description">Toast, action de séance échouée</note>
+      </trans-unit>
+      <trans-unit id="patientShell.session.started" datatype="html">
+        <source>Séance démarrée.</source>
+        <target state="translated">Session started.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+        <note priority="1" from="description">Toast après le démarrage d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="patientShell.session.closed" datatype="html">
+        <source>Séance clôturée.</source>
+        <target state="translated">Session closed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+        <note priority="1" from="description">Toast après la clôture d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.title" datatype="html">
+        <source> Clôturer la séance
+</source>
+        <target state="translated">Close the session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.dialog.html</context>
+          <context context-type="linenumber">2,5</context>
+        </context-group>
+        <note priority="1" from="description">Titre du dialogue de clôture</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.duration" datatype="html">
+        <source>Durée (min)</source>
+        <target state="translated">Duration (min)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.dialog.html</context>
+          <context context-type="linenumber">13,17</context>
+        </context-group>
+        <note priority="1" from="description">Champ du dialogue de clôture</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.summary" datatype="html">
+        <source>Compte rendu (facultatif)</source>
+        <target state="translated">Summary (optional)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.dialog.html</context>
+          <context context-type="linenumber">44,48</context>
+        </context-group>
+        <note priority="1" from="description">Champ du dialogue de clôture</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.cancel" datatype="html">
+        <source> Annuler </source>
+        <target state="translated">Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.dialog.html</context>
+          <context context-type="linenumber">64,68</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du dialogue de clôture</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.confirm" datatype="html">
+        <source> Clôturer </source>
+        <target state="translated">Close</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.dialog.html</context>
+          <context context-type="linenumber">73,77</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du dialogue de clôture</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.durationRange" datatype="html">
+        <source> Une durée entière entre 1 et 600 minutes. </source>
+        <target state="translated">A whole number of minutes between 1 and 600.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.dialog.html</context>
+          <context context-type="linenumber">31,35</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de durée hors bornes</note>
+      </trans-unit>
+      <trans-unit id="patientShell.capture.placeholder" datatype="html">
+        <source>Noter quelque chose…</source>
+        <target state="translated">Note something…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/capture-bar.component.ts</context>
+          <context context-type="linenumber">20,21</context>
+        </context-group>
+        <note priority="1" from="description">Texte indicatif de la barre de capture</note>
+      </trans-unit>
+      <trans-unit id="patientShell.capture.label" datatype="html">
+        <source>Noter quelque chose</source>
+        <target state="translated">Note something</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/capture-bar.component.ts</context>
+          <context context-type="linenumber">13,18</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la barre de capture</note>
+      </trans-unit>
+      <trans-unit id="patientShell.error.heading" datatype="html">
+        <source> Dossier patient </source>
+        <target state="translated">Patient record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">Titre caché du dossier en erreur</note>
+      </trans-unit>
+      <trans-unit id="patientShell.error.back" datatype="html">
+        <source>Retour à la liste</source>
+        <target state="translated">Back to the list</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
+          <context context-type="linenumber">8,13</context>
+        </context-group>
+        <note priority="1" from="description">Lien de retour depuis un dossier en erreur</note>
+      </trans-unit>
+      <trans-unit id="patientShell.placeholder.text" datatype="html">
+        <source> Cet onglet s&apos;affichera ici. </source>
+        <target state="translated">This tab will appear here.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/tab-placeholder.page.ts</context>
+          <context context-type="linenumber">33,36</context>
+        </context-group>
+        <note priority="1" from="description">Texte d&apos;un onglet provisoire du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientShell.placeholder.counter" datatype="html">
+        <source>Compteur : <x id="INTERPOLATION" equiv-text="{{ count() }}"/></source>
+        <target state="translated">Counter: <x id="INTERPOLATION" equiv-text="{{ count() }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/tab-placeholder.page.ts</context>
+          <context context-type="linenumber">38,39</context>
+        </context-group>
+        <note priority="1" from="description">Compteur d&apos;un onglet provisoire</note>
+      </trans-unit>
+      <trans-unit id="patientShell.placeholder.sheetLink" datatype="html">
+        <source>Modifier la fiche</source>
+        <target state="translated">Edit the record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/tab-placeholder.page.ts</context>
+          <context context-type="linenumber">45,53</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la fiche depuis le dossier</note>
+      </trans-unit>
+      <trans-unit id="patientShell.overview.pageTitle" datatype="html">
+        <source>Vue d&apos;ensemble · PsyMate</source>
+        <target state="translated">Overview · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientShell.timeline.pageTitle" datatype="html">
+        <source>Timeline · PsyMate</source>
+        <target state="translated">Timeline · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientShell.graph.pageTitle" datatype="html">
+        <source>Graphe · PsyMate</source>
+        <target state="translated">Graph · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientShell.search.pageTitle" datatype="html">
+        <source>Recherche · PsyMate</source>
+        <target state="translated">Search · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet du dossier</note>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

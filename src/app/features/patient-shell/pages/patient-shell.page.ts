@@ -1,0 +1,153 @@
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  effect,
+  inject,
+  Injector,
+  input,
+  untracked,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { filter, firstValueFrom } from 'rxjs';
+
+import { ShortcutService } from '../../../core/shortcuts';
+import {
+  PatientHeaderComponent,
+  PatientSessionInfo,
+  StateComponent,
+  ToastService,
+} from '../../../shared/ui';
+import { StateKind } from '../../../shared/util';
+import { ShellTab } from '../data/patient-shell.model';
+import { PatientShellStore } from '../data/patient-shell.store';
+import { CloseSessionDialog, CloseSessionResult } from '../panels/close-session.dialog';
+import { CaptureBarComponent } from '../ui/capture-bar.component';
+import { finalLoadError, sessionProblemText, toHeaderInfo } from '../ui/shell-labels';
+
+/**
+ * Page patient /patients/:id (B2, fiche 00 §2) : l'en-tête permanent (pm-patient-header, nourri
+ * par le PatientShellStore), la barre de capture repliée, et l'onglet courant dans le
+ * router-outlet (overview, timeline, graph, search). Le store est fourni ici : les onglets
+ * l'injectent et y rangent leur état, qui survit aux changements d'onglet tant que le dossier
+ * reste ouvert. 403 PATIENT_FORBIDDEN et 404 : état erreur du shell, sans redirection.
+ */
+@Component({
+  selector: 'pm-patient-shell-page',
+  imports: [CaptureBarComponent, PatientHeaderComponent, RouterLink, RouterOutlet, StateComponent],
+  providers: [PatientShellStore],
+  templateUrl: './patient-shell.page.html',
+  styleUrl: './patient-shell.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class PatientShellPage {
+  /** :id de la route (withComponentInputBinding). */
+  readonly id = input.required<string>();
+
+  protected readonly store = inject(PatientShellStore);
+  private readonly dialog = inject(MatDialog);
+  private readonly toast = inject(ToastService);
+  private readonly shortcuts = inject(ShortcutService);
+  private readonly injector = inject(Injector);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly route = inject(ActivatedRoute);
+
+  private readonly navigated = toSignal(
+    inject(Router).events.pipe(filter((event) => event instanceof NavigationEnd)),
+  );
+
+  /** Onglet affiché (data.tab de la route enfant) : la bascule Vue n'existe que sur l'onglet 1. */
+  protected readonly activeTab = computed<ShellTab | null>(() => {
+    this.navigated();
+    return (this.route.firstChild?.snapshot.data['tab'] as ShellTab | undefined) ?? null;
+  });
+
+  protected readonly headerPatient = computed(() => {
+    const patient = this.store.patient();
+    return patient ? toHeaderInfo(patient) : null;
+  });
+
+  protected readonly headerSession = computed<PatientSessionInfo>(() => {
+    const current = this.store.currentSession();
+    if (current) return { kind: 'current', startedAt: current.startedAt };
+    const last = this.store.lastSession();
+    if (last) return { kind: 'last', date: last.startedAt };
+    return { kind: 'none' };
+  });
+
+  /** L'en-tête montre le chargement et l'erreur qu'un nouvel essai peut lever (5xx, réseau). */
+  protected readonly headerState = computed<StateKind | null>(() => {
+    if (this.store.patient()) return null;
+    return this.store.status() === 'error' ? 'error' : 'loading';
+  });
+
+  /** 403 PATIENT_FORBIDDEN, 404 : état erreur du shell, sans « Réessayer » ni redirection. */
+  protected readonly finalError = computed(() =>
+    this.store.status() === 'error' ? finalLoadError(this.store.problem()) : null,
+  );
+
+  constructor() {
+    // Un autre :id (lien, historique) recharge le dossier ; le même :id ne refait rien.
+    effect(() => {
+      const id = this.id();
+      untracked(() => {
+        if (this.store.patientId() !== id) void this.store.load(id);
+      });
+    });
+  }
+
+  protected reload(): void {
+    void this.store.load(this.id());
+  }
+
+  protected async start(): Promise<void> {
+    if (await this.store.startSession()) {
+      this.toast.success(
+        $localize`:Toast après le démarrage d'une séance@@patientShell.session.started:Séance démarrée.`,
+      );
+      this.focusSessionButton('.close-session');
+    } else if (this.store.actionProblem()) {
+      this.toast.warning(sessionProblemText(this.store.actionProblem()));
+    }
+  }
+
+  /** Dialogue durée + compte rendu ; les touches globales sont suspendues tant qu'il est ouvert. */
+  protected async openClose(): Promise<void> {
+    this.shortcuts.enabled.set(false);
+    const ref = this.dialog.open<CloseSessionDialog, void, CloseSessionResult>(CloseSessionDialog, {
+      injector: this.injector,
+      role: 'dialog',
+      ariaModal: true,
+      autoFocus: 'first-tabbable',
+      restoreFocus: true,
+      width: '480px',
+      maxWidth: 'calc(100vw - 32px)',
+    });
+    const result = await firstValueFrom(ref.afterClosed());
+    this.shortcuts.enabled.set(true);
+    if (result === 'closed') {
+      this.toast.success(
+        $localize`:Toast après la clôture d'une séance@@patientShell.session.closed:Séance clôturée.`,
+      );
+      this.focusSessionButton('.start-session');
+    } else if (result === 'conflict') {
+      this.toast.warning(sessionProblemText(this.store.actionProblem()));
+    }
+    this.store.clearActionProblem();
+  }
+
+  /**
+   * Démarrer et Clôturer s'échangent dans l'en-tête : le focus suit le bouton qui remplace celui
+   * qu'on vient d'utiliser, au lieu de retomber sur le corps de la page.
+   */
+  private focusSessionButton(selector: string): void {
+    afterNextRender(
+      () => this.host.nativeElement.querySelector<HTMLButtonElement>(selector)?.focus(),
+      { injector: this.injector },
+    );
+  }
+}

@@ -1,0 +1,74 @@
+<h2 mat-dialog-title class="title" i18n="Titre du dialogue de clôture@@patientShell.close.title">
+  Clôturer la séance
+</h2>
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <mat-dialog-content class="content">
+    @if (generalError(); as message) {
+      <p class="general-error" role="alert">{{ message }}</p>
+    }
+    <div class="field">
+      <label
+        [for]="fid('durationMin')"
+        i18n="Champ du dialogue de clôture@@patientShell.close.duration"
+        >Durée (min)</label
+      >
+      <input
+        [id]="fid('durationMin')"
+        type="text"
+        inputmode="numeric"
+        autocomplete="off"
+        class="duration"
+        formControlName="durationMin"
+        [attr.aria-invalid]="invalid(form.controls.durationMin)"
+        [attr.aria-describedby]="fid('durationMin') + '-error'"
+      />
+      @if (rangeError()) {
+        <p
+          class="field-error"
+          [id]="fid('durationMin') + '-error'"
+          i18n="Erreur de durée hors bornes@@patientShell.close.durationRange"
+        >
+          Une durée entière entre 1 et 600 minutes.
+        </p>
+      } @else {
+        <pm-field-errors
+          [control]="form.controls.durationMin"
+          [id]="fid('durationMin') + '-error'"
+        />
+      }
+    </div>
+    <div class="field">
+      <label [for]="fid('summary')" i18n="Champ du dialogue de clôture@@patientShell.close.summary"
+        >Compte rendu (facultatif)</label
+      >
+      <textarea
+        [id]="fid('summary')"
+        rows="5"
+        formControlName="summary"
+        [attr.aria-invalid]="invalid(form.controls.summary)"
+        [attr.aria-describedby]="fid('summary') + '-error'"
+      ></textarea>
+      <pm-field-errors [control]="form.controls.summary" [id]="fid('summary') + '-error'" />
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      mat-stroked-button
+      type="button"
+      class="cancel"
+      (click)="cancel()"
+      i18n="Bouton du dialogue de clôture@@patientShell.close.cancel"
+    >
+      Annuler
+    </button>
+    <button
+      mat-flat-button
+      type="submit"
+      class="confirm"
+      [disabled]="store.busy()"
+      i18n="Bouton du dialogue de clôture@@patientShell.close.confirm"
+    >
+      Clôturer
+    </button>
+  </mat-dialog-actions>
+</form>
