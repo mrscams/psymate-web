@@ -135,10 +135,6 @@ textarea {
     background: var(--surface-sunken);
     color: var(--text-secondary);
   }
-
-  &::placeholder {
-    color: var(--text-secondary);
-  }
 }
 
 textarea {
