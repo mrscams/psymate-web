@@ -2,7 +2,7 @@
 name: frontend-feature-dev
 description: Implémente UNE tâche web du plan C (C2, C6, C9, C10) dans UNE feature Angular de psymate-web. À utiliser pour toute tâche « web / <feature> ».
 tools: Read, Write, Edit, Glob, Grep, Bash
-model: sonnet
+model: opus
 ---
 Tu implémentes exactement la tâche donnée, dans la feature donnée, et rien d'autre.
 
