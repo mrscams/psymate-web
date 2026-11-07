@@ -1,0 +1,256 @@
+<div class="account">
+  <pm-account-nav
+    [name]="displayName()"
+    [subtitle]="subtitle()"
+    [verificationStatus]="session.verificationStatus()"
+  />
+
+  <div class="content">
+    <header class="page-header">
+      <div>
+        <h1 i18n="Titre de la page Préférences@@preferences.title">Préférences</h1>
+        <p class="intro" i18n="Introduction de la page Préférences@@preferences.intro">
+          Mémorisées sur votre compte : vous les retrouvez sur tous vos appareils. Chaque changement
+          est enregistré immédiatement.
+        </p>
+      </div>
+      <p class="saved" role="status" aria-live="polite">{{ savedText() }}</p>
+    </header>
+
+    <pm-state [kind]="stateKind()" skeleton="block" [lines]="4" [action]="retry" />
+
+    @if (stateKind() === null) {
+      <section class="card" aria-labelledby="h-display">
+        <h2 id="h-display" i18n="Section Affichage@@preferences.section.display">Affichage</h2>
+        <div class="rows">
+          <pm-setting-row
+            id="overview-view"
+            label="Vue d'ensemble par défaut"
+            i18n-label="Réglage de la vue d'ensemble@@preferences.view.label"
+            help="Aussi modifiable depuis la page du patient."
+            i18n-help="Aide du réglage de la vue d'ensemble@@preferences.view.help"
+          >
+            <pm-segmented-control
+              [options]="viewOptions"
+              [value]="prefs.overviewView()"
+              labelledBy="overview-view-label"
+              describedBy="overview-view-help"
+              (valueChange)="setView($event)"
+            />
+          </pm-setting-row>
+
+          <pm-setting-row
+            id="overview-window"
+            label="Fenêtre d'analyse"
+            i18n-label="Réglage de la fenêtre d'analyse@@preferences.window.label"
+            help="Pour la tendance des ressentis et les situations actives."
+            i18n-help="Aide du réglage de la fenêtre@@preferences.window.help"
+          >
+            <pm-segmented-control
+              [options]="windowOptions"
+              [value]="prefs.overviewWindow()"
+              labelledBy="overview-window-label"
+              describedBy="overview-window-help"
+              (valueChange)="setWindow($event)"
+            />
+          </pm-setting-row>
+
+          <pm-setting-row
+            id="timeline-group"
+            label="Timeline"
+            i18n-label="Réglage du regroupement de la timeline@@preferences.groupBy.label"
+            help="Regroupement par défaut."
+            i18n-help="Aide du regroupement de la timeline@@preferences.groupBy.help"
+          >
+            <pm-segmented-control
+              [options]="groupByOptions"
+              [value]="prefs.timelineGroupBy()"
+              labelledBy="timeline-group-label"
+              describedBy="timeline-group-help"
+              (valueChange)="setGroupBy($event)"
+            />
+          </pm-setting-row>
+
+          <pm-setting-row
+            id="theme"
+            label="Thème"
+            i18n-label="Réglage du thème@@preferences.theme.label"
+            help="« Doux » réduit les contrastes pour les longues sessions."
+            i18n-help="Aide du réglage du thème@@preferences.theme.help"
+          >
+            <pm-theme-picker
+              [value]="prefs.theme()"
+              labelledBy="theme-label"
+              describedBy="theme-help"
+              (valueChange)="setTheme($event)"
+            />
+          </pm-setting-row>
+
+          <pm-setting-row
+            id="locale"
+            label="Langue"
+            i18n-label="Réglage de la langue@@preferences.locale.label"
+            help="Interface et vocabulaire. Vos entrées ne sont pas traduites."
+            i18n-help="Aide du réglage de la langue@@preferences.locale.help"
+          >
+            <select
+              class="select"
+              aria-labelledby="locale-label"
+              aria-describedby="locale-help"
+              [value]="prefs.locale()"
+              (change)="setLocale($event)"
+            >
+              <option value="fr" i18n="Option Français@@preferences.locale.fr">Français</option>
+              <option value="en" i18n="Option English, traduction partielle@@preferences.locale.en">
+                English · traduction partielle
+              </option>
+            </select>
+          </pm-setting-row>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="h-vocabulary">
+        <h2 id="h-vocabulary" i18n="Section Vocabulaire et saisie@@preferences.section.vocabulary">
+          Vocabulaire et saisie
+        </h2>
+        <div class="rows">
+          <pm-setting-row
+            id="subject"
+            label="Désignation des personnes suivies"
+            i18n-label="Réglage de la désignation@@preferences.subject.label"
+            help="Les coachs préfèrent souvent « client ». Actuellement : « {{
+              'many' | subjectLabel
+            }} »."
+            i18n-help="Aide du réglage de la désignation@@preferences.subject.help"
+          >
+            <pm-segmented-control
+              [options]="subjectOptions"
+              [value]="prefs.subjectLabel()"
+              labelledBy="subject-label"
+              describedBy="subject-help"
+              (valueChange)="setSubject($event)"
+            />
+          </pm-setting-row>
+
+          <pm-setting-row
+            id="medication"
+            label="Type « médicament »"
+            i18n-label="Réglage du type médicament@@preferences.medication.label"
+            help="Masqué par défaut pour les psychologues et les coachs."
+            i18n-help="Aide du réglage du type médicament@@preferences.medication.help"
+          >
+            <mat-slide-toggle
+              [checked]="prefs.medicationVisible()"
+              aria-describedby="medication-help"
+              (change)="setMedication($event.checked)"
+              i18n="Interrupteur du type médicament@@preferences.medication.toggle"
+            >
+              Afficher le type médicament dans la saisie et la timeline
+            </mat-slide-toggle>
+          </pm-setting-row>
+
+          <pm-setting-row
+            id="visibility"
+            label="Visibilité par défaut des nouvelles entrées"
+            i18n-label="Réglage de la visibilité par défaut@@preferences.visibility.label"
+            help="« Privée » exclut l'entrée des exports et des partages futurs."
+            i18n-help="Aide du réglage de la visibilité@@preferences.visibility.help"
+          >
+            <pm-segmented-control
+              [options]="visibilityOptions"
+              [value]="prefs.defaultVisibility()"
+              labelledBy="visibility-label"
+              describedBy="visibility-help"
+              (valueChange)="setVisibility($event)"
+            />
+          </pm-setting-row>
+
+          <pm-setting-row
+            id="duration"
+            label="Durée de séance par défaut"
+            i18n-label="Réglage de la durée de séance@@preferences.duration.label"
+            help="Pré-remplie à l'ouverture d'une séance, entre 15 et 180 minutes."
+            i18n-help="Aide du réglage de la durée de séance@@preferences.duration.help"
+          >
+            <input
+              class="number"
+              type="number"
+              inputmode="numeric"
+              min="15"
+              max="180"
+              step="1"
+              aria-labelledby="duration-label"
+              aria-describedby="duration-help"
+              [value]="prefs.defaultDurationMin()"
+              (change)="setDuration($event)"
+            />
+            <span class="unit" i18n="Unité minutes@@preferences.duration.unit">min</span>
+          </pm-setting-row>
+
+          <pm-setting-row
+            id="grace"
+            label="Délai de correction sans version"
+            i18n-label="Délai de correction sans version@@preferences.grace.label"
+            help="Pendant ce délai, corriger une entrée ne crée pas de nouvelle version."
+            i18n-help="Aide du délai de correction@@preferences.grace.help"
+          >
+            <span class="mono" aria-labelledby="grace-label" aria-describedby="grace-help">
+              <ng-container i18n="Valeur du délai de correction (G Q31)@@preferences.grace.value"
+                >1 h 15</ng-container
+              >
+            </span>
+            <span class="unit" i18n="Mention du délai fixé en V1@@preferences.grace.fixed"
+              >· fixé par l'application en V1</span
+            >
+          </pm-setting-row>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="h-emotions">
+        <div class="card-header">
+          <h2 id="h-emotions" i18n="Section Émotions personnalisées@@preferences.section.emotions">
+            Émotions personnalisées
+          </h2>
+          <a
+            [routerLink]="paths.emotions"
+            i18n="Lien vers la page des émotions@@preferences.emotions.link"
+            >Gérer la liste complète</a
+          >
+        </div>
+        <p
+          class="muted"
+          i18n="Texte de la section Émotions personnalisées@@preferences.emotions.text"
+        >
+          Vos émotions ajoutées au vocabulaire. Chacune est rattachée à une famille, ce qui permet
+          de la placer dans les courbes et le graphe. La liste, ses usages et sa gestion sont sur la
+          page dédiée.
+        </p>
+      </section>
+
+      <section class="card" aria-labelledby="h-security">
+        <div class="card-header">
+          <h2 id="h-security" i18n="Section Compte et sécurité@@preferences.section.security">
+            Compte et sécurité
+          </h2>
+          <a
+            [routerLink]="paths.security"
+            i18n="Lien vers Compte et sécurité@@preferences.security.link"
+            >Tout voir</a
+          >
+        </div>
+        <dl class="summary">
+          <div class="tile">
+            <dt i18n="E-mail de connexion@@preferences.security.email">E-mail de connexion</dt>
+            <dd>{{ session.me()?.email }}</dd>
+          </div>
+          <div class="tile">
+            <dt i18n="Double authentification@@preferences.security.twoFactor">
+              Double authentification
+            </dt>
+            <dd [class.success]="session.twoFactorEnabled()">{{ twoFactorText() }}</dd>
+          </div>
+        </dl>
+      </section>
+    }
+  </div>
+</div>
