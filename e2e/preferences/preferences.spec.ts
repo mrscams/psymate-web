@@ -212,7 +212,7 @@ test('langue : English recharge la page dans l’autre bundle, et la préférenc
   const otherPage = await other.newPage();
   await otherPage.goto('/fr/connexion');
   await otherPage.getByLabel('Adresse e-mail').fill(account.email);
-  await otherPage.getByLabel('Mot de passe').fill(account.password);
+  await otherPage.getByLabel('Mot de passe', { exact: true }).fill(account.password);
   await otherPage.getByRole('button', { name: 'Se connecter' }).click();
   await expect(otherPage).toHaveURL(/\/en\/patients$/);
   await other.close();

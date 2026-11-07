@@ -39,7 +39,9 @@ export async function createAccount(
 export async function signIn(page: Page, account: TestAccount, locale = 'fr'): Promise<void> {
   await page.goto(`/${locale}/connexion`);
   await page.getByLabel(locale === 'fr' ? 'Adresse e-mail' : 'Email address').fill(account.email);
-  await page.getByLabel(locale === 'fr' ? 'Mot de passe' : 'Password').fill(account.password);
+  await page
+    .getByLabel(locale === 'fr' ? 'Mot de passe' : 'Password', { exact: true })
+    .fill(account.password);
   await page.getByRole('button', { name: locale === 'fr' ? 'Se connecter' : 'Sign in' }).click();
   await expect(page).toHaveURL(new RegExp(`/${locale}/patients$`));
 }
