@@ -258,6 +258,16 @@ test.describe('pages publiques sans données', () => {
     await noJs.close();
 
     await page.goto('/fr/comment-ca-marche');
+    // Après hydratation : URL canonique et hreflang absolues (Lighthouse SEO).
+    const origin = new URL(page.url()).origin;
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      `${origin}/fr/comment-ca-marche`,
+    );
+    await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
+      'href',
+      `${origin}/en/comment-ca-marche`,
+    );
     await expect(page.locator('body')).not.toContainText(/google|agenda|signal/i);
     await expect(page.locator('body')).not.toContainText(EMERGENCY);
     await page.getByRole('link', { name: "Parcourir l'annuaire" }).click();

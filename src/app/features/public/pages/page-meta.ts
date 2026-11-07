@@ -1,5 +1,5 @@
-import { DOCUMENT, PlatformLocation } from '@angular/common';
-import { DestroyRef, inject, Injectable } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser, PlatformLocation } from '@angular/common';
+import { DestroyRef, inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 
 import { APP_LOCALES } from '../../../core/i18n';
@@ -33,6 +33,14 @@ export class PublicMeta {
   private readonly title = inject(Title);
   private readonly document = inject(DOCUMENT);
   private readonly baseHref = inject(PlatformLocation).getBaseHrefFromDOM() ?? '/';
+  /**
+   * Origine du site pour des URL canonique et hreflang absolues (Lighthouse, Google). Connue dans le
+   * navigateur seulement : au prérendu, aucune URL de production n'est écrite (CLAUDE.md), le HTML
+   * statique garde des liens relatifs, remplacés par des absolus à l'hydratation.
+   */
+  private readonly origin = isPlatformBrowser(inject(PLATFORM_ID))
+    ? (this.document.location?.origin ?? '')
+    : '';
 
   /** Pose les balises et les retire à la destruction de la page appelante. */
   apply(page: PublicPageMeta, destroyRef?: DestroyRef): void {
@@ -62,12 +70,12 @@ export class PublicMeta {
     this.meta.updateTag({ [attribute]: key, content }, `${attribute}="${key}"`);
   }
 
-  /** URL canonique et alternatives fr / en, relatives à la racine du site (/fr/…, /en/…). */
+  /** URL canonique et alternatives fr / en (absolues dans le navigateur, relatives au prérendu). */
   private links(path: string | null): void {
     this.document.head.querySelectorAll(`link${MANAGED_SELECTOR}`).forEach((node) => node.remove());
     if (path === null) return;
     const root = this.baseHref.replace(/\/(fr|en)\/?$/, '/').replace(/\/?$/, '/');
-    const href = (locale: string) => `${root}${locale}${path}`;
+    const href = (locale: string) => `${this.origin}${root}${locale}${path}`;
     const current = /\/en\/?$/.test(this.baseHref) ? 'en' : 'fr';
     this.link({ rel: 'canonical', href: href(current) });
     for (const locale of APP_LOCALES) {

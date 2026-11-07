@@ -80,7 +80,7 @@ describe('DirectoryPage', () => {
     expect(robots?.getAttribute('content')).toBe('index,follow');
     expect(
       TestBed.inject(DOCUMENT).head.querySelector('link[rel="canonical"]')?.getAttribute('href'),
-    ).toBe('/fr/annuaire');
+    ).toBe(`${TestBed.inject(DOCUMENT).location.origin}/fr/annuaire`);
   });
 
   it('facettes : les compteurs suivent chaque réponse', async () => {
