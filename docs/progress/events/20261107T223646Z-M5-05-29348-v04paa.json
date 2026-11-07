@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-07T22:36:46.922Z",
+  "task": "M5-05",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Pages publiques : annuaire (recherche, facettes, pagination, état vide), fiche praticien avec contact (honeypot, délai minimal, 429), comment ça marche ; prérendu SSR de /annuaire et /comment-ca-marche",
+  "notes": "Branche claude/m5-05-public-7915ef (pas de PR, consigne). lint, check:tokens, test (462), build, e2e tous dossiers (57, port 4500) verts ; axe 0 violation sur les 3 pages FR/EN ; Lighthouse non lancé (téléchargement refusé), axe-core à la place. Dépendances : @angular/ssr 22.2.6, @angular/platform-server 22.2.5. Fiche non prérendue (slugs inconnus au build, fiche 09 : V1.1). Sortie : index.csr.html + pages prérendues, serve-dist adapté. Budget initial 865 kB (810 avant). Revue : 1 bloquant (#contact) corrigé, à corriger traités.",
+  "next": "Rebase et PR par la session parente ; e2e flux 7 exige PSYMATE_E2E_ADMIN_* (seed sans fiche publiée) ; hébergement statique à aligner sur index.csr.html",
+  "branch": "claude/m5-05-public-7915ef",
+  "checkout": "m5-05-public-7915ef"
+}
