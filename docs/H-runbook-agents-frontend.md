@@ -27,7 +27,7 @@ Les prompts renvoient aux documents de `psymate-web/docs/` : `B-ux.md` (expérie
 | # | Décision |
 | --- | --- |
 | G Q1, Q2 | Produit **PsyMate** (jamais « Suivi »), dépôt `mrscams/psymate-web`, domaine psymate.com. |
-| C « Build frontend » | **Angular 22**, Material 22 (M3), **pnpm**, Node 24 (G Q50), zoneless, standalone, Signal Forms, `@ngrx/signals`, cytoscape, echarts, openapi-generator, Vitest, Playwright. Versions figées. Le scaffold Angular 21 / npm actuel est remplacé par M0-06 (voir « À trancher » ci-dessous). |
+| C « Build frontend » | **Angular 22**, Material 22 (M3), **pnpm**, Node 24 (G Q50), zoneless, standalone, Signal Forms, `@ngrx/signals`, cytoscape, echarts, openapi-generator, Vitest, Playwright. Versions figées. Le scaffold Angular 21 / npm actuel est remplacé par M0-06 (G Q51). |
 | G Q6 | Session par cookie, 12 h, 30 j avec « rester connecté » : aucun jeton côté web. |
 | G Q15 | Spécialités et publics : liste fermée (`GET /api/public/directory/vocabulary` côté public, `GET /api/vocabulary/directory` côté praticien), jamais de saisie libre. |
 | G Q20 | Pas de numéros d'urgence sur les pages publiques. |
@@ -40,7 +40,7 @@ Les prompts renvoient aux documents de `psymate-web/docs/` : `B-ux.md` (expérie
 | Contrat | `contract-v0.11.0` couvre toute la V1 web (M10-01 à M10-06 fusionnées). Aucune tâche web n'attend le backend. |
 | Handbook | Les 14 règles de `architecture-frontend.html` §11 sont la base du `CLAUDE.md` web (Partie 2). |
 
-**À trancher dans G avant M0-06** (une ligne à ajouter, puis à citer dans le prompt de M0-06) : Angular 22 + pnpm comme le plan C (recommandé : Signal Forms stables, support jusqu'en 2028), ou rester sur Angular 21 + npm du scaffold. Le reste de H est écrit pour 22 + pnpm ; si 21 est retenu, remplacer `pnpm` par `npm run` et Signal Forms par Reactive Forms dans les prompts.
+**Tranché le 7 novembre 2026** : Angular 22 + pnpm (G Q51), sur Node 24 (G Q50). H s'applique tel qu'écrit ; le scaffold Angular 21 / npm est remplacé par M0-06.
 
 ---
 
@@ -237,7 +237,7 @@ Chaque lot indique : ce qu'il faut avoir fusionné avant ; les agents à lancer 
 
 ## Lot 0 — Le socle
 
-**Avant de lancer** : Partie 2 terminée ; la décision Angular 22 / pnpm écrite dans G.
+**Avant de lancer** : Partie 2 terminée ; la décision Angular 22 / pnpm écrite dans G (Q51, fait).
 **Agents** : M0-06 seul, puis M0-07 seul, puis M0-09 seul (chacun pose ce que le suivant utilise).
 
 ### Agent 1 · tâche M0-06 — Initialiser `psymate-web`
@@ -251,7 +251,7 @@ claude --worktree M0-06
 ```text
 Tâche M0-06 — Initialiser psymate-web (dépôt psymate-web, racine). Utilise l'agent frontend-feature-dev.
 
-Contexte : lis CLAUDE.md, docs/C-plan.md « Décisions d'outillage » (Build frontend, Versions, CI) et C2 ligne M0-06, docs/G-decisions.md (la ligne Angular 22 / pnpm, et Q50 : Node 24 figé dans engines.node, .nvmrc et la CI), docs/B-ux.md B7 (bibliothèque de composants, i18n, accessibilité), docs/Etude-couleurs-Nordique.md §8 (thème Material et variables CSS, test de non-régression), docs/handbook/architecture-frontend.html §3 (arborescence) et §12.
+Contexte : lis CLAUDE.md, docs/C-plan.md « Décisions d'outillage » (Build frontend, Versions, CI) et C2 ligne M0-06, docs/G-decisions.md (Q51 : Angular 22 + pnpm ; Q50 : Node 24 figé dans engines.node, .nvmrc et la CI), docs/B-ux.md B7 (bibliothèque de composants, i18n, accessibilité), docs/Etude-couleurs-Nordique.md §8 (thème Material et variables CSS, test de non-régression), docs/handbook/architecture-frontend.html §3 (arborescence) et §12.
 
 Objectif : un projet Angular 22 (CLI 22, standalone, zoneless, provideExperimentalZonelessChangeDetection ou l'équivalent stable de la ligne 22 : vérifie dans la documentation officielle, pas de mémoire), géré par pnpm (packageManager figé), avec Angular Material 22 (M3) dont le thème est construit à partir de src/theme/tokens.css (variables de l'étude §8, thèmes light / dark / soft par data-theme), @angular/localize avec messages.fr.xlf source et messages.en.xlf, ESLint + Prettier avec les règles : no-hardcoded-color (aucun hexa dans src/app hors theme), eslint-plugin-boundaries (éléments core, shared, api, feature : une feature n'importe pas l'intérieur d'une autre ; api importé seulement depuis **/data/*.api.ts ; admin n'importe aucune feature patient), Vitest (pnpm test), Playwright avec axe-core (pnpm e2e, config qui attend http://localhost:8080/actuator/health), script pnpm check:tokens (tools/check-tokens.mjs : contraste ≥ 4,5:1 texte et 3:1 icônes pour chaque couple déclaré, deux thèmes), proxy.conf.json /api → :8080, arborescence vide de docs/handbook §3 (core/, api/ vide avec un README « généré », shared/, features/ avec un README), .github/workflows/ci.yml (lint → check:tokens → test → build → e2e avec l'API psymate-api en service Docker et Postgres, seed small). Budgets de build raisonnables. Supprime l'ancien scaffold (caseload, patient-detail).
 
