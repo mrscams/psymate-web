@@ -2,13 +2,17 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { routes } from './app.routes';
+import { provideApiClient, provideSessionInitializer } from './core/auth';
+import { provideHttpLayer } from './core/http';
 
 // Zoneless : c'est le mode par défaut depuis Angular 21 (angular.dev/guide/zoneless) ; zone.js
 // n'est ni installé ni chargé, et provideZoneChangeDetection() ne doit jamais apparaître ici.
-// HttpClient et les intercepteurs (core/http) arrivent avec M0-07.
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
+    provideHttpLayer(),
+    provideApiClient(),
+    provideSessionInitializer(),
   ],
 };

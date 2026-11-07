@@ -14,7 +14,7 @@
         <source>Langue</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">6</context>
         </context-group>
         <note priority="1" from="description">Étiquette de la navigation de langue</note>
       </trans-unit>
@@ -22,25 +22,249 @@
         <source>English</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">10,16</context>
+          <context context-type="linenumber">14,18</context>
         </context-group>
         <note priority="1" from="description">Lien vers l&apos;autre langue, écrit dans cette autre langue</note>
       </trans-unit>
-      <trans-unit id="app.home.title" datatype="html">
-        <source>Bienvenue dans PsyMate</source>
+      <trans-unit id="app.logout" datatype="html">
+        <source> Se déconnecter </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">16,17</context>
+          <context context-type="linenumber">26,32</context>
         </context-group>
-        <note priority="1" from="description">Titre de la page d&apos;accueil provisoire</note>
+        <note priority="1" from="description">Bouton de déconnexion provisoire</note>
       </trans-unit>
-      <trans-unit id="app.home.body" datatype="html">
-        <source> Le socle de l&apos;application est en place. Les écrans arrivent avec les prochaines tâches. </source>
+      <trans-unit id="auth.login.pageTitle" datatype="html">
+        <source>Connexion · PsyMate</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">18,22</context>
+          <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
+          <context context-type="linenumber">13</context>
         </context-group>
-        <note priority="1" from="description">Texte de la page d&apos;accueil provisoire</note>
+        <note priority="1" from="description">Titre d&apos;onglet de la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.state.confirmEmail.pageTitle" datatype="html">
+        <source>Confirmer l&apos;e-mail · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet, e-mail à confirmer</note>
+      </trans-unit>
+      <trans-unit id="auth.state.suspended.pageTitle" datatype="html">
+        <source>Compte suspendu · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet, compte suspendu</note>
+      </trans-unit>
+      <trans-unit id="auth.state.firstLogin.pageTitle" datatype="html">
+        <source>Première connexion · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet, première connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.state.back" datatype="html">
+        <source>Retour à la connexion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">20,26</context>
+        </context-group>
+        <note priority="1" from="description">Lien de retour vers la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.state.confirmEmail.title" datatype="html">
+        <source>Confirmez votre adresse e-mail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">Titre provisoire, e-mail à confirmer</note>
+      </trans-unit>
+      <trans-unit id="auth.state.confirmEmail.body" datatype="html">
+        <source>Un lien de confirmation vous a été envoyé. Ouvrez-le pour accéder à votre espace.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Texte provisoire, e-mail à confirmer</note>
+      </trans-unit>
+      <trans-unit id="auth.state.suspended.title" datatype="html">
+        <source>Compte suspendu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <note priority="1" from="description">Titre provisoire, compte suspendu</note>
+      </trans-unit>
+      <trans-unit id="auth.state.suspended.body" datatype="html">
+        <source>Votre compte n&apos;est pas actif. Le motif vous a été envoyé par e-mail.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">Texte provisoire, compte suspendu</note>
+      </trans-unit>
+      <trans-unit id="auth.state.firstLogin.title" datatype="html">
+        <source>Première connexion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Titre provisoire, première connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.state.firstLogin.body" datatype="html">
+        <source>Votre compte doit d&apos;abord changer son mot de passe et activer la double authentification.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">Texte provisoire, première connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.title" datatype="html">
+        <source>Connexion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">2,6</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;écran de connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.email" datatype="html">
+        <source>Adresse e-mail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">12,13</context>
+        </context-group>
+        <note priority="1" from="description">Champ e-mail de la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.email.required" datatype="html">
+        <source>Saisissez votre adresse e-mail.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">16,18</context>
+        </context-group>
+        <note priority="1" from="description">E-mail manquant</note>
+      </trans-unit>
+      <trans-unit id="auth.login.email.invalid" datatype="html">
+        <source>Cette adresse e-mail n&apos;est pas valide.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">20,25</context>
+        </context-group>
+        <note priority="1" from="description">E-mail mal formé</note>
+      </trans-unit>
+      <trans-unit id="auth.login.password" datatype="html">
+        <source>Mot de passe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">26,30</context>
+        </context-group>
+        <note priority="1" from="description">Champ mot de passe de la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.password.required" datatype="html">
+        <source>Saisissez votre mot de passe.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">37,42</context>
+        </context-group>
+        <note priority="1" from="description">Mot de passe manquant</note>
+      </trans-unit>
+      <trans-unit id="auth.login.otp.title" datatype="html">
+        <source> Double authentification activée </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">45,47</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc code 2FA</note>
+      </trans-unit>
+      <trans-unit id="auth.login.otp" datatype="html">
+        <source>Code de vérification</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">49,52</context>
+        </context-group>
+        <note priority="1" from="description">Champ code de vérification</note>
+      </trans-unit>
+      <trans-unit id="auth.login.otp.hint" datatype="html">
+        <source>Les 6 chiffres de votre application, ou un code de secours.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">62,65</context>
+        </context-group>
+        <note priority="1" from="description">Aide du champ code 2FA</note>
+      </trans-unit>
+      <trans-unit id="auth.login.remember" datatype="html">
+        <source>Rester connecté 30 jours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">69,73</context>
+        </context-group>
+        <note priority="1" from="description">Case rester connecté (G Q6)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.locked" datatype="html">
+        <source> Trop d&apos;essais. Réessayez dans <x id="INTERPOLATION" equiv-text="{{ lockDelay() }}"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">74,76</context>
+        </context-group>
+        <note priority="1" from="description">Compte verrouillé, compte à rebours</note>
+      </trans-unit>
+      <trans-unit id="auth.login.submit" datatype="html">
+        <source> Se connecter </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">86,90</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.error.credentials" datatype="html">
+        <source>E-mail, mot de passe ou code incorrect.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <note priority="1" from="description">Connexion refusée, message unique (fiche 11)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.error.invalid" datatype="html">
+        <source>Vérifiez l&apos;adresse e-mail et le mot de passe saisis.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <note priority="1" from="description">Connexion refusée, champ mal formé</note>
+      </trans-unit>
+      <trans-unit id="auth.login.error.unavailable" datatype="html">
+        <source>Connexion impossible pour le moment. Réessayez dans un instant.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Connexion impossible, serveur ou réseau</note>
+      </trans-unit>
+      <trans-unit id="patients.list.title" datatype="html">
+        <source>Mes patients</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.list.placeholder" datatype="html">
+        <source> La liste de vos patients s&apos;affichera ici. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">12,18</context>
+        </context-group>
+        <note priority="1" from="description">Texte provisoire de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.list.pageTitle" datatype="html">
+        <source>Mes patients · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/patients.routes.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de la liste des patients</note>
       </trans-unit>
     </body>
   </file>
