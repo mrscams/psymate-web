@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { guestGuard } from '../../core/auth';
+import { firstLoginGuard } from './first-login.guard';
 import { AccountStatePage } from './pages/account-state.page';
 import { ConfirmEmailPage } from './pages/confirm-email.page';
 import { LoginPage } from './pages/login.page';
@@ -53,10 +54,13 @@ export const AUTH_ROUTES: Routes = [
     component: SuspendedPage,
     title: $localize`:Titre d'onglet, compte suspendu@@auth.state.suspended.pageTitle:Compte suspendu · PsyMate`,
   },
+  // Fiche 18 C (M1-17) : écran bloquant avec sa propre barre sombre (layout bare), chargé à part
+  // car il embarque les briques de sécurité de features/account.
   {
     path: 'premiere-connexion',
-    component: AccountStatePage,
-    data: { kind: 'first-login' },
+    canActivate: [firstLoginGuard],
+    data: { layout: 'bare' },
+    loadComponent: () => import('./pages/first-login.page').then((m) => m.FirstLoginPage),
     title: $localize`:Titre d'onglet, première connexion@@auth.state.firstLogin.pageTitle:Première connexion · PsyMate`,
   },
 ];
