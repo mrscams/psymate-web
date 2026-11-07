@@ -1,0 +1,133 @@
+<form
+  class="upload"
+  [class.dragging]="dragging()"
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave()"
+  (drop)="onDrop($event)"
+  aria-labelledby="upload-title"
+  novalidate
+>
+  <h3 id="upload-title" i18n="Titre du formulaire d'ajout@@account.verification.upload.title">
+    Ajouter un justificatif
+  </h3>
+  <div class="grid">
+    <div class="field">
+      <label [for]="fieldId('type')" i18n="Champ type de document@@account.verification.upload.type"
+        >Type de document</label
+      >
+      <select
+        [id]="fieldId('type')"
+        formControlName="type"
+        required
+        [attr.aria-invalid]="form.controls.type.invalid && form.controls.type.touched"
+        [attr.aria-describedby]="fieldId('type') + '-error'"
+      >
+        <option
+          value=""
+          disabled
+          i18n="Option vide du type@@account.verification.upload.type.placeholder"
+        >
+          Choisir…
+        </option>
+        @for (type of types; track type) {
+          <option [value]="type">{{ typeLabel(type) }}</option>
+        }
+      </select>
+      <pm-field-errors [control]="form.controls.type" [id]="fieldId('type') + '-error'" />
+    </div>
+    <div class="field">
+      <label [for]="fieldId('title')" i18n="Champ intitulé@@account.verification.upload.docTitle"
+        >Intitulé</label
+      >
+      <input
+        [id]="fieldId('title')"
+        type="text"
+        formControlName="title"
+        required
+        [attr.aria-invalid]="form.controls.title.invalid && form.controls.title.touched"
+        [attr.aria-describedby]="fieldId('title') + '-error'"
+      />
+      <pm-field-errors [control]="form.controls.title" [id]="fieldId('title') + '-error'" />
+    </div>
+    <div class="field">
+      <label
+        [for]="fieldId('issuer')"
+        i18n="Champ établissement@@account.verification.upload.issuer"
+        >Établissement ou organisme</label
+      >
+      <input
+        [id]="fieldId('issuer')"
+        type="text"
+        formControlName="issuer"
+        [attr.aria-invalid]="form.controls.issuer.invalid && form.controls.issuer.touched"
+        [attr.aria-describedby]="fieldId('issuer') + '-error'"
+      />
+      <pm-field-errors [control]="form.controls.issuer" [id]="fieldId('issuer') + '-error'" />
+    </div>
+    <div class="field">
+      <label [for]="fieldId('year')" i18n="Champ année@@account.verification.upload.year"
+        >Année</label
+      >
+      <input
+        [id]="fieldId('year')"
+        type="text"
+        formControlName="year"
+        inputmode="numeric"
+        class="mono"
+        [attr.aria-invalid]="form.controls.year.invalid && form.controls.year.touched"
+        [attr.aria-describedby]="fieldId('year') + '-error'"
+      />
+      <pm-field-errors [control]="form.controls.year" [id]="fieldId('year') + '-error'" />
+    </div>
+  </div>
+
+  <div class="dropzone" [class.has-file]="file()">
+    <label [for]="fieldId('file')" class="file-label">
+      <span class="choose" i18n="Bouton choisir un fichier@@account.verification.upload.choose"
+        >Choisir un fichier</span
+      >
+      <span class="or" i18n="Zone de dépôt@@account.verification.upload.dropHint"
+        >ou glissez-le ici · PDF, JPG ou PNG, 10 Mo maximum</span
+      >
+    </label>
+    <input
+      #fileInput
+      [id]="fieldId('file')"
+      type="file"
+      [accept]="accept"
+      [disabled]="disabled() || uploading()"
+      (change)="onFileInput($event)"
+      [attr.aria-invalid]="fileMessage() !== null"
+      [attr.aria-describedby]="fieldId('file') + '-error ' + fieldId('file') + '-name'"
+    />
+    @if (file(); as f) {
+      <p class="file-name mono" [id]="fieldId('file') + '-name'">{{ f.name }}</p>
+    }
+    @if (fileMessage(); as message) {
+      <p class="field-error" [id]="fieldId('file') + '-error'" role="alert">{{ message }}</p>
+    }
+    @if (uploading()) {
+      <div class="progress">
+        <progress max="100" [value]="state().percent" [attr.aria-label]="progressLabel"></progress>
+        <span class="mono" aria-live="polite">{{ state().percent }} %</span>
+      </div>
+    }
+  </div>
+
+  <div class="actions">
+    <button
+      mat-stroked-button
+      type="submit"
+      [disabled]="disabled() || uploading()"
+      i18n="Bouton ajouter au dossier@@account.verification.upload.submit"
+    >
+      Ajouter au dossier
+    </button>
+    <p class="retention" i18n="Mention de rétention@@account.verification.upload.retention">
+      Les fichiers sont chiffrés et supprimés 90 jours après la décision de l'administrateur ; seule
+      la mention « vérifié le … » est conservée.
+    </p>
+  </div>
+</form>

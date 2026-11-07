@@ -1,23 +1,17 @@
-import AxeBuilder from '@axe-core/playwright';
 import { expect, Page, test } from '@playwright/test';
 
 import { confirmEmail, enableTwoFactor, register, SEED, uniqueEmail } from '../support/accounts';
+import { expectNoAxeViolations } from '../support/axe';
 import { totp, totpStep } from '../support/totp';
 
 // B3 flux 1, partie connexion (M0-07) : contre l'API locale et le seed small, jamais de mock.
 
 const WRONG_CREDENTIALS = 'E-mail, mot de passe ou code incorrect.';
 
-async function expectNoAxeViolations(page: Page): Promise<void> {
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .analyze();
-  expect(results.violations).toEqual([]);
-}
-
 async function fillCredentials(page: Page, email: string, password: string): Promise<void> {
   await page.getByLabel('Adresse e-mail').fill(email);
-  await page.getByLabel('Mot de passe').fill(password);
+  // exact : le bouton « Afficher le mot de passe » (M1-15) porte aussi ce texte.
+  await page.getByLabel('Mot de passe', { exact: true }).fill(password);
 }
 
 test('sans session, /patients mène à /connexion?next=/patients', async ({ page }) => {
@@ -70,7 +64,7 @@ test('identifiants faux : le même message unique, e-mail connu ou non', async (
   await expect(alert).toHaveText(WRONG_CREDENTIALS);
   await expect(page).toHaveURL(/\/fr\/connexion$/);
   await expect(page.getByLabel('Adresse e-mail')).toHaveValue(account.email);
-  await expect(page.getByLabel('Mot de passe')).toBeFocused();
+  await expect(page.getByLabel('Mot de passe', { exact: true })).toBeFocused();
   await expectNoAxeViolations(page);
 
   await page.getByLabel('Adresse e-mail').fill(uniqueEmail('m0-07.inconnu'));

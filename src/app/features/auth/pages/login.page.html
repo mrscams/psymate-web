@@ -1,5 +1,13 @@
 <section class="login-card">
   <h1 id="login-title" i18n="Titre de l'écran de connexion@@auth.login.title">Connexion</h1>
+  <p class="intro">
+    <span i18n="Sous-titre de l'écran de connexion@@auth.login.intro"
+      >Espace réservé aux praticiens.</span
+    >
+    <a [routerLink]="paths.register" i18n="Lien vers l'inscription@@auth.login.registerLink"
+      >Créer un compte</a
+    >
+  </p>
 
   <form
     [formGroup]="form"
@@ -29,17 +37,43 @@
       <input
         #passwordInput
         matInput
-        type="password"
+        [type]="showPassword() ? 'text' : 'password'"
+        [class.masked]="!showPassword()"
         formControlName="password"
         autocomplete="current-password"
         required
       />
+      <button
+        matSuffix
+        mat-icon-button
+        type="button"
+        class="toggle-password"
+        [attr.aria-pressed]="showPassword()"
+        [attr.aria-label]="showPasswordLabel"
+        (click)="togglePassword($event)"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          @if (showPassword()) {
+            <path
+              d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.1A10.5 10.5 0 0 1 12 5c5 0 9 4 10 7a12 12 0 0 1-2.6 3.7M6.6 6.6C4.4 8 2.8 10 2 12c1 3 5 7 10 7 1.5 0 2.9-.3 4.1-.9"
+            />
+          } @else {
+            <path d="M2 12c1-3 5-7 10-7s9 4 10 7c-1 3-5 7-10 7S3 15 2 12Z" />
+            <circle cx="12" cy="12" r="3" />
+          }
+        </svg>
+      </button>
       @if (form.controls.password.invalid) {
         <mat-error i18n="Mot de passe manquant@@auth.login.password.required"
           >Saisissez votre mot de passe.</mat-error
         >
       }
     </mat-form-field>
+    <p class="aside-link">
+      <a [routerLink]="paths.passwordReset" i18n="Lien mot de passe oublié@@auth.login.forgot"
+        >Mot de passe oublié ?</a
+      >
+    </p>
 
     @if (store.otpRequired()) {
       <div class="otp" role="group" aria-labelledby="otp-title">
@@ -55,15 +89,42 @@
             matInput
             class="otp-input"
             type="text"
-            inputmode="numeric"
+            [attr.inputmode]="recoveryCode() ? 'text' : 'numeric'"
             autocomplete="one-time-code"
             formControlName="otp"
             required
           />
-          <mat-hint i18n="Aide du champ code 2FA@@auth.login.otp.hint"
-            >Les 6 chiffres de votre application, ou un code de secours.</mat-hint
-          >
+          @if (recoveryCode()) {
+            <mat-hint i18n="Aide du champ code de secours@@auth.login.otp.recoveryHint"
+              >Un de vos 10 codes de secours ; il ne servira qu'une fois.</mat-hint
+            >
+          } @else {
+            <mat-hint i18n="Aide du champ code 2FA@@auth.login.otp.hint"
+              >Les 6 chiffres de votre application d'authentification.</mat-hint
+            >
+          }
         </mat-form-field>
+        <p class="aside-link">
+          @if (recoveryCode()) {
+            <button
+              type="button"
+              class="link-button"
+              (click)="useRecoveryCode(false)"
+              i18n="Revenir au code de l'application@@auth.login.otp.useApp"
+            >
+              Utiliser le code de l'application
+            </button>
+          } @else {
+            <button
+              type="button"
+              class="link-button"
+              (click)="useRecoveryCode(true)"
+              i18n="Basculer vers un code de secours@@auth.login.otp.useRecovery"
+            >
+              Utiliser un code de secours
+            </button>
+          }
+        </p>
       </div>
     }
 
@@ -93,5 +154,9 @@
     >
       Se connecter
     </button>
+    <p class="legal" i18n="Mention verrouillage et journal sous le bouton@@auth.login.lockNotice">
+      Après 5 tentatives échouées, le compte est verrouillé 15 minutes. Les connexions sont
+      consignées dans votre journal de sécurité.
+    </p>
   </form>
 </section>

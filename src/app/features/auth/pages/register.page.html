@@ -1,0 +1,390 @@
+<div class="register">
+  <header class="head">
+    <h1 id="register-title" i18n="Titre de l'inscription@@auth.register.title">
+      Créer votre compte praticien
+    </h1>
+    <p class="lead" i18n="Sous-titre de l'inscription@@auth.register.lead">
+      Trois minutes. Vous pourrez compléter votre profil public plus tard, il n'est pas obligatoire.
+    </p>
+    <p class="already">
+      <span i18n="Déjà un compte@@auth.register.already">Déjà un compte ?</span>
+      <a [routerLink]="loginPath" i18n="Lien vers la connexion@@auth.register.loginLink"
+        >Se connecter</a
+      >
+    </p>
+  </header>
+
+  <pm-problem-summary
+    [errors]="summaryErrors()"
+    [labels]="labels"
+    [unmatched]="unmatchedFields()"
+  />
+
+  <form [formGroup]="form" (ngSubmit)="submit()" aria-labelledby="register-title" novalidate>
+    <!-- 1 · Qui vous êtes -->
+    <section class="block" aria-labelledby="sec-who">
+      <h2 id="sec-who">
+        <span class="num" aria-hidden="true">1</span>
+        <span i18n="Section 1 de l'inscription@@auth.register.section.who">Qui vous êtes</span>
+      </h2>
+      <div class="grid-2">
+        <div class="field">
+          <label [for]="fieldId('firstName')">{{ labels['firstName'] }}</label>
+          <input
+            [id]="fieldId('firstName')"
+            type="text"
+            formControlName="firstName"
+            autocomplete="given-name"
+            required
+            [attr.aria-invalid]="isInvalid(form.controls.firstName)"
+            [attr.aria-describedby]="fieldId('firstName') + '-error'"
+          />
+          <pm-field-errors
+            [control]="form.controls.firstName"
+            [id]="fieldId('firstName') + '-error'"
+          />
+        </div>
+        <div class="field">
+          <label [for]="fieldId('lastName')">{{ labels['lastName'] }}</label>
+          <input
+            [id]="fieldId('lastName')"
+            type="text"
+            formControlName="lastName"
+            autocomplete="family-name"
+            required
+            [attr.aria-invalid]="isInvalid(form.controls.lastName)"
+            [attr.aria-describedby]="fieldId('lastName') + '-error'"
+          />
+          <pm-field-errors
+            [control]="form.controls.lastName"
+            [id]="fieldId('lastName') + '-error'"
+          />
+        </div>
+      </div>
+      <div class="field">
+        <label [for]="fieldId('email')">{{ labels['email'] }}</label>
+        <input
+          [id]="fieldId('email')"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          required
+          [attr.aria-invalid]="isInvalid(form.controls.email)"
+          [attr.aria-describedby]="fieldId('email') + '-hint ' + fieldId('email') + '-error'"
+        />
+        <p
+          class="hint"
+          [id]="fieldId('email') + '-hint'"
+          i18n="Aide du champ e-mail de l'inscription@@auth.register.email.hint"
+        >
+          Sert à vous connecter et à recevoir les messages de l'annuaire. Un e-mail de confirmation
+          vous sera envoyé.
+        </p>
+        <pm-field-errors [control]="form.controls.email" [id]="fieldId('email') + '-error'" />
+      </div>
+    </section>
+
+    <!-- 2 · Votre profession -->
+    <section class="block" aria-labelledby="sec-profession">
+      <h2 id="sec-profession">
+        <span class="num" aria-hidden="true">2</span>
+        <span i18n="Section 2 de l'inscription@@auth.register.section.profession"
+          >Votre profession</span
+        >
+      </h2>
+      <p class="hint" i18n="Explication de la section profession@@auth.register.profession.hint">
+        Elle détermine le vocabulaire de l'application (par exemple le type « médicament » n'est
+        proposé qu'aux psychiatres par défaut) et le libellé de votre fiche publique. Modifiable
+        plus tard.
+      </p>
+      <fieldset
+        class="professions"
+        [id]="fieldId('profession')"
+        tabindex="-1"
+        [attr.aria-describedby]="fieldId('profession') + '-error'"
+        [attr.aria-invalid]="isInvalid(form.controls.profession)"
+      >
+        <legend>{{ labels['profession'] }}</legend>
+        @for (card of professions; track card.value) {
+          <label class="card" [class.selected]="form.controls.profession.value === card.value">
+            <input
+              type="radio"
+              formControlName="profession"
+              [value]="card.value"
+              [id]="fieldId('profession') + '-' + card.value"
+              required
+            />
+            <span class="card-label">{{ card.label }}</span>
+            <span class="card-desc">{{ card.description }}</span>
+          </label>
+        }
+      </fieldset>
+      <pm-field-errors
+        [control]="form.controls.profession"
+        [id]="fieldId('profession') + '-error'"
+      />
+
+      <div class="grid-2">
+        <div class="field">
+          <label [for]="fieldId('professionalNumber')">{{ labels['professionalNumber'] }}</label>
+          <input
+            [id]="fieldId('professionalNumber')"
+            type="text"
+            formControlName="professionalNumber"
+            autocomplete="off"
+            class="mono"
+            [attr.aria-invalid]="isInvalid(form.controls.professionalNumber)"
+            [attr.aria-describedby]="fieldId('professionalNumber') + '-error'"
+          />
+          <pm-field-errors
+            [control]="form.controls.professionalNumber"
+            [id]="fieldId('professionalNumber') + '-error'"
+          />
+        </div>
+        <div class="field">
+          <label [for]="fieldId('phone')">{{ labels['phone'] }}</label>
+          <input
+            [id]="fieldId('phone')"
+            type="tel"
+            formControlName="phone"
+            autocomplete="tel"
+            inputmode="tel"
+            required
+            [attr.aria-invalid]="isInvalid(form.controls.phone)"
+            [attr.aria-describedby]="fieldId('phone') + '-hint ' + fieldId('phone') + '-error'"
+          />
+          <p
+            class="hint"
+            [id]="fieldId('phone') + '-hint'"
+            i18n="Aide du champ téléphone@@auth.register.phone.hint"
+          >
+            Pour la vérification de votre dossier. Jamais affiché sans votre accord.
+          </p>
+          <pm-field-errors [control]="form.controls.phone" [id]="fieldId('phone') + '-error'" />
+        </div>
+      </div>
+
+      <div
+        formGroupName="address"
+        class="address"
+        [class.disabled]="remoteOnly()"
+        [id]="fieldId('address')"
+        tabindex="-1"
+        role="group"
+        [attr.aria-label]="labels['address']"
+        [attr.aria-describedby]="fieldId('address') + '-error'"
+      >
+        <div class="field">
+          <label [for]="fieldId('address.street')">{{ labels['address.street'] }}</label>
+          <input
+            [id]="fieldId('address.street')"
+            type="text"
+            formControlName="street"
+            autocomplete="street-address"
+            [required]="!remoteOnly()"
+            [attr.aria-invalid]="isInvalid(form.controls.address.controls.street)"
+            [attr.aria-describedby]="fieldId('address.street') + '-error'"
+          />
+          <pm-field-errors
+            [control]="form.controls.address.controls.street"
+            [id]="fieldId('address.street') + '-error'"
+          />
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label [for]="fieldId('address.postalCode')">{{ labels['address.postalCode'] }}</label>
+            <input
+              [id]="fieldId('address.postalCode')"
+              type="text"
+              formControlName="postalCode"
+              autocomplete="postal-code"
+              inputmode="numeric"
+              class="mono"
+              [required]="!remoteOnly()"
+              [attr.aria-invalid]="isInvalid(form.controls.address.controls.postalCode)"
+              [attr.aria-describedby]="fieldId('address.postalCode') + '-error'"
+            />
+            <pm-field-errors
+              [control]="form.controls.address.controls.postalCode"
+              [id]="fieldId('address.postalCode') + '-error'"
+            />
+          </div>
+          <div class="field">
+            <label [for]="fieldId('address.city')">{{ labels['address.city'] }}</label>
+            <input
+              [id]="fieldId('address.city')"
+              type="text"
+              formControlName="city"
+              autocomplete="address-level2"
+              [required]="!remoteOnly()"
+              [attr.aria-invalid]="isInvalid(form.controls.address.controls.city)"
+              [attr.aria-describedby]="fieldId('address.city') + '-error'"
+            />
+            <pm-field-errors
+              [control]="form.controls.address.controls.city"
+              [id]="fieldId('address.city') + '-error'"
+            />
+          </div>
+        </div>
+        <pm-field-errors [control]="form.controls.address" [id]="fieldId('address') + '-error'" />
+      </div>
+      <label class="check">
+        <input
+          [id]="fieldId('remoteOnly')"
+          type="checkbox"
+          formControlName="remoteOnly"
+          (change)="toggleRemoteOnly()"
+        />
+        <span i18n="Case exercice en visio uniquement@@auth.register.remoteOnly"
+          >J'exerce uniquement en visioconsultation (pas d'adresse de cabinet)</span
+        >
+      </label>
+
+      <p
+        class="notice"
+        i18n="Encart annonçant le dépôt des justificatifs@@auth.register.docsNotice"
+      >
+        Après la création du compte, vous déposerez votre diplôme et une pièce d'identité (et, si
+        vous en avez, votre attestation ADELI, RPPS ou de certification). Un administrateur vérifie
+        le dossier sous 2 jours ouvrés ; l'annuaire public n'est accessible qu'une fois le dossier
+        validé.
+      </p>
+    </section>
+
+    <!-- 3 · Votre accès -->
+    <section class="block" aria-labelledby="sec-access">
+      <h2 id="sec-access">
+        <span class="num" aria-hidden="true">3</span>
+        <span i18n="Section 3 de l'inscription@@auth.register.section.access">Votre accès</span>
+      </h2>
+      <div class="field">
+        <label [for]="fieldId('password')">{{ labels['password'] }}</label>
+        <input
+          [id]="fieldId('password')"
+          type="password"
+          formControlName="password"
+          autocomplete="new-password"
+          required
+          minlength="12"
+          class="mono"
+          [attr.aria-invalid]="isInvalid(form.controls.password)"
+          [attr.aria-describedby]="
+            fieldId('password') + '-strength ' + fieldId('password') + '-error'
+          "
+        />
+        <div class="strength" [attr.data-level]="strength().level">
+          <div class="bars" aria-hidden="true">
+            @for (bar of strengthBars; track bar) {
+              <span class="bar" [class.on]="strength().level >= bar"></span>
+            }
+          </div>
+          <p class="hint" [id]="fieldId('password') + '-strength'" aria-live="polite">
+            {{ strengthText() }}
+          </p>
+        </div>
+        <pm-field-errors [control]="form.controls.password" [id]="fieldId('password') + '-error'" />
+      </div>
+      <div class="field">
+        <label [for]="fieldId('passwordConfirm')">{{ labels['passwordConfirm'] }}</label>
+        <input
+          [id]="fieldId('passwordConfirm')"
+          type="password"
+          formControlName="passwordConfirm"
+          autocomplete="new-password"
+          required
+          class="mono"
+          [attr.aria-invalid]="isInvalid(form.controls.passwordConfirm)"
+          [attr.aria-describedby]="fieldId('passwordConfirm') + '-error'"
+        />
+        @if (
+          isInvalid(form.controls.passwordConfirm) &&
+          form.controls.passwordConfirm.hasError('mismatch')
+        ) {
+          <p class="field-error" [id]="fieldId('passwordConfirm') + '-error'">
+            {{ mismatchMessage }}
+          </p>
+        } @else {
+          <pm-field-errors
+            [control]="form.controls.passwordConfirm"
+            [id]="fieldId('passwordConfirm') + '-error'"
+          />
+        }
+      </div>
+      <p class="hint" i18n="Rappel 2FA de la section accès@@auth.register.twoFactorHint">
+        12 caractères minimum. La double authentification pourra être activée dans vos paramètres ;
+        elle est recommandée pour un dossier clinique.
+      </p>
+    </section>
+
+    <!-- Consentements -->
+    <section class="block consents" aria-labelledby="sec-consents">
+      <h2
+        id="sec-consents"
+        class="sr-only"
+        i18n="Section consentements@@auth.register.section.consents"
+      >
+        Consentements
+      </h2>
+      <label class="check">
+        <input
+          [id]="fieldId('terms')"
+          type="checkbox"
+          formControlName="terms"
+          required
+          [attr.aria-invalid]="isInvalid(form.controls.terms)"
+          [attr.aria-describedby]="fieldId('terms') + '-error'"
+        />
+        <span
+          i18n="Case CGU et confidentialité, avec responsable du traitement@@auth.register.terms"
+        >
+          J'accepte les conditions d'utilisation et j'ai lu la politique de confidentialité. Je
+          comprends que je suis responsable du traitement des données de mes patients et que PsyMate
+          en est l'hébergeur.
+        </span>
+      </label>
+      @if (isInvalid(form.controls.terms) && !form.controls.terms.hasError('server')) {
+        <p class="field-error" [id]="fieldId('terms') + '-error'">{{ termsMessage }}</p>
+      } @else {
+        <pm-field-errors [control]="form.controls.terms" [id]="fieldId('terms') + '-error'" />
+      }
+    </section>
+
+    <div class="actions">
+      <button
+        mat-flat-button
+        type="submit"
+        [disabled]="submitting()"
+        i18n="Bouton de l'inscription@@auth.register.submit"
+      >
+        Créer mon compte
+      </button>
+      <p class="hint" i18n="Mention sous le bouton d'inscription@@auth.register.submit.hint">
+        Vous recevrez un e-mail pour confirmer votre adresse avant la première connexion.
+      </p>
+    </div>
+  </form>
+
+  <aside class="next" aria-labelledby="next-title">
+    <h2 id="next-title" i18n="Titre de la colonne Ensuite@@auth.register.next.title">Ensuite</h2>
+    <ol>
+      <li i18n="Étape 1 après l'inscription@@auth.register.next.step1">Confirmez votre e-mail.</li>
+      <li i18n="Étape 2 après l'inscription@@auth.register.next.step2">
+        Déposez votre diplôme et une pièce d'identité (plusieurs documents possibles). Vous pouvez
+        déjà utiliser l'outil pendant la vérification.
+      </li>
+      <li i18n="Étape 3 après l'inscription@@auth.register.next.step3">
+        Un administrateur valide votre dossier sous 2 jours ouvrés. Vous recevez un e-mail.
+      </li>
+      <li i18n="Étape 4 après l'inscription@@auth.register.next.step4">
+        Quand vous voulez, remplissez votre profil public pour apparaître dans l'annuaire. Rien
+        n'est publié sans votre accord.
+      </li>
+    </ol>
+    <h2 i18n="Titre du bloc Vos données@@auth.register.data.title">Vos données</h2>
+    <p i18n="Texte du bloc Vos données@@auth.register.data.body">
+      Hébergement en France, chiffrement au repos et en transit, sauvegardes quotidiennes. Chaque
+      praticien ne voit que ses propres patients. Export complet de votre dossier à tout moment.
+    </p>
+    <p class="beta" i18n="Mention bêta@@auth.register.beta">Bêta : vos retours façonnent la V1.</p>
+  </aside>
+</div>

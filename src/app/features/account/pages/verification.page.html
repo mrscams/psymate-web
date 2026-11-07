@@ -1,0 +1,226 @@
+<div class="account">
+  <pm-account-nav
+    [name]="name()"
+    [subtitle]="subtitle()"
+    [verificationStatus]="session.verificationStatus()"
+  />
+
+  <div class="content">
+    <header class="head">
+      <h1 i18n="Titre de la page dossier professionnel@@account.verification.title">
+        Dossier professionnel
+      </h1>
+      <p class="lead" i18n="Explication de la page@@account.verification.lead">
+        Déposez votre diplôme et une pièce d'identité. Les documents ne sont visibles que par les
+        administrateurs chargés de la vérification, jamais par les visiteurs ni par les autres
+        praticiens.
+      </p>
+    </header>
+
+    @if (stateKind(store.dossier()); as kind) {
+      <pm-state
+        [kind]="kind"
+        skeleton="block"
+        [lines]="4"
+        [details]="store.dossier().problem?.code"
+        [action]="{ label: retryLabel, handler: retry }"
+      />
+    } @else if (store.verification(); as v) {
+      <pm-verification-progress
+        [status]="v.status"
+        [documentCount]="v.documents.length"
+        [missingCount]="v.missing.length"
+      />
+
+      @switch (v.status) {
+        @case ('needs_more') {
+          <div class="notice warning" role="status">
+            <p
+              class="notice-title"
+              i18n="Encart complément demandé@@account.verification.needsMore.title"
+            >
+              Un administrateur vous demande un complément.
+            </p>
+            @if (v.adminMessage) {
+              <p class="notice-body">{{ v.adminMessage }}</p>
+            }
+          </div>
+        }
+        @case ('under_review') {
+          <p
+            class="notice info"
+            role="status"
+            i18n="Encart dossier soumis@@account.verification.underReview"
+          >
+            Dossier soumis le {{ submittedAtText() }} : en cours de vérification. Vous pouvez
+            utiliser l'application pour vos patients ; l'annuaire public sera disponible après
+            validation. Le dossier n'est plus modifiable.
+          </p>
+        }
+        @case ('approved') {
+          <p
+            class="notice success"
+            role="status"
+            i18n="Encart dossier approuvé@@account.verification.approved"
+          >
+            Dossier approuvé : votre profil peut apparaître dans l'annuaire avec le badge « Profil
+            vérifié ».
+          </p>
+        }
+      }
+
+      <section class="block" aria-labelledby="info-title">
+        <h2
+          id="info-title"
+          i18n="Titre des informations professionnelles@@account.verification.info.title"
+        >
+          Informations professionnelles
+        </h2>
+        <pm-professional-info-form
+          [info]="v.professionalInfo"
+          [profession]="v.profession"
+          [state]="store.info()"
+          (save)="saveInfo($event)"
+        />
+      </section>
+
+      <section class="block" aria-labelledby="docs-title">
+        <h2 id="docs-title" i18n="Titre des justificatifs@@account.verification.docs.title">
+          Justificatifs
+        </h2>
+        <p class="hint" i18n="Aide des justificatifs@@account.verification.docs.hint">
+          PDF, JPG ou PNG, 10 Mo maximum par fichier. Vous pouvez déposer plusieurs documents :
+          diplôme, pièce d'identité, attestation d'inscription, certification, carte
+          professionnelle.
+        </p>
+        @if (v.documents.length === 0) {
+          <pm-state
+            kind="empty"
+            compact
+            [title]="emptyTitle"
+            [message]="store.editable() ? emptyMessage : ''"
+          />
+        } @else {
+          <pm-document-list
+            [documents]="v.documents"
+            [editable]="store.editable()"
+            [removing]="store.removing()"
+            [removeProblem]="store.removeProblem()"
+            (remove)="remove($event)"
+            (open)="open($event)"
+          />
+        }
+        @if (store.editable()) {
+          <pm-document-upload
+            [state]="store.upload()"
+            [disabled]="!store.editable()"
+            (upload)="upload($event)"
+            (fileChanged)="store.resetUpload()"
+          />
+        }
+      </section>
+
+      @if (store.editable()) {
+        <section class="actions" aria-labelledby="actions-title">
+          <h2
+            id="actions-title"
+            class="sr-only"
+            i18n="Titre des actions@@account.verification.actions.title"
+          >
+            Soumission
+          </h2>
+          <button
+            mat-flat-button
+            type="button"
+            [disabled]="!store.canSubmit() || store.submission().status === 'busy'"
+            (click)="submit()"
+            i18n="Bouton soumettre le dossier@@account.verification.submit"
+          >
+            Soumettre le dossier pour vérification
+          </button>
+          @if (missingText(); as text) {
+            <p class="missing" role="status">{{ text }}</p>
+          }
+          @if (recommendedText(); as text) {
+            <p class="recommended">{{ text }}</p>
+          }
+          @if (submitMessage(); as text) {
+            <p class="error" role="alert">{{ text }}</p>
+          }
+          <a class="later" [routerLink]="homePath" i18n="Lien plus tard@@account.verification.later"
+            >Plus tard — aller à mes patients</a
+          >
+        </section>
+      }
+    }
+  </div>
+
+  <aside class="side" aria-labelledby="expected-title">
+    <section class="block">
+      <h2
+        id="expected-title"
+        i18n="Titre des justificatifs attendus@@account.verification.expected.title"
+      >
+        Justificatifs attendus
+      </h2>
+      <p i18n="Règle commune G Q14@@account.verification.expected.all">
+        Toutes les professions : un diplôme et une pièce d'identité.
+      </p>
+      <dl>
+        <dt i18n="Profession@@account.profession.psychologist">Psychologue</dt>
+        <dd i18n="Conseillé pour un psychologue@@account.verification.expected.psychologist">
+          Conseillé : attestation d'inscription ADELI.
+        </dd>
+        <dt i18n="Profession@@account.profession.psychiatrist">Psychiatre</dt>
+        <dd i18n="Conseillé pour un psychiatre@@account.verification.expected.psychiatrist">
+          Conseillé : attestation RPPS ou carte CPS.
+        </dd>
+        <dt i18n="Profession@@account.profession.coach">Coach</dt>
+        <dd i18n="Conseillé pour un coach@@account.verification.expected.coach">
+          Conseillé : certification reconnue (ICF, EMCC, RNCP…) ou diplôme universitaire de
+          coaching.
+        </dd>
+      </dl>
+    </section>
+    <section class="block" aria-labelledby="how-title">
+      <h2 id="how-title" i18n="Titre comment ça se passe@@account.verification.how.title">
+        Comment ça se passe
+      </h2>
+      <p i18n="Texte comment ça se passe, 1@@account.verification.how.body1">
+        Un administrateur compare vos documents à votre profession déclarée et, si possible, au
+        registre public (ADELI / RPPS). Il peut vous demander un document supplémentaire par e-mail.
+      </p>
+      <p i18n="Texte comment ça se passe, 2@@account.verification.how.body2">
+        Décision sous 2 jours ouvrés. En cas de refus, le motif vous est communiqué et vous pouvez
+        compléter le dossier ou faire un recours.
+      </p>
+    </section>
+    <section class="block" aria-labelledby="locks-title">
+      <h2 id="locks-title" i18n="Titre du tableau des états@@account.verification.lock.title">
+        États du dossier
+      </h2>
+      <table class="locks">
+        <thead>
+          <tr>
+            <th scope="col" i18n="Colonne état@@account.verification.lock.col.status">État</th>
+            <th scope="col" i18n="Colonne outil clinique@@account.verification.lock.col.tool">
+              Patients
+            </th>
+            <th scope="col" i18n="Colonne annuaire@@account.verification.lock.col.directory">
+              Annuaire
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of lockRows; track row.status) {
+            <tr [class.current]="store.status() && statusLabel(store.status()!) === row.status">
+              <th scope="row">{{ row.status }}</th>
+              <td>{{ row.tool }}</td>
+              <td>{{ row.directory }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  </aside>
+</div>

@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-07T14:25:21.484Z",
+  "task": "M1-15",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Écrans connexion, inscription, mot de passe oublié et dossier professionnel (fiches 11, 12, 13) : 266 tests Vitest, 26 e2e verts contre l'API locale, axe-core 0 violation, parcours clavier e2e",
+  "notes": "features/account créé (index, routes, data, ui, page) ; en.xlf regénéré complet ; après submit GET /api/auth/session avant /me (statut de /me mémorisé dans la session) ; case newsletter de la fiche 12 non affichée (absente du contrat) ; /mot-de-passe-oublie ajouté (demande seule, page du lien sans fiche) ; jauge de force locale (pas zxcvbn, le serveur reste juge) ; flux-1 adapté (getByLabel exact) ; aucune dépendance npm ajoutée ; revue reviewer : 0 bloquant, 3 à corriger tous traités",
+  "next": "Fusion avec M1-16 (account.routes.ts, index.ts, xlf) ; M1-17 (securite) et M1-18 (confirmer-email, compte-suspendu) peuvent démarrer ; triage premier login vers le dossier (fiche 12) relève de core/auth",
+  "branch": "claude/m1-15-identite-27b445",
+  "checkout": "m1-15-identite-27b445"
+}
