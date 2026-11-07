@@ -1,0 +1,290 @@
+<div class="demo">
+  <header class="demo-head">
+    <h1>Socle UI partagé · démonstration</h1>
+    <p class="lead">
+      Chaque composant de la fiche 00 dans ses états. Page de revue, hors du produit. Touche
+      <kbd>?</kbd> : aide des raccourcis.
+    </p>
+    <fieldset class="themes">
+      <legend>Thème</legend>
+      @for (t of themes; track t) {
+        <button
+          type="button"
+          mat-stroked-button
+          [class.selected]="theme.preference() === t"
+          [attr.aria-pressed]="theme.preference() === t"
+          (click)="setTheme(t)"
+        >
+          {{ t }}
+        </button>
+      }
+      <span class="resolved">data-theme = {{ theme.resolved() }}</span>
+    </fieldset>
+  </header>
+
+  <section class="block" aria-labelledby="h-appbar">
+    <h2 id="h-appbar">1 · Barre d'application</h2>
+    <p class="caption">Sans session</p>
+    <pm-app-bar [switchHref]="switchHref" [switchLang]="switchLang" />
+    <p class="caption">Avec session, section et fil d'Ariane ; <kbd>/</kbd> ouvre la recherche</p>
+    <pm-app-bar
+      section="Patients"
+      crumb="Marie D."
+      [user]="{ displayName: 'Claire Moreau' }"
+      [switchHref]="switchHref"
+      [switchLang]="switchLang"
+    />
+    <p class="caption">Bandeau d'état global (tant que le dossier n'est pas approuvé)</p>
+    <div class="row">
+      @for (s of ['docs_pending', 'under_review', 'needs_more', 'approved']; track s) {
+        <button type="button" mat-stroked-button (click)="verificationStatus.set($any(s))">
+          {{ s }}
+        </button>
+      }
+    </div>
+    <pm-verification-banner [status]="verificationStatus()" />
+    <p class="caption">Bandeau hors ligne (core/http) et bandeaux génériques</p>
+    <button type="button" mat-stroked-button class="toggle-offline" (click)="toggleOffline()">
+      {{ notices.offline() ? 'Revenir en ligne' : 'Simuler la perte de connexion' }}
+    </button>
+    <pm-status-banner level="success" message="Profil vérifié : votre fiche peut être publiée." />
+    <pm-status-banner
+      level="info"
+      message="Vue d'ensemble en cours de mise à jour."
+      actionLabel="Recalculer"
+    />
+  </section>
+
+  <section class="block" aria-labelledby="h-patient">
+    <h2 id="h-patient">2 · En-tête patient</h2>
+    <p class="caption">Chargement</p>
+    <pm-patient-header state="loading" />
+    <p class="caption">Erreur</p>
+    <pm-patient-header state="error" />
+    <p class="caption">Dossier chargé ; <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> changent d'onglet</p>
+    <button
+      type="button"
+      mat-stroked-button
+      class="toggle-session"
+      (click)="sessionCurrent.set(!sessionCurrent())"
+    >
+      {{ sessionCurrent() ? 'Clôturer (démo)' : 'Démarrer (démo)' }}
+    </button>
+    <pm-patient-header
+      [patient]="marie"
+      [session]="
+        sessionCurrent()
+          ? { kind: 'current', startedAt: startedAt }
+          : { kind: 'last', date: '2026-10-17' }
+      "
+      [showViewToggle]="true"
+      (startSession)="sessionCurrent.set(true)"
+      (closeSession)="sessionCurrent.set(false)"
+    >
+      <div pmCapture class="capture-placeholder">
+        Noter quelque chose… (barre de capture, M6-02)
+      </div>
+      <span pmViewToggle class="view-placeholder">Vue : Simple · Complète (M4-05)</span>
+    </pm-patient-header>
+  </section>
+
+  <section class="block" aria-labelledby="h-account">
+    <h2 id="h-account">3 · Navigation Mon compte</h2>
+    <div class="row top">
+      <pm-account-nav name="Claire Moreau" subtitle="Psychologue · Lyon" />
+      <pm-account-nav
+        name="Claire Moreau"
+        subtitle="Psychologue · Lyon"
+        [published]="true"
+        verificationStatus="under_review"
+      />
+      <pm-account-nav name="Samir Benali" subtitle="Coach · Paris" verificationStatus="approved" />
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="h-public">
+    <h2 id="h-public">4 · Layout public</h2>
+    <div class="frame">
+      <pm-public-layout [narrow]="true" [switchHref]="switchHref" [switchLang]="switchLang">
+        <h3>Connexion</h3>
+        <p>Conteneur centré 480 px des formulaires publics.</p>
+      </pm-public-layout>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="h-admin">
+    <h2 id="h-admin">5 · Barre d'administration</h2>
+    <pm-admin-bar [pendingCount]="6" [user]="{ displayName: 'Hugo Admin' }" />
+  </section>
+
+  <section class="block" aria-labelledby="h-panel">
+    <h2 id="h-panel">6 · Panneau latéral</h2>
+    <p class="caption">
+      480 px, voile, piège de focus, Échap ferme et rend le focus au bouton ; « Lier » empile un
+      second panneau de 420 px.
+    </p>
+    <button type="button" mat-flat-button class="open-panel" (click)="openPanel()">
+      Nouvelle entrée <kbd>N</kbd>
+    </button>
+    <span class="result" aria-live="polite">{{ lastPanel() }}</span>
+  </section>
+
+  <section class="block" aria-labelledby="h-state">
+    <h2 id="h-state">7 · Composant état</h2>
+    <div class="grid">
+      <div class="card">
+        <p class="caption">Vide</p>
+        <pm-state
+          kind="empty"
+          title="Aucune entrée dans cette période"
+          message="Élargissez la période ou saisissez la première entrée de la séance."
+          [action]="{ label: 'Saisir une entrée', shortcut: 'N', handler: noop }"
+        />
+      </div>
+      <div class="card">
+        <p class="caption">Chargement · ligne</p>
+        <pm-state kind="loading" skeleton="row" [lines]="4" />
+      </div>
+      <div class="card">
+        <p class="caption">Chargement · carte</p>
+        <pm-state kind="loading" skeleton="card" [lines]="2" />
+      </div>
+      <div class="card">
+        <p class="caption">Chargement · fiche</p>
+        <pm-state kind="loading" skeleton="profile" [lines]="1" />
+      </div>
+      <div class="card">
+        <p class="caption">Erreur</p>
+        <pm-state
+          kind="error"
+          title="Impossible de charger la timeline"
+          message="Le serveur n'a pas répondu. Rien n'a été modifié dans le dossier."
+          [action]="{ label: 'Réessayer', handler: noop }"
+          details="503 · service indisponible"
+        />
+      </div>
+      <div class="card">
+        <p class="caption">Vide · compact</p>
+        <pm-state kind="empty" title="Apparaîtra ici après deux ressentis." compact />
+      </div>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="h-toast">
+    <h2 id="h-toast">8 · Toasts et confirmation</h2>
+    <div class="row">
+      <button type="button" mat-stroked-button class="toast-success" (click)="toast('success')">
+        Toast succès
+      </button>
+      <button type="button" mat-stroked-button (click)="toast('info')">Toast information</button>
+      <button type="button" mat-stroked-button (click)="toast('warning')">
+        Toast avertissement
+      </button>
+      <button
+        type="button"
+        mat-stroked-button
+        class="toast-429"
+        (click)="notices.rateLimited(12, true)"
+      >
+        Simuler un 429
+      </button>
+    </div>
+    <div class="row">
+      <button type="button" mat-stroked-button class="confirm-simple" (click)="confirmSimple()">
+        Supprimer le patient démo
+      </button>
+      <button type="button" mat-stroked-button class="confirm-word" (click)="confirmWord()">
+        Archiver Marie D.
+      </button>
+      <span class="result" aria-live="polite">{{ lastConfirm() }}</span>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="h-icons">
+    <h2 id="h-icons">9 · Icônes de type d'entrée</h2>
+    <ul class="icons">
+      @for (type of entryTypes; track type) {
+        <li>
+          <pm-entry-icon [type]="type" [size]="20" />
+          <span>{{ entryTypeLabel(type) }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="block" aria-labelledby="h-forms">
+    <h2 id="h-forms">10 · Formulaires : 422 relié aux champs</h2>
+    <pm-problem-summary [errors]="problem()?.errors ?? []" [labels]="formLabels" />
+    <form [formGroup]="form" class="form" (submit)="$event.preventDefault()">
+      <div class="field">
+        <label [for]="fieldId('displayName')">Nom affiché</label>
+        <input
+          [id]="fieldId('displayName')"
+          type="text"
+          formControlName="displayName"
+          [attr.aria-invalid]="
+            form.controls.displayName.invalid && form.controls.displayName.touched
+          "
+          [attr.aria-describedby]="fieldId('displayName') + '-error'"
+        />
+        <pm-field-errors
+          [control]="form.controls.displayName"
+          [id]="fieldId('displayName') + '-error'"
+        />
+      </div>
+      <div class="field">
+        <label [for]="fieldId('birthDate')">Date de naissance</label>
+        <input
+          [id]="fieldId('birthDate')"
+          type="date"
+          formControlName="birthDate"
+          [attr.aria-invalid]="form.controls.birthDate.invalid && form.controls.birthDate.touched"
+          [attr.aria-describedby]="fieldId('birthDate') + '-error'"
+        />
+        <pm-field-errors
+          [control]="form.controls.birthDate"
+          [id]="fieldId('birthDate') + '-error'"
+        />
+      </div>
+      <div class="row">
+        <button type="button" mat-flat-button class="simulate-422" (click)="simulate422()">
+          Simuler un 422
+        </button>
+        <button type="button" mat-stroked-button (click)="clearProblem()">Effacer</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="block" aria-labelledby="h-util">
+    <h2 id="h-util">11 · Utilitaires : formatOccurred et subjectLabel</h2>
+    <table class="occurred">
+      <caption>
+        Six précisions, locale
+        {{
+          switchLang === 'en' ? 'fr' : 'en'
+        }}
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">precision</th>
+          <th scope="col">formatOccurred()</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (example of occurredExamples; track example.precision) {
+          <tr>
+            <td>
+              <code>{{ example.precision }}</code>
+            </td>
+            <td>{{ example.text }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <div class="row">
+      <button type="button" mat-stroked-button (click)="vocabulary.set('patient')">patient</button>
+      <button type="button" mat-stroked-button (click)="vocabulary.set('client')">client</button>
+      <span class="subject">Mes {{ 'many' | subjectLabel }} · {{ 'One' | subjectLabel }}</span>
+    </div>
+  </section>
+</div>

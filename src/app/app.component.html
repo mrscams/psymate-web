@@ -1,34 +1,40 @@
-<header class="app-header">
-  <span class="brand" i18n="Nom du produit@@app.brand">PsyMate</span>
-  <div class="header-actions">
-    <nav
-      aria-label="Langue"
-      i18n-aria-label="Étiquette de la navigation de langue@@app.localeNav.label"
+@switch (layout()) {
+  @case ('public') {
+    <pm-public-layout
+      [authenticated]="session.authenticated()"
+      [narrow]="true"
+      [switchHref]="switchHref()"
+      [switchLang]="other"
     >
-      <a
-        class="locale-switch"
-        [href]="switchHref()"
-        [attr.hreflang]="other"
-        [attr.lang]="other"
-        i18n="Lien vers l'autre langue, écrit dans cette autre langue@@app.localeSwitch"
-        >English</a
-      >
-    </nav>
+      <pm-network-banner />
+      <router-outlet />
+    </pm-public-layout>
+  }
+  @case ('admin') {
+    <pm-admin-bar [user]="user()" (logout)="logout()" />
+    <pm-network-banner />
+    <main id="main" class="app-main admin">
+      <router-outlet />
+    </main>
+  }
+  @case ('bare') {
+    <pm-network-banner />
+    <router-outlet />
+  }
+  @default {
+    <pm-app-bar
+      [user]="user()"
+      [switchHref]="switchHref()"
+      [switchLang]="other"
+      (logout)="logout()"
+    />
     @if (session.authenticated()) {
-      <!-- Provisoire (M0-07) : le menu de l'avatar de la barre d'application (M0-09) le remplace. -->
-      <button
-        mat-stroked-button
-        type="button"
-        class="logout"
-        (click)="logout()"
-        i18n="Bouton de déconnexion provisoire@@app.logout"
-      >
-        Se déconnecter
-      </button>
+      <pm-verification-banner [status]="session.verificationStatus()" />
     }
-  </div>
-</header>
-
-<main class="app-main">
-  <router-outlet />
-</main>
+    <pm-network-banner />
+    <main id="main" class="app-main">
+      <router-outlet />
+    </main>
+  }
+}
+<pm-toast-outlet />
