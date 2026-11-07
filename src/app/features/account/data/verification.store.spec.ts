@@ -158,6 +158,19 @@ describe('VerificationStore', () => {
     expect(session.verificationStatus()).toBe('under_review');
   });
 
+  it('submit réussi mais session non rafraîchie : le dossier reste soumis, aucun faux échec', async () => {
+    const reviewed: Verification = { ...DOSSIER, status: 'under_review', missing: [] };
+    const { store } = setup({
+      load: vi.fn().mockResolvedValue(DOSSIER),
+      submit: vi.fn().mockResolvedValue(reviewed),
+      refreshSession: vi.fn().mockRejectedValue({ status: 429, code: 'RATE_LIMITED' }),
+    });
+    await store.load();
+    await expect(store.submit()).resolves.toBe(true);
+    expect(store.status()).toBe('under_review');
+    expect(store.submission()).toEqual({ status: 'idle', problem: null });
+  });
+
   it('submit 409 VERIFICATION_INCOMPLETE : problème gardé avec missing[]', async () => {
     const { store } = setup({
       load: vi.fn().mockResolvedValue(DOSSIER),

@@ -93,6 +93,15 @@ export class LoginPage {
     });
   }
 
+  /**
+   * Afficher / masquer le mot de passe. Le clic ne remonte pas au conteneur mat-form-field, qui
+   * sinon rend le focus au champ : au clavier, le bouton garderait son état sans garder le focus.
+   */
+  protected togglePassword(event: Event): void {
+    event.stopPropagation();
+    this.showPassword.set(!this.showPassword());
+  }
+
   protected useRecoveryCode(recovery: boolean): void {
     this.recoveryCode.set(recovery);
     this.form.controls.otp.setValue('');

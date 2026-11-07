@@ -140,13 +140,18 @@ export const VerificationStore = signalStore(
         try {
           const dossier = await api.submit();
           patchState(store, { dossier: loaded(dossier), submission: ACTION_IDLE });
-          await api.refreshSession();
-          await session.load();
-          return true;
         } catch (error) {
           patchState(store, { submission: { status: 'error', problem: asProblem(error) } });
           return false;
         }
+        // Effet secondaire : le dossier est soumis même si le bandeau ne peut pas être rafraîchi.
+        try {
+          await api.refreshSession();
+          await session.load();
+        } catch {
+          // Le prochain chargement de l'application relira la session.
+        }
+        return true;
       },
 
       /** PATCH des informations professionnelles ; la réponse remplace celles du dossier. */

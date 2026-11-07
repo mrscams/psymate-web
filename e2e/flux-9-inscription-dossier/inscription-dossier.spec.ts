@@ -1,7 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { APIRequestContext, expect, Page, test } from '@playwright/test';
 
-import { confirmEmail, register, uniqueEmail } from '../support/accounts';
+import { confirmEmail, enableTwoFactor, register, uniqueEmail } from '../support/accounts';
+import { totp, totpStep } from '../support/totp';
 
 // B3 flux 9 (M1-15, fiches 11, 12, 13) : inscription, confirmation par Mailpit, dossier
 // professionnel, bandeau d'état. Contre l'API locale (seed small) et Mailpit, jamais de mock.
@@ -46,6 +47,20 @@ async function tabTo(page: Page, id: string): Promise<void> {
 
 async function expectFocus(page: Page, id: string): Promise<void> {
   await expect(page.locator(`#${id}`)).toBeFocused();
+}
+
+/** Tabule jusqu'au bouton, lien ou champ dont le nom accessible (aria-label ou texte) vaut `name`. */
+async function tabToName(page: Page, name: string): Promise<void> {
+  for (let i = 0; i < 60; i++) {
+    const current = await page.evaluate(() => {
+      const el = document.activeElement as HTMLElement | null;
+      if (!el || !el.matches('button, a, input, select, textarea')) return null;
+      return (el.getAttribute('aria-label') ?? el.textContent ?? '').trim();
+    });
+    if (current === name) return;
+    await page.keyboard.press('Tab');
+  }
+  throw new Error(`le focus n'a jamais atteint « ${name} »`);
 }
 
 /** Remplit l'inscription entièrement au clavier, dans l'ordre des champs de la fiche 12. */
@@ -340,4 +355,158 @@ test('dossier professionnel : 11 Mo refusé, .exe renommé → 415, complétude,
   await expect(page.getByRole('status').filter({ hasText: 'dossier professionnel' })).toContainText(
     'en cours de vérification',
   );
+});
+
+test('connexion au clavier : erreur 401, afficher le mot de passe, bloc code (2FA), axe à chaque état', async ({
+  page,
+  request,
+}) => {
+  const account = await register(request, 'm1-15.clavier');
+  await confirmEmail(request, account.email);
+  const { secret, usedStep } = await enableTwoFactor(request, (s) => {
+    const step = totpStep();
+    return { value: totp(s, step), step };
+  });
+
+  await page.goto('/fr/connexion');
+  await tabToName(page, 'Créer un compte');
+  await page.keyboard.press('Tab');
+  await expect(page.getByLabel('Adresse e-mail')).toBeFocused();
+  await page.keyboard.type(account.email);
+  await page.keyboard.press('Tab');
+  await expect(page.getByLabel('Mot de passe', { exact: true })).toBeFocused();
+  await page.keyboard.type('Pas-le-bon-mot-de-passe-1');
+  await page.keyboard.press('Tab');
+  const toggle = page.getByRole('button', { name: 'Afficher le mot de passe' });
+  await expect(toggle).toBeFocused();
+  await page.keyboard.press('Space');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('input[autocomplete=current-password]')).toHaveAttribute(
+    'type',
+    'text',
+  );
+  // Le bouton garde le focus (le clic ne remonte pas au conteneur mat-form-field).
+  await expect(toggle).toBeFocused();
+  await page.keyboard.press('Space');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: 'Mot de passe oublié ?' })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('checkbox', { name: /Rester connecté/ })).toBeFocused();
+  await page.keyboard.press('Space');
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Se connecter' })).toBeFocused();
+  await page.keyboard.press('Enter');
+
+  // 401 : message unique, focus rendu au mot de passe, axe sur l'état d'erreur.
+  await expect(page.getByRole('alert')).toHaveText('E-mail, mot de passe ou code incorrect.');
+  await expect(page.getByLabel('Mot de passe', { exact: true })).toBeFocused();
+  await expectNoAxeViolations(page);
+
+  await page.keyboard.press('Control+A');
+  await page.keyboard.type(account.password);
+  await page.keyboard.press('Enter');
+
+  // 202 : le bloc code apparaît et reçoit le focus ; axe sur l'état « code demandé » (fiche 11).
+  const code = page.getByLabel('Code de vérification');
+  await expect(code).toBeFocused();
+  await expectNoAxeViolations(page);
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Utiliser un code de secours' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(code).toHaveAttribute('inputmode', 'text');
+  await expect(code).toBeFocused();
+  await expect(page.getByText(/codes de secours/)).toBeVisible();
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Enter');
+  await expect(code).toHaveAttribute('inputmode', 'numeric');
+  await expect(code).toBeFocused();
+  await page.keyboard.type(totp(secret, Math.max(usedStep + 1, totpStep())));
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/\/fr\/patients$/);
+});
+
+test('dossier professionnel au clavier : type, intitulé, fichier, Ajouter, Retirer (confirmation), Soumettre', async ({
+  page,
+  request,
+}) => {
+  const account = await register(request, 'm1-15.dossier-clavier');
+  await confirmEmail(request, account.email);
+  await page.goto('/fr/connexion');
+  await page.getByLabel('Adresse e-mail').fill(account.email);
+  await page.getByLabel('Mot de passe', { exact: true }).fill(account.password);
+  await page.getByRole('button', { name: 'Se connecter' }).click();
+  await expect(page).toHaveURL(/\/fr\/patients$/);
+  await page.goto('/fr/mon-compte/dossier-professionnel');
+  await expect(page.getByText('Aucun justificatif déposé')).toBeVisible();
+
+  const documents = page.getByRole('list', { name: 'Justificatifs déposés' }).getByRole('listitem');
+  const pdf = {
+    name: 'master.pdf',
+    mimeType: 'application/pdf',
+    buffer: Buffer.from(
+      '%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[]/Count 0>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF',
+    ),
+  };
+
+  // Formulaire d'ajout : liste déroulante au clavier, champs, puis le fichier (la boîte de dialogue
+  // du système n'est pas pilotable : setInputFiles pose le fichier sur l'<input type=file> focalisé).
+  await tabTo(page, 'field-document-type');
+  await page.keyboard.press('ArrowDown');
+  await expect(page.locator('#field-document-type')).toHaveValue('diploma');
+  await page.keyboard.press('Tab');
+  await expectFocus(page, 'field-document-title');
+  await page.keyboard.type('Master 2');
+  await page.keyboard.press('Tab');
+  await expectFocus(page, 'field-document-issuer');
+  await page.keyboard.type('Lyon 2');
+  await page.keyboard.press('Tab');
+  await expectFocus(page, 'field-document-year');
+  await page.keyboard.type('2014');
+  await page.keyboard.press('Tab');
+  await expectFocus(page, 'field-document-file');
+  await page.locator('#field-document-file').setInputFiles(pdf);
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Ajouter au dossier' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(documents).toHaveCount(1);
+
+  // Retirer : la confirmation s'ouvre, Échap la ferme sans rien retirer, puis Tab + Entrée confirme.
+  await tabToName(page, 'Retirer Master 2');
+  await page.keyboard.press('Enter');
+  const dialog = page.getByRole('dialog', { name: /Retirer « Master 2 » \?/ });
+  await expect(dialog).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(documents).toHaveCount(1);
+  await expect(page.getByRole('button', { name: 'Retirer Master 2' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(dialog).toBeVisible();
+  await tabToName(page, 'Retirer');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page.getByText('Aucun justificatif déposé')).toBeVisible();
+
+  // Diplôme + pièce d'identité puis Soumettre au clavier.
+  await page.locator('#field-document-type').selectOption('diploma');
+  await page.locator('#field-document-title').fill('Master 2');
+  await page.locator('#field-document-file').setInputFiles(pdf);
+  await page.getByRole('button', { name: 'Ajouter au dossier' }).click();
+  await expect(documents).toHaveCount(1);
+  await page.locator('#field-document-type').selectOption('identity');
+  await page.locator('#field-document-title').fill('CNI');
+  await page.locator('#field-document-file').setInputFiles({
+    name: 'cni.png',
+    mimeType: 'image/png',
+    buffer: Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+      'base64',
+    ),
+  });
+  await page.getByRole('button', { name: 'Ajouter au dossier' }).click();
+  await expect(documents).toHaveCount(2);
+  await tabToName(page, 'Soumettre le dossier pour vérification');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.notice.info')).toContainText('en cours de vérification');
+  await expectNoAxeViolations(page);
 });

@@ -50,7 +50,7 @@
         class="toggle-password"
         [attr.aria-pressed]="showPassword()"
         [attr.aria-label]="showPasswordLabel"
-        (click)="showPassword.set(!showPassword())"
+        (click)="togglePassword($event)"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           @if (showPassword()) {

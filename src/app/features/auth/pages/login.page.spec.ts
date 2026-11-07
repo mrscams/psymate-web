@@ -68,9 +68,13 @@ describe('LoginPage', () => {
     const { fixture, el } = await render(vi.fn());
     const toggle = el.querySelector<HTMLButtonElement>('button.toggle-password');
     expect(toggle?.getAttribute('aria-pressed')).toBe('false');
+    // Le clic ne remonte pas au conteneur mat-form-field (qui rendrait le focus au champ).
+    const reachedForm = vi.fn();
+    el.querySelector('form')?.addEventListener('click', reachedForm);
     toggle?.click();
     await fixture.whenStable();
     expect(toggle?.getAttribute('aria-pressed')).toBe('true');
+    expect(reachedForm).not.toHaveBeenCalled();
     expect(el.querySelector<HTMLInputElement>('input[autocomplete=current-password]')?.type).toBe(
       'text',
     );
