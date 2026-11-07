@@ -32,7 +32,7 @@ export class PublicMeta {
   private readonly meta = inject(Meta);
   private readonly title = inject(Title);
   private readonly document = inject(DOCUMENT);
-  private readonly baseHref = inject(PlatformLocation).getBaseHrefFromDOM();
+  private readonly baseHref = inject(PlatformLocation).getBaseHrefFromDOM() ?? '/';
 
   /** Pose les balises et les retire à la destruction de la page appelante. */
   apply(page: PublicPageMeta, destroyRef?: DestroyRef): void {

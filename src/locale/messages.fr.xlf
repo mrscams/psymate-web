@@ -2803,7 +2803,7 @@
         <source>Connexion · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet de la connexion</note>
       </trans-unit>
@@ -2811,7 +2811,7 @@
         <source>Créer un compte · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet de l&apos;inscription</note>
       </trans-unit>
@@ -2819,7 +2819,7 @@
         <source>Mot de passe oublié · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet du mot de passe oublié</note>
       </trans-unit>
@@ -2827,11 +2827,11 @@
         <source>Confirmer l&apos;e-mail · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">36</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet, e-mail à confirmer</note>
       </trans-unit>
@@ -2839,7 +2839,7 @@
         <source>Lien expiré · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet, lien de confirmation expiré</note>
       </trans-unit>
@@ -2847,7 +2847,7 @@
         <source>Compte suspendu · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet, compte suspendu</note>
       </trans-unit>
@@ -2855,7 +2855,7 @@
         <source>Première connexion · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet, première connexion</note>
       </trans-unit>
@@ -4745,6 +4745,1373 @@
           <context context-type="linenumber">10</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="public.directory.title" datatype="html">
+        <source> Trouver un psychologue, un psychiatre ou un coach </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;annuaire public</note>
+      </trans-unit>
+      <trans-unit id="public.directory.verifiedNote" datatype="html">
+        <source> Seuls les praticiens dont le dossier a été vérifié apparaissent ici. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">7,14</context>
+        </context-group>
+        <note priority="1" from="description">Note sous le titre de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.search.label" datatype="html">
+        <source>Rechercher un praticien</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">14,15</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du formulaire de recherche de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.search.q" datatype="html">
+        <source>Mot-clé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">19,22</context>
+        </context-group>
+        <note priority="1" from="description">Champ mot-clé de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.search.q.placeholder" datatype="html">
+        <source>Nom, spécialité…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">28,29</context>
+        </context-group>
+        <note priority="1" from="description">Exemple de mot-clé de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.search.city" datatype="html">
+        <source>Ville</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">33,36</context>
+        </context-group>
+        <note priority="1" from="description">Champ ville de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.search.profession" datatype="html">
+        <source>Profession</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">47,51</context>
+        </context-group>
+        <note priority="1" from="description">Sélecteur de profession de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.search.profession.all" datatype="html">
+        <source>Toutes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">56,58</context>
+        </context-group>
+        <note priority="1" from="description">Option toutes professions</note>
+      </trans-unit>
+      <trans-unit id="public.search.specialty" datatype="html">
+        <source>Spécialité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">65,69</context>
+        </context-group>
+        <note priority="1" from="description">Sélecteur de spécialité de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.search.specialty.all" datatype="html">
+        <source>Toutes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">74,76</context>
+        </context-group>
+        <note priority="1" from="description">Option toutes spécialités</note>
+      </trans-unit>
+      <trans-unit id="public.search.submit" datatype="html">
+        <source> Rechercher </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">93,98</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de recherche de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.directory.rateLimited" datatype="html">
+        <source> Trop de recherches, réessayez dans <x id="INTERPOLATION" equiv-text="{{ retrySeconds() }}"/> s. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">99,103</context>
+        </context-group>
+        <note priority="1" from="description">Annuaire, 429</note>
+      </trans-unit>
+      <trans-unit id="public.filters.toggle" datatype="html">
+        <source> Filtres (<x id="INTERPOLATION" equiv-text="{{ filterCount() }}"/>) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">113,115</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui déplie les filtres sur petit écran</note>
+      </trans-unit>
+      <trans-unit id="public.filters.label" datatype="html">
+        <source>Filtres</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la colonne de filtres</note>
+      </trans-unit>
+      <trans-unit id="public.results.title" datatype="html">
+        <source> Résultats </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">136,139</context>
+        </context-group>
+        <note priority="1" from="description">Titre caché des résultats</note>
+      </trans-unit>
+      <trans-unit id="8811628201944424148" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {Aucun praticien} =1 {1 praticien} other {<x id="INTERPOLATION"/> praticiens}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">143,146</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="public.results.countInCity" datatype="html">
+        <source><x id="ICU" equiv-text="{data.total, plural,
+                  =0 {Aucun praticien}
+                  =1 {1 praticien}
+                  other {{{ data.total }} praticiens}
+                }" xid="1036290849905700919"/> à <x id="INTERPOLATION_1" equiv-text="{{ searchedCity() }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">143,149</context>
+        </context-group>
+        <note priority="1" from="description">Nombre de résultats dans une ville</note>
+      </trans-unit>
+      <trans-unit id="public.results.count" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {Aucun praticien} =1 {1 praticien} other {<x id="INTERPOLATION"/> praticiens}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">151,155</context>
+        </context-group>
+        <note priority="1" from="description">Nombre de résultats</note>
+      </trans-unit>
+      <trans-unit id="public.results.sort" datatype="html">
+        <source>Trier par</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">161,164</context>
+        </context-group>
+        <note priority="1" from="description">Sélecteur de tri des résultats</note>
+      </trans-unit>
+      <trans-unit id="public.results.sort.relevance" datatype="html">
+        <source>Pertinence</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">169,171</context>
+        </context-group>
+        <note priority="1" from="description">Tri par pertinence</note>
+      </trans-unit>
+      <trans-unit id="public.results.sort.name" datatype="html">
+        <source>Nom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">171,173</context>
+        </context-group>
+        <note priority="1" from="description">Tri par nom</note>
+      </trans-unit>
+      <trans-unit id="public.directory.error.inline" datatype="html">
+        <source> L&apos;annuaire est momentanément indisponible. Les résultats affichés sont ceux de la recherche précédente. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">182,188</context>
+        </context-group>
+        <note priority="1" from="description">Annuaire indisponible, liste précédente gardée</note>
+      </trans-unit>
+      <trans-unit id="public.directory.error.title" datatype="html">
+        <source>L&apos;annuaire est momentanément indisponible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">191,192</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;erreur de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.directory.error.message" datatype="html">
+        <source>Votre recherche est conservée. Réessayez dans un instant.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">193,194</context>
+        </context-group>
+        <note priority="1" from="description">Texte de l&apos;erreur de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.results.empty.city" datatype="html">
+        <source>Aucun praticien à <x id="INTERPOLATION" equiv-text="{{ searchedCity() }}"/> pour ces critères</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">204,205</context>
+        </context-group>
+        <note priority="1" from="description">Aucun résultat dans une ville</note>
+      </trans-unit>
+      <trans-unit id="public.results.empty" datatype="html">
+        <source>Aucun praticien pour ces critères</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">208,211</context>
+        </context-group>
+        <note priority="1" from="description">Aucun résultat</note>
+      </trans-unit>
+      <trans-unit id="public.results.chips" datatype="html">
+        <source>Critères actifs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">215,216</context>
+        </context-group>
+        <note priority="1" from="description">Liste des critères actifs</note>
+      </trans-unit>
+      <trans-unit id="public.results.chip.remove" datatype="html">
+        <source>retirer ce critère</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">230,232</context>
+        </context-group>
+        <note priority="1" from="description">Action d&apos;une puce de filtre</note>
+      </trans-unit>
+      <trans-unit id="public.results.suggest.widen" datatype="html">
+        <source> Élargir à toute la France </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">247,250</context>
+        </context-group>
+        <note priority="1" from="description">Suggestion : retirer ville et mot-clé</note>
+      </trans-unit>
+      <trans-unit id="public.results.suggest.removeLast" datatype="html">
+        <source> Retirer « <x id="INTERPOLATION" equiv-text="{{ chip.label }}"/> » </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">258,259</context>
+        </context-group>
+        <note priority="1" from="description">Suggestion : retirer le dernier filtre</note>
+      </trans-unit>
+      <trans-unit id="public.results.suggest.video" datatype="html">
+        <source> Inclure la visio </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">269,273</context>
+        </context-group>
+        <note priority="1" from="description">Suggestion : consultations en visio</note>
+      </trans-unit>
+      <trans-unit id="public.results.howItWorks" datatype="html">
+        <source>Comment fonctionne l&apos;annuaire ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">277,282</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers comment ça marche depuis l&apos;état vide</note>
+      </trans-unit>
+      <trans-unit id="public.directory.error.retry" datatype="html">
+        <source>Réessayer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;erreur de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.directory.chip.accepting" datatype="html">
+        <source>Accepte de nouveaux patients</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <note priority="1" from="description">Filtre actif « accepte de nouveaux patients »</note>
+      </trans-unit>
+      <trans-unit id="public.directory.meta.description" datatype="html">
+        <source>Trouvez un psychologue, un psychiatre ou un coach dont le dossier a été vérifié, et contactez-le directement.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.ts</context>
+          <context context-type="linenumber">190</context>
+        </context-group>
+        <note priority="1" from="description">Description de l&apos;annuaire pour les moteurs de recherche</note>
+      </trans-unit>
+      <trans-unit id="public.how.eyebrow" datatype="html">
+        <source> Comment ça marche </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">Surtitre de comment ça marche</note>
+      </trans-unit>
+      <trans-unit id="public.how.title" datatype="html">
+        <source> Un outil de suivi pour les praticiens, un annuaire vérifié pour le public. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">7,9</context>
+        </context-group>
+        <note priority="1" from="description">Titre de comment ça marche</note>
+      </trans-unit>
+      <trans-unit id="public.how.lead" datatype="html">
+        <source> PsyMate sert deux publics qui ne se croisent jamais dans l&apos;outil : les praticiens, qui y tiennent le fil de leurs accompagnements, et les personnes qui cherchent un professionnel et veulent savoir à qui elles s&apos;adressent. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">10,16</context>
+        </context-group>
+        <note priority="1" from="description">Introduction de comment ça marche</note>
+      </trans-unit>
+      <trans-unit id="public.how.paths.title" datatype="html">
+        <source> Deux parcours </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">22,24</context>
+        </context-group>
+        <note priority="1" from="description">Titre caché des deux parcours</note>
+      </trans-unit>
+      <trans-unit id="public.how.visitor.title" datatype="html">
+        <source> Vous cherchez un praticien </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">33,36</context>
+        </context-group>
+        <note priority="1" from="description">Titre du parcours visiteur</note>
+      </trans-unit>
+      <trans-unit id="public.how.visitor.text" datatype="html">
+        <source> Vous consultez les fiches publiques de psychologues, psychiatres et coachs dont le dossier a été vérifié par notre équipe. Vous les contactez par les moyens qu&apos;ils ont choisi d&apos;afficher, ou par un formulaire : votre message leur est transmis directement. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">37,42</context>
+        </context-group>
+        <note priority="1" from="description">Texte du parcours visiteur</note>
+      </trans-unit>
+      <trans-unit id="public.how.visitor.noAccount" datatype="html">
+        <source> Aucun compte à créer pour chercher ou contacter un praticien. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">43,45</context>
+        </context-group>
+        <note priority="1" from="description">Point du parcours visiteur</note>
+      </trans-unit>
+      <trans-unit id="public.how.visitor.badge" datatype="html">
+        <source> Le badge « Profil vérifié » figure sur chaque fiche dont le dossier est approuvé. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+        <note priority="1" from="description">Point du parcours visiteur</note>
+      </trans-unit>
+      <trans-unit id="public.how.visitor.contact" datatype="html">
+        <source> Seuls les moyens de contact choisis par le praticien sont affichés. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">49,53</context>
+        </context-group>
+        <note priority="1" from="description">Point du parcours visiteur</note>
+      </trans-unit>
+      <trans-unit id="public.how.visitor.cta" datatype="html">
+        <source>Parcourir l&apos;annuaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">56,60</context>
+        </context-group>
+        <note priority="1" from="description">Bouton vers l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.how.practitioner.title" datatype="html">
+        <source> Vous êtes praticien </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">72,75</context>
+        </context-group>
+        <note priority="1" from="description">Titre du parcours praticien</note>
+      </trans-unit>
+      <trans-unit id="public.how.practitioner.text" datatype="html">
+        <source> Vous notez vos séances, les ressentis exprimés, les situations de vie et, si votre pratique le permet, les traitements. Vous reliez ce qui va ensemble et retrouvez en quelques secondes où en est une personne. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">76,81</context>
+        </context-group>
+        <note priority="1" from="description">Texte du parcours praticien</note>
+      </trans-unit>
+      <trans-unit id="public.how.practitioner.open" datatype="html">
+        <source> Inscription ouverte aux psychologues, psychiatres et coachs. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">82,84</context>
+        </context-group>
+        <note priority="1" from="description">Point du parcours praticien</note>
+      </trans-unit>
+      <trans-unit id="public.how.practitioner.tool" datatype="html">
+        <source> Outil utilisable dès la confirmation de votre e-mail. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">85,87</context>
+        </context-group>
+        <note priority="1" from="description">Point du parcours praticien</note>
+      </trans-unit>
+      <trans-unit id="public.how.practitioner.profile" datatype="html">
+        <source> Fiche publique et badge après vérification de vos justificatifs. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">88,93</context>
+        </context-group>
+        <note priority="1" from="description">Point du parcours praticien</note>
+      </trans-unit>
+      <trans-unit id="public.how.practitioner.cta" datatype="html">
+        <source>Créer un compte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">95,100</context>
+        </context-group>
+        <note priority="1" from="description">Bouton vers l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="public.how.steps.title" datatype="html">
+        <source> De l&apos;inscription à la fiche publique, en quatre étapes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">102,104</context>
+        </context-group>
+        <note priority="1" from="description">Titre des quatre étapes</note>
+      </trans-unit>
+      <trans-unit id="public.how.steps.sub" datatype="html">
+        <source> La vérification prend au plus <x id="INTERPOLATION" equiv-text="{{ facts.verificationBusinessDays }}"/> jours ouvrés. Elle ne bloque pas l&apos;usage de l&apos;outil de suivi. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">105,108</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre des quatre étapes</note>
+      </trans-unit>
+      <trans-unit id="public.how.step1.title" datatype="html">
+        <source>Créer le compte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">111,112</context>
+        </context-group>
+        <note priority="1" from="description">Étape 1</note>
+      </trans-unit>
+      <trans-unit id="public.how.step1.text" datatype="html">
+        <source> Identité, profession, e-mail professionnel et téléphone. Quelques minutes. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">113,117</context>
+        </context-group>
+        <note priority="1" from="description">Étape 1, texte</note>
+      </trans-unit>
+      <trans-unit id="public.how.step2.title" datatype="html">
+        <source>Confirmer l&apos;e-mail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">118,119</context>
+        </context-group>
+        <note priority="1" from="description">Étape 2</note>
+      </trans-unit>
+      <trans-unit id="public.how.step2.text" datatype="html">
+        <source> Un lien valable <x id="INTERPOLATION" equiv-text="{{ facts.emailConfirmationHours }}"/> h. Dès ce clic, l&apos;outil de suivi est ouvert : vous pouvez créer vos premiers dossiers. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">120,122</context>
+        </context-group>
+        <note priority="1" from="description">Étape 2, texte</note>
+      </trans-unit>
+      <trans-unit id="public.how.step3.title" datatype="html">
+        <source>Déposer son diplôme et sa pièce d&apos;identité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">126,127</context>
+        </context-group>
+        <note priority="1" from="description">Étape 3</note>
+      </trans-unit>
+      <trans-unit id="public.how.step3.text" datatype="html">
+        <source> Scans ou photos (PDF, JPEG ou PNG). L&apos;attestation ADELI ou RPPS est recommandée pour les psychologues et les psychiatres. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">128,132</context>
+        </context-group>
+        <note priority="1" from="description">Étape 3, texte</note>
+      </trans-unit>
+      <trans-unit id="public.how.step4.title" datatype="html">
+        <source>Vérification humaine</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">134,135</context>
+        </context-group>
+        <note priority="1" from="description">Étape 4</note>
+      </trans-unit>
+      <trans-unit id="public.how.step4.text" datatype="html">
+        <source> Un membre de l&apos;équipe examine le dossier sous <x id="INTERPOLATION" equiv-text="{{ facts.verificationBusinessDays }}"/> jours ouvrés. Approuvé : fiche publique et badge activés. Pièce manquante : on vous dit précisément laquelle. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">136,138</context>
+        </context-group>
+        <note priority="1" from="description">Étape 4, texte</note>
+      </trans-unit>
+      <trans-unit id="public.how.never.title" datatype="html">
+        <source> Ce que nous ne voyons jamais </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">147,149</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc garanties</note>
+      </trans-unit>
+      <trans-unit id="public.how.never.text" datatype="html">
+        <source> Les dossiers patients appartiennent au praticien. Notre équipe d&apos;administration vérifie des diplômes, jamais des dossiers : l&apos;espace d&apos;administration n&apos;a techniquement aucun accès aux données cliniques. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">150,156</context>
+        </context-group>
+        <note priority="1" from="description">Texte du bloc garanties</note>
+      </trans-unit>
+      <trans-unit id="public.how.never.hosting.title" datatype="html">
+        <source>Hébergement en France</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">158,160</context>
+        </context-group>
+        <note priority="1" from="description">Garantie hébergement</note>
+      </trans-unit>
+      <trans-unit id="public.how.never.hosting.text" datatype="html">
+        <source>Données chiffrées au repos et en transit.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">161,165</context>
+        </context-group>
+        <note priority="1" from="description">Garantie hébergement, texte</note>
+      </trans-unit>
+      <trans-unit id="public.how.never.contact.title" datatype="html">
+        <source>Formulaire de contact relayé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">166,168</context>
+        </context-group>
+        <note priority="1" from="description">Garantie contact relayé</note>
+      </trans-unit>
+      <trans-unit id="public.how.never.contact.text" datatype="html">
+        <source>Le message part chez le praticien ; il n&apos;est rattaché à aucun dossier et il est effacé après <x id="INTERPOLATION" equiv-text="{{ facts.contactRetentionDays }}"/> jours.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">169,172</context>
+        </context-group>
+        <note priority="1" from="description">Garantie contact relayé, texte</note>
+      </trans-unit>
+      <trans-unit id="public.how.never.documents.title" datatype="html">
+        <source>Justificatifs purgés</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">175,177</context>
+        </context-group>
+        <note priority="1" from="description">Garantie justificatifs</note>
+      </trans-unit>
+      <trans-unit id="public.how.never.documents.text" datatype="html">
+        <source>Les scans de diplômes et de pièces d&apos;identité sont supprimés <x id="INTERPOLATION" equiv-text="{{ facts.documentsPurgeDays }}"/> jours après la décision.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">178,181</context>
+        </context-group>
+        <note priority="1" from="description">Garantie justificatifs, texte</note>
+      </trans-unit>
+      <trans-unit id="public.how.faq.title" datatype="html">
+        <source>Questions fréquentes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">186,188</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la FAQ</note>
+      </trans-unit>
+      <trans-unit id="public.how.faq.who.q" datatype="html">
+        <source>Qui peut créer un compte praticien ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">189,190</context>
+        </context-group>
+        <note priority="1" from="description">FAQ 1</note>
+      </trans-unit>
+      <trans-unit id="public.how.faq.who.a" datatype="html">
+        <source> Les psychologues, psychiatres et coachs qui exercent en France. Toutes les professions déposent un diplôme et une pièce d&apos;identité. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">191,194</context>
+        </context-group>
+        <note priority="1" from="description">FAQ 1, réponse</note>
+      </trans-unit>
+      <trans-unit id="public.how.faq.refused.q" datatype="html">
+        <source> Que se passe-t-il si mon dossier est refusé ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">197,199</context>
+        </context-group>
+        <note priority="1" from="description">FAQ 2</note>
+      </trans-unit>
+      <trans-unit id="public.how.faq.refused.a" datatype="html">
+        <source> Vous recevez le motif par e-mail. Vous ne pouvez plus saisir de nouvelles entrées, mais vous pouvez exporter vos données et contester la décision. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">200,204</context>
+        </context-group>
+        <note priority="1" from="description">FAQ 2, réponse</note>
+      </trans-unit>
+      <trans-unit id="public.how.faq.patients.q" datatype="html">
+        <source>Mes patients ont-ils un compte ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">205,206</context>
+        </context-group>
+        <note priority="1" from="description">FAQ 3</note>
+      </trans-unit>
+      <trans-unit id="public.how.faq.patients.a" datatype="html">
+        <source> Non. PsyMate est réservé aux praticiens : les personnes suivies n&apos;ont ni compte ni accès, et rien de leur dossier n&apos;apparaît dans l&apos;annuaire. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">207,211</context>
+        </context-group>
+        <note priority="1" from="description">FAQ 3, réponse</note>
+      </trans-unit>
+      <trans-unit id="public.how.faq.export.q" datatype="html">
+        <source> Puis-je exporter ou supprimer mes données ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">213,215</context>
+        </context-group>
+        <note priority="1" from="description">FAQ 4</note>
+      </trans-unit>
+      <trans-unit id="public.how.faq.export.a" datatype="html">
+        <source> Oui, à tout moment depuis votre compte : export complet de vos données, puis suppression du compte si vous le souhaitez. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.html</context>
+          <context context-type="linenumber">216,220</context>
+        </context-group>
+        <note priority="1" from="description">FAQ 4, réponse</note>
+      </trans-unit>
+      <trans-unit id="public.how.meta.description" datatype="html">
+        <source>PsyMate : un outil de suivi pour les psychologues, psychiatres et coachs, et un annuaire public de praticiens dont le dossier a été vérifié.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/how-it-works.page.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <note priority="1" from="description">Description de comment ça marche pour les moteurs de recherche</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.crumbs" datatype="html">
+        <source>Fil d&apos;Ariane</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">4,5</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du fil d&apos;Ariane</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.crumbs.directory" datatype="html">
+        <source>Annuaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">12,15</context>
+        </context-group>
+        <note priority="1" from="description">Fil d&apos;Ariane, annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.number" datatype="html">
+        <source>n°</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">42,44</context>
+        </context-group>
+        <note priority="1" from="description">Préfixe du numéro professionnel</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.responseDelay" datatype="html">
+        <source> Répond en général <x id="INTERPOLATION" equiv-text="{{ p.responseDelay }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">59,60</context>
+        </context-group>
+        <note priority="1" from="description">Délai de réponse déclaré</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.nextSlot" datatype="html">
+        <source> Prochain créneau : <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ nextSlot() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">64,65</context>
+        </context-group>
+        <note priority="1" from="description">Prochain créneau</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.contactCta" datatype="html">
+        <source>Prendre contact</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">75,79</context>
+        </context-group>
+        <note priority="1" from="description">Bouton vers le formulaire de contact</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.share" datatype="html">
+        <source> Partager </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">83,87</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de partage de la fiche</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.bio" datatype="html">
+        <source> Présentation </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">92,94</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la présentation</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.practice" datatype="html">
+        <source> Pratique </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">133,136</context>
+        </context-group>
+        <note priority="1" from="description">Titre caché de la pratique</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.specialties" datatype="html">
+        <source>Spécialités</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">137,139</context>
+        </context-group>
+        <note priority="1" from="description">Titre des spécialités</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.audiences" datatype="html">
+        <source>Publics</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">147,149</context>
+        </context-group>
+        <note priority="1" from="description">Titre des publics</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.modalities" datatype="html">
+        <source>Modalités</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">157,159</context>
+        </context-group>
+        <note priority="1" from="description">Titre des modalités</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.modality.notOffered" datatype="html">
+        <source>· non proposé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">165,168</context>
+        </context-group>
+        <note priority="1" from="description">Modalité non proposée</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.languagesFees" datatype="html">
+        <source> Langues et tarifs </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">176,179</context>
+        </context-group>
+        <note priority="1" from="description">Titre langues et tarifs</note>
+      </trans-unit>
+      <trans-unit id="public.contact.title" datatype="html">
+        <source> Envoyer un message à <x id="INTERPOLATION" equiv-text="{{ p.displayName }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">191,193</context>
+        </context-group>
+        <note priority="1" from="description">Titre du formulaire de contact</note>
+      </trans-unit>
+      <trans-unit id="public.contact.lead" datatype="html">
+        <source> Votre message est transmis par e-mail à <x id="INTERPOLATION" equiv-text="{{ p.displayName }}"/>. Il n&apos;est rattaché à aucun dossier patient. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">194,196</context>
+        </context-group>
+        <note priority="1" from="description">Introduction du formulaire de contact</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.side" datatype="html">
+        <source>Coordonnées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">210,211</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la colonne latérale de la fiche</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.contactMeans" datatype="html">
+        <source> Contact </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">219,222</context>
+        </context-group>
+        <note priority="1" from="description">Titre des moyens de contact</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.phone" datatype="html">
+        <source>Téléphone</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">224,226</context>
+        </context-group>
+        <note priority="1" from="description">Téléphone du praticien</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.email" datatype="html">
+        <source>E-mail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">232,234</context>
+        </context-group>
+        <note priority="1" from="description">E-mail du praticien</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.website" datatype="html">
+        <source>Site web</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">240,242</context>
+        </context-group>
+        <note priority="1" from="description">Site web du praticien</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.contactMeans.note" datatype="html">
+        <source> Seuls les moyens de contact choisis par le praticien sont affichés. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">253,259</context>
+        </context-group>
+        <note priority="1" from="description">Note sous les moyens de contact</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.office" datatype="html">
+        <source> Cabinet </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">261,264</context>
+        </context-group>
+        <note priority="1" from="description">Titre du cabinet</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.map" datatype="html">
+        <source>Ouvrir dans un plan</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">272,274</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers un plan</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.map.external" datatype="html">
+        <source>(nouvel onglet, OpenStreetMap)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">275,279</context>
+        </context-group>
+        <note priority="1" from="description">Mention lien externe</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.publishedBy" datatype="html">
+        <source> Les informations de cette fiche sont publiées par le praticien lui-même. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">283,288</context>
+        </context-group>
+        <note priority="1" from="description">Mention sous la fiche</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.notFound.title" datatype="html">
+        <source> Fiche introuvable </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">291,293</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la fiche introuvable</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.notFound.text" datatype="html">
+        <source> Cette fiche n&apos;existe pas ou n&apos;est plus publiée dans l&apos;annuaire. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">294,298</context>
+        </context-group>
+        <note priority="1" from="description">Texte de la fiche introuvable</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.notFound.back" datatype="html">
+        <source>Retour à l&apos;annuaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">300,306</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers l&apos;annuaire depuis la fiche introuvable</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.loadingTitle" datatype="html">
+        <source> Fiche d&apos;un praticien </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">308,312</context>
+        </context-group>
+        <note priority="1" from="description">Titre caché pendant le chargement de la fiche</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.error.title" datatype="html">
+        <source>Impossible d&apos;afficher cette fiche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">313,314</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;erreur de la fiche</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.error.message" datatype="html">
+        <source>L&apos;annuaire est momentanément indisponible. Réessayez dans un instant.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
+          <context context-type="linenumber">315,316</context>
+        </context-group>
+        <note priority="1" from="description">Texte de l&apos;erreur de la fiche</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.error.retry" datatype="html">
+        <source>Réessayer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;erreur de la fiche</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.notFound.pageTitle" datatype="html">
+        <source>Fiche introuvable · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.ts</context>
+          <context context-type="linenumber">161</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet, fiche introuvable</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.notFound.description" datatype="html">
+        <source>Cette fiche n&apos;existe pas ou n&apos;est plus publiée dans l&apos;annuaire PsyMate.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.ts</context>
+          <context context-type="linenumber">162</context>
+        </context-group>
+        <note priority="1" from="description">Description d&apos;une fiche introuvable</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.share.copied" datatype="html">
+        <source>Lien de la fiche copié.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.ts</context>
+          <context context-type="linenumber">195</context>
+        </context-group>
+        <note priority="1" from="description">Toast après copie du lien de la fiche</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.share.failed" datatype="html">
+        <source>Impossible de copier le lien. Copiez l&apos;adresse de la page.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+        <note priority="1" from="description">Toast si la copie du lien échoue</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.meta.description" datatype="html">
+        <source><x id="profession" equiv-text="profession"/> <x id="name" equiv-text="profile.displayName"/> dans l&apos;annuaire PsyMate.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.ts</context>
+          <context context-type="linenumber">217</context>
+        </context-group>
+        <note priority="1" from="description">Description par défaut d&apos;une fiche</note>
+      </trans-unit>
+      <trans-unit id="public.directory.pageTitle" datatype="html">
+        <source>Annuaire des praticiens · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/public.routes.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.practitioner.pageTitle" datatype="html">
+        <source>Fiche praticien · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/public.routes.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de la fiche avant chargement</note>
+      </trans-unit>
+      <trans-unit id="public.how.pageTitle" datatype="html">
+        <source>Comment ça marche · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/public.routes.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de comment ça marche</note>
+      </trans-unit>
+      <trans-unit id="public.contact.sent" datatype="html">
+        <source> Votre message a été transmis à <x id="INTERPOLATION" equiv-text="{{ practitionerName() }}"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation d&apos;envoi du message de contact</note>
+      </trans-unit>
+      <trans-unit id="public.contact.sent.next" datatype="html">
+        <source> La réponse arrivera directement à l&apos;adresse indiquée. Aucun compte n&apos;a été créé. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">7,11</context>
+        </context-group>
+        <note priority="1" from="description">Suite de la confirmation d&apos;envoi</note>
+      </trans-unit>
+      <trans-unit id="public.contact.another" datatype="html">
+        <source> Écrire un autre message </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">15,19</context>
+        </context-group>
+        <note priority="1" from="description">Bouton pour écrire un autre message</note>
+      </trans-unit>
+      <trans-unit id="public.contact.name" datatype="html">
+        <source>Votre nom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">23,27</context>
+        </context-group>
+        <note priority="1" from="description">Champ nom du formulaire de contact</note>
+      </trans-unit>
+      <trans-unit id="public.contact.email" datatype="html">
+        <source>Votre e-mail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">39,43</context>
+        </context-group>
+        <note priority="1" from="description">Champ e-mail du formulaire de contact</note>
+      </trans-unit>
+      <trans-unit id="public.contact.subject" datatype="html">
+        <source>Objet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">58,60</context>
+        </context-group>
+        <note priority="1" from="description">Champ objet du formulaire de contact</note>
+      </trans-unit>
+      <trans-unit id="public.contact.message" datatype="html">
+        <source>Message</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">72,76</context>
+        </context-group>
+        <note priority="1" from="description">Champ message du formulaire de contact</note>
+      </trans-unit>
+      <trans-unit id="public.contact.message.hint" datatype="html">
+        <source>Décrivez brièvement votre demande et vos disponibilités. Évitez les informations médicales détaillées : elles seront abordées en séance.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">83,86</context>
+        </context-group>
+        <note priority="1" from="description">Avertissement sous le champ message</note>
+      </trans-unit>
+      <trans-unit id="public.contact.consent" datatype="html">
+        <source>J&apos;accepte que mes coordonnées soient transmises à <x id="INTERPOLATION" equiv-text="{{ practitionerName() }}"/> pour répondre à ma demande.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">114,115</context>
+        </context-group>
+        <note priority="1" from="description">Case de consentement du formulaire de contact</note>
+      </trans-unit>
+      <trans-unit id="public.contact.consent.required" datatype="html">
+        <source> Cochez cette case pour envoyer votre message. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">123,128</context>
+        </context-group>
+        <note priority="1" from="description">Consentement manquant</note>
+      </trans-unit>
+      <trans-unit id="public.contact.privacy" datatype="html">
+        <source>En savoir plus sur la protection des données</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">130,136</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la confidentialité depuis le formulaire de contact</note>
+      </trans-unit>
+      <trans-unit id="public.contact.rateLimited" datatype="html">
+        <source> Trop de messages envoyés depuis votre connexion. Réessayez dans <x id="INTERPOLATION" equiv-text="{{ retryMinutes() }}"/> min. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">137,139</context>
+        </context-group>
+        <note priority="1" from="description">Contact, 429</note>
+      </trans-unit>
+      <trans-unit id="public.contact.error" datatype="html">
+        <source> Le message n&apos;a pas pu être envoyé. Votre saisie est conservée : réessayez dans un instant. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">142,146</context>
+        </context-group>
+        <note priority="1" from="description">Contact, échec d&apos;envoi</note>
+      </trans-unit>
+      <trans-unit id="public.contact.invalid" datatype="html">
+        <source> Certains champs sont à corriger. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">147,152</context>
+        </context-group>
+        <note priority="1" from="description">Contact, 422</note>
+      </trans-unit>
+      <trans-unit id="public.contact.submit" datatype="html">
+        <source> Envoyer le message </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">159,162</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;envoi du formulaire de contact</note>
+      </trans-unit>
+      <trans-unit id="public.contact.sending" datatype="html">
+        <source>Envoi en cours…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
+          <context context-type="linenumber">163,169</context>
+        </context-group>
+        <note priority="1" from="description">Envoi en cours</note>
+      </trans-unit>
+      <trans-unit id="public.contact.subject.firstAppointment" datatype="html">
+        <source>Demande de premier rendez-vous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Objet du message de contact</note>
+      </trans-unit>
+      <trans-unit id="public.contact.subject.practice" datatype="html">
+        <source>Question sur la pratique</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">Objet du message de contact</note>
+      </trans-unit>
+      <trans-unit id="public.contact.subject.other" datatype="html">
+        <source>Autre demande</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Objet du message de contact</note>
+      </trans-unit>
+      <trans-unit id="public.filters.availability" datatype="html">
+        <source> Disponibilité </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.html</context>
+          <context context-type="linenumber">22,26</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la facette disponibilité</note>
+      </trans-unit>
+      <trans-unit id="public.filters.accepting" datatype="html">
+        <source>Accepte de nouveaux patients</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.html</context>
+          <context context-type="linenumber">30,36</context>
+        </context-group>
+        <note priority="1" from="description">Case de la facette disponibilité</note>
+      </trans-unit>
+      <trans-unit id="public.filters.clear" datatype="html">
+        <source> Tout effacer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.html</context>
+          <context context-type="linenumber">43,46</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui retire tous les filtres de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.filters.professions" datatype="html">
+        <source>Profession</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la facette profession</note>
+      </trans-unit>
+      <trans-unit id="public.filters.audiences" datatype="html">
+        <source>Publics</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la facette publics</note>
+      </trans-unit>
+      <trans-unit id="public.filters.modalities" datatype="html">
+        <source>Modalités</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.ts</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la facette modalités</note>
+      </trans-unit>
+      <trans-unit id="public.filters.languages" datatype="html">
+        <source>Langues</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la facette langues</note>
+      </trans-unit>
+      <trans-unit id="public.profession.psychologist" datatype="html">
+        <source>Psychologue</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/labels.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <note priority="1" from="description">Profession</note>
+      </trans-unit>
+      <trans-unit id="public.profession.psychiatrist" datatype="html">
+        <source>Psychiatre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/labels.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">Profession</note>
+      </trans-unit>
+      <trans-unit id="public.profession.coach" datatype="html">
+        <source>Coach</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/labels.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Profession</note>
+      </trans-unit>
+      <trans-unit id="public.profession.psychologist.plural" datatype="html">
+        <source>Psychologues</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/labels.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">Profession au pluriel</note>
+      </trans-unit>
+      <trans-unit id="public.profession.psychiatrist.plural" datatype="html">
+        <source>Psychiatres</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/labels.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <note priority="1" from="description">Profession au pluriel</note>
+      </trans-unit>
+      <trans-unit id="public.profession.coach.plural" datatype="html">
+        <source>Coachs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/labels.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Profession au pluriel</note>
+      </trans-unit>
+      <trans-unit id="public.availability.accepting" datatype="html">
+        <source>Accepte de nouveaux patients</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/labels.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <note priority="1" from="description">Disponibilité d&apos;un praticien</note>
+      </trans-unit>
+      <trans-unit id="public.availability.waitlist" datatype="html">
+        <source>Liste d&apos;attente</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/labels.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Disponibilité d&apos;un praticien</note>
+      </trans-unit>
+      <trans-unit id="public.availability.closed" datatype="html">
+        <source>Complet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/labels.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <note priority="1" from="description">Disponibilité d&apos;un praticien</note>
+      </trans-unit>
+      <trans-unit id="public.modality.inPerson" datatype="html">
+        <source>Au cabinet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/labels.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <note priority="1" from="description">Modalité de consultation</note>
+      </trans-unit>
+      <trans-unit id="public.modality.video" datatype="html">
+        <source>En visio</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/labels.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Modalité de consultation</note>
+      </trans-unit>
+      <trans-unit id="public.modality.home" datatype="html">
+        <source>À domicile</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/labels.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+        <note priority="1" from="description">Modalité de consultation</note>
+      </trans-unit>
+      <trans-unit id="public.pagination.label" datatype="html">
+        <source>Pagination</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/pagination.component.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la pagination de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.pagination.previous" datatype="html">
+        <source>‹ Précédent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/pagination.component.html</context>
+          <context context-type="linenumber">16,21</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la page précédente des résultats</note>
+      </trans-unit>
+      <trans-unit id="public.pagination.page" datatype="html">
+        <source>Page</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/pagination.component.html</context>
+          <context context-type="linenumber">34,38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/pagination.component.html</context>
+          <context context-type="linenumber">47,51</context>
+        </context-group>
+        <note priority="1" from="description">Préfixe lu avant un numéro de page</note>
+      </trans-unit>
+      <trans-unit id="public.pagination.next" datatype="html">
+        <source>Suivant ›</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/pagination.component.html</context>
+          <context context-type="linenumber">63,70</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la page suivante des résultats</note>
+      </trans-unit>
+      <trans-unit id="public.verified" datatype="html">
+        <source>Profil vérifié</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/practitioner-badges.component.ts</context>
+          <context context-type="linenumber">51,56</context>
+        </context-group>
+        <note priority="1" from="description">Badge d&apos;un praticien au dossier approuvé</note>
+      </trans-unit>
+      <trans-unit id="public.card.specialties" datatype="html">
+        <source>Spécialités</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/practitioner-card.component.html</context>
+          <context context-type="linenumber">23,24</context>
+        </context-group>
+        <note priority="1" from="description">Liste des spécialités d&apos;une fiche résumée</note>
+      </trans-unit>
+      <trans-unit id="public.card.audiences" datatype="html">
+        <source>Publics</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/practitioner-card.component.html</context>
+          <context context-type="linenumber">34,37</context>
+        </context-group>
+        <note priority="1" from="description">Publics accueillis, fiche résumée</note>
+      </trans-unit>
+      <trans-unit id="public.card.modalities" datatype="html">
+        <source>Modalités</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/practitioner-card.component.html</context>
+          <context context-type="linenumber">40,44</context>
+        </context-group>
+        <note priority="1" from="description">Modalités de consultation, fiche résumée</note>
+      </trans-unit>
+      <trans-unit id="public.card.city" datatype="html">
+        <source>Ville</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/practitioner-card.component.html</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+        <note priority="1" from="description">Ville, fiche résumée</note>
+      </trans-unit>
+      <trans-unit id="public.card.languages" datatype="html">
+        <source>Langues</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/practitioner-card.component.html</context>
+          <context context-type="linenumber">52,56</context>
+        </context-group>
+        <note priority="1" from="description">Langues de consultation, fiche résumée</note>
+      </trans-unit>
+      <trans-unit id="public.card.open" datatype="html">
+        <source>Voir la fiche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/practitioner-card.component.html</context>
+          <context context-type="linenumber">61,63</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;une fiche résumée vers la fiche complète</note>
+      </trans-unit>
+      <trans-unit id="public.card.contact" datatype="html">
+        <source>Contacter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/practitioner-card.component.html</context>
+          <context context-type="linenumber">68,71</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;une fiche résumée vers le formulaire de contact</note>
       </trans-unit>
       <trans-unit id="forms.error.required" datatype="html">
         <source>Ce champ est obligatoire.</source>
