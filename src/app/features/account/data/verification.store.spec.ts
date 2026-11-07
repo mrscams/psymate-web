@@ -4,37 +4,8 @@ import { Observable, of, throwError } from 'rxjs';
 import { SessionStore } from '../../../core/auth';
 import { SessionApi } from '../../../core/auth/data/session.api';
 import { UploadEvent, Verification, VerificationApi } from './verification.api';
+import { DOSSIER } from './verification.fixtures';
 import { VerificationStore } from './verification.store';
-
-export const DOSSIER: Verification = {
-  status: 'docs_pending',
-  profession: 'psychologist',
-  submittedAt: null,
-  adminMessage: null,
-  decidedAt: null,
-  documents: [
-    {
-      id: 'd1',
-      type: 'diploma',
-      title: 'Master 2 Psychologie clinique',
-      issuer: 'Université Lyon 2',
-      year: 2014,
-      mime: 'application/pdf',
-      sizeBytes: 1_900_000,
-      uploadedAt: '2026-10-24T09:00:00Z',
-      reviewedStatus: 'pending',
-      purged: false,
-    },
-  ],
-  missing: ['identity'],
-  recommended: ['registration'],
-  professionalInfo: {
-    professionalNumber: '',
-    phone: '+33600000099',
-    remoteOnly: true,
-    address: { street: '', postalCode: '', city: '' },
-  },
-};
 
 const FILE = new File(['%PDF-1.4'], 'piece.pdf', { type: 'application/pdf' });
 const INPUT = { type: 'identity' as const, title: 'CNI', issuer: '', year: '' };

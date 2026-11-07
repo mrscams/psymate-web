@@ -1,0 +1,11 @@
+@use '../ui/security-form';
+
+:host {
+  display: block;
+  color: var(--text-primary);
+}
+
+button.danger {
+  --mdc-filled-button-container-color: var(--danger);
+  --mdc-filled-button-label-text-color: var(--danger-on);
+}

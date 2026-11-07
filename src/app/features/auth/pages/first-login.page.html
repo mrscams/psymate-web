@@ -1,0 +1,304 @@
+<a class="skip-link" href="#main" i18n="Lien d'évitement vers le contenu@@appBar.skip">
+  Aller au contenu
+</a>
+<header class="bar">
+  <span class="brand">
+    <span class="brand-name" i18n="Nom du produit@@app.brand">PsyMate</span>
+    @if (isAdmin()) {
+      <span class="badge" i18n="Badge Admin de la barre@@auth.firstLogin.adminBadge">Admin</span>
+    }
+  </span>
+  <span class="bar-title" i18n="Titre de la barre de première connexion@@auth.firstLogin.barTitle"
+    >Première connexion · configuration obligatoire</span
+  >
+  <span class="bar-end">
+    @if (session.me(); as me) {
+      <span class="bar-email">{{ me.email }}</span>
+      <button
+        type="button"
+        class="bar-link"
+        (click)="logout()"
+        i18n="Se déconnecter depuis la première connexion@@auth.firstLogin.logout"
+      >
+        Se déconnecter
+      </button>
+    } @else {
+      <a
+        class="bar-link"
+        [routerLink]="loginPath"
+        i18n="Retour à la connexion@@auth.firstLogin.backToLogin"
+        >Retour à la connexion</a
+      >
+    }
+  </span>
+</header>
+
+<main id="main" class="layout">
+  <aside class="explain" aria-labelledby="fl-explain-title">
+    <h1 id="fl-explain-title" i18n="Titre du panneau d'explication@@auth.firstLogin.explain.title">
+      Avant d'ouvrir l'administration.
+    </h1>
+    <p i18n="Explication de la première connexion@@auth.firstLogin.explain.body">
+      Ce compte a été créé depuis le serveur avec un mot de passe à usage unique, affiché une seule
+      fois dans le terminal. Deux étapes sont obligatoires avant tout accès à l'administration :
+      choisir votre mot de passe, puis activer la double authentification.
+    </p>
+    <ol
+      class="progress"
+      aria-label="Progression"
+      i18n-aria-label="Étiquette de la progression en deux étapes@@auth.firstLogin.progress.label"
+    >
+      <li
+        [class.active]="step() === 'password'"
+        [class.done]="step() !== 'password'"
+        [attr.aria-current]="step() === 'password' ? 'step' : null"
+      >
+        <span class="num" aria-hidden="true">1</span>
+        <span class="progress-text">
+          <strong i18n="Étape 1 de la progression@@auth.firstLogin.progress.password"
+            >Choisissez votre mot de passe</strong
+          >
+          <span i18n="Détail de l'étape 1@@auth.firstLogin.progress.password.detail"
+            >Remplace le mot de passe temporaire.</span
+          >
+        </span>
+      </li>
+      <li
+        [class.active]="step() === 'twoFactor'"
+        [attr.aria-current]="step() === 'twoFactor' ? 'step' : null"
+      >
+        <span class="num" aria-hidden="true">2</span>
+        <span class="progress-text">
+          <strong i18n="Étape 2 de la progression@@auth.firstLogin.progress.twoFactor"
+            >Activez la double authentification</strong
+          >
+          <span i18n="Détail de l'étape 2@@auth.firstLogin.progress.twoFactor.detail"
+            >Obligatoire pour les administrateurs, ne peut pas être désactivée ensuite.</span
+          >
+        </span>
+      </li>
+    </ol>
+    <p
+      class="warning"
+      role="note"
+      i18n="Encart : aucun accès à l'administration@@auth.firstLogin.explain.warning"
+    >
+      Tant que ces deux étapes ne sont pas terminées, toute page d'administration répond « accès
+      refusé » et vous ramène ici.
+    </p>
+    <p class="muted" i18n="Aucun e-mail, journal de sécurité@@auth.firstLogin.explain.journal">
+      Aucun e-mail n'intervient dans cette procédure. Les deux opérations sont consignées dans le
+      journal de sécurité.
+    </p>
+  </aside>
+
+  <section class="card" aria-labelledby="fl-step-title">
+    @switch (step()) {
+      @case ('password') {
+        <p class="step-label" i18n="Étape 1 / 2@@auth.firstLogin.password.step">Étape 1 / 2</p>
+        <h2 id="fl-step-title" i18n="Titre de l'étape 1@@auth.firstLogin.password.title">
+          Choisissez votre mot de passe
+        </h2>
+        <p class="intro" i18n="Explication de l'étape 1@@auth.firstLogin.password.intro">
+          Le mot de passe temporaire n'a été affiché qu'une seule fois dans le terminal ; il cesse
+          de fonctionner dès que celui-ci est enregistré.
+        </p>
+
+        <form [formGroup]="form" (ngSubmit)="submitPassword()" novalidate>
+          <div class="field">
+            <label [for]="fieldId('email')" i18n="Champ e-mail du compte@@auth.firstLogin.email"
+              >E-mail du compte</label
+            >
+            <input
+              [id]="fieldId('email')"
+              type="email"
+              formControlName="email"
+              autocomplete="username"
+              required
+              [readonly]="knownEmail() !== ''"
+              [attr.aria-invalid]="invalid(form.controls.email)"
+              [attr.aria-describedby]="fieldId('email') + '-error'"
+            />
+            <pm-field-errors [control]="form.controls.email" [id]="fieldId('email') + '-error'" />
+          </div>
+
+          <div class="field">
+            <label
+              [for]="fieldId('currentPassword')"
+              i18n="Champ mot de passe temporaire@@auth.firstLogin.currentPassword"
+              >Mot de passe temporaire</label
+            >
+            <input
+              [id]="fieldId('currentPassword')"
+              type="password"
+              class="mono"
+              formControlName="currentPassword"
+              autocomplete="current-password"
+              required
+              [attr.aria-invalid]="invalid(form.controls.currentPassword)"
+              [attr.aria-describedby]="
+                fieldId('currentPassword') + '-hint ' + fieldId('currentPassword') + '-error'
+              "
+            />
+            <p
+              class="hint"
+              [id]="fieldId('currentPassword') + '-hint'"
+              i18n="Aide du mot de passe temporaire@@auth.firstLogin.currentPassword.hint"
+            >
+              Les 20 caractères affichés par la commande de création du compte.
+            </p>
+            <pm-field-errors
+              [control]="form.controls.currentPassword"
+              [id]="fieldId('currentPassword') + '-error'"
+            />
+          </div>
+
+          <div class="field">
+            <label
+              [for]="fieldId('newPassword')"
+              i18n="Champ nouveau mot de passe@@auth.firstLogin.newPassword"
+              >Nouveau mot de passe</label
+            >
+            <input
+              [id]="fieldId('newPassword')"
+              type="password"
+              class="mono"
+              formControlName="newPassword"
+              autocomplete="new-password"
+              required
+              minlength="12"
+              [attr.aria-invalid]="
+                invalid(form.controls.newPassword) || policyProblems().length > 0
+              "
+              [attr.aria-describedby]="
+                fieldId('newPassword') + '-rules ' + fieldId('newPassword') + '-error'
+              "
+            />
+            <pm-password-rules
+              [id]="fieldId('newPassword') + '-rules'"
+              [password]="newPassword()"
+              [problems]="policyProblems()"
+            />
+            <pm-field-errors
+              [control]="form.controls.newPassword"
+              [id]="fieldId('newPassword') + '-error'"
+            />
+          </div>
+
+          <div class="field">
+            <label
+              [for]="fieldId('confirm')"
+              i18n="Champ confirmation du mot de passe@@auth.firstLogin.confirm"
+              >Confirmer le nouveau mot de passe</label
+            >
+            <input
+              [id]="fieldId('confirm')"
+              type="password"
+              class="mono"
+              formControlName="confirm"
+              autocomplete="new-password"
+              required
+              [attr.aria-invalid]="invalid(form.controls.confirm)"
+              [attr.aria-describedby]="fieldId('confirm') + '-error'"
+            />
+            @if (invalid(form.controls.confirm) && form.controls.confirm.hasError('mismatch')) {
+              <p class="field-error" [id]="fieldId('confirm') + '-error'">{{ mismatchMessage }}</p>
+            } @else {
+              <pm-field-errors
+                [control]="form.controls.confirm"
+                [id]="fieldId('confirm') + '-error'"
+              />
+            }
+          </div>
+
+          @if (store.otpRequired()) {
+            <div class="field">
+              <label [for]="fieldId('otp')" i18n="Champ code de vérification@@auth.firstLogin.otp"
+                >Code de vérification</label
+              >
+              <input
+                #otpInput
+                [id]="fieldId('otp')"
+                type="text"
+                class="otp"
+                formControlName="otp"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                maxlength="32"
+                required
+                [attr.aria-invalid]="invalid(form.controls.otp)"
+                [attr.aria-describedby]="fieldId('otp') + '-hint ' + fieldId('otp') + '-error'"
+              />
+              <p
+                class="hint"
+                [id]="fieldId('otp') + '-hint'"
+                i18n="Aide du champ code@@auth.firstLogin.otp.hint"
+              >
+                Votre double authentification est active : saisissez les 6 chiffres de l'application
+                ou un code de secours.
+              </p>
+              <pm-field-errors [control]="form.controls.otp" [id]="fieldId('otp') + '-error'" />
+            </div>
+          }
+
+          @if (message(); as text) {
+            <p class="banner banner--danger" role="alert">{{ text }}</p>
+          }
+          <pm-lock-notice [until]="store.lockedUntil()" (expired)="store.unlock()" />
+
+          <button
+            mat-flat-button
+            type="submit"
+            class="submit"
+            [disabled]="submitting() || locked()"
+            i18n="Enregistrer le mot de passe et continuer@@auth.firstLogin.password.submit"
+          >
+            Enregistrer et continuer
+          </button>
+          <p class="hint" i18n="Reconnexion automatique@@auth.firstLogin.password.autoLogin">
+            Vous serez reconnecté·e automatiquement avec le nouveau mot de passe.
+          </p>
+          <p class="hint" i18n="Mention verrouillage@@auth.firstLogin.password.lockNotice">
+            Après 5 tentatives échouées, le compte est verrouillé 15 minutes.
+          </p>
+        </form>
+      }
+      @case ('twoFactor') {
+        <p class="step-label" i18n="Étape 2 / 2@@auth.firstLogin.twoFactor.step">Étape 2 / 2</p>
+        <p
+          class="banner banner--success"
+          role="status"
+          i18n="Mot de passe enregistré@@auth.firstLogin.twoFactor.passwordDone"
+        >
+          Mot de passe enregistré.
+        </p>
+        <h2 id="fl-step-title" i18n="Titre de l'étape 2@@auth.firstLogin.twoFactor.title">
+          Activez la double authentification
+        </h2>
+        <p class="intro" i18n="Explication de l'étape 2@@auth.firstLogin.twoFactor.intro">
+          Obligatoire pour les administrateurs : sans elle, les pages d'administration restent
+          fermées. Un administrateur ne peut pas la désactiver ensuite. Les 10 codes de secours
+          s'afficheront à la fin, une seule fois : vous devrez confirmer les avoir enregistrés avant
+          d'accéder à l'administration.
+        </p>
+        <pm-two-factor-setup [(saved)]="codesSaved" />
+        <button
+          mat-flat-button
+          type="button"
+          class="submit"
+          [disabled]="!codesSaved()"
+          (click)="openAdmin()"
+          i18n="Ouvrir l'administration après la 2FA@@auth.firstLogin.twoFactor.openAdmin"
+        >
+          Ouvrir l'administration
+        </button>
+      }
+      @case ('done') {
+        <h2 id="fl-step-title" i18n="Configuration terminée@@auth.firstLogin.done.title">
+          Configuration terminée
+        </h2>
+        <p class="intro" i18n="Redirection en cours@@auth.firstLogin.done.body">Redirection…</p>
+      }
+    }
+  </section>
+</main>

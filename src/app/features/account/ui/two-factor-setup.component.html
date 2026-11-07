@@ -1,0 +1,165 @@
+<ol
+  class="stepper"
+  aria-label="Étapes de l'activation"
+  i18n-aria-label="Étiquette du stepper d'activation 2FA@@account.security.stepper.label"
+>
+  @for (step of steps; track step.key) {
+    <li
+      [class.active]="store.step() === step.key"
+      [class.done]="isDone(step.key)"
+      [attr.aria-current]="store.step() === step.key ? 'step' : null"
+    >
+      <span class="num" aria-hidden="true">{{ $index + 1 }}</span>
+      <span>{{ step.label }}</span>
+    </li>
+  }
+</ol>
+
+@switch (store.step()) {
+  @case ('scan') {
+    <section class="step" aria-labelledby="pm-2fa-scan-title">
+      <h3 id="pm-2fa-scan-title" i18n="Titre de l'étape 1@@account.security.scan.title">
+        Scanner le QR code
+      </h3>
+      <p class="intro" i18n="Explication de l'étape 1@@account.security.scan.intro">
+        Avec une application d'authentification (Aegis, FreeOTP, Google Authenticator, 1Password…).
+        Le secret n'est affiché qu'une seule fois.
+      </p>
+      @if (stateKind(store.enrollment()); as kind) {
+        <pm-state
+          [kind]="kind"
+          skeleton="block"
+          [lines]="3"
+          [details]="store.enrollment().problem?.code"
+          [action]="retry"
+        />
+      } @else {
+        <div class="qr-row">
+          <pm-qr-code [value]="store.otpauthUri()" [label]="qrLabel" />
+          <div class="secret-block">
+            <p class="hint" i18n="Aide : saisir le secret à la main@@account.security.secret.hint">
+              QR illisible ? Saisissez le secret à la main :
+            </p>
+            <p class="secret">
+              <code>{{ groupedSecret() }}</code>
+            </p>
+            <div class="secret-actions">
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="copySecret()"
+                i18n="Copier le secret TOTP@@account.security.secret.copy"
+              >
+                Copier
+              </button>
+              <span class="status" role="status" aria-live="polite">{{ copyStatus() }}</span>
+            </div>
+            <p class="hint" i18n="Paramètres TOTP de l'émetteur@@account.security.secret.params">
+              Émetteur PsyMate · 6 chiffres · toutes les 30 s · SHA-1.
+            </p>
+          </div>
+        </div>
+        <div class="actions">
+          <button
+            mat-flat-button
+            type="button"
+            (click)="store.goTo('code')"
+            i18n="Passer à l'étape du code@@account.security.scan.next"
+          >
+            Continuer
+          </button>
+        </div>
+      }
+    </section>
+  }
+  @case ('code') {
+    <section class="step" aria-labelledby="pm-2fa-code-title">
+      <h3 id="pm-2fa-code-title" i18n="Titre de l'étape 2@@account.security.code.title">
+        Saisir le code à 6 chiffres
+      </h3>
+      <form [formGroup]="form" (ngSubmit)="verify()" novalidate>
+        <div class="field">
+          <label [for]="codeId" i18n="Champ code de vérification@@account.security.code.label"
+            >Code de vérification</label
+          >
+          <input
+            #codeInput
+            [id]="codeId"
+            class="otp"
+            type="text"
+            formControlName="code"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            maxlength="6"
+            required
+            [attr.aria-invalid]="codeInvalid() || message() !== null"
+            [attr.aria-describedby]="codeId + '-hint ' + codeId + '-error'"
+          />
+          <p
+            class="hint"
+            [id]="codeId + '-hint'"
+            i18n="Aide du champ code@@account.security.code.hint"
+          >
+            Le code affiché par l'application pour PsyMate. Il prouve que le secret est bien
+            enregistré ; la double authentification n'est active qu'après cette étape.
+          </p>
+          @if (codeInvalid()) {
+            <p
+              class="field-error"
+              [id]="codeId + '-error'"
+              i18n="Code mal formé@@account.security.code.format"
+            >
+              Saisissez les 6 chiffres affichés par l'application.
+            </p>
+          } @else if (message(); as text) {
+            <p class="field-error" [id]="codeId + '-error'" role="alert">{{ text }}</p>
+          }
+        </div>
+        <pm-lock-notice [until]="store.verification().lockedUntil" (expired)="store.unlock()" />
+        <div class="actions">
+          <button
+            mat-button
+            type="button"
+            (click)="store.goTo('scan')"
+            i18n="Revenir au QR code@@account.security.code.back"
+          >
+            Retour
+          </button>
+          <button
+            mat-flat-button
+            type="submit"
+            [disabled]="busy() || locked()"
+            i18n="Vérifier le code@@account.security.code.submit"
+          >
+            Vérifier
+          </button>
+        </div>
+      </form>
+    </section>
+  }
+  @case ('codes') {
+    <section class="step" aria-labelledby="pm-2fa-codes-title">
+      <h3 id="pm-2fa-codes-title" i18n="Titre de l'étape 3@@account.security.codes.title">
+        Codes de secours
+      </h3>
+      <p
+        class="banner banner--success"
+        role="status"
+        i18n="Bandeau 2FA activée@@account.security.codes.enabled"
+      >
+        Double authentification activée. Conservez ces 10 codes en lieu sûr : chacun ne sert qu'une
+        fois et ils ne seront plus affichés.
+      </p>
+      @if (stateKind(store.recoveryCodes()); as kind) {
+        <pm-state
+          [kind]="kind"
+          skeleton="row"
+          [lines]="5"
+          [details]="store.recoveryCodes().problem?.code"
+        />
+      } @else {
+        <pm-recovery-codes [codes]="store.codes()" [(saved)]="saved" />
+      }
+    </section>
+  }
+}
