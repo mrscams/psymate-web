@@ -2,9 +2,9 @@
   <pm-practitioner-avatar [name]="card().displayName" />
   <div class="body">
     <div class="identity">
-      <h2 class="name">
+      <h3 class="name">
         <a class="name-link" [routerLink]="link()">{{ card().displayName }}</a>
-      </h2>
+      </h3>
       <pm-profession-chip [profession]="card().profession" />
       @if (card().verified) {
         <pm-verified-badge />

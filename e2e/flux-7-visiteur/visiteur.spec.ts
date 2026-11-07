@@ -111,7 +111,9 @@ test.describe('flux 7 : un visiteur trouve et contacte un praticien', () => {
     const contact = page.locator('#contact');
     await contact.getByLabel('Votre nom').fill('Sam Visiteur');
     await contact.getByLabel('Votre e-mail').fill('sam.visiteur@example.test');
-    await contact.getByLabel('Message').fill(`Bonjour, avez-vous un créneau en soirée ? ${token}`);
+    await contact
+      .getByLabel('Message', { exact: true })
+      .fill(`Bonjour, avez-vous un créneau en soirée ? ${token}`);
     await contact.getByRole('checkbox', { name: /J'accepte que mes coordonnées/ }).check();
     const sent = page.waitForResponse(
       (r) =>
@@ -146,6 +148,52 @@ test.describe('flux 7 : un visiteur trouve et contacte un praticien', () => {
     expect(patientCalls).toEqual([]);
   });
 
+  test('au clavier : recherche, facette, « Contacter » mène au formulaire de la fiche', async ({
+    page,
+  }) => {
+    await page.goto('/fr/annuaire');
+    await expect(page.locator('pm-practitioner-card').first()).toBeVisible();
+
+    // Entrée dans le champ Ville lance la recherche.
+    const city = page.getByRole('search').getByLabel('Ville');
+    await city.focus();
+    await page.keyboard.type('Paris');
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(/ville=Paris/);
+
+    // Espace sur une facette : filtre appliqué après 300 ms, URL à jour.
+    const accepting = page
+      .getByRole('complementary', { name: 'Filtres' })
+      .getByRole('checkbox', { name: 'Accepte de nouveaux patients' });
+    await accepting.focus();
+    await page.keyboard.press('Space');
+    await expect(page).toHaveURL(/accepte=oui/);
+
+    // « Contacter » d'une fiche résumée : la fiche s'ouvre sur son formulaire, focus sur son titre.
+    const card = page.locator('pm-practitioner-card').filter({ hasText: practitioner.displayName });
+    await card.getByRole('link', { name: `Contacter ${practitioner.displayName}` }).focus();
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(new RegExp(`/fr/praticiens/${practitioner.slug}#contact$`));
+    const title = page.getByRole('heading', {
+      name: `Envoyer un message à ${practitioner.displayName}`,
+    });
+    await expect(title).toBeFocused();
+    await expect(title).toBeInViewport();
+    await page.keyboard.press('Tab');
+    await expect(page.getByLabel('Votre nom')).toBeFocused();
+    await page.keyboard.type('Sam Visiteur');
+    await page.keyboard.press('Tab');
+    await expect(page.getByLabel('Votre e-mail')).toBeFocused();
+
+    // « Prendre contact » depuis le haut de la fiche : même destination.
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.getByRole('link', { name: 'Prendre contact' }).focus();
+    await page.keyboard.press('Enter');
+    await expect(title).toBeFocused();
+    await expect(title).toBeInViewport();
+    await expectNoAxeViolations(page);
+  });
+
   test('piège à robots rempli : 202 silencieux, rien dans Mailpit', async ({ page, request }) => {
     await page.goto(`/fr/praticiens/${practitioner.slug}`);
     const contact = page.locator('#contact');
@@ -153,7 +201,7 @@ test.describe('flux 7 : un visiteur trouve et contacte un praticien', () => {
     const token = `flux7-robot-${Date.now()}`;
     await contact.getByLabel('Votre nom').fill('Robot');
     await contact.getByLabel('Votre e-mail').fill('robot@example.test');
-    await contact.getByLabel('Message').fill(`Offre exceptionnelle ${token}`);
+    await contact.getByLabel('Message', { exact: true }).fill(`Offre exceptionnelle ${token}`);
     await contact.getByRole('checkbox', { name: /J'accepte que mes coordonnées/ }).check();
     // Le champ caché, qu'un humain ne voit ni n'atteint au clavier, rempli comme le ferait un robot.
     await page.locator('#contact-website').fill('https://spam.example.test', { force: true });
@@ -210,7 +258,7 @@ test.describe('pages publiques sans données', () => {
     await noJs.close();
 
     await page.goto('/fr/comment-ca-marche');
-    await expect(page.locator('body')).not.toContainText(/google|agenda|signaler/i);
+    await expect(page.locator('body')).not.toContainText(/google|agenda|signal/i);
     await expect(page.locator('body')).not.toContainText(EMERGENCY);
     await page.getByRole('link', { name: "Parcourir l'annuaire" }).click();
     await expect(page).toHaveURL(/\/fr\/annuaire$/);

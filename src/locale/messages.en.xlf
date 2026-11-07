@@ -7370,15 +7370,6 @@
         </context-group>
         <note priority="1" from="description">Consentement manquant</note>
       </trans-unit>
-      <trans-unit id="public.contact.privacy" datatype="html">
-        <source>En savoir plus sur la protection des données</source>
-        <target state="translated">Learn more about data protection</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
-          <context context-type="linenumber">130,136</context>
-        </context-group>
-        <note priority="1" from="description">Lien vers la confidentialité depuis le formulaire de contact</note>
-      </trans-unit>
       <trans-unit id="public.contact.rateLimited" datatype="html">
         <source> Trop de messages envoyés depuis votre connexion. Réessayez dans <x id="INTERPOLATION" equiv-text="{{ retryMinutes() }}"/> min. </source>
         <target state="translated">Too many messages sent from your connection. Try again in <x id="INTERPOLATION" equiv-text="{{ retryMinutes() }}"/> min.</target>
@@ -7733,6 +7724,15 @@
           <context context-type="linenumber">68,71</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;une fiche résumée vers le formulaire de contact</note>
+      </trans-unit>
+      <trans-unit id="public.avatar.label" datatype="html">
+        <source>Photo de <x id="name" equiv-text="this.name()"/> (initiales <x id="initials" equiv-text="this.letters()"/>)</source>
+        <target state="translated">Photo of <x id="name" equiv-text="this.name()"/> (initials <x id="initials" equiv-text="this.letters()"/>)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/practitioner-badges.component.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <note priority="1" from="description">Avatar sans photo d&apos;un praticien (fiche 08)</note>
       </trans-unit>
     </body>
   </file>

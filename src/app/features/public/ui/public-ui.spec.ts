@@ -82,7 +82,7 @@ describe('features/public ui', () => {
       fixture.componentRef.setInput('vocabulary', VOCABULARY);
       await fixture.whenStable();
       const el = fixture.nativeElement as HTMLElement;
-      expect(el.querySelector('h2 a')?.getAttribute('href')).toBe('/praticiens/claire-moreau');
+      expect(el.querySelector('h3 a')?.getAttribute('href')).toBe('/praticiens/claire-moreau');
       expect(el.textContent).toContain('Psychologue');
       expect(el.textContent).toContain('Profil vérifié');
       expect(el.textContent).toContain('Accepte de nouveaux patients');

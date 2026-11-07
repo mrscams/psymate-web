@@ -173,6 +173,11 @@
   }
 }
 
+// Cible du focus de « Prendre contact » : un titre, pas une commande.
+#contact-title:focus {
+  outline: none;
+}
+
 .contact .lead {
   margin: 0 0 16px;
   color: var(--text-secondary);

@@ -71,6 +71,7 @@
               mat-flat-button
               [routerLink]="[]"
               fragment="contact"
+              (click)="scrollToContact()"
               i18n="Bouton vers le formulaire de contact@@public.practitioner.contactCta"
               >Prendre contact</a
             >
@@ -187,7 +188,11 @@
       }
 
       <section id="contact" class="card contact" aria-labelledby="contact-title">
-        <h2 id="contact-title" i18n="Titre du formulaire de contact@@public.contact.title">
+        <h2
+          id="contact-title"
+          tabindex="-1"
+          i18n="Titre du formulaire de contact@@public.contact.title"
+        >
           Envoyer un message à {{ p.displayName }}
         </h2>
         <p class="lead" i18n="Introduction du formulaire de contact@@public.contact.lead">

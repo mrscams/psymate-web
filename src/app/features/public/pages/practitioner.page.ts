@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,11 +7,15 @@ import {
   effect,
   inject,
   input,
+  Injector,
   LOCALE_ID,
+  afterNextRender,
+  PLATFORM_ID,
   untracked,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { formatDate, toAppLocale } from '../../../core/i18n';
 import { StateAction, StateComponent, ToastService } from '../../../shared/ui';
@@ -69,6 +73,10 @@ export class PractitionerPage {
   private readonly meta = inject(PublicMeta);
   private readonly toast = inject(ToastService);
   private readonly document = inject(DOCUMENT);
+  private readonly injector = inject(Injector);
+  private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
+  /** Fragment de l'URL : #contact (« Contacter » d'une fiche résumée, « Prendre contact »). */
+  private readonly fragment = toSignal(inject(ActivatedRoute).fragment, { initialValue: null });
   private readonly destroyRef = inject(DestroyRef);
   protected readonly locale = toAppLocale(inject(LOCALE_ID));
 
@@ -144,10 +152,19 @@ export class PractitionerPage {
   });
 
   constructor() {
-    void this.vocabularyStore.ensureLoaded();
+    // Rendue dans le navigateur seulement (app.routes.server.ts) ; garde pour le serveur de dev.
+    if (this.browser) {
+      void this.vocabularyStore.ensureLoaded();
+      effect(() => {
+        const slug = this.slug();
+        untracked(() => void this.store.load(slug));
+      });
+    }
+    // #contact : le formulaire n'existe qu'une fois la fiche chargée ; on y va à ce moment-là.
     effect(() => {
-      const slug = this.slug();
-      untracked(() => void this.store.load(slug));
+      if (this.fragment() === 'contact' && this.profile()) {
+        untracked(() => this.scrollToContact());
+      }
     });
     // Balises : fiche chargée → indexable ; introuvable → noindex (fiche 09).
     effect(() => {
@@ -168,6 +185,19 @@ export class PractitionerPage {
         }
       });
     });
+  }
+
+  /** Défile jusqu'au formulaire et y place le focus (titre focalisable), après le rendu. */
+  protected scrollToContact(): void {
+    afterNextRender(
+      () => {
+        const title = this.document.getElementById('contact-title');
+        if (!title) return;
+        title.scrollIntoView({ block: 'start' });
+        title.focus({ preventScroll: true });
+      },
+      { injector: this.injector },
+    );
   }
 
   protected sendMessage(message: ContactMessage): void {

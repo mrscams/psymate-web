@@ -5425,7 +5425,7 @@
         <source>Prendre contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">75,79</context>
+          <context context-type="linenumber">76,80</context>
         </context-group>
         <note priority="1" from="description">Bouton vers le formulaire de contact</note>
       </trans-unit>
@@ -5433,7 +5433,7 @@
         <source> Partager </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">83,87</context>
+          <context context-type="linenumber">84,88</context>
         </context-group>
         <note priority="1" from="description">Bouton de partage de la fiche</note>
       </trans-unit>
@@ -5441,7 +5441,7 @@
         <source> Présentation </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">92,94</context>
+          <context context-type="linenumber">93,95</context>
         </context-group>
         <note priority="1" from="description">Titre de la présentation</note>
       </trans-unit>
@@ -5449,7 +5449,7 @@
         <source> Pratique </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">133,136</context>
+          <context context-type="linenumber">134,137</context>
         </context-group>
         <note priority="1" from="description">Titre caché de la pratique</note>
       </trans-unit>
@@ -5457,7 +5457,7 @@
         <source>Spécialités</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">137,139</context>
+          <context context-type="linenumber">138,140</context>
         </context-group>
         <note priority="1" from="description">Titre des spécialités</note>
       </trans-unit>
@@ -5465,7 +5465,7 @@
         <source>Publics</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">147,149</context>
+          <context context-type="linenumber">148,150</context>
         </context-group>
         <note priority="1" from="description">Titre des publics</note>
       </trans-unit>
@@ -5473,7 +5473,7 @@
         <source>Modalités</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">157,159</context>
+          <context context-type="linenumber">158,160</context>
         </context-group>
         <note priority="1" from="description">Titre des modalités</note>
       </trans-unit>
@@ -5481,7 +5481,7 @@
         <source>· non proposé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">165,168</context>
+          <context context-type="linenumber">166,169</context>
         </context-group>
         <note priority="1" from="description">Modalité non proposée</note>
       </trans-unit>
@@ -5489,7 +5489,7 @@
         <source> Langues et tarifs </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">176,179</context>
+          <context context-type="linenumber">177,180</context>
         </context-group>
         <note priority="1" from="description">Titre langues et tarifs</note>
       </trans-unit>
@@ -5497,7 +5497,7 @@
         <source> Envoyer un message à <x id="INTERPOLATION" equiv-text="{{ p.displayName }}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">191,193</context>
+          <context context-type="linenumber">196,198</context>
         </context-group>
         <note priority="1" from="description">Titre du formulaire de contact</note>
       </trans-unit>
@@ -5505,7 +5505,7 @@
         <source> Votre message est transmis par e-mail à <x id="INTERPOLATION" equiv-text="{{ p.displayName }}"/>. Il n&apos;est rattaché à aucun dossier patient. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">194,196</context>
+          <context context-type="linenumber">199,201</context>
         </context-group>
         <note priority="1" from="description">Introduction du formulaire de contact</note>
       </trans-unit>
@@ -5513,7 +5513,7 @@
         <source>Coordonnées</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">210,211</context>
+          <context context-type="linenumber">215,216</context>
         </context-group>
         <note priority="1" from="description">Étiquette de la colonne latérale de la fiche</note>
       </trans-unit>
@@ -5521,7 +5521,7 @@
         <source> Contact </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">219,222</context>
+          <context context-type="linenumber">224,227</context>
         </context-group>
         <note priority="1" from="description">Titre des moyens de contact</note>
       </trans-unit>
@@ -5529,7 +5529,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">224,226</context>
+          <context context-type="linenumber">229,231</context>
         </context-group>
         <note priority="1" from="description">Téléphone du praticien</note>
       </trans-unit>
@@ -5537,7 +5537,7 @@
         <source>E-mail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">232,234</context>
+          <context context-type="linenumber">237,239</context>
         </context-group>
         <note priority="1" from="description">E-mail du praticien</note>
       </trans-unit>
@@ -5545,7 +5545,7 @@
         <source>Site web</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">240,242</context>
+          <context context-type="linenumber">245,247</context>
         </context-group>
         <note priority="1" from="description">Site web du praticien</note>
       </trans-unit>
@@ -5553,7 +5553,7 @@
         <source> Seuls les moyens de contact choisis par le praticien sont affichés. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">253,259</context>
+          <context context-type="linenumber">258,264</context>
         </context-group>
         <note priority="1" from="description">Note sous les moyens de contact</note>
       </trans-unit>
@@ -5561,7 +5561,7 @@
         <source> Cabinet </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">261,264</context>
+          <context context-type="linenumber">266,269</context>
         </context-group>
         <note priority="1" from="description">Titre du cabinet</note>
       </trans-unit>
@@ -5569,7 +5569,7 @@
         <source>Ouvrir dans un plan</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">272,274</context>
+          <context context-type="linenumber">277,279</context>
         </context-group>
         <note priority="1" from="description">Lien vers un plan</note>
       </trans-unit>
@@ -5577,7 +5577,7 @@
         <source>(nouvel onglet, OpenStreetMap)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">275,279</context>
+          <context context-type="linenumber">280,284</context>
         </context-group>
         <note priority="1" from="description">Mention lien externe</note>
       </trans-unit>
@@ -5585,7 +5585,7 @@
         <source> Les informations de cette fiche sont publiées par le praticien lui-même. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">283,288</context>
+          <context context-type="linenumber">288,293</context>
         </context-group>
         <note priority="1" from="description">Mention sous la fiche</note>
       </trans-unit>
@@ -5593,7 +5593,7 @@
         <source> Fiche introuvable </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">291,293</context>
+          <context context-type="linenumber">296,298</context>
         </context-group>
         <note priority="1" from="description">Titre de la fiche introuvable</note>
       </trans-unit>
@@ -5601,7 +5601,7 @@
         <source> Cette fiche n&apos;existe pas ou n&apos;est plus publiée dans l&apos;annuaire. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">294,298</context>
+          <context context-type="linenumber">299,303</context>
         </context-group>
         <note priority="1" from="description">Texte de la fiche introuvable</note>
       </trans-unit>
@@ -5609,7 +5609,7 @@
         <source>Retour à l&apos;annuaire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">300,306</context>
+          <context context-type="linenumber">305,311</context>
         </context-group>
         <note priority="1" from="description">Lien vers l&apos;annuaire depuis la fiche introuvable</note>
       </trans-unit>
@@ -5617,7 +5617,7 @@
         <source> Fiche d&apos;un praticien </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">308,312</context>
+          <context context-type="linenumber">313,317</context>
         </context-group>
         <note priority="1" from="description">Titre caché pendant le chargement de la fiche</note>
       </trans-unit>
@@ -5625,7 +5625,7 @@
         <source>Impossible d&apos;afficher cette fiche</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">313,314</context>
+          <context context-type="linenumber">318,319</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;erreur de la fiche</note>
       </trans-unit>
@@ -5633,7 +5633,7 @@
         <source>L&apos;annuaire est momentanément indisponible. Réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">315,316</context>
+          <context context-type="linenumber">320,321</context>
         </context-group>
         <note priority="1" from="description">Texte de l&apos;erreur de la fiche</note>
       </trans-unit>
@@ -5641,7 +5641,7 @@
         <source>Réessayer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">88</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;erreur de la fiche</note>
       </trans-unit>
@@ -5649,7 +5649,7 @@
         <source>Fiche introuvable · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.ts</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">178</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet, fiche introuvable</note>
       </trans-unit>
@@ -5657,7 +5657,7 @@
         <source>Cette fiche n&apos;existe pas ou n&apos;est plus publiée dans l&apos;annuaire PsyMate.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">179</context>
         </context-group>
         <note priority="1" from="description">Description d&apos;une fiche introuvable</note>
       </trans-unit>
@@ -5665,7 +5665,7 @@
         <source>Lien de la fiche copié.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">225</context>
         </context-group>
         <note priority="1" from="description">Toast après copie du lien de la fiche</note>
       </trans-unit>
@@ -5673,7 +5673,7 @@
         <source>Impossible de copier le lien. Copiez l&apos;adresse de la page.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">229</context>
         </context-group>
         <note priority="1" from="description">Toast si la copie du lien échoue</note>
       </trans-unit>
@@ -5681,7 +5681,7 @@
         <source><x id="profession" equiv-text="profession"/> <x id="name" equiv-text="profile.displayName"/> dans l&apos;annuaire PsyMate.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.ts</context>
-          <context context-type="linenumber">217</context>
+          <context context-type="linenumber">247</context>
         </context-group>
         <note priority="1" from="description">Description par défaut d&apos;une fiche</note>
       </trans-unit>
@@ -5789,19 +5789,11 @@
         </context-group>
         <note priority="1" from="description">Consentement manquant</note>
       </trans-unit>
-      <trans-unit id="public.contact.privacy" datatype="html">
-        <source>En savoir plus sur la protection des données</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
-          <context context-type="linenumber">130,136</context>
-        </context-group>
-        <note priority="1" from="description">Lien vers la confidentialité depuis le formulaire de contact</note>
-      </trans-unit>
       <trans-unit id="public.contact.rateLimited" datatype="html">
         <source> Trop de messages envoyés depuis votre connexion. Réessayez dans <x id="INTERPOLATION" equiv-text="{{ retryMinutes() }}"/> min. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
-          <context context-type="linenumber">137,139</context>
+          <context context-type="linenumber">131,133</context>
         </context-group>
         <note priority="1" from="description">Contact, 429</note>
       </trans-unit>
@@ -5809,7 +5801,7 @@
         <source> Le message n&apos;a pas pu être envoyé. Votre saisie est conservée : réessayez dans un instant. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
-          <context context-type="linenumber">142,146</context>
+          <context context-type="linenumber">136,140</context>
         </context-group>
         <note priority="1" from="description">Contact, échec d&apos;envoi</note>
       </trans-unit>
@@ -5817,7 +5809,7 @@
         <source> Certains champs sont à corriger. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
-          <context context-type="linenumber">147,152</context>
+          <context context-type="linenumber">141,146</context>
         </context-group>
         <note priority="1" from="description">Contact, 422</note>
       </trans-unit>
@@ -5825,7 +5817,7 @@
         <source> Envoyer le message </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
-          <context context-type="linenumber">159,162</context>
+          <context context-type="linenumber">153,156</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;envoi du formulaire de contact</note>
       </trans-unit>
@@ -5833,7 +5825,7 @@
         <source>Envoi en cours…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
-          <context context-type="linenumber">163,169</context>
+          <context context-type="linenumber">157,163</context>
         </context-group>
         <note priority="1" from="description">Envoi en cours</note>
       </trans-unit>
@@ -5841,7 +5833,7 @@
         <source>Demande de premier rendez-vous</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <note priority="1" from="description">Objet du message de contact</note>
       </trans-unit>
@@ -5849,7 +5841,7 @@
         <source>Question sur la pratique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <note priority="1" from="description">Objet du message de contact</note>
       </trans-unit>
@@ -5857,7 +5849,7 @@
         <source>Autre demande</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <note priority="1" from="description">Objet du message de contact</note>
       </trans-unit>
@@ -6049,11 +6041,19 @@
         </context-group>
         <note priority="1" from="description">Lien vers la page suivante des résultats</note>
       </trans-unit>
+      <trans-unit id="public.avatar.label" datatype="html">
+        <source>Photo de <x id="name" equiv-text="this.name()"/> (initiales <x id="initials" equiv-text="this.letters()"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/practitioner-badges.component.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <note priority="1" from="description">Avatar sans photo d&apos;un praticien (fiche 08)</note>
+      </trans-unit>
       <trans-unit id="public.verified" datatype="html">
         <source>Profil vérifié</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/practitioner-badges.component.ts</context>
-          <context context-type="linenumber">51,56</context>
+          <context context-type="linenumber">55,60</context>
         </context-group>
         <note priority="1" from="description">Badge d&apos;un praticien au dossier approuvé</note>
       </trans-unit>

@@ -39,7 +39,7 @@ describe('HowItWorksPage', () => {
     expect(hrefs).toEqual(['/annuaire', '/inscription']);
   });
 
-  it('chiffres issus de la configuration partagée (délais, purges)', async () => {
+  it('chiffres lus dans PUBLIC_FACTS (délais, purges ; le contrat ne les expose pas)', async () => {
     const { el } = await render();
     const text = el.textContent ?? '';
     expect(text).toContain(`${PUBLIC_FACTS.verificationBusinessDays} jours ouvrés`);

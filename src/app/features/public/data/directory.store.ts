@@ -57,8 +57,10 @@ export const DirectoryStore = signalStore(
         const problem = asProblem(error);
         patchState(store, { result: failed(problem, store.result()) });
         if (problem.status === 429) {
+          // Retenue : elle repart d'elle-même à la fin du délai (resume).
           patchState(store, {
             rateLimitedUntil: Date.now() + (problem.retryAfterSeconds ?? 60) * 1000,
+            deferred: query,
           });
         }
       }

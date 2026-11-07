@@ -5,14 +5,14 @@ import { Availability } from '../data/directory.models';
 import { availabilityLabel, professionLabel } from './labels';
 
 /**
- * Initiales sur fond primaire pâle (fiches 08, 09 : `photoUrl` est toujours null en V1). Le nom
- * est écrit à côté : l'avatar est décoratif pour les lecteurs d'écran.
+ * Initiales sur fond primaire pâle (fiches 08, 09 : `photoUrl` est toujours null en V1), lues
+ * « Photo de … (initiales …) » comme le demande la fiche 08.
  */
 @Component({
   selector: 'pm-practitioner-avatar',
-  template: `<span class="avatar" [class.large]="large()" aria-hidden="true">{{
-    letters()
-  }}</span>`,
+  template: `<span class="avatar" [class.large]="large()" role="img" [attr.aria-label]="label()"
+    ><span aria-hidden="true">{{ letters() }}</span></span
+  >`,
   styles: `
     .avatar {
       display: inline-grid;
@@ -38,6 +38,10 @@ export class PractitionerAvatarComponent {
   readonly name = input.required<string>();
   readonly large = input(false);
   protected readonly letters = computed(() => initials(this.name()));
+  protected readonly label = computed(
+    () =>
+      $localize`:Avatar sans photo d'un praticien (fiche 08)@@public.avatar.label:Photo de ${this.name()}:name: (initiales ${this.letters()}:initials:)`,
+  );
 }
 
 /** Badge « Profil vérifié » : vert avec coche, jamais la couleur seule (fiche 08). */

@@ -17,13 +17,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { RouterLink } from '@angular/router';
 
 import { ApiProblem } from '../../../core/http';
 import { applyProblem, firstMessage } from '../../../shared/forms';
 import { ContactMessage } from '../data/directory.models';
 import { ContactStatus } from '../data/practitioner.store';
-import { PUBLIC_FEATURE_PATHS } from '../public-paths';
 
 /** Limites du contrat (SubmitContactRequest). */
 export const CONTACT_LIMITS = { name: 200, email: 320, subject: 200, message: 4000 } as const;
@@ -38,7 +36,6 @@ export const CONTACT_LIMITS = { name: 200, email: 320, subject: 200, message: 40
   selector: 'pm-contact-form',
   imports: [
     ReactiveFormsModule,
-    RouterLink,
     MatButtonModule,
     MatCheckboxModule,
     MatFormFieldModule,
@@ -60,7 +57,6 @@ export class ContactFormComponent {
   readonly writeAnother = output<void>();
 
   protected readonly limits = CONTACT_LIMITS;
-  protected readonly paths = PUBLIC_FEATURE_PATHS;
   protected readonly message = firstMessage;
 
   protected readonly subjects = [

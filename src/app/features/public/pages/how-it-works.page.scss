@@ -170,8 +170,14 @@ h2 {
     border-left: 3px solid var(--primary-tint);
   }
 
+  // Texte secondaire en clair plein (fiche 24 : ≥ 7:1 ; le gris atténué de la barre fait 6,7:1).
   span {
-    color: var(--admin-bar-text-muted);
+    color: var(--admin-bar-text);
+    font-weight: 400;
+  }
+
+  strong {
+    font-weight: 600;
   }
 }
 
