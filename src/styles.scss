@@ -1,5 +1,6 @@
 // Styles globaux. Les couleurs viennent de src/theme/tokens.css (chargé avant ce fichier, angular.json).
 @use './theme/material';
+@use './app/shared/ui/shared-ui.global';
 
 html {
   @include material.theme;

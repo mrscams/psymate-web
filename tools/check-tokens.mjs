@@ -38,6 +38,12 @@ const PAIRS = [
   ['warning', 'warning-bg', 'text'],
   ['success', 'success-bg', 'text'],
   ['danger', 'surface-raised', 'text', ['light', 'soft']],
+  ['info', 'info-bg', 'text'],
+  ['danger-on', 'danger', 'text'],
+  // Barre d'administration (fiche 00 §5), mêmes valeurs dans les trois thèmes
+  ['admin-bar-text', 'admin-bar-bg', 'text'],
+  ['admin-bar-text-muted', 'admin-bar-bg', 'text'],
+  ['flag', 'admin-bar-bg', 'icon'],
   // Types d'entrées : pastille, icône, bordure 3 px (jamais du texte)
   ['entry-note', 'surface-raised', 'icon'],
   ['entry-event', 'surface-raised', 'icon'],

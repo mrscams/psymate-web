@@ -55,6 +55,21 @@
   --link-proposed: #b9c2d1;
   --search-highlight: #fbf1dc;
 
+  /*
+   * Ajouts M0-09 (fiche 00, planche 29). Information : couple de la planche 29 (#2C4C99 / #E3EAF8,
+   * les valeurs de primary-hover / primary-tint). danger-on : texte d'un bouton destructif.
+   * Voile des panneaux : rgba(30,38,51,.45) (fiche 00 §6). Barre d'administration : #1E2633 /
+   * #E6EAF2 (fiche 00 §5), identiques dans les trois thèmes.
+   */
+  --info: #2c4c99;
+  --info-bg: #e3eaf8;
+  --danger-on: #ffffff;
+  --scrim: rgba(30, 38, 51, 0.45);
+  --admin-bar-bg: #1e2633;
+  --admin-bar-text: #e6eaf2;
+  --admin-bar-text-muted: #a3adc0;
+  --admin-bar-border: #334052;
+
   /* Typographie (étude §2, fiche 01) : Inter pour l'interface, JetBrains Mono pour dates et identifiants. */
   --font-ui: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
@@ -88,6 +103,9 @@
   --entry-feeling: #a99be6;
   --entry-session: #6bb5a5;
   --entry-medication: #d6a24e;
+  --info: #9db4e6;
+  --info-bg: #243457;
+  --scrim: rgba(0, 0, 0, 0.6);
 }
 
 :root[data-theme='soft'] {

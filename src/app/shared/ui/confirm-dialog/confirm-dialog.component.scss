@@ -1,0 +1,20 @@
+.title {
+  color: var(--text-primary);
+}
+
+.description {
+  margin: 0;
+  color: var(--text-secondary);
+  max-width: 52ch;
+}
+
+.word {
+  display: block;
+  margin-top: 16px;
+}
+
+.confirm.danger {
+  --mat-button-filled-container-color: var(--danger);
+  --mat-button-filled-label-text-color: var(--danger-on);
+  --mat-button-filled-state-layer-color: var(--danger-on);
+}

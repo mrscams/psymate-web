@@ -1,0 +1,70 @@
+@switch (kind()) {
+  @case ('loading') {
+    <div class="state loading" [class.compact]="compact()" role="status" aria-busy="true">
+      <span class="sr-only">{{ loadingLabel }}</span>
+      <div class="skeleton" [class]="'skeleton-' + skeleton()" aria-hidden="true">
+        @for (row of rows(); track $index) {
+          <div class="piece">
+            @if (skeleton() === 'card' || skeleton() === 'profile') {
+              <span class="shape"></span>
+            }
+            <span class="bars">
+              <span class="bar wide"></span>
+              @if (skeleton() !== 'row') {
+                <span class="bar"></span>
+              }
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+  @case ('empty') {
+    <div class="state empty" [class.compact]="compact()" role="status">
+      <svg class="illustration" viewBox="0 0 96 64" aria-hidden="true" focusable="false">
+        <rect x="8" y="12" width="80" height="44" rx="6" class="fill-sunken" />
+        <rect x="20" y="24" width="40" height="6" rx="3" class="fill-strong" />
+        <rect x="20" y="36" width="56" height="6" rx="3" class="fill-strong" />
+        <circle cx="76" cy="14" r="8" class="fill-raised stroke-strong" />
+      </svg>
+      <p class="title">{{ heading() }}</p>
+      @if (text()) {
+        <p class="message">{{ text() }}</p>
+      }
+      @if (action(); as act) {
+        <button mat-flat-button type="button" class="action" (click)="act.handler()">
+          {{ act.label }}
+          @if (act.shortcut) {
+            <kbd>{{ act.shortcut }}</kbd>
+          }
+        </button>
+      }
+    </div>
+  }
+  @case ('error') {
+    <div class="state error" [class.compact]="compact()" role="alert">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="10" class="stroke-danger" />
+        <path d="M12 7v6" class="stroke-danger" />
+        <circle cx="12" cy="16.5" r="1.2" class="fill-danger" />
+      </svg>
+      <div class="body">
+        <p class="title">{{ heading() }}</p>
+        @if (text()) {
+          <p class="message">{{ text() }}</p>
+        }
+        @if (action(); as act) {
+          <button mat-stroked-button type="button" class="action retry" (click)="act.handler()">
+            {{ retryLabel() }}
+          </button>
+        }
+        @if (details(); as detail) {
+          <details>
+            <summary>{{ detailsLabel }}</summary>
+            <pre class="mono">{{ detail }}</pre>
+          </details>
+        }
+      </div>
+    </div>
+  }
+}

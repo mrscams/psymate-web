@@ -1,0 +1,59 @@
+// Styles globaux des composants partagés (fiche 00) qui vivent hors de l'arbre d'un composant :
+// panneaux latéraux rendus dans l'overlay du CDK, classe utilitaire sr-only, touches <kbd>.
+// Importé une fois par src/styles.scss.
+
+// Texte lu par les lecteurs d'écran, invisible à l'écran.
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Touche de raccourci (planche 29) : mono 11 px, bordure basse 2 px.
+kbd {
+  display: inline-block;
+  min-width: 18px;
+  padding: 0 5px;
+  font: 11px/18px var(--font-mono);
+  text-align: center;
+  color: var(--text-secondary);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-subtle);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+}
+
+// Panneau latéral (shared/ui/side-panel) : pane de l'overlay ancrée à droite, voile sur la page.
+.pm-side-panel-veil {
+  background: var(--scrim);
+}
+
+.pm-side-panel-pane {
+  height: 100%;
+  background: var(--surface-raised);
+  box-shadow: -8px 0 32px var(--scrim);
+
+  .cdk-dialog-container {
+    display: block;
+    height: 100%;
+    outline: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .pm-side-panel-pane {
+    width: 100vw !important;
+  }
+}
+
+// Boîte de confirmation (shared/ui/confirm-dialog).
+.pm-confirm-dialog .mat-mdc-dialog-surface {
+  border-radius: 12px;
+}

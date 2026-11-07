@@ -1,0 +1,93 @@
+<a class="skip-link" href="#main" i18n="Lien d'évitement vers le contenu@@appBar.skip">
+  Aller au contenu
+</a>
+<header class="app-bar">
+  <a class="brand" [routerLink]="homePath">
+    <svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M8 16V8h4.5a3 3 0 0 1 0 6H8" />
+    </svg>
+    <span class="brand-name" i18n="Nom du produit@@app.brand">PsyMate</span>
+  </a>
+  @if (section(); as current) {
+    <span class="section" aria-current="location">
+      <span class="separator" aria-hidden="true">·</span>
+      {{ current }}
+      @if (crumb(); as crumb) {
+        <span class="separator" aria-hidden="true">/</span>
+        <span class="crumb">{{ crumb }}</span>
+      }
+    </span>
+  }
+
+  <div class="spacer"></div>
+
+  @if (showSearch()) {
+    <form class="search" role="search" (submit)="$event.preventDefault(); submitSearch()">
+      <label
+        class="sr-only"
+        for="app-bar-search"
+        i18n="Étiquette du champ de recherche@@appBar.search.label"
+        >Rechercher</label
+      >
+      <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+      </svg>
+      <input
+        #searchInput
+        id="app-bar-search"
+        type="search"
+        autocomplete="off"
+        [placeholder]="placeholder()"
+        [value]="query()"
+        (input)="query.set(searchInput.value)"
+      />
+      <kbd aria-hidden="true">/</kbd>
+    </form>
+  }
+
+  <nav
+    class="locale"
+    aria-label="Langue"
+    i18n-aria-label="Étiquette de la navigation de langue@@app.localeNav.label"
+  >
+    <a
+      class="locale-switch"
+      [href]="switchHref()"
+      [attr.hreflang]="switchLang()"
+      [attr.lang]="switchLang()"
+      i18n="Lien vers l'autre langue, écrit dans cette autre langue@@app.localeSwitch"
+      >English</a
+    >
+  </nav>
+
+  @if (user(); as me) {
+    <button
+      type="button"
+      class="avatar"
+      [matMenuTriggerFor]="accountMenu"
+      [attr.aria-label]="me.displayName"
+      aria-haspopup="menu"
+    >
+      <span aria-hidden="true">{{ initials() }}</span>
+    </button>
+    <mat-menu #accountMenu="matMenu" xPosition="before">
+      <a
+        mat-menu-item
+        [routerLink]="accountPath"
+        i18n="Entrée de menu de l'avatar@@appBar.menu.account"
+        >Mon compte</a
+      >
+      <button
+        mat-menu-item
+        type="button"
+        class="logout"
+        (click)="logout.emit()"
+        i18n="Entrée de menu de l'avatar@@appBar.menu.logout"
+      >
+        Déconnexion
+      </button>
+    </mat-menu>
+  }
+</header>
