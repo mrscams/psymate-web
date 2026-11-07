@@ -1,0 +1,162 @@
+@if (status() === 'sent') {
+  <div class="sent" role="status">
+    <p class="sent-title" i18n="Confirmation d'envoi du message de contact@@public.contact.sent">
+      Votre message a été transmis à {{ practitionerName() }}.
+    </p>
+    <p i18n="Suite de la confirmation d'envoi@@public.contact.sent.next">
+      La réponse arrivera directement à l'adresse indiquée. Aucun compte n'a été créé.
+    </p>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="another()"
+      i18n="Bouton pour écrire un autre message@@public.contact.another"
+    >
+      Écrire un autre message
+    </button>
+  </div>
+} @else {
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate aria-labelledby="contact-title">
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label i18n="Champ nom du formulaire de contact@@public.contact.name"
+          >Votre nom</mat-label
+        >
+        <input
+          matInput
+          id="field-name"
+          formControlName="name"
+          autocomplete="name"
+          [maxlength]="limits.name"
+          required
+        />
+        @if (form.controls.name.errors; as errors) {
+          <mat-error>{{ message(errors) }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label i18n="Champ e-mail du formulaire de contact@@public.contact.email"
+          >Votre e-mail</mat-label
+        >
+        <input
+          matInput
+          id="field-email"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          [maxlength]="limits.email"
+          required
+        />
+        @if (form.controls.email.errors; as errors) {
+          <mat-error>{{ message(errors) }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label i18n="Champ objet du formulaire de contact@@public.contact.subject"
+        >Objet</mat-label
+      >
+      <mat-select id="field-subject" formControlName="subject">
+        @for (subject of subjects; track subject) {
+          <mat-option [value]="subject">{{ subject }}</mat-option>
+        }
+      </mat-select>
+      @if (form.controls.subject.errors; as errors) {
+        <mat-error>{{ message(errors) }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label i18n="Champ message du formulaire de contact@@public.contact.message"
+        >Message</mat-label
+      >
+      <textarea
+        matInput
+        id="field-message"
+        formControlName="message"
+        rows="6"
+        [maxlength]="limits.message"
+        required
+      ></textarea>
+      <mat-hint i18n="Avertissement sous le champ message@@public.contact.message.hint"
+        >Décrivez brièvement votre demande et vos disponibilités. Évitez les informations médicales
+        détaillées : elles seront abordées en séance.</mat-hint
+      >
+      <mat-hint align="end" class="length">{{ messageLength() }} / {{ limits.message }}</mat-hint>
+      @if (form.controls.message.errors; as errors) {
+        <mat-error>{{ message(errors) }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Piège à robots (honeypot) : invisible et hors tabulation ; un humain ne le remplit jamais. -->
+    <div class="trap" aria-hidden="true">
+      <label for="contact-website">Website</label>
+      <input
+        id="contact-website"
+        type="text"
+        formControlName="website"
+        tabindex="-1"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="consent">
+      <mat-checkbox
+        id="field-consent"
+        formControlName="consent"
+        [attr.aria-describedby]="
+          form.controls.consent.invalid && (form.controls.consent.touched || submitted())
+            ? 'consent-error'
+            : null
+        "
+        i18n="Case de consentement du formulaire de contact@@public.contact.consent"
+        >J'accepte que mes coordonnées soient transmises à {{ practitionerName() }} pour répondre à
+        ma demande.</mat-checkbox
+      >
+      @if (form.controls.consent.invalid && (form.controls.consent.touched || submitted())) {
+        <p
+          id="consent-error"
+          class="error"
+          i18n="Consentement manquant@@public.contact.consent.required"
+        >
+          Cochez cette case pour envoyer votre message.
+        </p>
+      }
+    </div>
+
+    @switch (status()) {
+      @case ('rate-limited') {
+        <p class="notice" role="alert" i18n="Contact, 429@@public.contact.rateLimited">
+          Trop de messages envoyés depuis votre connexion. Réessayez dans {{ retryMinutes() }} min.
+        </p>
+      }
+      @case ('error') {
+        <p class="notice" role="alert" i18n="Contact, échec d'envoi@@public.contact.error">
+          Le message n'a pas pu être envoyé. Votre saisie est conservée : réessayez dans un instant.
+        </p>
+      }
+      @case ('invalid') {
+        <p class="notice" role="alert" i18n="Contact, 422@@public.contact.invalid">
+          Certains champs sont à corriger.
+        </p>
+      }
+    }
+
+    <div class="actions">
+      <button
+        mat-flat-button
+        type="submit"
+        [disabled]="status() === 'sending'"
+        i18n="Bouton d'envoi du formulaire de contact@@public.contact.submit"
+      >
+        Envoyer le message
+      </button>
+      @if (status() === 'sending') {
+        <span class="sending" role="status" i18n="Envoi en cours@@public.contact.sending"
+          >Envoi en cours…</span
+        >
+      }
+    </div>
+  </form>
+}

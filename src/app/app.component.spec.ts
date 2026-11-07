@@ -19,6 +19,7 @@ async function render(locale: string, options: { signedIn?: boolean; url?: strin
     providers: [
       provideRouter([
         { path: 'connexion', component: Blank, data: { layout: 'public' } },
+        { path: 'annuaire', component: Blank, data: { layout: 'public', wide: true } },
         { path: 'admin', component: Blank, data: { layout: 'admin' } },
         { path: '_demo', component: Blank, data: { layout: 'bare' } },
         { path: '**', component: Blank },
@@ -89,6 +90,12 @@ describe('AppComponent', () => {
     expect(el.querySelector('pm-public-layout main#main.narrow router-outlet')).not.toBeNull();
     expect(el.querySelector('pm-app-bar')).toBeNull();
     expect(el.querySelector('pm-verification-banner')).toBeNull();
+  });
+
+  it('habillage public large sur une route data.wide (annuaire) : pas de conteneur 480 px', async () => {
+    const { el } = await render('fr', { url: '/annuaire' });
+    expect(el.querySelector('pm-public-layout main#main router-outlet')).not.toBeNull();
+    expect(el.querySelector('pm-public-layout main#main.narrow')).toBeNull();
   });
 
   it('habillage admin et habillage nu', async () => {

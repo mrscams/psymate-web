@@ -1,4 +1,10 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  provideClientHydration,
+  withEventReplay,
+  withI18nSupport,
+  withNoHttpTransferCache,
+} from '@angular/platform-browser';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -16,5 +22,8 @@ export const appConfig: ApplicationConfig = {
     provideApiClient(),
     provideSessionInitializer(),
     providePreferences(),
+    // Pages publiques prérendues (app.routes.server.ts) : le navigateur reprend le HTML au lieu de le
+    // reconstruire. Rien à transférer : le prérendu n'appelle jamais l'API (app.config.server.ts).
+    provideClientHydration(withI18nSupport(), withEventReplay(), withNoHttpTransferCache()),
   ],
 };

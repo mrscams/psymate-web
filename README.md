@@ -27,6 +27,13 @@ Serveur de développement sur http://localhost:4200, en français ; `/api` est r
 développement ne sert qu'une langue à la fois ; la bascule FR ⇄ EN s'essaie sur le build
 (`pnpm build`, puis `node tools/serve-dist.mjs` : http://localhost:4200/fr/ et /en/).
 
+Prérendu (M5-05) : `pnpm build` prérend les pages publiques `/annuaire` et `/comment-ca-marche`
+(Angular SSR, `outputMode: static`, `src/app/app.routes.server.ts`). Chaque langue contient alors
+`index.csr.html` (coquille de l'application, à servir pour toute route sans fichier) et
+`annuaire/index.html`, `comment-ca-marche/index.html` (pages prérendues, à servir telles quelles) ;
+il n'y a plus d'`index.html` à la racine de la langue. Un hébergement statique doit suivre la même
+règle que `tools/serve-dist.mjs`.
+
 | Commande            | Rôle                                                                                       |
 | ------------------- | ------------------------------------------------------------------------------------------ |
 | `pnpm lint`         | ESLint (frontières entre features, `no-hardcoded-color`), fixtures ESLint, Prettier        |

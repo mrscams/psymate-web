@@ -1,0 +1,39 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.facet {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 12px 8px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  background: var(--surface-raised);
+
+  legend {
+    padding: 0 6px;
+    font: var(--mat-sys-title-small);
+    color: var(--text-primary);
+  }
+}
+
+.option {
+  min-height: 40px;
+}
+
+.option-label {
+  margin-right: 8px;
+}
+
+// Compteurs en JetBrains Mono (fiche 08).
+.count {
+  font: 12px/1 var(--font-mono);
+  color: var(--text-secondary);
+}
+
+.clear {
+  align-self: flex-start;
+}

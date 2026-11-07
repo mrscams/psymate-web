@@ -1,0 +1,222 @@
+<div class="how">
+  <header class="hero">
+    <p class="eyebrow" i18n="Surtitre de comment ça marche@@public.how.eyebrow">
+      Comment ça marche
+    </p>
+    <h1 i18n="Titre de comment ça marche@@public.how.title">
+      Un outil de suivi pour les praticiens, un annuaire vérifié pour le public.
+    </h1>
+    <p class="lead" i18n="Introduction de comment ça marche@@public.how.lead">
+      PsyMate sert deux publics qui ne se croisent jamais dans l'outil : les praticiens, qui y
+      tiennent le fil de leurs accompagnements, et les personnes qui cherchent un professionnel et
+      veulent savoir à qui elles s'adressent.
+    </p>
+  </header>
+
+  <section class="paths" aria-labelledby="how-paths-title">
+    <h2
+      id="how-paths-title"
+      class="sr-only"
+      i18n="Titre caché des deux parcours@@public.how.paths.title"
+    >
+      Deux parcours
+    </h2>
+    <article class="path visitor" aria-labelledby="how-visitor-title">
+      <div class="path-head">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6" />
+          </svg>
+        </span>
+        <h3 id="how-visitor-title" i18n="Titre du parcours visiteur@@public.how.visitor.title">
+          Vous cherchez un praticien
+        </h3>
+      </div>
+      <p i18n="Texte du parcours visiteur@@public.how.visitor.text">
+        Vous consultez les fiches publiques de psychologues, psychiatres et coachs dont le dossier a
+        été vérifié par notre équipe. Vous les contactez par les moyens qu'ils ont choisi
+        d'afficher, ou par un formulaire : votre message leur est transmis directement.
+      </p>
+      <ul>
+        <li i18n="Point du parcours visiteur@@public.how.visitor.noAccount">
+          Aucun compte à créer pour chercher ou contacter un praticien.
+        </li>
+        <li i18n="Point du parcours visiteur@@public.how.visitor.badge">
+          Le badge « Profil vérifié » figure sur chaque fiche dont le dossier est approuvé.
+        </li>
+        <li i18n="Point du parcours visiteur@@public.how.visitor.contact">
+          Seuls les moyens de contact choisis par le praticien sont affichés.
+        </li>
+      </ul>
+      <a
+        mat-stroked-button
+        [routerLink]="paths.directory"
+        i18n="Bouton vers l'annuaire@@public.how.visitor.cta"
+        >Parcourir l'annuaire</a
+      >
+    </article>
+
+    <article class="path practitioner" aria-labelledby="how-practitioner-title">
+      <div class="path-head">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M4 6h16M4 12h10M4 18h7" />
+            <circle cx="18" cy="17" r="3" />
+          </svg>
+        </span>
+        <h3
+          id="how-practitioner-title"
+          i18n="Titre du parcours praticien@@public.how.practitioner.title"
+        >
+          Vous êtes praticien
+        </h3>
+      </div>
+      <p i18n="Texte du parcours praticien@@public.how.practitioner.text">
+        Vous notez vos séances, les ressentis exprimés, les situations de vie et, si votre pratique
+        le permet, les traitements. Vous reliez ce qui va ensemble et retrouvez en quelques secondes
+        où en est une personne.
+      </p>
+      <ul>
+        <li i18n="Point du parcours praticien@@public.how.practitioner.open">
+          Inscription ouverte aux psychologues, psychiatres et coachs.
+        </li>
+        <li i18n="Point du parcours praticien@@public.how.practitioner.tool">
+          Outil utilisable dès la confirmation de votre e-mail.
+        </li>
+        <li i18n="Point du parcours praticien@@public.how.practitioner.profile">
+          Fiche publique et badge après vérification de vos justificatifs.
+        </li>
+      </ul>
+      <a
+        mat-flat-button
+        [routerLink]="paths.register"
+        i18n="Bouton vers l'inscription@@public.how.practitioner.cta"
+        >Créer un compte</a
+      >
+    </article>
+  </section>
+
+  <section class="steps" aria-labelledby="how-steps-title">
+    <h2 id="how-steps-title" i18n="Titre des quatre étapes@@public.how.steps.title">
+      De l'inscription à la fiche publique, en quatre étapes
+    </h2>
+    <p class="sub" i18n="Sous-titre des quatre étapes@@public.how.steps.sub">
+      La vérification prend au plus {{ facts.verificationBusinessDays }} jours ouvrés. Elle ne
+      bloque pas l'usage de l'outil de suivi.
+    </p>
+    <ol>
+      <li>
+        <span class="number" aria-hidden="true">01</span>
+        <h3 i18n="Étape 1@@public.how.step1.title">Créer le compte</h3>
+        <p i18n="Étape 1, texte@@public.how.step1.text">
+          Identité, profession, e-mail professionnel et téléphone. Quelques minutes.
+        </p>
+      </li>
+      <li>
+        <span class="number" aria-hidden="true">02</span>
+        <h3 i18n="Étape 2@@public.how.step2.title">Confirmer l'e-mail</h3>
+        <p i18n="Étape 2, texte@@public.how.step2.text">
+          Un lien valable {{ facts.emailConfirmationHours }} h. Dès ce clic, l'outil de suivi est
+          ouvert : vous pouvez créer vos premiers dossiers.
+        </p>
+      </li>
+      <li>
+        <span class="number" aria-hidden="true">03</span>
+        <h3 i18n="Étape 3@@public.how.step3.title">Déposer son diplôme et sa pièce d'identité</h3>
+        <p i18n="Étape 3, texte@@public.how.step3.text">
+          Scans ou photos (PDF, JPEG ou PNG). L'attestation ADELI ou RPPS est recommandée pour les
+          psychologues et les psychiatres.
+        </p>
+      </li>
+      <li>
+        <span class="number" aria-hidden="true">04</span>
+        <h3 i18n="Étape 4@@public.how.step4.title">Vérification humaine</h3>
+        <p i18n="Étape 4, texte@@public.how.step4.text">
+          Un membre de l'équipe examine le dossier sous {{ facts.verificationBusinessDays }} jours
+          ouvrés. Approuvé : fiche publique et badge activés. Pièce manquante : on vous dit
+          précisément laquelle.
+        </p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="never" aria-labelledby="how-never-title">
+    <div class="never-intro">
+      <h2 id="how-never-title" i18n="Titre du bloc garanties@@public.how.never.title">
+        Ce que nous ne voyons jamais
+      </h2>
+      <p i18n="Texte du bloc garanties@@public.how.never.text">
+        Les dossiers patients appartiennent au praticien. Notre équipe d'administration vérifie des
+        diplômes, jamais des dossiers : l'espace d'administration n'a techniquement aucun accès aux
+        données cliniques.
+      </p>
+    </div>
+    <ul>
+      <li>
+        <strong i18n="Garantie hébergement@@public.how.never.hosting.title"
+          >Hébergement en France</strong
+        >
+        <span i18n="Garantie hébergement, texte@@public.how.never.hosting.text"
+          >Données chiffrées au repos et en transit.</span
+        >
+      </li>
+      <li>
+        <strong i18n="Garantie contact relayé@@public.how.never.contact.title"
+          >Formulaire de contact relayé</strong
+        >
+        <span i18n="Garantie contact relayé, texte@@public.how.never.contact.text"
+          >Le message part chez le praticien ; il n'est rattaché à aucun dossier et il est effacé
+          après {{ facts.contactRetentionDays }} jours.</span
+        >
+      </li>
+      <li>
+        <strong i18n="Garantie justificatifs@@public.how.never.documents.title"
+          >Justificatifs purgés</strong
+        >
+        <span i18n="Garantie justificatifs, texte@@public.how.never.documents.text"
+          >Les scans de diplômes et de pièces d'identité sont supprimés
+          {{ facts.documentsPurgeDays }} jours après la décision.</span
+        >
+      </li>
+    </ul>
+  </section>
+
+  <section class="faq" aria-labelledby="how-faq-title">
+    <h2 id="how-faq-title" i18n="Titre de la FAQ@@public.how.faq.title">Questions fréquentes</h2>
+    <div class="faq-grid">
+      <details open>
+        <summary i18n="FAQ 1@@public.how.faq.who.q">Qui peut créer un compte praticien ?</summary>
+        <p i18n="FAQ 1, réponse@@public.how.faq.who.a">
+          Les psychologues, psychiatres et coachs qui exercent en France. Toutes les professions
+          déposent un diplôme et une pièce d'identité.
+        </p>
+      </details>
+      <details open>
+        <summary i18n="FAQ 2@@public.how.faq.refused.q">
+          Que se passe-t-il si mon dossier est refusé ?
+        </summary>
+        <p i18n="FAQ 2, réponse@@public.how.faq.refused.a">
+          Vous recevez le motif par e-mail. Vous ne pouvez plus saisir de nouvelles entrées, mais
+          vous pouvez exporter vos données et contester la décision.
+        </p>
+      </details>
+      <details>
+        <summary i18n="FAQ 3@@public.how.faq.patients.q">Mes patients ont-ils un compte ?</summary>
+        <p i18n="FAQ 3, réponse@@public.how.faq.patients.a">
+          Non. PsyMate est réservé aux praticiens : les personnes suivies n'ont ni compte ni accès,
+          et rien de leur dossier n'apparaît dans l'annuaire.
+        </p>
+      </details>
+      <details>
+        <summary i18n="FAQ 4@@public.how.faq.export.q">
+          Puis-je exporter ou supprimer mes données ?
+        </summary>
+        <p i18n="FAQ 4, réponse@@public.how.faq.export.a">
+          Oui, à tout moment depuis votre compte : export complet de vos données, puis suppression
+          du compte si vous le souhaitez.
+        </p>
+      </details>
+    </div>
+  </section>
+</div>

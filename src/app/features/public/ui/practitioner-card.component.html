@@ -1,0 +1,73 @@
+<article class="card">
+  <pm-practitioner-avatar [name]="card().displayName" />
+  <div class="body">
+    <div class="identity">
+      <h3 class="name">
+        <a class="name-link" [routerLink]="link()">{{ card().displayName }}</a>
+      </h3>
+      <pm-profession-chip [profession]="card().profession" />
+      @if (card().verified) {
+        <pm-verified-badge />
+      }
+      <pm-availability [availability]="card().availability" />
+    </div>
+    @if (card().titleLabel) {
+      <p class="title">{{ card().titleLabel }}</p>
+    }
+    @if (excerpt()) {
+      <p class="excerpt">{{ excerpt() }}</p>
+    }
+    @if (specialties().length) {
+      <ul
+        class="tags"
+        aria-label="Spécialités"
+        i18n-aria-label="Liste des spécialités d'une fiche résumée@@public.card.specialties"
+      >
+        @for (label of specialties(); track label) {
+          <li>{{ label }}</li>
+        }
+      </ul>
+    }
+    <dl class="facts">
+      @if (audiences().length) {
+        <div>
+          <dt i18n="Publics accueillis, fiche résumée@@public.card.audiences">Publics</dt>
+          <dd>{{ audiences().join(', ') }}</dd>
+        </div>
+      }
+      @if (modalities()) {
+        <div>
+          <dt i18n="Modalités de consultation, fiche résumée@@public.card.modalities">Modalités</dt>
+          <dd>{{ modalities() }}</dd>
+        </div>
+      }
+      @if (card().city) {
+        <div>
+          <dt i18n="Ville, fiche résumée@@public.card.city">Ville</dt>
+          <dd>{{ card().city }}</dd>
+        </div>
+      }
+      @if (languages()) {
+        <div>
+          <dt i18n="Langues de consultation, fiche résumée@@public.card.languages">Langues</dt>
+          <dd>{{ languages() }}</dd>
+        </div>
+      }
+    </dl>
+  </div>
+  <div class="actions">
+    <a mat-flat-button [routerLink]="link()">
+      <ng-container i18n="Bouton d'une fiche résumée vers la fiche complète@@public.card.open"
+        >Voir la fiche</ng-container
+      >
+      <span class="sr-only">{{ card().displayName }}</span>
+    </a>
+    <a mat-stroked-button [routerLink]="link()" fragment="contact">
+      <ng-container
+        i18n="Bouton d'une fiche résumée vers le formulaire de contact@@public.card.contact"
+        >Contacter</ng-container
+      >
+      <span class="sr-only">{{ card().displayName }}</span>
+    </a>
+  </div>
+</article>

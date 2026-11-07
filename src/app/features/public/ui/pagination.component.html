@@ -1,0 +1,69 @@
+@if (totalPages() > 1) {
+  <nav
+    aria-label="Pagination"
+    i18n-aria-label="Étiquette de la pagination de l'annuaire@@public.pagination.label"
+  >
+    <ul>
+      <li>
+        @if (page() > 1) {
+          <a
+            class="step"
+            [routerLink]="[]"
+            [queryParams]="params(page() - 1)"
+            queryParamsHandling="merge"
+            rel="prev"
+            i18n="Lien vers la page précédente des résultats@@public.pagination.previous"
+            >‹ Précédent</a
+          >
+        }
+      </li>
+      @for (slot of slots(); track $index) {
+        <li>
+          @if (slot === 'gap') {
+            <span class="gap" aria-hidden="true">…</span>
+          } @else if (slot === page()) {
+            <a
+              class="number current"
+              [routerLink]="[]"
+              [queryParams]="params(slot)"
+              queryParamsHandling="merge"
+              aria-current="page"
+              ><span
+                class="sr-only"
+                i18n="Préfixe lu avant un numéro de page@@public.pagination.page"
+                >Page</span
+              >
+              {{ slot }}</a
+            >
+          } @else {
+            <a
+              class="number"
+              [routerLink]="[]"
+              [queryParams]="params(slot)"
+              queryParamsHandling="merge"
+              ><span
+                class="sr-only"
+                i18n="Préfixe lu avant un numéro de page@@public.pagination.page"
+                >Page</span
+              >
+              {{ slot }}</a
+            >
+          }
+        </li>
+      }
+      <li>
+        @if (page() < totalPages()) {
+          <a
+            class="step"
+            [routerLink]="[]"
+            [queryParams]="params(page() + 1)"
+            queryParamsHandling="merge"
+            rel="next"
+            i18n="Lien vers la page suivante des résultats@@public.pagination.next"
+            >Suivant ›</a
+          >
+        }
+      </li>
+    </ul>
+  </nav>
+}

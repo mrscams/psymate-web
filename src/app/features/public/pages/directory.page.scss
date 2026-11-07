@@ -1,0 +1,179 @@
+:host {
+  display: block;
+}
+
+.intro {
+  margin-bottom: 20px;
+
+  h1 {
+    margin: 0;
+    font: var(--mat-sys-headline-small);
+  }
+}
+
+.note {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-medium);
+}
+
+.search {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 16px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+}
+
+.submit {
+  min-height: 48px;
+}
+
+.count {
+  font-family: var(--font-mono);
+}
+
+.rate-limited,
+.inline-error {
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--warning-bg);
+  color: var(--warning);
+  font: var(--mat-sys-body-medium);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 272px minmax(0, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+  align-items: start;
+}
+
+.filters-toggle {
+  display: none;
+}
+
+.results-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  .count {
+    margin: 0;
+    font: var(--mat-sys-title-medium);
+  }
+
+  .sort {
+    width: 180px;
+  }
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+  transition: opacity 150ms;
+
+  &.refreshing {
+    opacity: 0.55;
+  }
+}
+
+.no-results {
+  padding: 24px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+
+  h3 {
+    margin: 0 0 12px;
+    font: var(--mat-sys-title-medium);
+  }
+
+  a {
+    color: var(--primary);
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+  font: var(--mat-sys-label-large);
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    border-color: var(--primary);
+  }
+}
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 1000px) {
+  .search {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
+    .submit {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// 390 px (fiche 08) : filtres repliés sous « Filtres (n) », une colonne, boutons pleine largeur.
+@media (max-width: 760px) {
+  .search {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .filters-toggle {
+    display: inline-flex;
+    width: 100%;
+  }
+
+  .filters {
+    display: none;
+
+    &.open {
+      display: block;
+    }
+  }
+
+  .suggestions button {
+    width: 100%;
+  }
+}

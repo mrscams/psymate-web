@@ -1,0 +1,48 @@
+ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a,
+.gap {
+  display: inline-grid;
+  place-items: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0 8px;
+  border-radius: 8px;
+  font: var(--mat-sys-label-large);
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+
+  &:hover {
+    background: var(--primary-tint);
+  }
+}
+
+.number {
+  font-family: var(--font-mono);
+}
+
+// Page courante : le seul élément cobalt de la zone (fiche 08).
+.current {
+  background: var(--primary);
+  color: var(--primary-on);
+
+  &:hover {
+    background: var(--primary-hover);
+  }
+}
+
+.gap {
+  color: var(--text-secondary);
+}

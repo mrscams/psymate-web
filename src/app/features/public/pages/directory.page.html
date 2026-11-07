@@ -1,0 +1,294 @@
+<div class="directory">
+  <header class="intro">
+    <h1 i18n="Titre de l'annuaire public@@public.directory.title">
+      Trouver un psychologue, un psychiatre ou un coach
+    </h1>
+    <p class="note" i18n="Note sous le titre de l'annuaire@@public.directory.verifiedNote">
+      Seuls les praticiens dont le dossier a été vérifié apparaissent ici.
+    </p>
+  </header>
+
+  <form
+    class="search"
+    role="search"
+    aria-label="Rechercher un praticien"
+    i18n-aria-label="Étiquette du formulaire de recherche de l'annuaire@@public.search.label"
+    (ngSubmit)="submit()"
+  >
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field-q">
+      <mat-label i18n="Champ mot-clé de l'annuaire@@public.search.q">Mot-clé</mat-label>
+      <input
+        matInput
+        id="directory-q"
+        name="q"
+        type="search"
+        [maxlength]="textMax"
+        [ngModel]="qText()"
+        (ngModelChange)="qText.set($event)"
+        placeholder="Nom, spécialité…"
+        i18n-placeholder="Exemple de mot-clé de l'annuaire@@public.search.q.placeholder"
+      />
+    </mat-form-field>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field-city">
+      <mat-label i18n="Champ ville de l'annuaire@@public.search.city">Ville</mat-label>
+      <input
+        matInput
+        id="directory-city"
+        name="city"
+        type="text"
+        autocomplete="address-level2"
+        [maxlength]="textMax"
+        [ngModel]="cityText()"
+        (ngModelChange)="cityText.set($event)"
+      />
+    </mat-form-field>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field-profession">
+      <mat-label i18n="Sélecteur de profession de l'annuaire@@public.search.profession"
+        >Profession</mat-label
+      >
+      <mat-select
+        name="profession"
+        [value]="selectedProfession()"
+        [disabled]="rateLimited()"
+        (selectionChange)="setProfession($event.value)"
+      >
+        <mat-option value="" i18n="Option toutes professions@@public.search.profession.all"
+          >Toutes</mat-option
+        >
+        @for (profession of professions; track profession) {
+          <mat-option [value]="profession">{{ professionLabel(profession) }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field-specialty">
+      <mat-label i18n="Sélecteur de spécialité de l'annuaire@@public.search.specialty"
+        >Spécialité</mat-label
+      >
+      <mat-select
+        name="specialty"
+        [value]="selectedSpecialty()"
+        [disabled]="rateLimited()"
+        (selectionChange)="setSpecialty($event.value)"
+      >
+        <mat-option value="" i18n="Option toutes spécialités@@public.search.specialty.all"
+          >Toutes</mat-option
+        >
+        @for (option of specialtyOptions(); track option.code) {
+          <mat-option
+            [value]="option.code"
+            [disabled]="option.count === 0 && option.code !== selectedSpecialty()"
+          >
+            {{ option.label }} <span class="count">({{ option.count }})</span>
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <button
+      mat-flat-button
+      type="submit"
+      class="submit"
+      [disabled]="rateLimited()"
+      i18n="Bouton de recherche de l'annuaire@@public.search.submit"
+    >
+      Rechercher
+    </button>
+  </form>
+
+  @if (rateLimited()) {
+    <p class="rate-limited" role="alert" i18n="Annuaire, 429@@public.directory.rateLimited">
+      Trop de recherches, réessayez dans {{ retrySeconds() }} s.
+    </p>
+  }
+
+  <div class="layout">
+    <button
+      mat-stroked-button
+      type="button"
+      class="filters-toggle"
+      aria-controls="directory-filters"
+      [attr.aria-expanded]="filtersOpen()"
+      (click)="toggleFiltersPanel()"
+      i18n="Bouton qui déplie les filtres sur petit écran@@public.filters.toggle"
+    >
+      Filtres ({{ filterCount() }})
+    </button>
+    <aside
+      id="directory-filters"
+      class="filters"
+      [class.open]="filtersOpen()"
+      aria-label="Filtres"
+      i18n-aria-label="Étiquette de la colonne de filtres@@public.filters.label"
+    >
+      <pm-directory-filters
+        [query]="query()"
+        [facets]="store.facets()"
+        [vocabulary]="vocabulary()"
+        [locale]="locale"
+        [disabled]="rateLimited()"
+        (filterToggle)="toggleFilter($event)"
+        (acceptingChange)="setAccepting($event)"
+        (clearAll)="clearFilters()"
+      />
+    </aside>
+
+    <section class="results" aria-labelledby="results-title" [attr.aria-busy]="refreshing()">
+      <h2 id="results-title" class="sr-only" i18n="Titre caché des résultats@@public.results.title">
+        Résultats
+      </h2>
+      <div class="results-head">
+        <p class="count" aria-live="polite">
+          @if (page(); as data) {
+            @if (searchedCity()) {
+              <ng-container i18n="Nombre de résultats dans une ville@@public.results.countInCity"
+                >{data.total, plural,
+                  =0 {Aucun praticien}
+                  =1 {1 praticien}
+                  other {{{ data.total }} praticiens}
+                }
+                à {{ searchedCity() }}</ng-container
+              >
+            } @else {
+              <ng-container i18n="Nombre de résultats@@public.results.count">{data.total, plural,
+                =0 {Aucun praticien}
+                =1 {1 praticien}
+                other {{{ data.total }} praticiens}
+              }</ng-container>
+            }
+          }
+        </p>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="sort">
+          <mat-label i18n="Sélecteur de tri des résultats@@public.results.sort"
+            >Trier par</mat-label
+          >
+          <mat-select
+            [value]="query().sort"
+            [disabled]="rateLimited()"
+            (selectionChange)="setSort($event.value)"
+          >
+            <mat-option value="relevance" i18n="Tri par pertinence@@public.results.sort.relevance"
+              >Pertinence</mat-option
+            >
+            <mat-option value="name" i18n="Tri par nom@@public.results.sort.name">Nom</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      @if (result().status === 'error' && page()) {
+        <p
+          class="inline-error"
+          role="alert"
+          i18n="Annuaire indisponible, liste précédente gardée@@public.directory.error.inline"
+        >
+          L'annuaire est momentanément indisponible. Les résultats affichés sont ceux de la
+          recherche précédente.
+        </p>
+      }
+
+      <pm-state
+        [kind]="stateKind(result())"
+        skeleton="card"
+        [lines]="3"
+        title="L'annuaire est momentanément indisponible"
+        i18n-title="Titre de l'erreur de l'annuaire@@public.directory.error.title"
+        message="Votre recherche est conservée. Réessayez dans un instant."
+        i18n-message="Texte de l'erreur de l'annuaire@@public.directory.error.message"
+        [action]="retry"
+      />
+
+      @if (page(); as data) {
+        @if (data.total === 0) {
+          <div class="no-results" role="status">
+            <h3>
+              @if (searchedCity()) {
+                <ng-container i18n="Aucun résultat dans une ville@@public.results.empty.city"
+                  >Aucun praticien à {{ searchedCity() }} pour ces critères</ng-container
+                >
+              } @else {
+                <ng-container i18n="Aucun résultat@@public.results.empty"
+                  >Aucun praticien pour ces critères</ng-container
+                >
+              }
+            </h3>
+            @if (chips().length) {
+              <ul
+                class="chips"
+                aria-label="Critères actifs"
+                i18n-aria-label="Liste des critères actifs@@public.results.chips"
+              >
+                @for (chip of chips(); track chip.filter + chip.code) {
+                  <li>
+                    <button
+                      type="button"
+                      class="chip"
+                      [disabled]="rateLimited()"
+                      (click)="removeChip(chip)"
+                    >
+                      {{ chip.label }}
+                      <span
+                        class="sr-only"
+                        i18n="Action d'une puce de filtre@@public.results.chip.remove"
+                        >retirer ce critère</span
+                      >
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+            <div class="suggestions">
+              @if (canWiden()) {
+                <button
+                  mat-stroked-button
+                  type="button"
+                  [disabled]="rateLimited()"
+                  (click)="widen()"
+                  i18n="Suggestion : retirer ville et mot-clé@@public.results.suggest.widen"
+                >
+                  Élargir à toute la France
+                </button>
+              }
+              @if (lastChip(); as chip) {
+                <button
+                  mat-stroked-button
+                  type="button"
+                  [disabled]="rateLimited()"
+                  (click)="removeChip(chip)"
+                  i18n="Suggestion : retirer le dernier filtre@@public.results.suggest.removeLast"
+                >
+                  Retirer « {{ chip.label }} »
+                </button>
+              }
+              @if (canIncludeVideo()) {
+                <button
+                  mat-stroked-button
+                  type="button"
+                  [disabled]="rateLimited()"
+                  (click)="includeVideo()"
+                  i18n="Suggestion : consultations en visio@@public.results.suggest.video"
+                >
+                  Inclure la visio
+                </button>
+              }
+            </div>
+            <p>
+              <a
+                [routerLink]="paths.howItWorks"
+                i18n="Lien vers comment ça marche depuis l'état vide@@public.results.howItWorks"
+                >Comment fonctionne l'annuaire ?</a
+              >
+            </p>
+          </div>
+        } @else {
+          <ul class="cards" [class.refreshing]="refreshing()">
+            @for (card of data.items; track card.slug) {
+              <li>
+                <pm-practitioner-card [card]="card" [vocabulary]="vocabulary()" [locale]="locale" />
+              </li>
+            }
+          </ul>
+          <pm-pagination [page]="data.page" [totalPages]="data.totalPages" />
+        }
+      }
+    </section>
+  </div>
+</div>
