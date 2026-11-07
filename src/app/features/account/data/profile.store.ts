@@ -136,13 +136,33 @@ export const ProfileStore = signalStore(
       return chain;
     }
 
-    async function reloadProfile(): Promise<void> {
+    /** Relit le profil ; faux (et l'erreur dans `profile.problem`) si la relecture échoue. */
+    async function reloadProfile(): Promise<boolean> {
       patchState(store, { profile: loading(store.profile()) });
       try {
         patchState(store, { profile: loaded(await api.load()) });
+        return true;
       } catch (error) {
         patchState(store, { profile: failed(asProblem(error), store.profile()) });
+        return false;
       }
+    }
+
+    /**
+     * Après une écriture réussie (publish, unpublish, photo retirée), la relecture dit l'état réel.
+     * Si elle échoue, l'action n'est pas annoncée comme réussie : l'erreur reste affichée à part.
+     */
+    async function settleAfterWrite(key: 'publication' | 'photo'): Promise<boolean> {
+      const ok = await reloadProfile();
+      const problem = ok ? null : store.profile().problem;
+      if (key === 'publication') {
+        patchState(store, {
+          publication: { status: ok ? 'idle' : 'error', problem, missing: [] },
+        });
+      } else {
+        patchState(store, { photo: { status: ok ? 'idle' : 'error', problem } });
+      }
+      return ok;
     }
 
     async function loadVocabulary(): Promise<void> {
@@ -207,9 +227,7 @@ export const ProfileStore = signalStore(
           });
           return false;
         }
-        await reloadProfile();
-        patchState(store, { publication: { status: 'idle', problem: null, missing: [] } });
-        return true;
+        return settleAfterWrite('publication');
       },
 
       /** POST unpublish puis relecture du profil. */
@@ -223,9 +241,7 @@ export const ProfileStore = signalStore(
           });
           return false;
         }
-        await reloadProfile();
-        patchState(store, { publication: { status: 'idle', problem: null, missing: [] } });
-        return true;
+        return settleAfterWrite('publication');
       },
 
       /** Oublie le dernier refus de publication (l'utilisateur referme le message). */
@@ -255,9 +271,7 @@ export const ProfileStore = signalStore(
           patchState(store, { photo: { status: 'error', problem: asProblem(error) } });
           return false;
         }
-        await reloadProfile();
-        patchState(store, { photo: { status: 'idle', problem: null } });
-        return true;
+        return settleAfterWrite('photo');
       },
 
       /** Quitter l'écran : la saisie en attente part tout de suite (pas de perte sous 800 ms). */

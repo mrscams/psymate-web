@@ -103,6 +103,13 @@ const SPECIALTIES_SHOWN = 3;
         </div>
       }
 
+      @if (fields().websiteUrl.trim(); as website) {
+        <p class="line">
+          <span class="key" i18n="Site web dans l'aperçu@@profile.preview.website">Site web :</span>
+          {{ website }}
+        </p>
+      }
+
       <span class="cta" aria-hidden="true" i18n="Bouton factice de l'aperçu@@profile.preview.cta"
         >Prendre contact</span
       >
@@ -321,13 +328,12 @@ export class ProfilePreviewComponent {
     Math.max(0, this.specialties().length - SPECIALTIES_SHOWN),
   );
 
-  /** Contacts affichés : renseignés et, pour téléphone, e-mail et adresse, interrupteur actif. */
+  /** Moyens de contact affichés (contrat : téléphone, e-mail, adresse avec leur interrupteur). */
   protected readonly contacts = computed(() => {
     const fields = this.fields();
     const contacts: string[] = [];
     if (fields.showPhone && fields.contactPhone.trim()) contacts.push(fields.contactPhone.trim());
     if (fields.showEmail && fields.contactEmail.trim()) contacts.push(fields.contactEmail.trim());
-    if (fields.websiteUrl.trim()) contacts.push(fields.websiteUrl.trim());
     if (fields.showAddress && fields.address.trim()) {
       contacts.push(
         [fields.address.trim(), [fields.postalCode.trim(), fields.city.trim()].join(' ').trim()]

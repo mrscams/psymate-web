@@ -144,7 +144,7 @@ describe('ProfilePage', () => {
     await settle(fixture, AUTOSAVE_DELAY_MS + 50);
     expect(el.querySelector('#field-city-error')?.textContent).toContain('Ville trop longue');
     expect(el.querySelector('[data-testid="save-status"]')?.textContent).toContain(
-      "Erreur d'enregistrement",
+      'corrigez les champs signalés',
     );
   });
 
@@ -172,6 +172,38 @@ describe('ProfilePage', () => {
     expect(refused?.textContent).toContain('Affichez au moins un moyen de contact');
     refused!.querySelector<HTMLButtonElement>('button')!.click();
     expect(document.activeElement?.id).toBe('field-contactPhone');
+  });
+
+  it('publier avec un formulaire invalide : rien n’est envoyé, focus sur le champ fautif', async () => {
+    const api = fakeApi();
+    const { fixture, el } = await render(api);
+    typeInto(input(el, 'displayName'), '');
+    await settle(fixture);
+    el.querySelector<HTMLInputElement>('pm-publish-card input[role="switch"]')!.click();
+    await settle(fixture);
+    expect(api.publish).not.toHaveBeenCalled();
+    expect(document.activeElement?.id).toBe('field-displayName');
+    expect(el.querySelector('#field-displayName-error')?.textContent).toContain('obligatoire');
+  });
+
+  it('422 sur un champ sans contrôle visible (pays) : message dans la ligne d’état', async () => {
+    const api = fakeApi({
+      save: vi.fn().mockRejectedValue({
+        status: 422,
+        code: 'VALIDATION_FAILED',
+        errors: [{ field: 'country', code: '', message: 'Pays invalide' }],
+      }),
+    });
+    const { fixture, el } = await render(api);
+    typeInto(input(el, 'city'), 'Lyon');
+    await settle(fixture, AUTOSAVE_DELAY_MS + 50);
+    expect(el.querySelector('[data-testid="save-status"]')?.textContent).toContain('Pays invalide');
+    // Le champ caché ne bloque pas les enregistrements suivants.
+    typeInto(input(el, 'city'), 'Lyon 6e');
+    await settle(fixture);
+    expect(el.querySelector('[data-testid="save-status"]')?.textContent).not.toContain(
+      'corrigez les champs',
+    );
   });
 
   it('publication acceptée : profil relu, pastille « publié » dans la navigation', async () => {

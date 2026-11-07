@@ -113,10 +113,17 @@ describe('ChipPickerComponent', () => {
     expect(host.control.value).toEqual(['grief', 'burnout']);
   });
 
-  it('maximum atteint : champ inactif, plus aucun ajout', async () => {
-    const { fixture, input, host } = await render();
+  it('maximum atteint : champ en lecture seule mais focalisable, plus aucun ajout', async () => {
+    const { fixture, el, input, host } = await render();
     host.max.set(1);
     await fixture.whenStable();
-    expect(input.disabled).toBe(true);
+    expect(input.disabled).toBe(false);
+    expect(input.readOnly).toBe(true);
+    expect(input.getAttribute('aria-disabled')).toBe('true');
+    await type(fixture, input, 'anx');
+    expect(el.querySelectorAll('[role="option"]')).toHaveLength(0);
+    key(input, 'Enter');
+    await fixture.whenStable();
+    expect(host.control.value).toEqual(['grief']);
   });
 });

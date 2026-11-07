@@ -61,8 +61,10 @@ let nextId = 0;
         [attr.aria-controls]="listId"
         [attr.aria-activedescendant]="activeId()"
         [attr.aria-describedby]="describedBy()"
-        [placeholder]="placeholder()"
-        [disabled]="disabled() || full()"
+        [placeholder]="full() ? fullPlaceholder : placeholder()"
+        [disabled]="disabled()"
+        [readOnly]="full()"
+        [attr.aria-disabled]="full() ? 'true' : null"
         [value]="query()"
         (input)="onInput($event)"
         (keydown)="onKeydown($event)"
@@ -233,6 +235,8 @@ export class ChipPickerComponent implements ControlValueAccessor {
   readonly placeholder = input(
     $localize`:Invite du champ d'ajout de puces@@profile.chips.placeholder:Ajouter…`,
   );
+  /** Maximum atteint : le champ reste focalisable (lecture seule) pour ne pas perdre le focus. */
+  protected readonly fullPlaceholder = $localize`:Invite quand le maximum de puces est atteint@@profile.chips.full:Maximum atteint`;
   /** Identifiant d'un message d'erreur à relier au champ (aria-describedby). */
   readonly errorId = input<string | null>(null);
 

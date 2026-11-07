@@ -35,7 +35,7 @@ describe('ProfilePreviewComponent', () => {
     expect(el.textContent).toContain('60 € la séance');
   });
 
-  it('contacts : seulement ceux dont l’interrupteur « Afficher » est actif (site web dès qu’il est rempli)', async () => {
+  it('contacts : seulement ceux dont l’interrupteur « Afficher » est actif ; site web à part', async () => {
     const { el } = await render(
       fields({
         contactPhone: '04 00 00 00 00',
@@ -50,11 +50,10 @@ describe('ProfilePreviewComponent', () => {
       }),
     );
     const contacts = Array.from(el.querySelectorAll('.contact')).map((c) => c.textContent);
-    expect(contacts).toEqual([
-      'cabinet@example.test',
-      'https://claire.example.test',
-      '12 rue Vendôme, 69006 Lyon',
-    ]);
+    expect(contacts).toEqual(['cabinet@example.test', '12 rue Vendôme, 69006 Lyon']);
+    // Le site web n'est pas un moyen de contact du contrat : ligne à part, dès qu'il est rempli.
+    expect(el.textContent).toContain('Site web :');
+    expect(el.textContent).toContain('https://claire.example.test');
   });
 
   it('spécialités : trois libellés puis « +n », ville et modalités, disponibilité', async () => {

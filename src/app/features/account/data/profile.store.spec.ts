@@ -229,6 +229,17 @@ describe('ProfileStore', () => {
     expect(store).toBeTruthy();
   });
 
+  it('publication faite mais relecture en échec : pas annoncée comme réussie, erreur gardée', async () => {
+    const api = fakeApi({
+      load: vi.fn().mockRejectedValue({ status: 0, code: 'NETWORK_ERROR' }),
+    });
+    const store = setup(api);
+    expect(await store.publishProfile()).toBe(false);
+    expect(api.publish).toHaveBeenCalledTimes(1);
+    expect(store.publication().status).toBe('error');
+    expect(store.publication().problem?.code).toBe('NETWORK_ERROR');
+  });
+
   it('missingOf : seulement un 409 PROFILE_INCOMPLETE, éléments inconnus ignorés', () => {
     expect(missingOf(INCOMPLETE(['contact', 'inconnu']))).toEqual(['contact']);
     expect(missingOf({ status: 409, code: 'SLUG_CONFLICT' })).toEqual([]);

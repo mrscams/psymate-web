@@ -57,6 +57,35 @@ describe('PublishCardComponent', () => {
     expect(el.textContent).not.toContain('Elle disparaît immédiatement');
   });
 
+  it('fiche publiée, dossier plus approuvé : on peut toujours la retirer', async () => {
+    const { el, toggle } = await render({ canPublish: false, published: true });
+    expect(toggle.disabled).toBe(false);
+    expect(el.querySelector('#publish-locked')).toBeNull();
+  });
+
+  it('confirmation : le focus va sur « Retirer la fiche », puis revient à l’interrupteur', async () => {
+    const { fixture, el, toggle } = await render({ canPublish: true, published: true });
+    toggle.click();
+    await fixture.whenStable();
+    expect(toggle.getAttribute('aria-disabled')).toBe('true');
+    expect(toggle.disabled).toBe(false);
+    expect(document.activeElement?.textContent?.trim()).toBe('Retirer la fiche');
+    Array.from(el.querySelectorAll<HTMLButtonElement>('button'))
+      .find((b) => b.textContent?.includes('Garder la fiche publiée'))!
+      .click();
+    await fixture.whenStable();
+    expect(document.activeElement).toBe(toggle);
+  });
+
+  it('pendant l’appel : un nouveau clic n’émet rien', async () => {
+    const { fixture, toggle } = await render({ canPublish: true, busy: true });
+    const publish = vi.fn();
+    fixture.componentInstance.publish.subscribe(publish);
+    expect(toggle.getAttribute('aria-disabled')).toBe('true');
+    toggle.click();
+    expect(publish).not.toHaveBeenCalled();
+  });
+
   it('refus 409 : une ligne par élément manquant, dossier → lien vers le dossier', async () => {
     const { fixture, el } = await render({
       canPublish: true,

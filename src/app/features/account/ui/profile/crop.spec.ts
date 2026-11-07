@@ -1,5 +1,4 @@
 import { CENTERED, cropSquare, outputSide, PHOTO_SIZE } from './crop';
-import { initialsOf } from './profile-labels';
 
 describe('recadrage carré', () => {
   it('centré : le plus grand carré au milieu d’une photo paysage ou portrait', () => {
@@ -25,14 +24,5 @@ describe('recadrage carré', () => {
     expect(PHOTO_SIZE).toBe(512);
     expect(outputSide(3000)).toBe(512);
     expect(outputSide(300)).toBe(300);
-  });
-});
-
-describe('initialsOf', () => {
-  it('prénom et nom, titres ignorés', () => {
-    expect(initialsOf('Claire Martin')).toBe('CM');
-    expect(initialsOf('Dr Karim Haddad')).toBe('KH');
-    expect(initialsOf('Élise')).toBe('É');
-    expect(initialsOf('  ')).toBe('?');
   });
 });

@@ -18,6 +18,9 @@
           @if (savedAgo(); as ago) {
             <span> · {{ ago }}</span>
           }
+          @for (message of serverMessages(); track message) {
+            <span> · {{ message }}</span>
+          }
           @if (store.autosave().status === 'error') {
             @if (saveProblemText(); as detail) {
               <span> · {{ detail }}</span>
@@ -74,12 +77,7 @@
                   />
                 </div>
                 <div class="field">
-                  <span
-                    class="label"
-                    id="profession-label"
-                    i18n="Champ profession@@profile.profession"
-                    >Profession</span
-                  >
+                  <span class="label" i18n="Champ profession@@profile.profession">Profession</span>
                   <p class="readonly">{{ profession() }}</p>
                   <p class="help" i18n="Aide de la profession@@profile.profession.help">
                     Celle de votre dossier professionnel.
@@ -125,7 +123,12 @@
                     [options]="availabilityOptions"
                     [value]="current.availability"
                     labelledBy="availability-label"
+                    [describedBy]="id('availability') + '-error'"
                     (valueChange)="setAvailability($event)"
+                  />
+                  <pm-field-errors
+                    [control]="form.controls.availability"
+                    [id]="id('availability') + '-error'"
                   />
                 </div>
                 <div class="field">
@@ -154,12 +157,12 @@
               Présentation et pratique
             </h2>
             <div class="field">
-              <label [for]="id('bio')">
-                <span i18n="Champ présentation@@profile.bio">Présentation</span>
+              <div class="label-row">
+                <label [for]="id('bio')" i18n="Champ présentation@@profile.bio">Présentation</label>
                 <span class="counter" [id]="id('bio') + '-count'">
                   · {{ bioLength() }} / {{ limits.bio }}
                 </span>
-              </label>
+              </div>
               <textarea
                 class="input textarea"
                 rows="6"
@@ -215,7 +218,7 @@
                     [id]="id('audiences') + '-error'"
                   />
                 </div>
-                <fieldset class="field">
+                <fieldset class="field" [attr.aria-describedby]="id('modalities') + '-error'">
                   <legend i18n="Champ modalités@@profile.modalities">Modalités</legend>
                   @for (option of modalityOptions(); track option.code) {
                     <label class="check">
@@ -227,6 +230,10 @@
                       <span>{{ option.label }}</span>
                     </label>
                   }
+                  <pm-field-errors
+                    [control]="form.controls.modalities"
+                    [id]="id('modalities') + '-error'"
+                  />
                 </fieldset>
                 <div class="field">
                   <pm-chip-picker
@@ -236,7 +243,12 @@
                     hint="Langues de consultation."
                     i18n-hint="Aide des langues@@profile.languages.help"
                     [fieldId]="id('languages')"
+                    [errorId]="id('languages') + '-error'"
                     [options]="languageOptions()"
+                  />
+                  <pm-field-errors
+                    [control]="form.controls.languages"
+                    [id]="id('languages') + '-error'"
                   />
                 </div>
               </div>
@@ -328,7 +340,6 @@
                   class="input"
                   type="url"
                   formControlName="websiteUrl"
-                  placeholder="https://"
                   [id]="id('websiteUrl')"
                   [attr.maxlength]="limits.websiteUrl"
                   [attr.aria-invalid]="form.controls.websiteUrl.invalid"

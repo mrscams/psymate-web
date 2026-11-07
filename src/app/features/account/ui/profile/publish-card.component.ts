@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  Injector,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { ApiProblem } from '../../../../core/http';
@@ -29,12 +41,16 @@ export interface ChecklistItem {
           Apparaître dans l'annuaire
         </h2>
         <label class="switch" [class.on]="published()">
+          <!-- Une fiche publiée se retire toujours, même si le dossier n'est plus approuvé. Pendant
+               l'appel ou la confirmation : aria-disabled, pour que le focus clavier reste ici. -->
           <input
+            #toggleInput
             type="checkbox"
             role="switch"
             [checked]="published()"
-            [disabled]="!canPublish() || busy() || confirming()"
-            [attr.aria-describedby]="canPublish() ? 'publish-state' : 'publish-locked'"
+            [disabled]="locked()"
+            [attr.aria-disabled]="busy() || confirming() ? 'true' : null"
+            [attr.aria-describedby]="locked() ? 'publish-locked' : 'publish-state'"
             [attr.aria-busy]="busy()"
             (change)="toggle($event)"
           />
@@ -42,7 +58,7 @@ export interface ChecklistItem {
         </label>
       </div>
 
-      @if (!canPublish()) {
+      @if (locked()) {
         <p class="locked" id="publish-locked">
           <strong i18n="Publication impossible, dossier non approuvé@@profile.publish.lockedTitle"
             >Dossier en cours de vérification.</strong
@@ -81,6 +97,7 @@ export interface ChecklistItem {
           </p>
           <div class="actions">
             <button
+              #confirmButton
               type="button"
               class="button danger"
               [disabled]="busy()"
@@ -93,7 +110,7 @@ export interface ChecklistItem {
               type="button"
               class="button"
               [disabled]="busy()"
-              (click)="confirming.set(false)"
+              (click)="cancelUnpublish()"
               i18n="Bouton d'annulation de dépublication@@profile.publish.confirmNo"
             >
               Garder la fiche publiée
@@ -343,25 +360,51 @@ export class PublishCardComponent {
 
   protected readonly paths = ACCOUNT_PATHS;
   protected readonly confirming = signal(false);
+  private readonly injector = inject(Injector);
+  private readonly toggleInput = viewChild<ElementRef<HTMLInputElement>>('toggleInput');
+  private readonly confirmButton = viewChild<ElementRef<HTMLButtonElement>>('confirmButton');
 
-  protected readonly problemText = computed(() =>
-    this.problem()
-      ? $localize`:Échec de la publication ou dépublication@@profile.publish.failed:L'opération n'a pas abouti. Réessayez dans un instant.`
-      : null,
-  );
+  /** Publier exige un dossier approuvé ; retirer une fiche publiée reste toujours possible. */
+  protected readonly locked = computed(() => !this.published() && !this.canPublish());
+
+  protected readonly problemText = computed(() => {
+    const problem = this.problem();
+    if (!problem) return null;
+    return problem.status === 422
+      ? $localize`:Publication impossible, formulaire à corriger@@profile.publish.fixFields:Corrigez les champs signalés avant de publier.`
+      : $localize`:Échec de la publication ou dépublication@@profile.publish.failed:L'opération n'a pas abouti. Réessayez dans un instant.`;
+  });
 
   protected toggle(event: Event): void {
     const input = event.target as HTMLInputElement;
     const wanted = input.checked;
     // L'interrupteur suit le serveur, pas le clic : il bascule quand le profil relu le dit.
     input.checked = this.published();
-    if (wanted) this.publish.emit();
-    else this.confirming.set(true);
+    if (this.busy() || this.confirming()) return;
+    if (wanted) {
+      this.publish.emit();
+      return;
+    }
+    // Confirmation inline : le focus va sur « Retirer la fiche ».
+    this.confirming.set(true);
+    afterNextRender(() => this.confirmButton()?.nativeElement.focus(), {
+      injector: this.injector,
+    });
   }
 
   protected confirmUnpublish(): void {
     this.confirming.set(false);
+    this.focusToggle();
     this.unpublish.emit();
+  }
+
+  protected cancelUnpublish(): void {
+    this.confirming.set(false);
+    this.focusToggle();
+  }
+
+  private focusToggle(): void {
+    afterNextRender(() => this.toggleInput()?.nativeElement.focus(), { injector: this.injector });
   }
 
   protected label(item: MissingItem): string {

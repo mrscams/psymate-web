@@ -8849,6 +8849,37 @@
         </context-group>
         <note priority="1" from="description">État d&apos;une ligne de contrôle à faire</note>
       </trans-unit>
+      <trans-unit id="profile.publish.fixFields" datatype="html">
+        <source>Corrigez les champs signalés avant de publier.</source>
+        <target state="translated">Fix the highlighted fields before publishing.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
+          <context context-type="linenumber">328</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
+          <context context-type="linenumber">374</context>
+        </context-group>
+        <note priority="1" from="description">Publication impossible, formulaire à corriger</note>
+      </trans-unit>
+      <trans-unit id="profile.chips.full" datatype="html">
+        <source>Maximum atteint</source>
+        <target state="translated">Maximum reached</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/profile/chip-picker.component.ts</context>
+          <context context-type="linenumber">239</context>
+        </context-group>
+        <note priority="1" from="description">Invite quand le maximum de puces est atteint</note>
+      </trans-unit>
+      <trans-unit id="profile.preview.website" datatype="html">
+        <source>Site web :</source>
+        <target state="translated">Website:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/profile/profile-preview.component.ts</context>
+          <context context-type="linenumber">108,113</context>
+        </context-group>
+        <note priority="1" from="description">Site web dans l&apos;aperçu</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

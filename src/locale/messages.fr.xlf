@@ -688,7 +688,7 @@
         <source> Réessayer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">31,36</context>
+          <context context-type="linenumber">34,39</context>
         </context-group>
         <note priority="1" from="description">Bouton pour relancer l&apos;enregistrement</note>
       </trans-unit>
@@ -696,7 +696,7 @@
         <source>Identité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">45,47</context>
+          <context context-type="linenumber">48,50</context>
         </context-group>
         <note priority="1" from="description">Section Identité</note>
       </trans-unit>
@@ -704,7 +704,7 @@
         <source>Nom affiché</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">59,61</context>
+          <context context-type="linenumber">62,64</context>
         </context-group>
         <note priority="1" from="description">Champ nom affiché</note>
       </trans-unit>
@@ -712,7 +712,7 @@
         <source>Profession</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">78,80</context>
+          <context context-type="linenumber">80,81</context>
         </context-group>
         <note priority="1" from="description">Champ profession</note>
       </trans-unit>
@@ -720,7 +720,7 @@
         <source> Celle de votre dossier professionnel. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">82,84</context>
+          <context context-type="linenumber">83,85</context>
         </context-group>
         <note priority="1" from="description">Aide de la profession</note>
       </trans-unit>
@@ -728,7 +728,7 @@
         <source>Titre affiché</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">87,89</context>
+          <context context-type="linenumber">88,90</context>
         </context-group>
         <note priority="1" from="description">Champ titre affiché</note>
       </trans-unit>
@@ -736,7 +736,7 @@
         <source>N° professionnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">104,106</context>
+          <context context-type="linenumber">105,107</context>
         </context-group>
         <note priority="1" from="description">Champ numéro professionnel</note>
       </trans-unit>
@@ -744,7 +744,7 @@
         <source>Afficher le numéro de mon dossier professionnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">109,112</context>
+          <context context-type="linenumber">110,113</context>
         </context-group>
         <note priority="1" from="description">Interrupteur numéro professionnel</note>
       </trans-unit>
@@ -752,7 +752,7 @@
         <source>Disponibilité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">115,117</context>
+          <context context-type="linenumber">119,121</context>
         </context-group>
         <note priority="1" from="description">Champ disponibilité</note>
       </trans-unit>
@@ -760,7 +760,7 @@
         <source>Prochain créneau disponible (facultatif)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">127,130</context>
+          <context context-type="linenumber">136,139</context>
         </context-group>
         <note priority="1" from="description">Champ prochain créneau</note>
       </trans-unit>
@@ -768,7 +768,7 @@
         <source> Présentation et pratique </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">148,151</context>
+          <context context-type="linenumber">157,160</context>
         </context-group>
         <note priority="1" from="description">Section Présentation et pratique</note>
       </trans-unit>
@@ -776,7 +776,7 @@
         <source>Présentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">152,153</context>
+          <context context-type="linenumber">161,162</context>
         </context-group>
         <note priority="1" from="description">Champ présentation</note>
       </trans-unit>
@@ -784,7 +784,7 @@
         <source>Listes de l&apos;annuaire indisponibles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">174,175</context>
+          <context context-type="linenumber">183,184</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;erreur de la liste fermée</note>
       </trans-unit>
@@ -792,7 +792,7 @@
         <source>Spécialités</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">182,183</context>
+          <context context-type="linenumber">191,192</context>
         </context-group>
         <note priority="1" from="description">Champ spécialités</note>
       </trans-unit>
@@ -800,7 +800,7 @@
         <source>Liste commune à l&apos;annuaire.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">184,185</context>
+          <context context-type="linenumber">193,194</context>
         </context-group>
         <note priority="1" from="description">Aide des spécialités</note>
       </trans-unit>
@@ -808,7 +808,7 @@
         <source>Publics</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">209</context>
         </context-group>
         <note priority="1" from="description">Champ publics</note>
       </trans-unit>
@@ -816,7 +816,7 @@
         <source>Publics que vous accueillez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">201,202</context>
+          <context context-type="linenumber">210,211</context>
         </context-group>
         <note priority="1" from="description">Aide des publics</note>
       </trans-unit>
@@ -824,7 +824,7 @@
         <source>Modalités</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">213,214</context>
+          <context context-type="linenumber">222,223</context>
         </context-group>
         <note priority="1" from="description">Champ modalités</note>
       </trans-unit>
@@ -832,7 +832,7 @@
         <source>Langues</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">229</context>
+          <context context-type="linenumber">242</context>
         </context-group>
         <note priority="1" from="description">Champ langues</note>
       </trans-unit>
@@ -840,7 +840,7 @@
         <source>Langues de consultation.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">230,231</context>
+          <context context-type="linenumber">243,244</context>
         </context-group>
         <note priority="1" from="description">Aide des langues</note>
       </trans-unit>
@@ -848,7 +848,7 @@
         <source>Tarif (facultatif)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">240,242</context>
+          <context context-type="linenumber">258,260</context>
         </context-group>
         <note priority="1" from="description">Champ tarif</note>
       </trans-unit>
@@ -856,7 +856,7 @@
         <source> Texte libre, par exemple « 60 € la séance de 50 min ». Vide : rien n&apos;est affiché. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">250,252</context>
+          <context context-type="linenumber">268,270</context>
         </context-group>
         <note priority="1" from="description">Aide du tarif</note>
       </trans-unit>
@@ -864,7 +864,7 @@
         <source> Moyens de contact </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">259,261</context>
+          <context context-type="linenumber">277,279</context>
         </context-group>
         <note priority="1" from="description">Section Moyens de contact</note>
       </trans-unit>
@@ -872,7 +872,7 @@
         <source> Chaque moyen a son interrupteur « Afficher ». Le formulaire de contact de la fiche est toujours disponible et vous transmet les messages par e-mail. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">262,265</context>
+          <context context-type="linenumber">280,283</context>
         </context-group>
         <note priority="1" from="description">Aide des moyens de contact</note>
       </trans-unit>
@@ -880,7 +880,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">267,269</context>
+          <context context-type="linenumber">285,287</context>
         </context-group>
         <note priority="1" from="description">Champ téléphone</note>
       </trans-unit>
@@ -888,7 +888,7 @@
         <source>Afficher<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> le téléphone<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">287,288</context>
+          <context context-type="linenumber">305,306</context>
         </context-group>
         <note priority="1" from="description">Interrupteur afficher le téléphone</note>
       </trans-unit>
@@ -896,7 +896,7 @@
         <source>E-mail public</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">292,294</context>
+          <context context-type="linenumber">310,312</context>
         </context-group>
         <note priority="1" from="description">Champ e-mail public</note>
       </trans-unit>
@@ -904,7 +904,7 @@
         <source>Afficher<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> l&apos;e-mail<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">313,314</context>
+          <context context-type="linenumber">331,332</context>
         </context-group>
         <note priority="1" from="description">Interrupteur afficher l&apos;e-mail</note>
       </trans-unit>
@@ -912,7 +912,7 @@
         <source>Site web</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">318,320</context>
+          <context context-type="linenumber">336,338</context>
         </context-group>
         <note priority="1" from="description">Champ site web</note>
       </trans-unit>
@@ -920,7 +920,7 @@
         <source> Adresse complète, commençant par https://. Affichée dès qu&apos;elle est remplie. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">337,339</context>
+          <context context-type="linenumber">356,358</context>
         </context-group>
         <note priority="1" from="description">Aide du site web</note>
       </trans-unit>
@@ -928,7 +928,7 @@
         <source>Délai de réponse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">347,350</context>
+          <context context-type="linenumber">368,371</context>
         </context-group>
         <note priority="1" from="description">Champ délai de réponse</note>
       </trans-unit>
@@ -936,7 +936,7 @@
         <source> Ne pas afficher </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">352,354</context>
+          <context context-type="linenumber">373,375</context>
         </context-group>
         <note priority="1" from="description">Délai de réponse non affiché</note>
       </trans-unit>
@@ -944,7 +944,7 @@
         <source>Cabinet</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">365,367</context>
+          <context context-type="linenumber">386,388</context>
         </context-group>
         <note priority="1" from="description">Section Cabinet</note>
       </trans-unit>
@@ -952,7 +952,7 @@
         <source>Adresse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">367,369</context>
+          <context context-type="linenumber">388,390</context>
         </context-group>
         <note priority="1" from="description">Champ adresse</note>
       </trans-unit>
@@ -960,7 +960,7 @@
         <source>Code postal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">382,385</context>
+          <context context-type="linenumber">403,406</context>
         </context-group>
         <note priority="1" from="description">Champ code postal</note>
       </trans-unit>
@@ -968,7 +968,7 @@
         <source>Ville</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">399,401</context>
+          <context context-type="linenumber">420,422</context>
         </context-group>
         <note priority="1" from="description">Champ ville</note>
       </trans-unit>
@@ -976,7 +976,7 @@
         <source> Requise pour publier. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">410,412</context>
+          <context context-type="linenumber">435,437</context>
         </context-group>
         <note priority="1" from="description">Aide de la ville</note>
       </trans-unit>
@@ -984,7 +984,7 @@
         <source>Afficher l&apos;adresse sur la fiche</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">418,422</context>
+          <context context-type="linenumber">443,447</context>
         </context-group>
         <note priority="1" from="description">Interrupteur afficher l&apos;adresse</note>
       </trans-unit>
@@ -992,7 +992,7 @@
         <source>Réessayer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <note priority="1" from="description">Bouton Réessayer du profil public</note>
       </trans-unit>
@@ -1000,7 +1000,7 @@
         <source>Réessayer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">147</context>
         </context-group>
         <note priority="1" from="description">Bouton Réessayer de la liste fermée</note>
       </trans-unit>
@@ -1008,7 +1008,7 @@
         <source>Dossier professionnel approuvé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">206</context>
+          <context context-type="linenumber">216</context>
         </context-group>
         <note priority="1" from="description">Contrôle, dossier approuvé</note>
       </trans-unit>
@@ -1016,7 +1016,7 @@
         <source>Dossier professionnel pas encore approuvé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">207</context>
+          <context context-type="linenumber">217</context>
         </context-group>
         <note priority="1" from="description">Contrôle, dossier non approuvé</note>
       </trans-unit>
@@ -1024,7 +1024,7 @@
         <source>Nom affiché, profession, ville</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">222</context>
         </context-group>
         <note priority="1" from="description">Contrôle, identité</note>
       </trans-unit>
@@ -1032,7 +1032,7 @@
         <source>Au moins un moyen de contact affiché</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">217</context>
+          <context context-type="linenumber">227</context>
         </context-group>
         <note priority="1" from="description">Contrôle, contact</note>
       </trans-unit>
@@ -1040,7 +1040,7 @@
         <source>Photo ajoutée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">233</context>
         </context-group>
         <note priority="1" from="description">Contrôle, photo présente</note>
       </trans-unit>
@@ -1048,7 +1048,7 @@
         <source>Photo absente : les initiales sont affichées</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">224</context>
+          <context context-type="linenumber">234</context>
         </context-group>
         <note priority="1" from="description">Contrôle, photo absente</note>
       </trans-unit>
@@ -1056,7 +1056,7 @@
         <source>Non enregistré : corrigez les champs signalés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">232</context>
+          <context context-type="linenumber">242</context>
         </context-group>
         <note priority="1" from="description">Formulaire à corriger, rien n&apos;est enregistré</note>
       </trans-unit>
@@ -1064,7 +1064,7 @@
         <source>Enregistrement…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">237</context>
+          <context context-type="linenumber">247</context>
         </context-group>
         <note priority="1" from="description">Enregistrement automatique en cours</note>
       </trans-unit>
@@ -1072,7 +1072,7 @@
         <source>Enregistré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">239</context>
+          <context context-type="linenumber">249</context>
         </context-group>
         <note priority="1" from="description">Enregistrement automatique réussi</note>
       </trans-unit>
@@ -1080,7 +1080,7 @@
         <source>Erreur d&apos;enregistrement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">241</context>
+          <context context-type="linenumber">251</context>
         </context-group>
         <note priority="1" from="description">Enregistrement automatique en échec</note>
       </trans-unit>
@@ -1088,7 +1088,7 @@
         <source>Enregistré automatiquement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">243</context>
+          <context context-type="linenumber">253</context>
         </context-group>
         <note priority="1" from="description">Enregistrement automatique, au repos</note>
       </trans-unit>
@@ -1096,7 +1096,7 @@
         <source>dernière modification <x id="ago" equiv-text="ago"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">258</context>
+          <context context-type="linenumber">268</context>
         </context-group>
         <note priority="1" from="description">Date de dernière modification du profil</note>
       </trans-unit>
@@ -1104,15 +1104,27 @@
         <source>Vos dernières modifications ne sont pas enregistrées.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">264</context>
+          <context context-type="linenumber">274</context>
         </context-group>
         <note priority="1" from="description">Explication de l&apos;erreur d&apos;enregistrement</note>
+      </trans-unit>
+      <trans-unit id="profile.publish.fixFields" datatype="html">
+        <source>Corrigez les champs signalés avant de publier.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
+          <context context-type="linenumber">328</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
+          <context context-type="linenumber">374</context>
+        </context-group>
+        <note priority="1" from="description">Publication impossible, formulaire à corriger</note>
       </trans-unit>
       <trans-unit id="profile.published" datatype="html">
         <source>Votre fiche est publiée dans l&apos;annuaire.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">315</context>
+          <context context-type="linenumber">334</context>
         </context-group>
         <note priority="1" from="description">Toast après publication</note>
       </trans-unit>
@@ -1120,7 +1132,7 @@
         <source>Votre fiche est retirée de l&apos;annuaire.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">323</context>
+          <context context-type="linenumber">342</context>
         </context-group>
         <note priority="1" from="description">Toast après dépublication</note>
       </trans-unit>
@@ -1128,7 +1140,7 @@
         <source>Lien copié.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">331</context>
+          <context context-type="linenumber">350</context>
         </context-group>
         <note priority="1" from="description">Toast lien copié</note>
       </trans-unit>
@@ -1136,7 +1148,7 @@
         <source>Copie impossible : sélectionnez l&apos;adresse affichée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">334</context>
+          <context context-type="linenumber">353</context>
         </context-group>
         <note priority="1" from="description">Copie du lien impossible</note>
       </trans-unit>
@@ -1144,7 +1156,7 @@
         <source>Photo enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">342</context>
+          <context context-type="linenumber">361</context>
         </context-group>
         <note priority="1" from="description">Toast photo enregistrée</note>
       </trans-unit>
@@ -1152,7 +1164,7 @@
         <source>à l&apos;instant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">383</context>
+          <context context-type="linenumber">420</context>
         </context-group>
         <note priority="1" from="description">Enregistré il y a moins de 5 secondes</note>
       </trans-unit>
@@ -2899,7 +2911,7 @@
         <source> Pas dans la liste : seules les valeurs de l&apos;annuaire peuvent être choisies. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/chip-picker.component.ts</context>
-          <context context-type="linenumber">97,103</context>
+          <context context-type="linenumber">105,111</context>
         </context-group>
         <note priority="1" from="description">Aucune valeur de la liste fermée ne correspond</note>
       </trans-unit>
@@ -2907,15 +2919,23 @@
         <source>Ajouter…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/chip-picker.component.ts</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">236</context>
         </context-group>
         <note priority="1" from="description">Invite du champ d&apos;ajout de puces</note>
+      </trans-unit>
+      <trans-unit id="profile.chips.full" datatype="html">
+        <source>Maximum atteint</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/profile/chip-picker.component.ts</context>
+          <context context-type="linenumber">239</context>
+        </context-group>
+        <note priority="1" from="description">Invite quand le maximum de puces est atteint</note>
       </trans-unit>
       <trans-unit id="profile.chips.selected" datatype="html">
         <source><x id="field" equiv-text="this.label()"/> choisies</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/chip-picker.component.ts</context>
-          <context context-type="linenumber">284</context>
+          <context context-type="linenumber">294</context>
         </context-group>
         <note priority="1" from="description">Liste des puces choisies</note>
       </trans-unit>
@@ -2923,7 +2943,7 @@
         <source>Retirer <x id="label" equiv-text="label"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/chip-picker.component.ts</context>
-          <context context-type="linenumber">308</context>
+          <context context-type="linenumber">318</context>
         </context-group>
         <note priority="1" from="description">Bouton de retrait d&apos;une puce</note>
       </trans-unit>
@@ -2955,7 +2975,7 @@
         <source> Recadrer la photo </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">86,88</context>
+          <context context-type="linenumber">81,83</context>
         </context-group>
         <note priority="1" from="description">Titre du recadrage</note>
       </trans-unit>
@@ -2963,7 +2983,7 @@
         <source> La photo est recadrée en carré et réduite à 512 px. Ses métadonnées (lieu, appareil) ne sont pas envoyées. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">89,92</context>
+          <context context-type="linenumber">84,87</context>
         </context-group>
         <note priority="1" from="description">Aide du recadrage</note>
       </trans-unit>
@@ -2971,7 +2991,7 @@
         <source>Zoom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">94,96</context>
+          <context context-type="linenumber">89,91</context>
         </context-group>
         <note priority="1" from="description">Curseur de zoom</note>
       </trans-unit>
@@ -2979,7 +2999,7 @@
         <source>Position horizontale</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">105,108</context>
+          <context context-type="linenumber">100,103</context>
         </context-group>
         <note priority="1" from="description">Curseur de position horizontale</note>
       </trans-unit>
@@ -2987,7 +3007,7 @@
         <source>Position verticale</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">116,119</context>
+          <context context-type="linenumber">111,114</context>
         </context-group>
         <note priority="1" from="description">Curseur de position verticale</note>
       </trans-unit>
@@ -2995,7 +3015,7 @@
         <source> Enregistrer la photo </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">134,137</context>
+          <context context-type="linenumber">129,132</context>
         </context-group>
         <note priority="1" from="description">Bouton pour enregistrer la photo recadrée</note>
       </trans-unit>
@@ -3003,7 +3023,7 @@
         <source> Annuler </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">143,149</context>
+          <context context-type="linenumber">138,144</context>
         </context-group>
         <note priority="1" from="description">Bouton pour annuler le recadrage</note>
       </trans-unit>
@@ -3011,7 +3031,7 @@
         <source>Choisissez une image JPEG ou PNG.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">307</context>
+          <context context-type="linenumber">302</context>
         </context-group>
         <note priority="1" from="description">Photo d&apos;un autre format</note>
       </trans-unit>
@@ -3019,7 +3039,7 @@
         <source>Cette image n&apos;a pas pu être lue. Essayez une autre photo.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">318</context>
+          <context context-type="linenumber">313</context>
         </context-group>
         <note priority="1" from="description">Photo illisible</note>
       </trans-unit>
@@ -3027,7 +3047,7 @@
         <source>Le recadrage a échoué. Essayez une autre photo.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">337</context>
+          <context context-type="linenumber">332</context>
         </context-group>
         <note priority="1" from="description">Recadrage impossible</note>
       </trans-unit>
@@ -3035,7 +3055,7 @@
         <source>La photo dépasse 5 Mo.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">351</context>
+          <context context-type="linenumber">346</context>
         </context-group>
         <note priority="1" from="description">Photo refusée, plus de 5 Mo</note>
       </trans-unit>
@@ -3043,7 +3063,7 @@
         <source>Le serveur n&apos;accepte que les images JPEG ou PNG.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">353</context>
+          <context context-type="linenumber">348</context>
         </context-group>
         <note priority="1" from="description">Photo refusée, format</note>
       </trans-unit>
@@ -3051,7 +3071,7 @@
         <source>Cette image est trop grande (plus de 25 millions de pixels).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">355</context>
+          <context context-type="linenumber">350</context>
         </context-group>
         <note priority="1" from="description">Photo refusée, trop de pixels</note>
       </trans-unit>
@@ -3059,7 +3079,7 @@
         <source>Le serveur n&apos;a pas pu lire cette image.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">357</context>
+          <context context-type="linenumber">352</context>
         </context-group>
         <note priority="1" from="description">Photo refusée, illisible</note>
       </trans-unit>
@@ -3067,7 +3087,7 @@
         <source>La photo n&apos;a pas pu être enregistrée. Réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">359</context>
+          <context context-type="linenumber">354</context>
         </context-group>
         <note priority="1" from="description">Photo non enregistrée</note>
       </trans-unit>
@@ -3203,7 +3223,7 @@
         <source>Tarif :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-preview.component.ts</context>
-          <context context-type="linenumber">90,94</context>
+          <context context-type="linenumber">90,95</context>
         </context-group>
         <note priority="1" from="description">Tarif dans l&apos;aperçu</note>
       </trans-unit>
@@ -3215,11 +3235,19 @@
         </context-group>
         <note priority="1" from="description">Contacts affichés dans l&apos;aperçu</note>
       </trans-unit>
+      <trans-unit id="profile.preview.website" datatype="html">
+        <source>Site web :</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/profile/profile-preview.component.ts</context>
+          <context context-type="linenumber">108,113</context>
+        </context-group>
+        <note priority="1" from="description">Site web dans l&apos;aperçu</note>
+      </trans-unit>
       <trans-unit id="profile.preview.cta" datatype="html">
         <source>Prendre contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-preview.component.ts</context>
-          <context context-type="linenumber">107,110</context>
+          <context context-type="linenumber">114,117</context>
         </context-group>
         <note priority="1" from="description">Bouton factice de l&apos;aperçu</note>
       </trans-unit>
@@ -3227,7 +3255,7 @@
         <source> L&apos;aperçu se met à jour pendant la saisie. Les champs vides ne sont pas affichés sur la fiche. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-preview.component.ts</context>
-          <context context-type="linenumber">111,116</context>
+          <context context-type="linenumber">118,123</context>
         </context-group>
         <note priority="1" from="description">Note sous l&apos;aperçu</note>
       </trans-unit>
@@ -3235,7 +3263,7 @@
         <source> Apparaître dans l&apos;annuaire </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">36,38</context>
+          <context context-type="linenumber">41,43</context>
         </context-group>
         <note priority="1" from="description">Titre de la carte de publication</note>
       </trans-unit>
@@ -3243,7 +3271,7 @@
         <source>Publié</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">48,52</context>
+          <context context-type="linenumber">57,62</context>
         </context-group>
         <note priority="1" from="description">Interrupteur de publication</note>
       </trans-unit>
@@ -3251,7 +3279,7 @@
         <source>Dossier en cours de vérification.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">55,57</context>
+          <context context-type="linenumber">64,66</context>
         </context-group>
         <note priority="1" from="description">Publication impossible, dossier non approuvé</note>
       </trans-unit>
@@ -3259,7 +3287,7 @@
         <source> Votre dossier professionnel doit être approuvé avant de publier votre fiche. Vous pouvez déjà la remplir : rien n&apos;est visible tant qu&apos;elle n&apos;est pas publiée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">58,62</context>
+          <context context-type="linenumber">67,71</context>
         </context-group>
         <note priority="1" from="description">Explication de la publication verrouillée</note>
       </trans-unit>
@@ -3267,7 +3295,7 @@
         <source>Voir mon dossier professionnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">64,69</context>
+          <context context-type="linenumber">73,78</context>
         </context-group>
         <note priority="1" from="description">Lien vers le dossier professionnel</note>
       </trans-unit>
@@ -3275,7 +3303,7 @@
         <source>Votre fiche est visible à l&apos;adresse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">71,73</context>
+          <context context-type="linenumber">80,82</context>
         </context-group>
         <note priority="1" from="description">Fiche publiée</note>
       </trans-unit>
@@ -3283,7 +3311,7 @@
         <source>Une fois publiée, votre fiche sera visible à l&apos;adresse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">74,77</context>
+          <context context-type="linenumber">83,86</context>
         </context-group>
         <note priority="1" from="description">Fiche non publiée</note>
       </trans-unit>
@@ -3291,7 +3319,7 @@
         <source>Désactiver retire la fiche immédiatement de l&apos;annuaire.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">78,83</context>
+          <context context-type="linenumber">88,93</context>
         </context-group>
         <note priority="1" from="description">Effet de la dépublication</note>
       </trans-unit>
@@ -3299,7 +3327,7 @@
         <source> Retirer la fiche de l&apos;annuaire ? Elle disparaît immédiatement ; vos informations restent enregistrées pour une prochaine publication. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">85,88</context>
+          <context context-type="linenumber">95,98</context>
         </context-group>
         <note priority="1" from="description">Confirmation de dépublication</note>
       </trans-unit>
@@ -3307,7 +3335,7 @@
         <source> Retirer la fiche </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">96,99</context>
+          <context context-type="linenumber">107,110</context>
         </context-group>
         <note priority="1" from="description">Bouton de confirmation de dépublication</note>
       </trans-unit>
@@ -3315,7 +3343,7 @@
         <source> Garder la fiche publiée </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">105,109</context>
+          <context context-type="linenumber">116,121</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;annulation de dépublication</note>
       </trans-unit>
@@ -3323,7 +3351,7 @@
         <source> Publication refusée. À corriger : </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">114,117</context>
+          <context context-type="linenumber">125,128</context>
         </context-group>
         <note priority="1" from="description">Publication refusée, titre</note>
       </trans-unit>
@@ -3331,7 +3359,7 @@
         <source>Voir mon dossier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">124,127</context>
+          <context context-type="linenumber">135,138</context>
         </context-group>
         <note priority="1" from="description">Lien vers le dossier depuis le refus</note>
       </trans-unit>
@@ -3339,7 +3367,7 @@
         <source>Liste de contrôle</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">152,153</context>
         </context-group>
         <note priority="1" from="description">Liste de contrôle de la publication</note>
       </trans-unit>
@@ -3347,7 +3375,7 @@
         <source>Ouvrir la fiche publique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">158,162</context>
+          <context context-type="linenumber">173,177</context>
         </context-group>
         <note priority="1" from="description">Lien vers la fiche publique</note>
       </trans-unit>
@@ -3355,7 +3383,7 @@
         <source> Copier le lien </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">167,172</context>
+          <context context-type="linenumber">182,188</context>
         </context-group>
         <note priority="1" from="description">Bouton pour copier le lien de la fiche</note>
       </trans-unit>
@@ -3363,7 +3391,7 @@
         <source>L&apos;opération n&apos;a pas abouti. Réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">351</context>
+          <context context-type="linenumber">375</context>
         </context-group>
         <note priority="1" from="description">Échec de la publication ou dépublication</note>
       </trans-unit>
@@ -3371,7 +3399,7 @@
         <source>Fait :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">380</context>
+          <context context-type="linenumber">421</context>
         </context-group>
         <note priority="1" from="description">État d&apos;une ligne de contrôle réglée</note>
       </trans-unit>
@@ -3379,7 +3407,7 @@
         <source>À noter :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">382</context>
+          <context context-type="linenumber">423</context>
         </context-group>
         <note priority="1" from="description">État d&apos;une ligne de contrôle à signaler</note>
       </trans-unit>
@@ -3387,7 +3415,7 @@
         <source>À faire :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">384</context>
+          <context context-type="linenumber">425</context>
         </context-group>
         <note priority="1" from="description">État d&apos;une ligne de contrôle à faire</note>
       </trans-unit>

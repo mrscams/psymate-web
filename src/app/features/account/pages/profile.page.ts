@@ -14,8 +14,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SessionStore } from '../../../core/auth';
+import { ApiProblem } from '../../../core/http';
 import { toAppLocale } from '../../../core/i18n';
-import { applyProblem, FieldErrorsComponent, fieldId } from '../../../shared/forms';
+import {
+  applyProblem,
+  clearServerErrors,
+  FieldErrorsComponent,
+  fieldId,
+  firstInvalidField,
+} from '../../../shared/forms';
 import { AccountNavComponent, StateComponent, ToastService } from '../../../shared/ui';
 import { stateKind } from '../../../shared/util';
 import {
@@ -176,8 +183,11 @@ export class ProfilePage {
   );
 
   protected readonly availabilityOptions: SegmentOption<Availability>[] = (
-    ['accepting', 'waitlist', 'closed'] as const
+    ['accepting', 'waitlist', 'closed', 'unknown'] as const
   ).map((value) => ({ value, label: availabilityLabel(value) }));
+
+  /** Messages d'un 422 qui ne se rattachent à aucun champ visible (affichés dans la ligne d'état). */
+  protected readonly serverMessages = signal<string[]>([]);
 
   /** Délais proposés, plus la valeur enregistrée si elle n'en fait pas partie (saisie par l'API). */
   protected readonly delayOptions = computed(() => {
@@ -277,7 +287,7 @@ export class ProfilePage {
     // 422 du PUT : chaque message sous son champ (le client ne vérifie que la forme).
     effect(() => {
       const problem = this.store.autosave().problem;
-      if (problem?.status === 422) untracked(() => applyProblem(this.form, problem));
+      if (problem?.status === 422) untracked(() => this.showServerErrors(problem));
     });
 
     this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => this.onChange());
@@ -310,6 +320,15 @@ export class ProfilePage {
   }
 
   protected async publish(): Promise<void> {
+    // Le serveur publierait la dernière version enregistrée, pas ce qui est à l'écran.
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.focusField(firstInvalidField(this.form));
+      this.toasts.warning(
+        $localize`:Publication impossible, formulaire à corriger@@profile.publish.fixFields:Corrigez les champs signalés avant de publier.`,
+      );
+      return;
+    }
     if (await this.store.publishProfile()) {
       this.toasts.success(
         $localize`:Toast après publication@@profile.published:Votre fiche est publiée dans l'annuaire.`,
@@ -355,8 +374,25 @@ export class ProfilePage {
       specialties: 'specialties',
       audiences: 'audiences',
     };
-    const field = target[item];
+    this.focusField(target[item] ?? null);
+  }
+
+  private focusField(field: string | null): void {
     if (field) this.document.getElementById(fieldId(field))?.focus();
+  }
+
+  /**
+   * 422 du PUT : chaque message sous son champ ; ceux sans champ visible (pays, ou champ inconnu)
+   * vont dans la ligne d'état, et leur erreur est retirée du contrôle caché pour ne pas bloquer
+   * l'enregistrement automatique sans rien montrer.
+   */
+  private showServerErrors(problem: ApiProblem): void {
+    const { applied, unmatched } = applyProblem(this.form, problem);
+    const hidden = applied.filter((error) => error.field === 'country');
+    clearServerErrors(this.form.controls.country);
+    this.form.updateValueAndValidity({ emitEvent: false });
+    this.formInvalid.set(this.form.invalid);
+    this.serverMessages.set([...hidden, ...unmatched].map((error) => error.message));
   }
 
   private fill(profile: Profile): void {
@@ -365,6 +401,7 @@ export class ProfilePage {
   }
 
   private onChange(): void {
+    this.serverMessages.set([]);
     const values = this.form.getRawValue();
     this.values.set(values);
     this.formInvalid.set(this.form.invalid);
