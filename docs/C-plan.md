@@ -2,7 +2,7 @@
 
 Oct 24, 2026 · @Hayes · Version 1.2 · Complément des documents A (architecture) et B (UX) · révisé le 25 octobre 2026 : C6 (identité étendue, vue d'ensemble, admin), C7 (réserve pour le compagnon patient) · révisé le 27 octobre 2026 : versions épinglées (Spring Boot 4.1, Spring Modulith 2, Angular 22) ; l'ordonnancement détaillé du backend est dans `D-orchestration-backend.md`
 
-Mis à jour le 29 octobre 2026 : renommages et décisions de docs/G-decisions.md (PsyMate, com.psymate, psymate-api / psymate-web ; tâche M1-14b ajoutée ; M6-05 étendue ; vocabulaire de l'annuaire fermé). Quand ce document et G se contredisent, G l'emporte.
+Mis à jour le 3 novembre 2026 : C9 (écarts du contrat M10, tâches web M1-17 et M6-06) et C10 (révision des tâches web avant le document H : M0-09, M1-18, tâches révisées, ordre des briques). Mis à jour le 29 octobre 2026 : renommages et décisions de docs/G-decisions.md (PsyMate, com.psymate, psymate-api / psymate-web ; tâche M1-14b ajoutée ; M6-05 étendue ; vocabulaire de l'annuaire fermé). Quand ce document et G se contredisent, G l'emporte.
 
 ## Décisions d'outillage (fixées le 24 octobre 2026, versions révisées le 27 octobre 2026)
 
@@ -554,5 +554,34 @@ Deux constats sans tâche : la restauration d'une **version** d'entrée (la maqu
 | M1-17 | Écran Compte et sécurité, activation 2FA, première connexion admin | web / account-security | design 18, design 11, A10.4, G Q5, Q6 | Page `/mon-compte/securite` (mot de passe, 2FA : activation en 3 étapes avec QR + code + 10 codes de secours, désactivation, régénération ; « Déconnecter les autres appareils »), écran bloquant `/premiere-connexion` (changement de mot de passe puis 2FA obligatoire pour un administrateur) déclenché par `passwordChangeRequired` et par les `403 PASSWORD_CHANGE_REQUIRED` / `TWO_FACTOR_REQUIRED` | Critères de `18-compte-securite.md` ; un admin sans 2FA ne peut pas ouvrir `/admin` ; axe-core 0 violation ; parcours clavier e2e | Unité + e2e | M1-15, contrat `v0.10.0` (M10-03) |
 | M6-06 | Écran Données et export | web / account-data | design 19, design 16, G Q18 | Page `/mon-compte/donnees` : export d'un patient (PDF / Markdown), export du compte (job, état, lien 7 jours, `410`), bouton « Exporter ce dossier » dans la fiche patient et l'en-tête ; un seul job visible (dernier id conservé côté client) | Critères de `19-donnees-export.md` ; une entrée privée n'est jamais dans l'export ; `409 EXPORT_IN_PROGRESS` et `410` affichés proprement | Unité + e2e | M1-16, M6-05 |
 
-Les fiches web du 2 novembre s'appuient sur `00-composants-partages.md` (barre d'application, en-tête patient, navigation Mon compte, layout public, barre admin, panneau latéral, composant « état »), à poser une fois par M1-07 avant tout autre écran praticien.
+Les fiches web du 2 novembre s'appuient sur `00-composants-partages.md` (barre d'application, en-tête patient, navigation Mon compte, layout public, barre admin, panneau latéral, composant « état »), posées une fois par **M0-09** (C10) avant tout écran.
+
+## C10. Révision des tâches web avant le document H (3 novembre 2026)
+
+Relecture des 30 tâches `web` (C2, C6, C9) contre les 32 fiches de `docs/design/` et l'architecture frontend (`psymate-web/docs/handbook/architecture-frontend.html`). Six écarts : la fiche 00 n'avait pas de tâche, les fiches 16, 24, 25 et 27 n'étaient assignées à aucune tâche ou en partie seulement, deux paires de tâches se recouvraient (M0-07 / M1-15, M4-04 / M4-08) et M1-16 dépendait de M4-05, ce qui repoussait les préférences après la vue d'ensemble alors que tous les écrans en ont besoin. Les lignes ci-dessous **remplacent** la lecture des lignes d'origine pour ces tâches ; le document H s'appuie sur C10.
+
+### Tâches web ajoutées
+
+| ID | Titre | Dépôt / module | Lire | Quoi construire | Critères d'acceptation | Tests | Dépend de |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| M0-09 | Socle UI partagé | web / shared, core | design 00, design 29, B2, B7, étude couleurs §8, handbook architecture §5–§7 | `shared/ui` : barre d'application, bandeau d'état global, layout public, navigation Mon compte, panneau latéral (`role="dialog"`, piège de focus, Échap), composant « état » (vide / chargement / erreur), toasts, confirmation destructive, icônes de type d'entrée ; `core/http` : intercepteurs credentials, problem → `ApiProblem`, auth-redirect, retry-after, offline ; `core/shortcuts` ; `shared/forms/applyProblem` ; `src/theme/tokens.css` câblé dans le thème Material et `ThemeService` ; règles ESLint de frontières (features, un seul import de `api/` par feature) avec leurs fixtures | Critères de `00-composants-partages.md` ; un import interdit fait échouer `pnpm lint` ; chaque composant a ses trois états et un test ; axe-core 0 violation sur une page de démonstration | Unité + composants + fixture ESLint | M0-06, M0-07 |
+| M1-18 | Confirmation d'e-mail et compte suspendu / refusé | web / auth | design 25, design 27, G Q18, Q28 | Routes `/confirmer-email` (en attente, traitement du lien, expiré, renvoi limité), `/compte-suspendu` (lecture seule : motif, ce qui reste permis, export du compte via `POST /api/me/export` + suivi du job, recours `POST /api/me/appeal` une seule fois, état du recours) ; redirections depuis le `statusGuard` et l'intercepteur 403 | Critères des fiches 25 et 27 ; un compte `suspended` ne peut atteindre aucune route d'écriture ; un seul recours ouvert ; lien d'export `410` affiché proprement | Unité + e2e | M1-15, M0-09 |
+
+### Tâches existantes révisées
+
+| ID | Ce qui change |
+| --- | --- |
+| M0-07 | Devient le **socle technique de l'identité** : `pnpm contract:pull` + client généré, `SessionStore` (`GET /api/auth/me`), gardes `authGuard` / `roleGuard` / `statusGuard`, triage après connexion, page de connexion minimale pour tester le tout. Les écrans complets (11, 12, 13) sont M1-15, qui ne refait pas le socle. |
+| M1-06 | Couvre la **fiche 16 en entier** (page `/patients/nouveau` et `/patients/:id/fiche` : contexte, suivi, drapeaux, tags, archivage avec nom à retaper, historique des versions `GET /api/patients/{id}/versions`), pas seulement un panneau « Nouveau patient ». |
+| M1-15 | Écrans 11, 12, 13 complets sur le socle de M0-07 ; dépend de M0-09 (layout public, formulaires). Les fiches 25 et 27 sont M1-18. |
+| M1-16 | **Scindée.** M1-16 = `PreferencesStore` (chargé au login, optimiste, cache `localStorage`), page Préférences (14), thème et langue appliqués immédiatement ; dépend de M1-12 et M0-09 seulement, **plus de M4-05**. La bascule « Vue : Simple · Complète » et le sélecteur de fenêtre sont branchés par M4-05 et M4-07 sur les clés `overview.view` / `overview.window`. |
+| M1-07 | S'appuie sur M0-09 : ne construit que `features/patient-shell` (en-tête patient, onglets 1 2 3, `PatientShellStore` avec la mémoire des onglets, place de la barre de capture) ; dépend de M1-06 et M0-09. |
+| M4-04 + M4-08 | **Fusionnées** en une tâche, conservée sous l'ID M4-08 (fiche 07) ; M4-04 n'est plus lancée séparément. Dépend de M4-02, M3-02, M1-07. |
+| M5-05 | Couvre aussi la **fiche 24** (comment ça marche) et le vocabulaire public (`GET /api/public/directory/vocabulary`, M10-01) ; prérendu des trois pages publiques. |
+| M6-03 | Les raccourcis globaux et le composant « état » existent depuis M0-09 : M6-03 ne fait que la **revue de tous les écrans** (trois états présents, raccourcis branchés, messages i18n) et la planche 29 en e2e. |
+| M7-07 | Dépend aussi de M1-17 (un administrateur doit avoir activé la 2FA pour entrer) et de M0-09 (barre admin). |
+
+### Ordre des briques (repris par H)
+
+0 Socle (M0-06 → M0-07 → M0-09, M0-08 volet web en parallèle) · 1 Identité et compte (M1-15 → M1-17, M1-18 ; M1-16) · 2 Dossier patient, base (M1-06 → M1-07 → M1-08, M1-09) · 3 Vues du dossier, trois couloirs parallèles (timeline M3-02 → M3-03 → M3-04 ; liens et graphe M2-04 → M2-05 → M2-06 ; recherche M4-08 ; vue d'ensemble M4-05 → M4-07) · 4 Annuaire et profil public (M5-04, M5-05) · 5 Capture et finitions (M6-01 → M6-02, M6-03, M6-04, M6-06) · 6 Administration (M7-07) · 7 Bêta (M7-03, M7-04). Le contrat `contract-v0.11.0` couvre tout : aucune brique n'attend le backend.
 

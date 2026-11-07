@@ -55,7 +55,7 @@ Toutes en Nordique sauf mention : Liste des patients (1) · Vue d'ensemble compl
 1. Installer l'outillage (Git, `gh`, Docker Desktop, Java 21, Node 22 + pnpm, Claude Code). Les dépôts `mrscams/psymate-api` et `mrscams/psymate-web` existent (privés, vides) ; copier ces fichiers dans `docs/` de chaque dépôt et le zip de design dans `psymate-web/docs/design/`.
 2. Côté backend, suivre `F-runbook-agents-backend.md` lot par lot (il applique les vagues de `D-orchestration-backend.md`) : Partie 2 (fichiers de départ), puis lot 0 (M0-01 seul), puis M0-02 ∥ M0-03, puis trois couloirs en parallèle (identity, events minimal, vocabulary). Côté frontend, M0-06 puis M0-08 (document H à écrire). Enchaîner M1-10 → M1-14 (identité étendue) avant M1-15/16.
 3. Reporter les renommages de G5 dans les fiches `design/*.md` (en cours le 29 octobre).
-4. Écrire le document H (runbook frontend `psymate-web`), aligné sur les tags de contrat.
+4. ~~Écrire le document H~~ — fait le 3 novembre 2026 (`H-runbook-agents-frontend.md`, 8 lots, 30 prompts, aligné sur `contract-v0.11.0` et C10). Reste : sa Partie 2 à exécuter à la main dans `psymate-web` (M0-08, volet web), puis lancer le lot 0.
 5. Une fois l'application utilisable, recueillir les retours des premiers praticiens : vocabulaire d'émotions, types de liens, couleurs des familles d'émotions, liste des spécialités de l'annuaire (G Q10).
 6. Maquettes restantes : éditeur de lien (6), saisie en séance (5) et annuaire (8) en Nordique, historique des versions, planche d'états vides/erreur, admin › Vocabulaire de l'annuaire.
 7. Après M4 : décider si l'étude « Compagnon patient » (A11) est lancée.

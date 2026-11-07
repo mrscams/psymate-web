@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm *)", "Bash(npx playwright *)", "Bash(docker compose *)",
+      "Bash(git status*)", "Bash(git diff *)", "Bash(git log *)", "Bash(git add *)",
+      "Bash(git commit *)", "Bash(git push *)", "Bash(gh pr *)",
+      "Bash(make -C ../psymate-api log *)"
+    ],
+    "deny": ["Bash(rm -rf *)", "Bash(git push --force *)", "Read(.env*)", "Edit(src/app/api/**)", "Edit(docs/contract/openapi.yaml)"]
+  },
+  "hooks": {
+    "PostToolUse": [
+      { "matcher": "Edit|Write", "hooks": [ { "type": "command", "command": "pnpm -s prettier --write $(git diff --name-only --diff-filter=AM -- '*.ts' '*.html' '*.scss' 2>/dev/null) >/dev/null 2>&1 || true" } ] }
+    ],
+    "Stop": [
+      { "hooks": [ { "type": "command", "command": "test -f pnpm-lock.yaml && (pnpm -s lint && pnpm -s test -- --run || (echo 'Lint ou tests rouges : corrige avant de terminer' >&2; exit 2)) || true" } ] }
+    ]
+  }
+}
