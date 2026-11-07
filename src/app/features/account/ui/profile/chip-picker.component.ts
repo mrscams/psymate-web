@@ -378,6 +378,8 @@ export class ChipPickerComponent implements ControlValueAccessor {
     if (field) field.value = '';
     this.query.set('');
     this.active.set(0);
+    // La liste se referme (elle couvrirait les champs suivants) ; flèche bas ou la saisie la rouvre.
+    this.open.set(false);
     this.focusInput();
   }
 
