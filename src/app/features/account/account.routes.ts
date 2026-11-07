@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { PreferencesPage } from './pages/preferences.page';
+import { ProfilePage } from './pages/profile.page';
 import { SecurityPage, TWO_FACTOR_SEGMENT } from './pages/security.page';
 import { VerificationPage } from './pages/verification.page';
 
@@ -12,6 +13,11 @@ export const ACCOUNT_ROUTES: Routes = [
     path: 'dossier-professionnel',
     component: VerificationPage,
     title: $localize`:Titre d'onglet du dossier professionnel@@account.verification.pageTitle:Dossier professionnel · PsyMate`,
+  },
+  {
+    path: 'profil-public',
+    component: ProfilePage,
+    title: $localize`:Titre d'onglet du profil public@@profile.pageTitle:Profil public · PsyMate`,
   },
   {
     path: 'preferences',
