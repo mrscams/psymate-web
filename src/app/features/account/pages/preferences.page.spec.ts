@@ -105,7 +105,9 @@ describe('PreferencesPage', () => {
     expect(el.querySelector('pm-state .error[role="alert"]')).not.toBeNull();
     expect(el.querySelector('section.card')).toBeNull();
 
-    el.querySelector<HTMLButtonElement>('pm-state button.retry')?.click();
+    const retry = el.querySelector<HTMLButtonElement>('pm-state button.retry');
+    expect(retry?.textContent?.trim()).toBe('Réessayer');
+    retry?.click();
     await settle(fixture);
     expect(api.get).toHaveBeenCalledTimes(2);
     expect(el.querySelector('pm-state .error')).toBeNull();

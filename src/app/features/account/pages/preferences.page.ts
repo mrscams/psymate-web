@@ -58,7 +58,10 @@ export class PreferencesPage {
     return this.prefs.status() === 'error' ? 'error' : 'loading';
   });
 
-  protected readonly retry = { label: '', handler: (): void => void this.prefs.load() };
+  protected readonly retry = {
+    label: $localize`:Bouton Réessayer du bloc Préférences@@preferences.retry:Réessayer`,
+    handler: (): void => void this.prefs.load(),
+  };
 
   protected readonly displayName = computed(() => this.session.me()?.displayName ?? '');
   protected readonly subtitle = computed(() =>

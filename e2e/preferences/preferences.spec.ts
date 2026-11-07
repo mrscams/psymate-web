@@ -45,6 +45,7 @@ test('thème : appliqué sans rechargement, PATCH envoyé, conservé dans un aut
   expect((await response.json()).theme).toBe('dark');
   await expect(page.getByRole('status').filter({ hasText: /^Enregistré à/ })).toBeVisible();
   await expect(page.getByRole('radio', { name: 'Sombre' })).toBeChecked();
+  await expectNoAxeViolations(page);
 
   // Le cache de démarrage est écrit : au rechargement, le thème est là avant la réponse du serveur.
   const cached = await page.evaluate(() => localStorage.getItem('prefs'));
@@ -85,6 +86,7 @@ test('erreur du serveur sur le PATCH : valeur serveur rétablie et toast', async
     toast.getByText(/Réglage non enregistré : Un entier entre 15 et 180 est attendu\./),
   ).toBeVisible();
   await expect(duration).toHaveValue('60');
+  await expectNoAxeViolations(page);
 
   // Le serveur n'a rien appliqué : un rechargement relit 60.
   await page.reload();
@@ -127,6 +129,48 @@ test('coach nouvellement inscrit : « client » et type médicament masqué sans
   );
   await expect(page.locator('#subject-help')).toContainText('« patients »');
   expect((await patch).request().postDataJSON()).toEqual({ 'vocabulary.subjectLabel': 'patient' });
+  await expectNoAxeViolations(page);
+});
+
+test('clé inconnue dans le PATCH : ignorée, 200, les 9 clés renvoyées', async ({
+  page,
+  request,
+}) => {
+  // `request` porte la session ouverte par la confirmation d'e-mail (e2e/support/accounts.ts).
+  const account = await createAccount(request, 'm1-16.inconnue', 'psychologist');
+  const response = await request.patch('http://localhost:8080/api/me/preferences', {
+    data: { 'overview.window': '12m', cleInconnue: 'ignorée' },
+  });
+  expect(response.status(), await response.text()).toBe(200);
+  const body = (await response.json()) as Record<string, unknown>;
+  expect(Object.keys(body).sort()).toEqual(
+    [
+      'entries.defaultVisibility',
+      'entryTypes.medicationVisible',
+      'locale',
+      'overview.view',
+      'overview.window',
+      'sessions.defaultDurationMin',
+      'theme',
+      'timeline.groupBy',
+      'vocabulary.subjectLabel',
+    ].sort(),
+  );
+  expect(body['overview.window']).toBe('12m');
+  expect('cleInconnue' in body).toBe(false);
+
+  // L'écran relit les 9 clés telles quelles : « 1 an » actif, rien d'autre changé.
+  await signIn(page, account);
+  await openPreferences(page);
+  const window = page.getByRole('group', { name: "Fenêtre d'analyse" });
+  await expect(window.getByRole('button', { name: '1 an' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await expect(page.getByRole('spinbutton', { name: 'Durée de séance par défaut' })).toHaveValue(
+    '60',
+  );
+  await expectNoAxeViolations(page);
 });
 
 test('localStorage.prefs corrompu : l’application démarre quand même', async ({
@@ -143,6 +187,7 @@ test('localStorage.prefs corrompu : l’application démarre quand même', async
   // Le cache a été remplacé par la réponse du serveur.
   const cached = await page.evaluate(() => localStorage.getItem('prefs'));
   expect(JSON.parse(cached ?? '{}')['sessions.defaultDurationMin']).toBe(60);
+  await expectNoAxeViolations(page);
 });
 
 test('langue : English recharge la page dans l’autre bundle, et la préférence suit à la connexion', async ({
@@ -160,6 +205,7 @@ test('langue : English recharge la page dans l’autre bundle, et la préférenc
   await expect(page).toHaveURL(/\/en\/mon-compte\/preferences$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page.getByRole('heading', { level: 1, name: 'Preferences' })).toBeVisible();
+  await expectNoAxeViolations(page);
 
   // Autre navigateur, connexion depuis la page française : la langue du compte est suivie.
   const other = await browser.newContext();
@@ -179,7 +225,7 @@ test('parcours clavier et axe-core', async ({ page, request }) => {
   await expect(page.getByRole('switch')).toBeChecked();
   await expectNoAxeViolations(page);
 
-  // Au clavier : focus sur « Simple », flèche droite → Tab vers « Complète », Entrée enregistre.
+  // Au clavier : focus sur « Simple », Tab vers « Complète », puis Entrée enregistre.
   const group = page.getByRole('group', { name: "Vue d'ensemble par défaut" });
   await group.getByRole('button', { name: 'Simple' }).focus();
   await page.keyboard.press('Tab');

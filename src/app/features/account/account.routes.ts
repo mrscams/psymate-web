@@ -5,7 +5,8 @@ import { VerificationPage } from './pages/verification.page';
 
 /** Montées sous /mon-compte par app.routes.ts (authGuard, statusGuard). */
 export const ACCOUNT_ROUTES: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'dossier-professionnel' },
+  // /mon-compte seul : les préférences (fiche 14) ; le dossier professionnel a son lien dans le bandeau d'état.
+  { path: '', pathMatch: 'full', redirectTo: 'preferences' },
   {
     path: 'dossier-professionnel',
     component: VerificationPage,
