@@ -126,7 +126,7 @@ test('inscription complète au clavier → 201, /confirmer-email, e-mail de conf
   // saisie, la page est déjà partie ; la jauge est couverte par le test du mot de passe compromis).
   await expect(page).toHaveURL(/\/fr\/confirmer-email$/);
   await expect(
-    page.getByRole('heading', { level: 1, name: /Confirmez votre adresse e-mail/ }),
+    page.getByRole('heading', { level: 1, name: /Un dernier clic : confirmez votre e-mail/ }),
   ).toBeVisible();
 
   const subjects = await mailSubjects(request, email, 1);

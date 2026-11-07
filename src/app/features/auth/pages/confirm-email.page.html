@@ -1,0 +1,347 @@
+<section class="card" [class.expired]="mode() === 'expired'">
+  @if (session.me(); as me) {
+    <p class="who">
+      <span i18n="Bandeau : qui est connecté@@auth.confirm.signedInAs">Connecté·e en tant que</span>
+      <span class="mono">{{ me.email }}</span>
+      <span aria-hidden="true">·</span>
+      <button
+        type="button"
+        class="link-button"
+        (click)="logout()"
+        i18n="Bouton de déconnexion de la page de confirmation@@auth.confirm.logout"
+      >
+        Se déconnecter
+      </button>
+    </p>
+  }
+
+  @switch (mode()) {
+    @case ('token') {
+      <div class="icon info" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="m3 7 9 6 9-6" />
+        </svg>
+      </div>
+      <h1
+        id="confirm-title"
+        i18n="Titre pendant le traitement du lien@@auth.confirm.processing.title"
+      >
+        Confirmation de votre adresse…
+      </h1>
+      @if (confirmFailed()) {
+        <pm-state
+          kind="error"
+          [title]="processingErrorTitle"
+          [message]="processingErrorMessage"
+          [action]="retryAction"
+          [details]="confirmDetails()"
+        />
+      } @else {
+        <pm-state kind="loading" skeleton="block" [lines]="2" />
+      }
+      <p class="alt">
+        <a [routerLink]="loginPath" i18n="Retour à la connexion@@auth.confirm.loginLink"
+          >Se connecter</a
+        >
+      </p>
+    }
+
+    @case ('expired') {
+      <div class="icon warn" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 2" />
+        </svg>
+      </div>
+      <h1 id="confirm-title" i18n="Titre de la page lien expiré@@auth.confirm.expired.title">
+        Ce lien de confirmation a expiré
+      </h1>
+      <p class="lead" i18n="Explication du lien expiré@@auth.confirm.expired.lead">
+        Les liens sont valables 24 heures et ne servent qu'une fois : celui-ci a expiré, a déjà
+        servi ou a été remplacé par un envoi plus récent. Rien n'est perdu : votre compte existe, il
+        attend simplement sa confirmation.
+      </p>
+      <form
+        class="resend-form"
+        [formGroup]="emailForm"
+        (ngSubmit)="resend()"
+        aria-labelledby="confirm-title"
+        novalidate
+      >
+        <div class="field">
+          <label [for]="fieldId('email')">{{ labels.email }}</label>
+          <input
+            [id]="fieldId('email')"
+            type="email"
+            formControlName="email"
+            autocomplete="username"
+            required
+            [attr.aria-invalid]="
+              emailForm.controls.email.invalid && emailForm.controls.email.touched
+            "
+            [attr.aria-describedby]="fieldId('email') + '-error resend-note'"
+          />
+          <pm-field-errors
+            [control]="emailForm.controls.email"
+            [id]="fieldId('email') + '-error'"
+          />
+        </div>
+        <button
+          mat-flat-button
+          type="submit"
+          class="resend"
+          [attr.aria-disabled]="!canResend()"
+          [attr.aria-describedby]="cooldownSeconds() > 0 ? 'resend-cooldown' : null"
+          i18n="Bouton de la page lien expiré@@auth.confirm.expired.resend"
+        >
+          Recevoir un nouveau lien
+        </button>
+        <p id="resend-note" class="note" i18n="Note anti-énumération@@auth.confirm.expired.note">
+          Si cette adresse correspond à un compte non confirmé, un nouveau lien partira dans la
+          minute. Nous ne confirmons pas l'existence d'un compte.
+        </p>
+      </form>
+      <ng-container *ngTemplateOutlet="resendStatus" />
+      <p class="alt">
+        <span i18n="Déjà confirmé ?@@auth.confirm.alreadyConfirmed">Déjà confirmé ?</span>
+        <a [routerLink]="loginPath" i18n="Retour à la connexion@@auth.confirm.loginLink"
+          >Se connecter</a
+        >
+      </p>
+    }
+
+    @default {
+      <div class="icon info" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="m3 7 9 6 9-6" />
+        </svg>
+      </div>
+      <h1 id="confirm-title" i18n="Titre de la page e-mail à confirmer@@auth.confirm.pending.title">
+        Un dernier clic : confirmez votre e-mail
+      </h1>
+      @if (store.email(); as email) {
+        <p class="lead" i18n="Explication, adresse connue@@auth.confirm.pending.lead">
+          Nous venons d'envoyer un lien à <span class="mono">{{ email }}</span
+          >. Il reste valable <strong>24 heures</strong>. Dès que vous l'aurez ouvert, l'outil de
+          suivi sera disponible.
+        </p>
+      } @else {
+        <p class="lead" i18n="Explication, adresse inconnue@@auth.confirm.pending.leadUnknown">
+          Un lien de confirmation vous a été envoyé à l'inscription ; il reste valable
+          <strong>24 heures</strong>. Dès que vous l'aurez ouvert, l'outil de suivi sera disponible.
+        </p>
+      }
+      <ol class="steps">
+        <li i18n="Étape 1 de la confirmation@@auth.confirm.pending.step1">
+          Ouvrez votre boîte mail, dossier « Courrier indésirable » compris.
+        </li>
+        <li i18n="Étape 2 de la confirmation@@auth.confirm.pending.step2">
+          Cliquez sur « Confirmer mon adresse ».
+        </li>
+        <li i18n="Étape 3 de la confirmation@@auth.confirm.pending.step3">
+          Vous arriverez sur votre liste de patients, vide pour l'instant.
+        </li>
+      </ol>
+
+      <form
+        class="resend-form"
+        [formGroup]="emailForm"
+        (ngSubmit)="resend()"
+        aria-labelledby="confirm-title"
+        novalidate
+      >
+        @if (!store.email()) {
+          <div class="field">
+            <label [for]="fieldId('email')">{{ labels.email }}</label>
+            <input
+              [id]="fieldId('email')"
+              type="email"
+              formControlName="email"
+              autocomplete="username"
+              required
+              [attr.aria-invalid]="
+                emailForm.controls.email.invalid && emailForm.controls.email.touched
+              "
+              [attr.aria-describedby]="fieldId('email') + '-error'"
+            />
+            <pm-field-errors
+              [control]="emailForm.controls.email"
+              [id]="fieldId('email') + '-error'"
+            />
+          </div>
+        }
+        <div class="actions">
+          <button
+            mat-flat-button
+            type="submit"
+            class="resend"
+            [attr.aria-disabled]="!canResend()"
+            [attr.aria-describedby]="cooldownSeconds() > 0 ? 'resend-cooldown' : null"
+            i18n="Bouton de renvoi de l'e-mail@@auth.confirm.pending.resend"
+          >
+            Renvoyer l'e-mail
+          </button>
+          <p class="alt">
+            <span i18n="Mauvaise adresse ?@@auth.confirm.pending.wrongAddress"
+              >Mauvaise adresse ?</span
+            >
+            <button
+              type="button"
+              class="link-button"
+              id="change-toggle"
+              (click)="toggleChange()"
+              [attr.aria-expanded]="changing()"
+              aria-controls="change-form"
+              i18n="Lien qui déplie la correction d'adresse@@auth.confirm.pending.change"
+            >
+              Corriger l'e-mail
+            </button>
+            <span class="note" i18n="Conséquence de la correction@@auth.confirm.pending.changeNote"
+              >— le lien précédent sera invalidé.</span
+            >
+          </p>
+        </div>
+      </form>
+      <ng-container *ngTemplateOutlet="resendStatus" />
+
+      @if (changing()) {
+        <form
+          id="change-form"
+          class="change-form"
+          [formGroup]="changeForm"
+          (ngSubmit)="submitChange()"
+          aria-labelledby="change-title"
+          novalidate
+        >
+          <h2 id="change-title" i18n="Titre du formulaire de correction@@auth.confirm.change.title">
+            Corriger l'adresse e-mail
+          </h2>
+          <p class="note" i18n="Explication de la correction@@auth.confirm.change.lead">
+            Votre mot de passe prouve que la demande vient de vous. Un nouveau lien partira à la
+            nouvelle adresse ; l'ancienne reste celle du compte jusqu'à la confirmation.
+          </p>
+          @if (!store.email()) {
+            <div class="field">
+              <label [for]="fieldId('email')">{{ labels.email }}</label>
+              <input
+                [id]="fieldId('email')"
+                type="email"
+                formControlName="email"
+                autocomplete="username"
+                required
+                [attr.aria-invalid]="
+                  changeForm.controls.email.invalid && changeForm.controls.email.touched
+                "
+                [attr.aria-describedby]="fieldId('email') + '-error'"
+              />
+              <pm-field-errors
+                [control]="changeForm.controls.email"
+                [id]="fieldId('email') + '-error'"
+              />
+            </div>
+          }
+          <div class="field">
+            <label [for]="fieldId('password')">{{ labels.password }}</label>
+            <input
+              [id]="fieldId('password')"
+              type="password"
+              formControlName="password"
+              autocomplete="current-password"
+              required
+              [attr.aria-invalid]="
+                changeForm.controls.password.invalid && changeForm.controls.password.touched
+              "
+              [attr.aria-describedby]="fieldId('password') + '-error'"
+            />
+            <pm-field-errors
+              [control]="changeForm.controls.password"
+              [id]="fieldId('password') + '-error'"
+            />
+          </div>
+          <div class="field">
+            <label [for]="fieldId('newEmail')">{{ labels.newEmail }}</label>
+            <input
+              [id]="fieldId('newEmail')"
+              type="email"
+              formControlName="newEmail"
+              autocomplete="email"
+              required
+              [attr.aria-invalid]="
+                changeForm.controls.newEmail.invalid && changeForm.controls.newEmail.touched
+              "
+              [attr.aria-describedby]="fieldId('newEmail') + '-error'"
+            />
+            <pm-field-errors
+              [control]="changeForm.controls.newEmail"
+              [id]="fieldId('newEmail') + '-error'"
+            />
+          </div>
+          @if (changeError(); as text) {
+            <p class="banner error" role="alert">{{ text }}</p>
+          }
+          <div class="actions">
+            <button
+              mat-flat-button
+              type="submit"
+              [disabled]="store.change().status === 'busy'"
+              i18n="Bouton d'envoi de la correction@@auth.confirm.change.submit"
+            >
+              Envoyer le lien à la nouvelle adresse
+            </button>
+            <button
+              mat-button
+              type="button"
+              (click)="toggleChange()"
+              i18n="Annuler la correction@@auth.confirm.change.cancel"
+            >
+              Annuler
+            </button>
+          </div>
+        </form>
+      } @else if (store.change().status === 'done') {
+        <p class="banner ok" role="status" i18n="Correction acceptée@@auth.confirm.change.done">
+          Si le mot de passe est correct, un nouveau lien est parti à
+          <span class="mono">{{ store.email() }}</span
+          >. L'ancien lien ne fonctionne plus.
+        </p>
+      }
+
+      <p
+        class="note diplomas"
+        i18n="Rappel : la vérification est indépendante@@auth.confirm.pending.diplomas"
+      >
+        La vérification des diplômes est indépendante : vous pourrez déposer vos justificatifs juste
+        après, et commencer à utiliser l'outil sans attendre notre réponse.
+      </p>
+      @if (!session.me()) {
+        <p class="alt">
+          <span i18n="Déjà confirmé ?@@auth.confirm.alreadyConfirmed">Déjà confirmé ?</span>
+          <a [routerLink]="loginPath" i18n="Retour à la connexion@@auth.confirm.loginLink"
+            >Se connecter</a
+          >
+        </p>
+      }
+    }
+  }
+</section>
+
+<ng-template #resendStatus>
+  @if (cooldownSeconds() > 0) {
+    <p id="resend-cooldown" class="cooldown mono" role="status">
+      <span i18n="Compte à rebours avant le prochain renvoi@@auth.confirm.cooldown"
+        >Nouveau renvoi possible dans</span
+      >
+      {{ cooldownText() }}
+    </p>
+  }
+  @if (store.resend().status === 'done') {
+    <p class="banner ok" role="status" i18n="E-mail renvoyé@@auth.confirm.resent">
+      Demande envoyée. Si cette adresse correspond à un compte à confirmer, un nouvel e-mail arrive
+      dans la minute ; l'ancien lien ne fonctionne plus.
+    </p>
+  } @else if (resendError(); as text) {
+    <p class="banner error" role="alert">{{ text }}</p>
+  }
+</ng-template>

@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-07T18:43:30.318Z",
+  "task": "M1-18",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Confirmation d'e-mail (fiche 25 : attente, lien, expiré, renvoi limité, correction d'adresse) et compte suspendu (fiche 27 : export sans session avec suivi du job et 410, recours une seule fois puis 409) ; 4 commits, lint, tokens, 359 tests, build, 39 e2e verts",
+  "notes": "Compte email_pending et compte suspendu sans session (contrat) : pages publiques, identifiants dans le corps. Pas de GET /api/me/suspension ni GET /api/me/appeal dans le contrat : motif, date et pièces jointes du recours non affichables, texte renvoie à l'e-mail de décision ; lecture seule des dossiers impossible (sessions révoquées). 410 d'export couvert en unitaire (pas d'horloge de test API). L'API compte l'e-mail d'inscription dans la limite 1 envoi/min : e2e attendent 61 s. Admin local créé par make admin pour l'e2e de suspension (variables PSYMATE_E2E_ADMIN_*), test ignoré sans lui. Aucune dépendance ajoutée. Budget initial 810 kB (dette existante). Revue : 0 bloquant, 3 à corriger traités.",
+  "next": "La session parente rebase sur main, fusionne avec M1-17 (auth.routes.ts, messages.*.xlf : relancer extract-i18n), nettoie account-state.page.ts (textes confirm-email et suspended devenus morts), ouvre la PR",
+  "branch": "claude/m1-18-confirmation-131b66",
+  "checkout": "m1-18-confirmation-131b66"
+}

@@ -21,6 +21,7 @@ import { Router, RouterLink } from '@angular/router';
 import { afterLogin } from '../../../core/auth';
 import { ApiProblem } from '../../../core/http';
 import { AUTH_FEATURE_PATHS } from '../auth-feature-paths';
+import { ConfirmEmailStore } from '../data/confirm-email.store';
 import { LoginStore } from '../data/login.store';
 
 /**
@@ -50,6 +51,7 @@ export class LoginPage {
   readonly next = input<string | undefined>();
 
   protected readonly store = inject(LoginStore);
+  private readonly confirmEmail = inject(ConfirmEmailStore);
   private readonly router = inject(Router);
   private readonly injector = inject(Injector);
 
@@ -125,6 +127,8 @@ export class LoginPage {
       await this.router.navigateByUrl(afterLogin(user, this.next()));
       return;
     }
+    // 403 EMAIL_NOT_CONFIRMED : l'intercepteur mène à /confirmer-email ; la page y affiche l'adresse (fiche 25).
+    if (this.store.problem()?.code === 'EMAIL_NOT_CONFIRMED') this.confirmEmail.remember(email);
     // Focus utile après la réponse : le code s'il vient d'être demandé, sinon le mot de passe (fiche 11).
     const target =
       this.store.otpRequired() && (!wasOtpRequired || this.store.problem() !== null)
