@@ -1,4 +1,5 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -48,6 +49,7 @@ export class PatientListPage {
   /** Texte du filtre affiché tout de suite ; envoyé au store après la pause de frappe. */
   protected readonly query = signal(this.store.query());
   private timer: ReturnType<typeof setTimeout> | undefined;
+  private destroyed = false;
 
   protected readonly title = computed(() => {
     const subjects = subjectLabel(this.vocabulary.label(), 'many');
@@ -91,12 +93,20 @@ export class PatientListPage {
   constructor() {
     void this.store.load();
     void this.store.loadTags();
+    // Après le premier rendu : la barre d'application inscrit sa propre touche / dans un effect
+    // (posé en même temps que la page à l'arrivée depuis la connexion) ; la dernière inscription
+    // l'emporte, et c'est le filtre de la liste qui doit répondre ici (fiche 01).
     const shortcuts = inject(ShortcutService);
-    const releases = [
-      shortcuts.register('n', () => this.create(), this.newLabel()),
-      shortcuts.register('/', () => this.filters().focus()),
-    ];
+    const releases: (() => void)[] = [];
+    afterNextRender(() => {
+      if (this.destroyed) return;
+      releases.push(
+        shortcuts.register('n', () => this.create(), this.newLabel()),
+        shortcuts.register('/', () => this.filters().focus()),
+      );
+    });
     inject(DestroyRef).onDestroy(() => {
+      this.destroyed = true;
       releases.forEach((release) => release());
       clearTimeout(this.timer);
     });
