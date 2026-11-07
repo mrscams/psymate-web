@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-07T15:56:05.349Z",
+  "task": "M1-16",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 4 fusionnee (squash) : PreferencesStore, page /mon-compte/preferences, FR/EN ; CI verte (checks + 33 e2e)",
+  "notes": "Rebase sur main apres M1-15 : account.routes.ts reunit les deux pages (/mon-compte → preferences), messages.fr.xlf regenere (394 unites), selecteur Mot de passe rendu exact dans les e2e (bouton Afficher de M1-15). Lot 1 : reste M1-17 ∥ M1-18.",
+  "next": "M1-17 (securite, 2FA, premiere connexion) ∥ M1-18 (confirmation e-mail, compte suspendu) ; lot 4 (M5-04 ∥ M5-05) possible en parallele",
+  "pr": "https://github.com/mrscams/psymate-web/pull/4",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
