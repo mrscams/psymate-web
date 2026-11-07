@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-07T23:36:12.874Z",
+  "task": "M1-06",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 13 fusionnee (squash 119e623) : /patients (liste, filtre sans accents, tri, puces par tag, archives), /patients/nouveau et /patients/:id/fiche (fiche 16, versions, drapeaux, tags, archivage/restauration) ; CI verte (checks + 60 e2e, 6 ignores)",
+  "notes": "Rebase apres le lot 4 : fr.xlf regenere (1092 unites), en.xlf reuni (1100). e2e/support/axe.ts attend aussi la fin du fondu des dialogues Material (faux positif de contraste 2,07:1). Route provisoire /patients/:id/overview a remplacer par le shell de M1-07. Formulaires reactifs (applyProblem attend un FormGroup).",
+  "next": "M1-07 (page patient, en-tete, PatientShellStore) seul, puis M1-08 ∥ M1-09 ; M7-07 (lot 6) possible en parallele",
+  "pr": "https://github.com/mrscams/psymate-web/pull/13",
+  "branch": "main",
+  "checkout": "psymate-web"
+}

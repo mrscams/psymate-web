@@ -1,0 +1,9 @@
+{
+  "at": "2026-11-07T21:40:00.000Z",
+  "task": "M5-05",
+  "agent": "claude",
+  "status": "in-progress",
+  "summary": "Lot 4 lance : M5-05 (pages publiques) en cours dans son worktree",
+  "branch": "claude/m5-05-public-7915ef",
+  "checkout": "psymate-web"
+}

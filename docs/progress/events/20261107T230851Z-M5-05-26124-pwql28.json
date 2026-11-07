@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-07T23:08:51.123Z",
+  "task": "M5-05",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 10 fusionnee (squash 91c5202) : /annuaire, /praticiens/:slug avec contact, /comment-ca-marche, prerendu SSR de l annuaire et de comment ca marche ; CI verte (checks + 53 e2e, 4 ignores)",
+  "notes": "Dependances : @angular/ssr 22.2.6, @angular/platform-server 22.2.5. Fiche praticien non prerendue (liste inconnue au build) : ecart a valider. Sortie du build changee (index.csr.html), tools/serve-dist.mjs adapte. Lighthouse non lance (telechargement refuse), axe-core a la place. Flux 7 e2e ignore en CI (admin requis).",
+  "next": "M5-04 (PR 11), puis M1-06 ; exporter le chemin /praticiens/:slug depuis features/public pour M5-04",
+  "pr": "https://github.com/mrscams/psymate-web/pull/10",
+  "branch": "main",
+  "checkout": "psymate-web"
+}

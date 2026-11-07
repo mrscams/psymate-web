@@ -1,0 +1,9 @@
+{
+  "at": "2026-11-07T21:40:00.000Z",
+  "task": "M1-06",
+  "agent": "claude",
+  "status": "in-progress",
+  "summary": "Lot 2 lance : M1-06 (liste et fiche patient) en cours dans son worktree, en parallele du lot 4",
+  "branch": "claude/m1-06-patients-cca7bc",
+  "checkout": "psymate-web"
+}

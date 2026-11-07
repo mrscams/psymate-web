@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-07T23:08:51.691Z",
+  "task": "M5-04",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 11 fusionnee (squash 45c3245) : /mon-compte/profil-public, autosave 800 ms, publication avec 409 detaille, photo recadree 512 px, apercu visiteur ; CI verte (checks + 56 e2e, 6 ignores)",
+  "notes": "Rebase apres M5-05 : en.xlf reuni, unite public.avatar.label retablie depuis main ; fr.xlf regenere (960 unites). claire.seed est docs_pending dans le seed small : les e2e de publication passent par l admin e2e et s ignorent en CI. Chemin /praticiens/:slug en dur, a exporter depuis features/public.",
+  "next": "Lot 4 complet. M1-06 puis M1-07 (lot 2) ; M7-07 (lot 6) possible",
+  "pr": "https://github.com/mrscams/psymate-web/pull/11",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
