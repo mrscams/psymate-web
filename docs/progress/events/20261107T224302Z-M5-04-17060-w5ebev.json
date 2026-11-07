@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-07T22:43:02.815Z",
+  "task": "M5-04",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Mon profil public (/mon-compte/profil-public) : autosave 800 ms (PUT complet), photo recadrée 512 px par canvas, puces de la liste fermée, publication avec refus 409 détaillé, aperçu visiteur ; branche claude/m5-04-profil-f809b5",
+  "notes": "lint, check:tokens, test (473), build verts ; e2e 53/53 dont flux 8 (5, deux avec admin local PSYMATE_E2E_ADMIN_*, ignorés sans lui). Revue reviewer : 0 bloquant code, 7 à corriger traités. Ecarts suivis du contrat : PUT au lieu de PATCH, POST publish/unpublish, pas de durée de séance, horaires, accès ni accessibilité (absents du contrat), profession en lecture seule, site web sans interrupteur, photo non réaffichée après rechargement (aucune route ne la sert). Le seed small n'a aucun praticien approuvé (claire en docs_pending). Aucune dépendance npm.",
+  "next": "PR par la session parente ; lien Ouvrir la fiche publique vers /praticiens/:slug (M5-05) ; exposer le chemin public depuis features/public quand M5-05 est fusionnée",
+  "branch": "claude/m5-04-profil-f809b5",
+  "checkout": "m5-04-profil-f809b5"
+}
