@@ -1,0 +1,130 @@
+:host {
+  display: block;
+  overflow-x: auto;
+}
+
+.patients {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  transition: opacity 150ms;
+
+  &.refreshing {
+    opacity: 0.6;
+  }
+}
+
+th {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: left;
+  font: var(--mat-sys-label-medium);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
+  font: var(--mat-sys-body-medium);
+}
+
+tr:hover td {
+  background: var(--surface-ground);
+}
+
+tr.archived .name {
+  color: var(--text-secondary);
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+}
+
+.avatar {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary-tint);
+  color: var(--primary-hover);
+  font: var(--mat-sys-label-medium);
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  color: var(--text-primary);
+  font: var(--mat-sys-title-small);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+mark {
+  background: var(--search-highlight);
+  color: inherit;
+  border-radius: 2px;
+}
+
+.age {
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+  font: var(--mat-sys-label-medium);
+}
+
+.changed {
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.actions {
+  text-align: right;
+}
+
+.edit {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 8px;
+  color: var(--primary);
+  font: var(--mat-sys-label-large);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}

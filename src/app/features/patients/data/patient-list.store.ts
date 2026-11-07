@@ -1,0 +1,206 @@
+import { computed, inject } from '@angular/core';
+import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+
+import { ApiProblem, asProblem } from '../../../core/http';
+import {
+  appendPage,
+  CursorPage,
+  failed,
+  idle,
+  Loadable,
+  loaded,
+  loading,
+} from '../../../shared/util';
+import { PatientApi } from './patient.api';
+import {
+  PATIENT_SORTS,
+  PatientListQuery,
+  PatientSort,
+  PatientView,
+  PractitionerTag,
+} from './patient.model';
+
+/** Clé du tri mémorisé (fiche 01 : « tri persistant par praticien, localStorage »). */
+export const SORT_STORAGE_KEY = 'patients.sort';
+
+/** Le filtre ne part au serveur qu'à partir de 2 caractères (fiche 01). */
+export const MIN_QUERY_LENGTH = 2;
+
+interface PatientListState {
+  /** Texte saisi dans le filtre ; seul effectiveQuery est envoyé. */
+  query: string;
+  archived: boolean;
+  tag: string | null;
+  sort: PatientSort;
+  page: Loadable<CursorPage<PatientView>>;
+  /** « Afficher plus » en cours, et son erreur (la liste déjà affichée reste). */
+  loadingMore: boolean;
+  moreProblem: ApiProblem | null;
+  /** Tags du praticien pour les puces rapides. */
+  tags: Loadable<PractitionerTag[]>;
+  /** Restauration lancée depuis le toast « Restaurer ». */
+  restoreProblem: ApiProblem | null;
+}
+
+const initialState: PatientListState = {
+  query: '',
+  archived: false,
+  tag: null,
+  sort: 'name',
+  page: idle(),
+  loadingMore: false,
+  moreProblem: null,
+  tags: idle(),
+  restoreProblem: null,
+};
+
+export function effectiveQuery(query: string): string {
+  const trimmed = query.trim().replace(/\s+/g, ' ');
+  return trimmed.length >= MIN_QUERY_LENGTH ? trimmed : '';
+}
+
+function readSort(): PatientSort | null {
+  try {
+    const value = localStorage.getItem(SORT_STORAGE_KEY);
+    return PATIENT_SORTS.includes(value as PatientSort) ? (value as PatientSort) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeSort(sort: PatientSort): void {
+  try {
+    localStorage.setItem(SORT_STORAGE_KEY, sort);
+  } catch {
+    // Stockage indisponible (navigation privée) : le tri vaut pour la session seulement.
+  }
+}
+
+/**
+ * Liste des patients (fiche 01) : filtres, tri, page courante par curseur, puces de tags.
+ * Fourni à la racine : les filtres survivent à l'ouverture d'un dossier, et le toast « Restaurer »
+ * (posé après un archivage depuis la fiche) peut relire la liste. Chaque changement de filtre
+ * relit la première page ; une réponse arrivée après une requête plus récente est ignorée.
+ */
+export const PatientListStore = signalStore(
+  { providedIn: 'root' },
+  withState(initialState),
+  withComputed((store) => ({
+    effectiveQuery: computed(() => effectiveQuery(store.query())),
+    items: computed(() => store.page().data?.items ?? []),
+    hasMore: computed(() => (store.page().data?.nextCursor ?? null) !== null),
+    filtered: computed(
+      () => effectiveQuery(store.query()) !== '' || store.tag() !== null || store.archived(),
+    ),
+  })),
+  withMethods((store, api = inject(PatientApi)) => {
+    let request = 0;
+
+    function query(cursor: string | null = null): PatientListQuery {
+      return {
+        q: store.effectiveQuery(),
+        archived: store.archived(),
+        tag: store.tag(),
+        sort: store.sort(),
+        cursor,
+      };
+    }
+
+    async function reload(): Promise<void> {
+      const ticket = ++request;
+      patchState(store, { page: loading(store.page()), loadingMore: false, moreProblem: null });
+      try {
+        const page = await api.list(query());
+        if (ticket === request) patchState(store, { page: loaded(page) });
+      } catch (error) {
+        if (ticket === request) patchState(store, { page: failed(asProblem(error), store.page()) });
+      }
+    }
+
+    return {
+      /** Arrivée sur la liste : tri mémorisé, puis première page (la précédente reste affichée). */
+      async load(): Promise<void> {
+        const sort = readSort();
+        if (sort) patchState(store, { sort });
+        await reload();
+      },
+
+      reload,
+
+      /** Filtre saisi ; ne relit que si le texte effectif (≥ 2 caractères) change. */
+      async setQuery(text: string): Promise<void> {
+        const before = store.effectiveQuery();
+        patchState(store, { query: text });
+        if (store.effectiveQuery() !== before) await reload();
+      },
+
+      async setSort(sort: PatientSort): Promise<void> {
+        if (sort === store.sort()) return;
+        patchState(store, { sort });
+        writeSort(sort);
+        await reload();
+      },
+
+      async setTag(tag: string | null): Promise<void> {
+        if (tag === store.tag()) return;
+        patchState(store, { tag });
+        await reload();
+      },
+
+      async setArchived(archived: boolean): Promise<void> {
+        if (archived === store.archived()) return;
+        patchState(store, { archived });
+        await reload();
+      },
+
+      /** « Effacer les filtres » de l'état vide. */
+      async clearFilters(): Promise<void> {
+        patchState(store, { query: '', tag: null, archived: false });
+        await reload();
+      },
+
+      /** « Afficher plus » : page suivante concaténée, sans doublon. */
+      async loadMore(): Promise<void> {
+        const current = store.page().data;
+        if (!current?.nextCursor || store.loadingMore()) return;
+        const ticket = request;
+        patchState(store, { loadingMore: true, moreProblem: null });
+        try {
+          const next = await api.list(query(current.nextCursor));
+          if (ticket !== request) return;
+          patchState(store, {
+            page: loaded(appendPage(current, next, (patient) => patient.id)),
+            loadingMore: false,
+          });
+        } catch (error) {
+          if (ticket === request) {
+            patchState(store, { loadingMore: false, moreProblem: asProblem(error) });
+          }
+        }
+      },
+
+      /** GET /api/tags pour les puces ; une erreur ne fait que masquer les puces. */
+      async loadTags(): Promise<void> {
+        patchState(store, { tags: loading(store.tags()) });
+        try {
+          patchState(store, { tags: loaded(await api.listTags()) });
+        } catch (error) {
+          patchState(store, { tags: failed(asProblem(error), store.tags()) });
+        }
+      },
+
+      /** Toast « Restaurer » après un archivage : POST /restore puis relecture de la liste. */
+      async restore(id: string): Promise<PatientView | null> {
+        patchState(store, { restoreProblem: null });
+        try {
+          const patient = await api.restore(id);
+          await reload();
+          return patient;
+        } catch (error) {
+          patchState(store, { restoreProblem: asProblem(error) });
+          return null;
+        }
+      },
+    };
+  }),
+);
