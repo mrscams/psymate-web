@@ -9,6 +9,8 @@ allowBuilds:
   esbuild: true
   lmdb: true
   msgpackr-extract: true
+  # postinstall = simple message opencollective ; le JAR du générateur est téléchargé par tools/contract-pull.mjs.
+  '@openapitools/openapi-generator-cli': false
 
 # pnpm refuse par défaut une version publiée depuis moins de quelques jours. Angular 22.2.5
 # (dernière 22.x stable au 7 novembre 2026) l'était encore à l'installation : exemption ciblée,
