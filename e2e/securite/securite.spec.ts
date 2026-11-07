@@ -1,4 +1,4 @@
-import { APIRequestContext, expect, Page, test } from '@playwright/test';
+import { APIRequestContext, expect, Locator, Page, test } from '@playwright/test';
 
 import { expectNoAxeViolations } from '../support/axe';
 import { totp, totpStep } from '../support/totp';
@@ -21,6 +21,15 @@ import {
 
 const COMPROMISED_PASSWORD = 'motdepasse1234';
 const STRONG_PASSWORD = 'Nouveau-Fil-Rouge-2026!';
+
+/** Tabule (sans souris) jusqu'à ce que `target` ait le focus ; échoue après 40 tabulations. */
+async function tabUntil(page: Page, target: Locator): Promise<void> {
+  for (let i = 0; i < 40; i++) {
+    if (await target.evaluate((el) => el === document.activeElement)) return;
+    await page.keyboard.press('Tab');
+  }
+  throw new Error('le focus n’a jamais atteint la cible');
+}
 
 async function expectPanel(page: Page, title: string) {
   const panel = page.getByRole('dialog', { name: title });
@@ -87,10 +96,15 @@ test('activer la 2FA par le panneau (QR, code faux puis juste, 10 codes), puis l
   await expect(page.locator('.secret')).toHaveCount(0);
   const finish = panel.getByRole('button', { name: 'Terminer' });
   await expect(finish).toBeDisabled();
-  await panel.getByRole('checkbox', { name: 'Je les ai enregistrés' }).check();
+  // Au clavier : Tab jusqu'à la case, Espace la coche, Tab jusqu'à Terminer, Entrée.
+  const checkbox = panel.getByRole('checkbox', { name: 'Je les ai enregistrés' });
+  await tabUntil(page, checkbox);
+  await page.keyboard.press('Space');
+  await expect(checkbox).toBeChecked();
   await expect(finish).toBeEnabled();
   await expectNoAxeViolations(page);
-  await finish.click();
+  await tabUntil(page, finish);
+  await page.keyboard.press('Enter');
 
   await expect(panel).toHaveCount(0);
   await expect(page).toHaveURL(/\/fr\/mon-compte\/securite$/);
@@ -295,6 +309,39 @@ test('changer l’e-mail : mot de passe faux → 422 sur le champ (G Q49), puis 
   expect(await mailCount(request, newEmail, 1)).toBeGreaterThanOrEqual(1);
   // L'adresse actuelle reste celle du compte tant que le lien n'est pas ouvert.
   await expect(page.locator('section[aria-labelledby="h-email"]')).toContainText(account.email);
+});
+
+test('panneau 2FA au clavier : Entrée sur Activer l’ouvre, Échap demande confirmation, refuser le garde, confirmer le ferme et rend le focus', async ({
+  page,
+  request,
+}) => {
+  const account = await createAccount(request, 'm1-17.echap');
+  await signIn(page, account);
+  await openSecurity(page);
+
+  const activate = page.getByRole('button', { name: 'Activer' });
+  await tabUntil(page, activate);
+  await page.keyboard.press('Enter');
+  const panel = await expectPanel(page, 'Activer la double authentification');
+  await expect(page).toHaveURL(/\/securite\/2fa$/);
+  await expect(panel.getByRole('img', { name: /QR code/ })).toBeVisible();
+
+  // Échap : confirmation « Abandonner l'activation ? » ; Échap dans la boîte la referme, le panneau reste.
+  await page.keyboard.press('Escape');
+  const confirm = page.getByRole('dialog', { name: "Abandonner l'activation ?" });
+  await expect(confirm).toBeVisible();
+  await expectNoAxeViolations(page);
+  await page.keyboard.press('Escape');
+  await expect(confirm).toHaveCount(0);
+  await expect(panel).toBeVisible();
+
+  // Échap puis confirmation : le panneau se ferme, l'URL revient, le focus retourne au déclencheur.
+  await page.keyboard.press('Escape');
+  await confirm.getByRole('button', { name: 'Abandonner' }).click();
+  await expect(panel).toHaveCount(0);
+  await expect(page).toHaveURL(/\/fr\/mon-compte\/securite$/);
+  await expect(activate).toBeFocused();
+  await expect(page.getByText('Non activée')).toBeVisible();
 });
 
 test('sans session, /mon-compte/securite renvoie vers la connexion', async ({ page }) => {

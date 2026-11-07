@@ -162,6 +162,22 @@ describe('FirstLoginPage (fiche 18 C)', () => {
     expect(el.querySelector<HTMLButtonElement>('button[type=submit]')?.disabled).toBe(true);
   });
 
+  it('étape 2 : la session passe à twoFactorEnabled après verify, la page reste sur l’étape 2 jusqu’à « Ouvrir l’administration »', async () => {
+    const { fixture, el, navigateByUrl } = await render(admin);
+    expect(el.querySelector('pm-two-factor-setup')).not.toBeNull();
+    TestBed.inject(SessionStore).signIn({ ...admin, twoFactorEnabled: true });
+    await settle(fixture);
+    expect(el.querySelector('pm-two-factor-setup')).not.toBeNull();
+    expect(navigateByUrl).not.toHaveBeenCalled();
+    fixture.componentInstance['codesSaved'].set(true);
+    await settle(fixture);
+    [...el.querySelectorAll('button')]
+      .find((b) => b.textContent?.includes("Ouvrir l'administration"))
+      ?.click();
+    await settle(fixture);
+    expect(navigateByUrl).toHaveBeenCalledWith('/admin');
+  });
+
   it('plus rien d’exigé : redirection (admin équipé → /admin)', async () => {
     const { navigateByUrl } = await render({ ...admin, twoFactorEnabled: true });
     expect(navigateByUrl).toHaveBeenCalledWith('/admin');

@@ -1069,7 +1069,7 @@
         <note priority="1" from="description">Confirmation avant déconnexion des autres appareils</note>
       </trans-unit>
       <trans-unit id="account.security.sessions.confirmBody" datatype="html">
-        <source>Cet appareil reste connecté. Les autres devront se reconnecter ; l&apos;opération est consignée dans votre journal de sécurité.</source>
+        <source>Cet appareil reste connecté. Les autres devront se reconnecter ; l&apos;opération est consignée côté serveur.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">205</context>
@@ -1636,7 +1636,7 @@
         <source>Un compte administrateur ne peut pas désactiver sa double authentification.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/disable-two-factor.panel.ts</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <note priority="1" from="description">Désactivation refusée à un admin</note>
       </trans-unit>
@@ -1644,7 +1644,7 @@
         <source>La double authentification n&apos;est pas active sur ce compte.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/disable-two-factor.panel.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">183</context>
         </context-group>
         <note priority="1" from="description">Désactivation sans 2FA active</note>
       </trans-unit>
@@ -1770,7 +1770,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
-          <context context-type="linenumber">41,45</context>
+          <context context-type="linenumber">45,49</context>
         </context-group>
         <note priority="1" from="description">Terminer l&apos;activation de la 2FA</note>
       </trans-unit>
@@ -1802,7 +1802,7 @@
         <source> Annuler </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
-          <context context-type="linenumber">31,35</context>
+          <context context-type="linenumber">35,39</context>
         </context-group>
         <note priority="1" from="description">Annuler l&apos;activation de la 2FA</note>
       </trans-unit>
@@ -1810,9 +1810,57 @@
         <source>Activer la double authentification</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <note priority="1" from="description">Titre du panneau d&apos;activation 2FA</note>
+      </trans-unit>
+      <trans-unit id="account.security.panel.leaveCodes.title" datatype="html">
+        <source>Fermer sans avoir enregistré vos codes de secours ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation avant de fermer sans les codes</note>
+      </trans-unit>
+      <trans-unit id="account.security.panel.leaveCodes.body" datatype="html">
+        <source>La double authentification est déjà active. Ces 10 codes ne seront plus affichés ; vous pourrez en régénérer de nouveaux depuis Compte et sécurité.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <note priority="1" from="description">Explication, codes montrés une seule fois</note>
+      </trans-unit>
+      <trans-unit id="account.security.panel.leaveCodes.confirm" datatype="html">
+        <source>Fermer sans enregistrer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <note priority="1" from="description">Bouton fermer sans les codes</note>
+      </trans-unit>
+      <trans-unit id="account.security.panel.abandon.title" datatype="html">
+        <source>Abandonner l&apos;activation ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation avant d&apos;abandonner l&apos;activation</note>
+      </trans-unit>
+      <trans-unit id="account.security.panel.abandon.body" datatype="html">
+        <source>La double authentification ne sera pas activée. Le secret affiché sera remplacé au prochain essai.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+        <note priority="1" from="description">Explication, secret en attente</note>
+      </trans-unit>
+      <trans-unit id="account.security.panel.abandon.confirm" datatype="html">
+        <source>Abandonner</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Bouton abandonner l&apos;activation</note>
       </trans-unit>
       <trans-unit id="account.verification.type.diploma" datatype="html">
         <source>Diplôme</source>
@@ -3164,7 +3212,7 @@
         <source>Mot de passe enregistré. Reconnectez-vous avec votre nouveau mot de passe et votre code.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/first-login.page.ts</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">174</context>
         </context-group>
         <note priority="1" from="description">Mot de passe remplacé, reconnexion avec code</note>
       </trans-unit>
@@ -3172,7 +3220,7 @@
         <source>E-mail, mot de passe temporaire ou code incorrect.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/first-login.page.ts</context>
-          <context context-type="linenumber">210</context>
+          <context context-type="linenumber">223</context>
         </context-group>
         <note priority="1" from="description">Identifiants refusés à la première connexion, message unique</note>
       </trans-unit>
@@ -3180,7 +3228,7 @@
         <source>Ce compte ne peut pas changer son mot de passe pour le moment (adresse non confirmée ou compte suspendu).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/first-login.page.ts</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">225</context>
         </context-group>
         <note priority="1" from="description">Compte non autorisé à changer son mot de passe</note>
       </trans-unit>
@@ -3188,7 +3236,7 @@
         <source>Opération impossible pour le moment. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/first-login.page.ts</context>
-          <context context-type="linenumber">217</context>
+          <context context-type="linenumber">230</context>
         </context-group>
         <note priority="1" from="description">Première connexion impossible, serveur ou réseau</note>
       </trans-unit>

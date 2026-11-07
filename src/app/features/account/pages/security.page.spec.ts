@@ -5,7 +5,7 @@ import { SessionStore, SessionUser } from '../../../core/auth';
 import { SessionApi } from '../../../core/auth/data/session.api';
 import { ConfirmDialogService, SidePanelService, ToastService } from '../../../shared/ui';
 import { SecurityApi, SecurityOverview } from '../data/security.api';
-import { OVERVIEW } from '../data/security.store.spec';
+import { OVERVIEW } from '../data/security.fixtures';
 import { SecurityPage } from './security.page';
 
 const claire: SessionUser = {

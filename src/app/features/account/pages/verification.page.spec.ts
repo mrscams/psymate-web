@@ -5,7 +5,7 @@ import { SessionStore, SessionUser } from '../../../core/auth';
 import { SessionApi } from '../../../core/auth/data/session.api';
 import { ConfirmDialogService, ToastService } from '../../../shared/ui';
 import { Verification, VerificationApi } from '../data/verification.api';
-import { DOSSIER } from '../data/verification.store.spec';
+import { DOSSIER } from '../data/verification.fixtures';
 import { VerificationPage } from './verification.page';
 
 const alix: SessionUser = {

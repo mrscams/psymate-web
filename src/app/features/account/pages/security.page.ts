@@ -202,7 +202,7 @@ export class SecurityPage {
   protected async revokeOthers(): Promise<void> {
     const ok = await this.confirm.confirm({
       title: $localize`:Confirmation avant déconnexion des autres appareils@@account.security.sessions.confirmTitle:Déconnecter les autres appareils ?`,
-      description: $localize`:Explication de la confirmation@@account.security.sessions.confirmBody:Cet appareil reste connecté. Les autres devront se reconnecter ; l'opération est consignée dans votre journal de sécurité.`,
+      description: $localize`:Explication de la confirmation@@account.security.sessions.confirmBody:Cet appareil reste connecté. Les autres devront se reconnecter ; l'opération est consignée côté serveur.`,
       confirmLabel: $localize`:Bouton de la confirmation@@account.security.sessions.confirmButton:Déconnecter`,
     });
     if (ok) await this.store.revokeOthers();

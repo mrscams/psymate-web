@@ -79,7 +79,15 @@ export class FirstLoginPage {
   protected readonly fieldId = (name: string) => fieldId(`firstLogin.${name}`);
   protected readonly mismatchMessage = $localize`:Confirmation différente du mot de passe@@auth.firstLogin.password.mismatch:La confirmation ne correspond pas au nouveau mot de passe.`;
 
-  protected readonly step = computed(() => firstLoginStep(this.session.me()));
+  /**
+   * Une fois l'étape 2 affichée, elle reste affichée jusqu'à « Ouvrir l'administration » : la session
+   * dit twoFactorEnabled dès que verify réussit, mais les codes de secours doivent être confirmés avant
+   * tout accès à /admin (fiche 18 C).
+   */
+  private readonly twoFactorStarted = signal(false);
+  protected readonly step = computed<FirstLoginStep>(() =>
+    this.twoFactorStarted() ? 'twoFactor' : firstLoginStep(this.session.me()),
+  );
   protected readonly isAdmin = computed(() => this.session.me()?.role === 'admin');
   /** E-mail connu par la session (compte déjà connecté) : champ en lecture seule. */
   protected readonly knownEmail = computed(() => this.session.me()?.email ?? '');
@@ -123,6 +131,11 @@ export class FirstLoginPage {
         afterNextRender(() => this.otpInput()?.nativeElement.focus(), {
           injector: this.injector,
         });
+      }
+    });
+    effect(() => {
+      if (firstLoginStep(this.session.me()) === 'twoFactor') {
+        untracked(() => this.twoFactorStarted.set(true));
       }
     });
     // Plus rien d'exigé (praticien dont le mot de passe est remplacé, admin déjà équipé) : on sort.
