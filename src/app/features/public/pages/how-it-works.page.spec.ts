@@ -61,7 +61,7 @@ describe('HowItWorksPage', () => {
       'annuaire',
     );
     expect(head.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(
-      '/fr/comment-ca-marche',
+      `${TestBed.inject(DOCUMENT).location.origin}/fr/comment-ca-marche`,
     );
   });
 });
