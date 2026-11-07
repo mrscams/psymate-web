@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-07T18:52:37.573Z",
+  "task": "M1-17",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Compte et sécurité (fiche 18 A), panneau d'activation 2FA (18 B), première connexion administrateur (18 C) et page provisoire /admin ; lint, check:tokens, test (352), build, e2e (42 dont 9 sécurité, make admin réel) verts ; revue reviewer sans bloquant, 4 points corrigés",
+  "notes": "Dépendance qrcode-generator 1.5.2 (CommonJS déclaré dans angular.json). features/account exporte TwoFactorSetupComponent, PasswordRulesComponent et LockNoticeComponent pour features/auth (import par l'index). features/admin créé (page provisoire + garde 2FA, M7-07 remplace). Écarts : panneau 480 px (pas 560) ; compteur de codes restants absent du contrat ; croix du panneau sans confirmation (shared) ; 423 à 5 codes faux couvert en Vitest seulement ; e-mail saisissable sur /premiere-connexion sans session ; chunk first-login embarque features/account",
+  "next": "Session parente : rebase, PR, fusion ; M1-18 touche auth.routes.ts (conflit trivial) et les xlf (refaire extract-i18n) ; M7-07 remplace features/admin",
+  "branch": "claude/m1-17-securite-6b24af",
+  "checkout": "m1-17-securite-6b24af"
+}
