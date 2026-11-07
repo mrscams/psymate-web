@@ -75,8 +75,8 @@
             >Vos dossiers restent protégés</strong
           >
           <span i18n="Possibilité 3, détail@@auth.suspended.can.protected.body"
-            >Rien n'est supprimé pendant la suspension. En cas de clôture définitive, vous aurez 90
-            jours pour récupérer vos données.</span
+            >Rien n'est supprimé pendant la suspension. En cas de clôture définitive, vos données
+            restent conservées 90 jours avant toute purge.</span
           >
         </li>
       </ul>
@@ -323,8 +323,8 @@
         role="status"
         i18n="Compte clos : plus de recours@@auth.suspended.appeal.closedAccount"
       >
-        Un compte clos ne peut plus déposer de recours. L'export de vos dossiers reste possible
-        pendant 90 jours.
+        Un compte clos ne peut plus déposer de recours ni lancer d'export depuis cette page :
+        écrivez à l'adresse indiquée dans l'e-mail de décision.
       </p>
     } @else {
       @switch (store.appeal().status) {

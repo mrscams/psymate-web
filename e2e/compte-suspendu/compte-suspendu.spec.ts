@@ -125,7 +125,7 @@ test.describe('compte suspendu par un administrateur', () => {
     await expect(page.getByLabel('Votre explication')).toHaveCount(0);
     await expectNoAxeViolations(page);
 
-    // Après rechargement : le job d'export est retrouvé (localStorage), le formulaire de recours
+    // Après rechargement : le job d'export est retrouvé (sessionStorage), le formulaire de recours
     // revient (le serveur reste juge) et le second dépôt répond 409 APPEAL_ALREADY_OPEN.
     await page.reload();
     await expect(page.locator('.job .pill')).toHaveText('Prêt');

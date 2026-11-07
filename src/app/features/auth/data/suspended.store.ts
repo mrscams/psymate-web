@@ -9,7 +9,11 @@ import { DownloadedFile, ExportStatus, SuspendedApi, SuspendedCredentials } from
 /** Verrou par défaut si le 423 ne dit pas sa durée : 15 minutes (contrat). */
 const DEFAULT_LOCK_SECONDS = 15 * 60;
 
-/** Clé localStorage du dernier export demandé (fiche 19 : `lastJobId` conservé côté client). */
+/**
+ * Clé sessionStorage du dernier export demandé (fiche 19 : `lastJobId` conservé côté client). Le
+ * jeton de suivi du statusUrl donne accès au statut et au lien de l'export : il ne survit qu'à
+ * l'onglet (rechargement), jamais à sa fermeture.
+ */
 export const EXPORT_JOB_STORAGE_KEY = 'psymate.suspended.export';
 
 /** Codes 409 du recours qui ferment le formulaire : la décision est déjà contestée ou incontestable. */
@@ -62,7 +66,7 @@ export type ExportRowKind = 'none' | 'queued' | 'running' | 'ready' | 'expired' 
 /**
  * État du compte suspendu ou refusé (fiche 27) : export du compte (job asynchrone, lien 7 jours,
  * 410 ensuite) et recours (un seul par décision). Fourni à la racine : le recours envoyé reste
- * affiché tant que l'application n'est pas rechargée ; le job d'export survit dans localStorage.
+ * affiché tant que l'application n'est pas rechargée ; le job d'export survit dans sessionStorage.
  */
 export const SuspendedStore = signalStore(
   { providedIn: 'root' },
@@ -92,7 +96,7 @@ export const SuspendedStore = signalStore(
   withMethods((store, api = inject(SuspendedApi), document = inject(DOCUMENT)) => {
     const storage = (): Storage | null => {
       try {
-        return document.defaultView?.localStorage ?? null;
+        return document.defaultView?.sessionStorage ?? null;
       } catch {
         return null;
       }

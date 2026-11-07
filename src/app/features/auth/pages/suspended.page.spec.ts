@@ -19,7 +19,7 @@ const DONE: ExportStatus = {
 const MESSAGE = 'Le diplôme transmis est bien celui de mon établissement, voici pourquoi.';
 
 async function render(api: Partial<SuspendedApi>) {
-  localStorage.clear();
+  sessionStorage.clear();
   TestBed.configureTestingModule({
     imports: [SuspendedPage],
     providers: [
@@ -148,11 +148,11 @@ describe('SuspendedPage · export', () => {
     expect(el.querySelector('[role=alert]')).toBeNull();
     await click(fixture, el, 'Relancer');
     expect(el.querySelector('.job .row')).toBeNull();
-    expect(localStorage.getItem(EXPORT_JOB_STORAGE_KEY)).toBeNull();
+    expect(sessionStorage.getItem(EXPORT_JOB_STORAGE_KEY)).toBeNull();
   });
 
   it('done sans lien (déjà expiré au retour sur la page) → « Expiré »', async () => {
-    localStorage.setItem(EXPORT_JOB_STORAGE_KEY, JSON.stringify({ jobId: 'job-1', token: 't' }));
+    sessionStorage.setItem(EXPORT_JOB_STORAGE_KEY, JSON.stringify({ jobId: 'job-1', token: 't' }));
     TestBed.configureTestingModule({
       imports: [SuspendedPage],
       providers: [

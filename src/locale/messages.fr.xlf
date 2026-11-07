@@ -2880,7 +2880,7 @@
         <note priority="1" from="description">Possibilité 3, titre</note>
       </trans-unit>
       <trans-unit id="auth.suspended.can.protected.body" datatype="html">
-        <source>Rien n&apos;est supprimé pendant la suspension. En cas de clôture définitive, vous aurez 90 jours pour récupérer vos données.</source>
+        <source>Rien n&apos;est supprimé pendant la suspension. En cas de clôture définitive, vos données restent conservées 90 jours avant toute purge.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/suspended.page.html</context>
           <context context-type="linenumber">78,83</context>
@@ -3044,7 +3044,7 @@
         <note priority="1" from="description">Titre du recours</note>
       </trans-unit>
       <trans-unit id="auth.suspended.appeal.closedAccount" datatype="html">
-        <source> Un compte clos ne peut plus déposer de recours. L&apos;export de vos dossiers reste possible pendant 90 jours. </source>
+        <source> Un compte clos ne peut plus déposer de recours ni lancer d&apos;export depuis cette page : écrivez à l&apos;adresse indiquée dans l&apos;e-mail de décision. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/suspended.page.html</context>
           <context context-type="linenumber">326,330</context>

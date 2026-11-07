@@ -24,13 +24,13 @@ const DONE: ExportStatus = {
 };
 
 function setup(api: Partial<SuspendedApi>) {
-  localStorage.clear();
+  sessionStorage.clear();
   TestBed.configureTestingModule({ providers: [{ provide: SuspendedApi, useValue: api }] });
   return TestBed.inject(SuspendedStore);
 }
 
 describe('SuspendedStore · export du compte', () => {
-  it('requestExport : 202 { jobId, statusUrl } → job mémorisé (localStorage), statut relu', async () => {
+  it('requestExport : 202 { jobId, statusUrl } → job mémorisé (sessionStorage), statut relu', async () => {
     const requestExport = vi
       .fn()
       .mockResolvedValue({ kind: 'requested', jobId: 'job-1', token: 'tok' });
@@ -42,7 +42,7 @@ describe('SuspendedStore · export du compte', () => {
     expect(requestExport).toHaveBeenCalledWith(CREDENTIALS);
     expect(exportStatus).toHaveBeenCalledWith('job-1', 'tok');
     expect(store.job()).toEqual({ jobId: 'job-1', token: 'tok' });
-    expect(JSON.parse(localStorage.getItem(EXPORT_JOB_STORAGE_KEY) ?? '{}')).toEqual({
+    expect(JSON.parse(sessionStorage.getItem(EXPORT_JOB_STORAGE_KEY) ?? '{}')).toEqual({
       jobId: 'job-1',
       token: 'tok',
     });
@@ -100,8 +100,8 @@ describe('SuspendedStore · export du compte', () => {
     expect(store.exportStatus().data?.error).toBe('disk full');
   });
 
-  it('restore : reprend le job de localStorage et réinterroge ; 404 → la ligne disparaît', async () => {
-    localStorage.setItem(EXPORT_JOB_STORAGE_KEY, JSON.stringify({ jobId: 'job-9', token: 't9' }));
+  it('restore : reprend le job de sessionStorage et réinterroge ; 404 → la ligne disparaît', async () => {
+    sessionStorage.setItem(EXPORT_JOB_STORAGE_KEY, JSON.stringify({ jobId: 'job-9', token: 't9' }));
     const exportStatus = vi.fn().mockRejectedValue({ status: 404, code: 'EXPORT_NOT_FOUND' });
     TestBed.configureTestingModule({
       providers: [{ provide: SuspendedApi, useValue: { exportStatus } }],
@@ -111,7 +111,7 @@ describe('SuspendedStore · export du compte', () => {
     expect(exportStatus).toHaveBeenCalledWith('job-9', 't9');
     expect(store.job()).toBeNull();
     expect(store.exportKind()).toBe('none');
-    expect(localStorage.getItem(EXPORT_JOB_STORAGE_KEY)).toBeNull();
+    expect(sessionStorage.getItem(EXPORT_JOB_STORAGE_KEY)).toBeNull();
   });
 
   it('refreshExport : erreur réseau → état erreur, donnée précédente conservée', async () => {
