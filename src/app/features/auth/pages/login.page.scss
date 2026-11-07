@@ -12,15 +12,59 @@
 }
 
 h1 {
-  margin: 0 0 24px;
+  margin: 0 0 4px;
   font: var(--mat-sys-headline-small);
   color: var(--text-primary);
+}
+
+.intro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 0 0 24px;
+  color: var(--text-secondary);
+}
+
+a,
+.link-button {
+  color: var(--primary);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
 }
 
 form {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.aside-link {
+  margin: -8px 0 8px;
+  text-align: right;
+  font: var(--mat-sys-body-small);
+}
+
+.masked {
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+}
+
+.toggle-password svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .otp-title {
@@ -52,4 +96,10 @@ form {
 button[type='submit'] {
   height: 46px;
   margin-top: 8px;
+}
+
+.legal {
+  margin: 12px 0 0;
+  font: var(--mat-sys-body-small);
+  color: var(--text-secondary);
 }

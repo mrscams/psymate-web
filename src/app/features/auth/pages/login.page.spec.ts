@@ -56,6 +56,40 @@ describe('LoginPage', () => {
     expect(el.querySelector('input[autocomplete=one-time-code]')).toBeNull();
   });
 
+  it('liens Créer un compte et Mot de passe oublié, mention du verrouillage (fiche 11)', async () => {
+    const { el } = await render(vi.fn());
+    const links = [...el.querySelectorAll('a')].map((a) => a.textContent?.trim());
+    expect(links).toContain('Créer un compte');
+    expect(links).toContain('Mot de passe oublié ?');
+    expect(el.textContent).toContain('verrouillé 15 minutes');
+  });
+
+  it('afficher le mot de passe : aria-pressed et type text', async () => {
+    const { fixture, el } = await render(vi.fn());
+    const toggle = el.querySelector<HTMLButtonElement>('button.toggle-password');
+    expect(toggle?.getAttribute('aria-pressed')).toBe('false');
+    toggle?.click();
+    await fixture.whenStable();
+    expect(toggle?.getAttribute('aria-pressed')).toBe('true');
+    expect(el.querySelector<HTMLInputElement>('input[autocomplete=current-password]')?.type).toBe(
+      'text',
+    );
+  });
+
+  it('code de secours : le champ code passe en texte libre', async () => {
+    const login = vi.fn().mockResolvedValueOnce({ kind: 'otp-required' });
+    const { fixture, el } = await render(login);
+    await submit(fixture, el);
+    const otp = el.querySelector<HTMLInputElement>('input[autocomplete=one-time-code]');
+    expect(otp?.getAttribute('inputmode')).toBe('numeric');
+    [...el.querySelectorAll<HTMLButtonElement>('button.link-button')]
+      .find((b) => b.textContent?.includes('code de secours'))
+      ?.click();
+    await fixture.whenStable();
+    expect(otp?.getAttribute('inputmode')).toBe('text');
+    expect(el.textContent).toContain('codes de secours');
+  });
+
   it('champs vides : rien n’est envoyé', async () => {
     const login = vi.fn();
     const { fixture, el } = await render(login);

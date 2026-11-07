@@ -1,0 +1,170 @@
+<form [formGroup]="form" (ngSubmit)="submit()" aria-labelledby="info-title" novalidate>
+  <div class="grid">
+    <div class="field">
+      <span class="label" i18n="Profession déclarée@@account.verification.info.profession"
+        >Profession déclarée</span
+      >
+      <p class="value">{{ professionText() }}</p>
+    </div>
+    <div class="field">
+      <label [for]="fieldId('professionalNumber')">
+        <span i18n="Champ numéro professionnel@@account.verification.info.professionalNumber"
+          >N° ADELI / RPPS</span
+        >
+        @if (numberRecommended()) {
+          <span
+            class="muted"
+            i18n="
+              Numéro recommandé, jamais bloquant (G
+              Q14)@@account.verification.info.professionalNumber.recommended"
+            >(recommandé, jamais bloquant)</span
+          >
+        } @else {
+          <span
+            class="muted"
+            i18n="Numéro facultatif@@account.verification.info.professionalNumber.optional"
+            >(facultatif)</span
+          >
+        }
+      </label>
+      <input
+        [id]="fieldId('professionalNumber')"
+        type="text"
+        formControlName="professionalNumber"
+        class="mono"
+        autocomplete="off"
+        [attr.aria-invalid]="
+          form.controls.professionalNumber.invalid && form.controls.professionalNumber.touched
+        "
+        [attr.aria-describedby]="fieldId('professionalNumber') + '-error'"
+      />
+      <pm-field-errors
+        [control]="form.controls.professionalNumber"
+        [id]="fieldId('professionalNumber') + '-error'"
+      />
+    </div>
+    <div class="field">
+      <label [for]="fieldId('phone')" i18n="Champ téléphone@@account.verification.info.phone"
+        >Téléphone de contact</label
+      >
+      <input
+        [id]="fieldId('phone')"
+        type="tel"
+        formControlName="phone"
+        autocomplete="tel"
+        inputmode="tel"
+        [attr.aria-invalid]="form.controls.phone.invalid && form.controls.phone.touched"
+        [attr.aria-describedby]="fieldId('phone') + '-error'"
+      />
+      <pm-field-errors [control]="form.controls.phone" [id]="fieldId('phone') + '-error'" />
+    </div>
+    <label class="check">
+      <input
+        [id]="fieldId('remoteOnly')"
+        type="checkbox"
+        formControlName="remoteOnly"
+        (change)="toggleRemoteOnly()"
+      />
+      <span i18n="Case exercice en visio uniquement@@account.verification.info.remoteOnly"
+        >J'exerce uniquement en visioconsultation</span
+      >
+    </label>
+  </div>
+
+  <div
+    formGroupName="address"
+    class="grid address"
+    role="group"
+    [attr.aria-label]="addressLabel"
+    [attr.aria-describedby]="fieldId('address') + '-error'"
+    [id]="fieldId('address')"
+    tabindex="-1"
+  >
+    <div class="field wide">
+      <label [for]="fieldId('address.street')" i18n="Champ rue@@account.verification.info.street"
+        >Adresse du cabinet</label
+      >
+      <input
+        [id]="fieldId('address.street')"
+        type="text"
+        formControlName="street"
+        autocomplete="street-address"
+        [attr.aria-invalid]="
+          form.controls.address.controls.street.invalid &&
+          form.controls.address.controls.street.touched
+        "
+        [attr.aria-describedby]="fieldId('address.street') + '-error'"
+      />
+      <pm-field-errors
+        [control]="form.controls.address.controls.street"
+        [id]="fieldId('address.street') + '-error'"
+      />
+    </div>
+    <div class="field">
+      <label
+        [for]="fieldId('address.postalCode')"
+        i18n="Champ code postal@@account.verification.info.postalCode"
+        >Code postal</label
+      >
+      <input
+        [id]="fieldId('address.postalCode')"
+        type="text"
+        formControlName="postalCode"
+        autocomplete="postal-code"
+        inputmode="numeric"
+        class="mono"
+        [attr.aria-invalid]="
+          form.controls.address.controls.postalCode.invalid &&
+          form.controls.address.controls.postalCode.touched
+        "
+        [attr.aria-describedby]="fieldId('address.postalCode') + '-error'"
+      />
+      <pm-field-errors
+        [control]="form.controls.address.controls.postalCode"
+        [id]="fieldId('address.postalCode') + '-error'"
+      />
+    </div>
+    <div class="field">
+      <label [for]="fieldId('address.city')" i18n="Champ ville@@account.verification.info.city"
+        >Ville</label
+      >
+      <input
+        [id]="fieldId('address.city')"
+        type="text"
+        formControlName="city"
+        autocomplete="address-level2"
+        [attr.aria-invalid]="
+          form.controls.address.controls.city.invalid && form.controls.address.controls.city.touched
+        "
+        [attr.aria-describedby]="fieldId('address.city') + '-error'"
+      />
+      <pm-field-errors
+        [control]="form.controls.address.controls.city"
+        [id]="fieldId('address.city') + '-error'"
+      />
+    </div>
+    <pm-field-errors [control]="form.controls.address" [id]="fieldId('address') + '-error'" />
+  </div>
+
+  <div class="actions">
+    <button
+      mat-stroked-button
+      type="submit"
+      [disabled]="busy()"
+      i18n="Bouton enregistrer les informations@@account.verification.info.save"
+    >
+      Enregistrer
+    </button>
+    @if (saved()) {
+      <span
+        class="saved"
+        role="status"
+        i18n="Confirmation d'enregistrement@@account.verification.info.saved"
+        >Enregistré</span
+      >
+    }
+    @if (failure(); as text) {
+      <span class="error" role="alert">{{ text }}</span>
+    }
+  </div>
+</form>

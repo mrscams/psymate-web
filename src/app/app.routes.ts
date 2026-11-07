@@ -17,6 +17,12 @@ export const routes: Routes = [
     canActivate: [authGuard, statusGuard],
     loadChildren: () => import('./features/patients').then((m) => m.PATIENTS_ROUTES),
   },
+  // Mon compte (fiche 00 §3) : dossier professionnel (M1-15), préférences (M1-16)…
+  {
+    path: 'mon-compte',
+    canActivate: [authGuard, statusGuard],
+    loadChildren: () => import('./features/account').then((m) => m.ACCOUNT_ROUTES),
+  },
   // Démonstration des composants partagés (M0-09) : revue visuelle et axe-core, hors du produit.
   {
     path: '_demo',

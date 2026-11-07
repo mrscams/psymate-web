@@ -16,20 +16,25 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { afterLogin } from '../../../core/auth';
-import { ApiProblem } from '../../../core/http/api-problem';
+import { ApiProblem } from '../../../core/http';
+import { AUTH_FEATURE_PATHS } from '../auth-feature-paths';
 import { LoginStore } from '../data/login.store';
 
 /**
- * /connexion, version minimale de M0-07 (fiche 11) : e-mail, mot de passe, « rester connecté »,
- * bloc code de vérification après un 202, messages 401 / 423. L'écran complet est M1-15.
+ * /connexion (fiche 11) : e-mail, mot de passe avec bouton afficher, « rester connecté » (G Q6),
+ * bloc code de vérification après un 202 (code de l'application ou code de secours), message unique
+ * 401, verrou 423 avec compte à rebours, liens Créer un compte et Mot de passe oublié. Les 403
+ * d'état (e-mail non confirmé, compte suspendu, mot de passe à changer) sont redirigés par
+ * core/http avant d'arriver ici.
  */
 @Component({
   selector: 'pm-login-page',
   imports: [
     ReactiveFormsModule,
+    RouterLink,
     MatButtonModule,
     MatCheckboxModule,
     MatFormFieldModule,
@@ -48,6 +53,8 @@ export class LoginPage {
   private readonly router = inject(Router);
   private readonly injector = inject(Injector);
 
+  protected readonly paths = AUTH_FEATURE_PATHS;
+
   protected readonly form = inject(NonNullableFormBuilder).group({
     email: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
     password: ['', [Validators.required, Validators.maxLength(200)]],
@@ -57,6 +64,12 @@ export class LoginPage {
 
   private readonly passwordInput = viewChild<ElementRef<HTMLInputElement>>('passwordInput');
   private readonly otpInput = viewChild<ElementRef<HTMLInputElement>>('otpInput');
+
+  /** Mot de passe en clair (bouton afficher, aria-pressed). */
+  protected readonly showPassword = signal(false);
+  protected readonly showPasswordLabel = $localize`:Bouton afficher le mot de passe@@auth.login.showPassword:Afficher le mot de passe`;
+  /** Le champ code reçoit un code de secours (texte) plutôt que les 6 chiffres de l'application. */
+  protected readonly recoveryCode = signal(false);
 
   private readonly now = signal(Date.now());
   protected readonly lockSeconds = computed(() => {
@@ -78,6 +91,12 @@ export class LoginPage {
       }, 1000);
       onCleanup(() => clearInterval(timer));
     });
+  }
+
+  protected useRecoveryCode(recovery: boolean): void {
+    this.recoveryCode.set(recovery);
+    this.form.controls.otp.setValue('');
+    afterNextRender(() => this.otpInput()?.nativeElement.focus(), { injector: this.injector });
   }
 
   protected async submit(): Promise<void> {
