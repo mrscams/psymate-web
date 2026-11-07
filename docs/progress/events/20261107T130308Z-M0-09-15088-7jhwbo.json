@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-07T13:03:08.588Z",
+  "task": "M0-09",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Socle UI partagé : shared/ui (app-bar, bandeaux, public-layout, account-nav, admin-bar, patient-header, side-panel, state, toast, confirm-dialog, entry-icon), shared/forms, shared/util, core/http (429, hors ligne), core/shortcuts, core/theme, core/i18n, page /_demo ; 195 tests Vitest, 19 e2e verts",
+  "notes": "Branche claude/m0-09-socle-ui-bdd5b1 (rien poussé, pas de PR). Aucune dépendance ajoutée (@axe-core/playwright déjà présent). Revue reviewer : aucun bloquant ; remarque : le 429 e2e passe par la page de démonstration et non par un vrai 429 de l'API (couvert par Vitest). Décisions : side-panel sur le Dialog du CDK ; habillage par data.layout (practitioner / public / admin / bare) ; /_demo présent dans tous les builds (lazy, aucun lien) pour axe-core ; tokens ajoutés info, danger-on, scrim, admin-bar ; blocs d'erreur en --danger sur --danger-bg dans les deux thèmes (M6-04 à revoir) ; e2e connexion (M0-07) adapté à la déconnexion par le menu de l'avatar. Note de passation : side-session-notes/M0-09-passation.md",
+  "next": "Lots 1 (M1-15, M1-16, M1-17, M1-18), 2 (M1-06, M1-07), 4 (M5-04, M5-05) et 6 (M7-07) peuvent démarrer après fusion ; M1-16 branche ThemeService et SubjectVocabulary ; M1-07 nourrit pm-patient-header",
+  "branch": "claude/m0-09-socle-ui-bdd5b1",
+  "checkout": "m0-09-socle-ui-bdd5b1"
+}
