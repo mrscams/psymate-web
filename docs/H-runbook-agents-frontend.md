@@ -150,6 +150,8 @@ Le hook `Stop` empêche un agent de s'arrêter sur du rouge ; `test -f package.j
 
 ## 2.5 Créer les deux agents dans `.claude/agents/`
 
+Modèle des deux agents : **Opus 5.5** (`model: opus`, décision du 7 novembre 2026 ; `sonnet` à l'origine). Les sessions qui pilotent une tâche sont lancées sur le même modèle.
+
 `.claude/agents/frontend-feature-dev.md` :
 
 ```markdown
@@ -157,7 +159,7 @@ Le hook `Stop` empêche un agent de s'arrêter sur du rouge ; `test -f package.j
 name: frontend-feature-dev
 description: Implémente UNE tâche web du plan C (C2, C6, C9, C10) dans UNE feature Angular de psymate-web. À utiliser pour toute tâche « web / <feature> ».
 tools: Read, Write, Edit, Glob, Grep, Bash
-model: sonnet
+model: opus
 ---
 Tu implémentes exactement la tâche donnée, dans la feature donnée, et rien d'autre.
 
@@ -183,7 +185,7 @@ Pendant :
 name: reviewer
 description: Relit le diff d'une tâche web sans rien modifier. À lancer avant chaque fusion.
 tools: Read, Glob, Grep, Bash
-model: sonnet
+model: opus
 ---
 Tu relis le diff de la branche courante par rapport à main (git diff main...HEAD). Tu ne modifies aucun fichier.
 
