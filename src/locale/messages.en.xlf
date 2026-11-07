@@ -8853,6 +8853,7 @@
           <context context-type="linenumber">108,113</context>
         </context-group>
         <note priority="1" from="description">Site web dans l&apos;aperçu</note>
+      </trans-unit>
       <trans-unit id="patients.overview.title" datatype="html">
         <source>Vue d&apos;ensemble</source>
         <target state="translated">Overview</target>
