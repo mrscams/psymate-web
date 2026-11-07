@@ -1,0 +1,9 @@
+{
+  "at": "2026-11-07T16:10:00.000Z",
+  "task": "M1-17",
+  "agent": "claude",
+  "status": "in-progress",
+  "summary": "M1-17 lancee dans son worktree depuis main, en parallele de M1-18",
+  "branch": "claude/m1-17-securite-6b24af",
+  "checkout": "psymate-web"
+}
