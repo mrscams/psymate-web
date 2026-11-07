@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-07T15:31:45.546Z",
+  "task": "M1-16",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "PreferencesStore (core/preferences) et page /mon-compte/preferences : 9 clés avec défauts par profession, chargement au login, set optimiste avec repli serveur, cache localStorage.prefs, thème, vocabulaire et langue branchés ; 26 + 10 tests Vitest, 7 e2e",
+  "notes": "Pas de PR (consigne : branche non poussée). Revue : aucun bloquant, 3 points corrigés (e2e clé inconnue, axe dans chaque scénario, ARIA). Décisions : délai de correction 1 h 15 (G Q31) ; résumé sécurité = e-mail et 2FA de SessionStore (sessions actives = M1-17) ; section Émotions = lien (M1-09) ; durée de séance : forme vérifiée côté client, plage jugée par le serveur (422 → repli + toast) ; langue du compte suivie à la connexion seulement. Points de fusion avec M1-15 : features/account/index.ts, account.routes.ts, app.routes.ts (route mon-compte), messages.fr/en.xlf (65 unités EN ajoutées dont appBar.avatar.menu). Budget initial 790 kB (781 kB avant M1-16, déjà au-dessus des 500 kB).",
+  "next": "M1-06 branche subjectLabel sur la barre et /patients ; M4-05 et M4-07 lisent overview.view et overview.window et affichent le toast d'erreur comme la page ; mise en page deux colonnes de Mon compte à partager (M1-15)",
+  "branch": "claude/m1-16-preferences-a9703d",
+  "checkout": "m1-16-preferences-a9703d"
+}

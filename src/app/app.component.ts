@@ -78,7 +78,7 @@ export class AppComponent {
   });
 
   constructor() {
-    // Applique data-theme dès le démarrage (préférence système tant que M1-16 ne branche pas la clé theme).
+    // Applique data-theme dès le démarrage ; la clé `theme` des préférences le pilote (core/preferences).
     inject(ThemeService);
   }
 

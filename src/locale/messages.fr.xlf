@@ -158,9 +158,499 @@
         <source>Dossier professionnel · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet du dossier professionnel</note>
+      </trans-unit>
+      <trans-unit id="preferences.pageTitle" datatype="html">
+        <source>Préférences · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet des préférences</note>
+      </trans-unit>
+      <trans-unit id="preferences.title" datatype="html">
+        <source>Préférences</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la page Préférences</note>
+      </trans-unit>
+      <trans-unit id="preferences.intro" datatype="html">
+        <source> Mémorisées sur votre compte : vous les retrouvez sur tous vos appareils. Chaque changement est enregistré immédiatement. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">13,17</context>
+        </context-group>
+        <note priority="1" from="description">Introduction de la page Préférences</note>
+      </trans-unit>
+      <trans-unit id="preferences.section.display" datatype="html">
+        <source>Affichage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">24,27</context>
+        </context-group>
+        <note priority="1" from="description">Section Affichage</note>
+      </trans-unit>
+      <trans-unit id="preferences.view.label" datatype="html">
+        <source>Vue d&apos;ensemble par défaut</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">28,29</context>
+        </context-group>
+        <note priority="1" from="description">Réglage de la vue d&apos;ensemble</note>
+      </trans-unit>
+      <trans-unit id="preferences.view.help" datatype="html">
+        <source>Aussi modifiable depuis la page du patient.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">30,31</context>
+        </context-group>
+        <note priority="1" from="description">Aide du réglage de la vue d&apos;ensemble</note>
+      </trans-unit>
+      <trans-unit id="preferences.window.label" datatype="html">
+        <source>Fenêtre d&apos;analyse</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">44,45</context>
+        </context-group>
+        <note priority="1" from="description">Réglage de la fenêtre d&apos;analyse</note>
+      </trans-unit>
+      <trans-unit id="preferences.window.help" datatype="html">
+        <source>Pour la tendance des ressentis et les situations actives.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">46,47</context>
+        </context-group>
+        <note priority="1" from="description">Aide du réglage de la fenêtre</note>
+      </trans-unit>
+      <trans-unit id="preferences.groupBy.label" datatype="html">
+        <source>Timeline</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">60,61</context>
+        </context-group>
+        <note priority="1" from="description">Réglage du regroupement de la timeline</note>
+      </trans-unit>
+      <trans-unit id="preferences.groupBy.help" datatype="html">
+        <source>Regroupement par défaut.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">62,63</context>
+        </context-group>
+        <note priority="1" from="description">Aide du regroupement de la timeline</note>
+      </trans-unit>
+      <trans-unit id="preferences.theme.label" datatype="html">
+        <source>Thème</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Réglage du thème</note>
+      </trans-unit>
+      <trans-unit id="preferences.theme.help" datatype="html">
+        <source>« Doux » réduit les contrastes pour les longues sessions.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">78,79</context>
+        </context-group>
+        <note priority="1" from="description">Aide du réglage du thème</note>
+      </trans-unit>
+      <trans-unit id="preferences.locale.label" datatype="html">
+        <source>Langue</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+        <note priority="1" from="description">Réglage de la langue</note>
+      </trans-unit>
+      <trans-unit id="preferences.locale.help" datatype="html">
+        <source>Interface et vocabulaire. Vos entrées ne sont pas traduites.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">93,94</context>
+        </context-group>
+        <note priority="1" from="description">Aide du réglage de la langue</note>
+      </trans-unit>
+      <trans-unit id="preferences.locale.fr" datatype="html">
+        <source>Français</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">103,104</context>
+        </context-group>
+        <note priority="1" from="description">Option Français</note>
+      </trans-unit>
+      <trans-unit id="preferences.locale.en" datatype="html">
+        <source> English · traduction partielle </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">105,108</context>
+        </context-group>
+        <note priority="1" from="description">Option English, traduction partielle</note>
+      </trans-unit>
+      <trans-unit id="preferences.section.vocabulary" datatype="html">
+        <source> Vocabulaire et saisie </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">114,117</context>
+        </context-group>
+        <note priority="1" from="description">Section Vocabulaire et saisie</note>
+      </trans-unit>
+      <trans-unit id="preferences.subject.label" datatype="html">
+        <source>Désignation des personnes suivies</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">119,120</context>
+        </context-group>
+        <note priority="1" from="description">Réglage de la désignation</note>
+      </trans-unit>
+      <trans-unit id="preferences.subject.help" datatype="html">
+        <source>Les coachs préfèrent souvent « client ». Actuellement : « <x id="INTERPOLATION" equiv-text="{{
+              &apos;many&apos; | subjectLabel
+            }}"/> ».</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">121,124</context>
+        </context-group>
+        <note priority="1" from="description">Aide du réglage de la désignation</note>
+      </trans-unit>
+      <trans-unit id="preferences.medication.label" datatype="html">
+        <source>Type « médicament »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">137,138</context>
+        </context-group>
+        <note priority="1" from="description">Réglage du type médicament</note>
+      </trans-unit>
+      <trans-unit id="preferences.medication.help" datatype="html">
+        <source>Masqué par défaut pour les psychologues et les coachs.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">139,140</context>
+        </context-group>
+        <note priority="1" from="description">Aide du réglage du type médicament</note>
+      </trans-unit>
+      <trans-unit id="preferences.medication.toggle" datatype="html">
+        <source> Afficher le type médicament dans la saisie et la timeline </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">148,152</context>
+        </context-group>
+        <note priority="1" from="description">Interrupteur du type médicament</note>
+      </trans-unit>
+      <trans-unit id="preferences.visibility.label" datatype="html">
+        <source>Visibilité par défaut des nouvelles entrées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">154,155</context>
+        </context-group>
+        <note priority="1" from="description">Réglage de la visibilité par défaut</note>
+      </trans-unit>
+      <trans-unit id="preferences.visibility.help" datatype="html">
+        <source>« Privée » exclut l&apos;entrée des exports et des partages futurs.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">156,157</context>
+        </context-group>
+        <note priority="1" from="description">Aide du réglage de la visibilité</note>
+      </trans-unit>
+      <trans-unit id="preferences.duration.label" datatype="html">
+        <source>Durée de séance par défaut</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">170,171</context>
+        </context-group>
+        <note priority="1" from="description">Réglage de la durée de séance</note>
+      </trans-unit>
+      <trans-unit id="preferences.duration.help" datatype="html">
+        <source>Pré-remplie à l&apos;ouverture d&apos;une séance, entre 15 et 180 minutes.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">172,173</context>
+        </context-group>
+        <note priority="1" from="description">Aide du réglage de la durée de séance</note>
+      </trans-unit>
+      <trans-unit id="preferences.duration.unit" datatype="html">
+        <source>min</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">187,190</context>
+        </context-group>
+        <note priority="1" from="description">Unité minutes</note>
+      </trans-unit>
+      <trans-unit id="preferences.grace.label" datatype="html">
+        <source>Délai de correction sans version</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">192,193</context>
+        </context-group>
+        <note priority="1" from="description">Délai de correction sans version</note>
+      </trans-unit>
+      <trans-unit id="preferences.grace.help" datatype="html">
+        <source>Pendant ce délai, corriger une entrée ne crée pas de nouvelle version.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">194,195</context>
+        </context-group>
+        <note priority="1" from="description">Aide du délai de correction</note>
+      </trans-unit>
+      <trans-unit id="preferences.grace.value" datatype="html">
+        <source>1 h 15</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">198,200</context>
+        </context-group>
+        <note priority="1" from="description">Valeur du délai de correction (G Q31)</note>
+      </trans-unit>
+      <trans-unit id="preferences.grace.fixed" datatype="html">
+        <source>· fixé par l&apos;application en V1</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">201,205</context>
+        </context-group>
+        <note priority="1" from="description">Mention du délai fixé en V1</note>
+      </trans-unit>
+      <trans-unit id="preferences.section.emotions" datatype="html">
+        <source> Émotions personnalisées </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">210,213</context>
+        </context-group>
+        <note priority="1" from="description">Section Émotions personnalisées</note>
+      </trans-unit>
+      <trans-unit id="preferences.emotions.link" datatype="html">
+        <source>Gérer la liste complète</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">215,220</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la page des émotions</note>
+      </trans-unit>
+      <trans-unit id="preferences.emotions.text" datatype="html">
+        <source> Vos émotions ajoutées au vocabulaire. Chacune est rattachée à une famille, ce qui permet de la placer dans les courbes et le graphe. La liste, ses usages et sa gestion sont sur la page dédiée. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">222,228</context>
+        </context-group>
+        <note priority="1" from="description">Texte de la section Émotions personnalisées</note>
+      </trans-unit>
+      <trans-unit id="preferences.section.security" datatype="html">
+        <source> Compte et sécurité </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">231,234</context>
+        </context-group>
+        <note priority="1" from="description">Section Compte et sécurité</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.link" datatype="html">
+        <source>Tout voir</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">236,240</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers Compte et sécurité</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.email" datatype="html">
+        <source>E-mail de connexion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">241,243</context>
+        </context-group>
+        <note priority="1" from="description">E-mail de connexion</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.twoFactor" datatype="html">
+        <source> Double authentification </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">246,248</context>
+        </context-group>
+        <note priority="1" from="description">Double authentification</note>
+      </trans-unit>
+      <trans-unit id="preferences.retry" datatype="html">
+        <source>Réessayer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Réessayer du bloc Préférences</note>
+      </trans-unit>
+      <trans-unit id="preferences.saving" datatype="html">
+        <source>Enregistrement…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">Statut pendant l&apos;enregistrement d&apos;un réglage</note>
+      </trans-unit>
+      <trans-unit id="preferences.saved" datatype="html">
+        <source>Enregistré à <x id="time" equiv-text="time"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <note priority="1" from="description">Statut après l&apos;enregistrement d&apos;un réglage</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.twoFactor.on" datatype="html">
+        <source>Activée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <note priority="1" from="description">Double authentification active</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.twoFactor.off" datatype="html">
+        <source>Non activée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <note priority="1" from="description">Double authentification inactive</note>
+      </trans-unit>
+      <trans-unit id="preferences.view.simple" datatype="html">
+        <source>Simple</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+        <note priority="1" from="description">Vue d&apos;ensemble simple</note>
+      </trans-unit>
+      <trans-unit id="preferences.view.complete" datatype="html">
+        <source>Complète</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+        <note priority="1" from="description">Vue d&apos;ensemble complète</note>
+      </trans-unit>
+      <trans-unit id="preferences.window.30d" datatype="html">
+        <source>30 j</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+        <note priority="1" from="description">Fenêtre de 30 jours</note>
+      </trans-unit>
+      <trans-unit id="preferences.window.90d" datatype="html">
+        <source>90 j</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+        <note priority="1" from="description">Fenêtre de 90 jours</note>
+      </trans-unit>
+      <trans-unit id="preferences.window.12m" datatype="html">
+        <source>1 an</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+        <note priority="1" from="description">Fenêtre de 12 mois</note>
+      </trans-unit>
+      <trans-unit id="preferences.groupBy.session" datatype="html">
+        <source>Par séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <note priority="1" from="description">Timeline par séance</note>
+      </trans-unit>
+      <trans-unit id="preferences.groupBy.month" datatype="html">
+        <source>Par mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+        <note priority="1" from="description">Timeline par mois</note>
+      </trans-unit>
+      <trans-unit id="preferences.groupBy.chronological" datatype="html">
+        <source>Chronologique</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <note priority="1" from="description">Timeline chronologique</note>
+      </trans-unit>
+      <trans-unit id="preferences.subject.patient" datatype="html">
+        <source>Patient·e</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+        <note priority="1" from="description">Désignation patient</note>
+      </trans-unit>
+      <trans-unit id="preferences.subject.client" datatype="html">
+        <source>Client·e</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+        <note priority="1" from="description">Désignation client</note>
+      </trans-unit>
+      <trans-unit id="preferences.visibility.clinical" datatype="html">
+        <source>Clinique</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <note priority="1" from="description">Visibilité clinique</note>
+      </trans-unit>
+      <trans-unit id="preferences.visibility.private" datatype="html">
+        <source>Privée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+        <note priority="1" from="description">Visibilité privée</note>
+      </trans-unit>
+      <trans-unit id="preferences.duration.invalid" datatype="html">
+        <source>Saisissez un nombre entier de minutes.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+        <note priority="1" from="description">Durée de séance non entière</note>
+      </trans-unit>
+      <trans-unit id="preferences.saveRejected" datatype="html">
+        <source>Réglage non enregistré : <x id="reason" equiv-text="fieldMessage"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">187</context>
+        </context-group>
+        <note priority="1" from="description">Toast quand le serveur refuse un réglage (422)</note>
+      </trans-unit>
+      <trans-unit id="preferences.saveFailed" datatype="html">
+        <source>Impossible d&apos;enregistrer ce réglage. La valeur précédente est rétablie.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+        <note priority="1" from="description">Toast quand l&apos;enregistrement d&apos;un réglage échoue</note>
+      </trans-unit>
+      <trans-unit id="profession.psychologist" datatype="html">
+        <source>Psychologue</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">195</context>
+        </context-group>
+        <note priority="1" from="description">Profession</note>
+      </trans-unit>
+      <trans-unit id="profession.psychiatrist" datatype="html">
+        <source>Psychiatre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+        <note priority="1" from="description">Profession</note>
+      </trans-unit>
+      <trans-unit id="profession.coach" datatype="html">
+        <source>Coach</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+        <note priority="1" from="description">Profession</note>
       </trans-unit>
       <trans-unit id="account.verification.title" datatype="html">
         <source> Dossier professionnel </source>
@@ -898,7 +1388,7 @@
         <source>Choisissez un fichier.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <note priority="1" from="description">Fichier manquant</note>
       </trans-unit>
@@ -906,7 +1396,7 @@
         <source>Ce fichier dépasse 10 Mo. Réduisez-le ou choisissez un autre fichier ; le dossier n&apos;a pas changé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
-          <context context-type="linenumber">185</context>
+          <context context-type="linenumber">184</context>
         </context-group>
         <note priority="1" from="description">Fichier trop lourd (client et 413)</note>
       </trans-unit>
@@ -914,7 +1404,7 @@
         <source>Seuls les fichiers PDF, JPEG et PNG sont acceptés ; le dossier n&apos;a pas changé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
-          <context context-type="linenumber">187</context>
+          <context context-type="linenumber">186</context>
         </context-group>
         <note priority="1" from="description">Format refusé (client et 415)</note>
       </trans-unit>
@@ -922,7 +1412,7 @@
         <source>Le dossier compte déjà 20 justificatifs : retirez-en un avant d&apos;en ajouter.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">198</context>
         </context-group>
         <note priority="1" from="description">409 DOCUMENT_LIMIT</note>
       </trans-unit>
@@ -930,7 +1420,7 @@
         <source>Le dossier n&apos;est plus modifiable dans son état actuel.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">199</context>
         </context-group>
         <note priority="1" from="description">409 VERIFICATION_LOCKED</note>
       </trans-unit>
@@ -938,7 +1428,7 @@
         <source>Fichier vide, illisible ou image trop grande (25 millions de pixels au maximum).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
-          <context context-type="linenumber">204</context>
+          <context context-type="linenumber">203</context>
         </context-group>
         <note priority="1" from="description">422 DOCUMENT_INVALID</note>
       </trans-unit>
@@ -946,9 +1436,41 @@
         <source>L&apos;envoi a échoué. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
-          <context context-type="linenumber">206</context>
+          <context context-type="linenumber">205</context>
         </context-group>
         <note priority="1" from="description">Envoi impossible</note>
+      </trans-unit>
+      <trans-unit id="preferences.theme.light" datatype="html">
+        <source>Clair</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/theme-picker.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Thème clair</note>
+      </trans-unit>
+      <trans-unit id="preferences.theme.soft" datatype="html">
+        <source>Doux</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/theme-picker.component.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <note priority="1" from="description">Thème au contraste doux</note>
+      </trans-unit>
+      <trans-unit id="preferences.theme.dark" datatype="html">
+        <source>Sombre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/theme-picker.component.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <note priority="1" from="description">Thème sombre</note>
+      </trans-unit>
+      <trans-unit id="preferences.theme.system" datatype="html">
+        <source>Système</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/theme-picker.component.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <note priority="1" from="description">Thème qui suit le système</note>
       </trans-unit>
       <trans-unit id="account.verification.info.profession" datatype="html">
         <source>Profession déclarée</source>
@@ -1439,7 +1961,7 @@
         <source>E-mail, mot de passe ou code incorrect.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">150</context>
         </context-group>
         <note priority="1" from="description">Connexion refusée, message unique (fiche 11)</note>
       </trans-unit>
@@ -1447,7 +1969,7 @@
         <source>Vérifiez l&apos;adresse e-mail et le mot de passe saisis.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">155</context>
         </context-group>
         <note priority="1" from="description">Connexion refusée, champ mal formé</note>
       </trans-unit>
@@ -1455,7 +1977,7 @@
         <source>Connexion impossible pour le moment. Réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <note priority="1" from="description">Connexion impossible, serveur ou réseau</note>
       </trans-unit>
@@ -1587,7 +2109,7 @@
         <source> Pour la vérification de votre dossier. Jamais affiché sans votre accord. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">159,161</context>
+          <context context-type="linenumber">161,163</context>
         </context-group>
         <note priority="1" from="description">Aide du champ téléphone</note>
       </trans-unit>
@@ -1595,7 +2117,7 @@
         <source>J&apos;exerce uniquement en visioconsultation (pas d&apos;adresse de cabinet)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">237,243</context>
+          <context context-type="linenumber">239,245</context>
         </context-group>
         <note priority="1" from="description">Case exercice en visio uniquement</note>
       </trans-unit>
@@ -1603,7 +2125,7 @@
         <source> Après la création du compte, vous déposerez votre diplôme et une pièce d&apos;identité (et, si vous en avez, votre attestation ADELI, RPPS ou de certification). Un administrateur vérifie le dossier sous 2 jours ouvrés ; l&apos;annuaire public n&apos;est accessible qu&apos;une fois le dossier validé. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">245,252</context>
+          <context context-type="linenumber">247,254</context>
         </context-group>
         <note priority="1" from="description">Encart annonçant le dépôt des justificatifs</note>
       </trans-unit>
@@ -1611,7 +2133,7 @@
         <source>Votre accès</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">256,259</context>
+          <context context-type="linenumber">258,261</context>
         </context-group>
         <note priority="1" from="description">Section 3 de l&apos;inscription</note>
       </trans-unit>
@@ -1619,7 +2141,7 @@
         <source> 12 caractères minimum. La double authentification pourra être activée dans vos paramètres ; elle est recommandée pour un dossier clinique. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">312,318</context>
+          <context context-type="linenumber">314,320</context>
         </context-group>
         <note priority="1" from="description">Rappel 2FA de la section accès</note>
       </trans-unit>
@@ -1627,7 +2149,7 @@
         <source> Consentements </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">324,328</context>
+          <context context-type="linenumber">326,330</context>
         </context-group>
         <note priority="1" from="description">Section consentements</note>
       </trans-unit>
@@ -1635,7 +2157,7 @@
         <source> J&apos;accepte les conditions d&apos;utilisation et j&apos;ai lu la politique de confidentialité. Je comprends que je suis responsable du traitement des données de mes patients et que PsyMate en est l&apos;hébergeur. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">338,343</context>
+          <context context-type="linenumber">340,345</context>
         </context-group>
         <note priority="1" from="description">Case CGU et confidentialité, avec responsable du traitement</note>
       </trans-unit>
@@ -1643,7 +2165,7 @@
         <source> Créer mon compte </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">357,359</context>
+          <context context-type="linenumber">359,361</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;inscription</note>
       </trans-unit>
@@ -1651,7 +2173,7 @@
         <source> Vous recevrez un e-mail pour confirmer votre adresse avant la première connexion. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">360,365</context>
+          <context context-type="linenumber">362,367</context>
         </context-group>
         <note priority="1" from="description">Mention sous le bouton d&apos;inscription</note>
       </trans-unit>
@@ -1659,7 +2181,7 @@
         <source>Ensuite</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">366,368</context>
+          <context context-type="linenumber">368,370</context>
         </context-group>
         <note priority="1" from="description">Titre de la colonne Ensuite</note>
       </trans-unit>
@@ -1667,7 +2189,7 @@
         <source>Confirmez votre e-mail.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">368,369</context>
+          <context context-type="linenumber">370,371</context>
         </context-group>
         <note priority="1" from="description">Étape 1 après l&apos;inscription</note>
       </trans-unit>
@@ -1675,7 +2197,7 @@
         <source> Déposez votre diplôme et une pièce d&apos;identité (plusieurs documents possibles). Vous pouvez déjà utiliser l&apos;outil pendant la vérification. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">370,373</context>
+          <context context-type="linenumber">372,375</context>
         </context-group>
         <note priority="1" from="description">Étape 2 après l&apos;inscription</note>
       </trans-unit>
@@ -1683,7 +2205,7 @@
         <source> Un administrateur valide votre dossier sous 2 jours ouvrés. Vous recevez un e-mail. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">374,376</context>
+          <context context-type="linenumber">376,378</context>
         </context-group>
         <note priority="1" from="description">Étape 3 après l&apos;inscription</note>
       </trans-unit>
@@ -1691,7 +2213,7 @@
         <source> Quand vous voulez, remplissez votre profil public pour apparaître dans l&apos;annuaire. Rien n&apos;est publié sans votre accord. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">377,381</context>
+          <context context-type="linenumber">379,383</context>
         </context-group>
         <note priority="1" from="description">Étape 4 après l&apos;inscription</note>
       </trans-unit>
@@ -1699,7 +2221,7 @@
         <source>Vos données</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">381,382</context>
+          <context context-type="linenumber">383,384</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc Vos données</note>
       </trans-unit>
@@ -1707,7 +2229,7 @@
         <source> Hébergement en France, chiffrement au repos et en transit, sauvegardes quotidiennes. Chaque praticien ne voit que ses propres patients. Export complet de votre dossier à tout moment. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">383,386</context>
+          <context context-type="linenumber">385,388</context>
         </context-group>
         <note priority="1" from="description">Texte du bloc Vos données</note>
       </trans-unit>
@@ -1715,7 +2237,7 @@
         <source>Bêta : vos retours façonnent la V1.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">386,389</context>
+          <context context-type="linenumber">388,391</context>
         </context-group>
         <note priority="1" from="description">Mention bêta</note>
       </trans-unit>
