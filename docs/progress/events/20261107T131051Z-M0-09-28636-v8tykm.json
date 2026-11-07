@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-07T13:10:51.194Z",
+  "task": "M0-09",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "M0-09 fusionnee (ff) dans m0-08-web-preparation apres relecture : lint, check:tokens (81 couples), 195 tests, build et 19 e2e verts dans le depot principal",
+  "notes": "Lot 0 complet sur la branche. Branche poussee et PR vers main ouverte avec les quatre taches (M0-08 web, M0-06, M0-07, M0-09).",
+  "next": "Apres fusion sur main : lot 1 (M1-15 ∥ M1-16) et lot 4 (M5-04 ∥ M5-05) en parallele",
+  "branch": "m0-08-web-preparation",
+  "checkout": "psymate-web"
+}

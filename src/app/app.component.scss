@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  min-height: 100%;
+  background: var(--surface-ground);
+}
+
+.app-main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px;
+}

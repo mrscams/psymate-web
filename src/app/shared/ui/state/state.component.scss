@@ -1,0 +1,169 @@
+:host {
+  display: block;
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 24px;
+  text-align: center;
+  color: var(--text-primary);
+
+  &.compact {
+    padding: 16px;
+  }
+}
+
+.title {
+  margin: 0;
+  font: var(--mat-sys-title-medium);
+}
+
+.message {
+  margin: 0;
+  max-width: 48ch;
+  color: var(--text-secondary);
+}
+
+.action {
+  margin-top: 8px;
+}
+
+kbd {
+  margin-left: 8px;
+}
+
+/* Vide */
+.illustration {
+  width: 96px;
+  height: 64px;
+}
+.compact .illustration {
+  width: 64px;
+  height: 42px;
+}
+.fill-sunken {
+  fill: var(--surface-sunken);
+}
+.fill-strong {
+  fill: var(--border-strong);
+}
+.fill-raised {
+  fill: var(--surface-raised);
+}
+.stroke-strong {
+  stroke: var(--border-strong);
+  stroke-width: 2;
+}
+
+/* Erreur */
+.error {
+  flex-direction: row;
+  align-items: flex-start;
+  text-align: left;
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+.error .message,
+.error details {
+  color: var(--danger);
+}
+.error .retry {
+  --mat-button-outlined-label-text-color: var(--danger);
+  --mat-button-outlined-outline-color: var(--danger);
+}
+.error .icon {
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+}
+.error .title {
+  color: var(--danger);
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.stroke-danger {
+  fill: none;
+  stroke: var(--danger);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.fill-danger {
+  fill: var(--danger);
+}
+details {
+  font: var(--mat-sys-body-small);
+  color: var(--text-secondary);
+}
+summary {
+  cursor: pointer;
+}
+pre {
+  margin: 4px 0 0;
+  white-space: pre-wrap;
+}
+
+/* Chargement : squelettes aux dimensions du contenu, sans animation obligatoire */
+.loading {
+  align-items: stretch;
+  padding: 8px 0;
+}
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.piece {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.bars {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+}
+.bar {
+  display: block;
+  height: 12px;
+  width: 60%;
+  border-radius: 6px;
+  background: var(--surface-sunken);
+}
+.bar.wide {
+  width: 90%;
+}
+.shape {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--surface-sunken);
+}
+.skeleton-row .piece {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.skeleton-card .piece {
+  padding: 12px;
+  border-left: 3px solid var(--surface-sunken);
+  background: var(--surface-raised);
+  border-radius: 8px;
+}
+.skeleton-block .bar {
+  height: 16px;
+}
+.skeleton-profile .shape {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}

@@ -1,0 +1,55 @@
+:host {
+  display: block;
+}
+
+.login-card {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 32px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+}
+
+h1 {
+  margin: 0 0 24px;
+  font: var(--mat-sys-headline-small);
+  color: var(--text-primary);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.otp-title {
+  margin: 0 0 8px;
+  color: var(--text-secondary);
+}
+
+.otp-input {
+  font-family: var(--font-mono);
+  letter-spacing: 0.25em;
+}
+
+.banner {
+  margin: 8px 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+}
+
+.banner--danger {
+  color: var(--danger);
+  background: var(--danger-bg);
+}
+
+.banner--warning {
+  color: var(--warning);
+  background: var(--warning-bg);
+}
+
+button[type='submit'] {
+  height: 46px;
+  margin-top: 8px;
+}

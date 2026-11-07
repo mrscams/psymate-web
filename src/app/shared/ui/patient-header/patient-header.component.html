@@ -1,0 +1,100 @@
+<div class="patient-header">
+  @if (state(); as kind) {
+    @if (kind === 'error') {
+      <pm-state kind="error" [title]="errorTitle" [action]="retryAction" compact />
+    } @else {
+      <pm-state kind="loading" skeleton="profile" [lines]="1" compact />
+    }
+  } @else if (patient(); as p) {
+    <div class="identity">
+      <div class="who">
+        <h1 class="name">
+          {{ p.displayName }}
+          <!-- Place réservée (A11, B9) : marqueur « rapporté par le patient », jamais dessiné en V1. -->
+          <span class="reported-slot" aria-hidden="true"></span>
+        </h1>
+        <p class="meta">
+          @if (age() !== null) {
+            <span i18n="Âge dans l'en-tête patient@@patientHeader.age">{{ age() }} ans</span>
+          }
+          @if (since()) {
+            @if (age() !== null) {
+              <span class="dot" aria-hidden="true">·</span>
+            }
+            <span i18n="Début du suivi dans l'en-tête patient@@patientHeader.since"
+              >suivi·e depuis {{ since() }}</span
+            >
+          }
+        </p>
+        @if (flags().length > 0) {
+          <ul
+            class="flags"
+            aria-label="Drapeaux"
+            i18n-aria-label="Étiquette de la liste des drapeaux@@patientHeader.flags"
+          >
+            @for (flag of flags(); track flag.code) {
+              <li class="flag">{{ flag.label }}</li>
+            }
+          </ul>
+        }
+      </div>
+      <div class="session">
+        @if (sessionText(); as text) {
+          <span class="session-text" [class.current]="session()?.kind === 'current'">{{
+            text
+          }}</span>
+        }
+        @if (session()?.kind === 'current') {
+          <button
+            mat-stroked-button
+            type="button"
+            class="close-session"
+            [disabled]="busy()"
+            (click)="closeSession.emit()"
+            i18n="Bouton de l'en-tête patient@@patientHeader.session.close"
+          >
+            Clôturer la séance
+          </button>
+        } @else {
+          <button
+            mat-flat-button
+            type="button"
+            class="start-session"
+            [disabled]="busy()"
+            (click)="startSession.emit()"
+            i18n="Bouton de l'en-tête patient@@patientHeader.session.start"
+          >
+            Démarrer la séance
+          </button>
+        }
+      </div>
+    </div>
+    <div class="capture">
+      <ng-content select="[pmCapture]" />
+    </div>
+    <div class="tabs-row">
+      <nav
+        class="tabs"
+        aria-label="Dossier"
+        i18n-aria-label="Étiquette des onglets du dossier@@patientHeader.tabs"
+      >
+        @for (tab of tabs; track tab.key) {
+          <a
+            [routerLink]="link(p.id, tab.segment)"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            [routerLinkActiveOptions]="{ exact: tab.segment === '' }"
+          >
+            <kbd aria-hidden="true">{{ tab.key }}</kbd>
+            <span>{{ tab.label() }}</span>
+          </a>
+        }
+      </nav>
+      @if (showViewToggle()) {
+        <div class="view-toggle">
+          <ng-content select="[pmViewToggle]" />
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -42,3 +42,22 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Copie locale des documents (doublon de docs/)
+/clinic-docsUI/
+
+# Agents Claude Code et secrets (runbook H §2.6)
+.claude/worktrees/
+.env
+.env.*
+
+# Suivi d'avancement : la page est dérivée des événements (pnpm progress), seuls les événements sont commités
+docs/progress/index.html
+docs/progress/.lock/
+docs/progress/events/*.tmp
+
+# Playwright
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.cache/

@@ -1,0 +1,7 @@
+// expect: none
+// Permis : uniquement des tokens. Un commentaire qui cite #3A63C2 ne compte pas.
+/* Idem pour #fff dans un commentaire de bloc. */
+:host {
+  color: var(--text-primary);
+  border-left: 3px solid var(--entry-medication);
+}

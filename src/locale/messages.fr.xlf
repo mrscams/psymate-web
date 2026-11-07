@@ -1,0 +1,1152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="fr" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="subject.patient.one" datatype="html">
+        <source>patient</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Désignation de la personne suivie, singulier</note>
+      </trans-unit>
+      <trans-unit id="subject.patient.many" datatype="html">
+        <source>patients</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <note priority="1" from="description">Désignation de la personne suivie, pluriel</note>
+      </trans-unit>
+      <trans-unit id="subject.patient.One" datatype="html">
+        <source>Patient</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">Désignation de la personne suivie, singulier, capitale</note>
+      </trans-unit>
+      <trans-unit id="subject.patient.Many" datatype="html">
+        <source>Patients</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <note priority="1" from="description">Désignation de la personne suivie, pluriel, capitale</note>
+      </trans-unit>
+      <trans-unit id="subject.client.one" datatype="html">
+        <source>client</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <note priority="1" from="description">Désignation de la personne suivie (coach), singulier</note>
+      </trans-unit>
+      <trans-unit id="subject.client.many" datatype="html">
+        <source>clients</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Désignation de la personne suivie (coach), pluriel</note>
+      </trans-unit>
+      <trans-unit id="subject.client.One" datatype="html">
+        <source>Client</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <note priority="1" from="description">Désignation de la personne suivie (coach), singulier, capitale</note>
+      </trans-unit>
+      <trans-unit id="subject.client.Many" datatype="html">
+        <source>Clients</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <note priority="1" from="description">Désignation de la personne suivie (coach), pluriel, capitale</note>
+      </trans-unit>
+      <trans-unit id="shortcuts.n" datatype="html">
+        <source>Nouvelle entrée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="shortcuts.search" datatype="html">
+        <source>Rechercher</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="shortcuts.l" datatype="html">
+        <source>Lier l&apos;entrée ouverte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="shortcuts.1" datatype="html">
+        <source>Vue d&apos;ensemble</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="shortcuts.2" datatype="html">
+        <source>Timeline</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="shortcuts.3" datatype="html">
+        <source>Graphe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="shortcuts.m" datatype="html">
+        <source>Changer de mode</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="shortcuts.escapeKey" datatype="html">
+        <source>Échap</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la touche Échap</note>
+      </trans-unit>
+      <trans-unit id="shortcuts.escape" datatype="html">
+        <source>Fermer le panneau, le brouillon est conservé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="shortcuts.help" datatype="html">
+        <source>Afficher cette aide</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="shortcuts.help.title" datatype="html">
+        <source>Raccourcis clavier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/demo/demo-panels.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <note priority="1" from="description">Titre du panneau d&apos;aide des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="auth.login.pageTitle" datatype="html">
+        <source>Connexion · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.state.confirmEmail.pageTitle" datatype="html">
+        <source>Confirmer l&apos;e-mail · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet, e-mail à confirmer</note>
+      </trans-unit>
+      <trans-unit id="auth.state.suspended.pageTitle" datatype="html">
+        <source>Compte suspendu · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet, compte suspendu</note>
+      </trans-unit>
+      <trans-unit id="auth.state.firstLogin.pageTitle" datatype="html">
+        <source>Première connexion · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet, première connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.state.back" datatype="html">
+        <source>Retour à la connexion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">20,26</context>
+        </context-group>
+        <note priority="1" from="description">Lien de retour vers la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.state.confirmEmail.title" datatype="html">
+        <source>Confirmez votre adresse e-mail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">Titre provisoire, e-mail à confirmer</note>
+      </trans-unit>
+      <trans-unit id="auth.state.confirmEmail.body" datatype="html">
+        <source>Un lien de confirmation vous a été envoyé. Ouvrez-le pour accéder à votre espace.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Texte provisoire, e-mail à confirmer</note>
+      </trans-unit>
+      <trans-unit id="auth.state.suspended.title" datatype="html">
+        <source>Compte suspendu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <note priority="1" from="description">Titre provisoire, compte suspendu</note>
+      </trans-unit>
+      <trans-unit id="auth.state.suspended.body" datatype="html">
+        <source>Votre compte n&apos;est pas actif. Le motif vous a été envoyé par e-mail.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">Texte provisoire, compte suspendu</note>
+      </trans-unit>
+      <trans-unit id="auth.state.firstLogin.title" datatype="html">
+        <source>Première connexion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Titre provisoire, première connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.state.firstLogin.body" datatype="html">
+        <source>Votre compte doit d&apos;abord changer son mot de passe et activer la double authentification.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">Texte provisoire, première connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.title" datatype="html">
+        <source>Connexion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">2,6</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;écran de connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.email" datatype="html">
+        <source>Adresse e-mail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">12,13</context>
+        </context-group>
+        <note priority="1" from="description">Champ e-mail de la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.email.required" datatype="html">
+        <source>Saisissez votre adresse e-mail.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">16,18</context>
+        </context-group>
+        <note priority="1" from="description">E-mail manquant</note>
+      </trans-unit>
+      <trans-unit id="auth.login.email.invalid" datatype="html">
+        <source>Cette adresse e-mail n&apos;est pas valide.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">20,25</context>
+        </context-group>
+        <note priority="1" from="description">E-mail mal formé</note>
+      </trans-unit>
+      <trans-unit id="auth.login.password" datatype="html">
+        <source>Mot de passe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">27,31</context>
+        </context-group>
+        <note priority="1" from="description">Champ mot de passe de la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.password.required" datatype="html">
+        <source>Saisissez votre mot de passe.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">39,44</context>
+        </context-group>
+        <note priority="1" from="description">Mot de passe manquant</note>
+      </trans-unit>
+      <trans-unit id="auth.login.otp.title" datatype="html">
+        <source> Double authentification activée </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">47,49</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc code 2FA</note>
+      </trans-unit>
+      <trans-unit id="auth.login.otp" datatype="html">
+        <source>Code de vérification</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">51,54</context>
+        </context-group>
+        <note priority="1" from="description">Champ code de vérification</note>
+      </trans-unit>
+      <trans-unit id="auth.login.otp.hint" datatype="html">
+        <source>Les 6 chiffres de votre application, ou un code de secours.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">64,67</context>
+        </context-group>
+        <note priority="1" from="description">Aide du champ code 2FA</note>
+      </trans-unit>
+      <trans-unit id="auth.login.remember" datatype="html">
+        <source>Rester connecté 30 jours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">73,78</context>
+        </context-group>
+        <note priority="1" from="description">Case rester connecté (G Q6)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.locked" datatype="html">
+        <source> Trop d&apos;essais. Réessayez dans <x id="INTERPOLATION" equiv-text="{{ lockDelay() }}"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">82,84</context>
+        </context-group>
+        <note priority="1" from="description">Compte verrouillé, compte à rebours</note>
+      </trans-unit>
+      <trans-unit id="auth.login.submit" datatype="html">
+        <source> Se connecter </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">94,98</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.error.credentials" datatype="html">
+        <source>E-mail, mot de passe ou code incorrect.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <note priority="1" from="description">Connexion refusée, message unique (fiche 11)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.error.invalid" datatype="html">
+        <source>Vérifiez l&apos;adresse e-mail et le mot de passe saisis.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <note priority="1" from="description">Connexion refusée, champ mal formé</note>
+      </trans-unit>
+      <trans-unit id="auth.login.error.unavailable" datatype="html">
+        <source>Connexion impossible pour le moment. Réessayez dans un instant.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Connexion impossible, serveur ou réseau</note>
+      </trans-unit>
+      <trans-unit id="patients.list.title" datatype="html">
+        <source>Mes patients</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.list.placeholder" datatype="html">
+        <source> La liste de vos patients s&apos;affichera ici. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">12,18</context>
+        </context-group>
+        <note priority="1" from="description">Texte provisoire de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.list.pageTitle" datatype="html">
+        <source>Mes patients · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/patients.routes.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="forms.error.required" datatype="html">
+        <source>Ce champ est obligatoire.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de champ, valeur manquante</note>
+      </trans-unit>
+      <trans-unit id="forms.error.email" datatype="html">
+        <source>Adresse e-mail invalide.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de champ, e-mail mal formé</note>
+      </trans-unit>
+      <trans-unit id="forms.error.minlength" datatype="html">
+        <source>Au moins <x id="n" equiv-text="n"/> caractères.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de champ, trop court</note>
+      </trans-unit>
+      <trans-unit id="forms.error.maxlength" datatype="html">
+        <source>Au plus <x id="n" equiv-text="n"/> caractères.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de champ, trop long</note>
+      </trans-unit>
+      <trans-unit id="forms.error.futureDate" datatype="html">
+        <source>La date ne peut pas être dans le futur.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de champ, date future</note>
+      </trans-unit>
+      <trans-unit id="forms.error.date" datatype="html">
+        <source>Date invalide.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de champ, date illisible</note>
+      </trans-unit>
+      <trans-unit id="forms.error.pattern" datatype="html">
+        <source>Format invalide.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de champ, format</note>
+      </trans-unit>
+      <trans-unit id="forms.error.invalid" datatype="html">
+        <source>Valeur invalide.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de champ, règle inconnue</note>
+      </trans-unit>
+      <trans-unit id="forms.summary.titleOne" datatype="html">
+        <source>1 champ à corriger.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/forms/problem-summary.component.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="description">Résumé d&apos;un 422, un seul champ</note>
+      </trans-unit>
+      <trans-unit id="forms.summary.titleMany" datatype="html">
+        <source><x id="count" equiv-text="count"/> champs à corriger.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/forms/problem-summary.component.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <note priority="1" from="description">Résumé d&apos;un 422, plusieurs champs</note>
+      </trans-unit>
+      <trans-unit id="accountNav.badge.pending" datatype="html">
+        <source>en attente</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">Pastille du dossier professionnel</note>
+      </trans-unit>
+      <trans-unit id="accountNav.badge.needsMore" datatype="html">
+        <source>complément demandé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Pastille du dossier professionnel</note>
+      </trans-unit>
+      <trans-unit id="accountNav.badge.approved" datatype="html">
+        <source>approuvé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Pastille du dossier professionnel</note>
+      </trans-unit>
+      <trans-unit id="accountNav.label" datatype="html">
+        <source>Mon compte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
+          <context context-type="linenumber">50,51</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la navigation Mon compte</note>
+      </trans-unit>
+      <trans-unit id="accountNav.profile" datatype="html">
+        <source>Profil public</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <note priority="1" from="description">Entrée de Mon compte</note>
+      </trans-unit>
+      <trans-unit id="accountNav.badge.published" datatype="html">
+        <source>publié</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+        <note priority="1" from="description">Pastille du profil public publié</note>
+      </trans-unit>
+      <trans-unit id="accountNav.preferences" datatype="html">
+        <source>Préférences</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+        <note priority="1" from="description">Entrée de Mon compte</note>
+      </trans-unit>
+      <trans-unit id="accountNav.emotions" datatype="html">
+        <source>Émotions personnalisées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <note priority="1" from="description">Entrée de Mon compte</note>
+      </trans-unit>
+      <trans-unit id="accountNav.verification" datatype="html">
+        <source>Dossier professionnel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+        <note priority="1" from="description">Entrée de Mon compte</note>
+      </trans-unit>
+      <trans-unit id="accountNav.security" datatype="html">
+        <source>Compte et sécurité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <note priority="1" from="description">Entrée de Mon compte</note>
+      </trans-unit>
+      <trans-unit id="accountNav.data" datatype="html">
+        <source>Données et export</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <note priority="1" from="description">Entrée de Mon compte</note>
+      </trans-unit>
+      <trans-unit id="appBar.skip" datatype="html">
+        <source> Aller au contenu
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
+          <context context-type="linenumber">2,6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
+          <context context-type="linenumber">2,5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="linenumber">2,5</context>
+        </context-group>
+        <note priority="1" from="description">Lien d&apos;évitement vers le contenu</note>
+      </trans-unit>
+      <trans-unit id="app.brand" datatype="html">
+        <source>PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
+          <context context-type="linenumber">7,8</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+        <note priority="1" from="description">Nom du produit</note>
+      </trans-unit>
+      <trans-unit id="adminBar.tag" datatype="html">
+        <source>ADMIN</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
+          <context context-type="linenumber">8,12</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la barre d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="adminBar.nav.label" datatype="html">
+        <source>Administration</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
+          <context context-type="linenumber">12,13</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la navigation d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="adminBar.tab.validation" datatype="html">
+        <source>Validation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
+          <context context-type="linenumber">16,18</context>
+        </context-group>
+        <note priority="1" from="description">Onglet d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="adminBar.tab.practitioners" datatype="html">
+        <source>Praticiens</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
+          <context context-type="linenumber">26,30</context>
+        </context-group>
+        <note priority="1" from="description">Onglet d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="adminBar.tab.journal" datatype="html">
+        <source>Journal</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
+          <context context-type="linenumber">33,36</context>
+        </context-group>
+        <note priority="1" from="description">Onglet d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="adminBar.tab.vocabulary" datatype="html">
+        <source>Vocabulaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
+          <context context-type="linenumber">40,44</context>
+        </context-group>
+        <note priority="1" from="description">Onglet d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="appBar.menu.logout" datatype="html">
+        <source> Déconnexion </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
+          <context context-type="linenumber">62,66</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
+          <context context-type="linenumber">89,94</context>
+        </context-group>
+        <note priority="1" from="description">Entrée de menu de l&apos;avatar</note>
+      </trans-unit>
+      <trans-unit id="adminBar.reminder" datatype="html">
+        <source> Aucune donnée patient n&apos;est accessible depuis l&apos;administration. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
+          <context context-type="linenumber">68,71</context>
+        </context-group>
+        <note priority="1" from="description">Rappel sous la barre d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="appBar.search.label" datatype="html">
+        <source>Rechercher</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du champ de recherche</note>
+      </trans-unit>
+      <trans-unit id="app.localeNav.label" datatype="html">
+        <source>Langue</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la navigation de langue</note>
+      </trans-unit>
+      <trans-unit id="app.localeSwitch" datatype="html">
+        <source>English</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
+          <context context-type="linenumber">61,68</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="linenumber">46,52</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers l&apos;autre langue, écrit dans cette autre langue</note>
+      </trans-unit>
+      <trans-unit id="appBar.menu.account" datatype="html">
+        <source>Mon compte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
+          <context context-type="linenumber">80,84</context>
+        </context-group>
+        <note priority="1" from="description">Entrée de menu de l&apos;avatar</note>
+      </trans-unit>
+      <trans-unit id="appBar.search.placeholder" datatype="html">
+        <source>Rechercher</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche de la barre d&apos;application</note>
+      </trans-unit>
+      <trans-unit id="confirm.confirm" datatype="html">
+        <source>Confirmer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/confirm-dialog/confirm-dialog.component.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">Bouton par défaut d&apos;une confirmation</note>
+      </trans-unit>
+      <trans-unit id="confirm.cancel" datatype="html">
+        <source>Annuler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/confirm-dialog/confirm-dialog.component.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;annulation d&apos;une confirmation</note>
+      </trans-unit>
+      <trans-unit id="confirm.word.label" datatype="html">
+        <source>Tapez « <x id="word" equiv-text="this.options.confirmWord ?? &apos;&apos;"/> » pour confirmer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/confirm-dialog/confirm-dialog.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du champ où retaper le nom</note>
+      </trans-unit>
+      <trans-unit id="entry.type.note" datatype="html">
+        <source>Note</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-icon.component.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Type d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entry.type.event" datatype="html">
+        <source>Événement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-icon.component.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <note priority="1" from="description">Type d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entry.type.situation" datatype="html">
+        <source>Situation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-icon.component.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">Type d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entry.type.feeling" datatype="html">
+        <source>Ressenti</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-icon.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <note priority="1" from="description">Type d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entry.type.session" datatype="html">
+        <source>Séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-icon.component.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Type d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entry.type.medication" datatype="html">
+        <source>Médicament</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-icon.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <note priority="1" from="description">Type d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.age" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ age() }}"/> ans</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.html</context>
+          <context context-type="linenumber">18,19</context>
+        </context-group>
+        <note priority="1" from="description">Âge dans l&apos;en-tête patient</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.since" datatype="html">
+        <source>suivi·e depuis <x id="INTERPOLATION" equiv-text="{{ since() }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.html</context>
+          <context context-type="linenumber">25,26</context>
+        </context-group>
+        <note priority="1" from="description">Début du suivi dans l&apos;en-tête patient</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.flags" datatype="html">
+        <source>Drapeaux</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.html</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la liste des drapeaux</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.session.close" datatype="html">
+        <source> Clôturer la séance </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.html</context>
+          <context context-type="linenumber">56,60</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;en-tête patient</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.session.start" datatype="html">
+        <source> Démarrer la séance </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.html</context>
+          <context context-type="linenumber">67,72</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;en-tête patient</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.tabs" datatype="html">
+        <source>Dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.html</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette des onglets du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.tab.overview" datatype="html">
+        <source>Vue d&apos;ensemble</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Onglet du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.tab.timeline" datatype="html">
+        <source>Timeline</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">Onglet du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.tab.graph" datatype="html">
+        <source>Graphe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <note priority="1" from="description">Onglet du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.session.current" datatype="html">
+        <source>Séance du <x id="day" equiv-text="day"/> · en cours depuis <x id="since" equiv-text="since"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <note priority="1" from="description">Séance en cours dans l&apos;en-tête patient</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.session.last" datatype="html">
+        <source>Dernière séance : <x id="last" equiv-text="last"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <note priority="1" from="description">Dernière séance dans l&apos;en-tête patient</note>
+      </trans-unit>
+      <trans-unit id="state.error.retry" datatype="html">
+        <source>Réessayer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;état erreur</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.error.title" datatype="html">
+        <source>Impossible de charger ce dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">État erreur de l&apos;en-tête patient</note>
+      </trans-unit>
+      <trans-unit id="public.tagline" datatype="html">
+        <source>Annuaire des praticiens</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="linenumber">12,17</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre du bandeau public</note>
+      </trans-unit>
+      <trans-unit id="public.nav.label" datatype="html">
+        <source>Site</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la navigation publique</note>
+      </trans-unit>
+      <trans-unit id="public.nav.directory" datatype="html">
+        <source>Annuaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="linenumber">25,29</context>
+        </context-group>
+        <note priority="1" from="description">Lien du bandeau public</note>
+      </trans-unit>
+      <trans-unit id="public.nav.howItWorks" datatype="html">
+        <source>Comment ça marche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="linenumber">32,37</context>
+        </context-group>
+        <note priority="1" from="description">Lien du bandeau public</note>
+      </trans-unit>
+      <trans-unit id="public.nav.practitioner" datatype="html">
+        <source>Espace praticien</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="linenumber">54,59</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du bandeau public vers l&apos;espace praticien</note>
+      </trans-unit>
+      <trans-unit id="public.footer.label" datatype="html">
+        <source>Informations légales</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="linenumber">64,65</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la navigation du pied</note>
+      </trans-unit>
+      <trans-unit id="public.footer.legal" datatype="html">
+        <source>Mentions légales</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="linenumber">68,70</context>
+        </context-group>
+        <note priority="1" from="description">Lien du pied public</note>
+      </trans-unit>
+      <trans-unit id="public.footer.privacy" datatype="html">
+        <source>Confidentialité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="linenumber">71,73</context>
+        </context-group>
+        <note priority="1" from="description">Lien du pied public</note>
+      </trans-unit>
+      <trans-unit id="public.footer.accessibility" datatype="html">
+        <source>Accessibilité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="linenumber">74,78</context>
+        </context-group>
+        <note priority="1" from="description">Lien du pied public</note>
+      </trans-unit>
+      <trans-unit id="sidePanel.close" datatype="html">
+        <source>Fermer le panneau</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/side-panel/side-panel.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Croix de fermeture d&apos;un panneau</note>
+      </trans-unit>
+      <trans-unit id="state.error.title" datatype="html">
+        <source>Impossible de charger ce bloc</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">Titre par défaut de l&apos;état erreur</note>
+      </trans-unit>
+      <trans-unit id="state.empty.title" datatype="html">
+        <source>Rien à afficher pour le moment</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Titre par défaut de l&apos;état vide</note>
+      </trans-unit>
+      <trans-unit id="state.error.message" datatype="html">
+        <source>Le serveur n&apos;a pas répondu. Rien n&apos;a été modifié.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Phrase par défaut de l&apos;état erreur</note>
+      </trans-unit>
+      <trans-unit id="state.loading" datatype="html">
+        <source>Chargement…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Texte lu par le lecteur d&apos;écran pendant un chargement</note>
+      </trans-unit>
+      <trans-unit id="state.error.details" datatype="html">
+        <source>Détail technique</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <note priority="1" from="description">Résumé repliable du détail technique</note>
+      </trans-unit>
+      <trans-unit id="banner.offline.message" datatype="html">
+        <source>Connexion perdue · vos brouillons sont conservés sur cet appareil et seront renvoyés automatiquement.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/status-banner/network-banner.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <note priority="1" from="description">Bandeau hors ligne</note>
+      </trans-unit>
+      <trans-unit id="banner.offline.retry" datatype="html">
+        <source>Réessayer maintenant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/status-banner/network-banner.component.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du bandeau hors ligne</note>
+      </trans-unit>
+      <trans-unit id="banner.level.success" datatype="html">
+        <source>Succès</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/status-banner/status-banner.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">Mot du niveau d&apos;un bandeau</note>
+      </trans-unit>
+      <trans-unit id="banner.level.info" datatype="html">
+        <source>Information</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/status-banner/status-banner.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Mot du niveau d&apos;un bandeau</note>
+      </trans-unit>
+      <trans-unit id="banner.level.warning" datatype="html">
+        <source>Avertissement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/status-banner/status-banner.component.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <note priority="1" from="description">Mot du niveau d&apos;un bandeau</note>
+      </trans-unit>
+      <trans-unit id="banner.verification.docsPending" datatype="html">
+        <source>Votre dossier professionnel est incomplet. Déposez vos justificatifs pour être vérifié·e.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/status-banner/verification-banner.component.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">Bandeau d&apos;état, justificatifs attendus</note>
+      </trans-unit>
+      <trans-unit id="banner.verification.underReview" datatype="html">
+        <source>Votre dossier professionnel est en cours de vérification. Vous pouvez utiliser l&apos;application pour vos patients ; l&apos;annuaire public sera disponible après validation.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/status-banner/verification-banner.component.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <note priority="1" from="description">Bandeau d&apos;état, dossier en vérification</note>
+      </trans-unit>
+      <trans-unit id="banner.verification.needsMore" datatype="html">
+        <source>Dossier professionnel : un complément vous est demandé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/status-banner/verification-banner.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <note priority="1" from="description">Bandeau d&apos;état, complément demandé</note>
+      </trans-unit>
+      <trans-unit id="banner.verification.action" datatype="html">
+        <source>Voir le dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/status-banner/verification-banner.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Lien du bandeau d&apos;état vers le dossier</note>
+      </trans-unit>
+      <trans-unit id="toast.close" datatype="html">
+        <source>Fermer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de fermeture d&apos;un toast</note>
+      </trans-unit>
+      <trans-unit id="toast.level.success" datatype="html">
+        <source>Succès</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <note priority="1" from="description">Mot du niveau d&apos;un toast</note>
+      </trans-unit>
+      <trans-unit id="toast.level.info" datatype="html">
+        <source>Information</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <note priority="1" from="description">Mot du niveau d&apos;un toast</note>
+      </trans-unit>
+      <trans-unit id="toast.level.warning" datatype="html">
+        <source>Avertissement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <note priority="1" from="description">Mot du niveau d&apos;un toast</note>
+      </trans-unit>
+      <trans-unit id="toast.rateLimited.noDelay" datatype="html">
+        <source>Trop de requêtes, réessayez dans un instant. Votre saisie est conservée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">Toast 429 sans délai connu</note>
+      </trans-unit>
+      <trans-unit id="toast.rateLimited" datatype="html">
+        <source>Trop de requêtes, réessayez dans <x id="delay" equiv-text="delay"/>. Votre saisie est conservée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <note priority="1" from="description">Toast 429 avec le délai Retry-After</note>
+      </trans-unit>
+      <trans-unit id="toast.reconnected.none" datatype="html">
+        <source>Connexion rétablie.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Toast de retour du réseau, rien à renvoyer</note>
+      </trans-unit>
+      <trans-unit id="toast.reconnected.one" datatype="html">
+        <source>Connexion rétablie · 1 brouillon renvoyé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Toast de retour du réseau, un envoi</note>
+      </trans-unit>
+      <trans-unit id="toast.reconnected.many" datatype="html">
+        <source>Connexion rétablie · <x id="count" equiv-text="n"/> brouillons renvoyés.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Toast de retour du réseau, plusieurs envois</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

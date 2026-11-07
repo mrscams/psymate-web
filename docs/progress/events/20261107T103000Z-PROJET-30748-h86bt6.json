@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-07T10:30:00.000Z",
+  "task": "PROJET",
+  "agent": "claude",
+  "status": "done",
+  "summary": "Suivi d'avancement copie de psymate-api dans psymate-web (tools/progress, docs/progress, skill progress-log) ; decisions G Q50 (Node 24 LTS) et Q51 (Angular 22 + pnpm) ecrites",
+  "notes": "Tout reste en local sur la branche m0-08-web-preparation : rien pousse, pas de PR. Les evenements existent desormais dans les deux depots ; celui-ci fait foi pour les taches web.",
+  "next": "Lot 0 : M0-09 (socle UI partage) ; puis lots 1 et 4 en parallele",
+  "branch": "m0-08-web-preparation",
+  "checkout": "psymate-web"
+}

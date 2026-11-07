@@ -1,0 +1,57 @@
+// Thème Angular Material 22 (M3) construit sur les tokens Nordique (src/theme/tokens.css).
+//
+// mat.theme() pose la base M3 (palette cobalt proche de #3A63C2, typographie, densité) ;
+// le second argument remplace les rôles système --mat-sys-* par les variables de tokens.css.
+// Comme ce sont des var(), un changement de data-theme (light / dark / soft) suffit à rethémer
+// Material sans recompiler ni dupliquer le thème.
+@use '@angular/material' as mat;
+
+$nordique-system-colors: (
+  primary: var(--primary),
+  on-primary: var(--primary-on),
+  primary-container: var(--primary-tint),
+  on-primary-container: var(--primary-hover),
+  inverse-primary: var(--primary-tint),
+  // Pas de seconde couleur d'accent : la lavande est réservée au ressenti (étude §3).
+  secondary: var(--primary),
+  on-secondary: var(--primary-on),
+  secondary-container: var(--primary-tint),
+  on-secondary-container: var(--primary-hover),
+  tertiary: var(--primary),
+  on-tertiary: var(--primary-on),
+  tertiary-container: var(--primary-tint),
+  on-tertiary-container: var(--primary-hover),
+  error: var(--danger),
+  on-error: var(--surface-raised),
+  error-container: var(--danger-bg),
+  on-error-container: var(--danger),
+  background: var(--surface-ground),
+  on-background: var(--text-primary),
+  surface: var(--surface-raised),
+  on-surface: var(--text-primary),
+  on-surface-variant: var(--text-secondary),
+  surface-variant: var(--surface-sunken),
+  surface-dim: var(--surface-sunken),
+  surface-bright: var(--surface-raised),
+  surface-container-lowest: var(--surface-raised),
+  surface-container-low: var(--surface-raised),
+  surface-container: var(--surface-raised),
+  surface-container-high: var(--surface-ground),
+  surface-container-highest: var(--surface-sunken),
+  outline: var(--border-strong),
+  outline-variant: var(--border-subtle),
+);
+
+@mixin theme {
+  @include mat.theme(
+    (
+      color: mat.$blue-palette,
+      typography: (
+        plain-family: var(--font-ui),
+        brand-family: var(--font-ui),
+      ),
+      density: 0,
+    ),
+    $nordique-system-colors
+  );
+}

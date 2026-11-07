@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-07T11:00:00.000Z",
+  "task": "M0-06",
+  "agent": "claude",
+  "status": "done",
+  "summary": "psymate-web initialise : Angular 22.2 + pnpm 12, theme Nordique sur Material, FR/EN (deux bundles), ESLint frontieres + no-hardcoded-color (18 fixtures), check:tokens (66 couples, 3 themes), Vitest, Playwright + axe-core, CI",
+  "notes": "Branche claude/m0-06-init-10a4b1 fusionnee en local (ff) dans m0-08-web-preparation ; rien pousse, CI jamais executee. Node fige en 24.22.2 (Angular 22.2 exige >= 24.15). Contrastes sous le seuil non corriges : joie sur blanc, danger et familles d'emotions en sombre (M6-04). README src/app/api non cree (deny Edit).",
+  "next": "M0-07",
+  "branch": "m0-08-web-preparation",
+  "checkout": "psymate-web"
+}

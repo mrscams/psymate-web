@@ -1,0 +1,39 @@
+<div class="toasts" role="status" aria-live="polite" aria-atomic="false">
+  @for (toast of toasts.toasts(); track toast.id) {
+    <div class="toast" [class]="toast.level">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        @switch (toast.level) {
+          @case ('success') {
+            <path d="M5 12.5 10 17.5 19 7" />
+          }
+          @case ('warning') {
+            <path d="M12 3 22 20H2Z M12 10v5 M12 17.5v.5" />
+          }
+          @default {
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 11v6 M12 7.5v.5" />
+          }
+        }
+      </svg>
+      <span class="level" [class.sr-only]="toast.level === 'success'"
+        >{{ levelLabel(toast.level) }} ·
+      </span>
+      <span class="message">{{ toast.message }}</span>
+      @if (toast.action; as action) {
+        <button mat-button type="button" class="action" (click)="act(toast)">
+          {{ action.label }}
+        </button>
+      }
+      <button
+        type="button"
+        class="close"
+        [attr.aria-label]="closeLabel"
+        (click)="toasts.dismiss(toast.id)"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6 6 18" />
+        </svg>
+      </button>
+    </div>
+  }
+</div>

@@ -1,0 +1,35 @@
+<h2 mat-dialog-title class="title">{{ options.title }}</h2>
+<mat-dialog-content>
+  @if (options.description) {
+    <p class="description">{{ options.description }}</p>
+  }
+  @if (options.confirmWord) {
+    <mat-form-field class="word" appearance="outline">
+      <mat-label>{{ wordLabel }}</mat-label>
+      <input
+        matInput
+        type="text"
+        autocomplete="off"
+        cdkFocusInitial
+        [ngModel]="typed()"
+        (ngModelChange)="typed.set($event)"
+        (keydown.enter)="confirm()"
+      />
+    </mat-form-field>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" class="cancel" (click)="cancel()">
+    {{ cancelLabel }}
+  </button>
+  <button
+    mat-flat-button
+    type="button"
+    class="confirm"
+    [class.danger]="options.destructive"
+    [disabled]="!canConfirm()"
+    (click)="confirm()"
+  >
+    {{ confirmLabel }}
+  </button>
+</mat-dialog-actions>

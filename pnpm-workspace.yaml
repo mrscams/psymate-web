@@ -1,0 +1,26 @@
+# Réglages pnpm du dépôt (pnpm ne lit pas de réglages dans package.json).
+
+# Versions exactes à l'ajout d'une dépendance (handbook §11, règle 13 : aucune plage).
+saveExact: true
+
+# Paquets autorisés à lancer un script d'installation (binaires natifs du build Angular).
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
+  # postinstall = simple message opencollective ; le JAR du générateur est téléchargé par tools/contract-pull.mjs.
+  '@openapitools/openapi-generator-cli': false
+
+# pnpm refuse par défaut une version publiée depuis moins de quelques jours. Angular 22.2.5
+# (dernière 22.x stable au 7 novembre 2026) l'était encore à l'installation : exemption ciblée,
+# écrite par pnpm lui-même, à retirer à la prochaine montée de version.
+minimumReleaseAgeExclude:
+  - '@angular/common@22.2.5'
+  - '@angular/compiler-cli@22.2.5'
+  - '@angular/compiler@22.2.5'
+  - '@angular/core@22.2.5'
+  - '@angular/forms@22.2.5'
+  - '@angular/localize@22.2.5'
+  - '@angular/platform-browser@22.2.5'
+  - '@angular/router@22.2.5'

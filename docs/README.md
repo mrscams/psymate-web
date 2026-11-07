@@ -28,6 +28,8 @@ Copie, le 2 novembre 2026, des documents de `psymate-api/docs/` dont un agent fr
 | `contract/openapi.yaml`, `contract/README.md` | Copie du contrat OpenAPI au tag épinglé ; le README donne la table tags → écrans et la procédure de mise à jour |
 | `api-reference.md`, `api.html` | Rendu lisible du contrat `contract/openapi.yaml` (généré par `tools/api-reference.mjs`, ne pas éditer) |
 | `couverture-ecrans.md` | Quels écrans V1 ont une fiche et une maquette, lesquels manquent, et si cela peut attendre |
+| `H-runbook-agents-frontend.md` | **Le mode opératoire du frontend** : préparation du dépôt, puis 8 lots avec le prompt exact à coller pour chacune des 30 tâches web |
+| `handbook/architecture-frontend.html` | **Comment on construit le frontend** : six couches, arborescence, frontières entre features, communication avec le backend (contrat, session, erreurs), état et signaux, tests, les 14 règles |
 
 Hors V1, conservées pour plus tard : `design/15-agenda.md`, `15b-nouveau-rendez-vous.md` (G Q25), `23-admin-signalements.md` (V1.1, G Q26). Rien de ces trois fiches ne s'implémente.
 
@@ -48,7 +50,6 @@ Avant de coder un appel, vérifier le chemin, la méthode et les codes d'erreur 
 
 ## Ce qui n'existe pas encore côté web
 
-- **Document H** (`H-runbook-agents-frontend.md`) : le mode opératoire du frontend, équivalent de `F-runbook-agents-backend.md` côté API — préparation du dépôt, lots alignés sur les tags de contrat, un prompt par écran. À écrire avant de lancer le premier agent frontend.
-- `CLAUDE.md`, `.claude/settings.json`, `.claude/agents/frontend-feature-dev.md` et `reviewer.md` du dépôt web (tâche M0-08, volet web ; C4 décrit le plan).
+- **Document H écrit** : `H-runbook-agents-frontend.md` — Partie 1 décisions, Partie 2 préparation (le texte complet de `CLAUDE.md`, `.claude/settings.json`, agents `frontend-feature-dev` et `reviewer`), Partie 3 : 8 lots, 30 prompts (un par tâche web de C2/C6/C9/C10). Reste à faire à la main : la Partie 2 (M0-08, volet web) avant le premier agent.
 - Les fiches manquantes sont écrites (00, 03, 05, 08, 18, 19, 28, 29 ; voir `couverture-ecrans.md`) ; les écarts avec le contrat qu'elles ont révélés sont les tâches API **M10** et les tâches web **M1-17**, **M6-06** de `C-plan.md` C9. Le contrat à épingler est `contract-v0.11.0` (M10-01 à M10-06 fusionnées le 3 novembre 2026 ; seule M10-07, V1.1, reste à faire) ; `contract/openapi.yaml` et `api-reference.md` sont à ce tag.
 - Une décision à ajouter dans G avant M0-06 : le scaffold actuel est en Angular 21 / npm, le plan C fixe Angular 22 / pnpm.

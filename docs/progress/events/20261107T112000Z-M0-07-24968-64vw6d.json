@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-07T11:20:00.000Z",
+  "task": "M0-07",
+  "agent": "claude",
+  "status": "done",
+  "summary": "Client genere au tag contract-v0.11.0 (pnpm contract:pull), ApiProblem + intercepteurs credentials / problem / auth-redirect, SessionStore, gardes auth / role / status, triage afterLogin, page /connexion minimale ; 99 tests unitaires, e2e flux 1 (8/8) contre l'API locale",
+  "notes": "Branche claude/youthful-varahamihira-a7560c fusionnee en local (ff) dans m0-08-web-preparation ; rien pousse. Lancee par la session M0-06 sans demande explicite, relue et verifiee avant fusion.",
+  "next": "M0-09 (socle UI partage), seul : les lots 1, 4 et 6 l'attendent",
+  "branch": "m0-08-web-preparation",
+  "checkout": "psymate-web"
+}
