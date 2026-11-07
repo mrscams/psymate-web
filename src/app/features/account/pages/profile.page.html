@@ -1,0 +1,462 @@
+<div class="account">
+  <pm-account-nav
+    [name]="navName()"
+    [subtitle]="navSubtitle()"
+    [published]="store.published()"
+    [verificationStatus]="session.verificationStatus()"
+  />
+
+  <div class="main">
+    <header class="page-header">
+      <h1 i18n="Titre de la page Profil public@@profile.title">Profil public</h1>
+      <p class="intro" i18n="Introduction de la page Profil public@@profile.intro">
+        Ce que les visiteurs de l'annuaire voient. Rien n'est publié sans l'interrupteur « Publié ».
+      </p>
+      @if (values()) {
+        <p class="saved" data-testid="save-status">
+          <span role="status">{{ saveStatus() }}</span>
+          @if (savedAgo(); as ago) {
+            <span> · {{ ago }}</span>
+          }
+          @if (store.autosave().status === 'error') {
+            @if (saveProblemText(); as detail) {
+              <span> · {{ detail }}</span>
+            }
+            <button
+              type="button"
+              class="link"
+              (click)="retrySave()"
+              i18n="Bouton pour relancer l'enregistrement@@profile.save.retry"
+            >
+              Réessayer
+            </button>
+          }
+        </p>
+      }
+    </header>
+
+    <pm-state [kind]="profileState()" skeleton="profile" [lines]="4" [action]="retry" />
+
+    @if (values(); as current) {
+      <div class="columns">
+        <form class="form" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
+          <!-- Identité -->
+          <section class="card" aria-labelledby="h-identity">
+            <h2 id="h-identity" i18n="Section Identité@@profile.section.identity">Identité</h2>
+            <div class="identity">
+              <pm-photo-editor
+                [initials]="initials()"
+                [photoUrl]="photoUrl()"
+                [hasPhoto]="store.hasPhoto()"
+                [busy]="store.photo().status === 'busy'"
+                [problem]="store.photo().problem"
+                (photoSave)="savePhoto($event)"
+                (photoRemove)="removePhoto()"
+              />
+              <div class="grid">
+                <div class="field">
+                  <label [for]="id('displayName')" i18n="Champ nom affiché@@profile.displayName"
+                    >Nom affiché</label
+                  >
+                  <input
+                    class="input"
+                    type="text"
+                    formControlName="displayName"
+                    [id]="id('displayName')"
+                    [attr.maxlength]="limits.displayName"
+                    [attr.aria-invalid]="form.controls.displayName.invalid"
+                    [attr.aria-describedby]="id('displayName') + '-error'"
+                    autocomplete="name"
+                  />
+                  <pm-field-errors
+                    [control]="form.controls.displayName"
+                    [id]="id('displayName') + '-error'"
+                  />
+                </div>
+                <div class="field">
+                  <span
+                    class="label"
+                    id="profession-label"
+                    i18n="Champ profession@@profile.profession"
+                    >Profession</span
+                  >
+                  <p class="readonly">{{ profession() }}</p>
+                  <p class="help" i18n="Aide de la profession@@profile.profession.help">
+                    Celle de votre dossier professionnel.
+                  </p>
+                </div>
+                <div class="field">
+                  <label [for]="id('titleLabel')" i18n="Champ titre affiché@@profile.titleLabel"
+                    >Titre affiché</label
+                  >
+                  <input
+                    class="input"
+                    type="text"
+                    formControlName="titleLabel"
+                    [id]="id('titleLabel')"
+                    [attr.maxlength]="limits.titleLabel"
+                    [attr.aria-describedby]="id('titleLabel') + '-error'"
+                  />
+                  <pm-field-errors
+                    [control]="form.controls.titleLabel"
+                    [id]="id('titleLabel') + '-error'"
+                  />
+                </div>
+                <div class="field">
+                  <span class="label" i18n="Champ numéro professionnel@@profile.professionalNumber"
+                    >N° professionnel</span
+                  >
+                  <label class="switch">
+                    <input type="checkbox" role="switch" formControlName="showProfessionalNumber" />
+                    <span i18n="Interrupteur numéro professionnel@@profile.showProfessionalNumber"
+                      >Afficher le numéro de mon dossier professionnel</span
+                    >
+                  </label>
+                </div>
+                <div class="field wide">
+                  <span
+                    class="label"
+                    id="availability-label"
+                    i18n="Champ disponibilité@@profile.availability"
+                    >Disponibilité</span
+                  >
+                  <pm-segmented-control
+                    class="availability"
+                    [options]="availabilityOptions"
+                    [value]="current.availability"
+                    labelledBy="availability-label"
+                    (valueChange)="setAvailability($event)"
+                  />
+                </div>
+                <div class="field">
+                  <label [for]="id('nextSlotAt')" i18n="Champ prochain créneau@@profile.nextSlotAt"
+                    >Prochain créneau disponible (facultatif)</label
+                  >
+                  <input
+                    class="input"
+                    type="date"
+                    formControlName="nextSlotAt"
+                    [id]="id('nextSlotAt')"
+                    [attr.aria-describedby]="id('nextSlotAt') + '-error'"
+                  />
+                  <pm-field-errors
+                    [control]="form.controls.nextSlotAt"
+                    [id]="id('nextSlotAt') + '-error'"
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Présentation et pratique -->
+          <section class="card" aria-labelledby="h-practice">
+            <h2 id="h-practice" i18n="Section Présentation et pratique@@profile.section.practice">
+              Présentation et pratique
+            </h2>
+            <div class="field">
+              <label [for]="id('bio')">
+                <span i18n="Champ présentation@@profile.bio">Présentation</span>
+                <span class="counter" [id]="id('bio') + '-count'">
+                  · {{ bioLength() }} / {{ limits.bio }}
+                </span>
+              </label>
+              <textarea
+                class="input textarea"
+                rows="6"
+                formControlName="bio"
+                [id]="id('bio')"
+                [attr.maxlength]="limits.bio"
+                [attr.aria-describedby]="id('bio') + '-count ' + id('bio') + '-error'"
+              ></textarea>
+              <pm-field-errors [control]="form.controls.bio" [id]="id('bio') + '-error'" />
+            </div>
+
+            <pm-state
+              [kind]="vocabularyState()"
+              skeleton="block"
+              [lines]="2"
+              compact
+              [action]="retryVocabulary"
+              title="Listes de l'annuaire indisponibles"
+              i18n-title="Titre de l'erreur de la liste fermée@@profile.vocabulary.errorTitle"
+            />
+            @if (vocabularyState() === null) {
+              <div class="grid">
+                <div class="field">
+                  <pm-chip-picker
+                    formControlName="specialties"
+                    label="Spécialités"
+                    i18n-label="Champ spécialités@@profile.specialties"
+                    hint="Liste commune à l'annuaire."
+                    i18n-hint="Aide des spécialités@@profile.specialties.help"
+                    [fieldId]="id('specialties')"
+                    [errorId]="id('specialties') + '-error'"
+                    [options]="specialtyOptions()"
+                    [max]="limits.specialties"
+                  />
+                  <pm-field-errors
+                    [control]="form.controls.specialties"
+                    [id]="id('specialties') + '-error'"
+                  />
+                </div>
+                <div class="field">
+                  <pm-chip-picker
+                    formControlName="audiences"
+                    label="Publics"
+                    i18n-label="Champ publics@@profile.audiences"
+                    hint="Publics que vous accueillez."
+                    i18n-hint="Aide des publics@@profile.audiences.help"
+                    [fieldId]="id('audiences')"
+                    [errorId]="id('audiences') + '-error'"
+                    [options]="audienceOptions()"
+                  />
+                  <pm-field-errors
+                    [control]="form.controls.audiences"
+                    [id]="id('audiences') + '-error'"
+                  />
+                </div>
+                <fieldset class="field">
+                  <legend i18n="Champ modalités@@profile.modalities">Modalités</legend>
+                  @for (option of modalityOptions(); track option.code) {
+                    <label class="check">
+                      <input
+                        type="checkbox"
+                        [checked]="current.modalities.includes(option.code)"
+                        (change)="toggleModality(option.code, $event)"
+                      />
+                      <span>{{ option.label }}</span>
+                    </label>
+                  }
+                </fieldset>
+                <div class="field">
+                  <pm-chip-picker
+                    formControlName="languages"
+                    label="Langues"
+                    i18n-label="Champ langues@@profile.languages"
+                    hint="Langues de consultation."
+                    i18n-hint="Aide des langues@@profile.languages.help"
+                    [fieldId]="id('languages')"
+                    [options]="languageOptions()"
+                  />
+                </div>
+              </div>
+            }
+
+            <div class="field">
+              <label [for]="id('fees')" i18n="Champ tarif@@profile.fees">Tarif (facultatif)</label>
+              <input
+                class="input"
+                type="text"
+                formControlName="fees"
+                [id]="id('fees')"
+                [attr.maxlength]="limits.fees"
+                [attr.aria-describedby]="id('fees') + '-help ' + id('fees') + '-error'"
+              />
+              <p class="help" [id]="id('fees') + '-help'" i18n="Aide du tarif@@profile.fees.help">
+                Texte libre, par exemple « 60 € la séance de 50 min ». Vide : rien n'est affiché.
+              </p>
+              <pm-field-errors [control]="form.controls.fees" [id]="id('fees') + '-error'" />
+            </div>
+          </section>
+
+          <!-- Moyens de contact -->
+          <section class="card" aria-labelledby="h-contact">
+            <h2 id="h-contact" i18n="Section Moyens de contact@@profile.section.contact">
+              Moyens de contact
+            </h2>
+            <p class="help" i18n="Aide des moyens de contact@@profile.contact.help">
+              Chaque moyen a son interrupteur « Afficher ». Le formulaire de contact de la fiche est
+              toujours disponible et vous transmet les messages par e-mail.
+            </p>
+            <div class="contacts">
+              <label [for]="id('contactPhone')" i18n="Champ téléphone@@profile.contactPhone"
+                >Téléphone</label
+              >
+              <div class="field">
+                <input
+                  class="input"
+                  type="tel"
+                  formControlName="contactPhone"
+                  [id]="id('contactPhone')"
+                  [attr.maxlength]="limits.contactPhone"
+                  [attr.aria-describedby]="id('contactPhone') + '-error'"
+                  autocomplete="tel"
+                />
+                <pm-field-errors
+                  [control]="form.controls.contactPhone"
+                  [id]="id('contactPhone') + '-error'"
+                />
+              </div>
+              <label class="switch">
+                <input type="checkbox" role="switch" formControlName="showPhone" />
+                <span i18n="Interrupteur afficher le téléphone@@profile.showPhone"
+                  >Afficher<span class="sr-only"> le téléphone</span></span
+                >
+              </label>
+
+              <label [for]="id('contactEmail')" i18n="Champ e-mail public@@profile.contactEmail"
+                >E-mail public</label
+              >
+              <div class="field">
+                <input
+                  class="input"
+                  type="email"
+                  formControlName="contactEmail"
+                  [id]="id('contactEmail')"
+                  [attr.maxlength]="limits.contactEmail"
+                  [attr.aria-invalid]="form.controls.contactEmail.invalid"
+                  [attr.aria-describedby]="id('contactEmail') + '-error'"
+                  autocomplete="email"
+                />
+                <pm-field-errors
+                  [control]="form.controls.contactEmail"
+                  [id]="id('contactEmail') + '-error'"
+                />
+              </div>
+              <label class="switch">
+                <input type="checkbox" role="switch" formControlName="showEmail" />
+                <span i18n="Interrupteur afficher l'e-mail@@profile.showEmail"
+                  >Afficher<span class="sr-only"> l'e-mail</span></span
+                >
+              </label>
+
+              <label [for]="id('websiteUrl')" i18n="Champ site web@@profile.websiteUrl"
+                >Site web</label
+              >
+              <div class="field">
+                <input
+                  class="input"
+                  type="url"
+                  formControlName="websiteUrl"
+                  placeholder="https://"
+                  [id]="id('websiteUrl')"
+                  [attr.maxlength]="limits.websiteUrl"
+                  [attr.aria-invalid]="form.controls.websiteUrl.invalid"
+                  [attr.aria-describedby]="
+                    id('websiteUrl') + '-help ' + id('websiteUrl') + '-error'
+                  "
+                  autocomplete="url"
+                />
+                <p
+                  class="help"
+                  [id]="id('websiteUrl') + '-help'"
+                  i18n="Aide du site web@@profile.websiteUrl.help"
+                >
+                  Adresse complète, commençant par https://. Affichée dès qu'elle est remplie.
+                </p>
+                <pm-field-errors
+                  [control]="form.controls.websiteUrl"
+                  [id]="id('websiteUrl') + '-error'"
+                />
+              </div>
+              <span></span>
+
+              <label
+                [for]="id('responseDelay')"
+                i18n="Champ délai de réponse@@profile.responseDelay"
+                >Délai de réponse</label
+              >
+              <div class="field">
+                <select class="input" formControlName="responseDelay" [id]="id('responseDelay')">
+                  <option value="" i18n="Délai de réponse non affiché@@profile.responseDelay.none">
+                    Ne pas afficher
+                  </option>
+                  @for (option of delayOptions(); track option) {
+                    <option [value]="option">{{ option }}</option>
+                  }
+                </select>
+              </div>
+              <span></span>
+            </div>
+          </section>
+
+          <!-- Cabinet -->
+          <section class="card" aria-labelledby="h-office">
+            <h2 id="h-office" i18n="Section Cabinet@@profile.section.office">Cabinet</h2>
+            <div class="field">
+              <label [for]="id('address')" i18n="Champ adresse@@profile.address">Adresse</label>
+              <input
+                class="input"
+                type="text"
+                formControlName="address"
+                [id]="id('address')"
+                [attr.maxlength]="limits.address"
+                [attr.aria-describedby]="id('address') + '-error'"
+                autocomplete="street-address"
+              />
+              <pm-field-errors [control]="form.controls.address" [id]="id('address') + '-error'" />
+            </div>
+            <div class="grid">
+              <div class="field">
+                <label [for]="id('postalCode')" i18n="Champ code postal@@profile.postalCode"
+                  >Code postal</label
+                >
+                <input
+                  class="input"
+                  type="text"
+                  formControlName="postalCode"
+                  [id]="id('postalCode')"
+                  [attr.maxlength]="limits.postalCode"
+                  [attr.aria-describedby]="id('postalCode') + '-error'"
+                  autocomplete="postal-code"
+                />
+                <pm-field-errors
+                  [control]="form.controls.postalCode"
+                  [id]="id('postalCode') + '-error'"
+                />
+              </div>
+              <div class="field">
+                <label [for]="id('city')" i18n="Champ ville@@profile.city">Ville</label>
+                <input
+                  class="input"
+                  type="text"
+                  formControlName="city"
+                  [id]="id('city')"
+                  [attr.maxlength]="limits.city"
+                  [attr.aria-describedby]="id('city') + '-help ' + id('city') + '-error'"
+                  autocomplete="address-level2"
+                />
+                <p
+                  class="help"
+                  [id]="id('city') + '-help'"
+                  i18n="Aide de la ville@@profile.city.help"
+                >
+                  Requise pour publier.
+                </p>
+                <pm-field-errors [control]="form.controls.city" [id]="id('city') + '-error'" />
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" role="switch" formControlName="showAddress" />
+              <span i18n="Interrupteur afficher l'adresse@@profile.showAddress"
+                >Afficher l'adresse sur la fiche</span
+              >
+            </label>
+          </section>
+        </form>
+
+        <aside class="side">
+          <pm-publish-card
+            [published]="store.published()"
+            [canPublish]="canPublish()"
+            [busy]="store.publishing()"
+            [publicUrl]="publicUrl()"
+            [checklist]="checklist()"
+            [missing]="store.publication().missing"
+            [problem]="store.publication().problem"
+            (publish)="publish()"
+            (unpublish)="unpublish()"
+            (copyLink)="copyLink()"
+            (fix)="focusMissing($event)"
+          />
+          <pm-profile-preview
+            [fields]="current"
+            [profession]="profession()"
+            [vocabulary]="store.vocabulary().data"
+            [photoUrl]="photoUrl()"
+          />
+        </aside>
+      </div>
+    }
+  </div>
+</div>
