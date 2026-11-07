@@ -1,7 +1,7 @@
-import AxeBuilder from '@axe-core/playwright';
 import { APIRequestContext, expect, Page, test } from '@playwright/test';
 
 import { confirmEmail, enableTwoFactor, register, uniqueEmail } from '../support/accounts';
+import { expectNoAxeViolations } from '../support/axe';
 import { totp, totpStep } from '../support/totp';
 
 // B3 flux 9 (M1-15, fiches 11, 12, 13) : inscription, confirmation par Mailpit, dossier
@@ -10,15 +10,6 @@ import { totp, totpStep } from '../support/totp';
 const MAILPIT = 'http://localhost:8025';
 const STRONG_PASSWORD = 'Vendôme-Lyon-2026!x';
 const COMPROMISED_PASSWORD = 'motdepasse1234';
-
-async function expectNoAxeViolations(page: Page): Promise<void> {
-  // L'ondulation Material d'un clic éclaircit le fond du bouton pendant 225 ms : on attend sa fin.
-  await expect(page.locator('.mat-ripple-element')).toHaveCount(0);
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .analyze();
-  expect(results.violations).toEqual([]);
-}
 
 /** Sujets des e-mails reçus par une adresse dans Mailpit (attend jusqu'à 15 s le nombre voulu). */
 async function mailSubjects(

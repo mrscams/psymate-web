@@ -1,19 +1,12 @@
-import AxeBuilder from '@axe-core/playwright';
 import { expect, Page, test } from '@playwright/test';
 
 import { confirmEmail, enableTwoFactor, register, SEED, uniqueEmail } from '../support/accounts';
+import { expectNoAxeViolations } from '../support/axe';
 import { totp, totpStep } from '../support/totp';
 
 // B3 flux 1, partie connexion (M0-07) : contre l'API locale et le seed small, jamais de mock.
 
 const WRONG_CREDENTIALS = 'E-mail, mot de passe ou code incorrect.';
-
-async function expectNoAxeViolations(page: Page): Promise<void> {
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .analyze();
-  expect(results.violations).toEqual([]);
-}
 
 async function fillCredentials(page: Page, email: string, password: string): Promise<void> {
   await page.getByLabel('Adresse e-mail').fill(email);
