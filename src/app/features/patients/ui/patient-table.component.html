@@ -1,0 +1,79 @@
+<table class="patients" [class.refreshing]="refreshing()" [attr.aria-busy]="refreshing()">
+  <thead>
+    <tr>
+      <th scope="col" [attr.aria-sort]="nameSort()">{{ 'One' | subjectLabel }}</th>
+      <th scope="col" i18n="Colonne de la liste des patients@@patients.table.flags">Drapeaux</th>
+      <th scope="col" i18n="Colonne de la liste des patients@@patients.table.tags">Tags</th>
+      <th
+        scope="col"
+        [attr.aria-sort]="changedSort()"
+        i18n="Colonne de la liste des patients@@patients.table.changed"
+      >
+        Dernière modification
+      </th>
+      <th scope="col" class="actions">
+        <span class="sr-only" i18n="Colonne de la liste des patients@@patients.table.actions"
+          >Actions</span
+        >
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (row of rows(); track row.patient.id) {
+      <tr [class.archived]="row.archived">
+        <td class="who">
+          <span class="avatar" aria-hidden="true">{{ row.initials }}</span>
+          <span class="identity">
+            <a class="name" [routerLink]="['/patients', row.patient.id, 'overview']">
+              @for (part of row.name; track $index) {
+                @if (part.match) {
+                  <mark>{{ part.text }}</mark>
+                } @else {
+                  <span>{{ part.text }}</span>
+                }
+              }
+            </a>
+            @if (row.age !== null) {
+              <span class="age" i18n="Âge dans la liste des patients@@patients.table.age"
+                >{{ row.age }} ans</span
+              >
+            }
+          </span>
+        </td>
+        <td>
+          <pm-patient-flags [flags]="row.patient.flags" />
+        </td>
+        <td>
+          @if (row.tags.length > 0) {
+            <ul class="tags">
+              @for (tag of row.tags; track tag) {
+                <li class="tag">#{{ tag }}</li>
+              }
+              @if (row.moreTags > 0) {
+                <li class="tag more">+{{ row.moreTags }}</li>
+              }
+            </ul>
+          }
+        </td>
+        <td class="mono changed">
+          @if (row.archived) {
+            <span i18n="Date d'archivage dans la liste@@patients.table.archivedOn"
+              >Archivé·e {{ row.changed }}</span
+            >
+          } @else {
+            {{ row.changed }}
+          }
+        </td>
+        <td class="actions">
+          <a
+            class="edit"
+            [routerLink]="['/patients', row.patient.id, 'fiche']"
+            [attr.aria-label]="openLabel(row.patient.displayName)"
+            i18n="Lien vers la fiche d'un patient@@patients.table.edit"
+            >Fiche</a
+          >
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

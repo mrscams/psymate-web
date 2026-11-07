@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-07T23:13:51.065Z",
+  "task": "M1-06",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Liste des patients (fiche 01) et fiche patient complete (fiche 16) : PatientApi, PatientListStore, PatientStore, TagStore, e2e flux 2",
+  "notes": "lint, check:tokens, test (481), build verts ; e2e complets 51 passes, 1 ignore (admin sans variables). Revue : 1 bloquant (store racine non remis a zero au changement de compte) corrige, 9 a corriger traites ou reportes en ecarts. Ecarts contrat : pas de filtres a surveiller / seance en cours / inactifs ni de colonnes derniere seance / tendance (puces = tags du praticien), pas de total, version 1 sans instantane, archivage par DELETE. Route provisoire /patients/:id/overview a retirer par M1-07.",
+  "next": "M1-07 (shell /patients/:id) : remplacer la route provisoire :id/overview de features/patients",
+  "branch": "claude/m1-06-patients-cca7bc",
+  "checkout": "m1-06-patients-cca7bc"
+}

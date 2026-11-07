@@ -11,6 +11,8 @@ import { expect, Page } from '@playwright/test';
  */
 export async function expectNoAxeViolations(page: Page): Promise<void> {
   await expect(page.locator('.mat-ripple-element')).toHaveCount(0);
+  // Même raison pour l'ouverture et la fermeture d'un dialogue Material (fondu : couleurs semi-transparentes).
+  await expect(page.locator('.mdc-dialog--opening, .mdc-dialog--closing')).toHaveCount(0);
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
     .analyze();

@@ -2186,33 +2186,6 @@
         </context-group>
         <note priority="1" from="description">Jauge de force, fort</note>
       </trans-unit>
-      <trans-unit id="patients.list.title" datatype="html">
-        <source>Mes patients</source>
-        <target state="translated">My patients</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">10,11</context>
-        </context-group>
-        <note priority="1" from="description">Titre de la liste des patients</note>
-      </trans-unit>
-      <trans-unit id="patients.list.placeholder" datatype="html">
-        <source> La liste de vos patients s&apos;affichera ici. </source>
-        <target state="translated"> Your patients will appear here. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">12,18</context>
-        </context-group>
-        <note priority="1" from="description">Texte provisoire de la liste des patients</note>
-      </trans-unit>
-      <trans-unit id="patients.list.pageTitle" datatype="html">
-        <source>Mes patients · PsyMate</source>
-        <target state="translated">My patients · PsyMate</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/patients.routes.ts</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-        <note priority="1" from="description">Titre d&apos;onglet de la liste des patients</note>
-      </trans-unit>
       <trans-unit id="forms.error.required" datatype="html">
         <source>Ce champ est obligatoire.</source>
         <target state="translated">This field is required.</target>
@@ -8880,6 +8853,1305 @@
           <context context-type="linenumber">108,113</context>
         </context-group>
         <note priority="1" from="description">Site web dans l&apos;aperçu</note>
+      </trans-unit>
+      <trans-unit id="patients.overview.title" datatype="html">
+        <source>Vue d&apos;ensemble</source>
+        <target state="translated">Overview</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/overview-placeholder.page.ts</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+        <note priority="1" from="description">Titre provisoire de la vue d&apos;ensemble</note>
+      </trans-unit>
+      <trans-unit id="patients.overview.placeholder" datatype="html">
+        <source> La vue d&apos;ensemble du dossier s&apos;affichera ici. </source>
+        <target state="translated">The record overview will appear here.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/overview-placeholder.page.ts</context>
+          <context context-type="linenumber">15,19</context>
+        </context-group>
+        <note priority="1" from="description">Texte provisoire de la vue d&apos;ensemble</note>
+      </trans-unit>
+      <trans-unit id="patients.overview.sheetLink" datatype="html">
+        <source>Modifier la fiche</source>
+        <target state="translated">Edit the record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/overview-placeholder.page.ts</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.overview.listLink" datatype="html">
+        <source>Retour à la liste</source>
+        <target state="translated">Back to the list</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/overview-placeholder.page.ts</context>
+          <context context-type="linenumber">24,30</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.form.crumbs" datatype="html">
+        <source>Fil d&apos;Ariane</source>
+        <target state="translated">Breadcrumb</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Fil d&apos;Ariane</note>
+      </trans-unit>
+      <trans-unit id="patients.form.crumbs.sheet" datatype="html">
+        <source>Fiche</source>
+        <target state="translated">Record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+        <note priority="1" from="description">Fil d&apos;Ariane, fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.form.crumbs.new" datatype="html">
+        <source>Nouveau</source>
+        <target state="translated">New</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">12,18</context>
+        </context-group>
+        <note priority="1" from="description">Fil d&apos;Ariane, création</note>
+      </trans-unit>
+      <trans-unit id="patients.form.historyLink" datatype="html">
+        <source> historique </source>
+        <target state="translated">history</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">30,37</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers l&apos;historique</note>
+      </trans-unit>
+      <trans-unit id="patients.form.archivedBanner" datatype="html">
+        <source>Ce dossier est archivé : il n&apos;apparaît plus dans la liste et ne peut pas être modifié.</source>
+        <target state="translated">This record is archived: it no longer appears in the list and cannot be edited.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">47,52</context>
+        </context-group>
+        <note priority="1" from="description">Bandeau d&apos;un dossier archivé</note>
+      </trans-unit>
+      <trans-unit id="patients.form.restore" datatype="html">
+        <source> Restaurer </source>
+        <target state="translated">Restore</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">57,62</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de restauration</note>
+      </trans-unit>
+      <trans-unit id="patients.form.identity" datatype="html">
+        <source>Identité</source>
+        <target state="translated">Identity</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">78,80</context>
+        </context-group>
+        <note priority="1" from="description">Section de la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.field.displayName" datatype="html">
+        <source>Nom affiché</source>
+        <target state="translated">Display name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">81,82</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.form.displayName.hint" datatype="html">
+        <source> Obligatoire. Un prénom et une initiale suffisent. </source>
+        <target state="translated">Required. A first name and an initial are enough.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">100,103</context>
+        </context-group>
+        <note priority="1" from="description">Aide du nom affiché</note>
+      </trans-unit>
+      <trans-unit id="patients.field.firstName" datatype="html">
+        <source>Prénom</source>
+        <target state="translated">First name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">112,115</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.field.lastName" datatype="html">
+        <source>Nom</source>
+        <target state="translated">Last name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">131,134</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.field.birthDate" datatype="html">
+        <source>Date de naissance</source>
+        <target state="translated">Date of birth</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">150,153</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.field.pronoun" datatype="html">
+        <source>Pronom / accord</source>
+        <target state="translated">Pronoun</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">167,170</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.form.unset" datatype="html">
+        <source> Non renseigné </source>
+        <target state="translated">Not specified</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">176,178</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">297,299</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">312,314</context>
+        </context-group>
+        <note priority="1" from="description">Option vide d&apos;une liste</note>
+      </trans-unit>
+      <trans-unit id="patients.field.phone" datatype="html">
+        <source>Téléphone</source>
+        <target state="translated">Phone</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">186,189</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.field.email" datatype="html">
+        <source>E-mail</source>
+        <target state="translated">Email</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">201,204</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.form.email.hint" datatype="html">
+        <source> Pour les rappels, plus tard. </source>
+        <target state="translated">For reminders, later.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">216,218</context>
+        </context-group>
+        <note priority="1" from="description">Aide de l&apos;e-mail</note>
+      </trans-unit>
+      <trans-unit id="patients.form.context" datatype="html">
+        <source>Contexte</source>
+        <target state="translated">Context</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">224,226</context>
+        </context-group>
+        <note priority="1" from="description">Section de la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.field.situation" datatype="html">
+        <source>Situation</source>
+        <target state="translated">Situation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">230,232</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.field.activity" datatype="html">
+        <source>Activité</source>
+        <target state="translated">Occupation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">238,240</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.field.referredBy" datatype="html">
+        <source>Adressé·e par</source>
+        <target state="translated">Referred by</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">246,248</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.field.initialReason" datatype="html">
+        <source>Motif initial</source>
+        <target state="translated">Initial reason</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">254,257</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.field.history" datatype="html">
+        <source>Histoire et éléments à garder en tête</source>
+        <target state="translated">History and things to keep in mind</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">267,269</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.form.followUp" datatype="html">
+        <source>Suivi</source>
+        <target state="translated">Follow-up</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">274,276</context>
+        </context-group>
+        <note priority="1" from="description">Section de la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.field.since" datatype="html">
+        <source>Suivi·e depuis</source>
+        <target state="translated">Followed since</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">280,283</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.field.rhythm" datatype="html">
+        <source>Rythme habituel</source>
+        <target state="translated">Usual frequency</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">293,295</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.field.modality" datatype="html">
+        <source>Modalité par défaut</source>
+        <target state="translated">Default setting</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">308,310</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.field.durationMin" datatype="html">
+        <source>Durée de séance (min)</source>
+        <target state="translated">Session length (min)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">323,326</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.field.fee" datatype="html">
+        <source>Tarif</source>
+        <target state="translated">Fee</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">343,346</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.form.fee.placeholder" datatype="html">
+        <source>[TARIF]</source>
+        <target state="translated">[FEE]</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">351</context>
+        </context-group>
+        <note priority="1" from="description">Exemple du champ tarif</note>
+      </trans-unit>
+      <trans-unit id="patients.field.prescriber" datatype="html">
+        <source>Médecin / prescripteur</source>
+        <target state="translated">Physician / prescriber</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">358,360</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.form.flags" datatype="html">
+        <source>Drapeaux</source>
+        <target state="translated">Flags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">366,367</context>
+        </context-group>
+        <note priority="1" from="description">Section de la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.form.tags" datatype="html">
+        <source>Tags du dossier</source>
+        <target state="translated">Record tags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">371,373</context>
+        </context-group>
+        <note priority="1" from="description">Section de la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.form.stamp" datatype="html">
+        <source> Chaque modification est horodatée. </source>
+        <target state="translated">Every change is timestamped.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">386,389</context>
+        </context-group>
+        <note priority="1" from="description">Mention sous le formulaire</note>
+      </trans-unit>
+      <trans-unit id="patients.form.cancel" datatype="html">
+        <source> Annuler </source>
+        <target state="translated">Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">394,396</context>
+        </context-group>
+        <note priority="1" from="description">Bouton annuler</note>
+      </trans-unit>
+      <trans-unit id="patients.form.save" datatype="html">
+        <source>Enregistrer</source>
+        <target state="translated">Save</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">397,398</context>
+        </context-group>
+        <note priority="1" from="description">Bouton enregistrer</note>
+      </trans-unit>
+      <trans-unit id="patients.form.saveShortcut" datatype="html">
+        <source>Ctrl+Entrée</source>
+        <target state="translated">Ctrl+Enter</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">399,403</context>
+        </context-group>
+        <note priority="1" from="description">Raccourci d&apos;enregistrement</note>
+      </trans-unit>
+      <trans-unit id="patients.archive.title" datatype="html">
+        <source> Archiver ce dossier </source>
+        <target state="translated">Archive this record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">409,411</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la zone d&apos;archivage</note>
+      </trans-unit>
+      <trans-unit id="patients.archive.text" datatype="html">
+        <source> Le dossier disparaît de la liste. Rien n&apos;est supprimé : entrées, liens et séances sont conservés, et la restauration est possible à tout moment. </source>
+        <target state="translated">The record disappears from the list. Nothing is deleted: entries, links and sessions are kept, and it can be restored at any time.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">412,416</context>
+        </context-group>
+        <note priority="1" from="description">Explication de la zone d&apos;archivage</note>
+      </trans-unit>
+      <trans-unit id="patients.archive.button" datatype="html">
+        <source> Archiver… </source>
+        <target state="translated">Archive…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">422,424</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;archivage</note>
+      </trans-unit>
+      <trans-unit id="patients.form.onCreate.title" datatype="html">
+        <source> À la création </source>
+        <target state="translated">On creation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">439,441</context>
+        </context-group>
+        <note priority="1" from="description">Encart de création</note>
+      </trans-unit>
+      <trans-unit id="patients.form.onCreate.text" datatype="html">
+        <source> Une séance d&apos;accueil est créée à la date du jour, puis la vue d&apos;ensemble s&apos;ouvre. </source>
+        <target state="translated">An intake session is created for today, then the overview opens.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">442,446</context>
+        </context-group>
+        <note priority="1" from="description">Encart de création</note>
+      </trans-unit>
+      <trans-unit id="patients.form.privacy.title" datatype="html">
+        <source> Confidentialité </source>
+        <target state="translated">Privacy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">448,450</context>
+        </context-group>
+        <note priority="1" from="description">Encart confidentialité</note>
+      </trans-unit>
+      <trans-unit id="patients.form.privacy.text" datatype="html">
+        <source> Les coordonnées ne sont jamais synchronisées avec un agenda externe ni publiées dans l&apos;annuaire. </source>
+        <target state="translated">Contact details are never synced with an external calendar nor published in the directory.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">451,455</context>
+        </context-group>
+        <note priority="1" from="description">Encart confidentialité</note>
+      </trans-unit>
+      <trans-unit id="patients.history.title" datatype="html">
+        <source> Historique des versions </source>
+        <target state="translated">Version history</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">462,465</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;historique</note>
+      </trans-unit>
+      <trans-unit id="patients.form.editTitle" datatype="html">
+        <source>Modifier la fiche · <x id="name" equiv-text="patient.displayName"/></source>
+        <target state="translated">Edit record · <x id="name" equiv-text="patient.displayName"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la fiche en modification</note>
+      </trans-unit>
+      <trans-unit id="patients.form.newTitle" datatype="html">
+        <source>Nouveau <x id="subject" equiv-text="subject"/></source>
+        <target state="translated">New <x id="subject" equiv-text="subject"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la fiche en création</note>
+      </trans-unit>
+      <trans-unit id="patients.form.loadError" datatype="html">
+        <source>Impossible de charger cette fiche</source>
+        <target state="translated">Unable to load this record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+        <note priority="1" from="description">État erreur de la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.form.saved" datatype="html">
+        <source>Fiche enregistrée</source>
+        <target state="translated">Record saved</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">222</context>
+        </context-group>
+        <note priority="1" from="description">Toast après enregistrement de la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.archive.confirmTitle" datatype="html">
+        <source>Archiver <x id="name" equiv-text="patient.displayName"/> ?</source>
+        <target state="translated">Archive <x id="name" equiv-text="patient.displayName"/>?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">252</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la confirmation d&apos;archivage</note>
+      </trans-unit>
+      <trans-unit id="patients.archive.confirmText" datatype="html">
+        <source>Le dossier disparaît de la liste ; rien n&apos;est supprimé et vous pourrez le restaurer.</source>
+        <target state="translated">The record disappears from the list; nothing is deleted and you can restore it.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">253</context>
+        </context-group>
+        <note priority="1" from="description">Explication de l&apos;archivage</note>
+      </trans-unit>
+      <trans-unit id="patients.archive.confirm" datatype="html">
+        <source>Archiver ce <x id="subject" equiv-text="subject"/></source>
+        <target state="translated">Archive this <x id="subject" equiv-text="subject"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">254</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de confirmation d&apos;archivage</note>
+      </trans-unit>
+      <trans-unit id="patients.form.meta.created" datatype="html">
+        <source>créée le <x id="date" equiv-text="created"/></source>
+        <target state="translated">created on <x id="date" equiv-text="created"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">342</context>
+        </context-group>
+        <note priority="1" from="description">Méta de la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.form.meta.versions" datatype="html">
+        <source><x id="count" equiv-text="count"/> versions</source>
+        <target state="translated"><x id="count" equiv-text="count"/> versions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">347</context>
+        </context-group>
+        <note priority="1" from="description">Méta de la fiche, plusieurs versions</note>
+      </trans-unit>
+      <trans-unit id="patients.form.meta.version" datatype="html">
+        <source>1 version</source>
+        <target state="translated">1 version</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">348</context>
+        </context-group>
+        <note priority="1" from="description">Méta de la fiche, une version</note>
+      </trans-unit>
+      <trans-unit id="patients.form.meta.updated" datatype="html">
+        <source>dernière modification le <x id="date" equiv-text="updated"/></source>
+        <target state="translated">last changed on <x id="date" equiv-text="updated"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">353</context>
+        </context-group>
+        <note priority="1" from="description">Méta de la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.list.more" datatype="html">
+        <source> Afficher plus </source>
+        <target state="translated">Show more</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
+          <context context-type="linenumber">59,62</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de pagination de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.list.moreError" datatype="html">
+        <source> La suite de la liste n&apos;a pas pu être chargée. </source>
+        <target state="translated">The rest of the list could not be loaded.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
+          <context context-type="linenumber">67,73</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de la page suivante</note>
+      </trans-unit>
+      <trans-unit id="patients.list.title" datatype="html">
+        <source>Mes <x id="subjects" equiv-text="subjects"/></source>
+        <target state="translated">My <x id="subjects" equiv-text="subjects"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.list.new" datatype="html">
+        <source>Nouveau <x id="subject" equiv-text="subject"/></source>
+        <target state="translated">New <x id="subject" equiv-text="subject"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de création</note>
+      </trans-unit>
+      <trans-unit id="patients.empty.filtered" datatype="html">
+        <source>Aucun <x id="subject" equiv-text="subject"/> ne correspond</source>
+        <target state="translated">No <x id="subject" equiv-text="subject"/> matches</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">État vide de la liste filtrée</note>
+      </trans-unit>
+      <trans-unit id="patients.empty.title" datatype="html">
+        <source>Créez votre premier <x id="subject" equiv-text="subject"/></source>
+        <target state="translated">Create your first <x id="subject" equiv-text="subject"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <note priority="1" from="description">État vide de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.empty.clear" datatype="html">
+        <source>Effacer les filtres</source>
+        <target state="translated">Clear filters</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+        <note priority="1" from="description">Action de l&apos;état vide filtré</note>
+      </trans-unit>
+      <trans-unit id="patients.error.title" datatype="html">
+        <source>Impossible de charger vos <x id="subjects" equiv-text="subjects"/></source>
+        <target state="translated">Unable to load your <x id="subjects" equiv-text="subjects"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+        <note priority="1" from="description">État erreur de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.list.pageTitle" datatype="html">
+        <source>Mes <x id="subjects" equiv-text="subjects"/> · PsyMate</source>
+        <target state="translated">My <x id="subjects" equiv-text="subjects"/> · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/patients.routes.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.form.newPageTitle" datatype="html">
+        <source>Nouveau <x id="subject" equiv-text="subject"/> · PsyMate</source>
+        <target state="translated">New <x id="subject" equiv-text="subject"/> · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/patients.routes.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de la création</note>
+      </trans-unit>
+      <trans-unit id="patients.form.pageTitle" datatype="html">
+        <source>Fiche · PsyMate</source>
+        <target state="translated">Record · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/patients.routes.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.overview.pageTitle" datatype="html">
+        <source>Vue d&apos;ensemble · PsyMate</source>
+        <target state="translated">Overview · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/patients.routes.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet provisoire de la vue d&apos;ensemble</note>
+      </trans-unit>
+      <trans-unit id="patients.form.flag.watch.help" datatype="html">
+        <source>Avec une raison, visible dans l&apos;en-tête et la liste.</source>
+        <target state="translated">With a reason, shown in the header and the list.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/flag-fields.component.ts</context>
+          <context context-type="linenumber">29,32</context>
+        </context-group>
+        <note priority="1" from="description">Aide du drapeau à surveiller</note>
+      </trans-unit>
+      <trans-unit id="patients.form.flag.risk.help" datatype="html">
+        <source>Idées suicidaires, mise en danger.</source>
+        <target state="translated">Suicidal thoughts, self-endangerment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/flag-fields.component.ts</context>
+          <context context-type="linenumber">36,39</context>
+        </context-group>
+        <note priority="1" from="description">Aide du drapeau risque</note>
+      </trans-unit>
+      <trans-unit id="patients.form.flag.shared.help" datatype="html">
+        <source>Suivi partagé avec un autre professionnel.</source>
+        <target state="translated">Care shared with another professional.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/flag-fields.component.ts</context>
+          <context context-type="linenumber">45,50</context>
+        </context-group>
+        <note priority="1" from="description">Aide du drapeau suivi conjoint</note>
+      </trans-unit>
+      <trans-unit id="patients.field.watchReason" datatype="html">
+        <source>Raison du drapeau</source>
+        <target state="translated">Reason for the flag</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/flag-fields.component.ts</context>
+          <context context-type="linenumber">52,56</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+        <note priority="1" from="description">Champ de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.form.flag.risk.reminder" datatype="html">
+        <source> Les éléments de risque se notent dans la timeline (note privée). </source>
+        <target state="translated">Risk details are recorded in the timeline (private note).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/flag-fields.component.ts</context>
+          <context context-type="linenumber">71,75</context>
+        </context-group>
+        <note priority="1" from="description">Rappel du drapeau risque</note>
+      </trans-unit>
+      <trans-unit id="patients.preview.title" datatype="html">
+        <source> Aperçu de l&apos;en-tête </source>
+        <target state="translated">Header preview</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/header-preview.component.ts</context>
+          <context context-type="linenumber">25,28</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;aperçu de l&apos;en-tête</note>
+      </trans-unit>
+      <trans-unit id="patients.preview.noName" datatype="html">
+        <source> Nom affiché </source>
+        <target state="translated">Display name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/header-preview.component.ts</context>
+          <context context-type="linenumber">34,37</context>
+        </context-group>
+        <note priority="1" from="description">Aperçu sans nom</note>
+      </trans-unit>
+      <trans-unit id="patients.preview.age" datatype="html">
+        <source><x id="age" equiv-text="age"/> ans</source>
+        <target state="translated"><x id="age" equiv-text="age"/> years old</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/header-preview.component.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+        <note priority="1" from="description">Âge dans l&apos;aperçu de l&apos;en-tête</note>
+      </trans-unit>
+      <trans-unit id="patients.preview.since" datatype="html">
+        <source>suivi·e depuis <x id="since" equiv-text="since"/></source>
+        <target state="translated">followed since <x id="since" equiv-text="since"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/header-preview.component.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <note priority="1" from="description">Début du suivi dans l&apos;aperçu</note>
+      </trans-unit>
+      <trans-unit id="patients.filter.hint" datatype="html">
+        <source>Accents et majuscules ignorés, à partir de 2 caractères.</source>
+        <target state="translated">Accents and case ignored, from 2 characters.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
+          <context context-type="linenumber">16,21</context>
+        </context-group>
+        <note priority="1" from="description">Aide du filtre de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.sort.label" datatype="html">
+        <source>Trier par</source>
+        <target state="translated">Sort by</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
+          <context context-type="linenumber">23,25</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du tri de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.chips.label" datatype="html">
+        <source>Filtrer par tag</source>
+        <target state="translated">Filter by tag</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
+          <context context-type="linenumber">37,38</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette des puces rapides</note>
+      </trans-unit>
+      <trans-unit id="patients.chips.all" datatype="html">
+        <source> Tous </source>
+        <target state="translated">All</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
+          <context context-type="linenumber">48,51</context>
+        </context-group>
+        <note priority="1" from="description">Puce rapide sans filtre de tag</note>
+      </trans-unit>
+      <trans-unit id="patients.archived.toggle" datatype="html">
+        <source>Afficher les archivés</source>
+        <target state="translated">Show archived</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
+          <context context-type="linenumber">71,75</context>
+        </context-group>
+        <note priority="1" from="description">Bascule de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.filter.label" datatype="html">
+        <source>Filtrer les <x id="subjects" equiv-text="subjects"/> par nom</source>
+        <target state="translated">Filter <x id="subjects" equiv-text="subjects"/> by name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du filtre de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.flags.list" datatype="html">
+        <source>Drapeaux</source>
+        <target state="translated">Flags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-flags.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la liste des drapeaux d&apos;un patient</note>
+      </trans-unit>
+      <trans-unit id="patients.flags.watchSince" datatype="html">
+        <source><x id="label" equiv-text="label"/> depuis le <x id="date" equiv-text="date"/></source>
+        <target state="translated"><x id="label" equiv-text="label"/> since <x id="date" equiv-text="date"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-flags.component.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Drapeau à surveiller avec sa date</note>
+      </trans-unit>
+      <trans-unit id="patients.flag.watch" datatype="html">
+        <source>À surveiller</source>
+        <target state="translated">Watch</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <note priority="1" from="description">Drapeau patient</note>
+      </trans-unit>
+      <trans-unit id="patients.flag.risk" datatype="html">
+        <source>Risque</source>
+        <target state="translated">Risk</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">Drapeau patient</note>
+      </trans-unit>
+      <trans-unit id="patients.flag.sharedCare" datatype="html">
+        <source>Suivi conjoint</source>
+        <target state="translated">Shared care</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">Drapeau patient</note>
+      </trans-unit>
+      <trans-unit id="patients.pronoun.elle" datatype="html">
+        <source>Elle</source>
+        <target state="translated">She</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <note priority="1" from="description">Pronom du patient</note>
+      </trans-unit>
+      <trans-unit id="patients.pronoun.il" datatype="html">
+        <source>Il</source>
+        <target state="translated">He</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">Pronom du patient</note>
+      </trans-unit>
+      <trans-unit id="patients.pronoun.iel" datatype="html">
+        <source>Iel</source>
+        <target state="translated">They</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <note priority="1" from="description">Pronom du patient</note>
+      </trans-unit>
+      <trans-unit id="patients.pronoun.neutre" datatype="html">
+        <source>Neutre</source>
+        <target state="translated">Neutral</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Pronom du patient</note>
+      </trans-unit>
+      <trans-unit id="patients.rhythm.weekly" datatype="html">
+        <source>Hebdomadaire</source>
+        <target state="translated">Weekly</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">Rythme de suivi</note>
+      </trans-unit>
+      <trans-unit id="patients.rhythm.biweekly" datatype="html">
+        <source>Toutes les 1 à 2 semaines</source>
+        <target state="translated">Every 1 to 2 weeks</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">Rythme de suivi</note>
+      </trans-unit>
+      <trans-unit id="patients.rhythm.monthly" datatype="html">
+        <source>Mensuel</source>
+        <target state="translated">Monthly</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">Rythme de suivi</note>
+      </trans-unit>
+      <trans-unit id="patients.rhythm.irregular" datatype="html">
+        <source>Irrégulier</source>
+        <target state="translated">Irregular</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">Rythme de suivi</note>
+      </trans-unit>
+      <trans-unit id="patients.modality.inPerson" datatype="html">
+        <source>Cabinet</source>
+        <target state="translated">In person</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <note priority="1" from="description">Modalité de séance</note>
+      </trans-unit>
+      <trans-unit id="patients.modality.video" datatype="html">
+        <source>Visio</source>
+        <target state="translated">Video</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">Modalité de séance</note>
+      </trans-unit>
+      <trans-unit id="patients.modality.phone" datatype="html">
+        <source>Téléphone</source>
+        <target state="translated">Phone</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <note priority="1" from="description">Modalité de séance</note>
+      </trans-unit>
+      <trans-unit id="patients.sort.name" datatype="html">
+        <source>Nom A → Z</source>
+        <target state="translated">Name A → Z</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">Tri de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.sort.updated" datatype="html">
+        <source>Dernière modification</source>
+        <target state="translated">Last changed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Tri de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.sort.created" datatype="html">
+        <source>Date de création</source>
+        <target state="translated">Creation date</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <note priority="1" from="description">Tri de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.archived.toast.f" datatype="html">
+        <source><x id="name" equiv-text="name"/> archivée</source>
+        <target state="translated"><x id="name" equiv-text="name"/> archived</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Toast après archivage, accord féminin</note>
+      </trans-unit>
+      <trans-unit id="patients.archived.toast.m" datatype="html">
+        <source><x id="name" equiv-text="name"/> archivé</source>
+        <target state="translated"><x id="name" equiv-text="name"/> archived</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <note priority="1" from="description">Toast après archivage, accord masculin</note>
+      </trans-unit>
+      <trans-unit id="patients.archived.toast.n" datatype="html">
+        <source><x id="name" equiv-text="name"/> archivé·e</source>
+        <target state="translated"><x id="name" equiv-text="name"/> archived</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <note priority="1" from="description">Toast après archivage, accord inclusif</note>
+      </trans-unit>
+      <trans-unit id="patients.restored.toast.f" datatype="html">
+        <source><x id="name" equiv-text="name"/> restaurée</source>
+        <target state="translated"><x id="name" equiv-text="name"/> restored</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <note priority="1" from="description">Toast après restauration, accord féminin</note>
+      </trans-unit>
+      <trans-unit id="patients.restored.toast.m" datatype="html">
+        <source><x id="name" equiv-text="name"/> restauré</source>
+        <target state="translated"><x id="name" equiv-text="name"/> restored</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+        <note priority="1" from="description">Toast après restauration, accord masculin</note>
+      </trans-unit>
+      <trans-unit id="patients.restored.toast.n" datatype="html">
+        <source><x id="name" equiv-text="name"/> restauré·e</source>
+        <target state="translated"><x id="name" equiv-text="name"/> restored</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+        <note priority="1" from="description">Toast après restauration, accord inclusif</note>
+      </trans-unit>
+      <trans-unit id="patients.archived.restore" datatype="html">
+        <source>Restaurer</source>
+        <target state="translated">Restore</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <note priority="1" from="description">Action du toast d&apos;archivage</note>
+      </trans-unit>
+      <trans-unit id="patients.error.archived" datatype="html">
+        <source>Ce dossier est archivé : restaurez-le avant de le modifier.</source>
+        <target state="translated">This record is archived: restore it before editing.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+        <note priority="1" from="description">Erreur d&apos;écriture, patient archivé</note>
+      </trans-unit>
+      <trans-unit id="patients.error.flagActive" datatype="html">
+        <source>Ce drapeau est déjà posé : la fiche a été rechargée.</source>
+        <target state="translated">This flag is already set: the record has been reloaded.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+        <note priority="1" from="description">Erreur d&apos;écriture, drapeau déjà posé</note>
+      </trans-unit>
+      <trans-unit id="patients.error.notFound" datatype="html">
+        <source>Ce dossier n&apos;existe pas ou ne vous appartient pas.</source>
+        <target state="translated">This record does not exist or is not yours.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">142</context>
+        </context-group>
+        <note priority="1" from="description">Erreur d&apos;écriture, dossier introuvable</note>
+      </trans-unit>
+      <trans-unit id="patients.error.generic" datatype="html">
+        <source>L&apos;enregistrement n&apos;a pas abouti. Vos saisies sont conservées : réessayez.</source>
+        <target state="translated">Saving failed. Your input is kept: try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+        <note priority="1" from="description">Erreur d&apos;écriture générique</note>
+      </trans-unit>
+      <trans-unit id="patients.table.flags" datatype="html">
+        <source>Drapeaux</source>
+        <target state="translated">Flags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
+          <context context-type="linenumber">5,6</context>
+        </context-group>
+        <note priority="1" from="description">Colonne de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.table.tags" datatype="html">
+        <source>Tags</source>
+        <target state="translated">Tags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
+          <context context-type="linenumber">6,9</context>
+        </context-group>
+        <note priority="1" from="description">Colonne de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.table.changed" datatype="html">
+        <source> Dernière modification </source>
+        <target state="translated">Last changed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
+          <context context-type="linenumber">12,15</context>
+        </context-group>
+        <note priority="1" from="description">Colonne de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.table.actions" datatype="html">
+        <source>Actions</source>
+        <target state="translated">Actions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
+          <context context-type="linenumber">16,22</context>
+        </context-group>
+        <note priority="1" from="description">Colonne de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.table.age" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ row.age }}"/> ans</source>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ row.age }}"/> years old</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
+          <context context-type="linenumber">38,39</context>
+        </context-group>
+        <note priority="1" from="description">Âge dans la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.table.archivedOn" datatype="html">
+        <source>Archivé·e <x id="INTERPOLATION" equiv-text="{{ row.changed }}"/></source>
+        <target state="translated">Archived <x id="INTERPOLATION" equiv-text="{{ row.changed }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
+          <context context-type="linenumber">61,62</context>
+        </context-group>
+        <note priority="1" from="description">Date d&apos;archivage dans la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.table.edit" datatype="html">
+        <source>Fiche</source>
+        <target state="translated">Record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
+          <context context-type="linenumber">74,79</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la fiche d&apos;un patient</note>
+      </trans-unit>
+      <trans-unit id="patients.table.editLabel" datatype="html">
+        <source>Modifier la fiche de <x id="name" equiv-text="name"/></source>
+        <target state="translated">Edit the record of <x id="name" equiv-text="name"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la fiche d&apos;un patient</note>
+      </trans-unit>
+      <trans-unit id="patients.tags.add" datatype="html">
+        <source>Ajouter un tag</source>
+        <target state="translated">Add a tag</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/tag-editor.component.ts</context>
+          <context context-type="linenumber">34,37</context>
+        </context-group>
+        <note priority="1" from="description">Champ d&apos;ajout de tag</note>
+      </trans-unit>
+      <trans-unit id="patients.tags.addButton" datatype="html">
+        <source> Ajouter </source>
+        <target state="translated">Add</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/tag-editor.component.ts</context>
+          <context context-type="linenumber">55,58</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;ajout de tag</note>
+      </trans-unit>
+      <trans-unit id="patients.tags.hint" datatype="html">
+        <source> Communs à tous vos dossiers. Une émotion ne peut pas servir de tag. </source>
+        <target state="translated">Shared across all your records. An emotion cannot be used as a tag.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/tag-editor.component.ts</context>
+          <context context-type="linenumber">64,66</context>
+        </context-group>
+        <note priority="1" from="description">Aide du champ tag</note>
+      </trans-unit>
+      <trans-unit id="patients.tags.list" datatype="html">
+        <source>Tags du dossier</source>
+        <target state="translated">Record tags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/tag-editor.component.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la liste des tags du patient</note>
+      </trans-unit>
+      <trans-unit id="patients.tags.remove" datatype="html">
+        <source>Retirer le tag #<x id="tag" equiv-text="tag"/></source>
+        <target state="translated">Remove tag #<x id="tag" equiv-text="tag"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/tag-editor.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de retrait d&apos;un tag</note>
+      </trans-unit>
+      <trans-unit id="patients.history.baseUnknown" datatype="html">
+        <source> La création n&apos;a pas d&apos;instantané : valeurs enregistrées par cette modification. </source>
+        <target state="translated">Creation has no snapshot: values saved by this change.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.html</context>
+          <context context-type="linenumber">26,30</context>
+        </context-group>
+        <note priority="1" from="description">Version sans état précédent</note>
+      </trans-unit>
+      <trans-unit id="patients.history.empty" datatype="html">
+        <source>Aucune modification depuis la création</source>
+        <target state="translated">No changes since creation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <note priority="1" from="description">Historique vide</note>
+      </trans-unit>
+      <trans-unit id="patients.history.error" datatype="html">
+        <source>Impossible de charger l&apos;historique</source>
+        <target state="translated">Unable to load the history</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <note priority="1" from="description">Historique en erreur</note>
+      </trans-unit>
+      <trans-unit id="patients.history.version" datatype="html">
+        <source>Version <x id="version" equiv-text="version"/></source>
+        <target state="translated">Version <x id="version" equiv-text="version"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;une version de la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.history.emptyValue" datatype="html">
+        <source>(vide)</source>
+        <target state="translated">(empty)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Valeur vide dans l&apos;historique</note>
       </trans-unit>
     </body>
   </file>

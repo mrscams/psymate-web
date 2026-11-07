@@ -1,0 +1,74 @@
+<div class="toolbar" role="search">
+  <div class="field filter">
+    <label for="patients-filter">{{ filterLabel() }}</label>
+    <input
+      #filter
+      id="patients-filter"
+      type="search"
+      autocomplete="off"
+      [value]="query()"
+      (input)="onInput($event)"
+      (keydown)="onKeydown($event)"
+      aria-describedby="patients-filter-hint"
+    />
+    <p id="patients-filter-hint" class="hint">
+      <span i18n="Aide du filtre de la liste@@patients.filter.hint"
+        >Accents et majuscules ignorés, à partir de 2 caractères.</span
+      >
+      <kbd>/</kbd>
+    </p>
+  </div>
+  <div class="field sort">
+    <label for="patients-sort" i18n="Étiquette du tri de la liste@@patients.sort.label"
+      >Trier par</label
+    >
+    <select id="patients-sort" [value]="sort()" (change)="onSort($event)">
+      @for (option of sorts; track option.value) {
+        <option [value]="option.value" [selected]="option.value === sort()">
+          {{ option.label }}
+        </option>
+      }
+    </select>
+  </div>
+</div>
+<div class="chips-row">
+  <ul
+    class="chips"
+    aria-label="Filtrer par tag"
+    i18n-aria-label="Étiquette des puces rapides@@patients.chips.label"
+  >
+    <li>
+      <button
+        type="button"
+        class="chip"
+        [attr.aria-pressed]="activeTag() === null"
+        (click)="tagChange.emit(null)"
+        i18n="Puce rapide sans filtre de tag@@patients.chips.all"
+      >
+        Tous
+      </button>
+    </li>
+    @for (tag of tags(); track tag.id) {
+      <li>
+        <button
+          type="button"
+          class="chip"
+          [attr.aria-pressed]="activeTag() === tag.label"
+          (click)="tagChange.emit(activeTag() === tag.label ? null : tag.label)"
+        >
+          #{{ tag.label }}
+        </button>
+      </li>
+    }
+  </ul>
+  <label class="archived-toggle">
+    <input
+      type="checkbox"
+      [checked]="archived()"
+      (change)="archivedChange.emit($any($event.target).checked)"
+    />
+    <span i18n="Bascule de la liste des patients@@patients.archived.toggle"
+      >Afficher les archivés</span
+    >
+  </label>
+</div>

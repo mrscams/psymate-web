@@ -1,0 +1,73 @@
+<header class="page-header">
+  <h1>{{ title() }}</h1>
+  <a mat-flat-button routerLink="/patients/nouveau" class="new">
+    {{ newLabel() }}
+    <kbd>N</kbd>
+  </a>
+</header>
+
+<section class="card" aria-labelledby="patients-list-title">
+  <h2 id="patients-list-title" class="sr-only">{{ title() }}</h2>
+  <pm-patient-filters
+    [query]="query()"
+    (queryChange)="onQuery($event)"
+    [sort]="store.sort()"
+    (sortChange)="store.setSort($event)"
+    [tags]="tags.tags().data ?? []"
+    [activeTag]="store.tag()"
+    (tagChange)="store.setTag($event)"
+    [archived]="store.archived()"
+    (archivedChange)="store.setArchived($event)"
+    (openFirst)="openFirst()"
+  />
+
+  @if (staleError()) {
+    <div class="banner" role="alert">
+      <span>{{ errorTitle() }}</span>
+      <button mat-stroked-button type="button" (click)="store.reload()">{{ retry.label }}</button>
+    </div>
+  }
+
+  @if (kind(); as state) {
+    @switch (state) {
+      @case ('loading') {
+        <pm-state kind="loading" skeleton="row" [lines]="6" />
+      }
+      @case ('error') {
+        <pm-state kind="error" [title]="errorTitle()" [action]="retry" />
+      }
+      @case ('empty') {
+        <pm-state kind="empty" [title]="emptyTitle()" [action]="emptyAction()" />
+      }
+    }
+  } @else {
+    <pm-patient-table
+      [patients]="store.items()"
+      [query]="store.effectiveQuery()"
+      [sort]="store.sort()"
+      [refreshing]="refreshing()"
+    />
+    @if (store.hasMore()) {
+      <div class="more">
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="store.loadingMore()"
+          (click)="store.loadMore()"
+          i18n="Bouton de pagination de la liste@@patients.list.more"
+        >
+          Afficher plus
+        </button>
+        @if (store.moreProblem()) {
+          <p
+            class="more-error"
+            role="alert"
+            i18n="Erreur de la page suivante@@patients.list.moreError"
+          >
+            La suite de la liste n'a pas pu être chargée.
+          </p>
+        }
+      </div>
+    }
+  }
+</section>

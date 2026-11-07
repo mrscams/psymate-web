@@ -1,0 +1,46 @@
+@if (state(); as kind) {
+  @switch (kind) {
+    @case ('loading') {
+      <pm-state kind="loading" skeleton="card" [lines]="2" compact />
+    }
+    @case ('error') {
+      <pm-state kind="error" [title]="errorTitle" [action]="retryAction" compact />
+    }
+    @case ('empty') {
+      <pm-state kind="empty" [title]="emptyTitle" compact />
+    }
+  }
+} @else {
+  <ol class="versions">
+    @for (entry of entries(); track entry.version) {
+      <li class="version">
+        <h3>
+          <span>{{ versionTitle(entry.version) }}</span>
+          <span class="when mono">{{ entry.when }}</span>
+        </h3>
+        @if (entry.reason) {
+          <p class="reason">{{ entry.reason }}</p>
+        }
+        @if (entry.baseUnknown) {
+          <p class="note" i18n="Version sans état précédent@@patients.history.baseUnknown">
+            La création n'a pas d'instantané : valeurs enregistrées par cette modification.
+          </p>
+        }
+        <dl class="changes">
+          @for (row of entry.rows; track row.field) {
+            <div class="change">
+              <dt>{{ row.label }}</dt>
+              <dd>
+                @if (row.before !== null) {
+                  <del>{{ row.before }}</del>
+                  <span class="arrow" aria-hidden="true">→</span>
+                }
+                <ins>{{ row.after }}</ins>
+              </dd>
+            </div>
+          }
+        </dl>
+      </li>
+    }
+  </ol>
+}
