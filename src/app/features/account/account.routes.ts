@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { PreferencesPage } from './pages/preferences.page';
+import { SecurityPage, TWO_FACTOR_SEGMENT } from './pages/security.page';
 import { VerificationPage } from './pages/verification.page';
 
 /** Montées sous /mon-compte par app.routes.ts (authGuard, statusGuard). */
@@ -16,5 +17,12 @@ export const ACCOUNT_ROUTES: Routes = [
     path: 'preferences',
     component: PreferencesPage,
     title: $localize`:Titre d'onglet des préférences@@preferences.pageTitle:Préférences · PsyMate`,
+  },
+  {
+    path: 'securite',
+    component: SecurityPage,
+    title: $localize`:Titre d'onglet de Compte et sécurité@@account.security.pageTitle:Compte et sécurité · PsyMate`,
+    // /mon-compte/securite/2fa : même page, le panneau d'activation ouvert (fiche 18 B).
+    children: [{ path: TWO_FACTOR_SEGMENT, children: [] }],
   },
 ];

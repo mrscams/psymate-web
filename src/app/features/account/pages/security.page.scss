@@ -1,0 +1,230 @@
+:host {
+  display: block;
+  color: var(--text-primary);
+}
+
+.account {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+pm-account-nav {
+  flex: 0 1 220px;
+}
+
+.content {
+  flex: 999 1 560px;
+  min-width: 0;
+  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+h1 {
+  margin: 0 0 4px;
+  font: var(--mat-sys-headline-small);
+}
+
+.intro,
+.help,
+.note {
+  margin: 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+.intro {
+  font: var(--mat-sys-body-medium);
+}
+
+.note:empty {
+  display: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 26px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+}
+
+.card-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+h2 {
+  margin: 0;
+  font: var(--mat-sys-label-medium);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+
+  .count {
+    font-weight: 400;
+  }
+}
+
+// Grille libellé 260 px / valeur / action (fiche 18).
+.row {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr) auto;
+  gap: 8px 24px;
+  align-items: center;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.label {
+  font: var(--mat-sys-body-medium);
+  font-weight: 500;
+}
+
+.value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0;
+  min-width: 0;
+  font: var(--mat-sys-body-medium);
+  overflow-wrap: anywhere;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.masked {
+  letter-spacing: 0.1em;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font: var(--mat-sys-label-medium);
+  font-weight: 600;
+}
+
+.badge--success {
+  color: var(--success);
+  background: var(--success-bg);
+}
+
+.badge--warning {
+  color: var(--warning);
+  background: var(--warning-bg);
+}
+
+.badge--info {
+  color: var(--info);
+  background: var(--info-bg);
+}
+
+button.danger {
+  --mdc-outlined-button-label-text-color: var(--danger);
+  --mdc-outlined-button-outline-color: var(--danger);
+}
+
+.banner {
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font: var(--mat-sys-body-medium);
+}
+
+.banner--danger {
+  color: var(--danger);
+  background: var(--danger-bg);
+}
+
+.sessions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.session {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+
+  &.current {
+    border-color: var(--primary);
+  }
+}
+
+.session-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.device {
+  font: var(--mat-sys-body-medium);
+  font-weight: 500;
+}
+
+.session-dates {
+  grid-column: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  margin: 0;
+
+  div {
+    display: flex;
+    gap: 6px;
+  }
+  dt {
+    color: var(--text-secondary);
+    font: var(--mat-sys-body-small);
+  }
+  dd {
+    margin: 0;
+    font: var(--mat-sys-body-small);
+  }
+}
+
+.revoke {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+
+@media (max-width: 720px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .session {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .revoke {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: start;
+  }
+}
