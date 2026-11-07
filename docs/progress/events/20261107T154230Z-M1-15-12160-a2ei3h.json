@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-07T15:42:30.535Z",
+  "task": "M1-15",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 3 fusionnee (squash e116d0e) : ecrans connexion, inscription, mot de passe oublie, dossier professionnel ; CI verte (checks + 26 e2e)",
+  "notes": "Correctif e2e avant fusion : attendre la fin de l ondulation Material avant axe-core (helper e2e/support/axe.ts), sinon contraste 4,38:1 mesure en CI sur le bouton Se connecter. Lot 0 fusionne en squash (PR 2, 31d9006) : les branches de taches coupees avant doivent etre rebasees sur main.",
+  "next": "M1-16 : rebase sur main, PR, CI, fusion ; puis M1-17 ∥ M1-18 et lot 4 (M5-04 ∥ M5-05)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/3",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
