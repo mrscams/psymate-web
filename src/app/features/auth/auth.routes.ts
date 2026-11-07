@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 
 import { guestGuard } from '../../core/auth';
 import { firstLoginGuard } from './first-login.guard';
-import { AccountStatePage } from './pages/account-state.page';
 import { ConfirmEmailPage } from './pages/confirm-email.page';
 import { LoginPage } from './pages/login.page';
 import { PasswordResetPage } from './pages/password-reset.page';

@@ -4604,6 +4604,7 @@
           <context context-type="linenumber">365</context>
         </context-group>
         <note priority="1" from="description">Recours déjà ouvert</note>
+      </trans-unit>
       <trans-unit id="account.security.pageTitle" datatype="html">
         <source>Compte et sécurité · PsyMate</source>
         <target state="translated">Account and security · PsyMate</target>
