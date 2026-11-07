@@ -1,0 +1,9 @@
+{
+  "at": "2026-11-07T13:30:34.955Z",
+  "task": "M1-16",
+  "agent": "claude",
+  "status": "in-progress",
+  "summary": "Lot 1 lance : M1-16 (PreferencesStore et page Preferences) en cours dans son worktree, en parallele de M1-15",
+  "branch": "claude/m1-16-preferences",
+  "checkout": "psymate-web"
+}
