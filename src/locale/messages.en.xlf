@@ -7733,6 +7733,7 @@
           <context context-type="linenumber">43</context>
         </context-group>
         <note priority="1" from="description">Avatar sans photo d&apos;un praticien (fiche 08)</note>
+      </trans-unit>
       <trans-unit id="profile.pageTitle" datatype="html">
         <source>Profil public · PsyMate</source>
         <target state="translated">Public profile · PsyMate</target>
