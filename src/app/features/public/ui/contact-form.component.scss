@@ -1,0 +1,92 @@
+:host {
+  display: block;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.length {
+  font-family: var(--font-mono);
+}
+
+// Hors écran, pas display:none : certains robots ne remplissent que les champs « visibles ».
+.trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.consent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.privacy {
+  margin-left: 40px;
+  color: var(--primary);
+  font: var(--mat-sys-body-small);
+}
+
+.error {
+  margin: 0 0 0 40px;
+  color: var(--danger);
+  font: var(--mat-sys-body-small);
+}
+
+.notice {
+  margin: 8px 0 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.sending {
+  color: var(--text-secondary);
+}
+
+.sent {
+  padding: 16px;
+  border-radius: 10px;
+  background: var(--success-bg);
+  color: var(--success);
+
+  p {
+    margin: 0 0 8px;
+  }
+}
+
+.sent-title {
+  font: var(--mat-sys-title-medium);
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .actions button {
+    width: 100%;
+  }
+}

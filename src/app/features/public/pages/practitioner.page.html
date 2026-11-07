@@ -1,0 +1,320 @@
+@if (profile(); as p) {
+  <nav
+    class="crumbs"
+    aria-label="Fil d'Ariane"
+    i18n-aria-label="Étiquette du fil d'Ariane@@public.practitioner.crumbs"
+  >
+    <ol>
+      <li>
+        <a
+          [routerLink]="paths.directory"
+          i18n="Fil d'Ariane, annuaire@@public.practitioner.crumbs.directory"
+          >Annuaire</a
+        >
+      </li>
+      @for (crumb of crumbs(); track crumb.label) {
+        <li>
+          <a [routerLink]="paths.directory" [queryParams]="crumb.params">{{ crumb.label }}</a>
+        </li>
+      }
+      <li aria-current="page">{{ p.displayName }}</li>
+    </ol>
+  </nav>
+
+  <div class="layout">
+    <div class="main">
+      <section class="card identity" aria-labelledby="practitioner-name">
+        <pm-practitioner-avatar [name]="p.displayName" [large]="true" />
+        <div class="identity-body">
+          <div class="name-row">
+            <h1 id="practitioner-name">{{ p.displayName }}</h1>
+            @if (p.verified) {
+              <pm-verified-badge />
+            }
+          </div>
+          <p class="profession-row">
+            <pm-profession-chip [profession]="p.profession" />
+            @if (p.titleLabel) {
+              <span>{{ p.titleLabel }}</span>
+            }
+            @if (p.professionalNumber) {
+              <span class="mono"
+                ><span i18n="Préfixe du numéro professionnel@@public.practitioner.number">n°</span>
+                {{ p.professionalNumber }}</span
+              >
+            }
+          </p>
+          <ul class="facts">
+            @if (p.city || offeredModalities()) {
+              <li>
+                {{ p.city }}
+                @if (p.city && offeredModalities()) {
+                  ·
+                }
+                {{ offeredModalities() }}
+              </li>
+            }
+            @if (p.responseDelay) {
+              <li i18n="Délai de réponse déclaré@@public.practitioner.responseDelay">
+                Répond en général {{ p.responseDelay }}
+              </li>
+            }
+            @if (nextSlot()) {
+              <li i18n="Prochain créneau@@public.practitioner.nextSlot">
+                Prochain créneau : <span class="mono">{{ nextSlot() }}</span>
+              </li>
+            }
+            <li class="availability"><pm-availability [availability]="p.availability" /></li>
+          </ul>
+          <div class="actions">
+            <a
+              mat-flat-button
+              [routerLink]="[]"
+              fragment="contact"
+              i18n="Bouton vers le formulaire de contact@@public.practitioner.contactCta"
+              >Prendre contact</a
+            >
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="share()"
+              i18n="Bouton de partage de la fiche@@public.practitioner.share"
+            >
+              Partager
+            </button>
+          </div>
+        </div>
+      </section>
+
+      @if (bio().length) {
+        <section class="card" aria-labelledby="practitioner-bio">
+          <h2 id="practitioner-bio" i18n="Titre de la présentation@@public.practitioner.bio">
+            Présentation
+          </h2>
+          @for (block of bio(); track $index) {
+            @if (block.kind === 'paragraph') {
+              <p>
+                @for (span of block.spans; track $index) {
+                  @if (span.strong) {
+                    <strong>{{ span.text }}</strong>
+                  } @else {
+                    {{ span.text }}
+                  }
+                }
+              </p>
+            } @else {
+              <ul>
+                @for (item of block.items; track $index) {
+                  <li>
+                    @for (span of item; track $index) {
+                      @if (span.strong) {
+                        <strong>{{ span.text }}</strong>
+                      } @else {
+                        {{ span.text }}
+                      }
+                    }
+                  </li>
+                }
+              </ul>
+            }
+          }
+        </section>
+      }
+
+      @if (
+        specialties().length || audiences().length || modalities().length || languages() || p.fees
+      ) {
+        <section class="card practice" aria-labelledby="practitioner-practice">
+          <h2
+            id="practitioner-practice"
+            class="sr-only"
+            i18n="Titre caché de la pratique@@public.practitioner.practice"
+          >
+            Pratique
+          </h2>
+          @if (specialties().length) {
+            <div>
+              <h3 i18n="Titre des spécialités@@public.practitioner.specialties">Spécialités</h3>
+              <ul class="tags">
+                @for (label of specialties(); track label) {
+                  <li>{{ label }}</li>
+                }
+              </ul>
+            </div>
+          }
+          @if (audiences().length) {
+            <div>
+              <h3 i18n="Titre des publics@@public.practitioner.audiences">Publics</h3>
+              <ul class="tags">
+                @for (label of audiences(); track label) {
+                  <li>{{ label }}</li>
+                }
+              </ul>
+            </div>
+          }
+          @if (modalities().length) {
+            <div>
+              <h3 i18n="Titre des modalités@@public.practitioner.modalities">Modalités</h3>
+              <ul class="modalities">
+                @for (modality of modalities(); track modality.code) {
+                  <li [class.offered]="modality.offered">
+                    <span class="square" aria-hidden="true"></span>
+                    {{ modality.label }}
+                    @if (!modality.offered) {
+                      <span i18n="Modalité non proposée@@public.practitioner.modality.notOffered"
+                        >· non proposé</span
+                      >
+                    }
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+          @if (languages() || p.fees) {
+            <div>
+              <h3 i18n="Titre langues et tarifs@@public.practitioner.languagesFees">
+                Langues et tarifs
+              </h3>
+              @if (languages()) {
+                <p>{{ languages() }}</p>
+              }
+              @if (p.fees) {
+                <p class="mono fees">{{ p.fees }}</p>
+              }
+            </div>
+          }
+        </section>
+      }
+
+      <section id="contact" class="card contact" aria-labelledby="contact-title">
+        <h2 id="contact-title" i18n="Titre du formulaire de contact@@public.contact.title">
+          Envoyer un message à {{ p.displayName }}
+        </h2>
+        <p class="lead" i18n="Introduction du formulaire de contact@@public.contact.lead">
+          Votre message est transmis par e-mail à {{ p.displayName }}. Il n'est rattaché à aucun
+          dossier patient.
+        </p>
+        <pm-contact-form
+          [practitionerName]="p.displayName"
+          [status]="store.contact().status"
+          [problem]="store.contact().problem"
+          [retryAt]="store.contact().retryAt"
+          (send)="sendMessage($event)"
+          (writeAnother)="store.resetContact()"
+        />
+      </section>
+    </div>
+
+    <aside
+      class="side"
+      aria-label="Coordonnées"
+      i18n-aria-label="Étiquette de la colonne latérale de la fiche@@public.practitioner.side"
+    >
+      @if (hasContactMeans()) {
+        <section class="card" aria-labelledby="practitioner-contact">
+          <h2
+            id="practitioner-contact"
+            i18n="Titre des moyens de contact@@public.practitioner.contactMeans"
+          >
+            Contact
+          </h2>
+          <dl class="means">
+            @if (p.phone) {
+              <div>
+                <dt i18n="Téléphone du praticien@@public.practitioner.phone">Téléphone</dt>
+                <dd>
+                  <a class="mono" [href]="'tel:' + p.phone">{{ p.phone }}</a>
+                </dd>
+              </div>
+            }
+            @if (p.email) {
+              <div>
+                <dt i18n="E-mail du praticien@@public.practitioner.email">E-mail</dt>
+                <dd>
+                  <a [href]="'mailto:' + p.email">{{ p.email }}</a>
+                </dd>
+              </div>
+            }
+            @if (p.websiteUrl) {
+              <div>
+                <dt i18n="Site web du praticien@@public.practitioner.website">Site web</dt>
+                <dd>
+                  <a [href]="p.websiteUrl" rel="noopener nofollow" target="_blank">{{
+                    p.websiteUrl
+                  }}</a>
+                </dd>
+              </div>
+            }
+          </dl>
+          <p
+            class="hint"
+            i18n="Note sous les moyens de contact@@public.practitioner.contactMeans.note"
+          >
+            Seuls les moyens de contact choisis par le praticien sont affichés.
+          </p>
+        </section>
+      }
+
+      @if (p.address) {
+        <section class="card" aria-labelledby="practitioner-office">
+          <h2 id="practitioner-office" i18n="Titre du cabinet@@public.practitioner.office">
+            Cabinet
+          </h2>
+          <address>
+            {{ p.address }}<br />
+            @if (p.postalCode || p.city) {
+              {{ p.postalCode }} {{ p.city }}
+            }
+          </address>
+          @if (mapHref(); as href) {
+            <a class="map" [href]="href" rel="noopener nofollow" target="_blank">
+              <ng-container i18n="Lien vers un plan@@public.practitioner.map"
+                >Ouvrir dans un plan</ng-container
+              >
+              <span class="sr-only" i18n="Mention lien externe@@public.practitioner.map.external"
+                >(nouvel onglet, OpenStreetMap)</span
+              >
+            </a>
+          }
+        </section>
+      }
+
+      <p class="published-by" i18n="Mention sous la fiche@@public.practitioner.publishedBy">
+        Les informations de cette fiche sont publiées par le praticien lui-même.
+      </p>
+    </aside>
+  </div>
+} @else {
+  @if (store.notFound()) {
+    <section class="card not-found" role="status">
+      <h1 i18n="Titre de la fiche introuvable@@public.practitioner.notFound.title">
+        Fiche introuvable
+      </h1>
+      <p i18n="Texte de la fiche introuvable@@public.practitioner.notFound.text">
+        Cette fiche n'existe pas ou n'est plus publiée dans l'annuaire.
+      </p>
+      <a
+        mat-flat-button
+        [routerLink]="paths.directory"
+        i18n="Lien vers l'annuaire depuis la fiche introuvable@@public.practitioner.notFound.back"
+        >Retour à l'annuaire</a
+      >
+    </section>
+  } @else {
+    <h1
+      class="sr-only"
+      i18n="Titre caché pendant le chargement de la fiche@@public.practitioner.loadingTitle"
+    >
+      Fiche d'un praticien
+    </h1>
+    <pm-state
+      [kind]="stateKind(store.profile())"
+      skeleton="profile"
+      title="Impossible d'afficher cette fiche"
+      i18n-title="Titre de l'erreur de la fiche@@public.practitioner.error.title"
+      message="L'annuaire est momentanément indisponible. Réessayez dans un instant."
+      i18n-message="Texte de l'erreur de la fiche@@public.practitioner.error.message"
+      [action]="retry"
+    />
+  }
+}

@@ -1,0 +1,250 @@
+:host {
+  display: block;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-medium);
+
+  li + li::before {
+    content: '›';
+    margin-right: 6px;
+  }
+
+  a {
+    color: var(--text-secondary);
+  }
+
+  [aria-current='page'] {
+    color: var(--text-primary);
+  }
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  gap: 24px;
+  align-items: start;
+}
+
+.main,
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.card {
+  padding: 24px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+
+  h2 {
+    margin: 0 0 12px;
+    font: var(--mat-sys-title-medium);
+  }
+}
+
+.identity {
+  display: flex;
+  gap: 24px;
+}
+
+.identity-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.name-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+
+  h1 {
+    margin: 0;
+    font: var(--mat-sys-headline-medium);
+  }
+}
+
+.profession-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-medium);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.practice {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 32px;
+
+  h3 {
+    margin: 0 0 10px;
+    color: var(--text-secondary);
+    font: var(--mat-sys-label-large);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  p {
+    margin: 0 0 4px;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: 4px 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background: var(--surface-sunken);
+    font: var(--mat-sys-label-large);
+  }
+}
+
+.modalities {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 0;
+    color: var(--text-secondary);
+  }
+
+  li.offered {
+    color: var(--text-primary);
+  }
+}
+
+// Carré plein : proposée (vert sauge, fiche 09) ; gris : non proposée (le texte le dit aussi).
+.square {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--border-strong);
+
+  .offered & {
+    background: var(--entry-session);
+  }
+}
+
+.contact .lead {
+  margin: 0 0 16px;
+  color: var(--text-secondary);
+}
+
+.means {
+  margin: 0;
+
+  div + div {
+    margin-top: 12px;
+  }
+
+  dt {
+    color: var(--text-secondary);
+    font: var(--mat-sys-body-small);
+  }
+
+  dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  a {
+    color: var(--primary);
+  }
+}
+
+.hint,
+.published-by {
+  margin: 12px 0 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+address {
+  font-style: normal;
+}
+
+.map {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--primary);
+}
+
+.not-found {
+  max-width: 560px;
+
+  h1 {
+    margin: 0 0 8px;
+    font: var(--mat-sys-headline-small);
+  }
+}
+
+// 390 px (fiche 09) : colonnes empilées, formulaire en une colonne, boutons pleine largeur.
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .identity {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .practice {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .actions a,
+  .actions button {
+    width: 100%;
+  }
+}

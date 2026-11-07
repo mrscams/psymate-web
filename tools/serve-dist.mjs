@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Sert l'application construite (dist/psymate-web/browser) pour les e2e : les deux langues
-// sous /fr/ et /en/ (ng serve n'en sert qu'une à la fois), retour sur index.html pour les routes
-// du SPA, et proxy /api → psymate-api, comme proxy.conf.json en développement.
+// sous /fr/ et /en/ (ng serve n'en sert qu'une à la fois), les pages prérendues
+// (<langue>/<route>/index.html, M5-05), retour sur la coquille du SPA (index.csr.html) pour les
+// autres routes, et proxy /api → psymate-api, comme proxy.conf.json en développement.
 // Usage : pnpm build, puis node tools/serve-dist.mjs (PORT=4200, API_URL=http://localhost:8080).
 import { createReadStream, existsSync, statSync } from 'node:fs';
 import { createServer, request } from 'node:http';
@@ -25,7 +26,19 @@ const TYPES = {
   '.woff2': 'font/woff2',
 };
 
-if (!LOCALES.every((locale) => existsSync(join(ROOT, locale, 'index.html')))) {
+/** Coquille du SPA : index.csr.html depuis le prérendu (outputMode static), index.html avant. */
+function shellOf(locale) {
+  const csr = join(ROOT, locale, 'index.csr.html');
+  return existsSync(csr) ? csr : join(ROOT, locale, 'index.html');
+}
+
+/** Page prérendue de la route (/fr/annuaire → fr/annuaire/index.html), ou null. */
+function prerenderedOf(file) {
+  const page = join(file, 'index.html');
+  return existsSync(page) && statSync(page).isFile() ? page : null;
+}
+
+if (!LOCALES.every((locale) => existsSync(shellOf(locale)))) {
   console.error(`[serve-dist] ${ROOT} ne contient pas /fr et /en : lance d'abord pnpm build.`);
   process.exit(1);
 }
@@ -84,7 +97,7 @@ const server = createServer((req, res) => {
   } else if (extname(url.pathname)) {
     res.writeHead(404).end();
   } else {
-    sendFile(res, join(ROOT, locale, 'index.html'));
+    sendFile(res, prerenderedOf(file) ?? shellOf(locale));
   }
 });
 

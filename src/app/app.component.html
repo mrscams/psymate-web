@@ -2,7 +2,7 @@
   @case ('public') {
     <pm-public-layout
       [authenticated]="session.authenticated()"
-      [narrow]="true"
+      [narrow]="narrow()"
       [switchHref]="switchHref()"
       [switchLang]="other"
     >

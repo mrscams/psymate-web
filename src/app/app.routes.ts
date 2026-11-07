@@ -12,6 +12,12 @@ export const routes: Routes = [
     data: { layout: 'public' },
     loadChildren: () => import('./features/auth').then((m) => m.AUTH_ROUTES),
   },
+  // Pages publiques (M5-05, fiches 08, 09, 24) : sans garde ni session, prérendues (app.routes.server.ts).
+  {
+    path: '',
+    data: { layout: 'public' },
+    loadChildren: () => import('./features/public').then((m) => m.PUBLIC_ROUTES),
+  },
   {
     path: 'patients',
     canActivate: [authGuard, statusGuard],

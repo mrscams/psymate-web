@@ -19,7 +19,8 @@ import {
 /**
  * Habillage d'une route, porté par `data.layout` (hérité des parents) :
  * - practitioner (défaut) : barre d'application, bandeaux d'état, <main> ;
- * - public : layout public (fiche 00 §4), sans barre d'application ;
+ * - public : layout public (fiche 00 §4), sans barre d'application ; conteneur étroit (480 px) des
+ *   formulaires, sauf si une route déclare `data.wide` (annuaire, fiche praticien, comment ça marche) ;
  * - admin : barre d'administration (fiche 00 §5) ;
  * - bare : la route seule (page de démonstration).
  */
@@ -58,17 +59,20 @@ export class AppComponent {
       map(() => ({
         url: this.router.url,
         layout: layoutOf(this.router.routerState.snapshot.root),
+        wide: isWide(this.router.routerState.snapshot.root),
       })),
     ),
     {
       initialValue: {
         url: this.router.url,
         layout: layoutOf(this.router.routerState.snapshot.root),
+        wide: isWide(this.router.routerState.snapshot.root),
       },
     },
   );
 
   protected readonly layout = computed(() => this.navigation().layout);
+  protected readonly narrow = computed(() => !this.navigation().wide);
   protected readonly switchHref = computed(() =>
     localeSwitchHref(this.baseHref, this.navigation().url, this.other),
   );
@@ -97,4 +101,12 @@ export function layoutOf(root: ActivatedRouteSnapshot): AppLayout {
     if (declared) layout = declared as AppLayout;
   }
   return layout;
+}
+
+/** Une route de la chaîne déclare `data.wide` : layout public pleine largeur (1120 px). */
+export function isWide(root: ActivatedRouteSnapshot): boolean {
+  for (let route: ActivatedRouteSnapshot | null = root; route; route = route.firstChild) {
+    if (route.data['wide'] === true) return true;
+  }
+  return false;
 }

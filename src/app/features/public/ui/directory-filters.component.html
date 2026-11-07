@@ -1,0 +1,45 @@
+@for (group of groups(); track group.filter) {
+  <fieldset class="facet">
+    <legend>{{ group.legend }}</legend>
+    @for (option of group.options; track option.code) {
+      <mat-checkbox
+        class="option"
+        [checked]="option.checked"
+        [disabled]="option.disabled || disabled()"
+        (change)="
+          filterToggle.emit({ filter: group.filter, code: option.code, checked: $event.checked })
+        "
+      >
+        <span class="option-label">{{ option.label }}</span>
+        <span class="count">{{ option.count }}</span>
+      </mat-checkbox>
+    }
+  </fieldset>
+}
+
+<fieldset class="facet">
+  <legend i18n="Légende de la facette disponibilité@@public.filters.availability">
+    Disponibilité
+  </legend>
+  <mat-checkbox
+    class="option"
+    [checked]="query().accepting"
+    [disabled]="disabled()"
+    (change)="acceptingChange.emit($event.checked)"
+    i18n="Case de la facette disponibilité@@public.filters.accepting"
+    >Accepte de nouveaux patients</mat-checkbox
+  >
+</fieldset>
+
+@if (hasFilters()) {
+  <button
+    mat-button
+    type="button"
+    class="clear"
+    [disabled]="disabled()"
+    (click)="clearAll.emit()"
+    i18n="Bouton qui retire tous les filtres de l'annuaire@@public.filters.clear"
+  >
+    Tout effacer
+  </button>
+}
