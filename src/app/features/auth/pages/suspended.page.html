@@ -1,0 +1,419 @@
+<div class="suspended">
+  <section class="card main" aria-labelledby="suspended-title">
+    @if (session.me(); as me) {
+      <p class="who">
+        <span i18n="Bandeau : qui est connecté@@auth.confirm.signedInAs"
+          >Connecté·e en tant que</span
+        >
+        <span class="mono">{{ me.email }}</span>
+        <span aria-hidden="true">·</span>
+        <button
+          type="button"
+          class="link-button"
+          (click)="logout()"
+          i18n="Bouton de déconnexion de la page compte suspendu@@auth.suspended.logout"
+        >
+          Se déconnecter
+        </button>
+      </p>
+    }
+    <p class="band" role="status">
+      <svg class="band-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 8v5 M12 16v.5" />
+      </svg>
+      {{ bandText() }}
+    </p>
+    <h1 id="suspended-title">{{ title() }}</h1>
+    <p class="lead" i18n="Ce qui reste possible et ce qui est désactivé@@auth.suspended.lead">
+      Vous ne pouvez plus vous connecter à l'application : la saisie de nouvelles entrées et votre
+      fiche publique sont désactivées jusqu'à la levée de la décision. Vos dossiers ne sont pas
+      supprimés : vous pouvez les exporter, et contester la décision une fois.
+    </p>
+
+    <section class="reason" aria-labelledby="reason-title">
+      <h2 id="reason-title" i18n="Titre de l'encart motif@@auth.suspended.reason.title">
+        Motif communiqué
+      </h2>
+      <p i18n="Où se trouve le motif@@auth.suspended.reason.body">
+        Le motif détaillé et la référence de la décision figurent dans l'e-mail qui vous a été
+        envoyé au moment de la décision.
+      </p>
+      <p
+        class="note"
+        i18n="Rappel : aucune donnée patient consultée@@auth.suspended.reason.noPatientData"
+      >
+        Aucune donnée patient n'a été consultée dans le cadre de cette décision.
+      </p>
+    </section>
+
+    <section aria-labelledby="can-title">
+      <h2 id="can-title" i18n="Titre de la liste des possibilités@@auth.suspended.can.title">
+        Ce que vous pouvez faire
+      </h2>
+      <ul class="can">
+        <li>
+          <strong i18n="Possibilité 1, titre@@auth.suspended.can.export.title"
+            >Exporter vos dossiers</strong
+          >
+          <span i18n="Possibilité 1, détail@@auth.suspended.can.export.body"
+            >Une archive zip : la liste de vos patients, puis un fichier Markdown et un PDF par
+            patient (entrées privées exclues). Le lien de téléchargement vaut 7 jours.</span
+          >
+        </li>
+        <li>
+          <strong i18n="Possibilité 2, titre@@auth.suspended.can.appeal.title"
+            >Contester la décision</strong
+          >
+          <span i18n="Possibilité 2, détail@@auth.suspended.can.appeal.body"
+            >Un seul recours par décision, examiné par une autre personne que celle qui a décidé.
+            Réponse sous 5 jours ouvrés, à titre indicatif.</span
+          >
+        </li>
+        <li>
+          <strong i18n="Possibilité 3, titre@@auth.suspended.can.protected.title"
+            >Vos dossiers restent protégés</strong
+          >
+          <span i18n="Possibilité 3, détail@@auth.suspended.can.protected.body"
+            >Rien n'est supprimé pendant la suspension. En cas de clôture définitive, vous aurez 90
+            jours pour récupérer vos données.</span
+          >
+        </li>
+      </ul>
+    </section>
+
+    <form
+      class="identity"
+      [formGroup]="credentials"
+      (ngSubmit)="requestExport()"
+      aria-labelledby="identity-title"
+      novalidate
+    >
+      <fieldset>
+        <legend
+          id="identity-title"
+          i18n="Légende du bloc d'identité@@auth.suspended.identity.title"
+        >
+          Confirmez votre identité
+        </legend>
+        <p class="note" i18n="Pourquoi saisir ses identifiants@@auth.suspended.identity.lead">
+          Votre compte n'a plus de session : l'export et le recours se font avec votre e-mail et
+          votre mot de passe, sans ouvrir de session.
+        </p>
+        <div class="field">
+          <label [for]="fieldId('email')">{{ labels.email }}</label>
+          <input
+            [id]="fieldId('email')"
+            type="email"
+            formControlName="email"
+            autocomplete="username"
+            required
+            [attr.aria-invalid]="
+              credentials.controls.email.invalid && credentials.controls.email.touched
+            "
+            [attr.aria-describedby]="fieldId('email') + '-error'"
+          />
+          <pm-field-errors
+            [control]="credentials.controls.email"
+            [id]="fieldId('email') + '-error'"
+          />
+        </div>
+        <div class="field">
+          <label [for]="fieldId('password')">{{ labels.password }}</label>
+          <input
+            [id]="fieldId('password')"
+            type="password"
+            formControlName="password"
+            autocomplete="current-password"
+            required
+            [attr.aria-invalid]="
+              credentials.controls.password.invalid && credentials.controls.password.touched
+            "
+            [attr.aria-describedby]="fieldId('password') + '-error'"
+          />
+          <pm-field-errors
+            [control]="credentials.controls.password"
+            [id]="fieldId('password') + '-error'"
+          />
+        </div>
+        @if (store.otpRequired()) {
+          <div class="field">
+            <label [for]="fieldId('otp')">{{ labels.otp }}</label>
+            <input
+              [id]="fieldId('otp')"
+              type="text"
+              formControlName="otp"
+              autocomplete="one-time-code"
+              inputmode="numeric"
+              [attr.aria-invalid]="
+                credentials.controls.otp.invalid && credentials.controls.otp.touched
+              "
+              [attr.aria-describedby]="fieldId('otp') + '-error otp-note'"
+            />
+            <p
+              id="otp-note"
+              class="note"
+              i18n="Explication du champ code@@auth.suspended.identity.otpNote"
+            >
+              La double authentification est active sur ce compte : saisissez le code de votre
+              application, ou un code de secours.
+            </p>
+            <pm-field-errors
+              [control]="credentials.controls.otp"
+              [id]="fieldId('otp') + '-error'"
+            />
+          </div>
+        }
+      </fieldset>
+
+      <section class="export" aria-labelledby="export-title">
+        <h2 id="export-title" i18n="Titre de la section export@@auth.suspended.export.title">
+          Exporter mes dossiers
+        </h2>
+        <div class="actions">
+          <button
+            id="export-button"
+            mat-flat-button
+            type="submit"
+            [attr.aria-disabled]="exportDisabled()"
+            [attr.aria-describedby]="exportDisabled() ? 'export-note' : null"
+            i18n="Bouton qui lance l'export@@auth.suspended.export.button"
+          >
+            Exporter mes dossiers
+          </button>
+          @if (store.exportPending()) {
+            <p
+              id="export-note"
+              class="note"
+              i18n="Pourquoi le bouton attend@@auth.suspended.export.pendingNote"
+            >
+              Un seul export à la fois : attendez la fin de celui en cours.
+            </p>
+          } @else if (locked()) {
+            <p id="export-note" class="note">{{ lockText() }}</p>
+          }
+        </div>
+        @if (exportError(); as text) {
+          <p class="banner error" role="alert">
+            {{ text }}
+            @if (exportNotSuspended()) {
+              <a [routerLink]="loginPath" i18n="Lien vers la connexion@@auth.suspended.loginLink"
+                >Se connecter</a
+              >
+            } @else if (exportEmailPending()) {
+              <a
+                [routerLink]="confirmEmailPath"
+                i18n="Lien vers la confirmation d'e-mail@@auth.suspended.confirmEmailLink"
+                >Confirmer mon adresse</a
+              >
+            }
+          </p>
+        }
+
+        <div class="job" aria-live="polite">
+          @switch (store.exportKind()) {
+            @case ('queued') {
+              <p class="row">
+                <span
+                  class="pill neutral"
+                  i18n="État du job : en attente@@auth.suspended.export.queued"
+                  >En attente</span
+                >
+                <span class="mono">{{ requestedAt() }}</span>
+                <span i18n="Détail de l'état en attente@@auth.suspended.export.queuedBody"
+                  >Export demandé ; la préparation commence dans un instant.</span
+                >
+              </p>
+            }
+            @case ('running') {
+              <p class="row">
+                <span
+                  class="pill warn"
+                  i18n="État du job : en préparation@@auth.suspended.export.running"
+                  >En préparation</span
+                >
+                <span class="mono">{{ requestedAt() }}</span>
+              </p>
+              <mat-progress-bar mode="indeterminate" [attr.aria-label]="runningLabel" />
+            }
+            @case ('ready') {
+              <p class="row">
+                <span class="pill ok" i18n="État du job : prêt@@auth.suspended.export.ready"
+                  >Prêt</span
+                >
+                <span i18n="Validité du lien@@auth.suspended.export.validUntil"
+                  >Lien valable jusqu'au <span class="mono">{{ expiresAt() }}</span></span
+                >
+                <button
+                  mat-stroked-button
+                  type="button"
+                  class="download"
+                  (click)="download()"
+                  [disabled]="store.download().status === 'busy'"
+                  i18n="Bouton de téléchargement du zip@@auth.suspended.export.download"
+                >
+                  Télécharger l'archive
+                </button>
+              </p>
+              @if (downloadError(); as text) {
+                <p class="banner error" role="alert">{{ text }}</p>
+              }
+            }
+            @case ('expired') {
+              <p class="row">
+                <span
+                  class="pill neutral"
+                  i18n="État du job : expiré@@auth.suspended.export.expired"
+                  >Expiré</span
+                >
+                <span i18n="Détail du lien expiré@@auth.suspended.export.expiredBody"
+                  >Le lien de téléchargement a expiré (7 jours) et le fichier a été purgé. Vous
+                  pouvez relancer un export.</span
+                >
+                <button
+                  mat-stroked-button
+                  type="button"
+                  (click)="relaunch()"
+                  i18n="Bouton relancer l'export@@auth.suspended.export.relaunch"
+                >
+                  Relancer
+                </button>
+              </p>
+            }
+            @case ('failed') {
+              <p class="row">
+                <span class="pill danger" i18n="État du job : échec@@auth.suspended.export.failed"
+                  >Échec</span
+                >
+                <span class="mono">{{ store.exportStatus().data?.error }}</span>
+                <button
+                  mat-stroked-button
+                  type="button"
+                  (click)="relaunch()"
+                  i18n="Bouton relancer l'export@@auth.suspended.export.relaunch"
+                >
+                  Relancer
+                </button>
+              </p>
+            }
+          }
+          @if (store.exportStatus().status === 'loading' && !store.exportStatus().data) {
+            <pm-state kind="loading" skeleton="row" [lines]="1" compact />
+          } @else if (store.exportStatus().status === 'error' && !store.exportStatus().data) {
+            <pm-state
+              kind="error"
+              compact
+              [title]="statusErrorTitle"
+              [action]="refreshAction"
+              [details]="statusDetails()"
+            />
+          }
+        </div>
+      </section>
+    </form>
+  </section>
+
+  <aside class="card side" aria-labelledby="appeal-title">
+    <h2 id="appeal-title" i18n="Titre du recours@@auth.suspended.appeal.title">
+      Contester la décision
+    </h2>
+    @if (!appealAllowed()) {
+      <p
+        class="banner neutral"
+        role="status"
+        i18n="Compte clos : plus de recours@@auth.suspended.appeal.closedAccount"
+      >
+        Un compte clos ne peut plus déposer de recours. L'export de vos dossiers reste possible
+        pendant 90 jours.
+      </p>
+    } @else {
+      @switch (store.appeal().status) {
+        @case ('submitted') {
+          <p
+            class="banner ok"
+            role="status"
+            i18n="État du recours envoyé@@auth.suspended.appeal.submitted"
+          >
+            Recours envoyé le <span class="mono">{{ appealSubmittedAt() }}</span> · en examen par un
+            administrateur différent de celui qui a pris la décision. Réponse sous 5 jours ouvrés, à
+            titre indicatif, par e-mail.
+          </p>
+        }
+        @case ('closed') {
+          <p class="banner neutral" role="status">{{ appealClosedText() }}</p>
+        }
+        @default {
+          <p class="lead" i18n="Explication du recours@@auth.suspended.appeal.lead">
+            Expliquez ce qui, selon vous, a été mal apprécié. Le recours est examiné par une autre
+            personne que celle qui a pris la décision.
+          </p>
+          <form
+            class="appeal"
+            [formGroup]="appealForm"
+            (ngSubmit)="submitAppeal()"
+            aria-labelledby="appeal-title"
+            novalidate
+          >
+            <div class="field">
+              <label [for]="fieldId('message')">{{ labels.message }}</label>
+              <textarea
+                [id]="fieldId('message')"
+                formControlName="message"
+                rows="7"
+                required
+                [attr.minlength]="appealMin"
+                [attr.maxlength]="appealMax"
+                [attr.aria-invalid]="
+                  appealForm.controls.message.invalid && appealForm.controls.message.touched
+                "
+                [attr.aria-describedby]="fieldId('message') + '-error message-count'"
+              ></textarea>
+              <p id="message-count" class="count mono">
+                {{ messageLength() }} / {{ appealMax }}
+                <span i18n="Minimum du message de recours@@auth.suspended.appeal.min"
+                  >· {{ appealMin }} caractères au moins</span
+                >
+              </p>
+              <pm-field-errors
+                [control]="appealForm.controls.message"
+                [id]="fieldId('message') + '-error'"
+              />
+            </div>
+            @if (appealError(); as text) {
+              <p class="banner error" role="alert">{{ text }}</p>
+            }
+            <button
+              mat-flat-button
+              type="submit"
+              [disabled]="store.appeal().status === 'busy' || locked()"
+              i18n="Bouton d'envoi du recours@@auth.suspended.appeal.submit"
+            >
+              Envoyer le recours
+            </button>
+            <p class="note" i18n="Rappel : un seul recours@@auth.suspended.appeal.once">
+              Un seul recours par décision. Après son examen, la décision devient définitive. Le
+              recours utilise l'identité saisie dans la carte principale.
+            </p>
+          </form>
+        }
+      }
+    }
+
+    <section class="help" aria-labelledby="help-title">
+      <h2 id="help-title" i18n="Titre de l'encart d'aide@@auth.suspended.help.title">
+        Besoin de parler à quelqu'un ?
+      </h2>
+      <p class="note" i18n="Texte de l'encart d'aide@@auth.suspended.help.body">
+        L'adresse de l'équipe vérification figure dans l'e-mail de décision. Merci de ne jamais
+        joindre de document contenant des informations sur vos patients.
+      </p>
+    </section>
+    @if (!session.me()) {
+      <p class="alt">
+        <a [routerLink]="loginPath" i18n="Retour à la connexion@@auth.suspended.backToLogin"
+          >Retour à la connexion</a
+        >
+      </p>
+    }
+  </aside>
+</div>

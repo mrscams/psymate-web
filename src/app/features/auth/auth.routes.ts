@@ -2,9 +2,11 @@ import { Routes } from '@angular/router';
 
 import { guestGuard } from '../../core/auth';
 import { AccountStatePage } from './pages/account-state.page';
+import { ConfirmEmailPage } from './pages/confirm-email.page';
 import { LoginPage } from './pages/login.page';
 import { PasswordResetPage } from './pages/password-reset.page';
 import { RegisterPage } from './pages/register.page';
+import { SuspendedPage } from './pages/suspended.page';
 
 /** Routes publiques de l'identité, montées à la racine par app.routes.ts. */
 export const AUTH_ROUTES: Routes = [
@@ -26,16 +28,29 @@ export const AUTH_ROUTES: Routes = [
     component: PasswordResetPage,
     title: $localize`:Titre d'onglet du mot de passe oublié@@auth.reset.pageTitle:Mot de passe oublié · PsyMate`,
   },
+  // Fiche 25 (M1-18) : en attente, lien expiré (avant :token, sinon « expire » serait pris pour un jeton), traitement du lien.
   {
     path: 'confirmer-email',
-    component: AccountStatePage,
-    data: { kind: 'confirm-email' },
+    component: ConfirmEmailPage,
+    data: { mode: 'pending' },
     title: $localize`:Titre d'onglet, e-mail à confirmer@@auth.state.confirmEmail.pageTitle:Confirmer l'e-mail · PsyMate`,
   },
   {
+    path: 'confirmer-email/expire',
+    component: ConfirmEmailPage,
+    data: { mode: 'expired' },
+    title: $localize`:Titre d'onglet, lien de confirmation expiré@@auth.confirm.expired.pageTitle:Lien expiré · PsyMate`,
+  },
+  {
+    path: 'confirmer-email/:token',
+    component: ConfirmEmailPage,
+    data: { mode: 'token' },
+    title: $localize`:Titre d'onglet, e-mail à confirmer@@auth.state.confirmEmail.pageTitle:Confirmer l'e-mail · PsyMate`,
+  },
+  // Fiche 27 (M1-18).
+  {
     path: 'compte-suspendu',
-    component: AccountStatePage,
-    data: { kind: 'suspended' },
+    component: SuspendedPage,
     title: $localize`:Titre d'onglet, compte suspendu@@auth.state.suspended.pageTitle:Compte suspendu · PsyMate`,
   },
   {
