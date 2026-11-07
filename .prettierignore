@@ -1,0 +1,13 @@
+# Générés, ou hors du périmètre du formatage
+.angular/
+.claude/
+coverage/
+dist/
+docs/
+out-tsc/
+playwright-report/
+test-results/
+pnpm-lock.yaml
+CLAUDE.md
+# Client généré par pnpm contract:pull (M0-07), jamais édité
+src/app/api/

@@ -1,0 +1,4 @@
+# Fins de ligne LF partout (Prettier les vérifie ; évite les CRLF de core.autocrlf sous Windows).
+* text=auto eol=lf
+*.ico binary
+*.png binary

@@ -1,0 +1,5 @@
+// expect: psymate/no-hardcoded-color
+// Violation : couleur fonctionnelle en dur dans une feuille de composant.
+:host {
+  background: rgb(238, 241, 246);
+}
