@@ -2,6 +2,7 @@ import {
   AbstractControl,
   NonNullableFormBuilder,
   ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 
@@ -10,6 +11,16 @@ import { PmValidators } from '../../../shared/forms';
 import { NAME_MAX_LENGTH, PatientFormValue } from '../data/patient.model';
 
 /** « À surveiller » coché exige une raison (fiche 16, contrat : flags[i].reason REQUIRED). */
+/**
+ * Longueur maximale vérifiée seulement si le champ a été modifié : un dossier ancien au nom plus
+ * long reste modifiable tant que le nom ne change pas (G Q47 : pas de revalidation d'une valeur
+ * inchangée).
+ */
+function maxLengthIfEdited(max: number): ValidatorFn {
+  const check = PmValidators.maxLengthTrimmed(max);
+  return (control) => (control.pristine ? null : check(control));
+}
+
 function watchReasonRequired(control: AbstractControl): ValidationErrors | null {
   const watch = control.parent?.get('watch')?.value === true;
   return watch && String(control.value ?? '').trim() === '' ? { required: true } : null;
@@ -17,19 +28,20 @@ function watchReasonRequired(control: AbstractControl): ValidationErrors | null 
 
 /**
  * Formulaire réactif de la fiche 16 (shared/forms.applyProblem travaille sur un FormGroup) : les
- * règles de forme seulement (nom requis et ≤ 120, date passée, durée entière) ; le serveur reste
+ * règles de forme seulement (nom requis et ≤ 120, date passée, durée entière ; téléphone et e-mail
+ * sont du texte libre au contrat) ; le serveur reste
  * juge (120 ans, pronom, tags).
  */
 export function buildPatientForm(fb: NonNullableFormBuilder, initial: PatientFormValue) {
-  const name = PmValidators.maxLengthTrimmed(NAME_MAX_LENGTH);
+  const name = maxLengthIfEdited(NAME_MAX_LENGTH);
   return fb.group({
     displayName: [initial.displayName, [PmValidators.trimmedRequired, name]],
     firstName: [initial.firstName, [name]],
     lastName: [initial.lastName, [name]],
     birthDate: [initial.birthDate, [PmValidators.date, PmValidators.notFutureDate()]],
     pronoun: [initial.pronoun],
-    phone: [initial.phone, [Validators.maxLength(40)]],
-    email: [initial.email, [Validators.maxLength(254)]],
+    phone: [initial.phone],
+    email: [initial.email],
     context: fb.group({
       situation: [initial.context.situation],
       activity: [initial.context.activity],

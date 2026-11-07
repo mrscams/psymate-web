@@ -22,7 +22,12 @@ import { flagLabel } from './patient-labels';
     @if (chips().length > 0) {
       <ul class="flags" [attr.aria-label]="listLabel">
         @for (chip of chips(); track chip.kind) {
-          <li class="flag" [attr.title]="chip.reason">{{ chip.text }}</li>
+          <li class="flag" [attr.title]="chip.reason">
+            {{ chip.text }}
+            @if (chip.reason) {
+              <span class="sr-only">: {{ chip.reason }}</span>
+            }
+          </li>
         }
       </ul>
     }

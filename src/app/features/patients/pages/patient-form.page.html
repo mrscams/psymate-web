@@ -21,9 +21,14 @@
       {{ text }}
       @if (store.versions().data?.length) {
         ·
-        <a href="#versions-title" i18n="Lien vers l'historique@@patients.form.historyLink"
-          >historique</a
+        <button
+          type="button"
+          class="link"
+          (click)="showHistory()"
+          i18n="Lien vers l'historique@@patients.form.historyLink"
         >
+          historique
+        </button>
       }
     </p>
   }
@@ -343,6 +348,7 @@
                 class="mono"
                 formControlName="fee"
                 placeholder="[TARIF]"
+                i18n-placeholder="Exemple du champ tarif@@patients.form.fee.placeholder"
               />
             </div>
             <div class="field">
@@ -365,9 +371,9 @@
           <legend i18n="Section de la fiche@@patients.form.tags">Tags du dossier</legend>
           <pm-tag-editor
             [tags]="tags()"
-            [suggestions]="store.tags().data ?? []"
+            [suggestions]="tagStore.tags().data ?? []"
             [problem]="tagMessage()"
-            [busy]="store.tagStatus() === 'busy'"
+            [busy]="tagStore.status() === 'busy'"
             [disabled]="readOnly()"
             [(draft)]="tagDraft"
             (add)="addTag($event)"
@@ -448,7 +454,11 @@
       </section>
       @if (editing()) {
         <section class="aside-card history" aria-labelledby="versions-title">
-          <h2 id="versions-title" i18n="Titre de l'historique@@patients.history.title">
+          <h2
+            id="versions-title"
+            tabindex="-1"
+            i18n="Titre de l'historique@@patients.history.title"
+          >
             Historique des versions
           </h2>
           <pm-version-history

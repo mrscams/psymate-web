@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 
+import { SessionApi } from '../../../core/auth/data/session.api';
 import { SubjectVocabulary } from '../../../core/i18n';
 import { PatientApi } from '../data/patient.api';
 import { OMAR, patient, TAGS } from '../data/patient.fixtures';
@@ -14,6 +15,7 @@ async function render(api: Partial<PatientApi>, label: 'patient' | 'client' = 'p
     imports: [PatientListPage],
     providers: [
       provideRouter([]),
+      { provide: SessionApi, useValue: {} },
       { provide: PatientApi, useValue: { listTags: vi.fn().mockResolvedValue(TAGS), ...api } },
     ],
   });
@@ -153,6 +155,7 @@ async function renderWithFakeTimers(api: Partial<PatientApi>) {
     imports: [PatientListPage],
     providers: [
       provideRouter([]),
+      { provide: SessionApi, useValue: {} },
       { provide: PatientApi, useValue: { listTags: vi.fn().mockResolvedValue(TAGS), ...api } },
     ],
   });

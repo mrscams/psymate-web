@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { PatientApi } from './patient.api';
-import { patient, TAGS, VERSIONS } from './patient.fixtures';
+import { patient, VERSIONS } from './patient.fixtures';
 import { PatientChanges } from './patient.model';
 import { PatientStore } from './patient.store';
 
@@ -160,53 +160,15 @@ describe('PatientStore', () => {
     if (method === 'restore' && expected) expect(store.archived()).toBe(false);
   });
 
-  describe('resolveTag', () => {
-    it.each([
-      ['libellé existant (accents et # ignorés) : pas de création', '#Sante', 'santé', 0],
-      ['nouveau libellé : POST /api/tags', 'famille', 'famille', 1],
-    ])('%s', async (_label, input, expected, creations) => {
-      const createTag = vi
-        .fn()
-        .mockResolvedValue({ id: 't-f', label: 'famille', normalizedLabel: 'famille' });
-      const store = setup({ listTags: vi.fn().mockResolvedValue(TAGS), createTag });
-      await store.loadTags();
-      expect((await store.resolveTag(input))?.label).toBe(expected);
-      expect(createTag).toHaveBeenCalledTimes(creations);
-    });
-
-    it('TAG_IS_EMOTION : refus gardé avec le message du serveur', async () => {
-      const store = setup({
-        listTags: vi.fn().mockResolvedValue(TAGS),
-        createTag: vi.fn().mockRejectedValue({
-          status: 422,
-          code: 'TAG_IS_EMOTION',
-          errors: [
-            { field: 'label', code: 'TAG_IS_EMOTION', message: '« anxiété » est une émotion.' },
-          ],
-        }),
-      });
-      await store.loadTags();
-      expect(await store.resolveTag('anxiété')).toBeNull();
-      expect(store.tagProblem()?.code).toBe('TAG_IS_EMOTION');
-      store.clearTagProblem();
-      expect(store.tagProblem()).toBeNull();
-    });
-
-    it('TAG_EXISTS : relecture des tags et réutilisation', async () => {
-      const listTags = vi
-        .fn()
-        .mockResolvedValueOnce(TAGS)
-        .mockResolvedValueOnce([
-          ...TAGS,
-          { id: 't-f', label: 'Famille', normalizedLabel: 'famille' },
-        ]);
-      const store = setup({
-        listTags,
-        createTag: vi.fn().mockRejectedValue({ status: 409, code: 'TAG_EXISTS' }),
-      });
-      await store.loadTags();
-      expect((await store.resolveTag('famille'))?.id).toBe('t-f');
-      expect(store.tagProblem()).toBeNull();
-    });
+  it('load d’un autre dossier : rien du précédent ne reste pendant le chargement', async () => {
+    const get = vi
+      .fn()
+      .mockResolvedValueOnce(patient())
+      .mockImplementationOnce(() => new Promise(() => undefined));
+    const store = setup({ get, versions: vi.fn().mockResolvedValue(VERSIONS) });
+    await store.load('p-marie');
+    void store.load('p-omar');
+    expect(store.current()).toBeNull();
+    expect(store.history()).toEqual([]);
   });
 });

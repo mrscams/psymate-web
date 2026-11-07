@@ -1,12 +1,31 @@
 import { TestBed } from '@angular/core/testing';
 
+import { SessionStore, SessionUser } from '../../../core/auth';
+import { SessionApi } from '../../../core/auth/data/session.api';
 import { PatientApi } from './patient.api';
 import { OMAR, patient } from './patient.fixtures';
 import { PatientListQuery } from './patient.model';
 import { effectiveQuery, PatientListStore, SORT_STORAGE_KEY } from './patient-list.store';
 
+const user = (id: string): SessionUser => ({
+  id,
+  email: `${id}@example.test`,
+  displayName: id,
+  profession: 'psychologist',
+  verificationStatus: 'approved',
+  role: 'practitioner',
+  twoFactorEnabled: false,
+  passwordChangeRequired: false,
+});
+
 function setup(api: Partial<PatientApi>) {
-  TestBed.configureTestingModule({ providers: [{ provide: PatientApi, useValue: api }] });
+  TestBed.configureTestingModule({
+    providers: [
+      { provide: PatientApi, useValue: api },
+      { provide: SessionApi, useValue: {} },
+    ],
+  });
+  TestBed.inject(SessionStore).signIn(user('claire'));
   return TestBed.inject(PatientListStore);
 }
 
@@ -141,5 +160,25 @@ describe('PatientListStore', () => {
     expect(list).toHaveBeenCalledTimes(1);
     await expect(store.restore('p-x')).resolves.toBeNull();
     expect(store.restoreProblem()?.code).toBe('PATIENT_NOT_FOUND');
+  });
+
+  it('autre compte dans le même onglet : ni patients ni filtres du précédent', async () => {
+    const list = vi
+      .fn()
+      .mockResolvedValueOnce(page())
+      .mockResolvedValueOnce(page())
+      .mockResolvedValueOnce(page())
+      .mockImplementationOnce(() => new Promise(() => undefined));
+    const store = setup({ list });
+    await store.load();
+    await store.setQuery('marie');
+    await store.setTag('travail');
+    TestBed.inject(SessionStore).signIn(user('karim'));
+    void store.load();
+    expect(store.items()).toEqual([]);
+    expect(store.page().status).toBe('loading');
+    expect(store.query()).toBe('');
+    expect(store.tag()).toBeNull();
+    expect(list).toHaveBeenLastCalledWith(expect.objectContaining({ q: '', tag: null }));
   });
 });

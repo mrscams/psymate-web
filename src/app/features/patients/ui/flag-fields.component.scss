@@ -45,27 +45,23 @@
   color: var(--text-secondary);
 }
 
-// Cartes cochées (fiche 16, tokens) : texte et aide dans la couleur du drapeau.
+// Cartes cochées : ambre pour « à surveiller » et « risque » (fiche 00, étude couleurs : jamais de
+// rouge sur un patient, écart assumé avec les tokens de la fiche 16), bleu pour le suivi conjoint.
 .checked {
-  &.watch {
+  &.watch,
+  &.risk {
     border-color: var(--flag);
     background: var(--warning-bg);
-  }
-  &.risk {
-    border-color: var(--danger);
-    background: var(--danger-bg);
   }
   &.shared {
     border-color: var(--primary);
     background: var(--primary-tint);
   }
   &.watch,
-  &.watch .flag-help {
-    color: var(--warning);
-  }
+  &.watch .flag-help,
   &.risk,
   &.risk .flag-help {
-    color: var(--danger);
+    color: var(--warning);
   }
   &.shared,
   &.shared .flag-help {

@@ -48,6 +48,7 @@ import {
   toFormValue,
 } from '../data/patient.model';
 import { PatientStore } from '../data/patient.store';
+import { TagStore } from '../data/tag.store';
 import { FlagFieldsComponent } from '../ui/flag-fields.component';
 import { HeaderPreviewComponent } from '../ui/header-preview.component';
 import { buildPatientForm, toFormProblem } from '../ui/patient-form';
@@ -94,6 +95,7 @@ export class PatientFormPage {
   readonly id = input<string>();
 
   protected readonly store = inject(PatientStore);
+  protected readonly tagStore = inject(TagStore);
   private readonly list = inject(PatientListStore);
   private readonly router = inject(Router);
   private readonly toasts = inject(ToastService);
@@ -157,7 +159,7 @@ export class PatientFormPage {
     })),
   );
   protected readonly tagMessage = computed(() => {
-    const problem = this.store.tagProblem();
+    const problem = this.tagStore.problem();
     return problem ? problemText(problem) : null;
   });
   protected readonly retry: StateAction = {
@@ -167,7 +169,8 @@ export class PatientFormPage {
   protected readonly loadErrorTitle = $localize`:État erreur de la fiche@@patients.form.loadError:Impossible de charger cette fiche`;
 
   constructor() {
-    void this.store.loadTags();
+    this.tagStore.clearProblem();
+    void this.tagStore.load();
     effect(() => {
       const id = this.id();
       untracked(() => void this.load(id));
@@ -230,7 +233,7 @@ export class PatientFormPage {
   }
 
   protected async addTag(label: string): Promise<void> {
-    const tag = await this.store.resolveTag(label);
+    const tag = await this.tagStore.resolve(label);
     if (!tag) return;
     if (!this.tags().includes(tag.label)) this.tags.update((tags) => [...tags, tag.label]);
     this.tagDraft.set('');
@@ -282,6 +285,13 @@ export class PatientFormPage {
   private async restoreFromList(patient: PatientView): Promise<void> {
     const restored = await this.list.restore(patient.id);
     if (restored) this.toasts.success(restoredMessage(restored.displayName, restored.pronoun));
+  }
+
+  /** Lien « historique » de la méta : défile jusqu'à l'historique et y met le focus. */
+  protected showHistory(): void {
+    const title = this.document.getElementById('versions-title');
+    title?.scrollIntoView({ block: 'start' });
+    title?.focus();
   }
 
   protected retryHistory(): void {

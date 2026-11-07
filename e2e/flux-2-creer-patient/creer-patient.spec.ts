@@ -110,6 +110,15 @@ test('créer un patient, le retrouver (marie, marié), modifier le rythme, archi
   await expect(history.getByRole('heading', { name: /Version 2/ })).toBeVisible();
   await expect(history).toContainText('Rythme habituel');
   await expect(history).toContainText('Mensuel');
+
+  // Une seconde modification : la version 3 ne liste que la différence, avant → après.
+  await page.getByLabel('Rythme habituel').selectOption({ label: 'Irrégulier' });
+  await page.getByRole('button', { name: /Enregistrer/ }).click();
+  await expect(page.locator('.page-header .meta')).toContainText('3 versions');
+  const v3 = history.getByRole('listitem').filter({ hasText: 'Version 3' });
+  await expect(v3.locator('dt')).toHaveText(['Rythme habituel']);
+  await expect(v3.locator('del')).toHaveText('Mensuel');
+  await expect(v3.locator('ins')).toHaveText('Irrégulier');
   await expectNoAxeViolations(page);
 
   // Archiver avec le nom retapé → liste sans le patient, toast « Restaurer ».

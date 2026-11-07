@@ -9,8 +9,6 @@ import {
   PatientCreateInput,
   PatientVersion,
   PatientView,
-  PractitionerTag,
-  normalizeText,
   versionDiffs,
 } from './patient.model';
 
@@ -19,29 +17,21 @@ export type ActionStatus = 'idle' | 'busy' | 'error';
 interface PatientState {
   patient: Loadable<PatientView>;
   versions: Loadable<PatientVersion[]>;
-  /** Tags du praticien, pour l'autocomplétion de la fiche. */
-  tags: Loadable<PractitionerTag[]>;
   /** Enregistrement (création ou modification) : statut et problème (422 → champs). */
   saveStatus: ActionStatus;
   saveProblem: ApiProblem | null;
   /** Archivage ou restauration depuis la fiche. */
   archiveStatus: ActionStatus;
   archiveProblem: ApiProblem | null;
-  /** Création d'un tag (POST /api/tags) : TAG_IS_EMOTION, TAG_EXISTS. */
-  tagStatus: ActionStatus;
-  tagProblem: ApiProblem | null;
 }
 
 const initialState: PatientState = {
   patient: idle(),
   versions: idle(),
-  tags: idle(),
   saveStatus: 'idle',
   saveProblem: null,
   archiveStatus: 'idle',
   archiveProblem: null,
-  tagStatus: 'idle',
-  tagProblem: null,
 };
 
 /**
@@ -70,6 +60,9 @@ export const PatientStore = signalStore(
     return {
       /** GET /api/patients/{id} puis l'historique des versions. */
       async load(id: string): Promise<void> {
+        // Un autre dossier (même page, autre :id) : rien du précédent ne reste affiché.
+        if (store.patient().data?.id !== id)
+          patchState(store, { patient: idle(), versions: idle() });
         patchState(store, { patient: loading(store.patient()) });
         try {
           patchState(store, { patient: loaded(await api.get(id)) });
@@ -81,15 +74,6 @@ export const PatientStore = signalStore(
       },
 
       loadVersions,
-
-      async loadTags(): Promise<void> {
-        patchState(store, { tags: loading(store.tags()) });
-        try {
-          patchState(store, { tags: loaded(await api.listTags()) });
-        } catch (error) {
-          patchState(store, { tags: failed(asProblem(error), store.tags()) });
-        }
-      },
 
       /** POST /api/patients ; la fiche créée, ou null (problème dans saveProblem). */
       async create(input: PatientCreateInput): Promise<PatientView | null> {
@@ -158,49 +142,6 @@ export const PatientStore = signalStore(
           patchState(store, { archiveStatus: 'error', archiveProblem: asProblem(error) });
           return false;
         }
-      },
-
-      /**
-       * Un libellé saisi devient un tag : existant (même libellé normalisé) → réutilisé ; sinon
-       * POST /api/tags. TAG_IS_EMOTION (fiche 16 : « refus avec message explicite ») reste dans
-       * tagProblem ; TAG_EXISTS (créé ailleurs entre-temps) → relecture des tags.
-       */
-      async resolveTag(label: string): Promise<PractitionerTag | null> {
-        const wanted = normalizeText(label.replace(/#/g, '').trim());
-        if (!wanted) return null;
-        const find = () =>
-          (store.tags().data ?? []).find(
-            (tag) => tag.normalizedLabel === wanted || normalizeText(tag.label) === wanted,
-          ) ?? null;
-        const known = find();
-        patchState(store, { tagProblem: null, tagStatus: 'idle' });
-        if (known) return known;
-        patchState(store, { tagStatus: 'busy' });
-        try {
-          const created = await api.createTag(label.replace(/#/g, '').trim());
-          patchState(store, {
-            tagStatus: 'idle',
-            tags: loaded([...(store.tags().data ?? []), created]),
-          });
-          return created;
-        } catch (error) {
-          const problem = asProblem(error);
-          if (problem.code === 'TAG_EXISTS') {
-            try {
-              patchState(store, { tags: loaded(await api.listTags()), tagStatus: 'idle' });
-              const existing = find();
-              if (existing) return existing;
-            } catch {
-              // La relecture a échoué : on montre le 409 d'origine.
-            }
-          }
-          patchState(store, { tagStatus: 'error', tagProblem: problem });
-          return null;
-        }
-      },
-
-      clearTagProblem(): void {
-        patchState(store, { tagProblem: null, tagStatus: 'idle' });
       },
     };
   }),

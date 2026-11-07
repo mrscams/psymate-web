@@ -13,7 +13,7 @@
     (queryChange)="onQuery($event)"
     [sort]="store.sort()"
     (sortChange)="store.setSort($event)"
-    [tags]="store.tags().data ?? []"
+    [tags]="tags.tags().data ?? []"
     [activeTag]="store.tag()"
     (tagChange)="store.setTag($event)"
     [archived]="store.archived()"

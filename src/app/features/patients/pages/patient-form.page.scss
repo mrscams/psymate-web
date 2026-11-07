@@ -39,8 +39,11 @@
     font: var(--mat-sys-body-small);
     color: var(--text-secondary);
 
-    a {
+    .link {
+      all: unset;
       color: var(--primary);
+      text-decoration: underline;
+      cursor: pointer;
     }
   }
 }

@@ -1,6 +1,7 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 
+import { SessionStore } from '../../../core/auth';
 import { ApiProblem, asProblem } from '../../../core/http';
 import {
   appendPage,
@@ -12,13 +13,7 @@ import {
   loading,
 } from '../../../shared/util';
 import { PatientApi } from './patient.api';
-import {
-  PATIENT_SORTS,
-  PatientListQuery,
-  PatientSort,
-  PatientView,
-  PractitionerTag,
-} from './patient.model';
+import { PATIENT_SORTS, PatientListQuery, PatientSort, PatientView } from './patient.model';
 
 /** Clé du tri mémorisé (fiche 01 : « tri persistant par praticien, localStorage »). */
 export const SORT_STORAGE_KEY = 'patients.sort';
@@ -36,8 +31,8 @@ interface PatientListState {
   /** « Afficher plus » en cours, et son erreur (la liste déjà affichée reste). */
   loadingMore: boolean;
   moreProblem: ApiProblem | null;
-  /** Tags du praticien pour les puces rapides. */
-  tags: Loadable<PractitionerTag[]>;
+  /** Utilisateur de la session à qui appartiennent filtres et page (remise à zéro sinon). */
+  owner: string | null;
   /** Restauration lancée depuis le toast « Restaurer ». */
   restoreProblem: ApiProblem | null;
 }
@@ -50,7 +45,7 @@ const initialState: PatientListState = {
   page: idle(),
   loadingMore: false,
   moreProblem: null,
-  tags: idle(),
+  owner: null,
   restoreProblem: null,
 };
 
@@ -79,7 +74,9 @@ function writeSort(sort: PatientSort): void {
 /**
  * Liste des patients (fiche 01) : filtres, tri, page courante par curseur, puces de tags.
  * Fourni à la racine : les filtres survivent à l'ouverture d'un dossier, et le toast « Restaurer »
- * (posé après un archivage depuis la fiche) peut relire la liste. Chaque changement de filtre
+ * (posé après un archivage depuis la fiche) peut relire la liste. Si l'utilisateur de la session a
+ * changé depuis le dernier chargement (déconnexion puis autre compte dans le même onglet), tout
+ * repart de zéro : ni patients ni filtres d'un compte ne s'affichent pour le suivant. Chaque changement de filtre
  * relit la première page ; une réponse arrivée après une requête plus récente est ignorée.
  */
 export const PatientListStore = signalStore(
@@ -93,7 +90,7 @@ export const PatientListStore = signalStore(
       () => effectiveQuery(store.query()) !== '' || store.tag() !== null || store.archived(),
     ),
   })),
-  withMethods((store, api = inject(PatientApi)) => {
+  withMethods((store, api = inject(PatientApi), session = inject(SessionStore)) => {
     let request = 0;
 
     function query(cursor: string | null = null): PatientListQuery {
@@ -120,6 +117,8 @@ export const PatientListStore = signalStore(
     return {
       /** Arrivée sur la liste : tri mémorisé, puis première page (la précédente reste affichée). */
       async load(): Promise<void> {
+        const owner = session.me()?.id ?? null;
+        if (owner !== store.owner()) patchState(store, { ...initialState, owner });
         const sort = readSort();
         if (sort) patchState(store, { sort });
         await reload();
@@ -176,16 +175,6 @@ export const PatientListStore = signalStore(
           if (ticket === request) {
             patchState(store, { loadingMore: false, moreProblem: asProblem(error) });
           }
-        }
-      },
-
-      /** GET /api/tags pour les puces ; une erreur ne fait que masquer les puces. */
-      async loadTags(): Promise<void> {
-        patchState(store, { tags: loading(store.tags()) });
-        try {
-          patchState(store, { tags: loaded(await api.listTags()) });
-        } catch (error) {
-          patchState(store, { tags: failed(asProblem(error), store.tags()) });
         }
       },
 

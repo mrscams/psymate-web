@@ -1,8 +1,21 @@
-import { Routes } from '@angular/router';
+import { inject } from '@angular/core';
+import { ResolveFn, Routes } from '@angular/router';
 
+import { subjectLabel, SubjectVocabulary } from '../../core/i18n';
 import { OverviewPlaceholderPage } from './pages/overview-placeholder.page';
 import { PatientFormPage } from './pages/patient-form.page';
 import { PatientListPage } from './pages/patient-list.page';
+
+/** Titre d'onglet qui suit la désignation patient / client (préférence, coach). */
+const listTitle: ResolveFn<string> = () => {
+  const subjects = subjectLabel(inject(SubjectVocabulary).label(), 'many');
+  return $localize`:Titre d'onglet de la liste des patients@@patients.list.pageTitle:Mes ${subjects}:subjects: · PsyMate`;
+};
+
+const newTitle: ResolveFn<string> = () => {
+  const subject = subjectLabel(inject(SubjectVocabulary).label(), 'one');
+  return $localize`:Titre d'onglet de la création@@patients.form.newPageTitle:Nouveau ${subject}:subject: · PsyMate`;
+};
 
 /**
  * Montées sous /patients par app.routes.ts (authGuard, statusGuard) : la liste (fiche 01), la
@@ -13,12 +26,12 @@ export const PATIENTS_ROUTES: Routes = [
   {
     path: '',
     component: PatientListPage,
-    title: $localize`:Titre d'onglet de la liste des patients@@patients.list.pageTitle:Mes patients · PsyMate`,
+    title: listTitle,
   },
   {
     path: 'nouveau',
     component: PatientFormPage,
-    title: $localize`:Titre d'onglet de la création@@patients.form.newPageTitle:Nouveau dossier · PsyMate`,
+    title: newTitle,
   },
   {
     path: ':id/fiche',

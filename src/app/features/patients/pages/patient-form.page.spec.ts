@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 
+import { SessionApi } from '../../../core/auth/data/session.api';
 import { SubjectVocabulary } from '../../../core/i18n';
 import { PreferencesStore } from '../../../core/preferences';
 import { ConfirmDialogService, ToastService } from '../../../shared/ui';
@@ -22,6 +23,7 @@ async function render(api: Partial<PatientApi>, options: Options = {}) {
     imports: [PatientFormPage],
     providers: [
       provideRouter([]),
+      { provide: SessionApi, useValue: {} },
       { provide: PatientApi, useValue: { listTags: vi.fn().mockResolvedValue(TAGS), ...api } },
       { provide: PreferencesStore, useValue: { defaultDurationMin: () => 60 } },
       { provide: ConfirmDialogService, useValue: { confirm } },
@@ -253,6 +255,25 @@ describe('PatientFormPage', () => {
       expect(api.versions).toHaveBeenCalledTimes(2);
       expect(el.querySelector('.meta')?.textContent).toContain('4 versions');
       expect(toasts.toasts().map((t) => t.message)).toEqual(['Fiche enregistrée']);
+    });
+
+    it('nom ancien de plus de 120 caractères inchangé : enregistrable (G Q47)', async () => {
+      const longName = 'A'.repeat(130);
+      const api = {
+        get: vi.fn().mockResolvedValue(patient({ displayName: longName })),
+        versions: vi.fn().mockResolvedValue([]),
+        patch: vi.fn().mockResolvedValue(patient({ displayName: longName, currentVersion: 2 })),
+      };
+      const { fixture, el } = await render(api, { id: 'p-marie' });
+      type(el, 'followUp-rhythm', 'monthly');
+      submit(el);
+      await settle(fixture);
+      expect(api.patch).toHaveBeenCalledWith('p-marie', { followUp: { rhythm: 'monthly' } });
+      type(el, 'displayName', longName + 'B');
+      submit(el);
+      await settle(fixture);
+      expect(api.patch).toHaveBeenCalledTimes(1);
+      expect(el.querySelector('#field-displayName-error')?.textContent).toContain('120');
     });
 
     it('archiver : nom à retaper, DELETE, retour à la liste avec « Restaurer »', async () => {

@@ -16,6 +16,7 @@ import { ShortcutService } from '../../../core/shortcuts';
 import { StateAction, StateComponent } from '../../../shared/ui';
 import { isRefreshing, stateKind } from '../../../shared/util';
 import { PatientListStore } from '../data/patient-list.store';
+import { TagStore } from '../data/tag.store';
 import { PatientFiltersComponent } from '../ui/patient-filters.component';
 import { PatientTableComponent } from '../ui/patient-table.component';
 
@@ -42,6 +43,7 @@ export const FILTER_DEBOUNCE_MS = 250;
 })
 export class PatientListPage {
   protected readonly store = inject(PatientListStore);
+  protected readonly tags = inject(TagStore);
   private readonly router = inject(Router);
   private readonly vocabulary = inject(SubjectVocabulary);
   private readonly filters = viewChild.required(PatientFiltersComponent);
@@ -91,8 +93,11 @@ export class PatientListPage {
   });
 
   constructor() {
+    // load() remet le store à zéro de façon synchrone si le compte a changé : le filtre affiché part
+    // de son état une fois cette vérification faite.
     void this.store.load();
-    void this.store.loadTags();
+    this.query.set(this.store.query());
+    void this.tags.load();
     // Après le premier rendu : la barre d'application inscrit sa propre touche / dans un effect
     // (posé en même temps que la page à l'arrivée depuis la connexion) ; la dernière inscription
     // l'emporte, et c'est le filtre de la liste qui doit répondre ici (fiche 01).
