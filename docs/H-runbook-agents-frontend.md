@@ -27,7 +27,7 @@ Les prompts renvoient aux documents de `psymate-web/docs/` : `B-ux.md` (expérie
 | # | Décision |
 | --- | --- |
 | G Q1, Q2 | Produit **PsyMate** (jamais « Suivi »), dépôt `mrscams/psymate-web`, domaine psymate.com. |
-| C « Build frontend » | **Angular 22**, Material 22 (M3), **pnpm**, Node 22, zoneless, standalone, Signal Forms, `@ngrx/signals`, cytoscape, echarts, openapi-generator, Vitest, Playwright. Versions figées. Le scaffold Angular 21 / npm actuel est remplacé par M0-06 (voir « À trancher » ci-dessous). |
+| C « Build frontend » | **Angular 22**, Material 22 (M3), **pnpm**, Node 24 (G Q50), zoneless, standalone, Signal Forms, `@ngrx/signals`, cytoscape, echarts, openapi-generator, Vitest, Playwright. Versions figées. Le scaffold Angular 21 / npm actuel est remplacé par M0-06 (voir « À trancher » ci-dessous). |
 | G Q6 | Session par cookie, 12 h, 30 j avec « rester connecté » : aucun jeton côté web. |
 | G Q15 | Spécialités et publics : liste fermée (`GET /api/public/directory/vocabulary` côté public, `GET /api/vocabulary/directory` côté praticien), jamais de saisie libre. |
 | G Q20 | Pas de numéros d'urgence sur les pages publiques. |
@@ -51,7 +51,7 @@ Durée : une heure. À la main, sans agent.
 ## 2.1 Prérequis
 
 ```bash
-node --version      # 22.x
+node --version      # 24.x
 corepack enable && pnpm --version   # pnpm 9+
 docker --version    # pour les e2e (API + Postgres) et Mailpit
 gh auth status
@@ -251,7 +251,7 @@ claude --worktree M0-06
 ```text
 Tâche M0-06 — Initialiser psymate-web (dépôt psymate-web, racine). Utilise l'agent frontend-feature-dev.
 
-Contexte : lis CLAUDE.md, docs/C-plan.md « Décisions d'outillage » (Build frontend, Versions, CI) et C2 ligne M0-06, docs/G-decisions.md (la ligne Angular 22 / pnpm), docs/B-ux.md B7 (bibliothèque de composants, i18n, accessibilité), docs/Etude-couleurs-Nordique.md §8 (thème Material et variables CSS, test de non-régression), docs/handbook/architecture-frontend.html §3 (arborescence) et §12.
+Contexte : lis CLAUDE.md, docs/C-plan.md « Décisions d'outillage » (Build frontend, Versions, CI) et C2 ligne M0-06, docs/G-decisions.md (la ligne Angular 22 / pnpm, et Q50 : Node 24 figé dans engines.node, .nvmrc et la CI), docs/B-ux.md B7 (bibliothèque de composants, i18n, accessibilité), docs/Etude-couleurs-Nordique.md §8 (thème Material et variables CSS, test de non-régression), docs/handbook/architecture-frontend.html §3 (arborescence) et §12.
 
 Objectif : un projet Angular 22 (CLI 22, standalone, zoneless, provideExperimentalZonelessChangeDetection ou l'équivalent stable de la ligne 22 : vérifie dans la documentation officielle, pas de mémoire), géré par pnpm (packageManager figé), avec Angular Material 22 (M3) dont le thème est construit à partir de src/theme/tokens.css (variables de l'étude §8, thèmes light / dark / soft par data-theme), @angular/localize avec messages.fr.xlf source et messages.en.xlf, ESLint + Prettier avec les règles : no-hardcoded-color (aucun hexa dans src/app hors theme), eslint-plugin-boundaries (éléments core, shared, api, feature : une feature n'importe pas l'intérieur d'une autre ; api importé seulement depuis **/data/*.api.ts ; admin n'importe aucune feature patient), Vitest (pnpm test), Playwright avec axe-core (pnpm e2e, config qui attend http://localhost:8080/actuator/health), script pnpm check:tokens (tools/check-tokens.mjs : contraste ≥ 4,5:1 texte et 3:1 icônes pour chaque couple déclaré, deux thèmes), proxy.conf.json /api → :8080, arborescence vide de docs/handbook §3 (core/, api/ vide avec un README « généré », shared/, features/ avec un README), .github/workflows/ci.yml (lint → check:tokens → test → build → e2e avec l'API psymate-api en service Docker et Postgres, seed small). Budgets de build raisonnables. Supprime l'ancien scaffold (caseload, patient-detail).
 
