@@ -48,7 +48,9 @@ test('connexion avec un compte du seed → /patients, puis déconnexion', async 
   await page.goto('/fr/connexion');
   await expect(page).toHaveURL(/\/fr\/patients$/);
 
-  await page.getByRole('button', { name: 'Se déconnecter' }).click();
+  // Déconnexion depuis le menu de l'avatar de la barre d'application (M0-09).
+  await page.getByRole('button', { name: /menu du compte/ }).click();
+  await page.getByRole('menuitem', { name: 'Déconnexion' }).click();
   await expect(page).toHaveURL(/\/fr\/connexion$/);
   await page.goto('/fr/patients');
   await expect(page).toHaveURL(/\/fr\/connexion\?next=%2Fpatients$/);

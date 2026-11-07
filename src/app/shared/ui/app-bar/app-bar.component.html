@@ -63,14 +63,11 @@
   </nav>
 
   @if (user(); as me) {
-    <button
-      type="button"
-      class="avatar"
-      [matMenuTriggerFor]="accountMenu"
-      [attr.aria-label]="me.displayName"
-      aria-haspopup="menu"
-    >
-      <span aria-hidden="true">{{ initials() }}</span>
+    <button type="button" class="avatar" [matMenuTriggerFor]="accountMenu" aria-haspopup="menu">
+      <span>{{ initials() }}</span>
+      <span class="sr-only" i18n="Suite du nom accessible de l'avatar@@appBar.avatar.menu"
+        >· {{ me.displayName }}, menu du compte</span
+      >
     </button>
     <mat-menu #accountMenu="matMenu" xPosition="before">
       <a

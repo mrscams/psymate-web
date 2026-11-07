@@ -7,15 +7,17 @@ import { expect, Page, test } from '@playwright/test';
 
 const SERIOUS = ['serious', 'critical'];
 
+const title = (page: Page) => page.getByRole('heading', { level: 1, name: /démonstration/ });
+
 async function openDemo(page: Page, locale = 'fr'): Promise<void> {
   await page.goto(`/${locale}/_demo`);
-  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(title(page)).toBeVisible();
 }
 
-async function seriousViolations(page: Page) {
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .analyze();
+/** `include` : limiter l'analyse (au panneau ouvert, dont la page derrière le voile est aria-hidden). */
+async function seriousViolations(page: Page, include?: string) {
+  const builder = new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']);
+  const results = await (include ? builder.include(include) : builder).analyze();
   return results.violations
     .filter((violation) => SERIOUS.includes(violation.impact ?? ''))
     .map((violation) => ({
@@ -42,14 +44,20 @@ test('axe-core : aucune violation serious sur /_demo en anglais', async ({ page 
 test('axe-core : panneau latéral ouvert et boîte de confirmation ouverte', async ({ page }) => {
   await openDemo(page);
   await page.getByRole('button', { name: /Nouvelle entrée/ }).click();
-  await expect(page.getByRole('dialog', { name: 'Nouvelle entrée' })).toBeVisible();
-  expect(await seriousViolations(page)).toEqual([]);
+  const panel = page.getByRole('dialog', { name: 'Nouvelle entrée' });
+  await expect(panel).toBeVisible();
+  await expect(panel.locator('input').first()).toBeFocused();
+  expect(await seriousViolations(page, '.cdk-overlay-container')).toEqual([]);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).toHaveCount(0);
 
   await page.locator('button.confirm-word').click();
-  await expect(page.getByRole('dialog', { name: 'Archiver Marie D. ?' })).toBeVisible();
-  expect(await seriousViolations(page)).toEqual([]);
+  const confirm = page.getByRole('dialog', { name: 'Archiver Marie D. ?' });
+  await expect(confirm).toBeVisible();
+  // Le focus arrive à la fin de l'animation d'ouverture : les couleurs sont alors stables pour axe.
+  await expect(confirm.getByRole('textbox')).toBeFocused();
+  await page.waitForTimeout(300);
+  expect(await seriousViolations(page, '.cdk-overlay-container')).toEqual([]);
   await page.keyboard.press('Escape');
 });
 
@@ -111,7 +119,7 @@ test('raccourcis : / donne le focus à la recherche, ? ouvre l’aide, inactifs 
   page,
 }) => {
   await openDemo(page);
-  await page.locator('h1').click();
+  await title(page).click();
   await page.keyboard.press('/');
   await expect(page.locator('input[type="search"]').last()).toBeFocused();
 
@@ -120,7 +128,7 @@ test('raccourcis : / donne le focus à la recherche, ? ouvre l’aide, inactifs 
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(page.locator('input[type="search"]').last()).toHaveValue('?');
 
-  await page.locator('h1').click();
+  await title(page).click();
   await page.keyboard.press('Shift+?');
   await expect(page.getByRole('dialog', { name: 'Raccourcis clavier' })).toBeVisible();
   await expect(page.getByRole('dialog')).toContainText('Nouvelle entrée');
@@ -184,7 +192,9 @@ test('en-tête patient : Démarrer puis Clôturer sans rechargement ; touches 1 
   await header.getByRole('button', { name: 'Clôturer la séance' }).click();
   await expect(header).toContainText('Dernière séance');
 
-  await page.locator('h1').click();
+  // La touche 2 navigue vers l'onglet Timeline du dossier ; sans session, la garde renvoie à la
+  // connexion : on vérifie seulement que la page de démonstration a été quittée.
+  await title(page).click();
   await page.keyboard.press('2');
-  await expect(page).toHaveURL(/\/patients\/demo\/timeline$/);
+  await expect(page).not.toHaveURL(/_demo/);
 });

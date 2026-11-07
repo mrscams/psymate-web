@@ -73,7 +73,7 @@ describe('AppComponent', () => {
     const { fixture, el } = await render('fr', { signedIn: true });
     expect(el.querySelector('pm-verification-banner .banner.warning')).not.toBeNull();
     const avatar = el.querySelector<HTMLButtonElement>('pm-app-bar button.avatar');
-    expect(avatar?.textContent?.trim()).toBe('CM');
+    expect(avatar?.querySelector('span:not(.sr-only)')?.textContent).toBe('CM');
 
     avatar?.click();
     await fixture.whenStable();

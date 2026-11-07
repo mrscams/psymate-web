@@ -66,7 +66,15 @@ kbd {
   border: 1px solid var(--danger);
   border-radius: 8px;
   background: var(--danger-bg);
-  color: var(--text-primary);
+  color: var(--danger);
+}
+.error .message,
+.error details {
+  color: var(--danger);
+}
+.error .retry {
+  --mat-button-outlined-label-text-color: var(--danger);
+  --mat-button-outlined-outline-color: var(--danger);
 }
 .error .icon {
   flex: 0 0 24px;

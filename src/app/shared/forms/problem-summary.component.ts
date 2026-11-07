@@ -1,9 +1,11 @@
+import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   effect,
   ElementRef,
+  inject,
   input,
   viewChild,
 } from '@angular/core';
@@ -26,7 +28,9 @@ import { fieldId } from './apply-problem';
           <ul>
             @for (error of linked(); track error.field) {
               <li>
-                <a [href]="'#' + fieldId(error.field)">{{ labelOf(error.field) }}</a>
+                <a [href]="'#' + fieldId(error.field)" (click)="focusField($event, error.field)">{{
+                  labelOf(error.field)
+                }}</a>
                 <span class="message"> · {{ error.message }}</span>
               </li>
             }
@@ -60,7 +64,6 @@ import { fieldId } from './apply-problem';
     }
     .message {
       margin: 4px 0 0;
-      color: var(--text-primary);
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -74,6 +77,7 @@ export class ProblemSummaryComponent {
   readonly unmatched = input<string[]>([]);
 
   private readonly box = viewChild<ElementRef<HTMLElement>>('box');
+  private readonly document = inject(DOCUMENT);
 
   protected readonly fieldId = fieldId;
 
@@ -99,5 +103,14 @@ export class ProblemSummaryComponent {
 
   protected labelOf(field: string): string {
     return this.labels()[field] ?? field;
+  }
+
+  /** Le lien mène au champ et lui donne le focus (le navigateur ne fait que défiler). */
+  protected focusField(event: Event, field: string): void {
+    const target = this.document.getElementById(fieldId(field));
+    if (!target) return;
+    event.preventDefault();
+    target.scrollIntoView({ block: 'center' });
+    target.focus();
   }
 }

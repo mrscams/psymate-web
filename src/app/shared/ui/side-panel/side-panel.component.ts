@@ -24,11 +24,6 @@ import { uniqueId } from '../../util';
     <header class="panel-header">
       <h2 class="title" [id]="titleId">{{ title() }}</h2>
       <ng-content select="[pmPanelHeader]" />
-      <button type="button" class="close" [attr.aria-label]="closeLabel" (click)="requestClose()">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M6 6l12 12M18 6 6 18" />
-        </svg>
-      </button>
     </header>
     <div class="panel-body">
       <ng-content />
@@ -36,6 +31,12 @@ import { uniqueId } from '../../util';
     <footer class="panel-footer">
       <ng-content select="[pmPanelFooter]" />
     </footer>
+    <!-- Dernier dans l'ordre de tabulation (le focus initial va au premier champ du corps), affiché en haut à droite. -->
+    <button type="button" class="close" [attr.aria-label]="closeLabel" (click)="requestClose()">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6 6l12 12M18 6 6 18" />
+      </svg>
+    </button>
   `,
   styleUrl: './side-panel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

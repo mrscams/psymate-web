@@ -42,7 +42,7 @@ describe('AdminBarComponent', () => {
     const { fixture, el } = await render({ pendingCount: 6, user: { displayName: 'Hugo Admin' } });
     expect(el.querySelector('.count')?.textContent).toBe('6');
     const avatar = el.querySelector<HTMLButtonElement>('button.avatar');
-    expect(avatar?.textContent?.trim()).toBe('HA');
+    expect(avatar?.querySelector('span:not(.sr-only)')?.textContent).toBe('HA');
     const logout = vi.fn();
     fixture.componentInstance.logout.subscribe(logout);
     avatar?.click();

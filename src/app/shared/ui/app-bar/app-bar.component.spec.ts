@@ -67,8 +67,10 @@ describe('AppBarComponent', () => {
   it('avec session : avatar aux initiales, menu Mon compte et Déconnexion', async () => {
     const { fixture, el } = await render({ user: { displayName: 'Claire Moreau' } });
     const avatar = el.querySelector<HTMLButtonElement>('button.avatar');
-    expect(avatar?.textContent?.trim()).toBe('CM');
-    expect(avatar?.getAttribute('aria-label')).toBe('Claire Moreau');
+    expect(avatar?.querySelector('span:not(.sr-only)')?.textContent).toBe('CM');
+    expect(avatar?.textContent?.replace(/\s+/g, ' ').trim()).toMatch(
+      /^CM ?· Claire Moreau, menu du compte$/,
+    );
 
     const loggedOut = vi.fn();
     fixture.componentInstance.loggedOut.subscribe(loggedOut);
