@@ -89,13 +89,12 @@ export class ProfessionalInfoFormComponent {
       });
     });
     effect(() => {
-      this.state().problem;
-      untracked(() => this.applyServerErrors());
+      const problem = this.state().problem;
+      untracked(() => this.applyServerErrors(problem));
     });
   }
 
-  private applyServerErrors(): void {
-    const problem = this.state().problem;
+  private applyServerErrors(problem = this.state().problem): void {
     if (problem?.status === 422) applyProblem(this.form, problem);
   }
 

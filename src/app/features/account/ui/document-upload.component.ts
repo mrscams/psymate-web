@@ -91,8 +91,8 @@ export class DocumentUploadComponent {
   constructor() {
     // 422 sur type / title / issuer / year : sous chaque champ (le fichier a son propre message).
     effect(() => {
-      this.state().problem;
-      untracked(() => this.applyServerErrors());
+      const problem = this.state().problem;
+      untracked(() => this.applyServerErrors(problem));
     });
     // Verrou : enable() recalcule les erreurs des contrôles, le 422 courant est reposé ensuite.
     effect(() => {
@@ -105,8 +105,7 @@ export class DocumentUploadComponent {
     });
   }
 
-  private applyServerErrors(): void {
-    const problem = this.state().problem;
+  private applyServerErrors(problem = this.state().problem): void {
     if (problem?.status === 422 && problem.errors?.length) applyProblem(this.form, problem);
   }
 

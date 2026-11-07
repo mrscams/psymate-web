@@ -93,11 +93,15 @@ describe('VerificationPage', () => {
     const { fixture, el, toast } = await render({
       load: vi.fn().mockResolvedValue(complete),
       submit,
+      refreshSession: vi.fn().mockResolvedValue(undefined),
     });
     const button = el.querySelector<HTMLButtonElement>('section.actions button');
     expect(button?.disabled).toBe(false);
     expect(el.querySelector('.missing')).toBeNull();
     button?.click();
+    // submit → refreshSession → session.load : trois promesses hors des tâches suivies par le fixture.
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
     await fixture.whenStable();
     expect(submit).toHaveBeenCalled();
     expect(TestBed.inject(SessionStore).verificationStatus()).toBe('under_review');

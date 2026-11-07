@@ -72,6 +72,8 @@ export class RegisterPage {
 
   protected readonly loginPath = AUTH_PATHS.login;
   protected readonly fieldId = fieldId;
+  protected readonly mismatchMessage = clientMessage('passwordConfirm', { mismatch: true });
+  protected readonly termsMessage = clientMessage('terms', { required: true });
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     firstName: ['', [PmValidators.trimmedRequired, PmValidators.maxLengthTrimmed(100)]],

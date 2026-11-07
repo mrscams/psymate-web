@@ -99,6 +99,8 @@
       </p>
       <fieldset
         class="professions"
+        [id]="fieldId('profession')"
+        tabindex="-1"
         [attr.aria-describedby]="fieldId('profession') + '-error'"
         [attr.aria-invalid]="isInvalid(form.controls.profession)"
       >
@@ -109,7 +111,7 @@
               type="radio"
               formControlName="profession"
               [value]="card.value"
-              [id]="$first ? fieldId('profession') : fieldId('profession') + '-' + card.value"
+              [id]="fieldId('profession') + '-' + card.value"
               required
             />
             <span class="card-label">{{ card.label }}</span>
@@ -298,12 +300,8 @@
           isInvalid(form.controls.passwordConfirm) &&
           form.controls.passwordConfirm.hasError('mismatch')
         ) {
-          <p
-            class="field-error"
-            [id]="fieldId('passwordConfirm') + '-error'"
-            i18n="Confirmation du mot de passe différente@@auth.register.error.mismatch"
-          >
-            Les deux mots de passe ne sont pas identiques.
+          <p class="field-error" [id]="fieldId('passwordConfirm') + '-error'">
+            {{ mismatchMessage }}
           </p>
         } @else {
           <pm-field-errors
@@ -345,13 +343,7 @@
         </span>
       </label>
       @if (isInvalid(form.controls.terms) && !form.controls.terms.hasError('server')) {
-        <p
-          class="field-error"
-          [id]="fieldId('terms') + '-error'"
-          i18n="Consentement obligatoire@@auth.register.error.terms"
-        >
-          Vous devez accepter les conditions d'utilisation et la politique de confidentialité.
-        </p>
+        <p class="field-error" [id]="fieldId('terms') + '-error'">{{ termsMessage }}</p>
       } @else {
         <pm-field-errors [control]="form.controls.terms" [id]="fieldId('terms') + '-error'" />
       }

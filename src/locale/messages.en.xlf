@@ -173,21 +173,1164 @@
         </context-group>
         <note priority="1" from="description">Titre du panneau d&apos;aide des raccourcis</note>
       </trans-unit>
+      <trans-unit id="account.verification.pageTitle" datatype="html">
+        <source>Dossier professionnel · PsyMate</source>
+        <target state="translated">Professional file · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet du dossier professionnel</note>
+      </trans-unit>
+      <trans-unit id="account.verification.title" datatype="html">
+        <source> Dossier professionnel </source>
+        <target state="translated">Professional file</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">11,13</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la page dossier professionnel</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lead" datatype="html">
+        <source> Déposez votre diplôme et une pièce d&apos;identité. Les documents ne sont visibles que par les administrateurs chargés de la vérification, jamais par les visiteurs ni par les autres praticiens. </source>
+        <target state="translated">Upload your diploma and an identity document. Documents are visible only to the administrators in charge of verification, never to visitors or other practitioners.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">14,20</context>
+        </context-group>
+        <note priority="1" from="description">Explication de la page</note>
+      </trans-unit>
+      <trans-unit id="account.verification.needsMore.title" datatype="html">
+        <source> Un administrateur vous demande un complément. </source>
+        <target state="translated">An administrator is asking you for more.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">42,45</context>
+        </context-group>
+        <note priority="1" from="description">Encart complément demandé</note>
+      </trans-unit>
+      <trans-unit id="account.verification.underReview" datatype="html">
+        <source> Dossier soumis le <x id="INTERPOLATION" equiv-text="{{ submittedAtText() }}"/> : en cours de vérification. Vous pouvez utiliser l&apos;application pour vos patients ; l&apos;annuaire public sera disponible après validation. Le dossier n&apos;est plus modifiable. </source>
+        <target state="translated">File submitted on <x id="INTERPOLATION" equiv-text="{{ submittedAtText() }}"/>: under review. You can use the application for your patients; the public directory will open after validation. The file can no longer be changed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">55,57</context>
+        </context-group>
+        <note priority="1" from="description">Encart dossier soumis</note>
+      </trans-unit>
+      <trans-unit id="account.verification.approved" datatype="html">
+        <source> Dossier approuvé : votre profil peut apparaître dans l&apos;annuaire avec le badge « Profil vérifié ». </source>
+        <target state="translated">File approved: your profile may appear in the directory with the “Verified profile” badge.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">66,72</context>
+        </context-group>
+        <note priority="1" from="description">Encart dossier approuvé</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.title" datatype="html">
+        <source> Informations professionnelles </source>
+        <target state="translated">Professional information</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">77,80</context>
+        </context-group>
+        <note priority="1" from="description">Titre des informations professionnelles</note>
+      </trans-unit>
+      <trans-unit id="account.verification.docs.title" datatype="html">
+        <source> Justificatifs </source>
+        <target state="translated">Supporting documents</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">89,91</context>
+        </context-group>
+        <note priority="1" from="description">Titre des justificatifs</note>
+      </trans-unit>
+      <trans-unit id="account.verification.docs.hint" datatype="html">
+        <source> PDF, JPG ou PNG, 10 Mo maximum par fichier. Vous pouvez déposer plusieurs documents : diplôme, pièce d&apos;identité, attestation d&apos;inscription, certification, carte professionnelle. </source>
+        <target state="translated">PDF, JPG or PNG, 10 MB per file at most. You can upload several documents: diploma, identity document, registration certificate, certification, professional card.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">92,96</context>
+        </context-group>
+        <note priority="1" from="description">Aide des justificatifs</note>
+      </trans-unit>
+      <trans-unit id="account.verification.actions.title" datatype="html">
+        <source> Soumission </source>
+        <target state="translated">Submission</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">130,133</context>
+        </context-group>
+        <note priority="1" from="description">Titre des actions</note>
+      </trans-unit>
+      <trans-unit id="account.verification.submit" datatype="html">
+        <source> Soumettre le dossier pour vérification </source>
+        <target state="translated">Submit the file for verification</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">139,141</context>
+        </context-group>
+        <note priority="1" from="description">Bouton soumettre le dossier</note>
+      </trans-unit>
+      <trans-unit id="account.verification.later" datatype="html">
+        <source>Plus tard — aller à mes patients</source>
+        <target state="translated">Later — go to my patients</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">151,156</context>
+        </context-group>
+        <note priority="1" from="description">Lien plus tard</note>
+      </trans-unit>
+      <trans-unit id="account.verification.expected.title" datatype="html">
+        <source> Justificatifs attendus </source>
+        <target state="translated">Expected documents</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">164,166</context>
+        </context-group>
+        <note priority="1" from="description">Titre des justificatifs attendus</note>
+      </trans-unit>
+      <trans-unit id="account.verification.expected.all" datatype="html">
+        <source> Toutes les professions : un diplôme et une pièce d&apos;identité. </source>
+        <target state="translated">All professions: a diploma and an identity document.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">167,170</context>
+        </context-group>
+        <note priority="1" from="description">Règle commune G Q14</note>
+      </trans-unit>
+      <trans-unit id="account.profession.psychologist" datatype="html">
+        <source>Psychologue</source>
+        <target state="translated">Psychologist</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">170,171</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <note priority="1" from="description">Profession</note>
+      </trans-unit>
+      <trans-unit id="account.verification.expected.psychologist" datatype="html">
+        <source> Conseillé : attestation d&apos;inscription ADELI. </source>
+        <target state="translated">Recommended: ADELI registration certificate.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">172,174</context>
+        </context-group>
+        <note priority="1" from="description">Conseillé pour un psychologue</note>
+      </trans-unit>
+      <trans-unit id="account.profession.psychiatrist" datatype="html">
+        <source>Psychiatre</source>
+        <target state="translated">Psychiatrist</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">174,175</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">Profession</note>
+      </trans-unit>
+      <trans-unit id="account.verification.expected.psychiatrist" datatype="html">
+        <source> Conseillé : attestation RPPS ou carte CPS. </source>
+        <target state="translated">Recommended: RPPS certificate or CPS card.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">176,178</context>
+        </context-group>
+        <note priority="1" from="description">Conseillé pour un psychiatre</note>
+      </trans-unit>
+      <trans-unit id="account.profession.coach" datatype="html">
+        <source>Coach</source>
+        <target state="translated">Coach</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">178,179</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Profession</note>
+      </trans-unit>
+      <trans-unit id="account.verification.expected.coach" datatype="html">
+        <source> Conseillé : certification reconnue (ICF, EMCC, RNCP…) ou diplôme universitaire de coaching. </source>
+        <target state="translated">Recommended: recognised certification (ICF, EMCC, RNCP…) or a university coaching diploma.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">180,185</context>
+        </context-group>
+        <note priority="1" from="description">Conseillé pour un coach</note>
+      </trans-unit>
+      <trans-unit id="account.verification.how.title" datatype="html">
+        <source> Comment ça se passe </source>
+        <target state="translated">How it works</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">187,189</context>
+        </context-group>
+        <note priority="1" from="description">Titre comment ça se passe</note>
+      </trans-unit>
+      <trans-unit id="account.verification.how.body1" datatype="html">
+        <source> Un administrateur compare vos documents à votre profession déclarée et, si possible, au registre public (ADELI / RPPS). Il peut vous demander un document supplémentaire par e-mail. </source>
+        <target state="translated">An administrator compares your documents with your declared profession and, when possible, with the public register (ADELI / RPPS). They may ask you for an additional document by e-mail.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">190,193</context>
+        </context-group>
+        <note priority="1" from="description">Texte comment ça se passe, 1</note>
+      </trans-unit>
+      <trans-unit id="account.verification.how.body2" datatype="html">
+        <source> Décision sous 2 jours ouvrés. En cas de refus, le motif vous est communiqué et vous pouvez compléter le dossier ou faire un recours. </source>
+        <target state="translated">Decision within 2 working days. If refused, you are told why and can complete the file or appeal.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">194,198</context>
+        </context-group>
+        <note priority="1" from="description">Texte comment ça se passe, 2</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lock.title" datatype="html">
+        <source> États du dossier </source>
+        <target state="translated">File states</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">200,204</context>
+        </context-group>
+        <note priority="1" from="description">Titre du tableau des états</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lock.col.status" datatype="html">
+        <source>État</source>
+        <target state="translated">State</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">205,206</context>
+        </context-group>
+        <note priority="1" from="description">Colonne état</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lock.col.tool" datatype="html">
+        <source> Patients </source>
+        <target state="translated">Patients</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">207,209</context>
+        </context-group>
+        <note priority="1" from="description">Colonne outil clinique</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lock.col.directory" datatype="html">
+        <source> Annuaire </source>
+        <target state="translated">Directory</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
+          <context context-type="linenumber">210,214</context>
+        </context-group>
+        <note priority="1" from="description">Colonne annuaire</note>
+      </trans-unit>
+      <trans-unit id="state.error.retry" datatype="html">
+        <source>Réessayer</source>
+        <target state="translated">Retry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;état erreur</note>
+      </trans-unit>
+      <trans-unit id="account.verification.docs.empty.title" datatype="html">
+        <source>Aucun justificatif déposé</source>
+        <target state="translated">No document uploaded</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">État vide de la liste des justificatifs</note>
+      </trans-unit>
+      <trans-unit id="account.verification.docs.empty.message" datatype="html">
+        <source>Ajoutez votre diplôme et votre pièce d&apos;identité avec le formulaire ci-dessous.</source>
+        <target state="translated">Add your diploma and your identity document with the form below.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <note priority="1" from="description">Texte de l&apos;état vide</note>
+      </trans-unit>
+      <trans-unit id="account.verification.missing" datatype="html">
+        <source>Il manque : <x id="list" equiv-text="missing.map(documentTypeShort).join(&apos;, &apos;)"/>.</source>
+        <target state="translated">Missing: <x id="list" equiv-text="missing.map(documentTypeShort).join(&apos;, &apos;)"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Pièces obligatoires manquantes</note>
+      </trans-unit>
+      <trans-unit id="account.verification.recommended" datatype="html">
+        <source>Conseillé pour votre profession, sans bloquer la soumission : <x id="list" equiv-text="recommended.map(documentTypeShort).join(&apos;, &apos;)"/>.</source>
+        <target state="translated">Recommended for your profession, without blocking submission: <x id="list" equiv-text="recommended.map(documentTypeShort).join(&apos;, &apos;)"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <note priority="1" from="description">Pièces conseillées absentes (G Q14)</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lock.docsPending" datatype="html">
+        <source>Justificatifs attendus</source>
+        <target state="translated">Documents expected</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">État du dossier</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lock.yes" datatype="html">
+        <source>oui</source>
+        <target state="translated">yes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+        <note priority="1" from="description">Outil clinique accessible</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lock.no" datatype="html">
+        <source>non</source>
+        <target state="translated">no</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <note priority="1" from="description">Annuaire inaccessible</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lock.underReview" datatype="html">
+        <source>En cours de vérification</source>
+        <target state="translated">Under review</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <note priority="1" from="description">État du dossier</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lock.needsMore" datatype="html">
+        <source>Complément demandé</source>
+        <target state="translated">More requested</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <note priority="1" from="description">État du dossier</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lock.approved" datatype="html">
+        <source>Approuvé</source>
+        <target state="translated">Approved</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <note priority="1" from="description">État du dossier</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lock.yesBadge" datatype="html">
+        <source>oui, badge « Profil vérifié »</source>
+        <target state="translated">yes, “Verified profile” badge</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Annuaire accessible et badge vérifié</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lock.rejected" datatype="html">
+        <source>Refusé</source>
+        <target state="translated">Rejected</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+        <note priority="1" from="description">État du dossier</note>
+      </trans-unit>
+      <trans-unit id="account.verification.lock.suspended" datatype="html">
+        <source>non (compte suspendu, recours possible)</source>
+        <target state="translated">no (account suspended, appeal possible)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">133</context>
+        </context-group>
+        <note priority="1" from="description">Outil clinique fermé</note>
+      </trans-unit>
+      <trans-unit id="account.verification.toast.uploaded" datatype="html">
+        <source>Justificatif ajouté au dossier.</source>
+        <target state="translated">Document added to the file.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">162</context>
+        </context-group>
+        <note priority="1" from="description">Toast après dépôt</note>
+      </trans-unit>
+      <trans-unit id="account.verification.remove.title" datatype="html">
+        <source>Retirer « <x id="title" equiv-text="doc.title"/> » ?</source>
+        <target state="translated">Remove “<x id="title" equiv-text="doc.title"/>”?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la confirmation de retrait</note>
+      </trans-unit>
+      <trans-unit id="account.verification.remove.description" datatype="html">
+        <source>Le fichier est effacé du stockage. Vous pourrez en déposer un autre.</source>
+        <target state="translated">The file is erased from storage. You can upload another one.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">172</context>
+        </context-group>
+        <note priority="1" from="description">Texte de la confirmation de retrait</note>
+      </trans-unit>
+      <trans-unit id="account.verification.remove.confirm" datatype="html">
+        <source>Retirer</source>
+        <target state="translated">Remove</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de la confirmation de retrait</note>
+      </trans-unit>
+      <trans-unit id="account.verification.toast.removed" datatype="html">
+        <source>Justificatif retiré.</source>
+        <target state="translated">Document removed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+        <note priority="1" from="description">Toast après retrait</note>
+      </trans-unit>
+      <trans-unit id="account.verification.toast.submitted" datatype="html">
+        <source>Dossier soumis. Un administrateur le vérifie sous 2 jours ouvrés.</source>
+        <target state="translated">File submitted. An administrator reviews it within 2 working days.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">192</context>
+        </context-group>
+        <note priority="1" from="description">Toast après soumission</note>
+      </trans-unit>
+      <trans-unit id="account.verification.submit.incomplete" datatype="html">
+        <source>Le serveur refuse la soumission, il manque : <x id="list" equiv-text="list"/>.</source>
+        <target state="translated">The server refuses the submission, missing: <x id="list" equiv-text="list"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">214</context>
+        </context-group>
+        <note priority="1" from="description">409 VERIFICATION_INCOMPLETE avec la liste</note>
+      </trans-unit>
+      <trans-unit id="account.verification.submit.incompleteNoList" datatype="html">
+        <source>Le serveur refuse la soumission : des justificatifs obligatoires manquent.</source>
+        <target state="translated">The server refuses the submission: required documents are missing.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">215</context>
+        </context-group>
+        <note priority="1" from="description">409 VERIFICATION_INCOMPLETE sans liste</note>
+      </trans-unit>
+      <trans-unit id="account.verification.submit.locked" datatype="html">
+        <source>Le dossier ne peut pas être soumis dans son état actuel.</source>
+        <target state="translated">The file cannot be submitted in its current state.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">218</context>
+        </context-group>
+        <note priority="1" from="description">409 VERIFICATION_LOCKED à la soumission</note>
+      </trans-unit>
+      <trans-unit id="account.verification.submit.failed" datatype="html">
+        <source>La soumission a échoué. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <target state="translated">The submission failed. Nothing was changed; try again in a moment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">220</context>
+        </context-group>
+        <note priority="1" from="description">Soumission impossible</note>
+      </trans-unit>
+      <trans-unit id="account.verification.type.diploma" datatype="html">
+        <source>Diplôme</source>
+        <target state="translated">Diploma</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif</note>
+      </trans-unit>
+      <trans-unit id="account.verification.type.registration" datatype="html">
+        <source>Attestation d&apos;inscription (ADELI / RPPS)</source>
+        <target state="translated">Registration certificate (ADELI / RPPS)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif</note>
+      </trans-unit>
+      <trans-unit id="account.verification.type.certification" datatype="html">
+        <source>Certification (coaching)</source>
+        <target state="translated">Certification (coaching)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif</note>
+      </trans-unit>
+      <trans-unit id="account.verification.type.professionalCard" datatype="html">
+        <source>Carte professionnelle</source>
+        <target state="translated">Professional card</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif</note>
+      </trans-unit>
+      <trans-unit id="account.verification.type.identity" datatype="html">
+        <source>Pièce d&apos;identité</source>
+        <target state="translated">Identity document</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif</note>
+      </trans-unit>
+      <trans-unit id="account.verification.type.other" datatype="html">
+        <source>Autre</source>
+        <target state="translated">Other</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif</note>
+      </trans-unit>
+      <trans-unit id="account.verification.typeShort.diploma" datatype="html">
+        <source>diplôme</source>
+        <target state="translated">diploma</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif, court</note>
+      </trans-unit>
+      <trans-unit id="account.verification.typeShort.registration" datatype="html">
+        <source>attestation ADELI / RPPS</source>
+        <target state="translated">ADELI / RPPS certificate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif, court</note>
+      </trans-unit>
+      <trans-unit id="account.verification.typeShort.certification" datatype="html">
+        <source>certification de coaching</source>
+        <target state="translated">coaching certification</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif, court</note>
+      </trans-unit>
+      <trans-unit id="account.verification.typeShort.professionalCard" datatype="html">
+        <source>carte professionnelle</source>
+        <target state="translated">professional card</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif, court</note>
+      </trans-unit>
+      <trans-unit id="account.verification.typeShort.identity" datatype="html">
+        <source>pièce d&apos;identité</source>
+        <target state="translated">identity document</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif, court</note>
+      </trans-unit>
+      <trans-unit id="account.verification.typeShort.other" datatype="html">
+        <source>autre document</source>
+        <target state="translated">other document</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif, court</note>
+      </trans-unit>
+      <trans-unit id="account.verification.review.conform" datatype="html">
+        <source>Conforme</source>
+        <target state="translated">Compliant</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <note priority="1" from="description">Statut d&apos;un justificatif</note>
+      </trans-unit>
+      <trans-unit id="account.verification.review.nonConform" datatype="html">
+        <source>Non conforme</source>
+        <target state="translated">Non-compliant</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <note priority="1" from="description">Statut d&apos;un justificatif</note>
+      </trans-unit>
+      <trans-unit id="account.verification.review.pending" datatype="html">
+        <source>En attente de vérification</source>
+        <target state="translated">Awaiting review</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">Statut d&apos;un justificatif</note>
+      </trans-unit>
+      <trans-unit id="account.verification.size.mo" datatype="html">
+        <source><x id="size" equiv-text="new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(mo)"/> Mo</source>
+        <target state="translated"><x id="size" equiv-text="new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(mo)"/> MB</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Taille de fichier en mégaoctets</note>
+      </trans-unit>
+      <trans-unit id="account.verification.size.ko" datatype="html">
+        <source><x id="size" equiv-text="new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(bytes / 1024)"/> Ko</source>
+        <target state="translated"><x id="size" equiv-text="new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(bytes / 1024)"/> KB</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Taille de fichier en kilooctets</note>
+      </trans-unit>
+      <trans-unit id="account.verification.doc.uploadedAt" datatype="html">
+        <source>déposé le <x id="INTERPOLATION" equiv-text="{{ dateOf(doc) }}"/></source>
+        <target state="translated">uploaded on <x id="INTERPOLATION" equiv-text="{{ dateOf(doc) }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
+          <context context-type="linenumber">45,46</context>
+        </context-group>
+        <note priority="1" from="description">Date de dépôt d&apos;un justificatif</note>
+      </trans-unit>
+      <trans-unit id="account.verification.doc.open" datatype="html">
+        <source> Voir </source>
+        <target state="translated">View</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
+          <context context-type="linenumber">61,64</context>
+        </context-group>
+        <note priority="1" from="description">Bouton voir un justificatif</note>
+      </trans-unit>
+      <trans-unit id="account.verification.doc.remove" datatype="html">
+        <source> Retirer </source>
+        <target state="translated">Remove</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
+          <context context-type="linenumber">74,78</context>
+        </context-group>
+        <note priority="1" from="description">Bouton retirer un justificatif</note>
+      </trans-unit>
+      <trans-unit id="account.verification.docs.listLabel" datatype="html">
+        <source>Justificatifs déposés</source>
+        <target state="translated">Uploaded documents</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
+          <context context-type="linenumber">192</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la liste des justificatifs</note>
+      </trans-unit>
+      <trans-unit id="account.verification.doc.removeLabel" datatype="html">
+        <source>Retirer <x id="title" equiv-text="doc.title"/></source>
+        <target state="translated">Remove <x id="title" equiv-text="doc.title"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
+          <context context-type="linenumber">211</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible du bouton Retirer</note>
+      </trans-unit>
+      <trans-unit id="account.verification.doc.openLabel" datatype="html">
+        <source>Voir <x id="title" equiv-text="doc.title"/></source>
+        <target state="translated">View <x id="title" equiv-text="doc.title"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
+          <context context-type="linenumber">215</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible du bouton Voir</note>
+      </trans-unit>
+      <trans-unit id="account.verification.doc.remove.locked" datatype="html">
+        <source>Ce justificatif ne peut plus être retiré : le dossier n&apos;est plus modifiable.</source>
+        <target state="translated">This document can no longer be removed: the file is no longer editable.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
+          <context context-type="linenumber">220</context>
+        </context-group>
+        <note priority="1" from="description">Retrait refusé, dossier verrouillé</note>
+      </trans-unit>
+      <trans-unit id="account.verification.doc.remove.failed" datatype="html">
+        <source>Le retrait a échoué. Rien n&apos;a été modifié.</source>
+        <target state="translated">Removal failed. Nothing was changed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
+          <context context-type="linenumber">222</context>
+        </context-group>
+        <note priority="1" from="description">Retrait impossible</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.title" datatype="html">
+        <source> Ajouter un justificatif </source>
+        <target state="translated">Add a document</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">13,17</context>
+        </context-group>
+        <note priority="1" from="description">Titre du formulaire d&apos;ajout</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.type" datatype="html">
+        <source>Type de document</source>
+        <target state="translated">Document type</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">18,22</context>
+        </context-group>
+        <note priority="1" from="description">Champ type de document</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.type.placeholder" datatype="html">
+        <source> Choisir… </source>
+        <target state="translated">Choose…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">32,35</context>
+        </context-group>
+        <note priority="1" from="description">Option vide du type</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.docTitle" datatype="html">
+        <source>Intitulé</source>
+        <target state="translated">Title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">42,46</context>
+        </context-group>
+        <note priority="1" from="description">Champ intitulé</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.issuer" datatype="html">
+        <source>Établissement ou organisme</source>
+        <target state="translated">Institution or organisation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">58,62</context>
+        </context-group>
+        <note priority="1" from="description">Champ établissement</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.year" datatype="html">
+        <source>Année</source>
+        <target state="translated">Year</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">71,74</context>
+        </context-group>
+        <note priority="1" from="description">Champ année</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.choose" datatype="html">
+        <source>Choisir un fichier</source>
+        <target state="translated">Choose a file</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">89,91</context>
+        </context-group>
+        <note priority="1" from="description">Bouton choisir un fichier</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.dropHint" datatype="html">
+        <source>ou glissez-le ici · PDF, JPG ou PNG, 10 Mo maximum</source>
+        <target state="translated">or drop it here · PDF, JPG or PNG, 10 MB at most</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">92,97</context>
+        </context-group>
+        <note priority="1" from="description">Zone de dépôt</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.submit" datatype="html">
+        <source> Ajouter au dossier </source>
+        <target state="translated">Add to the file</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">126,128</context>
+        </context-group>
+        <note priority="1" from="description">Bouton ajouter au dossier</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.retention" datatype="html">
+        <source> Les fichiers sont chiffrés et supprimés 90 jours après la décision de l&apos;administrateur ; seule la mention « vérifié le … » est conservée. </source>
+        <target state="translated">Files are encrypted and deleted 90 days after the administrator’s decision; only the “verified on …” mention is kept.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">129,134</context>
+        </context-group>
+        <note priority="1" from="description">Mention de rétention</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.progress" datatype="html">
+        <source>Progression de l&apos;envoi</source>
+        <target state="translated">Upload progress</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la barre de progression</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.error.required" datatype="html">
+        <source>Choisissez un fichier.</source>
+        <target state="translated">Choose a file.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+        <note priority="1" from="description">Fichier manquant</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.error.tooLarge" datatype="html">
+        <source>Ce fichier dépasse 10 Mo. Réduisez-le ou choisissez un autre fichier ; le dossier n&apos;a pas changé.</source>
+        <target state="translated">This file exceeds 10 MB. Reduce it or choose another file; the file was not changed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
+        <note priority="1" from="description">Fichier trop lourd (client et 413)</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.error.unsupported" datatype="html">
+        <source>Seuls les fichiers PDF, JPEG et PNG sont acceptés ; le dossier n&apos;a pas changé.</source>
+        <target state="translated">Only PDF, JPEG and PNG files are accepted; the file was not changed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
+          <context context-type="linenumber">187</context>
+        </context-group>
+        <note priority="1" from="description">Format refusé (client et 415)</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.error.limit" datatype="html">
+        <source>Le dossier compte déjà 20 justificatifs : retirez-en un avant d&apos;en ajouter.</source>
+        <target state="translated">The file already holds 20 documents: remove one before adding another.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+        <note priority="1" from="description">409 DOCUMENT_LIMIT</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.error.locked" datatype="html">
+        <source>Le dossier n&apos;est plus modifiable dans son état actuel.</source>
+        <target state="translated">The file can no longer be changed in its current state.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
+          <context context-type="linenumber">200</context>
+        </context-group>
+        <note priority="1" from="description">409 VERIFICATION_LOCKED</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.error.invalid" datatype="html">
+        <source>Fichier vide, illisible ou image trop grande (25 millions de pixels au maximum).</source>
+        <target state="translated">Empty or unreadable file, or image too large (25 million pixels at most).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
+          <context context-type="linenumber">204</context>
+        </context-group>
+        <note priority="1" from="description">422 DOCUMENT_INVALID</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.error.failed" datatype="html">
+        <source>L&apos;envoi a échoué. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <target state="translated">The upload failed. Nothing was changed; try again in a moment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+        <note priority="1" from="description">Envoi impossible</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.profession" datatype="html">
+        <source>Profession déclarée</source>
+        <target state="translated">Declared profession</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
+          <context context-type="linenumber">5,8</context>
+        </context-group>
+        <note priority="1" from="description">Profession déclarée</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.professionalNumber" datatype="html">
+        <source>N° ADELI / RPPS</source>
+        <target state="translated">ADELI / RPPS number</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
+          <context context-type="linenumber">12,16</context>
+        </context-group>
+        <note priority="1" from="description">Champ numéro professionnel</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.professionalNumber.recommended" datatype="html">
+        <source>(recommandé, jamais bloquant)</source>
+        <target state="translated">(recommended, never blocking)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
+          <context context-type="linenumber">20,25</context>
+        </context-group>
+        <note priority="1" from="description">Numéro recommandé, jamais bloquant (G
+              Q14)</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.professionalNumber.optional" datatype="html">
+        <source>(facultatif)</source>
+        <target state="translated">(optional)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
+          <context context-type="linenumber">26,31</context>
+        </context-group>
+        <note priority="1" from="description">Numéro facultatif</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.phone" datatype="html">
+        <source>Téléphone de contact</source>
+        <target state="translated">Contact phone</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
+          <context context-type="linenumber">48,52</context>
+        </context-group>
+        <note priority="1" from="description">Champ téléphone</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.remoteOnly" datatype="html">
+        <source>J&apos;exerce uniquement en visioconsultation</source>
+        <target state="translated">I practise remotely only (video)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
+          <context context-type="linenumber">69,76</context>
+        </context-group>
+        <note priority="1" from="description">Case exercice en visio uniquement</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.street" datatype="html">
+        <source>Adresse du cabinet</source>
+        <target state="translated">Practice address</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
+          <context context-type="linenumber">85,88</context>
+        </context-group>
+        <note priority="1" from="description">Champ rue</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.postalCode" datatype="html">
+        <source>Code postal</source>
+        <target state="translated">Postal code</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
+          <context context-type="linenumber">107,110</context>
+        </context-group>
+        <note priority="1" from="description">Champ code postal</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.city" datatype="html">
+        <source>Ville</source>
+        <target state="translated">City</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
+          <context context-type="linenumber">129,132</context>
+        </context-group>
+        <note priority="1" from="description">Champ ville</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.save" datatype="html">
+        <source> Enregistrer </source>
+        <target state="translated">Save</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
+          <context context-type="linenumber">156,161</context>
+        </context-group>
+        <note priority="1" from="description">Bouton enregistrer les informations</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.saved" datatype="html">
+        <source>Enregistré</source>
+        <target state="translated">Saved</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
+          <context context-type="linenumber">163,167</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation d&apos;enregistrement</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.address" datatype="html">
+        <source>Adresse du cabinet</source>
+        <target state="translated">Practice address</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <note priority="1" from="description">Groupe adresse des informations professionnelles</note>
+      </trans-unit>
+      <trans-unit id="account.verification.info.error.failed" datatype="html">
+        <source>Enregistrement impossible pour le moment. Rien n&apos;a été modifié.</source>
+        <target state="translated">Saving is not possible right now. Nothing was changed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <note priority="1" from="description">Enregistrement impossible</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.label" datatype="html">
+        <source>Progression du dossier</source>
+        <target state="translated">File progress</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la progression du dossier</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.docs.submitted" datatype="html">
+        <source><x id="count" equiv-text="count"/> déposés · dossier soumis</source>
+        <target state="translated"><x id="count" equiv-text="count"/> uploaded · file submitted</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <note priority="1" from="description">Jalon justificatifs, dossier soumis</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.docs.missing" datatype="html">
+        <source><x id="count" equiv-text="count"/> déposés · <x id="missing" equiv-text="missing"/> manquant(s)</source>
+        <target state="translated"><x id="count" equiv-text="count"/> uploaded · <x id="missing" equiv-text="missing"/> missing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <note priority="1" from="description">Jalon justificatifs, pièces manquantes</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.docs.complete" datatype="html">
+        <source><x id="count" equiv-text="count"/> déposés · prêt à soumettre</source>
+        <target state="translated"><x id="count" equiv-text="count"/> uploaded · ready to submit</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <note priority="1" from="description">Jalon justificatifs, complet</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.created" datatype="html">
+        <source>Compte créé</source>
+        <target state="translated">Account created</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <note priority="1" from="description">Jalon 1</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.created.detail" datatype="html">
+        <source>Fait</source>
+        <target state="translated">Done</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <note priority="1" from="description">Détail du jalon 1</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.emailConfirmed" datatype="html">
+        <source>E-mail confirmé</source>
+        <target state="translated">E-mail confirmed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Jalon 2</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.emailConfirmed.detail" datatype="html">
+        <source>Fait</source>
+        <target state="translated">Done</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">Détail du jalon 2</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.docs" datatype="html">
+        <source>Justificatifs</source>
+        <target state="translated">Documents</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+        <note priority="1" from="description">Jalon 3</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.validation" datatype="html">
+        <source>Validation</source>
+        <target state="translated">Validation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <note priority="1" from="description">Jalon 4</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.validation.approved" datatype="html">
+        <source>Dossier approuvé</source>
+        <target state="translated">File approved</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+        <note priority="1" from="description">Détail du jalon 4, approuvé</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.validation.underReview" datatype="html">
+        <source>En cours, sous 2 jours ouvrés</source>
+        <target state="translated">In progress, within 2 working days</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+        <note priority="1" from="description">Détail du jalon 4, en cours</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.validation.todo" datatype="html">
+        <source>Sous 2 jours ouvrés après soumission</source>
+        <target state="translated">Within 2 working days after submission</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <note priority="1" from="description">Détail du jalon 4, à venir</note>
+      </trans-unit>
       <trans-unit id="auth.login.pageTitle" datatype="html">
         <source>Connexion · PsyMate</source>
         <target state="translated">Sign in · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet de la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.register.pageTitle" datatype="html">
+        <source>Créer un compte · PsyMate</source>
+        <target state="translated">Create an account · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.reset.pageTitle" datatype="html">
+        <source>Mot de passe oublié · PsyMate</source>
+        <target state="translated">Forgotten password · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet du mot de passe oublié</note>
       </trans-unit>
       <trans-unit id="auth.state.confirmEmail.pageTitle" datatype="html">
         <source>Confirmer l&apos;e-mail · PsyMate</source>
         <target state="translated">Confirm your email · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet, e-mail à confirmer</note>
       </trans-unit>
@@ -196,7 +1339,7 @@
         <target state="translated">Account suspended · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet, compte suspendu</note>
       </trans-unit>
@@ -205,7 +1348,7 @@
         <target state="translated">First sign-in · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet, première connexion</note>
       </trans-unit>
@@ -277,16 +1420,38 @@
         <target state="translated">Sign in</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">2,6</context>
+          <context context-type="linenumber">2,4</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;écran de connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.intro" datatype="html">
+        <source>Espace réservé aux praticiens.</source>
+        <target state="translated">Reserved for practitioners.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">5,7</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre de l&apos;écran de connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.registerLink" datatype="html">
+        <source>Créer un compte</source>
+        <target state="translated">Create an account</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">8,14</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers l&apos;inscription</note>
       </trans-unit>
       <trans-unit id="auth.login.email" datatype="html">
         <source>Adresse e-mail</source>
         <target state="translated">Email address</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">12,13</context>
+          <context context-type="linenumber">20,21</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
+          <context context-type="linenumber">41,43</context>
         </context-group>
         <note priority="1" from="description">Champ e-mail de la connexion</note>
       </trans-unit>
@@ -295,7 +1460,11 @@
         <target state="translated">Enter your email address.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">16,18</context>
+          <context context-type="linenumber">24,26</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
+          <context context-type="linenumber">46,48</context>
         </context-group>
         <note priority="1" from="description">E-mail manquant</note>
       </trans-unit>
@@ -304,7 +1473,11 @@
         <target state="translated">This email address is not valid.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">20,25</context>
+          <context context-type="linenumber">28,33</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
+          <context context-type="linenumber">50,53</context>
         </context-group>
         <note priority="1" from="description">E-mail mal formé</note>
       </trans-unit>
@@ -313,7 +1486,7 @@
         <target state="translated">Password</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">27,31</context>
+          <context context-type="linenumber">35,39</context>
         </context-group>
         <note priority="1" from="description">Champ mot de passe de la connexion</note>
       </trans-unit>
@@ -322,16 +1495,25 @@
         <target state="translated">Enter your password.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">39,44</context>
+          <context context-type="linenumber">68,72</context>
         </context-group>
         <note priority="1" from="description">Mot de passe manquant</note>
+      </trans-unit>
+      <trans-unit id="auth.login.forgot" datatype="html">
+        <source>Mot de passe oublié ?</source>
+        <target state="translated">Forgotten password?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">74,79</context>
+        </context-group>
+        <note priority="1" from="description">Lien mot de passe oublié</note>
       </trans-unit>
       <trans-unit id="auth.login.otp.title" datatype="html">
         <source> Double authentification activée </source>
         <target state="translated"> Two-factor authentication is on </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">47,49</context>
+          <context context-type="linenumber">81,83</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc code 2FA</note>
       </trans-unit>
@@ -340,25 +1522,52 @@
         <target state="translated">Verification code</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">51,54</context>
+          <context context-type="linenumber">85,88</context>
         </context-group>
         <note priority="1" from="description">Champ code de vérification</note>
       </trans-unit>
-      <trans-unit id="auth.login.otp.hint" datatype="html">
-        <source>Les 6 chiffres de votre application, ou un code de secours.</source>
-        <target state="translated">The 6 digits from your app, or a recovery code.</target>
+      <trans-unit id="auth.login.otp.recoveryHint" datatype="html">
+        <source>Un de vos 10 codes de secours ; il ne servira qu&apos;une fois.</source>
+        <target state="translated">One of your 10 recovery codes; it works only once.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">64,67</context>
+          <context context-type="linenumber">99,102</context>
+        </context-group>
+        <note priority="1" from="description">Aide du champ code de secours</note>
+      </trans-unit>
+      <trans-unit id="auth.login.otp.hint" datatype="html">
+        <source>Les 6 chiffres de votre application d&apos;authentification.</source>
+        <target state="translated">The 6 digits from your authenticator app.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">103,106</context>
         </context-group>
         <note priority="1" from="description">Aide du champ code 2FA</note>
+      </trans-unit>
+      <trans-unit id="auth.login.otp.useApp" datatype="html">
+        <source> Utiliser le code de l&apos;application </source>
+        <target state="translated">Use the app code</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">115,118</context>
+        </context-group>
+        <note priority="1" from="description">Revenir au code de l&apos;application</note>
+      </trans-unit>
+      <trans-unit id="auth.login.otp.useRecovery" datatype="html">
+        <source> Utiliser un code de secours </source>
+        <target state="translated">Use a recovery code</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">124,128</context>
+        </context-group>
+        <note priority="1" from="description">Basculer vers un code de secours</note>
       </trans-unit>
       <trans-unit id="auth.login.remember" datatype="html">
         <source>Rester connecté 30 jours</source>
         <target state="translated">Stay signed in for 30 days</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">73,78</context>
+          <context context-type="linenumber">134,139</context>
         </context-group>
         <note priority="1" from="description">Case rester connecté (G Q6)</note>
       </trans-unit>
@@ -367,7 +1576,7 @@
         <target state="translated"> Too many attempts. Try again in <x id="INTERPOLATION" equiv-text="{{ lockDelay() }}"/>. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">82,84</context>
+          <context context-type="linenumber">143,145</context>
         </context-group>
         <note priority="1" from="description">Compte verrouillé, compte à rebours</note>
       </trans-unit>
@@ -376,16 +1585,34 @@
         <target state="translated"> Sign in </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">94,98</context>
+          <context context-type="linenumber">155,157</context>
         </context-group>
         <note priority="1" from="description">Bouton de connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.lockNotice" datatype="html">
+        <source> Après 5 tentatives échouées, le compte est verrouillé 15 minutes. Les connexions sont consignées dans votre journal de sécurité. </source>
+        <target state="translated">After 5 failed attempts the account is locked for 15 minutes. Sign-ins are recorded in your security log.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">158,163</context>
+        </context-group>
+        <note priority="1" from="description">Mention verrouillage et journal sous le bouton</note>
+      </trans-unit>
+      <trans-unit id="auth.login.showPassword" datatype="html">
+        <source>Afficher le mot de passe</source>
+        <target state="translated">Show password</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Bouton afficher le mot de passe</note>
       </trans-unit>
       <trans-unit id="auth.login.error.credentials" datatype="html">
         <source>E-mail, mot de passe ou code incorrect.</source>
         <target state="translated">Incorrect email, password or code.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">141</context>
         </context-group>
         <note priority="1" from="description">Connexion refusée, message unique (fiche 11)</note>
       </trans-unit>
@@ -394,7 +1621,7 @@
         <target state="translated">Check the email address and password you entered.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <note priority="1" from="description">Connexion refusée, champ mal formé</note>
       </trans-unit>
@@ -403,9 +1630,561 @@
         <target state="translated">Sign-in is unavailable right now. Try again in a moment.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <note priority="1" from="description">Connexion impossible, serveur ou réseau</note>
+      </trans-unit>
+      <trans-unit id="auth.reset.title" datatype="html">
+        <source> Mot de passe oublié </source>
+        <target state="translated">Forgotten password</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
+          <context context-type="linenumber">23,26</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;écran mot de passe oublié</note>
+      </trans-unit>
+      <trans-unit id="auth.reset.sent" datatype="html">
+        <source> Si un compte existe pour cette adresse, un e-mail avec un lien de réinitialisation vient de partir. Le lien est valable 30 minutes. </source>
+        <target state="translated">If an account exists for this address, an e-mail with a reset link has just been sent. The link is valid for 30 minutes.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
+          <context context-type="linenumber">27,30</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation d&apos;envoi du lien</note>
+      </trans-unit>
+      <trans-unit id="auth.reset.back" datatype="html">
+        <source>Retour à la connexion</source>
+        <target state="translated">Back to sign-in</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
+          <context context-type="linenumber">31,34</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
+          <context context-type="linenumber">66,70</context>
+        </context-group>
+        <note priority="1" from="description">Retour à la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.reset.intro" datatype="html">
+        <source> Indiquez l&apos;adresse e-mail de votre compte : vous recevrez un lien pour choisir un nouveau mot de passe. </source>
+        <target state="translated">Enter your account e-mail address: you will receive a link to choose a new password.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
+          <context context-type="linenumber">35,38</context>
+        </context-group>
+        <note priority="1" from="description">Explication de l&apos;écran mot de passe oublié</note>
+      </trans-unit>
+      <trans-unit id="auth.reset.submit" datatype="html">
+        <source> Envoyer le lien </source>
+        <target state="translated">Send the link</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
+          <context context-type="linenumber">63,65</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;envoi du lien de réinitialisation</note>
+      </trans-unit>
+      <trans-unit id="auth.reset.error.invalid" datatype="html">
+        <source>Vérifiez l&apos;adresse e-mail saisie.</source>
+        <target state="translated">Check the e-mail address you entered.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <note priority="1" from="description">Demande refusée, e-mail mal formé</note>
+      </trans-unit>
+      <trans-unit id="auth.reset.error.unavailable" datatype="html">
+        <source>Envoi impossible pour le moment. Réessayez dans un instant.</source>
+        <target state="translated">Sending is not possible right now. Try again in a moment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
+          <context context-type="linenumber">135</context>
+        </context-group>
+        <note priority="1" from="description">Demande impossible, serveur ou réseau</note>
+      </trans-unit>
+      <trans-unit id="auth.register.title" datatype="html">
+        <source> Créer votre compte praticien </source>
+        <target state="translated">Create your practitioner account</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.lead" datatype="html">
+        <source> Trois minutes. Vous pourrez compléter votre profil public plus tard, il n&apos;est pas obligatoire. </source>
+        <target state="translated">Three minutes. You can complete your public profile later; it is not required.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">7,10</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.already" datatype="html">
+        <source>Déjà un compte ?</source>
+        <target state="translated">Already have an account?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+        <note priority="1" from="description">Déjà un compte</note>
+      </trans-unit>
+      <trans-unit id="auth.register.loginLink" datatype="html">
+        <source>Se connecter</source>
+        <target state="translated">Sign in</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">12,18</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.register.section.who" datatype="html">
+        <source>Qui vous êtes</source>
+        <target state="translated">Who you are</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">28,31</context>
+        </context-group>
+        <note priority="1" from="description">Section 1 de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.email.hint" datatype="html">
+        <source> Sert à vous connecter et à recevoir les messages de l&apos;annuaire. Un e-mail de confirmation vous sera envoyé. </source>
+        <target state="translated">Used to sign in and to receive directory messages. A confirmation e-mail will be sent.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">80,83</context>
+        </context-group>
+        <note priority="1" from="description">Aide du champ e-mail de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.section.profession" datatype="html">
+        <source>Votre profession</source>
+        <target state="translated">Your profession</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">92,95</context>
+        </context-group>
+        <note priority="1" from="description">Section 2 de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.profession.hint" datatype="html">
+        <source> Elle détermine le vocabulaire de l&apos;application (par exemple le type « médicament » n&apos;est proposé qu&apos;aux psychiatres par défaut) et le libellé de votre fiche publique. Modifiable plus tard. </source>
+        <target state="translated">It sets the application’s vocabulary (for instance the “medication” type is offered to psychiatrists only by default) and the label of your public profile. Can be changed later.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">96,102</context>
+        </context-group>
+        <note priority="1" from="description">Explication de la section profession</note>
+      </trans-unit>
+      <trans-unit id="auth.register.phone.hint" datatype="html">
+        <source> Pour la vérification de votre dossier. Jamais affiché sans votre accord. </source>
+        <target state="translated">For the verification of your file. Never shown without your consent.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">159,161</context>
+        </context-group>
+        <note priority="1" from="description">Aide du champ téléphone</note>
+      </trans-unit>
+      <trans-unit id="auth.register.remoteOnly" datatype="html">
+        <source>J&apos;exerce uniquement en visioconsultation (pas d&apos;adresse de cabinet)</source>
+        <target state="translated">I practise remotely only (no practice address)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">237,243</context>
+        </context-group>
+        <note priority="1" from="description">Case exercice en visio uniquement</note>
+      </trans-unit>
+      <trans-unit id="auth.register.docsNotice" datatype="html">
+        <source> Après la création du compte, vous déposerez votre diplôme et une pièce d&apos;identité (et, si vous en avez, votre attestation ADELI, RPPS ou de certification). Un administrateur vérifie le dossier sous 2 jours ouvrés ; l&apos;annuaire public n&apos;est accessible qu&apos;une fois le dossier validé. </source>
+        <target state="translated">After creating the account you will upload your diploma and an identity document (and, if you have them, your ADELI, RPPS or certification documents). An administrator checks the file within 2 working days; the public directory opens once the file is validated.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">245,252</context>
+        </context-group>
+        <note priority="1" from="description">Encart annonçant le dépôt des justificatifs</note>
+      </trans-unit>
+      <trans-unit id="auth.register.section.access" datatype="html">
+        <source>Votre accès</source>
+        <target state="translated">Your access</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">256,259</context>
+        </context-group>
+        <note priority="1" from="description">Section 3 de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.twoFactorHint" datatype="html">
+        <source> 12 caractères minimum. La double authentification pourra être activée dans vos paramètres ; elle est recommandée pour un dossier clinique. </source>
+        <target state="translated">12 characters at least. Two-factor authentication can be enabled in your settings; it is recommended for clinical records.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">312,318</context>
+        </context-group>
+        <note priority="1" from="description">Rappel 2FA de la section accès</note>
+      </trans-unit>
+      <trans-unit id="auth.register.section.consents" datatype="html">
+        <source> Consentements </source>
+        <target state="translated">Consents</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">324,328</context>
+        </context-group>
+        <note priority="1" from="description">Section consentements</note>
+      </trans-unit>
+      <trans-unit id="auth.register.terms" datatype="html">
+        <source> J&apos;accepte les conditions d&apos;utilisation et j&apos;ai lu la politique de confidentialité. Je comprends que je suis responsable du traitement des données de mes patients et que PsyMate en est l&apos;hébergeur. </source>
+        <target state="translated">I accept the terms of use and I have read the privacy policy. I understand that I am the controller of my patients’ data and that PsyMate is its host.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">338,343</context>
+        </context-group>
+        <note priority="1" from="description">Case CGU et confidentialité, avec responsable du traitement</note>
+      </trans-unit>
+      <trans-unit id="auth.register.submit" datatype="html">
+        <source> Créer mon compte </source>
+        <target state="translated">Create my account</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">357,359</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.submit.hint" datatype="html">
+        <source> Vous recevrez un e-mail pour confirmer votre adresse avant la première connexion. </source>
+        <target state="translated">You will receive an e-mail to confirm your address before the first sign-in.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">360,365</context>
+        </context-group>
+        <note priority="1" from="description">Mention sous le bouton d&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.next.title" datatype="html">
+        <source>Ensuite</source>
+        <target state="translated">Next</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">366,368</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la colonne Ensuite</note>
+      </trans-unit>
+      <trans-unit id="auth.register.next.step1" datatype="html">
+        <source>Confirmez votre e-mail.</source>
+        <target state="translated">Confirm your e-mail.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">368,369</context>
+        </context-group>
+        <note priority="1" from="description">Étape 1 après l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.next.step2" datatype="html">
+        <source> Déposez votre diplôme et une pièce d&apos;identité (plusieurs documents possibles). Vous pouvez déjà utiliser l&apos;outil pendant la vérification. </source>
+        <target state="translated">Upload your diploma and an identity document (several documents possible). You can already use the tool during verification.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">370,373</context>
+        </context-group>
+        <note priority="1" from="description">Étape 2 après l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.next.step3" datatype="html">
+        <source> Un administrateur valide votre dossier sous 2 jours ouvrés. Vous recevez un e-mail. </source>
+        <target state="translated">An administrator validates your file within 2 working days. You receive an e-mail.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">374,376</context>
+        </context-group>
+        <note priority="1" from="description">Étape 3 après l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.next.step4" datatype="html">
+        <source> Quand vous voulez, remplissez votre profil public pour apparaître dans l&apos;annuaire. Rien n&apos;est publié sans votre accord. </source>
+        <target state="translated">Whenever you want, fill in your public profile to appear in the directory. Nothing is published without your consent.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">377,381</context>
+        </context-group>
+        <note priority="1" from="description">Étape 4 après l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.data.title" datatype="html">
+        <source>Vos données</source>
+        <target state="translated">Your data</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">381,382</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc Vos données</note>
+      </trans-unit>
+      <trans-unit id="auth.register.data.body" datatype="html">
+        <source> Hébergement en France, chiffrement au repos et en transit, sauvegardes quotidiennes. Chaque praticien ne voit que ses propres patients. Export complet de votre dossier à tout moment. </source>
+        <target state="translated">Hosted in France, encrypted at rest and in transit, daily backups. Each practitioner sees only their own patients. Full export of your records at any time.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">383,386</context>
+        </context-group>
+        <note priority="1" from="description">Texte du bloc Vos données</note>
+      </trans-unit>
+      <trans-unit id="auth.register.beta" datatype="html">
+        <source>Bêta : vos retours façonnent la V1.</source>
+        <target state="translated">Beta: your feedback shapes V1.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">386,389</context>
+        </context-group>
+        <note priority="1" from="description">Mention bêta</note>
+      </trans-unit>
+      <trans-unit id="auth.register.firstName" datatype="html">
+        <source>Prénom</source>
+        <target state="translated">First name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+        <note priority="1" from="description">Champ de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.lastName" datatype="html">
+        <source>Nom</source>
+        <target state="translated">Last name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+        <note priority="1" from="description">Champ de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.email" datatype="html">
+        <source>E-mail professionnel</source>
+        <target state="translated">Professional e-mail</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <note priority="1" from="description">Champ de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.profession" datatype="html">
+        <source>Profession</source>
+        <target state="translated">Profession</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Légende des cartes de profession</note>
+      </trans-unit>
+      <trans-unit id="auth.register.professionalNumber" datatype="html">
+        <source>Numéro professionnel (ADELI / RPPS, facultatif)</source>
+        <target state="translated">Professional number (ADELI / RPPS, optional)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <note priority="1" from="description">Champ de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.phone" datatype="html">
+        <source>Téléphone</source>
+        <target state="translated">Phone</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <note priority="1" from="description">Champ de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.address" datatype="html">
+        <source>Adresse du cabinet</source>
+        <target state="translated">Practice address</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+        <note priority="1" from="description">Groupe adresse de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.address.street" datatype="html">
+        <source>Adresse du cabinet</source>
+        <target state="translated">Practice address</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+        <note priority="1" from="description">Champ de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.address.postalCode" datatype="html">
+        <source>Code postal</source>
+        <target state="translated">Postal code</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <note priority="1" from="description">Champ de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.address.city" datatype="html">
+        <source>Ville</source>
+        <target state="translated">City</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <note priority="1" from="description">Champ de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.password" datatype="html">
+        <source>Mot de passe</source>
+        <target state="translated">Password</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <note priority="1" from="description">Champ de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.passwordConfirm" datatype="html">
+        <source>Confirmer le mot de passe</source>
+        <target state="translated">Confirm password</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <note priority="1" from="description">Champ de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.register.terms.short" datatype="html">
+        <source>Conditions d&apos;utilisation et confidentialité</source>
+        <target state="translated">Terms of use and privacy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">Case des consentements, libellé court pour le résumé</note>
+      </trans-unit>
+      <trans-unit id="auth.register.profession.psychologist" datatype="html">
+        <source>Psychologue</source>
+        <target state="translated">Psychologist</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+        <note priority="1" from="description">Carte de profession</note>
+      </trans-unit>
+      <trans-unit id="auth.register.profession.psychologist.desc" datatype="html">
+        <source>Suivi psychothérapeutique. Entrées : note, événement, situation, ressenti, séance. Médicament en lecture seule si prescrit par un confrère.</source>
+        <target state="translated">Psychotherapeutic follow-up. Entries: note, event, situation, feeling, session. Medication read-only when prescribed by a colleague.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <note priority="1" from="description">Ce que change la profession psychologue</note>
+      </trans-unit>
+      <trans-unit id="auth.register.profession.psychiatrist" datatype="html">
+        <source>Psychiatre</source>
+        <target state="translated">Psychiatrist</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <note priority="1" from="description">Carte de profession</note>
+      </trans-unit>
+      <trans-unit id="auth.register.profession.psychiatrist.desc" datatype="html">
+        <source>Suivi médical et thérapeutique. Tous les types d&apos;entrées, dont médicament avec posologie et prescripteur.</source>
+        <target state="translated">Medical and therapeutic follow-up. All entry types, including medication with dosage and prescriber.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+        <note priority="1" from="description">Ce que change la profession psychiatre</note>
+      </trans-unit>
+      <trans-unit id="auth.register.profession.coach" datatype="html">
+        <source>Coach</source>
+        <target state="translated">Coach</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+        <note priority="1" from="description">Carte de profession</note>
+      </trans-unit>
+      <trans-unit id="auth.register.profession.coach.desc" datatype="html">
+        <source>Accompagnement. Vocabulaire « client » possible, type médicament masqué. Libellé public « Coach ».</source>
+        <target state="translated">Coaching. “Client” vocabulary available, medication type hidden. Public label “Coach”.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Ce que change la profession coach</note>
+      </trans-unit>
+      <trans-unit id="auth.register.error.unavailable" datatype="html">
+        <source>Inscription impossible pour le moment. Rien n&apos;a été enregistré ; réessayez dans un instant.</source>
+        <target state="translated">Registration is not possible right now. Nothing was saved; try again in a moment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+        <note priority="1" from="description">Inscription impossible, serveur ou réseau</note>
+      </trans-unit>
+      <trans-unit id="auth.register.error.mismatch" datatype="html">
+        <source>Les deux mots de passe ne sont pas identiques.</source>
+        <target state="translated">The two passwords are not identical.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">282</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation du mot de passe différente</note>
+      </trans-unit>
+      <trans-unit id="auth.register.error.postalCode" datatype="html">
+        <source>Le code postal comporte cinq chiffres.</source>
+        <target state="translated">The postal code has five digits.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">285</context>
+        </context-group>
+        <note priority="1" from="description">Code postal mal formé</note>
+      </trans-unit>
+      <trans-unit id="auth.register.error.terms" datatype="html">
+        <source>Vous devez accepter les conditions d&apos;utilisation et la politique de confidentialité.</source>
+        <target state="translated">You must accept the terms of use and the privacy policy.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">288</context>
+        </context-group>
+        <note priority="1" from="description">Consentement obligatoire</note>
+      </trans-unit>
+      <trans-unit id="auth.register.strength.empty" datatype="html">
+        <source>12 caractères minimum.</source>
+        <target state="translated">12 characters at least.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">297</context>
+        </context-group>
+        <note priority="1" from="description">Jauge de force, vide</note>
+      </trans-unit>
+      <trans-unit id="auth.register.strength.short" datatype="html">
+        <source>Trop court · <x id="length" equiv-text="length"/> caractères sur 12.</source>
+        <target state="translated">Too short · <x id="length" equiv-text="length"/> characters out of 12.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">299</context>
+        </context-group>
+        <note priority="1" from="description">Jauge de force, trop court</note>
+      </trans-unit>
+      <trans-unit id="auth.register.strength.weak" datatype="html">
+        <source>Faible · <x id="length" equiv-text="length"/> caractères. Mélangez majuscules, chiffres et signes.</source>
+        <target state="translated">Weak · <x id="length" equiv-text="length"/> characters. Mix upper case, digits and symbols.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">301</context>
+        </context-group>
+        <note priority="1" from="description">Jauge de force, faible</note>
+      </trans-unit>
+      <trans-unit id="auth.register.strength.good" datatype="html">
+        <source>Bon · <x id="length" equiv-text="length"/> caractères.</source>
+        <target state="translated">Good · <x id="length" equiv-text="length"/> characters.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">303</context>
+        </context-group>
+        <note priority="1" from="description">Jauge de force, bon</note>
+      </trans-unit>
+      <trans-unit id="auth.register.strength.strong" datatype="html">
+        <source>Fort · <x id="length" equiv-text="length"/> caractères.</source>
+        <target state="translated">Strong · <x id="length" equiv-text="length"/> characters.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
+          <context context-type="linenumber">305</context>
+        </context-group>
+        <note priority="1" from="description">Jauge de force, fort</note>
       </trans-unit>
       <trans-unit id="patients.list.title" datatype="html">
         <source>Mes patients</source>
@@ -511,7 +2290,7 @@
         <target state="translated">1 field to correct.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/forms/problem-summary.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">94</context>
         </context-group>
         <note priority="1" from="description">Résumé d&apos;un 422, un seul champ</note>
       </trans-unit>
@@ -520,7 +2299,7 @@
         <target state="translated"><x id="count" equiv-text="count"/> fields to correct.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/forms/problem-summary.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">95</context>
         </context-group>
         <note priority="1" from="description">Résumé d&apos;un 422, plusieurs champs</note>
       </trans-unit>
@@ -712,16 +2491,29 @@
         </context-group>
         <note priority="1" from="description">Onglet d&apos;administration</note>
       </trans-unit>
+      <trans-unit id="appBar.avatar.menu" datatype="html">
+        <source>· <x id="INTERPOLATION" equiv-text="{{ me.displayName }}"/>, menu du compte</source>
+        <target state="translated">· <x id="INTERPOLATION" equiv-text="{{ me.displayName }}"/>, account menu</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
+          <context context-type="linenumber">48,50</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
+          <context context-type="linenumber">69,71</context>
+        </context-group>
+        <note priority="1" from="description">Suite du nom accessible de l&apos;avatar</note>
+      </trans-unit>
       <trans-unit id="appBar.menu.logout" datatype="html">
         <source> Déconnexion </source>
         <target state="translated">Sign out</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
-          <context context-type="linenumber">62,66</context>
+          <context context-type="linenumber">59,63</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
-          <context context-type="linenumber">89,94</context>
+          <context context-type="linenumber">86,91</context>
         </context-group>
         <note priority="1" from="description">Entrée de menu de l&apos;avatar</note>
       </trans-unit>
@@ -730,7 +2522,7 @@
         <target state="translated">No patient data is accessible from the administration.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
-          <context context-type="linenumber">68,71</context>
+          <context context-type="linenumber">65,68</context>
         </context-group>
         <note priority="1" from="description">Rappel sous la barre d&apos;administration</note>
       </trans-unit>
@@ -761,7 +2553,7 @@
         <target state="translated">Français</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
-          <context context-type="linenumber">61,68</context>
+          <context context-type="linenumber">61,66</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
@@ -774,7 +2566,7 @@
         <target state="translated">My account</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
-          <context context-type="linenumber">80,84</context>
+          <context context-type="linenumber">77,81</context>
         </context-group>
         <note priority="1" from="description">Entrée de menu de l&apos;avatar</note>
       </trans-unit>
@@ -967,19 +2759,6 @@
         </context-group>
         <note priority="1" from="description">Dernière séance dans l&apos;en-tête patient</note>
       </trans-unit>
-      <trans-unit id="state.error.retry" datatype="html">
-        <source>Réessayer</source>
-        <target state="translated">Retry</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
-          <context context-type="linenumber">126</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
-          <context context-type="linenumber">74</context>
-        </context-group>
-        <note priority="1" from="description">Bouton de l&apos;état erreur</note>
-      </trans-unit>
       <trans-unit id="patientHeader.error.title" datatype="html">
         <source>Impossible de charger ce dossier</source>
         <target state="translated">Unable to load this record</target>
@@ -1075,7 +2854,7 @@
         <target state="translated">Close the panel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/side-panel/side-panel.component.ts</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <note priority="1" from="description">Croix de fermeture d&apos;un panneau</note>
       </trans-unit>

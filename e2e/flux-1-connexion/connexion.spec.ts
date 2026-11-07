@@ -17,7 +17,8 @@ async function expectNoAxeViolations(page: Page): Promise<void> {
 
 async function fillCredentials(page: Page, email: string, password: string): Promise<void> {
   await page.getByLabel('Adresse e-mail').fill(email);
-  await page.getByLabel('Mot de passe').fill(password);
+  // exact : le bouton « Afficher le mot de passe » (M1-15) porte aussi ce texte.
+  await page.getByLabel('Mot de passe', { exact: true }).fill(password);
 }
 
 test('sans session, /patients mène à /connexion?next=/patients', async ({ page }) => {
@@ -70,7 +71,7 @@ test('identifiants faux : le même message unique, e-mail connu ou non', async (
   await expect(alert).toHaveText(WRONG_CREDENTIALS);
   await expect(page).toHaveURL(/\/fr\/connexion$/);
   await expect(page.getByLabel('Adresse e-mail')).toHaveValue(account.email);
-  await expect(page.getByLabel('Mot de passe')).toBeFocused();
+  await expect(page.getByLabel('Mot de passe', { exact: true })).toBeFocused();
   await expectNoAxeViolations(page);
 
   await page.getByLabel('Adresse e-mail').fill(uniqueEmail('m0-07.inconnu'));

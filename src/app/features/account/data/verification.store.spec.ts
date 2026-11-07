@@ -140,12 +140,18 @@ describe('VerificationStore', () => {
       twoFactorEnabled: false,
       passwordChangeRequired: false,
     });
+    const refreshSession = vi.fn().mockResolvedValue(undefined);
     const { store, session } = setup(
-      { load: vi.fn().mockResolvedValue(DOSSIER), submit: vi.fn().mockResolvedValue(reviewed) },
+      {
+        load: vi.fn().mockResolvedValue(DOSSIER),
+        submit: vi.fn().mockResolvedValue(reviewed),
+        refreshSession,
+      },
       me,
     );
     await store.load();
     await expect(store.submit()).resolves.toBe(true);
+    expect(refreshSession).toHaveBeenCalled();
     expect(store.status()).toBe('under_review');
     expect(store.editable()).toBe(false);
     expect(me).toHaveBeenCalled();

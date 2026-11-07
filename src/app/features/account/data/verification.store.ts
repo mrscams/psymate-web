@@ -131,12 +131,16 @@ export const VerificationStore = signalStore(
         }
       },
 
-      /** POST submit → under_review ; la session est relue pour le bandeau d'état. */
+      /**
+       * POST submit → under_review ; la session serveur est rafraîchie (GET /api/auth/session) puis
+       * relue par core/auth (GET /api/auth/me) pour que le bandeau d'état change sans rechargement.
+       */
       async submit(): Promise<boolean> {
         patchState(store, { submission: { status: 'busy', problem: null } });
         try {
           const dossier = await api.submit();
           patchState(store, { dossier: loaded(dossier), submission: ACTION_IDLE });
+          await api.refreshSession();
           await session.load();
           return true;
         } catch (error) {

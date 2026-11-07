@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { filter, firstValueFrom, map, Observable } from 'rxjs';
 
 import {
+  AuthentificationService,
   DecisionDto,
   DocumentDto,
   ProfessionalInfoDto,
@@ -93,6 +94,7 @@ export type ProfessionalInfoPatch = Partial<ProfessionalInfo>;
 @Injectable({ providedIn: 'root' })
 export class VerificationApi {
   private readonly service = inject(VerificationDuPraticienService);
+  private readonly auth = inject(AuthentificationService);
 
   /** GET /api/me/verification. */
   async load(): Promise<Verification> {
@@ -149,6 +151,15 @@ export class VerificationApi {
   /** POST /api/me/verification/submit → dossier under_review (409 VERIFICATION_INCOMPLETE sinon). */
   async submit(): Promise<Verification> {
     return toVerification(await firstValueFrom(this.service.submitVerification()));
+  }
+
+  /**
+   * GET /api/auth/session : relit le compte en base et rafraîchit la session côté serveur. Le statut
+   * de GET /api/auth/me est celui mémorisé dans la session (contrat) : après la soumission, cet appel
+   * précède la relecture de la session par core/auth pour que le bandeau change sans rechargement.
+   */
+  async refreshSession(): Promise<void> {
+    await firstValueFrom(this.auth.session());
   }
 
   /** PATCH /api/me/professional-info ; renvoie les informations enregistrées. */
