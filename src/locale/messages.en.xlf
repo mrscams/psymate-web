@@ -19264,6 +19264,7 @@
           <context context-type="linenumber">30,33</context>
         </context-group>
         <note priority="1" from="description">Bloc en cours de relecture</note>
+</trans-unit>
       <trans-unit id="timeline.decade.back" datatype="html">
         <source>Revenir à l&apos;agrégat par mois</source>
         <target state="translated">Back to the monthly aggregate</target>
