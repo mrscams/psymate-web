@@ -14849,6 +14849,586 @@
         </context-group>
         <note priority="1" from="description">Aucune émotion, comment en créer</note>
       </trans-unit>
+      <trans-unit id="links.action.exists" datatype="html">
+        <source>Un lien de ce type existe déjà entre ces deux entrées.</source>
+        <target state="translated">A link of this type already exists between these two entries.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <note priority="1" from="description">Changement vers un type déjà posé (409)</note>
+      </trans-unit>
+      <trans-unit id="links.action.failed" datatype="html">
+        <source>L&apos;action n&apos;a pas abouti : le serveur n&apos;a pas répondu. Réessayez.</source>
+        <target state="translated">The action did not go through: the server did not respond. Try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+        <note priority="1" from="description">Action sur un lien impossible</note>
+      </trans-unit>
+      <trans-unit id="links.action.inactive" datatype="html">
+        <source>Ce lien a déjà été modifié ou retiré.</source>
+        <target state="translated">This link has already been changed or removed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <note priority="1" from="description">Lien déjà remplacé (409)</note>
+      </trans-unit>
+      <trans-unit id="links.action.invalid" datatype="html">
+        <source>Ce type n&apos;est pas permis pour ces deux entrées.</source>
+        <target state="translated">This type is not allowed for these two entries.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <note priority="1" from="description">Type refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="links.cancel" datatype="html">
+        <source>Annuler</source>
+        <target state="translated">Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">276,277</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;annulation de l&apos;éditeur de lien</note>
+      </trans-unit>
+      <trans-unit id="links.catalog.error" datatype="html">
+        <source>Impossible de charger les types de liens</source>
+        <target state="translated">Unable to load link types</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+        <note priority="1" from="description">Types de liens illisibles</note>
+      </trans-unit>
+      <trans-unit id="links.changed" datatype="html">
+        <source>Type du lien modifié.</source>
+        <target state="translated">Link type changed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">467</context>
+        </context-group>
+        <note priority="1" from="description">Toast après un changement de type de lien</note>
+      </trans-unit>
+      <trans-unit id="links.editor.incomplete" datatype="html">
+        <source>Choisissez une cible et un type de lien permis.</source>
+        <target state="translated">Choose a target and an allowed link type.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">381</context>
+        </context-group>
+        <note priority="1" from="description">Lien incomplet</note>
+      </trans-unit>
+      <trans-unit id="links.editor.relation" datatype="html">
+        <source>Relation</source>
+        <target state="translated">Relation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">Nom du groupe des types de lien</note>
+      </trans-unit>
+      <trans-unit id="links.editor.title" datatype="html">
+        <source>Lier deux entrées</source>
+        <target state="translated">Link two entries</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;éditeur de lien</note>
+      </trans-unit>
+      <trans-unit id="links.editor.unnamed" datatype="html">
+        <source>une entrée</source>
+        <target state="translated">an entry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;une entrée sans titre ni texte</note>
+      </trans-unit>
+      <trans-unit id="links.from.label" datatype="html">
+        <source> Depuis </source>
+        <target state="translated"> From </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+        <note priority="1" from="description">Bloc de l&apos;entrée source</note>
+      </trans-unit>
+      <trans-unit id="links.leave.cancel" datatype="html">
+        <source>Continuer</source>
+        <target state="translated">Keep editing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">342</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui revient à l&apos;éditeur de lien</note>
+      </trans-unit>
+      <trans-unit id="links.leave.confirm" datatype="html">
+        <source>Abandonner</source>
+        <target state="translated">Discard</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">341</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui abandonne le lien</note>
+      </trans-unit>
+      <trans-unit id="links.leave.description" datatype="html">
+        <source>La cible et le type choisis ne seront pas enregistrés.</source>
+        <target state="translated">The chosen target and type will not be saved.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">340</context>
+        </context-group>
+        <note priority="1" from="description">Détail de la confirmation de fermeture</note>
+      </trans-unit>
+      <trans-unit id="links.leave.title" datatype="html">
+        <source>Abandonner ce lien ?</source>
+        <target state="translated">Discard this link?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">339</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation de fermeture de l&apos;éditeur de lien</note>
+      </trans-unit>
+      <trans-unit id="links.placed.edit" datatype="html">
+        <source> Modifier le type </source>
+        <target state="translated"> Change type </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">45,48</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de modification du type d&apos;un lien</note>
+      </trans-unit>
+      <trans-unit id="links.placed.editGroup" datatype="html">
+        <source>Nouveau type</source>
+        <target state="translated">New type</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+        <note priority="1" from="description">Nom du groupe des types d&apos;un lien posé</note>
+      </trans-unit>
+      <trans-unit id="links.placed.empty" datatype="html">
+        <source>Aucun lien sur cette entrée pour le moment</source>
+        <target state="translated">No links on this entry yet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <note priority="1" from="description">Aucun lien posé</note>
+      </trans-unit>
+      <trans-unit id="links.placed.error" datatype="html">
+        <source>Impossible de charger les liens de cette entrée</source>
+        <target state="translated">Unable to load the links of this entry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <note priority="1" from="description">Liens illisibles</note>
+      </trans-unit>
+      <trans-unit id="links.placed.loadingTypes" datatype="html">
+        <source> Lecture des types possibles… </source>
+        <target state="translated"> Reading the possible types… </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">74,77</context>
+        </context-group>
+        <note priority="1" from="description">Types en cours de lecture</note>
+      </trans-unit>
+      <trans-unit id="links.placed.remove" datatype="html">
+        <source> Retirer </source>
+        <target state="translated"> Remove </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">55,58</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de retrait d&apos;un lien</note>
+      </trans-unit>
+      <trans-unit id="links.placed.removedBadge" datatype="html">
+        <source>retiré</source>
+        <target state="translated">removed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">25,28</context>
+        </context-group>
+        <note priority="1" from="description">Marque d&apos;un lien retiré</note>
+      </trans-unit>
+      <trans-unit id="links.placed.title" datatype="html">
+        <source>Liens déjà posés sur cette entrée · <x id="count" equiv-text="count"/></source>
+        <target state="translated">Links already on this entry · <x id="count" equiv-text="count"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la liste des liens posés</note>
+      </trans-unit>
+      <trans-unit id="links.problem.archived" datatype="html">
+        <source>Une des deux entrées est archivée : elle ne peut plus être liée.</source>
+        <target state="translated">One of the two entries is archived: it can no longer be linked.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <note priority="1" from="description">Extrémité archivée (409)</note>
+      </trans-unit>
+      <trans-unit id="links.problem.editType" datatype="html">
+        <source> Modifier le type </source>
+        <target state="translated"> Change type </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">16,22</context>
+        </context-group>
+        <note priority="1" from="description">Action du message de lien en double</note>
+      </trans-unit>
+      <trans-unit id="links.problem.exists" datatype="html">
+        <source>Ce lien existe déjà · Modifier le type ?</source>
+        <target state="translated">This link already exists · Change its type?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">Lien en double (409)</note>
+      </trans-unit>
+      <trans-unit id="links.problem.forbidden" datatype="html">
+        <source>Ces entrées ne font pas partie de vos dossiers.</source>
+        <target state="translated">These entries are not part of your records.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <note priority="1" from="description">Dossier d&apos;un autre praticien (403)</note>
+      </trans-unit>
+      <trans-unit id="links.problem.network" datatype="html">
+        <source>Le lien n&apos;a pas été enregistré : le serveur n&apos;a pas répondu. Votre choix est conservé.</source>
+        <target state="translated">The link was not saved: the server did not respond. Your choice is kept.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Lien non enregistré, serveur muet</note>
+      </trans-unit>
+      <trans-unit id="links.problem.notFound" datatype="html">
+        <source>Cette entrée n&apos;existe plus. Choisissez une autre cible.</source>
+        <target state="translated">This entry no longer exists. Choose another target.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <note priority="1" from="description">Entrée introuvable (404)</note>
+      </trans-unit>
+      <trans-unit id="links.problem.other" datatype="html">
+        <source>Le lien n&apos;a pas été enregistré. Vérifiez votre choix et réessayez.</source>
+        <target state="translated">The link was not saved. Check your choice and try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Lien non enregistré</note>
+      </trans-unit>
+      <trans-unit id="links.rationale.label" datatype="html">
+        <source>Pourquoi (facultatif)</source>
+        <target state="translated">Why (optional)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">212,216</context>
+        </context-group>
+        <note priority="1" from="description">Champ de justification du lien</note>
+      </trans-unit>
+      <trans-unit id="links.refusal.both" datatype="html">
+        <source>« <x id="label" equiv-text="label"/> » : seulement de <x id="sources" equiv-text="sources"/> vers <x id="targets" equiv-text="targets"/>.</source>
+        <target state="translated">“<x id="label" equiv-text="label"/>”: only from <x id="sources" equiv-text="sources"/> to <x id="targets" equiv-text="targets"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">Aide d&apos;un type de lien interdit pour la source et la cible</note>
+      </trans-unit>
+      <trans-unit id="links.refusal.reversible" datatype="html">
+        <source>Possible en inversant le sens.</source>
+        <target state="translated">Possible by reversing the direction.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">Aide, le type est permis dans l&apos;autre sens</note>
+      </trans-unit>
+      <trans-unit id="links.refusal.source" datatype="html">
+        <source>« <x id="label" equiv-text="label"/> » : seulement depuis <x id="sources" equiv-text="sources"/>.</source>
+        <target state="translated">“<x id="label" equiv-text="label"/>”: only from <x id="sources" equiv-text="sources"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <note priority="1" from="description">Aide d&apos;un type de lien interdit pour la source</note>
+      </trans-unit>
+      <trans-unit id="links.refusal.target" datatype="html">
+        <source>« <x id="label" equiv-text="label"/> » : seulement vers <x id="targets" equiv-text="targets"/>.</source>
+        <target state="translated">“<x id="label" equiv-text="label"/>”: only to <x id="targets" equiv-text="targets"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">Aide d&apos;un type de lien interdit pour la cible</note>
+      </trans-unit>
+      <trans-unit id="links.relation.invert" datatype="html">
+        <source>Inverser le sens</source>
+        <target state="translated">Reverse direction</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">159,163</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;inversion du sens du lien</note>
+      </trans-unit>
+      <trans-unit id="links.relation.label" datatype="html">
+        <source> Relation </source>
+        <target state="translated"> Relation </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">146,149</context>
+        </context-group>
+        <note priority="1" from="description">Bloc du type de lien</note>
+      </trans-unit>
+      <trans-unit id="links.removed" datatype="html">
+        <source>Lien retiré.</source>
+        <target state="translated">Link removed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">475</context>
+        </context-group>
+        <note priority="1" from="description">Toast après le retrait d&apos;un lien</note>
+      </trans-unit>
+      <trans-unit id="links.save" datatype="html">
+        <source>Enregistrer le lien</source>
+        <target state="translated">Save link</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">263,265</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;enregistrement du lien</note>
+      </trans-unit>
+      <trans-unit id="links.saveAnother" datatype="html">
+        <source> Enregistrer et lier une autre </source>
+        <target state="translated"> Save and link another </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">273,275</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;enregistrement puis nouveau lien</note>
+      </trans-unit>
+      <trans-unit id="links.saved" datatype="html">
+        <source>Lien enregistré.</source>
+        <target state="translated">Link saved.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">399</context>
+        </context-group>
+        <note priority="1" from="description">Toast après la pose d&apos;un lien</note>
+      </trans-unit>
+      <trans-unit id="links.saved.undo" datatype="html">
+        <source>Annuler</source>
+        <target state="translated">Undo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">402</context>
+        </context-group>
+        <note priority="1" from="description">Action du toast qui retire le lien posé</note>
+      </trans-unit>
+      <trans-unit id="links.search.allTypes" datatype="html">
+        <source> Tous les types </source>
+        <target state="translated"> All types </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">81,83</context>
+        </context-group>
+        <note priority="1" from="description">Tous les types d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="links.search.label" datatype="html">
+        <source>Rechercher une entrée du dossier</source>
+        <target state="translated">Search an entry in the record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">63,66</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche de cible</note>
+      </trans-unit>
+      <trans-unit id="links.search.placeholder" datatype="html">
+        <source>Rechercher une entrée…</source>
+        <target state="translated">Search an entry…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">71,75</context>
+        </context-group>
+        <note priority="1" from="description">Indication du champ de recherche de cible</note>
+      </trans-unit>
+      <trans-unit id="links.search.typeLabel" datatype="html">
+        <source>Type d&apos;entrée cherché</source>
+        <target state="translated">Entry type searched</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">77,79</context>
+        </context-group>
+        <note priority="1" from="description">Filtre de type de la cible</note>
+      </trans-unit>
+      <trans-unit id="links.sentence.label" datatype="html">
+        <source> Le lien se lira </source>
+        <target state="translated"> The link will read </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">192,195</context>
+        </context-group>
+        <note priority="1" from="description">Bloc de la phrase lisible</note>
+      </trans-unit>
+      <trans-unit id="links.shape.dotted" datatype="html">
+        <source>Dans le graphe : pointillé et flèche vers la cible.</source>
+        <target state="translated">In the graph: dotted line with an arrow to the target.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.shape.double" datatype="html">
+        <source>Dans le graphe : trait double et flèche vers la cible.</source>
+        <target state="translated">In the graph: double line with an arrow to the target.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.shape.longDash" datatype="html">
+        <source>Dans le graphe : tirets longs et flèche vers la cible.</source>
+        <target state="translated">In the graph: long dashes with an arrow to the target.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.shape.shortDash" datatype="html">
+        <source>Dans le graphe : tirets courts et flèche vers la cible.</source>
+        <target state="translated">In the graph: short dashes with an arrow to the target.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.shape.solid" datatype="html">
+        <source>Dans le graphe : trait plein et flèche vers la cible.</source>
+        <target state="translated">In the graph: solid line with an arrow to the target.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.shape.symmetric" datatype="html">
+        <source>Dans le graphe : trait pointillé, sans flèche (le lien vaut dans les deux sens).</source>
+        <target state="translated">In the graph: dotted line, no arrow (the link holds both ways).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien symétrique dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.shape.thin" datatype="html">
+        <source>Dans le graphe : trait fin et flèche vers la cible.</source>
+        <target state="translated">In the graph: thin line with an arrow to the target.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.source.error" datatype="html">
+        <source>Impossible de charger cette entrée</source>
+        <target state="translated">Unable to load this entry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+        <note priority="1" from="description">Entrée source illisible</note>
+      </trans-unit>
+      <trans-unit id="links.targets.empty" datatype="html">
+        <source>Aucune autre entrée trouvée</source>
+        <target state="translated">No other entry found</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">165</context>
+        </context-group>
+        <note priority="1" from="description">Aucune cible trouvée</note>
+      </trans-unit>
+      <trans-unit id="links.targets.emptyMessage" datatype="html">
+        <source>Modifiez la recherche ou le type.</source>
+        <target state="translated">Change the search or the type.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">166</context>
+        </context-group>
+        <note priority="1" from="description">Aucune cible, que faire</note>
+      </trans-unit>
+      <trans-unit id="links.targets.error" datatype="html">
+        <source>Impossible de chercher dans le dossier</source>
+        <target state="translated">Unable to search the record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">164</context>
+        </context-group>
+        <note priority="1" from="description">Recherche de cible en erreur</note>
+      </trans-unit>
+      <trans-unit id="links.targets.legend" datatype="html">
+        <source> Entrée à lier </source>
+        <target state="translated"> Entry to link </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">107,109</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la liste des cibles</note>
+      </trans-unit>
+      <trans-unit id="links.targets.linked" datatype="html">
+        <source>déjà lié (<x id="labels" equiv-text="labels.join(&apos;, &apos;)"/>)</source>
+        <target state="translated">already linked (<x id="labels" equiv-text="labels.join(&apos;, &apos;)"/>)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+        <note priority="1" from="description">Mention d&apos;une entrée déjà liée</note>
+      </trans-unit>
+      <trans-unit id="links.to.label" datatype="html">
+        <source> Vers </source>
+        <target state="translated"> To </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">56,59</context>
+        </context-group>
+        <note priority="1" from="description">Bloc de l&apos;entrée cible</note>
+      </trans-unit>
+      <trans-unit id="links.undone" datatype="html">
+        <source>Lien annulé.</source>
+        <target state="translated">Link undone.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">495</context>
+        </context-group>
+        <note priority="1" from="description">Toast après l&apos;annulation d&apos;un lien</note>
+      </trans-unit>
+      <trans-unit id="links.placed.typesError" datatype="html">
+        <source>Impossible de lire les types possibles.</source>
+        <target state="translated">Unable to read the possible types.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">71,74</context>
+        </context-group>
+        <note priority="1" from="description">Types possibles illisibles</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

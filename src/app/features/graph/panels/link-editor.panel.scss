@@ -1,0 +1,332 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.placed {
+  margin-top: 20px;
+}
+
+.block-label {
+  margin: 0;
+  padding: 0;
+  font: var(--mat-sys-label-large);
+  color: var(--text-primary);
+}
+
+.patient {
+  font: var(--mat-sys-body-medium);
+  color: var(--text-secondary);
+}
+
+.hint {
+  margin: 0;
+  font: var(--mat-sys-body-small);
+  color: var(--text-secondary);
+}
+
+.count {
+  align-self: flex-end;
+}
+
+// Carte de l'entrée source : bordure gauche à la couleur du type (fiche 06, tokens).
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--entry-note);
+  border-radius: 8px;
+  background: var(--surface-raised);
+
+  &[data-type='event'] {
+    border-left-color: var(--entry-event);
+  }
+  &[data-type='situation'] {
+    border-left-color: var(--entry-situation);
+  }
+  &[data-type='feeling'] {
+    border-left-color: var(--entry-feeling);
+  }
+  &[data-type='session'] {
+    border-left-color: var(--entry-session);
+  }
+  &[data-type='medication'] {
+    border-left-color: var(--entry-medication);
+  }
+}
+
+.card-text {
+  min-width: 0;
+}
+
+.card-name {
+  margin: 0;
+  font: var(--mat-sys-body-large);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.card-meta {
+  margin: 2px 0 0;
+  font: var(--mat-sys-body-small);
+  color: var(--text-secondary);
+}
+
+.search-row {
+  display: flex;
+  gap: 8px;
+}
+
+input[type='search'],
+select,
+textarea {
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: var(--mat-sys-body-large);
+
+  &[aria-invalid='true'] {
+    border-color: var(--danger);
+  }
+  &:focus-visible {
+    border-color: var(--primary);
+    outline: 2px solid var(--primary-tint);
+    outline-offset: 0;
+  }
+}
+
+input[type='search'] {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+select {
+  flex: 0 0 auto;
+  max-width: 40%;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  resize: vertical;
+}
+
+.targets {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 260px;
+  margin: 4px 0 0;
+  padding: 0;
+  overflow-y: auto;
+  border: 0;
+}
+
+.target {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 44px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-sunken);
+  }
+  &:has(input:checked) {
+    background: var(--primary-tint);
+  }
+  input {
+    margin: 4px 0 0;
+    accent-color: var(--primary);
+  }
+  pm-entry-icon {
+    margin-top: 4px;
+  }
+}
+
+.target-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.target-name {
+  font: var(--mat-sys-body-medium);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.target-meta {
+  font: var(--mat-sys-body-small);
+  color: var(--text-secondary);
+}
+
+// Entrée déjà liée : grisée (texte secondaire, jamais sous le contraste AA), avec le verbe du lien.
+.target.linked .target-name {
+  color: var(--text-secondary);
+}
+
+.linked-text {
+  font-style: italic;
+}
+
+.relation-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.invert {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 18px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: var(--mat-sys-label-large);
+  cursor: pointer;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  &[aria-pressed='true'] {
+    border-color: var(--primary);
+    background: var(--primary-tint);
+    color: var(--primary-hover);
+  }
+  &:disabled {
+    cursor: default;
+    color: var(--text-secondary);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+// Phrase lisible : fond calme, verbe en gras (fiche 06).
+.sentence {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--surface-sunken);
+  font: var(--mat-sys-body-large);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.verb {
+  font-weight: 600;
+  color: var(--primary-hover);
+}
+
+.alert {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font: var(--mat-sys-body-medium);
+
+  p {
+    margin: 0;
+  }
+}
+
+.alert-action {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--danger);
+  border-radius: 16px;
+  background: var(--surface-raised);
+  color: var(--danger);
+  font: var(--mat-sys-label-large);
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 20px;
+    background: var(--surface-raised);
+    color: var(--text-primary);
+    font: var(--mat-sys-label-large);
+    cursor: pointer;
+  }
+  .primary {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-on);
+
+    kbd {
+      border-color: currentColor;
+    }
+  }
+  .ghost {
+    margin-left: auto;
+    border-color: transparent;
+    background: none;
+  }
+  button[aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+  .primary[aria-disabled='true'] {
+    border-color: var(--border-strong);
+    background: var(--surface-sunken);
+    color: var(--text-secondary);
+  }
+  button:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
