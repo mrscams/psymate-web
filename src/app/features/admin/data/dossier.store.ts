@@ -89,7 +89,8 @@ export const DossierStore = signalStore(
         patchState(store, {
           viewer: loaded({
             documentId: document.id,
-            objectUrl: URL.createObjectURL(blob),
+            // Type imposé par le dossier (pdf, png, jpeg), pas par l'en-tête de la réponse.
+            objectUrl: URL.createObjectURL(new Blob([blob], { type: document.mime })),
             signedUrl: signed.url,
             expiresAt: signed.expiresAt,
           }),

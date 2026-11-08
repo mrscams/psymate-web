@@ -66,6 +66,8 @@ export class VocabularyPage {
 
   /** Ligne dont le panneau « Renommer » est ouvert : `kind:code`. */
   protected readonly editing = signal<string | null>(null);
+  /** Échec d'une réactivation (pas de toast pour une erreur, fiche 00 §7). */
+  protected readonly actionError = signal<string | null>(null);
 
   protected readonly entries = computed(() => {
     const list = this.tab() === 'audience' ? this.store.audiences() : this.store.specialties();
@@ -179,8 +181,20 @@ export class VocabularyPage {
     return (patch) => this.store.update(entry.kind, entry.code, patch);
   }
 
-  protected onRenamed(): void {
+  /** Ferme le panneau et rend le focus au bouton « Renommer » de la ligne. */
+  protected closeRename(entry: VocabularyEntry): void {
     this.editing.set(null);
+    requestAnimationFrame(() =>
+      this.host.nativeElement.querySelector<HTMLElement>(`#${this.renameId(entry)}`)?.focus(),
+    );
+  }
+
+  protected renameId(entry: VocabularyEntry): string {
+    return `rename-button-${entry.kind}-${entry.code}`;
+  }
+
+  protected onRenamed(entry: VocabularyEntry): void {
+    this.closeRename(entry);
     this.toast.success(
       $localize`:Toast après renommage@@admin.vocabulary.renamedToast:Libellé mis à jour · visible immédiatement dans l'annuaire`,
     );
@@ -204,8 +218,14 @@ export class VocabularyPage {
   }
 
   protected async reactivate(entry: VocabularyEntry): Promise<void> {
+    this.actionError.set(null);
     const problem = await this.store.setActive(entry.kind, entry.code, true);
-    if (!problem) {
+    if (problem) {
+      this.actionError.set(
+        problem.detail ??
+          $localize`:Erreur de réactivation d'une entrée@@admin.vocabulary.reactivateError:La réactivation n'a pas pu être enregistrée. Rien n'a été modifié.`,
+      );
+    } else {
       this.toast.success(
         $localize`:Toast après réactivation d'une entrée@@admin.vocabulary.reactivatedToast:« ${entry.labelFr}:label: » réactivée · visible immédiatement dans l'annuaire`,
       );

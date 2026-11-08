@@ -1864,15 +1864,19 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">144</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/confirm-email.page.ts</context>
@@ -4055,7 +4059,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
-          <context context-type="linenumber">296,300</context>
+          <context context-type="linenumber">296,298</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
@@ -4072,6 +4076,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">249,255</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">304,310</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
@@ -4453,7 +4461,7 @@
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
-          <context context-type="linenumber">304,307</context>
+          <context context-type="linenumber">313,316</context>
         </context-group>
         <note priority="1" from="description">Note de bas de page des praticiens</note>
       </trans-unit>
@@ -4677,7 +4685,7 @@
         <source>Aucun dossier ouvert</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
-          <context context-type="linenumber">93,94</context>
+          <context context-type="linenumber">97,98</context>
         </context-group>
         <note priority="1" from="description">Aucun dossier ouvert</note>
       </trans-unit>
@@ -4685,7 +4693,7 @@
         <source>Choisissez un dossier dans la file.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
-          <context context-type="linenumber">95,96</context>
+          <context context-type="linenumber">99,100</context>
         </context-group>
         <note priority="1" from="description">Phrase sans dossier ouvert</note>
       </trans-unit>
@@ -4693,7 +4701,7 @@
         <source> Justificatifs · <x id="INTERPOLATION" equiv-text="{{ d.documents.length }}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
-          <context context-type="linenumber">113,115</context>
+          <context context-type="linenumber">117,119</context>
         </context-group>
         <note priority="1" from="description">Titre des justificatifs</note>
       </trans-unit>
@@ -4701,7 +4709,7 @@
         <source> La qualification n&apos;a pas pu être enregistrée. Réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
-          <context context-type="linenumber">121,124</context>
+          <context context-type="linenumber">125,128</context>
         </context-group>
         <note priority="1" from="description">Erreur de qualification</note>
       </trans-unit>
@@ -4709,15 +4717,31 @@
         <source>Aucun justificatif déposé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
-          <context context-type="linenumber">128,129</context>
+          <context context-type="linenumber">132,133</context>
         </context-group>
         <note priority="1" from="description">Dossier sans justificatif</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.notReviewable" datatype="html">
+        <source> Ce dossier n&apos;attend pas de décision : son statut ne permet ni approbation, ni complément, ni refus. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">165,171</context>
+        </context-group>
+        <note priority="1" from="description">Dossier hors examen</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.dossierRegion" datatype="html">
+        <source>Dossier ouvert</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la région du dossier</note>
       </trans-unit>
       <trans-unit id="admin.validation.title" datatype="html">
         <source>À vérifier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <note priority="1" from="description">Titre de la file de vérification</note>
       </trans-unit>
@@ -4725,7 +4749,7 @@
         <source>À vérifier · <x id="count" equiv-text="total"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <note priority="1" from="description">Titre de la file de vérification avec total</note>
       </trans-unit>
@@ -4733,7 +4757,7 @@
         <source>Ce dossier n&apos;existe pas</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <note priority="1" from="description">Dossier introuvable</note>
       </trans-unit>
@@ -4741,7 +4765,7 @@
         <source>Impossible de charger ce dossier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">93</context>
         </context-group>
         <note priority="1" from="description">Erreur du dossier</note>
       </trans-unit>
@@ -4749,7 +4773,7 @@
         <source>Complément demandé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">118</context>
         </context-group>
         <note priority="1" from="description">Filtre de la file</note>
       </trans-unit>
@@ -4757,7 +4781,7 @@
         <source>En attente</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
-          <context context-type="linenumber">117</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <note priority="1" from="description">Filtre de la file</note>
       </trans-unit>
@@ -4765,7 +4789,7 @@
         <source><x id="name" equiv-text="name"/> approuvé·e · e-mail envoyé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <note priority="1" from="description">Toast après approbation</note>
       </trans-unit>
@@ -4773,7 +4797,7 @@
         <source>Complément demandé à <x id="name" equiv-text="name"/> · e-mail envoyé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">167</context>
         </context-group>
         <note priority="1" from="description">Toast après demande de complément</note>
       </trans-unit>
@@ -4781,7 +4805,7 @@
         <source>Dossier de <x id="name" equiv-text="name"/> refusé · compte suspendu, e-mail envoyé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">169</context>
         </context-group>
         <note priority="1" from="description">Toast après refus</note>
       </trans-unit>
@@ -4813,7 +4837,7 @@
         <source>fixe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">33,38</context>
+          <context context-type="linenumber">34,39</context>
         </context-group>
         <note priority="1" from="description">Mention d&apos;une liste fixe</note>
       </trans-unit>
@@ -4821,7 +4845,7 @@
         <source>Afficher les désactivées</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">42,48</context>
+          <context context-type="linenumber">44,50</context>
         </context-group>
         <note priority="1" from="description">Case d&apos;affichage des entrées désactivées</note>
       </trans-unit>
@@ -4829,7 +4853,7 @@
         <source>Impossible de charger le vocabulaire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">57,58</context>
+          <context context-type="linenumber">62,63</context>
         </context-group>
         <note priority="1" from="description">État erreur du vocabulaire</note>
       </trans-unit>
@@ -4837,7 +4861,7 @@
         <source>Aucune entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">65,66</context>
+          <context context-type="linenumber">70,71</context>
         </context-group>
         <note priority="1" from="description">État vide du vocabulaire</note>
       </trans-unit>
@@ -4845,7 +4869,7 @@
         <source>Ajoutez la première avec le formulaire ci-dessous.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">67,68</context>
+          <context context-type="linenumber">72,73</context>
         </context-group>
         <note priority="1" from="description">Phrase de l&apos;état vide du vocabulaire</note>
       </trans-unit>
@@ -4853,11 +4877,11 @@
         <source>Code</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">82,83</context>
+          <context context-type="linenumber">87,88</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">180,181</context>
+          <context context-type="linenumber">186,187</context>
         </context-group>
         <note priority="1" from="description">Colonne du vocabulaire</note>
       </trans-unit>
@@ -4865,11 +4889,11 @@
         <source> Libellé FR </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">84,86</context>
+          <context context-type="linenumber">89,91</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">182,184</context>
+          <context context-type="linenumber">188,190</context>
         </context-group>
         <note priority="1" from="description">Colonne du vocabulaire</note>
       </trans-unit>
@@ -4877,11 +4901,11 @@
         <source> Libellé EN </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">87,89</context>
+          <context context-type="linenumber">92,94</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">185,188</context>
+          <context context-type="linenumber">191,194</context>
         </context-group>
         <note priority="1" from="description">Colonne du vocabulaire</note>
       </trans-unit>
@@ -4889,7 +4913,7 @@
         <source>Ordre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">89,90</context>
+          <context context-type="linenumber">94,95</context>
         </context-group>
         <note priority="1" from="description">Colonne du vocabulaire</note>
       </trans-unit>
@@ -4897,7 +4921,7 @@
         <source> Utilisation </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">91,93</context>
+          <context context-type="linenumber">96,98</context>
         </context-group>
         <note priority="1" from="description">Colonne du vocabulaire</note>
       </trans-unit>
@@ -4905,7 +4929,7 @@
         <source>État</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">93,94</context>
+          <context context-type="linenumber">98,99</context>
         </context-group>
         <note priority="1" from="description">Colonne du vocabulaire</note>
       </trans-unit>
@@ -4913,7 +4937,7 @@
         <source> Actions </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">95,98</context>
+          <context context-type="linenumber">100,103</context>
         </context-group>
         <note priority="1" from="description">Colonne du vocabulaire</note>
       </trans-unit>
@@ -4921,7 +4945,7 @@
         <source> Utilisée par <x id="INTERPOLATION" equiv-text="{{ entry.usedByPublishedProfiles }}"/> profil(s) publié(s) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">107,108</context>
+          <context context-type="linenumber">112,113</context>
         </context-group>
         <note priority="1" from="description">Utilisation d&apos;une entrée</note>
       </trans-unit>
@@ -4929,7 +4953,7 @@
         <source>Active</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">113,115</context>
+          <context context-type="linenumber">118,120</context>
         </context-group>
         <note priority="1" from="description">État actif</note>
       </trans-unit>
@@ -4937,7 +4961,7 @@
         <source>Désactivée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">115,117</context>
+          <context context-type="linenumber">120,122</context>
         </context-group>
         <note priority="1" from="description">État désactivé</note>
       </trans-unit>
@@ -4945,7 +4969,7 @@
         <source>Renommer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">127,128</context>
+          <context context-type="linenumber">133,134</context>
         </context-group>
         <note priority="1" from="description">Bouton de renommage</note>
       </trans-unit>
@@ -4953,7 +4977,7 @@
         <source>Désactiver…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">138,140</context>
+          <context context-type="linenumber">144,146</context>
         </context-group>
         <note priority="1" from="description">Bouton de désactivation</note>
       </trans-unit>
@@ -4961,7 +4985,7 @@
         <source>Réactiver</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">146,148</context>
+          <context context-type="linenumber">152,154</context>
         </context-group>
         <note priority="1" from="description">Bouton de réactivation d&apos;une entrée</note>
       </trans-unit>
@@ -4970,7 +4994,7 @@
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">211,215</context>
+          <context context-type="linenumber">217,221</context>
         </context-group>
         <note priority="1" from="description">Note de bas de page du vocabulaire</note>
       </trans-unit>
@@ -4978,7 +5002,7 @@
         <source>Entrée ajoutée · visible immédiatement dans l&apos;annuaire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">98</context>
         </context-group>
         <note priority="1" from="description">Toast après ajout au vocabulaire</note>
       </trans-unit>
@@ -4986,7 +5010,7 @@
         <source>Publics</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">111</context>
         </context-group>
         <note priority="1" from="description">Sous-onglet du vocabulaire</note>
       </trans-unit>
@@ -4994,7 +5018,7 @@
         <source>Modalités</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">113</context>
         </context-group>
         <note priority="1" from="description">Sous-onglet du vocabulaire</note>
       </trans-unit>
@@ -5002,7 +5026,7 @@
         <source>Langues</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">115</context>
         </context-group>
         <note priority="1" from="description">Sous-onglet du vocabulaire</note>
       </trans-unit>
@@ -5010,7 +5034,7 @@
         <source>Spécialités</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <note priority="1" from="description">Sous-onglet du vocabulaire</note>
       </trans-unit>
@@ -5018,15 +5042,23 @@
         <source>Libellé mis à jour · visible immédiatement dans l&apos;annuaire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
-          <context context-type="linenumber">185</context>
+          <context context-type="linenumber">199</context>
         </context-group>
         <note priority="1" from="description">Toast après renommage</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.reactivateError" datatype="html">
+        <source>La réactivation n&apos;a pas pu être enregistrée. Rien n&apos;a été modifié.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de réactivation d&apos;une entrée</note>
       </trans-unit>
       <trans-unit id="admin.vocabulary.reactivatedToast" datatype="html">
         <source>« <x id="label" equiv-text="entry.labelFr"/> » réactivée · visible immédiatement dans l&apos;annuaire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
-          <context context-type="linenumber">210</context>
+          <context context-type="linenumber">230</context>
         </context-group>
         <note priority="1" from="description">Toast après réactivation d&apos;une entrée</note>
       </trans-unit>
@@ -5866,7 +5898,7 @@
         <source>Justificatif : <x id="title" equiv-text="title"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <note priority="1" from="description">Nom accessible de la visionneuse</note>
       </trans-unit>
@@ -5874,7 +5906,7 @@
         <source>Aucun justificatif affiché</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <note priority="1" from="description">Visionneuse vide</note>
       </trans-unit>
@@ -5882,7 +5914,7 @@
         <source>Ce fichier a été purgé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <note priority="1" from="description">Justificatif purgé</note>
       </trans-unit>
@@ -5890,7 +5922,7 @@
         <source>Impossible d&apos;afficher ce justificatif</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <note priority="1" from="description">Erreur de la visionneuse</note>
       </trans-unit>
@@ -5898,7 +5930,7 @@
         <source>Choisissez « Afficher » sur un justificatif.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">140</context>
         </context-group>
         <note priority="1" from="description">Visionneuse vide</note>
       </trans-unit>

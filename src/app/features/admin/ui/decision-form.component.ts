@@ -149,7 +149,7 @@ export class DecisionFormComponent {
 
   /** Approbation malgré les points ouverts : force si des justificatifs ne sont pas conformes. */
   protected approveAnyway(): void {
-    this.emit('approved', true);
+    this.emit('approved', this.nonConform() > 0);
   }
 
   protected cancelConfirm(): void {

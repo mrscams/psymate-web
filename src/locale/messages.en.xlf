@@ -12943,6 +12943,33 @@
         </context-group>
         <note priority="1" from="description">Erreur d&apos;écriture du vocabulaire</note>
       </trans-unit>
+      <trans-unit id="admin.validation.notReviewable" datatype="html">
+        <source> Ce dossier n&apos;attend pas de décision : son statut ne permet ni approbation, ni complément, ni refus. </source>
+        <target state="translated">This file is not awaiting a decision: its status allows neither approval, nor a request for more information, nor rejection.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">165,171</context>
+        </context-group>
+        <note priority="1" from="description">Dossier hors examen</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.dossierRegion" datatype="html">
+        <source>Dossier ouvert</source>
+        <target state="translated">Open file</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la région du dossier</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.reactivateError" datatype="html">
+        <source>La réactivation n&apos;a pas pu être enregistrée. Rien n&apos;a été modifié.</source>
+        <target state="translated">The reactivation could not be saved. Nothing was changed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de réactivation d&apos;une entrée</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

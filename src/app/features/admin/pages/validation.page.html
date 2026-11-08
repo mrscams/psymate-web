@@ -85,7 +85,11 @@
   }
 </section>
 
-<section class="dossier" aria-labelledby="dossier-title">
+<section
+  class="dossier"
+  [attr.aria-labelledby]="dossier.dossier().data ? 'dossier-title' : null"
+  [attr.aria-label]="dossier.dossier().data ? null : dossierLabel"
+>
   @if (!practitionerId()) {
     @if (queueKind() !== 'loading') {
       <pm-state
@@ -141,19 +145,26 @@
           [file]="dossier.viewer().data"
           [loading]="dossier.viewer().status === 'loading'"
           [problem]="dossier.viewer().problem"
-          (expired)="refreshViewer()"
+          (reload)="refreshViewer()"
         />
       }
     </div>
 
-    @for (key of [d.practitionerId]; track key) {
-      <pm-decision-form
-        [displayName]="d.displayName"
-        [nonConform]="dossier.nonConform()"
-        [submitting]="dossier.submitting()"
-        [problem]="dossier.decisionProblem()"
-        (decide)="onDecide($event)"
-      />
+    @if (d.verificationStatus === 'under_review' || d.verificationStatus === 'needs_more') {
+      @for (key of [d.practitionerId]; track key) {
+        <pm-decision-form
+          [displayName]="d.displayName"
+          [nonConform]="dossier.nonConform()"
+          [submitting]="dossier.submitting()"
+          [problem]="dossier.decisionProblem()"
+          (decide)="onDecide($event)"
+        />
+      }
+    } @else {
+      <p class="decided" i18n="Dossier hors examen@@admin.validation.notReviewable">
+        Ce dossier n'attend pas de décision : son statut ne permet ni approbation, ni complément, ni
+        refus.
+      </p>
     }
   }
 </section>

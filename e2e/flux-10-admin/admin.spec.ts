@@ -194,9 +194,16 @@ test.describe('administration', () => {
     await expect(dialog).toHaveCount(0);
     await expect(row).toContainText('Suspendu');
 
-    // Le praticien est déconnecté par la suspension : sa session API reçoit 403 ACCOUNT_SUSPENDED.
+    // Sessions révoquées par la suspension : l'ancienne session n'est plus reconnue, et une nouvelle
+    // connexion est refusée avec ACCOUNT_SUSPENDED (le client affiche alors l'écran 27).
     const me = await practitioner.api.get(`${API}/api/auth/me`);
-    expect([401, 403]).toContain(me.status());
+    expect(me.status()).toBe(401);
+    expect(((await me.json()) as { code: string }).code).toBe('UNAUTHENTICATED');
+    const login = await practitioner.api.post(`${API}/api/auth/login`, {
+      data: { email: practitioner.email, password: practitioner.password },
+    });
+    expect(login.status()).toBe(403);
+    expect(((await login.json()) as { code: string }).code).toBe('ACCOUNT_SUSPENDED');
 
     await row.getByRole('button', { name: /Réactiver…/ }).click();
     await dialog
@@ -253,6 +260,7 @@ test.describe('administration', () => {
       // Modalités et langues : lecture seule.
       await page.getByRole('tab', { name: /Langues/ }).click();
       await expect(page).toHaveURL(/kind=language/);
+      await expect(page.getByRole('tabpanel').getByRole('row')).toHaveCount(16);
       await expect(page.getByRole('tabpanel').getByRole('button')).toHaveCount(0);
     } finally {
       // Ménage : fiche retirée, spécialité de test désactivée (jamais supprimée).
@@ -262,6 +270,61 @@ test.describe('administration', () => {
       });
       await practitioner.api.dispose();
     }
+  });
+
+  test('clavier : file (↑ ↓ Entrée), sous-onglets (flèches), Renommer (Échap), dialogue (Échap)', async ({
+    page,
+    context,
+  }) => {
+    await shareSession(admin, context);
+    await page.goto('/fr/admin/validation');
+    const links = page
+      .getByRole('list', { name: 'Dossiers en attente de vérification' })
+      .getByRole('link');
+    await expect(links.nth(1)).toBeVisible();
+    await expect(page).toHaveURL(/\/admin\/validation\/[0-9a-f-]{36}$/);
+    await links.first().focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(links.nth(1)).toBeFocused();
+    const second = await links.nth(1).getAttribute('href');
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(new RegExp(`${second}$`));
+    await page.keyboard.press('ArrowUp');
+    await expect(links.first()).toBeFocused();
+
+    await page.goto('/fr/admin/vocabulaire');
+    const specialties = page.getByRole('tab', { name: /Spécialités/ });
+    await specialties.focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(page).toHaveURL(/kind=audience/);
+    await expect(page.getByRole('tab', { name: /Publics/ })).toBeFocused();
+    await expect(page.getByRole('tab', { name: /Publics/ })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    await page.keyboard.press('ArrowLeft');
+    await expect(specialties).toBeFocused();
+
+    // Renommer au clavier : panneau annoncé, Échap le ferme et rend le focus au bouton.
+    const rename = page.getByRole('button', { name: /^Renommer/ }).first();
+    await rename.focus();
+    await page.keyboard.press('Enter');
+    await expect(rename).toHaveAttribute('aria-expanded', 'true');
+    await page.keyboard.press('Tab');
+    await expect(page.getByLabel('Libellé FR', { exact: true }).first()).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(rename).toHaveAttribute('aria-expanded', 'false');
+    await expect(rename).toBeFocused();
+
+    // « Désactiver… » au clavier : le dialogue s'ouvre sur « Annuler », Échap le ferme sans rien changer.
+    const deactivate = page.getByRole('button', { name: /^Désactiver…/ }).first();
+    await deactivate.focus();
+    await page.keyboard.press('Enter');
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('button', { name: 'Annuler' })).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(deactivate).toBeFocused();
   });
 
   test('journal : lecture seule, paginé par curseur, focus sur la première nouvelle ligne', async ({

@@ -116,6 +116,15 @@ describe('DecisionFormComponent', () => {
     );
   });
 
+  it('points de contrôle ouverts mais justificatifs conformes : confirmation, sans force', async () => {
+    const { fixture, button, type, decided } = await render({ nonConform: 0 });
+    button('Approuver').click();
+    await fixture.whenStable();
+    await type('#field-internalNote', 'Registre consulté par téléphone.');
+    button('Approuver quand même').click();
+    expect(decided[0]).toEqual(expect.objectContaining({ kind: 'approved', force: false }));
+  });
+
   it('409 ADMIN_APPROVAL_INCOMPLETE : ouvre la confirmation ; 409 d’état : message lisible', async () => {
     const { fixture, el } = await render();
     fixture.componentRef.setInput('problem', { status: 409, code: 'ADMIN_APPROVAL_INCOMPLETE' });

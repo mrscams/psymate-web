@@ -8,6 +8,7 @@ import {
   AdministrationVerificationsService,
   AdministrationVocabulaireDeLannuaireService,
   AdminDocumentDto,
+  AnnuairePublicService,
   AppealDecisionRequestOutcomeEnum,
   AppealItemDto,
   CreateRequestKindEnum,
@@ -20,7 +21,6 @@ import {
   QueueItemDto,
   RecoursService,
   ReviewRequestReviewedStatusEnum,
-  VocabulaireDeLannuaireService,
 } from '../../../api';
 import { CursorPage } from '../../../shared/util';
 import {
@@ -66,7 +66,7 @@ export class AdminApi {
   private readonly appealsApi = inject(RecoursService);
   private readonly journalApi = inject(AdministrationJournalService);
   private readonly vocabularyApi = inject(AdministrationVocabulaireDeLannuaireService);
-  private readonly publicVocabulary = inject(VocabulaireDeLannuaireService);
+  private readonly publicDirectory = inject(AnnuairePublicService);
 
   // ------------------------------------------------------------ Vérifications (fiche 20)
 
@@ -223,9 +223,12 @@ export class AdminApi {
     return (list.items ?? []).map(toEntry);
   }
 
-  /** Modalités et langues (listes fixes, lecture seule) : GET /api/vocabulary/directory. */
+  /**
+   * Modalités et langues (listes fixes, lecture seule) : GET /api/public/directory/vocabulary, même
+   * contenu que la route des praticiens, sans session (la route praticien n'est pas documentée pour un admin).
+   */
   async fixedVocabulary(): Promise<FixedVocabulary> {
-    const lists = await firstValueFrom(this.publicVocabulary.get1());
+    const lists = await firstValueFrom(this.publicDirectory.getPublicDirectoryVocabulary());
     return {
       modalities: (lists.modalities ?? []).map(toFixed),
       languages: (lists.languages ?? []).map(toFixed),

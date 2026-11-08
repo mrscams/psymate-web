@@ -39,8 +39,8 @@ test('première connexion de l’administrateur : mot de passe, puis 2FA obligat
 
   // Sans session, /admin renvoie vers la connexion.
   await page.goto('/fr/admin');
-  // /admin redirige vers /admin/validation avant les gardes (M7-07) : next peut porter l'un ou l'autre.
-  await expect(page).toHaveURL(/\/fr\/connexion\?next=%2Fadmin(%2Fvalidation)?$/);
+  // /admin redirige vers /admin/validation avant les gardes (M7-07) : next porte la file.
+  await expect(page).toHaveURL(/\/fr\/connexion\?next=%2Fadmin%2Fvalidation$/);
   await page.goto('/fr/premiere-connexion');
 
   // Étape 1 au clavier : e-mail (saisissable, aucune session), mot de passe temporaire, nouveau, confirmation.

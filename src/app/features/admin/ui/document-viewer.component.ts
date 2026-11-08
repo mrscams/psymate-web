@@ -10,7 +10,7 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { ApiProblem } from '../../../core/http';
-import { StateComponent } from '../../../shared/ui';
+import { StateAction, StateComponent } from '../../../shared/ui';
 import { StateKind } from '../../../shared/util';
 import { ViewerFile } from '../data/dossier.store';
 import { DossierDocument } from '../data/admin.model';
@@ -73,6 +73,7 @@ import { DossierDocument } from '../data/admin.model';
           [kind]="kind"
           [title]="stateTitle()"
           [message]="stateMessage()"
+          [action]="kind === 'error' && problem()?.status !== 410 ? retry : undefined"
           skeleton="profile"
           compact
         />
@@ -95,8 +96,8 @@ export class DocumentViewerComponent {
   readonly file = input<ViewerFile | null>(null);
   readonly loading = input(false);
   readonly problem = input<ApiProblem | null>(null);
-  /** L'URL signée a expiré : la page en demande une nouvelle. */
-  readonly expired = output<void>();
+  /** URL signée expirée ou « Réessayer » : la page redemande une URL et le fichier. */
+  readonly reload = output<void>();
 
   private readonly sanitizer = inject(DomSanitizer);
 
@@ -139,6 +140,11 @@ export class DocumentViewerComponent {
       : $localize`:Visionneuse vide@@admin.viewer.emptyHint:Choisissez « Afficher » sur un justificatif.`,
   );
 
+  protected readonly retry: StateAction = {
+    label: $localize`:Bouton de l'état erreur@@state.error.retry:Réessayer`,
+    handler: () => this.reload.emit(),
+  };
+
   protected zoomBy(step: number): void {
     this.zoom.update((zoom) => Math.min(3, Math.max(0.5, zoom + step)));
   }
@@ -152,7 +158,7 @@ export class DocumentViewerComponent {
     const expiresAt = this.file()?.expiresAt;
     if (expiresAt && new Date(expiresAt).getTime() <= Date.now()) {
       event.preventDefault();
-      this.expired.emit();
+      this.reload.emit();
     }
   }
 }

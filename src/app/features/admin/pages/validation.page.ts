@@ -54,6 +54,8 @@ export class ValidationPage {
   private readonly toast = inject(ToastService);
 
   protected readonly statuses = QUEUE_STATUSES;
+  /** Nom de la région du dossier tant qu'aucun dossier n'est chargé (vide, chargement, erreur). */
+  protected readonly dossierLabel = $localize`:Nom de la région du dossier@@admin.validation.dossierRegion:Dossier ouvert`;
   protected readonly queueStatus = computed<QueueStatus>(() =>
     this.status() === 'needs_more' ? 'needs_more' : 'under_review',
   );

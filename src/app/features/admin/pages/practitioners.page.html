@@ -295,6 +295,15 @@
         >
           Afficher plus
         </button>
+        @if (appeals.moreProblem()) {
+          <p
+            class="more-error"
+            role="alert"
+            i18n="Erreur de la page suivante@@admin.list.moreError"
+          >
+            La suite de la liste n'a pas pu être chargée.
+          </p>
+        }
       </div>
     }
   }

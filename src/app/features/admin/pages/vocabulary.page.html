@@ -48,6 +48,9 @@
   </div>
 
   <div id="vocabulary-panel" role="tabpanel" [attr.aria-labelledby]="'vocabulary-tab-' + tab()">
+    @if (actionError(); as text) {
+      <p class="action-error" role="alert">{{ text }}</p>
+    }
     @if (kindState(); as state) {
       @switch (state) {
         @case ('loading') {
@@ -124,6 +127,7 @@
                       type="button"
                       [attr.aria-expanded]="editing() === key(entry)"
                       [attr.aria-controls]="panelId(entry)"
+                      [id]="renameId(entry)"
                       (click)="toggleRename(entry)"
                     >
                       <span i18n="Bouton de renommage@@admin.vocabulary.rename">Renommer</span>
@@ -159,8 +163,8 @@
                     <pm-rename-panel
                       [entry]="entry"
                       [save]="saveFor(entry)"
-                      (saved)="onRenamed()"
-                      (cancelled)="editing.set(null)"
+                      (saved)="onRenamed(entry)"
+                      (cancelled)="closeRename(entry)"
                     />
                   </td>
                 </tr>
