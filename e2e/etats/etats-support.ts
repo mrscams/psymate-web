@@ -31,6 +31,11 @@ export function getOf(path: string | RegExp): (url: URL, method: string) => bool
     (typeof path === 'string' ? url.pathname === path : path.test(url.pathname));
 }
 
+/** Écriture POST dont le chemin est exactement `path`. */
+export function postOf(path: string): (url: URL, method: string) => boolean {
+  return (url, method) => method === 'POST' && url.pathname === path;
+}
+
 type Matcher = (url: URL, method: string) => boolean;
 
 /** Retient les requêtes visées jusqu'à `release()` ; elles partent ensuite vers l'API réelle. */
