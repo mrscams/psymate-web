@@ -7,6 +7,7 @@ import {
   canvas,
   crowdedFolder,
   emptySpot,
+  enableProbe,
   expectNoAxeViolationsOutsideCanvas,
   graphReady,
   layoutMs,
@@ -49,6 +50,7 @@ test.describe('vue graphe', () => {
 
     // Sans animation (prefers-reduced-motion) : la durée mesurée est celle du calcul du layout.
     await page.emulateMedia({ reducedMotion: 'reduce' });
+    await enableProbe(page);
     await signIn(page, SEED.claire);
     const started = Date.now();
     await page.goto(`/fr/patients/${biggest.id}/graph`);
@@ -119,6 +121,7 @@ test.describe('vue graphe', () => {
   }) => {
     const account = await createAccount(request, 'm2-06.glisser', 'psychologist');
     const folder = await smallFolder(request);
+    await enableProbe(page);
     await signIn(page, account);
     await page.goto(`/fr/patients/${folder.patientId}/graph?root=${folder.situation}`);
     await graphReady(page, { count: 4 });
@@ -176,6 +179,7 @@ test.describe('vue graphe', () => {
   }) => {
     const account = await createAccount(request, 'm2-06.timeline', 'psychologist');
     const folder = await smallFolder(request);
+    await enableProbe(page);
     await signIn(page, account);
     await page.goto(`/fr/patients/${folder.patientId}/graph?root=${folder.situation}`);
     await graphReady(page, { count: 4 });
@@ -200,6 +204,7 @@ test.describe('vue graphe', () => {
     );
     await graphReady(page, { count: 4 });
     await expect.poll(() => zoom(page)).toBeCloseTo(zoomed, 3);
+    await expectNoAxeViolationsOutsideCanvas(page);
   });
 
   test('liste équivalente : tableau des liens et détail, au clavier seulement ; axe hors canevas', async ({
@@ -208,6 +213,7 @@ test.describe('vue graphe', () => {
   }) => {
     const account = await createAccount(request, 'm2-06.liste', 'psychologist');
     const folder = await smallFolder(request);
+    await enableProbe(page);
     await signIn(page, account);
     await page.goto(`/fr/patients/${folder.patientId}/graph?root=${folder.situation}`);
     await graphReady(page, { count: 4 });
@@ -235,7 +241,7 @@ test.describe('vue graphe', () => {
     const detail = page.getByRole('complementary', { name: "Entretien d'évaluation" });
     await expect(detail).toBeVisible();
     await expect(detail.getByRole('heading', { level: 2 })).toBeFocused();
-    await expect(page.locator('pm-graph-page [aria-live="polite"]')).toHaveText(
+    await expect(page.locator('pm-graph-page p.sr-only[aria-live="polite"]')).toHaveText(
       "Entrée sélectionnée : Entretien d'évaluation, Événement",
     );
     await expect(detail.getByRole('heading', { level: 3 })).toHaveText('Liens de cette entrée · 1');
@@ -261,6 +267,7 @@ test.describe('vue graphe', () => {
     const account = await createAccount(request, 'm2-06.groupe', 'psychologist');
     const members = 155;
     const folder = await crowdedFolder(request, members);
+    await enableProbe(page);
     await signIn(page, account);
     await page.goto(`/fr/patients/${folder.patientId}/graph?root=${folder.situation}`);
 
@@ -282,8 +289,24 @@ test.describe('vue graphe', () => {
       (response) =>
         response.request().method() === 'POST' && response.url().endsWith('/graph/expand'),
     );
-    await detail.getByRole('button', { name: 'Déplier' }).click();
+    // « Déplier » au clavier, depuis le tableau des groupes de la liste équivalente.
+    const toggle = page.getByRole('button', { name: 'Liste des liens', exact: true });
+    await toggle.focus();
+    await page.keyboard.press('Enter');
+    const groups = page.getByRole('table', { name: "Groupes d'entrées regroupées (à déplier)" });
+    await expect(groups.getByRole('row')).toHaveCount(2);
+    const expand = groups.getByRole('button', {
+      name: `Déplier : ${members} ressentis regroupés · anxiété majoritaire`,
+    });
+    for (let i = 0; i < 40; i++) {
+      await page.keyboard.press('Tab');
+      if (await expand.evaluate((el) => el === document.activeElement)) break;
+    }
+    await expect(expand).toBeFocused();
+    await expectNoAxeViolationsOutsideCanvas(page);
+    await page.keyboard.press('Enter');
     expect((await expanded).status()).toBe(200);
+    await expect(groups).toHaveCount(0);
     await expect(page.locator('.count')).toHaveText(`${members + 1} nœuds · ${members} liens`);
     await expect.poll(() => nodeCount(page)).toBe(members + 1);
     await expect(detail).toBeHidden();

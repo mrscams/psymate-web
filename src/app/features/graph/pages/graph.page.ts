@@ -28,13 +28,14 @@ import { StateKind, stateKind } from '../../../shared/util';
 import { ENTRY_QUERY_PARAM, openEntryEditor } from '../../entries';
 import { PatientShellStore } from '../../patient-shell';
 import {
+  DEFAULT_DEPTH,
   GRAPH_DEPTHS,
   GRAPH_PERIODS,
   GraphDepth,
   GraphPeriod,
-  GraphPositions,
+  GraphPositionsChange,
   GraphQuery,
-  GraphViewport,
+  GraphViewportChange,
   hasGraphParams,
   isEmptyGraph,
   isSuperNodeId,
@@ -56,6 +57,7 @@ import {
   graphProblemTitle,
   groupLabel,
   isRetryable,
+  isRootProblem,
   nodeLabel,
   nodeName,
   periodLabel,
@@ -106,6 +108,8 @@ export class GraphPage {
   protected readonly listOpen = signal(false);
   /** Incrémenté par « Recentrer » : le canevas relance le layout. */
   protected readonly relayoutCount = signal(0);
+  /** Page quittée : un éditeur fermé ensuite ne relit plus le graphe. */
+  private destroyed = false;
 
   private readonly params = toSignal(this.route.queryParamMap);
 
@@ -224,7 +228,8 @@ export class GraphPage {
     const problem = this.store.graph().problem;
     switch (this.graphState()) {
       case 'error':
-        if (problem?.code === 'ENTRY_NOT_FOUND' || problem?.code === 'ENTRY_ARCHIVED') {
+        // 404, 409 ou 422 sur root (DIFFERENT_PATIENT) : la racine est en cause, pas les filtres.
+        if (isRootProblem(problem)) {
           return { label: this.wholeFolderLabel, handler: () => this.recenter(null) };
         }
         if (problem?.code === 'VALIDATION_FAILED') {
@@ -244,6 +249,9 @@ export class GraphPage {
   protected readonly staleError = computed(
     () => this.store.graph().status === 'error' && this.graphState() === null,
   );
+
+  /** Titre de l'alerte de relecture en échec (l'état erreur du bloc, lui, n'est pas affiché). */
+  protected readonly staleTitle = computed(() => graphProblemTitle(this.store.graph().problem));
 
   protected readonly refreshing = computed(
     () => this.store.graph().status === 'loading' && !!this.store.graph().data,
@@ -282,6 +290,8 @@ export class GraphPage {
   private readonly allTypesLabel = $localize`:Action qui montre tous les types d'entrées@@graph.action.allTypes:Montrer tous les types`;
   private readonly timelineLabel = $localize`:Action qui ouvre la timeline depuis le graphe vide@@graph.action.timeline:Ouvrir la timeline`;
   protected readonly loadingCanvasTitle = $localize`:Chargement du moteur du graphe@@graph.canvas.loading:Préparation du graphe…`;
+  protected readonly canvasFailedTitle = $localize`:Le moteur du graphe ne s'est pas chargé@@graph.canvas.failed:Impossible d'afficher le graphe`;
+  protected readonly canvasFailedMessage = $localize`:Que faire quand le moteur du graphe manque@@graph.canvas.failedMessage:Rechargez la page pour réessayer. La liste des liens reste disponible (bouton « Liste des liens »).`;
   protected readonly depthLabelId = 'graph-depth-label';
 
   constructor() {
@@ -326,6 +336,7 @@ export class GraphPage {
 
     // Départ de l'onglet : requête, graphe, zoom, positions et sélection rangés dans le shell (B2).
     destroyRef.onDestroy(() => {
+      this.destroyed = true;
       const snapshot = this.store.snapshot();
       if (snapshot) this.shell.rememberTab<GraphSnapshot>('graph', snapshot);
     });
@@ -399,12 +410,14 @@ export class GraphPage {
     this.link(drop.sourceId, drop.targetId);
   }
 
-  protected onViewport(viewport: GraphViewport): void {
-    this.store.rememberViewport(this.store.key(), viewport);
+  /** Zoom et position, rangés sous la racine du graphe dessiné (pas celle d'une lecture en cours). */
+  protected onViewport(change: GraphViewportChange): void {
+    this.store.rememberViewport(change.key, change.viewport);
   }
 
-  protected onPositions(positions: GraphPositions): void {
-    this.store.rememberPositions(this.store.key(), positions);
+  /** Positions, rangées sous la racine du layout qui les a produites. */
+  protected onPositions(change: GraphPositionsChange): void {
+    this.store.rememberPositions(change.key, change.positions);
   }
 
   // ── Panneau de détail et liste équivalente ──────────────────────────────────────────
@@ -438,7 +451,9 @@ export class GraphPage {
       patientName: this.shell.patient()?.displayName,
       targetId,
     });
-    void ref?.closed.then(() => this.store.refresh());
+    void ref?.closed.then(() => {
+      if (!this.destroyed) void this.store.refresh();
+    });
   }
 
   /** « Corriger » : l'éditeur d'entrée (une correction crée une version), puis relecture. */
@@ -447,7 +462,7 @@ export class GraphPage {
     if (!patientId) return;
     const ref = openEntryEditor(patientId, { entryId, injector: this.injector });
     void ref?.closed.then((saved) => {
-      if (saved) void this.store.refresh();
+      if (saved && !this.destroyed) void this.store.refresh();
     });
   }
 
@@ -458,7 +473,7 @@ export class GraphPage {
   // ── URL ─────────────────────────────────────────────────────────────────────────────
 
   private resetFilters(): void {
-    this.update({ linkTypes: [], types: [], period: 'all', depth: 2 });
+    this.update({ linkTypes: [], types: [], period: 'all', depth: DEFAULT_DEPTH });
   }
 
   /** Nouvelle requête : l'URL change (l'effet relit) ; un filtre remplace l'entrée d'historique. */

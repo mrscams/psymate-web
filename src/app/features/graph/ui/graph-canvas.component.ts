@@ -13,14 +13,16 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import type { Core, CytoscapeOptions, EventObject, NodeSingular } from 'cytoscape';
+import type { Core, CytoscapeOptions, EventObject, Layouts, NodeSingular } from 'cytoscape';
 
 import { ThemeService } from '../../../core/theme';
 import { StateComponent } from '../../../shared/ui';
 import {
   GraphPositions,
+  GraphPositionsChange,
   GraphView,
   GraphViewport,
+  GraphViewportChange,
   isSuperNodeId,
   LinkDrop,
   Point,
@@ -63,8 +65,9 @@ export const GRAPH_RENDERER = new InjectionToken<() => Promise<GraphRenderer>>('
 
 /**
  * Sonde des e2e (Playwright pilote un canevas, pas un DOM) : position à l'écran d'un nœud et durée
- * du dernier layout. Posée sur l'élément hôte (`pmGraphProbe`), elle ne donne que ce qui est déjà
- * dessiné à l'écran.
+ * du dernier layout. Posée sur l'élément hôte (`pmGraphProbe`) seulement si les e2e l'ont demandée
+ * (`globalThis.pmE2E === true`, posé par page.addInitScript), retirée à la destruction ; elle ne
+ * donne que ce qui est déjà dessiné à l'écran.
  */
 export interface GraphProbe {
   /** Centre du nœud en coordonnées de la fenêtre ; null s'il n'est pas dessiné. */
@@ -141,8 +144,10 @@ export class GraphCanvasComponent {
   readonly nodeSelected = output<string | null>();
   readonly nodeActivated = output<string>();
   readonly linkDropped = output<LinkDrop>();
-  readonly viewportChanged = output<GraphViewport>();
-  readonly positionsChanged = output<GraphPositions>();
+  /** Zoom et position, avec la racine du graphe dessiné. */
+  readonly viewportChanged = output<GraphViewportChange>();
+  /** Positions, avec la racine du layout qui les a produites (jamais rangées sous une autre). */
+  readonly positionsChanged = output<GraphPositionsChange>();
 
   protected readonly failed = signal(false);
   protected readonly failedTitle = $localize`:Le moteur du graphe ne s'est pas chargé@@graph.canvas.failed:Impossible d'afficher le graphe`;
@@ -167,6 +172,8 @@ export class GraphCanvasComponent {
   private viewportTimer: ReturnType<typeof setTimeout> | null = null;
   private destroyed = false;
   private resizeObserver: ResizeObserver | null = null;
+  /** Layout en cours (arrêté avant une reconstruction et à la destruction). */
+  private running: { layout: Layouts; cancelled: boolean } | null = null;
 
   constructor() {
     afterNextRender(() => void this.start());
@@ -201,6 +208,8 @@ export class GraphCanvasComponent {
       this.destroyed = true;
       if (this.viewportTimer) clearTimeout(this.viewportTimer);
       this.resizeObserver?.disconnect();
+      this.stopLayout();
+      delete (this.host.nativeElement as { pmGraphProbe?: GraphProbe }).pmGraphProbe;
       this.cy?.destroy();
       this.cy = null;
     });
@@ -289,7 +298,11 @@ export class GraphCanvasComponent {
       this.linkDropped.emit({ sourceId: dragged.id(), targetId: target.id() });
       return;
     }
-    this.positionsChanged.emit({ [dragged.id()]: { ...dragged.position() } });
+    if (!this.builtKey) return;
+    this.positionsChanged.emit({
+      key: this.builtKey,
+      positions: { [dragged.id()]: { ...dragged.position() } },
+    });
   }
 
   /** L'entrée (pas un super-nœud) dont la boîte contient le centre du nœud glissé. */
@@ -312,9 +325,23 @@ export class GraphCanvasComponent {
   private emitViewport(cy: Core): void {
     if (this.viewportTimer) clearTimeout(this.viewportTimer);
     this.viewportTimer = null;
-    if (!this.cy) return;
+    if (!this.cy || !this.builtKey) return;
+    this.emitViewportFor(cy, this.builtKey);
+  }
+
+  private emitViewportFor(cy: Core, key: string): void {
     const pan = cy.pan();
-    this.viewportChanged.emit({ zoom: cy.zoom(), pan: { x: pan.x, y: pan.y } });
+    this.viewportChanged.emit({ key, viewport: { zoom: cy.zoom(), pan: { x: pan.x, y: pan.y } } });
+  }
+
+  /** Arrête le layout en cours : ses positions (partielles) ne seront pas rangées. */
+  private stopLayout(): void {
+    const running = this.running;
+    if (!running) return;
+    this.running = null;
+    running.cancelled = true;
+    running.layout.stop();
+    this.layoutRunning = false;
   }
 
   private sync(
@@ -333,6 +360,7 @@ export class GraphCanvasComponent {
     this.builtKey = key;
     this.builtRelayout = relayout;
     if (rebuild) {
+      this.stopLayout();
       cy.elements().remove();
       cy.add(elements);
       this.place(cy, forceLayout ? null : untracked(() => this.positions()), forceLayout);
@@ -367,10 +395,13 @@ export class GraphCanvasComponent {
         node.position(remembered[id] ?? this.besideNeighbours(cy, node, index, pending));
         pending.delete(id);
       });
-      if (added.length) {
+      const key = this.builtKey;
+      if (added.length && key) {
         const placed: GraphPositions = {};
         for (const id of added) placed[id] = { ...cy.getElementById(id).position() };
-        queueMicrotask(() => this.positionsChanged.emit(placed));
+        queueMicrotask(() => {
+          if (this.cy) this.positionsChanged.emit({ key, positions: placed });
+        });
       }
     });
   }
@@ -426,6 +457,8 @@ export class GraphCanvasComponent {
     if (!nodes.length) return;
     const animate = !this.reducedMotion();
     const started = performance.now();
+    // La racine du layout, capturée au lancement : ses positions ne vont qu'à elle.
+    const key = this.builtKey ?? '';
     const layout = cy.layout({
       name: this.renderer?.layout ?? 'grid',
       animate: animate ? 'end' : false,
@@ -437,18 +470,20 @@ export class GraphCanvasComponent {
       idealEdgeLength: 90,
       nodeRepulsion: 6500,
     } as unknown as Parameters<Core['layout']>[0]);
+    const running = { layout, cancelled: false };
+    this.running = running;
     this.layoutRunning = true;
     layout.one('layoutstop', () => {
+      if (running.cancelled || !this.cy) return;
+      this.running = null;
       this.layoutRunning = false;
       this.lastLayoutMs = Math.round(performance.now() - started);
-      if (!this.cy) return;
       const placed: GraphPositions = {};
       cy.nodes().forEach((node) => {
         placed[node.id()] = { ...node.position() };
       });
-      this.positionsChanged.emit(placed);
-      const pan = cy.pan();
-      this.viewportChanged.emit({ zoom: cy.zoom(), pan: { x: pan.x, y: pan.y } });
+      this.positionsChanged.emit({ key, positions: placed });
+      this.emitViewportFor(cy, key);
     });
     layout.run();
   }
@@ -467,6 +502,7 @@ export class GraphCanvasComponent {
   }
 
   private exposeProbe(cy: Core): void {
+    if ((globalThis as { pmE2E?: unknown }).pmE2E !== true) return;
     const container = this.container().nativeElement;
     const probe: GraphProbe = {
       point: (id) => {

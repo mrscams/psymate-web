@@ -93,6 +93,8 @@ function toNode(dto: GraphNodeDto): GraphNode {
     emotion: dto.emotion ?? null,
     degree: dto.degree ?? 0,
     distance: dto.distance ?? 0,
+    // Lecture seule, jamais dessiné (A11) : practitioner en V1.
+    authorType: dto.authorType ?? 'practitioner',
   };
 }
 

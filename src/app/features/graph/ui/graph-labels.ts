@@ -105,8 +105,24 @@ export function statusLabel(status: string): string {
   }
 }
 
+/**
+ * Le problème vient-il de la racine (404 ENTRY_NOT_FOUND, 409 ENTRY_ARCHIVED, 422 sur le champ
+ * root : DIFFERENT_PATIENT) ? Alors « Voir tout le dossier », pas « Filtres par défaut ».
+ */
+export function isRootProblem(problem: ApiProblem | null): boolean {
+  if (!problem) return false;
+  if (problem.code === 'ENTRY_NOT_FOUND' || problem.code === 'ENTRY_ARCHIVED') return true;
+  return (
+    problem.code === 'VALIDATION_FAILED' &&
+    !!problem.errors?.some((error) => error.field === 'root')
+  );
+}
+
 /** Titre de l'état erreur du graphe selon le problème. */
 export function graphProblemTitle(problem: ApiProblem | null): string {
+  if (problem?.code === 'VALIDATION_FAILED' && isRootProblem(problem)) {
+    return $localize`:Racine du graphe d'un autre dossier (422 DIFFERENT_PATIENT)@@graph.problem.otherPatient:Cette entrée n'appartient pas à ce dossier`;
+  }
   switch (problem?.code) {
     case 'ENTRY_NOT_FOUND':
       return $localize`:Racine du graphe introuvable (404)@@graph.problem.notFound:Cette entrée n'existe plus`;
@@ -124,10 +140,10 @@ export function graphProblemTitle(problem: ApiProblem | null): string {
 
 /** Phrase de l'état erreur ; undefined : la phrase par défaut du composant état. */
 export function graphProblemMessage(problem: ApiProblem | null): string | undefined {
+  if (isRootProblem(problem)) {
+    return $localize`:Que faire quand la racine est perdue@@graph.problem.rootMessage:Le graphe peut se centrer sur tout le dossier.`;
+  }
   switch (problem?.code) {
-    case 'ENTRY_NOT_FOUND':
-    case 'ENTRY_ARCHIVED':
-      return $localize`:Que faire quand la racine est perdue@@graph.problem.rootMessage:Le graphe peut se centrer sur tout le dossier.`;
     case 'VALIDATION_FAILED':
       return (
         problem?.errors?.map((error) => error.message).join(' ') ||

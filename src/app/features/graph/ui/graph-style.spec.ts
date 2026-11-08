@@ -91,7 +91,6 @@ describe('graph-style : tokens → feuille de style Cytoscape', () => {
       'border-color': tok('--primary'),
       'underlay-color': tok('--primary-tint'),
     });
-    expect(styleOf('edge:selected')).toMatchObject({ 'line-color': tok('--primary'), width: 2.5 });
   });
 
   it('trait par style de lien, flèche si dirigé, pointillé clair pour proposed', () => {

@@ -80,11 +80,6 @@
 
     <button type="button" class="filter" [matMenuTriggerFor]="linksMenu">{{ linksText() }}</button>
     <mat-menu #linksMenu="matMenu">
-      @if (catalogFailed()) {
-        <div class="menu-state">
-          <pm-state kind="error" [title]="catalogErrorTitle" [action]="catalogRetry" compact />
-        </div>
-      }
       <button
         mat-menu-item
         type="button"
@@ -113,6 +108,16 @@
       }
     </mat-menu>
 
+    @if (catalogFailed()) {
+      <!-- Erreur du catalogue hors du menu (role=menu n'admet que des items) : libellés en codes. -->
+      <span class="catalog-error" role="alert">
+        {{ catalogErrorTitle }}
+        <button type="button" class="tool" (click)="catalogRetry.handler()">
+          {{ catalogRetry.label }}
+        </button>
+      </span>
+    }
+
     <label class="field">
       <span class="field-label" i18n="Période du graphe@@graph.period.label">Période</span>
       <select class="select" (change)="onPeriodChange($event)">
@@ -125,7 +130,9 @@
     </label>
 
     <span class="spacer"></span>
-    <span class="count" [class.refreshing]="refreshing()">{{ countText() }}</span>
+    <span class="count" aria-live="polite" [class.refreshing]="refreshing()">{{
+      countText()
+    }}</span>
     <button
       type="button"
       class="tool"
@@ -153,7 +160,7 @@
   }
   @if (staleError()) {
     <div class="alert" role="alert">
-      <span>{{ stateTitle() ?? '' }}</span>
+      <span>{{ staleTitle() }}</span>
       <span i18n="Le dernier graphe reste affiché@@graph.stale"
         >Le dernier graphe reçu reste affiché.</span
       >
@@ -198,7 +205,7 @@
           } @placeholder {
             <pm-state kind="loading" [title]="loadingCanvasTitle" skeleton="block" [lines]="4" />
           } @error {
-            <pm-state kind="error" [title]="loadingCanvasTitle" />
+            <pm-state kind="error" [title]="canvasFailedTitle" [message]="canvasFailedMessage" />
           }
           <pm-graph-legend class="legend" />
         }
@@ -234,7 +241,10 @@
           [view]="view"
           [names]="names()"
           [linkLabels]="linkTypeLabels()"
+          [emotionLabels]="store.emotionLabels()"
+          [expanding]="!!store.expandingId()"
           (selectEntry)="selectFromList($event)"
+          (expandGroup)="expand($event)"
         />
       } @else {
         <pm-state

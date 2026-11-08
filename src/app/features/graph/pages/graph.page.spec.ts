@@ -35,6 +35,7 @@ function shellMock(snapshot?: GraphSnapshot) {
 interface Setup {
   neighbourhood?: (...args: unknown[]) => Promise<GraphView>;
   expand?: (...args: unknown[]) => Promise<GraphView>;
+  linkTypes?: (...args: unknown[]) => Promise<unknown>;
   shell?: ReturnType<typeof shellMock>;
   url?: string;
 }
@@ -47,7 +48,7 @@ async function render(setup: Setup = {}) {
     emotionLabels: vi.fn().mockResolvedValue({ anxiety: 'Anxiété' }),
   };
   const linkApi = {
-    linkTypes: vi.fn().mockResolvedValue(CATALOG),
+    linkTypes: vi.fn(setup.linkTypes ?? (() => Promise.resolve(CATALOG))),
     entry: vi.fn((id: string) => Promise.resolve(source({ id }))),
     linksOf: vi.fn().mockResolvedValue([link()]),
     targets: vi.fn().mockResolvedValue([]),
@@ -152,6 +153,77 @@ describe('GraphPage', () => {
     );
   });
 
+  it('422 sur root (DIFFERENT_PATIENT) : « Voir tout le dossier », pas « Filtres par défaut »', async () => {
+    const neighbourhood = vi
+      .fn()
+      .mockRejectedValueOnce({
+        status: 422,
+        code: 'VALIDATION_FAILED',
+        errors: [{ field: 'root', code: 'DIFFERENT_PATIENT', message: 'Autre patient.' }],
+      })
+      .mockResolvedValue(graphView());
+    const { el, harness, button } = await render({ neighbourhood });
+    expect(text(el.querySelector('.board [role="alert"]'))).toContain(
+      "Cette entrée n'appartient pas à ce dossier",
+    );
+    expect(button('Filtres par défaut')).toBeUndefined();
+    button('Voir tout le dossier').click();
+    await settle(harness);
+    expect(url()).toBe('/patients/p-1/graph');
+  });
+
+  it('422 sur les filtres : « Filtres par défaut » (profondeur par défaut, sans période)', async () => {
+    const neighbourhood = vi
+      .fn()
+      .mockRejectedValueOnce({
+        status: 422,
+        code: 'VALIDATION_FAILED',
+        errors: [{ field: 'linkTypes', code: 'INVALID_VALUE', message: 'Type inconnu.' }],
+      })
+      .mockResolvedValue(graphView());
+    const { el, harness, button } = await render({
+      neighbourhood,
+      url: '/patients/p-1/graph?root=e-situation&depth=3&period=90d&linkTypes=treats',
+    });
+    expect(text(el.querySelector('.board [role="alert"]'))).toContain('Type inconnu.');
+    button('Filtres par défaut').click();
+    await settle(harness);
+    expect(url()).toBe('/patients/p-1/graph?root=e-situation');
+  });
+
+  it('relecture en échec : le dernier graphe reste, alerte titrée avec Réessayer', async () => {
+    const neighbourhood = vi
+      .fn()
+      .mockResolvedValueOnce(graphView())
+      .mockRejectedValueOnce(serverError)
+      .mockResolvedValue(graphView({ edges: graphView().edges.slice(0, 2) }));
+    const { el, harness } = await render({ neighbourhood });
+    const period = el.querySelectorAll<HTMLSelectElement>('select')[1];
+    period.value = '30d';
+    period.dispatchEvent(new Event('change'));
+    await settle(harness);
+    const alert = el.querySelector('.alert[role="alert"]');
+    expect(text(alert)).toContain('Impossible de charger le graphe');
+    expect(text(alert)).toContain('Le dernier graphe reçu reste affiché.');
+    expect(el.querySelector('pm-graph-canvas')).not.toBeNull();
+    alert!.querySelector('button')!.click();
+    await settle(harness);
+    expect(el.querySelector('.alert[role="alert"]')).toBeNull();
+    expect(text(el.querySelector('.count'))).toBe('4 nœuds · 2 liens');
+  });
+
+  it('types de liens illisibles : erreur dans la barre d’outils (hors du menu), Réessayer', async () => {
+    const linkTypes = vi.fn().mockRejectedValueOnce(serverError).mockResolvedValue(CATALOG);
+    const { el, harness } = await render({ linkTypes });
+    const alert = el.querySelector('.toolbar .catalog-error[role="alert"]');
+    expect(text(alert)).toContain('Impossible de charger les types de liens');
+    alert!.querySelector('button')!.click();
+    await settle(harness);
+    expect(linkTypes).toHaveBeenCalledTimes(2);
+    expect(el.querySelector('.catalog-error')).toBeNull();
+    expect(el.querySelector('.count')?.getAttribute('aria-live')).toBe('polite');
+  });
+
   it('vide : message et « Ouvrir la timeline »', async () => {
     const { el, harness, button } = await render({
       neighbourhood: () => Promise.resolve(graphView({ edges: [] })),
@@ -241,6 +313,23 @@ describe('GraphPage', () => {
     expect(cy().nodes()).toHaveLength(7);
   });
 
+  it('liste équivalente : les super-nœuds y sont, « Déplier » depuis le tableau des groupes', async () => {
+    const { el, harness, button, graphApi } = await render({
+      neighbourhood: () => Promise.resolve(graphView({ superNodes: [superNode()] })),
+    });
+    button('Liste des liens').click();
+    await settle(harness);
+    const groups = el.querySelector('#graph-links-list table.groups');
+    expect(text(groups?.querySelector('tbody tr'))).toContain(
+      '3 ressentis regroupés · anxiété majoritaire',
+    );
+    groups!.querySelector<HTMLButtonElement>('button.expand')!.click();
+    await settle(harness);
+    expect(graphApi.expand).toHaveBeenCalledWith('p-1', 'sn:e-situation:feeling');
+    expect(el.querySelector('#graph-links-list table.groups')).toBeNull();
+    expect(el.querySelectorAll('#graph-links-list tbody tr')).toHaveLength(6);
+  });
+
   it('super-nœud sélectionné : panneau avec « Déplier »', async () => {
     const { el, harness, graphApi, cy, button } = await render({
       neighbourhood: () => Promise.resolve(graphView({ superNodes: [superNode()] })),
@@ -250,7 +339,7 @@ describe('GraphPage', () => {
     expect(text(el.querySelector('pm-graph-detail h2'))).toBe(
       '3 ressentis regroupés · anxiété majoritaire',
     );
-    expect(text(el.querySelector('[aria-live="polite"]'))).toBe(
+    expect(text(el.querySelector('p.sr-only[aria-live="polite"]'))).toBe(
       'Groupe sélectionné : 3 ressentis regroupés · anxiété majoritaire',
     );
     button('Déplier').click();
@@ -280,7 +369,7 @@ describe('GraphPage', () => {
     expect(linkApi.entry).toHaveBeenCalledWith('e-med');
     expect(text(el.querySelector('pm-graph-detail h2'))).toBe('Sertraline 50 mg');
     expect(document.activeElement).toBe(el.querySelector('pm-graph-detail h2'));
-    expect(text(el.querySelector('[aria-live="polite"]'))).toBe(
+    expect(text(el.querySelector('p.sr-only[aria-live="polite"]'))).toBe(
       'Entrée sélectionnée : Sertraline 50 mg, Médicament',
     );
   });

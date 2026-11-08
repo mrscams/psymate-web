@@ -3,7 +3,12 @@ import cytoscape, { Core, CytoscapeOptions, NodeSingular } from 'cytoscape';
 
 import { ThemeService } from '../../../core/theme';
 import { expansion, graphView, superNode } from '../data/graph.fixtures';
-import { GraphView, LinkDrop } from '../data/graph.model';
+import {
+  GraphPositionsChange,
+  GraphView,
+  GraphViewportChange,
+  LinkDrop,
+} from '../data/graph.model';
 import { GRAPH_RENDERER, GraphCanvasComponent, GraphProbe } from './graph-canvas.component';
 import { GraphElementLabels } from './graph-elements';
 import { GRAPH_TOKEN_NAMES } from './graph-style';
@@ -29,6 +34,7 @@ async function render(
     positions?: Record<string, { x: number; y: number }> | null;
     viewport?: { zoom: number; pan: { x: number; y: number } } | null;
     reducedMotion?: boolean;
+    onCreate?: (cy: Core) => void;
   } = {},
 ) {
   // Headless : une animation ne progresse pas ; sans prefers-reduced-motion, le layout est animé.
@@ -37,6 +43,7 @@ async function render(
   const create = vi.fn((config: CytoscapeOptions) => {
     // Sans canevas (jsdom) : Cytoscape en mode headless, layout grille.
     cy = cytoscape({ ...config, headless: true, styleEnabled: true });
+    options.onCreate?.(cy);
     return cy;
   });
   const matchMedia = vi.fn((query: string) => ({
@@ -64,8 +71,8 @@ async function render(
     selected: [] as (string | null)[],
     activated: [] as string[],
     drops: [] as LinkDrop[],
-    positions: [] as Record<string, unknown>[],
-    viewports: [] as unknown[],
+    positions: [] as GraphPositionsChange[],
+    viewports: [] as GraphViewportChange[],
   };
   const component = fixture.componentInstance;
   component.nodeSelected.subscribe((id) => events.selected.push(id));
@@ -87,7 +94,24 @@ async function settle(fixture: { whenStable(): Promise<unknown> }): Promise<void
 }
 
 describe('GraphCanvasComponent', () => {
-  afterEach(() => vi.unstubAllGlobals());
+  // La sonde des e2e n'est posée que sur demande (page.addInitScript dans e2e/flux-6-graphe).
+  beforeEach(() => ((globalThis as { pmE2E?: boolean }).pmE2E = true));
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    delete (globalThis as { pmE2E?: boolean }).pmE2E;
+  });
+
+  it('sonde des e2e : absente sans pmE2E, retirée à la destruction', async () => {
+    const { fixture, host } = await render();
+    expect((host as { pmGraphProbe?: GraphProbe }).pmGraphProbe).toBeDefined();
+    fixture.destroy();
+    expect((host as { pmGraphProbe?: GraphProbe }).pmGraphProbe).toBeUndefined();
+
+    TestBed.resetTestingModule();
+    delete (globalThis as { pmE2E?: boolean }).pmE2E;
+    const silent = await render();
+    expect((silent.host as { pmGraphProbe?: GraphProbe }).pmGraphProbe).toBeUndefined();
+  });
 
   it('charge le moteur, dessine nœuds et liens, sonde des e2e, nom accessible', async () => {
     const { host, create, probe, cy } = await render();
@@ -107,8 +131,9 @@ describe('GraphCanvasComponent', () => {
   it('layout : positions et zoom remontés à la page ; animé sauf prefers-reduced-motion', async () => {
     const { events, cy, matchMedia } = await render({ reducedMotion: true });
     expect(matchMedia).toHaveBeenCalledWith('(prefers-reduced-motion: reduce)');
-    expect(Object.keys(events.positions.at(-1) ?? {})).toHaveLength(4);
-    expect(events.viewports.length).toBeGreaterThan(0);
+    expect(events.positions.at(-1)?.key).toBe('e-situation');
+    expect(Object.keys(events.positions.at(-1)?.positions ?? {})).toHaveLength(4);
+    expect(events.viewports.at(-1)?.key).toBe('e-situation');
     const reduced = vi.spyOn(cy(), 'layout');
     matchMedia.mockClear();
 
@@ -162,7 +187,10 @@ describe('GraphCanvasComponent', () => {
     host.querySelector<HTMLButtonElement>('button[aria-label="Zoom avant"]')!.click();
     expect(cy().zoom()).toBeCloseTo(before * 1.25);
     expect(events.viewports.length).toBe(count + 1);
-    expect(events.viewports.at(-1)).toMatchObject({ zoom: cy().zoom() });
+    expect(events.viewports.at(-1)).toMatchObject({
+      key: 'e-situation',
+      viewport: { zoom: cy().zoom() },
+    });
     host.querySelector<HTMLButtonElement>('button[aria-label="Zoom arrière"]')!.click();
     expect(cy().zoom()).toBeCloseTo(before);
   });
@@ -212,7 +240,10 @@ describe('GraphCanvasComponent', () => {
     event.position({ x: 150, y: 150 });
     event.emit('dragfree');
     expect(events.drops).toHaveLength(1);
-    expect(events.positions.at(-1)).toEqual({ 'e-event': { x: 150, y: 150 } });
+    expect(events.positions.at(-1)).toEqual({
+      key: 'e-situation',
+      positions: { 'e-event': { x: 150, y: 150 } },
+    });
   });
 
   it('mise à jour sans layout : nouveaux nœuds placés près de leurs voisins, les autres immobiles', async () => {
@@ -240,6 +271,33 @@ describe('GraphCanvasComponent', () => {
     expect(cy().$('#e-med').position()).toEqual({ x: 300, y: 300 });
     const f1 = cy().$('#e-f1').position();
     expect(Math.hypot(f1.x, f1.y)).toBeLessThan(150);
+  });
+
+  it('autre racine pendant un layout : il est arrêté, ses positions ne sont rangées nulle part', async () => {
+    // Layout animé (headless : il ne finit jamais seul) puis nouvelle racine.
+    const stops: ReturnType<typeof vi.fn>[] = [];
+    const { fixture, events, probe } = await render({
+      reducedMotion: false,
+      onCreate: (cy) => {
+        const original = cy.layout.bind(cy);
+        cy.layout = ((options: Parameters<Core['layout']>[0]) => {
+          const layout = original(options);
+          const stop = vi.fn(layout.stop.bind(layout));
+          layout.stop = stop as unknown as typeof layout.stop;
+          stops.push(stop);
+          return layout;
+        }) as Core['layout'];
+      },
+    });
+    expect(probe.busy()).toBe(true);
+    expect(stops).toHaveLength(1);
+    fixture.componentRef.setInput('layoutKey', 'e-med');
+    fixture.componentRef.setInput('root', 'e-med');
+    await settle(fixture);
+    expect(stops[0]).toHaveBeenCalled();
+    expect(stops).toHaveLength(2);
+    // Aucune position du premier layout n'a été rangée, ni sous l'ancienne clé ni sous la nouvelle.
+    expect(events.positions).toEqual([]);
   });
 
   it('changement de thème : les tokens sont relus', async () => {

@@ -18065,6 +18065,78 @@
         </context-group>
         <note priority="1" from="description">Liste des liens du graphe vide</note>
       </trans-unit>
+      <trans-unit id="graph.canvas.failedMessage" datatype="html">
+        <source>Rechargez la page pour réessayer. La liste des liens reste disponible (bouton « Liste des liens »).</source>
+        <target state="translated">Reload the page to try again. The link list is still available (“Link list” button).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
+          <context context-type="linenumber">294</context>
+        </context-group>
+        <note priority="1" from="description">Que faire quand le moteur du graphe manque</note>
+      </trans-unit>
+      <trans-unit id="graph.problem.otherPatient" datatype="html">
+        <source>Cette entrée n&apos;appartient pas à ce dossier</source>
+        <target state="translated">This entry does not belong to this record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+        <note priority="1" from="description">Racine du graphe d&apos;un autre dossier (422 DIFFERENT_PATIENT)</note>
+      </trans-unit>
+      <trans-unit id="graph.table.group" datatype="html">
+        <source> Groupe </source>
+        <target state="translated"> Group </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">77,79</context>
+        </context-group>
+        <note priority="1" from="description">Colonne groupe de la liste des super-nœuds</note>
+      </trans-unit>
+      <trans-unit id="graph.table.neighbor" datatype="html">
+        <source> Relié à </source>
+        <target state="translated"> Linked to </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">80,82</context>
+        </context-group>
+        <note priority="1" from="description">Colonne voisin de la liste des super-nœuds</note>
+      </trans-unit>
+      <trans-unit id="graph.table.action" datatype="html">
+        <source> Action </source>
+        <target state="translated"> Action </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">83,87</context>
+        </context-group>
+        <note priority="1" from="description">Colonne action de la liste des super-nœuds</note>
+      </trans-unit>
+      <trans-unit id="graph.table.expand" datatype="html">
+        <source> Déplier </source>
+        <target state="translated"> Expand </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">111,114</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui déplie un super-nœud depuis la liste</note>
+      </trans-unit>
+      <trans-unit id="graph.table.groupsCaption" datatype="html">
+        <source>Groupes d&apos;entrées regroupées (à déplier)</source>
+        <target state="translated">Grouped entries (to expand)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+        <note priority="1" from="description">Légende du tableau des super-nœuds</note>
+      </trans-unit>
+      <trans-unit id="graph.table.expandLabel" datatype="html">
+        <source>Déplier : <x id="label" equiv-text="label"/></source>
+        <target state="translated">Expand: <x id="label" equiv-text="label"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">217</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible du bouton Déplier d&apos;un groupe</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

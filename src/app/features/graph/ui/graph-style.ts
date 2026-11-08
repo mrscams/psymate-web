@@ -17,7 +17,6 @@ export const GRAPH_TOKEN_NAMES = {
   primaryTint: '--primary-tint',
   feeling: '--feeling',
   feelingTint: '--feeling-tint',
-  feelingText: '--feeling-text',
   link: '--link',
   linkProposed: '--link-proposed',
   font: '--font-ui',
@@ -100,7 +99,8 @@ const LINE: Record<Exclude<LinkLineStyle, 'double'>, Record<string, unknown>> = 
  * - super-nœuds : rectangle en pointillés sur `surface-sunken` ;
  * - liens : trait `link`, style par type (classe `line-<style>`), flèche si dirigé, `proposed` en
  *   pointillé `link-proposed` avec « suggéré » (V2) ;
- * - sélection : `primary` et halo `primary-tint`.
+ * - sélection d'un nœud : `primary` et halo `primary-tint` (les arêtes ne se sélectionnent pas : leur
+ *   détail passe par la liste équivalente).
  */
 export function graphStylesheet(tokens: GraphTokens): StylesheetJson {
   const sheet: { selector: string; style: Record<string, unknown> }[] = [
@@ -230,14 +230,6 @@ export function graphStylesheet(tokens: GraphTokens): StylesheetJson {
         'underlay-color': tokens.primaryTint,
         'underlay-padding': 4,
         'underlay-opacity': 1,
-      },
-    },
-    {
-      selector: 'edge:selected',
-      style: {
-        'line-color': tokens.primary,
-        'target-arrow-color': tokens.primary,
-        width: 2.5,
       },
     },
     { selector: 'node.link-target', style: { 'border-color': tokens.primary, 'border-width': 3 } },

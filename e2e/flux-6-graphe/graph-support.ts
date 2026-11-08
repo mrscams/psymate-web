@@ -19,6 +19,16 @@ interface Probe {
 
 type WithProbe = HTMLElement & { pmGraphProbe?: Probe };
 
+/**
+ * Demande la sonde du canevas (pm-graph-canvas ne la pose que si globalThis.pmE2E vaut true) : à
+ * appeler avant la première navigation.
+ */
+export async function enableProbe(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    (globalThis as { pmE2E?: boolean }).pmE2E = true;
+  });
+}
+
 export function canvas(page: Page): Locator {
   return page.locator('pm-graph-canvas');
 }

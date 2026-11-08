@@ -72,6 +72,11 @@ export interface GraphNode {
   degree: number;
   /** Sauts depuis la racine (0 : la racine). */
   distance: number;
+  /**
+   * Auteur de l'entrée (GraphNodeDto.authorType) : practitioner en V1. Lecture seule, place réservée
+   * pour le compagnon patient (A11) : jamais dessiné.
+   */
+  readonly authorType: string;
 }
 
 /** Un lien accepté entre deux nœuds rendus. */
@@ -125,6 +130,18 @@ export interface LinkDrop {
 
 /** Positions des nœuds par identifiant, pour une racine (layout stable, fiche 04). */
 export type GraphPositions = Record<string, Point>;
+
+/** Positions remontées par le canevas, avec la racine (layoutKey) du layout qui les a produites. */
+export interface GraphPositionsChange {
+  key: string;
+  positions: GraphPositions;
+}
+
+/** Zoom et position remontés par le canevas, avec la racine du graphe dessiné. */
+export interface GraphViewportChange {
+  key: string;
+  viewport: GraphViewport;
+}
 
 /** Lecture d'un paramètre d'URL (ParamMap d'Angular, URLSearchParams). */
 export interface ParamReader {

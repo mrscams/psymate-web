@@ -13,6 +13,7 @@ export function node(overrides: Partial<GraphNode> = {}): GraphNode {
     emotion: null,
     degree: 3,
     distance: 0,
+    authorType: 'practitioner',
     ...overrides,
   };
 }
