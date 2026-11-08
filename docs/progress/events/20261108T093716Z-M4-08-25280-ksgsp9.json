@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T09:37:16.933Z",
+  "task": "M4-08",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 22 fusionnee (squash e12e07e) : recherche dans le dossier (features/search), champ de la barre, puces avec compteurs, periode, seance, exacts puis approches surlignes, apercu, clavier ; ouvre la timeline par ?focus=<id> ; CI verte (checks + 84 e2e).",
+  "notes": "Ecart d architecture a trancher : la page importe openEntryEditor depuis features/entries (comme le shell). Pas de tri, matchedVia, linksCount, sessionLabel (absents du contrat). Doublon appBar.avatar.menu present dans en.xlf depuis M7-07, a nettoyer. Bundle initial ~871 kB (budget 500 kB, avertissement).",
+  "next": "M4-05 vue d ensemble quand M2-06 est fusionnee",
+  "pr": "https://github.com/mrscams/psymate-web/pull/22",
+  "branch": "main",
+  "checkout": "psymate-web"
+}

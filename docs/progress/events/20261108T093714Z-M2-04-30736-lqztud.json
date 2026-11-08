@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T09:37:14.241Z",
+  "task": "M2-04",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 21 fusionnee (squash d572be7) : editeur de lien (features/graph) ouvert par ?link=, touche L et openLinkEditor ; matrice E5.3, inversion de sens, 409 LINK_EXISTS -> Modifier le type, Retirer ; CI verte (checks + 78 e2e).",
+  "notes": "URL /patients/:id?link= au lieu de /graphe?lier= ; pas de types passifs (direction incoming) ; pas de bouton Lier dans l interface (features/entries hors tache) ; croix de pm-side-panel ferme sans confirmation (shared/ui).",
+  "next": "M2-05 rail Lie a (en cours), puis M2-06 vue graphe",
+  "pr": "https://github.com/mrscams/psymate-web/pull/21",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
