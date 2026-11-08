@@ -74,6 +74,8 @@ describe('PatientSearchPage', () => {
     const { el } = await render({ find: vi.fn(() => never<SearchPage>()) });
     expect(el.querySelector('pm-state [aria-busy="true"]')).not.toBeNull();
     expect(el.querySelector('pm-search-results')).toBeNull();
+    // Pas de « Tous 0 » avant la première lecture.
+    expect(text(el.querySelector('pm-search-type-chips button'))).toBe('Tous');
   });
 
   it('vide : « Aucun résultat pour « … » » et l’aide de la syntaxe', async () => {
@@ -92,6 +94,7 @@ describe('PatientSearchPage', () => {
     const { el, harness } = await render({ find });
     const alert = el.querySelector('[role="alert"]');
     expect(text(alert)).toContain('Recherche indisponible');
+    expect(text(el.querySelector('pm-search-type-chips button'))).toBe('Tous');
     const retry = [...el.querySelectorAll('pm-state button')].find((b) =>
       text(b).includes('Réessayer'),
     ) as HTMLButtonElement;
