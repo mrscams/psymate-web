@@ -1,0 +1,131 @@
+:host {
+  display: block;
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 20px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h3 {
+  flex: 1 1 auto;
+  margin: 0;
+  font: var(--mat-sys-title-medium);
+  overflow-wrap: anywhere;
+}
+
+.type {
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--primary-tint);
+  color: var(--primary-hover);
+  font: var(--mat-sys-body-small);
+}
+
+dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 16px;
+  margin: 0;
+  font: var(--mat-sys-body-medium);
+}
+
+dt {
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+dd {
+  margin: 0;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.body {
+  margin: 0;
+  font: var(--mat-sys-body-large);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--surface-sunken);
+}
+
+h4 {
+  margin: 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-label-medium);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+  font: var(--mat-sys-body-medium);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.actions button {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: var(--mat-sys-label-large);
+  cursor: pointer;
+}
+
+.actions button:hover {
+  border-color: var(--border-strong);
+}
+
+.actions button.primary {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-on);
+}
+
+.actions button.primary:hover {
+  border-color: var(--primary-hover);
+  background: var(--primary-hover);
+}
+
+.actions button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.help {
+  padding-top: 10px;
+  border-top: 1px solid var(--surface-sunken);
+}

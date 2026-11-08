@@ -26,6 +26,10 @@
       [user]="user()"
       [switchHref]="switchHref()"
       [switchLang]="other"
+      [query]="searchBar.query()"
+      [searchPlaceholder]="searchBar.placeholder()"
+      (queryChange)="searchBar.input($event)"
+      (searchSubmit)="searchBar.submit($event)"
       (logout)="logout()"
     />
     @if (session.authenticated()) {

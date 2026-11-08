@@ -1,0 +1,170 @@
+<section class="search" aria-labelledby="search-heading">
+  <div class="zone">
+    <div class="intro">
+      <h2 id="search-heading" i18n="Titre de l'onglet recherche@@search.heading">
+        Recherche dans le dossier
+      </h2>
+      <p class="scope" i18n="Portée de la recherche@@search.scope">
+        dans le dossier de {{ patientName() }} · champ de recherche en haut de page (<kbd>/</kbd>)
+      </p>
+      <button
+        type="button"
+        class="close"
+        aria-keyshortcuts="Escape"
+        (click)="leave()"
+        i18n="Bouton qui ferme la recherche@@search.close"
+      >
+        Fermer la recherche <kbd>Échap</kbd>
+      </button>
+    </div>
+
+    <div class="filters">
+      <pm-search-type-chips
+        [counts]="store.results().data?.counts ?? []"
+        [allCount]="store.allCount()"
+        [selected]="filters().type"
+        (selectType)="setType($event)"
+      />
+      <div class="selects">
+        <label for="search-period" i18n="Étiquette du sélecteur de période@@search.period.label"
+          >Période</label
+        >
+        <select id="search-period" (change)="setPeriod($any($event.target).value)">
+          @for (preset of presets; track preset) {
+            <option [value]="preset" [selected]="period() === preset">
+              {{ periodLabel(preset) }}
+            </option>
+          }
+          @if (period() === 'custom') {
+            <option value="custom" selected>{{ periodLabel('custom') }}</option>
+          }
+        </select>
+        <label for="search-session" i18n="Étiquette du sélecteur de séance@@search.session.select"
+          >Séance</label
+        >
+        <select id="search-session" (change)="setSession($any($event.target).value)">
+          <option
+            value=""
+            [selected]="!filters().sessionId"
+            i18n="Toutes les séances@@search.session.all"
+          >
+            Toutes
+          </option>
+          @for (session of sessionOptions(); track session.id) {
+            <option [value]="session.id" [selected]="filters().sessionId === session.id">
+              {{ session.label }}
+            </option>
+          }
+          @if (store.sessions().status === 'loading') {
+            <option disabled i18n="Séances en cours de chargement@@search.session.loading">
+              Chargement des séances…
+            </option>
+          }
+        </select>
+        @if (store.sessions().status === 'error') {
+          <span class="sessions-error" role="alert">
+            <span i18n="Séances indisponibles@@search.session.error">Séances indisponibles</span>
+            <button
+              type="button"
+              (click)="store.retrySessions()"
+              i18n="Bouton qui relit les séances@@search.session.retry"
+            >
+              Réessayer
+            </button>
+          </span>
+        }
+        <label class="archived">
+          <input
+            type="checkbox"
+            [checked]="filters().archived"
+            (change)="setArchived($any($event.target).checked)"
+          />
+          <span i18n="Case des entrées archivées@@search.archived"
+            >inclure les entrées archivées</span
+          >
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="results" [class.refreshing]="refreshing()" [attr.aria-busy]="refreshing()">
+      <p class="summary" aria-live="polite">{{ summary() }}</p>
+      <p class="sr-only" aria-live="polite" aria-atomic="true">{{ selectionText() }}</p>
+
+      @if (store.results().status === 'idle') {
+        <div class="idle">
+          <h3 i18n="Titre de la recherche sans saisie@@search.idle.title">Que cherchez-vous ?</h3>
+          <p i18n="Consigne de la recherche sans saisie@@search.idle.message">
+            Tapez au moins 2 caractères dans le champ de recherche en haut de page : un mot, un tag,
+            une émotion ou une période. La recherche ignore les accents et tolère les fautes.
+          </p>
+          <pm-search-syntax-help />
+        </div>
+      } @else if (resultsState() === 'empty') {
+        <pm-state
+          kind="empty"
+          [title]="emptyTitle()"
+          message="Vérifiez l'orthographe, retirez un filtre ou essayez la syntaxe ci-dessous."
+          i18n-message="Message de l'état vide de la recherche@@search.empty.message"
+        />
+        <pm-search-syntax-help />
+      } @else if (resultsState()) {
+        <pm-state
+          [kind]="resultsState()"
+          skeleton="card"
+          [lines]="4"
+          title="Recherche indisponible"
+          i18n-title="Titre de la recherche en erreur@@search.error.title"
+          [message]="problemText()"
+          [action]="retryAction()"
+        />
+      } @else {
+        @if (store.results().status === 'error') {
+          <p class="inline-error" role="alert">{{ problemText() }}</p>
+        }
+        <pm-search-results
+          [exact]="store.exact()"
+          [approximate]="store.approximate()"
+          [selectedId]="store.selectedId()"
+          [sessions]="store.sessions().data ?? []"
+          (selectHit)="select($event)"
+          (openHit)="openTimeline($event)"
+        />
+        @if (store.remaining() > 0) {
+          <button
+            type="button"
+            class="more"
+            [disabled]="store.loadingMore() || refreshing()"
+            (click)="store.more()"
+            i18n="Bouton qui charge la page suivante de résultats@@search.more"
+          >
+            {store.nextCount(), plural,
+              =1 {Afficher le résultat suivant}
+              other {Afficher les {{ store.nextCount() }} résultats suivants}
+            }
+            ({store.remaining(), plural, =1 {1 restant} other {{{ store.remaining() }} restants}})
+          </button>
+        }
+        @if (store.moreProblem()) {
+          <p class="inline-error" role="alert" i18n="Erreur de la page suivante@@search.more.error">
+            Les résultats suivants n'ont pas pu être chargés. Réessayez.
+          </p>
+        }
+      }
+    </div>
+
+    @if (store.selected(); as hit) {
+      <pm-search-preview
+        class="preview"
+        [hit]="hit"
+        [preview]="store.preview()"
+        [sessions]="store.sessions().data ?? []"
+        (openTimeline)="openTimeline($event)"
+        (openGraph)="openGraph($event)"
+        (edit)="edit($event)"
+        (retry)="store.retryPreview()"
+      />
+    }
+  </div>
+</section>

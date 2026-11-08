@@ -6,6 +6,7 @@ import { filter, map } from 'rxjs';
 
 import { AUTH_PATHS, SessionStore } from './core/auth';
 import { localeSwitchHref, otherLocale, toAppLocale } from './core/i18n';
+import { DossierSearchBar } from './features/search';
 import { ThemeService } from './core/theme';
 import {
   AdminBarComponent,
@@ -48,6 +49,8 @@ export type AppLayout = 'practitioner' | 'public' | 'admin' | 'bare';
 export class AppComponent {
   private readonly router = inject(Router);
   protected readonly session = inject(SessionStore);
+  /** Champ de la barre sur un écran patient : recherche dans le dossier (features/search). */
+  protected readonly searchBar = inject(DossierSearchBar);
   private readonly baseHref = inject(PlatformLocation).getBaseHrefFromDOM();
 
   protected readonly locale = toAppLocale(inject(LOCALE_ID));

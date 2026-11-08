@@ -1,0 +1,101 @@
+<aside
+  class="preview"
+  aria-label="Aperçu de l'entrée sélectionnée"
+  i18n-aria-label="Nom de l'aperçu@@search.preview.label"
+>
+  @if (entry(); as entry) {
+    <div class="heading">
+      <pm-entry-icon [type]="entry.type" [size]="14" />
+      <h3>{{ title(entry) }}</h3>
+      <span class="type">{{ typeLabel(entry.type) }}</span>
+    </div>
+    <dl>
+      <div>
+        <dt i18n="Métadonnée de l'aperçu@@search.preview.when">Quand</dt>
+        <dd class="mono">{{ when(entry) }}</dd>
+      </div>
+      <div>
+        <dt i18n="Métadonnée de l'aperçu@@search.preview.session">Séance</dt>
+        <dd>
+          @if (session(entry); as session) {
+            {{ session }}
+          } @else {
+            <span i18n="Aucune séance de rattachement@@search.preview.noSession">aucune</span>
+          }
+        </dd>
+      </div>
+      <div>
+        <dt i18n="Métadonnée de l'aperçu@@search.preview.recorded">Saisi</dt>
+        <dd>
+          <span class="mono">{{ recorded(entry) }}</span> ·
+          <span i18n="Numéro de version@@search.preview.version">v{{ entry.version }}</span>
+        </dd>
+      </div>
+      <div>
+        <dt i18n="Métadonnée de l'aperçu@@search.preview.visibility">Visibilité</dt>
+        <dd>
+          {{ visibility(entry.visibility) }}
+          @if (entry.archived) {
+            · <span i18n="Mention d'une entrée archivée@@search.hit.archived">archivée</span>
+          }
+        </dd>
+      </div>
+      @if (entry.intensity !== null) {
+        <div>
+          <dt i18n="Métadonnée de l'aperçu@@search.preview.intensity">Intensité</dt>
+          <dd class="mono">{{ entry.intensity }}/10</dd>
+        </div>
+      }
+    </dl>
+    @if (entry.body) {
+      <p class="body">{{ entry.body }}</p>
+    }
+    @if (entry.links.length > 0) {
+      <div class="links">
+        <h4 i18n="Titre des liens de l'aperçu@@search.preview.links">
+          Liens · {{ entry.links.length }}
+        </h4>
+        <ul>
+          @for (link of entry.links; track link.id) {
+            <li>{{ link.sentence }}</li>
+          }
+        </ul>
+      </div>
+    }
+    <div class="actions">
+      <button
+        type="button"
+        class="primary"
+        (click)="openTimeline.emit(entry.id)"
+        i18n="Bouton de l'aperçu@@search.preview.openTimeline"
+      >
+        Ouvrir dans la timeline
+      </button>
+      <button
+        type="button"
+        (click)="openGraph.emit(entry.id)"
+        i18n="Bouton de l'aperçu@@search.preview.openGraph"
+      >
+        Voir dans le graphe
+      </button>
+      <button
+        type="button"
+        (click)="edit.emit(entry.id)"
+        i18n="Bouton de l'aperçu@@search.preview.edit"
+      >
+        Modifier
+      </button>
+    </div>
+  } @else {
+    <pm-state
+      [kind]="state()"
+      skeleton="block"
+      [lines]="4"
+      compact
+      title="Aperçu indisponible"
+      i18n-title="Titre de l'aperçu en erreur@@search.preview.errorTitle"
+      [action]="retryAction"
+    />
+  }
+  <pm-search-syntax-help class="help" />
+</aside>

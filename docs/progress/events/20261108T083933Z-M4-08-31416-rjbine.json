@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T08:39:33.564Z",
+  "task": "M4-08",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Recherche dans le dossier (/patients/:id/search, M4-04 fusionnée) : SearchStore, champ de la barre branché, puces avec compteurs, période, séance, archivées, exacts puis approchés surlignés sans innerHTML, aperçu, clavier, aide de syntaxe ; 57 Vitest et 5 e2e verts",
+  "notes": "Timeline positionnée par ?focus= (et non ?entry=, réservé à l'éditeur ; validé par la session parente, relayé à M3-02). Écarts fiche 07 / contrat : pas de tri ni de sort, pas de matchedVia ni de 'Trouvée par ses liens', ni linksCount, ni sessionLabel, ni jeton séance: ; mots tous requis, donc la note de juin sans 'entretien' ne sort pas. Seed small sans dossier Marie D. : les e2e créent leurs données par l'API. Le critère 2 000 entrées < 150 ms relève du backend. Revue : 1 bloquant (aperçu périmé après Modifier) et 12 à corriger traités. e2e complets : 80 passés, 11 ignorés, 1 échec Mailpit instable sous charge (passe seul).",
+  "next": "M3-02 : consommer ?focus=<entryId> sur la timeline ; M2-06 : ?root= sur le graphe",
+  "branch": "claude/eager-austin-d89c11",
+  "checkout": "eager-austin-d89c11"
+}
