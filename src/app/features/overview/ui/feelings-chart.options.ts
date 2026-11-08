@@ -195,7 +195,7 @@ export function feelingsChartOptions(
         lineStyle: { color: tokens.medication, type: 'dashed', width: 1.5 },
         label: {
           show: true,
-          position: 'insideEndTop',
+          position: 'end',
           color: tokens.textSecondary,
           fontSize: 11,
           formatter: medicationName(marker, labels),
@@ -235,7 +235,7 @@ export function feelingsChartOptions(
     animation: false,
     backgroundColor: 'transparent',
     textStyle: { fontFamily: tokens.font, color: tokens.textSecondary },
-    grid: { left: 36, right: 16, top: 24, bottom: 28 },
+    grid: { left: 36, right: 24, top: 30, bottom: 28 },
     tooltip: {
       trigger: 'item',
       backgroundColor: tokens.surface,
