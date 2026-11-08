@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T08:33:29.703Z",
+  "task": "M2-04",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Éditeur de lien (features/graph) : panneau 420 px ouvert par ?link=<entryId>, la touche L (entrée ouverte) et openLinkEditor ; recherche de cible dans le dossier, entrées déjà liées grisées, puces filtrées par la matrice E5.3 (refusées désactivées avec aide), inversion (direction incoming), phrase lisible aria-live, justification, ⏎ crée, 409 LINK_EXISTS → Modifier le type (PATCH), Retirer (DELETE, marqué retiré).",
+  "notes": "Branche claude/charming-bell-ac3cb1 (non poussée). lint, check:tokens, test (887), build verts ; e2e complets : 73 passés + 6 échecs Mailpit (e-mails en retard, 3 worktrees en parallèle) tous verts au rejeu, flux-4 3/3. Shell patient : 1 import + 1 appel connectLinkEditor. Croix de pm-side-panel ferme sans confirmation (shared/ui, hors tâche).",
+  "next": "M2-05 (rail Lié à) et M3-02 (menu Lier de la timeline) appellent openLinkEditor ; M2-06 page graphe dans features/graph.",
+  "branch": "claude/charming-bell-ac3cb1",
+  "checkout": "charming-bell-ac3cb1"
+}
