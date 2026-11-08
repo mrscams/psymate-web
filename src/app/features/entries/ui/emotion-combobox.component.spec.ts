@@ -99,12 +99,12 @@ describe('EmotionComboboxComponent', () => {
     await fixture.whenStable();
     expect(input.getAttribute('aria-expanded')).toBe('true');
     expect(options(el)).toEqual(['Anxiété', "Créer l'émotion personnalisée « anx »"]);
+    expect(input.hasAttribute('aria-activedescendant')).toBe(false);
+    key(input, 'ArrowDown');
+    await fixture.whenStable();
     expect(input.getAttribute('aria-activedescendant')).toBe(
       el.querySelector('[role="option"]')!.id,
     );
-    key(input, 'ArrowDown');
-    key(input, 'ArrowUp');
-    await fixture.whenStable();
     const enter = key(input, 'Enter');
     await fixture.whenStable();
     expect(enter.defaultPrevented).toBe(true);
@@ -133,6 +133,9 @@ describe('EmotionComboboxComponent', () => {
     type(input, 'Rumination');
     await fixture.whenStable();
     expect(options(el)).toEqual(["Créer l'émotion personnalisée « Rumination »"]);
+    // ⏎ sans option active ne crée rien (jamais de création par mégarde) ; ↓ ⏎ ouvre la création.
+    expect(key(input, 'Enter').defaultPrevented).toBe(false);
+    key(input, 'ArrowDown');
     key(input, 'Enter');
     await fixture.whenStable();
     const fieldset = el.querySelector<HTMLElement>('fieldset.create')!;
@@ -159,6 +162,7 @@ describe('EmotionComboboxComponent', () => {
     const { fixture, el, input, host } = await render({ createEmotion });
     type(input, 'Rumination');
     await fixture.whenStable();
+    key(input, 'ArrowDown');
     key(input, 'Enter');
     await fixture.whenStable();
     el.querySelector<HTMLInputElement>('input[value="sadness"]')!.click();

@@ -68,7 +68,7 @@ export class EmotionComboboxComponent implements ControlValueAccessor {
   /** Texte de l'input. */
   protected readonly query = signal('');
   protected readonly open = signal(false);
-  protected readonly active = signal(0);
+  protected readonly active = signal(-1);
   protected readonly disabled = signal(false);
   /** Création en cours : le libellé à créer et la famille choisie. */
   protected readonly creating = signal<string | null>(null);
@@ -96,8 +96,11 @@ export class EmotionComboboxComponent implements ControlValueAccessor {
     return matches;
   });
 
+  /** Aucune option active tant qu'on n'a pas appuyé sur ↓ ou ↑ (fiche 05 : « anx » → ↓ → ⏎). */
   protected readonly activeId = computed(() =>
-    this.open() && this.options().length > 0 ? this.optionId(this.active()) : null,
+    this.open() && this.active() >= 0 && this.active() < this.options().length
+      ? this.optionId(this.active())
+      : null,
   );
 
   protected readonly listState = computed(() => {
@@ -143,7 +146,7 @@ export class EmotionComboboxComponent implements ControlValueAccessor {
   protected onInput(value: string): void {
     this.query.set(value);
     this.open.set(true);
-    this.active.set(0);
+    this.active.set(-1);
     this.creating.set(null);
     this.store.clearEmotionProblem();
     if (this.code() !== null) this.select(null);
@@ -154,23 +157,27 @@ export class EmotionComboboxComponent implements ControlValueAccessor {
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
-        if (!this.open()) {
-          this.open.set(true);
-          this.active.set(0);
-        } else if (count > 0) this.move((this.active() + 1) % count);
+        this.open.set(true);
+        if (count > 0) this.move(this.active() < 0 ? 0 : (this.active() + 1) % count);
         break;
       case 'ArrowUp':
         event.preventDefault();
-        if (!this.open()) this.open.set(true);
-        if (count > 0) this.move((this.active() - 1 + count) % count);
+        this.open.set(true);
+        if (count > 0) this.move(this.active() <= 0 ? count - 1 : this.active() - 1);
         break;
-      case 'Enter':
-        if (this.open() && count > 0 && !event.ctrlKey && !event.metaKey) {
-          event.preventDefault();
-          event.stopPropagation();
-          this.choose(this.options()[this.active()]);
-        }
+      case 'Enter': {
+        if (!this.open() || count === 0 || event.ctrlKey || event.metaKey) break;
+        // Sans option active, ⏎ prend la première émotion proposée (jamais la création).
+        const option =
+          this.active() >= 0
+            ? this.options()[this.active()]
+            : this.options().find((item) => item.kind === 'emotion');
+        if (!option) break;
+        event.preventDefault();
+        event.stopPropagation();
+        this.choose(option);
         break;
+      }
       case 'Escape':
         if (this.open()) {
           event.preventDefault();

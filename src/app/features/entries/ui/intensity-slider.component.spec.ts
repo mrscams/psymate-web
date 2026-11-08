@@ -38,7 +38,8 @@ describe('IntensitySliderComponent', () => {
     const slider = el.querySelector<HTMLElement>('[role="slider"]')!;
     expect(slider.getAttribute('aria-valuemin')).toBe('0');
     expect(slider.getAttribute('aria-valuemax')).toBe('10');
-    expect(slider.getAttribute('aria-valuenow')).toBeNull();
+    // aria-valuenow est requis pour un slider : 0 tant que non réglé, la valeur lue dit « Non renseignée ».
+    expect(slider.getAttribute('aria-valuenow')).toBe('0');
     expect(slider.getAttribute('aria-valuetext')).toBe('Non renseignée');
     expect(slider.getAttribute('aria-labelledby')).toBe('lbl');
 
