@@ -2,9 +2,11 @@ import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 
 import { ApiProblem, asProblem } from '../../../core/http';
+import { TimelineFiltersStore } from './timeline-filters.store';
 import { TimelineApi } from './timeline.api';
 import {
   buildRows,
+  EmotionFamily,
   layoutBands,
   MAX_WINDOWS,
   neighbourhood,
@@ -46,16 +48,21 @@ interface TimelineState {
   zoom: TimelineZoom;
   /** Premier créneau visible : la position de défilement, rangée dans le shell. */
   anchor: number;
-  /** Index des séances (identifiant → début), pour la pastille et le début du suivi. */
+  /** Index des séances (identifiant → début), pour la pastille, le début du suivi, le mode par séance. */
   sessions: Record<string, string>;
+  /** L'index des séances a répondu (ou échoué) : le mode par séance peut regrouper sans attendre plus. */
+  sessionsReady: boolean;
   /** Début déclaré du suivi (en-tête patient : followUp.since, sinon création du dossier). */
   followedSince: string | null;
   emotionLabels: Record<string, string>;
+  emotionFamilies: Record<string, EmotionFamily>;
   /** Dernière carte ouverte (bordure primaire). */
   selectedId: string | null;
-  /** Bornes de la plage (période, M3-03) ; null = sans borne. */
-  from: string | null;
-  to: string | null;
+  /**
+   * Mode par séance (M3-03) : les fenêtres en mémoire sont les trois premières (les plus récentes),
+   * quelle que soit la position de défilement ; le regroupement porte sur elles.
+   */
+  headOnly: boolean;
 }
 
 const emptyFacets: TimelineFacets = { types: {}, emotions: {}, tags: {} };
@@ -75,11 +82,12 @@ const initialState: TimelineState = {
   zoom: 'week',
   anchor: 0,
   sessions: {},
+  sessionsReady: false,
   followedSince: null,
   emotionLabels: {},
+  emotionFamilies: {},
   selectedId: null,
-  from: null,
-  to: null,
+  headOnly: false,
 };
 
 function sum(counts: Record<string, number>): number {
@@ -124,18 +132,39 @@ export const TimelineStore = signalStore(
         if (!items.length) return null;
         return { newest: items[0].occurred, oldest: items[items.length - 1].occurred };
       }),
+      /**
+       * Les éléments des premières fenêtres (MAX_WINDOWS au plus), pour le mode par séance : prêts
+       * quand toutes sont chargées ; `complete` si elles couvrent toute la plage filtrée.
+       */
+      head: computed(() => {
+        const count = windowCount(store.total(), store.sizes());
+        const wanted = Math.min(MAX_WINDOWS, count);
+        const windows = store.windows().filter((w) => w.index < wanted);
+        const loaded = windows.filter((w) => w.status === 'loaded');
+        return {
+          items: loaded.sort((a, b) => a.index - b.index).flatMap((w) => w.items),
+          ready: loaded.length === wanted,
+          complete: (store.lastIndex() ?? MAX_WINDOWS) < MAX_WINDOWS,
+          failed: windows.find((w) => w.status === 'error') ?? null,
+        };
+      }),
       canZoomIn: computed(() => ZOOM_LEVELS.indexOf(store.zoom()) > 0),
       canZoomOut: computed(() => ZOOM_LEVELS.indexOf(store.zoom()) < ZOOM_LEVELS.length - 1),
     };
   }),
-  withMethods((store, api = inject(TimelineApi)) => {
+  withMethods((store, api = inject(TimelineApi), filters = inject(TimelineFiltersStore)) => {
     /** Change à chaque (re)chargement : une réponse d'une génération passée est ignorée. */
     let generation = 0;
     /** Requêtes en vol par fenêtre (jamais deux fois la même). */
     const inflight = new Map<number, Promise<void>>();
 
     function query(cursor: string | null) {
-      return { from: store.from(), to: store.to(), cursor, limit: WINDOW_SIZE };
+      return { ...filters.query(), cursor, limit: WINDOW_SIZE };
+    }
+
+    /** La fenêtre courante après un (re)chargement : la deuxième en mode par séance (0, 1, 2 en mémoire). */
+    function home(): number {
+      return store.headOnly() ? Math.min(1, Math.max(0, store.count() - 1)) : store.current();
     }
 
     function setWindow(win: TimelineWindow): void {
@@ -255,7 +284,7 @@ export const TimelineStore = signalStore(
         });
         if (page.nextCursor === null)
           patchState(store, { total: page.items.length, trail: [null] });
-        focus(store.current());
+        focus(home());
       } catch (error) {
         if (gen !== generation) return;
         patchState(store, { status: 'error', problem: asProblem(error) });
@@ -266,15 +295,20 @@ export const TimelineStore = signalStore(
     async function loadSide(gen: number): Promise<void> {
       const id = store.patientId();
       if (!id) return;
-      const [sessions, labels] = await Promise.allSettled([
+      const [sessions, vocabulary] = await Promise.allSettled([
         api.sessions(id),
         Object.keys(store.emotionLabels()).length
-          ? Promise.resolve(store.emotionLabels())
-          : api.emotionLabels(),
+          ? Promise.resolve({ labels: store.emotionLabels(), families: store.emotionFamilies() })
+          : api.emotions(),
       ]);
       if (gen !== generation) return;
       if (sessions.status === 'fulfilled') patchState(store, { sessions: sessions.value });
-      if (labels.status === 'fulfilled') patchState(store, { emotionLabels: labels.value });
+      if (vocabulary.status === 'fulfilled')
+        patchState(store, {
+          emotionLabels: vocabulary.value.labels,
+          emotionFamilies: vocabulary.value.families,
+        });
+      patchState(store, { sessionsReady: true });
     }
 
     function setZoom(zoom: TimelineZoom): void {
@@ -300,6 +334,8 @@ export const TimelineStore = signalStore(
             ...snapshot,
             windows: snapshot.windows.filter((w) => w.status === 'loaded'),
             current: windowOfSlot(snapshot.anchor, snapshot.sizes),
+            headOnly: store.headOnly(),
+            sessionsReady: true,
             followedSince,
             status: 'loaded',
           });
@@ -309,11 +345,48 @@ export const TimelineStore = signalStore(
         patchState(store, {
           ...initialState,
           zoom: snapshot?.zoom ?? initialState.zoom,
+          headOnly: store.headOnly(),
           patientId,
           followedSince,
           status: 'loading',
         });
         await Promise.all([loadFirst(gen), loadSide(gen)]);
+      },
+
+      /**
+       * Les filtres ont changé (TimelineFiltersStore) : la plage filtrée est relue depuis la première
+       * page (total, facettes, situations), la position revient en haut ; zoom, index des séances et
+       * noms d'émotions restent.
+       */
+      async applyFilters(): Promise<void> {
+        const id = store.patientId();
+        if (!id) return;
+        generation++;
+        inflight.clear();
+        patchState(store, {
+          status: 'loading',
+          problem: null,
+          total: 0,
+          facets: emptyFacets,
+          ongoing: [],
+          trail: [null],
+          sizes: [],
+          lastIndex: null,
+          windows: [],
+          current: 0,
+          anchor: 0,
+        });
+        await loadFirst(generation);
+      },
+
+      /**
+       * Mode par séance (true) : les trois premières fenêtres restent en mémoire, le défilement ne
+       * déplace plus la fenêtre courante. Retour au chronologique (false) : le défilement reprend.
+       */
+      setHeadOnly(on: boolean): void {
+        if (on === store.headOnly()) return;
+        patchState(store, { headOnly: on });
+        if (on && store.status() === 'loaded') focus(home());
       },
 
       /** Réessayer après l'échec de la première fenêtre. */
@@ -331,7 +404,7 @@ export const TimelineStore = signalStore(
        * courante (ses voisines se chargent si besoin, les autres sortent de la mémoire).
        */
       visible(first: number, last: number): void {
-        if (store.status() !== 'loaded') return;
+        if (store.status() !== 'loaded' || store.headOnly()) return;
         const total = store.total();
         if (!total) return;
         const top = Math.max(0, Math.min(first, total - 1));
@@ -409,6 +482,7 @@ export const TimelineStore = signalStore(
           anchor: store.anchor(),
           sessions: store.sessions(),
           emotionLabels: store.emotionLabels(),
+          emotionFamilies: store.emotionFamilies(),
           selectedId: store.selectedId(),
         };
       },
@@ -458,7 +532,7 @@ export const TimelineStore = signalStore(
           if (gen !== generation) return;
           await fetchWindow(win.index, gen);
         }
-        focus(store.current());
+        focus(home());
       } catch (error) {
         if (gen !== generation) return;
         // L'écran garde ce qu'il montre ; l'échec ne touche que la relecture.

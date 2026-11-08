@@ -1,4 +1,8 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+
+import { PreferencesStore } from '../../../core/preferences';
+import { TimelineFiltersStore } from './timeline-filters.store';
 
 import { TimelineApi } from './timeline.api';
 import { items, pagedTimeline, timelineItem, timelinePage } from './timeline.fixtures';
@@ -16,13 +20,27 @@ function setup(api: Partial<Record<keyof TimelineApi, unknown>>) {
   const mock = {
     page: vi.fn(),
     sessions: vi.fn().mockResolvedValue({}),
-    emotionLabels: vi.fn().mockResolvedValue({ anxiety: 'Anxiété' }),
+    emotions: vi
+      .fn()
+      .mockResolvedValue({ labels: { anxiety: 'Anxiété' }, families: { anxiety: 'fear' } }),
     ...api,
   };
   TestBed.configureTestingModule({
-    providers: [TimelineStore, { provide: TimelineApi, useValue: mock }],
+    providers: [
+      TimelineStore,
+      TimelineFiltersStore,
+      { provide: TimelineApi, useValue: mock },
+      {
+        provide: PreferencesStore,
+        useValue: { timelineGroupBy: signal('chronological'), set: vi.fn() },
+      },
+    ],
   });
-  return { store: TestBed.inject(TimelineStore), api: mock };
+  return {
+    store: TestBed.inject(TimelineStore),
+    filters: TestBed.inject(TimelineFiltersStore),
+    api: mock,
+  };
 }
 
 /** API simulée qui sert une chronologie de `total` éléments par pages de 200. */
@@ -51,7 +69,16 @@ describe('TimelineStore', () => {
     expect(store.total()).toBe(1000);
     expect(store.rows()).toHaveLength(1000);
     expect(cursors(page)).toEqual([null, 'c1']);
-    expect(page.mock.calls[0][1]).toEqual({ from: null, to: null, cursor: null, limit: 200 });
+    expect(page.mock.calls[0][1]).toEqual({
+      types: [],
+      emotions: [],
+      tags: [],
+      draftsOnly: false,
+      from: null,
+      to: null,
+      cursor: null,
+      limit: 200,
+    });
     expect(store.inMemory()).toBe(2);
     expect(store.rows()[0].item?.id).toBe('e-0');
     expect(store.rows()[399].item?.id).toBe('e-399');
@@ -59,6 +86,8 @@ describe('TimelineStore', () => {
     expect(store.rows()[400]).toMatchObject({ item: null, state: 'idle', window: 2 });
     expect(api.sessions).toHaveBeenCalledWith('p-1');
     expect(store.emotionLabels()).toEqual({ anxiety: 'Anxiété' });
+    expect(store.emotionFamilies()).toEqual({ anxiety: 'fear' });
+    expect(store.sessionsReady()).toBe(true);
   });
 
   it('défilement jusqu’au bout : jamais plus de trois fenêtres en mémoire', async () => {
@@ -322,7 +351,7 @@ describe('TimelineStore', () => {
     const { store } = setup({
       page: vi.fn().mockResolvedValue(timelinePage({ items: items(2) })),
       sessions: vi.fn().mockRejectedValue(serverError),
-      emotionLabels: vi.fn().mockRejectedValue(serverError),
+      emotions: vi.fn().mockRejectedValue(serverError),
     });
     await store.load('p-1', null);
     expect(store.status()).toBe('loaded');
@@ -344,5 +373,103 @@ describe('TimelineStore', () => {
     expect(store.rows()[650].item?.id).toBe('e-650');
     expect(await store.locate('inconnue')).toBeNull();
     expect(store.windows().length).toBeLessThanOrEqual(MAX_WINDOWS);
+  });
+
+  it('applyFilters : la requête porte les filtres, la plage est relue depuis la première page', async () => {
+    const { page } = paged(1000);
+    const { store, filters } = setup({ page });
+    await store.load('p-1', null);
+    await flush();
+    store.visible(450, 460);
+    await flush();
+    page.mockClear();
+
+    filters.set({
+      types: ['feeling'],
+      emotions: ['anxiety'],
+      tags: ['sommeil'],
+      draftsOnly: true,
+      from: null,
+      to: null,
+    });
+    await store.applyFilters();
+    await flush();
+    expect(page.mock.calls[0][1]).toEqual(
+      expect.objectContaining({
+        types: ['feeling'],
+        emotions: ['anxiety'],
+        tags: ['sommeil'],
+        draftsOnly: true,
+        cursor: null,
+      }),
+    );
+    // Position remise en haut, fenêtres relues depuis la première.
+    expect(store.anchor()).toBe(0);
+    expect(store.current()).toBe(0);
+    expect(cursors(page)).toEqual([null, 'c1']);
+  });
+
+  it('applyFilters : une réponse d’avant le changement est ignorée', async () => {
+    let release: (value: TimelinePage) => void = () => undefined;
+    const page = vi
+      .fn()
+      .mockImplementationOnce(() => new Promise<TimelinePage>((resolve) => (release = resolve)))
+      .mockResolvedValue(timelinePage({ items: items(2, 'f') }));
+    const { store, filters } = setup({ page });
+    const loading = store.load('p-1', null);
+    filters.set({ ...filters.filters(), emotions: ['anxiety'] });
+    await store.applyFilters();
+    release(timelinePage({ items: items(5) }));
+    await loading;
+    await flush();
+    expect(store.total()).toBe(2);
+    expect(store.rows()[0].item?.id).toBe('f-0');
+  });
+
+  it('mode par séance (headOnly) : les trois premières fenêtres, le défilement ne les déplace pas', async () => {
+    const { page } = paged(1000);
+    const { store } = setup({ page });
+    store.setHeadOnly(true);
+    await store.load('p-1', null);
+    await flush();
+    expect(store.windows().map((w) => w.index)).toEqual([0, 1, 2]);
+    const head = store.head();
+    expect(head.ready).toBe(true);
+    expect(head.complete).toBe(false);
+    expect(head.items).toHaveLength(600);
+    store.visible(900, 910);
+    await flush();
+    expect(store.windows().map((w) => w.index)).toEqual([0, 1, 2]);
+
+    // Retour au chronologique : le défilement reprend la main.
+    store.setHeadOnly(false);
+    store.visible(900, 910);
+    await flush();
+    expect(store.windows().map((w) => w.index)).toEqual([3, 4]);
+  });
+
+  it('head : complet quand toute la plage tient dans les fenêtres lues', async () => {
+    const { page } = paged(250);
+    const { store } = setup({ page });
+    store.setHeadOnly(true);
+    await store.load('p-1', null);
+    await flush();
+    expect(store.head()).toMatchObject({ ready: true, complete: true, failed: null });
+    expect(store.head().items).toHaveLength(250);
+  });
+
+  it('head : une fenêtre en échec est signalée', async () => {
+    const { pages } = pagedTimeline(500);
+    const page = vi.fn((_id: string, query: TimelineQuery) =>
+      query.cursor === 'c2'
+        ? Promise.reject(serverError)
+        : Promise.resolve(pages.get(query.cursor)!),
+    );
+    const { store } = setup({ page });
+    store.setHeadOnly(true);
+    await store.load('p-1', null);
+    await flush();
+    expect(store.head().ready).toBe(false);
+    expect(store.head().failed?.index).toBe(2);
   });
 });
