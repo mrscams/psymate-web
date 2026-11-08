@@ -17128,33 +17128,6 @@
         </context-group>
         <note priority="1" from="description">Titre d&apos;une séance du mode par séance</note>
       </trans-unit>
-      <trans-unit id="timeline.session.noEntry" datatype="html">
-        <source>aucune entrée</source>
-        <target state="translated">no entries</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.ts</context>
-          <context context-type="linenumber">117</context>
-        </context-group>
-        <note priority="1" from="description">Séance sans entrée, dans son en-tête</note>
-      </trans-unit>
-      <trans-unit id="timeline.session.entry" datatype="html">
-        <source>1 entrée</source>
-        <target state="translated">1 entry</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.ts</context>
-          <context context-type="linenumber">119</context>
-        </context-group>
-        <note priority="1" from="description">Nombre d&apos;entrées d&apos;une séance</note>
-      </trans-unit>
-      <trans-unit id="timeline.session.entries" datatype="html">
-        <source><x id="count" equiv-text="count"/> entrées</source>
-        <target state="translated"><x id="count" equiv-text="count"/> entries</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.ts</context>
-          <context context-type="linenumber">120</context>
-        </context-group>
-        <note priority="1" from="description">Nombre d&apos;entrées d&apos;une séance</note>
-      </trans-unit>
       <trans-unit id="timeline.sessions.list" datatype="html">
         <source>Séances, de la plus récente à la plus ancienne</source>
         <target state="translated">Sessions, from most recent to oldest</target>
@@ -17172,6 +17145,60 @@
           <context context-type="linenumber">157</context>
         </context-group>
         <note priority="1" from="description">Nom de la liste des entrées d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="timeline.focus.filtersCleared" datatype="html">
+        <source>Filtres retirés pour afficher l&apos;entrée demandée.</source>
+        <target state="translated">Filters cleared to show the requested entry.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">334</context>
+        </context-group>
+        <note priority="1" from="description">Information quand les filtres excluaient l&apos;entrée demandée</note>
+      </trans-unit>
+      <trans-unit id="timeline.period.30d.name" datatype="html">
+        <source>30 derniers jours</source>
+        <target state="translated">Last 30 days</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">145</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible de la période de 30 jours de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.period.90d.name" datatype="html">
+        <source>90 derniers jours</source>
+        <target state="translated">Last 90 days</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible de la période de 90 jours de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.period.1y.name" datatype="html">
+        <source>12 derniers mois</source>
+        <target state="translated">Last 12 months</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible de la période d&apos;un an de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.period.all.name" datatype="html">
+        <source>Toute la période</source>
+        <target state="translated">Whole period</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible de la période sans borne de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.session.entries" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {aucune entrée} =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =0 {no entries} =1 {1 entry} other {<x id="INTERPOLATION"/> entries}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
+          <context context-type="linenumber">29,33</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;entrées d&apos;une séance, dans son en-tête</note>
       </trans-unit>
     </body>
   </file>
