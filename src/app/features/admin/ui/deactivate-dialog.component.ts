@@ -70,9 +70,8 @@ export interface DeactivateDialogData {
           cdkFocusInitial
           (click)="close()"
           [disabled]="sending()"
-          i18n="Bouton d'annulation d'une confirmation@@confirm.cancel"
         >
-          Annuler
+          {{ cancelLabel }}
         </button>
         <button
           mat-flat-button
@@ -135,6 +134,7 @@ export class DeactivateDialogComponent {
 
   private readonly closeButton = viewChild('closeButton', { read: ElementRef });
 
+  protected readonly cancelLabel = $localize`:Bouton d'annulation d'une confirmation@@confirm.cancel:Annuler`;
   protected readonly sending = signal(false);
   /** Compteur du 409 VOCABULARY_IN_USE ; null tant qu'il n'y en a pas. */
   protected readonly inUse = signal<number | null>(null);

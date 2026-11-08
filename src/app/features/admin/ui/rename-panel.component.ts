@@ -72,13 +72,8 @@ import { applyVocabularyProblem, LABEL_MAX } from './vocabulary-forms';
         >
           Enregistrer
         </button>
-        <button
-          mat-stroked-button
-          type="button"
-          (click)="cancelled.emit()"
-          i18n="Bouton d'annulation d'une confirmation@@confirm.cancel"
-        >
-          Annuler
+        <button mat-stroked-button type="button" (click)="cancelled.emit()">
+          {{ cancelLabel }}
         </button>
       </div>
       <p class="rules" i18n="Note du renommage@@admin.vocabulary.renameNote">
@@ -113,6 +108,7 @@ export class RenamePanelComponent implements OnInit {
     }),
   });
 
+  protected readonly cancelLabel = $localize`:Bouton d'annulation d'une confirmation@@confirm.cancel:Annuler`;
   protected readonly sending = signal(false);
   protected readonly error = signal<string | null>(null);
 
