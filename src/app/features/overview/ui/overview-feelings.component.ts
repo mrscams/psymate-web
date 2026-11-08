@@ -16,7 +16,6 @@ import {
   FeelingsChartData,
   FeelingsChartLabels,
   groupByEmotion,
-  SeriesSymbol,
   seriesSymbol,
 } from './feelings-chart.options';
 import { feelingsSummary, formatDay } from './overview-labels';
@@ -259,7 +258,7 @@ export class OverviewFeelingsComponent {
       code: series.emotionCode,
       label: series.label,
       count: points.length,
-      symbol: seriesSymbol(index) as SeriesSymbol,
+      symbol: seriesSymbol(index),
       color: familyColor(series.family),
     })),
   );
