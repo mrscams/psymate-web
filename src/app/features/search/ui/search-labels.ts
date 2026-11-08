@@ -1,9 +1,9 @@
 // Textes et formats de l'écran de recherche (fiche 07) : tous en $localize, dates par Intl.
 
 import { ApiProblem } from '../../../core/http';
-import { EntryType } from '../../../shared/ui';
+import { EntryType, entryTypeLabel } from '../../../shared/ui';
 import { formatOccurred, OccurredPrecision } from '../../../shared/util';
-import { PeriodPreset, SearchHit, SessionOption } from '../data/search.model';
+import { PeriodPreset, plainText, SearchHit, SessionOption } from '../data/search.model';
 
 /** Libellé pluriel d'une puce de type (fiche 07 : « Notes 5 »). */
 export function typeChipLabel(type: EntryType): string {
@@ -73,6 +73,16 @@ export function sessionLabel(session: SessionOption, locale: string): string {
   return $localize`:Séance désignée par sa date@@search.session.label:Séance du ${day}:day:`;
 }
 
+/** Titre d'un résultat en texte brut ; sans titre, le type, ou « Séance du … » pour une séance. */
+export function hitTitle(hit: SearchHit, locale: string): string {
+  const title = plainText(hit.title);
+  if (title) return title;
+  if (hit.type === 'session' && hit.occurredFrom) {
+    return sessionLabel({ id: hit.entryId, startedAt: hit.occurredFrom }, locale);
+  }
+  return entryTypeLabel(hit.type);
+}
+
 export function hitWhen(hit: SearchHit, locale: string): string {
   return formatOccurred(
     { from: hit.occurredFrom, to: hit.occurredTo, precision: hit.precision },
@@ -86,40 +96,62 @@ export function visibilityLabel(visibility: 'private' | 'clinical'): string {
     : $localize`:Visibilité d'une entrée@@search.visibility.clinical:clinique`;
 }
 
-/** Ligne de synthèse (aria-live) : nombre, requête, mode de recherche, durée. */
+/**
+ * Ligne de synthèse (aria-live) : nombre, requête, durée. Guillemets et pluriels dans chaque
+ * message (la langue cible choisit les siens). Les exacts viennent du plein texte sans accents ni
+ * casse ; les approchés, des trigrammes.
+ */
 export function summaryText(
   total: number,
   approximate: number,
   text: string,
   tookMs: number,
 ): string {
-  const query = text ? `« ${text} »` : '';
-  if (total === 0 && approximate > 0) {
-    return $localize`:Synthèse sans résultat exact@@search.summary.approximateOnly:Aucun résultat exact pour ${query}:query: · ${approximate}:count: résultats approchés · ${tookMs}:ms: ms`;
+  if (total === 0 && approximate === 1) {
+    return $localize`:Synthèse sans résultat exact, un approché@@search.summary.approximateOne:Aucun résultat exact pour « ${text}:query: » · 1 résultat approché (trigrammes) · ${tookMs}:ms: ms`;
+  }
+  if (total === 0 && approximate > 1) {
+    return $localize`:Synthèse sans résultat exact, plusieurs approchés@@search.summary.approximateOnly:Aucun résultat exact pour « ${text}:query: » · ${approximate}:count: résultats approchés (trigrammes) · ${tookMs}:ms: ms`;
   }
   if (total === 0) {
-    return $localize`:Synthèse sans résultat@@search.summary.none:Aucun résultat pour ${query}:query:`;
+    return $localize`:Synthèse sans résultat@@search.summary.none:Aucun résultat pour « ${text}:query: »`;
   }
   return total === 1
-    ? $localize`:Synthèse, un résultat@@search.summary.one:1 résultat pour ${query}:query: · sans accents, par trigrammes · ${tookMs}:ms: ms`
-    : $localize`:Synthèse, plusieurs résultats@@search.summary.many:${total}:count: résultats pour ${query}:query: · sans accents, par trigrammes · ${tookMs}:ms: ms`;
+    ? $localize`:Synthèse, un résultat@@search.summary.one:1 résultat pour « ${text}:query: » · sans accents ni casse · ${tookMs}:ms: ms`
+    : $localize`:Synthèse, plusieurs résultats@@search.summary.many:${total}:count: résultats pour « ${text}:query: » · sans accents ni casse · ${tookMs}:ms: ms`;
 }
 
-/** Message d'erreur de la recherche : 400 de syntaxe (date invalide, requête trop longue) ou panne. */
+/** Champs en faute d'un 400 SEARCH_BAD_REQUEST. */
+function badFields(problem: ApiProblem | null): Set<string> {
+  return new Set(
+    problem?.code === 'SEARCH_BAD_REQUEST'
+      ? (problem.errors ?? []).map((error) => error.field)
+      : [],
+  );
+}
+
+/** Message d'erreur : 400 selon le champ en faute (q, from / to, session), sinon panne. */
 export function searchProblemText(problem: ApiProblem | null): string {
   if (problem?.code === 'SEARCH_BAD_REQUEST') {
-    const codes = new Set(problem.errors?.map((error) => error.code) ?? []);
-    if (codes.has('INVALID_DATE')) {
+    const errors = problem.errors ?? [];
+    const onQuery = errors.filter((error) => error.field === 'q').map((error) => error.code);
+    if (onQuery.includes('INVALID_DATE')) {
       return $localize`:Erreur de recherche@@search.error.invalidDate:Date invalide dans avant: ou après: (format AAAA, AAAA-MM ou AAAA-MM-JJ).`;
     }
-    if (codes.has('TOO_LONG')) {
+    if (onQuery.includes('TOO_LONG')) {
       return $localize`:Erreur de recherche@@search.error.tooLong:La recherche dépasse 200 caractères.`;
     }
-    if (codes.has('RANGE_INVERTED')) {
-      return $localize`:Erreur de recherche@@search.error.range:La fin de la période précède son début.`;
+    if (isPeriodProblem(problem)) {
+      return $localize`:Erreur de recherche@@search.error.period:La période de l'adresse est invalide. Revenez à tout le dossier.`;
     }
   }
   return $localize`:Erreur de recherche@@search.error.generic:La recherche est indisponible pour le moment. Votre saisie est conservée.`;
+}
+
+/** 400 sur from / to (date impossible, période inversée) : « Tout le dossier » la corrige. */
+export function isPeriodProblem(problem: ApiProblem | null): boolean {
+  const fields = badFields(problem);
+  return fields.has('from') || fields.has('to');
 }
 
 /** Une erreur qu'un nouvel essai peut lever (pas une erreur de syntaxe). */

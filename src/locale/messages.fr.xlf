@@ -13151,11 +13151,35 @@
         </context-group>
         <note priority="1" from="description">Toutes les séances</note>
       </trans-unit>
+      <trans-unit id="search.session.loading" datatype="html">
+        <source> Chargement des séances… </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">60,64</context>
+        </context-group>
+        <note priority="1" from="description">Séances en cours de chargement</note>
+      </trans-unit>
+      <trans-unit id="search.session.error" datatype="html">
+        <source>Séances indisponibles</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">66,69</context>
+        </context-group>
+        <note priority="1" from="description">Séances indisponibles</note>
+      </trans-unit>
+      <trans-unit id="search.session.retry" datatype="html">
+        <source> Réessayer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">72,75</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui relit les séances</note>
+      </trans-unit>
       <trans-unit id="search.archived" datatype="html">
         <source>inclure les entrées archivées</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">66,70</context>
+          <context context-type="linenumber">83,87</context>
         </context-group>
         <note priority="1" from="description">Case des entrées archivées</note>
       </trans-unit>
@@ -13163,7 +13187,7 @@
         <source>Que cherchez-vous ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">79,80</context>
+          <context context-type="linenumber">97,98</context>
         </context-group>
         <note priority="1" from="description">Titre de la recherche sans saisie</note>
       </trans-unit>
@@ -13171,7 +13195,7 @@
         <source> Tapez au moins 2 caractères dans le champ de recherche en haut de page : un mot, un tag, une émotion ou une période. La recherche ignore les accents et tolère les fautes. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">81,84</context>
+          <context context-type="linenumber">99,102</context>
         </context-group>
         <note priority="1" from="description">Consigne de la recherche sans saisie</note>
       </trans-unit>
@@ -13179,7 +13203,7 @@
         <source>Vérifiez l&apos;orthographe, retirez un filtre ou essayez la syntaxe ci-dessous.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">90,91</context>
+          <context context-type="linenumber">108,109</context>
         </context-group>
         <note priority="1" from="description">Message de l&apos;état vide de la recherche</note>
       </trans-unit>
@@ -13187,23 +13211,40 @@
         <source>Recherche indisponible</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">99,100</context>
+          <context context-type="linenumber">117,118</context>
         </context-group>
         <note priority="1" from="description">Titre de la recherche en erreur</note>
       </trans-unit>
       <trans-unit id="search.more" datatype="html">
-        <source> Afficher les <x id="INTERPOLATION" equiv-text="{{ store.remaining() }}"/> autres résultats </source>
+        <source> <x id="ICU" equiv-text="{store.nextCount(), plural,
+              =1 {Afficher le résultat suivant}
+              other {Afficher les {{ store.nextCount() }} résultats suivants}
+            }" xid="1559026508360962188"/> (<x id="ICU_1" equiv-text="{store.remaining(), plural, =1 {1 restant} other {{{ store.remaining() }} restants}}" xid="2414671900317649748"/>) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">124,125</context>
+          <context context-type="linenumber">142,149</context>
         </context-group>
         <note priority="1" from="description">Bouton qui charge la page suivante de résultats</note>
+      </trans-unit>
+      <trans-unit id="970324615134966178" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {Afficher le résultat suivant} other {Afficher les <x id="INTERPOLATION"/> résultats suivants}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">142,144</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1110506048880539534" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 restant} other {<x id="INTERPOLATION"/> restants}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="search.more.error" datatype="html">
         <source> Les résultats suivants n&apos;ont pas pu être chargés. Réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">129,135</context>
+          <context context-type="linenumber">151,157</context>
         </context-group>
         <note priority="1" from="description">Erreur de la page suivante</note>
       </trans-unit>
@@ -13211,15 +13252,23 @@
         <source>Réessayer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;état erreur</note>
+      </trans-unit>
+      <trans-unit id="search.selection" datatype="html">
+        <source>Sélection : <x id="title" equiv-text="title"/>, <x id="position" equiv-text="position"/> sur <x id="count" equiv-text="hits.length"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+        <note priority="1" from="description">Annonce du résultat sélectionné</note>
       </trans-unit>
       <trans-unit id="search.empty.title" datatype="html">
         <source>Aucun résultat pour « <x id="query" equiv-text="this.store.effectiveQuery()"/> »</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <note priority="1" from="description">État vide de la recherche</note>
       </trans-unit>
@@ -13227,7 +13276,7 @@
         <source>Fermer la recherche</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">199</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis</note>
       </trans-unit>
@@ -13379,7 +13428,7 @@
         <source>privée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">95</context>
         </context-group>
         <note priority="1" from="description">Visibilité d&apos;une entrée</note>
       </trans-unit>
@@ -13387,39 +13436,47 @@
         <source>clinique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">96</context>
         </context-group>
         <note priority="1" from="description">Visibilité d&apos;une entrée</note>
       </trans-unit>
-      <trans-unit id="search.summary.approximateOnly" datatype="html">
-        <source>Aucun résultat exact pour <x id="query" equiv-text="query"/> · <x id="count" equiv-text="approximate"/> résultats approchés · <x id="ms" equiv-text="tookMs"/> ms</source>
+      <trans-unit id="search.summary.approximateOne" datatype="html">
+        <source>Aucun résultat exact pour « <x id="query" equiv-text="text"/> » · 1 résultat approché (trigrammes) · <x id="ms" equiv-text="tookMs"/> ms</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">111</context>
         </context-group>
-        <note priority="1" from="description">Synthèse sans résultat exact</note>
+        <note priority="1" from="description">Synthèse sans résultat exact, un approché</note>
+      </trans-unit>
+      <trans-unit id="search.summary.approximateOnly" datatype="html">
+        <source>Aucun résultat exact pour « <x id="query" equiv-text="text"/> » · <x id="count" equiv-text="approximate"/> résultats approchés (trigrammes) · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+        <note priority="1" from="description">Synthèse sans résultat exact, plusieurs approchés</note>
       </trans-unit>
       <trans-unit id="search.summary.none" datatype="html">
-        <source>Aucun résultat pour <x id="query" equiv-text="query"/></source>
+        <source>Aucun résultat pour « <x id="query" equiv-text="text"/> »</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <note priority="1" from="description">Synthèse sans résultat</note>
       </trans-unit>
       <trans-unit id="search.summary.one" datatype="html">
-        <source>1 résultat pour <x id="query" equiv-text="query"/> · sans accents, par trigrammes · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <source>1 résultat pour « <x id="query" equiv-text="text"/> » · sans accents ni casse · <x id="ms" equiv-text="tookMs"/> ms</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">Synthèse, un résultat</note>
       </trans-unit>
       <trans-unit id="search.summary.many" datatype="html">
-        <source><x id="count" equiv-text="total"/> résultats pour <x id="query" equiv-text="query"/> · sans accents, par trigrammes · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <source><x id="count" equiv-text="total"/> résultats pour « <x id="query" equiv-text="text"/> » · sans accents ni casse · <x id="ms" equiv-text="tookMs"/> ms</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">Synthèse, plusieurs résultats</note>
       </trans-unit>
@@ -13427,7 +13484,7 @@
         <source>Date invalide dans avant: ou après: (format AAAA, AAAA-MM ou AAAA-MM-JJ).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">139</context>
         </context-group>
         <note priority="1" from="description">Erreur de recherche</note>
       </trans-unit>
@@ -13435,15 +13492,15 @@
         <source>La recherche dépasse 200 caractères.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">142</context>
         </context-group>
         <note priority="1" from="description">Erreur de recherche</note>
       </trans-unit>
-      <trans-unit id="search.error.range" datatype="html">
-        <source>La fin de la période précède son début.</source>
+      <trans-unit id="search.error.period" datatype="html">
+        <source>La période de l&apos;adresse est invalide. Revenez à tout le dossier.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <note priority="1" from="description">Erreur de recherche</note>
       </trans-unit>
@@ -13451,7 +13508,7 @@
         <source>La recherche est indisponible pour le moment. Votre saisie est conservée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <note priority="1" from="description">Erreur de recherche</note>
       </trans-unit>
@@ -13519,7 +13576,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
-          <context context-type="linenumber">48,53</context>
+          <context context-type="linenumber">49,54</context>
         </context-group>
         <note priority="1" from="description">Mention d&apos;une entrée archivée</note>
       </trans-unit>
@@ -13583,7 +13640,7 @@
         <source>privée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
-          <context context-type="linenumber">44,47</context>
+          <context context-type="linenumber">45,48</context>
         </context-group>
         <note priority="1" from="description">Mention d&apos;une entrée privée</note>
       </trans-unit>
@@ -13591,7 +13648,7 @@
         <source>Résultats</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
-          <context context-type="linenumber">60,61</context>
+          <context context-type="linenumber">61,62</context>
         </context-group>
         <note priority="1" from="description">Nom de la liste des résultats exacts</note>
       </trans-unit>
@@ -13599,7 +13656,7 @@
         <source> Résultats approchés </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
-          <context context-type="linenumber">75,77</context>
+          <context context-type="linenumber">76,78</context>
         </context-group>
         <note priority="1" from="description">Titre de la section des résultats approchés</note>
       </trans-unit>
@@ -13607,7 +13664,7 @@
         <source> Orthographe proche (tolérance aux fautes de frappe). </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
-          <context context-type="linenumber">78,82</context>
+          <context context-type="linenumber">79,83</context>
         </context-group>
         <note priority="1" from="description">Explication des résultats approchés</note>
       </trans-unit>
@@ -13615,7 +13672,7 @@
         <source>Résultats approchés</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
-          <context context-type="linenumber">82,83</context>
+          <context context-type="linenumber">83,84</context>
         </context-group>
         <note priority="1" from="description">Nom de la liste des résultats approchés</note>
       </trans-unit>

@@ -132,7 +132,7 @@ describe('PatientSearchPage', () => {
       find: vi.fn().mockResolvedValue(searchPage({ exact: [hit(), FEELING, injected], total: 3 })),
     });
     expect(text(el.querySelector('.summary'))).toBe(
-      '3 résultats pour « entretien » · sans accents, par trigrammes · 42 ms',
+      '3 résultats pour « entretien » · sans accents ni casse · 42 ms',
     );
     const list = el.querySelector('ol[aria-label="Résultats"]');
     expect(list?.querySelectorAll('li')).toHaveLength(3);
@@ -231,6 +231,84 @@ describe('PatientSearchPage', () => {
     await settle(harness);
     expect(TestBed.inject(Router).url).toBe(
       '/patients/8943f30b-07b2-4933-8a06-7bb3ac736ea7/graph?root=e-entretien',
+    );
+  });
+  it('Entrée sur un résultat de la liste : timeline sur ce résultat', async () => {
+    const { el, harness } = await render();
+    const button = el.querySelector<HTMLButtonElement>(
+      'li[data-entry-id="e-anxiete"] button.title',
+    ) as HTMLButtonElement;
+    button.focus();
+    key(button, 'Enter');
+    await settle(harness);
+    expect(TestBed.inject(Router).url).toBe(
+      '/patients/8943f30b-07b2-4933-8a06-7bb3ac736ea7/timeline?focus=e-anxiete',
+    );
+  });
+
+  it('↓ depuis la barre : la sélection est annoncée (aria-live)', async () => {
+    const { el, harness } = await render();
+    const bar = document.createElement('input');
+    bar.id = 'app-bar-search';
+    document.body.appendChild(bar);
+    try {
+      key(bar, 'ArrowDown');
+      await settle(harness);
+      expect(text(el.querySelector('.sr-only[aria-live="polite"]'))).toBe(
+        'Sélection : Ressenti, 2 sur 2',
+      );
+    } finally {
+      bar.remove();
+    }
+  });
+
+  it('↑ ↓ hors de la barre et de la liste (puce) : défilement laissé au navigateur', async () => {
+    const { el } = await render();
+    const chip = el.querySelector('pm-search-type-chips button') as HTMLButtonElement;
+    expect(key(chip, 'ArrowDown').defaultPrevented).toBe(false);
+  });
+
+  it('période invalide dans l’URL (400 sur from) : « Tout le dossier » retire la période', async () => {
+    const find = vi
+      .fn()
+      .mockRejectedValueOnce({
+        status: 400,
+        code: 'SEARCH_BAD_REQUEST',
+        errors: [{ field: 'from', code: 'INVALID_DATE', message: '' }],
+      })
+      .mockResolvedValueOnce(searchPage());
+    const { el, harness } = await render(
+      { find },
+      '/patients/8943f30b-07b2-4933-8a06-7bb3ac736ea7/search?q=entretien&from=2026-02-31',
+    );
+    expect(text(el.querySelector('pm-state'))).toContain('La période de l');
+    const action = el.querySelector('pm-state button') as HTMLButtonElement;
+    expect(text(action)).toBe('Tout le dossier');
+    action.click();
+    await settle(harness);
+    expect(TestBed.inject(Router).url).not.toContain('from=');
+    expect(find).toHaveBeenCalledTimes(2);
+  });
+
+  it('séances indisponibles : message et Réessayer', async () => {
+    const sessions = vi
+      .fn()
+      .mockRejectedValueOnce({ status: 503, code: 'INTERNAL_ERROR' })
+      .mockResolvedValueOnce([]);
+    const { el, harness } = await render({ sessions });
+    expect(text(el.querySelector('.sessions-error'))).toContain('Séances indisponibles');
+    (el.querySelector('.sessions-error button') as HTMLButtonElement).click();
+    await settle(harness);
+    expect(sessions).toHaveBeenCalledTimes(2);
+    expect(el.querySelector('.sessions-error')).toBeNull();
+  });
+
+  it('« Afficher les N résultats suivants (M restants) »', async () => {
+    const { el } = await render({
+      find: vi.fn().mockResolvedValue(searchPage({ total: 45 })),
+    });
+    expect(text(el.querySelector('button.more'))).toBe(
+      'Afficher les 20 résultats suivants (43 restants)',
     );
   });
 });

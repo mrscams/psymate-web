@@ -55,7 +55,24 @@
               {{ session.label }}
             </option>
           }
+          @if (store.sessions().status === 'loading') {
+            <option disabled i18n="Séances en cours de chargement@@search.session.loading">
+              Chargement des séances…
+            </option>
+          }
         </select>
+        @if (store.sessions().status === 'error') {
+          <span class="sessions-error" role="alert">
+            <span i18n="Séances indisponibles@@search.session.error">Séances indisponibles</span>
+            <button
+              type="button"
+              (click)="store.retrySessions()"
+              i18n="Bouton qui relit les séances@@search.session.retry"
+            >
+              Réessayer
+            </button>
+          </span>
+        }
         <label class="archived">
           <input
             type="checkbox"
@@ -73,9 +90,10 @@
   <div class="body">
     <div class="results" [class.refreshing]="refreshing()" [attr.aria-busy]="refreshing()">
       <p class="summary" aria-live="polite">{{ summary() }}</p>
+      <p class="sr-only" aria-live="polite" aria-atomic="true">{{ selectionText() }}</p>
 
       @if (store.results().status === 'idle') {
-        <div class="idle" role="status">
+        <div class="idle">
           <h3 i18n="Titre de la recherche sans saisie@@search.idle.title">Que cherchez-vous ?</h3>
           <p i18n="Consigne de la recherche sans saisie@@search.idle.message">
             Tapez au moins 2 caractères dans le champ de recherche en haut de page : un mot, un tag,
@@ -117,11 +135,15 @@
           <button
             type="button"
             class="more"
-            [disabled]="store.loadingMore()"
+            [disabled]="store.loadingMore() || refreshing()"
             (click)="store.more()"
             i18n="Bouton qui charge la page suivante de résultats@@search.more"
           >
-            Afficher les {{ store.remaining() }} autres résultats
+            {store.nextCount(), plural,
+              =1 {Afficher le résultat suivant}
+              other {Afficher les {{ store.nextCount() }} résultats suivants}
+            }
+            ({store.remaining(), plural, =1 {1 restant} other {{{ store.remaining() }} restants}})
           </button>
         }
         @if (store.moreProblem()) {

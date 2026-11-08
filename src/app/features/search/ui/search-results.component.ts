@@ -13,7 +13,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { EntryIconComponent, entryTypeLabel } from '../../../shared/ui';
 import { SearchHit, SessionOption } from '../data/search.model';
 import { MarkedTextComponent } from './marked-text.component';
-import { hitWhen, precisionLabel, sessionLabel } from './search-labels';
+import { hitTitle, hitWhen, precisionLabel, sessionLabel } from './search-labels';
 
 /**
  * Listes de résultats (fiche 07) : exacts, puis « Résultats approchés » (trigrammes, tolérance aux
@@ -48,10 +48,14 @@ export class SearchResultsComponent {
 
   /** Titre affiché sans titre d'entrée : le type, ou « Séance du … » pour une séance. */
   protected fallbackTitle(hit: SearchHit): string {
-    if (hit.type === 'session' && hit.occurredFrom) {
-      return sessionLabel({ id: hit.entryId, startedAt: hit.occurredFrom }, this.locale);
-    }
-    return entryTypeLabel(hit.type);
+    return hitTitle(hit, this.locale);
+  }
+
+  /** Entrée sur un résultat : l'ouvre dans la timeline (fiche 07), sans repasser par le clic. */
+  protected enter(event: Event, hit: SearchHit): void {
+    event.preventDefault();
+    this.selectHit.emit(hit.entryId);
+    this.openHit.emit(hit.entryId);
   }
 
   protected sessionOf(hit: SearchHit): string | null {

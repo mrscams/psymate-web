@@ -15442,7 +15442,7 @@
         <target state="translated">in <x id="INTERPOLATION" equiv-text="{{ patientName() }}"/>’s record · search field at the top of the page (<x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>/<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">8,11</context>
+          <context context-type="linenumber">8,10</context>
         </context-group>
         <note priority="1" from="description">Portée de la recherche</note>
       </trans-unit>
@@ -15451,7 +15451,7 @@
         <target state="translated">Close search <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Esc<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">18,20</context>
+          <context context-type="linenumber">17,19</context>
         </context-group>
         <note priority="1" from="description">Bouton qui ferme la recherche</note>
       </trans-unit>
@@ -15460,7 +15460,7 @@
         <target state="translated">Period</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">31,33</context>
+          <context context-type="linenumber">30,32</context>
         </context-group>
         <note priority="1" from="description">Étiquette du sélecteur de période</note>
       </trans-unit>
@@ -15469,7 +15469,7 @@
         <target state="translated">Session</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">44,46</context>
+          <context context-type="linenumber">43,45</context>
         </context-group>
         <note priority="1" from="description">Étiquette du sélecteur de séance</note>
       </trans-unit>
@@ -15478,16 +15478,43 @@
         <target state="translated">All</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">52,54</context>
+          <context context-type="linenumber">51,53</context>
         </context-group>
         <note priority="1" from="description">Toutes les séances</note>
+      </trans-unit>
+      <trans-unit id="search.session.loading" datatype="html">
+        <source> Chargement des séances… </source>
+        <target state="translated">Loading sessions…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">60,64</context>
+        </context-group>
+        <note priority="1" from="description">Séances en cours de chargement</note>
+      </trans-unit>
+      <trans-unit id="search.session.error" datatype="html">
+        <source>Séances indisponibles</source>
+        <target state="translated">Sessions unavailable</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">66,69</context>
+        </context-group>
+        <note priority="1" from="description">Séances indisponibles</note>
+      </trans-unit>
+      <trans-unit id="search.session.retry" datatype="html">
+        <source> Réessayer </source>
+        <target state="translated">Try again</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">72,75</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui relit les séances</note>
       </trans-unit>
       <trans-unit id="search.archived" datatype="html">
         <source>inclure les entrées archivées</source>
         <target state="translated">include archived entries</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">67,71</context>
+          <context context-type="linenumber">83,87</context>
         </context-group>
         <note priority="1" from="description">Case des entrées archivées</note>
       </trans-unit>
@@ -15496,7 +15523,7 @@
         <target state="translated">What are you looking for?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">80,81</context>
+          <context context-type="linenumber">97,98</context>
         </context-group>
         <note priority="1" from="description">Titre de la recherche sans saisie</note>
       </trans-unit>
@@ -15505,7 +15532,7 @@
         <target state="translated">Type at least 2 characters in the search field at the top of the page: a word, a tag, an emotion or a period. Search ignores accents and tolerates typos.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">82,85</context>
+          <context context-type="linenumber">99,102</context>
         </context-group>
         <note priority="1" from="description">Consigne de la recherche sans saisie</note>
       </trans-unit>
@@ -15514,7 +15541,7 @@
         <target state="translated">Check the spelling, remove a filter or try the syntax below.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">91,92</context>
+          <context context-type="linenumber">108,109</context>
         </context-group>
         <note priority="1" from="description">Message de l&apos;état vide de la recherche</note>
       </trans-unit>
@@ -15523,25 +15550,47 @@
         <target state="translated">Search unavailable</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">100,101</context>
+          <context context-type="linenumber">117,118</context>
         </context-group>
         <note priority="1" from="description">Titre de la recherche en erreur</note>
       </trans-unit>
       <trans-unit id="search.more" datatype="html">
-        <source> Afficher les <x id="INTERPOLATION" equiv-text="{{ store.remaining() }}"/> autres résultats </source>
-        <target state="translated">Show the <x id="INTERPOLATION" equiv-text="{{ store.remaining() }}"/> other results</target>
+        <source> <x id="ICU" equiv-text="{store.nextCount(), plural,
+              =1 {Afficher le résultat suivant}
+              other {Afficher les {{ store.nextCount() }} résultats suivants}
+            }" xid="1559026508360962188"/> (<x id="ICU_1" equiv-text="{store.remaining(), plural, =1 {1 restant} other {{{ store.remaining() }} restants}}" xid="2414671900317649748"/>) </source>
+        <target state="translated"><x id="ICU" equiv-text="{store.nextCount(), plural,
+              =1 {Afficher le résultat suivant}
+              other {Afficher les {{ store.nextCount() }} résultats suivants}
+            }" xid="1559026508360962188"/> (<x id="ICU_1" equiv-text="{store.remaining(), plural, =1 {1 restant} other {{{ store.remaining() }} restants}}" xid="2414671900317649748"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">125,126</context>
+          <context context-type="linenumber">142,149</context>
         </context-group>
         <note priority="1" from="description">Bouton qui charge la page suivante de résultats</note>
+      </trans-unit>
+      <trans-unit id="970324615134966178" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {Afficher le résultat suivant} other {Afficher les <x id="INTERPOLATION"/> résultats suivants}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {Show the next result} other {Show the next <x id="INTERPOLATION"/> results}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">142,144</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1110506048880539534" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 restant} other {<x id="INTERPOLATION"/> restants}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 left} other {<x id="INTERPOLATION"/> left}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="search.more.error" datatype="html">
         <source> Les résultats suivants n&apos;ont pas pu être chargés. Réessayez. </source>
         <target state="translated">The next results could not be loaded. Try again.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
-          <context context-type="linenumber">130,136</context>
+          <context context-type="linenumber">151,157</context>
         </context-group>
         <note priority="1" from="description">Erreur de la page suivante</note>
       </trans-unit>
@@ -15550,16 +15599,25 @@
         <target state="translated">Try again</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;état erreur</note>
+      </trans-unit>
+      <trans-unit id="search.selection" datatype="html">
+        <source>Sélection : <x id="title" equiv-text="title"/>, <x id="position" equiv-text="position"/> sur <x id="count" equiv-text="hits.length"/></source>
+        <target state="translated">Selected: <x id="title" equiv-text="title"/>, <x id="position" equiv-text="position"/> of <x id="count" equiv-text="hits.length"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+        <note priority="1" from="description">Annonce du résultat sélectionné</note>
       </trans-unit>
       <trans-unit id="search.empty.title" datatype="html">
         <source>Aucun résultat pour « <x id="query" equiv-text="this.store.effectiveQuery()"/> »</source>
         <target state="translated">No results for “<x id="query" equiv-text="this.store.effectiveQuery()"/>”</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <note priority="1" from="description">État vide de la recherche</note>
       </trans-unit>
@@ -15568,7 +15626,7 @@
         <target state="translated">Close search</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
-          <context context-type="linenumber">172</context>
+          <context context-type="linenumber">199</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis</note>
       </trans-unit>
@@ -15577,7 +15635,7 @@
         <target state="translated">Search this record</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/search-bar.ts</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <note priority="1" from="description">Champ de recherche de la barre sur un écran patient</note>
       </trans-unit>
@@ -15739,7 +15797,7 @@
         <target state="translated">private</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">95</context>
         </context-group>
         <note priority="1" from="description">Visibilité d&apos;une entrée</note>
       </trans-unit>
@@ -15748,43 +15806,52 @@
         <target state="translated">clinical</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">96</context>
         </context-group>
         <note priority="1" from="description">Visibilité d&apos;une entrée</note>
       </trans-unit>
-      <trans-unit id="search.summary.approximateOnly" datatype="html">
-        <source>Aucun résultat exact pour <x id="query" equiv-text="query"/> · <x id="count" equiv-text="approximate"/> résultats approchés · <x id="ms" equiv-text="tookMs"/> ms</source>
-        <target state="translated">No exact results for <x id="query" equiv-text="query"/> · <x id="count" equiv-text="approximate"/> approximate results · <x id="ms" equiv-text="tookMs"/> ms</target>
+      <trans-unit id="search.summary.approximateOne" datatype="html">
+        <source>Aucun résultat exact pour « <x id="query" equiv-text="text"/> » · 1 résultat approché (trigrammes) · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <target state="translated">No exact results for “<x id="query" equiv-text="text"/>” · 1 approximate result (trigrams) · <x id="ms" equiv-text="tookMs"/> ms</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">111</context>
         </context-group>
-        <note priority="1" from="description">Synthèse sans résultat exact</note>
+        <note priority="1" from="description">Synthèse sans résultat exact, un approché</note>
+      </trans-unit>
+      <trans-unit id="search.summary.approximateOnly" datatype="html">
+        <source>Aucun résultat exact pour « <x id="query" equiv-text="text"/> » · <x id="count" equiv-text="approximate"/> résultats approchés (trigrammes) · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <target state="translated">No exact results for “<x id="query" equiv-text="text"/>” · <x id="count" equiv-text="approximate"/> approximate results (trigrams) · <x id="ms" equiv-text="tookMs"/> ms</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+        <note priority="1" from="description">Synthèse sans résultat exact, plusieurs approchés</note>
       </trans-unit>
       <trans-unit id="search.summary.none" datatype="html">
-        <source>Aucun résultat pour <x id="query" equiv-text="query"/></source>
-        <target state="translated">No results for <x id="query" equiv-text="query"/></target>
+        <source>Aucun résultat pour « <x id="query" equiv-text="text"/> »</source>
+        <target state="translated">No results for “<x id="query" equiv-text="text"/>”</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <note priority="1" from="description">Synthèse sans résultat</note>
       </trans-unit>
       <trans-unit id="search.summary.one" datatype="html">
-        <source>1 résultat pour <x id="query" equiv-text="query"/> · sans accents, par trigrammes · <x id="ms" equiv-text="tookMs"/> ms</source>
-        <target state="translated">1 result for <x id="query" equiv-text="query"/> · accent-insensitive, by trigrams · <x id="ms" equiv-text="tookMs"/> ms</target>
+        <source>1 résultat pour « <x id="query" equiv-text="text"/> » · sans accents ni casse · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <target state="translated">1 result for “<x id="query" equiv-text="text"/>” · accent- and case-insensitive · <x id="ms" equiv-text="tookMs"/> ms</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">Synthèse, un résultat</note>
       </trans-unit>
       <trans-unit id="search.summary.many" datatype="html">
-        <source><x id="count" equiv-text="total"/> résultats pour <x id="query" equiv-text="query"/> · sans accents, par trigrammes · <x id="ms" equiv-text="tookMs"/> ms</source>
-        <target state="translated"><x id="count" equiv-text="total"/> results for <x id="query" equiv-text="query"/> · accent-insensitive, by trigrams · <x id="ms" equiv-text="tookMs"/> ms</target>
+        <source><x id="count" equiv-text="total"/> résultats pour « <x id="query" equiv-text="text"/> » · sans accents ni casse · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <target state="translated"><x id="count" equiv-text="total"/> results for “<x id="query" equiv-text="text"/>” · accent- and case-insensitive · <x id="ms" equiv-text="tookMs"/> ms</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">Synthèse, plusieurs résultats</note>
       </trans-unit>
@@ -15793,7 +15860,7 @@
         <target state="translated">Invalid date in before: or after: (format YYYY, YYYY-MM or YYYY-MM-DD).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">139</context>
         </context-group>
         <note priority="1" from="description">Erreur de recherche</note>
       </trans-unit>
@@ -15802,16 +15869,16 @@
         <target state="translated">The search is longer than 200 characters.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">142</context>
         </context-group>
         <note priority="1" from="description">Erreur de recherche</note>
       </trans-unit>
-      <trans-unit id="search.error.range" datatype="html">
-        <source>La fin de la période précède son début.</source>
-        <target state="translated">The end of the period is before its start.</target>
+      <trans-unit id="search.error.period" datatype="html">
+        <source>La période de l&apos;adresse est invalide. Revenez à tout le dossier.</source>
+        <target state="translated">The period in the address is invalid. Go back to the whole record.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <note priority="1" from="description">Erreur de recherche</note>
       </trans-unit>
@@ -15820,7 +15887,7 @@
         <target state="translated">Search is unavailable right now. Your input is kept.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <note priority="1" from="description">Erreur de recherche</note>
       </trans-unit>
@@ -15896,7 +15963,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
-          <context context-type="linenumber">48,53</context>
+          <context context-type="linenumber">49,54</context>
         </context-group>
         <note priority="1" from="description">Mention d&apos;une entrée archivée</note>
       </trans-unit>
@@ -15932,7 +15999,7 @@
         <target state="translated">View in the graph</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
-          <context context-type="linenumber">79,81</context>
+          <context context-type="linenumber">79,82</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;aperçu</note>
       </trans-unit>
@@ -15941,7 +16008,7 @@
         <target state="translated">Edit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
-          <context context-type="linenumber">82,86</context>
+          <context context-type="linenumber">86,90</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;aperçu</note>
       </trans-unit>
@@ -15950,7 +16017,7 @@
         <target state="translated">Preview unavailable</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
-          <context context-type="linenumber">91,92</context>
+          <context context-type="linenumber">95,96</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;aperçu en erreur</note>
       </trans-unit>
@@ -15968,7 +16035,7 @@
         <target state="translated">private</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
-          <context context-type="linenumber">44,47</context>
+          <context context-type="linenumber">45,48</context>
         </context-group>
         <note priority="1" from="description">Mention d&apos;une entrée privée</note>
       </trans-unit>
@@ -15977,7 +16044,7 @@
         <target state="translated">Results</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
-          <context context-type="linenumber">60,61</context>
+          <context context-type="linenumber">61,62</context>
         </context-group>
         <note priority="1" from="description">Nom de la liste des résultats exacts</note>
       </trans-unit>
@@ -15986,7 +16053,7 @@
         <target state="translated">Approximate results</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
-          <context context-type="linenumber">72,74</context>
+          <context context-type="linenumber">76,78</context>
         </context-group>
         <note priority="1" from="description">Titre de la section des résultats approchés</note>
       </trans-unit>
@@ -15995,7 +16062,7 @@
         <target state="translated">Similar spelling (typo-tolerant).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
-          <context context-type="linenumber">75,79</context>
+          <context context-type="linenumber">79,83</context>
         </context-group>
         <note priority="1" from="description">Explication des résultats approchés</note>
       </trans-unit>
@@ -16004,7 +16071,7 @@
         <target state="translated">Approximate results</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
-          <context context-type="linenumber">79,80</context>
+          <context context-type="linenumber">83,84</context>
         </context-group>
         <note priority="1" from="description">Nom de la liste des résultats approchés</note>
       </trans-unit>
@@ -16085,7 +16152,7 @@
         <target state="translated">All</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/type-chips.component.ts</context>
-          <context context-type="linenumber">26,27</context>
+          <context context-type="linenumber">26,28</context>
         </context-group>
         <note priority="1" from="description">Puce de tous les types</note>
       </trans-unit>

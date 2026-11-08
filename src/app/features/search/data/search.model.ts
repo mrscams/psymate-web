@@ -1,7 +1,7 @@
 // Modèles de vue de features/search (handbook §2, couche 4 → 3) : la recherche dans le dossier
 // (fiche 07) telle que l'écran la lit, préparée depuis les DTO par data/search.api.ts.
 
-import { EntryType } from '../../../shared/ui';
+import { ENTRY_TYPES, EntryType } from '../../../shared/ui';
 import { OccurredPrecision } from '../../../shared/util';
 
 /** La recherche ne part qu'à partir de 2 caractères (fiche 07). */
@@ -178,14 +178,6 @@ export function sameFilters(a: SearchFilters, b: SearchFilters): boolean {
   );
 }
 
-const ENTRY_TYPE_VALUES: readonly EntryType[] = [
-  'note',
-  'event',
-  'situation',
-  'feeling',
-  'session',
-  'medication',
-];
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -199,7 +191,7 @@ export function filtersFromParams(
   const session = params['session'];
   return {
     q: (params['q'] ?? '').slice(0, MAX_QUERY_LENGTH),
-    type: ENTRY_TYPE_VALUES.find((value) => value === type) ?? null,
+    type: ENTRY_TYPES.find((value) => value === type) ?? null,
     from: from && ISO_DATE.test(from) ? from : null,
     to: to && ISO_DATE.test(to) ? to : null,
     sessionId: session && UUID.test(session) ? session : null,

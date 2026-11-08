@@ -62,6 +62,12 @@ export const SearchStore = signalStore(
       selected: computed(() => hits().find((hit) => hit.entryId === store.selectedId()) ?? null),
       /** Résultats exacts pas encore chargés (« Afficher les N autres »). */
       remaining: computed(() => Math.max(0, (store.results().data?.total ?? 0) - exact().length)),
+      /** Ce que « Afficher » charge vraiment : une page au plus. */
+      nextCount: computed(() => {
+        const page = store.results().data;
+        if (!page) return 0;
+        return Math.min(page.pageSize, Math.max(0, page.total - exact().length));
+      }),
       /** Compteur de « Tous » : la somme des types, sans le filtre de type. */
       allCount: computed(() =>
         (store.results().data?.counts ?? []).reduce((sum, item) => sum + item.count, 0),
@@ -93,14 +99,21 @@ export const SearchStore = signalStore(
       }
     }
 
-    function select(entryId: string | null): void {
-      if (entryId === store.selectedId() && store.preview().status !== 'error') return;
+    /** Sélectionne un résultat ; `force` relit l'aperçu même si la sélection ne change pas. */
+    function select(entryId: string | null, force = false): void {
+      if (!force && entryId === store.selectedId() && store.preview().status !== 'error') return;
       patchState(store, { selectedId: entryId });
       void loadPreview(entryId);
     }
 
-    /** Première page des filtres courants ; garde la sélection si elle est encore là. */
-    async function search(preferredId: string | null = store.selectedId()): Promise<void> {
+    /**
+     * Première page des filtres courants ; garde la sélection si elle est encore là. `reread` :
+     * après une écriture, l'aperçu de la sélection conservée est relu lui aussi.
+     */
+    async function search(
+      preferredId: string | null = store.selectedId(),
+      reread = false,
+    ): Promise<void> {
       const patientId = store.patientId();
       const ticket = ++searchTicket;
       patchState(store, { loadingMore: false, moreProblem: null });
@@ -116,7 +129,7 @@ export const SearchStore = signalStore(
         patchState(store, { results: loaded(page) });
         const hits = store.hits();
         const keep = hits.find((hit) => hit.entryId === preferredId);
-        select(keep?.entryId ?? hits[0]?.entryId ?? null);
+        select(keep?.entryId ?? hits[0]?.entryId ?? null, reread);
       } catch (error) {
         if (ticket === searchTicket) {
           patchState(store, { results: failed(asProblem(error), store.results()) });
@@ -161,14 +174,16 @@ export const SearchStore = signalStore(
 
       /** Réessayer après une erreur, ou relire après une écriture (projection relue, CLAUDE.md). */
       refresh(): Promise<void> {
-        return search();
+        return search(store.selectedId(), true);
       },
 
       /** Page suivante de résultats exacts, ajoutée à la liste (pas d'approchés après la page 1). */
       async more(): Promise<void> {
         const patientId = store.patientId();
         const current = store.results().data;
-        if (!patientId || !current || store.loadingMore() || store.remaining() === 0) return;
+        // Pendant une nouvelle recherche, la page affichée est périmée : rien à prolonger.
+        if (!patientId || !current || store.results().status !== 'loaded') return;
+        if (store.loadingMore() || store.remaining() === 0) return;
         const ticket = searchTicket;
         patchState(store, { loadingMore: true, moreProblem: null });
         try {

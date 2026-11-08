@@ -129,7 +129,7 @@ async function settled(page: Page): Promise<void> {
 test.describe('recherche dans le dossier', () => {
   test.describe.configure({ timeout: 90_000 });
 
-  test('/ → « entretien manger » (faute) → ↓ → Entrée : timeline positionnée sur l’entrée', async ({
+  test('/ → « entretien manger » (faute) → ↓ → Entrée : URL de la timeline avec ?focus= (positionnement : M3-02)', async ({
     page,
     request,
   }) => {
@@ -154,15 +154,18 @@ test.describe('recherche dans le dossier', () => {
       page.getByRole('heading', { level: 2, name: 'Recherche dans le dossier' }),
     ).toBeVisible();
 
-    // La faute de frappe trouve l'événement du 18 oct. par les trigrammes (section approchés).
-    const found = page.locator(`li[data-entry-id="${dossier.ids.event}"]`);
-    await expect(found).toBeVisible();
-    await expect(found).toContainText("Entretien d'évaluation avec le manager");
-    expect(body.items.some((item) => item.entryId === dossier.ids.event)).toBe(true);
-    if (body.items.every((item) => item.approximate)) {
-      await expect(approximate(page)).toBeVisible();
-      await expect(page.locator('.summary')).toContainText('Aucun résultat exact');
+    // Aucun texte ne contient « manger » (mots tous requis) : la page 1 est complétée par les
+    // résultats approchés (trigrammes), qui retrouvent les entrées citant entretien et manager.
+    expect(body.items.every((item) => item.approximate)).toBe(true);
+    const fuzzy = [dossier.ids.event, dossier.ids.feeling, dossier.ids.feeling3];
+    for (const id of fuzzy) {
+      expect(body.items.map((item) => item.entryId)).toContain(id);
+      await expect(approximate(page).locator(`li[data-entry-id="${id}"]`)).toBeVisible();
     }
+    await expect(page.locator(`li[data-entry-id="${dossier.ids.event}"]`)).toContainText(
+      "Entretien d'évaluation avec le manager",
+    );
+    await expect(page.locator('.summary')).toContainText('Aucun résultat exact');
     await expect(bar(page)).toBeFocused();
     await settled(page);
     await expectNoAxeViolations(page);
@@ -188,7 +191,7 @@ test.describe('recherche dans le dossier', () => {
     await expect(bar(page)).toHaveValue('');
   });
 
-  test('« entretien manager » : événement, ressenti lié et note de juin, surlignés ; Échap revient à l’onglet', async ({
+  test('« entretien manager » : les entrées qui citent les deux mots, surlignés ; Échap revient à l’onglet', async ({
     page,
     request,
   }) => {
@@ -200,9 +203,19 @@ test.describe('recherche dans le dossier', () => {
     await expect(bar(page)).toBeFocused();
     await page.keyboard.type('entretien manager');
     await expect(results(page)).toBeVisible();
-    for (const id of [dossier.ids.event, dossier.ids.feeling, dossier.ids.feeling3]) {
+    const both = [
+      dossier.ids.event,
+      dossier.ids.feeling,
+      dossier.ids.feeling3,
+      dossier.ids.untagged,
+    ];
+    for (const id of both) {
       await expect(page.locator(`li[data-entry-id="${id}"]`)).toBeVisible();
     }
+    await expect(results(page).getByRole('listitem')).toHaveCount(both.length);
+    // Écart fiche 07 ↔ contrat : les mots sont tous requis, la note de juin (sans « entretien »)
+    // ne sort pas.
+    await expect(page.locator(`li[data-entry-id="${dossier.ids.noteJune}"]`)).toHaveCount(0);
     const marks = page.locator(`li[data-entry-id="${dossier.ids.event}"] mark`);
     await expect(marks.first()).toBeVisible();
     // Surlignage : fond --search-highlight, texte en text-primary (fiche 07).
@@ -288,6 +301,8 @@ test.describe('recherche dans le dossier', () => {
     await expect(
       preview.getByRole('heading', { name: 'Le manager a changé en juin' }),
     ).toBeVisible();
+    await settled(page);
+    await expectNoAxeViolations(page);
     await preview.getByRole('button', { name: 'Modifier' }).click();
     await expect(page).toHaveURL(new RegExp(`entry=${dossier.ids.noteJune}`));
     const editor = page.locator('[role="dialog"]:has(pm-entry-editor-panel)');
@@ -302,7 +317,7 @@ test.describe('recherche dans le dossier', () => {
     );
   });
 
-  test("aucune entrée privée d'un autre praticien : karim ne fuit ni dans la recherche de claire, ni par son dossier", async ({
+  test("portée du patient : l'entrée privée de karim ne sort ni de la recherche de claire, ni de son dossier (403)", async ({
     page,
     request,
   }) => {

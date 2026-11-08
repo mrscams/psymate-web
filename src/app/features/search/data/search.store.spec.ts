@@ -215,4 +215,41 @@ describe('SearchStore', () => {
     expect(store.selectedId()).toBeNull();
     expect(store.preview().status).toBe('idle');
   });
+  it('refresh (après « Modifier ») relit aussi l’aperçu de la sélection conservée', async () => {
+    const preview = vi
+      .fn()
+      .mockResolvedValueOnce(entryPreview())
+      .mockResolvedValueOnce(entryPreview({ title: 'Titre corrigé', version: 2 }));
+    const { store } = setup({ preview });
+    await store.apply(filters());
+    await vi.waitFor(() => expect(store.preview().data?.version).toBe(1));
+    await store.refresh();
+    expect(store.selectedId()).toBe('e-entretien');
+    expect(preview).toHaveBeenCalledTimes(2);
+    await vi.waitFor(() => expect(store.preview().data?.title).toBe('Titre corrigé'));
+  });
+
+  it('more pendant une nouvelle recherche : rien ne part (la page affichée est périmée)', async () => {
+    const pending = deferred<SearchPage>();
+    const find = vi
+      .fn()
+      .mockResolvedValueOnce(searchPage({ total: 30 }))
+      .mockReturnValueOnce(pending.promise);
+    const { store } = setup({ find });
+    await store.apply(filters());
+    const searching = store.apply(filters({ q: 'manager' }));
+    await store.more();
+    expect(find).toHaveBeenCalledTimes(2);
+    expect(find.mock.calls[1][1].page).toBe(1);
+    pending.resolve(searchPage({ exact: [NOTE_JUNE] }));
+    await searching;
+    expect(store.hits().map((h) => h.entryId)).toEqual(['e-note-juin']);
+  });
+
+  it('nextCount : une page au plus (le bouton annonce ce qu’il charge)', async () => {
+    const { store } = setup({ find: vi.fn().mockResolvedValue(searchPage({ total: 45 })) });
+    await store.apply(filters());
+    expect(store.remaining()).toBe(43);
+    expect(store.nextCount()).toBe(20);
+  });
 });

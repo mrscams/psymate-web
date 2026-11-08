@@ -58,11 +58,15 @@ export class DossierSearchBar {
     const subscription = this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe(() => {
+        const before = patientLocation(this.url());
         const url = this.router.url;
         this.url.set(url);
         const here = patientLocation(url);
-        // Hors de l'écran de recherche, le champ se vide (rien ne reste d'une autre recherche).
-        if (here?.tab !== 'search') {
+        // En quittant la recherche ou l'écran (autre onglet, autre patient), le champ se vide ;
+        // un simple changement de paramètre sur le même écran ne coupe pas une frappe en cours.
+        const sameScreen =
+          !!before && !!here && before.patientId === here.patientId && before.tab === here.tab;
+        if (here?.tab !== 'search' && !sameScreen) {
           this.cancel();
           this.query.set('');
         }

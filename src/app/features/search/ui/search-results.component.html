@@ -14,6 +14,7 @@
           class="title"
           [attr.data-entry-id]="hit.entryId"
           (click)="selectHit.emit(hit.entryId)"
+          (keydown.enter)="enter($event, hit)"
           (dblclick)="openHit.emit(hit.entryId)"
         >
           @if (hit.title; as title) {

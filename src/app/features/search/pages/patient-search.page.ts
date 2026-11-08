@@ -15,7 +15,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 
-import { isEditableTarget, ShortcutService } from '../../../core/shortcuts';
+import { ShortcutService } from '../../../core/shortcuts';
 import { EntryType, SidePanelService, StateAction, StateComponent } from '../../../shared/ui';
 import { isRefreshing, stateKind } from '../../../shared/util';
 import { openEntryEditor } from '../../entries';
@@ -35,6 +35,8 @@ import { SearchStore } from '../data/search.store';
 import { DossierSearchBar } from '../search-bar';
 import {
   canRetry,
+  hitTitle,
+  isPeriodProblem,
   periodLabel,
   searchProblemText,
   sessionLabel,
@@ -85,6 +87,7 @@ export class PatientSearchPage {
   private readonly panels = inject(SidePanelService);
   private readonly locale = inject(LOCALE_ID);
   private readonly results = viewChild(SearchResultsComponent);
+  private readonly document = inject(DOCUMENT);
 
   protected readonly filters = toSignal(
     this.route.queryParamMap.pipe(
@@ -132,19 +135,37 @@ export class PatientSearchPage {
     );
   });
 
-  protected readonly retryAction = computed<StateAction | undefined>(() =>
-    canRetry(this.problem())
-      ? {
-          label: $localize`:Bouton de l'état erreur@@search.retry:Réessayer`,
-          handler: () => void this.store.refresh(),
-        }
-      : undefined,
-  );
+  /** Réessayer une panne ; une période invalide (from / to de l'URL) se corrige par « Tout le dossier ». */
+  protected readonly retryAction = computed<StateAction | undefined>(() => {
+    const problem = this.problem();
+    if (canRetry(problem)) {
+      return {
+        label: $localize`:Bouton de l'état erreur@@search.retry:Réessayer`,
+        handler: () => void this.store.refresh(),
+      };
+    }
+    if (isPeriodProblem(problem)) {
+      return { label: periodLabel('all'), handler: () => this.navigate({ from: null, to: null }) };
+    }
+    return undefined;
+  });
+
+  /** Annonce de la sélection (↑ ↓ depuis la barre : le focus reste dans le champ). */
+  protected readonly selectionText = computed(() => {
+    const hits = this.store.hits();
+    const selected = this.store.selected();
+    if (!selected) return '';
+    const position = hits.indexOf(selected) + 1;
+    const title = hitTitle(selected, this.locale);
+    return $localize`:Annonce du résultat sélectionné@@search.selection:Sélection : ${title}:title:, ${position}:position: sur ${hits.length}:count:`;
+  });
 
   protected readonly emptyTitle = computed(
     () =>
       $localize`:État vide de la recherche@@search.empty.title:Aucun résultat pour « ${this.store.effectiveQuery()}:query: »`,
   );
+
+  private destroyed = false;
 
   constructor() {
     const memory = this.shell.recallTab<SearchTabMemory>('search');
@@ -169,6 +190,7 @@ export class PatientSearchPage {
     });
 
     const destroyRef = inject(DestroyRef);
+    destroyRef.onDestroy(() => (this.destroyed = true));
     destroyRef.onDestroy(this.bar.attach({ submit: () => this.openSelected() }));
     destroyRef.onDestroy(
       inject(ShortcutService).register(
@@ -179,10 +201,9 @@ export class PatientSearchPage {
     );
 
     // ↑ ↓ : depuis le champ de la barre (le registre des raccourcis ignore les champs) ou la liste.
-    const document = inject(DOCUMENT);
     const keydown = (event: KeyboardEvent): void => this.onKeydown(event);
-    document.addEventListener('keydown', keydown);
-    destroyRef.onDestroy(() => document.removeEventListener('keydown', keydown));
+    this.document.addEventListener('keydown', keydown);
+    destroyRef.onDestroy(() => this.document.removeEventListener('keydown', keydown));
   }
 
   protected setType(type: EntryType | null): void {
@@ -227,12 +248,14 @@ export class PatientSearchPage {
     if (!patientId) return;
     const ref = openEntryEditor(patientId, { entryId, injector: this.injector });
     void ref?.closed.then((saved) => {
-      if (saved) void this.store.refresh();
+      if (saved && !this.destroyed) void this.store.refresh();
     });
   }
 
   /** Échap : retour à l'écran d'où l'on vient (sinon l'onglet 1), la barre se vide. */
   protected leave(): void {
+    // Échap dans une liste déroulante native : c'est elle qu'on ferme, pas la recherche.
+    if (this.document.activeElement instanceof HTMLSelectElement) return;
     const patientId = this.shell.patientId();
     if (!patientId) return;
     void this.router.navigateByUrl(this.bar.returnUrl(patientId));
@@ -249,12 +272,13 @@ export class PatientSearchPage {
     if (this.panels.isOpen()) return;
     const target = event.target as HTMLElement | null;
     const fromBar = target?.id === BAR_INPUT_ID;
-    if (!fromBar && isEditableTarget(target)) return;
+    const fromList = !!target?.closest('pm-search-results');
+    // Ailleurs (puces, boutons, fond de page), ↑ ↓ gardent leur rôle : défilement, sélecteurs.
+    if (!fromBar && !fromList) return;
     if (this.store.hits().length === 0) return;
     event.preventDefault();
     this.store.move(event.key === 'ArrowDown' ? 1 : -1);
     const list = this.results();
-    const fromList = !!target?.closest('pm-search-results');
     // Depuis la liste, le focus suit la sélection ; depuis la barre, il y reste (saisie continue).
     if (fromList) list?.focusSelected();
     else list?.revealSelected();
