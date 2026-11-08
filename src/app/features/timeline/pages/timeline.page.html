@@ -1,0 +1,236 @@
+<section class="timeline" aria-labelledby="timeline-heading">
+  <h2
+    id="timeline-heading"
+    class="sr-only"
+    i18n="Titre caché de l'onglet timeline@@timeline.heading"
+  >
+    Timeline
+  </h2>
+
+  <div
+    class="toolbar"
+    role="toolbar"
+    aria-label="Affichage de la timeline"
+    i18n-aria-label="Nom de la barre d'outils de la timeline@@timeline.toolbar"
+  >
+    <div
+      class="zoom"
+      role="group"
+      aria-label="Zoom"
+      i18n-aria-label="Nom du groupe de zoom de la timeline@@timeline.zoomGroup"
+    >
+      <button
+        type="button"
+        class="zoom-button"
+        [attr.aria-label]="zoomOutLabel"
+        aria-keyshortcuts="-"
+        [disabled]="!store.canZoomOut()"
+        (click)="zoom('out')"
+      >
+        <span aria-hidden="true">−</span>
+      </button>
+      <span class="granularity" aria-live="polite">{{ zoomText() }}</span>
+      <button
+        type="button"
+        class="zoom-button"
+        [attr.aria-label]="zoomInLabel"
+        aria-keyshortcuts="+"
+        [disabled]="!store.canZoomIn()"
+        (click)="zoom('in')"
+      >
+        <span aria-hidden="true">+</span>
+      </button>
+      <span class="hint" i18n="Aide du zoom à la molette@@timeline.zoomHint">Ctrl + molette</span>
+    </div>
+  </div>
+
+  @if (state(); as kind) {
+    @switch (kind) {
+      @case ('loading') {
+        <pm-state kind="loading" skeleton="card" [lines]="4" />
+      }
+      @case ('error') {
+        <pm-state
+          kind="error"
+          [action]="retry"
+          [details]="store.problem()?.code ?? ''"
+          title="Impossible de charger la timeline"
+          i18n-title="Titre de l'erreur de la timeline@@timeline.error.title"
+        />
+      }
+      @case ('empty') {
+        <pm-state
+          kind="empty"
+          title="Aucune entrée pour l'instant"
+          i18n-title="Titre de la timeline vide@@timeline.empty.title"
+          message="Notez la première dans la barre de capture, en haut du dossier (N)."
+          i18n-message="Texte de la timeline vide@@timeline.empty.message"
+        />
+      }
+    }
+  } @else {
+    <p class="status-line">
+      <span class="count">{{ countText() }}</span>
+      @if (boundsText()) {
+        <span class="bounds">{{ boundsText() }}</span>
+      }
+    </p>
+
+    @if (bandItems().length) {
+      <ul
+        class="bands-legend"
+        aria-label="Situations sur la période"
+        i18n-aria-label="Nom de la liste des situations en bande@@timeline.bands"
+      >
+        @for (entry of bandItems(); track entry.band.item.id) {
+          <li [attr.aria-label]="entry.label" [class.ongoing]="entry.band.item.ongoing">
+            <span class="swatch" aria-hidden="true"></span>
+            <span class="band-title" aria-hidden="true">{{ entry.band.item.title }}</span>
+            @if (entry.band.item.ongoing) {
+              <span
+                class="band-state"
+                aria-hidden="true"
+                i18n="Mention d'une situation en cours@@timeline.band.ongoingShort"
+                >en cours</span
+              >
+            }
+          </li>
+        }
+      </ul>
+    }
+
+    <cdk-virtual-scroll-viewport
+      class="viewport"
+      [itemSize]="rowHeight()"
+      [minBufferPx]="rowHeight() * 4"
+      [maxBufferPx]="rowHeight() * 8"
+      [style.--lanes]="lanes()"
+      (scrolledIndexChange)="onScrolled($event)"
+      (wheel)="onWheel($event)"
+    >
+      <div class="list" role="list" [attr.aria-label]="listLabel">
+        <div
+          *cdkVirtualFor="let row of store.rows(); trackBy: trackSlot; templateCacheSize: 0"
+          class="row"
+          [class.before]="row.before"
+          [style.height.px]="rowHeight()"
+          [attr.role]="row.item || row.state === 'error' ? 'listitem' : null"
+          [attr.aria-hidden]="row.item || row.state === 'error' ? null : 'true'"
+        >
+          <div class="bands" aria-hidden="true">
+            @for (on of row.bands; track $index) {
+              <span class="lane" [class.on]="on">
+                @if (row.bandHeads[$index]; as head) {
+                  @if (head.item.ongoing && row.slot === 0) {
+                    <span class="arrow"></span>
+                  }
+                  <span class="lane-label">{{ head.item.title }}</span>
+                }
+              </span>
+            }
+          </div>
+          <div class="axis" aria-hidden="true">
+            @if (row.item && row.groupStart) {
+              @let label = axisLabel(row);
+              <span class="axis-main">{{ label.main }}</span>
+              <span class="axis-sub">{{ label.sub }}</span>
+            }
+            @if (row.item) {
+              <span class="marker"><pm-entry-icon [type]="row.item.type" [size]="10" /></span>
+            }
+          </div>
+          <div class="content">
+            @if (row.firstBefore) {
+              <div class="follow-start">
+                <span class="follow-start-text">{{ followStartText() }}</span>
+                <span
+                  class="follow-start-zone"
+                  i18n="Titre de la zone avant le suivi@@timeline.beforeZone"
+                  >Avant le suivi</span
+                >
+              </div>
+            }
+            @if (row.item; as item) {
+              <pm-timeline-card
+                [item]="item"
+                [zoom]="store.zoom()"
+                [before]="row.before"
+                [selected]="store.selectedId() === item.id"
+                [saidIn]="row.saidIn"
+                [emotionLabel]="emotionLabel(item)"
+                [menu]="cardMenu"
+                (opened)="open($event)"
+              />
+            } @else if (row.state === 'error') {
+              @if (row.firstOfWindow) {
+                <div class="window-error" role="alert">
+                  <span i18n="Message d'une fenêtre de la timeline en échec@@timeline.window.error"
+                    >Cette partie de la timeline n'a pas pu être chargée.</span
+                  >
+                  <button
+                    type="button"
+                    class="retry"
+                    (click)="store.retryWindow(row.window)"
+                    i18n="Bouton Réessayer d'une fenêtre@@timeline.window.retry"
+                  >
+                    Réessayer
+                  </button>
+                </div>
+              }
+            } @else {
+              <div class="skeleton"></div>
+            }
+          </div>
+        </div>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  }
+</section>
+
+<mat-menu #cardMenu="matMenu" class="timeline-card-menu">
+  <ng-template matMenuContent let-item="item">
+    <button mat-menu-item type="button" (click)="open(item)">
+      <span class="menu-row">
+        <span class="menu-label" i18n="Action Ouvrir du menu d'une carte@@timeline.menu.open"
+          >Ouvrir</span
+        >
+        <span class="menu-hint" i18n="Raccourci de l'action Ouvrir@@timeline.menu.openHint"
+          >Entrée</span
+        >
+      </span>
+    </button>
+    <button mat-menu-item type="button" (click)="edit(item)">
+      <span class="menu-row">
+        <span class="menu-label" i18n="Action Corriger du menu d'une carte@@timeline.menu.edit"
+          >Corriger</span
+        >
+        <span class="menu-hint" i18n="Aide de l'action Corriger@@timeline.menu.editHint"
+          >crée une version</span
+        >
+      </span>
+    </button>
+    <!-- Lier (L) : éditeur de lien de M2-04 ; présent, désactivé, la touche L n'est pas prise ici. -->
+    <button mat-menu-item type="button" disabled disabledInteractive>
+      <span class="menu-row">
+        <span class="menu-label" i18n="Action Lier du menu d'une carte@@timeline.menu.link"
+          >Lier</span
+        >
+        <span class="menu-hint" i18n="Aide de l'action Lier désactivée@@timeline.menu.linkHint"
+          >L · bientôt disponible</span
+        >
+      </span>
+    </button>
+    <button mat-menu-item type="button" (click)="showInGraph(item)">
+      <span class="menu-row">
+        <span
+          class="menu-label"
+          i18n="Action Voir dans le graphe du menu d'une carte@@timeline.menu.graph"
+          >Voir dans le graphe</span
+        >
+        <span class="menu-hint" i18n="Aide de l'action Voir dans le graphe@@timeline.menu.graphHint"
+          >onglet 3</span
+        >
+      </span>
+    </button>
+  </ng-template>
+</mat-menu>

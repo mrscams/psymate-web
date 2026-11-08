@@ -1,0 +1,246 @@
+:host {
+  display: block;
+  height: 100%;
+  min-width: 0;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 10px 12px 10px 14px;
+  border: 1px solid var(--border-subtle);
+  // Bordure gauche 3 px à la couleur du type (fiche 03 : jamais d'aplat).
+  border-left: 3px solid var(--card-type, var(--entry-note));
+  border-radius: 10px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  cursor: pointer;
+  overflow: hidden;
+
+  &:hover {
+    border-color: var(--border-strong);
+    border-left-color: var(--card-type, var(--entry-note));
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  &.selected {
+    border: 1.5px solid var(--primary);
+    border-left: 3px solid var(--card-type, var(--entry-note));
+  }
+
+  &.compact {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+
+    .head {
+      flex: 1;
+      padding-right: 0;
+    }
+    .meta {
+      flex: none;
+    }
+    .more {
+      position: static;
+      margin: 0;
+    }
+  }
+
+  // Zone « Avant le suivi » : cartes réduites sur le fond enfoncé.
+  &.before {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    background: var(--surface-sunken);
+    border-color: var(--border-subtle);
+
+    .title {
+      font: var(--mat-sys-body-medium);
+    }
+  }
+}
+
+.type-note {
+  --card-type: var(--entry-note);
+}
+.type-event {
+  --card-type: var(--entry-event);
+}
+.type-situation {
+  --card-type: var(--entry-situation);
+}
+.type-feeling {
+  --card-type: var(--entry-feeling);
+}
+.type-session {
+  --card-type: var(--entry-session);
+}
+.type-medication {
+  --card-type: var(--entry-medication);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding-right: 32px;
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font: var(--mat-sys-title-small);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chip {
+  flex: none;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font: var(--mat-sys-label-small);
+}
+
+.draft {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.more {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  &:hover {
+    background: var(--surface-sunken);
+    color: var(--text-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+  }
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  min-width: 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+.when {
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.said {
+  padding: 1px 8px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 999px;
+  color: var(--text-secondary);
+}
+
+.details {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  min-width: 0;
+  overflow: hidden;
+  max-height: 24px;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+.feeling {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--feeling);
+}
+
+.family-joy {
+  background: var(--emotion-joy);
+}
+.family-trust {
+  background: var(--emotion-trust);
+}
+.family-fear {
+  background: var(--emotion-fear);
+}
+.family-surprise {
+  background: var(--emotion-surprise);
+}
+.family-sadness {
+  background: var(--emotion-sadness);
+}
+.family-disgust {
+  background: var(--emotion-disgust);
+}
+.family-anger {
+  background: var(--emotion-anger);
+}
+.family-anticipation {
+  background: var(--emotion-anticipation);
+}
+
+.intensity {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--feeling-tint);
+  color: var(--feeling-text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.tag {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+}
+
+.links {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}

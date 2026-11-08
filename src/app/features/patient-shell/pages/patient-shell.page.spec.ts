@@ -221,6 +221,7 @@ describe('PatientShellPage', () => {
   });
 
   it('changer d’onglet et revenir conserve l’état (compteur rangé par rememberTab)', async () => {
+    // L'onglet Graphe est encore provisoire (la Timeline est la page de M3-02).
     const { el, harness, api } = await render();
     const counter = () => el.querySelector<HTMLButtonElement>('pm-tab-placeholder-page .counter');
     counter()?.click();
@@ -228,9 +229,9 @@ describe('PatientShellPage', () => {
     await settle(harness);
     expect(text(counter())).toBe('Compteur : 2');
 
-    await harness.navigateByUrl('/patients/p-marie/timeline');
+    await harness.navigateByUrl('/patients/p-marie/graph');
     await settle(harness);
-    expect(text(el.querySelector('pm-tab-placeholder-page h2'))).toBe('Timeline');
+    expect(text(el.querySelector('pm-tab-placeholder-page h2'))).toBe('Graphe');
     expect(text(counter())).toBe('Compteur : 0');
     expect(el.querySelector('.view-toggle')).toBeNull();
     counter()?.click();
@@ -239,7 +240,7 @@ describe('PatientShellPage', () => {
     await harness.navigateByUrl('/patients/p-marie');
     await settle(harness);
     expect(text(counter())).toBe('Compteur : 2');
-    await harness.navigateByUrl('/patients/p-marie/timeline');
+    await harness.navigateByUrl('/patients/p-marie/graph');
     await settle(harness);
     expect(text(counter())).toBe('Compteur : 1');
     expect(api.patient).toHaveBeenCalledTimes(1);
