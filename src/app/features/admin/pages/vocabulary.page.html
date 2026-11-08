@@ -27,10 +27,12 @@
         >
           {{ tabLabel(option) }}
           @if (tabCount(option) !== null) {
-            <span class="count">{{ tabCount(option) }}</span>
+            &ngsp;<span class="count">{{ tabCount(option) }}</span>
           }
           @if (isFixed(option)) {
-            <span class="fixed" i18n="Mention d'une liste fixe@@admin.vocabulary.fixed">fixe</span>
+            &ngsp;<span class="fixed" i18n="Mention d'une liste fixe@@admin.vocabulary.fixed"
+              >fixe</span
+            >
           }
         </button>
       }
