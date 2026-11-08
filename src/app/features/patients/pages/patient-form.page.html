@@ -433,6 +433,14 @@
         [since]="value().followUp?.since ?? ''"
         [flags]="previewFlags()"
       />
+      @if (patient(); as p) {
+        <section class="aside-card" aria-labelledby="export-title">
+          <h2 id="export-title" i18n="Encart d'export du dossier@@patients.export.title">
+            Export du dossier
+          </h2>
+          <pm-patient-export-menu [patientId]="p.id" />
+        </section>
+      }
       @if (!editing()) {
         <section class="aside-card" aria-labelledby="on-create-title">
           <h2 id="on-create-title" i18n="Encart de création@@patients.form.onCreate.title">

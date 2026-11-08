@@ -1,0 +1,261 @@
+<div class="account">
+  <pm-account-nav
+    [name]="displayName()"
+    [subtitle]="subtitle()"
+    [verificationStatus]="session.verificationStatus()"
+  />
+
+  <div class="content">
+    <header class="page-header">
+      <h1 i18n="Titre de la page Données et export@@account.data.title">Données et export</h1>
+      <p class="intro" i18n="Introduction de la page@@account.data.intro">
+        Récupérez vos dossiers dans des formats ouverts. Un export ne modifie et n'efface rien : vos
+        données restent dans PsyMate.
+      </p>
+    </header>
+
+    <!-- Exporter un dossier -->
+    <section class="card" aria-labelledby="patient-export-title">
+      <div class="card-header">
+        <h2 id="patient-export-title" i18n="Carte export patient@@account.data.patient.title">
+          Exporter un dossier
+        </h2>
+        <p class="help" i18n="Aide de la carte export patient@@account.data.patient.help">
+          Un seul dossier, téléchargé immédiatement. Le même export est disponible depuis la fiche
+          de chaque dossier.
+        </p>
+      </div>
+
+      @if (patientsState(); as kind) {
+        @switch (kind) {
+          @case ('loading') {
+            <pm-state kind="loading" skeleton="row" [lines]="2" />
+          }
+          @case ('error') {
+            <pm-state
+              kind="error"
+              [title]="patientsErrorTitle"
+              [action]="retryPatients"
+              [details]="store.patients().problem?.code"
+            />
+          }
+          @default {
+            <pm-state kind="empty" [title]="patientsEmptyTitle" [message]="patientsEmptyMessage" />
+          }
+        }
+      } @else {
+        <div class="patient-form">
+          <pm-patient-combobox
+            class="combobox"
+            [label]="patientLabel()"
+            [options]="store.patients().data ?? []"
+            [loading]="patientsLoading()"
+            (queryChange)="search($event)"
+            (selectedChange)="select($event)"
+          />
+          <div class="format">
+            <span
+              id="format-label"
+              class="format-label"
+              i18n="Libellé du format@@account.data.format"
+              >Format</span
+            >
+            <div class="segmented" role="group" aria-labelledby="format-label">
+              @for (option of formats; track option.value) {
+                <button
+                  type="button"
+                  [attr.aria-pressed]="format() === option.value"
+                  (click)="format.set(option.value)"
+                >
+                  {{ option.label }}
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+        @if (searchError()) {
+          <p
+            class="error"
+            role="alert"
+            i18n="Recherche de patient en erreur@@account.data.patient.searchError"
+          >
+            La recherche n'a pas abouti : modifiez le texte pour réessayer.
+          </p>
+        }
+        <div class="actions">
+          <button
+            mat-flat-button
+            type="button"
+            class="export-patient"
+            [disabled]="!selected() || patientBusy()"
+            (click)="exportPatient()"
+            i18n="Bouton d'export d'un patient@@account.data.patient.export"
+          >
+            Exporter
+          </button>
+          <span class="note" i18n="Contenu du fichier exporté@@account.data.patient.fileNote"
+            >Séances et entrées en ordre chronologique, texte de la version courante.</span
+          >
+        </div>
+        @if (patientError(); as text) {
+          <p class="error" role="alert">{{ text }}</p>
+        }
+      }
+
+      <p class="reminder" i18n="Rappel des règles d'export@@account.data.patient.reminder">
+        <strong>Les entrées privées ne sont jamais exportées</strong>, ni les entrées archivées ; un
+        lien vers une entrée non exportée est omis · <strong>thème clair</strong> pour le PDF quel
+        que soit votre réglage · <strong>ordre chronologique</strong> · langue du document : celle
+        de l'interface.
+      </p>
+    </section>
+
+    <!-- Exporter tout mon compte -->
+    <section class="card" aria-labelledby="account-export-title">
+      <div class="card-header">
+        <h2 id="account-export-title" i18n="Carte export du compte@@account.data.account.title">
+          Exporter tout mon compte
+        </h2>
+        <p class="help" i18n="Aide de la carte export du compte@@account.data.account.help">
+          Une archive complète, préparée en arrière-plan. Vous pouvez quitter la page : l'état de
+          l'export est repris à votre retour.
+        </p>
+      </div>
+      <ul class="tiles">
+        <li>
+          <strong i18n="Tuile contenu, titre@@account.data.tile.content.title">Archive zip</strong>
+          <span i18n="Tuile contenu, détail@@account.data.tile.content.body"
+            >Pour chaque dossier, le PDF et le Markdown (comme l'export individuel), plus
+            <span class="mono">patients.md</span>, la liste de vos dossiers.</span
+          >
+        </li>
+        <li>
+          <strong i18n="Tuile lien, titre@@account.data.tile.link.title"
+            >Lien valable 7 jours</strong
+          >
+          <span i18n="Tuile lien, détail@@account.data.tile.link.body"
+            >Après l'échéance, le fichier est purgé et le lien répond « expiré ». Il suffit de
+            relancer un export.</span
+          >
+        </li>
+        <li>
+          <strong i18n="Tuile rien effacé, titre@@account.data.tile.nothing.title"
+            >Rien n'est effacé</strong
+          >
+          <span i18n="Tuile rien effacé, détail@@account.data.tile.nothing.body"
+            >Exporter ne modifie ni ne supprime aucune donnée. Les entrées privées ne font pas
+            partie de l'archive.</span
+          >
+        </li>
+      </ul>
+      <div class="actions">
+        <button
+          mat-flat-button
+          type="button"
+          class="prepare"
+          [disabled]="store.launchBlocked()"
+          [attr.aria-describedby]="store.launchBlocked() ? 'prepare-note' : null"
+          (click)="prepare()"
+          i18n="Bouton qui prépare l'export du compte@@account.data.account.prepare"
+        >
+          Préparer l'export
+        </button>
+        @if (store.launchBlocked()) {
+          <span
+            id="prepare-note"
+            class="note"
+            i18n="Pourquoi le bouton attend@@account.data.account.pendingNote"
+            >Un seul export à la fois : un export est en préparation. Le bouton se réactive dès
+            qu'il est terminé.</span
+          >
+        }
+      </div>
+      @if (launchError(); as text) {
+        <p class="error" role="alert">{{ text }}</p>
+      }
+    </section>
+
+    <!-- Dernier export (un seul job visible en V1) -->
+    <section class="card" aria-labelledby="last-export-title">
+      <h2
+        id="last-export-title"
+        tabindex="-1"
+        i18n="Carte du dernier export@@account.data.job.title"
+      >
+        Dernier export
+      </h2>
+      <div class="job" aria-live="polite">
+        @if (jobState(); as kind) {
+          @switch (kind) {
+            @case ('loading') {
+              <pm-state kind="loading" skeleton="row" [lines]="1" />
+            }
+            @case ('error') {
+              <pm-state
+                kind="error"
+                [title]="jobErrorTitle"
+                [action]="retryJob"
+                [details]="store.job().problem?.code"
+              />
+            }
+            @default {
+              <pm-state kind="empty" [title]="jobEmptyTitle()" [message]="jobEmptyMessage()" />
+            }
+          }
+        } @else {
+          <pm-export-job-row
+            [kind]="store.jobKind()"
+            [job]="store.job().data"
+            [downloading]="store.download().status === 'busy'"
+            [relaunchDisabled]="store.launchBlocked()"
+            (download)="download()"
+            (relaunch)="relaunch()"
+          />
+          @if (downloadError(); as text) {
+            <p class="error" role="alert">{{ text }}</p>
+          }
+        }
+      </div>
+      <p class="help" i18n="Exports patient non conservés@@account.data.job.patientNote">
+        Les exports d'un seul dossier sont téléchargés immédiatement : ils ne sont pas conservés et
+        n'apparaissent pas ici.
+      </p>
+    </section>
+
+    <!-- Vos données -->
+    <section class="card" aria-labelledby="your-data-title">
+      <h2 id="your-data-title" i18n="Carte Vos données@@account.data.yours.title">Vos données</h2>
+      <dl class="facts">
+        <div>
+          <dt i18n="Fait hébergement, titre@@account.data.yours.hosting.title">Hébergement</dt>
+          <dd i18n="Fait hébergement, détail@@account.data.yours.hosting.body">
+            Données hébergées en France, chiffrées au repos. Les archives d'export le sont aussi,
+            jusqu'à leur purge.
+          </dd>
+        </div>
+        <div>
+          <dt i18n="Fait journal, titre@@account.data.yours.journal.title">Journal des accès</dt>
+          <dd i18n="Fait journal, détail@@account.data.yours.journal.body">
+            Chaque export et chaque téléchargement sont consignés avec la date et l'appareil.
+          </dd>
+        </div>
+        <div>
+          <dt i18n="Fait rien effacé, titre@@account.data.yours.nothing.title">
+            Rien n'est effacé
+          </dt>
+          <dd>
+            <span i18n="Fait rien effacé, détail@@account.data.yours.nothing.body"
+              >Exporter ne supprime rien ; aucune donnée clinique n'est jamais supprimée
+              physiquement.</span
+            >
+            <a
+              [routerLink]="howItWorksPath"
+              i18n="Lien Comment ça marche@@account.data.yours.howItWorks"
+              >Comment ça marche</a
+            >
+          </dd>
+        </div>
+      </dl>
+    </section>
+  </div>
+</div>

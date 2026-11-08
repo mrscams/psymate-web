@@ -20254,6 +20254,802 @@
           <context context-type="linenumber">366,367</context>
         </context-group>
         <note priority="1" from="description">Motif d&apos;un drapeau</note>
+</trans-unit>
+      <trans-unit id="account.data.pageTitle" datatype="html">
+        <source>Données et export · PsyMate</source>
+        <target state="translated">Data and export · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de Données et export</note>
+      </trans-unit>
+      <trans-unit id="account.data.title" datatype="html">
+        <source>Données et export</source>
+        <target state="translated">Data and export</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la page Données et export</note>
+      </trans-unit>
+      <trans-unit id="account.data.intro" datatype="html">
+        <source> Récupérez vos dossiers dans des formats ouverts. Un export ne modifie et n&apos;efface rien : vos données restent dans PsyMate. </source>
+        <target state="translated">Get your records back in open formats. An export changes and deletes nothing: your data stays in PsyMate.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">12,17</context>
+        </context-group>
+        <note priority="1" from="description">Introduction de la page</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.title" datatype="html">
+        <source> Exporter un dossier </source>
+        <target state="translated">Export one record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+        <note priority="1" from="description">Carte export patient</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.help" datatype="html">
+        <source> Un seul dossier, téléchargé immédiatement. Le même export est disponible depuis la fiche de chaque dossier. </source>
+        <target state="translated">A single record, downloaded immediately. The same export is available from each record's file.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">24,29</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la carte export patient</note>
+      </trans-unit>
+      <trans-unit id="account.data.format" datatype="html">
+        <source>Format</source>
+        <target state="translated">Format</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">61,63</context>
+        </context-group>
+        <note priority="1" from="description">Libellé du format</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.searchError" datatype="html">
+        <source> La recherche n&apos;a pas abouti : modifiez le texte pour réessayer. </source>
+        <target state="translated">The search failed: change the text to try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">82,86</context>
+        </context-group>
+        <note priority="1" from="description">Recherche de patient en erreur</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.export" datatype="html">
+        <source> Exporter </source>
+        <target state="translated">Export</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">94,96</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;export d&apos;un patient</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.fileNote" datatype="html">
+        <source>Séances et entrées en ordre chronologique, texte de la version courante.</source>
+        <target state="translated">Sessions and entries in chronological order, current version of the text.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">97,100</context>
+        </context-group>
+        <note priority="1" from="description">Contenu du fichier exporté</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.reminder" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Les entrées privées ne sont jamais exportées<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, ni les entrées archivées ; un lien vers une entrée non exportée est omis · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>thème clair<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> pour le PDF quel que soit votre réglage · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>ordre chronologique<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> · langue du document : celle de l&apos;interface. </source>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Private entries are never exported<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, nor archived entries; a link to an entry that is not exported is left out · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>light theme<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> for the PDF whatever your setting · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>chronological order<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> · document language: the interface language.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">106,111</context>
+        </context-group>
+        <note priority="1" from="description">Rappel des règles d&apos;export</note>
+      </trans-unit>
+      <trans-unit id="account.data.account.title" datatype="html">
+        <source> Exporter tout mon compte </source>
+        <target state="translated">Export my whole account</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">117,119</context>
+        </context-group>
+        <note priority="1" from="description">Carte export du compte</note>
+      </trans-unit>
+      <trans-unit id="account.data.account.help" datatype="html">
+        <source> Une archive complète, préparée en arrière-plan. Vous pouvez quitter la page : l&apos;état de l&apos;export est repris à votre retour. </source>
+        <target state="translated">A complete archive, prepared in the background. You can leave the page: the export status is picked up when you come back.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">120,125</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la carte export du compte</note>
+      </trans-unit>
+      <trans-unit id="account.data.tile.content.title" datatype="html">
+        <source>Archive zip</source>
+        <target state="translated">Zip archive</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">126,127</context>
+        </context-group>
+        <note priority="1" from="description">Tuile contenu, titre</note>
+      </trans-unit>
+      <trans-unit id="account.data.tile.content.body" datatype="html">
+        <source>Pour chaque dossier, le PDF et le Markdown (comme l&apos;export individuel), plus <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>patients.md<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, la liste de vos dossiers.</source>
+        <target state="translated">For each record, its PDF and Markdown (like the single export), plus <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>patients.md<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, the list of your records.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">128,130</context>
+        </context-group>
+        <note priority="1" from="description">Tuile contenu, détail</note>
+      </trans-unit>
+      <trans-unit id="account.data.tile.link.title" datatype="html">
+        <source>Lien valable 7 jours</source>
+        <target state="translated">Link valid for 7 days</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">134,136</context>
+        </context-group>
+        <note priority="1" from="description">Tuile lien, titre</note>
+      </trans-unit>
+      <trans-unit id="account.data.tile.link.body" datatype="html">
+        <source>Après l&apos;échéance, le fichier est purgé et le lien répond « expiré ». Il suffit de relancer un export.</source>
+        <target state="translated">After the deadline, the file is purged and the link answers “expired”. Just start a new export.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">137,142</context>
+        </context-group>
+        <note priority="1" from="description">Tuile lien, détail</note>
+      </trans-unit>
+      <trans-unit id="account.data.tile.nothing.title" datatype="html">
+        <source>Rien n&apos;est effacé</source>
+        <target state="translated">Nothing is deleted</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">143,145</context>
+        </context-group>
+        <note priority="1" from="description">Tuile rien effacé, titre</note>
+      </trans-unit>
+      <trans-unit id="account.data.tile.nothing.body" datatype="html">
+        <source>Exporter ne modifie ni ne supprime aucune donnée. Les entrées privées ne font pas partie de l&apos;archive.</source>
+        <target state="translated">Exporting neither changes nor deletes any data. Private entries are not part of the archive.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">146,151</context>
+        </context-group>
+        <note priority="1" from="description">Tuile rien effacé, détail</note>
+      </trans-unit>
+      <trans-unit id="account.data.account.prepare" datatype="html">
+        <source> Préparer l&apos;export </source>
+        <target state="translated">Prepare the export</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">161,164</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui prépare l&apos;export du compte</note>
+      </trans-unit>
+      <trans-unit id="account.data.account.pendingNote" datatype="html">
+        <source>Un seul export à la fois : un export est en préparation. Le bouton se réactive dès qu&apos;il est terminé.</source>
+        <target state="translated">One export at a time: an export is being prepared. The button comes back as soon as it is finished.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">168,173</context>
+        </context-group>
+        <note priority="1" from="description">Pourquoi le bouton attend</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.title" datatype="html">
+        <source> Dernier export </source>
+        <target state="translated">Latest export</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">185,187</context>
+        </context-group>
+        <note priority="1" from="description">Carte du dernier export</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.patientNote" datatype="html">
+        <source> Les exports d&apos;un seul dossier sont téléchargés immédiatement : ils ne sont pas conservés et n&apos;apparaissent pas ici. </source>
+        <target state="translated">Single-record exports are downloaded immediately: they are not kept and do not appear here.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">220,226</context>
+        </context-group>
+        <note priority="1" from="description">Exports patient non conservés</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.title" datatype="html">
+        <source>Vos données</source>
+        <target state="translated">Your data</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">227,230</context>
+        </context-group>
+        <note priority="1" from="description">Carte Vos données</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.hosting.title" datatype="html">
+        <source>Hébergement</source>
+        <target state="translated">Hosting</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">230,231</context>
+        </context-group>
+        <note priority="1" from="description">Fait hébergement, titre</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.hosting.body" datatype="html">
+        <source> Données hébergées en France, chiffrées au repos. Les archives d&apos;export le sont aussi, jusqu&apos;à leur purge. </source>
+        <target state="translated">Data hosted in France, encrypted at rest. Export archives are too, until they are purged.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">232,237</context>
+        </context-group>
+        <note priority="1" from="description">Fait hébergement, détail</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.journal.title" datatype="html">
+        <source>Journal des accès</source>
+        <target state="translated">Access log</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">237,238</context>
+        </context-group>
+        <note priority="1" from="description">Fait journal, titre</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.journal.body" datatype="html">
+        <source> Chaque export et chaque téléchargement sont consignés avec la date et l&apos;appareil. </source>
+        <target state="translated">Every export and every download is logged with its date and device.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">239,243</context>
+        </context-group>
+        <note priority="1" from="description">Fait journal, détail</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.nothing.title" datatype="html">
+        <source> Rien n&apos;est effacé </source>
+        <target state="translated">Nothing is deleted</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">244,247</context>
+        </context-group>
+        <note priority="1" from="description">Fait rien effacé, titre</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.nothing.body" datatype="html">
+        <source>Exporter ne supprime rien ; aucune donnée clinique n&apos;est jamais supprimée physiquement.</source>
+        <target state="translated">Exporting deletes nothing; no clinical data is ever physically deleted.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">248,252</context>
+        </context-group>
+        <note priority="1" from="description">Fait rien effacé, détail</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.howItWorks" datatype="html">
+        <source>Comment ça marche</source>
+        <target state="translated">How it works</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">254,259</context>
+        </context-group>
+        <note priority="1" from="description">Lien Comment ça marche</note>
+      </trans-unit>
+      <trans-unit id="account.data.format.pdf" datatype="html">
+        <source>PDF</source>
+        <target state="translated">PDF</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <note priority="1" from="description">Format d&apos;export PDF</note>
+      </trans-unit>
+      <trans-unit id="account.data.format.md" datatype="html">
+        <source>Markdown</source>
+        <target state="translated">Markdown</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <note priority="1" from="description">Format d&apos;export Markdown</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.emptyTitle" datatype="html">
+        <source>Aucun dossier à exporter</source>
+        <target state="translated">No record to export</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Aucun patient à exporter</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.emptyMessage" datatype="html">
+        <source>Les dossiers que vous créez apparaîtront ici.</source>
+        <target state="translated">The records you create will appear here.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <note priority="1" from="description">Explication de l&apos;état vide</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.errorTitle" datatype="html">
+        <source>Impossible de charger vos dossiers</source>
+        <target state="translated">Your records could not be loaded</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <note priority="1" from="description">Liste des patients indisponible</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.downloadError" datatype="html">
+        <source>Téléchargement impossible pour le moment. Le lien reste valable : réessayez dans un instant.</source>
+        <target state="translated">Download unavailable for now. The link is still valid: try again in a moment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <note priority="1" from="description">Téléchargement du zip impossible</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.emptyTitle" datatype="html">
+        <source>Aucun export de compte en cours</source>
+        <target state="translated">No account export in progress</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Aucun export de compte connu</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.emptyMessage" datatype="html">
+        <source>Le dernier export lancé depuis ce navigateur s&apos;affichera ici, avec son lien de téléchargement.</source>
+        <target state="translated">The latest export started from this browser will show here, with its download link.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+        <note priority="1" from="description">Explication de l&apos;état vide</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.errorTitle" datatype="html">
+        <source>Impossible de lire l&apos;état de l&apos;export</source>
+        <target state="translated">The export status could not be read</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <note priority="1" from="description">Lecture de l&apos;état impossible</note>
+      </trans-unit>
+      <trans-unit id="account.data.dialog.title" datatype="html">
+        <source>Préparer l&apos;export du compte</source>
+        <target state="translated">Prepare the account export</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <note priority="1" from="description">Titre du dialogue de l&apos;export du compte</note>
+      </trans-unit>
+      <trans-unit id="account.data.dialog.body" datatype="html">
+        <source>L&apos;archive zip contient patients.md, la liste de vos dossiers, puis le PDF et le Markdown de chaque dossier ; les entrées privées et archivées n&apos;en font pas partie. Elle est préparée en arrière-plan et son lien de téléchargement est valable 7 jours. Rien n&apos;est modifié ni supprimé dans vos dossiers.</source>
+        <target state="translated">The zip archive contains patients.md, the list of your records, then the PDF and Markdown of each record; private and archived entries are not included. It is prepared in the background and its download link is valid for 7 days. Nothing in your records is changed or deleted.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <note priority="1" from="description">Contenu du dialogue de l&apos;export du compte</note>
+      </trans-unit>
+      <trans-unit id="account.data.dialog.confirm" datatype="html">
+        <source>Lancer l&apos;export</source>
+        <target state="translated">Start the export</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du dialogue de l&apos;export du compte</note>
+      </trans-unit>
+      <trans-unit id="account.data.dialog.cancel" datatype="html">
+        <source>Annuler</source>
+        <target state="translated">Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;annulation du dialogue</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.error.offline" datatype="html">
+        <source>Connexion perdue : réessayez une fois le réseau revenu.</source>
+        <target state="translated">Connection lost: try again once the network is back.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">212</context>
+        </context-group>
+        <note priority="1" from="description">Export patient hors ligne</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.error.forbidden" datatype="html">
+        <source>Ce dossier n&apos;est pas accessible depuis votre compte.</source>
+        <target state="translated">This record cannot be accessed from your account.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">214</context>
+        </context-group>
+        <note priority="1" from="description">Export patient refusé</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.error.notFound" datatype="html">
+        <source>Ce dossier n&apos;existe pas ou plus.</source>
+        <target state="translated">This record does not exist or no longer exists.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">216</context>
+        </context-group>
+        <note priority="1" from="description">Export patient introuvable</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.error.rateLimited" datatype="html">
+        <source>Trop de demandes rapprochées : réessayez dans quelques instants.</source>
+        <target state="translated">Too many requests in a row: try again in a few moments.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">218</context>
+        </context-group>
+        <note priority="1" from="description">Export patient limité</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.error.failed" datatype="html">
+        <source>La génération du fichier a échoué. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <target state="translated">The file could not be generated. Nothing was changed; try again in a moment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">220</context>
+        </context-group>
+        <note priority="1" from="description">Export patient en échec</note>
+      </trans-unit>
+      <trans-unit id="account.data.launch.inProgressKnown" datatype="html">
+        <source>Un export est déjà en cours : il est affiché ci-dessous. Le bouton se réactive dès qu&apos;il est terminé.</source>
+        <target state="translated">An export is already in progress: it is shown below. The button comes back as soon as it is finished.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-group>
+        <note priority="1" from="description">Export déjà en cours, job affiché</note>
+      </trans-unit>
+      <trans-unit id="account.data.launch.inProgress" datatype="html">
+        <source>Un export de votre compte est déjà en préparation, lancé depuis un autre appareil ou une autre session. Vous pourrez relancer un export ici dans un instant.</source>
+        <target state="translated">An export of your account is already being prepared, started from another device or session. You can start an export here again in a moment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+        <note priority="1" from="description">Export déjà en cours, lancé ailleurs</note>
+      </trans-unit>
+      <trans-unit id="account.data.launch.error" datatype="html">
+        <source>Export impossible pour le moment. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <target state="translated">Export unavailable for now. Nothing was changed; try again in a moment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+        <note priority="1" from="description">Export du compte impossible</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.requested" datatype="html">
+        <source>Demandé le</source>
+        <target state="translated">Requested on</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+        <note priority="1" from="description">Préfixe lu de la date de demande</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.queued" datatype="html">
+        <source>En attente</source>
+        <target state="translated">Queued</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">38,40</context>
+        </context-group>
+        <note priority="1" from="description">État du job : en attente</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.queuedBody" datatype="html">
+        <source>La préparation commence dans un instant ; actualisation automatique.</source>
+        <target state="translated">Preparation starts in a moment; refreshed automatically.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">41,44</context>
+        </context-group>
+        <note priority="1" from="description">Détail de l&apos;attente</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.running" datatype="html">
+        <source>En préparation</source>
+        <target state="translated">Preparing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+        <note priority="1" from="description">État du job : en préparation</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.runningBody" datatype="html">
+        <source>Actualisation automatique.</source>
+        <target state="translated">Refreshed automatically.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">49,53</context>
+        </context-group>
+        <note priority="1" from="description">Détail de la préparation</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.ready" datatype="html">
+        <source>Prêt</source>
+        <target state="translated">Ready</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">53,54</context>
+        </context-group>
+        <note priority="1" from="description">État du job : prêt</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.validUntil" datatype="html">
+        <source>lien valable jusqu&apos;au <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ expiresAt() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">link valid until <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ expiresAt() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">55,56</context>
+        </context-group>
+        <note priority="1" from="description">Validité du lien</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.download" datatype="html">
+        <source> Télécharger </source>
+        <target state="translated">Download</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">65,68</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de téléchargement du zip</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.expired" datatype="html">
+        <source>Expiré</source>
+        <target state="translated">Expired</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">70,72</context>
+        </context-group>
+        <note priority="1" from="description">État du job : expiré</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.expiredBody" datatype="html">
+        <source>Le lien de 7 jours a expiré et le fichier a été purgé.</source>
+        <target state="translated">The 7-day link has expired and the file has been purged.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">73,76</context>
+        </context-group>
+        <note priority="1" from="description">Détail du lien expiré</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.relaunch" datatype="html">
+        <source> Relancer </source>
+        <target state="translated">Start again</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">83,86</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">101,105</context>
+        </context-group>
+        <note priority="1" from="description">Bouton relancer l&apos;export</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.failed" datatype="html">
+        <source>Échec</source>
+        <target state="translated">Failed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">88,91</context>
+        </context-group>
+        <note priority="1" from="description">État du job : échec</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.progress" datatype="html">
+        <source>Préparation de l&apos;export en cours</source>
+        <target state="translated">Export being prepared</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de l&apos;indicateur de préparation</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.none" datatype="html">
+        <source> Aucun dossier ne correspond à cette recherche. </source>
+        <target state="translated">No record matches this search.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
+          <context context-type="linenumber">77,84</context>
+        </context-group>
+        <note priority="1" from="description">Aucun patient ne correspond à la recherche</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.placeholder" datatype="html">
+        <source>Nom affiché…</source>
+        <target state="translated">Display name…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
+          <context context-type="linenumber">172</context>
+        </context-group>
+        <note priority="1" from="description">Indication du sélecteur de patient</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.list" datatype="html">
+        <source>Dossiers correspondants</source>
+        <target state="translated">Matching records</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.archived" datatype="html">
+        <source>archivé</source>
+        <target state="translated">archived</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
+          <context context-type="linenumber">196</context>
+        </context-group>
+        <note priority="1" from="description">Patient archivé dans le sélecteur</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.age" datatype="html">
+        <source><x id="age" equiv-text="age"/> ans</source>
+        <target state="translated"><x id="age" equiv-text="age"/> years old</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+        <note priority="1" from="description">Âge dans le sélecteur</note>
+      </trans-unit>
+      <trans-unit id="patients.export.title" datatype="html">
+        <source> Export du dossier </source>
+        <target state="translated">Record export</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">439,441</context>
+        </context-group>
+        <note priority="1" from="description">Encart d&apos;export du dossier</note>
+      </trans-unit>
+      <trans-unit id="patients.export.button" datatype="html">
+        <source>Exporter ce dossier</source>
+        <target state="translated">Export this record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">32,36</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du menu d&apos;export du dossier</note>
+      </trans-unit>
+      <trans-unit id="patients.export.menu" datatype="html">
+        <source>Format d&apos;export</source>
+        <target state="translated">Export format</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">38,39</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du menu des formats d&apos;export</note>
+      </trans-unit>
+      <trans-unit id="patients.export.pdf" datatype="html">
+        <source>PDF</source>
+        <target state="translated">PDF</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">43,44</context>
+        </context-group>
+        <note priority="1" from="description">Format PDF du menu d&apos;export</note>
+      </trans-unit>
+      <trans-unit id="patients.export.pdfHint" datatype="html">
+        <source>thème clair · à imprimer</source>
+        <target state="translated">light theme · for printing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">45,49</context>
+        </context-group>
+        <note priority="1" from="description">Détail du format PDF</note>
+      </trans-unit>
+      <trans-unit id="patients.export.md" datatype="html">
+        <source>Markdown</source>
+        <target state="translated">Markdown</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">51,52</context>
+        </context-group>
+        <note priority="1" from="description">Format Markdown du menu d&apos;export</note>
+      </trans-unit>
+      <trans-unit id="patients.export.mdHint" datatype="html">
+        <source>texte brut · réutilisable</source>
+        <target state="translated">plain text · reusable</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">53,57</context>
+        </context-group>
+        <note priority="1" from="description">Détail du format Markdown</note>
+      </trans-unit>
+      <trans-unit id="patients.export.note" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Entrées privées exclues<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, ainsi que les entrées archivées. Ordre chronologique, version courante du texte. </source>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Private entries excluded<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, as well as archived entries. Chronological order, current version of the text.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">64,67</context>
+        </context-group>
+        <note priority="1" from="description">Rappel sous le menu d&apos;export</note>
+      </trans-unit>
+      <trans-unit id="patients.export.direct" datatype="html">
+        <source>Téléchargement immédiat, rien n&apos;est conservé côté serveur. Pour tous vos dossiers d&apos;un coup :</source>
+        <target state="translated">Immediate download, nothing is kept on the server. For all your records at once:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">69,73</context>
+        </context-group>
+        <note priority="1" from="description">Téléchargement direct</note>
+      </trans-unit>
+      <trans-unit id="patients.export.accountLink" datatype="html">
+        <source>Mon compte › Données et export</source>
+        <target state="translated">My account › Data and export</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">75,82</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers Données et export</note>
+      </trans-unit>
+      <trans-unit id="patients.export.busy" datatype="html">
+        <source>Préparation du fichier…</source>
+        <target state="translated">Preparing the file…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+        <note priority="1" from="description">Fichier en préparation</note>
+      </trans-unit>
+      <trans-unit id="patients.export.error.offline" datatype="html">
+        <source>Connexion perdue : réessayez une fois le réseau revenu.</source>
+        <target state="translated">Connection lost: try again once the network is back.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">154</context>
+        </context-group>
+        <note priority="1" from="description">Export patient hors ligne</note>
+      </trans-unit>
+      <trans-unit id="patients.export.error.forbidden" datatype="html">
+        <source>Ce dossier n&apos;est pas accessible depuis votre compte.</source>
+        <target state="translated">This record cannot be accessed from your account.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+        <note priority="1" from="description">Export patient refusé</note>
+      </trans-unit>
+      <trans-unit id="patients.export.error.notFound" datatype="html">
+        <source>Ce dossier n&apos;existe pas ou plus.</source>
+        <target state="translated">This record does not exist or no longer exists.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">158</context>
+        </context-group>
+        <note priority="1" from="description">Export patient introuvable</note>
+      </trans-unit>
+      <trans-unit id="patients.export.error.rateLimited" datatype="html">
+        <source>Trop de demandes rapprochées : réessayez dans quelques instants.</source>
+        <target state="translated">Too many requests in a row: try again in a few moments.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+        <note priority="1" from="description">Export patient limité</note>
+      </trans-unit>
+      <trans-unit id="patients.export.error.failed" datatype="html">
+        <source>La génération du fichier a échoué. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <target state="translated">The file could not be generated. Nothing was changed; try again in a moment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">162</context>
+        </context-group>
+        <note priority="1" from="description">Export patient en échec</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.downloadInvalid" datatype="html">
+        <source>Le lien de téléchargement n&apos;était plus valide : il vient d&apos;être relu. Réessayez.</source>
+        <target state="translated">The download link was no longer valid: it has just been refreshed. Try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+        <note priority="1" from="description">Lien signé refusé</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.elsewhereTitle" datatype="html">
+        <source>Un export est en préparation ailleurs</source>
+        <target state="translated">An export is being prepared elsewhere</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+        <note priority="1" from="description">Export lancé ailleurs</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.elsewhereMessage" datatype="html">
+        <source>Il a été lancé depuis un autre appareil ou une autre session : son état et son lien s&apos;affichent là où il a été lancé.</source>
+        <target state="translated">It was started from another device or session: its status and link show where it was started.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <note priority="1" from="description">Explication de l&apos;export lancé ailleurs</note>
       </trans-unit>
     </body>
   </file>
