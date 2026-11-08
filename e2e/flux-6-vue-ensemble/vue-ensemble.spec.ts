@@ -45,8 +45,8 @@ test.describe('vue d’ensemble', () => {
     // timing() vaut -1 quand la mesure manque : elle doit exister.
     expect(openMs).toBeGreaterThan(0);
 
-    // Vue simple (M4-07 à venir) : l'état provisoire ; la bascule est à droite des onglets.
-    await expect(page.getByText('Récit : bientôt')).toBeVisible();
+    // Vue simple « Récit » (défaut, M4-07) ; la bascule est à droite des onglets.
+    await expect(block(page, 'En bref')).toBeVisible();
     const toggle = viewToggle(page);
     await expect(toggle).toContainText('mémorisée dans vos préférences');
     await expect(toggle.getByRole('button', { name: 'Simple' })).toHaveAttribute(
@@ -258,11 +258,11 @@ test.describe('vue d’ensemble', () => {
     expect(overviewWindow(await reread)).toBe('90d');
     await expect(block(page, "Tendance d'intensité · 90 jours")).toBeVisible();
 
-    // Bascule Vue : Espace → Simple (état provisoire), Tab puis Entrée → Complète.
+    // Bascule Vue : Espace → Simple (vue « Récit »), Tab puis Entrée → Complète.
     const toggle = viewToggle(page);
     await toggle.getByRole('button', { name: 'Simple' }).focus();
     await page.keyboard.press('Space');
-    await expect(page.getByText('Récit : bientôt')).toBeVisible();
+    await expect(block(page, 'En bref')).toBeVisible();
     await page.keyboard.press('Tab');
     await expect(toggle.getByRole('button', { name: 'Complète' })).toBeFocused();
     await page.keyboard.press('Enter');
