@@ -1,0 +1,254 @@
+:host {
+  display: block;
+}
+
+.decade {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-raised);
+}
+
+.head,
+.facts,
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+
+.head,
+.note,
+.hint {
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+.note,
+.hint {
+  margin: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--primary-tint);
+  color: var(--primary-hover);
+  font-weight: 500;
+
+  svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+}
+
+.facts {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--font-ui);
+  font-size: 10px;
+
+  text,
+  .seg,
+  .curve,
+  .dot,
+  .band,
+  .arrow,
+  line {
+    pointer-events: none;
+  }
+}
+
+.grid {
+  stroke: var(--border-subtle);
+  stroke-dasharray: 3 4;
+
+  &.base {
+    stroke-dasharray: none;
+  }
+}
+
+.tick {
+  fill: var(--text-secondary);
+  font-family: var(--font-mono);
+
+  &.intensity {
+    fill: var(--feeling-text);
+  }
+}
+
+.year {
+  stroke: var(--border-strong);
+}
+
+.year-label {
+  fill: var(--text-primary);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+// Liseré entre les segments empilés : les types se distinguent aussi par la séparation, pas par la
+// seule couleur (la légende et l'info-bulle les nomment).
+.seg {
+  stroke: var(--surface-raised);
+  stroke-width: 0.75;
+}
+
+@each $type in note, event, situation, feeling, session, medication {
+  .type-#{$type} {
+    fill: var(--entry-#{$type});
+  }
+}
+
+.curve {
+  fill: none;
+  stroke: var(--feeling);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.dot {
+  fill: var(--surface-raised);
+  stroke: var(--feeling);
+  stroke-width: 1.5;
+}
+
+.follow {
+  stroke: var(--primary);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+
+.follow-label {
+  fill: var(--primary-hover);
+}
+
+.band {
+  fill: color-mix(in srgb, var(--entry-situation) 25%, transparent);
+}
+
+.arrow {
+  fill: none;
+  stroke: var(--entry-situation);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.band-label {
+  fill: var(--entry-situation);
+}
+
+.hit {
+  fill: transparent;
+  cursor: zoom-in;
+
+  &:hover {
+    fill: color-mix(in srgb, var(--primary) 8%, transparent);
+  }
+}
+
+.legend {
+  margin: 0;
+  padding: 4px 0 0;
+  border-top: 1px solid var(--border-subtle);
+  list-style: none;
+  font: var(--mat-sys-body-small);
+  color: var(--text-secondary);
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+.swatch {
+  display: inline-block;
+  width: 14px;
+  border-radius: 2px;
+}
+
+.curve-swatch {
+  height: 3px;
+  background: var(--feeling);
+}
+
+.band-swatch {
+  height: 8px;
+  background: color-mix(in srgb, var(--entry-situation) 25%, transparent);
+  box-shadow: inset 0 0 0 1px var(--entry-situation);
+}
+
+.months summary {
+  color: var(--text-primary);
+  font: var(--mat-sys-label-large);
+  cursor: pointer;
+}
+
+.table-wrap {
+  max-height: 320px;
+  margin-top: 8px;
+  overflow: auto;
+}
+
+table {
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+th,
+td {
+  padding: 2px 12px 2px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: right;
+  white-space: nowrap;
+}
+
+thead th {
+  font: var(--mat-sys-label-medium);
+  color: var(--text-secondary);
+}
+
+th[scope='row'] {
+  text-align: left;
+}
+
+.month-button {
+  padding: 2px 4px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--primary-hover);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hit {
+    transition: fill 120ms ease-out;
+  }
+}

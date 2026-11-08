@@ -31,9 +31,16 @@ export async function createPatient(
   return ((await response.json()) as { id: string }).id;
 }
 
-/** La séance d'accueil est créée de façon asynchrone après le patient : on l'attend. */
-export async function intakeOf(api: APIRequestContext, patientId: string): Promise<string> {
-  for (let attempt = 0; attempt < 40; attempt++) {
+/**
+ * La séance d'accueil est créée de façon asynchrone après le patient : on l'attend (`timeoutMs`,
+ * 10 s par défaut ; plus quand les données s'écrivent pendant que d'autres chargent l'API).
+ */
+export async function intakeOf(
+  api: APIRequestContext,
+  patientId: string,
+  timeoutMs = 10_000,
+): Promise<string> {
+  for (let attempt = 0; attempt < timeoutMs / 250; attempt++) {
     const response = await api.get(`${API}/api/patients/${patientId}/sessions/current`);
     if (response.status() === 200) return ((await response.json()) as { id: string }).id;
     await new Promise((resolve) => setTimeout(resolve, 250));
@@ -161,8 +168,10 @@ export async function storyPatient(api: APIRequestContext): Promise<StoryPatient
 }
 
 /**
- * Patient « volume » : une séance il y a trois ans, puis `count` notes réparties jusqu'à hier,
- * écrites en parallèle sur plusieurs sessions API (limite de débit par session).
+ * Patient « volume » : une séance il y a deux ans, puis `count` notes réparties jusqu'à hier,
+ * écrites en parallèle sur plusieurs sessions API (limite de débit par session). Deux ans et non
+ * trois : au-delà de 36 mois couverts, la timeline passe à l'agrégat par mois (M3-04) ; ce patient
+ * sert au défilement des cartes.
  */
 export async function volumePatient(
   api: APIRequestContext,
@@ -171,7 +180,7 @@ export async function volumePatient(
 ): Promise<string> {
   const id = await createPatient(api, 'Volume 2000');
   await intakeOf(api, id);
-  const span = 3 * 365;
+  const span = 2 * 365;
   const session = await pastSession(api, id, daysAgo(span + 1, 8));
   const contexts = await Promise.all(
     Array.from({ length: Math.ceil(count / PER_SESSION) }, () => signedInContext(account)),

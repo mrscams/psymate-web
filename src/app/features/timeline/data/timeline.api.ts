@@ -7,10 +7,12 @@ import {
   EntryDto,
   TimelineItemDto,
   TimelinePageDto,
+  TimelinePeriodDto,
   VocabulaireService,
 } from '../../../api';
-import { EntryType } from '../../../shared/ui';
+import { ENTRY_TYPES, EntryType } from '../../../shared/ui';
 import { OccurredPrecision } from '../../../shared/util';
+import { DecadeRange, periodMonth, TimelinePeriod } from './timeline-decade.model';
 import { SessionDetail, SessionKind, SessionModality } from './timeline-sessions.model';
 import {
   EMOTION_FAMILIES,
@@ -99,6 +101,28 @@ export class TimelineApi {
   }
 
   /**
+   * GET /api/patients/{id}/timeline/summary?granularity=month : les mois non vides de la fenêtre
+   * (bornes de période des filtres), du plus ancien au plus récent, avec le nombre d'entrées par
+   * type et l'intensité moyenne des ressentis (vue décennie, M3-04). Calculé par le serveur ; les
+   * filtres de type, d'émotion, de tag et de brouillon n'existent pas pour ce résumé (contrat).
+   * Entrées privées exclues (includePrivate absent), comme la chronologie.
+   */
+  async summary(patientId: string, range: DecadeRange): Promise<TimelinePeriod[]> {
+    const dto = await firstValueFrom(
+      this.timeline.getTimelineSummary(
+        patientId,
+        'month',
+        range.from ?? undefined,
+        range.to ?? undefined,
+      ),
+    );
+    return (dto.periods ?? [])
+      .map(toPeriod)
+      .filter((period): period is TimelinePeriod => period !== null)
+      .sort((a, b) => a.month - b.month);
+  }
+
+  /**
    * GET /api/entries/{id} d'une séance : horaires, durée, modalité, genre, clôture et compte rendu
    * (texte de la version courante, figé à la clôture), pour la séance dépliée du mode par séance.
    */
@@ -123,6 +147,29 @@ export class TimelineApi {
     }
     return { labels, families };
   }
+}
+
+function toPeriod(dto: TimelinePeriodDto): TimelinePeriod | null {
+  const month = periodMonth(dto.period);
+  if (month === null) return null;
+  const counts: Partial<Record<EntryType, number>> = {};
+  let total = 0;
+  for (const type of ENTRY_TYPES) {
+    const n = dto.counts?.[type];
+    if (typeof n === 'number' && Number.isFinite(n) && n > 0) {
+      counts[type] = n;
+      total += n;
+    }
+  }
+  const average = dto.averageIntensity;
+  return {
+    period: dto.period ?? '',
+    month,
+    counts,
+    total,
+    feelingCount: dto.feelingCount ?? counts.feeling ?? 0,
+    averageIntensity: typeof average === 'number' && Number.isFinite(average) ? average : null,
+  };
 }
 
 function toSessionDetail(dto: EntryDto): SessionDetail {

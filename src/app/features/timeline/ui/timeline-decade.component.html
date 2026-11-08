@@ -1,0 +1,293 @@
+@switch (state()) {
+  @case ('loading') {
+    <pm-state kind="loading" skeleton="block" [lines]="3" />
+  }
+  @case ('error') {
+    <pm-state
+      kind="error"
+      [action]="retryAction"
+      [details]="problemCode()"
+      title="Impossible de charger l'agrégat par mois"
+      i18n-title="Titre de l'erreur de la vue décennie@@timeline.decade.error.title"
+    />
+  }
+  @case ('empty') {
+    <pm-state
+      kind="empty"
+      title="Aucune entrée sur cette plage"
+      i18n-title="Titre de la vue décennie vide@@timeline.decade.empty.title"
+      message="Élargissez la période, ou revenez au détail avec le zoom avant (+)."
+      i18n-message="Texte de la vue décennie vide@@timeline.decade.empty.message"
+    />
+  }
+  @default {
+    @if (chart(); as c) {
+      <div class="decade">
+        <div class="head">
+          <span class="badge">
+            <svg aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 16 16">
+              <circle cx="7" cy="7" r="4.5" />
+              <path d="M10.5 10.5 14 14M7 5v4M5 7h4" />
+            </svg>
+            <span i18n="Étiquette de la vue décennie@@timeline.decade.badge"
+              >Agrégé par mois · double-clic pour zoomer</span
+            >
+          </span>
+          <span class="facts">
+            <span class="range">{{ startText() }} → {{ endText() }}</span>
+            @if (years()) {
+              <span
+                i18n="Années de la durée de la plage, vue décennie@@timeline.decade.years"
+                >{years(), plural, =1 {1 an} other {{{ years() }} ans}}</span
+              >
+            }
+            @if (extraMonths()) {
+              <span
+                i18n="Mois de la durée de la plage, vue décennie@@timeline.decade.months"
+                >{extraMonths(), plural, =1 {1 mois} other {{{ extraMonths() }} mois}}</span
+              >
+            }
+            <span i18n="Mois de la plage de la vue décennie@@timeline.decade.monthsCount"
+              >{{ monthCount() }} mois · {{ filled().length }} non vides ·</span
+            >
+            <span
+              i18n="Nombre d'entrées de la vue décennie@@timeline.decade.entries"
+              >{entryCount(), plural, =1 {1 entrée} other {{{ entryText() }} entrées}}</span
+            >
+            @if (outside()) {
+              <span
+                i18n="Entrées hors de la plage de la vue décennie@@timeline.decade.outside"
+                >{outside(), plural,
+                  =1 {1 entrée hors plage}
+                  other {{{ outsideText() }} entrées hors plage}
+                }</span
+              >
+            }
+          </span>
+        </div>
+
+        @if (partialFilters()) {
+          <p class="note" i18n="Filtres sans effet sur la vue décennie@@timeline.decade.partial">
+            Les filtres d'émotion, de tag et de brouillon ne s'appliquent pas à l'agrégat par mois ;
+            les types et la période, si.
+          </p>
+        }
+
+        <svg
+          class="chart"
+          role="img"
+          focusable="false"
+          [attr.aria-label]="ariaLabel()"
+          [attr.viewBox]="'0 0 ' + c.width + ' ' + c.height"
+        >
+          @for (tick of c.countTicks; track tick.value) {
+            <line
+              class="grid"
+              [class.base]="tick.value === 0"
+              [attr.x1]="c.left"
+              [attr.x2]="c.right"
+              [attr.y1]="tick.y"
+              [attr.y2]="tick.y"
+            />
+            <text class="tick" text-anchor="end" [attr.x]="c.left - 6" [attr.y]="tick.y + 3.5">
+              {{ countText(tick.value) }}
+            </text>
+          }
+          @for (tick of c.intensityTicks; track tick.value) {
+            <text class="tick intensity" [attr.x]="c.right + 8" [attr.y]="tick.y + 3.5">
+              {{ countText(tick.value) }}
+            </text>
+          }
+          @for (year of c.years; track year.year) {
+            <line
+              class="year"
+              [attr.x1]="year.x"
+              [attr.x2]="year.x"
+              [attr.y1]="c.top"
+              [attr.y2]="c.base + 6"
+            />
+            <text class="year-label" [attr.x]="year.x + 4" [attr.y]="c.yearY">{{ year.year }}</text>
+          }
+          @for (m of c.months; track m.month) {
+            @for (s of m.segments; track s.type) {
+              <rect
+                [attr.class]="'seg type-' + s.type"
+                [attr.x]="m.barX"
+                [attr.y]="s.y"
+                [attr.width]="m.barWidth"
+                [attr.height]="s.height"
+              />
+            }
+          }
+          @for (points of c.curve; track $index) {
+            <polyline class="curve" [attr.points]="points" />
+          }
+          @for (dot of c.dots; track dot.month) {
+            <circle class="dot" r="2.5" [attr.cx]="dot.x" [attr.cy]="dot.y" />
+          }
+          @if (c.follow; as f) {
+            <line
+              class="follow"
+              [attr.x1]="f.x"
+              [attr.x2]="f.x"
+              [attr.y1]="c.top - 10"
+              [attr.y2]="c.base + 6"
+            />
+            <text
+              class="follow-label"
+              [attr.x]="f.anchorEnd ? f.x - 4 : f.x + 4"
+              [attr.y]="c.top - 14"
+              [attr.text-anchor]="f.anchorEnd ? 'end' : 'start'"
+            >
+              {{ followText() }}
+            </text>
+          }
+          @for (band of c.bands; track band.item.id) {
+            <rect
+              class="band"
+              rx="3"
+              height="14"
+              [attr.x]="band.x"
+              [attr.y]="band.y"
+              [attr.width]="band.width"
+            />
+            @if (band.ongoing) {
+              <path
+                class="arrow"
+                [attr.d]="
+                  'M' +
+                  (band.x + band.width) +
+                  ' ' +
+                  (band.y + 7) +
+                  'h7M' +
+                  (band.x + band.width + 4) +
+                  ' ' +
+                  (band.y + 4) +
+                  'l3 3-3 3'
+                "
+              />
+            }
+            <text
+              class="band-label"
+              [attr.x]="bandTextX(band)"
+              [attr.y]="band.y + 10.5"
+              [attr.text-anchor]="bandAnchor(band)"
+            >
+              {{ bandText(band) }}
+            </text>
+          }
+          @for (m of c.months; track m.month) {
+            <rect
+              class="hit"
+              [attr.data-month]="m.key"
+              [attr.x]="m.x"
+              [attr.y]="c.top - 4"
+              [attr.width]="m.width"
+              [attr.height]="c.base - c.top + 4"
+              (dblclick)="drill.emit(m.month)"
+            >
+              <title>{{ monthTitle(m) }}</title>
+            </rect>
+          }
+        </svg>
+
+        <ul
+          class="legend"
+          aria-label="Légende"
+          i18n-aria-label="Nom de la légende de la vue décennie@@timeline.decade.legend"
+        >
+          @for (t of shownTypes(); track t.type) {
+            <li><pm-entry-icon [type]="t.type" [size]="12" />{{ t.label }}</li>
+          }
+          @if (intensity()) {
+            <li>
+              <span class="swatch curve-swatch" aria-hidden="true"></span>
+              <span i18n="Légende de la courbe d'intensité@@timeline.decade.legend.intensity"
+                >Intensité moyenne des ressentis (axe droit, 0–10)</span
+              >
+            </li>
+          }
+          @if (c.bands.length) {
+            <li>
+              <span class="swatch band-swatch" aria-hidden="true"></span>
+              <span i18n="Légende des bandes de situations@@timeline.decade.legend.bands"
+                >Situations longues</span
+              >
+            </li>
+          }
+        </ul>
+        <p class="hint" i18n="Aide des gestes de la vue décennie@@timeline.decade.hint">
+          Survoler un mois : détail des comptes · double-clic : timeline au zoom « semaine » sur ce
+          mois · Échap : retour
+        </p>
+
+        <details class="months">
+          <summary i18n="Ouverture du tableau des mois de la vue décennie@@timeline.decade.table">
+            Tableau des mois non vides ({{ filled().length }}) · Entrée ouvre le détail d'un mois
+          </summary>
+          <div class="table-wrap">
+            <table>
+              <caption
+                class="sr-only"
+                i18n="Légende du tableau des mois de la vue décennie@@timeline.decade.caption"
+              >
+                Nombre d'entrées par type et intensité moyenne des ressentis, mois par mois
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col" i18n="Colonne des mois de la vue décennie@@timeline.decade.month">
+                    Mois
+                  </th>
+                  @for (t of shownTypes(); track t.type) {
+                    <th scope="col">{{ t.label }}</th>
+                  }
+                  @if (intensity()) {
+                    <th
+                      scope="col"
+                      i18n="Colonne de l'intensité moyenne, vue décennie@@timeline.decade.average"
+                    >
+                      Intensité moyenne
+                    </th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of rows(); track row.month) {
+                  <tr>
+                    <th scope="row">
+                      <button
+                        type="button"
+                        class="month-button"
+                        [attr.aria-label]="row.action"
+                        (click)="drill.emit(row.month)"
+                      >
+                        {{ row.label }}
+                      </button>
+                    </th>
+                    @for (count of row.counts; track $index) {
+                      <td>{{ count }}</td>
+                    }
+                    @if (intensity()) {
+                      <td>
+                        @if (row.average; as average) {
+                          {{ average }}
+                        } @else {
+                          <span aria-hidden="true">—</span>
+                          <span
+                            class="sr-only"
+                            i18n="Mois sans ressenti, vue décennie@@timeline.decade.noFeeling"
+                            >aucun ressenti</span
+                          >
+                        }
+                      </td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+    }
+  }
+}

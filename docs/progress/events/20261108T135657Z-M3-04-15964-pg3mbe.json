@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T13:56:57.150Z",
+  "task": "M3-04",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Vue décennie agrégée : SVG maison sans dépendance, bascule automatique au-delà de 3 ans, double-clic vers le détail du mois, tableau équivalent accessible",
+  "notes": "Commits 36ca550 + d84e5af (suites de revue, aucun bloquant). Plage = période des filtres sinon début clinique (min followedSince, 1re séance) jusqu'au dernier mois non vide ; comparée en jours civils quand connus. Résumé API seed small : médiane 13 à 44 ms (curl) ; e2e 14 à 42 ms, rendu après données 24 à 47 ms. Seed medium (10 ans) non mesuré. Écarts : résumé sans situations longues (bandes tirées de ongoingSituations), filtres émotion/tag/brouillon non appliqués à l'agrégat, mois UTC du résumé contre jours locaux du détail, patient e2e volume réduit à 2 ans (dossiers de plus de 3 ans ouverts en agrégat). Aucune dépendance npm ; bundle initial 905,49 kB inchangé. Vitest 137 fichiers / 1198 tests ; e2e flux-5-timeline 14/14.",
+  "next": "Rebase, PR M3-04 et fusion ; arbitrer la définition de plage (dossier contre zoom) ; mesure sur seed medium à faire",
+  "branch": "claude/loving-pare-ad3cab",
+  "checkout": "loving-pare-ad3cab"
+}

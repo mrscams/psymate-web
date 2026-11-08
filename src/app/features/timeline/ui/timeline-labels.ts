@@ -1,6 +1,7 @@
 // Textes de features/timeline qui dépendent d'une valeur (précision, granularité, intensité) :
 // tous en $localize, jamais en dur dans un template.
 
+import { EntryType } from '../../../shared/ui';
 import { OccurredPrecision } from '../../../shared/util';
 import { PeriodPreset, TimelineMode } from '../data/timeline-filters.model';
 import { SessionKind, SessionModality } from '../data/timeline-sessions.model';
@@ -213,4 +214,45 @@ export function dayLabel(day: string, locale: string): string {
   return dtf(locale, { day: 'numeric', month: 'short', year: 'numeric' }).format(
     new Date(y, m - 1, d),
   );
+}
+
+// ---------------------------------------------------------------- vue décennie (M3-04)
+
+/** Granularité affichée entre − et + quand la timeline montre l'agrégat par mois. */
+export function decadeZoomLabel(): string {
+  return $localize`:Granularité du zoom de la timeline en vue décennie@@timeline.zoom.decade:Décennie`;
+}
+
+/** Nom d'un type au pluriel (légende, colonnes du tableau des mois). */
+export function typePluralLabel(type: EntryType): string {
+  switch (type) {
+    case 'note':
+      return $localize`:Type d'entrée au pluriel, vue décennie@@timeline.decade.type.note:Notes`;
+    case 'event':
+      return $localize`:Type d'entrée au pluriel, vue décennie@@timeline.decade.type.event:Événements`;
+    case 'situation':
+      return $localize`:Type d'entrée au pluriel, vue décennie@@timeline.decade.type.situation:Situations`;
+    case 'feeling':
+      return $localize`:Type d'entrée au pluriel, vue décennie@@timeline.decade.type.feeling:Ressentis`;
+    case 'session':
+      return $localize`:Type d'entrée au pluriel, vue décennie@@timeline.decade.type.session:Séances`;
+    case 'medication':
+      return $localize`:Type d'entrée au pluriel, vue décennie@@timeline.decade.type.medication:Médicaments`;
+  }
+}
+
+/** Mois d'un rang (année × 12 + mois, UTC) : « mars 2025 », « janv. 2023 » en court. */
+export function monthLabel(index: number, locale: string, long = false): string {
+  const date = new Date(Date.UTC(Math.floor(index / 12), index % 12, 1));
+  return dtf(locale, { month: long ? 'long' : 'short', year: 'numeric', timeZone: 'UTC' }).format(
+    date,
+  );
+}
+
+/** Intensité moyenne au format de la langue, une décimale (« 5,2 »). */
+export function averageLabel(value: number, locale: string): string {
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  }).format(value);
 }

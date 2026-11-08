@@ -1,6 +1,6 @@
 <section
   class="timeline"
-  [class.fill]="mode() === 'chronological'"
+  [class.fill]="mode() === 'chronological' && !decade()"
   aria-labelledby="timeline-heading"
 >
   <h2
@@ -29,7 +29,12 @@
       (filtersChange)="changeFilters($event)"
     />
     <div class="toolbar-end">
-      <pm-timeline-mode [mode]="mode()" (modeChange)="setMode($event)" />
+      <pm-timeline-mode
+        [mode]="mode()"
+        [sessionDisabled]="decade()"
+        (modeChange)="setMode($event)"
+        (blocked)="explainDecadeMode()"
+      />
       @if (mode() === 'chronological') {
         <div
           class="zoom"
@@ -42,7 +47,7 @@
             class="zoom-button"
             [attr.aria-label]="zoomOutLabel"
             aria-keyshortcuts="-"
-            [disabled]="!store.canZoomOut()"
+            [disabled]="!canZoomOut()"
             (click)="zoom('out')"
           >
             <span aria-hidden="true">−</span>
@@ -53,7 +58,7 @@
             class="zoom-button"
             [attr.aria-label]="zoomInLabel"
             aria-keyshortcuts="+"
-            [disabled]="!store.canZoomIn()"
+            [disabled]="!canZoomIn()"
             (click)="zoom('in')"
           >
             <span aria-hidden="true">+</span>
@@ -149,6 +154,20 @@
       (linked)="link($event)"
       (openSession)="openSession($event)"
       (retryDetail)="sessionDetails.retry($event)"
+    />
+  } @else if (decade()) {
+    <pm-timeline-decade
+      [status]="decadeStore.status()"
+      [problemCode]="decadeStore.problem()?.code ?? ''"
+      [periods]="decadeStore.periods()"
+      [plage]="decadeStore.plage()"
+      [types]="decadeTypes()"
+      [situations]="store.ongoing()"
+      [followStart]="store.followStart()"
+      [partialFilters]="partialFilters()"
+      (drill)="openMonth($event)"
+      (retry)="decadeStore.retrySummary()"
+      (wheel)="onWheel($event)"
     />
   } @else {
     <p class="status-line">
