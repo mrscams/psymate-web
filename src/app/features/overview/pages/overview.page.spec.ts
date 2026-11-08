@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 
 import { PreferencesStore } from '../../../core/preferences';
 import { ToastService } from '../../../shared/ui';
@@ -301,14 +301,43 @@ describe('OverviewPage', () => {
     expect(text(el)).toContain("Tendance d'intensité · 30 jours");
   });
 
-  it('vue simple : état provisoire « Récit : bientôt », qui mène à la vue complète', async () => {
-    const { el, set, settle } = await render({ view: 'simple' });
-    expect(text(el)).toContain('Récit : bientôt');
-    expect(el.querySelector('pm-overview-block')).toBeNull();
-    button(el, 'Afficher la vue complète').click();
+  it('vue simple (défaut) : le récit à la place des blocs chiffrés, sur la même synthèse', async () => {
+    const { el, overview } = await render({ view: 'simple' });
+    expect(overview).toHaveBeenCalledTimes(1);
+    expect(el.querySelector('pm-overview-simple')).not.toBeNull();
+    expect(text(el)).not.toContain('Récit : bientôt');
+    const headings = [...el.querySelectorAll('pm-overview-block h3')].map((h) => text(h));
+    expect(headings).toContain('En bref');
+    expect(headings).not.toContain('Résumé');
+    expect(text(el.querySelector('.sentence'))).toBe(
+      'Suivi depuis le 12 mars 2025 : 31 séances, soit environ une séance par semaine.',
+    );
+    // Le sélecteur de fenêtre et le pied restent communs aux deux vues.
+    expect(el.querySelector('.windows')).not.toBeNull();
+    expect(text(el.querySelector('footer'))).toContain('Dernière mise à jour de la synthèse');
+  });
+
+  it('bascule simple ↔ complète : aucune nouvelle lecture de la synthèse', async () => {
+    const { el, overview, set, settle } = await render({ view: 'simple' });
+    // La bascule vit dans l'en-tête (shell) ; ici, la préférence change comme elle l'écrirait.
+    await set('overview.view', 'complete' as never);
     await settle();
-    expect(set).toHaveBeenCalledWith('overview.view', 'complete');
-    expect(el.querySelector('pm-overview-block')).not.toBeNull();
+    expect(el.querySelector('pm-overview-simple')).toBeNull();
+    expect(text(block(el, 'Situations actives'))).toContain('Surcharge au travail');
+    await set('overview.view', 'simple' as never);
+    await settle();
+    expect(el.querySelector('pm-overview-simple')).not.toBeNull();
+    expect(overview).toHaveBeenCalledTimes(1);
+  });
+
+  it('vue simple : un point du graphe ou une entrée ouvre l’éditeur (?entry=)', async () => {
+    const { fixture, el, settle } = await render({ view: 'simple' });
+    const simple = fixture.debugElement.query((d) => d.name === 'pm-overview-simple');
+    simple.componentInstance.entrySelected.emit('f-1');
+    await settle();
+    const router = TestBed.inject(Router);
+    expect(router.url).toBe('/?entry=f-1');
+    expect(el.querySelector('pm-overview-simple')).not.toBeNull();
   });
 
   it('dernière mise à jour : heure du calcul (computedAt), région d’état permanente, sans « Recalculer »', async () => {
@@ -386,7 +415,7 @@ describe('OverviewPage', () => {
   it('préférences pas encore lues : ni requête ni vue simple ; lues → une seule lecture', async () => {
     const { el, overview, loaded, settle } = await render({ prefsLoaded: false });
     expect(overview).not.toHaveBeenCalled();
-    expect(text(el)).not.toContain('Récit : bientôt');
+    expect(el.querySelector('pm-overview-simple')).toBeNull();
     expect(el.querySelector('pm-overview-block')).toBeNull();
     expect(el.querySelector('[aria-busy="true"]')).not.toBeNull();
     loaded.set(true);

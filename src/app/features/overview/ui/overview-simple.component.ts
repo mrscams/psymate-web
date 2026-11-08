@@ -42,14 +42,7 @@ const ENTRY_PARAM = 'entry';
 
 /** Les blocs de la vue simple, chacun avec ses trois états. */
 export type SimpleBlock =
-  | 'brief'
-  | 'feelings'
-  | 'lastSession'
-  | 'situations'
-  | 'since'
-  | 'medications'
-  | 'frame'
-  | 'todo';
+  'brief' | 'feelings' | 'lastSession' | 'situations' | 'since' | 'medications' | 'frame' | 'todo';
 
 const EMPTY: Record<SimpleBlock, (view: OverviewView) => boolean> = {
   brief: isBriefEmpty,

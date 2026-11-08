@@ -224,7 +224,9 @@ export const isFeelingsEmpty = (view: OverviewView): boolean => view.feelings.po
 export const isSinceEmpty = (view: OverviewView): boolean =>
   view.sinceLastSession.entries.length === 0;
 export const isFrameEmpty = (view: OverviewView): boolean =>
-  view.facts.followedSince === null && view.facts.sessionCount === 0 && view.facts.flags.length === 0;
+  view.facts.followedSince === null &&
+  view.facts.sessionCount === 0 &&
+  view.facts.flags.length === 0;
 export const isTodoEmpty = (view: OverviewView): boolean =>
   view.drafts.count === 0 && view.drafts.openSession === null;
 

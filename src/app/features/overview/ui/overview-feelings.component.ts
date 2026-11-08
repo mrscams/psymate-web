@@ -80,10 +80,11 @@ const ENTRY_PARAM = 'entry';
               }
             }
           </svg>
-          <span i18n="Émotion dans la légende du graphe des ressentis@@overview.simple.feelings.legend.emotion"
-            >{{ item.label }} ({item.count, plural,
-              =1 {1 ressenti}
-              other {{{item.count}} ressentis}
+          <span
+            i18n="
+              Émotion dans la légende du graphe des
+              ressentis@@overview.simple.feelings.legend.emotion"
+            >{{ item.label }} ({item.count, plural, =1 {1 ressenti} other {{{item.count}} ressentis}
             })</span
           >
         </li>
@@ -104,12 +105,15 @@ const ENTRY_PARAM = 'entry';
       }
     </ul>
     <details class="data">
-      <summary i18n="Bouton qui déplie les données du graphe des ressentis@@overview.simple.feelings.data">
+      <summary
+        i18n="Bouton qui déplie les données du graphe des ressentis@@overview.simple.feelings.data"
+      >
         Voir les données
       </summary>
       <table>
         <caption
-          i18n="Légende du tableau des ressentis de la vue simple@@overview.simple.feelings.data.caption"
+          i18n="
+            Légende du tableau des ressentis de la vue simple@@overview.simple.feelings.data.caption"
         >
           Ressentis notés sur la période
         </caption>

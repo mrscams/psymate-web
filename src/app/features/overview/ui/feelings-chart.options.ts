@@ -104,7 +104,12 @@ export function groupByEmotion(
     groups.delete(series.emotionCode);
   }
   for (const [code, points] of groups) {
-    const series = { emotionCode: code, family: points[0].family, label: code, count: points.length };
+    const series = {
+      emotionCode: code,
+      family: points[0].family,
+      label: code,
+      count: points.length,
+    };
     ordered.push({ series, points });
   }
   return ordered;
@@ -162,13 +167,11 @@ export function feelingsChartOptions(
           return datum ? String(datum.value[1]) : '';
         },
       },
-      data: points.map(
-        (point): FeelingDatum => ({
-          value: [point.date, point.intensity],
-          entryId: point.entryId,
-          emotion: series.label,
-        }),
-      ),
+      data: points.map((point): FeelingDatum => ({
+        value: [point.date, point.intensity],
+        entryId: point.entryId,
+        emotion: series.label,
+      })),
       tooltip: {
         formatter: (params: unknown) => {
           const datum = (params as { data?: FeelingDatum }).data;

@@ -21,7 +21,10 @@ export function emptyOverview(overrides: Partial<OverviewView> = {}): OverviewVi
   };
 }
 
-/** Marie D. : deux ressentis, une situation, un médicament, deux séances, un drapeau. */
+/**
+ * Marie D. : deux ressentis, une situation, un médicament, deux séances, un drapeau, un récit
+ * (phrases fictives du serveur) et deux entrées depuis la dernière séance.
+ */
 export function overviewView(overrides: Partial<OverviewView> = {}): OverviewView {
   return emptyOverview({
     computedAt: '2026-11-08T10:00:00Z',
@@ -101,8 +104,17 @@ export function overviewView(overrides: Partial<OverviewView> = {}): OverviewVie
         { emotionCode: 'anxiety', family: 'fear', label: 'Anxiété', count: 1 },
         { emotionCode: 'joy', family: 'joy', label: 'Joie', count: 1 },
       ],
-      markers: [],
-      ticks: ['2026-10-17'],
+      markers: [
+        {
+          entryId: 'e-med',
+          date: '2026-09-12',
+          kind: 'medication',
+          change: 'start',
+          label: 'Sertraline 75 mg',
+          sessionKind: null,
+        },
+      ],
+      ticks: ['2026-10-10', '2026-10-17'],
     },
     emotions: [
       { code: 'anxiety', label: 'Anxiété', count: 18, previousCount: 12, delta: 6 },
@@ -147,6 +159,34 @@ export function overviewView(overrides: Partial<OverviewView> = {}): OverviewVie
         version: 1,
       },
     ],
+    narrative: {
+      sentences: [
+        'Suivi depuis le 12 mars 2025 : 31 séances, soit environ une séance par semaine.',
+        "Sur les 30 derniers jours, l'intensité des ressentis monte (7 en moyenne contre 4,5 les 30 jours précédents) ; le ressenti qui revient le plus souvent est « Anxiété ».",
+        'Une situation reste ouverte : Surcharge au travail.',
+      ],
+      attention: 'À surveiller depuis le 3 octobre 2026 (motif : Sommeil).',
+    },
+    sinceLastSession: {
+      lastSessionId: 's-1',
+      lastSessionAt: '2026-10-17T14:00:00Z',
+      entries: [
+        {
+          entryId: 'f-2',
+          type: 'feeling',
+          title: 'Joie après la randonnée',
+          status: 'draft',
+          occurredFrom: '2026-11-07T17:00:00Z',
+        },
+        {
+          entryId: 'e-note',
+          type: 'note',
+          title: null,
+          status: 'final',
+          occurredFrom: '2026-10-22T09:00:00Z',
+        },
+      ],
+    },
     ...overrides,
   });
 }

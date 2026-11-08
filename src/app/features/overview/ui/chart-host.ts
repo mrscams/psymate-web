@@ -100,7 +100,8 @@ export abstract class ChartHost {
     this.chart = chart;
     chart.on('click', (params) => {
       const datum = params.data as { entryId?: string } | undefined;
-      if (datum && typeof datum === 'object' && datum.entryId) this.pointSelected.emit(datum.entryId);
+      if (datum && typeof datum === 'object' && datum.entryId)
+        this.pointSelected.emit(datum.entryId);
     });
     if (typeof ResizeObserver === 'function') {
       this.resizeObserver = new ResizeObserver(() => this.chart?.resize());
