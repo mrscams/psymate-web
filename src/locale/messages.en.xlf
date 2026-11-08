@@ -1352,69 +1352,6 @@
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet, première connexion</note>
       </trans-unit>
-      <trans-unit id="auth.state.back" datatype="html">
-        <source>Retour à la connexion</source>
-        <target state="translated">Back to sign in</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
-          <context context-type="linenumber">20,26</context>
-        </context-group>
-        <note priority="1" from="description">Lien de retour vers la connexion</note>
-      </trans-unit>
-      <trans-unit id="auth.state.confirmEmail.title" datatype="html">
-        <source>Confirmez votre adresse e-mail</source>
-        <target state="translated">Confirm your email address</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-        <note priority="1" from="description">Titre provisoire, e-mail à confirmer</note>
-      </trans-unit>
-      <trans-unit id="auth.state.confirmEmail.body" datatype="html">
-        <source>Un lien de confirmation vous a été envoyé. Ouvrez-le pour accéder à votre espace.</source>
-        <target state="translated">We sent you a confirmation link. Open it to access your workspace.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-        <note priority="1" from="description">Texte provisoire, e-mail à confirmer</note>
-      </trans-unit>
-      <trans-unit id="auth.state.suspended.title" datatype="html">
-        <source>Compte suspendu</source>
-        <target state="translated">Account suspended</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
-          <context context-type="linenumber">55</context>
-        </context-group>
-        <note priority="1" from="description">Titre provisoire, compte suspendu</note>
-      </trans-unit>
-      <trans-unit id="auth.state.suspended.body" datatype="html">
-        <source>Votre compte n&apos;est pas actif. Le motif vous a été envoyé par e-mail.</source>
-        <target state="translated">Your account is not active. The reason was sent to you by email.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
-          <context context-type="linenumber">56</context>
-        </context-group>
-        <note priority="1" from="description">Texte provisoire, compte suspendu</note>
-      </trans-unit>
-      <trans-unit id="auth.state.firstLogin.title" datatype="html">
-        <source>Première connexion</source>
-        <target state="translated">First sign-in</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
-          <context context-type="linenumber">59</context>
-        </context-group>
-        <note priority="1" from="description">Titre provisoire, première connexion</note>
-      </trans-unit>
-      <trans-unit id="auth.state.firstLogin.body" datatype="html">
-        <source>Votre compte doit d&apos;abord changer son mot de passe et activer la double authentification.</source>
-        <target state="translated">Your account must first change its password and turn on two-factor authentication.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/account-state.page.ts</context>
-          <context context-type="linenumber">60</context>
-        </context-group>
-        <note priority="1" from="description">Texte provisoire, première connexion</note>
-      </trans-unit>
       <trans-unit id="auth.login.title" datatype="html">
         <source>Connexion</source>
         <target state="translated">Sign in</target>
