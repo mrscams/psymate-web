@@ -122,6 +122,8 @@ describe('GraphPage', () => {
     const { el } = await render({ neighbourhood: () => never() });
     expect(el.querySelector('.board pm-state [aria-busy="true"]')).not.toBeNull();
     expect(el.querySelector('pm-graph-canvas')).toBeNull();
+    // Pas de « 0 nœuds · 0 liens » avant la première lecture.
+    expect(text(el.querySelector('.count'))).toBe('');
   });
 
   it('erreur 5xx : Réessayer relit le graphe', async () => {
@@ -130,6 +132,7 @@ describe('GraphPage', () => {
     expect(text(el.querySelector('.board [role="alert"]'))).toContain(
       'Impossible de charger le graphe',
     );
+    expect(text(el.querySelector('.count'))).toBe('');
     button('Réessayer').click();
     await settle(harness);
     expect(graphApi.neighbourhood).toHaveBeenCalledTimes(2);

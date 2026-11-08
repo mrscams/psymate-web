@@ -11308,7 +11308,7 @@
         <source> Recentrer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">142,146</context>
+          <context context-type="linenumber">144,148</context>
         </context-group>
         <note priority="1" from="description">Bouton qui relance le layout du graphe</note>
       </trans-unit>
@@ -11316,7 +11316,7 @@
         <source> Liste des liens </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">152,157</context>
+          <context context-type="linenumber">154,159</context>
         </context-group>
         <note priority="1" from="description">Bouton qui montre la liste équivalente des liens</note>
       </trans-unit>
@@ -11324,7 +11324,7 @@
         <source> Graphe partiel : au-delà de 150 nœuds, des entrées sont regroupées ou retirées. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">158,162</context>
+          <context context-type="linenumber">160,164</context>
         </context-group>
         <note priority="1" from="description">Graphe tronqué</note>
       </trans-unit>
@@ -11332,7 +11332,7 @@
         <source>Le dernier graphe reçu reste affiché.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">165,167</context>
+          <context context-type="linenumber">167,169</context>
         </context-group>
         <note priority="1" from="description">Le dernier graphe reste affiché</note>
       </trans-unit>
