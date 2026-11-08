@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T15:47:31.285Z",
+  "task": "M6-06",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Page /mon-compte/donnees (export patient PDF|Markdown, export du compte avec suivi du dernier job, 409/410), ExportStore, menu « Exporter ce dossier ▾ » dans la fiche patient, e2e/export 4/4",
+  "notes": "Écarts : entrée de menu dans l'en-tête patient non faite (shared/ui/patient-header sans sortie export, tâche dédiée) ; 409 sans jobId au contrat : job lancé ailleurs non affichable, bouton réactivé après 30 s ; export patient en blob via le client généré ; store nommé ExportStore ; patient du seed Quentin S. au lieu de Marie D. ; 410 couvert en Vitest seulement. Revue faite, points traités (8635802). Branche à rebaser sur main (xlf : unités decade de M3-04).",
+  "next": "Rebase sur main + extract-i18n, PR ; tâche shared/ui pour la sortie export de l'en-tête patient ; tâche shared/util pour saveFile/fileNameOf ; tâche core/http pour lire les erreurs problem+json reçues en Blob",
+  "branch": "claude/ecstatic-ritchie-9261ee",
+  "checkout": "ecstatic-ritchie-9261ee"
+}
