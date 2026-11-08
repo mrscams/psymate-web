@@ -114,6 +114,8 @@ describe('LinkEditorPanel', () => {
     const empty = [...el.querySelectorAll('pm-state')].map(text).join(' | ');
     expect(empty).toContain('Aucune autre entrée trouvée');
     expect(empty).toContain('Aucun lien sur cette entrée pour le moment');
+    // Vide n'est pas une erreur : pas de « Réessayer ».
+    expect(el.querySelectorAll('pm-state button')).toHaveLength(0);
     expect(text(el.querySelector('#pm-link-placed'))).toBe('Liens déjà posés sur cette entrée · 0');
   });
 

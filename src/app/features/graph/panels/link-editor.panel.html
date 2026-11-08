@@ -32,7 +32,7 @@
           [lines]="1"
           compact
           [title]="kind === 'error' ? sourceErrorTitle : undefined"
-          [action]="sourceRetry"
+          [action]="kind === 'error' ? sourceRetry : undefined"
         />
       } @else if (sourceView(); as entry) {
         <div class="card" [attr.data-type]="entry.type">
@@ -96,7 +96,7 @@
             kind === 'error' ? targetsErrorTitle : kind === 'empty' ? targetsEmptyTitle : undefined
           "
           [message]="kind === 'empty' ? targetsEmptyMessage : undefined"
-          [action]="targetsRetry"
+          [action]="kind === 'error' ? targetsRetry : undefined"
         />
       } @else {
         <fieldset
@@ -167,7 +167,7 @@
           [lines]="1"
           compact
           [title]="kind === 'error' ? catalogErrorTitle : undefined"
-          [action]="catalogRetry"
+          [action]="kind === 'error' ? catalogRetry : undefined"
         />
       } @else {
         <pm-link-type-chips
@@ -236,7 +236,7 @@
         [title]="
           kind === 'error' ? linksErrorTitle : kind === 'empty' ? linksEmptyTitle : undefined
         "
-        [action]="linksRetry"
+        [action]="kind === 'error' ? linksRetry : undefined"
       />
     } @else {
       <pm-placed-links
