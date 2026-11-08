@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T00:46:01.776Z",
+  "task": "M7-07",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Écrans d'administration : validation (file, dossier, visionneuse blob, liste de contrôle, décision), praticiens (suspendre, réactiver, recours), journal paginé, vocabulaire (409 avec compteur) ; 63 tests Vitest admin, 6 e2e flux 10",
+  "notes": "Lint, tokens, Vitest 659, build, e2e 72 sur 72 (port 4707, admin local) verts ; revue reviewer : 0 bloquant, 7 à corriger traités. Écarts contrat : pas de filtre annuaire, export CSV, tri par colonne, total du journal, file 'traités', segment Sécurité ; MESSAGE_REQUIRED en 422. Fichier signé en X-Frame-Options DENY : visionneuse par URL blob. Page provisoire /admin (M1-17) supprimée, e2e premiere-connexion adapté. Aucune dépendance npm.",
+  "next": "Brancher pendingCount de pm-admin-bar dans app.component (tâche dédiée) ; PR à ouvrir par la session parente après rebase",
+  "branch": "claude/m7-07-admin-84001d",
+  "checkout": "m7-07-admin-84001d"
+}
