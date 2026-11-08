@@ -22,7 +22,8 @@ $nordique-system-colors: (
   tertiary-container: var(--primary-tint),
   on-tertiary-container: var(--primary-hover),
   error: var(--danger),
-  on-error: var(--surface-raised),
+  // Texte d'un aplat d'erreur : danger-on (blanc en clair, neutre 90 en sombre, où danger s'éclaircit).
+  on-error: var(--danger-on),
   error-container: var(--danger-bg),
   on-error-container: var(--danger),
   background: var(--surface-ground),
@@ -40,7 +41,20 @@ $nordique-system-colors: (
   surface-container-highest: var(--surface-sunken),
   outline: var(--border-strong),
   outline-variant: var(--border-subtle),
+  // M6-04 : rôles restés sur la palette bleue de mat.theme (light-dark() hors Nordique).
+  // Infobulles et snack-bars : surface inversée = texte principal, texte = carte (15,1:1 en clair,
+  // 12,4:1 en sombre).
+  inverse-surface: var(--text-primary),
+  inverse-on-surface: var(--surface-raised),
+  surface-tint: var(--primary),
+  // Texte des options d'un <select> natif dans un mat-form-field : quasi-noir par défaut, illisible
+  // sur la liste sombre du navigateur (color-scheme: dark).
+  neutral10: var(--text-primary),
 );
+// Laissés à Material, justes dans les deux thèmes : scrim et shadow (#000), neutral-variant20 (voile
+// du sidenav, foncé), les rôles *-fixed (constants par définition M3, inutilisés ici).
+// color-scheme n'est pas émis par mat.theme (theme-type color-scheme : light-dark()) ; il est posé
+// par tokens.css (light sur :root, dark sur [data-theme='dark']).
 
 @mixin theme {
   @include mat.theme(

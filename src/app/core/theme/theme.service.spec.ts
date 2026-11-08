@@ -44,6 +44,53 @@ describe('ThemeService', () => {
     media.matches = false;
     media.listeners.forEach((listener) => listener({ matches: false }));
     expect(service.resolved()).toBe('light');
+    // Sans rechargement : <html> suit le système, pas seulement le signal.
+    expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+
+    media.matches = true;
+    media.listeners.forEach((listener) => listener({ matches: true }));
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+  });
+
+  it('un choix manuel ignore les changements du système, system les suit de nouveau', () => {
+    const media = fakeMatchMedia(false);
+    const service = TestBed.inject(ThemeService);
+    service.set('soft');
+
+    media.matches = true;
+    media.listeners.forEach((listener) => listener({ matches: true }));
+    expect(service.resolved()).toBe('soft');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('soft');
+
+    // Le système a changé pendant le choix manuel : revenir à system prend la valeur courante.
+    service.set('system');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+  });
+
+  it('écoute prefers-color-scheme: dark et se désabonne à la destruction', () => {
+    const media = fakeMatchMedia(false);
+    TestBed.inject(ThemeService);
+    expect(window.matchMedia).toHaveBeenCalledWith('(prefers-color-scheme: dark)');
+    expect(media.listeners).toHaveLength(1);
+    TestBed.resetTestingModule();
+    expect(media.listeners).toHaveLength(0);
+  });
+
+  it('refresh() relit le système et réapplique', () => {
+    const media = fakeMatchMedia(false);
+    const service = TestBed.inject(ThemeService);
+    media.matches = true;
+    service.refresh();
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+  });
+
+  it('sans matchMedia (rendu serveur, vieux navigateur) : clair par défaut', () => {
+    delete (document.defaultView as unknown as { matchMedia?: unknown }).matchMedia;
+    const service = TestBed.inject(ThemeService);
+    expect(service.resolved()).toBe('light');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+    service.set('dark');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
   });
 
   it.each(['light', 'soft', 'dark'] as const)('set(%s) applique le thème demandé', (theme) => {
