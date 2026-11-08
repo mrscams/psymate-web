@@ -59,17 +59,6 @@ async function lanes(row: Locator): Promise<boolean[]> {
   return row.locator('.lane').evaluateAll((nodes) => nodes.map((n) => n.classList.contains('on')));
 }
 
-/**
- * La carte est dans la zone visible de la liste (le défilement virtuel), même si la liste dépasse
- * le bas de la fenêtre du navigateur (barre d'outils sur deux lignes, M3-03).
- */
-async function inList(viewport: Locator, card: Locator): Promise<boolean> {
-  const list = await viewport.boundingBox();
-  const box = await card.boundingBox();
-  if (!list || !box) return false;
-  return box.y >= list.y - 1 && box.y + box.height <= list.y + list.height + 1;
-}
-
 /** Nombre de fenêtres en mémoire lu dans la ligne d'état (« … · n fenêtres en mémoire »). */
 function windowsOf(text: string | null): number {
   const match = /(\d+) fenêtres? en mémoire/.exec(text ?? '');
@@ -293,7 +282,7 @@ test('« Corriger » puis retour, « Voir dans le graphe » puis retour : positi
   await page.keyboard.press('Escape');
   await expect(editor).toBeHidden();
   expect(await t.viewport.evaluate((el) => el.scrollTop)).toBe(scrollTop);
-  await expect.poll(() => inList(t.viewport, card)).toBe(true);
+  await expect(card).toBeInViewport();
 
   // Voir dans le graphe : onglet 3 centré sur l'entrée ; retour par la touche 2.
   await card.click({ button: 'right' });
@@ -303,8 +292,8 @@ test('« Corriger » puis retour, « Voir dans le graphe » puis retour : positi
   await expect(page).toHaveURL(new RegExp(`/patients/${volume}/graph\\?root=`));
   await page.keyboard.press('2');
   await expect(page).toHaveURL(new RegExp(`/patients/${volume}/timeline$`));
+  await expect(t.card(anchor)).toBeInViewport();
   await expect.poll(() => t.viewport.evaluate((el) => el.scrollTop)).toBe(leftAt);
-  await expect.poll(() => inList(t.viewport, t.card(anchor))).toBe(true);
   await expect(t.card(anchor)).toHaveClass(/\bselected\b/);
   await expectNoAxeViolations(page);
 });

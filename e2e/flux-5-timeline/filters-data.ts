@@ -5,7 +5,7 @@ import { createPatient, daysAgo, entry, intakeOf } from './timeline-data';
 // Données des e2e des filtres et du mode par séance (M3-03), écrites par l'API réelle (jamais de
 // mock) dans un compte jetable.
 
-const API = 'http://localhost:8080';
+export const API = 'http://localhost:8080';
 
 /** Préférence `timeline.groupBy` du compte (PATCH /api/me/preferences). */
 export async function setGroupBy(
@@ -46,7 +46,7 @@ export interface FilterPatient {
 }
 
 /**
- * Patient « filtres » : séance d'accueil (à la création), une séance il y a 20 jours (anxiété 5,
+ * Patient « filtres » : séance d'accueil (datée d'il y a 40 jours), une séance il y a 20 jours (anxiété 5,
  * « Dispute au travail »), puis la séance la plus récente, aujourd'hui (anxiété 7, anxiété 6 en
  * brouillon, joie 4, note « Réveils nocturnes » taguée #sommeil). Trois ressentis d'anxiété en
  * tout, dont un brouillon ; neuf éléments avec les trois séances.
@@ -55,7 +55,13 @@ export async function filterPatient(api: APIRequestContext): Promise<FilterPatie
   const tag = await api.post(`${API}/api/tags`, { data: { label: 'sommeil' } });
   expect([201, 409], await tag.text()).toContain(tag.status());
   const id = await createPatient(api, 'Nora B.', '1987-06-02');
-  await intakeOf(api, id);
+  // L'accueil est créé avec le patient (maintenant) : daté d'il y a 40 jours, il devient la séance
+  // la plus ancienne, et la séance du jour la plus récente, sans dépendre de l'horloge.
+  const intake = await intakeOf(api, id);
+  const dated = await api.patch(`${API}/api/entries/${intake}`, {
+    data: { occurred: { from: daysAgo(40, 10) } },
+  });
+  expect(dated.status(), await dated.text()).toBe(200);
   const older = await closedSession(
     api,
     id,
@@ -75,12 +81,10 @@ export async function filterPatient(api: APIRequestContext): Promise<FilterPatie
     occurred: { from: daysAgo(22), precision: 'day' },
     sessionId: older,
   });
-  // Après l'accueil (créé avec le patient) : la séance du jour est la plus récente.
-  await new Promise((resolve) => setTimeout(resolve, 1100));
   const recent = await closedSession(
     api,
     id,
-    new Date().toISOString(),
+    daysAgo(0, 6),
     45,
     'Travail sur l’anxiété du matin et les réveils nocturnes.',
   );

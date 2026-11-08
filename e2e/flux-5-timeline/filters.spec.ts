@@ -9,7 +9,7 @@ import {
 import { createAccount, signIn } from '../preferences/accounts';
 import { TestAccount } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
-import { FilterPatient, filterPatient, setGroupBy } from './filters-data';
+import { API, FilterPatient, filterPatient, setGroupBy } from './filters-data';
 import { createPatient, intakeOf } from './timeline-data';
 
 // Filtres et mode par séance de la timeline (M3-03, fiche 03, C2) contre l'API locale (jamais de
@@ -176,26 +176,26 @@ test('basculer par séance avec M (préférence écrite) ; la dernière séance 
   );
   await expect(panel.locator('pm-timeline-card')).toHaveCount(4);
   await expect(panel.locator('pm-timeline-card', { hasText: 'Réveils nocturnes' })).toBeVisible();
-  // Les autres repliées avec leur compte : l'accueil (créé avec le patient, sans entrée), puis la
-  // séance d'il y a 20 jours.
+  // Les autres repliées avec leur compte : la séance d'il y a 20 jours, puis l'accueil (40 jours,
+  // sans entrée).
   await expect(t.toggles.nth(1)).toHaveAttribute('aria-expanded', 'false');
-  await expect(t.toggles.nth(1)).toContainText('aucune entrée');
+  await expect(t.toggles.nth(1)).toContainText('2 entrées');
   await expect(t.toggles.nth(2)).toHaveAttribute('aria-expanded', 'false');
-  await expect(t.toggles.nth(2)).toContainText('2 entrées');
+  await expect(t.toggles.nth(2)).toContainText('aucune entrée');
   await expectNoAxeViolations(page);
 
   // Déplier la précédente : son détail se lit (durée, entrées).
-  await t.toggles.nth(2).click();
-  await expect(t.toggles.nth(2)).toHaveAttribute('aria-expanded', 'true');
+  await t.toggles.nth(1).click();
+  await expect(t.toggles.nth(1)).toHaveAttribute('aria-expanded', 'true');
   await expect(page.getByRole('region', { name: /^Séance du / })).toHaveCount(2);
-  const previous = page.locator(`#${await t.toggles.nth(2).getAttribute('aria-controls')}`);
+  const previous = page.locator(`#${await t.toggles.nth(1).getAttribute('aria-controls')}`);
   await expect(previous.locator('.facts')).toContainText('50 min');
   await expect(
     previous.locator('pm-timeline-card', { hasText: 'Dispute au travail' }),
   ).toBeVisible();
   // L'accueil, déplié, se nomme comme tel une fois son détail lu.
-  await t.toggles.nth(1).click();
-  await expect(t.toggles.nth(1)).toContainText("Séance d'accueil du");
+  await t.toggles.nth(2).click();
+  await expect(t.toggles.nth(2)).toContainText("Séance d'accueil du");
 
   // Le filtre s'applique aussi par séance : anxiété → les deux séances où elle a été notée.
   await chip(t.emotions, 'Anxiété').click();
@@ -230,14 +230,46 @@ test('la préférence est relue sur un autre patient ; ?mode= l’emporte sans l
   await expect(page.locator('cdk-virtual-scroll-viewport')).toBeVisible();
   await expectNoAxeViolations(page);
 
-  // ... relue en ouvrant Nora B. (navigation dans l'application, puis rechargement complet).
-  await page.goto(`/fr/patients/${nora.id}/timeline`);
+  // ... relue en ouvrant Nora B. par l'application, sans rechargement : logo → liste → Nora B. →
+  // onglet Timeline. Le marqueur posé sur window prouve qu'aucune page n'a été rechargée.
+  await page.evaluate(() => ((window as unknown as Record<string, boolean>)['m303'] = true));
+  const noReload = () =>
+    page.evaluate(() => (window as unknown as Record<string, boolean>)['m303'] === true);
+  const openTimeline = async (name: string, id: string) => {
+    await page.getByRole('link', { name: 'PsyMate' }).click();
+    await expect(page).toHaveURL(/\/fr\/patients$/);
+    await page.getByRole('link', { name, exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/patients/${id}$`));
+    await page
+      .getByRole('navigation', { name: 'Dossier' })
+      .getByRole('link', { name: /Timeline/ })
+      .click();
+    await expect(page).toHaveURL(new RegExp(`/patients/${id}/timeline$`));
+  };
+  await openTimeline('Nora B.', nora.id);
   await expect(page.locator('cdk-virtual-scroll-viewport')).toBeVisible();
   await expect(t.sessions).toHaveCount(0);
   await expect(t.mode.getByRole('button', { name: 'Chronologique' })).toHaveAttribute(
     'aria-pressed',
     'true',
   );
+  expect(await noReload()).toBe(true);
+
+  // Dans l'autre sens : M sur Nora B. (par séance), puis Paul R. par l'application.
+  await blur(page);
+  const back = page.waitForResponse(
+    (r) => r.url().endsWith('/api/me/preferences') && r.request().method() === 'PATCH',
+  );
+  await page.keyboard.press('m');
+  expect((await back).request().postDataJSON()).toEqual({ 'timeline.groupBy': 'session' });
+  await openTimeline('Paul R.', other);
+  await expect(t.sessions).toBeVisible();
+  await expect(t.mode.getByRole('button', { name: 'Par séance' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  expect(await noReload()).toBe(true);
+  await setGroupBy(api, 'chronological');
 
   // ?mode=session : par séance pour cette visite, la préférence reste « chronologique ».
   let patched = false;
@@ -247,7 +279,7 @@ test('la préférence est relue sur un autre patient ; ?mode= l’emporte sans l
   await page.goto(`/fr/patients/${nora.id}/timeline?mode=session`);
   await expect(t.sessions).toBeVisible();
   await expect(t.toggles.first()).toHaveAttribute('aria-expanded', 'true');
-  const prefs = await api.get('http://localhost:8080/api/me/preferences');
+  const prefs = await api.get(`${API}/api/me/preferences`);
   expect(((await prefs.json()) as Record<string, string>)['timeline.groupBy']).toBe(
     'chronological',
   );
