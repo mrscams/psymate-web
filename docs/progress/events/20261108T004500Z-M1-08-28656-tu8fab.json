@@ -1,0 +1,9 @@
+{
+  "at": "2026-11-08T00:45:00.000Z",
+  "task": "M1-08",
+  "agent": "claude",
+  "status": "in-progress",
+  "summary": "M1-08 (editeur d entree, versions) lancee dans son worktree depuis main, en parallele de M1-09 et M7-07",
+  "branch": "claude/m1-08-entries-b8068b",
+  "checkout": "psymate-web"
+}

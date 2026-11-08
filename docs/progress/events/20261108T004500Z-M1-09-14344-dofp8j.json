@@ -1,0 +1,9 @@
+{
+  "at": "2026-11-08T00:45:00.000Z",
+  "task": "M1-09",
+  "agent": "claude",
+  "status": "in-progress",
+  "summary": "M1-09 (tags et emotions personnalisees) lancee dans son worktree depuis main, en parallele de M1-08 et M7-07",
+  "branch": "claude/m1-09-vocabulaire-f1e5c1",
+  "checkout": "psymate-web"
+}
