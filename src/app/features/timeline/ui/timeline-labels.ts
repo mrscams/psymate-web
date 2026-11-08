@@ -2,6 +2,8 @@
 // tous en $localize, jamais en dur dans un template.
 
 import { OccurredPrecision } from '../../../shared/util';
+import { PeriodPreset, TimelineMode } from '../data/timeline-filters.model';
+import { SessionKind, SessionModality } from '../data/timeline-sessions.model';
 import { TimelineZoom } from '../data/timeline.model';
 
 /** « précision : … » (fiche 03, écarts : suivre, codes traduits). */
@@ -110,4 +112,91 @@ export function sessionDate(iso: string, locale: string): string {
     month: 'short',
     year: 'numeric',
   }).format(date);
+}
+
+/** Bascule Chronologique | Par séance. */
+export function modeLabel(mode: TimelineMode): string {
+  switch (mode) {
+    case 'chronological':
+      return $localize`:Mode chronologique de la timeline@@timeline.mode.chronological:Chronologique`;
+    case 'session':
+      return $localize`:Mode par séance de la timeline@@timeline.mode.session:Par séance`;
+  }
+}
+
+/** Périodes proposées (fiche 03 : 30 j / 90 j / 1 an / Tout). */
+export function periodLabel(preset: PeriodPreset): string {
+  switch (preset) {
+    case '30d':
+      return $localize`:Période de 30 jours de la timeline@@timeline.period.30d:30 j`;
+    case '90d':
+      return $localize`:Période de 90 jours de la timeline@@timeline.period.90d:90 j`;
+    case '1y':
+      return $localize`:Période d'un an de la timeline@@timeline.period.1y:1 an`;
+    case 'all':
+      return $localize`:Période sans borne de la timeline@@timeline.period.all:Tout`;
+  }
+}
+
+/** Modalité d'une séance. */
+export function modalityLabel(modality: SessionModality | null): string {
+  switch (modality) {
+    case 'in_person':
+      return $localize`:Modalité d'une séance@@timeline.modality.inPerson:Présentiel`;
+    case 'video':
+      return $localize`:Modalité d'une séance@@timeline.modality.video:Visio`;
+    case 'phone':
+      return $localize`:Modalité d'une séance@@timeline.modality.phone:Téléphone`;
+    case 'email':
+      return $localize`:Modalité d'une séance@@timeline.modality.email:E-mail`;
+    default:
+      return '';
+  }
+}
+
+/** Genre d'une séance (accueil, ordinaire, contact). */
+export function sessionKindLabel(kind: SessionKind | null): string {
+  switch (kind) {
+    case 'intake':
+      return $localize`:Genre d'une séance@@timeline.sessionKind.intake:Séance d'accueil`;
+    case 'contact':
+      return $localize`:Genre d'une séance@@timeline.sessionKind.contact:Contact`;
+    default:
+      return $localize`:Genre d'une séance@@timeline.sessionKind.session:Séance`;
+  }
+}
+
+/** Durée d'une séance en minutes, au format de la langue (« 50 min »). */
+export function durationLabel(minutes: number, locale: string): string {
+  const value = new Intl.NumberFormat(locale).format(minutes);
+  return $localize`:Durée d'une séance en minutes@@timeline.session.duration:${value}:value: min`;
+}
+
+/** Date complète d'une séance (« mardi 8 octobre 2026 »), dans le fuseau du praticien. */
+export function sessionLongDate(iso: string | null, locale: string): string {
+  if (!iso) return '';
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  return dtf(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(
+    date,
+  );
+}
+
+/** Horaires d'une séance (« 15:00 – 15:50 », ou le seul début tant qu'elle est ouverte). */
+export function sessionHours(from: string | null, to: string | null, locale: string): string {
+  const format = dtf(locale, { hour: '2-digit', minute: '2-digit' });
+  const start = from ? new Date(from) : null;
+  if (!start || Number.isNaN(start.getTime())) return '';
+  const end = to ? new Date(to) : null;
+  return end && !Number.isNaN(end.getTime())
+    ? `${format.format(start)} – ${format.format(end)}`
+    : format.format(start);
+}
+
+/** Jour calendaire court (« 8 oct. 2026 ») d'une borne de période AAAA-MM-JJ. */
+export function dayLabel(day: string, locale: string): string {
+  const [y, m, d] = day.split('-').map(Number);
+  return dtf(locale, { day: 'numeric', month: 'short', year: 'numeric' }).format(
+    new Date(y, m - 1, d),
+  );
 }

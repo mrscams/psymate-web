@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { PreferencesStore } from '../../../core/preferences';
 import { PatientShellStore } from '../../patient-shell';
+import { NO_FILTERS } from '../data/timeline-filters.model';
 import { TimelineApi } from '../data/timeline.api';
 import { items, pagedTimeline, timelineItem, timelinePage } from '../data/timeline.fixtures';
 import { TimelinePage as Page, TimelineQuery, TimelineSnapshot } from '../data/timeline.model';
@@ -30,19 +31,37 @@ function shellMock(snapshot?: TimelineSnapshot) {
   };
 }
 
+function prefsMock(groupBy: 'session' | 'month' | 'chronological' = 'chronological') {
+  const timelineGroupBy = signal(groupBy);
+  return {
+    defaultVisibility: signal('clinical'),
+    medicationVisible: signal(true),
+    timelineGroupBy,
+    set: vi.fn(async (_key: string, value: 'session' | 'month' | 'chronological') => {
+      timelineGroupBy.set(value);
+      return null;
+    }),
+  };
+}
+
 async function render(
   page: (id: string, query: TimelineQuery) => Promise<Page>,
   shell = shellMock(),
   focus: string | null = null,
+  options: { prefs?: ReturnType<typeof prefsMock>; params?: Record<string, string> } = {},
 ) {
+  const prefs = options.prefs ?? prefsMock();
+  const params = { ...(options.params ?? {}), ...(focus ? { focus } : {}) };
+  const paramMap = convertToParamMap(params);
+  const sessionDetail = vi.fn(() => never());
   TestBed.configureTestingModule({
     providers: [
       provideRouter([]),
-      ...(focus
+      ...(Object.keys(params).length
         ? [
             {
               provide: ActivatedRoute,
-              useValue: { queryParamMap: of(convertToParamMap({ focus })) },
+              useValue: { queryParamMap: of(paramMap), snapshot: { queryParamMap: paramMap } },
             },
           ]
         : []),
@@ -53,13 +72,11 @@ async function render(
         useValue: {
           page: vi.fn(page),
           sessions: vi.fn().mockResolvedValue({}),
-          emotionLabels: vi.fn().mockResolvedValue({}),
+          emotions: vi.fn().mockResolvedValue({ labels: { anxiety: 'Anxiété' }, families: {} }),
+          sessionDetail,
         },
       },
-      {
-        provide: PreferencesStore,
-        useValue: { defaultVisibility: signal('clinical'), medicationVisible: signal(true) },
-      },
+      { provide: PreferencesStore, useValue: prefs },
       // L'éditeur d'entrée (features/entries) lit l'API par HttpClient : requêtes en attente ici.
       provideHttpClient(),
       provideHttpClientTesting(),
@@ -68,7 +85,7 @@ async function render(
   const fixture = TestBed.createComponent(TimelinePage);
   await flush();
   await fixture.whenStable();
-  return { fixture, el: fixture.nativeElement as HTMLElement, shell };
+  return { fixture, el: fixture.nativeElement as HTMLElement, shell, prefs };
 }
 
 function text(el: Element | null | undefined): string {
@@ -172,9 +189,10 @@ describe('TimelinePage', () => {
       'Lier',
       'Voir dans le graphe',
     ]);
-    // Lier : présent, désactivé mais atteignable, avec son aide (éditeur de lien, M2-04).
-    expect(entries[2].getAttribute('aria-disabled')).toBe('true');
-    expect(text(entries[2])).toContain('bientôt disponible');
+    // Lier : branché sur l'éditeur de lien (features/graph), raccourci L, plus « bientôt disponible ».
+    expect(entries[2].getAttribute('aria-disabled')).not.toBe('true');
+    expect(text(entries[2].querySelector('.menu-hint'))).toBe('L');
+    expect(text(entries[2])).not.toContain('bientôt');
     entries[3].click();
     expect(navigate).toHaveBeenCalledWith(['/patients', 'p-1', 'graph'], {
       queryParams: { root: 'e-0' },
@@ -188,7 +206,12 @@ describe('TimelinePage', () => {
     fixture.destroy();
     expect(shell.rememberTab).toHaveBeenCalledWith(
       'timeline',
-      expect.objectContaining({ patientId: 'p-1', total: 3, zoom: 'week' }),
+      expect.objectContaining({
+        patientId: 'p-1',
+        total: 3,
+        zoom: 'week',
+        filters: { filters: NO_FILTERS, modeOverride: null },
+      }),
     );
     const snapshot = shell.rememberTab.mock.calls[0][1] as TimelineSnapshot;
 
@@ -218,5 +241,155 @@ describe('TimelinePage', () => {
       expect.objectContaining({ queryParams: { focus: null }, replaceUrl: true }),
     );
     navigate.mockRestore();
+  });
+
+  it('puce de filtre : la plage filtrée est relue, l’URL réécrite (replaceUrl)', async () => {
+    const page = vi.fn().mockResolvedValue(
+      timelinePage({
+        items: items(2),
+        facets: { types: { note: 2, feeling: 1 }, emotions: { anxiety: 1 }, tags: {} },
+      }),
+    );
+    const { el, fixture } = await render(page);
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const anxiety = el.querySelector<HTMLButtonElement>('button[data-emotion="anxiety"]')!;
+    expect(text(anxiety)).toBe('Anxiété 1');
+    anxiety.click();
+    await flush();
+    await fixture.whenStable();
+    expect(page).toHaveBeenLastCalledWith(
+      'p-1',
+      expect.objectContaining({ emotions: ['anxiety'], cursor: null }),
+    );
+    expect(navigate).toHaveBeenCalledWith(
+      [],
+      expect.objectContaining({
+        queryParams: expect.objectContaining({ emotion: ['anxiety'], types: null, mode: null }),
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      }),
+    );
+    expect(el.querySelector('button[data-emotion="anxiety"]')?.getAttribute('aria-pressed')).toBe(
+      'true',
+    );
+  });
+
+  it('URL ?emotion=&drafts= : filtres repris au chargement (rechargement, lien partagé)', async () => {
+    const page = vi.fn().mockResolvedValue(timelinePage({ items: items(1) }));
+    const { el } = await render(page, shellMock(), null, {
+      params: { emotion: 'anxiety', drafts: '1' },
+    });
+    expect(page.mock.calls[0][1]).toEqual(
+      expect.objectContaining({ emotions: ['anxiety'], draftsOnly: true }),
+    );
+    const drafts = [...el.querySelectorAll('button')].find((b) =>
+      text(b).startsWith('Brouillons seulement'),
+    );
+    expect(drafts?.getAttribute('aria-pressed')).toBe('true');
+  });
+
+  it('vide avec des filtres : « Aucune entrée pour ces filtres », Effacer les filtres', async () => {
+    const page = vi
+      .fn()
+      .mockResolvedValueOnce(
+        timelinePage({ items: [], facets: { types: {}, emotions: {}, tags: {} } }),
+      )
+      .mockResolvedValue(timelinePage({ items: items(2) }));
+    const { el, fixture } = await render(page, shellMock(), null, {
+      params: { emotion: 'anxiety' },
+    });
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const empty = el.querySelector('pm-state [role="status"]');
+    expect(text(empty)).toContain('Aucune entrée pour ces filtres');
+    empty!.querySelector<HTMLButtonElement>('button')!.click();
+    await flush();
+    await fixture.whenStable();
+    expect(page).toHaveBeenLastCalledWith('p-1', expect.objectContaining({ emotions: [] }));
+    expect(el.querySelectorAll('pm-timeline-card')).toHaveLength(2);
+  });
+
+  it('préférence « par séance » : séances dépliables, ligne d’état, pas de zoom', async () => {
+    const session = timelineItem({
+      id: 's-1',
+      type: 'session',
+      title: null,
+      sessionId: null,
+      occurred: { from: '2026-10-30T15:00:00Z', to: null, precision: 'exact', label: null },
+    });
+    const note = timelineItem({ id: 'a', title: 'Point sur le sommeil', sessionId: 's-1' });
+    const { el } = await render(
+      () =>
+        Promise.resolve(
+          timelinePage({
+            items: [session, note],
+            facets: { types: { session: 1, note: 1 }, emotions: {}, tags: {} },
+          }),
+        ),
+      shellMock(),
+      null,
+      { prefs: prefsMock('session') },
+    );
+    expect(el.querySelector('pm-timeline-sessions')).not.toBeNull();
+    expect(el.querySelector('cdk-virtual-scroll-viewport')).toBeNull();
+    expect(el.querySelector('.zoom')).toBeNull();
+    expect(text(el.querySelector('.status-line .count'))).toBe('2 entrées · 1 séance');
+    const toggle = el.querySelector('button.toggle');
+    expect(toggle?.getAttribute('aria-expanded')).toBe('true');
+    expect(el.querySelector('button[data-mode="session"]')?.getAttribute('aria-pressed')).toBe(
+      'true',
+    );
+  });
+
+  it('touche M : la préférence est écrite, le mode bascule', async () => {
+    const { el, fixture, prefs } = await render(() =>
+      Promise.resolve(timelinePage({ items: items(2) })),
+    );
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    expect(el.querySelector('cdk-virtual-scroll-viewport')).not.toBeNull();
+    document.body.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'm', bubbles: true, cancelable: true }),
+    );
+    await flush();
+    await fixture.whenStable();
+    expect(prefs.set).toHaveBeenCalledWith('timeline.groupBy', 'session');
+    expect(el.querySelector('pm-timeline-sessions')).not.toBeNull();
+    // Le bouton fait de même dans l'autre sens.
+    el.querySelector<HTMLButtonElement>('button[data-mode="chronological"]')!.click();
+    await flush();
+    await fixture.whenStable();
+    expect(prefs.set).toHaveBeenLastCalledWith('timeline.groupBy', 'chronological');
+    expect(el.querySelector('cdk-virtual-scroll-viewport')).not.toBeNull();
+  });
+
+  it('?mode=chronological l’emporte sur la préférence, sans l’écrire', async () => {
+    const { el, prefs } = await render(
+      () => Promise.resolve(timelinePage({ items: items(2) })),
+      shellMock(),
+      null,
+      { prefs: prefsMock('session'), params: { mode: 'chronological' } },
+    );
+    expect(el.querySelector('cdk-virtual-scroll-viewport')).not.toBeNull();
+    expect(prefs.set).not.toHaveBeenCalled();
+  });
+
+  it('mémoire de l’onglet : filtres repris au retour sans paramètre d’URL', async () => {
+    const { fixture, shell } = await render(() =>
+      Promise.resolve(timelinePage({ items: items(3) })),
+    );
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const button = [...(fixture.nativeElement as HTMLElement).querySelectorAll('button')].find(
+      (b) => text(b).startsWith('Brouillons seulement'),
+    )!;
+    button.click();
+    await flush();
+    fixture.destroy();
+    const snapshot = shell.rememberTab.mock.calls[0][1] as TimelineSnapshot;
+    expect(snapshot.filters?.filters.draftsOnly).toBe(true);
+
+    TestBed.resetTestingModule();
+    const page = vi.fn<(id: string, query: TimelineQuery) => Promise<Page>>(() => never<Page>());
+    const again = await render(page, shellMock(snapshot));
+    expect(again.el.querySelectorAll('pm-timeline-card')).toHaveLength(3);
+    expect(page.mock.calls[0][1]).toEqual(expect.objectContaining({ draftsOnly: true }));
   });
 });
