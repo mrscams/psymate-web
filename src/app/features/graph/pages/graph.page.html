@@ -1,0 +1,251 @@
+<section class="graph" aria-labelledby="graph-heading">
+  <h2 id="graph-heading" class="sr-only" i18n="Titre de l'onglet graphe@@graph.heading">
+    Graphe des liens
+  </h2>
+
+  <div class="toolbar">
+    <label class="field">
+      <span class="field-label" i18n="Sélecteur de la racine du graphe@@graph.root.label"
+        >Centré sur</span
+      >
+      <select class="select root-select" (change)="onRootChange($event)">
+        <option
+          value=""
+          [selected]="!store.query().root"
+          i18n="Racine : tout le dossier@@graph.root.all"
+        >
+          Tout le dossier
+        </option>
+        @if (store.query().root && !store.rootNode()) {
+          <option
+            [value]="store.query().root"
+            selected
+            i18n="Racine pas encore lue@@graph.root.pending"
+          >
+            Entrée choisie
+          </option>
+        }
+        @for (option of rootOptions(); track option.id) {
+          <option [value]="option.id" [selected]="option.id === store.query().root">
+            {{ option.name }}
+          </option>
+        }
+      </select>
+    </label>
+
+    <div class="field" role="group" [attr.aria-labelledby]="depthLabelId">
+      <span class="field-label" [id]="depthLabelId" i18n="Profondeur du graphe@@graph.depth.label"
+        >Profondeur</span
+      >
+      <div class="segmented">
+        @for (depth of depths; track depth) {
+          <button
+            type="button"
+            class="segment"
+            [attr.aria-pressed]="store.query().depth === depth"
+            [disabled]="!store.query().root"
+            (click)="setDepth(depth)"
+          >
+            {{ depth }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <button type="button" class="filter" [matMenuTriggerFor]="typesMenu">{{ typesText() }}</button>
+    <mat-menu #typesMenu="matMenu">
+      <button
+        mat-menu-item
+        type="button"
+        role="menuitemcheckbox"
+        [attr.aria-checked]="!store.query().types.length"
+        (click)="setTypes([]); $event.stopPropagation()"
+      >
+        <span class="check" aria-hidden="true">{{ !store.query().types.length ? '✓' : '' }}</span>
+        <span i18n="Filtre : tous les types d'entrées@@graph.filter.allTypes">Tous les types</span>
+      </button>
+      @for (type of entryTypes; track type) {
+        <button
+          mat-menu-item
+          type="button"
+          role="menuitemcheckbox"
+          [attr.aria-checked]="typeChecked(type)"
+          (click)="toggleType(type); $event.stopPropagation()"
+        >
+          <span class="check" aria-hidden="true">{{ typeChecked(type) ? '✓' : '' }}</span>
+          {{ typeLabel(type) }}
+        </button>
+      }
+    </mat-menu>
+
+    <button type="button" class="filter" [matMenuTriggerFor]="linksMenu">{{ linksText() }}</button>
+    <mat-menu #linksMenu="matMenu">
+      @if (catalogFailed()) {
+        <div class="menu-state">
+          <pm-state kind="error" [title]="catalogErrorTitle" [action]="catalogRetry" compact />
+        </div>
+      }
+      <button
+        mat-menu-item
+        type="button"
+        role="menuitemcheckbox"
+        [attr.aria-checked]="!store.query().linkTypes.length"
+        (click)="setLinkTypes([]); $event.stopPropagation()"
+      >
+        <span class="check" aria-hidden="true">{{
+          !store.query().linkTypes.length ? '✓' : ''
+        }}</span>
+        <span i18n="Filtre : tous les types de liens@@graph.filter.allLinks">Tous les liens</span>
+      </button>
+      @for (option of linkTypeOptions(); track option.code) {
+        <button
+          mat-menu-item
+          type="button"
+          role="menuitemcheckbox"
+          [attr.aria-checked]="linkTypeChecked(option.code)"
+          (click)="toggleLinkType(option.code); $event.stopPropagation()"
+        >
+          <span class="check" aria-hidden="true">{{
+            linkTypeChecked(option.code) ? '✓' : ''
+          }}</span>
+          {{ option.label }}
+        </button>
+      }
+    </mat-menu>
+
+    <label class="field">
+      <span class="field-label" i18n="Période du graphe@@graph.period.label">Période</span>
+      <select class="select" (change)="onPeriodChange($event)">
+        @for (period of periods; track period) {
+          <option [value]="period" [selected]="store.query().period === period">
+            {{ periodLabel(period) }}
+          </option>
+        }
+      </select>
+    </label>
+
+    <span class="spacer"></span>
+    <span class="count" [class.refreshing]="refreshing()">{{ countText() }}</span>
+    <button
+      type="button"
+      class="tool"
+      (click)="relayout()"
+      i18n="Bouton qui relance le layout du graphe@@graph.relayout"
+    >
+      Recentrer
+    </button>
+    <button
+      type="button"
+      class="tool"
+      aria-controls="graph-links-list"
+      [attr.aria-expanded]="listOpen()"
+      (click)="toggleList()"
+      i18n="Bouton qui montre la liste équivalente des liens@@graph.list.toggle"
+    >
+      Liste des liens
+    </button>
+  </div>
+
+  @if (store.graph().data?.truncated) {
+    <p class="note" i18n="Graphe tronqué@@graph.truncated">
+      Graphe partiel : au-delà de 150 nœuds, des entrées sont regroupées ou retirées.
+    </p>
+  }
+  @if (staleError()) {
+    <div class="alert" role="alert">
+      <span>{{ stateTitle() ?? '' }}</span>
+      <span i18n="Le dernier graphe reste affiché@@graph.stale"
+        >Le dernier graphe reçu reste affiché.</span
+      >
+      <button type="button" class="tool" (click)="retryAction.handler()">
+        {{ retryAction.label }}
+      </button>
+    </div>
+  }
+
+  <div class="stage" [class.with-detail]="hasSelection()">
+    <div class="board">
+      @if (graphState(); as kind) {
+        <pm-state
+          [kind]="kind"
+          [title]="stateTitle()"
+          [message]="stateMessage()"
+          [action]="stateAction()"
+          skeleton="block"
+          [lines]="4"
+        />
+      } @else {
+        @if (store.view(); as view) {
+          @defer (on immediate) {
+            <pm-graph-canvas
+              class="canvas"
+              [view]="view"
+              [root]="store.query().root"
+              [selectedId]="store.selectedId()"
+              [layoutKey]="store.key()"
+              [positions]="store.currentPositions()"
+              [viewport]="store.currentViewport()"
+              [lineStyles]="store.lineStyles()"
+              [labels]="canvasLabels()"
+              [relayout]="relayoutCount()"
+              [label]="canvasLabel()"
+              (nodeSelected)="onSelect($event)"
+              (nodeActivated)="onActivate($event)"
+              (linkDropped)="onLinkDrop($event)"
+              (viewportChanged)="onViewport($event)"
+              (positionsChanged)="onPositions($event)"
+            />
+          } @placeholder {
+            <pm-state kind="loading" [title]="loadingCanvasTitle" skeleton="block" [lines]="4" />
+          } @error {
+            <pm-state kind="error" [title]="loadingCanvasTitle" />
+          }
+          <pm-graph-legend class="legend" />
+        }
+      }
+    </div>
+
+    @if (hasSelection()) {
+      <pm-graph-detail
+        class="detail"
+        [node]="store.selectedNode()"
+        [group]="store.selectedGroup()"
+        [detail]="store.detail()"
+        [emotionLabels]="store.emotionLabels()"
+        [root]="store.query().root"
+        [expanding]="!!store.expandingId()"
+        [expandProblem]="store.expandProblem()"
+        (closed)="closeDetail()"
+        (recenter)="recenter($event)"
+        (showInTimeline)="openTimeline($event)"
+        (link)="link($event)"
+        (edit)="edit($event)"
+        (expand)="expand($event)"
+        (retry)="store.retryDetail()"
+        (selectEntry)="selectFromList($event)"
+      />
+    }
+  </div>
+
+  @if (listOpen()) {
+    <div id="graph-links-list" class="list">
+      @if (store.view(); as view) {
+        <pm-graph-links-table
+          [view]="view"
+          [names]="names()"
+          [linkLabels]="linkTypeLabels()"
+          (selectEntry)="selectFromList($event)"
+        />
+      } @else {
+        <pm-state
+          [kind]="graphState() ?? 'loading'"
+          [title]="stateTitle()"
+          [action]="stateAction()"
+          compact
+        />
+      }
+    </div>
+  }
+
+  <p class="sr-only" aria-live="polite">{{ selectionAnnouncement() }}</p>
+</section>

@@ -58,17 +58,18 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(page.getByRole('heading', { level: 2, name: "Vue d'ensemble" })).toBeVisible();
   await expectNoAxeViolations(page);
 
-  // L'onglet 1 range son compteur (rememberTab) ; on part sur le Graphe (encore provisoire) par clic.
+  // L'onglet 1 (encore provisoire) range son compteur (rememberTab) ; on part sur le Graphe (M2-06)
+  // par clic : patient sans lien, l'état vide du graphe.
   await counter(page).click();
   await counter(page).click();
   await expect(counter(page)).toHaveText('Compteur : 2');
   await h.tabs.getByRole('link', { name: /Graphe/ }).click();
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph$`));
-  await expect(page.getByRole('heading', { level: 2, name: 'Graphe' })).toBeVisible();
-  await expect(counter(page)).toHaveText('Compteur : 0');
-  await counter(page).click();
+  await expect(page.getByRole('heading', { level: 2, name: 'Graphe des liens' })).toBeAttached();
+  await expect(page.getByText('Les liens que vous créez apparaîtront ici')).toBeVisible();
+  await expect(counter(page)).toHaveCount(0);
 
-  // Touches : 2 → Timeline (M3-02), 1 → retour à l'onglet 1 avec son état, 3 → Graphe avec le sien.
+  // Touches : 2 → Timeline (M3-02), 1 → retour à l'onglet 1 avec son état, 3 → Graphe.
   await page.keyboard.press('2');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/timeline$`));
   await expect(page.getByRole('heading', { level: 2, name: 'Timeline' })).toBeAttached();
@@ -76,7 +77,8 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
   await expect(counter(page)).toHaveText('Compteur : 2');
   await page.keyboard.press('3');
-  await expect(counter(page)).toHaveText('Compteur : 1');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph$`));
+  await expect(page.getByText('Les liens que vous créez apparaîtront ici')).toBeVisible();
   await expectNoAxeViolations(page);
 
   // Un champ a le focus : 1 2 3 s'écrivent, l'onglet ne change pas.

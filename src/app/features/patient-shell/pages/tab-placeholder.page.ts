@@ -19,9 +19,9 @@ export interface PlaceholderTabState {
 }
 
 /**
- * Onglet provisoire du dossier (M1-07) : overview, timeline, graph et search en attendant leurs
- * tâches (M4-05, M3-02, M2-06, M4-08), qui remplacent chacune sa route. Le compteur démontre la
- * mémoire des onglets : il est rangé par rememberTab et relu par recallTab au retour (B2).
+ * Onglet provisoire du dossier (M1-07) : overview seul désormais, en attendant M4-05 (timeline,
+ * graph et search ont leur page). Le compteur démontre la mémoire des onglets : il est rangé par
+ * rememberTab et relu par recallTab au retour (B2).
  */
 @Component({
   selector: 'pm-tab-placeholder-page',

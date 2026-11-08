@@ -40,6 +40,8 @@
     "@angular/router": "22.2.5",
     "@angular/ssr": "22.2.6",
     "@ngrx/signals": "22.0.1",
+    "cytoscape": "3.34.4",
+    "cytoscape-cose-bilkent": "4.1.0",
     "qrcode-generator": "1.5.2",
     "rxjs": "7.8.2",
     "tslib": "2.9.1"

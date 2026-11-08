@@ -55,6 +55,8 @@ import { PlacedLinksComponent } from '../ui/placed-links.component';
 export interface LinkEditorData {
   entryId: string;
   patientName: string | null;
+  /** Cible préremplie (glisser-déposer dans le graphe, M2-06) ; absente : à chercher. */
+  targetId?: string | null;
 }
 
 /** Délai sans frappe avant de relancer la recherche de cible (B3 flux 5 : 300 ms). */
@@ -288,6 +290,8 @@ export class LinkEditorPanel {
 
   constructor() {
     void this.store.open(this.data.entryId);
+    const prefilled = this.data.targetId;
+    if (prefilled && prefilled !== this.data.entryId) void this.prefill(prefilled);
 
     // Recherche : 300 ms sans frappe ; le type relance tout de suite.
     const query$ = merge(
@@ -322,6 +326,12 @@ export class LinkEditorPanel {
       backdrop.unsubscribe();
       this.store.closed(this.data.entryId);
     });
+  }
+
+  /** Cible préremplie : lue (GET /api/entries/{id}) puis choisie, sauf si un choix a déjà été fait. */
+  private async prefill(targetId: string): Promise<void> {
+    const entry = await this.store.entryById(targetId);
+    if (entry && !this.target() && !this.form.controls.targetId.value) this.chooseTarget(entry);
   }
 
   protected chooseTarget(entry: LinkEntry): void {

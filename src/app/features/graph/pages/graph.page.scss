@@ -1,0 +1,177 @@
+:host {
+  display: block;
+}
+
+.graph {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-label {
+  color: var(--text-secondary);
+  font: var(--mat-sys-label-large);
+}
+
+.select,
+.filter,
+.tool,
+.segment {
+  min-height: 36px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: var(--mat-sys-label-large);
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.select {
+  max-width: 260px;
+  padding: 0 8px;
+}
+
+.filter,
+.tool {
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.segmented {
+  display: inline-flex;
+}
+
+.segment {
+  width: 36px;
+  padding: 0;
+  border-radius: 0;
+  cursor: pointer;
+
+  & + & {
+    margin-left: -1px;
+  }
+
+  &:first-child {
+    border-radius: 8px 0 0 8px;
+  }
+
+  &:last-child {
+    border-radius: 0 8px 8px 0;
+  }
+
+  &[aria-pressed='true'] {
+    background: var(--primary-tint);
+    color: var(--primary-hover);
+  }
+
+  &:disabled {
+    color: var(--text-disabled);
+    cursor: default;
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+.count {
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-medium);
+
+  &.refreshing {
+    opacity: 0.6;
+  }
+}
+
+.check {
+  display: inline-block;
+  width: 18px;
+  color: var(--primary-hover);
+}
+
+.menu-state {
+  padding: 8px 12px;
+}
+
+.note {
+  margin: 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+.alert {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font: var(--mat-sys-body-medium);
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+
+  &.with-detail {
+    grid-template-columns: minmax(0, 1fr) 360px;
+  }
+}
+
+.board {
+  position: relative;
+  height: max(480px, calc(100vh - 340px));
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  overflow: hidden;
+}
+
+.canvas {
+  height: 100%;
+}
+
+.legend {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  max-width: calc(100% - 100px);
+}
+
+.detail {
+  height: max(480px, calc(100vh - 340px));
+}
+
+.list {
+  padding: 0 4px;
+}
+
+@media (max-width: 1024px) {
+  .stage.with-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .detail {
+    height: auto;
+  }
+}

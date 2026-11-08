@@ -5,8 +5,9 @@ import { TabPlaceholderPage } from './pages/tab-placeholder.page';
 
 /**
  * Montées sous /patients/:id par app.routes.ts (authGuard, statusGuard) : la page patient et ses
- * onglets (B2). Les quatre onglets sont provisoires ; chaque tâche remplace la route de son onglet
- * par sa page (M4-05 overview, M3-02 timeline, M2-06 graph, M4-08 search) en gardant data.tab.
+ * onglets (B2). Chaque tâche remplace la route de son onglet par sa page en gardant data.tab :
+ * timeline (M3-02), graph (M2-06) et search (M4-08) sont en place ; overview (M4-05) est encore
+ * la page provisoire.
  * /patients/:id/overview (destination de M1-06 après création) renvoie sur l'onglet 1,
  * /patients/:id, celui que l'en-tête désigne.
  */
@@ -31,7 +32,7 @@ export const PATIENT_SHELL_ROUTES: Routes = [
       },
       {
         path: 'graph',
-        component: TabPlaceholderPage,
+        loadComponent: () => import('../graph').then((m) => m.loadGraphPage()),
         data: { tab: 'graph' },
         title: $localize`:Titre d'onglet du dossier@@patientShell.graph.pageTitle:Graphe · PsyMate`,
       },
