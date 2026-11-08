@@ -126,7 +126,7 @@ describe('TimelinePage', () => {
         }),
       ),
     );
-    expect(text(el.querySelector('.status-line .count'))).toBe('2 entrées · 1 fenêtres en mémoire');
+    expect(text(el.querySelector('.status-line .count'))).toBe('2 entrées · 1 fenêtre en mémoire');
     expect(el.querySelector('[role="list"]')?.getAttribute('aria-label')).toContain('plus récente');
     expect(el.querySelectorAll('[role="listitem"] pm-timeline-card')).toHaveLength(2);
     const band = el.querySelector('.bands-legend li');

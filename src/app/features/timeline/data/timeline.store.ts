@@ -5,7 +5,6 @@ import { ApiProblem, asProblem } from '../../../core/http';
 import { TimelineApi } from './timeline.api';
 import {
   buildRows,
-  followUpStart,
   layoutBands,
   MAX_WINDOWS,
   neighbourhood,
@@ -98,7 +97,8 @@ function sum(counts: Record<string, number>): number {
 export const TimelineStore = signalStore(
   withState(initialState),
   withComputed((store) => {
-    const followStart = computed(() => followUpStart(store.followedSince(), store.sessions()));
+    // Début du suivi du contrat (followedSince : followUp.since, sinon création du dossier).
+    const followStart = computed(() => store.followedSince());
     const bands = computed(() => layoutBands(store.ongoing()));
     return {
       followStart,
@@ -164,6 +164,10 @@ export const TimelineStore = signalStore(
       const trail = [...store.trail()];
       trail[k + 1] = page.nextCursor;
       const patch: Partial<TimelineState> = { sizes, trail };
+      // Facettes en retard sur les pages (écriture entre deux lectures) : il reste au moins un
+      // élément après cette page, le total ne doit pas couper la liste avant lui.
+      const end = windowOffset(k, sizes) + page.items.length;
+      if (page.nextCursor !== null && end >= store.total()) patch.total = end + 1;
       if (page.nextCursor === null) {
         patch.lastIndex = k;
         trail.length = k + 1;
@@ -234,7 +238,10 @@ export const TimelineStore = signalStore(
       try {
         const page = await api.page(id, query(null));
         if (gen !== generation) return;
-        const total = Math.max(sum(page.facets.types), page.items.length);
+        const total = Math.max(
+          sum(page.facets.types),
+          page.items.length + (page.nextCursor ? 1 : 0),
+        );
         patchState(store, {
           status: 'loaded',
           problem: null,
@@ -420,16 +427,25 @@ export const TimelineStore = signalStore(
       try {
         const first = await api.page(id, query(null));
         if (gen !== generation) return;
+        // Même suite de pages (premier curseur inchangé) : les curseurs déjà lus restent valables,
+        // chaque fenêtre en mémoire est relue directement. Sinon, on repart de la première page.
+        const same = first.nextCursor !== null && first.nextCursor === store.trail()[1];
+        const sizes = same ? [...store.sizes()] : [];
+        sizes[0] = first.items.length;
         patchState(store, {
           facets: first.facets,
           ongoing: first.ongoingSituations,
-          total: Math.max(sum(first.facets.types), first.items.length),
-          sizes: [first.items.length],
-          trail: [null, first.nextCursor],
-          lastIndex: first.nextCursor === null ? 0 : null,
+          total: Math.max(sum(first.facets.types), first.items.length + (first.nextCursor ? 1 : 0)),
+          sizes,
+          trail: same ? store.trail() : [null, first.nextCursor],
+          lastIndex: same ? store.lastIndex() : first.nextCursor === null ? 0 : null,
         });
         if (first.nextCursor === null)
-          patchState(store, { total: first.items.length, trail: [null] });
+          patchState(store, {
+            total: first.items.length,
+            trail: [null],
+            sizes: [first.items.length],
+          });
         const others = store.windows().filter((w) => w.index !== 0);
         const keepFirst = neighbourhood(store.current(), store.count()).includes(0);
         patchState(store, {

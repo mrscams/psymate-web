@@ -2,7 +2,6 @@ import { items, timelineItem } from './timeline.fixtures';
 import {
   bandsAt,
   buildRows,
-  followUpStart,
   groupKey,
   layoutBands,
   saidInSession,
@@ -58,16 +57,6 @@ describe('timeline.model', () => {
       ).toBeNull();
       expect(saidInSession(timelineItem({ sessionId: 's-x' }), sessions)).toBeNull();
     });
-  });
-
-  it('début du suivi : la plus ancienne séance ou le début déclaré s’il est plus ancien', () => {
-    expect(followUpStart('2026-11-01', { a: '2025-03-04T09:00:00Z' })).toBe(
-      '2025-03-04T09:00:00.000Z',
-    );
-    expect(followUpStart('2024-01-01', { a: '2025-03-04T09:00:00Z' })).toBe(
-      '2024-01-01T00:00:00.000Z',
-    );
-    expect(followUpStart(null, {})).toBeNull();
   });
 
   describe('bandes de situations', () => {
@@ -155,6 +144,22 @@ describe('timeline.model', () => {
       expect(rows.map((row) => row.bands[0])).toEqual([true, true, false, false]);
       expect(rows[0].bandHeads[0]?.item.id).toBe('reorg');
       expect(rows[1].bandHeads[0]).toBeNull();
+    });
+
+    it('« Début du suivi » une seule fois, même quand la fenêtre précédente n’est pas en mémoire', () => {
+      const old = (id: string, year: number) =>
+        timelineItem({ id, occurred: { from: `${year}-01-01T00:00:00Z`, precision: 'year' } });
+      const rows = buildRows({
+        total: 4,
+        sizes: [2, 2],
+        windows: [loaded(1, [old('c', 2012), old('d', 2010)])],
+        zoom: 'week',
+        sessions: {},
+        followStart: '2025-03-04',
+        bands: [],
+      });
+      expect(rows.map((row) => row.firstBefore)).toEqual([false, false, false, false]);
+      expect(rows.map((row) => row.before)).toEqual([false, false, true, true]);
     });
   });
 });

@@ -22,8 +22,11 @@ export async function createPatient(
   api: APIRequestContext,
   displayName: string,
   birthDate?: string,
+  followUp?: Record<string, string>,
 ): Promise<string> {
-  const response = await api.post(`${API}/api/patients`, { data: { displayName, birthDate } });
+  const response = await api.post(`${API}/api/patients`, {
+    data: { displayName, birthDate, followUp },
+  });
   expect(response.status(), await response.text()).toBe(201);
   return ((await response.json()) as { id: string }).id;
 }
@@ -91,14 +94,17 @@ export interface StoryPatient {
 }
 
 /**
- * Patient « récit » : séance d'accueil (aujourd'hui), deux séances passées (il y a 400 et 30 jours :
- * la plus ancienne marque le début du suivi), une situation en cours commencée il y a 200 jours,
+ * Patient « récit » : suivi depuis 400 jours (followUp.since), séance d'accueil (aujourd'hui), deux
+ * séances passées (il y a 400 et 30 jours), une situation en cours commencée il y a 200 jours,
  * une situation terminée (120 → 90 jours), un événement dit en séance il y a 30 jours mais survenu
  * 5 jours plus tôt (pastille), une note du jour même de cette séance (sans pastille), et trois
  * entrées d'avant le suivi (année 2014, phase de vie « enfance », période « Études à Lille »).
  */
 export async function storyPatient(api: APIRequestContext): Promise<StoryPatient> {
-  const id = await createPatient(api, 'Lina T.', '1990-04-12');
+  // Début du suivi déclaré (followUp.since, fiche 16) : le jour de la première séance.
+  const id = await createPatient(api, 'Lina T.', '1990-04-12', {
+    since: daysAgo(400).slice(0, 10),
+  });
   await intakeOf(api, id);
   const first = await pastSession(api, id, daysAgo(400, 8));
   const recent = await pastSession(api, id, daysAgo(30, 15));

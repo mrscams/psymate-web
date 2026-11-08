@@ -17,8 +17,7 @@ import { StoryPatient, storyPatient, volumePatient } from './timeline-data';
 // zone « Avant le suivi ») et un patient « volume » de 2 000 notes (défilement, fenêtres, zoom).
 
 const VOLUME = 2000;
-/** 2 000 notes, la séance passée et la séance d'accueil. */
-const VOLUME_TOTAL = VOLUME + 2;
+// Total affiché : 2 000 notes, la séance passée et la séance d'accueil, soit « 2 002 » (Intl, fr).
 
 let account: TestAccount;
 let story: StoryPatient;
@@ -59,7 +58,7 @@ async function lanes(row: Locator): Promise<boolean[]> {
 
 /** Nombre de fenêtres en mémoire lu dans la ligne d'état (« … · n fenêtres en mémoire »). */
 function windowsOf(text: string | null): number {
-  const match = /(\d+) fenêtres en mémoire/.exec(text ?? '');
+  const match = /(\d+) fenêtres? en mémoire/.exec(text ?? '');
   return match ? Number(match[1]) : -1;
 }
 
@@ -70,7 +69,7 @@ test('situations en bande, pastille « dit en séance du … », zone « Avant l
   await page.goto(`/fr/patients/${story.id}/timeline`);
   const t = timeline(page);
   await expect(t.card('Entretien annuel')).toBeVisible();
-  await expect(t.count).toHaveText('10 entrées · 1 fenêtres en mémoire');
+  await expect(t.count).toHaveText('10 entrées · 1 fenêtre en mémoire');
 
   // Bandes : la situation en cours (commencée il y a 200 jours) va jusqu'en haut, avec la flèche ;
   // la situation terminée ne couvre que sa plage ; les deux ne partagent pas de colonne.
@@ -168,7 +167,7 @@ test(`${VOLUME} entrées : défilement fluide, trois fenêtres au plus, zoom san
   await page.goto(`/fr/patients/${volume}/timeline`);
   const t = timeline(page);
   // Fenêtre courante puis la suivante en arrière-plan.
-  await expect(t.count).toHaveText(`${VOLUME_TOTAL} entrées · 2 fenêtres en mémoire`);
+  await expect(t.count).toHaveText(/^2\s002 entrées · 2 fenêtres en mémoire$/);
   await expect(t.granularity).toHaveText('Semaine');
   await page.waitForLoadState('networkidle');
   const settled = requests.length;
@@ -211,7 +210,7 @@ test(`${VOLUME} entrées : défilement fluide, trois fenêtres au plus, zoom san
           last = now;
           el.scrollTop += 160;
           const text = document.querySelector('.status-line .count')?.textContent ?? '';
-          const match = /(\d+) fenêtres en mémoire/.exec(text);
+          const match = /(\d+) fenêtres? en mémoire/.exec(text);
           if (match) maxWindows = Math.max(maxWindows, Number(match[1]));
           if (++n < frames) requestAnimationFrame(step);
           else {
@@ -236,8 +235,9 @@ test(`${VOLUME} entrées : défilement fluide, trois fenêtres au plus, zoom san
   test.info().annotations.push({ type: 'perf', description: JSON.stringify(stats) });
   console.log(`M3-02 défilement ${VOLUME} entrées :`, JSON.stringify(stats));
   expect(stats.maxWindows).toBeLessThanOrEqual(3);
-  expect(stats.p95).toBeLessThan(50);
-  expect(stats.long).toBeLessThan(stats.frames * 0.05);
+  // 60 Hz : 16,7 ms par trame ; au plus une trame sautée au 95e centile, 2 % de trames longues.
+  expect(stats.p95).toBeLessThan(34);
+  expect(stats.long).toBeLessThan(stats.frames * 0.02);
 
   // En bas de la liste : la plus ancienne note est là, toujours trois fenêtres au plus.
   await t.viewport.evaluate((el) => (el.scrollTop = el.scrollHeight));
@@ -252,7 +252,7 @@ test('« Corriger » puis retour, « Voir dans le graphe » puis retour : positi
   await signIn(page, account);
   await page.goto(`/fr/patients/${volume}/timeline`);
   const t = timeline(page);
-  await expect(t.count).toContainText(`${VOLUME_TOTAL} entrées`);
+  await expect(t.count).toHaveText(/^2\s002 entrées · /);
 
   // Au milieu de la deuxième fenêtre.
   await t.viewport.evaluate((el) => (el.scrollTop = 96 * 450));

@@ -235,32 +235,10 @@
 }
 
 .window-error {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  background: var(--danger-bg);
-  color: var(--danger);
-  font: var(--mat-sys-body-medium);
-}
-
-.retry {
-  min-height: 36px;
-  padding: 0 14px;
-  border: 1px solid var(--danger);
-  border-radius: 8px;
-  background: var(--surface-raised);
-  color: var(--danger);
-  font: var(--mat-sys-label-large);
-  cursor: pointer;
-
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-  }
+  display: block;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 // Menu contextuel : son contenu vient de ce gabarit (matMenuContent), il garde donc nos styles

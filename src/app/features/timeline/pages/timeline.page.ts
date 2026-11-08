@@ -86,11 +86,10 @@ export class TimelinePage {
     handler: () => void this.store.reload(),
   };
 
-  protected readonly countText = computed(() => {
-    const total = this.store.total();
-    const windows = this.store.inMemory();
-    return $localize`:Ligne d'état de la timeline@@timeline.status.count:${total}:total: entrées · ${windows}:windows: fenêtres en mémoire`;
-  });
+  /** Total de la ligne d'état, au format de la langue (« 2 002 »). */
+  protected readonly totalText = computed(() =>
+    new Intl.NumberFormat(this.locale).format(this.store.total()),
+  );
 
   protected readonly boundsText = computed(() => {
     const bounds = this.store.currentBounds();
@@ -125,6 +124,9 @@ export class TimelinePage {
 
   private lastWheel = 0;
   private restored = false;
+  /** Position rangée au départ précédent (px), null sans reprise. */
+  private restoreOffset: number | null = null;
+  private lastOffset = 0;
 
   constructor() {
     // Le patient du dossier (en-tête) : la chronologie se charge, ou reprend l'état rangé.
@@ -133,8 +135,16 @@ export class TimelinePage {
       if (!patient) return;
       untracked(() => {
         if (this.store.patientId() === patient.id) return;
-        const snapshot = this.shell.recallTab<TimelineSnapshot>('timeline');
-        void this.store.load(patient.id, patient.followedSince, snapshot);
+        const recalled = this.shell.recallTab<TimelineSnapshot>('timeline');
+        const { offset, ...snapshot } = recalled ?? ({} as Partial<TimelineSnapshot>);
+        this.restoreOffset = recalled?.patientId === patient.id ? (offset ?? null) : null;
+        void this.store.load(
+          patient.id,
+          patient.followedSince,
+          recalled ? (snapshot as TimelineSnapshot) : undefined,
+        );
+        // Repris : l'état ne vit plus que dans le TimelineStore (rangé à nouveau au départ).
+        if (recalled) this.shell.rememberTab<TimelineSnapshot | undefined>('timeline', undefined);
       });
     });
 
@@ -146,8 +156,19 @@ export class TimelinePage {
       if (!viewport || !ready || this.restored || this.focusParam()) return;
       this.restored = true;
       const anchor = untracked(() => this.store.anchor());
-      if (anchor > 0)
-        afterNextRender(() => this.scrollTo(viewport, anchor), { injector: this.injector });
+      const offset = this.restoreOffset;
+      if (anchor > 0 || offset)
+        afterNextRender(() => this.scrollTo(viewport, anchor, offset), { injector: this.injector });
+    });
+
+    // Position exacte, suivie au défilement, pour la reprendre au pixel près au retour sur l'onglet.
+    effect((onCleanup) => {
+      const viewport = this.viewport();
+      if (!viewport) return;
+      const subscription = viewport
+        .elementScrolled()
+        .subscribe(() => (this.lastOffset = viewport.measureScrollOffset('top')));
+      onCleanup(() => subscription.unsubscribe());
     });
 
     // ?focus=<id> : la timeline lit ses fenêtres jusqu'à l'entrée, la met en haut de l'écran,
@@ -171,7 +192,12 @@ export class TimelinePage {
     // Départ de l'onglet : l'état (fenêtres, zoom, position) est rangé dans le shell (B2).
     destroyRef.onDestroy(() => {
       const snapshot = this.store.snapshot();
-      if (snapshot) this.shell.rememberTab<TimelineSnapshot>('timeline', snapshot);
+      if (snapshot) {
+        this.shell.rememberTab<TimelineSnapshot>('timeline', {
+          ...snapshot,
+          offset: this.lastOffset,
+        });
+      }
     });
   }
 
@@ -214,12 +240,17 @@ export class TimelinePage {
    * Amène le créneau `slot` en haut de l'écran. La hauteur totale du défilement n'est connue du CDK
    * qu'une trame après le rendu : on réessaie quelques trames tant que la position n'est pas atteinte.
    */
-  private scrollTo(viewport: CdkVirtualScrollViewport, slot: number, attempts = 10): void {
+  private scrollTo(
+    viewport: CdkVirtualScrollViewport,
+    slot: number,
+    offset: number | null = null,
+    attempts = 10,
+  ): void {
     viewport.checkViewportSize();
-    viewport.scrollToIndex(slot);
-    const target = slot * this.rowHeight();
+    const target = offset ?? slot * this.rowHeight();
+    viewport.scrollToOffset(target);
     if (Math.abs(viewport.measureScrollOffset('top') - target) > 1 && attempts > 0) {
-      requestAnimationFrame(() => this.scrollTo(viewport, slot, attempts - 1));
+      requestAnimationFrame(() => this.scrollTo(viewport, slot, offset, attempts - 1));
     }
   }
 
@@ -254,6 +285,23 @@ export class TimelinePage {
     if (now - this.lastWheel < WHEEL_STEP_MS) return;
     this.lastWheel = now;
     this.zoom(event.deltaY < 0 ? 'in' : 'out');
+  }
+
+  /** Ligne lue par les lecteurs d'écran : une carte, ou l'erreur de sa fenêtre. */
+  protected announced(row: TimelineRow): boolean {
+    return !!row.item || (row.state === 'error' && row.firstOfWindow);
+  }
+
+  private readonly retryActions = new Map<number, StateAction>();
+
+  /** « Réessayer » d'une fenêtre en échec (même objet d'une détection à l'autre). */
+  protected retryWindow(window: number): StateAction {
+    let action = this.retryActions.get(window);
+    if (!action) {
+      action = { label: this.retry.label, handler: () => void this.store.retryWindow(window) };
+      this.retryActions.set(window, action);
+    }
+    return action;
   }
 
   protected trackSlot(_index: number, row: TimelineRow): number {

@@ -254,6 +254,38 @@ describe('TimelineStore', () => {
     expect(cursors(page)[0]).toBeNull();
   });
 
+  it('refresh loin dans la liste : les curseurs connus servent, aucune page n’est reparcourue', async () => {
+    const { page } = paged(1000);
+    const { store } = setup({ page });
+    await store.load('p-1', null);
+    await flush();
+    store.visible(650, 658);
+    await flush();
+    expect(store.windows().map((w) => w.index)).toEqual([2, 3, 4]);
+    page.mockClear();
+
+    await store.refresh();
+    await flush();
+    expect(cursors(page)).toEqual([null, 'c2', 'c3', 'c4']);
+    expect(store.windows().map((w) => w.index)).toEqual([2, 3, 4]);
+  });
+
+  it('facettes en retard sur les pages : le total s’étend, la liste n’est pas coupée', async () => {
+    const { pages } = pagedTimeline(400);
+    const late = vi.fn((_id: string, query: TimelineQuery) => {
+      const found = pages.get(query.cursor)!;
+      return Promise.resolve({
+        ...found,
+        facets: { types: { note: 200 }, emotions: {}, tags: {} },
+      });
+    });
+    const { store } = setup({ page: late });
+    await store.load('p-1', null);
+    await flush();
+    expect(store.total()).toBe(400);
+    expect(store.rows()[399].item?.id).toBe('e-399');
+  });
+
   it('index des séances : pastille « dit en séance du … » et début du suivi', async () => {
     const said = timelineItem({
       id: 'e-said',
@@ -276,9 +308,9 @@ describe('TimelineStore', () => {
         .fn()
         .mockResolvedValue({ 's-1': '2026-10-17T16:00:00Z', 's-0': '2025-03-04T09:00:00Z' }),
     });
-    await store.load('p-1', '2026-11-01');
+    await store.load('p-1', '2025-03-04');
 
-    expect(store.followStart()).toBe('2025-03-04T09:00:00.000Z');
+    expect(store.followStart()).toBe('2025-03-04');
     const rows = store.rows();
     expect(rows[0].saidIn).toBe('2026-10-17T16:00:00Z');
     expect(rows[1].saidIn).toBeNull();

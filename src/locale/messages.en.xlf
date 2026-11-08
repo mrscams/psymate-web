@@ -16255,15 +16255,6 @@
         </context-group>
         <note priority="1" from="description">Message d&apos;une fenêtre de la timeline en échec</note>
       </trans-unit>
-      <trans-unit id="timeline.window.retry" datatype="html">
-        <source> Réessayer </source>
-        <target state="translated"> Retry </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">176,178</context>
-        </context-group>
-        <note priority="1" from="description">Bouton Réessayer d&apos;une fenêtre</note>
-      </trans-unit>
       <trans-unit id="timeline.menu.open" datatype="html">
         <source>Ouvrir</source>
         <target state="translated">Open</target>
@@ -16344,15 +16335,6 @@
           <context context-type="linenumber">81</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;état erreur de la timeline</note>
-      </trans-unit>
-      <trans-unit id="timeline.status.count" datatype="html">
-        <source><x id="total" equiv-text="total"/> entrées · <x id="windows" equiv-text="windows"/> fenêtres en mémoire</source>
-        <target state="translated"><x id="total" equiv-text="total"/> entries · <x id="windows" equiv-text="windows"/> windows in memory</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">88</context>
-        </context-group>
-        <note priority="1" from="description">Ligne d&apos;état de la timeline</note>
       </trans-unit>
       <trans-unit id="timeline.status.bounds" datatype="html">
         <source>Fenêtre : <x id="oldest" equiv-text="oldest"/> → <x id="newest" equiv-text="newest"/></source>
@@ -16569,6 +16551,24 @@
           <context context-type="linenumber">81</context>
         </context-group>
         <note priority="1" from="description">Libellé d&apos;une semaine sur l&apos;axe de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.status.entries" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 entry} other {<x id="INTERPOLATION"/> entries}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">76,80</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;entrées de la ligne d&apos;état de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.status.windows" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 fenêtre en mémoire} other {<x id="INTERPOLATION"/> fenêtres en mémoire}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 window in memory} other {<x id="INTERPOLATION"/> windows in memory}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">81,87</context>
+        </context-group>
+        <note priority="1" from="description">Fenêtres en mémoire de la ligne d&apos;état de la timeline</note>
       </trans-unit>
     </body>
   </file>

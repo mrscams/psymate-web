@@ -6,6 +6,8 @@
   [class.compact]="zoom() === 'month'"
   [class.draft]="item().status === 'draft'"
   tabindex="0"
+  aria-keyshortcuts="Enter Shift+F10"
+  [attr.aria-current]="selected() ? 'true' : null"
   [attr.aria-label]="ariaLabel()"
   [attr.data-entry-id]="item().id"
   (click)="open($event)"

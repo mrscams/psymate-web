@@ -43,6 +43,19 @@ export function intensityOpacity(intensity: number | null): number {
   return 0.35;
 }
 
+/** Formateurs Intl mis en cache (l'axe en demande un par ligne et par passage). */
+const formats = new Map<string, Intl.DateTimeFormat>();
+
+function dtf(locale: string, options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
+  const key = `${locale}|${JSON.stringify(options)}`;
+  let format = formats.get(key);
+  if (!format) {
+    format = new Intl.DateTimeFormat(locale, options);
+    formats.set(key, format);
+  }
+  return format;
+}
+
 /** Libellé de l'axe pour le premier élément d'un groupe (jour, semaine, mois). */
 export function groupLabel(
   iso: string | null | undefined,
@@ -57,14 +70,14 @@ export function groupLabel(
   // L'axe n'est jamais plus fin que la date de l'élément : une année reste une année.
   if (precision === 'year' || precision === 'period' || precision === 'life_phase') {
     return {
-      main: new Intl.DateTimeFormat(locale, { year: 'numeric', timeZone }).format(date),
+      main: dtf(locale, { year: 'numeric', timeZone }).format(date),
       sub: '',
     };
   }
   if (zoom === 'month' || precision === 'month') {
     return {
-      main: new Intl.DateTimeFormat(locale, { month: 'short', timeZone }).format(date),
-      sub: new Intl.DateTimeFormat(locale, { year: 'numeric', timeZone }).format(date),
+      main: dtf(locale, { month: 'short', timeZone }).format(date),
+      sub: dtf(locale, { year: 'numeric', timeZone }).format(date),
     };
   }
   if (zoom === 'week') {
@@ -72,21 +85,19 @@ export function groupLabel(
     const local = timeZone === undefined;
     const weekday = ((local ? date.getDay() : date.getUTCDay()) + 6) % 7;
     const monday = new Date(date.getTime() - weekday * 86_400_000);
-    const day = new Intl.DateTimeFormat(locale, {
+    const day = dtf(locale, {
       day: 'numeric',
       month: 'short',
       timeZone,
     }).format(monday);
     return {
       main: $localize`:Libellé d'une semaine sur l'axe de la timeline@@timeline.axis.week:sem. du ${day}:day:`,
-      sub: new Intl.DateTimeFormat(locale, { year: 'numeric', timeZone }).format(monday),
+      sub: dtf(locale, { year: 'numeric', timeZone }).format(monday),
     };
   }
   return {
-    main: new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', timeZone }).format(
-      date,
-    ),
-    sub: new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone }).format(date),
+    main: dtf(locale, { day: 'numeric', month: 'short', timeZone }).format(date),
+    sub: dtf(locale, { weekday: 'short', timeZone }).format(date),
   };
 }
 
@@ -94,7 +105,7 @@ export function groupLabel(
 export function sessionDate(iso: string, locale: string): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return '';
-  return new Intl.DateTimeFormat(locale, {
+  return dtf(locale, {
     day: 'numeric',
     month: 'short',
     year: 'numeric',

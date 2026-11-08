@@ -103,6 +103,8 @@ export interface TimelineSnapshot {
   sessions: Record<string, string>;
   emotionLabels: Record<string, string>;
   selectedId: string | null;
+  /** Position exacte de défilement (px), rangée par la page ; reprise si le zoom n'a pas changé. */
+  offset?: number;
 }
 
 // ---------------------------------------------------------------- fenêtres et créneaux
@@ -207,23 +209,6 @@ export function isBeforeFollowUp(item: TimelineItem, followStart: string | null)
   const start = time(followStart);
   const from = time(item.occurred.from);
   return start !== null && from !== null && from < start;
-}
-
-/**
- * Début du suivi (fiche 03, zone « Avant le suivi ») : la plus ancienne séance du dossier (la
- * première rencontre), ou le début déclaré (followUp.since, sinon la création du dossier) s'il est
- * plus ancien. Null si rien n'est connu.
- */
-export function followUpStart(
-  followedSince: string | null,
-  sessions: Readonly<Record<string, string>>,
-): string | null {
-  let best: number | null = time(followedSince);
-  for (const from of Object.values(sessions)) {
-    const ms = time(from);
-    if (ms !== null && (best === null || ms < best)) best = ms;
-  }
-  return best === null ? null : new Date(best).toISOString();
 }
 
 // ---------------------------------------------------------------- bandes de situations
@@ -370,7 +355,10 @@ export function buildRows(input: RowsInput): TimelineRow[] {
         firstOfWindow: i === 0,
         groupStart: !previous || groupKey(previous, zoom) !== groupKey(item, zoom),
         before,
-        firstBefore: before && (!previous || !isBeforeFollowUp(previous, followStart)),
+        // Le marqueur ne se pose qu'une fois : au premier créneau, ou après un élément d'avant la
+        // zone ; jamais après un créneau vide (fenêtre précédente hors mémoire).
+        firstBefore:
+          before && (slot === 0 || (previous !== null && !isBeforeFollowUp(previous, followStart))),
         saidIn: saidInSession(item, sessions),
         bands: covered,
         bandHeads: heads,

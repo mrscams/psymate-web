@@ -70,7 +70,20 @@
     }
   } @else {
     <p class="status-line">
-      <span class="count">{{ countText() }}</span>
+      <span class="count"
+        ><span
+          i18n="Nombre d'entrées de la ligne d'état de la timeline@@timeline.status.entries"
+          >{store.total(), plural, =1 {1 entrée} other {{{ totalText() }} entrées}}</span
+        >
+        ·
+        <span
+          i18n="Fenêtres en mémoire de la ligne d'état de la timeline@@timeline.status.windows"
+          >{store.inMemory(), plural,
+            =1 {1 fenêtre en mémoire}
+            other {{{ store.inMemory() }} fenêtres en mémoire}
+          }</span
+        ></span
+      >
       @if (boundsText()) {
         <span class="bounds">{{ boundsText() }}</span>
       }
@@ -114,8 +127,10 @@
           class="row"
           [class.before]="row.before"
           [style.height.px]="rowHeight()"
-          [attr.role]="row.item || row.state === 'error' ? 'listitem' : null"
-          [attr.aria-hidden]="row.item || row.state === 'error' ? null : 'true'"
+          [attr.role]="announced(row) ? 'listitem' : null"
+          [attr.aria-hidden]="announced(row) ? null : 'true'"
+          [attr.aria-setsize]="announced(row) ? store.total() : null"
+          [attr.aria-posinset]="announced(row) ? row.slot + 1 : null"
         >
           <div class="bands" aria-hidden="true">
             @for (on of row.bands; track $index) {
@@ -163,19 +178,15 @@
               />
             } @else if (row.state === 'error') {
               @if (row.firstOfWindow) {
-                <div class="window-error" role="alert">
-                  <span i18n="Message d'une fenêtre de la timeline en échec@@timeline.window.error"
-                    >Cette partie de la timeline n'a pas pu être chargée.</span
-                  >
-                  <button
-                    type="button"
-                    class="retry"
-                    (click)="store.retryWindow(row.window)"
-                    i18n="Bouton Réessayer d'une fenêtre@@timeline.window.retry"
-                  >
-                    Réessayer
-                  </button>
-                </div>
+                <pm-state
+                  class="window-error"
+                  kind="error"
+                  compact
+                  [action]="retryWindow(row.window)"
+                  title="Cette partie de la timeline n'a pas pu être chargée."
+                  i18n-title="Message d'une fenêtre de la timeline en échec@@timeline.window.error"
+                  message=""
+                />
               }
             } @else {
               <div class="skeleton"></div>
