@@ -9,7 +9,7 @@ import {
   ToastService,
 } from '../../../shared/ui';
 import { LinkApi } from '../data/link.api';
-import { CATALOG, EVENT, link, SITUATION, source } from '../data/link.fixtures';
+import { CATALOG, EVENT, link, MEDICATION, SITUATION, source } from '../data/link.fixtures';
 import { EntryLink } from '../data/link.model';
 import { LinkEditorData, LinkEditorPanel } from './link-editor.panel';
 
@@ -27,7 +27,11 @@ async function settle(): Promise<void> {
   }
 }
 
-async function render(api: Api = {}, confirm = vi.fn().mockResolvedValue(true)) {
+async function render(
+  api: Api = {},
+  confirm = vi.fn().mockResolvedValue(true),
+  targetId: string | null = null,
+) {
   const mock: Api = {
     linkTypes: vi.fn().mockResolvedValue(CATALOG),
     entry: vi.fn().mockResolvedValue(source()),
@@ -47,7 +51,7 @@ async function render(api: Api = {}, confirm = vi.fn().mockResolvedValue(true)) 
   });
   const ref = TestBed.inject(SidePanelService).open<LinkEditorPanel, LinkEditorData, EntryLink>(
     LinkEditorPanel,
-    { data: { entryId: 'e-feeling', patientName: 'Marie D.' }, width: 420 },
+    { data: { entryId: 'e-feeling', patientName: 'Marie D.', targetId }, width: 420 },
   ) as SidePanelRef<EntryLink>;
   await settle();
   const el = document.querySelector<HTMLElement>('pm-link-editor-panel')!;
@@ -133,6 +137,21 @@ describe('LinkEditorPanel', () => {
     expect(targets[1].classList.contains('linked')).toBe(true);
     expect(text(targets[1])).toContain('déjà lié (aggravé par)');
     expect(text(el.querySelector('#pm-link-placed'))).toBe('Liens déjà posés sur cette entrée · 1');
+  });
+
+  it('cible préremplie (glisser dans le graphe, M2-06) : lue puis choisie, le type reste à choisir', async () => {
+    const entry = vi.fn((id: string) =>
+      Promise.resolve(
+        id === 'e-medication' ? { ...MEDICATION, patientId: 'p-marie', archived: false } : source(),
+      ),
+    );
+    const { el, api } = await render({ entry }, undefined, 'e-medication');
+    expect(api.entry).toHaveBeenCalledWith('e-medication');
+    const checked = el.querySelector<HTMLInputElement>('input[type="radio"]:checked');
+    expect(checked?.value).toBe('e-medication');
+    expect(text(el.querySelector('form.editor .sentence'))).toBe('Anxiété 8/10 … Sertraline 50 mg');
+    // Ressenti → médicament : « traite » n'est permis que dans l'autre sens.
+    expect(chip(el, 'treats').getAttribute('aria-disabled')).toBe('true');
   });
 
   it('seuls les types permis pour le couple sont actifs ; aide reliée aux puces refusées', async () => {

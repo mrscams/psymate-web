@@ -246,6 +246,18 @@ export const LinkEditorStore = signalStore(
         }
       },
 
+      /** Une entrée du dossier, pour préremplir la cible (glisser-déposer du graphe) ; null si illisible. */
+      async entryById(entryId: string): Promise<LinkEntry | null> {
+        try {
+          const { id, type, title, excerpt, occurredFrom, occurredTo, precision } =
+            await api.entry(entryId);
+          rememberTypes([{ id, type }]);
+          return { id, type, title, excerpt, occurredFrom, occurredTo, precision };
+        } catch {
+          return null;
+        }
+      },
+
       /** Efface le problème du dernier enregistrement (nouvelle saisie). */
       clearProblem(): void {
         patchState(store, { problem: null });

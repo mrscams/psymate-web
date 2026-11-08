@@ -17,6 +17,11 @@ export interface OpenLinkEditorOptions {
   patientName?: string | null;
   /** Hors contexte d'injection (gestionnaire d'événement), l'injecteur de l'appelant. */
   injector?: Injector;
+  /**
+   * Cible préremplie (B3 flux 4, variante graphe : glisser un nœud sur un autre ouvre l'éditeur
+   * avec source et cible choisies) ; le type reste à choisir.
+   */
+  targetId?: string | null;
 }
 
 /** Le lien posé par « Enregistrer le lien » (undefined : fermé sans enregistrer, ou après « … et lier une autre »). */
@@ -39,7 +44,11 @@ export function openLinkEditor(
   if (store.active()) return null;
   const panels = injector.get(SidePanelService);
 
-  const data: LinkEditorData = { entryId, patientName: options.patientName ?? null };
+  const data: LinkEditorData = {
+    entryId,
+    patientName: options.patientName ?? null,
+    targetId: options.targetId ?? null,
+  };
   const ref = panels.open<LinkEditorPanel, LinkEditorData, LinkEditorResult>(LinkEditorPanel, {
     data,
     width: 420,

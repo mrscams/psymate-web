@@ -1,0 +1,127 @@
+<aside class="detail" role="complementary" [attr.aria-labelledby]="headingId">
+  <header class="head">
+    <pm-entry-icon [type]="type()" [size]="16" />
+    <h2 #heading class="title" tabindex="-1" [id]="headingId">{{ title() }}</h2>
+    <span class="type-chip">{{ typeLabel() }}</span>
+    <button type="button" class="close" [attr.aria-label]="closeLabel" (click)="closed.emit()">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6 6l12 12M18 6 6 18" />
+      </svg>
+    </button>
+  </header>
+
+  <div class="body">
+    @if (group(); as current) {
+      <p class="text">{{ groupText() }}</p>
+      @if (expandError()) {
+        <p class="alert" role="alert">{{ expandError() }}</p>
+      }
+      <div class="actions">
+        <button
+          type="button"
+          class="action primary"
+          [disabled]="expanding()"
+          (click)="expand.emit(current.id)"
+          i18n="Bouton qui déplie un super-nœud du graphe@@graph.detail.expand"
+        >
+          Déplier
+        </button>
+        <button
+          type="button"
+          class="action"
+          (click)="recenter.emit(current.neighborId)"
+          i18n="Recentrer sur le voisin d'un super-nœud@@graph.detail.recenterNeighbor"
+        >
+          Recentrer sur l'entrée voisine
+        </button>
+      </div>
+    } @else if (node(); as current) {
+      <pm-state
+        [kind]="state()"
+        [title]="detailErrorTitle"
+        [action]="retryAction()"
+        skeleton="profile"
+        [lines]="3"
+        compact
+      />
+      @if (entry(); as data) {
+        <dl class="facts">
+          @if (when()) {
+            <div>
+              <dt i18n="Date d'une entrée dans le détail du graphe@@graph.detail.when">Quand</dt>
+              <dd>{{ when() }}</dd>
+            </div>
+          }
+          @if (emotion()) {
+            <div>
+              <dt i18n="Émotion d'un ressenti dans le détail du graphe@@graph.detail.emotion">
+                Émotion
+              </dt>
+              <dd>{{ emotion() }}</dd>
+            </div>
+          }
+        </dl>
+        @if (data.excerpt) {
+          <p class="text">{{ data.excerpt }}</p>
+        }
+
+        <h3 class="links-title">{{ linksHeading() }}</h3>
+        @if (links().length) {
+          <ul class="links">
+            @for (item of links(); track item.id) {
+              <li>
+                <button type="button" class="link" (click)="selectEntry.emit(item.other)">
+                  {{ item.sentence }}
+                </button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="muted">{{ noLinks }}</p>
+        }
+      }
+
+      <div class="actions">
+        <button
+          type="button"
+          class="action primary"
+          aria-keyshortcuts="L"
+          (click)="link.emit(current.id)"
+          i18n="Bouton qui lie l'entrée sélectionnée dans le graphe@@graph.detail.link"
+        >
+          Lier (L)
+        </button>
+        <button
+          type="button"
+          class="action"
+          (click)="showInTimeline.emit(current.id)"
+          i18n="Bouton qui ouvre la timeline sur l'entrée sélectionnée@@graph.detail.timeline"
+        >
+          Voir dans la timeline
+        </button>
+        @if (!isRoot()) {
+          <button
+            type="button"
+            class="action"
+            (click)="recenter.emit(current.id)"
+            i18n="Bouton qui recentre le graphe sur l'entrée sélectionnée@@graph.detail.recenter"
+          >
+            Recentrer le graphe ici
+          </button>
+        }
+        <button
+          type="button"
+          class="action"
+          (click)="edit.emit(current.id)"
+          i18n="Bouton qui corrige l'entrée sélectionnée dans le graphe@@graph.detail.edit"
+        >
+          Corriger l'entrée
+        </button>
+      </div>
+    }
+  </div>
+
+  <p class="help" i18n="Aide du panneau de détail du graphe@@graph.detail.help">
+    Glisser un nœud sur un autre crée un lien · double-clic : ouvrir dans la timeline
+  </p>
+</aside>

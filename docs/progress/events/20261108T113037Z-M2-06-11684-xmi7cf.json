@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T11:30:37.675Z",
+  "task": "M2-06",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Vue graphe /patients/:id/graph : Cytoscape + cose-bilkent en @defer (hors bundle initial), styles par tokens relus au changement de thème, racine/profondeur, filtres, panneau de détail (Lier, Corriger, Recentrer), glisser → éditeur de lien prérempli, double-clic → timeline ?focus=, super-nœuds Déplier, liste équivalente au clavier (liens + groupes), GraphStore mémorisé par rememberTab.",
+  "notes": "Dépendances ajoutées : cytoscape 3.34.4, cytoscape-cose-bilkent 4.1.0 (exactes). Mesure 150 nœuds : prêt 418 ms, layout 114 ms, image médiane 16,7 ms (60 i/s). Bundle initial 901,00 → 905,21 kB. Écarts : filtre types local (absent du contrat), liens accepted seuls, double-clic = timeline (Recentrer dans le panneau), pas de panneau d'arête ni de mode L + deux clics, intensité non dessinée, trait double simulé, période en préréglages, racine pas agrandie, date pas en JetBrains Mono. Revue : 1 bloquant (super-nœuds au clavier), 7 à corriger et 4 suggestions traités. Tokens --link/--link-proposed sans valeur sombre.",
+  "next": "Tâche tokens pour --link/--link-proposed en thème sombre ; allowedCommonJsDependencies pour taire les avertissements CJS ; panneau d'arête (accepter/rejeter/retirer) ; M4-05 overview.",
+  "branch": "claude/youthful-proskuriakova-77dee2",
+  "checkout": "youthful-proskuriakova-77dee2"
+}
