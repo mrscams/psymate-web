@@ -1,0 +1,315 @@
+<header class="page-header">
+  <h1 i18n="Titre de la liste des comptes@@admin.practitioners.title">Praticiens</h1>
+  @if (breakdown().length > 0) {
+    <ul
+      class="breakdown"
+      aria-label="Répartition par statut"
+      i18n-aria-label="Étiquette de la répartition@@admin.practitioners.breakdown"
+    >
+      @for (item of breakdown(); track item.status) {
+        <li>
+          <span class="badge" [class]="item.tone">{{ item.label }}</span>
+          <span class="count">{{ item.count }}</span>
+        </li>
+      }
+    </ul>
+  }
+</header>
+
+<section class="card" aria-labelledby="accounts-title">
+  <h2
+    id="accounts-title"
+    class="sr-only"
+    i18n="Titre caché de la liste@@admin.practitioners.listTitle"
+  >
+    Comptes
+  </h2>
+  <div class="filters">
+    <div class="field search">
+      <label for="accounts-search" i18n="Champ de recherche des comptes@@admin.practitioners.search"
+        >Rechercher (nom ou e-mail)</label
+      >
+      <input id="accounts-search" type="search" [value]="query()" (input)="onQuery($event)" />
+    </div>
+    <div class="field">
+      <label for="accounts-profession" i18n="Filtre profession@@admin.practitioners.profession"
+        >Profession</label
+      >
+      <select id="accounts-profession" (change)="onProfession($event)">
+        <option
+          value=""
+          [selected]="!profession()"
+          i18n="Toutes les professions@@admin.practitioners.allProfessions"
+        >
+          Toutes
+        </option>
+        @for (option of professions; track option) {
+          <option [value]="option" [selected]="option === profession()">
+            {{ professionText(option) }}
+          </option>
+        }
+      </select>
+    </div>
+    <div class="field">
+      <label for="accounts-role" i18n="Filtre rôle@@admin.practitioners.role">Comptes</label>
+      <select id="accounts-role" (change)="onRole($event)">
+        <option
+          value="practitioner"
+          [selected]="roleValue() === 'practitioner'"
+          i18n="Rôle praticien@@admin.practitioners.rolePractitioner"
+        >
+          Praticiens
+        </option>
+        <option
+          value="admin"
+          [selected]="roleValue() === 'admin'"
+          i18n="Rôle administrateur@@admin.practitioners.roleAdmin"
+        >
+          Administrateurs
+        </option>
+        <option
+          value="all"
+          [selected]="roleValue() === 'all'"
+          i18n="Tous les rôles@@admin.practitioners.roleAll"
+        >
+          Tous les comptes
+        </option>
+      </select>
+    </div>
+  </div>
+  <div
+    class="segments"
+    role="group"
+    aria-label="Statut"
+    i18n-aria-label="Étiquette des segments de statut@@admin.practitioners.statusGroup"
+  >
+    <button type="button" [attr.aria-pressed]="!store.filters().status" (click)="setStatus(null)">
+      {{ segmentLabel(null) }}
+    </button>
+    @for (option of statuses; track option) {
+      <button
+        type="button"
+        [attr.aria-pressed]="store.filters().status === option"
+        (click)="setStatus(option)"
+      >
+        {{ segmentLabel(option) }}
+      </button>
+    }
+  </div>
+
+  @if (staleError()) {
+    <div class="banner" role="alert">
+      <span i18n="Erreur de rechargement des comptes@@admin.practitioners.stale"
+        >La liste n'a pas pu être relue.</span
+      >
+      <button mat-stroked-button type="button" (click)="store.reload()">{{ retry.label }}</button>
+    </div>
+  }
+
+  @if (kind(); as state) {
+    @switch (state) {
+      @case ('loading') {
+        <pm-state kind="loading" skeleton="row" [lines]="6" />
+      }
+      @case ('error') {
+        <pm-state
+          kind="error"
+          title="Impossible de charger les comptes"
+          i18n-title="État erreur des comptes@@admin.practitioners.error"
+          [action]="retry"
+        />
+      }
+      @case ('empty') {
+        <pm-state
+          kind="empty"
+          title="Aucun compte ne correspond"
+          i18n-title="État vide des comptes@@admin.practitioners.empty"
+          message="Modifiez la recherche ou les filtres."
+          i18n-message="Phrase de l'état vide des comptes@@admin.practitioners.emptyHint"
+        />
+      }
+    }
+  } @else {
+    <div class="table-wrap">
+      <table [class.refreshing]="refreshing()">
+        <caption class="sr-only" i18n="Légende du tableau des comptes@@admin.practitioners.caption">
+          Comptes, du plus récemment créé au plus ancien
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col" i18n="Colonne@@admin.practitioners.col.who">Praticien</th>
+            <th scope="col" i18n="Colonne@@admin.practitioners.col.where">Profession · ville</th>
+            <th scope="col" i18n="Colonne@@admin.practitioners.col.status">Vérification</th>
+            <th scope="col" i18n="Colonne@@admin.practitioners.col.twoFactor">2FA</th>
+            <th scope="col" i18n="Colonne@@admin.practitioners.col.dates">
+              Inscrit · dernière connexion
+            </th>
+            <th scope="col" i18n="Colonne@@admin.practitioners.col.actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.id) {
+            <tr>
+              <td>
+                <div class="who">
+                  <span class="avatar" aria-hidden="true">{{ row.initials }}</span>
+                  <div>
+                    <div class="name">{{ row.displayName }}</div>
+                    <div class="secondary">{{ row.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>{{ row.where }}</td>
+              <td>
+                <span class="badge" [class]="row.tone">{{ row.statusText }}</span>
+                <div class="secondary">
+                  {{ row.since }}
+                  @if (row.overdue) {
+                    ·
+                    <strong class="late" i18n="Mention d'un dossier hors délai@@admin.queue.overdue"
+                      >hors délai</strong
+                    >
+                  }
+                </div>
+              </td>
+              <td>
+                @if (row.twoFactorEnabled) {
+                  <span i18n="2FA activée@@admin.practitioners.twoFactorOn">Activée</span>
+                } @else {
+                  <span i18n="2FA non activée@@admin.practitioners.twoFactorOff">Non</span>
+                }
+              </td>
+              <td>
+                <div>{{ row.created }}</div>
+                <div class="secondary">{{ row.lastLogin ?? '—' }}</div>
+                @if (row.purge) {
+                  <div
+                    class="secondary"
+                    i18n="Date de purge d'un compte refusé@@admin.practitioners.purge"
+                  >
+                    Purge des données le {{ row.purge }}
+                  </div>
+                }
+              </td>
+              <td>
+                <div class="actions">
+                  @if (row.role === 'practitioner') {
+                    <a
+                      [routerLink]="['/admin/validation', row.id]"
+                      i18n="Lien vers le dossier@@admin.practitioners.openDossier"
+                      >Ouvrir le dossier<span class="sr-only"> · {{ row.displayName }}</span></a
+                    >
+                  }
+                  <a
+                    [routerLink]="['/admin/journal']"
+                    [queryParams]="{ practitioner: row.id, period: 'all' }"
+                    i18n="Lien vers le journal du compte@@admin.practitioners.journal"
+                    >Journal<span class="sr-only"> · {{ row.displayName }}</span></a
+                  >
+                  @if (row.canSuspend) {
+                    <button type="button" class="suspend" (click)="suspend(row)">
+                      <span i18n="Bouton de suspension@@admin.practitioners.suspend"
+                        >Suspendre…</span
+                      >
+                      <span class="sr-only">{{ row.displayName }}</span>
+                    </button>
+                  }
+                  @if (row.canReactivate) {
+                    <button type="button" class="reactivate" (click)="reactivate(row)">
+                      <span i18n="Bouton de réactivation@@admin.practitioners.reactivate"
+                        >Réactiver…</span
+                      >
+                      <span class="sr-only">{{ row.displayName }}</span>
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (store.hasMore()) {
+      <div class="more">
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="store.loadingMore()"
+          (click)="store.loadMore()"
+          i18n="Bouton de pagination@@admin.list.more"
+        >
+          Afficher plus
+        </button>
+        @if (store.moreProblem()) {
+          <p
+            class="more-error"
+            role="alert"
+            i18n="Erreur de la page suivante@@admin.list.moreError"
+          >
+            La suite de la liste n'a pas pu être chargée.
+          </p>
+        }
+      </div>
+    }
+  }
+</section>
+
+<section class="card" aria-labelledby="appeals-title">
+  <h2 id="appeals-title" i18n="Titre des recours ouverts@@admin.appeals.title">Recours ouverts</h2>
+  @if (appealsKind(); as state) {
+    @switch (state) {
+      @case ('loading') {
+        <pm-state kind="loading" skeleton="row" [lines]="2" compact />
+      }
+      @case ('error') {
+        <pm-state
+          kind="error"
+          compact
+          title="Impossible de charger les recours"
+          i18n-title="État erreur des recours@@admin.appeals.error"
+          [action]="retryAppeals"
+        />
+      }
+      @case ('empty') {
+        <pm-state
+          kind="empty"
+          compact
+          title="Aucun recours en attente"
+          i18n-title="État vide des recours@@admin.appeals.empty"
+        />
+      }
+    }
+  } @else {
+    <pm-appeal-list
+      [appeals]="appeals.items()"
+      (decide)="decideAppeal($event.appeal, $event.outcome)"
+    />
+    @if (appeals.hasMore()) {
+      <div class="more">
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="appeals.loadingMore()"
+          (click)="appeals.loadMore()"
+          i18n="Bouton de pagination@@admin.list.more"
+        >
+          Afficher plus
+        </button>
+        @if (appeals.moreProblem()) {
+          <p
+            class="more-error"
+            role="alert"
+            i18n="Erreur de la page suivante@@admin.list.moreError"
+          >
+            La suite de la liste n'a pas pu être chargée.
+          </p>
+        }
+      </div>
+    }
+  }
+</section>
+
+<p class="footnote" i18n="Note de bas de page des praticiens@@admin.practitioners.footnote">
+  Suspendre révoque toutes les sessions du compte et retire sa fiche de l'annuaire ; le praticien
+  reçoit le motif et peut déposer un recours. L'administration ne voit aucune donnée patient.
+</p>

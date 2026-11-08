@@ -1,0 +1,87 @@
+@use '../ui/admin';
+
+@include admin.banners;
+
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+  max-width: 1400px;
+  margin: 0 auto;
+  color: var(--text-primary);
+}
+
+.queue {
+  display: flex;
+  flex: 1 1 340px;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 420px;
+}
+
+.queue-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  justify-content: space-between;
+
+  h1 {
+    margin: 0;
+    font: var(--mat-sys-title-large);
+  }
+
+  select {
+    min-height: 36px;
+    padding: 0 8px;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--surface-raised);
+    color: var(--text-primary);
+    font: var(--mat-sys-body-medium);
+  }
+}
+
+pm-queue-list.refreshing {
+  opacity: 0.6;
+}
+
+// Grand écran : la file défile seule, le dossier reste en vue.
+@media (width >= 960px) {
+  pm-queue-list {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    padding: 4px;
+  }
+}
+
+.dossier {
+  @include admin.card;
+
+  flex: 999 1 520px;
+  min-width: 0;
+}
+
+.documents {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.decided {
+  margin: 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-medium);
+}
+
+.section-title {
+  margin: 0;
+  font: var(--mat-sys-title-medium);
+}
+
+@media (width < 600px) {
+  .queue {
+    max-width: none;
+  }
+}

@@ -5,6 +5,9 @@ import { totp, totpStep } from '../support/totp';
 import { createAdmin } from './admin';
 import { INVALID_CODE } from './helpers';
 
+/** Accueil de l'administration : la file de validation, dossier ouvert ou non (M7-07). */
+const ADMIN_HOME = /\/fr\/admin\/validation(\/[0-9a-f-]{36})?$/;
+
 // Fiche 18 C (M1-17, G Q5) : l'administrateur créé par `make admin` arrive sur /premiere-connexion,
 // remplace son mot de passe à usage unique, active la 2FA, confirme ses codes de secours, puis entre
 // sur /admin ; avant, /admin le renvoie vers l'étape manquante. Contre l'API locale, jamais de mock.
@@ -36,7 +39,8 @@ test('première connexion de l’administrateur : mot de passe, puis 2FA obligat
 
   // Sans session, /admin renvoie vers la connexion.
   await page.goto('/fr/admin');
-  await expect(page).toHaveURL(/\/fr\/connexion\?next=%2Fadmin$/);
+  // /admin redirige vers /admin/validation avant les gardes (M7-07) : next porte la file.
+  await expect(page).toHaveURL(/\/fr\/connexion\?next=%2Fadmin%2Fvalidation$/);
   await page.goto('/fr/premiere-connexion');
 
   // Étape 1 au clavier : e-mail (saisissable, aucune session), mot de passe temporaire, nouveau, confirmation.
@@ -91,13 +95,14 @@ test('première connexion de l’administrateur : mot de passe, puis 2FA obligat
   await expect(open).toBeEnabled();
   await open.click();
 
-  await expect(page).toHaveURL(/\/fr\/admin$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'Administration' })).toBeVisible();
+  // /admin mène à la file de validation (M7-07), sur le plus ancien dossier s'il y en a un.
+  await expect(page).toHaveURL(ADMIN_HOME);
+  await expect(page.getByRole('heading', { level: 1, name: /^À vérifier/ })).toBeVisible();
   await expectNoAxeViolations(page);
 
   // /premiere-connexion n'a plus de raison d'être : retour à /admin.
   await page.goto('/fr/premiere-connexion');
-  await expect(page).toHaveURL(/\/fr\/admin$/);
+  await expect(page).toHaveURL(ADMIN_HOME);
 
   // Un administrateur ne voit pas « Désactiver » (409 TWO_FACTOR_REQUIRED_FOR_ADMIN côté serveur).
   await page.goto('/fr/mon-compte/securite');

@@ -1,0 +1,220 @@
+<header class="page-header">
+  <h1 i18n="Titre du vocabulaire@@admin.vocabulary.title">Vocabulaire de l'annuaire</h1>
+  <p i18n="Sous-titre du vocabulaire@@admin.vocabulary.subtitle">
+    Liste fermée vue par les praticiens dans leur profil public et par les visiteurs dans les
+    filtres de l'annuaire. On désactive une entrée, on ne la supprime jamais.
+  </p>
+</header>
+
+<section class="card">
+  <div class="tabs-row">
+    <div
+      class="segments"
+      role="tablist"
+      aria-label="Listes"
+      i18n-aria-label="Étiquette des sous-onglets@@admin.vocabulary.tabs"
+    >
+      @for (option of tabs; track option) {
+        <button
+          type="button"
+          role="tab"
+          [id]="'vocabulary-tab-' + option"
+          aria-controls="vocabulary-panel"
+          [attr.aria-selected]="option === tab()"
+          [attr.tabindex]="option === tab() ? 0 : -1"
+          (click)="selectTab(option)"
+          (keydown)="onTabKey($event)"
+        >
+          {{ tabLabel(option) }}
+          @if (tabCount(option) !== null) {
+            &ngsp;<span class="count">{{ tabCount(option) }}</span>
+          }
+          @if (isFixed(option)) {
+            &ngsp;<span class="fixed" i18n="Mention d'une liste fixe@@admin.vocabulary.fixed"
+              >fixe</span
+            >
+          }
+        </button>
+      }
+    </div>
+    @if (editable()) {
+      <label class="inactive">
+        <input type="checkbox" [checked]="showInactive()" (change)="onInactive($event)" />
+        <span i18n="Case d'affichage des entrées désactivées@@admin.vocabulary.showInactive"
+          >Afficher les désactivées</span
+        >
+      </label>
+    }
+  </div>
+
+  <div id="vocabulary-panel" role="tabpanel" [attr.aria-labelledby]="'vocabulary-tab-' + tab()">
+    @if (actionError(); as text) {
+      <p class="action-error" role="alert">{{ text }}</p>
+    }
+    @if (kindState(); as state) {
+      @switch (state) {
+        @case ('loading') {
+          <pm-state kind="loading" skeleton="row" [lines]="6" />
+        }
+        @case ('error') {
+          <pm-state
+            kind="error"
+            title="Impossible de charger le vocabulaire"
+            i18n-title="État erreur du vocabulaire@@admin.vocabulary.loadError"
+            [action]="retry"
+          />
+        }
+        @case ('empty') {
+          <pm-state
+            kind="empty"
+            title="Aucune entrée"
+            i18n-title="État vide du vocabulaire@@admin.vocabulary.empty"
+            message="Ajoutez la première avec le formulaire ci-dessous."
+            i18n-message="Phrase de l'état vide du vocabulaire@@admin.vocabulary.emptyHint"
+          />
+        }
+      }
+    } @else if (editable()) {
+      <div class="table-wrap">
+        <table [class.refreshing]="refreshing()">
+          <caption class="sr-only">
+            {{
+              tabLabel(tab())
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col" i18n="Colonne du vocabulaire@@admin.vocabulary.col.code">Code</th>
+              <th scope="col" i18n="Colonne du vocabulaire@@admin.vocabulary.col.labelFr">
+                Libellé FR
+              </th>
+              <th scope="col" i18n="Colonne du vocabulaire@@admin.vocabulary.col.labelEn">
+                Libellé EN
+              </th>
+              <th scope="col" i18n="Colonne du vocabulaire@@admin.vocabulary.col.order">Ordre</th>
+              <th scope="col" i18n="Colonne du vocabulaire@@admin.vocabulary.col.usage">
+                Utilisation
+              </th>
+              <th scope="col" i18n="Colonne du vocabulaire@@admin.vocabulary.col.state">État</th>
+              <th scope="col" i18n="Colonne du vocabulaire@@admin.vocabulary.col.actions">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of entries(); track key(entry)) {
+              <tr [class.disabled]="!entry.active">
+                <td class="mono code">{{ entry.code }}</td>
+                <td class="label">{{ entry.labelFr }}</td>
+                <td>{{ entry.labelEn ?? '—' }}</td>
+                <td class="mono">{{ entry.sortOrder }}</td>
+                <td i18n="Utilisation d'une entrée@@admin.vocabulary.usage">
+                  Utilisée par {{ entry.usedByPublishedProfiles }} profil(s) publié(s)
+                </td>
+                <td>
+                  <span class="state" [class.on]="entry.active">
+                    <span class="dot" aria-hidden="true"></span>
+                    @if (entry.active) {
+                      <span i18n="État actif@@admin.vocabulary.active">Active</span>
+                    } @else {
+                      <span i18n="État désactivé@@admin.vocabulary.inactive">Désactivée</span>
+                    }
+                  </span>
+                </td>
+                <td>
+                  <div class="actions">
+                    <button
+                      type="button"
+                      [attr.aria-expanded]="editing() === key(entry)"
+                      [attr.aria-controls]="panelId(entry)"
+                      [id]="renameId(entry)"
+                      (click)="toggleRename(entry)"
+                    >
+                      <span i18n="Bouton de renommage@@admin.vocabulary.rename">Renommer</span>
+                      <span class="sr-only">{{ entry.labelFr }}</span>
+                    </button>
+                    @if (entry.active) {
+                      <button
+                        type="button"
+                        class="danger"
+                        [disabled]="editing() === key(entry)"
+                        (click)="deactivate(entry)"
+                      >
+                        <span i18n="Bouton de désactivation@@admin.vocabulary.deactivate"
+                          >Désactiver…</span
+                        >
+                        <span class="sr-only">{{ entry.labelFr }}</span>
+                      </button>
+                    } @else {
+                      <button type="button" class="success" (click)="reactivate(entry)">
+                        <span
+                          i18n="Bouton de réactivation d'une entrée@@admin.vocabulary.reactivate"
+                          >Réactiver</span
+                        >
+                        <span class="sr-only">{{ entry.labelFr }}</span>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+              @if (editing() === key(entry)) {
+                <tr class="panel-row" [id]="panelId(entry)">
+                  <td colspan="7">
+                    <pm-rename-panel
+                      [entry]="entry"
+                      [save]="saveFor(entry)"
+                      (saved)="onRenamed(entry)"
+                      (cancelled)="closeRename(entry)"
+                    />
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <caption class="sr-only">
+            {{
+              tabLabel(tab())
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col" i18n="Colonne du vocabulaire@@admin.vocabulary.col.code">Code</th>
+              <th scope="col" i18n="Colonne du vocabulaire@@admin.vocabulary.col.labelFr">
+                Libellé FR
+              </th>
+              <th scope="col" i18n="Colonne du vocabulaire@@admin.vocabulary.col.labelEn">
+                Libellé EN
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of fixedEntries(); track entry.code) {
+              <tr>
+                <td class="mono code">{{ entry.code }}</td>
+                <td>{{ entry.labelFr }}</td>
+                <td>{{ entry.labelEn ?? '—' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @if (editable()) {
+      @for (k of [kindOf(tab())]; track k) {
+        <pm-add-entry-form [kind]="k" [create]="create" />
+      }
+    }
+  </div>
+</section>
+
+<p class="footnote" i18n="Note de bas de page du vocabulaire@@admin.vocabulary.footnote">
+  Modalités et langues sont des listes fixes du contrat, en lecture seule. Une entrée utilisée par
+  une fiche publiée ne peut pas être désactivée ; une entrée désactivée n'est plus proposée aux
+  praticiens ni aux visiteurs.
+</p>

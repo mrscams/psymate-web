@@ -1,0 +1,216 @@
+// Styles communs des écrans d'administration (fiches 20, 21, 22, 28) : tokens seulement.
+
+@mixin page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: var(--text-primary);
+}
+
+@mixin page-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: baseline;
+  justify-content: space-between;
+
+  h1 {
+    margin: 0;
+    font: var(--mat-sys-headline-small);
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-secondary);
+    font: var(--mat-sys-body-medium);
+  }
+}
+
+@mixin card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-raised);
+}
+
+@mixin badges {
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font: var(--mat-sys-label-medium);
+    white-space: nowrap;
+
+    &.success {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    &.info {
+      background: var(--info-bg);
+      color: var(--info);
+    }
+
+    &.warning {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    &.danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    &.neutral {
+      background: var(--surface-sunken);
+      color: var(--text-secondary);
+    }
+  }
+}
+
+@mixin field($long: true) {
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    label {
+      font: var(--mat-sys-label-large);
+    }
+  }
+
+  input[type='search'],
+  input[type='text'],
+  input[type='date'],
+  input[type='number'],
+  select,
+  textarea {
+    min-height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    background: var(--surface-raised);
+    color: var(--text-primary);
+    font: var(--mat-sys-body-medium);
+  }
+
+  @if $long {
+    textarea {
+      min-height: 88px;
+      padding: 8px 12px;
+      resize: vertical;
+    }
+
+    [aria-invalid='true'] {
+      border-color: var(--danger);
+    }
+  }
+}
+
+@mixin segments {
+  .segments {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    background: var(--surface-ground);
+
+    button {
+      min-height: 36px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text-secondary);
+      font: var(--mat-sys-label-large);
+      cursor: pointer;
+
+      &[aria-pressed='true'],
+      &[aria-selected='true'] {
+        background: var(--surface-raised);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 1px var(--border-strong);
+      }
+    }
+  }
+}
+
+@mixin table {
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    transition: opacity 150ms;
+
+    &.refreshing {
+      opacity: 0.6;
+    }
+  }
+
+  th {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-subtle);
+    text-align: left;
+    font: var(--mat-sys-label-medium);
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-subtle);
+    vertical-align: top;
+    font: var(--mat-sys-body-medium);
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .secondary {
+    color: var(--text-secondary);
+    font: var(--mat-sys-body-small);
+  }
+}
+
+@mixin banners {
+  .banner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    border-radius: 10px;
+    background: var(--danger-bg);
+    color: var(--danger);
+    font: var(--mat-sys-body-medium);
+  }
+
+  .more {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .more-error {
+    margin: 0;
+    color: var(--danger);
+    font: var(--mat-sys-body-small);
+  }
+}

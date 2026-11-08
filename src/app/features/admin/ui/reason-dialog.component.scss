@@ -1,0 +1,42 @@
+@use 'admin';
+
+@include admin.field;
+
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.description,
+.hint {
+  margin: 0 0 12px;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-medium);
+}
+
+.hint {
+  margin: 4px 0 0;
+  font: var(--mat-sys-body-small);
+}
+
+.locked {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+  font: var(--mat-sys-body-medium);
+}
+
+.error {
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font: var(--mat-sys-body-medium);
+}
+
+button.danger:not(:disabled) {
+  --mat-button-filled-container-color: var(--danger);
+  --mat-button-filled-label-text-color: var(--danger-on);
+}

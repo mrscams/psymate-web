@@ -1,0 +1,214 @@
+<header class="page-header">
+  <h1 i18n="Titre du journal@@admin.journal.title">Journal</h1>
+  <p i18n="Sous-titre du journal@@admin.journal.subtitle">
+    Décisions d'administration, accès aux justificatifs et événements de sécurité des comptes ;
+    lecture seule, jamais d'adresse IP ni de donnée patient.
+  </p>
+</header>
+
+<section class="card" aria-labelledby="journal-list-title">
+  <h2
+    id="journal-list-title"
+    class="sr-only"
+    i18n="Titre caché du journal@@admin.journal.listTitle"
+  >
+    Événements
+  </h2>
+  <div
+    class="segments"
+    role="group"
+    aria-label="Type d'événement"
+    i18n-aria-label="Étiquette des segments du journal@@admin.journal.segments"
+  >
+    @for (category of categories; track category) {
+      <button
+        type="button"
+        [attr.aria-pressed]="filters().category === category"
+        (click)="setCategory(category)"
+      >
+        {{ categoryLabel(category) }}
+      </button>
+    }
+  </div>
+  <div class="filters">
+    <div class="field">
+      <label for="journal-actor" i18n="Filtre administrateur@@admin.journal.actor">Par</label>
+      <select id="journal-actor" (change)="onActor($event)">
+        <option
+          value=""
+          [selected]="!filters().actorId"
+          i18n="Tous les auteurs@@admin.journal.actorAll"
+        >
+          Tous
+        </option>
+        @for (admin of store.admins().data ?? []; track admin.id) {
+          <option [value]="admin.id" [selected]="admin.id === filters().actorId">
+            {{ admin.displayName }} · {{ admin.email }}
+          </option>
+        }
+      </select>
+    </div>
+    <div class="field">
+      <label for="journal-period" i18n="Filtre période@@admin.journal.period">Période</label>
+      <select id="journal-period" (change)="onPeriod($event)">
+        @for (option of periods; track option) {
+          <option [value]="option" [selected]="option === filters().period">
+            {{ periodLabel(option) }}
+          </option>
+        }
+      </select>
+    </div>
+    @if (filters().period === 'custom') {
+      <div class="field">
+        <label for="journal-from" i18n="Début de période@@admin.journal.from">Du</label>
+        <input
+          id="journal-from"
+          type="date"
+          [value]="filters().from ?? ''"
+          (change)="onDay('from', $event)"
+        />
+      </div>
+      <div class="field">
+        <label for="journal-to" i18n="Fin de période@@admin.journal.to">Au</label>
+        <input
+          id="journal-to"
+          type="date"
+          [value]="filters().to ?? ''"
+          (change)="onDay('to', $event)"
+        />
+      </div>
+    }
+    @if (filters().practitionerId) {
+      <p class="chip">
+        <span i18n="Filtre praticien actif@@admin.journal.practitionerChip"
+          >Compte : {{ practitionerName() ?? filters().practitionerId }}</span
+        >
+        <button
+          type="button"
+          (click)="filterPractitioner(null)"
+          i18n="Retirer le filtre praticien@@admin.journal.practitionerClear"
+        >
+          Retirer ce filtre
+        </button>
+      </p>
+    }
+  </div>
+
+  @if (staleError()) {
+    <div class="banner" role="alert">
+      <span i18n="Erreur de rechargement du journal@@admin.journal.stale"
+        >Le journal n'a pas pu être relu.</span
+      >
+      <button mat-stroked-button type="button" (click)="store.reload()">{{ retry.label }}</button>
+    </div>
+  }
+
+  @if (kind(); as state) {
+    @switch (state) {
+      @case ('loading') {
+        <pm-state kind="loading" skeleton="row" [lines]="8" />
+      }
+      @case ('error') {
+        <pm-state
+          kind="error"
+          title="Impossible de charger le journal"
+          i18n-title="État erreur du journal@@admin.journal.error"
+          [action]="retry"
+        />
+      }
+      @case ('empty') {
+        <pm-state
+          kind="empty"
+          title="Aucun événement pour ces filtres"
+          i18n-title="État vide du journal@@admin.journal.empty"
+          message="Élargissez la période ou retirez un filtre."
+          i18n-message="Phrase de l'état vide du journal@@admin.journal.emptyHint"
+        />
+      }
+    }
+  } @else {
+    <div class="table-wrap">
+      <table [class.refreshing]="refreshing()">
+        <caption class="sr-only">
+          {{
+            caption()
+          }}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col" i18n="Colonne du journal@@admin.journal.col.at">Horodatage</th>
+            <th scope="col" i18n="Colonne du journal@@admin.journal.col.type">Type</th>
+            <th scope="col" i18n="Colonne du journal@@admin.journal.col.event">Événement</th>
+            <th scope="col" i18n="Colonne du journal@@admin.journal.col.by">Par</th>
+            <th scope="col" i18n="Colonne du journal@@admin.journal.col.context">Contexte</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.id) {
+            <tr tabindex="-1">
+              <td class="mono nowrap">{{ row.time }}</td>
+              <td>
+                <span class="badge" [class]="row.category.tone">{{ row.category.label }}</span>
+                <div class="mono kind">{{ row.kind }}</div>
+              </td>
+              <td>
+                <div>{{ row.text }}</div>
+                @if (row.practitionerDisplayName && row.practitionerId) {
+                  <button
+                    type="button"
+                    class="link"
+                    (click)="filterPractitioner(row.practitionerId)"
+                  >
+                    {{ row.practitionerDisplayName }}
+                    <span class="sr-only" i18n="Action d'un nom du journal@@admin.journal.filterBy"
+                      >: voir seulement ses événements</span
+                    >
+                  </button>
+                }
+              </td>
+              <td>{{ row.by }}</td>
+              <td>
+                @if (row.source === 'verification_decision' && row.practitionerId) {
+                  <a
+                    [routerLink]="['/admin/validation', row.practitionerId]"
+                    i18n="Lien vers le dossier@@admin.journal.openDossier"
+                    >Voir le dossier</a
+                  >
+                } @else {
+                  <span class="secondary">—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (store.hasMore()) {
+      <div class="more">
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="store.loadingMore()"
+          (click)="more()"
+          i18n="Bouton de pagination@@admin.list.more"
+        >
+          Afficher plus
+        </button>
+        @if (store.moreProblem()) {
+          <p
+            class="more-error"
+            role="alert"
+            i18n="Erreur de la page suivante@@admin.list.moreError"
+          >
+            La suite de la liste n'a pas pu être chargée.
+          </p>
+        }
+      </div>
+    }
+  }
+</section>
+
+<p class="footnote" i18n="Note de bas de page du journal@@admin.journal.footnote">
+  Journal en ajout seul : aucune ligne ne se modifie ni ne se supprime. Les adresses IP ne sont
+  jamais affichées.
+</p>
