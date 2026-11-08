@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T22:11:18.397Z",
+  "task": "M4-07",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 35 fusionnee (squash 2ca39b0) : vue simple Recit par defaut (phrases de l API telles quelles, point d attention, graphe ECharts des ressentis reels, derniere seance, situations, traitement, cadre, a completer), bascule simple/complete sans rechargement ; lot 3 complet ; CI verte (checks + 116 e2e).",
+  "notes": "Aucune dependance. Etat vide verifie par assertion explicite (pas de .snap). Champs absents du contrat non affiches (tendance expliquee, prochaine seance, rythme). Suite : renommer TrendChart/TREND_RENDERER.",
+  "next": "Lot 5 : M6-02 (en cours), M6-03 quand tous les ecrans sont la ; puis lot 7",
+  "pr": "https://github.com/mrscams/psymate-web/pull/35",
+  "branch": "main",
+  "checkout": "psymate-web"
+}

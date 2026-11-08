@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T22:11:22.829Z",
+  "task": "M6-06",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 36 fusionnee (squash 9d29145) : /mon-compte/donnees (export patient PDF/Markdown, export du compte avec suivi du job, 409, 410 -> Relancer), menu Exporter ce dossier dans la fiche patient, ExportStore ; CI verte (checks + 126 e2e).",
+  "notes": "Entree du menu de l en-tete non faite : shared/ui/patient-header sans sortie export (tache shared/ui). saveFile duplique entre account et patients (tache shared/util). Erreurs recues en blob non lues (tache core/http). 409 sans id de job dans le contrat.",
+  "next": "M6-03 ; taches shared/ui, shared/util, core/http a ouvrir",
+  "pr": "https://github.com/mrscams/psymate-web/pull/36",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
