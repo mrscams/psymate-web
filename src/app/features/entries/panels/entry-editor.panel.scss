@@ -185,3 +185,52 @@ kbd {
     opacity: 0.6;
   }
 }
+
+.rail {
+  .hint {
+    margin-top: 2px;
+  }
+}
+
+.rail-error {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font: var(--mat-sys-body-medium);
+}
+
+.links {
+  h3 {
+    margin: 0;
+  }
+  .placed {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      padding: 8px 10px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      font: var(--mat-sys-body-medium);
+      color: var(--text-primary);
+    }
+  }
+  .link-editor {
+    align-self: flex-start;
+    min-height: 36px;
+    padding: 0 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    background: var(--surface-raised);
+    color: var(--primary-hover);
+    font: var(--mat-sys-label-large);
+    cursor: pointer;
+  }
+}

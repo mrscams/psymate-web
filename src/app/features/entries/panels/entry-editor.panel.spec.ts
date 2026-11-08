@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
@@ -7,7 +9,17 @@ import { PreferencesStore } from '../../../core/preferences';
 import { SidePanelService, ToastService } from '../../../shared/ui';
 import { EntriesApi } from '../data/entries.api';
 import { EntryEditorStore } from '../data/entry-editor.store';
-import { CURRENT_SESSION, EMOTIONS, entry, SESSIONS, TAGS, VERSIONS } from '../data/entry.fixtures';
+import {
+  CANDIDATES,
+  CURRENT_SESSION,
+  EMOTIONS,
+  entry,
+  LINK_TYPES,
+  PLACED_LINKS,
+  SESSIONS,
+  TAGS,
+  VERSIONS,
+} from '../data/entry.fixtures';
 import { openEntryEditor } from '../entry-editor.launcher';
 
 type Api = Partial<Record<keyof EntriesApi, ReturnType<typeof vi.fn>>>;
@@ -26,12 +38,18 @@ function setup(api: Api = {}) {
     create: vi.fn().mockResolvedValue(entry({ id: 'e-new', type: 'note' })),
     patch: vi.fn().mockResolvedValue(entry({ version: 3 })),
     createEmotion: vi.fn(),
+    linkTypes: vi.fn().mockResolvedValue(LINK_TYPES),
+    railSource: vi.fn().mockResolvedValue({ situations: [], recent: CANDIDATES }),
+    linksOf: vi.fn().mockResolvedValue(PLACED_LINKS),
     ...api,
   };
   const toast = { success: vi.fn(), warning: vi.fn() };
   TestBed.configureTestingModule({
     providers: [
       provideRouter([{ path: '**', children: [] }]),
+      // L'éditeur de lien (features/graph) s'ouvre pour de vrai : ses requêtes restent en attente.
+      provideHttpClient(),
+      provideHttpClientTesting(),
       { provide: EntriesApi, useValue: mock },
       { provide: ToastService, useValue: toast },
       { provide: SessionStore, useValue: { me: signal({ id: 'u-claire' }) } },
@@ -282,6 +300,176 @@ describe('EntryEditorPanel', () => {
       expect(panel().querySelector('#field-reason')).toBeNull();
       expect(panel().querySelector('.footer .link')).toBeNull();
       expect(text(panel().querySelector('.footer .primary'))).toBe('Enregistrer ⏎');
+    });
+  });
+  describe('rail « Lié à… » (M2-05)', () => {
+    const refused = {
+      status: 422,
+      code: 'VALIDATION_FAILED',
+      errors: [
+        {
+          field: 'links[0].linkType',
+          code: 'LINK_TYPE_NOT_ALLOWED',
+          message: 'Type de lien non permis pour ce couple.',
+        },
+      ],
+    };
+
+    async function feeling(): Promise<void> {
+      TestBed.runInInjectionContext(() => openEntryEditor('p-marie', { type: 'feeling' }));
+      await settle();
+      const combo = panel().querySelector<HTMLInputElement>('#field-feeling-emotionCode')!;
+      combo.value = 'anx';
+      combo.dispatchEvent(new Event('input'));
+      await settle();
+      key(combo, 'Enter');
+      await settle();
+      key(panel().querySelector('[role="slider"]')!, '8');
+      await settle();
+    }
+
+    function railRow(name: string): HTMLElement {
+      const row = Array.from(panel().querySelectorAll<HTMLElement>('pm-link-rail .row')).find(
+        (item) => item.textContent?.includes(name),
+      );
+      if (!row) throw new Error(`cible absente : ${name}`);
+      return row;
+    }
+
+    it('chargement : squelette dans le bloc Lié à…', async () => {
+      setup({ railSource: vi.fn(() => never()) });
+      TestBed.runInInjectionContext(() => openEntryEditor('p-marie'));
+      await settle();
+      const rail = panel().querySelector('fieldset.rail')!;
+      expect(text(rail.querySelector('legend'))).toBe('Lié à…');
+      expect(rail.querySelector('pm-state [aria-busy="true"]')).not.toBeNull();
+      expect(rail.querySelector('pm-link-rail')).toBeNull();
+    });
+
+    it('vide : aucune entrée récente à lier', async () => {
+      setup({ railSource: vi.fn().mockResolvedValue({ situations: [], recent: [] }) });
+      TestBed.runInInjectionContext(() => openEntryEditor('p-marie'));
+      await settle();
+      expect(text(panel().querySelector('fieldset.rail pm-state'))).toContain(
+        'Aucune entrée récente à lier',
+      );
+    });
+
+    it('erreur : message et Réessayer, qui relit les cibles', async () => {
+      const railSource = vi
+        .fn()
+        .mockRejectedValueOnce({ status: 503, code: 'SERVICE_UNAVAILABLE' })
+        .mockResolvedValue({ situations: [], recent: CANDIDATES });
+      setup({ railSource });
+      TestBed.runInInjectionContext(() => openEntryEditor('p-marie'));
+      await settle();
+      const state = panel().querySelector('fieldset.rail pm-state [role="alert"]')!;
+      expect(text(state)).toContain('Impossible de proposer des entrées à lier');
+      state.querySelector<HTMLButtonElement>('button')!.click();
+      await settle();
+      expect(panel().querySelectorAll('pm-link-rail .row')).toHaveLength(CANDIDATES.length);
+    });
+
+    it('cocher une cible : links[] dans le POST, type proposé par la matrice', async () => {
+      const { api } = setup({
+        create: vi.fn().mockResolvedValue(entry({ id: 'e-f', type: 'feeling' })),
+      });
+      await feeling();
+      railRow('Entretien annuel').querySelector<HTMLInputElement>('input')!.click();
+      await settle();
+      panel().querySelector<HTMLButtonElement>('.footer .primary')!.click();
+      await settle();
+      const body = api.create!.mock.calls[0][1];
+      expect(body).toMatchObject({
+        type: 'feeling',
+        links: [{ targetId: 'c-event', linkType: 'triggers', direction: 'incoming' }],
+      });
+      expect(JSON.stringify(body)).not.toMatch(/authorType|submissionId/);
+    });
+
+    it('type de l’entrée changé : le lien coché suit la matrice', async () => {
+      const { api } = setup();
+      await feeling();
+      railRow('Entretien annuel').querySelector<HTMLInputElement>('input')!.click();
+      await settle();
+      panel().querySelector<HTMLButtonElement>('[data-type="note"]')!.click();
+      await settle();
+      fill('#field-body', 'Note liée');
+      await settle();
+      panel().querySelector<HTMLButtonElement>('.footer .primary')!.click();
+      await settle();
+      expect(api.create!.mock.calls[0][1]).toMatchObject({
+        type: 'note',
+        links: [{ targetId: 'c-event', linkType: 'co_occurs', direction: 'outgoing' }],
+      });
+    });
+
+    it('422 sur un lien : message sous le rail, saisie et case conservées, panneau ouvert', async () => {
+      setup({ create: vi.fn().mockRejectedValue(refused) });
+      await feeling();
+      railRow('Entretien annuel').querySelector<HTMLInputElement>('input')!.click();
+      await settle();
+      panel().querySelector<HTMLButtonElement>('.footer .primary')!.click();
+      await settle();
+      const error = panel().querySelector('fieldset.rail .rail-error[role="alert"]')!;
+      expect(text(error)).toBe(
+        "Lien vers « Entretien annuel » refusé : ce type de lien n'est pas permis entre ces deux types d'entrée. L'entrée n'a pas été créée ; votre saisie est conservée.",
+      );
+      expect(document.activeElement).toBe(error);
+      expect(panel().querySelector('.alert')).toBeNull();
+      const box = railRow('Entretien annuel').querySelector<HTMLInputElement>('input')!;
+      expect(box.checked).toBe(true);
+      expect(box.getAttribute('aria-describedby')).toBe(error.id);
+      expect(panel().querySelector<HTMLInputElement>('#field-feeling-emotionCode')!.value).toBe(
+        'Anxiété',
+      );
+      expect(document.querySelector('pm-entry-editor-panel')).not.toBeNull();
+
+      // Toucher au rail efface le message.
+      box.click();
+      await settle();
+      expect(panel().querySelector('.rail-error')).toBeNull();
+    });
+
+    it('séance : pas de rail (aucun lien à la création d’une séance)', async () => {
+      setup();
+      TestBed.runInInjectionContext(() => openEntryEditor('p-marie', { type: 'session' }));
+      await settle();
+      expect(panel().querySelector('fieldset.rail')).toBeNull();
+    });
+
+    it('correction : liens posés en lecture, « Lier ou modifier » ouvre l’éditeur de lien, pas de rail', async () => {
+      const { api } = setup();
+      TestBed.runInInjectionContext(() => openEntryEditor('p-marie', { entryId: 'e-1' }));
+      await settle();
+      expect(panel().querySelector('fieldset.rail')).toBeNull();
+      const links = panel().querySelector('section.links')!;
+      expect(text(links.querySelector('h3'))).toBe('Lié à… · 1');
+      expect(text(links.querySelector('li'))).toBe('Entretien annuel déclenche Anxiété 8/10');
+      links.querySelector<HTMLButtonElement>('button.link-editor')!.click();
+      await settle();
+      expect(document.querySelector('pm-link-editor-panel')).not.toBeNull();
+      expect(TestBed.inject(Router).url).toContain('link=e-1');
+      expect(api.create).not.toHaveBeenCalled();
+    });
+
+    it('correction : liens illisibles → erreur avec Réessayer ; aucun lien → état vide', async () => {
+      setup({ linksOf: vi.fn().mockRejectedValue({ status: 503, code: 'SERVICE_UNAVAILABLE' }) });
+      TestBed.runInInjectionContext(() => openEntryEditor('p-marie', { entryId: 'e-1' }));
+      await settle();
+      expect(text(panel().querySelector('section.links pm-state [role="alert"]'))).toContain(
+        'Impossible de charger les liens de cette entrée',
+      );
+      TestBed.inject(SidePanelService).closeAll();
+      await settle();
+
+      TestBed.resetTestingModule();
+      setup({ linksOf: vi.fn().mockResolvedValue([]) });
+      TestBed.runInInjectionContext(() => openEntryEditor('p-marie', { entryId: 'e-2' }));
+      await settle();
+      expect(text(panel().querySelector('section.links pm-state'))).toContain(
+        'Aucun lien pour le moment',
+      );
     });
   });
 });

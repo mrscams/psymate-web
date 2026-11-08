@@ -138,7 +138,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">384,387</context>
+          <context context-type="linenumber">457,460</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
@@ -2120,15 +2120,23 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">186</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">213</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">226</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
@@ -9107,11 +9115,35 @@
         </context-group>
         <note priority="1" from="description">Aucune séance pour ce patient</note>
       </trans-unit>
+      <trans-unit id="entries.rail.legend" datatype="html">
+        <source> Lié à… </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">295,297</context>
+        </context-group>
+        <note priority="1" from="description">Bloc du rail des liens</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.hint" datatype="html">
+        <source> Situations en cours et entrées récentes. <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Espace<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> coche ; les liens cochés sont posés avec l&apos;entrée, tout ou rien. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">321,323</context>
+        </context-group>
+        <note priority="1" from="description">Aide du rail des liens</note>
+      </trans-unit>
+      <trans-unit id="entries.links.edit" datatype="html">
+        <source>Lier ou modifier les liens</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">358,364</context>
+        </context-group>
+        <note priority="1" from="description">Ouvrir l&apos;éditeur de lien depuis une correction</note>
+      </trans-unit>
       <trans-unit id="entries.reason.label" datatype="html">
         <source>Motif de la correction (facultatif)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">299,302</context>
+          <context context-type="linenumber">372,375</context>
         </context-group>
         <note priority="1" from="description">Motif d&apos;une correction</note>
       </trans-unit>
@@ -9119,7 +9151,7 @@
         <source> Plus · visibilité, tags </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">318,320</context>
+          <context context-type="linenumber">391,393</context>
         </context-group>
         <note priority="1" from="description">Bloc replié des options</note>
       </trans-unit>
@@ -9127,7 +9159,7 @@
         <source> Visibilité </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">322,324</context>
+          <context context-type="linenumber">395,397</context>
         </context-group>
         <note priority="1" from="description">Visibilité d&apos;une entrée</note>
       </trans-unit>
@@ -9135,7 +9167,7 @@
         <source>Clinique : partagée avec l&apos;équipe clinique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">327,330</context>
+          <context context-type="linenumber">400,403</context>
         </context-group>
         <note priority="1" from="description">Visibilité clinique</note>
       </trans-unit>
@@ -9143,7 +9175,7 @@
         <source>Privée : vous seul, exclue de l&apos;export</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">333,336</context>
+          <context context-type="linenumber">406,409</context>
         </context-group>
         <note priority="1" from="description">Visibilité privée</note>
       </trans-unit>
@@ -9151,7 +9183,7 @@
         <source>Tags</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">342,344</context>
+          <context context-type="linenumber">415,417</context>
         </context-group>
         <note priority="1" from="description">Tags d&apos;une entrée</note>
       </trans-unit>
@@ -9159,7 +9191,7 @@
         <source>Annuler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">382,384</context>
+          <context context-type="linenumber">455,457</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;annulation du panneau</note>
       </trans-unit>
@@ -9167,7 +9199,7 @@
         <source>Brouillon</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">388,390</context>
+          <context context-type="linenumber">461,463</context>
         </context-group>
         <note priority="1" from="description">Bouton brouillon</note>
       </trans-unit>
@@ -9175,7 +9207,7 @@
         <source>Type d&apos;entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">99</context>
         </context-group>
         <note priority="1" from="description">Nom du groupe des types d&apos;entrée</note>
       </trans-unit>
@@ -9183,7 +9215,7 @@
         <source>Nouvelle entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <note priority="1" from="description">Titre du panneau en création</note>
       </trans-unit>
@@ -9191,7 +9223,7 @@
         <source>Modifier l&apos;entrée · v<x id="version" equiv-text="version"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">122</context>
         </context-group>
         <note priority="1" from="description">Titre du panneau en correction</note>
       </trans-unit>
@@ -9199,7 +9231,7 @@
         <source>Impossible de charger cette entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <note priority="1" from="description">Entrée illisible</note>
       </trans-unit>
@@ -9207,7 +9239,7 @@
         <source>Créée <x id="ago" equiv-text="ago"/> · dans la fenêtre de grâce (1 h 15) : la version 1 sera modifiée en place, sans nouvelle version.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">149</context>
         </context-group>
         <note priority="1" from="description">Bandeau de grâce, dans la fenêtre</note>
       </trans-unit>
@@ -9215,7 +9247,7 @@
         <source>Modifiée <x id="ago" equiv-text="ago"/> · hors fenêtre de grâce (1 h 15) : cette correction créera la version <x id="next" equiv-text="next"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">152</context>
         </context-group>
         <note priority="1" from="description">Bandeau de grâce, hors fenêtre</note>
       </trans-unit>
@@ -9223,7 +9255,7 @@
         <source>Enregistrer la version <x id="next" equiv-text="next"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">159</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;enregistrement d&apos;une correction</note>
       </trans-unit>
@@ -9231,7 +9263,7 @@
         <source>Enregistrer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">161</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;enregistrement</note>
       </trans-unit>
@@ -9239,7 +9271,7 @@
         <source>Version <x id="current" equiv-text="current"/> · Historique (<x id="count" equiv-text="count"/> versions)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">167</context>
         </context-group>
         <note priority="1" from="description">Lien vers l&apos;historique des versions</note>
       </trans-unit>
@@ -9247,7 +9279,7 @@
         <source>Impossible de charger les séances</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">193</context>
         </context-group>
         <note priority="1" from="description">Séances illisibles</note>
       </trans-unit>
@@ -9255,7 +9287,7 @@
         <source>Impossible de charger les tags</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">200</context>
         </context-group>
         <note priority="1" from="description">Tags illisibles</note>
       </trans-unit>
@@ -9263,7 +9295,7 @@
         <source>Aucun tag pour le moment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">190</context>
+          <context context-type="linenumber">201</context>
         </context-group>
         <note priority="1" from="description">Aucun tag</note>
       </trans-unit>
@@ -9271,19 +9303,75 @@
         <source>Les tags se créent dans Compte, Tags.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">191</context>
+          <context context-type="linenumber">202</context>
         </context-group>
         <note priority="1" from="description">Aucun tag, où en créer</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.loadError" datatype="html">
+        <source>Impossible de proposer des entrées à lier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">216</context>
+        </context-group>
+        <note priority="1" from="description">Rail illisible</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.emptyTitle" datatype="html">
+        <source>Aucune entrée récente à lier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">217</context>
+        </context-group>
+        <note priority="1" from="description">Rail vide</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.emptyMessage" datatype="html">
+        <source>Les situations en cours et les dernières entrées du dossier apparaîtront ici.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">218</context>
+        </context-group>
+        <note priority="1" from="description">Rail vide, explication</note>
+      </trans-unit>
+      <trans-unit id="entries.links.loadError" datatype="html">
+        <source>Impossible de charger les liens de cette entrée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-group>
+        <note priority="1" from="description">Liens illisibles</note>
+      </trans-unit>
+      <trans-unit id="entries.links.emptyTitle" datatype="html">
+        <source>Aucun lien pour le moment</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+        <note priority="1" from="description">Aucun lien posé</note>
+      </trans-unit>
+      <trans-unit id="entries.links.titleCount" datatype="html">
+        <source>Lié à… · <x id="count" equiv-text="count"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">234</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc des liens en correction, avec leur nombre</note>
+      </trans-unit>
+      <trans-unit id="entries.links.title" datatype="html">
+        <source>Lié à…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">235</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc des liens</note>
       </trans-unit>
       <trans-unit id="entries.saved.draft" datatype="html">
         <source>Brouillon enregistré.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">322</context>
+          <context context-type="linenumber">422</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">329</context>
+          <context context-type="linenumber">429</context>
         </context-group>
         <note priority="1" from="description">Toast après un brouillon</note>
       </trans-unit>
@@ -9291,7 +9379,7 @@
         <source>Correction enregistrée (version <x id="version" equiv-text="version"/>).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">326</context>
+          <context context-type="linenumber">426</context>
         </context-group>
         <note priority="1" from="description">Toast après une correction</note>
       </trans-unit>
@@ -9299,7 +9387,7 @@
         <source>Entrée enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">330</context>
+          <context context-type="linenumber">430</context>
         </context-group>
         <note priority="1" from="description">Toast après une création</note>
       </trans-unit>
@@ -9307,7 +9395,7 @@
         <source>Séance du <x id="date" equiv-text="date"/> (en cours)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">336</context>
+          <context context-type="linenumber">436</context>
         </context-group>
         <note priority="1" from="description">Séance ouverte dans le bloc Séance</note>
       </trans-unit>
@@ -9315,7 +9403,7 @@
         <source>Séance du <x id="date" equiv-text="date"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">337</context>
+          <context context-type="linenumber">437</context>
         </context-group>
         <note priority="1" from="description">Séance dans le bloc Séance</note>
       </trans-unit>
@@ -9499,7 +9587,7 @@
         <source>Exact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <note priority="1" from="description">Précision du moment d&apos;une entrée</note>
       </trans-unit>
@@ -9507,7 +9595,7 @@
         <source>Jour</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <note priority="1" from="description">Précision du moment d&apos;une entrée</note>
       </trans-unit>
@@ -9515,7 +9603,7 @@
         <source>Mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <note priority="1" from="description">Précision du moment d&apos;une entrée</note>
       </trans-unit>
@@ -9523,7 +9611,7 @@
         <source>Année</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <note priority="1" from="description">Précision du moment d&apos;une entrée</note>
       </trans-unit>
@@ -9531,7 +9619,7 @@
         <source>Période</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">19</context>
         </context-group>
         <note priority="1" from="description">Précision du moment d&apos;une entrée</note>
       </trans-unit>
@@ -9539,7 +9627,7 @@
         <source>Phase de vie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">21</context>
         </context-group>
         <note priority="1" from="description">Précision du moment d&apos;une entrée</note>
       </trans-unit>
@@ -9547,7 +9635,7 @@
         <source>Joie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">28</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
       </trans-unit>
@@ -9555,7 +9643,7 @@
         <source>Confiance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">30</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
       </trans-unit>
@@ -9563,7 +9651,7 @@
         <source>Peur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
       </trans-unit>
@@ -9571,7 +9659,7 @@
         <source>Surprise</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
       </trans-unit>
@@ -9579,7 +9667,7 @@
         <source>Tristesse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">36</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
       </trans-unit>
@@ -9587,7 +9675,7 @@
         <source>Dégoût</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">38</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
       </trans-unit>
@@ -9595,7 +9683,7 @@
         <source>Colère</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
       </trans-unit>
@@ -9603,7 +9691,7 @@
         <source>Anticipation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
       </trans-unit>
@@ -9611,7 +9699,7 @@
         <source>Présentiel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">49</context>
         </context-group>
         <note priority="1" from="description">Modalité de séance</note>
       </trans-unit>
@@ -9619,7 +9707,7 @@
         <source>Visio</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <note priority="1" from="description">Modalité de séance</note>
       </trans-unit>
@@ -9627,7 +9715,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <note priority="1" from="description">Modalité de séance</note>
       </trans-unit>
@@ -9635,7 +9723,7 @@
         <source>E-mail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <note priority="1" from="description">Modalité de séance</note>
       </trans-unit>
@@ -9643,7 +9731,7 @@
         <source>Titre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <note priority="1" from="description">Champ de l&apos;historique d&apos;une entrée</note>
       </trans-unit>
@@ -9651,7 +9739,7 @@
         <source>Texte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <note priority="1" from="description">Champ de l&apos;historique d&apos;une entrée</note>
       </trans-unit>
@@ -9659,7 +9747,7 @@
         <source>Une séance est déjà ouverte pour ce patient : clôturez-la avant d&apos;en créer une autre.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <note priority="1" from="description">Erreur de l&apos;éditeur d&apos;entrée</note>
       </trans-unit>
@@ -9667,7 +9755,7 @@
         <source>Cette entrée est archivée : restaurez-la avant de la corriger.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <note priority="1" from="description">Erreur de l&apos;éditeur d&apos;entrée</note>
       </trans-unit>
@@ -9675,7 +9763,7 @@
         <source>Cette entrée n&apos;existe plus.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <note priority="1" from="description">Erreur de l&apos;éditeur d&apos;entrée</note>
       </trans-unit>
@@ -9683,7 +9771,7 @@
         <source>Cette entrée appartient au dossier d&apos;un autre praticien.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <note priority="1" from="description">Erreur de l&apos;éditeur d&apos;entrée</note>
       </trans-unit>
@@ -9691,7 +9779,7 @@
         <source>Le serveur n&apos;a pas répondu. Votre saisie est conservée : réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <note priority="1" from="description">Erreur de l&apos;éditeur d&apos;entrée</note>
       </trans-unit>
@@ -9699,7 +9787,7 @@
         <source>L&apos;entrée n&apos;a pas pu être enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <note priority="1" from="description">Erreur de l&apos;éditeur d&apos;entrée</note>
       </trans-unit>
@@ -9707,7 +9795,7 @@
         <source>Une émotion porte déjà ce libellé : choisissez-la dans la liste.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <note priority="1" from="description">Erreur de création d&apos;émotion</note>
       </trans-unit>
@@ -9715,9 +9803,81 @@
         <source>L&apos;émotion n&apos;a pas pu être créée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="description">Erreur de création d&apos;émotion</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.refusedNamed" datatype="html">
+        <source>Lien vers « <x id="name" equiv-text="name"/> » refusé : <x id="reason" equiv-text="reason"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Lien refusé vers une cible nommée</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.refused" datatype="html">
+        <source>Lien refusé : <x id="reason" equiv-text="reason"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">Lien refusé</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.nothingCreated" datatype="html">
+        <source>L&apos;entrée n&apos;a pas été créée ; votre saisie est conservée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+        <note priority="1" from="description">Après un lien refusé, rien n&apos;est créé</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.reason.typeNotAllowed" datatype="html">
+        <source>ce type de lien n&apos;est pas permis entre ces deux types d&apos;entrée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.reason.unknownType" datatype="html">
+        <source>ce type de lien n&apos;existe pas.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.reason.exists" datatype="html">
+        <source>ce lien existe déjà.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.reason.archived" datatype="html">
+        <source>l&apos;entrée liée est archivée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.reason.notFound" datatype="html">
+        <source>l&apos;entrée liée n&apos;existe plus.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.reason.otherPatient" datatype="html">
+        <source>l&apos;entrée liée appartient à un autre dossier.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
       </trans-unit>
       <trans-unit id="entries.intensity.unset" datatype="html">
         <source>Non renseignée</source>
@@ -9734,6 +9894,22 @@
           <context context-type="linenumber">141</context>
         </context-group>
         <note priority="1" from="description">Valeur lue du curseur d&apos;intensité</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.typeLabel" datatype="html">
+        <source>Type de lien avec « <x id="name" equiv-text="name"/> »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/link-rail.component.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+        <note priority="1" from="description">Liste du type de lien d&apos;une cible du rail</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.ongoing" datatype="html">
+        <source>en cours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/link-rail.component.ts</context>
+          <context context-type="linenumber">166</context>
+        </context-group>
+        <note priority="1" from="description">Situation sans fin dans le rail</note>
       </trans-unit>
       <trans-unit id="entries.when.legend" datatype="html">
         <source>Quand</source>

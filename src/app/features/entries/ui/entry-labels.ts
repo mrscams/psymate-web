@@ -1,8 +1,9 @@
 // Libellés de features/entries (fiche 05) : précisions, familles d'émotion, modalités, messages
 // d'erreur propres à l'éditeur. Le type d'entrée garde le libellé partagé (entryTypeLabel).
 
+import { FieldProblem } from '../../../core/http';
 import { OccurredPrecision } from '../../../shared/util';
-import { EmotionFamily, SessionModality } from '../data/entry.model';
+import { EmotionFamily, RailLink, SessionModality } from '../data/entry.model';
 
 export function precisionLabel(precision: OccurredPrecision): string {
   switch (precision) {
@@ -89,4 +90,46 @@ export function emotionProblemText(code: string, message?: string): string {
     message ??
     $localize`:Erreur de création d'émotion@@entries.emotion.error:L'émotion n'a pas pu être créée.`
   );
+}
+
+/**
+ * Message sous le rail « Lié à… » quand le POST refuse un lien (422, errors[].field = links[i].…) :
+ * la cible et la raison pour chaque lien refusé, puis le rappel que l'entrée n'a pas été créée (tout
+ * ou rien) et que la saisie est gardée. `names` : nom des cibles du rail par identifiant.
+ */
+export function linkProblemText(
+  errors: readonly FieldProblem[],
+  links: readonly RailLink[],
+  names: ReadonlyMap<string, string>,
+): string {
+  const reasons = errors.map((error) => {
+    const index = Number(/^links\[(\d+)\]/.exec(error.field)?.[1] ?? NaN);
+    const link = Number.isNaN(index) ? undefined : links[index];
+    const name = link ? (names.get(link.targetId) ?? null) : null;
+    const reason = linkReason(error);
+    return name
+      ? $localize`:Lien refusé vers une cible nommée@@entries.rail.refusedNamed:Lien vers « ${name}:name: » refusé : ${reason}:reason:`
+      : $localize`:Lien refusé@@entries.rail.refused:Lien refusé : ${reason}:reason:`;
+  });
+  const after = $localize`:Après un lien refusé, rien n'est créé@@entries.rail.nothingCreated:L'entrée n'a pas été créée ; votre saisie est conservée.`;
+  return [...reasons, after].join(' ');
+}
+
+function linkReason(error: FieldProblem): string {
+  switch (error.code) {
+    case 'LINK_TYPE_NOT_ALLOWED':
+      return $localize`:Raison d'un lien refusé (422)@@entries.rail.reason.typeNotAllowed:ce type de lien n'est pas permis entre ces deux types d'entrée.`;
+    case 'UNKNOWN_LINK_TYPE':
+      return $localize`:Raison d'un lien refusé (422)@@entries.rail.reason.unknownType:ce type de lien n'existe pas.`;
+    case 'LINK_EXISTS':
+      return $localize`:Raison d'un lien refusé (422)@@entries.rail.reason.exists:ce lien existe déjà.`;
+    case 'ENTRY_ARCHIVED':
+      return $localize`:Raison d'un lien refusé (422)@@entries.rail.reason.archived:l'entrée liée est archivée.`;
+    case 'ENTRY_NOT_FOUND':
+      return $localize`:Raison d'un lien refusé (422)@@entries.rail.reason.notFound:l'entrée liée n'existe plus.`;
+    case 'DIFFERENT_PATIENT':
+      return $localize`:Raison d'un lien refusé (422)@@entries.rail.reason.otherPatient:l'entrée liée appartient à un autre dossier.`;
+    default:
+      return error.message;
+  }
 }

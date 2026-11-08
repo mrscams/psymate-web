@@ -1,4 +1,5 @@
-import { entry, EMOTIONS, feelingEntry, VERSIONS } from './entry.fixtures';
+import { EntryType } from '../../../shared/ui';
+import { candidate, entry, EMOTIONS, feelingEntry, LINK_TYPES, VERSIONS } from './entry.fixtures';
 import {
   draftFromEntry,
   emptyDraft,
@@ -7,7 +8,11 @@ import {
   filterEmotions,
   graceInfo,
   hasEmotionLabel,
+  linkChoices,
   occurredDraft,
+  railCandidates,
+  reconcileLinks,
+  sameLinks,
   startIso,
   toCreateBody,
   toOccurredBody,
@@ -268,5 +273,117 @@ describe('entry.model', () => {
     expect(filterEmotions(EMOTIONS, '')).toHaveLength(EMOTIONS.length);
     expect(hasEmotionLabel(EMOTIONS, 'anxiete')).toBe(true);
     expect(hasEmotionLabel(EMOTIONS, 'Rumination')).toBe(false);
+  });
+
+  describe('rail « Lié à… » (M2-05)', () => {
+    /** Premier type proposé : code et sens, vus depuis la nouvelle entrée. */
+    const first = (entryType: EntryType, targetType: EntryType) => {
+      const choice = linkChoices(LINK_TYPES, entryType, targetType)[0];
+      return choice ? `${choice.linkType}:${choice.direction}` : null;
+    };
+
+    it.each<[EntryType, EntryType, string | null]>([
+      // Fiche 05 : cocher « Entretien annuel » depuis un ressenti pose triggers en incoming.
+      ['feeling', 'event', 'triggers:incoming'],
+      ['feeling', 'situation', 'triggers:incoming'],
+      ['feeling', 'medication', 'worsens:incoming'],
+      ['feeling', 'feeling', 'co_occurs:outgoing'],
+      ['feeling', 'note', 'co_occurs:outgoing'],
+      ['event', 'event', 'triggers:incoming'],
+      ['event', 'feeling', 'caused_by:incoming'],
+      ['situation', 'medication', 'worsens:incoming'],
+      ['medication', 'feeling', 'co_occurs:outgoing'],
+      ['note', 'situation', 'co_occurs:outgoing'],
+      ['note', 'medication', 'co_occurs:outgoing'],
+      // Une séance n'est source que de triggers / relieves et cible de part_of.
+      ['feeling', 'session', 'triggers:incoming'],
+      ['note', 'session', 'part_of:outgoing'],
+      ['medication', 'session', null],
+    ])('%s → cible %s : %s', (entryType, targetType, expected) => {
+      expect(first(entryType, targetType)).toBe(expected);
+    });
+
+    it('tous les choix sont dans la matrice E5.3 (aucun type hors matrice proposé)', () => {
+      const types: EntryType[] = ['note', 'event', 'situation', 'feeling', 'session', 'medication'];
+      for (const entryType of types) {
+        for (const targetType of types) {
+          for (const choice of linkChoices(LINK_TYPES, entryType, targetType)) {
+            const type = LINK_TYPES.find((item) => item.code === choice.linkType)!;
+            const [from, to] =
+              choice.direction === 'incoming' ? [targetType, entryType] : [entryType, targetType];
+            expect(type.sources).toContain(from);
+            expect(type.targets).toContain(to);
+          }
+        }
+      }
+    });
+
+    it('verbe vu depuis la nouvelle entrée : inverse en incoming, direct en outgoing, symétrique une fois', () => {
+      const choices = linkChoices(LINK_TYPES, 'feeling', 'event');
+      expect(choices.map((choice) => choice.label)).toEqual([
+        'déclenché par',
+        'aggravé par',
+        'soulagé par',
+        'survient avec',
+        'suivi de',
+        'est causé par',
+        'fait suite à',
+      ]);
+      expect(choices.filter((choice) => choice.linkType === 'co_occurs')).toHaveLength(1);
+    });
+
+    it('railCandidates : situations en cours, puis récentes, sans doublon, cinq au plus', () => {
+      const list = railCandidates(
+        [
+          candidate({ id: 's-1', type: 'situation', ongoing: true }),
+          candidate({ id: 's-done', type: 'situation', ongoing: false }),
+        ],
+        [candidate({ id: 's-1', type: 'situation', ongoing: true }), candidate({ id: 'e-1' })],
+      );
+      expect(list.map((item) => item.id)).toEqual(['s-1', 'e-1']);
+      const many = Array.from({ length: 8 }, (_, i) => candidate({ id: `e-${i}` }));
+      expect(railCandidates([], many)).toHaveLength(5);
+    });
+
+    it('reconcileLinks : type gardé s’il reste permis, reproposé sinon, lien retiré si cible absente', () => {
+      const event = candidate({ id: 'c-event', type: 'event' });
+      const links = [
+        { targetId: 'c-event', linkType: 'triggers', direction: 'incoming' } as const,
+        { targetId: 'c-gone', linkType: 'co_occurs', direction: 'outgoing' } as const,
+      ];
+      expect(reconcileLinks(links, [event], LINK_TYPES, 'feeling')).toEqual([links[0]]);
+      // L'entrée devient une note : triggers ne vaut plus pour (événement → note), co_occurs proposé.
+      expect(reconcileLinks(links, [event], LINK_TYPES, 'note')).toEqual([
+        { targetId: 'c-event', linkType: 'co_occurs', direction: 'outgoing' },
+      ]);
+      expect(sameLinks(links, [...links])).toBe(true);
+      expect(sameLinks(links, [links[0]])).toBe(false);
+    });
+
+    it('toCreateBody : links[] {targetId, linkType, direction} ; aucun pour une séance', () => {
+      const link = { targetId: 'c-event', linkType: 'triggers', direction: 'incoming' } as const;
+      expect(
+        toCreateBody(
+          draft({
+            type: 'feeling',
+            feeling: { emotionCode: 'anxiety', intensity: 8 },
+            links: [link],
+          }),
+        ).links,
+      ).toEqual([link]);
+      expect(
+        toCreateBody(
+          draft({
+            type: 'session',
+            session: { modality: 'in_person', durationMin: null },
+            links: [link],
+          }),
+        ),
+      ).not.toHaveProperty('links');
+    });
+
+    it('draftFromEntry : une correction ne coche aucun lien', () => {
+      expect(draftFromEntry(entry({ linkCount: 2 })).links).toEqual([]);
+    });
   });
 });

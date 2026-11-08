@@ -288,6 +288,79 @@
         </div>
       }
 
+      <!-- 7. Lié à… (création ; une séance ne porte pas de lien à la création) -->
+      @if (!editing && type() !== 'session') {
+        <fieldset class="block rail" aria-describedby="pm-entry-links-hint">
+          <legend class="block-label" i18n="Bloc du rail des liens@@entries.rail.legend">
+            Lié à…
+          </legend>
+          @if (railState(); as kind) {
+            <pm-state
+              [kind]="kind"
+              compact
+              skeleton="row"
+              [lines]="2"
+              [title]="
+                kind === 'error' ? railErrorTitle : kind === 'empty' ? railEmptyTitle : undefined
+              "
+              [message]="kind === 'empty' ? railEmptyMessage : undefined"
+              [action]="kind === 'error' ? railRetry : undefined"
+            />
+          } @else {
+            <pm-link-rail
+              formControlName="links"
+              [candidates]="store.linkCandidates().data ?? []"
+              [linkTypes]="store.linkTypes().data ?? []"
+              [entryType]="type()"
+              [emotions]="store.emotions().data ?? []"
+              [describedBy]="railError() ? railErrorId : null"
+              (change)="railChanged()"
+            />
+          }
+          <p class="hint" id="pm-entry-links-hint" i18n="Aide du rail des liens@@entries.rail.hint">
+            Situations en cours et entrées récentes. <kbd>Espace</kbd> coche ; les liens cochés sont
+            posés avec l'entrée, tout ou rien.
+          </p>
+          @if (railError(); as message) {
+            <p class="rail-error" role="alert" tabindex="-1" [id]="railErrorId">{{ message }}</p>
+          }
+        </fieldset>
+      }
+
+      <!-- 7. Lié à… (correction : en lecture, modifiés dans l'éditeur de lien) -->
+      @if (editing) {
+        <section class="block links" aria-labelledby="pm-entry-links-title">
+          <h3 class="block-label" id="pm-entry-links-title">{{ placedTitle() }}</h3>
+          @if (placedState(); as kind) {
+            <pm-state
+              [kind]="kind"
+              compact
+              skeleton="row"
+              [lines]="1"
+              [title]="
+                kind === 'error'
+                  ? placedErrorTitle
+                  : kind === 'empty'
+                    ? placedEmptyTitle
+                    : undefined
+              "
+              [action]="kind === 'error' ? placedRetry : undefined"
+            />
+          } @else {
+            <ul class="placed">
+              @for (link of store.placedLinks().data ?? []; track link.id) {
+                <li>{{ link.sentence }}</li>
+              }
+            </ul>
+          }
+          <button type="button" class="link-editor" (click)="openLinks()">
+            <ng-container i18n="Ouvrir l'éditeur de lien depuis une correction@@entries.links.edit"
+              >Lier ou modifier les liens</ng-container
+            >
+          </button>
+        </section>
+      }
+
       <!-- Correction hors grâce : motif -->
       @if (grace(); as info) {
         @if (!info.inGrace) {
