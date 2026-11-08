@@ -294,5 +294,20 @@ test.describe('rail « Lié à… »', () => {
     const linkEditor = page.locator('[role="dialog"]:has(pm-link-editor-panel)');
     await expect(linkEditor).toBeVisible();
     await expect(page).toHaveURL(new RegExp(`link=${feelingId}`));
+    await expect(linkEditor.locator('pm-state [aria-busy="true"]')).toHaveCount(0);
+    await expectNoAxeViolations(page);
+
+    // Un lien posé pendant que l'éditeur de lien est ouvert : relu à sa fermeture.
+    const noteId = await createEntry(request, patientId, { type: 'note', body: 'Dort mal' });
+    await ok(
+      request.post(`${API}/api/entries/${feelingId}/links`, {
+        data: { targetId: noteId, linkType: 'co_occurs' },
+      }),
+    );
+    await page.keyboard.press('Escape');
+    await expect(linkEditor).toBeHidden();
+    await expect(e.dialog).toBeVisible();
+    await expect(links.getByRole('heading', { name: 'Lié à… · 2' })).toBeVisible();
+    await expect(links.locator('li')).toHaveCount(2);
   });
 });

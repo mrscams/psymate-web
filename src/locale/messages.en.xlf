@@ -16760,6 +16760,24 @@
         </context-group>
         <note priority="1" from="description">Situation sans fin dans le rail</note>
       </trans-unit>
+      <trans-unit id="entries.rail.reason.self" datatype="html">
+        <source>une entrée ne peut pas être liée à elle-même.</source>
+        <target state="translated">an entry cannot be linked to itself.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.feelingName" datatype="html">
+        <source><x id="emotion" equiv-text="emotion"/> <x id="intensity" equiv-text="intensity"/>/10</source>
+        <target state="translated"><x id="emotion" equiv-text="emotion"/> <x id="intensity" equiv-text="intensity"/>/10</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/link-rail.component.ts</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;un ressenti sans titre dans le rail</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -360,6 +360,32 @@ describe('EntryEditorStore', () => {
       expect(JSON.stringify(body)).not.toMatch(/authorType|submissionId/);
     });
 
+    it('liens invisibles jamais envoyés : cible absente du rail, ou rail jamais chargé', async () => {
+      const gone = { targetId: 'c-gone', linkType: 'co_occurs', direction: 'outgoing' } as const;
+      const input = draft({
+        type: 'feeling',
+        feeling: { emotionCode: 'anxiety', intensity: 8 },
+        links: [{ ...link }, gone],
+      });
+      const { store, api } = setup();
+      await store.open({ patientId: 'p-marie' });
+      await store.save(input);
+      expect(api.create!.mock.calls[0][1]['links']).toEqual([link]);
+
+      // Brouillon rouvert, chronologie en erreur (aucune cible affichée) : aucun lien ne part,
+      // mais le brouillon garde les liens cochés.
+      TestBed.resetTestingModule();
+      const failing = setup({
+        railSource: vi.fn().mockRejectedValue({ status: 503, code: 'SERVICE_UNAVAILABLE' }),
+        create: vi.fn().mockRejectedValue({ status: 0, code: 'NETWORK_ERROR' }),
+      });
+      await failing.store.open({ patientId: 'p-marie' });
+      expect(failing.store.linkCandidates().status).toBe('error');
+      await failing.store.save(input);
+      expect(failing.api.create!.mock.calls[0][1]).not.toHaveProperty('links');
+      expect(failing.store.currentDraft()?.links).toEqual(input.links);
+    });
+
     it('aucun lien coché : pas de clé links ; une séance n’en porte jamais', async () => {
       const { store, api } = setup();
       await store.open({ patientId: 'p-marie' });

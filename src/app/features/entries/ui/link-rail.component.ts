@@ -6,6 +6,7 @@ import {
   inject,
   input,
   LOCALE_ID,
+  output,
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -60,6 +61,9 @@ export class LinkRailComponent implements ControlValueAccessor {
   readonly emotions = input<readonly Emotion[]>([]);
   /** Message d'erreur sous le rail (422 sur un lien), relié aux cases. */
   readonly describedBy = input<string | null>(null);
+
+  /** L'utilisateur a coché, décoché ou changé un type (pas une écriture du formulaire). */
+  readonly picked = output<RailLink[]>();
 
   protected readonly value = signal<RailLink[]>([]);
   protected readonly disabled = signal(false);
@@ -156,6 +160,7 @@ export class LinkRailComponent implements ControlValueAccessor {
     this.value.set(list);
     this.onChange(list);
     this.onTouched();
+    this.picked.emit(list);
   }
 
   private metaOf(candidate: LinkCandidate): string {
@@ -175,7 +180,9 @@ export function candidateName(candidate: LinkCandidate, emotions: readonly Emoti
   if (candidate.type === 'feeling' && candidate.emotionCode) {
     const emotion =
       emotions.find((item) => item.code === candidate.emotionCode)?.label ?? candidate.emotionCode;
-    return candidate.intensity === null ? emotion : `${emotion} ${candidate.intensity}/10`;
+    if (candidate.intensity === null) return emotion;
+    const intensity = candidate.intensity;
+    return $localize`:Nom d'un ressenti sans titre dans le rail@@entries.rail.feelingName:${emotion}:emotion: ${intensity}:intensity:/10`;
   }
   return entryTypeLabel(candidate.type);
 }

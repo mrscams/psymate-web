@@ -127,6 +127,8 @@ function linkReason(error: FieldProblem): string {
       return $localize`:Raison d'un lien refusé (422)@@entries.rail.reason.archived:l'entrée liée est archivée.`;
     case 'ENTRY_NOT_FOUND':
       return $localize`:Raison d'un lien refusé (422)@@entries.rail.reason.notFound:l'entrée liée n'existe plus.`;
+    case 'SELF_LINK':
+      return $localize`:Raison d'un lien refusé (422)@@entries.rail.reason.self:une entrée ne peut pas être liée à elle-même.`;
     case 'DIFFERENT_PATIENT':
       return $localize`:Raison d'un lien refusé (422)@@entries.rail.reason.otherPatient:l'entrée liée appartient à un autre dossier.`;
     default:

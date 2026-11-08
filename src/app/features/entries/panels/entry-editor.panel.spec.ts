@@ -420,6 +420,9 @@ describe('EntryEditorPanel', () => {
       const box = railRow('Entretien annuel').querySelector<HTMLInputElement>('input')!;
       expect(box.checked).toBe(true);
       expect(box.getAttribute('aria-describedby')).toBe(error.id);
+      expect(
+        railRow('Entretien annuel').querySelector('select')!.getAttribute('aria-describedby'),
+      ).toBe(error.id);
       expect(panel().querySelector<HTMLInputElement>('#field-feeling-emotionCode')!.value).toBe(
         'Anxiété',
       );
@@ -429,6 +432,47 @@ describe('EntryEditorPanel', () => {
       box.click();
       await settle();
       expect(panel().querySelector('.rail-error')).toBeNull();
+    });
+
+    it('Échap puis réouverture : lien coché et type choisi intacts, cibles relues', async () => {
+      const { api } = setup();
+      await feeling();
+      const select = railRow('Entretien annuel').querySelector<HTMLSelectElement>('select')!;
+      const index = Array.from(select.options).findIndex((o) => text(o) === 'est causé par');
+      select.value = String(index);
+      select.dispatchEvent(new Event('change'));
+      await settle();
+      TestBed.inject(SidePanelService).closeTop();
+      await settle();
+      expect(document.querySelector('pm-entry-editor-panel')).toBeNull();
+
+      TestBed.runInInjectionContext(() => openEntryEditor('p-marie'));
+      await settle();
+      expect(api.railSource).toHaveBeenCalledTimes(2);
+      const row = railRow('Entretien annuel');
+      expect(row.querySelector<HTMLInputElement>('input')!.checked).toBe(true);
+      expect(text(row.querySelector<HTMLSelectElement>('select')!.selectedOptions[0])).toBe(
+        'est causé par',
+      );
+      panel().querySelector<HTMLButtonElement>('.footer .primary')!.click();
+      await settle();
+      expect(api.create!.mock.calls[0][1]).toMatchObject({
+        links: [{ targetId: 'c-event', linkType: 'caused_by', direction: 'outgoing' }],
+      });
+    });
+
+    it('vide aussi quand aucune cible n’admet de type pour l’entrée en cours', async () => {
+      setup({
+        railSource: vi.fn().mockResolvedValue({
+          situations: [],
+          recent: [{ ...CANDIDATES[1], id: 'c-session', type: 'session', title: null }],
+        }),
+      });
+      TestBed.runInInjectionContext(() => openEntryEditor('p-marie', { type: 'medication' }));
+      await settle();
+      expect(text(panel().querySelector('fieldset.rail pm-state'))).toContain(
+        'Aucune entrée récente à lier',
+      );
     });
 
     it('séance : pas de rail (aucun lien à la création d’une séance)', async () => {

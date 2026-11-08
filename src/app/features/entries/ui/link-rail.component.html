@@ -22,6 +22,7 @@
         class="type"
         [class.confirmed]="!!link"
         [attr.aria-label]="typeLabel(row)"
+        [attr.aria-describedby]="describedBy()"
         [disabled]="disabled()"
         (change)="choose(row, +$any($event.target).value)"
         (blur)="touched()"

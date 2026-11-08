@@ -314,7 +314,7 @@
               [entryType]="type()"
               [emotions]="store.emotions().data ?? []"
               [describedBy]="railError() ? railErrorId : null"
-              (change)="railChanged()"
+              (picked)="railChanged()"
             />
           }
           <p class="hint" id="pm-entry-links-hint" i18n="Aide du rail des liens@@entries.rail.hint">

@@ -38,6 +38,7 @@ import { draftKey, EditorTarget, EntryEditorStore } from '../data/entry-editor.s
 import {
   EntryStatus,
   EntryView,
+  linkChoices,
   reconcileLinks,
   sameLinks,
   SESSION_MODALITIES,
@@ -207,7 +208,12 @@ export class EntryEditorPanel {
     const candidates = stateKind(this.store.linkCandidates());
     if (types === 'error' || candidates === 'error') return 'error';
     if (types === 'loading' || candidates === 'loading') return 'loading';
-    return candidates;
+    if (candidates === 'empty') return 'empty';
+    // Vide aussi quand aucune cible n'admet de type pour l'entrée en cours (rien à proposer).
+    const catalog = this.store.linkTypes().data ?? [];
+    const type = this.type();
+    const list = this.store.linkCandidates().data ?? [];
+    return list.some((item) => linkChoices(catalog, type, item.type).length > 0) ? null : 'empty';
   });
   protected readonly railRetry: StateAction = {
     label: $localize`:Bouton de l'état erreur@@state.error.retry:Réessayer`,

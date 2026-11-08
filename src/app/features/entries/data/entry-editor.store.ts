@@ -394,7 +394,11 @@ export const EntryEditorStore = signalStore(
               const body = toPatchBody(entry, draft, status);
               saved = body ? await api.patch(entryId, body) : entry;
             } else {
-              saved = await api.create(patientId, toCreateBody(draft, status));
+              // Seuls les liens vers une cible affichée partent (aucun si le rail n'est pas
+              // chargé) : rien d'invisible dans le POST. Le brouillon garde la saisie entière.
+              const shown = new Set((store.linkCandidates().data ?? []).map((item) => item.id));
+              const links = draft.links.filter((link) => shown.has(link.targetId));
+              saved = await api.create(patientId, toCreateBody({ ...draft, links }, status));
             }
             setDraft(key, null);
             patchState(store, { saving: false });
