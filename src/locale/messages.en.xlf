@@ -16156,6 +16156,7 @@
           <context context-type="linenumber">26,28</context>
         </context-group>
         <note priority="1" from="description">Puce de tous les types</note>
+</trans-unit>
       <trans-unit id="timeline.heading" datatype="html">
         <source> Timeline </source>
         <target state="translated"> Timeline </target>

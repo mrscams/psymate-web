@@ -74,7 +74,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">116</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis</note>
       </trans-unit>
@@ -91,6 +91,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
           <context context-type="linenumber">34</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/link-editor.launcher.ts</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis</note>
       </trans-unit>
@@ -135,6 +139,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
           <context context-type="linenumber">384,387</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">279,283</context>
         </context-group>
         <note priority="1" from="description">Nom de la touche Échap</note>
       </trans-unit>
@@ -2129,6 +2137,26 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
           <context context-type="linenumber">122</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">154</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">161</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">190</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">79,81</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
@@ -9795,6 +9823,522 @@
         </context-group>
         <note priority="1" from="description">Fin d&apos;une situation</note>
       </trans-unit>
+      <trans-unit id="links.problem.editType" datatype="html">
+        <source> Modifier le type </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">16,22</context>
+        </context-group>
+        <note priority="1" from="description">Action du message de lien en double</note>
+      </trans-unit>
+      <trans-unit id="links.from.label" datatype="html">
+        <source> Depuis </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+        <note priority="1" from="description">Bloc de l&apos;entrée source</note>
+      </trans-unit>
+      <trans-unit id="links.to.label" datatype="html">
+        <source> Vers </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">56,59</context>
+        </context-group>
+        <note priority="1" from="description">Bloc de l&apos;entrée cible</note>
+      </trans-unit>
+      <trans-unit id="links.search.label" datatype="html">
+        <source>Rechercher une entrée du dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">63,66</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche de cible</note>
+      </trans-unit>
+      <trans-unit id="links.search.placeholder" datatype="html">
+        <source>Rechercher une entrée…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">71,75</context>
+        </context-group>
+        <note priority="1" from="description">Indication du champ de recherche de cible</note>
+      </trans-unit>
+      <trans-unit id="links.search.typeLabel" datatype="html">
+        <source>Type d&apos;entrée cherché</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">77,79</context>
+        </context-group>
+        <note priority="1" from="description">Filtre de type de la cible</note>
+      </trans-unit>
+      <trans-unit id="links.search.allTypes" datatype="html">
+        <source> Tous les types </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">81,83</context>
+        </context-group>
+        <note priority="1" from="description">Tous les types d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="links.targets.legend" datatype="html">
+        <source> Entrée à lier </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">107,109</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la liste des cibles</note>
+      </trans-unit>
+      <trans-unit id="links.relation.label" datatype="html">
+        <source> Relation </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">146,149</context>
+        </context-group>
+        <note priority="1" from="description">Bloc du type de lien</note>
+      </trans-unit>
+      <trans-unit id="links.relation.invert" datatype="html">
+        <source>Inverser le sens</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">159,163</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;inversion du sens du lien</note>
+      </trans-unit>
+      <trans-unit id="links.sentence.label" datatype="html">
+        <source> Le lien se lira </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">192,195</context>
+        </context-group>
+        <note priority="1" from="description">Bloc de la phrase lisible</note>
+      </trans-unit>
+      <trans-unit id="links.rationale.label" datatype="html">
+        <source>Pourquoi (facultatif)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">212,216</context>
+        </context-group>
+        <note priority="1" from="description">Champ de justification du lien</note>
+      </trans-unit>
+      <trans-unit id="links.save" datatype="html">
+        <source>Enregistrer le lien</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">265,267</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;enregistrement du lien</note>
+      </trans-unit>
+      <trans-unit id="links.saveAnother" datatype="html">
+        <source> Enregistrer et lier une autre </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">275,277</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;enregistrement puis nouveau lien</note>
+      </trans-unit>
+      <trans-unit id="links.cancel" datatype="html">
+        <source>Annuler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">278,279</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;annulation de l&apos;éditeur de lien</note>
+      </trans-unit>
+      <trans-unit id="links.editor.title" datatype="html">
+        <source>Lier deux entrées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;éditeur de lien</note>
+      </trans-unit>
+      <trans-unit id="links.editor.relation" datatype="html">
+        <source>Relation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">Nom du groupe des types de lien</note>
+      </trans-unit>
+      <trans-unit id="links.editor.unnamed" datatype="html">
+        <source>une entrée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;une entrée sans titre ni texte</note>
+      </trans-unit>
+      <trans-unit id="links.source.error" datatype="html">
+        <source>Impossible de charger cette entrée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+        <note priority="1" from="description">Entrée source illisible</note>
+      </trans-unit>
+      <trans-unit id="links.catalog.error" datatype="html">
+        <source>Impossible de charger les types de liens</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">164</context>
+        </context-group>
+        <note priority="1" from="description">Types de liens illisibles</note>
+      </trans-unit>
+      <trans-unit id="links.targets.error" datatype="html">
+        <source>Impossible de chercher dans le dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+        <note priority="1" from="description">Recherche de cible en erreur</note>
+      </trans-unit>
+      <trans-unit id="links.targets.empty" datatype="html">
+        <source>Aucune autre entrée trouvée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">181</context>
+        </context-group>
+        <note priority="1" from="description">Aucune cible trouvée</note>
+      </trans-unit>
+      <trans-unit id="links.targets.emptyMessage" datatype="html">
+        <source>Modifiez la recherche ou le type.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+        <note priority="1" from="description">Aucune cible, que faire</note>
+      </trans-unit>
+      <trans-unit id="links.placed.error" datatype="html">
+        <source>Impossible de charger les liens de cette entrée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+        <note priority="1" from="description">Liens illisibles</note>
+      </trans-unit>
+      <trans-unit id="links.placed.empty" datatype="html">
+        <source>Aucun lien sur cette entrée pour le moment</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">194</context>
+        </context-group>
+        <note priority="1" from="description">Aucun lien posé</note>
+      </trans-unit>
+      <trans-unit id="links.placed.title" datatype="html">
+        <source>Liens déjà posés sur cette entrée · <x id="count" equiv-text="count"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">198</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la liste des liens posés</note>
+      </trans-unit>
+      <trans-unit id="links.targets.linked" datatype="html">
+        <source>déjà lié (<x id="labels" equiv-text="labels.join(&apos;, &apos;)"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">217</context>
+        </context-group>
+        <note priority="1" from="description">Mention d&apos;une entrée déjà liée</note>
+      </trans-unit>
+      <trans-unit id="links.leave.title" datatype="html">
+        <source>Abandonner ce lien ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">355</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation de fermeture de l&apos;éditeur de lien</note>
+      </trans-unit>
+      <trans-unit id="links.leave.description" datatype="html">
+        <source>La cible et le type choisis ne seront pas enregistrés.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">356</context>
+        </context-group>
+        <note priority="1" from="description">Détail de la confirmation de fermeture</note>
+      </trans-unit>
+      <trans-unit id="links.leave.confirm" datatype="html">
+        <source>Abandonner</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">357</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui abandonne le lien</note>
+      </trans-unit>
+      <trans-unit id="links.leave.cancel" datatype="html">
+        <source>Continuer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">358</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui revient à l&apos;éditeur de lien</note>
+      </trans-unit>
+      <trans-unit id="links.editor.incomplete" datatype="html">
+        <source>Choisissez une cible et un type de lien permis.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">398</context>
+        </context-group>
+        <note priority="1" from="description">Lien incomplet</note>
+      </trans-unit>
+      <trans-unit id="links.saved" datatype="html">
+        <source>Lien enregistré.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">416</context>
+        </context-group>
+        <note priority="1" from="description">Toast après la pose d&apos;un lien</note>
+      </trans-unit>
+      <trans-unit id="links.saved.undo" datatype="html">
+        <source>Annuler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">419</context>
+        </context-group>
+        <note priority="1" from="description">Action du toast qui retire le lien posé</note>
+      </trans-unit>
+      <trans-unit id="links.changed" datatype="html">
+        <source>Type du lien modifié.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">490</context>
+        </context-group>
+        <note priority="1" from="description">Toast après un changement de type de lien</note>
+      </trans-unit>
+      <trans-unit id="links.removed" datatype="html">
+        <source>Lien retiré.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">498</context>
+        </context-group>
+        <note priority="1" from="description">Toast après le retrait d&apos;un lien</note>
+      </trans-unit>
+      <trans-unit id="links.undone" datatype="html">
+        <source>Lien annulé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">518</context>
+        </context-group>
+        <note priority="1" from="description">Toast après l&apos;annulation d&apos;un lien</note>
+      </trans-unit>
+      <trans-unit id="links.refusal.both" datatype="html">
+        <source>« <x id="label" equiv-text="label"/> » : seulement de <x id="sources" equiv-text="sources"/> vers <x id="targets" equiv-text="targets"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">Aide d&apos;un type de lien interdit pour la source et la cible</note>
+      </trans-unit>
+      <trans-unit id="links.refusal.source" datatype="html">
+        <source>« <x id="label" equiv-text="label"/> » : seulement depuis <x id="sources" equiv-text="sources"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <note priority="1" from="description">Aide d&apos;un type de lien interdit pour la source</note>
+      </trans-unit>
+      <trans-unit id="links.refusal.target" datatype="html">
+        <source>« <x id="label" equiv-text="label"/> » : seulement vers <x id="targets" equiv-text="targets"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">Aide d&apos;un type de lien interdit pour la cible</note>
+      </trans-unit>
+      <trans-unit id="links.refusal.reversible" datatype="html">
+        <source>Possible en inversant le sens.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">Aide, le type est permis dans l&apos;autre sens</note>
+      </trans-unit>
+      <trans-unit id="links.shape.symmetric" datatype="html">
+        <source>Dans le graphe : trait pointillé, sans flèche (le lien vaut dans les deux sens).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien symétrique dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.shape.longDash" datatype="html">
+        <source>Dans le graphe : tirets longs et flèche vers la cible.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.shape.shortDash" datatype="html">
+        <source>Dans le graphe : tirets courts et flèche vers la cible.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.shape.dotted" datatype="html">
+        <source>Dans le graphe : pointillé et flèche vers la cible.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.shape.thin" datatype="html">
+        <source>Dans le graphe : trait fin et flèche vers la cible.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.shape.double" datatype="html">
+        <source>Dans le graphe : trait double et flèche vers la cible.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.shape.solid" datatype="html">
+        <source>Dans le graphe : trait plein et flèche vers la cible.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Forme d&apos;un lien dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="links.problem.exists" datatype="html">
+        <source>Ce lien existe déjà · Modifier le type ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">Lien en double (409)</note>
+      </trans-unit>
+      <trans-unit id="links.problem.archived" datatype="html">
+        <source>Une des deux entrées est archivée : elle ne peut plus être liée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <note priority="1" from="description">Extrémité archivée (409)</note>
+      </trans-unit>
+      <trans-unit id="links.problem.notFound" datatype="html">
+        <source>Cette entrée n&apos;existe plus. Choisissez une autre cible.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <note priority="1" from="description">Entrée introuvable (404)</note>
+      </trans-unit>
+      <trans-unit id="links.problem.forbidden" datatype="html">
+        <source>Ces entrées ne font pas partie de vos dossiers.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <note priority="1" from="description">Dossier d&apos;un autre praticien (403)</note>
+      </trans-unit>
+      <trans-unit id="links.problem.network" datatype="html">
+        <source>Le lien n&apos;a pas été enregistré : le serveur n&apos;a pas répondu. Votre choix est conservé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Lien non enregistré, serveur muet</note>
+      </trans-unit>
+      <trans-unit id="links.problem.other" datatype="html">
+        <source>Le lien n&apos;a pas été enregistré. Vérifiez votre choix et réessayez.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Lien non enregistré</note>
+      </trans-unit>
+      <trans-unit id="links.action.exists" datatype="html">
+        <source>Un lien de ce type existe déjà entre ces deux entrées.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <note priority="1" from="description">Changement vers un type déjà posé (409)</note>
+      </trans-unit>
+      <trans-unit id="links.action.inactive" datatype="html">
+        <source>Ce lien a déjà été modifié ou retiré.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <note priority="1" from="description">Lien déjà remplacé (409)</note>
+      </trans-unit>
+      <trans-unit id="links.action.invalid" datatype="html">
+        <source>Ce type n&apos;est pas permis pour ces deux entrées.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <note priority="1" from="description">Type refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="links.action.failed" datatype="html">
+        <source>L&apos;action n&apos;a pas abouti : le serveur n&apos;a pas répondu. Réessayez.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+        <note priority="1" from="description">Action sur un lien impossible</note>
+      </trans-unit>
+      <trans-unit id="links.placed.removedBadge" datatype="html">
+        <source>retiré</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">25,28</context>
+        </context-group>
+        <note priority="1" from="description">Marque d&apos;un lien retiré</note>
+      </trans-unit>
+      <trans-unit id="links.placed.edit" datatype="html">
+        <source> Modifier le type </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">45,48</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de modification du type d&apos;un lien</note>
+      </trans-unit>
+      <trans-unit id="links.placed.remove" datatype="html">
+        <source> Retirer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">55,58</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de retrait d&apos;un lien</note>
+      </trans-unit>
+      <trans-unit id="links.placed.typesError" datatype="html">
+        <source>Impossible de lire les types possibles.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">71,74</context>
+        </context-group>
+        <note priority="1" from="description">Types possibles illisibles</note>
+      </trans-unit>
+      <trans-unit id="links.placed.loadingTypes" datatype="html">
+        <source> Lecture des types possibles… </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">88,91</context>
+        </context-group>
+        <note priority="1" from="description">Types en cours de lecture</note>
+      </trans-unit>
+      <trans-unit id="links.placed.editGroup" datatype="html">
+        <source>Nouveau type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+        <note priority="1" from="description">Nom du groupe des types d&apos;un lien posé</note>
+      </trans-unit>
       <trans-unit id="patientShell.error.heading" datatype="html">
         <source> Dossier patient </source>
         <context-group purpose="location">
@@ -9823,7 +10367,7 @@
         <source>Séance démarrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <note priority="1" from="description">Toast après le démarrage d&apos;une séance</note>
       </trans-unit>
@@ -9831,7 +10375,7 @@
         <source>Séance clôturée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">169</context>
+          <context context-type="linenumber">172</context>
         </context-group>
         <note priority="1" from="description">Toast après la clôture d&apos;une séance</note>
       </trans-unit>
@@ -12559,6 +13103,651 @@
         </context-group>
         <note priority="1" from="description">Bouton d&apos;une fiche résumée vers le formulaire de contact</note>
       </trans-unit>
+      <trans-unit id="search.heading" datatype="html">
+        <source> Recherche dans le dossier </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">5,7</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;onglet recherche</note>
+      </trans-unit>
+      <trans-unit id="search.scope" datatype="html">
+        <source> dans le dossier de <x id="INTERPOLATION" equiv-text="{{ patientName() }}"/> · champ de recherche en haut de page (<x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>/<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/>) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+        <note priority="1" from="description">Portée de la recherche</note>
+      </trans-unit>
+      <trans-unit id="search.close" datatype="html">
+        <source> Fermer la recherche <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Échap<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">17,19</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui ferme la recherche</note>
+      </trans-unit>
+      <trans-unit id="search.period.label" datatype="html">
+        <source>Période</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">30,32</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du sélecteur de période</note>
+      </trans-unit>
+      <trans-unit id="search.session.select" datatype="html">
+        <source>Séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">43,45</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du sélecteur de séance</note>
+      </trans-unit>
+      <trans-unit id="search.session.all" datatype="html">
+        <source> Toutes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">51,53</context>
+        </context-group>
+        <note priority="1" from="description">Toutes les séances</note>
+      </trans-unit>
+      <trans-unit id="search.session.loading" datatype="html">
+        <source> Chargement des séances… </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">60,64</context>
+        </context-group>
+        <note priority="1" from="description">Séances en cours de chargement</note>
+      </trans-unit>
+      <trans-unit id="search.session.error" datatype="html">
+        <source>Séances indisponibles</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">66,69</context>
+        </context-group>
+        <note priority="1" from="description">Séances indisponibles</note>
+      </trans-unit>
+      <trans-unit id="search.session.retry" datatype="html">
+        <source> Réessayer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">72,75</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui relit les séances</note>
+      </trans-unit>
+      <trans-unit id="search.archived" datatype="html">
+        <source>inclure les entrées archivées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">83,87</context>
+        </context-group>
+        <note priority="1" from="description">Case des entrées archivées</note>
+      </trans-unit>
+      <trans-unit id="search.idle.title" datatype="html">
+        <source>Que cherchez-vous ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">97,98</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la recherche sans saisie</note>
+      </trans-unit>
+      <trans-unit id="search.idle.message" datatype="html">
+        <source> Tapez au moins 2 caractères dans le champ de recherche en haut de page : un mot, un tag, une émotion ou une période. La recherche ignore les accents et tolère les fautes. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">99,102</context>
+        </context-group>
+        <note priority="1" from="description">Consigne de la recherche sans saisie</note>
+      </trans-unit>
+      <trans-unit id="search.empty.message" datatype="html">
+        <source>Vérifiez l&apos;orthographe, retirez un filtre ou essayez la syntaxe ci-dessous.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">108,109</context>
+        </context-group>
+        <note priority="1" from="description">Message de l&apos;état vide de la recherche</note>
+      </trans-unit>
+      <trans-unit id="search.error.title" datatype="html">
+        <source>Recherche indisponible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">117,118</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la recherche en erreur</note>
+      </trans-unit>
+      <trans-unit id="search.more" datatype="html">
+        <source> <x id="ICU" equiv-text="{store.nextCount(), plural,
+              =1 {Afficher le résultat suivant}
+              other {Afficher les {{ store.nextCount() }} résultats suivants}
+            }" xid="1559026508360962188"/> (<x id="ICU_1" equiv-text="{store.remaining(), plural, =1 {1 restant} other {{{ store.remaining() }} restants}}" xid="2414671900317649748"/>) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">142,149</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui charge la page suivante de résultats</note>
+      </trans-unit>
+      <trans-unit id="970324615134966178" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {Afficher le résultat suivant} other {Afficher les <x id="INTERPOLATION"/> résultats suivants}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">142,144</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1110506048880539534" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 restant} other {<x id="INTERPOLATION"/> restants}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="search.more.error" datatype="html">
+        <source> Les résultats suivants n&apos;ont pas pu être chargés. Réessayez. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
+          <context context-type="linenumber">151,157</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de la page suivante</note>
+      </trans-unit>
+      <trans-unit id="search.retry" datatype="html">
+        <source>Réessayer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;état erreur</note>
+      </trans-unit>
+      <trans-unit id="search.selection" datatype="html">
+        <source>Sélection : <x id="title" equiv-text="title"/>, <x id="position" equiv-text="position"/> sur <x id="count" equiv-text="hits.length"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+        <note priority="1" from="description">Annonce du résultat sélectionné</note>
+      </trans-unit>
+      <trans-unit id="search.empty.title" datatype="html">
+        <source>Aucun résultat pour « <x id="query" equiv-text="this.store.effectiveQuery()"/> »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
+          <context context-type="linenumber">165</context>
+        </context-group>
+        <note priority="1" from="description">État vide de la recherche</note>
+      </trans-unit>
+      <trans-unit id="search.shortcut.escape" datatype="html">
+        <source>Fermer la recherche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="search.bar.placeholder" datatype="html">
+        <source>Rechercher dans le dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/search-bar.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche de la barre sur un écran patient</note>
+      </trans-unit>
+      <trans-unit id="search.type.note" datatype="html">
+        <source>Notes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Puce de type, pluriel</note>
+      </trans-unit>
+      <trans-unit id="search.type.event" datatype="html">
+        <source>Événements</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Puce de type, pluriel</note>
+      </trans-unit>
+      <trans-unit id="search.type.situation" datatype="html">
+        <source>Situations</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Puce de type, pluriel</note>
+      </trans-unit>
+      <trans-unit id="search.type.feeling" datatype="html">
+        <source>Ressentis</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Puce de type, pluriel</note>
+      </trans-unit>
+      <trans-unit id="search.type.session" datatype="html">
+        <source>Séances</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <note priority="1" from="description">Puce de type, pluriel</note>
+      </trans-unit>
+      <trans-unit id="search.type.medication" datatype="html">
+        <source>Médicaments</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">Puce de type, pluriel</note>
+      </trans-unit>
+      <trans-unit id="search.period.all" datatype="html">
+        <source>Tout le dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Période de recherche</note>
+      </trans-unit>
+      <trans-unit id="search.period.30d" datatype="html">
+        <source>30 derniers jours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Période de recherche</note>
+      </trans-unit>
+      <trans-unit id="search.period.90d" datatype="html">
+        <source>90 derniers jours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">Période de recherche</note>
+      </trans-unit>
+      <trans-unit id="search.period.12m" datatype="html">
+        <source>12 derniers mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">Période de recherche</note>
+      </trans-unit>
+      <trans-unit id="search.period.custom" datatype="html">
+        <source>Période choisie</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">Période de recherche venue de l&apos;URL</note>
+      </trans-unit>
+      <trans-unit id="search.precision.day" datatype="html">
+        <source>précision jour</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <note priority="1" from="description">Précision d&apos;une date</note>
+      </trans-unit>
+      <trans-unit id="search.precision.month" datatype="html">
+        <source>précision mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <note priority="1" from="description">Précision d&apos;une date</note>
+      </trans-unit>
+      <trans-unit id="search.precision.year" datatype="html">
+        <source>précision année</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">Précision d&apos;une date</note>
+      </trans-unit>
+      <trans-unit id="search.precision.period" datatype="html">
+        <source>période</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">Précision d&apos;une date</note>
+      </trans-unit>
+      <trans-unit id="search.precision.lifePhase" datatype="html">
+        <source>phase de vie</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <note priority="1" from="description">Précision d&apos;une date</note>
+      </trans-unit>
+      <trans-unit id="search.session.label" datatype="html">
+        <source>Séance du <x id="day" equiv-text="day"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <note priority="1" from="description">Séance désignée par sa date</note>
+      </trans-unit>
+      <trans-unit id="search.visibility.private" datatype="html">
+        <source>privée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">Visibilité d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="search.visibility.clinical" datatype="html">
+        <source>clinique</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+        <note priority="1" from="description">Visibilité d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="search.summary.approximateOne" datatype="html">
+        <source>Aucun résultat exact pour « <x id="query" equiv-text="text"/> » · 1 résultat approché (trigrammes) · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Synthèse sans résultat exact, un approché</note>
+      </trans-unit>
+      <trans-unit id="search.summary.approximateOnly" datatype="html">
+        <source>Aucun résultat exact pour « <x id="query" equiv-text="text"/> » · <x id="count" equiv-text="approximate"/> résultats approchés (trigrammes) · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+        <note priority="1" from="description">Synthèse sans résultat exact, plusieurs approchés</note>
+      </trans-unit>
+      <trans-unit id="search.summary.none" datatype="html">
+        <source>Aucun résultat pour « <x id="query" equiv-text="text"/> »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <note priority="1" from="description">Synthèse sans résultat</note>
+      </trans-unit>
+      <trans-unit id="search.summary.one" datatype="html">
+        <source>1 résultat pour « <x id="query" equiv-text="text"/> » · sans accents ni casse · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+        <note priority="1" from="description">Synthèse, un résultat</note>
+      </trans-unit>
+      <trans-unit id="search.summary.many" datatype="html">
+        <source><x id="count" equiv-text="total"/> résultats pour « <x id="query" equiv-text="text"/> » · sans accents ni casse · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <note priority="1" from="description">Synthèse, plusieurs résultats</note>
+      </trans-unit>
+      <trans-unit id="search.error.invalidDate" datatype="html">
+        <source>Date invalide dans avant: ou après: (format AAAA, AAAA-MM ou AAAA-MM-JJ).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de recherche</note>
+      </trans-unit>
+      <trans-unit id="search.error.tooLong" datatype="html">
+        <source>La recherche dépasse 200 caractères.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">142</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de recherche</note>
+      </trans-unit>
+      <trans-unit id="search.error.period" datatype="html">
+        <source>La période de l&apos;adresse est invalide. Revenez à tout le dossier.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">145</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de recherche</note>
+      </trans-unit>
+      <trans-unit id="search.error.generic" datatype="html">
+        <source>La recherche est indisponible pour le moment. Votre saisie est conservée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de recherche</note>
+      </trans-unit>
+      <trans-unit id="search.preview.label" datatype="html">
+        <source>Aperçu de l&apos;entrée sélectionnée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+        <note priority="1" from="description">Nom de l&apos;aperçu</note>
+      </trans-unit>
+      <trans-unit id="search.preview.when" datatype="html">
+        <source>Quand</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">14,16</context>
+        </context-group>
+        <note priority="1" from="description">Métadonnée de l&apos;aperçu</note>
+      </trans-unit>
+      <trans-unit id="search.preview.session" datatype="html">
+        <source>Séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+        <note priority="1" from="description">Métadonnée de l&apos;aperçu</note>
+      </trans-unit>
+      <trans-unit id="search.preview.noSession" datatype="html">
+        <source>aucune</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">23,28</context>
+        </context-group>
+        <note priority="1" from="description">Aucune séance de rattachement</note>
+      </trans-unit>
+      <trans-unit id="search.preview.recorded" datatype="html">
+        <source>Saisi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">28,30</context>
+        </context-group>
+        <note priority="1" from="description">Métadonnée de l&apos;aperçu</note>
+      </trans-unit>
+      <trans-unit id="search.preview.version" datatype="html">
+        <source>v<x id="INTERPOLATION" equiv-text="{{ entry.version }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">31,32</context>
+        </context-group>
+        <note priority="1" from="description">Numéro de version</note>
+      </trans-unit>
+      <trans-unit id="search.preview.visibility" datatype="html">
+        <source>Visibilité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">35,37</context>
+        </context-group>
+        <note priority="1" from="description">Métadonnée de l&apos;aperçu</note>
+      </trans-unit>
+      <trans-unit id="search.hit.archived" datatype="html">
+        <source>archivée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">39,43</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
+          <context context-type="linenumber">49,54</context>
+        </context-group>
+        <note priority="1" from="description">Mention d&apos;une entrée archivée</note>
+      </trans-unit>
+      <trans-unit id="search.preview.intensity" datatype="html">
+        <source>Intensité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">45,46</context>
+        </context-group>
+        <note priority="1" from="description">Métadonnée de l&apos;aperçu</note>
+      </trans-unit>
+      <trans-unit id="search.preview.links" datatype="html">
+        <source> Liens · <x id="INTERPOLATION" equiv-text="{{ entry.links.length }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">56,58</context>
+        </context-group>
+        <note priority="1" from="description">Titre des liens de l&apos;aperçu</note>
+      </trans-unit>
+      <trans-unit id="search.preview.openTimeline" datatype="html">
+        <source> Ouvrir dans la timeline </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">72,76</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;aperçu</note>
+      </trans-unit>
+      <trans-unit id="search.preview.openGraph" datatype="html">
+        <source> Voir dans le graphe </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">79,82</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;aperçu</note>
+      </trans-unit>
+      <trans-unit id="search.preview.edit" datatype="html">
+        <source> Modifier </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">86,90</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;aperçu</note>
+      </trans-unit>
+      <trans-unit id="search.preview.errorTitle" datatype="html">
+        <source>Aperçu indisponible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
+          <context context-type="linenumber">95,96</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;aperçu en erreur</note>
+      </trans-unit>
+      <trans-unit id="search.preview.retry" datatype="html">
+        <source>Réessayer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;état erreur</note>
+      </trans-unit>
+      <trans-unit id="search.hit.private" datatype="html">
+        <source>privée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
+          <context context-type="linenumber">45,48</context>
+        </context-group>
+        <note priority="1" from="description">Mention d&apos;une entrée privée</note>
+      </trans-unit>
+      <trans-unit id="search.results.label" datatype="html">
+        <source>Résultats</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
+          <context context-type="linenumber">61,62</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la liste des résultats exacts</note>
+      </trans-unit>
+      <trans-unit id="search.approximate.title" datatype="html">
+        <source> Résultats approchés </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
+          <context context-type="linenumber">76,78</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la section des résultats approchés</note>
+      </trans-unit>
+      <trans-unit id="search.approximate.note" datatype="html">
+        <source> Orthographe proche (tolérance aux fautes de frappe). </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
+          <context context-type="linenumber">79,83</context>
+        </context-group>
+        <note priority="1" from="description">Explication des résultats approchés</note>
+      </trans-unit>
+      <trans-unit id="search.approximate.label" datatype="html">
+        <source>Résultats approchés</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
+          <context context-type="linenumber">83,84</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la liste des résultats approchés</note>
+      </trans-unit>
+      <trans-unit id="search.help.keys" datatype="html">
+        <source> ↑ ↓ pour parcourir les résultats · Entrée ouvre dans la timeline · Échap revient à l&apos;écran précédent </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
+          <context context-type="linenumber">11,16</context>
+        </context-group>
+        <note priority="1" from="description">Aide clavier de la recherche</note>
+      </trans-unit>
+      <trans-unit id="search.help.tag" datatype="html">
+        <source>entrées portant ce tag</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
+          <context context-type="linenumber">17,20</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la syntaxe</note>
+      </trans-unit>
+      <trans-unit id="search.help.emotion" datatype="html">
+        <source>ressentis de cette émotion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
+          <context context-type="linenumber">21,24</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la syntaxe</note>
+      </trans-unit>
+      <trans-unit id="search.help.before" datatype="html">
+        <source>avant septembre 2026</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
+          <context context-type="linenumber">25,28</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la syntaxe</note>
+      </trans-unit>
+      <trans-unit id="search.help.after" datatype="html">
+        <source>à partir de juillet 2026</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
+          <context context-type="linenumber">29,32</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la syntaxe</note>
+      </trans-unit>
+      <trans-unit id="search.help.phrase" datatype="html">
+        <source>expression exacte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
+          <context context-type="linenumber">33,36</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la syntaxe</note>
+      </trans-unit>
+      <trans-unit id="search.help.exclude" datatype="html">
+        <source>exclut ce mot</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
+          <context context-type="linenumber">37,42</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la syntaxe</note>
+      </trans-unit>
+      <trans-unit id="search.types.label" datatype="html">
+        <source>Types</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/type-chips.component.ts</context>
+          <context context-type="linenumber">18,22</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette des puces de type</note>
+      </trans-unit>
+      <trans-unit id="search.types.all" datatype="html">
+        <source>Tous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/type-chips.component.ts</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+        <note priority="1" from="description">Puce de tous les types</note>
+      </trans-unit>
       <trans-unit id="timeline.heading" datatype="html">
         <source> Timeline </source>
         <context-group purpose="location">
@@ -12779,7 +13968,7 @@
         <source>Situation <x id="title" equiv-text="title"/>, <x id="when" equiv-text="when"/>, en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">329</context>
+          <context context-type="linenumber">359</context>
         </context-group>
         <note priority="1" from="description">Nom accessible d&apos;une bande de situation en cours</note>
       </trans-unit>
@@ -12787,7 +13976,7 @@
         <source>Situation <x id="title" equiv-text="title"/>, <x id="when" equiv-text="when"/>, terminée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">330</context>
+          <context context-type="linenumber">360</context>
         </context-group>
         <note priority="1" from="description">Nom accessible d&apos;une bande de situation terminée</note>
       </trans-unit>
