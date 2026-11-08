@@ -1,8 +1,10 @@
 import { Routes } from '@angular/router';
 
+import { EmotionsPage } from './pages/emotions.page';
 import { PreferencesPage } from './pages/preferences.page';
 import { ProfilePage } from './pages/profile.page';
 import { SecurityPage, TWO_FACTOR_SEGMENT } from './pages/security.page';
+import { TagsPage } from './pages/tags.page';
 import { VerificationPage } from './pages/verification.page';
 
 /** Montées sous /mon-compte par app.routes.ts (authGuard, statusGuard). */
@@ -23,6 +25,16 @@ export const ACCOUNT_ROUTES: Routes = [
     path: 'preferences',
     component: PreferencesPage,
     title: $localize`:Titre d'onglet des préférences@@preferences.pageTitle:Préférences · PsyMate`,
+  },
+  {
+    path: 'emotions',
+    component: EmotionsPage,
+    title: $localize`:Titre d'onglet des émotions personnalisées@@vocabulary.pageTitle:Émotions personnalisées · PsyMate`,
+  },
+  {
+    path: 'tags',
+    component: TagsPage,
+    title: $localize`:Titre d'onglet des tags@@vocabulary.tags.pageTitle:Tags · PsyMate`,
   },
   {
     path: 'securite',

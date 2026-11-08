@@ -1,0 +1,94 @@
+// Mise en page des pages Émotions personnalisées et Tags : même gabarit que les Préférences.
+:host {
+  display: block;
+}
+
+.account {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+pm-account-nav {
+  flex: 0 1 220px;
+}
+
+.content {
+  flex: 999 1 560px;
+  min-width: 0;
+  max-width: 980px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+h1 {
+  margin: 0 0 4px;
+  font: var(--mat-sys-headline-small);
+  color: var(--text-primary);
+}
+
+.intro,
+.muted {
+  margin: 0 0 4px;
+  max-width: 720px;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-medium);
+
+  a {
+    color: var(--primary);
+  }
+}
+
+.muted {
+  font: var(--mat-sys-body-small);
+}
+
+.error {
+  margin: 0 0 8px;
+  color: var(--danger);
+  font: var(--mat-sys-body-small);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px 26px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.card-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+
+h2 {
+  margin: 0;
+  font: var(--mat-sys-label-medium);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+
+  &:focus {
+    outline: none;
+  }
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    padding: 16px;
+  }
+}

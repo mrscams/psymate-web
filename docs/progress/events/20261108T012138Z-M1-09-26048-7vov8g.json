@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T01:21:38.998Z",
+  "task": "M1-09",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Tags et émotions personnalisées : /mon-compte/emotions (ajout, renommage, fusion avec aperçu, journal annulable 30 jours, vocabulaire global) et /mon-compte/tags (création, renommage, fusion, 422 TAG_IS_EMOTION avec l'émotion proposée)",
+  "notes": "Branche claude/m1-09-vocabulaire-f1e5c1, non poussée. lint, check:tokens, test (694), build verts ; e2e complets 69 passés, 6 ignorés (admin). Revue : 0 bloquant, 3 à corriger traités. Écarts contrat : pas de liste des fusions d'émotions (journal en localStorage par compte), EmotionView sans usage ni valence/activation, pas de désactivation ni de GET similar (proximité côté client), TagView.usageCount jamais incrémenté par l'API hors fusion (colonne retirée). Aucune dépendance npm.",
+  "next": "Backend : GET /api/me/emotions/merges et usageCount tenu à jour. shared/ui : entrée Tags dans pm-account-nav et ACCOUNT_PATHS.tags (tâche dédiée).",
+  "branch": "claude/m1-09-vocabulaire-f1e5c1",
+  "checkout": "m1-09-vocabulaire-f1e5c1"
+}
