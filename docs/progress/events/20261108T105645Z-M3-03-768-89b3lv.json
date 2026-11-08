@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T10:56:45.501Z",
+  "task": "M3-03",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Filtres de la timeline (types avec facettes, émotion, tag, brouillons, période), bascule Chronologique | Par séance (bouton, touche M, préférence timeline.groupBy), séances dépliables, état dans l'URL et la mémoire d'onglet, barre d'outils au clavier, Lier branché sur openLinkEditor.",
+  "notes": "TimelineFiltersStore séparé, lu par TimelineStore (headOnly dérivé). Détail de séance via GET /api/entries/{id} (TimelineItemDto sans durée/modalité ; compte rendu = body courant). Regroupement par séance limité à 600 entrées. Clôturer reste dans l'en-tête partagé. Revue faite, 6 points corrigés. Vitest 1037 verts ; e2e flux-5-timeline + flux-5-recherche 14/14 ; passe complète : 4 échecs Mailpit verts au rejeu. Branche non rebasée sur main (M2-05) : conflits xlf probables.",
+  "next": "Rebase sur main, PR M3-03 Filtres et mode par séance, puis M3-04 vue décennie.",
+  "branch": "claude/lucid-mayer-b6319f",
+  "checkout": "lucid-mayer-b6319f"
+}
