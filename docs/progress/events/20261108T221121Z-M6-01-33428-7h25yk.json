@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T22:11:21.619Z",
+  "task": "M6-01",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 33 fusionnee (squash b88e14f) : parseur pur de la barre de commande (features/capture/parser), prefixes de type, emotion par prefixe, intensite 0-10, dates relatives, > cible, avertissements codes avec blocking ; 109 phrases, 147 tests, couverture 100 % ; CI verte.",
+  "notes": "Intensite 0-10 (contrat) vs 1-10 (B5). Saison -> precision period. Couverture mesuree hors depot (pas de @vitest/coverage-v8) : tache d outillage a prevoir.",
+  "next": "M6-02 barre de commande (en cours)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/33",
+  "branch": "main",
+  "checkout": "psymate-web"
+}

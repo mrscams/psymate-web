@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T22:11:22.179Z",
+  "task": "M6-04",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 34 fusionnee (squash 81e7a61) : mode sombre complet et contraste doux (tous les tokens), theme Material, system suit prefers-color-scheme (bug ThemeService corrige), check:tokens 81 -> 186 couples + controle de couverture, e2e theme, 20 captures ; CI verte.",
+  "notes": "Decision ecrite a prendre : 3 couples de l etude sous le seuil AA (joie 2,26, lien suggere 1,79, drapeau 2,89) admis en exceptions avec plancher. Nom de situation sur sa bande a 3,56:1 en sombre (timeline, a corriger). Flash clair au chargement (index.html).",
+  "next": "M6-03 revue des etats ; tache tokens/etude pour les exceptions",
+  "pr": "https://github.com/mrscams/psymate-web/pull/34",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
