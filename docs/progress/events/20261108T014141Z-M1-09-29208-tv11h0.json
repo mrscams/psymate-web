@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T01:41:41.553Z",
+  "task": "M1-09",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 18 fusionnee (squash 8ffe078) : /mon-compte/emotions (ajout, renommage, fusion avec apercu, journal annulable 30 j) et /mon-compte/tags (creation, renommage, fusion, 422 TAG_IS_EMOTION) ; CI verte (checks + 70 e2e, 11 ignores)",
+  "notes": "Le contrat n a pas de liste des fusions d emotions : journal garde dans le navigateur par compte (vocabulary.emotionMerges.<userId>) ; il manque GET /api/me/emotions/merges cote API. Compteur d usages des tags toujours 0 cote API : colonne retiree. Pas d entree Tags dans account-nav (shared/ui) : liens croises entre les deux pages.",
+  "next": "M1-08 (PR) puis fin du lot 2 ; lot 3 ensuite",
+  "pr": "https://github.com/mrscams/psymate-web/pull/18",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
