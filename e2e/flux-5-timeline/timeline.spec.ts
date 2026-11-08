@@ -10,6 +10,7 @@ import {
 import { createAccount, signIn } from '../preferences/accounts';
 import { TestAccount } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { setGroupBy } from './filters-data';
 import { StoryPatient, storyPatient, volumePatient } from './timeline-data';
 
 // Timeline, mode chronologique (M3-02, fiche 03, B4 écran 3) contre l'API locale (jamais de mock) :
@@ -30,6 +31,8 @@ test.beforeAll(async () => {
   test.setTimeout(240_000);
   api = await playwrightRequest.newContext();
   account = await createAccount(api, 'm3-02.timeline', 'psychologist');
+  // Ces cas portent sur le mode chronologique (état A) ; le défaut du compte est « par séance ».
+  await setGroupBy(api, 'chronological');
   story = await storyPatient(api);
   volume = await volumePatient(api, account, VOLUME);
 });
@@ -54,6 +57,17 @@ function timeline(page: Page) {
 /** Lanes de bande allumées sur une ligne, dans l'ordre des colonnes. */
 async function lanes(row: Locator): Promise<boolean[]> {
   return row.locator('.lane').evaluateAll((nodes) => nodes.map((n) => n.classList.contains('on')));
+}
+
+/**
+ * La carte est dans la zone visible de la liste (le défilement virtuel), même si la liste dépasse
+ * le bas de la fenêtre du navigateur (barre d'outils sur deux lignes, M3-03).
+ */
+async function inList(viewport: Locator, card: Locator): Promise<boolean> {
+  const list = await viewport.boundingBox();
+  const box = await card.boundingBox();
+  if (!list || !box) return false;
+  return box.y >= list.y - 1 && box.y + box.height <= list.y + list.height + 1;
 }
 
 /** Nombre de fenêtres en mémoire lu dans la ligne d'état (« … · n fenêtres en mémoire »). */
@@ -130,8 +144,9 @@ test('menu contextuel entièrement au clavier ; « Corriger » ouvre l’éditeu
   await expect(item('Corriger')).toBeFocused();
   await page.keyboard.press('ArrowDown');
   await expect(item('Lier')).toBeFocused();
-  await expect(item('Lier')).toHaveAttribute('aria-disabled', 'true');
-  await expect(item('Lier')).toContainText('bientôt disponible');
+  // Lier : branché sur l'éditeur de lien (M3-03), raccourci L.
+  await expect(item('Lier')).not.toHaveAttribute('aria-disabled', 'true');
+  await expect(item('Lier')).not.toContainText('bientôt');
   await page.keyboard.press('ArrowDown');
   await expect(item('Voir dans le graphe')).toBeFocused();
   await expectNoAxeViolations(page);
@@ -278,7 +293,7 @@ test('« Corriger » puis retour, « Voir dans le graphe » puis retour : positi
   await page.keyboard.press('Escape');
   await expect(editor).toBeHidden();
   expect(await t.viewport.evaluate((el) => el.scrollTop)).toBe(scrollTop);
-  await expect(card).toBeInViewport();
+  await expect.poll(() => inList(t.viewport, card)).toBe(true);
 
   // Voir dans le graphe : onglet 3 centré sur l'entrée ; retour par la touche 2.
   await card.click({ button: 'right' });
@@ -288,8 +303,8 @@ test('« Corriger » puis retour, « Voir dans le graphe » puis retour : positi
   await expect(page).toHaveURL(new RegExp(`/patients/${volume}/graph\\?root=`));
   await page.keyboard.press('2');
   await expect(page).toHaveURL(new RegExp(`/patients/${volume}/timeline$`));
-  await expect(t.card(anchor)).toBeInViewport();
   await expect.poll(() => t.viewport.evaluate((el) => el.scrollTop)).toBe(leftAt);
+  await expect.poll(() => inList(t.viewport, t.card(anchor))).toBe(true);
   await expect(t.card(anchor)).toHaveClass(/\bselected\b/);
   await expectNoAxeViolations(page);
 });
