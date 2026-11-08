@@ -235,4 +235,34 @@ describe('PatientShellStore', () => {
       expect(store.recallTab('timeline')).toBeUndefined();
     });
   });
+
+  describe('écritures (relecture des projections, M4-05)', () => {
+    it('séance démarrée, clôturée, contact, noteWrite : revision augmente ; un échec non', async () => {
+      const store = await loaded(null, {
+        start: vi.fn().mockResolvedValue(openSession()),
+        close: vi.fn().mockResolvedValue(closedSession({ id: 's-open' })),
+        contact: vi.fn().mockRejectedValue(alreadyOpen),
+      });
+      expect(store.revision()).toBe(0);
+      await store.startSession();
+      expect(store.revision()).toBe(1);
+      await store.closeSession();
+      expect(store.revision()).toBe(2);
+      await store.contactSession({
+        modality: 'phone',
+        occurredFrom: '2026-11-08T09:00:00Z',
+        body: 'Appel',
+      });
+      expect(store.revision()).toBe(2);
+      store.noteWrite();
+      expect(store.revision()).toBe(3);
+    });
+
+    it('un autre dossier ne remet pas revision à zéro (jamais de faux « rien n’a changé »)', async () => {
+      const store = await loaded(null);
+      store.noteWrite();
+      await store.load('p-omar');
+      expect(store.revision()).toBe(1);
+    });
+  });
 });

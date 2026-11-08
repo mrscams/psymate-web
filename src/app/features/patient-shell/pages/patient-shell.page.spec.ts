@@ -47,6 +47,10 @@ async function render(api: Partial<Api> = {}, url = '/patients/p-marie', duratio
           defaultDurationMin: signal(durationMin),
           defaultVisibility: signal('clinical'),
           medicationVisible: signal(true),
+          // Vue d'ensemble (M4-05) : vue complète, fenêtre 90 j.
+          overviewView: signal('complete'),
+          overviewWindow: signal('90d'),
+          set: vi.fn().mockResolvedValue(null),
         },
       },
       // L'éditeur d'entrée (features/entries) lit l'API par HttpClient : requêtes en attente ici.
@@ -57,6 +61,31 @@ async function render(api: Partial<Api> = {}, url = '/patients/p-marie', duratio
   const harness = await RouterTestingHarness.create(url);
   await settle(harness);
   return { harness, el: harness.fixture.nativeElement as HTMLElement, api: mock };
+}
+
+/**
+ * Répond aux lectures de la vue d'ensemble en attente (GET …/overview, onglet 1) : deux séances, la
+ * plus récente dépliée par défaut.
+ */
+function answerOverview(): void {
+  const http = TestBed.inject(HttpTestingController);
+  for (const request of http.match((r) => r.url.endsWith('/overview'))) {
+    request.flush({
+      window: '90d',
+      recentSessions: [
+        { entryId: 's-2', occurredFrom: '2026-10-17T14:00:00Z', kind: 'session', entryCount: 1 },
+        { entryId: 's-1', occurredFrom: '2026-10-10T14:00:00Z', kind: 'session', entryCount: 0 },
+      ],
+    });
+  }
+}
+
+function sessionToggles(el: HTMLElement): HTMLButtonElement[] {
+  return [...el.querySelectorAll<HTMLButtonElement>('pm-overview-sessions button[aria-expanded]')];
+}
+
+function expandedStates(el: HTMLElement): (string | null)[] {
+  return sessionToggles(el).map((b) => b.getAttribute('aria-expanded'));
 }
 
 async function settle(harness: RouterTestingHarness): Promise<void> {
@@ -81,7 +110,7 @@ describe('PatientShellPage', () => {
     const { el } = await render({ patient: vi.fn(() => never<ReturnType<typeof shellPatient>>()) });
     expect(el.querySelector('pm-patient-header [aria-busy="true"]')).not.toBeNull();
     expect(el.querySelector('h1')).toBeNull();
-    expect(el.querySelector('pm-tab-placeholder-page')).toBeNull();
+    expect(el.querySelector('pm-overview-page')).toBeNull();
   });
 
   it('chargé : nom, drapeau, dernière séance, barre de capture, onglet 1 avec la bascule Vue', async () => {
@@ -94,8 +123,8 @@ describe('PatientShellPage', () => {
     expect(el.querySelector('pm-capture-bar input')?.getAttribute('placeholder')).toBe(
       'Noter quelque chose…',
     );
-    expect(text(el.querySelector('pm-tab-placeholder-page h2'))).toBe("Vue d'ensemble");
-    expect(el.querySelector('.view-toggle')).not.toBeNull();
+    expect(text(el.querySelector('pm-overview-page h2'))).toBe("Vue d'ensemble");
+    expect(el.querySelector('.view-toggle pm-overview-view-toggle [role="group"]')).not.toBeNull();
   });
 
   it('séance d’accueil seule : ni « en cours » ni « dernière séance »', async () => {
@@ -220,25 +249,28 @@ describe('PatientShellPage', () => {
     expect(api.close).not.toHaveBeenCalled();
   });
 
-  it('changer d’onglet et revenir conserve l’état (compteur rangé par rememberTab)', async () => {
-    // L'onglet 1 est encore provisoire (M4-05) ; le Graphe est la page de M2-06, la Timeline celle
-    // de M3-02 (leur propre mémoire est testée dans leur feature).
+  it('changer d’onglet et revenir conserve l’état (séances dépliées, rangées par rememberTab)', async () => {
+    // L'onglet 1 est la vue d'ensemble (M4-05) ; le Graphe est la page de M2-06 (sa propre
+    // mémoire est testée dans sa feature).
     const { el, harness, api } = await render();
-    const counter = () => el.querySelector<HTMLButtonElement>('pm-tab-placeholder-page .counter');
-    counter()?.click();
-    counter()?.click();
+    answerOverview();
     await settle(harness);
-    expect(text(counter())).toBe('Compteur : 2');
+    expect(expandedStates(el)).toEqual(['true', 'false']);
+    sessionToggles(el)[1].click();
+    await settle(harness);
+    expect(expandedStates(el)).toEqual(['true', 'true']);
 
     await harness.navigateByUrl('/patients/p-marie/graph');
     await settle(harness);
     expect(el.querySelector('pm-graph-page')).not.toBeNull();
-    expect(counter()).toBeNull();
+    expect(el.querySelector('pm-overview-page')).toBeNull();
     expect(el.querySelector('.view-toggle')).toBeNull();
 
     await harness.navigateByUrl('/patients/p-marie');
     await settle(harness);
-    expect(text(counter())).toBe('Compteur : 2');
+    answerOverview();
+    await settle(harness);
+    expect(expandedStates(el)).toEqual(['true', 'true']);
     expect(api.patient).toHaveBeenCalledTimes(1);
   });
 
@@ -275,11 +307,17 @@ describe('PatientShellPage', () => {
       .mockResolvedValueOnce(shellPatient())
       .mockResolvedValueOnce(shellPatient({ id: 'p-omar', displayName: 'Omar B.', flags: [] }));
     const { el, harness } = await render({ patient });
-    el.querySelector<HTMLButtonElement>('pm-tab-placeholder-page .counter')?.click();
+    answerOverview();
+    await settle(harness);
+    sessionToggles(el)[0].click();
+    await settle(harness);
+    expect(expandedStates(el)).toEqual(['false', 'false']);
     await harness.navigateByUrl('/patients/p-omar');
     await settle(harness);
+    answerOverview();
+    await settle(harness);
     expect(text(el.querySelector('h1.name'))).toBe('Omar B.');
-    expect(text(el.querySelector('pm-tab-placeholder-page .counter'))).toBe('Compteur : 0');
+    expect(expandedStates(el)).toEqual(['true', 'false']);
   });
 
   describe('éditeur d’entrée (M1-08)', () => {

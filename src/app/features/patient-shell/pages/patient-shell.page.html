@@ -42,7 +42,8 @@
         </svg>
       </button>
     </div>
-    <!-- Emplacement [pmViewToggle] : bascule « Vue : Simple · Complète », branchée en M4-05. -->
+    <!-- Bascule « Vue : Simple · Complète » (features/overview, M4-05) : visible sur l'onglet 1. -->
+    <pm-overview-view-toggle pmViewToggle />
   </pm-patient-header>
   @if (store.patient()) {
     <div class="tab-content">

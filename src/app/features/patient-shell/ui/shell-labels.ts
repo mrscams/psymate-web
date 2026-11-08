@@ -1,6 +1,6 @@
 import { ApiProblem } from '../../../core/http';
 import { PatientHeaderInfo } from '../../../shared/ui';
-import { FlagKind, ShellPatient, ShellTab } from '../data/patient-shell.model';
+import { FlagKind, ShellPatient } from '../data/patient-shell.model';
 
 // Libellés de features/patient-shell ($localize, français d'abord). Les codes viennent du contrat ;
 // seuls ces libellés changent avec la langue.
@@ -25,19 +25,6 @@ export function toHeaderInfo(patient: ShellPatient): PatientHeaderInfo {
     followedSince: patient.followedSince,
     flags: patient.flags.map((kind) => ({ code: kind, label: flagLabel(kind) })),
   };
-}
-
-export function tabLabel(tab: ShellTab): string {
-  switch (tab) {
-    case 'overview':
-      return $localize`:Onglet du dossier@@patientShell.tab.overview:Vue d'ensemble`;
-    case 'timeline':
-      return $localize`:Onglet du dossier@@patientShell.tab.timeline:Timeline`;
-    case 'graph':
-      return $localize`:Onglet du dossier@@patientShell.tab.graph:Graphe`;
-    case 'search':
-      return $localize`:Recherche dans le dossier@@patientShell.tab.search:Recherche`;
-  }
 }
 
 /**

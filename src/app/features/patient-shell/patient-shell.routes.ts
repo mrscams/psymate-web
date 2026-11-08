@@ -1,13 +1,11 @@
 import { Routes } from '@angular/router';
 
 import { PatientShellPage } from './pages/patient-shell.page';
-import { TabPlaceholderPage } from './pages/tab-placeholder.page';
 
 /**
  * Montées sous /patients/:id par app.routes.ts (authGuard, statusGuard) : la page patient et ses
- * onglets (B2). Chaque tâche remplace la route de son onglet par sa page en gardant data.tab :
- * timeline (M3-02), graph (M2-06) et search (M4-08) sont en place ; overview (M4-05) est encore
- * la page provisoire.
+ * onglets (B2), chacun chargé à la demande avec son data.tab : overview (M4-05), timeline (M3-02),
+ * graph (M2-06) et search (M4-08).
  * /patients/:id/overview (destination de M1-06 après création) renvoie sur l'onglet 1,
  * /patients/:id, celui que l'en-tête désigne.
  */
@@ -19,7 +17,7 @@ export const PATIENT_SHELL_ROUTES: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        component: TabPlaceholderPage,
+        loadComponent: () => import('../overview').then((m) => m.loadOverviewPage()),
         data: { tab: 'overview' },
         title: $localize`:Titre d'onglet du dossier@@patientShell.overview.pageTitle:Vue d'ensemble · PsyMate`,
       },
