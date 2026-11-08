@@ -34,21 +34,22 @@ export interface EmotionOption {
 export interface ParseOptions {
   /** Vocabulaire du praticien : globales et personnalisées. */
   readonly emotions: readonly EmotionOption[];
-  /** Horloge injectée : le parseur ne lit jamais l'heure de la machine. */
+  /** Horloge injectée : le parseur ne lit jamais l'heure de la machine. Date invalide : erreur levée. */
   readonly now: Date;
   /** Locale de l'interface (« fr », « fr-FR », « en »…) : choisit la grammaire des dates. */
   readonly locale: string;
   /**
-   * Fuseau IANA du praticien (« Europe/Paris ») : sert seulement à savoir quel jour civil est
-   * « aujourd'hui ». Absent : UTC (jamais le fuseau de la machine).
+   * Fuseau IANA du praticien (« Europe/Paris »), obligatoire : il dit quel jour civil est
+   * « aujourd'hui ». Jamais lu dans l'environnement. Inconnu : UTC et INVALID_TIME_ZONE.
    */
-  readonly timeZone?: string;
+  readonly timeZone: string;
 }
 
 /**
- * Le moment interprété, au format de EntryOccurredRequest : bornes UTC ISO 8601. Les précisions
- * jour, mois, année et période ont des bornes en jours entiers UTC (« 2026-11-10T00:00:00Z »),
- * comme l'éditeur d'entrée ; `to` est exclusive (le jour qui suit la fin).
+ * Le moment interprété, exactement au format de EntryOccurredRequest du contrat (from, precision,
+ * to, label) : bornes UTC ISO 8601. Les précisions jour, mois, année et période ont des bornes en
+ * jours entiers UTC (« 2026-11-10T00:00:00Z »), comme l'éditeur d'entrée ; `to` est exclusive (le
+ * jour qui suit la fin). Sans date saisie : `now` en précision exact.
  */
 export interface ParsedOccurred {
   readonly from: string;
@@ -57,11 +58,6 @@ export interface ParsedOccurred {
   readonly to?: string;
   /** Libellé de la période (« été 2024 »), obligatoire pour la précision period. */
   readonly label?: string;
-  /**
-   * Texte de la saisie qui a donné la date (« il y a 3 jours »). Absent : aucune date saisie,
-   * `from` vaut `now` en précision exact (le serveur prendrait de même l'instant de saisie).
-   */
-  readonly expression?: string;
 }
 
 export interface ParseTarget {
@@ -81,17 +77,20 @@ export interface ParseWarningParams {
   AMBIGUOUS_EMOTION: { readonly word: string; readonly candidates: readonly string[] };
   /** Un mot suivi d'une intensité ne correspond à aucune émotion : création d'une émotion personnalisée. */
   UNKNOWN_EMOTION: { readonly word: string };
-  /** Ressenti sans intensité (le contrat l'exige). */
-  MISSING_INTENSITY: { readonly min: number; readonly max: number };
+  /**
+   * Le premier mot désigne une émotion, mais aucune intensité ne le suit : la saisie reste une note.
+   * `candidates` : le code reconnu, ou les codes possibles si le mot est ambigu.
+   */
+  POSSIBLE_FEELING: { readonly word: string; readonly candidates: readonly string[] };
   /** Intensité lue hors des bornes du contrat ; elle n'est pas retenue. */
   INTENSITY_OUT_OF_RANGE: { readonly value: number; readonly min: number; readonly max: number };
   /** `>` sans rien derrière. */
   EMPTY_TARGET: Record<string, never>;
   /** Guillemet ouvrant sans fermant : la suite est lue comme du texte littéral. */
   UNCLOSED_QUOTE: { readonly quote: string; readonly index: number };
-  /** Plusieurs dates reconnues : la première est retenue, les autres restent dans le texte. */
+  /** Deux dates qui ne concordent pas : la première est retenue, les autres restent dans le texte. */
   AMBIGUOUS_DATE: { readonly used: string; readonly ignored: readonly string[] };
-  /** Date explicite impossible (« 31 février ») : laissée dans le texte. */
+  /** Date impossible (« 31 avril ») ou hors de 1900 à l'an prochain : laissée dans le texte. */
   INVALID_DATE: { readonly expression: string };
   /** Date retenue dans le futur (après aujourd'hui dans le fuseau du praticien). */
   FUTURE_DATE: { readonly expression: string };
@@ -111,7 +110,7 @@ export const PARSE_HINTS = {
   UNKNOWN_PREFIX: 'USE_KNOWN_PREFIX',
   AMBIGUOUS_EMOTION: 'PICK_EMOTION',
   UNKNOWN_EMOTION: 'CREATE_CUSTOM_EMOTION',
-  MISSING_INTENSITY: 'ADD_INTENSITY',
+  POSSIBLE_FEELING: 'ADD_INTENSITY_FOR_FEELING',
   INTENSITY_OUT_OF_RANGE: 'USE_INTENSITY_RANGE',
   EMPTY_TARGET: 'TYPE_TARGET_AFTER_GT',
   UNCLOSED_QUOTE: 'CLOSE_QUOTE',
@@ -124,14 +123,41 @@ export const PARSE_HINTS = {
 
 export type ParseHint = (typeof PARSE_HINTS)[ParseWarningCode];
 
-/** Un avertissement : code stable, code d'aide, paramètres typés selon le code. */
+/**
+ * Avertissements bloquants : la saisie ne peut pas être enregistrée telle quelle (Entrée ouvre
+ * l'éditeur ou l'aperçu demande une correction). Les autres sont informatifs : l'enregistrement reste
+ * possible, l'aperçu les signale.
+ */
+export const BLOCKING_WARNINGS: readonly ParseWarningCode[] = [
+  'AMBIGUOUS_EMOTION',
+  'UNKNOWN_EMOTION',
+  'INTENSITY_OUT_OF_RANGE',
+  'EMPTY_TEXT',
+  'UNCLOSED_QUOTE',
+];
+
+/** Un avertissement : code stable, code d'aide, caractère bloquant, paramètres typés selon le code. */
 export type ParseWarning = {
   [C in ParseWarningCode]: {
     readonly code: C;
     readonly hint: (typeof PARSE_HINTS)[C];
+    readonly blocking: boolean;
     readonly params: ParseWarningParams[C];
   };
 }[ParseWarningCode];
+
+/** Construit un avertissement (aide et caractère bloquant déduits du code). */
+export function parseWarning<C extends ParseWarningCode>(
+  code: C,
+  params: ParseWarningParams[C],
+): ParseWarning {
+  return {
+    code,
+    hint: PARSE_HINTS[code],
+    blocking: BLOCKING_WARNINGS.includes(code),
+    params,
+  } as ParseWarning;
+}
 
 export interface ParseResult {
   readonly type: CaptureEntryType;
@@ -141,7 +167,10 @@ export interface ParseResult {
   readonly intensity?: number;
   /** Le reste de la saisie, espaces normalisés, sans les jetons consommés (titre, corps ou molécule). */
   readonly text: string;
+  /** Prêt à envoyer tel quel comme EntryOccurredRequest. */
   readonly occurred: ParsedOccurred;
+  /** Texte de la saisie qui a donné la date (« il y a 3 jours ») ; absent sans date saisie. */
+  readonly dateExpression?: string;
   /** Entrée à lier, d'après ce qui suit le dernier `>` hors guillemets. */
   readonly target?: ParseTarget;
   readonly warnings: readonly ParseWarning[];

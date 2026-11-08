@@ -1,10 +1,11 @@
 // Grammaire de la barre de commande (M6-01) : table de phrases (parse.cases.ts) et cas ciblés.
 import type { EntryType } from '../../../shared/ui';
 import type { OccurredPrecision } from '../../../shared/util';
+import { matchEmotion } from './emotion-match';
 import { CAPTURE_PREFIXES, parse } from './parse';
 import { CASE_EMOTIONS, CASE_OPTIONS, caseOptions, PARSE_CASES } from './parse.cases';
 import type { CaptureEntryType, CapturePrecision } from './parse.types';
-import { INTENSITY_MAX, INTENSITY_MIN, PARSE_HINTS } from './parse.types';
+import { BLOCKING_WARNINGS, INTENSITY_MAX, INTENSITY_MIN, PARSE_HINTS } from './parse.types';
 
 // Contrôle à la compilation : les unions locales restent des sous-ensembles des valeurs du contrat
 // déjà employées par l'application (EntryType, OccurredPrecision).
@@ -83,6 +84,7 @@ describe('parse — cas ciblés', () => {
       {
         code: 'UNKNOWN_PREFIX',
         hint: 'USE_KNOWN_PREFIX',
+        blocking: false,
         params: { prefix: '/', known: ['/evt', '/sit', '/med', '/note'] },
       },
     ]);
@@ -138,7 +140,12 @@ describe('parse — cas ciblés', () => {
     const result = at('/note “hier” et “demain');
     expect(result.text).toBe('“hier” et “demain');
     expect(result.warnings).toEqual([
-      { code: 'UNCLOSED_QUOTE', hint: 'CLOSE_QUOTE', params: { quote: '“', index: 16 } },
+      {
+        code: 'UNCLOSED_QUOTE',
+        hint: 'CLOSE_QUOTE',
+        blocking: true,
+        params: { quote: '“', index: 16 },
+      },
     ]);
   });
 
@@ -149,7 +156,7 @@ describe('parse — cas ciblés', () => {
 
   it('cible entre guillemets vides', () => {
     expect(at('/note a > «»').warnings).toEqual([
-      { code: 'EMPTY_TARGET', hint: 'TYPE_TARGET_AFTER_GT', params: {} },
+      { code: 'EMPTY_TARGET', hint: 'TYPE_TARGET_AFTER_GT', blocking: false, params: {} },
     ]);
   });
 
@@ -176,7 +183,7 @@ describe('parse — cas ciblés', () => {
     expect(at('/note 31/04/2024').warnings[0]).toMatchObject({ code: 'INVALID_DATE' });
     expect(at('/note 2024-13-01').warnings[0]).toMatchObject({ code: 'INVALID_DATE' });
     expect(at('/note 0 mars 2024').warnings[0]).toMatchObject({ code: 'INVALID_DATE' });
-    expect(at('/note le 29 février').warnings[0]).toMatchObject({ code: 'INVALID_DATE' });
+    expect(at('/note le 31 avril').warnings[0]).toMatchObject({ code: 'INVALID_DATE' });
   });
 
   it('29 février d’une année bissextile', () => {
@@ -189,7 +196,13 @@ describe('parse — cas ciblés', () => {
   });
 
   it('saison en cours dans le futur', () => {
-    expect(at('/note hiver 2026').warnings[0]).toMatchObject({ code: 'FUTURE_DATE' });
+    expect(at('/note hiver 2027').warnings[0]).toMatchObject({ code: 'FUTURE_DATE' });
+    expect(at('/note hiver 2026').occurred).toEqual({
+      from: '2025-12-01T00:00:00Z',
+      precision: 'period',
+      to: '2026-03-01T00:00:00Z',
+      label: 'hiver 2026',
+    });
   });
 
   it('jour de semaine anglais du jour même', () => {
@@ -198,5 +211,97 @@ describe('parse — cas ciblés', () => {
 
   it('JJ/MM avec amorce dans l’année en cours', () => {
     expect(at('/note le 1/2').occurred.from).toBe('2026-02-01T00:00:00Z');
+  });
+
+  it('horloge invalide : erreur de programmation', () => {
+    expect(() => at('/note hier', { now: new Date('invalide') })).toThrow(RangeError);
+  });
+
+  it('avertissements bloquants et informatifs', () => {
+    expect([...BLOCKING_WARNINGS].sort()).toEqual([
+      'AMBIGUOUS_EMOTION',
+      'EMPTY_TEXT',
+      'INTENSITY_OUT_OF_RANGE',
+      'UNCLOSED_QUOTE',
+      'UNKNOWN_EMOTION',
+    ]);
+    const all = PARSE_CASES.flatMap((parseCase) => parseCase.expected.warnings);
+    for (const warning of all) {
+      expect(warning.blocking).toBe(BLOCKING_WARNINGS.includes(warning.code));
+    }
+    expect(at('stress 7').warnings[0].blocking).toBe(true);
+    expect(at('anx dormi').warnings[0].blocking).toBe(false);
+  });
+
+  it('occurred est exactement un EntryOccurredRequest', () => {
+    const keys = PARSE_CASES.map((parseCase) =>
+      Object.keys(parse(parseCase.input, caseOptions(parseCase)).occurred),
+    );
+    for (const list of keys) {
+      for (const key of list) expect(['from', 'precision', 'to', 'label'].includes(key)).toBe(true);
+    }
+  });
+
+  it('dates hors bornes : jamais d’instant illisible', () => {
+    for (const input of [
+      '/note il y a 99999999999999 jours',
+      '/note il y a 99999999999999 h',
+      '/note il y a 99999999999999 mois',
+      '/note hiver 1900',
+    ]) {
+      const result = at(input);
+      expect(result.occurred.precision).toBe('exact');
+      expect(result.warnings[0]).toMatchObject({ code: 'INVALID_DATE' });
+    }
+  });
+
+  it('jour suivant ou prochain le jour même : dans 7 jours', () => {
+    expect(at('/note mercredi prochain').occurred.from).toBe('2026-11-18T00:00:00Z');
+    expect(at('/note lundi suivant').occurred.from).toBe('2026-11-16T00:00:00Z');
+    expect(at('/note next wednesday', { locale: 'en' }).occurred.from).toBe('2026-11-18T00:00:00Z');
+    expect(at('/note next week', { locale: 'en' }).occurred.precision).toBe('exact');
+  });
+
+  it('habitudes en anglais : pas de date', () => {
+    expect(at('/note every monday', { locale: 'en' }).dateExpression).toBeUndefined();
+  });
+
+  it('jour de semaine et date avec année qui concordent', () => {
+    expect(at('/note mardi 10 novembre 2026').dateExpression).toBe('mardi 10 novembre 2026');
+    expect(at('/note mardi 31 avril').warnings[0]).toMatchObject({ code: 'INVALID_DATE' });
+  });
+
+  it('anglais : mois avant le jour, avec année', () => {
+    expect(at('/note march 3 2024', { locale: 'en' }).occurred.from).toBe('2024-03-03T00:00:00Z');
+  });
+
+  it('préfixe ambigu et nombre hors bornes : note', () => {
+    expect(at('tri 12').type).toBe('note');
+    expect(at('tri 12').warnings[0].code).toBe('POSSIBLE_FEELING');
+  });
+
+  it('émotion suivie d’un nombre avec unité : note', () => {
+    expect(at('anx 8 jours').type).toBe('note');
+    expect(at('anx 8').type).toBe('feeling');
+  });
+
+  it('mot vide anglais suivi d’un nombre : note', () => {
+    expect(at('the 5', { locale: 'en' }).type).toBe('note');
+  });
+
+  it('cible numérique : la cible précédente n’est pas reprise', () => {
+    expect(at('/note a > b > 14/9')).toMatchObject({ text: 'a > b > 14/9' });
+    expect(at('/note a > b > 14/9').target).toBeUndefined();
+  });
+
+  it('aucun mot : aucune émotion', () => {
+    expect(matchEmotion([], CASE_EMOTIONS)).toEqual({ kind: 'none' });
+  });
+
+  it('langue de grammaire : sous-étiquette primaire', () => {
+    expect(at('/note yesterday', { locale: 'en_US' }).dateExpression).toBe('yesterday');
+    expect(at('/note yesterday', { locale: 'eng' }).dateExpression).toBe('yesterday');
+    expect(at('/note hier', { locale: 'enfr' }).dateExpression).toBe('hier');
+    expect(at('/note hier', { locale: '' }).dateExpression).toBe('hier');
   });
 });

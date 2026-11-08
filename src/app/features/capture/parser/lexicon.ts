@@ -16,6 +16,11 @@ export interface DateLexicon {
   readonly weekdays: readonly string[];
   /** Mot facultatif après un jour de semaine (« lundi dernier »). */
   readonly weekdayAfter: readonly string[];
+  /** Mot qui désigne le prochain jour de ce nom, avant (« next monday ») ou après (« lundi prochain »). */
+  readonly weekdayNextBefore: readonly string[];
+  readonly weekdayNextAfter: readonly string[];
+  /** Mot qui fait d'un jour de semaine une habitude, pas une date (« chaque lundi »). */
+  readonly weekdayRepeat: readonly string[];
   /** Janvier à décembre. */
   readonly months: readonly string[];
   readonly seasons: ReadonlyMap<string, SeasonStart>;
@@ -29,6 +34,15 @@ export interface DateLexicon {
   readonly units: ReadonlyMap<string, TimeUnit>;
   /** Dates numériques JJ/MM[/AAAA] (ordre français ; ambiguës en anglais, donc absentes). */
   readonly slashDates: boolean;
+  /** Mois avant le jour (« march 3 », « march 3rd ») en plus de « 3 march ». */
+  readonly monthFirst: boolean;
+  /** Unités de mesure : un nombre suivi de l'une d'elles n'est jamais une intensité. */
+  readonly measures: readonly string[];
+  /**
+   * Mots grammaticaux ou courants qui ne sont jamais lus comme préfixe d'émotion (« sur » n'est pas
+   * « surprise », « con » n'est pas « confiance ») ; une correspondance exacte reste possible.
+   */
+  readonly stopWords: readonly string[];
 }
 
 function units(entries: Record<TimeUnit, readonly string[]>): ReadonlyMap<string, TimeUnit> {
@@ -48,6 +62,9 @@ const FR: DateLexicon = {
   ],
   weekdays: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],
   weekdayAfter: ['dernier', 'passe'],
+  weekdayNextBefore: [],
+  weekdayNextAfter: ['prochain', 'suivant'],
+  weekdayRepeat: ['chaque', 'tous', 'les'],
   months: [
     'janvier',
     'fevrier',
@@ -93,6 +110,75 @@ const FR: DateLexicon = {
     year: ['an', 'ans', 'annee', 'annees'],
   }),
   slashDates: true,
+  monthFirst: false,
+  measures: [
+    'fois',
+    'mg',
+    'g',
+    'kg',
+    'ml',
+    'cl',
+    'l',
+    'cp',
+    'cps',
+    'comprime',
+    'comprimes',
+    'gelule',
+    'gelules',
+    'goutte',
+    'gouttes',
+    'nuit',
+    'nuits',
+    'km',
+    'm',
+    'cm',
+    'kilos',
+    'euros',
+    '%',
+  ],
+  stopWords: [
+    'sur',
+    'sous',
+    'des',
+    'les',
+    'par',
+    'pas',
+    'pour',
+    'son',
+    'ses',
+    'mon',
+    'mes',
+    'ton',
+    'tes',
+    'nos',
+    'vos',
+    'aux',
+    'une',
+    'est',
+    'ont',
+    'qui',
+    'que',
+    'mal',
+    'con',
+    'cul',
+    'dis',
+    'dit',
+    'peu',
+    'col',
+    'cet',
+    'ces',
+    'car',
+    'avec',
+    'dans',
+    'sans',
+    'plus',
+    'tres',
+    'tout',
+    'elle',
+    'mais',
+    'puis',
+    'comme',
+  ],
 };
 
 const EN: DateLexicon = {
@@ -104,6 +190,9 @@ const EN: DateLexicon = {
   ],
   weekdays: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
   weekdayAfter: [],
+  weekdayNextBefore: ['next'],
+  weekdayNextAfter: [],
+  weekdayRepeat: ['every', 'each'],
   months: [
     'january',
     'february',
@@ -151,6 +240,67 @@ const EN: DateLexicon = {
     year: ['y', 'yr', 'yrs', 'year', 'years'],
   }),
   slashDates: false,
+  monthFirst: true,
+  measures: [
+    'times',
+    'mg',
+    'g',
+    'kg',
+    'lb',
+    'lbs',
+    'ml',
+    'pill',
+    'pills',
+    'tablet',
+    'tablets',
+    'drop',
+    'drops',
+    'night',
+    'nights',
+    'km',
+    'miles',
+    '%',
+  ],
+  stopWords: [
+    'the',
+    'and',
+    'for',
+    'his',
+    'her',
+    'was',
+    'not',
+    'per',
+    'con',
+    'dis',
+    'ant',
+    'are',
+    'but',
+    'can',
+    'had',
+    'has',
+    'she',
+    'you',
+    'all',
+    'any',
+  ],
 };
 
 export const LEXICONS: Readonly<Record<GrammarLanguage, DateLexicon>> = { fr: FR, en: EN };
+
+const ALL = Object.values(LEXICONS);
+
+/** Unités de durée et de mesure des deux langues : « 3 semaines », « 4 heures », « 50 mg », « 3 fois ». */
+const QUANTITY_UNITS: ReadonlySet<string> = new Set(
+  ALL.flatMap((lexicon) => [...lexicon.units.keys(), ...lexicon.measures]),
+);
+
+/** Mots vides des deux langues : le vocabulaire d'émotions est comparé dans les deux langues. */
+const STOP_WORDS: ReadonlySet<string> = new Set(ALL.flatMap((lexicon) => lexicon.stopWords));
+
+export function isQuantityUnit(word: string): boolean {
+  return QUANTITY_UNITS.has(word);
+}
+
+export function isStopWord(word: string): boolean {
+  return STOP_WORDS.has(word);
+}

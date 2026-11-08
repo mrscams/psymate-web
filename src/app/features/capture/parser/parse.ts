@@ -4,30 +4,35 @@
 // Ordre d'analyse :
 // 1. Guillemets « … », "…", “…” : texte littéral, jamais interprété (ni préfixe, ni émotion, ni date,
 //    ni `>`). Guillemet non fermé → UNCLOSED_QUOTE, la suite est littérale. Les guillemets restent
-//    dans le texte (une citation du patient garde ses guillemets).
+//    dans le texte (une citation du patient garde ses guillemets), sauf quand tout le texte est un
+//    seul passage cité.
 // 2. `>` : tout ce qui suit le dernier `>` hors guillemets est la cible du lien (target.query, sans
-//    guillemets) ; `>` vide → EMPTY_TARGET. Les `>` précédents restent dans le texte.
+//    guillemets) ; `>` vide → EMPTY_TARGET. Les `>` précédents restent dans le texte, de même qu'un
+//    `>` suivi d'un nombre seul (« tension > 14 » n'est pas un lien).
 // 3. Préfixe de type en tête : /evt, /sit, /med, /note (et leurs formes longues, voir PREFIXES).
 //    Préfixe inconnu → UNKNOWN_PREFIX, il est retiré et la saisie est lue comme sans préfixe.
-// 4. Sans préfixe, l'émotion en tête (emotion-match.ts) fait un ressenti, suivi de son intensité
-//    facultative (« 8 » ou « 8/10 ») ; préfixe d'émotion ambigu → ressenti sans émotion,
-//    AMBIGUOUS_EMOTION ; mot inconnu suivi d'une intensité → ressenti sans émotion, UNKNOWN_EMOTION
-//    (la barre propose de créer l'émotion personnalisée) ; sinon note.
+// 4. Sans préfixe, un ressenti a la forme B5 « émotion intensité » (« anx 8 ») : le mot d'émotion
+//    (emotion-match.ts) suivi aussitôt d'un nombre, sans unité derrière (« 3 semaines », « 50 mg »,
+//    « 3 fois » ne sont jamais des intensités).
+//    - émotion reconnue + nombre de 0 à 10 → ressenti ; nombre hors bornes → ressenti sans
+//      intensité, INTENSITY_OUT_OF_RANGE ;
+//    - préfixe ambigu + nombre de 0 à 10 → ressenti sans émotion, AMBIGUOUS_EMOTION ;
+//    - mot inconnu (ni mot vide, ni nombre) + nombre de 0 à 10 → ressenti sans émotion,
+//      UNKNOWN_EMOTION (la barre propose de créer l'émotion personnalisée) ;
+//    - émotion reconnue ou ambiguë sans intensité valable → note, POSSIBLE_FEELING (informatif) ;
+//    - sinon → note.
 //    Intensité : bornes du contrat, 0 à 10 (EntryFeelingRequest.intensity), et non 1 à 10 comme le
-//    disait la tâche : le contrat l'emporte, et l'éditeur d'entrée accepte déjà 0. Hors bornes →
-//    INTENSITY_OUT_OF_RANGE, le nombre est consommé mais pas retenu ; absente → MISSING_INTENSITY.
+//    disait la tâche : le contrat l'emporte, et l'éditeur d'entrée accepte déjà 0.
 // 5. Date (relative-date.ts), n'importe où hors guillemets et hors cible ; la première reconnue est
 //    retenue, les suivantes restent dans le texte (AMBIGUOUS_DATE). Sans date : `now`, précision
 //    exact (la plus fine du contrat).
 // 6. Texte : le reste, espaces normalisés.
 
-import { civilDay } from './calendar';
-import type { CivilDate } from './calendar';
+import { civilDay, isValidTimeZone } from './calendar';
 import { matchEmotion } from './emotion-match';
-import type { EmotionMatch } from './emotion-match';
-import { LEXICONS } from './lexicon';
+import { isQuantityUnit, isStopWord, LEXICONS } from './lexicon';
 import { foldDateWord, foldWord, grammarLanguage, stripPunctuation } from './normalize';
-import { INTENSITY_MAX, INTENSITY_MIN, PARSE_HINTS } from './parse.types';
+import { INTENSITY_MAX, INTENSITY_MIN, parseWarning } from './parse.types';
 import type {
   CaptureEntryType,
   ParsedOccurred,
@@ -35,8 +40,6 @@ import type {
   ParseResult,
   ParseTarget,
   ParseWarning,
-  ParseWarningCode,
-  ParseWarningParams,
 } from './parse.types';
 import { matchDateAt } from './relative-date';
 import type { DateContext, DateWord, ResolvedDate } from './relative-date';
@@ -77,28 +80,21 @@ const TEXT_REQUIRED: ReadonlySet<CaptureEntryType> = new Set([
 
 const INTENSITY = /^(\d{1,3})(?:\/10)?$/;
 const LETTER = /\p{L}/u;
+/** Une cible faite seulement de chiffres (« > 14 », « > 14/9 ») est une comparaison, pas un lien. */
+const NUMERIC_TARGET = /^[\d\s.,/%+-]+$/;
 
 /** Longueur maximale d'un libellé d'émotion reconnu en tête (« tristesse profonde »). */
 const EMOTION_WORDS = 4;
 
-function warning<C extends ParseWarningCode>(code: C, params: ParseWarningParams[C]): ParseWarning {
-  return { code, hint: PARSE_HINTS[code], params } as ParseWarning;
-}
-
-function today(options: ParseOptions, warnings: ParseWarning[]): CivilDate {
-  const timeZone = options.timeZone ?? 'UTC';
-  try {
-    return civilDay(options.now, timeZone);
-  } catch {
-    warnings.push(warning('INVALID_TIME_ZONE', { timeZone }));
-    return civilDay(options.now, 'UTC');
-  }
-}
-
-function readIntensity(token: Token | undefined): number | undefined {
+/** Nombre posé juste après le mot d'émotion, sans unité derrière lui. */
+function readIntensity(tokens: readonly Token[], at: number): number | undefined {
+  const token = tokens[at];
   if (!token || token.kind !== 'word') return undefined;
   const match = INTENSITY.exec(stripPunctuation(token.raw));
-  return match ? Number(match[1]) : undefined;
+  if (!match) return undefined;
+  const next = tokens[at + 1];
+  if (next && next.kind === 'word' && isQuantityUnit(foldWord(next.raw))) return undefined;
+  return Number(match[1]);
 }
 
 /** Mots consécutifs à partir de `start`, sous forme de comparaison (pour l'émotion en tête). */
@@ -157,7 +153,7 @@ function findDates(
       }
       const words = run.slice(start, start + match.length);
       const expression = expressionOf(words);
-      if (match.kind === 'invalid') warnings.push(warning('INVALID_DATE', { expression }));
+      if (match.kind === 'invalid') warnings.push(parseWarning('INVALID_DATE', { expression }));
       else found.push({ date: match, expression, indices: words.map((word) => word.index) });
       start += match.length;
     }
@@ -171,6 +167,8 @@ interface Typed {
   readonly intensity?: number;
 }
 
+const NOTE: Typed = { type: 'note' };
+
 /** Étape 4 : émotion et intensité en tête d'une saisie sans préfixe. */
 function readFeeling(
   tokens: readonly Token[],
@@ -180,53 +178,67 @@ function readFeeling(
   warnings: ParseWarning[],
 ): Typed {
   const words = leadingWords(tokens, start);
-  const match: EmotionMatch = matchEmotion(words, options.emotions);
-  let length = 1;
-  let emotionCode: string | undefined;
-  if (match.kind === 'match') {
-    emotionCode = match.code;
-    length = match.words;
-  } else if (match.kind === 'ambiguous') {
-    const word = stripPunctuation(tokens[start].raw);
-    warnings.push(warning('AMBIGUOUS_EMOTION', { word, candidates: match.candidates }));
-  } else {
-    const word = words.length ? stripPunctuation(tokens[start].raw) : '';
-    if (!LETTER.test(word) || readIntensity(tokens[start + 1]) === undefined)
-      return { type: 'note' };
-    warnings.push(warning('UNKNOWN_EMOTION', { word }));
-  }
-  for (let i = start; i < start + length; i++) consumed.add(i);
-
+  if (!words.length) return NOTE;
+  const match = matchEmotion(words, options.emotions);
+  const length = match.kind === 'match' ? match.words : 1;
   const at = start + length;
-  const value = readIntensity(tokens[at]);
-  if (value === undefined) {
-    warnings.push(warning('MISSING_INTENSITY', { min: INTENSITY_MIN, max: INTENSITY_MAX }));
-    return { type: 'feeling', emotionCode };
+  const value = readIntensity(tokens, at);
+  const inRange = value !== undefined && value <= INTENSITY_MAX;
+  const word = tokens
+    .slice(start, at)
+    .map((token) => stripPunctuation(token.raw))
+    .join(' ');
+  const take = (): void => {
+    for (let i = start; i <= at; i++) consumed.add(i);
+  };
+
+  if (match.kind === 'none') {
+    if (!inRange || !LETTER.test(word) || isStopWord(words[0])) return NOTE;
+    take();
+    warnings.push(parseWarning('UNKNOWN_EMOTION', { word }));
+    return { type: 'feeling', intensity: value };
   }
-  consumed.add(at);
-  if (value > INTENSITY_MAX) {
-    warnings.push(
-      warning('INTENSITY_OUT_OF_RANGE', { value, min: INTENSITY_MIN, max: INTENSITY_MAX }),
-    );
-    return { type: 'feeling', emotionCode };
+  const candidates = match.kind === 'match' ? [match.code] : match.candidates;
+  if (match.kind === 'ambiguous' ? !inRange : value === undefined) {
+    warnings.push(parseWarning('POSSIBLE_FEELING', { word, candidates }));
+    return NOTE;
   }
-  return { type: 'feeling', emotionCode, intensity: value };
+  take();
+  if (match.kind === 'ambiguous') {
+    warnings.push(parseWarning('AMBIGUOUS_EMOTION', { word, candidates }));
+    return { type: 'feeling', intensity: value };
+  }
+  if (!inRange) {
+    const range = { value: value as number, min: INTENSITY_MIN, max: INTENSITY_MAX };
+    warnings.push(parseWarning('INTENSITY_OUT_OF_RANGE', range));
+    return { type: 'feeling', emotionCode: match.code };
+  }
+  return { type: 'feeling', emotionCode: match.code, intensity: value };
 }
 
+/**
+ * @throws RangeError si `options.now` n'est pas une date valide (erreur de programmation : l'horloge
+ * est fournie par l'appelant).
+ */
 export function parse(input: string, options: ParseOptions): ParseResult {
+  if (Number.isNaN(options.now.getTime())) {
+    throw new RangeError('parse : options.now doit être une date valide.');
+  }
   const warnings: ParseWarning[] = [];
   const { tokens: all, unclosed } = tokenize(input);
-  if (unclosed) warnings.push(warning('UNCLOSED_QUOTE', unclosed));
+  if (unclosed) warnings.push(parseWarning('UNCLOSED_QUOTE', unclosed));
 
   // 2. Cible du lien : après le dernier `>` hors guillemets.
   let tokens = all;
   let target: ParseTarget | undefined;
   const gt = all.map((token) => token.kind).lastIndexOf('gt');
   if (gt >= 0) {
-    tokens = all.slice(0, gt);
     const query = render(all.slice(gt + 1), () => true, true);
-    if (query) target = { query };
-    else warnings.push(warning('EMPTY_TARGET', {}));
+    if (!NUMERIC_TARGET.test(query)) {
+      tokens = all.slice(0, gt);
+      if (query) target = { query };
+      else warnings.push(parseWarning('EMPTY_TARGET', {}));
+    }
   }
 
   // 3. Préfixe de type.
@@ -240,7 +252,7 @@ export function parse(input: string, options: ParseOptions): ParseResult {
     prefixed = PREFIXES.get(foldWord(first.raw.slice(1)));
     if (!prefixed) {
       const known = CAPTURE_PREFIXES.map((entry) => entry.prefix);
-      warnings.push(warning('UNKNOWN_PREFIX', { prefix: stripPunctuation(first.raw), known }));
+      warnings.push(parseWarning('UNKNOWN_PREFIX', { prefix: stripPunctuation(first.raw), known }));
     }
   }
 
@@ -249,30 +261,39 @@ export function parse(input: string, options: ParseOptions): ParseResult {
     ? { type: prefixed }
     : readFeeling(tokens, start, options, consumed, warnings);
 
-  // 5. Date.
+  // 5. Date, dans le jour civil du fuseau injecté (UTC s'il est inconnu).
+  const zoneKnown = isValidTimeZone(options.timeZone);
+  if (!zoneKnown) warnings.push(parseWarning('INVALID_TIME_ZONE', { timeZone: options.timeZone }));
   const context: DateContext = {
     now: options.now,
-    today: today(options, warnings),
+    today: civilDay(options.now, zoneKnown ? options.timeZone : 'UTC'),
     lexicon: LEXICONS[grammarLanguage(options.locale)],
   };
   const dates = findDates(tokens, consumed, context, warnings);
   let occurred: ParsedOccurred = { from: options.now.toISOString(), precision: 'exact' };
+  let dateExpression: string | undefined;
   if (dates.length) {
     const [used, ...ignored] = dates;
     for (const index of used.indices) consumed.add(index);
     const { from, precision, to, label } = used.date;
-    occurred = { from, precision, expression: used.expression };
-    if (to !== undefined) occurred = { ...occurred, to, label };
+    occurred = to !== undefined ? { from, precision, to, label } : { from, precision };
+    dateExpression = used.expression;
     if (ignored.length) {
       const others = ignored.map((date) => date.expression);
-      warnings.push(warning('AMBIGUOUS_DATE', { used: used.expression, ignored: others }));
+      warnings.push(parseWarning('AMBIGUOUS_DATE', { used: used.expression, ignored: others }));
     }
-    if (used.date.future) warnings.push(warning('FUTURE_DATE', { expression: used.expression }));
+    if (used.date.future) {
+      warnings.push(parseWarning('FUTURE_DATE', { expression: used.expression }));
+    }
   }
 
-  // 6. Texte.
-  const text = render(tokens, (index) => !consumed.has(index));
-  if (!text && TEXT_REQUIRED.has(typed.type)) warnings.push(warning('EMPTY_TEXT', {}));
+  // 6. Texte ; un passage cité qui forme tout le texte perd ses guillemets.
+  const kept = tokens.filter((_, index) => !consumed.has(index));
+  const text =
+    kept.length === 1 && kept[0].kind === 'quote' && kept[0].closed
+      ? kept[0].content.trim()
+      : render(tokens, (index) => !consumed.has(index));
+  if (!text && TEXT_REQUIRED.has(typed.type)) warnings.push(parseWarning('EMPTY_TEXT', {}));
 
   return {
     type: typed.type,
@@ -280,6 +301,7 @@ export function parse(input: string, options: ParseOptions): ParseResult {
     ...(typed.intensity !== undefined ? { intensity: typed.intensity } : {}),
     text,
     occurred,
+    ...(dateExpression !== undefined ? { dateExpression } : {}),
     ...(target ? { target } : {}),
     warnings,
   };

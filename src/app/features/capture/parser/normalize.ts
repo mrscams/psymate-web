@@ -10,6 +10,7 @@ const APOSTROPHES = /[’ʼ`´]/g;
 const EDGE_PUNCTUATION = /^[.,;:!?()[\]{}…»”]+|[.,;:!?()[\]{}…»”]+$/g;
 const ELISION = /^[ld]'/;
 const SPACES = /\s+/g;
+const ENGLISH: ReadonlySet<string> = new Set(['en', 'eng']);
 
 /** Minuscules, sans accents, apostrophes typographiques ramenées à « ' ». */
 export function fold(value: string): string {
@@ -45,7 +46,8 @@ export function stripElision(raw: string): string {
   return raw.replace(APOSTROPHES, "'").replace(/^[lLdD]'/, '');
 }
 
-/** « fr », « fr-FR », « de » → fr ; « en », « en-GB » → en. */
+/** Sous-étiquette de langue : « en », « en-GB », « eng » → en ; « fr », « fr-FR », « de », « enfr » → fr. */
 export function grammarLanguage(locale: string): GrammarLanguage {
-  return fold(locale.trim()).startsWith('en') ? 'en' : 'fr';
+  const language = fold(locale.trim()).split(/[-_]/)[0];
+  return ENGLISH.has(language) ? 'en' : 'fr';
 }

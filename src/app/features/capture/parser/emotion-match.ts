@@ -5,9 +5,11 @@
 // 1. Correspondance exacte, du plus long libellé au plus court : les premiers mots égalent un code ou
 //    un libellé (« tristesse profonde » avant « tristesse »). Une seule émotion → reconnue.
 // 2. Sinon, préfixe du premier mot (3 lettres au moins, pour ne pas lire « a » ou « en » comme une
-//    émotion) : une seule émotion dont un code ou un libellé commence par ce mot → reconnue.
+//    émotion, et jamais un mot vide de lexicon.ts : « sur » n'est pas « surprise ») : une seule
+//    émotion dont un code ou un libellé commence par ce mot → reconnue.
 // 3. Plusieurs émotions à l'étape 1 ou 2 → ambiguë (candidats = codes). Aucune → rien.
 
+import { isStopWord } from './lexicon';
 import { foldLabel } from './normalize';
 import type { EmotionOption } from './parse.types';
 
@@ -59,7 +61,7 @@ export function matchEmotion(
     if (result.kind !== 'none') return result;
   }
   const prefix = words[0];
-  if (prefix.length < MIN_EMOTION_PREFIX) return { kind: 'none' };
+  if (prefix.length < MIN_EMOTION_PREFIX || isStopWord(prefix)) return { kind: 'none' };
   const starts = all.filter((emotion) => emotion.keys.some((key) => key.startsWith(prefix)));
   return decide(
     starts.map((emotion) => emotion.code),

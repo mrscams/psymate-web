@@ -11,6 +11,8 @@ export interface Token {
   readonly content: string;
   /** Un espace précédait le jeton dans la saisie. */
   readonly spaceBefore: boolean;
+  /** Faux seulement pour un passage cité sans guillemet fermant. */
+  readonly closed: boolean;
 }
 
 export interface UnclosedQuote {
@@ -41,7 +43,8 @@ export function tokenize(input: string): Tokenized {
   let space = false;
 
   const flush = (): void => {
-    if (word) tokens.push({ kind: 'word', raw: word, content: word, spaceBefore: wordSpace });
+    if (word)
+      tokens.push({ kind: 'word', raw: word, content: word, spaceBefore: wordSpace, closed: true });
     word = '';
   };
 
@@ -65,6 +68,7 @@ export function tokenize(input: string): Tokenized {
         raw: input.slice(i, stop),
         content: input.slice(i + 1, end < 0 ? input.length : end),
         spaceBefore: space,
+        closed: end >= 0,
       });
       space = false;
       i = stop;
@@ -72,7 +76,7 @@ export function tokenize(input: string): Tokenized {
     }
     if (char === '>') {
       flush();
-      tokens.push({ kind: 'gt', raw: char, content: char, spaceBefore: space });
+      tokens.push({ kind: 'gt', raw: char, content: char, spaceBefore: space, closed: true });
       space = false;
       i++;
       continue;

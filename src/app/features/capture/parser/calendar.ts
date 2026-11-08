@@ -10,9 +10,19 @@ export interface CivilDate {
 
 const MS_PER_DAY = 86_400_000;
 
+/** Le fuseau IANA est-il connu de Intl ? */
+export function isValidTimeZone(timeZone: string): boolean {
+  try {
+    new Intl.DateTimeFormat('en-US', { timeZone });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Le jour civil de `now` dans le fuseau IANA donné. Intl.DateTimeFormat reçoit une locale et un fuseau
- * explicites : le résultat ne dépend pas de l'environnement. Lève RangeError si le fuseau est inconnu.
+ * explicites : le résultat ne dépend pas de l'environnement. Le fuseau doit être valide (isValidTimeZone).
  */
 export function civilDay(now: Date, timeZone: string): CivilDate {
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -30,8 +40,11 @@ function fromUtc(date: Date): CivilDate {
   return { year: date.getUTCFullYear(), month: date.getUTCMonth() + 1, day: date.getUTCDate() };
 }
 
+/** Minuit UTC du jour civil. setUTCFullYear plutôt que Date.UTC, qui lit 0 à 99 comme 1900 à 1999. */
 function utc(date: CivilDate): Date {
-  return new Date(Date.UTC(date.year, date.month - 1, date.day));
+  const value = new Date(0);
+  value.setUTCFullYear(date.year, date.month - 1, date.day);
+  return value;
 }
 
 export function addDays(date: CivilDate, days: number): CivilDate {
@@ -50,7 +63,7 @@ export function weekday(date: CivilDate): number {
 }
 
 export function daysInMonth(year: number, month: number): number {
-  return new Date(Date.UTC(year, month, 0)).getUTCDate();
+  return utc({ year, month: month + 1, day: 0 }).getUTCDate();
 }
 
 /** Clé numérique ordonnée (AAAAMMJJ) pour comparer deux dates civiles. */

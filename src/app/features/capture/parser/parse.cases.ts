@@ -4,16 +4,8 @@
 // Horloge fixe : mercredi 11 novembre 2026, 09:30 UTC, soit 10:30 à Paris (fuseau injecté). Aucun cas
 // ne dépend de l'heure ni du fuseau de la machine.
 
-import { PARSE_HINTS } from './parse.types';
-import type {
-  EmotionOption,
-  ParsedOccurred,
-  ParseOptions,
-  ParseResult,
-  ParseWarning,
-  ParseWarningCode,
-  ParseWarningParams,
-} from './parse.types';
+import { parseWarning as warn } from './parse.types';
+import type { EmotionOption, ParsedOccurred, ParseOptions, ParseResult } from './parse.types';
 
 /** Les 29 émotions globales (E5.2) et trois émotions personnalisées, dans l'ordre de l'API. */
 export const CASE_EMOTIONS: readonly EmotionOption[] = [
@@ -77,38 +69,37 @@ export function caseOptions(parseCase: ParseCase): ParseOptions {
   return { ...CASE_OPTIONS, ...parseCase.options };
 }
 
-function warn<C extends ParseWarningCode>(code: C, params: ParseWarningParams[C]): ParseWarning {
-  return { code, hint: PARSE_HINTS[code], params } as ParseWarning;
-}
-
 const NOW: ParsedOccurred = { from: '2026-11-11T09:30:00.000Z', precision: 'exact' };
 const KNOWN_PREFIXES = ['/evt', '/sit', '/med', '/note'];
-const MISSING_INTENSITY = warn('MISSING_INTENSITY', { min: 0, max: 10 });
 const EMPTY_TEXT = warn('EMPTY_TEXT', {});
 
-function day(date: string, expression: string): ParsedOccurred {
-  return { from: `${date}T00:00:00Z`, precision: 'day', expression };
+type Dated = Pick<ParseResult, 'occurred' | 'dateExpression'>;
+
+function day(date: string, dateExpression: string): Dated {
+  return { occurred: { from: `${date}T00:00:00Z`, precision: 'day' }, dateExpression };
 }
 
-function month(date: string, expression: string): ParsedOccurred {
-  return { from: `${date}-01T00:00:00Z`, precision: 'month', expression };
+function month(date: string, dateExpression: string): Dated {
+  return { occurred: { from: `${date}-01T00:00:00Z`, precision: 'month' }, dateExpression };
 }
 
-function year(value: number, expression: string): ParsedOccurred {
-  return { from: `${value}-01-01T00:00:00Z`, precision: 'year', expression };
+function year(value: number, dateExpression: string): Dated {
+  return { occurred: { from: `${value}-01-01T00:00:00Z`, precision: 'year' }, dateExpression };
 }
 
-function exact(from: string, expression: string): ParsedOccurred {
-  return { from, precision: 'exact', expression };
+function exact(from: string, dateExpression: string): Dated {
+  return { occurred: { from, precision: 'exact' }, dateExpression };
 }
 
-function period(from: string, to: string, label: string, expression: string): ParsedOccurred {
+function period(from: string, to: string, label: string, dateExpression: string): Dated {
   return {
-    from: `${from}T00:00:00Z`,
-    precision: 'period',
-    to: `${to}T00:00:00Z`,
-    label,
-    expression,
+    occurred: {
+      from: `${from}T00:00:00Z`,
+      precision: 'period',
+      to: `${to}T00:00:00Z`,
+      label,
+    },
+    dateExpression,
   };
 }
 
@@ -145,7 +136,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'event',
       text: 'entretien avec le manager',
-      occurred: day('2026-11-10', 'mardi'),
+      ...day('2026-11-10', 'mardi'),
     }),
   },
   {
@@ -154,7 +145,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'situation',
       text: 'surcharge au travail',
-      occurred: month('2026-03', 'depuis mars'),
+      ...month('2026-03', 'depuis mars'),
     }),
   },
   {
@@ -195,16 +186,18 @@ export const PARSE_CASES: readonly ParseCase[] = [
     }),
   },
   {
-    rule: 'émotion : préfixe ambigu (deux globales, code et libellé)',
-    input: 'dis 4 au travail',
+    rule: 'émotion : préfixe ambigu sans intensité → note, ressenti possible',
+    input: 'tri pleure souvent',
     expected: result({
-      type: 'feeling',
-      intensity: 4,
-      text: 'au travail',
-      warnings: [
-        warn('AMBIGUOUS_EMOTION', { word: 'dis', candidates: ['distraction', 'disgust'] }),
-      ],
+      type: 'note',
+      text: 'tri pleure souvent',
+      warnings: [warn('POSSIBLE_FEELING', { word: 'tri', candidates: ['sadness', 'c_1a2b3c4d'] })],
     }),
+  },
+  {
+    rule: 'mot vide « dis » : jamais un préfixe (distraction, dégoût)',
+    input: 'dis 4 fois au travail',
+    expected: result({ type: 'note', text: 'dis 4 fois au travail' }),
   },
   {
     rule: 'émotion : l’exact gagne sur le préfixe (tristesse / tristesse profonde)',
@@ -218,7 +211,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
       type: 'feeling',
       emotionCode: 'c_1a2b3c4d',
       intensity: 7,
-      occurred: day('2026-11-10', 'depuis hier'),
+      ...day('2026-11-10', 'depuis hier'),
     }),
   },
   {
@@ -247,14 +240,78 @@ export const PARSE_CASES: readonly ParseCase[] = [
     }),
   },
   {
-    rule: 'ressenti sans intensité',
+    rule: 'émotion sans intensité → note, ressenti possible',
     input: "anx n'a pas dormi",
     expected: result({
-      type: 'feeling',
-      emotionCode: 'anxiety',
-      text: "n'a pas dormi",
-      warnings: [MISSING_INTENSITY],
+      type: 'note',
+      text: "anx n'a pas dormi",
+      warnings: [warn('POSSIBLE_FEELING', { word: 'anx', candidates: ['anxiety'] })],
     }),
+  },
+
+  // Faux ressentis (revue M6-01) : mots vides, nombres suivis d'une unité, intensité absente.
+  {
+    rule: '« sur » n’est pas « surprise », « 3 semaines » n’est pas une intensité',
+    input: 'sur 3 semaines, a perdu 4 kg',
+    expected: result({ type: 'note', text: 'sur 3 semaines, a perdu 4 kg' }),
+  },
+  {
+    rule: 'libellé exact suivi d’une durée → note, ressenti possible',
+    input: 'Vide 3 jours sans manger',
+    expected: result({
+      type: 'note',
+      text: 'Vide 3 jours sans manger',
+      warnings: [warn('POSSIBLE_FEELING', { word: 'Vide', candidates: ['emptiness'] })],
+    }),
+  },
+  {
+    rule: '« con 5 » : mot vide, ni confiance ni émotion à créer',
+    input: 'con 5',
+    expected: result({ type: 'note', text: 'con 5' }),
+  },
+  {
+    rule: '« cul 4 » : mot vide, pas culpabilité',
+    input: 'cul 4',
+    expected: result({ type: 'note', text: 'cul 4' }),
+  },
+  {
+    rule: '« sur la route » : note',
+    input: 'sur la route du travail',
+    expected: result({ type: 'note', text: 'sur la route du travail' }),
+  },
+  {
+    rule: '« Calme et posé » : note, ressenti possible',
+    input: 'Calme et posé',
+    expected: result({
+      type: 'note',
+      text: 'Calme et posé',
+      warnings: [warn('POSSIBLE_FEELING', { word: 'Calme', candidates: ['calm'] })],
+    }),
+  },
+  {
+    rule: '« Calme 7 » : ressenti',
+    input: 'Calme 7',
+    expected: result({ type: 'feeling', emotionCode: 'calm', intensity: 7 }),
+  },
+  {
+    rule: 'mot inconnu, nombre suivi d’une unité de durée → note',
+    input: 'Dort 4 heures par nuit',
+    expected: result({ type: 'note', text: 'Dort 4 heures par nuit' }),
+  },
+  {
+    rule: 'mot inconnu, « 3 fois » → note',
+    input: 'Réveillé 3 fois cette nuit',
+    expected: result({ type: 'note', text: 'Réveillé 3 fois cette nuit' }),
+  },
+  {
+    rule: 'mot inconnu, « 50 mg » → note',
+    input: 'Sertraline 50 mg',
+    expected: result({ type: 'note', text: 'Sertraline 50 mg' }),
+  },
+  {
+    rule: 'mot inconnu, nombre hors de 0 à 10 → note',
+    input: 'stress 12 au travail',
+    expected: result({ type: 'note', text: 'stress 12 au travail' }),
   },
 
   // Intensité.
@@ -286,7 +343,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
       emotionCode: 'fear',
       intensity: 3,
       text: 'soir',
-      occurred: day('2026-11-10', 'hier'),
+      ...day('2026-11-10', 'hier'),
     }),
   },
 
@@ -307,7 +364,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'event',
       text: 'promotion annoncée',
-      occurred: day('2026-11-09', 'lundi'),
+      ...day('2026-11-09', 'lundi'),
     }),
   },
   {
@@ -344,7 +401,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
   {
     rule: 'jour de semaine du jour même → il y a 7 jours',
     input: '/evt réunion mercredi',
-    expected: result({ type: 'event', text: 'réunion', occurred: day('2026-11-04', 'mercredi') }),
+    expected: result({ type: 'event', text: 'réunion', ...day('2026-11-04', 'mercredi') }),
   },
   {
     rule: '« jeudi dernier »',
@@ -352,7 +409,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'event',
       text: 'appel',
-      occurred: day('2026-11-05', 'jeudi dernier'),
+      ...day('2026-11-05', 'jeudi dernier'),
     }),
   },
   {
@@ -361,13 +418,13 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'note',
       text: 'a pleuré',
-      occurred: day('2026-11-11', 'aujourd’hui'),
+      ...day('2026-11-11', 'aujourd’hui'),
     }),
   },
   {
     rule: '« avant-hier »',
     input: '/note dispute avant-hier',
-    expected: result({ type: 'note', text: 'dispute', occurred: day('2026-11-09', 'avant-hier') }),
+    expected: result({ type: 'note', text: 'dispute', ...day('2026-11-09', 'avant-hier') }),
   },
   {
     rule: '« avant hier » en deux mots',
@@ -375,7 +432,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'note',
       text: 'dispute soir',
-      occurred: day('2026-11-09', 'avant hier'),
+      ...day('2026-11-09', 'avant hier'),
     }),
   },
 
@@ -383,12 +440,12 @@ export const PARSE_CASES: readonly ParseCase[] = [
   {
     rule: '« il y a 3 j »',
     input: '/note il y a 3 j malaise',
-    expected: result({ type: 'note', text: 'malaise', occurred: day('2026-11-08', 'il y a 3 j') }),
+    expected: result({ type: 'note', text: 'malaise', ...day('2026-11-08', 'il y a 3 j') }),
   },
   {
     rule: '« il y a 3j » collé',
     input: '/note malaise il y a 3j',
-    expected: result({ type: 'note', text: 'malaise', occurred: day('2026-11-08', 'il y a 3j') }),
+    expected: result({ type: 'note', text: 'malaise', ...day('2026-11-08', 'il y a 3j') }),
   },
   {
     rule: '« depuis 2 semaines »',
@@ -396,7 +453,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'situation',
       text: 'isolement',
-      occurred: day('2026-10-28', 'depuis 2 semaines'),
+      ...day('2026-10-28', 'depuis 2 semaines'),
     }),
   },
   {
@@ -405,7 +462,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'note',
       text: 'rechute',
-      occurred: day('2026-11-04', 'il y a une semaine'),
+      ...day('2026-11-04', 'il y a une semaine'),
     }),
   },
   {
@@ -414,7 +471,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'situation',
       text: 'insomnie',
-      occurred: day('2026-11-09', 'ça fait 2 jours'),
+      ...day('2026-11-09', 'ça fait 2 jours'),
     }),
   },
   {
@@ -423,7 +480,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'note',
       text: "crise d'angoisse",
-      occurred: exact('2026-11-11T07:30:00.000Z', 'il y a 2 h'),
+      ...exact('2026-11-11T07:30:00.000Z', 'il y a 2 h'),
     }),
   },
   {
@@ -432,7 +489,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'note',
       text: 'appel',
-      occurred: exact('2026-11-11T09:20:00.000Z', 'il y a 10 min'),
+      ...exact('2026-11-11T09:20:00.000Z', 'il y a 10 min'),
     }),
   },
   {
@@ -441,13 +498,13 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'situation',
       text: 'chômage',
-      occurred: month('2026-10', 'il y a 1 mois'),
+      ...month('2026-10', 'il y a 1 mois'),
     }),
   },
   {
     rule: '« il y a 2 ans » (précision année)',
     input: '/sit divorce il y a 2 ans',
-    expected: result({ type: 'situation', text: 'divorce', occurred: year(2024, 'il y a 2 ans') }),
+    expected: result({ type: 'situation', text: 'divorce', ...year(2024, 'il y a 2 ans') }),
   },
 
   // Mois, saisons, années.
@@ -457,7 +514,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'situation',
       text: 'déménagement',
-      occurred: month('2026-03', 'en mars'),
+      ...month('2026-03', 'en mars'),
     }),
   },
   {
@@ -466,7 +523,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'situation',
       text: 'tensions',
-      occurred: month('2025-12', 'en décembre'),
+      ...month('2025-12', 'en décembre'),
     }),
   },
   {
@@ -475,7 +532,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'situation',
       text: 'fatigue',
-      occurred: month('2026-11', 'en novembre'),
+      ...month('2026-11', 'en novembre'),
     }),
   },
   {
@@ -484,7 +541,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'situation',
       text: 'arrêt maladie',
-      occurred: month('2024-03', 'mars 2024'),
+      ...month('2024-03', 'mars 2024'),
     }),
   },
   {
@@ -493,16 +550,16 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'situation',
       text: 'burn-out',
-      occurred: period('2024-06-01', '2024-09-01', 'été 2024', "l'été 2024"),
+      ...period('2024-06-01', '2024-09-01', 'été 2024', "l'été 2024"),
     }),
   },
   {
-    rule: '« hiver 2024 » → décembre 2024 à février 2025',
+    rule: '« hiver 2024 » → décembre 2023 à février 2024 (Météo-France)',
     input: '/sit deuil hiver 2024',
     expected: result({
       type: 'situation',
       text: 'deuil',
-      occurred: period('2024-12-01', '2025-03-01', 'hiver 2024', 'hiver 2024'),
+      ...period('2023-12-01', '2024-03-01', 'hiver 2024', 'hiver 2024'),
     }),
   },
   {
@@ -511,25 +568,25 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'situation',
       text: 'reprise',
-      occurred: period('2025-03-01', '2025-06-01', 'printemps 2025', 'au printemps 2025'),
+      ...period('2025-03-01', '2025-06-01', 'printemps 2025', 'au printemps 2025'),
     }),
   },
   {
     rule: '« en 2019 » (précision année)',
     input: '/sit licenciement en 2019',
-    expected: result({ type: 'situation', text: 'licenciement', occurred: year(2019, 'en 2019') }),
+    expected: result({ type: 'situation', text: 'licenciement', ...year(2019, 'en 2019') }),
   },
 
   // Dates explicites.
   {
     rule: '« le 12 mars » : le plus récent non futur',
     input: '/evt mariage le 12 mars',
-    expected: result({ type: 'event', text: 'mariage', occurred: day('2026-03-12', 'le 12 mars') }),
+    expected: result({ type: 'event', text: 'mariage', ...day('2026-03-12', 'le 12 mars') }),
   },
   {
     rule: '« 12 décembre » en novembre → l’an dernier',
     input: '/note crise 12 décembre',
-    expected: result({ type: 'note', text: 'crise', occurred: day('2025-12-12', '12 décembre') }),
+    expected: result({ type: 'note', text: 'crise', ...day('2025-12-12', '12 décembre') }),
   },
   {
     rule: '« 1er avril 2024 »',
@@ -537,13 +594,13 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'event',
       text: 'accident',
-      occurred: day('2024-04-01', '1er avril 2024'),
+      ...day('2024-04-01', '1er avril 2024'),
     }),
   },
   {
     rule: '« le 20/12 » (JJ/MM avec amorce)',
     input: '/evt opération le 20/12',
-    expected: result({ type: 'event', text: 'opération', occurred: day('2025-12-20', 'le 20/12') }),
+    expected: result({ type: 'event', text: 'opération', ...day('2025-12-20', 'le 20/12') }),
   },
   {
     rule: '« 03/02/2024 »',
@@ -551,7 +608,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'event',
       text: 'opération',
-      occurred: day('2024-02-03', '03/02/2024'),
+      ...day('2024-02-03', '03/02/2024'),
     }),
   },
   {
@@ -560,7 +617,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'event',
       text: 'naissance',
-      occurred: day('2025-07-14', '2025-07-14'),
+      ...day('2025-07-14', '2025-07-14'),
     }),
   },
   {
@@ -578,7 +635,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'event',
       text: 'départ prévu',
-      occurred: year(2027, 'en 2027'),
+      ...year(2027, 'en 2027'),
       warnings: [warn('FUTURE_DATE', { expression: 'en 2027' })],
     }),
   },
@@ -588,8 +645,89 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'note',
       text: 'puis lundi',
-      occurred: day('2026-11-10', 'hier'),
+      ...day('2026-11-10', 'hier'),
       warnings: [warn('AMBIGUOUS_DATE', { used: 'hier', ignored: ['lundi'] })],
+    }),
+  },
+
+  {
+    rule: 'année au-delà de l’an prochain : invalide',
+    input: '/sit retraite en 2050',
+    expected: result({
+      type: 'situation',
+      text: 'retraite en 2050',
+      warnings: [warn('INVALID_DATE', { expression: 'en 2050' })],
+    }),
+  },
+  {
+    rule: 'durée qui remonte avant 1900 : invalide',
+    input: '/note il y a 300000 ans',
+    expected: result({
+      type: 'note',
+      text: 'il y a 300000 ans',
+      warnings: [warn('INVALID_DATE', { expression: 'il y a 300000 ans' })],
+    }),
+  },
+  {
+    rule: 'ISO sur une année hors motif : pas une date',
+    input: '/note 0024-02-29',
+    expected: result({ type: 'note', text: '0024-02-29' }),
+  },
+  {
+    rule: '« le 29 février » : dernière année bissextile',
+    input: '/evt naissance le 29 février',
+    expected: result({
+      type: 'event',
+      text: 'naissance',
+      ...day('2024-02-29', 'le 29 février'),
+    }),
+  },
+  {
+    rule: '« 31 avril » : invalide',
+    input: '/evt rendez-vous 31 avril',
+    expected: result({
+      type: 'event',
+      text: 'rendez-vous 31 avril',
+      warnings: [warn('INVALID_DATE', { expression: '31 avril' })],
+    }),
+  },
+  {
+    rule: '« mardi prochain » : prochain mardi, date future',
+    input: '/evt rdv mardi prochain',
+    expected: result({
+      type: 'event',
+      text: 'rdv',
+      ...day('2026-11-17', 'mardi prochain'),
+      warnings: [warn('FUTURE_DATE', { expression: 'mardi prochain' })],
+    }),
+  },
+  {
+    rule: '« chaque lundi » : une habitude, pas une date',
+    input: '/sit insomnie chaque lundi',
+    expected: result({ type: 'situation', text: 'insomnie chaque lundi' }),
+  },
+  {
+    rule: '« mardi 10 novembre » : une seule date quand elles concordent',
+    input: '/evt dispute mardi 10 novembre',
+    expected: result({ type: 'event', text: 'dispute', ...day('2026-11-10', 'mardi 10 novembre') }),
+  },
+  {
+    rule: '« lundi 10 novembre » : dates discordantes',
+    input: '/evt dispute lundi 10 novembre',
+    expected: result({
+      type: 'event',
+      text: 'dispute 10 novembre',
+      ...day('2026-11-09', 'lundi'),
+      warnings: [warn('AMBIGUOUS_DATE', { used: 'lundi', ignored: ['10 novembre'] })],
+    }),
+  },
+  {
+    rule: 'libellé de période en minuscules',
+    input: "/sit burn-out L'ÉTÉ 2025",
+    expected: result({
+      type: 'situation',
+      text: 'burn-out',
+      ...period('2025-06-01', '2025-09-01', 'été 2025', "L'ÉTÉ 2025"),
     }),
   },
 
@@ -612,6 +750,16 @@ export const PARSE_CASES: readonly ParseCase[] = [
 
   // Guillemets et cible.
   {
+    rule: 'texte entièrement cité : guillemets retirés',
+    input: '/note « il ne dort plus »',
+    expected: result({ type: 'note', text: 'il ne dort plus' }),
+  },
+  {
+    rule: '`>` suivi d’un nombre : comparaison, pas un lien',
+    input: '/note tension > 14',
+    expected: result({ type: 'note', text: 'tension > 14' }),
+  },
+  {
     rule: 'guillemets : contenu littéral (ni émotion, ni date)',
     input: '/note il a dit « je suis anx 8 hier »',
     expected: result({ type: 'note', text: 'il a dit « je suis anx 8 hier »' }),
@@ -619,7 +767,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
   {
     rule: 'guillemets droits en tête : pas d’émotion',
     input: '"anx" 8 hier',
-    expected: result({ type: 'note', text: '"anx" 8', occurred: day('2026-11-10', 'hier') }),
+    expected: result({ type: 'note', text: '"anx" 8', ...day('2026-11-10', 'hier') }),
   },
   {
     rule: 'cible entre guillemets',
@@ -675,26 +823,26 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'note',
       text: 'crise',
-      occurred: day('2026-11-10', 'hier'),
+      ...day('2026-11-10', 'hier'),
     }),
   },
   {
     rule: 'près de minuit : jour civil UTC',
     input: '/note crise hier',
     options: { now: NEAR_MIDNIGHT, timeZone: 'UTC' },
-    expected: result({ type: 'note', text: 'crise', occurred: day('2026-11-09', 'hier') }),
+    expected: result({ type: 'note', text: 'crise', ...day('2026-11-09', 'hier') }),
   },
   {
-    rule: 'près de minuit : sans fuseau, UTC',
+    rule: 'près de minuit : Los Angeles (UTC-8)',
     input: '/note crise hier',
-    options: { now: NEAR_MIDNIGHT, timeZone: undefined },
-    expected: result({ type: 'note', text: 'crise', occurred: day('2026-11-09', 'hier') }),
+    options: { now: NEAR_MIDNIGHT, timeZone: 'America/Los_Angeles' },
+    expected: result({ type: 'note', text: 'crise', ...day('2026-11-09', 'hier') }),
   },
   {
     rule: 'près de minuit : Kiritimati (UTC+14)',
     input: '/note crise hier',
     options: { now: NEAR_MIDNIGHT, timeZone: 'Pacific/Kiritimati' },
-    expected: result({ type: 'note', text: 'crise', occurred: day('2026-11-10', 'hier') }),
+    expected: result({ type: 'note', text: 'crise', ...day('2026-11-10', 'hier') }),
   },
   {
     rule: 'fuseau inconnu → UTC, signalé',
@@ -703,7 +851,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'note',
       text: 'crise',
-      occurred: day('2026-11-10', 'hier'),
+      ...day('2026-11-10', 'hier'),
       warnings: [warn('INVALID_TIME_ZONE', { timeZone: 'Mars/Olympus' })],
     }),
   },
@@ -713,7 +861,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     rule: 'locale fr-FR : grammaire française',
     input: '/evt dispute samedi',
     options: { locale: 'fr-FR' },
-    expected: result({ type: 'event', text: 'dispute', occurred: day('2026-11-07', 'samedi') }),
+    expected: result({ type: 'event', text: 'dispute', ...day('2026-11-07', 'samedi') }),
   },
   {
     rule: 'en : « yesterday »',
@@ -724,7 +872,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
       emotionCode: 'anxiety',
       intensity: 8,
       text: "couldn't sleep",
-      occurred: day('2026-11-10', 'yesterday'),
+      ...day('2026-11-10', 'yesterday'),
     }),
   },
   {
@@ -734,7 +882,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'event',
       text: 'meeting',
-      occurred: day('2026-11-09', 'last monday'),
+      ...day('2026-11-09', 'last monday'),
     }),
   },
   {
@@ -744,7 +892,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'situation',
       text: 'overload',
-      occurred: month('2026-03', 'since march'),
+      ...month('2026-03', 'since march'),
     }),
   },
   {
@@ -754,7 +902,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'note',
       text: 'panic attack',
-      occurred: day('2026-11-08', '3 days ago'),
+      ...day('2026-11-08', '3 days ago'),
     }),
   },
   {
@@ -764,7 +912,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'note',
       text: 'dispute',
-      occurred: day('2026-11-04', 'a week ago'),
+      ...day('2026-11-04', 'a week ago'),
     }),
   },
   {
@@ -774,7 +922,7 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'note',
       text: 'relapse',
-      occurred: day('2026-11-09', 'the day before yesterday'),
+      ...day('2026-11-09', 'the day before yesterday'),
     }),
   },
   {
@@ -784,8 +932,25 @@ export const PARSE_CASES: readonly ParseCase[] = [
     expected: result({
       type: 'situation',
       text: 'burnout',
-      occurred: period('2024-06-01', '2024-09-01', 'summer 2024', 'summer 2024'),
+      ...period('2024-06-01', '2024-09-01', 'summer 2024', 'summer 2024'),
     }),
+  },
+  {
+    rule: 'en : « next tuesday »',
+    input: '/evt appointment next tuesday',
+    options: { locale: 'en' },
+    expected: result({
+      type: 'event',
+      text: 'appointment',
+      ...day('2026-11-17', 'next tuesday'),
+      warnings: [warn('FUTURE_DATE', { expression: 'next tuesday' })],
+    }),
+  },
+  {
+    rule: 'en : « march 3rd » (mois avant le jour)',
+    input: '/evt surgery march 3rd',
+    options: { locale: 'en' },
+    expected: result({ type: 'event', text: 'surgery', ...day('2026-03-03', 'march 3rd') }),
   },
   {
     rule: 'en : pas de JJ/MM (ordre ambigu)',
