@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T08:51:16.813Z",
+  "task": "M3-02",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Timeline chronologique : axe, cartes par type, bandes de situations, pastille dit en séance, zone Avant le suivi, virtual scroll CDK, 3 fenêtres keyset en mémoire, zoom sans requête, menu contextuel au clavier, ?focus=<id>",
+  "notes": "871 tests Vitest verts (41 timeline). e2e complets : 80 passés, 11 ignorés (admin, Mailpit lent une fois sur flux-8, repassé). Défilement 2 000 entrées : 1 199 trames, p50 16,7 ms, p95 16,7 ms, max 16,8 ms, 0 trame longue, 3 fenêtres max. Début du suivi = followedSince (contrat). Ouvrir = éditeur (pas de panneau de lecture). Pas d'extrait ni de posologie (absents de TimelineItemDto). Lier désactivé (M2-04). Aucune dépendance npm.",
+  "next": "M3-03 (filtres, mode par séance) puis M3-04 ; M2-04 branche Lier et L ; M4-08 émet ?focus=<id> (TIMELINE_FOCUS_PARAM)",
+  "branch": "claude/wonderful-edison-34a520",
+  "checkout": "wonderful-edison-34a520"
+}
