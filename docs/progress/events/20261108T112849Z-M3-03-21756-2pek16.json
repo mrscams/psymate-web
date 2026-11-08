@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T11:28:49.934Z",
+  "task": "M3-03",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 26 fusionnee (squash f730395) : filtres de la timeline (types avec facettes, emotion, tag, brouillons, periode), bascule Chronologique | Par seance (bouton, touche M, preference timeline.groupBy), seances depliables, etat dans l URL et la memoire d onglet, barre d outils au clavier, Lier branche sur openLinkEditor ; debordement de la liste herite de M3-02 corrige ; CI verte (checks + 95 e2e).",
+  "notes": "Detail de seance via GET /api/entries/{id} (TimelineItemDto sans duree/modalite). Regroupement par seance limite a 600 entrees. Preference month en chronologique jusqu a M3-04. Entrees hors seance en groupe a part.",
+  "next": "M3-04 vue decennie (carte proposee)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/26",
+  "branch": "main",
+  "checkout": "psymate-web"
+}

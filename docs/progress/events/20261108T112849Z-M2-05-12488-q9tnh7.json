@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T11:28:49.317Z",
+  "task": "M2-05",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 25 fusionnee (squash f88fd93) : rail Lie a dans l editeur d entree (cinq cibles, type propose par la matrice E5.3, Tab + Espace, links[] a la creation, 422 sous le rail ; en correction, liens en lecture et ouverture de l editeur de lien) ; CI verte (checks + 89 e2e).",
+  "notes": "Recherche du rail non faite (fiche 05 par.7, B4). Type propose = premier type permis. Seances exclues des cibles. Import circulaire entries <-> graph par les index (ENTRY_QUERY_PARAM / openLinkEditor, isAllowed) a decoupler ; toLinkType duplique. e2e flux-8 profil public instable sous charge (Mailpit), vert seul : a stabiliser.",
+  "next": "M2-06 vue graphe (en cours) ; puis M4-05 vue d ensemble",
+  "pr": "https://github.com/mrscams/psymate-web/pull/25",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
