@@ -2,7 +2,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { LOCALE_ID, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
+import { of } from 'rxjs';
 
 import { PreferencesStore } from '../../../core/preferences';
 import { PatientShellStore } from '../../patient-shell';
@@ -32,10 +33,19 @@ function shellMock(snapshot?: TimelineSnapshot) {
 async function render(
   page: (id: string, query: TimelineQuery) => Promise<Page>,
   shell = shellMock(),
+  focus: string | null = null,
 ) {
   TestBed.configureTestingModule({
     providers: [
       provideRouter([]),
+      ...(focus
+        ? [
+            {
+              provide: ActivatedRoute,
+              useValue: { queryParamMap: of(convertToParamMap({ focus })) },
+            },
+          ]
+        : []),
       { provide: LOCALE_ID, useValue: 'fr' },
       { provide: PatientShellStore, useValue: shell },
       {
@@ -185,5 +195,28 @@ describe('TimelinePage', () => {
     TestBed.resetTestingModule();
     const again = await render(() => never(), shellMock(snapshot));
     expect(again.el.querySelectorAll('pm-timeline-card')).toHaveLength(3);
+  });
+
+  it('?focus=<id> : l’entrée est trouvée, sélectionnée, le paramètre retiré', async () => {
+    const { pages } = pagedTimeline(500);
+    const page = vi.fn((_id: string, query: TimelineQuery) =>
+      Promise.resolve(pages.get(query.cursor)!),
+    );
+    const navigate = vi.spyOn(Router.prototype, 'navigate').mockResolvedValue(true);
+    const { fixture } = await render(page, shellMock(), 'e-450');
+    await flush();
+    await fixture.whenStable();
+    const calls = page.mock.calls.map(([, query]) => query.cursor);
+    expect(calls).toContain('c2');
+    const instance = fixture.componentInstance as unknown as {
+      store: { selectedId(): string | null; anchor(): number };
+    };
+    expect(instance.store.selectedId()).toBe('e-450');
+    expect(instance.store.anchor()).toBe(450);
+    expect(navigate).toHaveBeenCalledWith(
+      [],
+      expect.objectContaining({ queryParams: { focus: null }, replaceUrl: true }),
+    );
+    navigate.mockRestore();
   });
 });

@@ -296,4 +296,21 @@ describe('TimelineStore', () => {
     expect(store.status()).toBe('loaded');
     expect(store.sessions()).toEqual({});
   });
+
+  it('locate (?focus=) : lit les fenêtres jusqu’à l’entrée, trois au plus en mémoire', async () => {
+    const { page } = paged(1000);
+    const { store } = setup({ page });
+    await store.load('p-1', null);
+    await flush();
+
+    expect(await store.locate('e-650')).toBe(650);
+    await flush();
+    expect(store.selectedId()).toBe('e-650');
+    expect(store.anchor()).toBe(650);
+    expect(store.current()).toBe(3);
+    expect(store.windows().length).toBeLessThanOrEqual(MAX_WINDOWS);
+    expect(store.rows()[650].item?.id).toBe('e-650');
+    expect(await store.locate('inconnue')).toBeNull();
+    expect(store.windows().length).toBeLessThanOrEqual(MAX_WINDOWS);
+  });
 });

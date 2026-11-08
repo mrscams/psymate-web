@@ -291,3 +291,20 @@ test('« Corriger » puis retour, « Voir dans le graphe » puis retour : positi
   await expect(t.card(anchor)).toHaveClass(/\bselected\b/);
   await expectNoAxeViolations(page);
 });
+
+test('?focus=<id> (recherche → timeline) : l’entrée est amenée à l’écran, sélectionnée, focalisée', async ({
+  page,
+}) => {
+  await signIn(page, account);
+  const id = story.ids['Déménagement à Lyon'];
+  await page.goto(`/fr/patients/${story.id}/timeline?focus=${id}`);
+  const t = timeline(page);
+  const card = t.card('Déménagement à Lyon');
+  await expect(card).toBeInViewport();
+  await expect(card).toBeFocused();
+  await expect(card).toHaveClass(/\bselected\b/);
+  // Le paramètre est retiré (?entry= reste réservé à la correction) ; la position reste dans l'onglet.
+  await expect(page).toHaveURL(new RegExp(`/patients/${story.id}/timeline$`));
+  await expect(page.locator('[role="dialog"]:has(pm-entry-editor-panel)')).toHaveCount(0);
+  await expectNoAxeViolations(page);
+});

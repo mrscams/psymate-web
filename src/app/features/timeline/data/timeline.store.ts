@@ -358,6 +358,33 @@ export const TimelineStore = signalStore(
 
       refresh,
 
+      /**
+       * Trouve le créneau d'une entrée (`?focus=<id>`, recherche → timeline) : les fenêtres sont lues
+       * dans l'ordre du curseur jusqu'à elle ; celle qui la contient devient la courante (trois
+       * fenêtres au plus restent en mémoire). Null si l'entrée n'est pas dans la plage.
+       */
+      async locate(id: string): Promise<number | null> {
+        const gen = generation;
+        for (let k = 0; store.status() === 'loaded' && k < store.count(); k++) {
+          let win = store.windows().find((w) => w.index === k && w.status === 'loaded');
+          if (!win) {
+            patchState(store, { current: k });
+            await fetchWindow(k, gen);
+            if (gen !== generation) return null;
+            win = store.windows().find((w) => w.index === k && w.status === 'loaded');
+            if (!win) return null;
+          }
+          const i = win.items.findIndex((item) => item.id === id);
+          if (i >= 0) {
+            const slot = windowOffset(k, store.sizes()) + i;
+            patchState(store, { selectedId: id, anchor: slot });
+            focus(k);
+            return slot;
+          }
+        }
+        return null;
+      },
+
       /** L'état à ranger dans le shell (rememberTab) : fenêtres chargées, zoom, position. */
       snapshot(): TimelineSnapshot | null {
         const patientId = store.patientId();

@@ -13,7 +13,9 @@ import {
   viewChild,
 } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
-import { Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs';
 
 import { ShortcutService } from '../../../core/shortcuts';
 import { EntryIconComponent, StateAction, StateComponent } from '../../../shared/ui';
@@ -22,6 +24,7 @@ import { openEntryEditor } from '../../entries';
 import { PatientShellStore } from '../../patient-shell';
 import { ROW_HEIGHT, TimelineItem, TimelineRow, TimelineSnapshot } from '../data/timeline.model';
 import { TimelineStore } from '../data/timeline.store';
+import { TIMELINE_FOCUS_PARAM } from '../timeline.params';
 import { TimelineCardComponent } from '../ui/timeline-card.component';
 import { groupLabel, zoomLabel } from '../ui/timeline-labels';
 
@@ -53,6 +56,7 @@ export class TimelinePage {
   protected readonly store = inject(TimelineStore);
   private readonly shell = inject(PatientShellStore);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly injector = inject(Injector);
   private readonly locale = inject(LOCALE_ID);
   private readonly shortcuts = inject(ShortcutService);
@@ -113,6 +117,12 @@ export class TimelinePage {
   protected readonly zoomInLabel = $localize`:Bouton de zoom avant de la timeline@@timeline.zoomIn:Zoom avant (+)`;
   protected readonly zoomOutLabel = $localize`:Bouton de zoom arrière de la timeline@@timeline.zoomOut:Zoom arrière (−)`;
 
+  /** `?focus=<entryId>` : entrée à amener à l'écran et à mettre en évidence (M4-08 → timeline). */
+  private readonly focusParam = toSignal(
+    this.route.queryParamMap.pipe(map((params) => params.get(TIMELINE_FOCUS_PARAM))),
+    { initialValue: null },
+  );
+
   private lastWheel = 0;
   private restored = false;
 
@@ -128,15 +138,26 @@ export class TimelinePage {
       });
     });
 
-    // Retour sur l'onglet : la position de défilement rangée est rétablie une fois les lignes là.
+    // Retour sur l'onglet : la position de défilement rangée est rétablie une fois les lignes là
+    // (sauf si ?focus= désigne une entrée : elle l'emporte).
     effect(() => {
       const viewport = this.viewport();
       const ready = this.store.status() === 'loaded' && this.store.total() > 0;
-      if (!viewport || !ready || this.restored) return;
+      if (!viewport || !ready || this.restored || this.focusParam()) return;
       this.restored = true;
       const anchor = untracked(() => this.store.anchor());
       if (anchor > 0)
         afterNextRender(() => this.scrollTo(viewport, anchor), { injector: this.injector });
+    });
+
+    // ?focus=<id> : la timeline lit ses fenêtres jusqu'à l'entrée, la met en haut de l'écran,
+    // sélectionnée et avec le focus, puis retire le paramètre (la position reste dans l'onglet).
+    effect(() => {
+      const id = this.focusParam();
+      const viewport = this.viewport();
+      const ready = this.store.status() === 'loaded' && this.store.total() > 0;
+      if (!id || !viewport || !ready) return;
+      untracked(() => void this.focusEntry(id, viewport));
     });
 
     const destroyRef = inject(DestroyRef);
@@ -152,6 +173,41 @@ export class TimelinePage {
       const snapshot = this.store.snapshot();
       if (snapshot) this.shell.rememberTab<TimelineSnapshot>('timeline', snapshot);
     });
+  }
+
+  private focusing: string | null = null;
+
+  private async focusEntry(id: string, viewport: CdkVirtualScrollViewport): Promise<void> {
+    if (this.focusing === id) return;
+    this.focusing = id;
+    this.restored = true;
+    const slot = await this.store.locate(id);
+    if (slot !== null) {
+      afterNextRender(
+        () => {
+          this.scrollTo(viewport, slot);
+          this.onScrolled(slot);
+          this.focusCard(viewport, id);
+        },
+        { injector: this.injector },
+      );
+    }
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { [TIMELINE_FOCUS_PARAM]: null },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+    this.focusing = null;
+  }
+
+  /** Donne le focus à la carte de l'entrée dès qu'elle est rendue (quelques trames au plus). */
+  private focusCard(viewport: CdkVirtualScrollViewport, id: string, attempts = 20): void {
+    const card = viewport.elementRef.nativeElement.querySelector<HTMLElement>(
+      `article[data-entry-id="${id}"]`,
+    );
+    if (card) card.focus({ preventScroll: true });
+    else if (attempts > 0) requestAnimationFrame(() => this.focusCard(viewport, id, attempts - 1));
   }
 
   /**
