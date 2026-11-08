@@ -12,7 +12,9 @@
 // Ajouter un couple ici quand un nouvel usage apparaît ; ne jamais retoucher une couleur de
 // tokens.css pour faire passer ce test sans décision écrite (G-decisions ou étude couleurs). Une
 // valeur de l'étude sous le seuil n'est pas corrigée en douce : elle devient une exception (`waiver`)
-// avec sa raison, affichée à chaque exécution, et le test échoue si l'exception n'a plus lieu d'être.
+// avec sa raison et un plancher (`floor`, le rapport actuel arrondi par défaut), affichée à chaque
+// exécution ; le test échoue si le rapport passe sous le plancher ou si l'exception n'a plus lieu
+// d'être. Ces exceptions attendent une décision écrite (étude §7 ou G-decisions).
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -107,10 +109,11 @@ const PAIRS = [
     {
       waiver: {
         themes: LIGHT_THEMES,
+        floor: 2.85,
         reason:
           'couple de l’étude §3 (#B8862E sur #FBF1DC), seulement en bordure de la puce de flag ' +
-          'choisie (flag-fields) : le libellé, écrit en warning (couple suivant), et aria-pressed ' +
-          'portent l’état',
+          'choisie (flag-fields : --flag sur --warning-bg, même valeur que --flag-bg) : le libellé, ' +
+          'écrit en warning (couple suivant), et aria-pressed portent l’état',
       },
     },
   ],
@@ -138,7 +141,7 @@ const PAIRS = [
     'emotion-joy',
     'surface-raised',
     'icon',
-    { waiver: { themes: LIGHT_THEMES, reason: STUDY_EMOTIONS } },
+    { waiver: { themes: LIGHT_THEMES, floor: 2.25, reason: STUDY_EMOTIONS } },
   ],
   ['emotion-trust', 'surface-raised', 'icon'],
   ['emotion-fear', 'surface-raised', 'icon'],
@@ -157,6 +160,7 @@ const PAIRS = [
     {
       waiver: {
         themes: LIGHT_THEMES,
+        floor: 1.75,
         reason:
           'suggestion IA V2, pointillé #B9C2D1 de l’étude §4 voulu plus pâle que le lien accepté ; ' +
           'l’étiquette « suggéré » en text-secondary porte l’information',
@@ -165,15 +169,25 @@ const PAIRS = [
   ],
 ];
 
-function parseBlocks(css) {
+function parseBlocks(source) {
+  // Commentaires retirés d'abord : un « } » dans un commentaire ne coupe plus un bloc.
+  const css = source.replace(/\/\*[\s\S]*?\*\//g, '');
   const blocks = {};
   const blockRe = /:root(?:\[data-theme=['"]?(\w+)['"]?\])?\s*\{([^}]*)\}/g;
+  let matched = 0;
   for (const [, theme = 'light', body] of css.matchAll(blockRe)) {
-    const vars = (blocks[theme] ??= {});
-    const clean = body.replace(/\/\*[\s\S]*?\*\//g, '');
-    for (const [, name, value] of clean.matchAll(/--([\w-]+)\s*:\s*([^;]+);/g)) {
+    // Un bloc en double (second :root, :root dans un @media…) serait fusionné en silence.
+    if (blocks[theme]) throw new Error(`tokens.css : bloc du thème ${theme} déclaré deux fois`);
+    const vars = (blocks[theme] = {});
+    matched++;
+    for (const [, name, value] of body.matchAll(/--([\w-]+)\s*:\s*([^;]+);/g)) {
       vars[name] = value.trim();
     }
+  }
+  // Tout sélecteur de thème doit être lu ici (pas de html[data-theme=…] ignoré en silence).
+  const themed = (css.match(/data-theme/g) ?? []).length;
+  if (themed !== matched - (blocks.light ? 1 : 0)) {
+    throw new Error('tokens.css : sélecteur data-theme hors de la forme :root[data-theme=…] { … }');
   }
   if (!blocks.light) throw new Error('tokens.css : bloc :root introuvable');
   return blocks;
@@ -275,9 +289,14 @@ for (const theme of THEMES) {
     const measure = `${fg} sur ${bg} (${kind}) : ${ratio.toFixed(2)}:1, minimum ${MIN[kind]}:1`;
     if (ok && !waiver) {
       console.log(`  ✓ ${measure}`);
+    } else if (!ok && waiver && ratio < waiver.floor) {
+      failures++;
+      console.error(`  ✗ ${measure} — sous le plancher de l’exception (${waiver.floor}:1)`);
     } else if (!ok && waiver) {
       waived++;
-      console.warn(`  ⚠ ${measure} — exception documentée : ${waiver.reason}`);
+      console.warn(
+        `  ⚠ ${measure} — exception documentée (plancher ${waiver.floor}:1) : ${waiver.reason}`,
+      );
     } else if (ok && waiver) {
       failures++;
       console.error(`  ✗ ${measure} — exception devenue inutile : la retirer de PAIRS`);

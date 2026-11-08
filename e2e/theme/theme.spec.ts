@@ -94,7 +94,7 @@ test.describe('thème', () => {
     await expectTheme(page, 'light');
     const noReload = await watchReloads(page);
 
-    // Sombre : appliqué avant même la réponse du serveur (PATCH en arrière-plan).
+    // Sombre : appliqué sur la page sans navigation ; le PATCH part en arrière-plan.
     let patch = page.waitForResponse(PATCH);
     await page.getByText('Sombre', { exact: true }).click();
     await expectTheme(page, 'dark');

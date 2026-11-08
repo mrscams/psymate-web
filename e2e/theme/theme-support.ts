@@ -55,6 +55,7 @@ export async function capture(page: Page, testInfo: TestInfo, name: string): Pro
   const path = testInfo.outputPath(`${name}.png`);
   await page.screenshot({ path, fullPage: true });
   await testInfo.attach(name, { path, contentType: 'image/png' });
+  // Copie facultative pour la PR : dossier HORS du dépôt (aucune capture ne doit être commitée).
   const extra = process.env['PSYMATE_THEME_CAPTURES'];
   if (extra) {
     mkdirSync(extra, { recursive: true });
