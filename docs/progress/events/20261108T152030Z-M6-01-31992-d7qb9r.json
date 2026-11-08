@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T15:20:30.550Z",
+  "task": "M6-01",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Parseur pur de la barre de commande (features/capture/parser) : préfixes /evt /sit /med /note, émotion par préfixe (globales + personnalisées, mots vides exclus), intensité 0–10, dates relatives et précision (jour, mois, période pour les saisons, année), > cible, guillemets ; avertissements codés avec blocking ; 109 phrases en table de cas, 147 tests, couverture 100 % (Node natif).",
+  "notes": "Intensité 0–10 (contrat EntryFeelingRequest) au lieu de 1–10 (B5/C2). Saison → precision period + label + to exclusif ; hiver N = déc. N-1 → fév. N. Sans préfixe, un ressenti exige une intensité juste après l'émotion, sinon note + POSSIBLE_FEELING. timeZone obligatoire. occurred = EntryOccurredRequest exact (dateExpression à part). Couverture non mesurable par pnpm test (pas de @vitest/coverage-v8) : mesurée avec node --experimental-test-coverage hors dépôt. Revue : 1 bloquant et 8 à corriger traités.",
+  "next": "M6-02 consomme parse() et la table parse.cases.ts ; suites : matin/soir et heures, règle ESLint de pureté du parseur, plages de jetons pour l'aperçu, tâche outillage @vitest/coverage-v8 avec seuil.",
+  "branch": "claude/priceless-kilby-515a8c",
+  "checkout": "priceless-kilby-515a8c"
+}
