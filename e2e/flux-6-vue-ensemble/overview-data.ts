@@ -64,6 +64,35 @@ export async function overviewFolder(api: APIRequestContext): Promise<OverviewFo
   return { patientId, situation, session };
 }
 
+/**
+ * Marie D. dont l'intensité monte (M4-07) : le dossier d'overviewFolder, plus un ressenti d'anxiété
+ * à 3/10 il y a 45 jours. Moyenne des 30 derniers jours (8, 6, 4) au-dessus de celle des 30 jours
+ * d'avant (3) de plus d'un point : le serveur écrit sa phrase « … monte … ».
+ */
+export async function risingFolder(api: APIRequestContext): Promise<OverviewFolder> {
+  const folder = await overviewFolder(api);
+  await entry(api, folder.patientId, {
+    type: 'feeling',
+    title: 'Anxiété 3/10',
+    feeling: { emotionCode: 'anxiety', intensity: 3 },
+    occurred: { from: daysAgo(45), precision: 'day' },
+    sessionId: folder.session,
+  });
+  return folder;
+}
+
+/** GET …/overview lu par l'API réelle (session du compte dans `api`), en français. */
+export async function readOverview(
+  api: APIRequestContext,
+  patientId: string,
+): Promise<{ narrative: { sentences: string[]; attention: string | null } }> {
+  const response = await api.get(`${API}/api/patients/${patientId}/overview?window=90d`, {
+    headers: { 'Accept-Language': 'fr' },
+  });
+  expect(response.status(), await response.text()).toBe(200);
+  return response.json();
+}
+
 /** Patient sans aucune donnée : la séance d'accueil, créée avec lui, est archivée. */
 export async function emptyPatient(api: APIRequestContext): Promise<string> {
   const patientId = await createPatient(api, 'Iris P.');

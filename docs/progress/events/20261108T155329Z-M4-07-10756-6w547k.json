@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T15:53:29.931Z",
+  "task": "M4-07",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Vue simple Récit (défaut) : En bref = narrative.sentences telles quelles, point d'attention, graphe ECharts à points réels (une série par émotion, repère médicament, ticks séances, tokens, @defer, tableau accessible), dernière séance, situations, depuis la dernière séance, traitement, cadre, à compléter ; place B9 réservée ; trois états par bloc ; bascule sans rechargement.",
+  "notes": "Écarts contrat : tendance sans champ dédié (libellé fixe + graphe), situations en données, noté pendant la séance = compte, sélecteur de fenêtre dans la barre commune, Marie D. créée par l'API (risingFolder), instantané vide en assertion explicite (pas de .snap). chart-host.ts extrait de trend-chart (M4-05). lint, tokens, test 1245, build verts ; e2e flux-6 11/11 ; passe complète 96 ok / 11 ignorés / 15 échecs de charge (Mailpit, filters) verts seuls. Aucune dépendance npm.",
+  "next": "Rebase sur main puis PR M4-07 Vue simple Récit ; suite : renommer TrendChart/TREND_RENDERER en noms génériques.",
+  "branch": "claude/competent-wu-4d09a1",
+  "checkout": "competent-wu-4d09a1"
+}

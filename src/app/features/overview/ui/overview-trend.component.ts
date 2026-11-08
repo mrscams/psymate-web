@@ -10,23 +10,11 @@ import {
 import { RouterLink } from '@angular/router';
 
 import { StateComponent } from '../../../shared/ui';
+import { ENTRY_QUERY_PARAM } from '../../entries';
 import { EmotionFamily, OverviewView } from '../data/overview.model';
-import { familyLabel, formatDay, formatIntensity, trendSummary } from './overview-labels';
+import { familyLabel, formatDay, formatIntensity, localDay, trendSummary } from './overview-labels';
 import { TrendChartComponent } from './trend-chart.component';
 import { TrendChartData, TrendChartLabels } from './trend-chart.options';
-
-/**
- * Horodatage de l'axe du temps d'ECharts (il lit « AAAA-MM-JJ » comme minuit local) → le jour
- * AAAA-MM-JJ qu'il représente.
- */
-export function localDay(timestamp: number): string {
-  const date = new Date(timestamp);
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-}
-
-/** Paramètre de l'éditeur d'entrée (features/entries, ENTRY_QUERY_PARAM) : le shell l'ouvre. */
-const ENTRY_PARAM = 'entry';
 
 /**
  * Corps du bloc « Tendance » (fiche 02, B4 écran 2) : la courbe ECharts (en @defer, hors du bundle
@@ -263,6 +251,6 @@ export class OverviewTrendComponent {
   }
 
   protected entryParams(entryId: string): Record<string, string> {
-    return { [ENTRY_PARAM]: entryId };
+    return { [ENTRY_QUERY_PARAM]: entryId };
   }
 }
