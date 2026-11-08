@@ -25,9 +25,11 @@ interface Editing {
 }
 
 /**
- * Tableau des tags (/mon-compte/tags) : libellé, usages, date de création ; Renommer en place,
- * Fusionner… avec aperçu en ligne (« réétiquette N usages ») et confirmation. La fusion de tags
- * n'a pas d'annulation dans le contrat : l'aperçu le dit.
+ * Tableau des tags (/mon-compte/tags) : libellé et date de création ; Renommer en place,
+ * Fusionner… avec aperçu en ligne et confirmation. L'aperçu donne le nombre d'usages réétiquetés
+ * quand l'API le connaît (usageCount > 0) : en contract-v0.11.0 ce compteur n'est augmenté que par
+ * les fusions, d'où l'absence de colonne « Usages ». La fusion de tags ne s'annule pas : l'aperçu
+ * le dit.
  */
 @Component({
   selector: 'pm-tag-table',

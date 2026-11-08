@@ -58,6 +58,8 @@ input[type='text'],
 }
 
 .proximity {
+  display: flex;
+  gap: 6px;
   margin: 0;
   padding: 6px 10px;
   border-radius: 8px;

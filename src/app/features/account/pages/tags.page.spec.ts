@@ -75,12 +75,13 @@ describe('TagsPage', () => {
     expect(el.querySelector('pm-state [role="status"]')?.textContent).toContain('Aucun tag');
   });
 
-  it('chargé : libellé, usages, date ; lien vers les émotions', async () => {
+  it('chargé : libellé et date, sans colonne d’usages ; lien vers les émotions', async () => {
     const { el } = await render({ list: vi.fn().mockResolvedValue(TAGS) });
     expect(el.querySelectorAll('pm-tag-table tbody tr[data-tag]')).toHaveLength(3);
     const travail = row(el, 'travail');
     expect(travail.textContent).toContain('#travail');
-    expect(travail.querySelectorAll('td')[1].textContent?.trim()).toBe('4');
+    expect(travail.querySelectorAll('td')[1].textContent?.trim()).toBe('1 nov. 2026');
+    expect(el.querySelector('pm-tag-table thead')?.textContent).not.toContain('Usages');
     expect(el.querySelector('#h-my-tags')?.textContent).toContain('Mes tags · 3');
     expect(el.querySelector('a[href="/mon-compte/emotions"]')).not.toBeNull();
   });
@@ -154,7 +155,6 @@ describe('TagsPage', () => {
     await settle(fixture);
     expect(merge).toHaveBeenCalledWith(BOULOT.id, TRAVAIL.id);
     expect(el.querySelector('tr[data-tag="boulot"]')).toBeNull();
-    expect(row(el, 'travail').querySelectorAll('td')[1].textContent?.trim()).toBe('6');
     expect(toasts.toasts()[0].message).toContain('« boulot » fusionné dans « travail »');
   });
 });

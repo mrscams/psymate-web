@@ -5,7 +5,6 @@
   <thead>
     <tr>
       <th scope="col" i18n="Colonne tag@@vocabulary.tags.col.tag">Tag</th>
-      <th scope="col" i18n="Colonne usages@@vocabulary.tags.col.usage">Usages</th>
       <th scope="col" i18n="Colonne date de création@@vocabulary.tags.col.created">Créé le</th>
       <th scope="col" class="actions-col" i18n="Colonne actions@@vocabulary.table.actions">
         Actions
@@ -38,7 +37,6 @@
             <span class="name"><span class="hash" aria-hidden="true">#</span>{{ tag.label }}</span>
           }
         </td>
-        <td class="mono">{{ tag.usageCount }}</td>
         <td class="mono">{{ created(tag) }}</td>
         <td class="actions-col">
           <span class="row-actions">
@@ -87,14 +85,14 @@
       </tr>
       @if (rowError() && editing()?.id === tag.id) {
         <tr class="sub-row">
-          <td colspan="4">
+          <td colspan="3">
             <p class="error" role="alert" [id]="'tag-row-error-' + tag.id">{{ rowError() }}</p>
           </td>
         </tr>
       }
       @if (isEditing('merge', tag.id)) {
         <tr class="sub-row">
-          <td colspan="4">
+          <td colspan="3">
             <div
               class="merge-confirm"
               role="group"

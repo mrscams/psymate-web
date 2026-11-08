@@ -13661,15 +13661,6 @@
         </context-group>
         <note priority="1" from="description">Colonne tag</note>
       </trans-unit>
-      <trans-unit id="vocabulary.tags.col.usage" datatype="html">
-        <source>Usages</source>
-        <target state="translated">Uses</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">8,9</context>
-        </context-group>
-        <note priority="1" from="description">Colonne usages</note>
-      </trans-unit>
       <trans-unit id="vocabulary.tags.col.created" datatype="html">
         <source>Créé le</source>
         <target state="translated">Created</target>
