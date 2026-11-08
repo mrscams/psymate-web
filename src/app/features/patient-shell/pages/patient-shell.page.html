@@ -26,8 +26,22 @@
     (closeSession)="openClose()"
     (retry)="reload()"
   >
-    <!-- Sortie (capture) : texte saisi + Entrée ; M1-08 y branche l'éditeur d'entrée. -->
-    <pm-capture-bar pmCapture />
+    <!-- Barre de capture (Entrée) et bouton + : ouvrent l'éditeur d'entrée (M1-08, features/entries). -->
+    <div pmCapture class="capture-row">
+      <pm-capture-bar class="capture-bar" (capture)="newEntry($event)" />
+      <button
+        type="button"
+        class="new-entry"
+        aria-label="Nouvelle entrée (N)"
+        i18n-aria-label="Bouton plus de l'en-tête patient@@patientShell.newEntry"
+        aria-keyshortcuts="N"
+        (click)="newEntry()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      </button>
+    </div>
     <!-- Emplacement [pmViewToggle] : bascule « Vue : Simple · Complète », branchée en M4-05. -->
   </pm-patient-header>
   @if (store.patient()) {

@@ -13904,6 +13904,951 @@
         </context-group>
         <note priority="1" from="description">Erreur, fusion introuvable (404)</note>
       </trans-unit>
+      <trans-unit id="entries.editor.draftBadge" datatype="html">
+        <source>brouillon</source>
+        <target state="translated">draft</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">7,12</context>
+        </context-group>
+        <note priority="1" from="description">Pastille d&apos;une entrée en brouillon</note>
+      </trans-unit>
+      <trans-unit id="entries.type.label" datatype="html">
+        <source>Type</source>
+        <target state="translated">Type</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">36,38</context>
+        </context-group>
+        <note priority="1" from="description">Bloc du type d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.feeling.emotion" datatype="html">
+        <source>Émotion</source>
+        <target state="translated">Emotion</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">49,52</context>
+        </context-group>
+        <note priority="1" from="description">Champ émotion d&apos;un ressenti</note>
+      </trans-unit>
+      <trans-unit id="entries.feeling.intensity" datatype="html">
+        <source>Intensité</source>
+        <target state="translated">Intensity</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">67,70</context>
+        </context-group>
+        <note priority="1" from="description">Champ intensité d&apos;un ressenti</note>
+      </trans-unit>
+      <trans-unit id="entries.feeling.text" datatype="html">
+        <source>Texte</source>
+        <target state="translated">Text</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">86,89</context>
+        </context-group>
+        <note priority="1" from="description">Texte court d&apos;un ressenti</note>
+      </trans-unit>
+      <trans-unit id="entries.medication.molecule" datatype="html">
+        <source>Molécule</source>
+        <target state="translated">Molecule</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">106,109</context>
+        </context-group>
+        <note priority="1" from="description">Molécule d&apos;un médicament</note>
+      </trans-unit>
+      <trans-unit id="entries.medication.dosage" datatype="html">
+        <source>Dose</source>
+        <target state="translated">Dose</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">126,129</context>
+        </context-group>
+        <note priority="1" from="description">Dose d&apos;un médicament</note>
+      </trans-unit>
+      <trans-unit id="entries.session.modality" datatype="html">
+        <source>Modalité</source>
+        <target state="translated">Modality</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">152,155</context>
+        </context-group>
+        <note priority="1" from="description">Modalité d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="entries.session.duration" datatype="html">
+        <source>Durée (min)</source>
+        <target state="translated">Duration (min)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">175,178</context>
+        </context-group>
+        <note priority="1" from="description">Durée d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="entries.session.startHint" datatype="html">
+        <source> Une séance créée ici est ouverte maintenant ; sa durée se donne à la clôture. </source>
+        <target state="translated">A session created here opens now; its duration is set when it is closed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">195,199</context>
+        </context-group>
+        <note priority="1" from="description">Une séance créée ici démarre</note>
+      </trans-unit>
+      <trans-unit id="entries.field.title" datatype="html">
+        <source>Titre</source>
+        <target state="translated">Title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">208,211</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.field.body" datatype="html">
+        <source>Texte</source>
+        <target state="translated">Text</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">230,233</context>
+        </context-group>
+        <note priority="1" from="description">Texte d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.field.bodyHint" datatype="html">
+        <source><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/>+<x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> pour enregistrer depuis le texte. </source>
+        <target state="translated"><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/>+<x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> to save from the text.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">244,246</context>
+        </context-group>
+        <note priority="1" from="description">Raccourci d&apos;enregistrement depuis un texte</note>
+      </trans-unit>
+      <trans-unit id="entries.session.label" datatype="html">
+        <source>Séance</source>
+        <target state="translated">Session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">260,263</context>
+        </context-group>
+        <note priority="1" from="description">Bloc de la séance de rattachement</note>
+      </trans-unit>
+      <trans-unit id="entries.session.none" datatype="html">
+        <source> Aucune séance </source>
+        <target state="translated">No session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">270,273</context>
+        </context-group>
+        <note priority="1" from="description">Aucune séance pour ce patient</note>
+      </trans-unit>
+      <trans-unit id="entries.reason.label" datatype="html">
+        <source>Motif de la correction (facultatif)</source>
+        <target state="translated">Reason for the correction (optional)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">292,295</context>
+        </context-group>
+        <note priority="1" from="description">Motif d&apos;une correction</note>
+      </trans-unit>
+      <trans-unit id="entries.more.summary" datatype="html">
+        <source> Plus · visibilité, tags </source>
+        <target state="translated">More · visibility, tags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">311,313</context>
+        </context-group>
+        <note priority="1" from="description">Bloc replié des options</note>
+      </trans-unit>
+      <trans-unit id="entries.visibility.legend" datatype="html">
+        <source> Visibilité </source>
+        <target state="translated">Visibility</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">315,317</context>
+        </context-group>
+        <note priority="1" from="description">Visibilité d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.visibility.clinical" datatype="html">
+        <source>Clinique : partagée avec l&apos;équipe clinique</source>
+        <target state="translated">Clinical: shared with the clinical team</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">320,323</context>
+        </context-group>
+        <note priority="1" from="description">Visibilité clinique</note>
+      </trans-unit>
+      <trans-unit id="entries.visibility.private" datatype="html">
+        <source>Privée : vous seul, exclue de l&apos;export</source>
+        <target state="translated">Private: you only, excluded from exports</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">326,329</context>
+        </context-group>
+        <note priority="1" from="description">Visibilité privée</note>
+      </trans-unit>
+      <trans-unit id="entries.tags.legend" datatype="html">
+        <source>Tags</source>
+        <target state="translated">Tags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">335,337</context>
+        </context-group>
+        <note priority="1" from="description">Tags d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.editor.cancel" datatype="html">
+        <source>Annuler</source>
+        <target state="translated">Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">375,377</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;annulation du panneau</note>
+      </trans-unit>
+      <trans-unit id="entries.editor.draft" datatype="html">
+        <source>Brouillon</source>
+        <target state="translated">Draft</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">381,383</context>
+        </context-group>
+        <note priority="1" from="description">Bouton brouillon</note>
+      </trans-unit>
+      <trans-unit id="entries.type.group" datatype="html">
+        <source>Type d&apos;entrée</source>
+        <target state="translated">Entry type</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+        <note priority="1" from="description">Nom du groupe des types d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.editor.titleNew" datatype="html">
+        <source>Nouvelle entrée</source>
+        <target state="translated">New entry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <note priority="1" from="description">Titre du panneau en création</note>
+      </trans-unit>
+      <trans-unit id="entries.editor.titleEdit" datatype="html">
+        <source>Modifier l&apos;entrée · v<x id="version" equiv-text="version"/></source>
+        <target state="translated">Edit entry · v<x id="version" equiv-text="version"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">Titre du panneau en correction</note>
+      </trans-unit>
+      <trans-unit id="entries.editor.loadError" datatype="html">
+        <source>Impossible de charger cette entrée</source>
+        <target state="translated">Unable to load this entry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <note priority="1" from="description">Entrée illisible</note>
+      </trans-unit>
+      <trans-unit id="entries.grace.in" datatype="html">
+        <source>Créée <x id="ago" equiv-text="ago"/> · dans la fenêtre de grâce (1 h 15) : la version 1 sera modifiée en place, sans nouvelle version.</source>
+        <target state="translated">Created <x id="ago" equiv-text="ago"/> · within the grace window (1 h 15): version 1 will be edited in place, with no new version.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <note priority="1" from="description">Bandeau de grâce, dans la fenêtre</note>
+      </trans-unit>
+      <trans-unit id="entries.grace.out" datatype="html">
+        <source>Modifiée <x id="ago" equiv-text="ago"/> · hors fenêtre de grâce (1 h 15) : cette correction créera la version <x id="next" equiv-text="next"/>.</source>
+        <target state="translated">Changed <x id="ago" equiv-text="ago"/> · outside the grace window (1 h 15): this correction will create version <x id="next" equiv-text="next"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+        <note priority="1" from="description">Bandeau de grâce, hors fenêtre</note>
+      </trans-unit>
+      <trans-unit id="entries.editor.saveVersion" datatype="html">
+        <source>Enregistrer la version <x id="next" equiv-text="next"/></source>
+        <target state="translated">Save version <x id="next" equiv-text="next"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;enregistrement d&apos;une correction</note>
+      </trans-unit>
+      <trans-unit id="entries.editor.save" datatype="html">
+        <source>Enregistrer</source>
+        <target state="translated">Save</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;enregistrement</note>
+      </trans-unit>
+      <trans-unit id="entries.editor.history" datatype="html">
+        <source>Version <x id="current" equiv-text="current"/> · Historique (<x id="count" equiv-text="count"/> versions)</source>
+        <target state="translated">Version <x id="current" equiv-text="current"/> · History (<x id="count" equiv-text="count"/> versions)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers l&apos;historique des versions</note>
+      </trans-unit>
+      <trans-unit id="entries.session.loadError" datatype="html">
+        <source>Impossible de charger les séances</source>
+        <target state="translated">Unable to load sessions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">170</context>
+        </context-group>
+        <note priority="1" from="description">Séances illisibles</note>
+      </trans-unit>
+      <trans-unit id="entries.tags.loadError" datatype="html">
+        <source>Impossible de charger les tags</source>
+        <target state="translated">Unable to load tags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <note priority="1" from="description">Tags illisibles</note>
+      </trans-unit>
+      <trans-unit id="entries.tags.emptyTitle" datatype="html">
+        <source>Aucun tag pour le moment</source>
+        <target state="translated">No tags yet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <note priority="1" from="description">Aucun tag</note>
+      </trans-unit>
+      <trans-unit id="entries.tags.emptyMessage" datatype="html">
+        <source>Les tags se créent dans Compte, Tags.</source>
+        <target state="translated">Tags are created in Account, Tags.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+        <note priority="1" from="description">Aucun tag, où en créer</note>
+      </trans-unit>
+      <trans-unit id="entries.saved.edit" datatype="html">
+        <source>Correction enregistrée (version <x id="version" equiv-text="version"/>).</source>
+        <target state="translated">Correction saved (version <x id="version" equiv-text="version"/>).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">315</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une correction</note>
+      </trans-unit>
+      <trans-unit id="entries.saved.draft" datatype="html">
+        <source>Brouillon enregistré.</source>
+        <target state="translated">Draft saved.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">318</context>
+        </context-group>
+        <note priority="1" from="description">Toast après un brouillon</note>
+      </trans-unit>
+      <trans-unit id="entries.saved.create" datatype="html">
+        <source>Entrée enregistrée.</source>
+        <target state="translated">Entry saved.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">319</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une création</note>
+      </trans-unit>
+      <trans-unit id="entries.session.open" datatype="html">
+        <source>Séance du <x id="date" equiv-text="date"/> (en cours)</source>
+        <target state="translated">Session of <x id="date" equiv-text="date"/> (in progress)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">325</context>
+        </context-group>
+        <note priority="1" from="description">Séance ouverte dans le bloc Séance</note>
+      </trans-unit>
+      <trans-unit id="entries.session.option" datatype="html">
+        <source>Séance du <x id="date" equiv-text="date"/></source>
+        <target state="translated">Session of <x id="date" equiv-text="date"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">326</context>
+        </context-group>
+        <note priority="1" from="description">Séance dans le bloc Séance</note>
+      </trans-unit>
+      <trans-unit id="entries.history.mine" datatype="html">
+        <source>vous</source>
+        <target state="translated">you</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.html</context>
+          <context context-type="linenumber">21,24</context>
+        </context-group>
+        <note priority="1" from="description">Auteur d&apos;une version, le praticien connecté</note>
+      </trans-unit>
+      <trans-unit id="entries.history.current" datatype="html">
+        <source>courante</source>
+        <target state="translated">current</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.html</context>
+          <context context-type="linenumber">28,32</context>
+        </context-group>
+        <note priority="1" from="description">Marque de la version courante</note>
+      </trans-unit>
+      <trans-unit id="entries.history.reason" datatype="html">
+        <source>Motif :</source>
+        <target state="translated">Reason:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.html</context>
+          <context context-type="linenumber">34,36</context>
+        </context-group>
+        <note priority="1" from="description">Motif d&apos;une version</note>
+      </trans-unit>
+      <trans-unit id="entries.history.unchanged" datatype="html">
+        <source>Inchangés :</source>
+        <target state="translated">Unchanged:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.html</context>
+          <context context-type="linenumber">52,55</context>
+        </context-group>
+        <note priority="1" from="description">Champs inchangés d&apos;une version</note>
+      </trans-unit>
+      <trans-unit id="entries.history.created" datatype="html">
+        <source> Création de l&apos;entrée. </source>
+        <target state="translated">Entry created.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.html</context>
+          <context context-type="linenumber">59,63</context>
+        </context-group>
+        <note priority="1" from="description">Première version d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.history.title" datatype="html">
+        <source>Historique des versions</source>
+        <target state="translated">Version history</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Titre du panneau d&apos;historique</note>
+      </trans-unit>
+      <trans-unit id="entries.history.error" datatype="html">
+        <source>Impossible de charger l&apos;historique</source>
+        <target state="translated">Unable to load the history</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">Historique en erreur</note>
+      </trans-unit>
+      <trans-unit id="entries.history.empty" datatype="html">
+        <source>Aucune version</source>
+        <target state="translated">No version</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <note priority="1" from="description">Historique vide</note>
+      </trans-unit>
+      <trans-unit id="entries.history.version" datatype="html">
+        <source>v<x id="version" equiv-text="version"/></source>
+        <target state="translated">v<x id="version" equiv-text="version"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Nom court d&apos;une version</note>
+      </trans-unit>
+      <trans-unit id="entries.history.emptyValue" datatype="html">
+        <source>(vide)</source>
+        <target state="translated">(empty)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <note priority="1" from="description">Valeur vide dans l&apos;historique</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.placeholder" datatype="html">
+        <source>Anxiété, colère…</source>
+        <target state="translated">Anxiety, anger…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
+          <context context-type="linenumber">19,20</context>
+        </context-group>
+        <note priority="1" from="description">Texte indicatif du champ émotion</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.toggle" datatype="html">
+        <source>Afficher les émotions</source>
+        <target state="translated">Show emotions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
+          <context context-type="linenumber">29,30</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui déplie la liste des émotions</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.list" datatype="html">
+        <source>Émotions</source>
+        <target state="translated">Emotions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
+          <context context-type="linenumber">42,43</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la liste des émotions</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.customTag" datatype="html">
+        <source>personnalisée</source>
+        <target state="translated">custom</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
+          <context context-type="linenumber">62,66</context>
+        </context-group>
+        <note priority="1" from="description">Marque d&apos;une émotion personnalisée</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.familyLegend" datatype="html">
+        <source> Famille de « <x id="INTERPOLATION" equiv-text="{{ label }}"/> » (obligatoire) </source>
+        <target state="translated">Family of “<x id="INTERPOLATION" equiv-text="{{ label }}"/>” (required)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
+          <context context-type="linenumber">95,97</context>
+        </context-group>
+        <note priority="1" from="description">Choix de la famille d&apos;une nouvelle émotion</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.familyRequired" datatype="html">
+        <source> Choisissez une famille. </source>
+        <target state="translated">Choose a family.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
+          <context context-type="linenumber">121,123</context>
+        </context-group>
+        <note priority="1" from="description">Famille manquante</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.create" datatype="html">
+        <source> Créer l&apos;émotion </source>
+        <target state="translated">Create emotion</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
+          <context context-type="linenumber">134,138</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de création d&apos;une émotion personnalisée</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.cancel" datatype="html">
+        <source> Annuler </source>
+        <target state="translated">Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
+          <context context-type="linenumber">142,147</context>
+        </context-group>
+        <note priority="1" from="description">Annulation de la création d&apos;une émotion</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.loadError" datatype="html">
+        <source>Impossible de charger les émotions</source>
+        <target state="translated">Unable to load emotions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <note priority="1" from="description">Liste des émotions en erreur</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.createOption" datatype="html">
+        <source>Créer l&apos;émotion personnalisée « <x id="label" equiv-text="label"/> »</source>
+        <target state="translated">Create custom emotion “<x id="label" equiv-text="label"/>”</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+        <note priority="1" from="description">Dernière ligne de la liste des émotions</note>
+      </trans-unit>
+      <trans-unit id="entries.precision.exact" datatype="html">
+        <source>Exact</source>
+        <target state="translated">Exact</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">Précision du moment d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.precision.day" datatype="html">
+        <source>Jour</source>
+        <target state="translated">Day</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Précision du moment d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.precision.month" datatype="html">
+        <source>Mois</source>
+        <target state="translated">Month</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Précision du moment d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.precision.year" datatype="html">
+        <source>Année</source>
+        <target state="translated">Year</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Précision du moment d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.precision.period" datatype="html">
+        <source>Période</source>
+        <target state="translated">Period</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Précision du moment d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.precision.lifePhase" datatype="html">
+        <source>Phase de vie</source>
+        <target state="translated">Life phase</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <note priority="1" from="description">Précision du moment d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.family.joy" datatype="html">
+        <source>Joie</source>
+        <target state="translated">Joy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
+      </trans-unit>
+      <trans-unit id="entries.family.trust" datatype="html">
+        <source>Confiance</source>
+        <target state="translated">Trust</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
+      </trans-unit>
+      <trans-unit id="entries.family.fear" datatype="html">
+        <source>Peur</source>
+        <target state="translated">Fear</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
+      </trans-unit>
+      <trans-unit id="entries.family.surprise" datatype="html">
+        <source>Surprise</source>
+        <target state="translated">Surprise</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
+      </trans-unit>
+      <trans-unit id="entries.family.sadness" datatype="html">
+        <source>Tristesse</source>
+        <target state="translated">Sadness</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
+      </trans-unit>
+      <trans-unit id="entries.family.disgust" datatype="html">
+        <source>Dégoût</source>
+        <target state="translated">Disgust</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
+      </trans-unit>
+      <trans-unit id="entries.family.anger" datatype="html">
+        <source>Colère</source>
+        <target state="translated">Anger</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
+      </trans-unit>
+      <trans-unit id="entries.family.anticipation" datatype="html">
+        <source>Anticipation</source>
+        <target state="translated">Anticipation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotion (E5.2)</note>
+      </trans-unit>
+      <trans-unit id="entries.modality.inPerson" datatype="html">
+        <source>Présentiel</source>
+        <target state="translated">In person</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">Modalité de séance</note>
+      </trans-unit>
+      <trans-unit id="entries.modality.video" datatype="html">
+        <source>Visio</source>
+        <target state="translated">Video</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <note priority="1" from="description">Modalité de séance</note>
+      </trans-unit>
+      <trans-unit id="entries.modality.phone" datatype="html">
+        <source>Téléphone</source>
+        <target state="translated">Phone</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Modalité de séance</note>
+      </trans-unit>
+      <trans-unit id="entries.modality.email" datatype="html">
+        <source>E-mail</source>
+        <target state="translated">Email</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+        <note priority="1" from="description">Modalité de séance</note>
+      </trans-unit>
+      <trans-unit id="entries.history.field.title" datatype="html">
+        <source>Titre</source>
+        <target state="translated">Title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <note priority="1" from="description">Champ de l&apos;historique d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.history.field.body" datatype="html">
+        <source>Texte</source>
+        <target state="translated">Text</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <note priority="1" from="description">Champ de l&apos;historique d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.error.sessionOpen" datatype="html">
+        <source>Une séance est déjà ouverte pour ce patient : clôturez-la avant d&apos;en créer une autre.</source>
+        <target state="translated">A session is already open for this patient: close it before creating another.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de l&apos;éditeur d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.error.archived" datatype="html">
+        <source>Cette entrée est archivée : restaurez-la avant de la corriger.</source>
+        <target state="translated">This entry is archived: restore it before correcting it.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de l&apos;éditeur d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.error.notFound" datatype="html">
+        <source>Cette entrée n&apos;existe plus.</source>
+        <target state="translated">This entry no longer exists.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de l&apos;éditeur d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.error.forbidden" datatype="html">
+        <source>Cette entrée appartient au dossier d&apos;un autre praticien.</source>
+        <target state="translated">This entry belongs to another practitioner&apos;s record.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de l&apos;éditeur d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.error.network" datatype="html">
+        <source>Le serveur n&apos;a pas répondu. Votre saisie est conservée : réessayez.</source>
+        <target state="translated">The server did not respond. Your input is kept: try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de l&apos;éditeur d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.error.generic" datatype="html">
+        <source>L&apos;entrée n&apos;a pas pu être enregistrée.</source>
+        <target state="translated">The entry could not be saved.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de l&apos;éditeur d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.exists" datatype="html">
+        <source>Une émotion porte déjà ce libellé : choisissez-la dans la liste.</source>
+        <target state="translated">An emotion already has this label: pick it from the list.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de création d&apos;émotion</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.error" datatype="html">
+        <source>L&apos;émotion n&apos;a pas pu être créée.</source>
+        <target state="translated">The emotion could not be created.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de création d&apos;émotion</note>
+      </trans-unit>
+      <trans-unit id="entries.intensity.unset" datatype="html">
+        <source>Non renseignée</source>
+        <target state="translated">Not set</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/intensity-slider.component.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+        <note priority="1" from="description">Valeur lue du curseur d&apos;intensité non réglé</note>
+      </trans-unit>
+      <trans-unit id="entries.intensity.valueText" datatype="html">
+        <source><x id="value" equiv-text="value"/> sur <x id="max" equiv-text="max"/></source>
+        <target state="translated"><x id="value" equiv-text="value"/> out of <x id="max" equiv-text="max"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/intensity-slider.component.ts</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+        <note priority="1" from="description">Valeur lue du curseur d&apos;intensité</note>
+      </trans-unit>
+      <trans-unit id="entries.when.legend" datatype="html">
+        <source>Quand</source>
+        <target state="translated">When</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">2,5</context>
+        </context-group>
+        <note priority="1" from="description">Bloc du moment d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.when.now" datatype="html">
+        <source> Maintenant </source>
+        <target state="translated">Now</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">11,15</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du moment présent</note>
+      </trans-unit>
+      <trans-unit id="entries.when.precision" datatype="html">
+        <source>Précision</source>
+        <target state="translated">Precision</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
+        <note priority="1" from="description">Groupe des précisions de date</note>
+      </trans-unit>
+      <trans-unit id="entries.when.lifePhase" datatype="html">
+        <source>Phase de vie</source>
+        <target state="translated">Life phase</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">38,41</context>
+        </context-group>
+        <note priority="1" from="description">Libellé d&apos;une phase de vie</note>
+      </trans-unit>
+      <trans-unit id="entries.when.lifePhaseHint" datatype="html">
+        <source>enfance, adolescence…</source>
+        <target state="translated">childhood, adolescence…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">44,45</context>
+        </context-group>
+        <note priority="1" from="description">Exemples de phases de vie</note>
+      </trans-unit>
+      <trans-unit id="entries.when.start" datatype="html">
+        <source>Début</source>
+        <target state="translated">Start</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">60,63</context>
+        </context-group>
+        <note priority="1" from="description">Début d&apos;une période ou d&apos;une situation</note>
+      </trans-unit>
+      <trans-unit id="entries.when.date" datatype="html">
+        <source>Date</source>
+        <target state="translated">Date</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">63,66</context>
+        </context-group>
+        <note priority="1" from="description">Date d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.when.end" datatype="html">
+        <source>Fin</source>
+        <target state="translated">End</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">83,85</context>
+        </context-group>
+        <note priority="1" from="description">Fin d&apos;une période</note>
+      </trans-unit>
+      <trans-unit id="entries.when.periodLabel" datatype="html">
+        <source>Libellé de la période</source>
+        <target state="translated">Period label</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">101,104</context>
+        </context-group>
+        <note priority="1" from="description">Libellé d&apos;une période</note>
+      </trans-unit>
+      <trans-unit id="entries.when.ongoing" datatype="html">
+        <source>En cours</source>
+        <target state="translated">Ongoing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">123,126</context>
+        </context-group>
+        <note priority="1" from="description">Situation sans fin</note>
+      </trans-unit>
+      <trans-unit id="entries.when.situationEnd" datatype="html">
+        <source>Fin</source>
+        <target state="translated">End</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">128,131</context>
+        </context-group>
+        <note priority="1" from="description">Fin d&apos;une situation</note>
+      </trans-unit>
+      <trans-unit id="patientShell.newEntry" datatype="html">
+        <source>Nouvelle entrée (N)</source>
+        <target state="translated">New entry (N)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
+          <context context-type="linenumber">35,36</context>
+        </context-group>
+        <note priority="1" from="description">Bouton plus de l&apos;en-tête patient</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.emptyTitle" datatype="html">
+        <source>Aucune émotion ne correspond</source>
+        <target state="translated">No emotion matches</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+        <note priority="1" from="description">Aucune émotion ne correspond</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.emptyMessage" datatype="html">
+        <source>Tapez un libellé pour créer une émotion personnalisée.</source>
+        <target state="translated">Type a label to create a custom emotion.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+        <note priority="1" from="description">Aucune émotion, comment en créer</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

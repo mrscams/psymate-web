@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T01:30:45.336Z",
+  "task": "M1-08",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Éditeur d'entrée (panneau 480 px, six types, émotion avec création personnalisée en ligne, intensité 0-10, précision temporelle, séance présélectionnée, brouillon Échap et Ctrl+S, correction avec bandeau de grâce et motif) et historique des versions ; branché sur N, + et la barre de capture, ?entry=<id>",
+  "notes": "711 tests Vitest verts, e2e complets 70 passés et 6 ignorés (admin) ; ressenti 8/10 au clavier mesuré à 333 ms. Écarts : historique en second panneau empilé (SidePanelService n'accole pas à gauche), intensité 0-10 (contrat), durée de séance seulement en correction (NOT_ALLOWED_ON_CREATE), diff limité au titre et au texte (EntryVersionDto), vocabulary/entry-types non lu. L'e2e de correction après la grâce consomme une entrée du seed en version 1 (ignoré si le seed est épuisé). Aucune dépendance npm.",
+  "next": "M2-04 et M2-05 (éditeur de lien, rail Lié à), M6-02 (grammaire de la barre de capture) peuvent s'appuyer sur openEntryEditor ; relire vue d'ensemble et timeline après écriture quand M3 et M4 existent",
+  "branch": "claude/m1-08-entries-b8068b",
+  "checkout": "m1-08-entries-b8068b"
+}

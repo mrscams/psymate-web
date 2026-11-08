@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   inject,
   Injector,
@@ -12,15 +13,17 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { filter, firstValueFrom } from 'rxjs';
+import { filter, firstValueFrom, map } from 'rxjs';
 
 import { ShortcutService } from '../../../core/shortcuts';
 import {
   PatientHeaderComponent,
   PatientSessionInfo,
+  SidePanelService,
   StateComponent,
   ToastService,
 } from '../../../shared/ui';
+import { ENTRY_QUERY_PARAM, openEntryEditor } from '../../entries';
 import { StateKind } from '../../../shared/util';
 import { ShellTab } from '../data/patient-shell.model';
 import { PatientShellStore } from '../data/patient-shell.store';
@@ -54,6 +57,12 @@ export class PatientShellPage {
   private readonly injector = inject(Injector);
   private readonly route = inject(ActivatedRoute);
   private readonly captureBar = viewChild(CaptureBarComponent);
+  private readonly panels = inject(SidePanelService);
+
+  /** `?entry=<id>` : correction d'une entrée, le panneau se rouvre au rechargement (fiche 05). */
+  private readonly entryParam = toSignal(
+    this.route.queryParamMap.pipe(map((params) => params.get(ENTRY_QUERY_PARAM))),
+  );
 
   private readonly navigated = toSignal(
     inject(Router).events.pipe(filter((event) => event instanceof NavigationEnd)),
@@ -96,6 +105,33 @@ export class PatientShellPage {
       untracked(() => {
         if (this.store.patientId() !== id) void this.store.load(id);
       });
+    });
+
+    // Éditeur d'entrée (M1-08) : N ouvre une nouvelle entrée ; ?entry=<id> ouvre sa correction.
+    inject(DestroyRef).onDestroy(
+      this.shortcuts.register(
+        'n',
+        () => this.newEntry(),
+        $localize`:Aide des raccourcis@@shortcuts.n:Nouvelle entrée`,
+      ),
+    );
+    effect(() => {
+      const entryId = this.entryParam();
+      const patient = this.store.patient();
+      if (!entryId || !patient) return;
+      untracked(() => openEntryEditor(patient.id, { entryId, injector: this.injector }));
+    });
+  }
+
+  /** N, bouton + ou Entrée dans la barre de capture (avec son texte) : nouvelle entrée. */
+  protected newEntry(text = ''): void {
+    if (this.panels.isOpen() || !this.store.patient()) return;
+    const ref = openEntryEditor(this.id(), { text, injector: this.injector });
+    // Le texte est dans le brouillon de l'éditeur : la barre se vide (pas de doublon à la 2e Entrée).
+    if (ref && text) this.captureBar()?.clear();
+    // Une séance créée depuis l'éditeur s'ouvre : l'en-tête relit la séance courante.
+    void ref?.closed.then((saved) => {
+      if (saved?.type === 'session') void this.store.refreshSession();
     });
   }
 

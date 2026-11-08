@@ -1,0 +1,67 @@
+<pm-side-panel [title]="title">
+  <aside class="history" [attr.aria-label]="title">
+    @if (state(); as kind) {
+      <pm-state
+        [kind]="kind"
+        skeleton="row"
+        [lines]="2"
+        [title]="kind === 'error' ? errorTitle : kind === 'empty' ? emptyTitle : undefined"
+        [action]="retry"
+      />
+    } @else {
+      <ol class="versions">
+        @for (item of versions(); track item.version) {
+          <li [attr.aria-current]="item.version === current() ? 'true' : null">
+            <p class="line">
+              <span class="name">{{ versionName(item.version) }}</span
+              >&ngsp;·&ngsp;<span class="mono">{{ item.when }}</span>
+              @if (item.mine) {
+                &ngsp;·&ngsp;<span
+                  i18n="Auteur d'une version, le praticien connecté@@entries.history.mine"
+                  >vous</span
+                >
+              }
+              @if (item.version === current()) {
+                &ngsp;·&ngsp;<span
+                  class="current"
+                  i18n="Marque de la version courante@@entries.history.current"
+                  >courante</span
+                >
+              }
+            </p>
+            @if (item.reason) {
+              <p class="reason">
+                <span i18n="Motif d'une version@@entries.history.reason">Motif :</span>
+                {{ item.reason }}
+              </p>
+            }
+            @if (item.rows.length > 0) {
+              <dl class="diff">
+                @for (row of item.rows; track row.field) {
+                  <dt>{{ row.label }}</dt>
+                  <dd>
+                    <s class="before">{{ row.before || emptyValue }}</s>
+                    <span class="after">{{ row.after || emptyValue }}</span>
+                  </dd>
+                }
+              </dl>
+            }
+            @if (item.unchangedText) {
+              <p class="unchanged">
+                <span i18n="Champs inchangés d'une version@@entries.history.unchanged"
+                  >Inchangés :</span
+                >
+                {{ item.unchangedText }}
+              </p>
+            }
+            @if (item.version === 1) {
+              <p class="unchanged" i18n="Première version d'une entrée@@entries.history.created">
+                Création de l'entrée.
+              </p>
+            }
+          </li>
+        }
+      </ol>
+    }
+  </aside>
+</pm-side-panel>

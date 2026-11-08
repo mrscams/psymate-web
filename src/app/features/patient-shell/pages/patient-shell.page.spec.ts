@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
@@ -39,7 +41,17 @@ async function render(api: Partial<Api> = {}, url = '/patients/p-marie', duratio
         withComponentInputBinding(),
       ),
       { provide: PatientShellApi, useValue: mock },
-      { provide: PreferencesStore, useValue: { defaultDurationMin: signal(durationMin) } },
+      {
+        provide: PreferencesStore,
+        useValue: {
+          defaultDurationMin: signal(durationMin),
+          defaultVisibility: signal('clinical'),
+          medicationVisible: signal(true),
+        },
+      },
+      // L'éditeur d'entrée (features/entries) lit l'API par HttpClient : requêtes en attente ici.
+      provideHttpClient(),
+      provideHttpClientTesting(),
     ],
   });
   const harness = await RouterTestingHarness.create(url);
@@ -271,5 +283,54 @@ describe('PatientShellPage', () => {
     await settle(harness);
     expect(text(el.querySelector('h1.name'))).toBe('Omar B.');
     expect(text(el.querySelector('pm-tab-placeholder-page .counter'))).toBe('Compteur : 0');
+  });
+
+  describe('éditeur d’entrée (M1-08)', () => {
+    const editor = () => document.querySelector<HTMLElement>('pm-entry-editor-panel');
+
+    afterEach(() => TestBed.inject(HttpTestingController).match(() => true));
+
+    it('bouton + et touche N : ouvrent l’éditeur, une seule fois', async () => {
+      const { harness, el } = await render();
+      el.querySelector<HTMLButtonElement>('button.new-entry')!.click();
+      await settle(harness);
+      expect(editor()?.querySelector('h2')?.textContent).toContain('Nouvelle entrée');
+      document.querySelector<HTMLButtonElement>('pm-side-panel button.close')!.click();
+      await settle(harness);
+      expect(editor()).toBeNull();
+
+      document.body.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'n', bubbles: true, cancelable: true }),
+      );
+      await settle(harness);
+      expect(editor()).not.toBeNull();
+      // Panneau ouvert : N ne rouvre rien.
+      document.body.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'n', bubbles: true, cancelable: true }),
+      );
+      await settle(harness);
+      expect(document.querySelectorAll('pm-entry-editor-panel')).toHaveLength(1);
+    });
+
+    it('Entrée dans la barre de capture : l’éditeur reprend le texte', async () => {
+      const { harness, el } = await render();
+      const input = el.querySelector<HTMLInputElement>('#pm-capture-input')!;
+      input.value = "n'a pas dormi";
+      input.dispatchEvent(new Event('input'));
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+      await settle(harness);
+      expect(editor()?.querySelector<HTMLTextAreaElement>('#field-body')?.value).toBe(
+        "n'a pas dormi",
+      );
+      await settle(harness);
+      expect(input.value).toBe('');
+    });
+
+    it('?entry=<id> : ouvre la correction de l’entrée', async () => {
+      const { harness } = await render({}, '/patients/p-marie?entry=e-1');
+      await settle(harness);
+      expect(editor()?.querySelector('h2')?.textContent).toContain('Modifier l');
+      TestBed.inject(HttpTestingController).expectOne((r) => r.url.endsWith('/api/entries/e-1'));
+    });
   });
 });

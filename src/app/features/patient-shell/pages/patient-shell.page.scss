@@ -17,3 +17,43 @@
 .back {
   color: var(--primary);
 }
+
+.capture-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.capture-bar {
+  flex: 1;
+  min-width: 0;
+}
+
+.new-entry {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  background: var(--primary);
+  color: var(--primary-on);
+  cursor: pointer;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}

@@ -1,0 +1,305 @@
+import { signal } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+
+import { SessionStore } from '../../../core/auth';
+import { PreferencesStore } from '../../../core/preferences';
+import { EntriesApi } from './entries.api';
+import { EntryEditorStore } from './entry-editor.store';
+import {
+  CURRENT_SESSION,
+  EMOTIONS,
+  entry,
+  feelingEntry,
+  SESSIONS,
+  TAGS,
+  VERSIONS,
+} from './entry.fixtures';
+import { emptyDraft, EntryDraft } from './entry.model';
+
+type Api = Partial<Record<keyof EntriesApi, ReturnType<typeof vi.fn>>>;
+
+function setup(
+  api: Api = {},
+  me = signal<{ id: string } | null>({ id: 'u-claire' }),
+  medicationVisible = true,
+) {
+  const mock: Api = {
+    emotions: vi.fn().mockResolvedValue(EMOTIONS),
+    tagLabels: vi.fn().mockResolvedValue(TAGS),
+    currentSession: vi.fn().mockResolvedValue(CURRENT_SESSION),
+    sessionsOf: vi.fn().mockResolvedValue(SESSIONS),
+    get: vi.fn().mockResolvedValue(entry()),
+    versions: vi.fn().mockResolvedValue([VERSIONS[1]]),
+    create: vi
+      .fn()
+      .mockImplementation(async (_p: string, body: { type: string }) =>
+        entry({ id: 'e-new', type: body.type as never }),
+      ),
+    patch: vi.fn().mockResolvedValue(entry({ version: 2 })),
+    createEmotion: vi.fn(),
+    ...api,
+  };
+  TestBed.configureTestingModule({
+    providers: [
+      { provide: EntriesApi, useValue: mock },
+      { provide: SessionStore, useValue: { me } },
+      {
+        provide: PreferencesStore,
+        useValue: {
+          defaultVisibility: signal('clinical'),
+          medicationVisible: signal(medicationVisible),
+        },
+      },
+    ],
+  });
+  return { store: TestBed.inject(EntryEditorStore), api: mock, me };
+}
+
+const problem422 = {
+  status: 422,
+  code: 'VALIDATION_FAILED',
+  errors: [
+    { field: 'feeling.intensity', code: 'REQUIRED', message: "L'intensité est obligatoire." },
+  ],
+};
+
+function draft(overrides: Partial<EntryDraft>): EntryDraft {
+  return { ...emptyDraft(overrides.type ?? 'note', 'clinical', 's-open'), ...overrides };
+}
+
+describe('EntryEditorStore', () => {
+  it('ouverture en création : brouillon vide avec le texte de la barre, séance courante, vocabulaire', async () => {
+    const { store, api } = setup();
+    const pending = store.open({ patientId: 'p-marie', text: "n'a pas dormi" });
+    expect(store.mode()).toBe('create');
+    expect(store.currentDraft()).toMatchObject({ type: 'note', body: "n'a pas dormi" });
+    await pending;
+    expect(store.currentSession()).toEqual(CURRENT_SESSION);
+    expect(store.sessionOptions()[0]).toEqual({ ...SESSIONS[0], open: true });
+    expect(store.emotions().data).toHaveLength(EMOTIONS.length);
+    expect(store.tags().data).toEqual(TAGS);
+    expect(api.get).not.toHaveBeenCalled();
+
+    // Le vocabulaire est gardé d'une ouverture à l'autre.
+    await store.open({ patientId: 'p-marie' });
+    expect(api.emotions).toHaveBeenCalledTimes(1);
+    expect(api.currentSession).toHaveBeenCalledTimes(2);
+  });
+
+  it('types proposés : Médicament masqué si entryTypes.medicationVisible = false, sauf en correction d’un médicament', async () => {
+    const { store } = setup({}, undefined, false);
+    await store.open({ patientId: 'p-marie' });
+    expect(store.types()).toEqual(['note', 'event', 'situation', 'feeling', 'session']);
+
+    TestBed.resetTestingModule();
+    const edit = setup(
+      { get: vi.fn().mockResolvedValue(entry({ type: 'medication' })) },
+      undefined,
+      false,
+    ).store;
+    await edit.open({ patientId: 'p-marie', entryId: 'e-1' });
+    expect(edit.types()).toContain('medication');
+  });
+
+  it('sans séance (404 NO_CURRENT_SESSION) : séance courante null, liste vide', async () => {
+    const { store } = setup({
+      currentSession: vi.fn().mockResolvedValue(null),
+      sessionsOf: vi.fn().mockResolvedValue([]),
+    });
+    await store.open({ patientId: 'p-new' });
+    expect(store.currentSession()).toBeNull();
+    expect(store.sessionOptions()).toEqual([]);
+  });
+
+  describe('save en création : un POST par type, jamais authorType ni submissionId', () => {
+    it.each<[string, Partial<EntryDraft>]>([
+      ['note', { type: 'note', body: 'Dort mal' }],
+      ['event', { type: 'event', title: 'Entretien annuel' }],
+      ['situation', { type: 'situation', title: 'Arrêt maladie' }],
+      ['feeling', { type: 'feeling', feeling: { emotionCode: 'anxiety', intensity: 8 } }],
+      ['session', { type: 'session', session: { modality: 'in_person', durationMin: null } }],
+      ['medication', { type: 'medication', medication: { molecule: 'Sertraline', dosage: '' } }],
+    ])('%s', async (type, input) => {
+      const { store, api } = setup();
+      await store.open({ patientId: 'p-marie', type: input.type });
+      const saved = await store.save(draft(input));
+      expect(saved?.type).toBe(type);
+      const [patientId, body] = api.create!.mock.calls[0] as [string, Record<string, unknown>];
+      expect(patientId).toBe('p-marie');
+      expect(body['type']).toBe(type);
+      expect(JSON.stringify(body)).not.toMatch(/authorType|submissionId/);
+      // Succès : le brouillon est effacé.
+      expect(store.currentDraft()).toBeNull();
+    });
+  });
+
+  it('Ctrl+S : status draft', async () => {
+    const { store, api } = setup();
+    await store.open({ patientId: 'p-marie' });
+    await store.save(draft({ type: 'note', body: 'à compléter' }), 'draft');
+    expect(api.create!.mock.calls[0][1]).toMatchObject({ status: 'draft' });
+  });
+
+  it('422 : problème rangé par champ, brouillon conservé, rien de perdu', async () => {
+    const { store } = setup({ create: vi.fn().mockRejectedValue(problem422) });
+    await store.open({ patientId: 'p-marie' });
+    const input = draft({ type: 'feeling', feeling: { emotionCode: 'anxiety', intensity: null } });
+    expect(await store.save(input)).toBeNull();
+    expect(store.saving()).toBe(false);
+    expect(store.errors()).toEqual({ 'feeling.intensity': "L'intensité est obligatoire." });
+    expect(store.currentDraft()).toEqual(input);
+  });
+
+  it('SESSION_REQUIRED (code racine, errors[0].field = sessionId) : erreur du champ séance', async () => {
+    const { store } = setup({
+      create: vi.fn().mockRejectedValue({
+        status: 422,
+        code: 'SESSION_REQUIRED',
+        errors: [
+          {
+            field: 'sessionId',
+            code: 'SESSION_REQUIRED',
+            message: 'Toute entrée appartient à une séance',
+          },
+        ],
+      }),
+    });
+    await store.open({ patientId: 'p-new' });
+    await store.save(draft({ type: 'note', body: 'x', sessionId: '' }));
+    expect(store.problem()?.code).toBe('SESSION_REQUIRED');
+    expect(store.errors()['sessionId']).toBe('Toute entrée appartient à une séance');
+  });
+
+  it('brouillon : gardé par patient à la fermeture, rendu à la réouverture, oublié si le compte change', async () => {
+    const { store, me } = setup();
+    await store.open({ patientId: 'p-marie' });
+    const typed = draft({
+      type: 'feeling',
+      feeling: { emotionCode: 'anxiety', intensity: 8 },
+      body: 'x',
+    });
+    store.keepDraft('create:p-marie', typed);
+    store.closed('create:p-marie');
+    expect(store.active()).toBe(false);
+
+    await store.open({ patientId: 'p-autre' });
+    expect(store.currentDraft()?.type).toBe('note');
+    // Le texte de la barre de capture s'ajoute au texte du brouillon : rien ne se perd.
+    await store.open({ patientId: 'p-marie', text: 'et fait des cauchemars' });
+    expect(store.currentDraft()).toEqual({ ...typed, body: 'x\net fait des cauchemars' });
+    expect(store.isOpenOn({ patientId: 'p-marie' })).toBe(true);
+
+    // Déconnexion : les brouillons cliniques sont effacés aussitôt, sans attendre une ouverture.
+    me.set(null);
+    TestBed.tick();
+    expect(store.drafts()).toEqual({});
+    me.set({ id: 'u-autre' });
+    await store.open({ patientId: 'p-marie' });
+    expect(store.currentDraft()?.body).toBe('');
+  });
+
+  describe('correction', () => {
+    it('ouverture : entrée, versions, brouillon depuis l’entrée ; grâce annoncée', async () => {
+      vi.useFakeTimers({ now: new Date('2026-10-24T12:30:00Z'), toFake: ['Date'] });
+      const { store, api } = setup();
+      await store.open({ patientId: 'p-marie', entryId: 'e-1' });
+      vi.useRealTimers();
+      expect(api.get).toHaveBeenCalledWith('e-1');
+      expect(store.mode()).toBe('edit');
+      expect(store.currentDraft()?.title).toBe('Entretien annuel');
+      expect(store.grace()).toMatchObject({ inGrace: true, nextVersion: 1 });
+      expect(api.currentSession).not.toHaveBeenCalled();
+    });
+
+    it('hors grâce : PATCH des seules clés modifiées avec le motif, puis relecture des versions', async () => {
+      const { store, api } = setup({
+        versions: vi.fn().mockResolvedValueOnce([VERSIONS[1]]).mockResolvedValueOnce(VERSIONS),
+      });
+      await store.open({ patientId: 'p-marie', entryId: 'e-1' });
+      expect(store.grace()).toMatchObject({ inGrace: false, nextVersion: 2 });
+      const current = store.currentDraft()!;
+      const saved = await store.save({ ...current, body: 'Corrigé', reason: 'relu' });
+      expect(api.patch).toHaveBeenCalledWith('e-1', { body: 'Corrigé', reason: 'relu' });
+      expect(JSON.stringify(api.patch!.mock.calls[0][1])).not.toMatch(/authorType|submissionId/);
+      expect(saved?.version).toBe(2);
+      expect(store.versionCount()).toBe(2);
+    });
+
+    it('rien de modifié : aucune requête, l’entrée telle quelle', async () => {
+      const { store, api } = setup({ get: vi.fn().mockResolvedValue(feelingEntry()) });
+      await store.open({ patientId: 'p-marie', entryId: 'e-feel' });
+      const saved = await store.save(store.currentDraft()!);
+      expect(api.patch).not.toHaveBeenCalled();
+      expect(saved?.id).toBe('e-feel');
+    });
+
+    it('brouillon corrigé : ⏎ le passe en définitif, Ctrl+S le garde en brouillon', async () => {
+      const { store, api } = setup({ get: vi.fn().mockResolvedValue(entry({ status: 'draft' })) });
+      await store.open({ patientId: 'p-marie', entryId: 'e-1' });
+      const unchanged = store.currentDraft()!;
+      await store.save(unchanged, 'draft');
+      expect(api.patch).not.toHaveBeenCalled();
+      await store.save(unchanged, 'final');
+      expect(api.patch).toHaveBeenCalledWith('e-1', { status: 'final' });
+    });
+
+    it('409 ENTRY_ARCHIVED : problème rangé', async () => {
+      const { store } = setup({
+        patch: vi.fn().mockRejectedValue({ status: 409, code: 'ENTRY_ARCHIVED' }),
+      });
+      await store.open({ patientId: 'p-marie', entryId: 'e-1' });
+      await store.save({ ...store.currentDraft()!, title: 'x' });
+      expect(store.problem()?.code).toBe('ENTRY_ARCHIVED');
+    });
+
+    it('entrée illisible : état erreur', async () => {
+      const { store } = setup({
+        get: vi.fn().mockRejectedValue({ status: 404, code: 'ENTRY_NOT_FOUND' }),
+      });
+      await store.open({ patientId: 'p-marie', entryId: 'e-x' });
+      expect(store.entry().status).toBe('error');
+      expect(store.entry().problem?.code).toBe('ENTRY_NOT_FOUND');
+    });
+  });
+
+  describe('émotion personnalisée en ligne', () => {
+    it('201 : ajoutée à la liste, relue (proposée dans un second ressenti)', async () => {
+      const created = { code: 'c_9f8e7d6c', label: 'Rumination', family: 'fear', custom: true };
+      const { store, api } = setup({
+        createEmotion: vi.fn().mockResolvedValue(created),
+        emotions: vi
+          .fn()
+          .mockResolvedValueOnce(EMOTIONS)
+          .mockResolvedValueOnce([...EMOTIONS, created]),
+      });
+      await store.open({ patientId: 'p-marie' });
+      const emotion = await store.createEmotion(' Rumination ', 'fear');
+      expect(api.createEmotion).toHaveBeenCalledWith('Rumination', 'fear');
+      expect(emotion?.code).toBe('c_9f8e7d6c');
+      expect(store.emotions().data?.some((e) => e.code === 'c_9f8e7d6c')).toBe(true);
+      await vi.waitFor(() => expect(api.emotions).toHaveBeenCalledTimes(2));
+    });
+
+    it('409 EMOTION_LABEL_EXISTS : emotionProblem, liste inchangée', async () => {
+      const { store } = setup({
+        createEmotion: vi.fn().mockRejectedValue({ status: 409, code: 'EMOTION_LABEL_EXISTS' }),
+      });
+      await store.open({ patientId: 'p-marie' });
+      expect(await store.createEmotion('Anxiété', 'fear')).toBeNull();
+      expect(store.emotionProblem()?.code).toBe('EMOTION_LABEL_EXISTS');
+      expect(store.emotions().data).toHaveLength(EMOTIONS.length);
+    });
+  });
+
+  it('vocabulaire en erreur : état erreur, Réessayer relit', async () => {
+    const emotions = vi
+      .fn()
+      .mockRejectedValueOnce({ status: 0, code: 'NETWORK_ERROR' })
+      .mockResolvedValueOnce(EMOTIONS);
+    const { store } = setup({ emotions });
+    await store.open({ patientId: 'p-marie' });
+    expect(store.emotions().status).toBe('error');
+    await store.retryEmotions();
+    expect(store.emotions().status).toBe('loaded');
+  });
+});
