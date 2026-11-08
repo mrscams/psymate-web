@@ -177,10 +177,11 @@ test.describe('vue d’ensemble', () => {
     await expect(feelings).toHaveText('3');
     const trend = block(page, "Tendance d'intensité · 90 jours");
 
-    // Barre de capture du shell → éditeur d'entrée → Ressenti, anxiété 7 → Enregistrer.
+    // Barre de commande du shell → Ctrl+Entrée : éditeur d'entrée prérempli → Ressenti, anxiété 7
+    // → Enregistrer.
     const capture = page.getByRole('textbox', { name: 'Noter quelque chose' });
     await capture.fill('Tendue avant la réunion');
-    await capture.press('Enter');
+    await capture.press('Control+Enter');
     const dialog = page.getByRole('dialog').filter({ has: page.locator('pm-entry-editor-panel') });
     await expect(dialog).toBeVisible();
     await expect(dialog.locator('pm-state [aria-busy="true"]')).toHaveCount(0);

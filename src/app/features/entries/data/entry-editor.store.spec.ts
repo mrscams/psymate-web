@@ -468,4 +468,97 @@ describe('EntryEditorStore', () => {
       expect(store.entry().data?.linkCount).toBe(1);
     });
   });
+
+  describe('préremplissage de la barre de commande (M6-02)', () => {
+    const fromBar = {
+      type: 'feeling' as const,
+      feeling: { emotionCode: 'c_nouvelle', intensity: 7 },
+      body: "avant l'examen",
+      occurred: null,
+      links: [
+        { targetId: 'e-event', linkType: 'triggers' as const, direction: 'incoming' as const },
+      ],
+    };
+
+    it('sans brouillon : le préremplissage devient le brouillon ; émotion inconnue → vocabulaire relu', async () => {
+      const { store, api } = setup();
+      await store.open({ patientId: 'p-marie' });
+      store.discardDraft();
+      store.closed('create:p-marie');
+      expect(api.emotions).toHaveBeenCalledTimes(1);
+
+      await store.open({ patientId: 'p-marie', type: 'feeling', prefill: fromBar });
+      expect(store.currentDraft()).toMatchObject({
+        type: 'feeling',
+        feeling: { emotionCode: 'c_nouvelle', intensity: 7 },
+        body: "avant l'examen",
+        occurred: { now: true },
+        sessionId: '',
+        links: fromBar.links,
+      });
+      expect(api.emotions).toHaveBeenCalledTimes(2);
+    });
+
+    it('brouillon non enregistré : fusionné, rien ne se perd (titre et texte, séance, tags, liens, moment)', async () => {
+      const { store } = setup();
+      await store.open({ patientId: 'p-marie' });
+      const other = {
+        targetId: 'e-note',
+        linkType: 'co_occurs' as const,
+        direction: 'outgoing' as const,
+      };
+      const typed = draft({
+        type: 'event',
+        title: 'Dispute',
+        body: 'Au téléphone',
+        sessionId: 's-old',
+        tags: ['famille'],
+        occurred: {
+          now: false,
+          precision: 'day',
+          from: '2026-11-10',
+          to: '',
+          label: '',
+          ongoing: true,
+        },
+        links: [other, { targetId: 'e-event', linkType: 'co_occurs', direction: 'outgoing' }],
+      });
+      store.keepDraft('create:p-marie', typed);
+      store.closed('create:p-marie');
+
+      await store.open({ patientId: 'p-marie', type: 'feeling', prefill: fromBar });
+      expect(store.currentDraft()).toMatchObject({
+        type: 'feeling',
+        title: 'Dispute',
+        body: "Au téléphone\navant l'examen",
+        feeling: { emotionCode: 'c_nouvelle', intensity: 7 },
+        sessionId: 's-old',
+        tags: ['famille'],
+        // Pas de date dans la barre : le moment du brouillon reste.
+        occurred: { now: false, precision: 'day', from: '2026-11-10' },
+        // Même cible : le lien de la barre l'emporte ; l'autre lien reste.
+        links: [fromBar.links[0], other],
+      });
+
+      // Un titre dans la barre remplace l'ancien, qui passe dans le texte ; sa date l'emporte.
+      store.closed('create:p-marie');
+      await store.open({
+        patientId: 'p-marie',
+        type: 'event',
+        prefill: {
+          type: 'event',
+          title: 'Entretien',
+          occurred: { from: '2026-11-09T00:00:00Z', precision: 'day' },
+        },
+      });
+      expect(store.currentDraft()).toMatchObject({
+        type: 'event',
+        title: 'Entretien',
+        body: "Dispute\nAu téléphone\navant l'examen",
+        occurred: { now: false, precision: 'day', from: '2026-11-09' },
+        sessionId: 's-old',
+        tags: ['famille'],
+      });
+    });
+  });
 });

@@ -190,9 +190,10 @@ test.describe('éditeur d’entrée', () => {
     await page.goto(`/fr/patients/${patientId}`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Iris P.');
 
+    // Ctrl+Entrée : la barre de commande (M6-02) ouvre l'éditeur prérempli (Entrée créerait).
     const capture = page.getByRole('textbox', { name: 'Noter quelque chose' });
     await capture.fill('Premier appel de la mère');
-    await capture.press('Enter');
+    await capture.press('Control+Enter');
     const e = editor(page);
     await settled(e.dialog);
     await expect(e.session).toHaveValue('');

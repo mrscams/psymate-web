@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T22:16:38.964Z",
+  "task": "M6-02",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Barre de commande et aperçu : champ de capture de l'en-tête patient interprété en direct (type, émotion, intensité, moment, cible > avec type de lien, avertissements), rail « Lié à » réutilisé, Entrée crée (bloquée si avertissement bloquant ou cible introuvable), Ctrl+Entrée ouvre l'éditeur prérempli, Ctrl+S brouillon, création d'émotion personnalisée proposée ; CaptureStore. Chrono « anx 8 n'a pas dormi > entretien » : 3,5 s au clavier (< 12 s).",
+  "notes": "Revue : 1 bloquant (lien > perdu si rail illisible) et 5 à corriger traités, remarques R1-R5, R7 (aria-controls seul, aria-expanded interdit sur textbox), R8, R10, R11 traitées. Écarts : panneau d'aperçu ancré sous le champ (pas dans le flux de l'en-tête) ; pas de préfixe /res ; intensité 0-10 ; type de lien = premier permis (situation → déclenché par) ; cible > cherchée parmi les 5 cibles du rail ; préfixe inconnu lu comme UNKNOWN_EMOTION. Hors capture : features/entries (EntryPrefill, mergePrefill, option prefill d'openEntryEditor, exports d'index), patient-shell (branchement, capture-bar supprimé), editeur.spec et vue-ensemble.spec (Entrée → Ctrl+Entrée). Aucune dépendance npm.",
+  "next": "Suites : store de vocabulaire partagé et dédoublonnage capture.api/entries.api (R6) ; double cast du corps de création (R9) ; budget du bundle initial dépassé au build à comparer avec main.",
+  "branch": "claude/jovial-hugle-e694e5",
+  "checkout": "jovial-hugle-e694e5"
+}

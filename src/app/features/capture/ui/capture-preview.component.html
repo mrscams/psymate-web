@@ -1,0 +1,103 @@
+@if (state(); as kind) {
+  @switch (kind) {
+    @case ('empty') {
+      <pm-state kind="empty" compact [title]="emptyTitle" [message]="emptyMessage" />
+    }
+    @case ('loading') {
+      <pm-state kind="loading" compact skeleton="row" [lines]="1" />
+    }
+    @case ('error') {
+      <pm-state kind="error" compact [title]="errorTitle" [action]="retryAction" />
+    }
+  }
+} @else if (preview(); as p) {
+  <div class="preview">
+    <p class="line">
+      <span class="part type" [class.feeling]="p.type === 'feeling'">
+        <pm-entry-icon [type]="p.type" [size]="12" />
+        <strong class="type-name">{{ typeLabel() }}</strong>
+      </span>
+      @if (p.emotion; as emotion) {
+        <span class="sep">&ngsp;·&ngsp;</span>
+        <span class="part emotion">
+          <span [class]="dotClass(emotion)" aria-hidden="true"></span>
+          <span class="emotion-name">{{ emotion.label }}</span
+          >&ngsp;
+          @if (p.intensity !== null) {
+            <span class="mono intensity">{{ intensity(p.intensity) }}</span>
+          }
+        </span>
+      } @else if (pendingWord(); as word) {
+        <span class="sep">&ngsp;·&ngsp;</span>
+        <span class="part emotion pending">
+          <span
+            i18n="
+              Émotion à préciser dans l'aperçu de la barre de
+              commande@@capture.preview.pendingEmotion"
+            >« {{ word }} » ?</span
+          >&ngsp;
+          @if (p.intensity !== null) {
+            <span class="mono intensity">{{ intensity(p.intensity) }}</span>
+          }
+        </span>
+      }
+      @if (p.text) {
+        <span class="sep">&ngsp;·&ngsp;</span>
+        <span class="part text">{{ quote(p.text) }}</span>
+      }
+      <span class="sep">&ngsp;·&ngsp;</span>
+      <span class="part when">{{ when() }}</span>
+      @if (session(); as label) {
+        <span class="sep">&ngsp;·&ngsp;</span>
+        <span class="part session">{{ label }}</span>
+      }
+      @if (p.target; as target) {
+        <span class="sep">&ngsp;·&ngsp;</span>
+        <span class="part target">
+          <span i18n="Cible du lien dans l'aperçu de la barre de commande@@capture.preview.linkedTo"
+            >lié à</span
+          >&ngsp;
+          <pm-entry-icon [type]="target.candidate.type" [size]="10" />
+          <span>{{ entryTypeName(target.candidate.type) }}</span
+          >&ngsp;
+          <strong class="target-name">{{ quote(target.name) }}</strong>
+          @if (target.choice; as choice) {
+            &ngsp;<span class="chip">{{ proposedLink(choice.label) }}</span>
+          }
+        </span>
+      }
+    </p>
+    @if (warnings().length > 0) {
+      <ul class="warnings">
+        @for (line of warnings(); track line.key) {
+          <li class="warning" [class.blocking]="line.blocking">
+            @if (line.blocking) {
+              <strong
+                class="badge"
+                i18n="Avertissement bloquant de la barre de commande@@capture.preview.blocking"
+                >À corriger :</strong
+              >&ngsp;
+            } @else {
+              <strong
+                class="badge"
+                i18n="Avertissement non bloquant de la barre de commande@@capture.preview.check"
+                >À vérifier :</strong
+              >&ngsp;
+            }
+            <span>{{ line.text }}</span>
+            @if (line.choices.length > 0) {
+              &ngsp;<span class="choices">
+                @for (emotion of line.choices; track emotion.code) {
+                  <button type="button" class="pick" (click)="pickEmotion.emit(emotion)">
+                    <span [class]="dotClass(emotion)" aria-hidden="true"></span>
+                    {{ emotion.label }}
+                  </button>
+                }
+              </span>
+            }
+          </li>
+        }
+      </ul>
+    }
+  </div>
+}

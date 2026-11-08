@@ -2,6 +2,7 @@ import { EntryType } from '../../../shared/ui';
 import { candidate, entry, EMOTIONS, feelingEntry, LINK_TYPES, VERSIONS } from './entry.fixtures';
 import {
   draftFromEntry,
+  draftFromPrefill,
   emptyDraft,
   EntryDraft,
   endIso,
@@ -384,6 +385,79 @@ describe('entry.model', () => {
 
     it('draftFromEntry : une correction ne coche aucun lien', () => {
       expect(draftFromEntry(entry({ linkCount: 2 })).links).toEqual([]);
+    });
+  });
+  describe('draftFromPrefill (barre de commande, M6-02)', () => {
+    it('saisie interprétée → brouillon du panneau → même corps de POST', () => {
+      const link = {
+        targetId: 'e-event',
+        linkType: 'triggers' as const,
+        direction: 'incoming' as const,
+      };
+      const feeling = draftFromPrefill(
+        {
+          type: 'feeling',
+          feeling: { emotionCode: 'anxiety', intensity: 8 },
+          body: "n'a pas dormi",
+          occurred: null,
+          links: [link],
+        },
+        'clinical',
+      );
+      expect(feeling).toMatchObject({
+        type: 'feeling',
+        body: "n'a pas dormi",
+        feeling: { emotionCode: 'anxiety', intensity: 8 },
+        occurred: { now: true },
+        sessionId: '',
+        links: [link],
+      });
+      expect(toCreateBody(feeling)).toEqual({
+        type: 'feeling',
+        visibility: 'clinical',
+        feeling: { emotionCode: 'anxiety', intensity: 8 },
+        body: "n'a pas dormi",
+        status: 'final',
+        links: [link],
+      });
+    });
+
+    it('moment du contrat (jour, période) : rendu tel quel par toCreateBody', () => {
+      const day = draftFromPrefill(
+        {
+          type: 'event',
+          title: 'Entretien',
+          occurred: { from: '2026-11-10T00:00:00Z', precision: 'day' },
+        },
+        'private',
+      );
+      expect(day.occurred).toMatchObject({ now: false, precision: 'day', from: '2026-11-10' });
+      expect(toCreateBody(day, 'draft')).toEqual({
+        type: 'event',
+        visibility: 'private',
+        title: 'Entretien',
+        occurred: { from: '2026-11-10T00:00:00Z', precision: 'day' },
+        status: 'draft',
+      });
+      const summer = draftFromPrefill(
+        {
+          type: 'situation',
+          title: 'burn-out',
+          occurred: {
+            from: '2024-06-01T00:00:00Z',
+            to: '2024-09-01T00:00:00Z',
+            precision: 'period',
+            label: 'été 2024',
+          },
+        },
+        'clinical',
+      );
+      expect(toCreateBody(summer).occurred).toEqual({
+        from: '2024-06-01T00:00:00Z',
+        to: '2024-09-01T00:00:00Z',
+        precision: 'period',
+        label: 'été 2024',
+      });
     });
   });
 });

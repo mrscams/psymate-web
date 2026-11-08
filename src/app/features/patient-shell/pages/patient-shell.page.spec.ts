@@ -14,6 +14,7 @@ import { provideRouter, Route, Router, Routes, withComponentInputBinding } from 
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { PreferencesStore } from '../../../core/preferences';
+import { CommandBarComponent } from '../../capture';
 import { PatientShellApi } from '../data/patient-shell.api';
 import {
   closedSession,
@@ -150,7 +151,7 @@ describe('PatientShellPage', () => {
     expect(text(el.querySelector('.flag'))).toBe('À surveiller');
     expect(text(el.querySelector('.session-text'))).toBe('Dernière séance : 17 oct. 2026');
     expect(el.querySelector('button.start-session')).not.toBeNull();
-    expect(el.querySelector('pm-capture-bar input')?.getAttribute('placeholder')).toBe(
+    expect(el.querySelector('pm-command-bar input')?.getAttribute('placeholder')).toBe(
       'Noter quelque chose…',
     );
     expect(text(el.querySelector('pm-fake-overview-tab h2'))).toBe("Vue d'ensemble");
@@ -212,7 +213,7 @@ describe('PatientShellPage', () => {
     expect(text(el.querySelector('.session-text'))).toContain('en cours depuis');
     expect(el.querySelector('button.close-session')).not.toBeNull();
     await vi.waitFor(() =>
-      expect(document.activeElement).toBe(el.querySelector('pm-capture-bar input')),
+      expect(document.activeElement).toBe(el.querySelector('pm-command-bar input')),
     );
   });
 
@@ -334,7 +335,7 @@ describe('PatientShellPage', () => {
     await settle(harness);
     expect(router.url).toBe('/patients/p-marie/graph');
 
-    const capture = el.querySelector<HTMLInputElement>('pm-capture-bar input')!;
+    const capture = el.querySelector<HTMLInputElement>('pm-command-bar input')!;
     capture.focus();
     press(capture, '2');
     await settle(harness);
@@ -391,18 +392,38 @@ describe('PatientShellPage', () => {
       expect(document.querySelectorAll('pm-entry-editor-panel')).toHaveLength(1);
     });
 
-    it('Entrée dans la barre de capture : l’éditeur reprend le texte', async () => {
+    it('Ctrl+Entrée dans la barre de commande : l’éditeur reprend la saisie interprétée', async () => {
       const { harness, el } = await render();
       const input = el.querySelector<HTMLInputElement>('#pm-capture-input')!;
       input.value = "n'a pas dormi";
       input.dispatchEvent(new Event('input'));
-      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+      input.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Enter', ctrlKey: true, bubbles: true }),
+      );
       await settle(harness);
       expect(editor()?.querySelector<HTMLTextAreaElement>('#field-body')?.value).toBe(
         "n'a pas dormi",
       );
       await settle(harness);
       expect(input.value).toBe('');
+    });
+
+    it('Entrée sur une barre vide : l’éditeur vide', async () => {
+      const { harness, el } = await render();
+      const input = el.querySelector<HTMLInputElement>('#pm-capture-input')!;
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+      await settle(harness);
+      expect(editor()?.querySelector('h2')?.textContent).toContain('Nouvelle entrée');
+    });
+
+    it('entrée créée par la barre de commande : les projections se relisent', async () => {
+      const { harness } = await render();
+      const store = shellStore(harness);
+      const before = store.revision();
+      const bar = harness.fixture.debugElement.query(By.directive(CommandBarComponent))
+        .componentInstance as CommandBarComponent;
+      bar.saved.emit({ id: 'e-new', type: 'feeling', status: 'final', sessionId: 's-1' });
+      expect(store.revision()).toBe(before + 1);
     });
 
     it('?entry=<id> : ouvre la correction de l’entrée', async () => {

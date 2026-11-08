@@ -17,16 +17,19 @@ import { LinkTypeOption } from '../../graph';
 import { EntriesApi } from './entries.api';
 import {
   draftFromEntry,
+  draftFromPrefill,
   Emotion,
   EmotionFamily,
   emptyDraft,
   EntryDraft,
+  EntryPrefill,
   EntryStatus,
   EntryVersion,
   EntryView,
   EntryVisibility,
   graceInfo,
   GraceInfo,
+  mergePrefill,
   LinkCandidate,
   PlacedLink,
   railCandidates,
@@ -43,6 +46,8 @@ export interface EditorTarget {
   entryId?: string | null;
   type?: EntryType;
   text?: string;
+  /** Saisie interprétée par la barre de commande (M6-02, Ctrl+Entrée) : remplace le brouillon. */
+  prefill?: EntryPrefill;
 }
 
 interface EntryEditorState {
@@ -314,7 +319,19 @@ export const EntryEditorStore = signalStore(
               : { currentSession: null, sessions: idle(), linkCandidates: idle() }),
           });
           const key = draftKey({ patientId: target.patientId, entryId });
-          if (!entryId) {
+          let refreshEmotions = false;
+          if (!entryId && target.prefill) {
+            // Barre de commande (Ctrl+Entrée) : sa saisie interprétée devient le brouillon, fusionnée
+            // avec un brouillon de création non enregistré (mergePrefill : rien ne se perd, B5).
+            const existing = store.drafts()[key];
+            const prefilled = draftFromPrefill(target.prefill, defaultVisibility());
+            const draft = existing ? mergePrefill(existing, prefilled) : prefilled;
+            setDraft(key, draft);
+            // Émotion créée depuis la barre : le vocabulaire gardé ici ne la connaît pas encore.
+            const code = draft.feeling.emotionCode;
+            const known = store.emotions().data ?? [];
+            refreshEmotions = !!code && !known.some((emotion) => emotion.code === code);
+          } else if (!entryId) {
             const existing = store.drafts()[key];
             const text = target.text?.trim() ?? '';
             if (!existing) {
@@ -329,7 +346,7 @@ export const EntryEditorStore = signalStore(
               setDraft(key, { ...existing, type: target.type });
             }
           }
-          const work: Promise<void>[] = [loadEmotions(), loadTags()];
+          const work: Promise<void>[] = [loadEmotions(refreshEmotions), loadTags()];
           if (entryId)
             work.push(loadEntry(entryId), loadVersions(entryId), loadPlacedLinks(entryId));
           else
