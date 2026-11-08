@@ -89,9 +89,13 @@ export class DataExportPage {
   /** « Patient » ou « Client » selon le vocabulaire du praticien (fiche 00). */
   protected readonly patientLabel = computed(() => subjectLabel(this.vocabulary.label(), 'One'));
 
-  /** Bloc patient : vide (aucun patient du tout), chargement et erreur du premier chargement. */
+  /**
+   * Bloc patient : vide (aucun patient du tout), chargement et erreur du premier chargement
+   * seulement. Ensuite le sélecteur reste en place (le focus ne se perd pas en effaçant le champ) ;
+   * chargement et erreur d'une recherche se lisent dans le champ.
+   */
   protected readonly patientsState = computed<StateKind | null>(() =>
-    this.store.query() === '' ? stateKind(this.store.patients()) : null,
+    this.store.patientsReady() ? null : stateKind(this.store.patients()),
   );
   protected readonly patientsLoading = computed(() => this.store.patients().status === 'loading');
   protected readonly retryPatients: StateAction = {
@@ -101,9 +105,9 @@ export class DataExportPage {
   protected readonly patientsEmptyTitle = $localize`:Aucun patient à exporter@@account.data.patient.emptyTitle:Aucun dossier à exporter`;
   protected readonly patientsEmptyMessage = $localize`:Explication de l'état vide@@account.data.patient.emptyMessage:Les dossiers que vous créez apparaîtront ici.`;
   protected readonly patientsErrorTitle = $localize`:Liste des patients indisponible@@account.data.patient.errorTitle:Impossible de charger vos dossiers`;
-  /** Recherche en erreur alors que des résultats précédents existent : message sous le champ. */
+  /** Recherche en erreur après le premier chargement : message sous le champ. */
   protected readonly searchError = computed(
-    () => this.store.query() !== '' && this.store.patients().status === 'error',
+    () => this.store.patientsReady() && this.store.patients().status === 'error',
   );
 
   protected readonly patientBusy = computed(() => this.store.patientExport().status === 'busy');
@@ -114,11 +118,13 @@ export class DataExportPage {
   protected readonly launchError = computed(() =>
     launchErrorText(this.store.launch().problem, this.store.jobPending()),
   );
-  protected readonly downloadError = computed(() =>
-    this.store.download().status === 'error'
-      ? $localize`:Téléchargement du zip impossible@@account.data.job.downloadError:Téléchargement impossible pour le moment. Le lien reste valable : réessayez dans un instant.`
-      : null,
-  );
+  protected readonly downloadError = computed(() => {
+    const download = this.store.download();
+    if (download.status !== 'error') return null;
+    return download.problem?.status === 403
+      ? $localize`:Lien signé refusé@@account.data.job.downloadInvalid:Le lien de téléchargement n'était plus valide : il vient d'être relu. Réessayez.`
+      : $localize`:Téléchargement du zip impossible@@account.data.job.downloadError:Téléchargement impossible pour le moment. Le lien reste valable : réessayez dans un instant.`;
+  });
 
   /** Bloc « Dernier export » : vide sans job connu ; chargement et erreur de la première lecture. */
   protected readonly jobState = computed<StateKind | null>(() => {
@@ -126,8 +132,17 @@ export class DataExportPage {
     if (!this.store.jobId() && !job.data) return 'empty';
     return stateKind(job);
   });
-  protected readonly jobEmptyTitle = $localize`:Aucun export de compte connu@@account.data.job.emptyTitle:Aucun export de compte en cours`;
-  protected readonly jobEmptyMessage = $localize`:Explication de l'état vide@@account.data.job.emptyMessage:Le dernier export lancé depuis ce navigateur s'affichera ici, avec son lien de téléchargement.`;
+  /** Vide : aucun job connu ; après un 409 pour un job lancé ailleurs, le dire plutôt que « aucun ». */
+  protected readonly jobEmptyTitle = computed(() =>
+    this.store.conflict()
+      ? $localize`:Export lancé ailleurs@@account.data.job.elsewhereTitle:Un export est en préparation ailleurs`
+      : $localize`:Aucun export de compte connu@@account.data.job.emptyTitle:Aucun export de compte en cours`,
+  );
+  protected readonly jobEmptyMessage = computed(() =>
+    this.store.conflict()
+      ? $localize`:Explication de l'export lancé ailleurs@@account.data.job.elsewhereMessage:Il a été lancé depuis un autre appareil ou une autre session : son état et son lien s'affichent là où il a été lancé.`
+      : $localize`:Explication de l'état vide@@account.data.job.emptyMessage:Le dernier export lancé depuis ce navigateur s'affichera ici, avec son lien de téléchargement.`,
+  );
   protected readonly jobErrorTitle = $localize`:Lecture de l'état impossible@@account.data.job.errorTitle:Impossible de lire l'état de l'export`;
   protected readonly retryJob: StateAction = {
     label: $localize`:Bouton de l'état erreur@@state.error.retry:Réessayer`,
@@ -138,12 +153,23 @@ export class DataExportPage {
     void this.store.searchPatients('');
     void this.store.restoreJob();
 
-    // Suivi du job : toutes les 3 s tant qu'il est en file ou en cours (fiche 19).
+    // Suivi du job : 3 s après chaque réponse, tant qu'il est en file ou en cours (fiche 19) ;
+    // jamais deux lectures en vol, arrêt dès done / failed ou à la sortie de la page.
     effect((onCleanup) => {
-      const kind = this.store.jobKind();
-      if (kind !== 'queued' && kind !== 'running') return;
-      const timer = setInterval(() => void this.store.refreshJob(), EXPORT_POLL_MS);
-      onCleanup(() => clearInterval(timer));
+      if (!this.jobActive()) return;
+      let cancelled = false;
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const next = (): void => {
+        timer = setTimeout(async () => {
+          await this.store.refreshJob();
+          if (!cancelled && this.jobActive()) next();
+        }, EXPORT_POLL_MS);
+      };
+      next();
+      onCleanup(() => {
+        cancelled = true;
+        clearTimeout(timer);
+      });
     });
 
     // 409 pour un job lancé ailleurs : « Préparer l'export » se réactive après un délai.
@@ -152,6 +178,11 @@ export class DataExportPage {
       const timer = setTimeout(() => this.store.clearConflict(), CONFLICT_RETRY_MS);
       onCleanup(() => clearTimeout(timer));
     });
+  }
+
+  private jobActive(): boolean {
+    const kind = this.store.jobKind();
+    return kind === 'queued' || kind === 'running';
   }
 
   protected search(query: string): void {

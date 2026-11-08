@@ -8,6 +8,7 @@ import {
   PatientDto,
   PatientsService,
 } from '../../../api';
+import { ApiProblem } from '../../../core/http';
 
 /** Format d'un export patient : `md` dans l'API, affiché « Markdown » (fiche 19, écarts). */
 export type PatientExportFormat = 'pdf' | 'md';
@@ -105,7 +106,12 @@ export class DataExportApi {
     const response = (await firstValueFrom(
       this.accountExports.requestAccountExport({}),
     )) as ExportRequestedDto;
-    return response.jobId ?? '';
+    if (!response.jobId) {
+      // 202 sans jobId (otpRequired n'existe pas avec une session) : réponse inattendue.
+      const problem: ApiProblem = { status: 202, code: 'EXPORT_JOB_MISSING' };
+      throw problem;
+    }
+    return response.jobId;
   }
 
   /** GET /api/me/export/{jobId} (propriétaire connecté : pas de jeton) ; 404 EXPORT_NOT_FOUND. */

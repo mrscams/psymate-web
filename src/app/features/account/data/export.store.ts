@@ -34,6 +34,11 @@ interface ExportState {
   /** Texte cherché dans le sélecteur de patient ; '' = premiers patients par nom. */
   query: string;
   patients: Loadable<PatientOption[]>;
+  /**
+   * Vrai dès qu'une recherche a rendu au moins un patient : le sélecteur reste alors affiché, et
+   * le chargement ou l'erreur d'une recherche suivante se lisent dans le champ, pas dans le bloc.
+   */
+  patientsReady: boolean;
   /** Export d'un patient (téléchargement direct, sans job). */
   patientExport: ActionState;
   /** Dernier job d'export de compte connu (le seul visible en V1, fiche 19 « Écarts »). */
@@ -51,6 +56,7 @@ const ACTION_IDLE: ActionState = { status: 'idle', problem: null };
 const initialState: ExportState = {
   query: '',
   patients: idle(),
+  patientsReady: false,
   patientExport: ACTION_IDLE,
   jobId: null,
   job: idle(),
@@ -148,11 +154,14 @@ export const ExportStore = signalStore(
         patchState(store, { job: loading(store.job()) });
         try {
           const status = await api.exportStatus(jobId);
+          // Un autre job a pris la place pendant l'appel (relance, oubli) : réponse périmée.
+          if (store.jobId() !== jobId) return;
           patchState(store, { job: loaded(status) });
           if (status.status !== 'queued' && status.status !== 'running') {
             patchState(store, { conflict: false });
           }
         } catch (error) {
+          if (store.jobId() !== jobId) return;
           const problem = asProblem(error);
           if (problem.status === 404) {
             // Job inconnu (purgé, autre compte) : la ligne disparaît (fiche 19).
@@ -171,7 +180,12 @@ export const ExportStore = signalStore(
           patchState(store, { query, patients: loading(store.patients()) });
           try {
             const options = await api.searchPatients(query);
-            if (seq === searchSeq) patchState(store, { patients: loaded(options) });
+            if (seq === searchSeq) {
+              patchState(store, {
+                patients: loaded(options),
+                patientsReady: store.patientsReady() || options.length > 0,
+              });
+            }
           } catch (error) {
             if (seq === searchSeq) {
               patchState(store, { patients: failed(asProblem(error), store.patients()) });
@@ -249,7 +263,8 @@ export const ExportStore = signalStore(
 
         /**
          * Télécharge le zip par son URL signée ; null si rien n'est téléchargeable ou en cas d'erreur.
-         * Un 410 EXPORT_EXPIRED bascule la ligne en « Expiré », sans erreur bloquante.
+         * Un 410 EXPORT_EXPIRED bascule la ligne en « Expiré », sans erreur bloquante ; un 403
+         * SIGNED_URL_INVALID relit l'état du job pour obtenir une downloadUrl à jour.
          */
         async downloadArchive(): Promise<DownloadedFile | null> {
           const data = store.job().data;
@@ -268,6 +283,7 @@ export const ExportStore = signalStore(
               });
             } else {
               patchState(store, { download: { status: 'error', problem } });
+              if (problem.status === 403) await refreshJob();
             }
             return null;
           }

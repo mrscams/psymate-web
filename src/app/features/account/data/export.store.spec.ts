@@ -199,6 +199,39 @@ describe('ExportStore · export du compte', () => {
     expect(stored()).toEqual({ jobId: 'job-2', owner: 'user-1' });
   });
 
+  it('403 au téléchargement (lien signé refusé) : l’état du job est relu', async () => {
+    remember('job-1');
+    const exportStatus = vi.fn().mockResolvedValue(JOB_DONE);
+    const store = setup({
+      exportStatus,
+      downloadExport: vi.fn().mockRejectedValue({ status: 403, code: 'UNKNOWN_ERROR' }),
+    });
+    await store.restoreJob();
+    await store.downloadArchive();
+    expect(exportStatus).toHaveBeenCalledTimes(2);
+    expect(store.download().problem?.status).toBe(403);
+    expect(store.jobKind()).toBe('ready');
+  });
+
+  it('réponse d’état arrivée après un changement de job : ignorée', async () => {
+    remember('job-1');
+    let resolveOld: (value: typeof JOB_DONE) => void = () => undefined;
+    const exportStatus = vi
+      .fn()
+      .mockReturnValueOnce(new Promise((resolve) => (resolveOld = resolve)))
+      .mockResolvedValueOnce({ ...JOB_QUEUED, jobId: 'job-2' });
+    const store = setup({ exportStatus, requestExport: vi.fn().mockResolvedValue('job-2') });
+
+    const restoring = store.restoreJob();
+    await store.launchExport();
+    resolveOld(JOB_DONE);
+    await restoring;
+
+    expect(store.jobId()).toBe('job-2');
+    expect(store.job().data?.jobId).toBe('job-2');
+    expect(store.jobKind()).toBe('queued');
+  });
+
   it('autre erreur au téléchargement : la ligne reste « Prêt », erreur non bloquante', async () => {
     remember('job-1');
     const store = setup({
@@ -214,6 +247,26 @@ describe('ExportStore · export du compte', () => {
 
 describe('ExportStore · export d’un patient', () => {
   beforeEach(() => localStorage.clear());
+
+  it('patientsReady : vrai dès qu’une recherche rend un patient, et le reste ensuite', async () => {
+    const searchPatients = vi
+      .fn()
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce(PATIENT_OPTIONS)
+      .mockResolvedValueOnce([])
+      .mockRejectedValueOnce({ status: 503, code: 'INTERNAL_ERROR' });
+    const store = setup({ searchPatients });
+
+    await store.searchPatients('');
+    expect(store.patientsReady()).toBe(false);
+    await store.searchPatients('mar');
+    expect(store.patientsReady()).toBe(true);
+    await store.searchPatients('zzz');
+    expect(store.patientsReady()).toBe(true);
+    await store.searchPatients('');
+    expect(store.patientsReady()).toBe(true);
+    expect(store.patients().status).toBe('error');
+  });
 
   it('searchPatients : la réponse la plus récente gagne', async () => {
     let resolveFirst: (value: typeof PATIENT_OPTIONS) => void = () => undefined;

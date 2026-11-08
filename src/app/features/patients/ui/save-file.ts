@@ -2,8 +2,8 @@ import { ExportedFile } from '../data/patient-export.api';
 
 /**
  * Enregistre un fichier reçu en blob : lien temporaire `download` cliqué puis retiré. Le fichier
- * passe par HttpClient (et non par une navigation) pour que ses erreurs restent des ApiProblem
- * affichés par l'écran (fiche 19 : 410 → « Expiré » sans erreur bloquante).
+ * passe par HttpClient (et non par une navigation) pour que ses erreurs (403, 404, 429, 500)
+ * restent des ApiProblem affichés sous le menu « Exporter ce dossier ».
  */
 export function saveFile(document: Document, file: ExportedFile): void {
   const view = document.defaultView;

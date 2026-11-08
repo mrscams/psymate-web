@@ -209,20 +209,72 @@ describe('DataExportPage', () => {
     expect(button(el, "Préparer l'export")?.disabled).toBe(true);
   });
 
-  it('job en préparation : indicateur indéterminé, état relu toutes les 3 s', async () => {
-    vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
-    remember();
-    const exportStatus = vi.fn().mockResolvedValueOnce(JOB_RUNNING).mockResolvedValue(JOB_DONE);
-    const { fixture, el } = await render({ exportStatus });
-    expect(el.querySelector('[role=progressbar]')).not.toBeNull();
-    expect(el.textContent).toContain('En préparation');
+  describe('suivi du job (setTimeout enchaînés, horloge simulée)', () => {
+    async function fakeSettle(fixture: ComponentFixture<unknown>): Promise<void> {
+      for (let i = 0; i < 3; i++) {
+        await vi.advanceTimersByTimeAsync(0);
+        await fixture.whenStable();
+        fixture.detectChanges();
+      }
+    }
 
-    vi.advanceTimersByTime(EXPORT_POLL_MS);
-    await settle(fixture);
+    async function renderFake(api: Partial<DataExportApi>) {
+      vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+      TestBed.configureTestingModule({
+        imports: [DataExportPage],
+        providers: [
+          provideRouter([]),
+          {
+            provide: DataExportApi,
+            useValue: { searchPatients: vi.fn().mockResolvedValue([]), ...api },
+          },
+          { provide: SessionApi, useValue: { me: vi.fn().mockResolvedValue(EXPORT_USER) } },
+          { provide: ConfirmDialogService, useValue: { confirm: vi.fn() } },
+        ],
+      });
+      TestBed.inject(SessionStore).signIn(EXPORT_USER);
+      const fixture = TestBed.createComponent(DataExportPage);
+      await fakeSettle(fixture);
+      return { fixture, el: fixture.nativeElement as HTMLElement };
+    }
 
-    expect(exportStatus).toHaveBeenCalledTimes(2);
-    expect(el.textContent).toContain('Prêt');
-    expect(el.querySelector('[role=progressbar]')).toBeNull();
+    it('en préparation : indicateur indéterminé, relu 3 s après la réponse, plus rien après done', async () => {
+      remember();
+      const exportStatus = vi.fn().mockResolvedValueOnce(JOB_RUNNING).mockResolvedValue(JOB_DONE);
+      const { fixture, el } = await renderFake({ exportStatus });
+      expect(el.querySelector('[role=progressbar]')).not.toBeNull();
+      expect(el.textContent).toContain('En préparation');
+      expect(exportStatus).toHaveBeenCalledTimes(1);
+
+      await vi.advanceTimersByTimeAsync(EXPORT_POLL_MS - 1);
+      expect(exportStatus).toHaveBeenCalledTimes(1);
+      await vi.advanceTimersByTimeAsync(1);
+      await fakeSettle(fixture);
+
+      expect(exportStatus).toHaveBeenCalledTimes(2);
+      expect(el.textContent).toContain('Prêt');
+      expect(el.querySelector('[role=progressbar]')).toBeNull();
+
+      await vi.advanceTimersByTimeAsync(EXPORT_POLL_MS * 4);
+      await fakeSettle(fixture);
+      expect(exportStatus).toHaveBeenCalledTimes(2);
+    });
+
+    it('en file tant qu’il faut : une lecture toutes les 3 s, arrêt à la sortie de la page', async () => {
+      remember();
+      const exportStatus = vi.fn().mockResolvedValue(JOB_QUEUED);
+      const { fixture } = await renderFake({ exportStatus });
+
+      await vi.advanceTimersByTimeAsync(EXPORT_POLL_MS);
+      await fakeSettle(fixture);
+      await vi.advanceTimersByTimeAsync(EXPORT_POLL_MS);
+      await fakeSettle(fixture);
+      expect(exportStatus).toHaveBeenCalledTimes(3);
+
+      fixture.destroy();
+      await vi.advanceTimersByTimeAsync(EXPORT_POLL_MS * 4);
+      expect(exportStatus).toHaveBeenCalledTimes(3);
+    });
   });
 
   it('Prêt → Télécharger : 410 bascule la ligne en « Expiré » avec « Relancer »', async () => {
@@ -240,5 +292,65 @@ describe('DataExportPage', () => {
     expect(button(el, 'Relancer')).toBeDefined();
     expect(button(el, 'Télécharger')).toBeUndefined();
     expect(el.querySelector('p[role=alert]')).toBeNull();
+  });
+  it('effacer une recherche sans résultat : le sélecteur reste en place et garde le focus', async () => {
+    let resolveEmpty: (value: typeof PATIENT_OPTIONS) => void = () => undefined;
+    const searchPatients = vi
+      .fn()
+      .mockResolvedValueOnce(PATIENT_OPTIONS)
+      .mockResolvedValueOnce([])
+      .mockReturnValueOnce(new Promise((resolve) => (resolveEmpty = resolve)))
+      .mockRejectedValueOnce({ status: 503, code: 'INTERNAL_ERROR' });
+    const { fixture, el } = await render({ searchPatients });
+    const page = fixture.componentInstance as unknown as { search(query: string): void };
+
+    page.search('zzz');
+    await settle(fixture);
+    const input = el.querySelector<HTMLInputElement>('[role=combobox]');
+    input?.focus();
+
+    // Champ effacé : la recherche '' part (chargement, données vides) sans retirer le champ.
+    page.search('');
+    fixture.detectChanges();
+    expect(el.querySelector('[aria-labelledby=patient-export-title] pm-state')).toBeNull();
+    expect(el.querySelector('[role=combobox]')).toBe(input);
+    expect(document.activeElement).toBe(input);
+    resolveEmpty(PATIENT_OPTIONS);
+    await settle(fixture);
+    expect(el.querySelector('[role=combobox]')).toBe(input);
+
+    // Erreur d'une recherche suivante : message sous le champ, pas de bloc erreur.
+    page.search('');
+    await settle(fixture);
+    expect(el.querySelector('[aria-labelledby=patient-export-title] pm-state')).toBeNull();
+    expect(el.querySelector('[role=combobox]')).toBe(input);
+    expect(el.querySelector('p[role=alert]')?.textContent).toContain("La recherche n'a pas abouti");
+  });
+
+  it('409 pour un job lancé ailleurs : le bloc « Dernier export » ne dit pas « aucun export »', async () => {
+    const { fixture, el } = await render({
+      requestExport: vi.fn().mockRejectedValue({ status: 409, code: 'EXPORT_IN_PROGRESS' }),
+    });
+    button(el, "Préparer l'export")?.click();
+    await settle(fixture);
+    const block = el.querySelector('[aria-live=polite]');
+    expect(block?.textContent).toContain('Un export est en préparation ailleurs');
+    expect(block?.textContent).not.toContain('Aucun export de compte en cours');
+  });
+
+  it('403 au téléchargement (lien signé refusé) : état du job relu, message dédié', async () => {
+    remember();
+    const exportStatus = vi.fn().mockResolvedValue(JOB_DONE);
+    const { fixture, el } = await render({
+      exportStatus,
+      downloadExport: vi.fn().mockRejectedValue({ status: 403, code: 'UNKNOWN_ERROR' }),
+    });
+    button(el, 'Télécharger')?.click();
+    await settle(fixture);
+    expect(exportStatus).toHaveBeenCalledTimes(2);
+    expect(el.querySelector('p[role=alert]')?.textContent).toContain(
+      "Le lien de téléchargement n'était plus valide",
+    );
+    expect(button(el, 'Télécharger')).toBeDefined();
   });
 });

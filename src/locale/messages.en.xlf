@@ -21023,6 +21023,33 @@
         </context-group>
         <note priority="1" from="description">Export patient en échec</note>
       </trans-unit>
+      <trans-unit id="account.data.job.downloadInvalid" datatype="html">
+        <source>Le lien de téléchargement n&apos;était plus valide : il vient d&apos;être relu. Réessayez.</source>
+        <target state="translated">The download link was no longer valid: it has just been refreshed. Try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+        <note priority="1" from="description">Lien signé refusé</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.elsewhereTitle" datatype="html">
+        <source>Un export est en préparation ailleurs</source>
+        <target state="translated">An export is being prepared elsewhere</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+        <note priority="1" from="description">Export lancé ailleurs</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.elsewhereMessage" datatype="html">
+        <source>Il a été lancé depuis un autre appareil ou une autre session : son état et son lien s&apos;affichent là où il a été lancé.</source>
+        <target state="translated">It was started from another device or session: its status and link show where it was started.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <note priority="1" from="description">Explication de l&apos;export lancé ailleurs</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

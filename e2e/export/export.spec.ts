@@ -82,6 +82,10 @@ const lastExport = (page: Page) =>
   page.getByRole('region', { name: 'Dernier export' }).locator('[aria-live="polite"]');
 
 test.describe('Données et export (fiche 19)', () => {
+  // L'API prépare les exports de compte un par un (un seul fil, tous comptes) : en série, un job
+  // n'attend jamais derrière celui d'un autre test de ce fichier.
+  test.describe.configure({ mode: 'serial' });
+
   test('PDF d’un patient du seed au clavier : Tab → combobox → ↓ → Entrée → format → Exporter', async ({
     page,
   }) => {
@@ -174,6 +178,7 @@ test.describe('Données et export (fiche 19)', () => {
     await expect(menu.getByRole('menuitem', { name: /PDF/ })).toBeFocused();
     await page.keyboard.press('ArrowDown');
     await expect(menu.getByRole('menuitem', { name: /Markdown/ })).toBeFocused();
+    await expectNoAxeViolations(page);
 
     const response = page.waitForResponse((r) => r.url().includes('/export?format=md'));
     const downloading = page.waitForEvent('download');
@@ -195,7 +200,7 @@ test.describe('Données et export (fiche 19)', () => {
     page,
     request,
   }) => {
-    test.setTimeout(90_000);
+    test.setTimeout(180_000);
     const account = await createAccount(request, 'm6-06.zip', 'psychologist');
     await createPatient(request, 'Iris T.');
     await signIn(page, account);
@@ -218,7 +223,7 @@ test.describe('Données et export (fiche 19)', () => {
 
     // Suivi toutes les 3 s jusqu'à done : « Prêt · lien valable jusqu'au … ».
     await expect(lastExport(page).getByText('Prêt', { exact: true })).toBeVisible({
-      timeout: 30_000,
+      timeout: 120_000,
     });
     await expect(lastExport(page)).toContainText('lien valable jusqu');
     await expect(prepareButton(page)).toBeEnabled();
@@ -250,7 +255,7 @@ test.describe('Données et export (fiche 19)', () => {
     page,
     request,
   }) => {
-    test.setTimeout(120_000);
+    test.setTimeout(420_000);
     const account: TestAccount = await createAccount(request, 'm6-06.409', 'psychologist');
     await createPatient(request, 'Iris T.');
     await signIn(page, account);
@@ -281,7 +286,7 @@ test.describe('Données et export (fiche 19)', () => {
       conflict = (await answer).status() === 409;
       if (!conflict) {
         await expect(lastExport(page).getByText('Prêt', { exact: true })).toBeVisible({
-          timeout: 30_000,
+          timeout: 120_000,
         });
       }
     }

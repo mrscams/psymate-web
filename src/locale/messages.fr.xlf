@@ -478,11 +478,11 @@
         <source>Réessayer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
@@ -610,7 +610,7 @@
         <source>Aucun dossier à exporter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">105</context>
         </context-group>
         <note priority="1" from="description">Aucun patient à exporter</note>
       </trans-unit>
@@ -618,7 +618,7 @@
         <source>Les dossiers que vous créez apparaîtront ici.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">106</context>
         </context-group>
         <note priority="1" from="description">Explication de l&apos;état vide</note>
       </trans-unit>
@@ -626,31 +626,55 @@
         <source>Impossible de charger vos dossiers</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">107</context>
         </context-group>
         <note priority="1" from="description">Liste des patients indisponible</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.downloadInvalid" datatype="html">
+        <source>Le lien de téléchargement n&apos;était plus valide : il vient d&apos;être relu. Réessayez.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+        <note priority="1" from="description">Lien signé refusé</note>
       </trans-unit>
       <trans-unit id="account.data.job.downloadError" datatype="html">
         <source>Téléchargement impossible pour le moment. Le lien reste valable : réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">126</context>
         </context-group>
         <note priority="1" from="description">Téléchargement du zip impossible</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.elsewhereTitle" datatype="html">
+        <source>Un export est en préparation ailleurs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+        <note priority="1" from="description">Export lancé ailleurs</note>
       </trans-unit>
       <trans-unit id="account.data.job.emptyTitle" datatype="html">
         <source>Aucun export de compte en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">139</context>
         </context-group>
         <note priority="1" from="description">Aucun export de compte connu</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.elsewhereMessage" datatype="html">
+        <source>Il a été lancé depuis un autre appareil ou une autre session : son état et son lien s&apos;affichent là où il a été lancé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <note priority="1" from="description">Explication de l&apos;export lancé ailleurs</note>
       </trans-unit>
       <trans-unit id="account.data.job.emptyMessage" datatype="html">
         <source>Le dernier export lancé depuis ce navigateur s&apos;affichera ici, avec son lien de téléchargement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">144</context>
         </context-group>
         <note priority="1" from="description">Explication de l&apos;état vide</note>
       </trans-unit>
@@ -658,7 +682,7 @@
         <source>Impossible de lire l&apos;état de l&apos;export</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <note priority="1" from="description">Lecture de l&apos;état impossible</note>
       </trans-unit>
@@ -666,7 +690,7 @@
         <source>Préparer l&apos;export du compte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">208</context>
         </context-group>
         <note priority="1" from="description">Titre du dialogue de l&apos;export du compte</note>
       </trans-unit>
@@ -674,7 +698,7 @@
         <source>L&apos;archive zip contient patients.md, la liste de vos dossiers, puis le PDF et le Markdown de chaque dossier ; les entrées privées et archivées n&apos;en font pas partie. Elle est préparée en arrière-plan et son lien de téléchargement est valable 7 jours. Rien n&apos;est modifié ni supprimé dans vos dossiers.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">209</context>
         </context-group>
         <note priority="1" from="description">Contenu du dialogue de l&apos;export du compte</note>
       </trans-unit>
@@ -682,7 +706,7 @@
         <source>Lancer l&apos;export</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">210</context>
         </context-group>
         <note priority="1" from="description">Bouton du dialogue de l&apos;export du compte</note>
       </trans-unit>
@@ -690,7 +714,7 @@
         <source>Annuler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">211</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;annulation du dialogue</note>
       </trans-unit>
@@ -698,7 +722,7 @@
         <source>Connexion perdue : réessayez une fois le réseau revenu.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">243</context>
         </context-group>
         <note priority="1" from="description">Export patient hors ligne</note>
       </trans-unit>
@@ -706,7 +730,7 @@
         <source>Ce dossier n&apos;est pas accessible depuis votre compte.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">214</context>
+          <context context-type="linenumber">245</context>
         </context-group>
         <note priority="1" from="description">Export patient refusé</note>
       </trans-unit>
@@ -714,7 +738,7 @@
         <source>Ce dossier n&apos;existe pas ou plus.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">216</context>
+          <context context-type="linenumber">247</context>
         </context-group>
         <note priority="1" from="description">Export patient introuvable</note>
       </trans-unit>
@@ -722,7 +746,7 @@
         <source>Trop de demandes rapprochées : réessayez dans quelques instants.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">218</context>
+          <context context-type="linenumber">249</context>
         </context-group>
         <note priority="1" from="description">Export patient limité</note>
       </trans-unit>
@@ -730,7 +754,7 @@
         <source>La génération du fichier a échoué. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">220</context>
+          <context context-type="linenumber">251</context>
         </context-group>
         <note priority="1" from="description">Export patient en échec</note>
       </trans-unit>
@@ -738,7 +762,7 @@
         <source>Un export est déjà en cours : il est affiché ci-dessous. Le bouton se réactive dès qu&apos;il est terminé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">229</context>
+          <context context-type="linenumber">260</context>
         </context-group>
         <note priority="1" from="description">Export déjà en cours, job affiché</note>
       </trans-unit>
@@ -746,7 +770,7 @@
         <source>Un export de votre compte est déjà en préparation, lancé depuis un autre appareil ou une autre session. Vous pourrez relancer un export ici dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">230</context>
+          <context context-type="linenumber">261</context>
         </context-group>
         <note priority="1" from="description">Export déjà en cours, lancé ailleurs</note>
       </trans-unit>
@@ -754,7 +778,7 @@
         <source>Export impossible pour le moment. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">232</context>
+          <context context-type="linenumber">263</context>
         </context-group>
         <note priority="1" from="description">Export du compte impossible</note>
       </trans-unit>
@@ -3238,7 +3262,7 @@
         <source> Aucun dossier ne correspond à cette recherche. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
-          <context context-type="linenumber">77,84</context>
+          <context context-type="linenumber">76,83</context>
         </context-group>
         <note priority="1" from="description">Aucun patient ne correspond à la recherche</note>
       </trans-unit>
@@ -3246,7 +3270,7 @@
         <source>Nom affiché…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
-          <context context-type="linenumber">172</context>
+          <context context-type="linenumber">170</context>
         </context-group>
         <note priority="1" from="description">Indication du sélecteur de patient</note>
       </trans-unit>
@@ -3254,7 +3278,7 @@
         <source>Dossiers correspondants</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
-          <context context-type="linenumber">173</context>
+          <context context-type="linenumber">171</context>
         </context-group>
         <note priority="1" from="description">Étiquette de la liste des patients</note>
       </trans-unit>
@@ -3262,7 +3286,7 @@
         <source>archivé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">194</context>
         </context-group>
         <note priority="1" from="description">Patient archivé dans le sélecteur</note>
       </trans-unit>
@@ -3270,7 +3294,7 @@
         <source><x id="age" equiv-text="age"/> ans</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
-          <context context-type="linenumber">201</context>
+          <context context-type="linenumber">199</context>
         </context-group>
         <note priority="1" from="description">Âge dans le sélecteur</note>
       </trans-unit>

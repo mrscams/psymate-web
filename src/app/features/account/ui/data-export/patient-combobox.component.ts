@@ -5,7 +5,6 @@ import {
   DestroyRef,
   inject,
   input,
-  LOCALE_ID,
   output,
   signal,
 } from '@angular/core';
@@ -166,7 +165,6 @@ export class PatientComboboxComponent {
   /** Patient choisi, ou null quand le texte ne correspond plus au choix. */
   readonly selectedChange = output<PatientOption | null>();
 
-  private readonly locale = inject(LOCALE_ID);
   protected readonly inputId = uniqueId('patient-combobox');
   protected readonly listId = `${this.inputId}-list`;
   protected readonly placeholder = $localize`:Indication du sélecteur de patient@@account.data.patient.placeholder:Nom affiché…`;
