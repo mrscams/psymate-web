@@ -13,6 +13,7 @@ import { ApiProblem, asProblem } from '../../../core/http';
 import { PreferencesStore } from '../../../core/preferences';
 import { ENTRY_TYPES, EntryType } from '../../../shared/ui';
 import { failed, idle, Loadable, loaded, loading } from '../../../shared/util';
+import { LinkTypeOption } from '../../graph';
 import { EntriesApi } from './entries.api';
 import {
   draftFromEntry,
@@ -26,6 +27,9 @@ import {
   EntryVisibility,
   graceInfo,
   GraceInfo,
+  LinkCandidate,
+  PlacedLink,
+  railCandidates,
   SessionOption,
   toCreateBody,
   toPatchBody,
@@ -57,6 +61,12 @@ interface EntryEditorState {
   sessions: Loadable<SessionOption[]>;
   emotions: Loadable<Emotion[]>;
   tags: Loadable<string[]>;
+  /** Catalogue des types de liens et matrice E5.3 (GET /api/vocabulary/link-types), gardé. */
+  linkTypes: Loadable<LinkTypeOption[]>;
+  /** Rail « Lié à… » (création) : cinq cibles lues dans la chronologie, relues à chaque ouverture. */
+  linkCandidates: Loadable<LinkCandidate[]>;
+  /** Correction : liens déjà posés (GET /api/entries/{id}/links), en lecture. */
+  placedLinks: Loadable<PlacedLink[]>;
   /** Brouillons conservés à Échap : `create:<patientId>` ou `edit:<entryId>`, en mémoire seulement. */
   drafts: Record<string, EntryDraft>;
   saving: boolean;
@@ -82,6 +92,9 @@ const initialState: EntryEditorState = {
   sessions: idle(),
   emotions: idle(),
   tags: idle(),
+  linkTypes: idle(),
+  linkCandidates: idle(),
+  placedLinks: idle(),
   drafts: {},
   saving: false,
   problem: null,
@@ -202,6 +215,42 @@ export const EntryEditorStore = signalStore(
         }
       }
 
+      async function loadLinkTypes(): Promise<void> {
+        if (store.linkTypes().status === 'loaded') return;
+        patchState(store, { linkTypes: loading(store.linkTypes()) });
+        try {
+          patchState(store, { linkTypes: loaded(await api.linkTypes()) });
+        } catch (error) {
+          patchState(store, { linkTypes: failed(asProblem(error), store.linkTypes()) });
+        }
+      }
+
+      /** Les cibles du rail se relisent à chaque ouverture : une entrée créée y apparaît (projection). */
+      async function loadLinkCandidates(patientId: string): Promise<void> {
+        patchState(store, { linkCandidates: loading(store.linkCandidates()) });
+        try {
+          const source = await api.railSource(patientId);
+          if (store.patientId() !== patientId || store.entryId()) return;
+          patchState(store, {
+            linkCandidates: loaded(railCandidates(source.situations, source.recent)),
+          });
+        } catch (error) {
+          if (store.patientId() !== patientId) return;
+          patchState(store, { linkCandidates: failed(asProblem(error), store.linkCandidates()) });
+        }
+      }
+
+      async function loadPlacedLinks(entryId: string): Promise<void> {
+        patchState(store, { placedLinks: loading(store.placedLinks()) });
+        try {
+          const links = await api.linksOf(entryId);
+          if (store.entryId() === entryId) patchState(store, { placedLinks: loaded(links) });
+        } catch (error) {
+          if (store.entryId() === entryId)
+            patchState(store, { placedLinks: failed(asProblem(error), store.placedLinks()) });
+        }
+      }
+
       async function loadVersions(entryId: string): Promise<void> {
         patchState(store, { versions: loading(store.versions()) });
         try {
@@ -254,12 +303,15 @@ export const EntryEditorStore = signalStore(
             entryId,
             entry: idle(),
             versions: idle(),
+            placedLinks: idle(),
             problem: null,
             emotionProblem: null,
             saving: false,
             active: true,
             now: Date.now(),
-            ...(samePatient ? {} : { currentSession: null, sessions: idle() }),
+            ...(samePatient
+              ? {}
+              : { currentSession: null, sessions: idle(), linkCandidates: idle() }),
           });
           const key = draftKey({ patientId: target.patientId, entryId });
           if (!entryId) {
@@ -278,8 +330,14 @@ export const EntryEditorStore = signalStore(
             }
           }
           const work: Promise<void>[] = [loadEmotions(), loadTags()];
-          if (entryId) work.push(loadEntry(entryId), loadVersions(entryId));
-          else work.push(loadSessions(target.patientId));
+          if (entryId)
+            work.push(loadEntry(entryId), loadVersions(entryId), loadPlacedLinks(entryId));
+          else
+            work.push(
+              loadSessions(target.patientId),
+              loadLinkTypes(),
+              loadLinkCandidates(target.patientId),
+            );
           await Promise.all(work);
         },
 
@@ -336,7 +394,11 @@ export const EntryEditorStore = signalStore(
               const body = toPatchBody(entry, draft, status);
               saved = body ? await api.patch(entryId, body) : entry;
             } else {
-              saved = await api.create(patientId, toCreateBody(draft, status));
+              // Seuls les liens vers une cible affichée partent (aucun si le rail n'est pas
+              // chargé) : rien d'invisible dans le POST. Le brouillon garde la saisie entière.
+              const shown = new Set((store.linkCandidates().data ?? []).map((item) => item.id));
+              const links = draft.links.filter((link) => shown.has(link.targetId));
+              saved = await api.create(patientId, toCreateBody({ ...draft, links }, status));
             }
             setDraft(key, null);
             patchState(store, { saving: false });
@@ -398,6 +460,26 @@ export const EntryEditorStore = signalStore(
           const entryId = store.entryId();
           return entryId
             ? Promise.all([loadEntry(entryId), loadVersions(entryId)]).then(() => undefined)
+            : Promise.resolve();
+        },
+
+        /** Rail en erreur : relit le catalogue (s'il manque) et les cibles. */
+        retryRail(): Promise<void> {
+          const patientId = store.patientId();
+          if (!patientId) return Promise.resolve();
+          return Promise.all([loadLinkTypes(), loadLinkCandidates(patientId)]).then(
+            () => undefined,
+          );
+        },
+
+        /**
+         * Après l'éditeur de lien (correction) : relit les liens posés et l'entrée (linkCount, qui
+         * décide de la grâce) ; le formulaire en cours n'est pas touché.
+         */
+        refreshLinks(): Promise<void> {
+          const entryId = store.entryId();
+          return entryId
+            ? Promise.all([loadPlacedLinks(entryId), loadEntry(entryId)]).then(() => undefined)
             : Promise.resolve();
         },
 

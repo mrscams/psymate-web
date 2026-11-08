@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T09:52:09.671Z",
+  "task": "M2-05",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Rail « Lié à… » dans l'éditeur d'entrée : cinq cibles (situations en cours puis entrées récentes, via la timeline), type proposé selon la matrice E5.3 (modifiable), Tab + Espace, links[] dans le POST de création, 422 sous le rail sans entrée créée ; en correction, liens en lecture et ouverture de l'éditeur de lien (M2-04).",
+  "notes": "Commits 71baca5 + aa127ff (suites de la revue : liens hors rail chargé non envoyés, $localize, état vide filtré, SELF_LINK, aria-describedby). lint, check:tokens, test (932), build verts ; e2e flux-3 9/9, passe complète 82 passés / 11 ignorés (admin). Hors entries : export isAllowed + LinkTypeOption dans features/graph/index.ts. Écarts : recherche du rail (fiche 05 §7, B4) non faite ; type proposé = premier type permis du catalogue (fiche 05 Écarts) au lieu de « aggrave » (B5) ; séances exclues des cibles. Points de fusion : messages.fr.xlf / messages.en.xlf (entries.rail.*, entries.links.*).",
+  "next": "Suites : import circulaire entries ↔ graph (ENTRY_QUERY_PARAM / openLinkEditor) à découpler par constantes partagées ou jeton ; toLinkType dupliqué avec graph/link.api.ts ; recherche dans le rail ; puis M2-06 (vue graphe).",
+  "branch": "claude/angry-cerf-c2a813",
+  "checkout": "m7-07-admin-84001d"
+}

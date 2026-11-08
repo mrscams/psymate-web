@@ -1,0 +1,38 @@
+<div class="rows">
+  @for (row of rows(); track row.candidate.id) {
+    @let link = linkOf(row);
+    <div class="row" [class.checked]="!!link">
+      <input
+        type="checkbox"
+        [id]="checkboxId(row)"
+        [checked]="!!link"
+        [disabled]="disabled()"
+        [attr.aria-describedby]="describedBy()"
+        (change)="toggle(row, $any($event.target).checked)"
+        (blur)="touched()"
+      />
+      <label class="target" [for]="checkboxId(row)">
+        <pm-entry-icon [type]="row.candidate.type" [size]="12" />
+        <span class="text">
+          <span class="name">{{ row.name }}</span>
+          <span class="meta">{{ row.meta }}</span>
+        </span>
+      </label>
+      <select
+        class="type"
+        [class.confirmed]="!!link"
+        [attr.aria-label]="typeLabel(row)"
+        [attr.aria-describedby]="describedBy()"
+        [disabled]="disabled()"
+        (change)="choose(row, +$any($event.target).value)"
+        (blur)="touched()"
+      >
+        @for (choice of row.choices; track choice.linkType + choice.direction) {
+          <option [value]="$index" [selected]="$index === selectedIndex(row)">
+            {{ choice.label }}
+          </option>
+        }
+      </select>
+    </div>
+  }
+</div>

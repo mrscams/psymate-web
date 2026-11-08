@@ -6,10 +6,14 @@ import { PreferencesStore } from '../../../core/preferences';
 import { EntriesApi } from './entries.api';
 import { EntryEditorStore } from './entry-editor.store';
 import {
+  CANDIDATES,
+  candidate,
   CURRENT_SESSION,
   EMOTIONS,
   entry,
   feelingEntry,
+  LINK_TYPES,
+  PLACED_LINKS,
   SESSIONS,
   TAGS,
   VERSIONS,
@@ -37,6 +41,9 @@ function setup(
       ),
     patch: vi.fn().mockResolvedValue(entry({ version: 2 })),
     createEmotion: vi.fn(),
+    linkTypes: vi.fn().mockResolvedValue(LINK_TYPES),
+    railSource: vi.fn().mockResolvedValue({ situations: [], recent: CANDIDATES }),
+    linksOf: vi.fn().mockResolvedValue(PLACED_LINKS),
     ...api,
   };
   TestBed.configureTestingModule({
@@ -301,5 +308,164 @@ describe('EntryEditorStore', () => {
     expect(store.emotions().status).toBe('error');
     await store.retryEmotions();
     expect(store.emotions().status).toBe('loaded');
+  });
+
+  describe('rail « Lié à… » (M2-05)', () => {
+    const link = { targetId: 'c-event', linkType: 'triggers', direction: 'incoming' } as const;
+
+    it('création : catalogue des types et cinq cibles au plus, situations en cours d’abord', async () => {
+      const recent = Array.from({ length: 6 }, (_, i) => candidate({ id: `c-${i}` }));
+      const situations = [
+        candidate({ id: 'c-sit-done', type: 'situation', ongoing: false }),
+        candidate({ id: 'c-sit', type: 'situation', ongoing: true }),
+      ];
+      const { store, api } = setup({
+        railSource: vi.fn().mockResolvedValue({
+          situations,
+          recent: [candidate({ id: 'c-sit', type: 'situation', ongoing: true }), ...recent],
+        }),
+      });
+      await store.open({ patientId: 'p-marie' });
+      expect(api.railSource).toHaveBeenCalledWith('p-marie');
+      expect(store.linkTypes().data).toEqual(LINK_TYPES);
+      expect(store.linkCandidates().data?.map((item) => item.id)).toEqual([
+        'c-sit',
+        'c-0',
+        'c-1',
+        'c-2',
+        'c-3',
+      ]);
+      expect(api.linksOf).not.toHaveBeenCalled();
+
+      // Relues à chaque ouverture (une entrée créée y apparaît) ; le catalogue est gardé.
+      await store.open({ patientId: 'p-marie' });
+      expect(api.railSource).toHaveBeenCalledTimes(2);
+      expect(api.linkTypes).toHaveBeenCalledTimes(1);
+    });
+
+    it('links[] cochés partent dans le corps du POST, sans authorType ni submissionId', async () => {
+      const { store, api } = setup();
+      await store.open({ patientId: 'p-marie', type: 'feeling' });
+      await store.save(
+        draft({
+          type: 'feeling',
+          feeling: { emotionCode: 'anxiety', intensity: 8 },
+          links: [{ ...link }],
+        }),
+      );
+      const body = api.create!.mock.calls[0][1] as Record<string, unknown>;
+      expect(body['links']).toEqual([
+        { targetId: 'c-event', linkType: 'triggers', direction: 'incoming' },
+      ]);
+      expect(JSON.stringify(body)).not.toMatch(/authorType|submissionId/);
+    });
+
+    it('liens invisibles jamais envoyés : cible absente du rail, ou rail jamais chargé', async () => {
+      const gone = { targetId: 'c-gone', linkType: 'co_occurs', direction: 'outgoing' } as const;
+      const input = draft({
+        type: 'feeling',
+        feeling: { emotionCode: 'anxiety', intensity: 8 },
+        links: [{ ...link }, gone],
+      });
+      const { store, api } = setup();
+      await store.open({ patientId: 'p-marie' });
+      await store.save(input);
+      expect(api.create!.mock.calls[0][1]['links']).toEqual([link]);
+
+      // Brouillon rouvert, chronologie en erreur (aucune cible affichée) : aucun lien ne part,
+      // mais le brouillon garde les liens cochés.
+      TestBed.resetTestingModule();
+      const failing = setup({
+        railSource: vi.fn().mockRejectedValue({ status: 503, code: 'SERVICE_UNAVAILABLE' }),
+        create: vi.fn().mockRejectedValue({ status: 0, code: 'NETWORK_ERROR' }),
+      });
+      await failing.store.open({ patientId: 'p-marie' });
+      expect(failing.store.linkCandidates().status).toBe('error');
+      await failing.store.save(input);
+      expect(failing.api.create!.mock.calls[0][1]).not.toHaveProperty('links');
+      expect(failing.store.currentDraft()?.links).toEqual(input.links);
+    });
+
+    it('aucun lien coché : pas de clé links ; une séance n’en porte jamais', async () => {
+      const { store, api } = setup();
+      await store.open({ patientId: 'p-marie' });
+      await store.save(draft({ type: 'note', body: 'x' }));
+      expect(api.create!.mock.calls[0][1]).not.toHaveProperty('links');
+      await store.open({ patientId: 'p-marie' });
+      await store.save(
+        draft({
+          type: 'session',
+          session: { modality: 'in_person', durationMin: null },
+          links: [{ ...link }],
+        }),
+      );
+      expect(api.create!.mock.calls[1][1]).not.toHaveProperty('links');
+    });
+
+    it('correction : jamais de links dans le PATCH ; liens posés lus en lecture', async () => {
+      const { store, api } = setup({ versions: vi.fn().mockResolvedValue(VERSIONS) });
+      await store.open({ patientId: 'p-marie', entryId: 'e-1' });
+      expect(api.linksOf).toHaveBeenCalledWith('e-1');
+      expect(store.placedLinks().data).toEqual(PLACED_LINKS);
+      expect(api.railSource).not.toHaveBeenCalled();
+      const current = store.currentDraft()!;
+      await store.save({ ...current, title: 'Entretien annuel (bis)', links: [{ ...link }] });
+      const [entryId, body] = api.patch!.mock.calls[0] as [string, Record<string, unknown>];
+      expect(entryId).toBe('e-1');
+      expect(body).toEqual({ title: 'Entretien annuel (bis)' });
+      expect(api.create).not.toHaveBeenCalled();
+    });
+
+    it('422 sur un lien : aucune entrée rendue, problème rangé, brouillon et liens gardés', async () => {
+      const refused = {
+        status: 422,
+        code: 'VALIDATION_FAILED',
+        errors: [
+          {
+            field: 'links[0].linkType',
+            code: 'LINK_TYPE_NOT_ALLOWED',
+            message: 'Type de lien non permis.',
+          },
+        ],
+      };
+      const { store } = setup({ create: vi.fn().mockRejectedValue(refused) });
+      await store.open({ patientId: 'p-marie' });
+      const input = draft({
+        type: 'feeling',
+        feeling: { emotionCode: 'anxiety', intensity: 8 },
+        links: [{ targetId: 'c-event', linkType: 'treats', direction: 'incoming' }],
+      });
+      expect(await store.save(input)).toBeNull();
+      expect(store.problem()?.errors?.[0].field).toBe('links[0].linkType');
+      expect(store.currentDraft()).toEqual(input);
+    });
+
+    it('rail en erreur : Réessayer relit le catalogue et les cibles', async () => {
+      const railSource = vi
+        .fn()
+        .mockRejectedValueOnce({ status: 503, code: 'SERVICE_UNAVAILABLE' })
+        .mockResolvedValue({ situations: [], recent: CANDIDATES });
+      const linkTypes = vi
+        .fn()
+        .mockRejectedValueOnce({ status: 0, code: 'NETWORK_ERROR' })
+        .mockResolvedValue(LINK_TYPES);
+      const { store } = setup({ railSource, linkTypes });
+      await store.open({ patientId: 'p-marie' });
+      expect(store.linkCandidates().status).toBe('error');
+      expect(store.linkTypes().status).toBe('error');
+      await store.retryRail();
+      expect(store.linkCandidates().data).toHaveLength(CANDIDATES.length);
+      expect(store.linkTypes().status).toBe('loaded');
+    });
+
+    it('après l’éditeur de lien : liens et entrée relus (linkCount de la grâce)', async () => {
+      const { store, api } = setup();
+      await store.open({ patientId: 'p-marie', entryId: 'e-1' });
+      api.linksOf!.mockResolvedValue([]);
+      api.get!.mockResolvedValue(entry({ linkCount: 1 }));
+      await store.refreshLinks();
+      expect(store.placedLinks().data).toEqual([]);
+      expect(store.entry().data?.linkCount).toBe(1);
+    });
   });
 });

@@ -5,6 +5,7 @@
 
 import { EntryType } from '../../../shared/ui';
 import { OccurredPrecision } from '../../../shared/util';
+import { isAllowed, LinkTypeCode, LinkTypeOption } from '../../graph';
 
 export type EntryStatus = 'draft' | 'final';
 export type EntryVisibility = 'private' | 'clinical';
@@ -128,6 +129,8 @@ export interface EntryDraft {
   tags: string[];
   /** Motif de la correction (PATCH reason). */
   reason: string;
+  /** Liens cochés dans le rail « Lié à… » (création seulement : jamais envoyés en correction). */
+  links: RailLink[];
 }
 
 /** Corps de POST /api/patients/{id}/entries (CreateEntryRequest, sans authorType ni submissionId). */
@@ -143,6 +146,8 @@ export interface CreateEntryBody {
   status?: EntryStatus;
   visibility?: EntryVisibility;
   tags?: string[];
+  /** Liens posés avec l'entrée, tout ou rien (EntryLinkRequest[], 20 au plus). */
+  links?: RailLink[];
 }
 
 /** Corps de PATCH /api/entries/{id} (PatchEntryRequest) : seules les clés modifiées. */
@@ -196,6 +201,7 @@ export function emptyDraft(
     visibility,
     tags: [],
     reason: '',
+    links: [],
   };
 }
 
@@ -222,6 +228,7 @@ export function draftFromEntry(entry: EntryView): EntryDraft {
     visibility: entry.visibility,
     tags: [...entry.tags],
     reason: '',
+    links: [],
   };
 }
 
@@ -274,6 +281,14 @@ export function toCreateBody(draft: EntryDraft, status: EntryStatus = 'final'): 
     body.status = status;
     if (draft.sessionId) body.sessionId = draft.sessionId;
     if (draft.tags.length > 0) body.tags = [...draft.tags];
+    // Une séance n'a pas de lien à la création (NOT_ALLOWED_ON_CREATE).
+    if (draft.links.length > 0) {
+      body.links = draft.links.map((link) => ({
+        targetId: link.targetId,
+        linkType: link.linkType,
+        direction: link.direction,
+      }));
+    }
   }
   return body;
 }
@@ -568,4 +583,147 @@ export function filterEmotions(emotions: Emotion[], query: string): Emotion[] {
 export function hasEmotionLabel(emotions: Emotion[], label: string): boolean {
   const q = normalize(label);
   return !!q && emotions.some((emotion) => normalize(emotion.label) === q);
+}
+
+// Rail « Lié à… » (fiche 05 §7, B5, M2-05) -------------------------------------------------------
+
+/** Cinq cibles au plus dans le rail (B5 : « les 5 entrées récentes ou actives »). */
+export const RAIL_SIZE = 5;
+
+/** Sens d'un lien vu depuis la nouvelle entrée (EntryLinkRequest.direction). */
+export type LinkDirection = 'outgoing' | 'incoming';
+
+/** Un lien coché dans le rail : la cible, le type et le sens vus depuis la nouvelle entrée. */
+export interface RailLink {
+  targetId: string;
+  linkType: LinkTypeCode;
+  /** outgoing : la nouvelle entrée est la source ; incoming : elle est la cible. */
+  direction: LinkDirection;
+}
+
+/** Une cible du rail (GET …/timeline) : une situation en cours ou une entrée récente. */
+export interface LinkCandidate {
+  id: string;
+  type: EntryType;
+  /** Titre de la version courante ; null si l'entrée n'en a pas. */
+  title: string | null;
+  /** Ressenti : code de l'émotion (libellé lu dans le vocabulaire) et intensité. */
+  emotionCode: string | null;
+  intensity: number | null;
+  occurred: OccurredValue;
+  /** Situation sans fin. */
+  ongoing: boolean;
+}
+
+/** Un type proposé pour un couple (nouvelle entrée, cible) : code, sens et verbe vu depuis l'entrée. */
+export interface LinkChoice {
+  linkType: LinkTypeCode;
+  direction: LinkDirection;
+  /** « déclenché par » (incoming d'un type orienté), « déclenche » (outgoing), « survient avec ». */
+  label: string;
+}
+
+/** Un lien déjà posé, en correction (GET /api/entries/{id}/links), vu depuis l'entrée. */
+export interface PlacedLink {
+  id: string;
+  linkType: LinkTypeCode;
+  /** Verbe vu depuis l'entrée (inverse quand elle est la cible). */
+  label: string;
+  /** Phrase du serveur « entrée verbe autre entrée ». */
+  sentence: string;
+}
+
+/**
+ * Les cinq cibles du rail : les situations en cours d'abord (ongoingSituations, ongoing = true),
+ * puis les entrées récentes (items, de la plus récente à la plus ancienne), sans doublon.
+ */
+export function railCandidates(
+  situations: readonly LinkCandidate[],
+  recent: readonly LinkCandidate[],
+  size: number = RAIL_SIZE,
+): LinkCandidate[] {
+  const seen = new Set<string>();
+  const list: LinkCandidate[] = [];
+  for (const candidate of [...situations.filter((item) => item.ongoing), ...recent]) {
+    if (!candidate.id || seen.has(candidate.id)) continue;
+    seen.add(candidate.id);
+    list.push(candidate);
+    if (list.length >= size) break;
+  }
+  return list;
+}
+
+/**
+ * Types proposés par la matrice E5.3 (G Q12, fiche 05 « Écarts ») pour lier la nouvelle entrée de
+ * type `entryType` à une cible de type `targetType`, dans l'ordre du catalogue : d'abord ceux où la
+ * cible est la source (couple (type cible, type de l'entrée), sens incoming : « Entretien annuel
+ * déclenche » le ressenti), puis ceux où la nouvelle entrée est la source (outgoing). Un type
+ * symétrique n'apparaît qu'une fois. Le premier est proposé ; liste vide : cible incompatible, jamais
+ * proposée. Le serveur reste juge (422 LINK_TYPE_NOT_ALLOWED).
+ */
+export function linkChoices(
+  types: readonly LinkTypeOption[],
+  entryType: EntryType,
+  targetType: EntryType,
+): LinkChoice[] {
+  const choices: LinkChoice[] = [];
+  for (const type of types) {
+    if (!isAllowed(type, targetType, entryType)) continue;
+    choices.push(
+      type.directed
+        ? { linkType: type.code, direction: 'incoming', label: type.inverseLabel ?? type.label }
+        : { linkType: type.code, direction: 'outgoing', label: type.label },
+    );
+  }
+  for (const type of types) {
+    if (!isAllowed(type, entryType, targetType)) continue;
+    if (!type.directed && choices.some((choice) => choice.linkType === type.code)) continue;
+    choices.push({ linkType: type.code, direction: 'outgoing', label: type.label });
+  }
+  return choices;
+}
+
+/** Le choix est-il celui de ce lien coché ? */
+export function sameChoice(
+  choice: Pick<LinkChoice, 'linkType' | 'direction'>,
+  link: Pick<RailLink, 'linkType' | 'direction'>,
+): boolean {
+  return choice.linkType === link.linkType && choice.direction === link.direction;
+}
+
+/**
+ * Les liens cochés après un changement du type de l'entrée ou des cibles du rail : un lien dont la
+ * cible n'est plus dans le rail tombe (rien d'invisible ne part dans le POST) ; un type devenu hors
+ * matrice est remplacé par le nouveau type proposé, ou le lien tombe si la cible est incompatible.
+ */
+export function reconcileLinks(
+  links: readonly RailLink[],
+  candidates: readonly LinkCandidate[],
+  types: readonly LinkTypeOption[],
+  entryType: EntryType,
+): RailLink[] {
+  const result: RailLink[] = [];
+  for (const link of links) {
+    const candidate = candidates.find((item) => item.id === link.targetId);
+    if (!candidate) continue;
+    const choices = linkChoices(types, entryType, candidate.type);
+    if (choices.some((choice) => sameChoice(choice, link))) {
+      result.push(link);
+    } else if (choices.length > 0) {
+      result.push({
+        targetId: link.targetId,
+        linkType: choices[0].linkType,
+        direction: choices[0].direction,
+      });
+    }
+  }
+  return result;
+}
+
+/** Deux listes de liens cochés identiques (même ordre) : pas de réécriture du formulaire. */
+export function sameLinks(a: readonly RailLink[], b: readonly RailLink[]): boolean {
+  return (
+    a.length === b.length &&
+    a.every((link, index) => link.targetId === b[index].targetId && sameChoice(link, b[index]))
+  );
 }

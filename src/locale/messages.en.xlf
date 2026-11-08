@@ -16571,6 +16571,213 @@
         </context-group>
         <note priority="1" from="description">Fenêtres en mémoire de la ligne d&apos;état de la timeline</note>
       </trans-unit>
+      <trans-unit id="entries.rail.legend" datatype="html">
+        <source> Lié à… </source>
+        <target state="translated"> Linked to… </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">295,297</context>
+        </context-group>
+        <note priority="1" from="description">Bloc du rail des liens</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.hint" datatype="html">
+        <source> Situations en cours et entrées récentes. <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Espace<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> coche ; les liens cochés sont posés avec l&apos;entrée, tout ou rien. </source>
+        <target state="translated"> Ongoing situations and recent entries. <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Space<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> checks; checked links are created with the entry, all or nothing. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">321,323</context>
+        </context-group>
+        <note priority="1" from="description">Aide du rail des liens</note>
+      </trans-unit>
+      <trans-unit id="entries.links.edit" datatype="html">
+        <source>Lier ou modifier les liens</source>
+        <target state="translated">Link or edit links</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">358,364</context>
+        </context-group>
+        <note priority="1" from="description">Ouvrir l&apos;éditeur de lien depuis une correction</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.loadError" datatype="html">
+        <source>Impossible de proposer des entrées à lier</source>
+        <target state="translated">Unable to suggest entries to link</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">216</context>
+        </context-group>
+        <note priority="1" from="description">Rail illisible</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.emptyTitle" datatype="html">
+        <source>Aucune entrée récente à lier</source>
+        <target state="translated">No recent entry to link</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">217</context>
+        </context-group>
+        <note priority="1" from="description">Rail vide</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.emptyMessage" datatype="html">
+        <source>Les situations en cours et les dernières entrées du dossier apparaîtront ici.</source>
+        <target state="translated">Ongoing situations and the latest entries of the record will appear here.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">218</context>
+        </context-group>
+        <note priority="1" from="description">Rail vide, explication</note>
+      </trans-unit>
+      <trans-unit id="entries.links.loadError" datatype="html">
+        <source>Impossible de charger les liens de cette entrée</source>
+        <target state="translated">Unable to load the links of this entry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-group>
+        <note priority="1" from="description">Liens illisibles</note>
+      </trans-unit>
+      <trans-unit id="entries.links.emptyTitle" datatype="html">
+        <source>Aucun lien pour le moment</source>
+        <target state="translated">No links yet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+        <note priority="1" from="description">Aucun lien posé</note>
+      </trans-unit>
+      <trans-unit id="entries.links.titleCount" datatype="html">
+        <source>Lié à… · <x id="count" equiv-text="count"/></source>
+        <target state="translated">Linked to… · <x id="count" equiv-text="count"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">234</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc des liens en correction, avec leur nombre</note>
+      </trans-unit>
+      <trans-unit id="entries.links.title" datatype="html">
+        <source>Lié à…</source>
+        <target state="translated">Linked to…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">235</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc des liens</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.refusedNamed" datatype="html">
+        <source>Lien vers « <x id="name" equiv-text="name"/> » refusé : <x id="reason" equiv-text="reason"/></source>
+        <target state="translated">Link to “<x id="name" equiv-text="name"/>” refused: <x id="reason" equiv-text="reason"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Lien refusé vers une cible nommée</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.refused" datatype="html">
+        <source>Lien refusé : <x id="reason" equiv-text="reason"/></source>
+        <target state="translated">Link refused: <x id="reason" equiv-text="reason"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">Lien refusé</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.nothingCreated" datatype="html">
+        <source>L&apos;entrée n&apos;a pas été créée ; votre saisie est conservée.</source>
+        <target state="translated">The entry was not created; your input is kept.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+        <note priority="1" from="description">Après un lien refusé, rien n&apos;est créé</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.reason.typeNotAllowed" datatype="html">
+        <source>ce type de lien n&apos;est pas permis entre ces deux types d&apos;entrée.</source>
+        <target state="translated">this link type is not allowed between these two entry types.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.reason.unknownType" datatype="html">
+        <source>ce type de lien n&apos;existe pas.</source>
+        <target state="translated">this link type does not exist.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.reason.exists" datatype="html">
+        <source>ce lien existe déjà.</source>
+        <target state="translated">this link already exists.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.reason.archived" datatype="html">
+        <source>l&apos;entrée liée est archivée.</source>
+        <target state="translated">the linked entry is archived.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.reason.notFound" datatype="html">
+        <source>l&apos;entrée liée n&apos;existe plus.</source>
+        <target state="translated">the linked entry no longer exists.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.reason.otherPatient" datatype="html">
+        <source>l&apos;entrée liée appartient à un autre dossier.</source>
+        <target state="translated">the linked entry belongs to another record.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.typeLabel" datatype="html">
+        <source>Type de lien avec « <x id="name" equiv-text="name"/> »</source>
+        <target state="translated">Link type with “<x id="name" equiv-text="name"/>”</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/link-rail.component.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+        <note priority="1" from="description">Liste du type de lien d&apos;une cible du rail</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.ongoing" datatype="html">
+        <source>en cours</source>
+        <target state="translated">ongoing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/link-rail.component.ts</context>
+          <context context-type="linenumber">166</context>
+        </context-group>
+        <note priority="1" from="description">Situation sans fin dans le rail</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.reason.self" datatype="html">
+        <source>une entrée ne peut pas être liée à elle-même.</source>
+        <target state="translated">an entry cannot be linked to itself.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/entry-labels.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un lien refusé (422)</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.feelingName" datatype="html">
+        <source><x id="emotion" equiv-text="emotion"/> <x id="intensity" equiv-text="intensity"/>/10</source>
+        <target state="translated"><x id="emotion" equiv-text="emotion"/> <x id="intensity" equiv-text="intensity"/>/10</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/link-rail.component.ts</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;un ressenti sans titre dans le rail</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

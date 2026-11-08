@@ -32,13 +32,23 @@ import {
   StateComponent,
   ToastService,
 } from '../../../shared/ui';
-import { stateKind } from '../../../shared/util';
+import { StateKind, stateKind } from '../../../shared/util';
+import { openLinkEditor } from '../../graph';
 import { draftKey, EditorTarget, EntryEditorStore } from '../data/entry-editor.store';
-import { EntryStatus, EntryView, SESSION_MODALITIES, SessionModality } from '../data/entry.model';
+import {
+  EntryStatus,
+  EntryView,
+  linkChoices,
+  reconcileLinks,
+  sameLinks,
+  SESSION_MODALITIES,
+  SessionModality,
+} from '../data/entry.model';
 import { EmotionComboboxComponent } from '../ui/emotion-combobox.component';
 import { buildEntryForm, EntryForm, formDraft } from '../ui/entry-form';
-import { modalityLabel, saveProblemText } from '../ui/entry-labels';
+import { linkProblemText, modalityLabel, saveProblemText } from '../ui/entry-labels';
 import { IntensitySliderComponent } from '../ui/intensity-slider.component';
+import { candidateName, LinkRailComponent } from '../ui/link-rail.component';
 import { OccurredFieldsComponent } from '../ui/occurred-fields.component';
 import { relativeAgo } from '../ui/relative-time';
 import { TypeChipsComponent } from '../ui/type-chips.component';
@@ -47,6 +57,7 @@ import { VersionHistoryPanel } from './version-history.panel';
 /** Horloge du bandeau de grâce. */
 const TICK_MS = 30_000;
 const GRACE_ID = 'pm-entry-grace';
+const RAIL_ERROR_ID = 'pm-entry-links-error';
 
 /**
  * Éditeur d'entrée (fiche 05, B4 écran 5) : panneau 480 px ouvert par SidePanelService, création ou
@@ -68,6 +79,7 @@ const GRACE_ID = 'pm-entry-grace';
     EmotionComboboxComponent,
     IntensitySliderComponent,
     OccurredFieldsComponent,
+    LinkRailComponent,
   ],
   templateUrl: './entry-editor.panel.html',
   styleUrl: './entry-editor.panel.scss',
@@ -190,6 +202,45 @@ export class EntryEditorPanel {
   protected readonly tagsEmptyTitle = $localize`:Aucun tag@@entries.tags.emptyTitle:Aucun tag pour le moment`;
   protected readonly tagsEmptyMessage = $localize`:Aucun tag, où en créer@@entries.tags.emptyMessage:Les tags se créent dans Compte, Tags.`;
 
+  /** Rail « Lié à… » (création) : catalogue des types et cibles, trois états (pm-state). */
+  protected readonly railState = computed<StateKind | null>(() => {
+    const types = stateKind(this.store.linkTypes());
+    const candidates = stateKind(this.store.linkCandidates());
+    if (types === 'error' || candidates === 'error') return 'error';
+    if (types === 'loading' || candidates === 'loading') return 'loading';
+    if (candidates === 'empty') return 'empty';
+    // Vide aussi quand aucune cible n'admet de type pour l'entrée en cours (rien à proposer).
+    const catalog = this.store.linkTypes().data ?? [];
+    const type = this.type();
+    const list = this.store.linkCandidates().data ?? [];
+    return list.some((item) => linkChoices(catalog, type, item.type).length > 0) ? null : 'empty';
+  });
+  protected readonly railRetry: StateAction = {
+    label: $localize`:Bouton de l'état erreur@@state.error.retry:Réessayer`,
+    handler: () => void this.store.retryRail(),
+  };
+  protected readonly railErrorTitle = $localize`:Rail illisible@@entries.rail.loadError:Impossible de proposer des entrées à lier`;
+  protected readonly railEmptyTitle = $localize`:Rail vide@@entries.rail.emptyTitle:Aucune entrée récente à lier`;
+  protected readonly railEmptyMessage = $localize`:Rail vide, explication@@entries.rail.emptyMessage:Les situations en cours et les dernières entrées du dossier apparaîtront ici.`;
+  protected readonly railErrorId = RAIL_ERROR_ID;
+  /** 422 sur un lien (links[i]) : message sous le rail ; aucune entrée n'a été créée. */
+  protected readonly railError = signal<string | null>(null);
+
+  /** Correction : liens déjà posés, en lecture ; ils se modifient dans l'éditeur de lien (M2-04). */
+  protected readonly placedState = computed(() => stateKind(this.store.placedLinks()));
+  protected readonly placedRetry: StateAction = {
+    label: $localize`:Bouton de l'état erreur@@state.error.retry:Réessayer`,
+    handler: () => void this.store.refreshLinks(),
+  };
+  protected readonly placedErrorTitle = $localize`:Liens illisibles@@entries.links.loadError:Impossible de charger les liens de cette entrée`;
+  protected readonly placedEmptyTitle = $localize`:Aucun lien posé@@entries.links.emptyTitle:Aucun lien pour le moment`;
+  protected readonly placedTitle = computed(() => {
+    const count = this.store.placedLinks().data?.length ?? 0;
+    return count > 0
+      ? $localize`:Titre du bloc des liens en correction, avec leur nombre@@entries.links.titleCount:Lié à… · ${count}:count:`
+      : $localize`:Titre du bloc des liens@@entries.links.title:Lié à…`;
+  });
+
   protected readonly selectedTags = computed(() => {
     this.revision();
     return this.form()?.controls.tags.value ?? [];
@@ -219,6 +270,22 @@ export class EntryEditorPanel {
       if (!current || !form || this.editing) return;
       const control = form.controls.sessionId;
       if (!control.value && control.pristine) control.setValue(current.id);
+    });
+
+    // Rail : un lien coché suit le type de l'entrée (type proposé de nouveau s'il sort de la
+    // matrice) et les cibles relues ; rien d'invisible ne part dans le POST.
+    effect(() => {
+      const form = this.form();
+      const type = this.type();
+      const types = this.store.linkTypes().data;
+      const candidates = this.store.linkCandidates();
+      if (this.editing || !form || !types || candidates.status !== 'loaded') return;
+      if (type === 'session') return;
+      untracked(() => {
+        const control = form.controls.links;
+        const next = reconcileLinks(control.value, candidates.data ?? [], types, type);
+        if (!sameLinks(next, control.value)) control.setValue(next);
+      });
     });
 
     // Le bandeau de grâce décrit le dialogue (fiche 05, accessibilité).
@@ -263,6 +330,19 @@ export class EntryEditorPanel {
     control.markAsDirty();
   }
 
+  /** Correction : l'éditeur de lien (M2-04) s'empile sur ce panneau ; à sa fermeture, relecture. */
+  protected openLinks(): void {
+    const entryId = this.target.entryId;
+    if (!entryId) return;
+    const ref = openLinkEditor(entryId, { injector: this.injector });
+    void ref?.closed.then(() => this.store.refreshLinks());
+  }
+
+  /** Le rail a changé : le message d'un lien refusé ne vaut plus. */
+  protected railChanged(): void {
+    this.railError.set(null);
+  }
+
   protected openHistory(): void {
     this.panels.open(VersionHistoryPanel, { width: 420, stack: true });
   }
@@ -299,7 +379,9 @@ export class EntryEditorPanel {
     if (!form || this.store.saving()) return;
     clearServerErrors(form);
     this.alert.set(null);
-    const saved = await this.store.save(formDraft(form), status);
+    this.railError.set(null);
+    const draft = formDraft(form);
+    const saved = await this.store.save(draft, status);
     if (saved) {
       this.saved = true;
       this.toast.success(this.savedText(saved, status));
@@ -308,13 +390,37 @@ export class EntryEditorPanel {
     }
     const problem = this.store.problem();
     if (!problem) return;
-    const { unmatched } = applyProblem(form, problem);
+    const { applied, unmatched } = applyProblem(form, problem);
+    // Un lien refusé (links[i].linkType, links[i].targetId) : message sous le rail, saisie gardée.
+    const linkErrors = unmatched.filter((error) => /^links(\[|\.|$)/.test(error.field ?? ''));
+    const others = unmatched.filter((error) => !linkErrors.includes(error));
+    if (linkErrors.length > 0) {
+      const emotions = this.store.emotions().data ?? [];
+      const names = new Map(
+        (this.store.linkCandidates().data ?? []).map((candidate) => [
+          candidate.id,
+          candidateName(candidate, emotions),
+        ]),
+      );
+      this.railError.set(linkProblemText(linkErrors, draft.links, names));
+    }
     if (problem.errors?.length) {
-      if (unmatched.length > 0) this.alert.set(unmatched.map((error) => error.message).join(' '));
+      if (others.length > 0) this.alert.set(others.map((error) => error.message).join(' '));
     } else {
       this.alert.set(saveProblemText(problem.code, problem.status));
     }
-    this.focusInvalid(form);
+    if (linkErrors.length > 0 && others.length === 0 && applied.length === 0) {
+      this.focusRailError();
+    } else {
+      this.focusInvalid(form);
+    }
+  }
+
+  private focusRailError(): void {
+    afterNextRender(
+      () => this.host.nativeElement.querySelector<HTMLElement>(`#${RAIL_ERROR_ID}`)?.focus(),
+      { injector: this.injector },
+    );
   }
 
   private savedText(saved: EntryView, status: EntryStatus): string {

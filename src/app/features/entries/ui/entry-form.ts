@@ -2,14 +2,15 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 import { EntryType } from '../../../shared/ui';
 import { OccurredPrecision } from '../../../shared/util';
-import { EntryDraft, EntryVisibility, SessionModality } from '../data/entry.model';
+import { EntryDraft, EntryVisibility, RailLink, SessionModality } from '../data/entry.model';
 
 /**
  * Formulaire réactif de l'éditeur (état d'écran du panneau). Les noms suivent les champs du contrat
  * pour qu'applyProblem relie chaque errors[].field à son contrôle : `title`, `body`,
  * `feeling.emotionCode`, `feeling.intensity`, `medication.molecule`, `session.modality`,
  * `occurred` (INVALID_TIME racine), `occurred.from`, `occurred.to`, `occurred.label`, `sessionId`,
- * `visibility`, `reason`. Aucune règle métier ici : le serveur juge (le client vérifie la forme).
+ * `visibility`, `reason`. `links` porte les liens cochés du rail « Lié à… » (les erreurs
+ * `links[i].…` d'un 422 s'affichent sous le rail, pas sur un contrôle). Aucune règle métier ici : le serveur juge (le client vérifie la forme).
  */
 export type OccurredForm = FormGroup<{
   now: FormControl<boolean>;
@@ -41,6 +42,7 @@ export type EntryForm = FormGroup<{
   visibility: FormControl<EntryVisibility>;
   tags: FormControl<string[]>;
   reason: FormControl<string>;
+  links: FormControl<RailLink[]>;
 }>;
 
 const text = (value: string): FormControl<string> => new FormControl(value, { nonNullable: true });
@@ -76,6 +78,7 @@ export function buildEntryForm(draft: EntryDraft): EntryForm {
     visibility: new FormControl<EntryVisibility>(draft.visibility, { nonNullable: true }),
     tags: new FormControl<string[]>([...draft.tags], { nonNullable: true }),
     reason: text(draft.reason),
+    links: new FormControl<RailLink[]>([...(draft.links ?? [])], { nonNullable: true }),
   });
 }
 
@@ -90,5 +93,6 @@ export function formDraft(form: EntryForm): EntryDraft {
       durationMin: duration === null || (duration as unknown) === '' ? null : Number(duration),
     },
     tags: [...value.tags],
+    links: [...value.links],
   };
 }

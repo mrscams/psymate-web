@@ -10,14 +10,19 @@ import {
   EntreesService,
   EntryDto,
   EntryVersionDto,
+  LiensService,
+  LinkDto,
+  LinkTypeView,
   PatchEntryRequest,
   SeancesService,
   TagsService,
+  TimelineItemDto,
   VocabulaireService,
 } from '../../../api';
 import { isApiProblem } from '../../../core/http';
 import { EntryType } from '../../../shared/ui';
 import { OccurredPrecision } from '../../../shared/util';
+import { LinkTypeCode, LinkTypeOption } from '../../graph';
 import {
   CreateEntryBody,
   Emotion,
@@ -27,7 +32,9 @@ import {
   EntryVersion,
   EntryView,
   EntryVisibility,
+  LinkCandidate,
   PatchEntryBody,
+  PlacedLink,
   SessionModality,
   SessionOption,
   SESSION_MODALITIES,
@@ -35,6 +42,26 @@ import {
 
 /** Au plus 200 séances listées dans le bloc Séance (limite de la chronologie). */
 const SESSIONS_LIMIT = 200;
+
+/**
+ * Entrées récentes lues pour le rail « Lié à… » : de quoi en garder cinq une fois retirées les
+ * situations en cours déjà proposées en tête.
+ */
+const RECENT_LIMIT = 10;
+
+/**
+ * Types des cibles du rail : pas de séance (l'entrée appartient déjà à sa séance par sessionId ; le
+ * rail propose le contenu clinique récent).
+ */
+const RAIL_TYPES: readonly EntryType[] = ['note', 'event', 'situation', 'feeling', 'medication'];
+
+/** Cibles du rail telles que la chronologie les rend, avant le tri du modèle (railCandidates). */
+export interface RailSource {
+  /** ongoingSituations de la chronologie (terminées comprises : ongoing les distingue). */
+  situations: LinkCandidate[];
+  /** items, de la plus récente à la plus ancienne. */
+  recent: LinkCandidate[];
+}
 
 /**
  * Service de données de features/entries (handbook §2, couche 4) : le seul fichier de la feature
@@ -51,6 +78,7 @@ export class EntriesApi {
   private readonly vocabulary = inject(VocabulaireService);
   private readonly customEmotions = inject(EmotionsPersonnellesService);
   private readonly tags = inject(TagsService);
+  private readonly links = inject(LiensService);
   private readonly english = inject(LOCALE_ID).startsWith('en');
 
   /** POST /api/patients/{id}/entries → 201 (422 VALIDATION_FAILED, SESSION_REQUIRED ; 409 SESSION_ALREADY_OPEN). */
@@ -97,6 +125,45 @@ export class EntriesApi {
       }),
     );
     return toEmotion(dto, this.english);
+  }
+
+  /** GET /api/vocabulary/link-types : les huit types et leur matrice (E5.3), dans l'ordre du catalogue. */
+  async linkTypes(): Promise<LinkTypeOption[]> {
+    const list = await firstValueFrom(this.vocabulary.linkTypes());
+    return list.map((view) => toLinkType(view, this.english));
+  }
+
+  /**
+   * GET /api/patients/{id}/timeline : les cibles du rail « Lié à… », situations en cours et entrées
+   * récentes (hors séances), brouillons compris, entrées privées exclues (défaut du contrat).
+   */
+  async railSource(patientId: string): Promise<RailSource> {
+    const page = await firstValueFrom(
+      this.timeline.getTimeline(
+        patientId,
+        undefined,
+        undefined,
+        [...RAIL_TYPES],
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        RECENT_LIMIT,
+      ),
+    );
+    return {
+      situations: (page.ongoingSituations ?? []).filter((item) => !!item.id).map(toCandidate),
+      recent: (page.items ?? [])
+        .filter((item) => !!item.id && item.type !== 'session')
+        .map(toCandidate),
+    };
+  }
+
+  /** GET /api/entries/{id}/links : liens acceptés de l'entrée, vus depuis elle (correction). */
+  async linksOf(entryId: string): Promise<PlacedLink[]> {
+    const list = await firstValueFrom(this.links.listEntryLinks(entryId));
+    return list.map(toPlacedLink);
   }
 
   /** GET /api/tags : libellés des tags actifs du praticien (choix des tags existants). */
@@ -180,12 +247,7 @@ function toEntry(dto: EntryDto): EntryView {
     visibility: (dto.visibility === 'private' ? 'private' : 'clinical') as EntryVisibility,
     title: dto.title ?? null,
     body: dto.body ?? null,
-    occurred: {
-      from: dto.occurred?.from ?? null,
-      to: dto.occurred?.to ?? null,
-      precision: oneOf(PRECISIONS, dto.occurred?.precision, 'exact'),
-      label: dto.occurred?.label ?? null,
-    },
+    occurred: toOccurred(dto.occurred),
     recordedAt: dto.recordedAt ?? null,
     sessionId: dto.sessionId ?? null,
     version: dto.version ?? 1,
@@ -207,6 +269,57 @@ function toEntry(dto: EntryDto): EntryView {
         }
       : null,
     archived: !!dto.archivedAt,
+  };
+}
+
+function toOccurred(dto: EntryDto['occurred']): EntryView['occurred'] {
+  return {
+    from: dto?.from ?? null,
+    to: dto?.to ?? null,
+    precision: oneOf(PRECISIONS, dto?.precision, 'exact'),
+    label: dto?.label ?? null,
+  };
+}
+
+function toCandidate(item: TimelineItemDto): LinkCandidate {
+  return {
+    id: item.id ?? '',
+    type: oneOf(ENTRY_TYPES, item.type, 'note'),
+    title: item.title?.trim() || null,
+    emotionCode: item.emotion?.code ?? null,
+    intensity: item.intensity ?? null,
+    occurred: toOccurred(item.occurred),
+    ongoing: item.ongoing === true,
+  };
+}
+
+function entryTypes(values: string[] | undefined): EntryType[] {
+  return (values ?? []).filter((value): value is EntryType =>
+    ENTRY_TYPES.includes(value as EntryType),
+  );
+}
+
+/** Libellés dans la langue de l'interface (labelEn / inverseLabelEn en anglais). */
+function toLinkType(view: LinkTypeView, english: boolean): LinkTypeOption {
+  const label = (english ? view.labelEn : view.labelFr) ?? view.labelFr ?? view.code ?? '';
+  const inverse = (english ? view.inverseLabelEn : view.inverseLabelFr) ?? view.inverseLabelFr;
+  return {
+    code: view.code as LinkTypeCode,
+    directed: view.directed ?? true,
+    label,
+    inverseLabel: inverse ?? null,
+    sources: entryTypes(view.allowedSourceTypes),
+    targets: entryTypes(view.allowedTargetTypes),
+    lineStyle: (view.lineStyle as LinkTypeOption['lineStyle'] | undefined) ?? 'solid',
+  };
+}
+
+function toPlacedLink(dto: LinkDto): PlacedLink {
+  return {
+    id: dto.id ?? '',
+    linkType: dto.linkType as LinkTypeCode,
+    label: dto.label ?? '',
+    sentence: dto.sentence ?? '',
   };
 }
 
