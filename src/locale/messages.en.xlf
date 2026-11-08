@@ -15428,6 +15428,7 @@
           <context context-type="linenumber">71,74</context>
         </context-group>
         <note priority="1" from="description">Types possibles illisibles</note>
+</trans-unit>
       <trans-unit id="search.heading" datatype="html">
         <source> Recherche dans le dossier </source>
         <target state="translated">Search the record</target>
