@@ -24,7 +24,7 @@ import {
   ToastService,
 } from '../../../shared/ui';
 import { ENTRY_QUERY_PARAM, openEntryEditor } from '../../entries';
-import { connectLinkEditor } from '../../graph';
+import { connectLinkEditor, LINK_QUERY_PARAM } from '../../graph';
 import { OverviewViewToggleComponent } from '../../overview';
 import { StateKind } from '../../../shared/util';
 import { ShellTab } from '../data/patient-shell.model';
@@ -71,6 +71,11 @@ export class PatientShellPage {
   /** `?entry=<id>` : correction d'une entrée, le panneau se rouvre au rechargement (fiche 05). */
   private readonly entryParam = toSignal(
     this.route.queryParamMap.pipe(map((params) => params.get(ENTRY_QUERY_PARAM))),
+  );
+
+  /** `?link=<entryId>` : l'éditeur de lien est ouvert (features/graph le pose et le retire). */
+  private readonly linkParam = toSignal(
+    this.route.queryParamMap.pipe(map((params) => params.get(LINK_QUERY_PARAM))),
   );
 
   private readonly navigated = toSignal(
@@ -137,6 +142,15 @@ export class PatientShellPage {
     });
     // Éditeur de lien (M2-04) : L lie l'entrée ouverte ; ?link=<id> s'ouvre après ?entry=.
     connectLinkEditor(() => this.store.patient());
+    // Sa fermeture (?link= retiré de l'URL) : un lien a pu être posé, les projections se relisent.
+    let link = untracked(() => this.linkParam() ?? null);
+    effect(() => {
+      const current = this.linkParam() ?? null;
+      if (current === link) return;
+      const closed = link !== null && current === null;
+      link = current;
+      if (closed) untracked(() => this.store.noteWrite());
+    });
   }
 
   /** N, bouton + ou Entrée dans la barre de capture (avec son texte) : nouvelle entrée. */

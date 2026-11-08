@@ -98,7 +98,9 @@ export function toView(dto: OverviewDto, requested: OverviewWindow, english = fa
       markers: toMarkers(dto.feelings?.markers),
       ticks: dto.feelings?.ticks ?? [],
     },
-    emotions: (dto.emotions?.top ?? []).filter((e) => !!e.code).map(toEmotion),
+    emotions: (dto.emotions?.top ?? [])
+      .filter((e) => !!e.code)
+      .map((e) => toEmotion(e, english ? englishLabels(dto.feelings?.series) : null)),
     drafts: {
       count: dto.drafts?.count ?? 0,
       openSession: dto.drafts?.openSession?.entryId
@@ -190,10 +192,19 @@ function toSeries(dto: FeelingSeriesDto, english: boolean): FeelingSeries {
   };
 }
 
-function toEmotion(dto: TopEmotionDto): TopEmotion {
+/** Code → libellé anglais, tiré des séries de ressentis (TopEmotionDto n'a que le français). */
+function englishLabels(series: FeelingSeriesDto[] | undefined): Map<string, string> {
+  const labels = new Map<string, string>();
+  for (const item of series ?? []) {
+    if (item.emotionCode && item.labelEn) labels.set(item.emotionCode, item.labelEn);
+  }
+  return labels;
+}
+
+function toEmotion(dto: TopEmotionDto, english: Map<string, string> | null): TopEmotion {
   return {
     code: dto.code!,
-    label: dto.label || dto.code!,
+    label: english?.get(dto.code!) || dto.label || dto.code!,
     count: dto.count ?? 0,
     previousCount: dto.previousCount ?? 0,
     delta: dto.delta ?? 0,

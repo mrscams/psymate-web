@@ -37,15 +37,17 @@ const ENTRY_PARAM = 'entry';
   selector: 'pm-overview-trend',
   imports: [RouterLink, StateComponent, TrendChartComponent],
   template: `
-    <div class="figure" role="img" [attr.aria-label]="summary()">
+    <!-- Le résumé (role=img) porte sur la courbe seule ; une erreur s'affiche hors de lui. -->
+    <div class="figure">
       @defer (on immediate) {
         <pm-overview-trend-chart
           [data]="chartData()"
           [labels]="chartLabels"
+          [summary]="summary()"
           (pointSelected)="pointSelected.emit($event)"
         />
       } @placeholder {
-        <div class="chart-placeholder"></div>
+        <div class="chart-placeholder" role="img" [attr.aria-label]="summary()"></div>
       } @error {
         <pm-state kind="error" compact [title]="failedTitle" />
       }

@@ -51,8 +51,8 @@ export const TREND_RENDERER = new InjectionToken<() => Promise<TrendRenderer>>('
 /**
  * Courbe de tendance de la vue d'ensemble (fiche 02) : ECharts, chargé à la demande, options
  * calculées par trendChartOptions à partir des tokens CSS (relus au changement de thème). Un clic
- * sur un point de ressenti émet son entrée. Décorative pour les lecteurs d'écran : le bloc parent
- * porte le résumé (`role="img"`) et le tableau des données.
+ * sur un point de ressenti émet son entrée. Pour les lecteurs d'écran : `role="img"` et le résumé
+ * (la courbe elle-même est masquée) ; une erreur de chargement s'affiche hors de cette image.
  */
 @Component({
   selector: 'pm-overview-trend-chart',
@@ -61,7 +61,9 @@ export const TREND_RENDERER = new InjectionToken<() => Promise<TrendRenderer>>('
     @if (failed()) {
       <pm-state kind="error" compact [title]="failedTitle" [message]="failedMessage" />
     }
-    <div #container class="chart" [class.hidden]="failed()" aria-hidden="true"></div>
+    <div class="figure" role="img" [attr.aria-label]="summary()" [class.hidden]="failed()">
+      <div #container class="chart" aria-hidden="true"></div>
+    </div>
   `,
   styles: `
     :host {
@@ -80,6 +82,8 @@ export const TREND_RENDERER = new InjectionToken<() => Promise<TrendRenderer>>('
 export class TrendChartComponent {
   readonly data = input.required<TrendChartData>();
   readonly labels = input.required<TrendChartLabels>();
+  /** Résumé de la courbe pour les lecteurs d'écran (`role="img"`), hors de l'état d'erreur. */
+  readonly summary = input.required<string>();
   /** Clic sur un point de ressenti : l'identifiant de l'entrée. */
   readonly pointSelected = output<string>();
 

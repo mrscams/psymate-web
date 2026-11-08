@@ -7,7 +7,8 @@ import { StateKind, uniqueId } from '../../../shared/util';
  * Un bloc de la vue d'ensemble (B4 écran 2) : titre toujours visible, et l'un des trois états
  * (shared/ui/state) à la place du contenu : squelette au chargement, phrase « apparaîtra ici
  * quand… » s'il est vide, erreur avec « Réessayer » (les autres blocs restent lisibles). Le contenu
- * (projeté) ne s'affiche que hors de ces états ; `[blockMeta]` reste à droite du titre.
+ * (projeté) ne s'affiche que hors de ces états ; `[blockMeta]` reste à droite du titre. Pendant
+ * une relecture : `aria-busy` et la mention « mise à jour… », le texte garde son contraste.
  */
 @Component({
   selector: 'pm-overview-block',
@@ -17,10 +18,18 @@ import { StateKind, uniqueId } from '../../../shared/util';
       class="block"
       [attr.aria-labelledby]="headingId"
       [attr.aria-busy]="refreshing() || null"
-      [class.refreshing]="refreshing()"
     >
       <header class="head">
         <h3 [id]="headingId">{{ heading() }}</h3>
+        @if (refreshing()) {
+          <!-- Indicateur visuel ; le pied de page (role=status) l'annonce une seule fois. -->
+          <span
+            class="busy"
+            aria-hidden="true"
+            i18n="Bloc en cours de relecture@@overview.block.busy"
+            >mise à jour…</span
+          >
+        }
         <ng-content select="[blockMeta]" />
       </header>
       @if (state(); as kind) {
@@ -53,10 +62,10 @@ import { StateKind, uniqueId } from '../../../shared/util';
       background: var(--surface-raised);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      transition: opacity 150ms;
     }
-    .refreshing {
-      opacity: 0.7;
+    .busy {
+      font: var(--mat-sys-label-small);
+      color: var(--text-secondary);
     }
     .head {
       display: flex;
@@ -72,11 +81,6 @@ import { StateKind, uniqueId } from '../../../shared/util';
       letter-spacing: 0.04em;
       text-transform: uppercase;
       color: var(--text-secondary);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .block {
-        transition: none;
-      }
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

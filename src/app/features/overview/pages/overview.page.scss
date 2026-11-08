@@ -24,8 +24,7 @@ h2 {
   border-radius: 8px;
   overflow: hidden;
 }
-.windows button,
-.recompute {
+.windows button {
   min-height: 32px;
   padding: 0 12px;
   border: 0;
@@ -192,8 +191,8 @@ a {
   flex: 0 0 auto;
   border-radius: 50%;
 }
-// Variation : signe + teinte en pastille (danger / success sur leur fond : contraste vérifié dans
-// les trois thèmes par check:tokens), jamais la couleur seule.
+// Variation : signe (+6, −2, =) et texte pour les lecteurs d'écran, teinte neutre (une hausse de
+// joie n'est pas un danger) ; text-primary sur surface-sunken, couple vérifié par check:tokens.
 .delta {
   min-width: 32px;
   box-sizing: border-box;
@@ -203,14 +202,6 @@ a {
   font: var(--mat-sys-label-medium);
   background: var(--surface-sunken);
   color: var(--text-primary);
-}
-.delta.up {
-  background: var(--danger-bg);
-  color: var(--danger);
-}
-.delta.down {
-  background: var(--success-bg);
-  color: var(--success);
 }
 .activity {
   display: grid;
@@ -241,10 +232,11 @@ a {
   font: var(--mat-sys-body-small);
   color: var(--text-secondary);
 }
-.recompute {
+.reload-failed {
+  padding: 4px 12px;
+  background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  color: var(--primary);
+  border-radius: 12px;
 }
 .simple {
   padding: 24px;

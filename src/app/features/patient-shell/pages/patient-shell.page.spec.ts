@@ -1,8 +1,16 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  reflectComponentType,
+  signal,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { By } from '@angular/platform-browser';
+import { provideRouter, Route, Router, Routes, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { PreferencesStore } from '../../../core/preferences';
@@ -13,7 +21,44 @@ import {
   openSession,
   shellPatient,
 } from '../data/patient-shell.fixtures';
+import { PatientShellStore } from '../data/patient-shell.store';
 import { PATIENT_SHELL_ROUTES } from '../patient-shell.routes';
+import { PatientShellPage } from './patient-shell.page';
+
+/**
+ * Onglet 1 factice : la spec du shell ne dépend pas du DOM ni des requêtes de la vue d'ensemble
+ * (features/overview, testée dans sa feature). Son compteur montre la mémoire des onglets
+ * (rememberTab / recallTab, B2).
+ */
+@Component({
+  selector: 'pm-fake-overview-tab',
+  template: `<h2>Vue d'ensemble</h2>
+    <button type="button" class="counter" (click)="increment()">Compteur : {{ count() }}</button>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class FakeOverviewTab implements OnInit {
+  private readonly store = inject(PatientShellStore);
+  protected readonly count = signal(0);
+
+  ngOnInit(): void {
+    this.count.set(this.store.recallTab<{ count: number }>('overview')?.count ?? 0);
+  }
+
+  protected increment(): void {
+    this.count.update((n) => n + 1);
+    this.store.rememberTab('overview', { count: this.count() });
+  }
+}
+
+/** Les routes du shell, l'onglet 1 (route '') remplacé par l'onglet factice, data.tab gardé. */
+function routesWithFakeOverview(): Routes {
+  const [shell] = PATIENT_SHELL_ROUTES;
+  const children = (shell.children ?? []).map((child): Route => {
+    if (child.path !== '' || child.redirectTo) return child;
+    return { ...child, loadComponent: undefined, component: FakeOverviewTab };
+  });
+  return [{ ...shell, children }];
+}
 
 type Api = Pick<PatientShellApi, 'patient' | 'current' | 'start' | 'close' | 'contact'>;
 
@@ -36,7 +81,7 @@ async function render(api: Partial<Api> = {}, url = '/patients/p-marie', duratio
       provideRouter(
         [
           { path: 'patients', children: [] },
-          { path: 'patients/:id', children: PATIENT_SHELL_ROUTES },
+          { path: 'patients/:id', children: routesWithFakeOverview() },
         ],
         withComponentInputBinding(),
       ),
@@ -47,9 +92,8 @@ async function render(api: Partial<Api> = {}, url = '/patients/p-marie', duratio
           defaultDurationMin: signal(durationMin),
           defaultVisibility: signal('clinical'),
           medicationVisible: signal(true),
-          // Vue d'ensemble (M4-05) : vue complète, fenêtre 90 j.
+          // Bascule « Vue » de la vue d'ensemble (M4-05), posée dans l'en-tête.
           overviewView: signal('complete'),
-          overviewWindow: signal('90d'),
           set: vi.fn().mockResolvedValue(null),
         },
       },
@@ -63,29 +107,15 @@ async function render(api: Partial<Api> = {}, url = '/patients/p-marie', duratio
   return { harness, el: harness.fixture.nativeElement as HTMLElement, api: mock };
 }
 
-/**
- * Répond aux lectures de la vue d'ensemble en attente (GET …/overview, onglet 1) : deux séances, la
- * plus récente dépliée par défaut.
- */
-function answerOverview(): void {
-  const http = TestBed.inject(HttpTestingController);
-  for (const request of http.match((r) => r.url.endsWith('/overview'))) {
-    request.flush({
-      window: '90d',
-      recentSessions: [
-        { entryId: 's-2', occurredFrom: '2026-10-17T14:00:00Z', kind: 'session', entryCount: 1 },
-        { entryId: 's-1', occurredFrom: '2026-10-10T14:00:00Z', kind: 'session', entryCount: 0 },
-      ],
-    });
-  }
+function counter(el: HTMLElement): HTMLButtonElement | null {
+  return el.querySelector<HTMLButtonElement>('pm-fake-overview-tab .counter');
 }
 
-function sessionToggles(el: HTMLElement): HTMLButtonElement[] {
-  return [...el.querySelectorAll<HTMLButtonElement>('pm-overview-sessions button[aria-expanded]')];
-}
-
-function expandedStates(el: HTMLElement): (string | null)[] {
-  return sessionToggles(el).map((b) => b.getAttribute('aria-expanded'));
+/** Le PatientShellStore fourni par la page du shell. */
+function shellStore(harness: RouterTestingHarness): PatientShellStore {
+  return harness.fixture.debugElement
+    .query(By.directive(PatientShellPage))
+    .injector.get(PatientShellStore);
 }
 
 async function settle(harness: RouterTestingHarness): Promise<void> {
@@ -110,7 +140,7 @@ describe('PatientShellPage', () => {
     const { el } = await render({ patient: vi.fn(() => never<ReturnType<typeof shellPatient>>()) });
     expect(el.querySelector('pm-patient-header [aria-busy="true"]')).not.toBeNull();
     expect(el.querySelector('h1')).toBeNull();
-    expect(el.querySelector('pm-overview-page')).toBeNull();
+    expect(el.querySelector('pm-fake-overview-tab')).toBeNull();
   });
 
   it('chargé : nom, drapeau, dernière séance, barre de capture, onglet 1 avec la bascule Vue', async () => {
@@ -123,7 +153,7 @@ describe('PatientShellPage', () => {
     expect(el.querySelector('pm-capture-bar input')?.getAttribute('placeholder')).toBe(
       'Noter quelque chose…',
     );
-    expect(text(el.querySelector('pm-overview-page h2'))).toBe("Vue d'ensemble");
+    expect(text(el.querySelector('pm-fake-overview-tab h2'))).toBe("Vue d'ensemble");
     expect(el.querySelector('.view-toggle pm-overview-view-toggle [role="group"]')).not.toBeNull();
   });
 
@@ -249,29 +279,49 @@ describe('PatientShellPage', () => {
     expect(api.close).not.toHaveBeenCalled();
   });
 
-  it('changer d’onglet et revenir conserve l’état (séances dépliées, rangées par rememberTab)', async () => {
-    // L'onglet 1 est la vue d'ensemble (M4-05) ; le Graphe est la page de M2-06 (sa propre
-    // mémoire est testée dans sa feature).
+  it('changer d’onglet et revenir conserve l’état (compteur rangé par rememberTab)', async () => {
+    // Onglet 1 factice (la vue d'ensemble réelle est testée dans features/overview) ; le Graphe
+    // est la page de M2-06 (sa propre mémoire est testée dans sa feature).
     const { el, harness, api } = await render();
-    answerOverview();
+    counter(el)?.click();
+    counter(el)?.click();
     await settle(harness);
-    expect(expandedStates(el)).toEqual(['true', 'false']);
-    sessionToggles(el)[1].click();
-    await settle(harness);
-    expect(expandedStates(el)).toEqual(['true', 'true']);
+    expect(text(counter(el))).toBe('Compteur : 2');
 
     await harness.navigateByUrl('/patients/p-marie/graph');
     await settle(harness);
     expect(el.querySelector('pm-graph-page')).not.toBeNull();
-    expect(el.querySelector('pm-overview-page')).toBeNull();
+    expect(counter(el)).toBeNull();
     expect(el.querySelector('.view-toggle')).toBeNull();
 
     await harness.navigateByUrl('/patients/p-marie');
     await settle(harness);
-    answerOverview();
-    await settle(harness);
-    expect(expandedStates(el)).toEqual(['true', 'true']);
+    expect(text(counter(el))).toBe('Compteur : 2');
     expect(api.patient).toHaveBeenCalledTimes(1);
+  });
+
+  it('onglet 1 : la route vide charge la vue d’ensemble (features/overview) à la demande, data.tab gardé', async () => {
+    const route = PATIENT_SHELL_ROUTES[0].children!.find((r) => r.path === '' && !r.redirectTo)!;
+    expect(route.data).toEqual({ tab: 'overview' });
+    expect(route.component).toBeUndefined();
+    const component = await (
+      route.loadComponent as () => Promise<Parameters<typeof reflectComponentType>[0]>
+    )();
+    expect(reflectComponentType(component)?.selector).toBe('pm-overview-page');
+  });
+
+  it('éditeur de lien fermé (?link= retiré de l’URL) : écriture notée, les projections se relisent', async () => {
+    const { harness } = await render();
+    const store = shellStore(harness);
+    const before = store.revision();
+    // ?link= puis son retrait : ce que fait features/graph à l'ouverture et à la fermeture.
+    await harness.navigateByUrl('/patients/p-marie?link=e-1');
+    await settle(harness);
+    expect(store.revision()).toBe(before);
+    await harness.navigateByUrl('/patients/p-marie');
+    await settle(harness);
+    expect(store.revision()).toBe(before + 1);
+    TestBed.inject(HttpTestingController).match(() => true);
   });
 
   it('touches 1 2 3 : changent d’onglet, pas quand la barre de capture a le focus', async () => {
@@ -307,17 +357,11 @@ describe('PatientShellPage', () => {
       .mockResolvedValueOnce(shellPatient())
       .mockResolvedValueOnce(shellPatient({ id: 'p-omar', displayName: 'Omar B.', flags: [] }));
     const { el, harness } = await render({ patient });
-    answerOverview();
-    await settle(harness);
-    sessionToggles(el)[0].click();
-    await settle(harness);
-    expect(expandedStates(el)).toEqual(['false', 'false']);
+    counter(el)?.click();
     await harness.navigateByUrl('/patients/p-omar');
     await settle(harness);
-    answerOverview();
-    await settle(harness);
     expect(text(el.querySelector('h1.name'))).toBe('Omar B.');
-    expect(expandedStates(el)).toEqual(['true', 'false']);
+    expect(text(counter(el))).toBe('Compteur : 0');
   });
 
   describe('éditeur d’entrée (M1-08)', () => {

@@ -196,26 +196,12 @@ export interface OverviewView {
 }
 
 /**
- * Âge au-delà duquel la synthèse affichée est signalée comme ancienne (fiche 02 : `stale` si la
- * projection a plus de 5 min de retard) : le contrat n'a pas de champ `stale` (le serveur recalcule
- * une projection en retard), on compare donc `computedAt` à l'heure courante pour proposer
- * « Recalculer » (une relecture), sans rien recalculer ici.
+ * Moyenne glissante des 7 derniers jours : celle du dernier point de la courbe, qui est toujours
+ * aujourd'hui (contrat, TrendDto.points). null si aucun ressenti sur ces 7 jours : on n'en cherche
+ * pas une plus ancienne, le libellé de la tuile dit « 7 derniers jours ».
  */
-export const STALE_AFTER_MS = 5 * 60_000;
-
-export function isStale(computedAt: string | null, now: number): boolean {
-  if (!computedAt) return false;
-  const at = Date.parse(computedAt);
-  return Number.isFinite(at) && now - at > STALE_AFTER_MS;
-}
-
-/** Dernière moyenne glissante connue (le point le plus récent qui en a une), ou null. */
-export function latestAverage(points: readonly TrendPoint[]): number | null {
-  for (let i = points.length - 1; i >= 0; i--) {
-    const value = points[i].average;
-    if (value !== null) return value;
-  }
-  return null;
+export function lastWeekAverage(points: readonly TrendPoint[]): number | null {
+  return points.at(-1)?.average ?? null;
 }
 
 // Vides par bloc (B4 : chaque bloc garde son titre et une phrase « apparaîtra ici quand… »).

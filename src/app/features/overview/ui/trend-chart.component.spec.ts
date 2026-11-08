@@ -44,6 +44,7 @@ async function render(loader?: () => Promise<(el: HTMLElement) => TrendChart>) {
   const view = overviewView();
   fixture.componentRef.setInput('data', { trend: view.trend, feelings: view.feelings });
   fixture.componentRef.setInput('labels', labels);
+  fixture.componentRef.setInput('summary', 'Intensité moyenne des ressentis sur 90 jours');
   const selected: string[] = [];
   fixture.componentInstance.pointSelected.subscribe((id) => selected.push(id));
   fixture.detectChanges();
@@ -58,7 +59,10 @@ function lineColor(option: TrendChartOption): unknown {
 
 describe('TrendChartComponent', () => {
   it('crée la courbe dans son conteneur, options tirées des tokens CSS', async () => {
-    const { chart, create } = await render();
+    const { chart, create, host } = await render();
+    expect(host.querySelector('[role="img"]')?.getAttribute('aria-label')).toBe(
+      'Intensité moyenne des ressentis sur 90 jours',
+    );
     expect(create).toHaveBeenCalledTimes(1);
     expect(chart.setOption).toHaveBeenCalled();
     const [option, opts] = chart.setOption.mock.lastCall!;
@@ -88,6 +92,9 @@ describe('TrendChartComponent', () => {
   it('ECharts ne se charge pas : « Tendance indisponible »', async () => {
     const { host } = await render(() => Promise.reject(new Error('chunk')));
     expect(host.querySelector('[role="alert"]')?.textContent).toContain('Tendance indisponible');
+    // L'erreur n'est pas dans l'image (role=img rend ses enfants présentationnels).
+    expect(host.querySelector('[role="img"] [role="alert"]')).toBeNull();
+    expect(host.querySelector('[role="img"]')?.classList).toContain('hidden');
   });
 
   it('destruction : la courbe est libérée', async () => {

@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   effect,
   inject,
   LOCALE_ID,
@@ -19,7 +18,7 @@ import {
   StateComponent,
   ToastService,
 } from '../../../shared/ui';
-import { StateKind, stateKind } from '../../../shared/util';
+import { StateKind } from '../../../shared/util';
 import { PatientShellStore } from '../../patient-shell';
 import {
   EmotionFamily,
@@ -30,9 +29,8 @@ import {
   isMedicationsEmpty,
   isSessionsEmpty,
   isSituationsEmpty,
-  isStale,
   isTrendEmpty,
-  latestAverage,
+  lastWeekAverage,
   OVERVIEW_WINDOWS,
   OverviewView,
   OverviewWindow,
@@ -43,7 +41,7 @@ import { OverviewBlockComponent } from '../ui/overview-block.component';
 import {
   deltaText,
   flagLabel,
-  formatAgo,
+  formatDateTime,
   formatDay,
   formatDelta,
   formatIntensity,
@@ -61,9 +59,6 @@ export interface OverviewTabState {
 
 /** Paramètre de l'éditeur d'entrée (features/entries, ENTRY_QUERY_PARAM) : le shell l'ouvre. */
 const ENTRY_PARAM = 'entry';
-
-/** Rafraîchissement de « il y a 2 min » et du signal « Recalculer ». */
-const CLOCK_MS = 30_000;
 
 /** Les blocs de la vue complète, chacun avec ses trois états. */
 type Block =
@@ -92,8 +87,9 @@ const EMPTY: Record<Block, (view: OverviewView) => boolean> = {
  * Onglet 1 du dossier, /patients/:id (fiche 02, B4 écran 2, B3 flux 6, B8). Vue complète : résumé
  * chiffré, tendance (ECharts en @defer), points d'attention vers la timeline filtrée, situations
  * actives (« Voir dans le graphe » → graph?root=), traitement en cours, dernières séances (timeline
- * par séance dépliée), émotions dominantes, activité récente, « dernière mise à jour » et
- * « Recalculer ». Vue simple (préférence overview.view = simple) : M4-07 ; un état provisoire ici.
+ * par séance dépliée), émotions dominantes, activité récente, heure de la dernière mise à jour
+ * (computedAt ; le serveur recalcule une projection en retard, la réponse n'est jamais obsolète).
+ * Vue simple (préférence overview.view = simple) : M4-07 ; un état provisoire ici.
  * La fenêtre (30 j / 90 j / 1 an) est la préférence overview.window, relue par l'API (?window=).
  */
 @Component({
@@ -126,8 +122,24 @@ export class OverviewPage {
   protected readonly window = this.prefs.overviewWindow;
   protected readonly patientId = computed(() => this.shell.patientId() ?? '');
 
-  /** Horloge de « il y a 2 min » et de « Recalculer ». */
-  protected readonly now = signal(Date.now());
+  /**
+   * Les préférences du compte sont lues (ou leur lecture a échoué) : avant, la vue et la fenêtre
+   * sont celles du cache ou des défauts, et la page attendrait une seconde lecture (flash de la vue
+   * simple, double requête).
+   */
+  protected readonly prefsReady = computed(
+    () => this.prefs.loaded() || this.prefs.status() === 'error',
+  );
+  /** Fenêtre de la synthèse affichée (la donnée), sinon celle de la préférence. */
+  protected readonly shownWindow = computed(() => this.view()?.window ?? this.window());
+  /** Relecture en échec alors que la synthèse précédente reste affichée : bandeau « Réessayer ». */
+  protected readonly reloadFailed = computed(
+    () => this.store.overview().status === 'error' && this.view() !== null,
+  );
+  protected readonly retryAction: StateAction = {
+    label: $localize`:Bouton du bandeau de relecture en échec@@overview.reloadFailed.retry:Réessayer`,
+    handler: () => this.refresh(),
+  };
 
   /**
    * Séances dépliées : ce que l'onglet avait rangé pour ce dossier (B2), sinon la plus récente. Un
@@ -144,23 +156,23 @@ export class OverviewPage {
     return first ? [first.entryId] : [];
   });
 
-  protected readonly stale = computed(() => isStale(this.view()?.computedAt ?? null, this.now()));
-  protected readonly updatedAgo = computed(() => {
+  /** Heure du calcul de la synthèse (computedAt), sans connotation de péremption. */
+  protected readonly updatedAt = computed(() => {
     const at = this.view()?.computedAt;
-    return at ? formatAgo(at, this.now(), this.locale) : null;
+    return at ? formatDateTime(at, this.locale) : null;
   });
 
   protected readonly trendHeading = computed(
     () =>
-      $localize`:Titre du bloc tendance@@overview.trend.heading:Tendance d'intensité · ${windowLongLabel(this.window())}:period:`,
+      $localize`:Titre du bloc tendance@@overview.trend.heading:Tendance d'intensité · ${windowLongLabel(this.shownWindow())}:period:`,
   );
   protected readonly emotionsHeading = computed(
     () =>
-      $localize`:Titre du bloc émotions dominantes@@overview.emotions.heading:Émotions dominantes · ${windowLongLabel(this.window())}:period:`,
+      $localize`:Titre du bloc émotions dominantes@@overview.emotions.heading:Émotions dominantes · ${windowLongLabel(this.shownWindow())}:period:`,
   );
   protected readonly latest = computed(() => {
     const view = this.view();
-    const value = view ? latestAverage(view.trend.points) : null;
+    const value = view ? lastWeekAverage(view.trend.points) : null;
     return value === null ? null : formatIntensity(value, this.locale);
   });
   protected readonly windowSessions = computed(
@@ -181,21 +193,35 @@ export class OverviewPage {
   };
 
   constructor() {
-    // Patient du dossier et fenêtre (préférence) → GET …/overview?window= (rien si déjà lu).
+    // Patient du dossier et fenêtre (préférence lue) → GET …/overview?window= (rien si déjà lu).
     effect(() => {
       const id = this.shell.patientId();
       const window = this.window();
-      if (!id) return;
+      if (!id || !this.prefsReady()) return;
       untracked(() => void this.store.load(id, window));
     });
 
-    const timer = setInterval(() => this.now.set(Date.now()), CLOCK_MS);
-    inject(DestroyRef).onDestroy(() => clearInterval(timer));
+    // B3 flux 6, étape 4 : « Démarrer la séance » depuis l'en-tête → la séance précédente se replie
+    // (la barre de capture prend le focus, côté shell). Une séance déjà ouverte au chargement ne
+    // replie rien.
+    let session = untracked(() => this.shell.currentSession()?.id ?? null);
+    effect(() => {
+      const current = this.shell.currentSession()?.id ?? null;
+      if (current === session) return;
+      session = current;
+      if (current) untracked(() => this.setExpanded([]));
+    });
   }
 
-  /** L'un des trois états d'un bloc, ou null pour son contenu. */
+  /**
+   * L'un des trois états d'un bloc, ou null pour son contenu. Une synthèse déjà lue reste affichée
+   * pendant une relecture ou après son échec (bandeau à part) : un bloc vide reste vide, il ne
+   * repasse pas au squelette. Sans synthèse : squelette, puis erreur.
+   */
   protected state(block: Block): StateKind | null {
-    return stateKind(this.store.overview(), EMPTY[block]);
+    const { status, data } = this.store.overview();
+    if (data) return EMPTY[block](data) ? 'empty' : null;
+    return status === 'error' ? 'error' : 'loading';
   }
 
   protected windowLabel(window: OverviewWindow): string {
@@ -220,7 +246,7 @@ export class OverviewPage {
   }
 
   protected deltaText(value: number): string {
-    return deltaText(value, this.window());
+    return deltaText(value, this.shownWindow());
   }
 
   protected familyColor(code: string): string {
@@ -274,7 +300,6 @@ export class OverviewPage {
   }
 
   protected refresh(): void {
-    this.now.set(Date.now());
     void this.store.refresh();
   }
 }

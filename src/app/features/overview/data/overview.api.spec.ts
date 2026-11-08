@@ -74,6 +74,8 @@ describe('OverviewApi · toView', () => {
       count: 0,
     });
     expect(view.emotions[0].delta).toBe(3);
+    // TopEmotionDto n'a que le français : en anglais, le libellé vient des séries de ressentis.
+    expect(view.emotions[0].label).toBe('Calm');
     expect(view.drafts.openSession).toEqual({ entryId: 'o', startedAt: '2026-11-08T09:00:00Z' });
     expect(view.recentSessions[0]).toMatchObject({ kind: 'contact', modality: 'phone' });
     expect(view.recentActivity[0]).toMatchObject({ type: 'medication', status: 'draft' });
@@ -81,9 +83,13 @@ describe('OverviewApi · toView', () => {
 
   it('libellé français par défaut', () => {
     const view = toView(
-      { feelings: { series: [{ emotionCode: 'calm', label: 'Calme', labelEn: 'Calm' }] } },
+      {
+        feelings: { series: [{ emotionCode: 'calm', label: 'Calme', labelEn: 'Calm' }] },
+        emotions: { top: [{ code: 'calm', label: 'Calme' }] },
+      },
       '90d',
     );
     expect(view.feelings.series[0].label).toBe('Calme');
+    expect(view.emotions[0].label).toBe('Calme');
   });
 });

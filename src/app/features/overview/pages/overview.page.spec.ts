@@ -17,6 +17,16 @@ function never<T>(): Promise<T> {
   return new Promise<T>(() => undefined);
 }
 
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  let reject!: (reason: unknown) => void;
+  const promise = new Promise<T>((ok, ko) => {
+    resolve = ok;
+    reject = ko;
+  });
+  return { promise, resolve, reject };
+}
+
 const BLOCKS = [
   'Résumé',
   "Tendance d'intensité · 90 jours",
@@ -30,12 +40,19 @@ const BLOCKS = [
 
 async function render(
   options: {
-    overview?: () => Promise<OverviewView>;
+    overview?: (patientId: string, window: string) => Promise<OverviewView>;
     view?: 'simple' | 'complete';
     remembered?: { expanded: string[] };
+    prefsLoaded?: boolean;
   } = {},
 ) {
-  const overview = vi.fn(options.overview ?? (() => Promise.resolve(overviewView())));
+  // Par défaut, le serveur répond pour la fenêtre demandée.
+  const overview = vi.fn(
+    options.overview ??
+      ((_: string, window: string) =>
+        Promise.resolve(overviewView({ window: window as OverviewView['window'] }))),
+  );
+  const loaded = signal(options.prefsLoaded ?? true);
   const mode = signal(options.view ?? 'complete');
   const window = signal<'30d' | '90d' | '12m'>('90d');
   const set = vi.fn(async (key: string, value: never) => {
@@ -46,6 +63,7 @@ async function render(
   const shell = {
     patientId: signal('p-marie'),
     revision: signal(0),
+    currentSession: signal<{ id: string } | null>(null),
     recallTab: vi.fn(() => options.remembered),
     rememberTab: vi.fn(),
   };
@@ -54,7 +72,16 @@ async function render(
       provideRouter([]),
       { provide: OverviewApi, useValue: { overview } },
       { provide: PatientShellStore, useValue: shell },
-      { provide: PreferencesStore, useValue: { overviewView: mode, overviewWindow: window, set } },
+      {
+        provide: PreferencesStore,
+        useValue: {
+          overviewView: mode,
+          overviewWindow: window,
+          set,
+          loaded,
+          status: signal('idle'),
+        },
+      },
       { provide: ToastService, useValue: { warning: vi.fn() } },
       {
         provide: TREND_RENDERER,
@@ -71,7 +98,7 @@ async function render(
   const fixture = TestBed.createComponent(OverviewPage);
   await settle(fixture);
   const el = fixture.nativeElement as HTMLElement;
-  return { fixture, el, overview, set, shell, settle: () => settle(fixture) };
+  return { fixture, el, overview, set, shell, loaded, settle: () => settle(fixture) };
 }
 
 async function settle(fixture: { whenStable(): Promise<unknown> }): Promise<void> {
@@ -284,23 +311,16 @@ describe('OverviewPage', () => {
     expect(el.querySelector('pm-overview-block')).not.toBeNull();
   });
 
-  it('dernière mise à jour ; « Recalculer » seulement si la synthèse est ancienne', async () => {
-    const fresh = await render({
-      overview: () => Promise.resolve(overviewView({ computedAt: new Date().toISOString() })),
+  it('dernière mise à jour : heure du calcul (computedAt), région d’état permanente, sans « Recalculer »', async () => {
+    const { el } = await render({
+      overview: () => Promise.resolve(overviewView({ computedAt: '2020-01-01T10:00:00Z' })),
     });
-    expect(text(fresh.el.querySelector('footer'))).toContain(
-      'Dernière mise à jour de la synthèse :',
-    );
-    expect(fresh.el.querySelector('footer button')).toBeNull();
-    TestBed.resetTestingModule();
-
-    const old = new Date(Date.now() - 20 * 60_000).toISOString();
-    const { el, overview, settle } = await render({
-      overview: () => Promise.resolve(overviewView({ computedAt: old })),
-    });
-    button(el.querySelector('footer')!, 'Recalculer').click();
-    await settle();
-    expect(overview).toHaveBeenCalledTimes(2);
+    const footer = el.querySelector('footer')!;
+    expect(footer.getAttribute('role')).toBe('status');
+    expect(text(footer)).toMatch(/^Dernière mise à jour de la synthèse : 1 janv. 2020/);
+    // Le contrat : la réponse n'est jamais obsolète (projection recalculée à la volée).
+    expect(footer.querySelector('button')).toBeNull();
+    expect(text(el)).not.toContain('Recalculer');
   });
 
   it('après une écriture depuis le dossier (événement du shell), la vue se recharge', async () => {
@@ -308,5 +328,83 @@ describe('OverviewPage', () => {
     shell.revision.set(1);
     await settle();
     expect(overview).toHaveBeenCalledTimes(2);
+  });
+
+  it('relecture en échec : la synthèse précédente reste, un bandeau « Réessayer » le dit', async () => {
+    let calls = 0;
+    const { el, shell, overview, settle } = await render({
+      overview: () =>
+        ++calls === 2
+          ? Promise.reject({ status: 500, code: 'INTERNAL_ERROR' })
+          : Promise.resolve(overviewView()),
+    });
+    shell.revision.set(1);
+    await settle();
+    const banner = el.querySelector<HTMLElement>('.reload-failed [role="alert"]');
+    expect(text(banner)).toContain("La synthèse n'a pas pu être relue");
+    // Les blocs gardent leur contenu (pas d'erreur par bloc).
+    expect(text(block(el, 'Situations actives'))).toContain('Surcharge au travail');
+    expect(block(el, 'Situations actives').querySelector('[role="alert"]')).toBeNull();
+    button(banner!, 'Réessayer').click();
+    await settle();
+    expect(overview).toHaveBeenCalledTimes(3);
+    expect(el.querySelector('.reload-failed')).toBeNull();
+  });
+
+  it('fenêtre en cours de lecture : les titres suivent la synthèse affichée, pas la préférence', async () => {
+    const next = deferred<OverviewView>();
+    let calls = 0;
+    const { el, settle } = await render({
+      overview: () => (++calls === 1 ? Promise.resolve(overviewView()) : next.promise),
+    });
+    const group = el.querySelector<HTMLElement>('.windows')!;
+    button(group, '1 an').click();
+    await settle();
+    expect(button(group, '1 an').getAttribute('aria-pressed')).toBe('true');
+    expect(text(el)).toContain("Tendance d'intensité · 90 jours");
+    expect(text(el)).toContain('Émotions dominantes · 90 jours');
+    expect(block(el, "Tendance d'intensité · 90 jours").getAttribute('aria-busy')).toBe('true');
+    next.resolve(overviewView({ window: '12m' }));
+    await settle();
+    expect(text(el)).toContain("Tendance d'intensité · 12 mois");
+    expect(text(el)).toContain('Émotions dominantes · 12 mois');
+  });
+
+  it('relecture : un bloc vide reste vide, il ne repasse pas au squelette', async () => {
+    let calls = 0;
+    const { el, shell, settle } = await render({
+      overview: () => (++calls === 1 ? Promise.resolve(emptyOverview()) : never()),
+    });
+    shell.revision.set(1);
+    await settle();
+    const situations = block(el, 'Situations actives');
+    expect(situations.getAttribute('aria-busy')).toBe('true');
+    expect(text(situations)).toContain('Aucune situation en cours');
+    expect(situations.querySelector('.state.loading')).toBeNull();
+  });
+
+  it('préférences pas encore lues : ni requête ni vue simple ; lues → une seule lecture', async () => {
+    const { el, overview, loaded, settle } = await render({ prefsLoaded: false });
+    expect(overview).not.toHaveBeenCalled();
+    expect(text(el)).not.toContain('Récit : bientôt');
+    expect(el.querySelector('pm-overview-block')).toBeNull();
+    expect(el.querySelector('[aria-busy="true"]')).not.toBeNull();
+    loaded.set(true);
+    await settle();
+    expect(overview).toHaveBeenCalledTimes(1);
+    expect(el.querySelector('pm-overview-block')).not.toBeNull();
+  });
+
+  it('« Démarrer la séance » (séance ouverte dans l’en-tête) : la séance précédente se replie', async () => {
+    const { el, shell, settle } = await render();
+    const states = () =>
+      [...block(el, 'Dernières séances').querySelectorAll('button[aria-expanded]')].map((b) =>
+        b.getAttribute('aria-expanded'),
+      );
+    expect(states()).toEqual(['true', 'false']);
+    shell.currentSession.set({ id: 's-new' });
+    await settle();
+    expect(states()).toEqual(['false', 'false']);
+    expect(shell.rememberTab).toHaveBeenCalledWith('overview', { expanded: [] });
   });
 });

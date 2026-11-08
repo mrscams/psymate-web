@@ -7,29 +7,26 @@ import {
   isMedicationsEmpty,
   isSessionsEmpty,
   isSituationsEmpty,
-  isStale,
   isTrendEmpty,
-  latestAverage,
+  lastWeekAverage,
   TIMELINE_PARAMS,
 } from './overview.model';
 
 describe('overview.model', () => {
-  it('isStale : plus de 5 min depuis computedAt', () => {
-    const at = '2026-11-08T10:00:00Z';
-    expect(isStale(at, Date.parse('2026-11-08T10:04:59Z'))).toBe(false);
-    expect(isStale(at, Date.parse('2026-11-08T10:05:01Z'))).toBe(true);
-    expect(isStale(null, Date.now())).toBe(false);
-    expect(isStale('pas une date', Date.now())).toBe(false);
-  });
-
-  it('latestAverage : la moyenne serveur la plus récente qui existe', () => {
-    expect(latestAverage([])).toBeNull();
+  it('lastWeekAverage : le dernier point (aujourd’hui) seulement, null s’il n’a pas de moyenne', () => {
+    expect(lastWeekAverage([])).toBeNull();
     expect(
-      latestAverage([
+      lastWeekAverage([
         { date: '2026-11-06', average: 4.5 },
         { date: '2026-11-07', average: null },
       ]),
-    ).toBe(4.5);
+    ).toBeNull();
+    expect(
+      lastWeekAverage([
+        { date: '2026-11-06', average: null },
+        { date: '2026-11-07', average: 3.25 },
+      ]),
+    ).toBe(3.25);
   });
 
   it('vides par bloc : un dossier sans données est vide partout', () => {

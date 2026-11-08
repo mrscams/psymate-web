@@ -4,7 +4,6 @@ import { TestBed } from '@angular/core/testing';
 import { PatientShellStore } from '../../patient-shell';
 import { OverviewApi } from './overview.api';
 import { emptyOverview, overviewView } from './overview.fixtures';
-import { isStale } from './overview.model';
 import { OverviewStore } from './overview.store';
 
 const serverError = { status: 500, code: 'INTERNAL_ERROR' };
@@ -144,17 +143,15 @@ describe('OverviewStore', () => {
     expect(store.view()?.window).toBe('12m');
   });
 
-  it('synthèse ancienne (stale) : « Recalculer » relit sans rien calculer localement', async () => {
+  it('refresh : relit la synthèse courante (même patient, même fenêtre)', async () => {
     const overview = vi
       .fn()
       .mockResolvedValueOnce(overviewView({ computedAt: '2026-11-08T10:00:00Z' }))
       .mockResolvedValueOnce(overviewView({ computedAt: '2026-11-08T10:20:00Z' }));
     const { store } = setup(overview);
-    await store.load('p-1', '90d');
-    const now = Date.parse('2026-11-08T10:20:00Z');
-    expect(isStale(store.view()!.computedAt, now)).toBe(true);
+    await store.load('p-1', '12m');
     await store.refresh();
-    expect(overview).toHaveBeenCalledTimes(2);
-    expect(isStale(store.view()!.computedAt, now)).toBe(false);
+    expect(overview).toHaveBeenNthCalledWith(2, 'p-1', '12m');
+    expect(store.view()?.computedAt).toBe('2026-11-08T10:20:00Z');
   });
 });

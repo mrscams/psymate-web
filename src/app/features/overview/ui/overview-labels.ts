@@ -124,17 +124,11 @@ export function formatLongDay(value: string, locale: string): string {
   }).format(date);
 }
 
-/** « il y a 2 min », « il y a 3 h », « hier » : l'âge d'une date-heure à `now`. */
-export function formatAgo(value: string, now: number, locale: string): string {
-  const at = Date.parse(value);
-  if (!Number.isFinite(at)) return value;
-  const seconds = Math.round((at - now) / 1000);
-  const format = new Intl.RelativeTimeFormat(locale, { numeric: 'auto', style: 'short' });
-  const abs = Math.abs(seconds);
-  if (abs < 60) return format.format(0, 'minute');
-  if (abs < 3600) return format.format(Math.round(seconds / 60), 'minute');
-  if (abs < 86_400) return format.format(Math.round(seconds / 3600), 'hour');
-  return format.format(Math.round(seconds / 86_400), 'day');
+/** Date-heure ISO → « 8 nov. 2026, 14:32 » dans le fuseau du praticien. */
+export function formatDateTime(value: string, locale: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(date);
 }
 
 /** Variation d'une émotion dominante : « +6 », « −2 », « = » (jamais la couleur seule). */

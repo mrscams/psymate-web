@@ -17,7 +17,25 @@
     </div>
   </div>
 
-  @if (mode() === 'simple') {
+  @if (reloadFailed()) {
+    <!-- Relecture en échec : la synthèse précédente reste affichée, le bandeau le dit. -->
+    <div class="reload-failed">
+      <pm-state
+        kind="error"
+        compact
+        title="La synthèse n'a pas pu être relue"
+        i18n-title="Bandeau de relecture en échec@@overview.reloadFailed.title"
+        message="Les chiffres affichés sont ceux de la lecture précédente."
+        i18n-message="Bandeau de relecture en échec@@overview.reloadFailed.message"
+        [action]="retryAction"
+      />
+    </div>
+  }
+
+  @if (!prefsReady()) {
+    <!-- Préférences du compte pas encore lues : ni vue simple ni vue complète (pas de flash). -->
+    <pm-state kind="loading" skeleton="block" [lines]="4" />
+  } @else if (mode() === 'simple') {
     <!-- Vue simple « Récit » : M4-07. État provisoire en attendant. -->
     <div class="simple">
       <pm-state
@@ -403,13 +421,7 @@
                   >{{ emotion.label }}</a
                 >
                 <strong class="emotion-count">{{ emotion.count }}</strong>
-                <span
-                  class="delta"
-                  [class.up]="emotion.delta > 0"
-                  [class.down]="emotion.delta < 0"
-                  aria-hidden="true"
-                  >{{ delta(emotion.delta) }}</span
-                >
+                <span class="delta" aria-hidden="true">{{ delta(emotion.delta) }}</span>
                 <span class="sr-only">{{ deltaText(emotion.delta) }}</span>
               </li>
             }
@@ -466,25 +478,16 @@
     </div>
   }
 
-  <footer class="footer">
+  <!-- Région d'état permanente : seul son contenu change (annoncé par les lecteurs d'écran). -->
+  <footer class="footer" role="status">
     @if (store.refreshing()) {
-      <span role="status" i18n="Synthèse en cours de relecture@@overview.updating"
+      <span i18n="Synthèse en cours de relecture@@overview.updating"
         >Mise à jour de la synthèse…</span
       >
-    } @else if (updatedAgo(); as ago) {
-      <span i18n="Âge de la synthèse@@overview.updated"
-        >Dernière mise à jour de la synthèse : {{ ago }}</span
+    } @else if (updatedAt(); as at) {
+      <span i18n="Heure de calcul de la synthèse@@overview.updated"
+        >Dernière mise à jour de la synthèse : {{ at }}</span
       >
-      @if (stale()) {
-        <button
-          type="button"
-          class="recompute"
-          (click)="refresh()"
-          i18n="Relire une synthèse ancienne@@overview.recompute"
-        >
-          Recalculer
-        </button>
-      }
     }
   </footer>
 </section>

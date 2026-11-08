@@ -18650,38 +18650,29 @@
         <note priority="1" from="description">Synthèse en cours de relecture</note>
       </trans-unit>
       <trans-unit id="overview.updated" datatype="html">
-        <source>Dernière mise à jour de la synthèse : <x id="INTERPOLATION" equiv-text="{{ ago }}"/></source>
-        <target state="translated">Summary last updated: <x id="INTERPOLATION" equiv-text="{{ ago }}"/></target>
+        <source>Dernière mise à jour de la synthèse : <x id="INTERPOLATION" equiv-text="{{ at }}"/></source>
+        <target state="translated">Summary last updated: <x id="INTERPOLATION" equiv-text="{{ at }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">476,478</context>
+          <context context-type="linenumber">489,491</context>
         </context-group>
-        <note priority="1" from="description">Âge de la synthèse</note>
-      </trans-unit>
-      <trans-unit id="overview.recompute" datatype="html">
-        <source> Recalculer </source>
-        <target state="translated"> Recalculate </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">485,490</context>
-        </context-group>
-        <note priority="1" from="description">Relire une synthèse ancienne</note>
+        <note priority="1" from="description">Heure de calcul de la synthèse</note>
       </trans-unit>
       <trans-unit id="overview.trend.heading" datatype="html">
-        <source>Tendance d&apos;intensité · <x id="period" equiv-text="windowLongLabel(this.window())"/></source>
-        <target state="translated">Intensity trend · <x id="period" equiv-text="windowLongLabel(this.window())"/></target>
+        <source>Tendance d&apos;intensité · <x id="period" equiv-text="windowLongLabel(this.shownWindow())"/></source>
+        <target state="translated">Intensity trend · <x id="period" equiv-text="windowLongLabel(this.shownWindow())"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">167</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc tendance</note>
       </trans-unit>
       <trans-unit id="overview.emotions.heading" datatype="html">
-        <source>Émotions dominantes · <x id="period" equiv-text="windowLongLabel(this.window())"/></source>
-        <target state="translated">Dominant emotions · <x id="period" equiv-text="windowLongLabel(this.window())"/></target>
+        <source>Émotions dominantes · <x id="period" equiv-text="windowLongLabel(this.shownWindow())"/></source>
+        <target state="translated">Dominant emotions · <x id="period" equiv-text="windowLongLabel(this.shownWindow())"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">171</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc émotions dominantes</note>
       </trans-unit>
@@ -19237,6 +19228,42 @@
           <context context-type="linenumber">88</context>
         </context-group>
         <note priority="1" from="description">La courbe ne s&apos;est pas chargée</note>
+      </trans-unit>
+      <trans-unit id="overview.reloadFailed.title" datatype="html">
+        <source>La synthèse n&apos;a pas pu être relue</source>
+        <target state="translated">The summary could not be reloaded</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">26,27</context>
+        </context-group>
+        <note priority="1" from="description">Bandeau de relecture en échec</note>
+      </trans-unit>
+      <trans-unit id="overview.reloadFailed.message" datatype="html">
+        <source>Les chiffres affichés sont ceux de la lecture précédente.</source>
+        <target state="translated">The figures shown come from the previous reading.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">28,29</context>
+        </context-group>
+        <note priority="1" from="description">Bandeau de relecture en échec</note>
+      </trans-unit>
+      <trans-unit id="overview.reloadFailed.retry" datatype="html">
+        <source>Réessayer</source>
+        <target state="translated">Retry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du bandeau de relecture en échec</note>
+      </trans-unit>
+      <trans-unit id="overview.block.busy" datatype="html">
+        <source>mise à jour…</source>
+        <target state="translated">updating…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-block.component.ts</context>
+          <context context-type="linenumber">30,33</context>
+        </context-group>
+        <note priority="1" from="description">Bloc en cours de relecture</note>
       </trans-unit>
     </body>
   </file>
