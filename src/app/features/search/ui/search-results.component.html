@@ -1,0 +1,90 @@
+<ng-template #hitTemplate let-hit>
+  <li
+    class="hit"
+    [attr.data-entry-id]="hit.entryId"
+    [class.selected]="hit.entryId === selectedId()"
+    [class.archived]="hit.archived"
+    [attr.aria-current]="hit.entryId === selectedId() ? 'true' : null"
+  >
+    <pm-entry-icon class="icon" [type]="hit.type" [size]="14" />
+    <div class="content">
+      <div class="head">
+        <button
+          type="button"
+          class="title"
+          [attr.data-entry-id]="hit.entryId"
+          (click)="selectHit.emit(hit.entryId)"
+          (dblclick)="openHit.emit(hit.entryId)"
+        >
+          @if (hit.title; as title) {
+            <pm-marked-text [segments]="title" />
+          } @else {
+            {{ fallbackTitle(hit) }}
+          }
+        </button>
+        <span class="meta">
+          {{ typeLabel(hit.type) }} · <span class="mono">{{ when(hit) }}</span>
+          @if (precision(hit.precision); as precisionText) {
+            · {{ precisionText }}
+          }
+        </span>
+      </div>
+      @if (hit.snippet; as snippet) {
+        <p class="snippet"><pm-marked-text [segments]="snippet" /></p>
+      }
+      @if (sessionOf(hit) || hit.tags.length > 0 || hit.archived || hit.visibility === 'private') {
+        <p class="context">
+          @if (sessionOf(hit); as session) {
+            <span>{{ session }}</span>
+          }
+          @for (tag of hit.tags; track tag) {
+            <span>#{{ tag }}</span>
+          }
+          @if (hit.visibility === 'private') {
+            <span class="badge" i18n="Mention d'une entrée privée@@search.hit.private">privée</span>
+          }
+          @if (hit.archived) {
+            <span class="badge" i18n="Mention d'une entrée archivée@@search.hit.archived"
+              >archivée</span
+            >
+          }
+        </p>
+      }
+    </div>
+  </li>
+</ng-template>
+
+@if (exact().length > 0) {
+  <ol
+    class="hits"
+    aria-label="Résultats"
+    i18n-aria-label="Nom de la liste des résultats exacts@@search.results.label"
+  >
+    @for (hit of exact(); track hit.entryId) {
+      <ng-container *ngTemplateOutlet="hitTemplate; context: { $implicit: hit }" />
+    }
+  </ol>
+}
+
+@if (approximate().length > 0) {
+  <section class="approximate" aria-labelledby="search-approximate-heading">
+    <h3
+      id="search-approximate-heading"
+      i18n="Titre de la section des résultats approchés@@search.approximate.title"
+    >
+      Résultats approchés
+    </h3>
+    <p class="approximate-note" i18n="Explication des résultats approchés@@search.approximate.note">
+      Orthographe proche (tolérance aux fautes de frappe).
+    </p>
+    <ol
+      class="hits"
+      aria-label="Résultats approchés"
+      i18n-aria-label="Nom de la liste des résultats approchés@@search.approximate.label"
+    >
+      @for (hit of approximate(); track hit.entryId) {
+        <ng-container *ngTemplateOutlet="hitTemplate; context: { $implicit: hit }" />
+      }
+    </ol>
+  </section>
+}

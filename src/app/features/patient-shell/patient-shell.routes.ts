@@ -37,7 +37,7 @@ export const PATIENT_SHELL_ROUTES: Routes = [
       },
       {
         path: 'search',
-        component: TabPlaceholderPage,
+        loadComponent: () => import('../search').then((m) => m.loadSearchPage()),
         data: { tab: 'search' },
         title: $localize`:Titre d'onglet du dossier@@patientShell.search.pageTitle:Recherche · PsyMate`,
       },
