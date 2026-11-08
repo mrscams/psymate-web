@@ -1,0 +1,159 @@
+<section class="queue" aria-labelledby="validation-title">
+  <header class="queue-header">
+    <h1 id="validation-title">{{ title() }}</h1>
+    <label
+      class="sr-only"
+      for="queue-filter"
+      i18n="Étiquette du filtre de la file@@admin.validation.filterLabel"
+      >Filtrer la file</label
+    >
+    <select id="queue-filter" [value]="queueStatus()" (change)="onStatus($event)">
+      @for (option of statuses; track option) {
+        <option [value]="option" [selected]="option === queueStatus()">
+          {{ labelOf(option) }}
+          @if (countOf(option) !== null) {
+            ({{ countOf(option) }})
+          }
+        </option>
+      }
+    </select>
+  </header>
+
+  @if (queueStale()) {
+    <div class="banner" role="alert">
+      <span i18n="Erreur de rechargement de la file@@admin.validation.queueStale"
+        >La file n'a pas pu être relue.</span
+      >
+      <button mat-stroked-button type="button" (click)="queue.reload()">
+        {{ retryQueue.label }}
+      </button>
+    </div>
+  }
+
+  @if (queueKind(); as kind) {
+    @switch (kind) {
+      @case ('loading') {
+        <pm-state kind="loading" skeleton="row" [lines]="5" />
+      }
+      @case ('error') {
+        <pm-state
+          kind="error"
+          title="Impossible de charger la file"
+          i18n-title="État erreur de la file@@admin.validation.queueError"
+          [action]="retryQueue"
+        />
+      }
+      @case ('empty') {
+        <pm-state
+          kind="empty"
+          title="Aucun dossier à vérifier"
+          i18n-title="État vide de la file@@admin.validation.queueEmpty"
+          message="Les dossiers soumis par les praticiens apparaîtront ici, du plus ancien au plus récent."
+          i18n-message="Phrase de l'état vide de la file@@admin.validation.queueEmptyHint"
+        />
+      }
+    }
+  } @else {
+    <pm-queue-list
+      [class.refreshing]="queueRefreshing()"
+      [items]="queue.items()"
+      [selectedId]="practitionerId() ?? null"
+      [status]="queueStatus()"
+    />
+    @if (queue.hasMore()) {
+      <div class="more">
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="queue.loadingMore()"
+          (click)="queue.loadMore()"
+          i18n="Bouton de pagination@@admin.list.more"
+        >
+          Afficher plus
+        </button>
+        @if (queue.moreProblem()) {
+          <p
+            class="more-error"
+            role="alert"
+            i18n="Erreur de la page suivante@@admin.list.moreError"
+          >
+            La suite de la liste n'a pas pu être chargée.
+          </p>
+        }
+      </div>
+    }
+  }
+</section>
+
+<section class="dossier" aria-labelledby="dossier-title">
+  @if (!practitionerId()) {
+    @if (queueKind() !== 'loading') {
+      <pm-state
+        kind="empty"
+        title="Aucun dossier ouvert"
+        i18n-title="Aucun dossier ouvert@@admin.validation.noDossier"
+        message="Choisissez un dossier dans la file."
+        i18n-message="Phrase sans dossier ouvert@@admin.validation.noDossierHint"
+      />
+    }
+  } @else if (dossierKind(); as kind) {
+    @switch (kind) {
+      @case ('loading') {
+        <pm-state kind="loading" skeleton="profile" />
+      }
+      @case ('error') {
+        <pm-state kind="error" [title]="dossierErrorTitle()" [action]="retryDossier" />
+      }
+    }
+  } @else if (dossier.dossier().data; as d) {
+    <pm-dossier-header [dossier]="d" headingId="dossier-title" />
+
+    <div class="documents">
+      <h2 class="section-title" i18n="Titre des justificatifs@@admin.validation.documents">
+        Justificatifs · {{ d.documents.length }}
+      </h2>
+      @if (dossier.reviewProblem()) {
+        <p
+          class="more-error"
+          role="alert"
+          i18n="Erreur de qualification@@admin.validation.reviewError"
+        >
+          La qualification n'a pas pu être enregistrée. Réessayez.
+        </p>
+      }
+      @if (d.documents.length === 0) {
+        <pm-state
+          kind="empty"
+          compact
+          title="Aucun justificatif déposé"
+          i18n-title="Dossier sans justificatif@@admin.validation.noDocuments"
+        />
+      } @else {
+        <pm-document-list
+          [documents]="d.documents"
+          [selectedId]="dossier.selectedDocumentId()"
+          [reviewing]="dossier.reviewing()"
+          (show)="dossier.showDocument($event)"
+          (review)="onReview($event)"
+        />
+        <pm-document-viewer
+          [document]="dossier.selectedDocument()"
+          [file]="dossier.viewer().data"
+          [loading]="dossier.viewer().status === 'loading'"
+          [problem]="dossier.viewer().problem"
+          (expired)="refreshViewer()"
+        />
+      }
+    </div>
+
+    @for (key of [d.practitionerId]; track key) {
+      <pm-decision-form
+        [displayName]="d.displayName"
+        [nonConform]="dossier.nonConform()"
+        [submitting]="dossier.submitting()"
+        [problem]="dossier.decisionProblem()"
+        (decide)="onDecide($event)"
+      />
+    }
+  }
+</section>

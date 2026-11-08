@@ -1,0 +1,74 @@
+@use 'admin';
+
+@include admin.badges;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.identity {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.initials {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--primary-tint);
+  color: var(--primary-hover);
+  font: var(--mat-sys-title-medium);
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+h2 {
+  margin: 0;
+  font: var(--mat-sys-title-large);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+}
+
+.dates {
+  margin: 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px 24px;
+  margin: 0;
+}
+
+dt {
+  color: var(--text-secondary);
+  font: var(--mat-sys-label-medium);
+}
+
+dd {
+  margin: 2px 0 0;
+  font: var(--mat-sys-body-medium);
+  overflow-wrap: anywhere;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}

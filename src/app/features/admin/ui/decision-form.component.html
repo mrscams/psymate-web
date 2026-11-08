@@ -1,0 +1,143 @@
+<fieldset class="checklist">
+  <legend i18n="Titre de la liste de contrôle@@admin.checklist.title">Liste de contrôle</legend>
+  @for (point of checklist; track point.key) {
+    <label>
+      <input
+        type="checkbox"
+        [checked]="checked()[point.key]"
+        (change)="toggle(point.key, $event)"
+      />
+      <span>{{ point.label }}</span>
+    </label>
+    @if (point.key === 'registryFound') {
+      <a
+        class="registry"
+        [href]="registryUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        i18n="Lien vers le registre public@@admin.checklist.registryLink"
+        >Ouvrir l'annuaire santé (RPPS) dans un nouvel onglet</a
+      >
+    }
+  }
+</fieldset>
+
+<form class="decision" [formGroup]="form" (submit)="$event.preventDefault()">
+  <h3 i18n="Titre du bloc décision@@admin.decision.title">Décision</h3>
+  <div class="field">
+    <label [for]="fieldId('internalNote')" i18n="Champ note interne@@admin.decision.noteLabel"
+      >Note interne (jamais envoyée au praticien)</label
+    >
+    <textarea
+      [id]="fieldId('internalNote')"
+      formControlName="internalNote"
+      maxlength="4000"
+      [attr.aria-invalid]="form.controls.internalNote.invalid || null"
+      [attr.aria-describedby]="fieldId('internalNote') + '-error'"
+    ></textarea>
+    <pm-field-errors
+      [control]="form.controls.internalNote"
+      [id]="fieldId('internalNote') + '-error'"
+    />
+  </div>
+  <div class="field">
+    <label
+      [for]="fieldId('messageToPractitioner')"
+      i18n="Champ message au praticien@@admin.decision.messageLabel"
+      >Message au praticien (obligatoire pour un complément ou un refus)</label
+    >
+    <textarea
+      [id]="fieldId('messageToPractitioner')"
+      formControlName="messageToPractitioner"
+      maxlength="4000"
+      [attr.aria-invalid]="form.controls.messageToPractitioner.invalid || null"
+      [attr.aria-describedby]="
+        fieldId('messageToPractitioner') + '-error ' + fieldId('messageToPractitioner') + '-hint'
+      "
+    ></textarea>
+    <p
+      class="hint"
+      [id]="fieldId('messageToPractitioner') + '-hint'"
+      i18n="Aide du message au praticien@@admin.decision.messageHint"
+    >
+      Envoyé par e-mail avec la décision.
+    </p>
+    <pm-field-errors
+      [control]="form.controls.messageToPractitioner"
+      [id]="fieldId('messageToPractitioner') + '-error'"
+    />
+  </div>
+
+  @if (generalError(); as text) {
+    <p class="error" role="alert">{{ text }}</p>
+  }
+
+  @if (confirming()) {
+    <div class="confirm" role="alert">
+      <p>{{ confirmText() }}</p>
+      @if (!hasNote()) {
+        <p class="hint" i18n="Note interne exigée@@admin.decision.noteRequired">
+          Écrivez d'abord une note interne : elle justifie l'approbation.
+        </p>
+      }
+      <div class="actions">
+        <button
+          mat-flat-button
+          type="button"
+          class="approve"
+          [disabled]="!hasNote() || submitting()"
+          (click)="approveAnyway()"
+          i18n="Bouton de confirmation d'une approbation forcée@@admin.decision.approveAnyway"
+        >
+          Approuver quand même
+        </button>
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="cancelConfirm()"
+          i18n="Annulation d'une approbation forcée@@admin.decision.cancel"
+        >
+          Annuler
+        </button>
+      </div>
+    </div>
+  }
+
+  <div class="actions">
+    <button
+      mat-flat-button
+      type="button"
+      class="approve"
+      [disabled]="submitting()"
+      (click)="approve()"
+      i18n="Bouton de décision@@admin.decision.approve"
+    >
+      Approuver
+    </button>
+    <button
+      mat-stroked-button
+      type="button"
+      class="more"
+      [disabled]="!hasMessage() || submitting()"
+      (click)="send('needs_more')"
+      i18n="Bouton de décision@@admin.decision.askMore"
+    >
+      Demander un complément
+    </button>
+    <button
+      mat-stroked-button
+      type="button"
+      class="reject"
+      [disabled]="!hasMessage() || submitting()"
+      (click)="send('rejected')"
+      i18n="Bouton de décision@@admin.decision.reject"
+    >
+      Refuser et suspendre
+    </button>
+  </div>
+  <p class="effects" i18n="Rappel des effets d'une décision@@admin.decision.effects">
+    Approuver : badge actif et e-mail « dossier validé ». Complément : e-mail avec votre message, le
+    praticien complète et resoumet. Refus : compte suspendu, sessions révoquées, e-mail avec le
+    motif et la voie de recours.
+  </p>
+</form>

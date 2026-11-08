@@ -1,0 +1,126 @@
+@use '../ui/admin';
+
+@include admin.segments;
+@include admin.table;
+
+:host {
+  @include admin.page;
+}
+
+.page-header {
+  @include admin.page-header;
+
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.card {
+  @include admin.card;
+}
+
+#vocabulary-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.tabs-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.count {
+  margin-left: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.fixed {
+  margin-left: 6px;
+  color: var(--text-secondary);
+  font: var(--mat-sys-label-small);
+}
+
+.inactive {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 44px;
+  font: var(--mat-sys-body-medium);
+}
+
+.code {
+  color: var(--primary-hover);
+}
+
+tr.disabled td {
+  background: var(--surface-ground);
+  color: var(--text-secondary);
+}
+
+tr.disabled .label {
+  text-decoration: line-through;
+}
+
+.state {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-disabled);
+  }
+
+  &.on .dot {
+    background: var(--success);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  button {
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--surface-raised);
+    color: var(--text-primary);
+    font: var(--mat-sys-label-large);
+    cursor: pointer;
+
+    &.danger {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    &.success {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    &:disabled {
+      border-color: var(--border-subtle);
+      color: var(--text-disabled);
+      cursor: default;
+    }
+  }
+}
+
+.panel-row td {
+  background: var(--surface-ground);
+}
+
+.footnote {
+  margin: 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}

@@ -1,0 +1,45 @@
+@use 'admin';
+
+@include admin.field;
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+h3 {
+  margin: 0;
+  font: var(--mat-sys-title-small);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: flex-start;
+
+  .field {
+    flex: 1 1 180px;
+  }
+
+  .order {
+    flex: 0 1 96px;
+  }
+
+  button {
+    margin-top: 24px;
+  }
+}
+
+.rules {
+  margin: 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+.error {
+  margin: 0;
+  color: var(--danger);
+  font: var(--mat-sys-body-medium);
+}
