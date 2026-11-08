@@ -71,7 +71,7 @@
     [matMenuTriggerFor]="menu()"
     [matMenuTriggerData]="{ item: item() }"
     [matMenuTriggerRestoreFocus]="false"
-    (menuClosed)="menuClosed()"
+    (menuOpened)="menuOpened()"
     (click)="$event.stopPropagation()"
     (keydown.enter)="$event.stopPropagation()"
   >

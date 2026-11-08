@@ -136,7 +136,7 @@ export class TimelinePage {
       this.restored = true;
       const anchor = untracked(() => this.store.anchor());
       if (anchor > 0)
-        afterNextRender(() => viewport.scrollToIndex(anchor), { injector: this.injector });
+        afterNextRender(() => this.scrollTo(viewport, anchor), { injector: this.injector });
     });
 
     const destroyRef = inject(DestroyRef);
@@ -152,6 +152,19 @@ export class TimelinePage {
       const snapshot = this.store.snapshot();
       if (snapshot) this.shell.rememberTab<TimelineSnapshot>('timeline', snapshot);
     });
+  }
+
+  /**
+   * Amène le créneau `slot` en haut de l'écran. La hauteur totale du défilement n'est connue du CDK
+   * qu'une trame après le rendu : on réessaie quelques trames tant que la position n'est pas atteinte.
+   */
+  private scrollTo(viewport: CdkVirtualScrollViewport, slot: number, attempts = 10): void {
+    viewport.checkViewportSize();
+    viewport.scrollToIndex(slot);
+    const target = slot * this.rowHeight();
+    if (Math.abs(viewport.measureScrollOffset('top') - target) > 1 && attempts > 0) {
+      requestAnimationFrame(() => this.scrollTo(viewport, slot, attempts - 1));
+    }
   }
 
   /** Défilement : la zone visible désigne la fenêtre courante (chargement des voisines). */
@@ -171,8 +184,7 @@ export class TimelinePage {
     if (!viewport) return;
     afterNextRender(
       () => {
-        viewport.checkViewportSize();
-        viewport.scrollToIndex(anchor);
+        this.scrollTo(viewport, anchor);
         this.onScrolled(anchor);
       },
       { injector: this.injector },

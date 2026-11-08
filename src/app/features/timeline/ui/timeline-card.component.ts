@@ -10,6 +10,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { take } from 'rxjs';
 
 import { EntryIconComponent, entryTypeLabel } from '../../../shared/ui';
 import { formatOccurred } from '../../../shared/util';
@@ -119,14 +120,16 @@ export class TimelineCardComponent {
   }
 
   /**
-   * À la fermeture sans action (Échap, clic ailleurs), le focus revient sur la carte (fiche 03) ;
-   * après une action, il reste où l'action l'a mis (panneau de l'éditeur, autre onglet).
+   * À la fermeture sans action (Échap, Tab, clic ailleurs), le focus revient sur la carte
+   * (fiche 03) ; après une action (raison « click », souris ou Entrée), il reste où l'action l'a
+   * mis (panneau de l'éditeur, autre onglet).
    */
-  protected menuClosed(): void {
-    setTimeout(() => {
-      const active = this.host.nativeElement.ownerDocument.activeElement;
-      if (!active || active === this.host.nativeElement.ownerDocument.body) this.focus();
-    });
+  protected menuOpened(): void {
+    this.menu()
+      .closed.pipe(take(1))
+      .subscribe((reason) => {
+        if (reason !== 'click') this.focus();
+      });
   }
 
   focus(): void {
