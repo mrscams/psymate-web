@@ -1,0 +1,134 @@
+<ul class="sessions" [attr.aria-label]="listLabel">
+  @for (group of groups(); track key(group)) {
+    @let expandedNow = isOpen(group);
+    <li class="session" [class.outside]="!group.id" [class.open]="expandedNow">
+      <h3 class="heading">
+        <button
+          type="button"
+          class="toggle"
+          [id]="'session-toggle-' + key(group)"
+          [attr.aria-expanded]="expandedNow"
+          [attr.aria-controls]="'session-panel-' + key(group)"
+          [attr.data-session-id]="group.id"
+          (click)="toggle(group)"
+        >
+          <span class="chevron" aria-hidden="true"></span>
+          @if (group.id) {
+            <pm-entry-icon type="session" [size]="14" />
+            <span class="title">{{ title(group) }}</span>
+          } @else {
+            <span
+              class="title"
+              i18n="Titre du groupe des entrées hors séance@@timeline.session.outside"
+              >Hors séance</span
+            >
+          }
+          <span
+            class="count"
+            i18n="Nombre d'entrées d'une séance, dans son en-tête@@timeline.session.entries"
+            >{group.entries.length, plural,
+              =0 {aucune entrée}
+              =1 {1 entrée}
+              other {{{ count(group.entries.length) }} entrées}
+            }</span
+          >
+        </button>
+      </h3>
+      @if (expandedNow) {
+        <div
+          class="panel"
+          role="region"
+          [id]="'session-panel-' + key(group)"
+          [attr.aria-labelledby]="'session-toggle-' + key(group)"
+        >
+          @if (group.id) {
+            @let state = detail(group);
+            <div class="summary">
+              @if (state?.status === 'error') {
+                <pm-state
+                  kind="error"
+                  compact
+                  [action]="retry(group.id)"
+                  [details]="state?.problem?.code ?? ''"
+                  title="Le détail de la séance n'a pas pu être chargé."
+                  i18n-title="Erreur du détail d'une séance@@timeline.session.error"
+                  message=""
+                />
+              } @else if (loaded(group); as detail) {
+                <p class="facts">
+                  @for (fact of facts(detail); track $index) {
+                    <span class="fact">{{ fact }}</span>
+                  }
+                  @if (!detail.closedAt) {
+                    <span
+                      class="open-state"
+                      i18n="Statut d'une séance non clôturée@@timeline.session.notClosed"
+                      >Non clôturée</span
+                    >
+                  }
+                </p>
+                <div class="report">
+                  <h4
+                    class="report-title"
+                    i18n="Titre du compte rendu d'une séance@@timeline.session.report"
+                  >
+                    Compte rendu
+                  </h4>
+                  @if (detail.summary) {
+                    <p class="report-text">{{ detail.summary }}</p>
+                  } @else {
+                    <p
+                      class="report-empty"
+                      i18n="Séance sans compte rendu@@timeline.session.noReport"
+                    >
+                      Aucun compte rendu.
+                    </p>
+                  }
+                  <button
+                    type="button"
+                    class="open-session"
+                    (click)="openSession.emit(group.id)"
+                    i18n="Bouton Ouvrir une séance@@timeline.session.open"
+                  >
+                    Ouvrir
+                  </button>
+                </div>
+              } @else {
+                <pm-state kind="loading" skeleton="row" [lines]="2" compact />
+              }
+            </div>
+          } @else {
+            <p
+              class="outside-note"
+              i18n="Explication du groupe hors séance@@timeline.session.outsideNote"
+            >
+              Entrées dont la séance n'est pas affichée (séance privée, ou en dehors des séances
+              lues).
+            </p>
+          }
+          @if (group.entries.length) {
+            <ul class="entries" [attr.aria-label]="entriesLabel">
+              @for (item of group.entries; track item.id) {
+                <li class="entry">
+                  <pm-timeline-card
+                    [item]="item"
+                    zoom="week"
+                    [selected]="selectedId() === item.id"
+                    [emotionLabel]="emotionLabel(item)"
+                    [menu]="menu()"
+                    (opened)="opened.emit($event)"
+                    (linked)="linked.emit($event)"
+                  />
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="no-entries" i18n="Séance sans entrée rattachée@@timeline.session.noEntries">
+              Aucune entrée rattachée pour ces filtres.
+            </p>
+          }
+        </div>
+      }
+    </li>
+  }
+</ul>

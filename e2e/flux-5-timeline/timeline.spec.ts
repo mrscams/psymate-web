@@ -10,6 +10,7 @@ import {
 import { createAccount, signIn } from '../preferences/accounts';
 import { TestAccount } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { setGroupBy } from './filters-data';
 import { StoryPatient, storyPatient, volumePatient } from './timeline-data';
 
 // Timeline, mode chronologique (M3-02, fiche 03, B4 écran 3) contre l'API locale (jamais de mock) :
@@ -30,6 +31,8 @@ test.beforeAll(async () => {
   test.setTimeout(240_000);
   api = await playwrightRequest.newContext();
   account = await createAccount(api, 'm3-02.timeline', 'psychologist');
+  // Ces cas portent sur le mode chronologique (état A) ; le défaut du compte est « par séance ».
+  await setGroupBy(api, 'chronological');
   story = await storyPatient(api);
   volume = await volumePatient(api, account, VOLUME);
 });
@@ -130,8 +133,9 @@ test('menu contextuel entièrement au clavier ; « Corriger » ouvre l’éditeu
   await expect(item('Corriger')).toBeFocused();
   await page.keyboard.press('ArrowDown');
   await expect(item('Lier')).toBeFocused();
-  await expect(item('Lier')).toHaveAttribute('aria-disabled', 'true');
-  await expect(item('Lier')).toContainText('bientôt disponible');
+  // Lier : branché sur l'éditeur de lien (M3-03), raccourci L.
+  await expect(item('Lier')).not.toHaveAttribute('aria-disabled', 'true');
+  await expect(item('Lier')).not.toContainText('bientôt');
   await page.keyboard.press('ArrowDown');
   await expect(item('Voir dans le graphe')).toBeFocused();
   await expectNoAxeViolations(page);

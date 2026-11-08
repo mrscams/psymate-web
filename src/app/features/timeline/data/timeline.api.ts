@@ -3,14 +3,19 @@ import { firstValueFrom } from 'rxjs';
 
 import {
   ChronologieService,
+  EntreesService,
+  EntryDto,
   TimelineItemDto,
   TimelinePageDto,
   VocabulaireService,
 } from '../../../api';
 import { EntryType } from '../../../shared/ui';
 import { OccurredPrecision } from '../../../shared/util';
+import { SessionDetail, SessionKind, SessionModality } from './timeline-sessions.model';
 import {
   EMOTION_FAMILIES,
+  EmotionFamily,
+  EmotionVocabulary,
   TimelineFacets,
   TimelineItem,
   TimelinePage,
@@ -21,20 +26,28 @@ import {
 /** Séances lues pour l'index (pastille, début du suivi) : au plus 5 pages de 200. */
 const SESSION_PAGES = 5;
 
+/** Une liste vide n'est pas envoyée (absent = sans filtre, contrat). */
+function list<T>(values: readonly T[]): T[] | undefined {
+  return values.length ? [...values] : undefined;
+}
+
 /**
  * Service de données de features/timeline (handbook §2, couche 4) : le seul fichier de la feature
- * qui importe le client généré (Chronologie, Vocabulaire pour le nom des émotions). Traduit les DTO
- * en modèles de vue ; les erreurs arrivent déjà en ApiProblem (core/http).
+ * qui importe le client généré (Chronologie ; Entrées pour le détail d'une séance ; Vocabulaire
+ * pour le nom des émotions). Traduit les DTO en modèles de vue ; les erreurs arrivent déjà en
+ * ApiProblem (core/http).
  */
 @Injectable({ providedIn: 'root' })
 export class TimelineApi {
   private readonly timeline = inject(ChronologieService);
+  private readonly entries = inject(EntreesService);
   private readonly vocabulary = inject(VocabulaireService);
   private readonly english = inject(LOCALE_ID).startsWith('en');
 
   /**
-   * GET /api/patients/{id}/timeline : une fenêtre (page keyset) de la chronologie, ses facettes et
-   * les situations qui chevauchent la plage. Entrées privées exclues (includePrivate absent).
+   * GET /api/patients/{id}/timeline : une fenêtre (page keyset) de la chronologie filtrée (types,
+   * emotions, tags, draftsOnly, période), ses facettes et les situations qui chevauchent la plage.
+   * Entrées privées exclues (includePrivate absent : le filtre est serveur, jamais client).
    */
   async page(patientId: string, query: TimelineQuery): Promise<TimelinePage> {
     const dto = await firstValueFrom(
@@ -42,10 +55,10 @@ export class TimelineApi {
         patientId,
         query.from ?? undefined,
         query.to ?? undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
+        list(query.types),
+        list(query.emotions),
+        list(query.tags),
+        query.draftsOnly ? true : undefined,
         undefined,
         query.cursor ?? undefined,
         query.limit,
@@ -85,17 +98,44 @@ export class TimelineApi {
     return index;
   }
 
-  /** GET /api/vocabulary/emotions : code → libellé dans la langue de l'interface. */
-  async emotionLabels(): Promise<Record<string, string>> {
+  /**
+   * GET /api/entries/{id} d'une séance : horaires, durée, modalité, genre, clôture et compte rendu
+   * (texte de la version courante, figé à la clôture), pour la séance dépliée du mode par séance.
+   */
+  async sessionDetail(sessionId: string): Promise<SessionDetail> {
+    return toSessionDetail(await firstValueFrom(this.entries.getEntry(sessionId)));
+  }
+
+  /**
+   * GET /api/vocabulary/emotions : code → libellé dans la langue de l'interface, et code → famille
+   * (pastille des puces d'émotion, dont les facettes ne donnent que le code).
+   */
+  async emotions(): Promise<EmotionVocabulary> {
     const list = await firstValueFrom(this.vocabulary.emotions());
     const labels: Record<string, string> = {};
+    const families: Record<string, EmotionFamily> = {};
     for (const emotion of list) {
       if (!emotion.code) continue;
       labels[emotion.code] =
         (this.english ? emotion.labelEn : null) || emotion.labelFr || emotion.code;
+      const family = EMOTION_FAMILIES.find((value) => value === emotion.family);
+      if (family) families[emotion.code] = family;
     }
-    return labels;
+    return { labels, families };
   }
+}
+
+function toSessionDetail(dto: EntryDto): SessionDetail {
+  return {
+    id: dto.id ?? '',
+    from: dto.occurred?.from ?? null,
+    to: dto.occurred?.to ?? null,
+    durationMin: dto.session?.durationMin ?? null,
+    modality: (dto.session?.modality ?? null) as SessionModality | null,
+    kind: (dto.session?.kind ?? null) as SessionKind | null,
+    closedAt: dto.session?.closedAt ?? null,
+    summary: dto.body?.trim() || null,
+  };
 }
 
 function toPage(dto: TimelinePageDto): TimelinePage {

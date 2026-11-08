@@ -5,6 +5,7 @@
 import { ApiProblem } from '../../../core/http';
 import { EntryType } from '../../../shared/ui';
 import { Occurred } from '../../../shared/util';
+import { TimelineFilterQuery, TimelineFiltersSnapshot } from './timeline-filters.model';
 
 /** Familles d'émotions du catalogue (pastilles, jamais en aplat). */
 export type EmotionFamily =
@@ -20,6 +21,12 @@ export const EMOTION_FAMILIES: readonly EmotionFamily[] = [
   'anger',
   'anticipation',
 ];
+
+/** Vocabulaire des émotions du praticien : libellé et famille par code. */
+export interface EmotionVocabulary {
+  labels: Record<string, string>;
+  families: Record<string, EmotionFamily>;
+}
 
 /** Une ligne de la chronologie (TimelineItemDto) : de quoi dessiner une carte sans l'entrée complète. */
 export interface TimelineItem {
@@ -57,11 +64,8 @@ export interface TimelinePage {
   nextCursor: string | null;
 }
 
-/** Ce que la chronologie demande (le reste des filtres, M3-03, s'y ajoutera). */
-export interface TimelineQuery {
-  /** Bornes de la plage, ISO 8601 UTC ; null = sans borne. */
-  from: string | null;
-  to: string | null;
+/** Ce que la chronologie demande : les filtres (TimelineFiltersStore), le curseur, la taille. */
+export interface TimelineQuery extends TimelineFilterQuery {
   cursor: string | null;
   limit: number;
 }
@@ -102,9 +106,12 @@ export interface TimelineSnapshot {
   anchor: number;
   sessions: Record<string, string>;
   emotionLabels: Record<string, string>;
+  emotionFamilies: Record<string, EmotionFamily>;
   selectedId: string | null;
   /** Position exacte de défilement (px), rangée par la page ; reprise si le zoom n'a pas changé. */
   offset?: number;
+  /** Filtres et mode de l'onglet (M3-03), rangés par la page avec le reste. */
+  filters?: TimelineFiltersSnapshot;
 }
 
 // ---------------------------------------------------------------- fenêtres et créneaux

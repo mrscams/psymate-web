@@ -25,7 +25,7 @@ const MAX_TAGS = 3;
  * (jamais d'aplat), titre, date rendue selon sa précision (formatOccurred) et la mention
  * « précision : … », brouillon, ressenti (pastille de famille à l'opacité de l'intensité et
  * « n/10 »), tags, nombre de liens, pastille « dit en séance du … ». Entrée ou clic : ouvrir ;
- * `⋯`, clic droit, `Maj+F10` ou la touche Menu : menu contextuel (fourni par la page). La place du
+ * `⋯`, clic droit, `Maj+F10` ou la touche Menu : menu contextuel (fourni par la page) ; `L` : lier. La place du
  * marqueur de provenance (authorType, A11) est gardée sans être dessinée.
  */
 @Component({
@@ -48,6 +48,8 @@ export class TimelineCardComponent {
   readonly menu = input.required<MatMenu>();
 
   readonly opened = output<TimelineItem>();
+  /** `L` sur la carte : lier l'entrée (éditeur de lien, fiche 06). */
+  readonly linked = output<TimelineItem>();
 
   private readonly locale = inject(LOCALE_ID);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -111,6 +113,17 @@ export class TimelineCardComponent {
   protected open(event: Event): void {
     if (event instanceof KeyboardEvent && event.target !== event.currentTarget) return;
     this.opened.emit(this.item());
+  }
+
+  /**
+   * `L` sur la carte elle-même : l'éditeur de lien s'ouvre sur l'entrée. La touche est consommée
+   * (le raccourci global L du dossier, qui lie l'entrée ouverte dans l'éditeur, ne la reçoit pas).
+   */
+  protected link(event: Event): void {
+    if (event.target !== event.currentTarget) return;
+    if (event instanceof KeyboardEvent && (event.ctrlKey || event.metaKey || event.altKey)) return;
+    event.preventDefault();
+    this.linked.emit(this.item());
   }
 
   /** Clic droit, Maj+F10, touche Menu : le menu contextuel s'ouvre sur la carte. */

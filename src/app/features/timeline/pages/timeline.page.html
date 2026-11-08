@@ -1,4 +1,8 @@
-<section class="timeline" aria-labelledby="timeline-heading">
+<section
+  class="timeline"
+  [class.fill]="mode() === 'chronological'"
+  aria-labelledby="timeline-heading"
+>
   <h2
     id="timeline-heading"
     class="sr-only"
@@ -12,35 +16,53 @@
     role="toolbar"
     aria-label="Affichage de la timeline"
     i18n-aria-label="Nom de la barre d'outils de la timeline@@timeline.toolbar"
+    aria-keyshortcuts="F"
+    pmRovingToolbar
   >
-    <div
-      class="zoom"
-      role="group"
-      aria-label="Zoom"
-      i18n-aria-label="Nom du groupe de zoom de la timeline@@timeline.zoomGroup"
-    >
-      <button
-        type="button"
-        class="zoom-button"
-        [attr.aria-label]="zoomOutLabel"
-        aria-keyshortcuts="-"
-        [disabled]="!store.canZoomOut()"
-        (click)="zoom('out')"
-      >
-        <span aria-hidden="true">−</span>
-      </button>
-      <span class="granularity" aria-live="polite">{{ zoomText() }}</span>
-      <button
-        type="button"
-        class="zoom-button"
-        [attr.aria-label]="zoomInLabel"
-        aria-keyshortcuts="+"
-        [disabled]="!store.canZoomIn()"
-        (click)="zoom('in')"
-      >
-        <span aria-hidden="true">+</span>
-      </button>
-      <span class="hint" i18n="Aide du zoom à la molette@@timeline.zoomHint">Ctrl + molette</span>
+    <pm-timeline-filters
+      class="filters"
+      [filters]="filters.filters()"
+      [facets]="store.facets()"
+      [emotionLabels]="store.emotionLabels()"
+      [emotionFamilies]="store.emotionFamilies()"
+      [medicationVisible]="prefs.medicationVisible()"
+      (filtersChange)="changeFilters($event)"
+    />
+    <div class="toolbar-end">
+      <pm-timeline-mode [mode]="mode()" (modeChange)="setMode($event)" />
+      @if (mode() === 'chronological') {
+        <div
+          class="zoom"
+          role="group"
+          aria-label="Zoom"
+          i18n-aria-label="Nom du groupe de zoom de la timeline@@timeline.zoomGroup"
+        >
+          <button
+            type="button"
+            class="zoom-button"
+            [attr.aria-label]="zoomOutLabel"
+            aria-keyshortcuts="-"
+            [disabled]="!store.canZoomOut()"
+            (click)="zoom('out')"
+          >
+            <span aria-hidden="true">−</span>
+          </button>
+          <span class="granularity" aria-live="polite">{{ zoomText() }}</span>
+          <button
+            type="button"
+            class="zoom-button"
+            [attr.aria-label]="zoomInLabel"
+            aria-keyshortcuts="+"
+            [disabled]="!store.canZoomIn()"
+            (click)="zoom('in')"
+          >
+            <span aria-hidden="true">+</span>
+          </button>
+          <span class="hint" i18n="Aide du zoom à la molette@@timeline.zoomHint"
+            >Ctrl + molette</span
+          >
+        </div>
+      }
     </div>
   </div>
 
@@ -59,15 +81,75 @@
         />
       }
       @case ('empty') {
-        <pm-state
-          kind="empty"
-          title="Aucune entrée pour l'instant"
-          i18n-title="Titre de la timeline vide@@timeline.empty.title"
-          message="Notez la première dans la barre de capture, en haut du dossier (N)."
-          i18n-message="Texte de la timeline vide@@timeline.empty.message"
-        />
+        @if (filters.active()) {
+          <pm-state
+            kind="empty"
+            [action]="clearFilters"
+            title="Aucune entrée pour ces filtres"
+            i18n-title="Titre de la timeline vide avec des filtres@@timeline.empty.filtered.title"
+            message="Retirez un filtre ou élargissez la période."
+            i18n-message="
+              Texte de la timeline vide avec des filtres@@timeline.empty.filtered.message"
+          />
+        } @else {
+          <pm-state
+            kind="empty"
+            title="Aucune entrée pour l'instant"
+            i18n-title="Titre de la timeline vide@@timeline.empty.title"
+            message="Notez la première dans la barre de capture, en haut du dossier (N)."
+            i18n-message="Texte de la timeline vide@@timeline.empty.message"
+          />
+        }
       }
     }
+  } @else if (mode() === 'session') {
+    <p class="status-line">
+      <span class="count"
+        ><span
+          i18n="Nombre d'entrées de la ligne d'état de la timeline@@timeline.status.entries"
+          >{store.total(), plural, =1 {1 entrée} other {{{ totalText() }} entrées}}</span
+        >
+        ·
+        <span
+          i18n="Nombre de séances de la ligne d'état de la timeline@@timeline.status.sessions"
+          >{sessionCount(), plural,
+            =0 {aucune séance}
+            =1 {1 séance}
+            other {{{ sessionCount() }} séances}
+          }</span
+        ></span
+      >
+      @if (!store.head().complete) {
+        <span
+          class="partial"
+          i18n="Regroupement limité aux entrées les plus récentes@@timeline.status.partial"
+          >Regroupement des {{ headSize }} entrées les plus récentes : réduisez la période pour les
+          plus anciennes.</span
+        >
+      }
+    </p>
+    @if (store.head().failed; as failed) {
+      <pm-state
+        kind="error"
+        compact
+        [action]="retryWindow(failed.index)"
+        title="Cette partie de la timeline n'a pas pu être chargée."
+        i18n-title="Message d'une fenêtre de la timeline en échec@@timeline.window.error"
+        message=""
+      />
+    }
+    <pm-timeline-sessions
+      [groups]="groups()"
+      [details]="sessionDetails.details()"
+      [emotionLabels]="store.emotionLabels()"
+      [selectedId]="store.selectedId()"
+      [menu]="cardMenu"
+      (expanded)="sessionDetails.load($event)"
+      (opened)="open($event)"
+      (linked)="link($event)"
+      (openSession)="openSession($event)"
+      (retryDetail)="sessionDetails.retry($event)"
+    />
   } @else {
     <p class="status-line">
       <span class="count"
@@ -175,6 +257,7 @@
                 [emotionLabel]="emotionLabel(item)"
                 [menu]="cardMenu"
                 (opened)="open($event)"
+                (linked)="link($event)"
               />
             } @else if (row.state === 'error') {
               @if (row.firstOfWindow) {
@@ -220,15 +303,13 @@
         >
       </span>
     </button>
-    <!-- Lier (L) : éditeur de lien de M2-04 ; présent, désactivé, la touche L n'est pas prise ici. -->
-    <button mat-menu-item type="button" disabled disabledInteractive>
+    <!-- Lier (L) : éditeur de lien (features/graph, fiche 06). -->
+    <button mat-menu-item type="button" (click)="link(item)">
       <span class="menu-row">
         <span class="menu-label" i18n="Action Lier du menu d'une carte@@timeline.menu.link"
           >Lier</span
         >
-        <span class="menu-hint" i18n="Aide de l'action Lier désactivée@@timeline.menu.linkHint"
-          >L · bientôt disponible</span
-        >
+        <span class="menu-hint" i18n="Raccourci de l'action Lier@@timeline.menu.linkKey">L</span>
       </span>
     </button>
     <button mat-menu-item type="button" (click)="showInGraph(item)">

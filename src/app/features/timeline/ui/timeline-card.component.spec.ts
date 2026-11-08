@@ -22,6 +22,7 @@ import { TimelineCardComponent } from './timeline-card.component';
       [emotionLabel]="emotionLabel()"
       [menu]="menu"
       (opened)="opened.push($event)"
+      (linked)="linked.push($event)"
     />
   `,
 })
@@ -32,6 +33,7 @@ class HostComponent {
   readonly saidIn = signal<string | null>(null);
   readonly emotionLabel = signal<string | null>(null);
   readonly opened: TimelineItem[] = [];
+  readonly linked: TimelineItem[] = [];
 }
 
 async function render(setup: (host: HostComponent) => void = () => undefined) {
@@ -167,5 +169,27 @@ describe('TimelineCardComponent', () => {
     await fixture.whenStable();
     expect(text(document.querySelector('.probe'))).toBe('e-1');
     expect(more.getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('L sur la carte : « lier » émis, la touche est consommée (pas le raccourci global)', async () => {
+    const { card, host } = await render();
+    const press = (target: Element, init: KeyboardEventInit = {}) => {
+      const event = new KeyboardEvent('keydown', {
+        key: 'l',
+        bubbles: true,
+        cancelable: true,
+        ...init,
+      });
+      target.dispatchEvent(event);
+      return event;
+    };
+    const event = press(card);
+    expect(event.defaultPrevented).toBe(true);
+    expect(host.linked.map((item) => item.id)).toEqual(['e-1']);
+    expect(card.getAttribute('aria-keyshortcuts')).toContain('L');
+    // Ctrl+L, ou L sur le bouton ⋯ : rien.
+    press(card, { ctrlKey: true });
+    press(card.querySelector('button.more')!);
+    expect(host.linked).toHaveLength(1);
   });
 });

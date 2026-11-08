@@ -1,0 +1,108 @@
+<div
+  class="group"
+  role="group"
+  aria-label="Types"
+  i18n-aria-label="Nom du groupe de puces de type de la timeline@@timeline.filters.types"
+>
+  <button
+    type="button"
+    class="chip"
+    [attr.aria-pressed]="allTypes()"
+    (click)="selectAllTypes()"
+    i18n="Puce de tous les types de la timeline@@timeline.filters.allTypes"
+  >
+    Tous
+  </button>
+  @for (chip of typeChips(); track chip.type) {
+    <button
+      type="button"
+      class="chip"
+      [attr.aria-pressed]="chip.selected"
+      [attr.data-type]="chip.type"
+      (click)="toggleType(chip.type)"
+    >
+      <pm-entry-icon [type]="chip.type" [size]="12" />
+      <span class="label">{{ chip.label }}</span>
+      <span class="count"> {{ chip.count }}</span>
+    </button>
+  }
+</div>
+
+@if (emotionChips().length) {
+  <div
+    class="group"
+    role="group"
+    aria-label="Émotions"
+    i18n-aria-label="Nom du groupe de puces d'émotion de la timeline@@timeline.filters.emotions"
+  >
+    @for (chip of emotionChips(); track chip.value) {
+      <button
+        type="button"
+        class="chip"
+        [attr.aria-pressed]="chip.selected"
+        [attr.data-emotion]="chip.value"
+        (click)="toggleEmotion(chip.value)"
+      >
+        <span [class]="familyClass(chip.value)" aria-hidden="true"></span>
+        <span class="label">{{ chip.label }}</span>
+        <span class="count"> {{ chip.count }}</span>
+      </button>
+    }
+  </div>
+}
+
+@if (tagChips().length) {
+  <div
+    class="group"
+    role="group"
+    aria-label="Tags"
+    i18n-aria-label="Nom du groupe de puces de tag de la timeline@@timeline.filters.tags"
+  >
+    @for (chip of tagChips(); track chip.value) {
+      <button
+        type="button"
+        class="chip"
+        [attr.aria-pressed]="chip.selected"
+        [attr.data-tag]="chip.value"
+        (click)="toggleTag(chip.value)"
+      >
+        <span class="label">{{ chip.label }}</span>
+        <span class="count"> {{ chip.count }}</span>
+      </button>
+    }
+  </div>
+}
+
+<div class="group">
+  <button
+    type="button"
+    class="chip drafts"
+    [attr.aria-pressed]="filters().draftsOnly"
+    (click)="toggleDrafts()"
+    i18n="Puce brouillons seulement de la timeline@@timeline.filters.drafts"
+  >
+    Brouillons seulement
+  </button>
+</div>
+
+<div
+  class="group"
+  role="group"
+  aria-label="Période"
+  i18n-aria-label="Nom du groupe de période de la timeline@@timeline.filters.period"
+>
+  @for (option of presets; track option) {
+    <button
+      type="button"
+      class="chip"
+      [attr.aria-pressed]="option === preset()"
+      [attr.title]="periodName(option)"
+      (click)="choosePeriod(option)"
+    >
+      {{ periodText(option) }}
+    </button>
+  }
+  @if (customPeriod(); as period) {
+    <span class="custom">{{ period }}</span>
+  }
+</div>

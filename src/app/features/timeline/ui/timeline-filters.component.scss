@@ -1,0 +1,83 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+// Puces : contour neutre ; actives sur le fond primaire teinté (fiche 03 : #E3EAF8 / #2C4C99).
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: var(--mat-sys-label-large);
+  cursor: pointer;
+
+  &[aria-pressed='true'] {
+    border-color: var(--primary-hover);
+    background: var(--primary-tint);
+    color: var(--primary-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+// Pastille de famille d'émotion (jamais en aplat sur la puce).
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--feeling);
+}
+
+.family-joy {
+  background: var(--emotion-joy);
+}
+.family-trust {
+  background: var(--emotion-trust);
+}
+.family-fear {
+  background: var(--emotion-fear);
+}
+.family-surprise {
+  background: var(--emotion-surprise);
+}
+.family-sadness {
+  background: var(--emotion-sadness);
+}
+.family-disgust {
+  background: var(--emotion-disgust);
+}
+.family-anger {
+  background: var(--emotion-anger);
+}
+.family-anticipation {
+  background: var(--emotion-anticipation);
+}
+
+.custom {
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
