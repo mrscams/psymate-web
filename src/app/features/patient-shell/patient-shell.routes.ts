@@ -25,7 +25,7 @@ export const PATIENT_SHELL_ROUTES: Routes = [
       { path: 'overview', pathMatch: 'full', redirectTo: '' },
       {
         path: 'timeline',
-        component: TabPlaceholderPage,
+        loadComponent: () => import('../timeline').then((m) => m.TimelinePage),
         data: { tab: 'timeline' },
         title: $localize`:Titre d'onglet du dossier@@patientShell.timeline.pageTitle:Timeline · PsyMate`,
       },

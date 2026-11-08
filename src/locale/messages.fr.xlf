@@ -13748,6 +13748,374 @@
         </context-group>
         <note priority="1" from="description">Puce de tous les types</note>
       </trans-unit>
+      <trans-unit id="timeline.heading" datatype="html">
+        <source> Timeline </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">7,13</context>
+        </context-group>
+        <note priority="1" from="description">Titre caché de l&apos;onglet timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.toolbar" datatype="html">
+        <source>Affichage de la timeline</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la barre d&apos;outils de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.zoomGroup" datatype="html">
+        <source>Zoom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <note priority="1" from="description">Nom du groupe de zoom de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.zoomHint" datatype="html">
+        <source>Ctrl + molette</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">43,48</context>
+        </context-group>
+        <note priority="1" from="description">Aide du zoom à la molette</note>
+      </trans-unit>
+      <trans-unit id="timeline.error.title" datatype="html">
+        <source>Impossible de charger la timeline</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">57,58</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;erreur de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.empty.title" datatype="html">
+        <source>Aucune entrée pour l&apos;instant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">64,65</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la timeline vide</note>
+      </trans-unit>
+      <trans-unit id="timeline.empty.message" datatype="html">
+        <source>Notez la première dans la barre de capture, en haut du dossier (N).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">66,67</context>
+        </context-group>
+        <note priority="1" from="description">Texte de la timeline vide</note>
+      </trans-unit>
+      <trans-unit id="timeline.status.entries" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">76,80</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;entrées de la ligne d&apos;état de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.status.windows" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 fenêtre en mémoire} other {<x id="INTERPOLATION"/> fenêtres en mémoire}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">81,87</context>
+        </context-group>
+        <note priority="1" from="description">Fenêtres en mémoire de la ligne d&apos;état de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.bands" datatype="html">
+        <source>Situations sur la période</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">95,96</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la liste des situations en bande</note>
+      </trans-unit>
+      <trans-unit id="timeline.band.ongoingShort" datatype="html">
+        <source>en cours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">107,112</context>
+        </context-group>
+        <note priority="1" from="description">Mention d&apos;une situation en cours</note>
+      </trans-unit>
+      <trans-unit id="timeline.beforeZone" datatype="html">
+        <source>Avant le suivi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">164,168</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la zone avant le suivi</note>
+      </trans-unit>
+      <trans-unit id="timeline.window.error" datatype="html">
+        <source>Cette partie de la timeline n&apos;a pas pu être chargée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">186,187</context>
+        </context-group>
+        <note priority="1" from="description">Message d&apos;une fenêtre de la timeline en échec</note>
+      </trans-unit>
+      <trans-unit id="timeline.menu.open" datatype="html">
+        <source>Ouvrir</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">206,208</context>
+        </context-group>
+        <note priority="1" from="description">Action Ouvrir du menu d&apos;une carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.menu.openHint" datatype="html">
+        <source>Entrée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">209,213</context>
+        </context-group>
+        <note priority="1" from="description">Raccourci de l&apos;action Ouvrir</note>
+      </trans-unit>
+      <trans-unit id="timeline.menu.edit" datatype="html">
+        <source>Corriger</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">216,218</context>
+        </context-group>
+        <note priority="1" from="description">Action Corriger du menu d&apos;une carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.menu.editHint" datatype="html">
+        <source>crée une version</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">219,223</context>
+        </context-group>
+        <note priority="1" from="description">Aide de l&apos;action Corriger</note>
+      </trans-unit>
+      <trans-unit id="timeline.menu.link" datatype="html">
+        <source>Lier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">227,229</context>
+        </context-group>
+        <note priority="1" from="description">Action Lier du menu d&apos;une carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.menu.linkHint" datatype="html">
+        <source>L · bientôt disponible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">230,234</context>
+        </context-group>
+        <note priority="1" from="description">Aide de l&apos;action Lier désactivée</note>
+      </trans-unit>
+      <trans-unit id="timeline.menu.graph" datatype="html">
+        <source>Voir dans le graphe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">239,241</context>
+        </context-group>
+        <note priority="1" from="description">Action Voir dans le graphe du menu d&apos;une carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.menu.graphHint" datatype="html">
+        <source>onglet 3</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">242,248</context>
+        </context-group>
+        <note priority="1" from="description">Aide de l&apos;action Voir dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="timeline.retry" datatype="html">
+        <source>Réessayer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;état erreur de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.status.bounds" datatype="html">
+        <source>Fenêtre : <x id="oldest" equiv-text="oldest"/> → <x id="newest" equiv-text="newest"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+        <note priority="1" from="description">Bornes de la fenêtre courante de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.followStart" datatype="html">
+        <source>Début du suivi · <x id="date" equiv-text="date"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <note priority="1" from="description">Marqueur de début du suivi dans la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.list" datatype="html">
+        <source>Entrées du patient, de la plus récente à la plus ancienne</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la liste des cartes de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.zoomIn" datatype="html">
+        <source>Zoom avant (+)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de zoom avant de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.zoomOut" datatype="html">
+        <source>Zoom arrière (−)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de zoom arrière de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.band.ongoing" datatype="html">
+        <source>Situation <x id="title" equiv-text="title"/>, <x id="when" equiv-text="when"/>, en cours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">359</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible d&apos;une bande de situation en cours</note>
+      </trans-unit>
+      <trans-unit id="timeline.band.closed" datatype="html">
+        <source>Situation <x id="title" equiv-text="title"/>, <x id="when" equiv-text="when"/>, terminée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">360</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible d&apos;une bande de situation terminée</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.precision" datatype="html">
+        <source>précision : <x id="INTERPOLATION" equiv-text="{{ precision() }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.html</context>
+          <context context-type="linenumber">32,34</context>
+        </context-group>
+        <note priority="1" from="description">Mention de la précision d&apos;une date</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.draft" datatype="html">
+        <source>Brouillon</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+        <note priority="1" from="description">Statut brouillon d&apos;une carte de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.menu" datatype="html">
+        <source>Actions sur « <x id="title" equiv-text="this.title()"/> » (Maj+F10)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du menu d&apos;une carte de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.said" datatype="html">
+        <source>dit en séance du <x id="date" equiv-text="date"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+        <note priority="1" from="description">Pastille d&apos;une entrée dite en séance un autre jour</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.link" datatype="html">
+        <source>1 lien</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <note priority="1" from="description">Nombre de liens d&apos;une carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.links" datatype="html">
+        <source><x id="count" equiv-text="count"/> liens</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <note priority="1" from="description">Nombre de liens d&apos;une carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.moreTags" datatype="html">
+        <source>+<x id="count" equiv-text="count"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <note priority="1" from="description">Tags non affichés d&apos;une carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.precision.exact" datatype="html">
+        <source>exacte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">Précision d&apos;une date de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.precision.day" datatype="html">
+        <source>jour</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">Précision d&apos;une date de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.precision.month" datatype="html">
+        <source>mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Précision d&apos;une date de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.precision.year" datatype="html">
+        <source>année</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Précision d&apos;une date de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.precision.period" datatype="html">
+        <source>période</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Précision d&apos;une date de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.precision.lifePhase" datatype="html">
+        <source>phase de vie</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">Précision d&apos;une date de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.zoom.day" datatype="html">
+        <source>Jour</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Granularité du zoom de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.zoom.week" datatype="html">
+        <source>Semaine</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Granularité du zoom de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.zoom.month" datatype="html">
+        <source>Mois</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">Granularité du zoom de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.axis.week" datatype="html">
+        <source>sem. du <x id="day" equiv-text="day"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Libellé d&apos;une semaine sur l&apos;axe de la timeline</note>
+      </trans-unit>
       <trans-unit id="forms.error.required" datatype="html">
         <source>Ce champ est obligatoire.</source>
         <context-group purpose="location">

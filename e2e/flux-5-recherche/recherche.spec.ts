@@ -184,9 +184,15 @@ test.describe('recherche dans le dossier', () => {
       page.getByRole('complementary', { name: "Aperçu de l'entrée sélectionnée" }),
     ).toBeVisible();
     await page.keyboard.press('Enter');
+    // La timeline (M3-02) lit ?focus=<id>, amène l'entrée à l'écran, la sélectionne puis retire le
+    // paramètre : l'URL finale est celle de l'onglet, et c'est la carte qui prouve le positionnement.
     await expect(page).toHaveURL(
-      new RegExp(`/fr/patients/${dossier.patientId}/timeline\\?focus=${selectedId}$`),
+      new RegExp(`/fr/patients/${dossier.patientId}/timeline(\\?focus=${selectedId})?$`),
     );
+    const focused = page.locator(`pm-timeline-card article[data-entry-id="${selectedId}"]`);
+    await expect(focused).toBeInViewport();
+    await expect(focused).toHaveAttribute('aria-current', 'true');
+    await expect(page).toHaveURL(new RegExp(`/fr/patients/${dossier.patientId}/timeline$`));
     // Hors de la recherche, la barre se vide.
     await expect(bar(page)).toHaveValue('');
   });

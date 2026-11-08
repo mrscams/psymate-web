@@ -58,24 +58,24 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(page.getByRole('heading', { level: 2, name: "Vue d'ensemble" })).toBeVisible();
   await expectNoAxeViolations(page);
 
-  // L'onglet 1 range son compteur (rememberTab) ; on part sur la Timeline par clic.
+  // L'onglet 1 range son compteur (rememberTab) ; on part sur le Graphe (encore provisoire) par clic.
   await counter(page).click();
   await counter(page).click();
   await expect(counter(page)).toHaveText('Compteur : 2');
-  await h.tabs.getByRole('link', { name: /Timeline/ }).click();
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/timeline$`));
-  await expect(page.getByRole('heading', { level: 2, name: 'Timeline' })).toBeVisible();
+  await h.tabs.getByRole('link', { name: /Graphe/ }).click();
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph$`));
+  await expect(page.getByRole('heading', { level: 2, name: 'Graphe' })).toBeVisible();
   await expect(counter(page)).toHaveText('Compteur : 0');
   await counter(page).click();
 
-  // Touches : 3 → Graphe, 1 → retour à l'onglet 1 avec son état, 2 → Timeline avec le sien.
-  await page.keyboard.press('3');
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph$`));
-  await expect(page.getByRole('heading', { level: 2, name: 'Graphe' })).toBeVisible();
+  // Touches : 2 → Timeline (M3-02), 1 → retour à l'onglet 1 avec son état, 3 → Graphe avec le sien.
+  await page.keyboard.press('2');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/timeline$`));
+  await expect(page.getByRole('heading', { level: 2, name: 'Timeline' })).toBeAttached();
   await page.keyboard.press('1');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
   await expect(counter(page)).toHaveText('Compteur : 2');
-  await page.keyboard.press('2');
+  await page.keyboard.press('3');
   await expect(counter(page)).toHaveText('Compteur : 1');
   await expectNoAxeViolations(page);
 
@@ -83,7 +83,7 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await h.capture.click();
   await page.keyboard.type('312');
   await expect(h.capture).toHaveValue('312');
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/timeline$`));
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph$`));
 
   // L'ancienne destination de M1-06 (après création) mène à l'onglet 1.
   await page.goto(`/fr/patients/${id}/overview`);
