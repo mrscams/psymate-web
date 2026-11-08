@@ -3,12 +3,16 @@
  * Source : docs/Etude-couleurs-Nordique.md §8 (variables CSS) et §6 (mode sombre, contraste doux).
  *
  * Seule source de vérité des couleurs : lue par le thème Angular Material (src/theme/material.scss),
- * par les composants maison et, plus tard, par Cytoscape et ECharts.
+ * par les composants maison, et par Cytoscape (graphe) et ECharts (courbe), qui relisent les
+ * variables par getComputedStyle à chaque changement de ThemeService.resolved().
  * Ne pas « ajuster » une valeur : pnpm check:tokens vérifie chaque couple déclaré
  * (tools/check-tokens.mjs), et aucune couleur en dur n'est permise ailleurs (règle no-hardcoded-color).
  *
  * Thèmes : clair par défaut (:root), [data-theme="dark"], [data-theme="soft"] (clair, fond adouci).
  * Le choix du thème (préférence système, réglage praticien) appartient au ThemeService (M0-09, M6-04).
+ * Le bloc sombre redéfinit chaque couleur de :root, sauf la barre d'administration (fiche 00 §5) et
+ * les polices : pnpm check:tokens signale tout oubli. Les exports PDF restent en clair quel que soit
+ * le thème de l'écran (étude §8) : ils sont produits par l'API, rien à faire ici.
  */
 
 :root {
@@ -91,7 +95,8 @@
   --primary-tint: #243457;
   /*
    * L'étude ne donne pas primary-on en sombre ; le blanc sur #7A9BE8 ferait 2,7:1.
-   * Texte foncé (neutre 90 de l'échelle, §3) : 6,4:1. Décision M0-06, à confirmer en M6-04.
+   * Texte foncé (neutre 90 de l'échelle, §3) : 6,4:1 sur primary, 8,4:1 sur primary-hover.
+   * Décision M0-06, confirmée en M6-04 (même règle pour danger-on ci-dessous).
    */
   --primary-on: #151a22;
   --feeling: #a99be6;
@@ -103,11 +108,71 @@
   --entry-feeling: #a99be6;
   --entry-session: #6bb5a5;
   --entry-medication: #d6a24e;
+
+  /*
+   * Familles d'émotions (étude §6 : « mêmes teintes, luminosité +15 % »). Lu comme +15 points de
+   * luminosité HSL, teinte et saturation inchangées (M6-04). Les valeurs claires posées telles quelles
+   * sur #1E2530 tombaient à 2,7:1 (tristesse) et 2,9:1 (colère) ; éclaircies, toutes dépassent 3:1
+   * sur raised, ground et sunken (pastilles, courbe, facettes).
+   */
+  --emotion-joy: #e4bf67;
+  --emotion-trust: #5fb9a7;
+  --emotion-fear: #aca0dd;
+  --emotion-surprise: #53c1d0;
+  --emotion-sadness: #678dc8;
+  --emotion-disgust: #99af5b;
+  --emotion-anger: #d07870;
+  --emotion-anticipation: #dfa169;
+
+  /*
+   * Signalétique (étude §3), absente de l'étude §6 : dérivée en M6-04 sur le modèle de primary-tint
+   * et feeling-tint. Fond : même teinte que le fond pâle clair, luminosité HSL 17-19 %, teinte
+   * visible sur surface-raised sans l'éclaircir ; texte / icône : même teinte que le texte clair,
+   * éclairci (luminosité HSL ~70-78 %). Chaque texte fait au moins 7:1 sur son fond et 7,8:1 sur
+   * surface-raised (les composants écrivent aussi danger, warning, success directement sur une carte).
+   * Les fonds sont assez sombres pour qu'un lien primary y reste à 4,5:1 (bandeaux avec lien : axe-core
+   * l'a relevé en M6-04 à 4,25:1 sur un premier fond d'avertissement #43371E).
+   * danger sert aussi d'aplat de bouton destructif : danger-on devient le neutre 90 (8,9:1),
+   * comme primary-on.
+   */
+  --danger: #f1a69d;
+  --danger-bg: #41231f;
+  --danger-on: #151a22;
+  --warning: #e0c17b;
+  --warning-bg: #3c311b;
+  --success: #8bd0ad;
+  --success-bg: #1e382a;
   --info: #9db4e6;
   --info-bg: #243457;
+
+  /*
+   * Flag praticien : ambre éclairci (même teinte que #B8862E), 7,2:1 sur surface-raised et sur la
+   * barre d'administration, qui garde ses valeurs (fiche 00 §5) et écrit admin-bar-bg sur flag.
+   * Comme en clair, flag-bg reprend le fond d'avertissement (étude §3). Le surlignage de recherche
+   * (étude §5, ambre pâle en clair) devient un ambre sombre un cran plus clair que warning-bg, pour
+   * se détacher de la carte (1,3:1 contre 1,2:1) : seul text-primary s'y pose (9,7:1), jamais un lien.
+   */
+  --flag: #d8aa5a;
+  --flag-bg: #3c311b;
+  --search-highlight: #43371e;
+
+  /*
+   * Liens du graphe (étude §4) : le trait accepté garde #8A94A6 (5,0:1 sur surface-raised sombre) ;
+   * la suggestion V2 doit rester plus discrète que lui, donc plus sombre sur fond sombre : neutre
+   * #6F7A90 (text-disabled sombre), 3,6:1. En clair, #B9C2D1 reste plus pâle que #8A94A6.
+   */
+  --link: #8a94a6;
+  --link-proposed: #6f7a90;
+
+  /* Voile : plus opaque qu'en clair pour détacher un panneau d'une page déjà sombre (M0-09). */
   --scrim: rgba(0, 0, 0, 0.6);
 }
 
+/*
+ * Contraste doux (étude §6) : « rien d'autre ne change » que le fond et la bordure fine ; tout le
+ * reste hérite de :root (clair). Vérifié en M6-04 par pnpm check:tokens : aucun couple ne passe
+ * sous son seuil avec ces deux valeurs, rien d'autre à redéfinir.
+ */
 :root[data-theme='soft'] {
   --surface-ground: #f3f4f7;
   --border-subtle: #dde1e8;

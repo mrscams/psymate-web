@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T15:19:27.324Z",
+  "task": "M6-04",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Mode sombre complet (tous les tokens, dont liens, émotions, signalétique), thème Material complété, system suit prefers-color-scheme (data-theme posé dans l'écoute), check:tokens 81→186 couples sur 3 thèmes + contrôle de couverture, e2e theme (bascule sans rechargement, émulation OS, parcours sombre axe 0 violation, 20 captures).",
+  "notes": "3 exceptions de contraste en clair/doux (emotion-joy 2,26, link-proposed 1,79, flag sur flag-bg 2,89 : valeurs de l'étude) avec plancher, à trancher dans l'étude §7 ou G. Libellé de bande situation en sombre 3,56:1 (timeline lane-label et band-label décennie, aria-hidden donc non vu par axe) : hors périmètre. Non capturés : admin, praticiens/:slug, première connexion, compte suspendu, confirmer-email, timeline mode mois, vue décennie (main). Flash clair au chargement non traité. Export PDF en clair : côté API.",
+  "next": "Après rebase sur main : relancer e2e/theme et capturer la vue décennie en sombre ; tâche de suivi pour le libellé situation en text-primary ; décision écrite sur les 3 exceptions.",
+  "branch": "claude/nice-bose-8a4aa2",
+  "checkout": "nice-bose-8a4aa2"
+}

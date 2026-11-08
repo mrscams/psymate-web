@@ -34,7 +34,14 @@ export class ThemeService {
   });
 
   constructor() {
-    const onChange = (event: MediaQueryListEvent): void => this.systemDark.set(event.matches);
+    // Le système change (réglage de l'OS, bascule jour / nuit) : data-theme suit tout de suite si la
+    // préférence est `system`. Appliqué ici, de façon synchrone, et non dans un effect : le graphe et
+    // la courbe relisent les tokens dans leurs propres effects sur resolved(), qui doivent trouver
+    // data-theme déjà posé (M6-04 ; avant, seul resolved() changeait, pas <html>).
+    const onChange = (event: MediaQueryListEvent): void => {
+      this.systemDark.set(event.matches);
+      this.apply(this.resolved());
+    };
     this.media?.addEventListener('change', onChange);
     inject(DestroyRef).onDestroy(() => this.media?.removeEventListener('change', onChange));
     this.apply(this.resolved());
