@@ -100,7 +100,7 @@ test('plus de 3 ans : bascule automatique sur l’agrégat par mois ; résumé e
     'Reconversion professionnelle',
   );
   await expect(t.month(decade.drillMonth).locator('title')).toContainText(
-    'Notes 1, Ressentis 1, Séances 1',
+    'Notes 1, Ressentis 1 et Séances 1',
   );
 
   // Mesures (A6, C2 M3-04) : temps du résumé (navigateur, à travers le proxy) et du rendu, après
@@ -127,6 +127,11 @@ test('plus de 3 ans : bascule automatique sur l’agrégat par mois ; résumé e
   };
   test.info().annotations.push({ type: 'mesure M3-04', description: JSON.stringify(report) });
   console.log(`M3-04 mesures (ms) : ${JSON.stringify(report)}`);
+  // Seuils tolérants, pas la cible : l'objectif « < 100 ms côté API » (A6) se mesure au curl sur le
+  // seed. Ici la requête passe par le proxy de serve-dist et l'API locale est partagée avec d'autres
+  // suites en parallèle (148 ms vus pendant une passe complète) ; on ne vérifie que l'ordre de
+  // grandeur, pour attraper une régression nette sans rendre le test instable.
+  expect(measures.summaryServer).toBeLessThan(1000);
   expect(measures.renderAfterData).toBeLessThan(500);
 
   await expectNoAxeViolations(page);
@@ -211,9 +216,12 @@ test('retour automatique au détail sous 3 ans (période « 1 an »), agrégat d
   await expect(t.session).toBeEnabled();
   await expect(t.granularity).toHaveText(/^(Jour|Semaine|Mois)$/);
 
+  await expectNoAxeViolations(page);
+
   await t.period.getByRole('button', { name: 'Tout', exact: true }).click();
   await expect(t.chart).toBeVisible();
   await expect(t.viewport).toHaveCount(0);
+  await expectNoAxeViolations(page);
 });
 
 test('préférence timeline.groupBy = month : agrégat forcé sur un dossier récent ; zoom + / −', async ({

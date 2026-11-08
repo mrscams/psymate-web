@@ -2,8 +2,7 @@ import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { EntryType } from '../../../shared/ui';
-import { periodMonth, Plage, TimelinePeriod } from '../data/timeline-decade.model';
-import { DecadeStatus } from '../data/timeline-decade.store';
+import { DecadeStatus, periodMonth, Plage, TimelinePeriod } from '../data/timeline-decade.model';
 import { monthlySummary, timelineItem, timelinePeriod } from '../data/timeline.fixtures';
 import { TimelineItem } from '../data/timeline.model';
 import { TimelineDecadeComponent } from './timeline-decade.component';
@@ -95,11 +94,15 @@ describe('TimelineDecadeComponent', () => {
       ],
     });
     expect(text(el.querySelector('.badge'))).toBe('Agrégé par mois · double-clic pour zoomer');
-    const facts = text(el.querySelector('.facts'));
-    expect(facts).toContain('nov. 2022 → oct. 2026');
-    expect(facts).toContain('4 ans');
-    expect(facts).toContain('48 mois · 48 non vides · 192 entrées');
-    expect(facts).toContain('2 entrées hors plage');
+    // Une unité de traduction par ICU (années, mois, entrées, hors plage) ; mois vides de la durée omis.
+    const facts = [...el.querySelectorAll('.facts > span')].map(text);
+    expect(facts).toEqual([
+      'nov. 2022 → oct. 2026',
+      '4 ans',
+      '48 mois · 48 non vides ·',
+      '192 entrées',
+      '2 entrées hors plage',
+    ]);
 
     const svg = el.querySelector('svg[role="img"]')!;
     const label = svg.getAttribute('aria-label')!;
@@ -110,7 +113,7 @@ describe('TimelineDecadeComponent', () => {
     const hits = svg.querySelectorAll('rect.hit');
     expect(hits).toHaveLength(48);
     expect(text(hits[0].querySelector('title'))).toBe(
-      'nov. 2022 : Notes 2, Ressentis 1, Séances 1 · intensité moyenne 4,0',
+      'nov. 2022 : Notes 2, Ressentis 1 et Séances 1 · intensité moyenne 4,0',
     );
     expect(svg.querySelectorAll('polyline.curve')).toHaveLength(1);
     expect(text(svg.querySelector('.follow-label'))).toBe('début du suivi · mars 2025');

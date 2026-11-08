@@ -19309,48 +19309,6 @@
         </context-group>
         <note priority="1" from="description">Étiquette de la vue décennie</note>
       </trans-unit>
-      <trans-unit id="4960777832908633315" datatype="html">
-        <source>{VAR_PLURAL, plural, =0 {} =1 {1 an} other {<x id="INTERPOLATION"/> ans}}</source>
-        <target state="translated">{VAR_PLURAL, plural, =0 {} =1 {1 year} other {<x id="INTERPOLATION"/> years}}</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">39,40</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="timeline.decade.duration" datatype="html">
-        <source><x id="ICU" equiv-text="{years(), plural, =0 {} =1 {1 an} other {{{ years() }} ans}}" xid="1947371557718191958"/> <x id="ICU_1" equiv-text="{extraMonths(), plural, =0 {} =1 {1 mois} other {{{ extraMonths() }} mois}}" xid="7074674437236966134"/></source>
-        <target state="translated"><x id="ICU" equiv-text="{years(), plural, =0 {} =1 {1 an} other {{{ years() }} ans}}" xid="1947371557718191958"/> <x id="ICU_1" equiv-text="{extraMonths(), plural, =0 {} =1 {1 mois} other {{{ extraMonths() }} mois}}" xid="7074674437236966134"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">39,42</context>
-        </context-group>
-        <note priority="1" from="description">Durée de la plage de la vue décennie</note>
-      </trans-unit>
-      <trans-unit id="5494495173981718140" datatype="html">
-        <source>{VAR_PLURAL, plural, =0 {} =1 {1 mois} other {<x id="INTERPOLATION"/> mois}}</source>
-        <target state="translated">{VAR_PLURAL, plural, =0 {} =1 {1 month} other {<x id="INTERPOLATION"/> months}}</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">40</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="timeline.decade.facts" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ monthCount() }}"/> mois · <x id="INTERPOLATION_1" equiv-text="{{ filled().length }}"/> non vides · <x id="ICU" equiv-text="{entryCount(), plural, =1 {1 entrée} other {{{ entryText() }} entrées}}" xid="7995041518217856986"/></source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ monthCount() }}"/> months · <x id="INTERPOLATION_1" equiv-text="{{ filled().length }}"/> non-empty · <x id="ICU" equiv-text="{entryCount(), plural, =1 {1 entrée} other {{{ entryText() }} entrées}}" xid="7995041518217856986"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">43,46</context>
-        </context-group>
-        <note priority="1" from="description">Comptes de la vue décennie</note>
-      </trans-unit>
-      <trans-unit id="5193809995596915518" datatype="html">
-        <source>{VAR_PLURAL, plural, =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
-        <target state="translated">{VAR_PLURAL, plural, =1 {1 entry} other {<x id="INTERPOLATION"/> entries}}</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">44,45</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="timeline.decade.outside" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {1 entrée hors plage} other {<x id="INTERPOLATION"/> entrées hors plage}}</source>
         <target state="translated">{VAR_PLURAL, plural, =1 {1 entry outside the range} other {<x id="INTERPOLATION"/> entries outside the range}}</target>
@@ -19629,6 +19587,69 @@
           <context context-type="linenumber">80</context>
         </context-group>
         <note priority="1" from="description">Aide du bouton Par séance désactivé en vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.bandName" datatype="html">
+        <source><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/></source>
+        <target state="translated"><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">252</context>
+        </context-group>
+        <note priority="1" from="description">Libellé d&apos;une bande de situation (titre et bornes), vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.entries" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 entry} other {<x id="INTERPOLATION"/> entries}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">55,58</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;entrées de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.months" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 mois} other {<x id="INTERPOLATION"/> mois}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 month} other {<x id="INTERPOLATION"/> months}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">47,50</context>
+        </context-group>
+        <note priority="1" from="description">Mois de la durée de la plage, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.monthsCount" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ monthCount() }}"/> mois · <x id="INTERPOLATION_1" equiv-text="{{ filled().length }}"/> non vides ·</source>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ monthCount() }}"/> months · <x id="INTERPOLATION_1" equiv-text="{{ filled().length }}"/> non-empty ·</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">51,52</context>
+        </context-group>
+        <note priority="1" from="description">Mois de la plage de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.typeCount" datatype="html">
+        <source><x id="type" equiv-text="type"/> <x id="count" equiv-text="count"/></source>
+        <target state="translated"><x id="type" equiv-text="type"/> <x id="count" equiv-text="count"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-group>
+        <note priority="1" from="description">Compte d&apos;un type dans l&apos;info-bulle d&apos;un mois, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.years" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 an} other {<x id="INTERPOLATION"/> ans}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 year} other {<x id="INTERPOLATION"/> years}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">41,45</context>
+        </context-group>
+        <note priority="1" from="description">Années de la durée de la plage, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.mode.decadeBlocked" datatype="html">
+        <source>Vue décennie : revenez au détail (zoom avant, +) pour regrouper par séance.</source>
+        <target state="translated">Decade view: go back to the detail (zoom in, +) to group by session.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">218</context>
+        </context-group>
+        <note priority="1" from="description">Information quand Par séance est demandé en vue décennie</note>
       </trans-unit>
     </body>
   </file>

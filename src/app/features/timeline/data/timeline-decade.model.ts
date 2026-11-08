@@ -3,7 +3,6 @@
 // entre le détail (états A et B) et l'agrégat par mois. Calculs purs, aucun texte ici.
 
 import { EntryType } from '../../../shared/ui';
-import { TimelineFilters } from './timeline-filters.model';
 
 /** Les comptes d'un mois non vide (TimelinePeriodDto, granularité `month`). */
 export interface TimelinePeriod {
@@ -33,15 +32,30 @@ export interface DecadeRange {
 
 export const NO_RANGE: DecadeRange = { from: null, to: null, fromDay: null, toDay: null };
 
+/** idle | loading (résumé demandé) | loaded | error (résumé en échec). */
+export type DecadeStatus = 'idle' | 'loading' | 'loaded' | 'error';
+
 /**
- * La plage de la timeline, en mois UTC, bornes incluses (`start` ≤ `end`) : voir `plageOf`.
+ * La plage de la timeline, en mois bornes incluses (`start` ≤ `end`), avec les jours de ses bornes
+ * quand ils sont connus (AAAA-MM-JJ) : voir `plageOf`.
  */
 export interface Plage {
   start: number;
   end: number;
+  startDay?: string | null;
+  endDay?: string | null;
 }
 
-/** Au-delà de 36 mois couverts (3 ans), la timeline passe d'elle-même à l'agrégat (fiche 03). */
+/** Une période de filtres (jours AAAA-MM-JJ, `to` inclus) : celle d'avant un double-clic sur un mois. */
+export interface DecadePeriod {
+  from: string | null;
+  to: string | null;
+}
+
+/**
+ * Au-delà de 3 ans, la timeline passe d'elle-même à l'agrégat (fiche 03) : en jours civils quand les
+ * deux bornes sont des jours connus, sinon plus de 36 mois couverts.
+ */
 export const DECADE_THRESHOLD_MONTHS = 36;
 
 /** Vue de la timeline chronologique : le détail (cartes) ou l'agrégat par mois. */
@@ -52,9 +66,8 @@ export interface DecadeSnapshot {
   periods: TimelinePeriod[];
   range: DecadeRange;
   manual: DecadeView | null;
-  drilled: boolean;
-  /** Filtres d'avant le double-clic sur un mois : `Échap` y revient. */
-  drillBack: TimelineFilters | null;
+  /** Période d'avant le double-clic sur un mois : `Échap` y revient. */
+  drillBack: DecadePeriod | null;
 }
 
 // ---------------------------------------------------------------- mois
@@ -106,6 +119,40 @@ export function monthDays(index: number): { from: string; to: string } {
 
 // ---------------------------------------------------------------- plage
 
+/** Le jour AAAA-MM-JJ en tête d'une date ou d'une date-heure ISO ; null sinon. */
+function dayOf(value: string | null | undefined): string | null {
+  const day = value?.slice(0, 10) ?? '';
+  return /^\d{4}-\d{2}-\d{2}$/.test(day) ? day : null;
+}
+
+/** Le même jour `years` ans plus tard (AAAA-MM-JJ ; le 29 février reste comparable). */
+export function addYears(day: string, years: number): string {
+  return `${String(Number(day.slice(0, 4)) + years).padStart(4, '0')}${day.slice(4)}`;
+}
+
+/** Une borne de plage : son mois, et son jour quand il est connu (filtre ou début du suivi). */
+interface Bound {
+  month: number;
+  day: string | null;
+}
+
+function clinicalBound(
+  periods: readonly TimelinePeriod[],
+  followedSince: string | null,
+): Bound | null {
+  const firstSession = periods.find((p) => (p.counts.session ?? 0) > 0)?.month ?? null;
+  const followDay = dayOf(followedSince);
+  const follow = dayMonth(followDay);
+  // Le début du suivi l'emporte s'il précède le mois de la première séance : son jour est connu.
+  // Dans le même mois, la séance a pu avoir lieu avant ce jour : on garde le mois.
+  if (follow !== null && (firstSession === null || follow < firstSession)) {
+    return { month: follow, day: followDay };
+  }
+  if (firstSession !== null) return { month: firstSession, day: null };
+  const first = periods[0]?.month;
+  return first === undefined ? null : { month: first, day: null };
+}
+
 /**
  * Début clinique du dossier, quand la période des filtres n'a pas de début : le plus ancien entre
  * le début du suivi (followedSince : followUp.since, sinon création du dossier) et le mois de la
@@ -116,30 +163,37 @@ export function clinicalStart(
   periods: readonly TimelinePeriod[],
   followedSince: string | null,
 ): number | null {
-  const firstSession = periods.find((p) => (p.counts.session ?? 0) > 0)?.month ?? null;
-  const follow = monthIndexOf(followedSince);
-  const candidates = [firstSession, follow].filter((m): m is number => m !== null);
-  if (candidates.length) return Math.min(...candidates);
-  return periods[0]?.month ?? null;
+  return clinicalBound(periods, followedSince)?.month ?? null;
 }
 
 /**
- * La plage de la timeline (M3-04), en mois bornes incluses :
- * - début : le mois du premier jour de la période des filtres, sinon le début clinique
- *   (`clinicalStart`) ;
- * - fin : le mois du dernier jour de la période des filtres, sinon le dernier mois non vide du
- *   résumé.
- * Null tant que rien ne la borne (aucune période, aucune entrée).
+ * La plage de la timeline (M3-04), en mois bornes incluses, avec ses jours quand ils sont connus :
+ * - début : le premier jour de la période des filtres, sinon le début clinique (`clinicalStart` :
+ *   jour du début du suivi, ou mois de la première séance du résumé) ;
+ * - fin : le dernier jour de la période des filtres, sinon le dernier mois non vide du résumé.
+ * Null tant que rien ne la borne (aucune période, aucune entrée). Avec une période `from` et `to`,
+ * le résumé n'est pas nécessaire (`periods` vide).
  */
 export function plageOf(
   range: DecadeRange,
   periods: readonly TimelinePeriod[],
   followedSince: string | null,
 ): Plage | null {
-  const start = range.fromDay ? dayMonth(range.fromDay) : clinicalStart(periods, followedSince);
-  const end = range.toDay ? dayMonth(range.toDay) : (periods.at(-1)?.month ?? start);
-  if (start === null || end === null) return null;
-  return { start, end: Math.max(start, end) };
+  const fromMonth = dayMonth(range.fromDay);
+  const start: Bound | null =
+    fromMonth !== null
+      ? { month: fromMonth, day: range.fromDay }
+      : clinicalBound(periods, followedSince);
+  if (!start) return null;
+  const toMonth = dayMonth(range.toDay);
+  const last = periods.at(-1)?.month;
+  const end: Bound =
+    toMonth !== null
+      ? { month: toMonth, day: range.toDay }
+      : { month: last ?? start.month, day: last === undefined ? start.day : null };
+  if (end.month < start.month)
+    return { start: start.month, end: start.month, startDay: start.day, endDay: start.day };
+  return { start: start.month, end: end.month, startDay: start.day, endDay: end.day };
 }
 
 /** Nombre de mois couverts par la plage (bornes incluses). */
@@ -147,9 +201,25 @@ export function plageMonths(plage: Plage): number {
   return plage.end - plage.start + 1;
 }
 
-/** La plage dépasse 3 ans : plus de 36 mois couverts. */
+/**
+ * La plage dépasse 3 ans. Avec deux jours connus (période des filtres, début du suivi) : en jours
+ * civils, la fin est après le même jour 3 ans plus tard (08/11/2023 → 08/11/2026 : non ; → 09/11/2026 :
+ * oui). Avec une borne tirée du résumé (des mois) : plus de 36 mois couverts.
+ */
 export function exceedsDecade(plage: Plage | null): boolean {
-  return plage !== null && plageMonths(plage) > DECADE_THRESHOLD_MONTHS;
+  if (!plage) return false;
+  if (plage.startDay && plage.endDay) return plage.endDay > addYears(plage.startDay, 3);
+  return plageMonths(plage) > DECADE_THRESHOLD_MONTHS;
+}
+
+/**
+ * La vue se décide sans le résumé : la période des filtres a ses deux bornes, ou commence il y a
+ * moins de 3 ans (`today`, AAAA-MM-JJ) et n'a pas de fin. Un résumé lent ne bloque alors pas le
+ * détail.
+ */
+export function decidedWithoutSummary(range: DecadeRange, today: string): boolean {
+  if (!range.fromDay) return false;
+  return !!range.toDay || addYears(range.fromDay, 3) >= today;
 }
 
 /**

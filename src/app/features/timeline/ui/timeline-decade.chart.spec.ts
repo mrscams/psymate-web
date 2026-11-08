@@ -134,10 +134,13 @@ describe('decadeChart', () => {
         situation('reconversion', '2025-01-01T00:00:00Z', '2026-05-15T00:00:00Z'),
         situation('grippe', '2025-02-01T00:00:00Z', '2025-02-08T00:00:00Z'),
         situation('ancienne', '2019-01-01T00:00:00Z', '2020-01-01T00:00:00Z'),
+        // Chevauche « conflit » mais finit avant la plage : ne lui prend pas sa colonne.
+        situation('avant', '2022-01-01T00:00:00Z', '2023-12-01T00:00:00Z'),
       ],
     });
     expect(chart.bands.map((band) => band.item.id)).toEqual(['conflit', 'reconversion']);
     const [conflict, career] = chart.bands;
+    expect(conflict.lane).toBe(0);
     expect(conflict.clippedStart).toBe(true);
     expect(conflict.x).toBe(chart.left);
     expect(conflict.x + conflict.width).toBe(chart.right);

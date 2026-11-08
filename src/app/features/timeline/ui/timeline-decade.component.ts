@@ -10,8 +10,13 @@ import {
 
 import { EntryIconComponent, EntryType, StateAction, StateComponent } from '../../../shared/ui';
 import { formatOccurred } from '../../../shared/util';
-import { DecadeStatus } from '../data/timeline-decade.store';
-import { outsideCount, Plage, plageMonths, TimelinePeriod } from '../data/timeline-decade.model';
+import {
+  DecadeStatus,
+  outsideCount,
+  Plage,
+  plageMonths,
+  TimelinePeriod,
+} from '../data/timeline-decade.model';
 import { TimelineItem } from '../data/timeline.model';
 import { ChartBand, ChartMonth, decadeChart, intensityTrend } from './timeline-decade.chart';
 import { averageLabel, monthLabel, typePluralLabel } from './timeline-labels';
@@ -61,6 +66,8 @@ export class TimelineDecadeComponent {
 
   private readonly locale = inject(LOCALE_ID);
   private readonly number = new Intl.NumberFormat(this.locale);
+  /** « Notes 2, Ressentis 1 et Séances 1 » : la liste au format de la langue. */
+  private readonly list = new Intl.ListFormat(this.locale, { type: 'conjunction' });
 
   protected readonly retryAction: StateAction = {
     label: $localize`:Bouton de l'état erreur de la timeline@@timeline.retry:Réessayer`,
@@ -215,9 +222,13 @@ export class TimelineDecadeComponent {
     if (!m.period || !m.total) {
       return $localize`:Info-bulle d'un mois vide, vue décennie@@timeline.decade.monthEmpty:${label}:month: : aucune entrée`;
     }
-    const counts = m.segments
-      .map((segment) => `${typePluralLabel(segment.type)} ${this.number.format(segment.count)}`)
-      .join(', ');
+    const counts = this.list.format(
+      m.segments.map((segment) => {
+        const type = typePluralLabel(segment.type);
+        const count = this.number.format(segment.count);
+        return $localize`:Compte d'un type dans l'info-bulle d'un mois, vue décennie@@timeline.decade.typeCount:${type}:type: ${count}:count:`;
+      }),
+    );
     const average = m.period.averageIntensity;
     if (average === null || !this.intensity()) {
       return $localize`:Info-bulle d'un mois, vue décennie@@timeline.decade.monthCounts:${label}:month: : ${counts}:counts:`;
@@ -237,7 +248,9 @@ export class TimelineDecadeComponent {
     const occurred = formatOccurred(band.item.occurred, this.locale);
     const when =
       title && occurred.startsWith(title) ? occurred.slice(title.length).trim() : occurred;
-    const name = when ? `${title} · ${when}` : title;
+    const name = when
+      ? $localize`:Libellé d'une bande de situation (titre et bornes), vue décennie@@timeline.decade.bandName:${title}:title: · ${when}:when:`
+      : title;
     return band.ongoing
       ? $localize`:Libellé d'une bande de situation en cours, vue décennie@@timeline.decade.bandOngoing:${name}:name: · en cours`
       : name;

@@ -102,6 +102,13 @@
   font-weight: 600;
 }
 
+// Liseré entre les segments empilés : les types se distinguent aussi par la séparation, pas par la
+// seule couleur (la légende et l'info-bulle les nomment).
+.seg {
+  stroke: var(--surface-raised);
+  stroke-width: 0.75;
+}
+
 @each $type in note, event, situation, feeling, session, medication {
   .type-#{$type} {
     fill: var(--entry-#{$type});

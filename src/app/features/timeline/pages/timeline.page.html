@@ -33,6 +33,7 @@
         [mode]="mode()"
         [sessionDisabled]="decade()"
         (modeChange)="setMode($event)"
+        (blocked)="explainDecadeMode()"
       />
       @if (mode() === 'chronological') {
         <div

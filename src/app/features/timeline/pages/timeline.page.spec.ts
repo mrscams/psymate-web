@@ -215,8 +215,23 @@ describe('TimelinePage', () => {
       'Agrégé par mois · double-clic pour zoomer',
     );
     expect(el.querySelectorAll('pm-timeline-decade rect.hit')).toHaveLength(60);
-    expect(el.querySelector<HTMLButtonElement>('button[data-mode="session"]')!.disabled).toBe(true);
+    const session = el.querySelector<HTMLButtonElement>('button[data-mode="session"]')!;
+    expect(session.getAttribute('aria-disabled')).toBe('true');
+    const hint = document.getElementById(session.getAttribute('aria-describedby')!);
+    expect(text(hint)).toBe('Revenez au détail (zoom avant, +) pour regrouper par séance');
     expect(el.querySelector('section.timeline')!.classList.contains('fill')).toBe(false);
+
+    // Clic sur « Par séance » inactif, ou M : rien ne change, on dit comment y aller.
+    const info = vi.spyOn(TestBed.inject(ToastService), 'info');
+    session.click();
+    document.body.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'm', bubbles: true, cancelable: true }),
+    );
+    expect(info).toHaveBeenCalledTimes(2);
+    expect(info).toHaveBeenCalledWith(
+      'Vue décennie : revenez au détail (zoom avant, +) pour regrouper par séance.',
+    );
+    expect(el.querySelector('pm-timeline-decade')).not.toBeNull();
   });
 
   it('résumé en attente : chargement, pas de bascule à vue', async () => {
@@ -260,13 +275,72 @@ describe('TimelinePage', () => {
     expect(el.querySelectorAll('pm-timeline-card')).toHaveLength(3);
     expect(text(el.querySelector('.granularity'))).toBe('Semaine');
 
+    // Une puce posée pendant le détail du mois reste après Échap : seule la période revient.
+    [...el.querySelectorAll<HTMLButtonElement>('pm-timeline-filters button')]
+      .find((b) => text(b).startsWith('Note'))!
+      .click();
+    await flush();
+    await fixture.whenStable();
+    expect(page).toHaveBeenLastCalledWith(
+      'p-1',
+      expect.objectContaining({ types: ['note'], from: new Date(2025, 2, 1).toISOString() }),
+    );
+
     document.body.dispatchEvent(
       new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
     );
     await flush();
     await fixture.whenStable();
-    expect(page).toHaveBeenLastCalledWith('p-1', expect.objectContaining({ from: null, to: null }));
+    expect(page).toHaveBeenLastCalledWith(
+      'p-1',
+      expect.objectContaining({ from: null, to: null, types: ['note'] }),
+    );
     expect(el.querySelector('pm-timeline-decade svg[role="img"]')).not.toBeNull();
+  });
+
+  it('?focus= sur un dossier de plus de 3 ans : l’entrée est cherchée dans le détail', async () => {
+    const navigate = vi.spyOn(Router.prototype, 'navigate').mockResolvedValue(true);
+    const { el, fixture } = await render(
+      () => Promise.resolve(timelinePage({ items: items(3) })),
+      shellMock(),
+      'e-1',
+      { summary: () => Promise.resolve(monthlySummary(60)) },
+    );
+    await flush();
+    await fixture.whenStable();
+    await flush();
+    expect(el.querySelector('pm-timeline-decade')).toBeNull();
+    const instance = fixture.componentInstance as unknown as {
+      store: { selectedId(): string | null };
+    };
+    expect(instance.store.selectedId()).toBe('e-1');
+    navigate.mockRestore();
+  });
+
+  it('changement de patient pendant le résumé : la réponse du précédent est ignorée', async () => {
+    let resolveFirst: (value: TimelinePeriod[]) => void = () => undefined;
+    const shell = shellMock();
+    const { el, fixture, summary } = await render(
+      () => Promise.resolve(timelinePage({ items: items(3) })),
+      shell,
+      null,
+      {
+        summary: (id) =>
+          id === 'p-1'
+            ? new Promise((resolve) => (resolveFirst = resolve))
+            : Promise.resolve(monthlySummary(12)),
+      },
+    );
+    expect(el.querySelector('pm-state [aria-busy="true"]')).not.toBeNull();
+    shell.patient.set({ id: 'p-2', displayName: 'Paul R.', followedSince: '2026-01-01' });
+    await flush();
+    await fixture.whenStable();
+    resolveFirst(monthlySummary(60));
+    await flush();
+    await fixture.whenStable();
+    expect(summary).toHaveBeenLastCalledWith('p-2', expect.anything());
+    expect(el.querySelector('pm-timeline-decade')).toBeNull();
+    expect(el.querySelectorAll('pm-timeline-card')).toHaveLength(3);
   });
 
   it('préférence timeline.groupBy = month : l’agrégat même sur deux ans', async () => {

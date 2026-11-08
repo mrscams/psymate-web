@@ -1,27 +1,34 @@
-import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import { computed, effect, inject, untracked } from '@angular/core';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 
 import { ApiProblem, asProblem } from '../../../core/http';
 import {
+  DecadePeriod,
   DecadeRange,
   DecadeSnapshot,
+  DecadeStatus,
   DecadeView,
+  decidedWithoutSummary,
   decideView,
   NO_RANGE,
   plageOf,
   sameRange,
   TimelinePeriod,
 } from './timeline-decade.model';
+import { localDay } from './timeline-filters.model';
 import { TimelineFiltersStore } from './timeline-filters.store';
 import { TimelineApi } from './timeline.api';
-
-/** idle | loading (résumé demandé) | loaded | error (résumé en échec). */
-export type DecadeStatus = 'idle' | 'loading' | 'loaded' | 'error';
+import { TimelineStore } from './timeline.store';
 
 interface DecadeState {
   patientId: string | null;
-  /** Début du suivi (en-tête patient), pour le début clinique de la plage. */
-  followedSince: string | null;
   status: DecadeStatus;
   problem: ApiProblem | null;
   /** Mois non vides du résumé, du plus ancien au plus récent. */
@@ -30,19 +37,21 @@ interface DecadeState {
   range: DecadeRange;
   /** Choix explicite (zoom − au-delà du mois, + depuis l'agrégat), oublié quand la plage change. */
   manual: DecadeView | null;
-  /** La plage vient d'un double-clic sur un mois : le détail l'emporte sur l'agrégat forcé. */
-  drilled: boolean;
+  /**
+   * Période d'avant le double-clic sur un mois : `Échap` y revient, et tant qu'elle est là, le
+   * détail l'emporte sur l'agrégat forcé. Seule source du « mois ouvert ».
+   */
+  drillBack: DecadePeriod | null;
 }
 
 const initialState: DecadeState = {
   patientId: null,
-  followedSince: null,
   status: 'idle',
   problem: null,
   periods: [],
   range: NO_RANGE,
   manual: null,
-  drilled: false,
+  drillBack: null,
 };
 
 /**
@@ -50,37 +59,58 @@ const initialState: DecadeState = {
  * (GET …/timeline/summary?granularity=month, calculé par le serveur, < 100 ms) et la vue qui en
  * découle. La bascule est dérivée, jamais copiée : `view` vaut l'agrégat dès que la plage dépasse
  * 3 ans (ou que la préférence `timeline.groupBy = month` le force) et revient au détail dès qu'elle
- * repasse en deçà, sauf choix explicite au zoom. Le résumé est relu à chaque changement de période
- * et après une écriture ; les autres filtres ne le changent pas (le contrat ne les connaît pas).
+ * repasse en deçà, sauf choix explicite au zoom ou mois ouvert. Le résumé n'est demandé qu'en mode
+ * chronologique (l'état C n'existe pas par séance), relu à chaque changement de période et après une
+ * écriture ; les autres filtres ne le changent pas (le contrat ne les connaît pas). Le début du suivi
+ * vient du TimelineStore (une seule source).
  */
 export const TimelineDecadeStore = signalStore(
   withState(initialState),
-  withComputed((store, filters = inject(TimelineFiltersStore)) => {
-    const plage = computed(() =>
-      store.status() === 'loaded'
-        ? plageOf(store.range(), store.periods(), store.followedSince())
-        : null,
-    );
-    return {
-      plage,
-      /** Détail ou agrégat ; toujours le détail en mode par séance (l'état C est chronologique). */
-      view: computed<DecadeView>(() =>
-        filters.mode() !== 'chronological'
-          ? 'detail'
-          : decideView({
-              manual: store.manual(),
-              drilled: store.drilled(),
-              forced: filters.forcedDecade(),
-              plage: plage(),
-            }),
-      ),
-      /** Le résumé a répondu (ou échoué) : la vue peut être décidée sans changer ensuite. */
-      settled: computed(() => store.status() === 'loaded' || store.status() === 'error'),
-    };
-  }),
+  withComputed(
+    (store, filters = inject(TimelineFiltersStore), timeline = inject(TimelineStore)) => {
+      const plage = computed(() => {
+        const range = store.range();
+        if (store.status() === 'loaded') {
+          return plageOf(range, store.periods(), timeline.followStart());
+        }
+        // Période des filtres bornée des deux côtés : la plage est connue sans le résumé.
+        return range.fromDay && range.toDay ? plageOf(range, [], null) : null;
+      });
+      const drilled = computed(() => store.drillBack() !== null);
+      return {
+        plage,
+        drilled,
+        /** Détail ou agrégat ; toujours le détail en mode par séance (l'état C est chronologique). */
+        view: computed<DecadeView>(() =>
+          filters.mode() !== 'chronological'
+            ? 'detail'
+            : decideView({
+                manual: store.manual(),
+                drilled: drilled(),
+                forced: filters.forcedDecade(),
+                plage: plage(),
+              }),
+        ),
+        /**
+         * La vue peut être décidée sans changer ensuite : le résumé a répondu (ou échoué), ou la
+         * période des filtres suffit (bornée, ou commencée il y a moins de 3 ans).
+         */
+        settled: computed(
+          () =>
+            store.status() === 'loaded' ||
+            store.status() === 'error' ||
+            decidedWithoutSummary(store.range(), localDay(new Date())),
+        ),
+      };
+    },
+  ),
   withMethods((store, api = inject(TimelineApi), filters = inject(TimelineFiltersStore)) => {
     /** Change à chaque demande : une réponse d'une demande passée est ignorée. */
     let generation = 0;
+
+    function chronological(): boolean {
+      return filters.mode() !== 'session';
+    }
 
     function currentRange(): DecadeRange {
       const query = filters.query();
@@ -106,54 +136,59 @@ export const TimelineDecadeStore = signalStore(
       }
     }
 
+    /** En mode par séance, rien n'est demandé : le résumé se lit au passage en chronologique. */
+    function fetchOrWait(): Promise<void> {
+      if (chronological()) return fetchSummary();
+      generation++;
+      patchState(store, { status: 'idle', problem: null });
+      return Promise.resolve();
+    }
+
     return {
       /**
        * Ouvre la vue sur le patient, pour la période des filtres. Avec l'état rangé au départ
        * précédent (même période), il est repris tel quel puis relu en arrière-plan.
        */
-      async open(
-        patientId: string,
-        followedSince: string | null,
-        snapshot?: DecadeSnapshot | null,
-      ): Promise<void> {
+      async open(patientId: string, snapshot?: DecadeSnapshot | null): Promise<void> {
         const range = currentRange();
         if (snapshot && sameRange(snapshot.range, range)) {
+          generation++;
           patchState(store, {
             ...initialState,
             patientId,
-            followedSince,
-            status: 'loaded',
+            status: chronological() ? 'loaded' : 'idle',
             periods: snapshot.periods,
             range,
             manual: snapshot.manual,
-            drilled: snapshot.drilled,
+            drillBack: snapshot.drillBack,
           });
-          await fetchSummary(true);
+          if (chronological()) await fetchSummary(true);
           return;
         }
-        patchState(store, {
-          ...initialState,
-          patientId,
-          followedSince,
-          range,
-        });
-        await fetchSummary();
+        patchState(store, { ...initialState, patientId, range });
+        await fetchOrWait();
       },
 
       /**
        * Les filtres ont changé. Si leur période change, le résumé est relu et le choix explicite
-       * tombe : la bascule redevient automatique. `drilled` dit si la période vient d'un
-       * double-clic sur un mois.
+       * tombe : la bascule redevient automatique.
        */
-      async syncRange(drilled: boolean): Promise<void> {
+      async syncRange(): Promise<void> {
         if (!store.patientId()) return;
         const range = currentRange();
-        if (sameRange(range, store.range()) && store.status() !== 'error') {
-          if (drilled !== store.drilled()) patchState(store, { drilled });
-          return;
-        }
-        patchState(store, { range, manual: null, drilled });
-        await fetchSummary();
+        if (sameRange(range, store.range()) && store.status() !== 'error') return;
+        patchState(store, { range, manual: null });
+        await fetchOrWait();
+      },
+
+      /** Double-clic sur un mois : la période d'avant est gardée (la plus ancienne, pour `Échap`). */
+      markDrill(previous: DecadePeriod): void {
+        if (!store.drillBack()) patchState(store, { drillBack: previous });
+      },
+
+      /** `Échap`, ou période changée à la main : plus de mois ouvert. */
+      forgetDrill(): void {
+        if (store.drillBack()) patchState(store, { drillBack: null });
       },
 
       /** Zoom − au-delà du mois : l'agrégat, jusqu'au prochain changement de période. */
@@ -167,27 +202,44 @@ export const TimelineDecadeStore = signalStore(
         patchState(store, { manual: 'detail' });
       },
 
-      /** Réessayer après l'échec du résumé. */
+      /** Réessayer après l'échec du résumé (et première lecture au passage en chronologique). */
       retrySummary(): Promise<void> {
         return fetchSummary();
       },
 
       /** Relit le résumé après une écriture, sans vider l'écran ni changer de vue. */
       rereadSummary(): Promise<void> {
+        if (store.status() !== 'loaded') return Promise.resolve();
+        if (!chronological()) {
+          // Par séance : relu au prochain passage en chronologique.
+          generation++;
+          patchState(store, { status: 'idle' });
+          return Promise.resolve();
+        }
         return fetchSummary(true);
       },
 
-      /** L'état à ranger dans le shell (rememberTab), sans les filtres d'avant le double-clic. */
-      snapshot(): Omit<DecadeSnapshot, 'drillBack'> | null {
+      /** L'état à ranger dans le shell (rememberTab). */
+      snapshot(): DecadeSnapshot | null {
         if (store.status() !== 'loaded') return null;
         return {
           periods: store.periods(),
           range: store.range(),
           manual: store.manual(),
-          drilled: store.drilled(),
+          drillBack: store.drillBack(),
         };
       },
     };
+  }),
+  withHooks({
+    onInit(store) {
+      const filters = inject(TimelineFiltersStore);
+      // Passage en chronologique (bouton, M, préférence) : le résumé attendu est lu.
+      effect(() => {
+        if (filters.mode() === 'session' || store.status() !== 'idle' || !store.patientId()) return;
+        untracked(() => void store.retrySummary());
+      });
+    },
   }),
 );
 

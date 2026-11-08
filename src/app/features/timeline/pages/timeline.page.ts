@@ -119,11 +119,6 @@ export class TimelinePage {
   protected readonly mode = this.filters.mode;
   /** Vue décennie (état C) : l'agrégat par mois remplace les cartes du mode chronologique. */
   protected readonly decade = computed(() => this.decadeStore.view() === 'decade');
-  /**
-   * Filtres d'avant le double-clic sur un mois : `Échap` y revient. Gardés tant que la période
-   * n'est pas changée à la main.
-   */
-  private readonly drillBack = signal<TimelineFilters | null>(null);
   /** Après un double-clic sur un mois : la première carte prend le focus une fois rendue. */
   private focusAfterDrill = false;
   /** Séances des fenêtres lues (mode par séance), de la plus récente à la plus ancienne. */
@@ -220,6 +215,7 @@ export class TimelinePage {
   protected readonly zoomOutLabel = $localize`:Bouton de zoom arrière de la timeline@@timeline.zoomOut:Zoom arrière (−)`;
   protected readonly modeShortcutLabel = $localize`:Aide du raccourci de la bascule de mode de la timeline@@timeline.modeShortcut:Chronologique ou par séance`;
   protected readonly filtersShortcutLabel = $localize`:Aide du raccourci des filtres de la timeline@@timeline.filtersShortcut:Aller aux filtres de la timeline`;
+  private readonly decadeModeHint = $localize`:Information quand Par séance est demandé en vue décennie@@timeline.mode.decadeBlocked:Vue décennie : revenez au détail (zoom avant, +) pour regrouper par séance.`;
   private readonly backLabel = $localize`:Aide du raccourci Échap après un double-clic sur un mois@@timeline.decade.back:Revenir à l'agrégat par mois`;
   /** Nombre d'entrées regroupées au plus en mode par séance (trois fenêtres). */
   protected readonly headSize = new Intl.NumberFormat(this.locale).format(
@@ -271,12 +267,8 @@ export class TimelinePage {
         );
         if (same && !reuse) this.store.setZoom(same.zoom);
         // Vue décennie : le résumé (repris s'il répond à la même période), le retour d'un mois.
-        this.drillBack.set(reuse ? (decadeSnapshot?.drillBack ?? null) : null);
-        void this.decadeStore.open(
-          patient.id,
-          patient.followedSince,
-          reuse ? decadeSnapshot : undefined,
-        );
+        this.focusAfterDrill = false;
+        void this.decadeStore.open(patient.id, reuse ? decadeSnapshot : undefined);
         this.ready.set(true);
         // Repris : l'état ne vit plus que dans les stores (rangé à nouveau au départ).
         if (recalled) this.shell.rememberTab<TimelineSnapshot | undefined>('timeline', undefined);
@@ -286,13 +278,15 @@ export class TimelinePage {
     // Après un double-clic sur un mois, Échap revient à l'agrégat (un panneau ouvert ensuite prend
     // Échap au-dessus, et le rend à sa fermeture).
     effect((onCleanup) => {
-      if (!this.drillBack()) return;
+      if (!this.decadeStore.drilled()) return;
       onCleanup(this.shortcuts.register('Escape', () => this.leaveMonth(), this.backLabel));
     });
 
     // Le détail du mois est là : la première carte prend le focus (clavier comme souris).
     effect(() => {
       const viewport = this.viewport();
+      // Mois sans entrée pour ces filtres : rien à focaliser, la demande tombe.
+      if (this.state() === 'empty') this.focusAfterDrill = false;
       if (!viewport || this.state() !== null || this.decade() || !this.focusAfterDrill) return;
       this.focusAfterDrill = false;
       afterNextRender(
@@ -395,7 +389,7 @@ export class TimelinePage {
           ...snapshot,
           offset: this.lastOffset,
           filters: this.filters.snapshot(),
-          ...(decade ? { decade: { ...decade, drillBack: this.drillBack() } } : {}),
+          ...(decade ? { decade } : {}),
         });
       }
     });
@@ -517,15 +511,19 @@ export class TimelinePage {
     const periodChanged = next.from !== current.from || next.to !== current.to;
     this.filters.set(next);
     this.restored = true;
-    if (origin !== 'drill' && periodChanged) this.drillBack.set(null);
+    if (origin === 'user') {
+      this.focusAfterDrill = false;
+      if (periodChanged) this.decadeStore.forgetDrill();
+    }
     void this.store.applyFilters();
-    void this.decadeStore.syncRange(!!this.drillBack());
+    void this.decadeStore.syncRange();
     return true;
   }
 
   /**
    * Double-clic sur un mois de l'agrégat (ou Entrée dans le tableau des mois) : la timeline détaillée
-   * sur les jours de ce mois, au zoom « semaine » ; `Échap` revient aux filtres d'avant.
+   * sur les jours de ce mois, au zoom « semaine » ; `Échap` revient à la période d'avant. Si la
+   * période est déjà ce mois (agrégat forcé par la préférence), c'est un simple retour au détail.
    */
   protected openMonth(month: number): void {
     const current = this.filters.filters();
@@ -534,26 +532,37 @@ export class TimelinePage {
     this.store.setZoom('week');
     this.focusAfterDrill = true;
     if (sameFilters(next, current)) {
-      void this.decadeStore.syncRange(true);
+      this.decadeStore.showDetail();
       return;
     }
-    if (!this.drillBack()) this.drillBack.set(current);
+    this.decadeStore.markDrill({ from: current.from, to: current.to });
     this.changeFilters(next, 'drill');
   }
 
-  /** `Échap` après un double-clic sur un mois : les filtres d'avant, donc l'agrégat. */
+  /**
+   * `Échap` après un double-clic sur un mois : la période d'avant, donc l'agrégat. Seule la période
+   * revient : les puces posées pendant le détail du mois restent.
+   */
   private leaveMonth(): void {
-    const previous = this.drillBack();
+    const previous = this.decadeStore.drillBack();
     if (!previous) return;
-    this.drillBack.set(null);
-    if (!this.changeFilters(previous, 'back')) void this.decadeStore.syncRange(false);
+    this.decadeStore.forgetDrill();
+    this.changeFilters({ ...this.filters.filters(), from: previous.from, to: previous.to }, 'back');
+  }
+
+  /** « Par séance » demandé en vue décennie (bouton inactif, touche M) : on dit comment y aller. */
+  protected explainDecadeMode(): void {
+    this.toasts.info(this.decadeModeHint);
   }
 
   /** Bascule Chronologique | Par séance (bouton, M) : la préférence est écrite. */
   protected async setMode(mode: TimelineMode): Promise<void> {
     if (mode === this.mode()) return;
     // L'état C est purement chronologique : « Par séance » attend le retour au détail.
-    if (this.decade()) return;
+    if (this.decade()) {
+      this.explainDecadeMode();
+      return;
+    }
     const problem = await this.filters.setMode(mode);
     if (problem) {
       this.toasts.show({

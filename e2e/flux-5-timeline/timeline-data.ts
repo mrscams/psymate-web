@@ -31,9 +31,16 @@ export async function createPatient(
   return ((await response.json()) as { id: string }).id;
 }
 
-/** La séance d'accueil est créée de façon asynchrone après le patient : on l'attend. */
-export async function intakeOf(api: APIRequestContext, patientId: string): Promise<string> {
-  for (let attempt = 0; attempt < 40; attempt++) {
+/**
+ * La séance d'accueil est créée de façon asynchrone après le patient : on l'attend (`timeoutMs`,
+ * 10 s par défaut ; plus quand les données s'écrivent pendant que d'autres chargent l'API).
+ */
+export async function intakeOf(
+  api: APIRequestContext,
+  patientId: string,
+  timeoutMs = 10_000,
+): Promise<string> {
+  for (let attempt = 0; attempt < timeoutMs / 250; attempt++) {
     const response = await api.get(`${API}/api/patients/${patientId}/sessions/current`);
     if (response.status() === 200) return ((await response.json()) as { id: string }).id;
     await new Promise((resolve) => setTimeout(resolve, 250));

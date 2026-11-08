@@ -1,8 +1,6 @@
 import { APIRequestContext } from '@playwright/test';
 
-import { createPatient, entry, pastSession } from './timeline-data';
-
-const API = 'http://localhost:8080';
+import { createPatient, entry, intakeOf, pastSession } from './timeline-data';
 
 // Données des e2e de la vue décennie (M3-04), écrites par l'API réelle (jamais de mock) dans un
 // compte jetable : un patient suivi depuis près de cinq ans (entrées antidatées) et un patient
@@ -17,19 +15,10 @@ export function monthsAgo(months: number, hourUtc = 9): string {
 }
 
 /**
- * La séance d'accueil, créée de façon asynchrone après le patient. Attente plus longue que celle
- * de `intakeOf` : ces données s'écrivent pendant que les 2 000 notes du patient « volume » chargent
- * l'API.
+ * Attente de la séance d'accueil : ces données s'écrivent pendant que les 2 000 notes du patient
+ * « volume » chargent l'API (10 s ne suffisent pas toujours).
  */
-async function intake(api: APIRequestContext, patientId: string): Promise<string> {
-  const deadline = Date.now() + 60_000;
-  while (Date.now() < deadline) {
-    const response = await api.get(`${API}/api/patients/${patientId}/sessions/current`);
-    if (response.status() === 200) return ((await response.json()) as { id: string }).id;
-    await new Promise((resolve) => setTimeout(resolve, 500));
-  }
-  throw new Error(`pas de séance d'accueil pour ${patientId}`);
-}
+const INTAKE_TIMEOUT_MS = 60_000;
 
 /** AAAA-MM (UTC) d'un instant ISO. */
 export function monthKeyOf(iso: string): string {
@@ -63,7 +52,7 @@ export async function decadePatient(api: APIRequestContext): Promise<DecadePatie
   const id = await createPatient(api, 'Hugo D.', '1979-02-11', {
     since: monthsAgo(50).slice(0, 10),
   });
-  await intake(api, id);
+  await intakeOf(api, id, INTAKE_TIMEOUT_MS);
   let drillNote = '';
   for (let k = 58; k >= 2; k -= 2) {
     const session = await pastSession(api, id, monthsAgo(k, 8));
@@ -112,7 +101,7 @@ export async function decadePatient(api: APIRequestContext): Promise<DecadePatie
 /** Patient récent : la séance d'accueil et une note du jour. */
 export async function recentPatient(api: APIRequestContext): Promise<string> {
   const id = await createPatient(api, 'Inès R.');
-  const intakeId = await intake(api, id);
+  const intakeId = await intakeOf(api, id, INTAKE_TIMEOUT_MS);
   await entry(api, id, {
     type: 'note',
     title: 'Premier contact',

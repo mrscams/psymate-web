@@ -117,6 +117,13 @@ function monthFloat(ms: number): number {
   return index + (ms - start) / (next - start);
 }
 
+/** La situation chevauche [startMs, endMs[ (sans début : depuis toujours ; sans fin : en cours). */
+function overlaps(item: TimelineItem, startMs: number, endMs: number): boolean {
+  const from = Date.parse(item.occurred.from ?? '');
+  const to = item.ongoing ? Number.NaN : Date.parse(item.occurred.to ?? '');
+  return (Number.isNaN(from) || from < endMs) && (Number.isNaN(to) || to > startMs);
+}
+
 function isLong(item: TimelineItem): boolean {
   if (item.ongoing) return true;
   const from = Date.parse(item.occurred.from ?? '');
@@ -211,25 +218,25 @@ export function decadeChart(input: DecadeChartInput): DecadeChart {
   // Bandes : situations longues qui chevauchent la plage, rangées en colonnes sans chevauchement.
   const startMs = monthStart(plage.start).getTime();
   const endMs = monthStart(plage.end + 1).getTime();
-  const bands: ChartBand[] = layoutBands(input.situations.filter(isLong))
-    .filter((band) => band.from < endMs && band.to > startMs)
-    .map((band) => {
-      const from = Math.max(band.from, startMs);
-      const to = Math.min(band.to, endMs);
-      const x = xOf(monthFloat(from));
-      const right = to >= endMs ? RIGHT : xOf(monthFloat(to));
-      const width = round(Math.max(3, right - x));
-      return {
-        item: band.item,
-        lane: band.lane,
-        x,
-        width,
-        y: BAND_TOP + band.lane * (BAND_HEIGHT + BAND_GAP),
-        ongoing: band.item.ongoing,
-        clippedStart: band.from < startMs,
-        inside: width >= 160,
-      };
-    });
+  // Filtrées sur la plage avant la mise en colonnes : une situation hors plage ne prend pas de colonne.
+  const visible = input.situations.filter((item) => isLong(item) && overlaps(item, startMs, endMs));
+  const bands: ChartBand[] = layoutBands(visible).map((band) => {
+    const from = Math.max(band.from, startMs);
+    const to = Math.min(band.to, endMs);
+    const x = xOf(monthFloat(from));
+    const right = to >= endMs ? RIGHT : xOf(monthFloat(to));
+    const width = round(Math.max(3, right - x));
+    return {
+      item: band.item,
+      lane: band.lane,
+      x,
+      width,
+      y: BAND_TOP + band.lane * (BAND_HEIGHT + BAND_GAP),
+      ongoing: band.item.ongoing,
+      clippedStart: band.from < startMs,
+      inside: width >= 160,
+    };
+  });
   const lanes = bands.length ? Math.max(...bands.map((band) => band.lane)) + 1 : 0;
 
   return {

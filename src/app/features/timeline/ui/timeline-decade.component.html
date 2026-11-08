@@ -35,13 +35,24 @@
           </span>
           <span class="facts">
             <span class="range">{{ startText() }} → {{ endText() }}</span>
-            <span i18n="Durée de la plage de la vue décennie@@timeline.decade.duration"
-              >{years(), plural, =0 {} =1 {1 an} other {{{ years() }} ans}}
-              {extraMonths(), plural, =0 {} =1 {1 mois} other {{{ extraMonths() }} mois}}</span
+            @if (years()) {
+              <span
+                i18n="Années de la durée de la plage, vue décennie@@timeline.decade.years"
+                >{years(), plural, =1 {1 an} other {{{ years() }} ans}}</span
+              >
+            }
+            @if (extraMonths()) {
+              <span
+                i18n="Mois de la durée de la plage, vue décennie@@timeline.decade.months"
+                >{extraMonths(), plural, =1 {1 mois} other {{{ extraMonths() }} mois}}</span
+              >
+            }
+            <span i18n="Mois de la plage de la vue décennie@@timeline.decade.monthsCount"
+              >{{ monthCount() }} mois · {{ filled().length }} non vides ·</span
             >
-            <span i18n="Comptes de la vue décennie@@timeline.decade.facts"
-              >{{ monthCount() }} mois · {{ filled().length }} non vides ·
-              {entryCount(), plural, =1 {1 entrée} other {{{ entryText() }} entrées}}</span
+            <span
+              i18n="Nombre d'entrées de la vue décennie@@timeline.decade.entries"
+              >{entryCount(), plural, =1 {1 entrée} other {{{ entryText() }} entrées}}</span
             >
             @if (outside()) {
               <span
