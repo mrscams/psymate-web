@@ -118,3 +118,7 @@
     font: var(--mat-sys-body-medium);
   }
 }
+
+.panel:focus {
+  outline: none;
+}

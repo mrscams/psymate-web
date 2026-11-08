@@ -309,9 +309,117 @@ describe('CommandBarComponent', () => {
     await settle(fixture);
     expect(api.railCandidates).toHaveBeenCalledTimes(2);
 
-    await press(fixture, input, 'Escape');
+    const escape = await press(fixture, input, 'Escape');
+    expect(escape.defaultPrevented).toBe(true);
     expect(el.querySelector('.panel')).toBeNull();
     await type(fixture, 'anx 9');
     expect(el.querySelector('.panel')).not.toBeNull();
+  });
+
+  it('sa propre création ne périme pas le rail (déjà relu par le store) ; une écriture ailleurs, si', async () => {
+    const { input, fixture, api } = await render();
+    await type(fixture, 'semble plus détendu');
+    await press(fixture, input, 'Enter');
+    // Le store relit le rail après la création.
+    await vi.waitFor(() => expect(api.railCandidates).toHaveBeenCalledTimes(2));
+    // Le dossier répond à `saved` en avançant sa révision : pas de relecture de plus au focus.
+    fixture.componentRef.setInput('revision', 1);
+    await settle(fixture);
+    input.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+    await settle(fixture);
+    expect(api.railCandidates).toHaveBeenCalledTimes(2);
+    expect(api.emotions).toHaveBeenCalledOnce();
+
+    fixture.componentRef.setInput('revision', 2);
+    await settle(fixture);
+    input.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+    await settle(fixture);
+    expect(api.railCandidates).toHaveBeenCalledTimes(3);
+  });
+
+  it('rail illisible : la cible du `>` est indisponible, Entrée ne crée rien (pas de lien perdu en silence)', async () => {
+    const { el, input, fixture, api } = await render({
+      railCandidates: vi.fn().mockRejectedValue({ status: 500, code: 'INTERNAL_ERROR' }),
+    });
+    await type(fixture, 'anx 8 > entretien');
+    expect(text(el.querySelector('li.warning.blocking'))).toContain(
+      "Les entrées à lier n'ont pas pu être chargées : réessayez, ou retirez « > ».",
+    );
+    await press(fixture, input, 'Enter');
+    expect(api.create).not.toHaveBeenCalled();
+    expect(text(el.querySelector('p.alert'))).toBe(
+      "Rien n'est enregistré. Les entrées à lier n'ont pas pu être chargées : réessayez, ou retirez « > ».",
+    );
+
+    // Sans `>`, le rail illisible ne bloque pas.
+    await type(fixture, 'anx 8');
+    await press(fixture, input, 'Enter');
+    expect(api.create).toHaveBeenCalledOnce();
+  });
+
+  it('catalogue des liens illisible : même blocage', async () => {
+    const { input, fixture, api } = await render({
+      linkTypes: vi.fn().mockRejectedValue({ status: 500, code: 'INTERNAL_ERROR' }),
+    });
+    await type(fixture, 'anx 8 > entretien');
+    await press(fixture, input, 'Enter');
+    expect(api.create).not.toHaveBeenCalled();
+  });
+
+  it('composition en cours (IME, accents) : Entrée et Ctrl+S appartiennent à la saisie', async () => {
+    const { input, fixture, api, opened } = await render();
+    await type(fixture, 'semble plus détendu');
+    await press(fixture, input, 'Enter', { isComposing: true });
+    await press(fixture, input, 'Enter', { keyCode: 229 } as KeyboardEventInit);
+    await press(fixture, input, 's', { ctrlKey: true, isComposing: true });
+    expect(api.create).not.toHaveBeenCalled();
+    expect(opened).toEqual([]);
+  });
+
+  it('Ctrl+S par la touche physique (code KeyS, autre disposition) ; rien pendant un enregistrement', async () => {
+    let resolve: (value: unknown) => void = () => undefined;
+    const { input, fixture, api, opened } = await render({
+      create: vi.fn().mockImplementation(() => new Promise((done) => (resolve = done))),
+    });
+    await type(fixture, 'semble plus détendu');
+    await press(fixture, input, 'ß', { ctrlKey: true, code: 'KeyS' });
+    expect(api.create).toHaveBeenCalledOnce();
+    expect(api.create!.mock.calls[0][1].status).toBe('draft');
+    // Enregistrement en cours : Ctrl+Entrée et Entrée ne font rien.
+    await press(fixture, input, 'Enter', { ctrlKey: true });
+    await press(fixture, input, 'Enter');
+    expect(opened).toEqual([]);
+    expect(api.create).toHaveBeenCalledOnce();
+    resolve({ id: 'e-new', type: 'note', status: 'draft', sessionId: 's-open' });
+    await settle(fixture);
+  });
+
+  it('saisie modifiée pendant l’enregistrement : la barre la garde', async () => {
+    let resolve: (value: unknown) => void = () => undefined;
+    const { input, fixture } = await render({
+      create: vi.fn().mockImplementation(() => new Promise((done) => (resolve = done))),
+    });
+    await type(fixture, 'semble plus détendu');
+    await press(fixture, input, 'Enter');
+    input.value = 'semble plus détendu, sourit';
+    input.dispatchEvent(new Event('input'));
+    resolve({ id: 'e-new', type: 'note', status: 'final', sessionId: 's-open' });
+    await settle(fixture);
+    expect(input.value).toBe('semble plus détendu, sourit');
+  });
+
+  it('lecteurs d’écran : résumé court (role="status") après une pause, tout de suite si la saisie devient bloquée ; aria-controls vers le panneau', async () => {
+    const { el, input, fixture } = await render();
+    await type(fixture, "anx 8 n'a pas dormi > entretien");
+    expect(input.getAttribute('aria-controls')).toBe('pm-capture-panel');
+    expect(el.querySelector('#pm-capture-panel')?.getAttribute('tabindex')).toBe('-1');
+    const status = el.querySelector('p.sr-only[role="status"]')!;
+    expect(text(status)).toBe('');
+    await new Promise((done) => setTimeout(done, 600));
+    await fixture.whenStable();
+    expect(text(status)).toBe('Ressenti, Anxiété 8 sur 10, lié à « Entretien annuel »');
+
+    await type(fixture, 'anx 12');
+    expect(text(status)).toBe("Ressenti, Anxiété, 1 point(s) à corriger avant d'enregistrer");
   });
 });

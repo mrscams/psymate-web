@@ -21537,6 +21537,195 @@
         </context-group>
         <note priority="1" from="description">Famille manquante</note>
       </trans-unit>
+      <trans-unit id="capture.target.railUnavailable" datatype="html">
+        <source>Les entrées à lier n&apos;ont pas pu être chargées : réessayez, ou retirez « &gt; ».</source>
+        <target state="translated">The entries to link could not be loaded: try again, or remove “&gt;”.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <note priority="1" from="description">Problème de cible dans la barre de commande</note>
+      </trans-unit>
+      <trans-unit id="capture.error.required" datatype="html">
+        <source>Un champ obligatoire manque.</source>
+        <target state="translated">A required field is missing.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
+      </trans-unit>
+      <trans-unit id="capture.error.outOfRange" datatype="html">
+        <source>Une valeur est hors des bornes permises.</source>
+        <target state="translated">A value is out of the allowed range.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
+      </trans-unit>
+      <trans-unit id="capture.error.invalidTime" datatype="html">
+        <source>Le moment n&apos;est pas valable.</source>
+        <target state="translated">The time is not valid.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
+      </trans-unit>
+      <trans-unit id="capture.error.unknownEmotion" datatype="html">
+        <source>L&apos;émotion n&apos;existe pas ou plus.</source>
+        <target state="translated">The emotion does not exist (any more).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">145</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
+      </trans-unit>
+      <trans-unit id="capture.error.unknownTag" datatype="html">
+        <source>Un tag n&apos;existe pas.</source>
+        <target state="translated">A tag does not exist.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
+      </trans-unit>
+      <trans-unit id="capture.error.linkExists" datatype="html">
+        <source>Ce lien existe déjà.</source>
+        <target state="translated">This link already exists.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
+      </trans-unit>
+      <trans-unit id="capture.error.linkTypeNotAllowed" datatype="html">
+        <source>Ce type de lien n&apos;est pas permis entre ces deux types d&apos;entrée.</source>
+        <target state="translated">This link type is not allowed between these two entry types.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
+      </trans-unit>
+      <trans-unit id="capture.error.unknownLinkType" datatype="html">
+        <source>Ce type de lien n&apos;existe pas.</source>
+        <target state="translated">This link type does not exist.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
+      </trans-unit>
+      <trans-unit id="capture.error.entryArchived" datatype="html">
+        <source>L&apos;entrée liée est archivée.</source>
+        <target state="translated">The linked entry is archived.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
+      </trans-unit>
+      <trans-unit id="capture.error.entryNotFound" datatype="html">
+        <source>L&apos;entrée liée n&apos;existe plus.</source>
+        <target state="translated">The linked entry no longer exists.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
+      </trans-unit>
+      <trans-unit id="capture.error.selfLink" datatype="html">
+        <source>Une entrée ne peut pas être liée à elle-même.</source>
+        <target state="translated">An entry cannot be linked to itself.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
+      </trans-unit>
+      <trans-unit id="capture.error.differentPatient" datatype="html">
+        <source>L&apos;entrée liée appartient à un autre dossier.</source>
+        <target state="translated">The linked entry belongs to another record.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">161</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
+      </trans-unit>
+      <trans-unit id="capture.error.sessionInvalid" datatype="html">
+        <source>La séance n&apos;appartient pas à ce dossier.</source>
+        <target state="translated">The session does not belong to this record.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+        <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
+      </trans-unit>
+      <trans-unit id="capture.emotion.labelInvalid" datatype="html">
+        <source>Le libellé de l&apos;émotion est obligatoire.</source>
+        <target state="translated">The label of the emotion is required.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de création d&apos;émotion depuis la barre</note>
+      </trans-unit>
+      <trans-unit id="capture.emotion.familyInvalid" datatype="html">
+        <source>Choisissez une famille parmi les huit proposées.</source>
+        <target state="translated">Choose one of the eight families.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de création d&apos;émotion depuis la barre</note>
+      </trans-unit>
+      <trans-unit id="capture.preview.quoted" datatype="html">
+        <source>« <x id="text" equiv-text="text"/> »</source>
+        <target state="translated">“<x id="text" equiv-text="text"/>”</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+        <note priority="1" from="description">Texte cité dans l&apos;aperçu de la barre de commande</note>
+      </trans-unit>
+      <trans-unit id="capture.preview.intensity" datatype="html">
+        <source><x id="value" equiv-text="value"/>/10</source>
+        <target state="translated"><x id="value" equiv-text="value"/>/10</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">194</context>
+        </context-group>
+        <note priority="1" from="description">Intensité dans l&apos;aperçu de la barre de commande</note>
+      </trans-unit>
+      <trans-unit id="capture.summary.emotion" datatype="html">
+        <source><x id="emotion" equiv-text="label"/> <x id="intensity" equiv-text="preview.intensity"/> sur 10</source>
+        <target state="translated"><x id="emotion" equiv-text="label"/> <x id="intensity" equiv-text="preview.intensity"/> out of 10</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">207</context>
+        </context-group>
+        <note priority="1" from="description">Résumé lu de l&apos;aperçu, émotion et intensité</note>
+      </trans-unit>
+      <trans-unit id="capture.summary.target" datatype="html">
+        <source>lié à « <x id="name" equiv-text="name"/> »</source>
+        <target state="translated">linked to “<x id="name" equiv-text="name"/>”</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">214</context>
+        </context-group>
+        <note priority="1" from="description">Résumé lu de l&apos;aperçu, cible du lien</note>
+      </trans-unit>
+      <trans-unit id="capture.summary.blocking" datatype="html">
+        <source><x id="count" equiv-text="blocking"/> point(s) à corriger avant d&apos;enregistrer</source>
+        <target state="translated"><x id="count" equiv-text="blocking"/> item(s) to fix before saving</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">221</context>
+        </context-group>
+        <note priority="1" from="description">Résumé lu de l&apos;aperçu, points bloquants</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

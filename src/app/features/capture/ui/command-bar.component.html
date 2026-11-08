@@ -19,6 +19,7 @@
       aria-keyshortcuts="Enter Control+Enter Control+S"
       [id]="inputId"
       [attr.aria-describedby]="describedBy()"
+      [attr.aria-controls]="panelOpen() ? panelId : null"
       [attr.aria-busy]="store.saving() ? 'true' : null"
       [value]="text()"
       (input)="onInput($any($event.target).value)"
@@ -29,7 +30,8 @@
   </div>
 
   @if (panelOpen()) {
-    <div class="panel">
+    <!-- tabindex -1 : un clic sur un texte du panneau y garde le focus (le panneau ne se ferme pas). -->
+    <div class="panel" tabindex="-1" [id]="panelId">
       <pm-capture-preview
         [id]="previewId"
         [preview]="preview()"
@@ -77,4 +79,5 @@
   }
 </div>
 
+<p class="sr-only" role="status">{{ announcement() }}</p>
 <p class="alert" role="alert" [id]="alertId" [class.shown]="!!alert()">{{ alert() }}</p>

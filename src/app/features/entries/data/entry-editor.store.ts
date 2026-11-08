@@ -29,6 +29,7 @@ import {
   EntryVisibility,
   graceInfo,
   GraceInfo,
+  mergePrefill,
   LinkCandidate,
   PlacedLink,
   railCandidates,
@@ -320,14 +321,11 @@ export const EntryEditorStore = signalStore(
           const key = draftKey({ patientId: target.patientId, entryId });
           let refreshEmotions = false;
           if (!entryId && target.prefill) {
-            // Barre de commande (Ctrl+Entrée) : sa saisie interprétée devient le brouillon ; le texte
-            // d'un brouillon précédent reste en tête du texte (rien ne se perd, B5).
+            // Barre de commande (Ctrl+Entrée) : sa saisie interprétée devient le brouillon, fusionnée
+            // avec un brouillon de création non enregistré (mergePrefill : rien ne se perd, B5).
             const existing = store.drafts()[key];
-            const draft = draftFromPrefill(target.prefill, defaultVisibility());
-            const previous = existing?.body.trim() ?? '';
-            if (previous && previous !== draft.body.trim()) {
-              draft.body = draft.body.trim() ? `${previous}\n${draft.body.trim()}` : previous;
-            }
+            const prefilled = draftFromPrefill(target.prefill, defaultVisibility());
+            const draft = existing ? mergePrefill(existing, prefilled) : prefilled;
             setDraft(key, draft);
             // Émotion créée depuis la barre : le vocabulaire gardé ici ne la connaît pas encore.
             const code = draft.feeling.emotionCode;

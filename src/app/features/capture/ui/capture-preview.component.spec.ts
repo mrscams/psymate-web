@@ -60,7 +60,8 @@ describe('CapturePreviewComponent', () => {
       "Ressenti · Anxiété 8/10 · « n'a pas dormi » · maintenant · séance en cours · lié à Événement « Entretien annuel » lien « déclenché par » proposé",
     );
     expect(el.querySelector('.emotion .dot')?.classList).toContain('family-fear');
-    expect(el.querySelector('[aria-live="polite"]')).not.toBeNull();
+    // La ligne est déjà décrite par aria-describedby : pas de région live ici (résumé dans la barre).
+    expect(el.querySelector('[aria-live]')).toBeNull();
     expect(el.querySelector('.warnings')).toBeNull();
   });
 

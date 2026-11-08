@@ -11,7 +11,7 @@
     }
   }
 } @else if (preview(); as p) {
-  <div class="preview" aria-live="polite">
+  <div class="preview">
     <p class="line">
       <span class="part type" [class.feeling]="p.type === 'feeling'">
         <pm-entry-icon [type]="p.type" [size]="12" />
@@ -24,7 +24,7 @@
           <span class="emotion-name">{{ emotion.label }}</span
           >&ngsp;
           @if (p.intensity !== null) {
-            <span class="mono intensity">{{ p.intensity }}/10</span>
+            <span class="mono intensity">{{ intensity(p.intensity) }}</span>
           }
         </span>
       } @else if (pendingWord(); as word) {
@@ -37,13 +37,13 @@
             >« {{ word }} » ?</span
           >&ngsp;
           @if (p.intensity !== null) {
-            <span class="mono intensity">{{ p.intensity }}/10</span>
+            <span class="mono intensity">{{ intensity(p.intensity) }}</span>
           }
         </span>
       }
       @if (p.text) {
         <span class="sep">&ngsp;·&ngsp;</span>
-        <span class="part text">« {{ p.text }} »</span>
+        <span class="part text">{{ quote(p.text) }}</span>
       }
       <span class="sep">&ngsp;·&ngsp;</span>
       <span class="part when">{{ when() }}</span>
@@ -60,7 +60,7 @@
           <pm-entry-icon [type]="target.candidate.type" [size]="10" />
           <span>{{ entryTypeName(target.candidate.type) }}</span
           >&ngsp;
-          <strong class="target-name">« {{ target.name }} »</strong>
+          <strong class="target-name">{{ quote(target.name) }}</strong>
           @if (target.choice; as choice) {
             &ngsp;<span class="chip">{{ proposedLink(choice.label) }}</span>
           }

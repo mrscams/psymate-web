@@ -17,7 +17,13 @@ import {
 } from '../../../shared/ui';
 import { formatOccurred, StateKind } from '../../../shared/util';
 import { CaptureEmotion, CapturePreview } from '../data/capture.model';
-import { precisionLabel, targetIssueText, warningText } from './capture-labels';
+import {
+  intensityText,
+  precisionLabel,
+  quoted,
+  targetIssueText,
+  warningText,
+} from './capture-labels';
 
 /** Une ligne d'avertissement : texte traduit, caractère bloquant, émotions à choisir (ambiguïté). */
 interface WarningLine {
@@ -107,6 +113,9 @@ export class CapturePreviewComponent {
     }
     return lines;
   });
+
+  protected readonly quote = quoted;
+  protected readonly intensity = intensityText;
 
   protected entryTypeName(type: EntryType): string {
     return entryTypeLabel(type);

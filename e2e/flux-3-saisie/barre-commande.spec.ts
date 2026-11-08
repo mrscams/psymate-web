@@ -105,13 +105,19 @@ test.describe('barre de commande', () => {
     await expect(page.locator('pm-patient-header .session-text')).toContainText('en cours');
     const b = bar(page);
 
-    let started = Number.POSITIVE_INFINITY;
-    const created = page.waitForResponse((r) => isCreate(r, patientId));
-    // Lecture après écriture : une lecture de la vue d'ensemble lancée après la saisie.
+    // Lecture après écriture : une lecture de la vue d'ensemble lancée APRÈS la réponse du POST
+    // (horloge du navigateur : début de la requête + arrivée de la réponse).
+    let postedAt = Number.POSITIVE_INFINITY;
+    const created = page.waitForResponse((r) => {
+      if (!isCreate(r, patientId)) return false;
+      const timing = r.request().timing();
+      postedAt = timing.startTime + timing.responseStart;
+      return true;
+    });
     const reread = page.waitForResponse(
-      (r) => isOverview(r, patientId) && r.request().timing().startTime > started,
+      (r) => isOverview(r, patientId) && r.request().timing().startTime >= postedAt,
     );
-    started = Date.now();
+    const started = Date.now();
     await b.input.focus();
     // Frappe à 100 ms par touche (un praticien rapide), pas l'injection instantanée du navigateur.
     await page.keyboard.type("anx 8 n'a pas dormi > entretien", { delay: 100 });
@@ -162,8 +168,11 @@ test.describe('barre de commande', () => {
     const account = await createAccount(request, 'm6-02.apercu', 'psychologist');
     const patientId = await createPatient(request, 'Hugo L.');
     await startSession(request, patientId);
-    await createEntry(request, patientId, { type: 'event', title: 'Entretien annuel' });
-    await createEntry(request, patientId, {
+    const eventId = await createEntry(request, patientId, {
+      type: 'event',
+      title: 'Entretien annuel',
+    });
+    const situationId = await createEntry(request, patientId, {
       type: 'situation',
       title: 'Surcharge au travail',
       occurred: { from: '2026-03-01T00:00:00Z', precision: 'month' },
@@ -192,6 +201,38 @@ test.describe('barre de commande', () => {
         .locator('option:checked'),
     ).toHaveText('déclenché par');
     await expectNoAxeViolations(page);
+
+    // Un clic sur le libellé d'une cible du rail la coche (le panneau reste ouvert), un second la
+    // décoche.
+    const situation = b.rail.getByRole('checkbox', { name: /Surcharge au travail/ });
+    await b.rail.locator('label', { hasText: 'Surcharge au travail' }).click();
+    await expect(b.panel).toBeVisible();
+    await expect(situation).toBeChecked();
+    await b.rail.locator('label', { hasText: 'Surcharge au travail' }).click();
+    await expect(situation).not.toBeChecked();
+
+    // Au clavier (B3 flux 3, étape 4) : Tab jusqu'à la case, Espace, Entrée → deux liens.
+    await b.input.focus();
+    for (let i = 0; i < 10; i++) {
+      if (await situation.evaluate((element) => element === document.activeElement)) break;
+      await page.keyboard.press('Tab');
+    }
+    await expect(situation).toBeFocused();
+    await page.keyboard.press('Space');
+    await expect(situation).toBeChecked();
+    const linked = page.waitForResponse((r) => isCreate(r, patientId));
+    await page.keyboard.press('Enter');
+    const linkedResponse = await linked;
+    expect(linkedResponse.status(), await linkedResponse.text()).toBe(201);
+    expect(linkedResponse.request().postDataJSON()).toMatchObject({
+      type: 'feeling',
+      links: [
+        { targetId: eventId, linkType: 'triggers', direction: 'incoming' },
+        { targetId: situationId, linkType: 'triggers', direction: 'incoming' },
+      ],
+    });
+    await expect(b.input).toHaveValue('');
+    await expect(b.input).toBeFocused();
 
     // Avertissement bloquant (intensité hors de 0 à 10) : Entrée ne crée rien et le dit.
     let posted = false;
@@ -238,14 +279,20 @@ test.describe('barre de commande', () => {
     await expect(b.proposal).toContainText("Créer l'émotion personnalisée « Tracas »");
     await expectNoAxeViolations(page);
 
-    // La famille est obligatoire (CreateEmotionRequest.family).
-    await b.proposal.getByRole('button', { name: "Créer l'émotion" }).click();
+    // Au clavier : Tab vers la famille ; Entrée sans famille → message (obligatoire, contrat).
+    const family = b.proposal.getByLabel('Famille');
+    await page.keyboard.press('Tab');
+    await expect(family).toBeFocused();
+    await page.keyboard.press('Enter');
     await expect(b.proposal.getByRole('alert')).toHaveText("Choisissez la famille de l'émotion.");
-    await b.proposal.getByLabel('Famille').selectOption({ label: 'Peur' });
+    await expectNoAxeViolations(page);
+    // Choix de la famille au clavier (saisie de l'initiale dans la liste), puis Entrée.
+    await page.keyboard.press('p');
+    await expect(family).toHaveValue('fear');
     const createdEmotion = page.waitForResponse(
       (r) => r.request().method() === 'POST' && new URL(r.url()).pathname === '/api/me/emotions',
     );
-    await b.proposal.getByRole('button', { name: "Créer l'émotion" }).click();
+    await page.keyboard.press('Enter');
     const emotionResponse = await createdEmotion;
     expect(emotionResponse.status(), await emotionResponse.text()).toBe(201);
     expect(emotionResponse.request().postDataJSON()).toEqual({ labelFr: 'Tracas', family: 'fear' });
@@ -254,6 +301,8 @@ test.describe('barre de commande', () => {
     // Le vocabulaire la connaît aussitôt : la saisie devient un ressenti.
     await expect(b.proposal).toBeHidden();
     await expect(b.line).toContainText('Ressenti · Tracas 6/10');
+    await expect(b.input).toBeFocused();
+    await expectNoAxeViolations(page);
     const created = page.waitForResponse((r) => isCreate(r, patientId));
     await b.input.press('Enter');
     const response = await created;

@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   ElementRef,
   inject,
@@ -25,6 +26,7 @@ import {
   CapturedEntry,
   CapturePreview,
   mergeLinks,
+  RailReadiness,
   replaceWord,
   targetLink,
   toPrefill,
@@ -33,12 +35,16 @@ import { CaptureStore } from '../data/capture.store';
 import { parse } from '../parser/parse';
 import {
   emotionProblemText,
+  previewSummary,
   saveProblemText,
   targetIssueText,
   warningText,
 } from './capture-labels';
 import { CapturePreviewComponent } from './capture-preview.component';
 import { EmotionProposalComponent, EmotionRequest } from './emotion-proposal.component';
+
+/** Pause de frappe avant de lire le résumé de l'aperçu (role="status"). */
+const ANNOUNCE_DELAY_MS = 500;
 
 /** Le fuseau du navigateur : il dit au parseur quel jour civil est « aujourd'hui » (M6-01). */
 function browserTimeZone(): string {
@@ -98,6 +104,7 @@ export class CommandBarComponent {
   protected readonly inputId = 'pm-capture-input';
   protected readonly previewId = 'pm-capture-preview';
   protected readonly alertId = 'pm-capture-alert';
+  protected readonly panelId = 'pm-capture-panel';
 
   /** La saisie (état d'écran). */
   protected readonly text = signal('');
@@ -110,6 +117,8 @@ export class CommandBarComponent {
   private readonly picked = signal<RailLink[]>([]);
   /** Cible du `>` décochée dans le rail : elle ne part pas. */
   private readonly dismissed = signal<string | null>(null);
+  /** Créations de la barre dont la révision du dossier n'est pas encore revenue. */
+  private ownWrites = 0;
   /** Message sous la barre : entrée bloquée, enregistrement refusé. */
   protected readonly alert = signal<string | null>(null);
 
@@ -123,23 +132,7 @@ export class CommandBarComponent {
   protected readonly linkTypes = computed(() => this.store.linkTypes().data ?? []);
 
   /** La saisie interprétée, puis confrontée au vocabulaire et au rail ; null si le champ est vide. */
-  protected readonly preview = computed<CapturePreview | null>(() => {
-    if (!this.hasText()) return null;
-    const emotions = this.emotions();
-    const result = parse(this.text(), {
-      emotions,
-      now: this.now(),
-      locale: this.locale,
-      timeZone: this.timeZone,
-    });
-    // Tant que le rail n'est pas lu, la cible du `>` n'est ni trouvée ni manquante.
-    const railReady = this.store.candidates().data !== null && this.store.linkTypes().data !== null;
-    return buildPreview(railReady ? result : { ...result, target: undefined }, {
-      emotions,
-      candidates: this.candidates(),
-      linkTypes: this.linkTypes(),
-    });
-  });
+  protected readonly preview = computed<CapturePreview | null>(() => this.interpret(false));
 
   /** Trois états de l'aperçu : vide (aide), chargement et erreur du vocabulaire ; null : l'aperçu. */
   protected readonly previewState = computed<StateKind | null>(() => {
@@ -180,6 +173,9 @@ export class CommandBarComponent {
     return problem ? emotionProblemText(problem) : null;
   });
 
+  /** Résumé lu par les lecteurs d'écran (role="status"), après une pause de frappe. */
+  protected readonly announcement = signal('');
+
   protected readonly describedBy = computed(() => {
     const ids = [];
     if (this.panelOpen()) ids.push(this.previewId);
@@ -195,17 +191,40 @@ export class CommandBarComponent {
   };
 
   constructor() {
+    // Résumé de l'aperçu pour les lecteurs d'écran : après 500 ms sans frappe, ou tout de suite
+    // quand la saisie devient (ou cesse d'être) bloquée.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let wasBlocking = false;
+    effect(() => {
+      const preview = this.panelOpen() ? this.preview() : null;
+      const summary = preview ? previewSummary(preview) : '';
+      const blocking = !!preview?.blocking;
+      clearTimeout(timer);
+      if (blocking !== wasBlocking || !summary) {
+        wasBlocking = blocking;
+        this.announcement.set(summary);
+      } else {
+        timer = setTimeout(() => this.announcement.set(summary), ANNOUNCE_DELAY_MS);
+      }
+    });
+    inject(DestroyRef).onDestroy(() => clearTimeout(timer));
     // Les liens affichés dans le rail : ceux cochés, et la cible du `>`.
     effect(() => {
       const links = this.links();
       untracked(() => this.linksControl.setValue(links, { emitEvent: false }));
     });
     // Une écriture ailleurs dans le dossier : rail et vocabulaire se relisent à la prochaine saisie.
+    // La révision que la barre provoque elle-même (sortie `saved`) ne compte pas : le store a déjà
+    // relu le rail après sa création.
     let seen = untracked(this.revision);
     effect(() => {
       const revision = this.revision();
       if (revision === seen) return;
       seen = revision;
+      if (this.ownWrites > 0) {
+        this.ownWrites--;
+        return;
+      }
       untracked(() => this.store.markStale());
     });
   }
@@ -253,9 +272,12 @@ export class CommandBarComponent {
   }
 
   protected onKey(event: KeyboardEvent): void {
+    // Composition en cours (accents, IME) : la touche appartient à la saisie.
+    if (event.isComposing || event.keyCode === 229) return;
     const target = event.target instanceof HTMLElement ? event.target : null;
     const modifier = event.ctrlKey || event.metaKey;
     if (event.key === 'Escape' && this.panelOpen()) {
+      event.preventDefault();
       this.collapsed.set(true);
       return;
     }
@@ -274,7 +296,7 @@ export class CommandBarComponent {
       else void this.submit('final');
       return;
     }
-    if (modifier && !event.altKey && event.key.toLowerCase() === 's') {
+    if (modifier && !event.altKey && (event.key.toLowerCase() === 's' || event.code === 'KeyS')) {
       event.preventDefault();
       if (!event.repeat) void this.submit('draft');
     }
@@ -321,8 +343,7 @@ export class CommandBarComponent {
   /** Entrée (final) ou Ctrl+S (brouillon) : POST dans la séance courante. */
   protected async submit(status: 'final' | 'draft'): Promise<void> {
     if (this.store.saving()) return;
-    const text = this.text().trim();
-    if (!text) {
+    if (!this.text().trim()) {
       if (status === 'final') this.openEditor.emit(null);
       return;
     }
@@ -337,7 +358,8 @@ export class CommandBarComponent {
       );
       return;
     }
-    const preview = this.preview();
+    // Au moment d'enregistrer, un rail toujours illisible rend la cible du `>` indisponible.
+    const preview = this.interpret(true);
     if (!preview) return;
     const reason = this.blockingReason(preview);
     if (reason) {
@@ -346,6 +368,8 @@ export class CommandBarComponent {
       );
       return;
     }
+    // La saisie envoyée : si elle change pendant l'enregistrement, la barre la garde.
+    const sent = this.text();
     const saved = await this.store.save(patientId, toPrefill(preview, this.links()), status);
     if (!saved) {
       const problem = this.store.problem();
@@ -357,8 +381,8 @@ export class CommandBarComponent {
         ? $localize`:Toast après un brouillon depuis la barre@@capture.saved.draft:Brouillon enregistré.`
         : $localize`:Toast après une création depuis la barre@@capture.saved.create:Entrée enregistrée.`,
     );
-    // Saisie modifiée pendant l'enregistrement : rien ne se perd, la barre la garde.
-    if (this.text().trim() === text) this.clear();
+    if (this.text() === sent) this.clear();
+    if (saved.id) this.ownWrites++;
     this.saved.emit(saved);
     this.focus();
   }
@@ -368,6 +392,7 @@ export class CommandBarComponent {
    * lecture en cours : l'éditeur laisse tout corriger).
    */
   protected refine(): void {
+    if (this.store.saving()) return;
     if (!this.hasText()) {
       this.openEditor.emit(null);
       return;
@@ -375,6 +400,31 @@ export class CommandBarComponent {
     this.now.set(new Date());
     const preview = this.preview();
     this.openEditor.emit(preview ? toPrefill(preview, this.links()) : null);
+  }
+
+  /**
+   * Interprète la saisie. Rail en cours de lecture : la cible du `>` n'est ni trouvée ni manquante,
+   * sauf au moment d'enregistrer (`saving`) où elle est indisponible, comme après un échec.
+   */
+  private interpret(saving: boolean): CapturePreview | null {
+    if (!this.hasText()) return null;
+    const emotions = this.emotions();
+    const result = parse(this.text(), {
+      emotions,
+      now: this.now(),
+      locale: this.locale,
+      timeZone: this.timeZone,
+    });
+    const ready = this.store.candidates().data !== null && this.store.linkTypes().data !== null;
+    const failed =
+      this.store.candidates().status === 'error' || this.store.linkTypes().status === 'error';
+    const rail: RailReadiness = ready ? 'ready' : failed || saving ? 'unavailable' : 'pending';
+    return buildPreview(result, {
+      emotions,
+      candidates: this.candidates(),
+      linkTypes: this.linkTypes(),
+      rail,
+    });
   }
 
   /** Le premier avertissement bloquant, en texte ; null si Entrée peut enregistrer. */

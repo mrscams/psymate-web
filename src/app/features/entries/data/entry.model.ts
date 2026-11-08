@@ -235,6 +235,42 @@ export function draftFromPrefill(prefill: EntryPrefill, visibility: EntryVisibil
   return draft;
 }
 
+/**
+ * Ctrl+Entrée sur un brouillon de création non enregistré : rien ne se perd. Le préremplissage gagne
+ * sur le type, le détail (émotion, intensité, molécule) et le moment quand il les renseigne ; le
+ * titre vient de la barre s'il y en a un, sinon reste l'ancien ; l'ancien titre remplacé et l'ancien
+ * texte passent en tête du texte ; séance, visibilité et tags du brouillon restent ; les liens sont
+ * réunis (celui de la barre l'emporte pour une même cible).
+ */
+export function mergePrefill(existing: EntryDraft, prefill: EntryDraft): EntryDraft {
+  const oldTitle = existing.title.trim();
+  const title = prefill.title.trim() || oldTitle;
+  const lines = [
+    oldTitle && oldTitle !== title ? oldTitle : '',
+    existing.body.trim(),
+    prefill.body.trim(),
+  ].filter((line, index, list) => !!line && list.indexOf(line) === index);
+  const feelingSet = prefill.feeling.emotionCode !== null || prefill.feeling.intensity !== null;
+  const medicationSet = !!prefill.medication.molecule.trim() || !!prefill.medication.dosage.trim();
+  const occurredSet = !prefill.occurred.now;
+  const links = [
+    ...prefill.links,
+    ...existing.links.filter(
+      (link) => !prefill.links.some((item) => item.targetId === link.targetId),
+    ),
+  ];
+  return {
+    ...existing,
+    type: prefill.type,
+    title,
+    body: lines.join('\n'),
+    feeling: feelingSet ? { ...prefill.feeling } : { ...existing.feeling },
+    medication: medicationSet ? { ...prefill.medication } : { ...existing.medication },
+    occurred: occurredSet ? { ...prefill.occurred } : { ...existing.occurred },
+    links,
+  };
+}
+
 /** Le brouillon d'une entrée existante : ses valeurs courantes dans les champs du panneau. */
 export function draftFromEntry(entry: EntryView): EntryDraft {
   return {

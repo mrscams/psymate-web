@@ -1,10 +1,10 @@
 // Textes de la barre de commande (M6-02) : avertissements du parseur (M6-01 donne des codes et des
 // paramètres, jamais de texte), problèmes de cible, précisions, problèmes d'enregistrement.
 
-import { ApiProblem } from '../../../core/http';
+import { ApiProblem, FieldProblem } from '../../../core/http';
 import { EntryType, entryTypeLabel } from '../../../shared/ui';
 import { OccurredPrecision } from '../../../shared/util';
-import { CaptureEmotion, TargetIssue } from '../data/capture.model';
+import { CaptureEmotion, CapturePreview, TargetIssue } from '../data/capture.model';
 import { CaptureEntryType, ParseWarning } from '../parser/parse.types';
 
 /** Une liste lisible (« a, b et c ») dans la langue de l'interface. */
@@ -87,6 +87,9 @@ function emptyTextHint(type: CaptureEntryType): string {
 
 /** La cible du `>` introuvable ou incompatible (bloquant). */
 export function targetIssueText(issue: TargetIssue, entryType: EntryType): string {
+  if (issue.code === 'RAIL_UNAVAILABLE') {
+    return $localize`:Problème de cible dans la barre de commande@@capture.target.railUnavailable:Les entrées à lier n'ont pas pu être chargées : réessayez, ou retirez « > ».`;
+  }
   if (issue.code === 'TARGET_NOT_FOUND') {
     const query = issue.query;
     return $localize`:Problème de cible dans la barre de commande@@capture.target.notFound:Aucune entrée récente ne commence par « ${query}:query: » : choisissez la cible dans « Lié à… » ou retirez « > ».`;
@@ -122,13 +125,45 @@ export function saveProblemText(problem: ApiProblem): string {
   if (problem.status === 0 || problem.status >= 500) {
     return $localize`:Erreur de la barre de commande@@capture.error.network:Le serveur n'a pas répondu. Votre saisie est conservée : réessayez.`;
   }
-  const details = (problem.errors ?? [])
-    .map((error) => error.message)
-    .filter((message) => !!message)
-    .join(' ');
+  const reasons = [...new Set((problem.errors ?? []).map(fieldProblemText))].filter((r) => !!r);
+  const details = reasons.join(' ');
   return details
     ? $localize`:Erreur de la barre de commande@@capture.error.details:L'entrée n'a pas été créée : ${details}:details: Complétez-la dans l'éditeur (Ctrl+Entrée).`
     : $localize`:Erreur de la barre de commande@@capture.error.generic:L'entrée n'a pas été créée. Complétez-la dans l'éditeur (Ctrl+Entrée).`;
+}
+
+/** Une erreur de champ du POST (422) : texte par code connu, message du serveur en repli. */
+function fieldProblemText(error: FieldProblem): string {
+  switch (error.code) {
+    case 'REQUIRED':
+      return $localize`:Raison d'un refus de la barre de commande (422)@@capture.error.required:Un champ obligatoire manque.`;
+    case 'OUT_OF_RANGE':
+      return $localize`:Raison d'un refus de la barre de commande (422)@@capture.error.outOfRange:Une valeur est hors des bornes permises.`;
+    case 'INVALID_TIME':
+      return $localize`:Raison d'un refus de la barre de commande (422)@@capture.error.invalidTime:Le moment n'est pas valable.`;
+    case 'UNKNOWN_EMOTION':
+      return $localize`:Raison d'un refus de la barre de commande (422)@@capture.error.unknownEmotion:L'émotion n'existe pas ou plus.`;
+    case 'UNKNOWN_TAG':
+      return $localize`:Raison d'un refus de la barre de commande (422)@@capture.error.unknownTag:Un tag n'existe pas.`;
+    case 'LINK_EXISTS':
+      return $localize`:Raison d'un refus de la barre de commande (422)@@capture.error.linkExists:Ce lien existe déjà.`;
+    case 'LINK_TYPE_NOT_ALLOWED':
+      return $localize`:Raison d'un refus de la barre de commande (422)@@capture.error.linkTypeNotAllowed:Ce type de lien n'est pas permis entre ces deux types d'entrée.`;
+    case 'UNKNOWN_LINK_TYPE':
+      return $localize`:Raison d'un refus de la barre de commande (422)@@capture.error.unknownLinkType:Ce type de lien n'existe pas.`;
+    case 'ENTRY_ARCHIVED':
+      return $localize`:Raison d'un refus de la barre de commande (422)@@capture.error.entryArchived:L'entrée liée est archivée.`;
+    case 'ENTRY_NOT_FOUND':
+      return $localize`:Raison d'un refus de la barre de commande (422)@@capture.error.entryNotFound:L'entrée liée n'existe plus.`;
+    case 'SELF_LINK':
+      return $localize`:Raison d'un refus de la barre de commande (422)@@capture.error.selfLink:Une entrée ne peut pas être liée à elle-même.`;
+    case 'DIFFERENT_PATIENT':
+      return $localize`:Raison d'un refus de la barre de commande (422)@@capture.error.differentPatient:L'entrée liée appartient à un autre dossier.`;
+    case 'SESSION_INVALID':
+      return $localize`:Raison d'un refus de la barre de commande (422)@@capture.error.sessionInvalid:La séance n'appartient pas à ce dossier.`;
+    default:
+      return error.message;
+  }
 }
 
 /** 409 EMOTION_LABEL_EXISTS et 422 de la création d'une émotion personnalisée. */
@@ -136,9 +171,55 @@ export function emotionProblemText(problem: ApiProblem): string {
   if (problem.code === 'EMOTION_LABEL_EXISTS') {
     return $localize`:Erreur de création d'émotion depuis la barre@@capture.emotion.exists:Une émotion porte déjà ce libellé : tapez son nom ou son début.`;
   }
-  const message = problem.errors?.[0]?.message;
+  const error = problem.errors?.[0];
+  if (error?.field === 'labelFr') {
+    return $localize`:Erreur de création d'émotion depuis la barre@@capture.emotion.labelInvalid:Le libellé de l'émotion est obligatoire.`;
+  }
+  if (error?.field === 'family') {
+    return $localize`:Erreur de création d'émotion depuis la barre@@capture.emotion.familyInvalid:Choisissez une famille parmi les huit proposées.`;
+  }
   return (
-    message ??
+    error?.message ||
     $localize`:Erreur de création d'émotion depuis la barre@@capture.emotion.error:L'émotion n'a pas pu être créée.`
   );
+}
+
+/** « texte » : guillemets de la langue de l'interface. */
+export function quoted(text: string): string {
+  return $localize`:Texte cité dans l'aperçu de la barre de commande@@capture.preview.quoted:« ${text}:text: »`;
+}
+
+/** 8/10 : intensité sur l'échelle du contrat. */
+export function intensityText(value: number): string {
+  return $localize`:Intensité dans l'aperçu de la barre de commande@@capture.preview.intensity:${value}:value:/10`;
+}
+
+/**
+ * Résumé court de l'aperçu pour les lecteurs d'écran (région role="status") : type, émotion et
+ * intensité, cible, nombre de points à corriger.
+ */
+export function previewSummary(preview: CapturePreview): string {
+  const parts = [entryTypeLabel(preview.type)];
+  if (preview.emotion) {
+    const label = preview.emotion.label;
+    parts.push(
+      preview.intensity !== null
+        ? $localize`:Résumé lu de l'aperçu, émotion et intensité@@capture.summary.emotion:${label}:emotion: ${preview.intensity}:intensity: sur 10`
+        : label,
+    );
+  }
+  if (preview.target) {
+    const name = preview.target.name;
+    parts.push(
+      $localize`:Résumé lu de l'aperçu, cible du lien@@capture.summary.target:lié à « ${name}:name: »`,
+    );
+  }
+  const blocking =
+    preview.warnings.filter((warning) => warning.blocking).length + (preview.targetIssue ? 1 : 0);
+  if (blocking > 0) {
+    parts.push(
+      $localize`:Résumé lu de l'aperçu, points bloquants@@capture.summary.blocking:${blocking}:count: point(s) à corriger avant d'enregistrer`,
+    );
+  }
+  return parts.join(', ');
 }

@@ -48,12 +48,13 @@ export interface CaptureTarget {
 
 /**
  * Problème vu par la barre, en plus des avertissements du parseur : la cible du `>` n'est pas dans
- * le rail, ou la matrice des liens n'admet aucun type entre les deux entrées. Tous deux bloquent
- * Entrée : un lien demandé ne disparaît jamais en silence (B5 : « l'aperçu supprime le risque
- * d'erreur silencieuse »).
+ * le rail, le rail n'a pas pu être lu, ou la matrice des liens n'admet aucun type entre les deux
+ * entrées. Tous bloquent Entrée : un lien demandé ne disparaît jamais en silence (B5 : « l'aperçu
+ * supprime le risque d'erreur silencieuse »).
  */
 export type TargetIssue =
   | { code: 'TARGET_NOT_FOUND'; query: string }
+  | { code: 'RAIL_UNAVAILABLE'; query: string }
   | { code: 'TARGET_NOT_ALLOWED'; name: string; targetType: EntryType };
 
 /** L'aperçu interprété (B5) : ce que la barre enregistrera si l'on tape Entrée. */
@@ -110,10 +111,19 @@ export function findTarget(
   );
 }
 
+/**
+ * État du rail pour la cible du `>` : ready (cibles et catalogue lus), pending (lecture en cours :
+ * la cible n'est ni trouvée ni manquante), unavailable (lecture échouée, ou toujours absente au
+ * moment d'enregistrer : la cible est introuvable, Entrée est bloquée).
+ */
+export type RailReadiness = 'ready' | 'pending' | 'unavailable';
+
 export interface PreviewContext {
   emotions: readonly CaptureEmotion[];
   candidates: readonly LinkCandidate[];
   linkTypes: readonly LinkTypeOption[];
+  /** Par défaut : ready. */
+  rail?: RailReadiness;
 }
 
 /** Résultat du parseur + vocabulaire + rail → aperçu (pur). */
@@ -125,7 +135,10 @@ export function buildPreview(result: ParseResult, context: PreviewContext): Capt
   let target: CaptureTarget | null = null;
   let targetIssue: TargetIssue | null = null;
   const query = result.target?.query.trim() ?? '';
-  if (query) {
+  const rail = context.rail ?? 'ready';
+  if (query && rail === 'unavailable') {
+    targetIssue = { code: 'RAIL_UNAVAILABLE', query };
+  } else if (query && rail === 'ready') {
     const found = findTarget(query, context.candidates, context.emotions);
     if (!found) {
       targetIssue = { code: 'TARGET_NOT_FOUND', query };

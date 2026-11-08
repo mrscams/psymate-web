@@ -7,7 +7,6 @@ export { ENTRY_QUERY_PARAM, openEntryEditor } from './entry-editor.launcher';
 // (matrice E5.3) et le même corps de POST que l'éditeur, depuis la saisie interprétée.
 export type {
   CreateEntryBody,
-  Emotion,
   EmotionFamily,
   EntryPrefill,
   LinkCandidate,
