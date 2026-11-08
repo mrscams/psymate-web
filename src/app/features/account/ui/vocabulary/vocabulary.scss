@@ -1,0 +1,253 @@
+// Styles communs des briques du vocabulaire (fiche 17) : tokens seulement.
+:host {
+  display: block;
+}
+
+h2 {
+  margin: 0 0 14px;
+  font: var(--mat-sys-label-medium);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+label,
+legend {
+  color: var(--text-primary);
+  font: var(--mat-sys-body-medium);
+}
+
+input[type='text'],
+.select {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: var(--mat-sys-body-medium);
+}
+
+.required {
+  color: var(--danger);
+  margin-left: 2px;
+}
+
+.hint,
+.muted {
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+.muted {
+  margin: 0;
+}
+
+.error {
+  margin: 4px 0 0;
+  color: var(--danger);
+  font: var(--mat-sys-body-small);
+}
+
+.proximity {
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--warning-bg);
+  color: var(--warning);
+  font: var(--mat-sys-body-small);
+}
+
+.families {
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.family {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  cursor: pointer;
+
+  &.checked {
+    border-color: var(--feeling);
+    background: var(--feeling-tint);
+  }
+}
+
+.dot {
+  display: inline-block;
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.actions,
+.row-actions,
+.tag-form-row,
+.merge-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.tag-form-row {
+  align-items: flex-end;
+
+  .field {
+    flex: 1 1 260px;
+    margin: 0;
+  }
+}
+
+.vocab-table {
+  width: 100%;
+  border-collapse: collapse;
+  font: var(--mat-sys-body-medium);
+  color: var(--text-primary);
+
+  th {
+    padding: 8px 10px;
+    text-align: left;
+    color: var(--text-secondary);
+    font: var(--mat-sys-body-small);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  td {
+    padding: 10px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .actions-col {
+    text-align: right;
+
+    .row-actions {
+      justify-content: flex-end;
+    }
+  }
+
+  .sub-row td {
+    border-bottom: 0;
+  }
+}
+
+.name {
+  font-weight: 600;
+}
+
+.hash {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.badge-perso {
+  margin-left: 8px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--feeling-tint);
+  color: var(--feeling-text);
+  font: var(--mat-sys-label-small);
+}
+
+.family-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inline-input {
+  width: 100%;
+  max-width: 280px;
+}
+
+.merge-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-ground);
+}
+
+.merge-title,
+.merge-preview {
+  margin: 0;
+}
+
+.check {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.family-warning {
+  color: var(--warning);
+}
+
+.journal {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.global-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px 24px;
+  margin: 0;
+
+  dt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+  }
+
+  dd {
+    margin: 4px 0 0;
+    color: var(--text-secondary);
+    font: var(--mat-sys-body-small);
+  }
+}

@@ -12969,6 +12969,948 @@
           <context context-type="linenumber">226</context>
         </context-group>
         <note priority="1" from="description">Erreur de réactivation d&apos;une entrée</note>
+      <trans-unit id="vocabulary.pageTitle" datatype="html">
+        <source>Émotions personnalisées · PsyMate</source>
+        <target state="translated">Custom emotions · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet des émotions personnalisées</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.pageTitle" datatype="html">
+        <source>Tags · PsyMate</source>
+        <target state="translated">Tags · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet des tags</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.title" datatype="html">
+        <source> Émotions personnalisées </source>
+        <target state="translated">Custom emotions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
+          <context context-type="linenumber">11,13</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la page Émotions personnalisées</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.intro" datatype="html">
+        <source> Le vocabulaire global (29 émotions, inspiré de Plutchik) couvre l&apos;essentiel. Quand il manque un mot à votre pratique, ajoutez-le ici : il sera proposé dans la saisie, marqué « perso », et rattaché à une famille pour entrer dans les courbes et le graphe. </source>
+        <target state="translated">The global vocabulary (29 emotions, inspired by Plutchik) covers the essentials. When your practice needs a missing word, add it here: it will be offered when recording feelings, marked “custom”, and attached to a family so it appears in curves and the graph.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
+          <context context-type="linenumber">14,19</context>
+        </context-group>
+        <note priority="1" from="description">Introduction de la page Émotions personnalisées</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tagsLink" datatype="html">
+        <source>Gérer mes tags</source>
+        <target state="translated">Manage my tags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
+          <context context-type="linenumber">20,25</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la page des tags</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.mine.title" datatype="html">
+        <source> Mes émotions · <x id="INTERPOLATION" equiv-text="{{ store.customs().length }}"/> </source>
+        <target state="translated">My emotions · <x id="INTERPOLATION" equiv-text="{{ store.customs().length }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
+          <context context-type="linenumber">32,34</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la liste des émotions personnelles</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.mine.hint" datatype="html">
+        <source> Une émotion utilisée ne se supprime pas : elle se fusionne. </source>
+        <target state="translated">An emotion in use cannot be deleted: merge it instead.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
+          <context context-type="linenumber">35,39</context>
+        </context-group>
+        <note priority="1" from="description">Mention sous le titre de la liste</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.journal.title" datatype="html">
+        <source> Journal des fusions </source>
+        <target state="translated">Merge log</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
+          <context context-type="linenumber">63,66</context>
+        </context-group>
+        <note priority="1" from="description">Titre du journal des fusions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.global.title" datatype="html">
+        <source> Vocabulaire global · <x id="INTERPOLATION" equiv-text="{{ store.globals().length }}"/> émotions </source>
+        <target state="translated">Global vocabulary · <x id="INTERPOLATION" equiv-text="{{ store.globals().length }}"/> emotions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
+          <context context-type="linenumber">75,76</context>
+        </context-group>
+        <note priority="1" from="description">Titre du vocabulaire global</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.global.hint" datatype="html">
+        <source> Géré par la plateforme, en lecture seule. </source>
+        <target state="translated">Managed by the platform, read-only.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
+          <context context-type="linenumber">78,81</context>
+        </context-group>
+        <note priority="1" from="description">Mention du vocabulaire global</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.mine.emptyTitle" datatype="html">
+        <source>Aucune émotion personnalisée</source>
+        <target state="translated">No custom emotions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état vide des émotions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.mine.emptyMessage" datatype="html">
+        <source>Ajoutez-en une avec le formulaire ci-dessus quand le vocabulaire global ne suffit pas.</source>
+        <target state="translated">Add one with the form above when the global vocabulary is not enough.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Message de l&apos;état vide des émotions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.retry" datatype="html">
+        <source>Réessayer</source>
+        <target state="translated">Retry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Réessayer de la liste des émotions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.add.done" datatype="html">
+        <source>« <x id="label" equiv-text="created.labelFr"/> » ajoutée à votre vocabulaire.</source>
+        <target state="translated">“<x id="label" equiv-text="created.labelFr"/>” added to your vocabulary.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <note priority="1" from="description">Toast après l&apos;ajout d&apos;une émotion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.done.one" datatype="html">
+        <source>« <x id="source" equiv-text="source"/> » fusionnée dans « <x id="target" equiv-text="target"/> » : 1 ressenti déplacé.</source>
+        <target state="translated">“<x id="source" equiv-text="source"/>” merged into “<x id="target" equiv-text="target"/>”: 1 feeling moved.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une fusion d&apos;émotions, un ressenti</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.done" datatype="html">
+        <source>« <x id="source" equiv-text="source"/> » fusionnée dans « <x id="target" equiv-text="target"/> » : <x id="count" equiv-text="count"/> ressentis déplacés.</source>
+        <target state="translated">“<x id="source" equiv-text="source"/>” merged into “<x id="target" equiv-text="target"/>”: <x id="count" equiv-text="count"/> feelings moved.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une fusion d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.undo" datatype="html">
+        <source>Annuler</source>
+        <target state="translated">Undo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <note priority="1" from="description">Action Annuler du toast de fusion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.journal.undoDone" datatype="html">
+        <source>Fusion annulée : « <x id="source" equiv-text="entry.sourceLabel"/> » est de retour avec ses ressentis.</source>
+        <target state="translated">Merge undone: “<x id="source" equiv-text="entry.sourceLabel"/>” is back with its feelings.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <note priority="1" from="description">Toast après l&apos;annulation d&apos;une fusion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.title" datatype="html">
+        <source>Tags</source>
+        <target state="translated">Tags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/tags.page.html</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la page Tags</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.intro" datatype="html">
+        <source> Vos mots-clés libres, posés sur les patients et les entrées. Renommer un tag le change partout ; fusionner deux tags réétiquette tout ce qui portait le premier. </source>
+        <target state="translated">Your free keywords, set on patients and entries. Renaming a tag changes it everywhere; merging two tags relabels everything that carried the first one.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/tags.page.html</context>
+          <context context-type="linenumber">12,16</context>
+        </context-group>
+        <note priority="1" from="description">Introduction de la page Tags</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.emotionsLink" datatype="html">
+        <source>Émotions personnalisées</source>
+        <target state="translated">Custom emotions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/tags.page.html</context>
+          <context context-type="linenumber">17,23</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers les émotions personnalisées</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.list.title" datatype="html">
+        <source> Mes tags · <x id="INTERPOLATION" equiv-text="{{ store.list().length }}"/> </source>
+        <target state="translated">My tags · <x id="INTERPOLATION" equiv-text="{{ store.list().length }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/tags.page.html</context>
+          <context context-type="linenumber">28,30</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la liste des tags</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.emptyTitle" datatype="html">
+        <source>Aucun tag</source>
+        <target state="translated">No tags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/tags.page.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état vide des tags</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.emptyMessage" datatype="html">
+        <source>Créez-en un ci-dessus, ou depuis la fiche d&apos;un patient.</source>
+        <target state="translated">Create one above, or from a patient record.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/tags.page.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <note priority="1" from="description">Message de l&apos;état vide des tags</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.retry" datatype="html">
+        <source>Réessayer</source>
+        <target state="translated">Retry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/tags.page.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Réessayer de la liste des tags</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.add.done" datatype="html">
+        <source>Tag « <x id="label" equiv-text="created.label"/> » créé.</source>
+        <target state="translated">Tag “<x id="label" equiv-text="created.label"/>” created.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/tags.page.ts</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+        <note priority="1" from="description">Toast après la création d&apos;un tag</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.merge.done" datatype="html">
+        <source>« <x id="source" equiv-text="source"/> » fusionné dans « <x id="target" equiv-text="target.label"/> ». Patients et entrées sont réétiquetés en arrière-plan : un écran déjà ouvert peut montrer l&apos;ancien libellé quelques secondes.</source>
+        <target state="translated">“<x id="source" equiv-text="source"/>” merged into “<x id="target" equiv-text="target.label"/>”. Patients and entries are relabelled in the background: a screen already open may show the old label for a few seconds.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/tags.page.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une fusion de tags</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.table.caption" datatype="html">
+        <source> Mes émotions personnalisées </source>
+        <target state="translated">My custom emotions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">3,7</context>
+        </context-group>
+        <note priority="1" from="description">Légende du tableau des émotions personnelles</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.table.emotion" datatype="html">
+        <source>Émotion</source>
+        <target state="translated">Emotion</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">7,8</context>
+        </context-group>
+        <note priority="1" from="description">Colonne émotion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.table.family" datatype="html">
+        <source>Famille</source>
+        <target state="translated">Family</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">8,9</context>
+        </context-group>
+        <note priority="1" from="description">Colonne famille</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.table.actions" datatype="html">
+        <source> Actions </source>
+        <target state="translated">Actions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">10,15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">11,16</context>
+        </context-group>
+        <note priority="1" from="description">Colonne actions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.rename.label" datatype="html">
+        <source>Nouveau libellé de « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> »</source>
+        <target state="translated">New label for “<x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/>”</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">21,22</context>
+        </context-group>
+        <note priority="1" from="description">Libellé du champ de renommage</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.badge.custom" datatype="html">
+        <source>perso</source>
+        <target state="translated">custom</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">39,44</context>
+        </context-group>
+        <note priority="1" from="description">Badge émotion personnalisée</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.rename.save" datatype="html">
+        <source> Enregistrer </source>
+        <target state="translated">Save</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">59,62</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">53,56</context>
+        </context-group>
+        <note priority="1" from="description">Bouton enregistrer le renommage</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.rename.cancel" datatype="html">
+        <source> Annuler </source>
+        <target state="translated">Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">67,70</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">61,64</context>
+        </context-group>
+        <note priority="1" from="description">Bouton annuler le renommage</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.rename" datatype="html">
+        <source>Renommer</source>
+        <target state="translated">Rename</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">78,79</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">70,71</context>
+        </context-group>
+        <note priority="1" from="description">Bouton renommer</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.open" datatype="html">
+        <source>Fusionner…</source>
+        <target state="translated">Merge…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">88,89</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">81,82</context>
+        </context-group>
+        <note priority="1" from="description">Bouton fusionner</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.title" datatype="html">
+        <source>Fusionner « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> » dans une autre émotion</source>
+        <target state="translated">Merge “<x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/>” into another emotion</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">113,114</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la fusion d&apos;émotion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.target" datatype="html">
+        <source>Fusionner dans</source>
+        <target state="translated">Merge into</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">118,121</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">113,116</context>
+        </context-group>
+        <note priority="1" from="description">Libellé du choix de la cible</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.choose" datatype="html">
+        <source> Choisir une émotion… </source>
+        <target state="translated">Choose an emotion…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">127,129</context>
+        </context-group>
+        <note priority="1" from="description">Option vide du choix de la cible</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.groupGlobal" datatype="html">
+        <source>Vocabulaire global</source>
+        <target state="translated">Global vocabulary</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">131,132</context>
+        </context-group>
+        <note priority="1" from="description">Groupe des émotions globales</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.groupCustom" datatype="html">
+        <source>Mes émotions</source>
+        <target state="translated">My emotions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">143,144</context>
+        </context-group>
+        <note priority="1" from="description">Groupe des émotions personnelles</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.allFamilies" datatype="html">
+        <source>Proposer les autres familles</source>
+        <target state="translated">Show other families</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">161,166</context>
+        </context-group>
+        <note priority="1" from="description">Case pour proposer les autres familles</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.question" datatype="html">
+        <source>Fusionner « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> » dans « <x id="INTERPOLATION_1" equiv-text="{{ target.labelFr }}"/> » ?</source>
+        <target state="translated">Merge “<x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/>” into “<x id="INTERPOLATION_1" equiv-text="{{ target.labelFr }}"/>”?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">169,170</context>
+        </context-group>
+        <note priority="1" from="description">Question de la fusion d&apos;émotion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.preview" datatype="html">
+        <source> Les ressentis qui portent « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> » gardent leur intensité et leur texte ; l&apos;émotion affichée devient « <x id="INTERPOLATION_1" equiv-text="{{ target.labelFr }}"/> ». Opération réversible pendant 30 jours depuis le journal des fusions.</source>
+        <target state="translated">Feelings labelled “<x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/>” keep their intensity and text; the displayed emotion becomes “<x id="INTERPOLATION_1" equiv-text="{{ target.labelFr }}"/>”. Can be undone for 30 days from the merge log.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">172,174</context>
+        </context-group>
+        <note priority="1" from="description">Aperçu de la fusion d&apos;émotion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.familyChange" datatype="html">
+        <source>« <x id="INTERPOLATION" equiv-text="{{ target.labelFr }}"/> » est dans la famille <x id="INTERPOLATION_1" equiv-text="{{ familyLabel(target.family) }}"/>, pas <x id="INTERPOLATION_2" equiv-text="{{ familyLabel(emotion.family) }}"/> : les courbes de ces ressentis changeront de couleur. Je confirme.</source>
+        <target state="translated">“<x id="INTERPOLATION" equiv-text="{{ target.labelFr }}"/>” belongs to the <x id="INTERPOLATION_1" equiv-text="{{ familyLabel(target.family) }}"/> family, not <x id="INTERPOLATION_2" equiv-text="{{ familyLabel(emotion.family) }}"/>: the curves of these feelings will change colour. I confirm.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">185,187</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation du changement de famille</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.confirm" datatype="html">
+        <source> Fusionner </source>
+        <target state="translated">Merge</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">201,203</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">147,149</context>
+        </context-group>
+        <note priority="1" from="description">Bouton confirmer la fusion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.merge.cancel" datatype="html">
+        <source> Annuler </source>
+        <target state="translated">Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
+          <context context-type="linenumber">209,211</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">155,157</context>
+        </context-group>
+        <note priority="1" from="description">Bouton annuler la fusion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.rename.required" datatype="html">
+        <source>Saisissez un libellé.</source>
+        <target state="translated">Enter a label.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, libellé vide au renommage</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.add.title" datatype="html">
+        <source> Ajouter une émotion </source>
+        <target state="translated">Add an emotion</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
+          <context context-type="linenumber">27,31</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la carte d&apos;ajout d&apos;émotion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.add.label" datatype="html">
+        <source>Libellé</source>
+        <target state="translated">Label</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+        <note priority="1" from="description">Libellé du champ libellé d&apos;émotion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.add.nearGlobal" datatype="html">
+        <source>Proche de « <x id="INTERPOLATION" equiv-text="{{ near.labelFr }}"/> » (vocabulaire global). Vérifiez que ce n&apos;est pas la même chose.</source>
+        <target state="translated">Close to “<x id="INTERPOLATION" equiv-text="{{ near.labelFr }}"/>” (global vocabulary). Check that it is not the same thing.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
+          <context context-type="linenumber">55,56</context>
+        </context-group>
+        <note priority="1" from="description">Avertissement de proximité, émotion globale</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.add.nearCustom" datatype="html">
+        <source>Proche de « <x id="INTERPOLATION" equiv-text="{{ near.labelFr }}"/> » (vos émotions). Vérifiez que ce n&apos;est pas la même chose.</source>
+        <target state="translated">Close to “<x id="INTERPOLATION" equiv-text="{{ near.labelFr }}"/>” (your emotions). Check that it is not the same thing.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
+          <context context-type="linenumber">60,61</context>
+        </context-group>
+        <note priority="1" from="description">Avertissement de proximité, émotion personnelle</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.add.family" datatype="html">
+        <source>Famille</source>
+        <target state="translated">Family</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
+          <context context-type="linenumber">74,75</context>
+        </context-group>
+        <note priority="1" from="description">Légende des familles</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.add.familyHint" datatype="html">
+        <source> · détermine la couleur des courbes et la place dans le graphe</source>
+        <target state="translated"> · sets the colour of curves and the place in the graph</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
+          <context context-type="linenumber">77,80</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la famille</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.add.submit" datatype="html">
+        <source>Ajouter à mon vocabulaire</source>
+        <target state="translated">Add to my vocabulary</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
+          <context context-type="linenumber">98,100</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;ajout d&apos;émotion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.add.visibility" datatype="html">
+        <source> Visible de vous seul·e ; proposée dans la saisie des ressentis dès la prochaine entrée. </source>
+        <target state="translated">Visible to you only; offered when recording feelings from your next entry.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
+          <context context-type="linenumber">101,105</context>
+        </context-group>
+        <note priority="1" from="description">Mention de visibilité d&apos;une émotion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.add.failed" datatype="html">
+        <source> L&apos;émotion n&apos;a pas été ajoutée. Vérifiez la connexion puis réessayez. </source>
+        <target state="translated">The emotion was not added. Check your connection and try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
+          <context context-type="linenumber">106,111</context>
+        </context-group>
+        <note priority="1" from="description">Échec de l&apos;ajout d&apos;émotion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.journal.empty" datatype="html">
+        <source> Aucune fusion faite depuis ce navigateur. Une fusion reste annulable pendant 30 jours. </source>
+        <target state="translated">No merge made from this browser. A merge can be undone for 30 days.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
+          <context context-type="linenumber">35,39</context>
+        </context-group>
+        <note priority="1" from="description">Journal des fusions vide</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.journal.into" datatype="html">
+        <source>fusionnée dans</source>
+        <target state="translated">merged into</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+        <note priority="1" from="description">Mot entre source et cible d&apos;une fusion</note>
+      </trans-unit>
+      <trans-unit id="4311614769790141296" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {aucun ressenti} =1 {1 ressenti} other {<x id="INTERPOLATION"/> ressentis}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =0 {no feelings} =1 {1 feeling} other {<x id="INTERPOLATION"/> feelings}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="vocabulary.journal.meta" datatype="html">
+        <source><x id="ICU" equiv-text="{row.entry.merge.affectedCount, plural, =0 {aucun ressenti} =1 {1 ressenti} other {{{row.entry.merge.affectedCount}} ressentis}}" xid="1847635703379406991"/> · le <x id="INTERPOLATION_1" equiv-text="{{ row.mergedAt }}"/></source>
+        <target state="translated"><x id="ICU" equiv-text="{row.entry.merge.affectedCount, plural, =0 {aucun ressenti} =1 {1 ressenti} other {{{row.entry.merge.affectedCount}} ressentis}}" xid="1847635703379406991"/> · on <x id="INTERPOLATION_1" equiv-text="{{ row.mergedAt }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
+          <context context-type="linenumber">53,54</context>
+        </context-group>
+        <note priority="1" from="description">Ressentis déplacés et date d&apos;une fusion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.journal.until" datatype="html">
+        <source>· annulable jusqu&apos;au <x id="INTERPOLATION" equiv-text="{{ row.until }}"/></source>
+        <target state="translated">· can be undone until <x id="INTERPOLATION" equiv-text="{{ row.until }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
+          <context context-type="linenumber">58,59</context>
+        </context-group>
+        <note priority="1" from="description">Fusion annulable jusqu&apos;à une date</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.journal.undone" datatype="html">
+        <source>· annulée le <x id="INTERPOLATION" equiv-text="{{ row.undoneAt }}"/></source>
+        <target state="translated">· undone on <x id="INTERPOLATION" equiv-text="{{ row.undoneAt }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
+          <context context-type="linenumber">63,64</context>
+        </context-group>
+        <note priority="1" from="description">Fusion annulée</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.journal.expired" datatype="html">
+        <source>· délai d&apos;annulation dépassé</source>
+        <target state="translated">· undo period expired</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
+          <context context-type="linenumber">68,71</context>
+        </context-group>
+        <note priority="1" from="description">Fusion au délai dépassé</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.journal.undo" datatype="html">
+        <source>Annuler la fusion</source>
+        <target state="translated">Undo merge</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
+          <context context-type="linenumber">81,82</context>
+        </context-group>
+        <note priority="1" from="description">Bouton annuler une fusion</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.add.title" datatype="html">
+        <source> Ajouter un tag </source>
+        <target state="translated">Add a tag</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-form.component.ts</context>
+          <context context-type="linenumber">22,25</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la carte d&apos;ajout de tag</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.add.label" datatype="html">
+        <source>Libellé du tag</source>
+        <target state="translated">Tag label</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-form.component.ts</context>
+          <context context-type="linenumber">27,30</context>
+        </context-group>
+        <note priority="1" from="description">Libellé du champ tag</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.add.submit" datatype="html">
+        <source>Créer le tag</source>
+        <target state="translated">Create tag</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-form.component.ts</context>
+          <context context-type="linenumber">42,45</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de création de tag</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.add.help" datatype="html">
+        <source> Un mot-clé libre pour regrouper patients et entrées (« # » facultatif). Un ressenti se note avec une émotion, pas avec un tag. </source>
+        <target state="translated">A free keyword to group patients and entries (“#” optional). A feeling is recorded with an emotion, not a tag.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-form.component.ts</context>
+          <context context-type="linenumber">49,53</context>
+        </context-group>
+        <note priority="1" from="description">Aide du champ tag</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.add.required" datatype="html">
+        <source>Saisissez un libellé.</source>
+        <target state="translated">Enter a label.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-form.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, libellé de tag vide</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.caption" datatype="html">
+        <source> Mes tags </source>
+        <target state="translated">My tags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">3,7</context>
+        </context-group>
+        <note priority="1" from="description">Légende du tableau des tags</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.col.tag" datatype="html">
+        <source>Tag</source>
+        <target state="translated">Tag</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <note priority="1" from="description">Colonne tag</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.col.usage" datatype="html">
+        <source>Usages</source>
+        <target state="translated">Uses</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">8,9</context>
+        </context-group>
+        <note priority="1" from="description">Colonne usages</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.col.created" datatype="html">
+        <source>Créé le</source>
+        <target state="translated">Created</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+        <note priority="1" from="description">Colonne date de création</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.rename.label" datatype="html">
+        <source>Nouveau libellé de « <x id="INTERPOLATION" equiv-text="{{ tag.label }}"/> »</source>
+        <target state="translated">New label for “<x id="INTERPOLATION" equiv-text="{{ tag.label }}"/>”</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">22,23</context>
+        </context-group>
+        <note priority="1" from="description">Libellé du champ de renommage de tag</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.merge.title" datatype="html">
+        <source>Fusionner « <x id="INTERPOLATION" equiv-text="{{ tag.label }}"/> » dans un autre tag</source>
+        <target state="translated">Merge “<x id="INTERPOLATION" equiv-text="{{ tag.label }}"/>” into another tag</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">106,107</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la fusion de tag</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.merge.choose" datatype="html">
+        <source> Choisir un tag… </source>
+        <target state="translated">Choose a tag…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">122,124</context>
+        </context-group>
+        <note priority="1" from="description">Option vide du choix du tag cible</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.merge.question" datatype="html">
+        <source>Fusionner « <x id="INTERPOLATION" equiv-text="{{ tag.label }}"/> » dans « <x id="INTERPOLATION_1" equiv-text="{{ target.label }}"/> » ?</source>
+        <target state="translated">Merge “<x id="INTERPOLATION" equiv-text="{{ tag.label }}"/>” into “<x id="INTERPOLATION_1" equiv-text="{{ target.label }}"/>”?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">132,133</context>
+        </context-group>
+        <note priority="1" from="description">Question de la fusion de tag</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.merge.preview" datatype="html">
+        <source> Réétiquette <x id="ICU" equiv-text="{tag.usageCount, plural, =0 {les patients et les entrées} =1 {1 usage (patient ou entrée)} other {{{tag.usageCount}} usages (patients et entrées)}}" xid="2428451736813176020"/> : ils porteront « <x id="INTERPOLATION_1" equiv-text="{{ target.label }}"/> », et « <x id="INTERPOLATION_2" equiv-text="{{ tag.label }}"/> » disparaît de vos tags. Cette fusion ne s&apos;annule pas.</source>
+        <target state="translated">Relabels <x id="ICU" equiv-text="{tag.usageCount, plural, =0 {les patients et les entrées} =1 {1 usage (patient ou entrée)} other {{{tag.usageCount}} usages (patients et entrées)}}" xid="2428451736813176020"/>: they will carry “<x id="INTERPOLATION_1" equiv-text="{{ target.label }}"/>”, and “<x id="INTERPOLATION_2" equiv-text="{{ tag.label }}"/>” disappears from your tags. This merge cannot be undone.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">135,136</context>
+        </context-group>
+        <note priority="1" from="description">Aperçu de la fusion de tag</note>
+      </trans-unit>
+      <trans-unit id="3449268335038653757" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {les patients et les entrées} =1 {1 usage (patient ou entrée)} other {<x id="INTERPOLATION"/> usages (patients et entrées)}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =0 {patients and entries} =1 {1 use (patient or entry)} other {<x id="INTERPOLATION"/> uses (patients and entries)}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
+          <context context-type="linenumber">135</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="vocabulary.family.joy" datatype="html">
+        <source>Joie</source>
+        <target state="translated">Joy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.family.trust" datatype="html">
+        <source>Confiance</source>
+        <target state="translated">Trust</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.family.fear" datatype="html">
+        <source>Peur</source>
+        <target state="translated">Fear</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.family.surprise" datatype="html">
+        <source>Surprise</source>
+        <target state="translated">Surprise</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.family.sadness" datatype="html">
+        <source>Tristesse</source>
+        <target state="translated">Sadness</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.family.disgust" datatype="html">
+        <source>Dégoût</source>
+        <target state="translated">Disgust</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.family.anger" datatype="html">
+        <source>Colère</source>
+        <target state="translated">Anger</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.family.anticipation" datatype="html">
+        <source>Anticipation</source>
+        <target state="translated">Anticipation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.isEmotion" datatype="html">
+        <source>Ce libellé est déjà une émotion : utiliser l&apos;émotion <x id="emotion" equiv-text="emotion.labelFr"/> ? Les émotions se notent en ressentis dans le dossier, pas en tags.</source>
+        <target state="translated">This label is already an emotion: use the emotion <x id="emotion" equiv-text="emotion.labelFr"/>? Emotions are recorded as feelings in the record, not as tags.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, le tag est une émotion (422), avec l&apos;émotion proposée</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.isEmotionPlain" datatype="html">
+        <source>Ce libellé est déjà une émotion : notez-le en ressenti dans le dossier, pas en tag.</source>
+        <target state="translated">This label is already an emotion: record it as a feeling in the record, not as a tag.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, le tag est une émotion (422)</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.exists" datatype="html">
+        <source>Un de vos tags porte déjà ce libellé (sans compter la casse, les accents ni « # »).</source>
+        <target state="translated">One of your tags already has this label (ignoring case, accents and “#”).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, tag existant (409)</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.notFound" datatype="html">
+        <source>Tag introuvable : il a peut-être été fusionné depuis un autre onglet. La liste a été rechargée.</source>
+        <target state="translated">Tag not found: it may have been merged in another tab. The list has been reloaded.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, tag introuvable (404)</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.add.exists" datatype="html">
+        <source>Ce libellé existe déjà dans le vocabulaire global ou dans vos émotions.</source>
+        <target state="translated">This label already exists in the global vocabulary or in your emotions.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, libellé d&apos;émotion déjà pris (409)</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.row.inactive" datatype="html">
+        <source>Cette émotion a déjà été fusionnée. La liste a été rechargée.</source>
+        <target state="translated">This emotion has already been merged. The list has been reloaded.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, émotion déjà fusionnée (409)</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.row.notFound" datatype="html">
+        <source>Émotion introuvable : elle a peut-être été fusionnée depuis un autre onglet.</source>
+        <target state="translated">Emotion not found: it may have been merged in another tab.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, émotion introuvable (404)</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.row.invalid" datatype="html">
+        <source>Saisie refusée par le serveur.</source>
+        <target state="translated">Input rejected by the server.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, saisie refusée (422)</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.row.failed" datatype="html">
+        <source>L&apos;opération a échoué. Vérifiez la connexion puis réessayez.</source>
+        <target state="translated">The operation failed. Check your connection and try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, écriture échouée</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.journal.error.expired" datatype="html">
+        <source>Le délai de 30 jours est dépassé : cette fusion ne s&apos;annule plus.</source>
+        <target state="translated">The 30-day period has passed: this merge can no longer be undone.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, délai d&apos;annulation dépassé (409)</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.journal.error.undone" datatype="html">
+        <source>Cette fusion a déjà été annulée.</source>
+        <target state="translated">This merge has already been undone.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, fusion déjà annulée (409)</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.journal.error.notFound" datatype="html">
+        <source>Fusion introuvable : elle a été retirée du journal.</source>
+        <target state="translated">Merge not found: it has been removed from the log.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, fusion introuvable (404)</note>
       </trans-unit>
     </body>
   </file>

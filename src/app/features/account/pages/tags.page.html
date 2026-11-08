@@ -1,0 +1,50 @@
+<div class="account">
+  <pm-account-nav
+    [name]="displayName()"
+    [subtitle]="subtitle()"
+    [verificationStatus]="session.verificationStatus()"
+  />
+
+  <div class="content">
+    <header class="page-header">
+      <h1 i18n="Titre de la page Tags@@vocabulary.tags.title">Tags</h1>
+      <p class="intro" i18n="Introduction de la page Tags@@vocabulary.tags.intro">
+        Vos mots-clés libres, posés sur les patients et les entrées. Renommer un tag le change
+        partout ; fusionner deux tags réétiquette tout ce qui portait le premier.
+      </p>
+      <p class="intro">
+        <a
+          [routerLink]="emotionsPath"
+          i18n="Lien vers les émotions personnalisées@@vocabulary.tags.emotionsLink"
+          >Émotions personnalisées</a
+        >
+      </p>
+    </header>
+
+    <section class="card">
+      <pm-tag-form [busy]="store.creating()" [save]="create" />
+    </section>
+
+    <section class="card" aria-labelledby="h-my-tags">
+      <h2 id="h-my-tags" i18n="Titre de la liste des tags@@vocabulary.tags.list.title">
+        Mes tags · {{ store.list().length }}
+      </h2>
+      <pm-state
+        [kind]="listState()"
+        skeleton="row"
+        [lines]="4"
+        [action]="retry"
+        [title]="listState() === 'empty' ? empty.title : undefined"
+        [message]="listState() === 'empty' ? empty.message : undefined"
+      />
+      @if (listState() === null) {
+        <pm-tag-table
+          [tags]="store.list()"
+          [busyId]="store.busyId()"
+          [rename]="rename"
+          [merge]="merge"
+        />
+      }
+    </section>
+  </div>
+</div>

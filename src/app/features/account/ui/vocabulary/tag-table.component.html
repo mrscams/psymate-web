@@ -1,0 +1,174 @@
+<table class="vocab-table">
+  <caption class="sr-only" i18n="Légende du tableau des tags@@vocabulary.tags.caption">
+    Mes tags
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col" i18n="Colonne tag@@vocabulary.tags.col.tag">Tag</th>
+      <th scope="col" i18n="Colonne usages@@vocabulary.tags.col.usage">Usages</th>
+      <th scope="col" i18n="Colonne date de création@@vocabulary.tags.col.created">Créé le</th>
+      <th scope="col" class="actions-col" i18n="Colonne actions@@vocabulary.table.actions">
+        Actions
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (tag of tags(); track tag.id) {
+      <tr [attr.data-tag]="tag.label" [attr.aria-busy]="busyId() === tag.id">
+        <td>
+          @if (isEditing('rename', tag.id)) {
+            <label class="sr-only" [for]="'tag-rename-input-' + tag.id">
+              <span i18n="Libellé du champ de renommage de tag@@vocabulary.tags.rename.label"
+                >Nouveau libellé de « {{ tag.label }} »</span
+              >
+            </label>
+            <input
+              class="inline-input"
+              type="text"
+              maxlength="80"
+              [id]="'tag-rename-input-' + tag.id"
+              [ngModel]="draft()"
+              (ngModelChange)="draft.set($event); rowError.set(null)"
+              (keydown.enter)="$event.preventDefault(); saveRename(tag)"
+              (keydown.escape)="cancel()"
+              [attr.aria-invalid]="rowError() !== null"
+              [attr.aria-describedby]="rowError() ? 'tag-row-error-' + tag.id : null"
+            />
+          } @else {
+            <span class="name"><span class="hash" aria-hidden="true">#</span>{{ tag.label }}</span>
+          }
+        </td>
+        <td class="mono">{{ tag.usageCount }}</td>
+        <td class="mono">{{ created(tag) }}</td>
+        <td class="actions-col">
+          <span class="row-actions">
+            @if (isEditing('rename', tag.id)) {
+              <button
+                mat-flat-button
+                type="button"
+                [disabled]="busyId() === tag.id"
+                (click)="saveRename(tag)"
+                i18n="Bouton enregistrer le renommage@@vocabulary.rename.save"
+              >
+                Enregistrer
+              </button>
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="cancel()"
+                i18n="Bouton annuler le renommage@@vocabulary.rename.cancel"
+              >
+                Annuler
+              </button>
+            } @else {
+              <button
+                mat-stroked-button
+                type="button"
+                [id]="'tag-rename-btn-' + tag.id"
+                (click)="startRename(tag)"
+              >
+                <span i18n="Bouton renommer@@vocabulary.rename">Renommer</span>
+                <span class="sr-only"> {{ tag.label }}</span>
+              </button>
+              <button
+                mat-stroked-button
+                type="button"
+                [id]="'tag-merge-btn-' + tag.id"
+                [disabled]="tags().length < 2"
+                [attr.aria-expanded]="isEditing('merge', tag.id)"
+                (click)="startMerge(tag)"
+              >
+                <span i18n="Bouton fusionner@@vocabulary.merge.open">Fusionner…</span>
+                <span class="sr-only"> {{ tag.label }}</span>
+              </button>
+            }
+          </span>
+        </td>
+      </tr>
+      @if (rowError() && editing()?.id === tag.id) {
+        <tr class="sub-row">
+          <td colspan="4">
+            <p class="error" role="alert" [id]="'tag-row-error-' + tag.id">{{ rowError() }}</p>
+          </td>
+        </tr>
+      }
+      @if (isEditing('merge', tag.id)) {
+        <tr class="sub-row">
+          <td colspan="4">
+            <div
+              class="merge-confirm"
+              role="group"
+              [attr.aria-labelledby]="'tag-merge-title-' + tag.id"
+              (keydown.escape)="cancel()"
+            >
+              <p class="merge-title" [id]="'tag-merge-title-' + tag.id">
+                <span i18n="Titre de la fusion de tag@@vocabulary.tags.merge.title"
+                  >Fusionner « {{ tag.label }} » dans un autre tag</span
+                >
+              </p>
+              <div class="merge-controls">
+                <label
+                  [for]="'tag-merge-target-' + tag.id"
+                  i18n="Libellé du choix de la cible@@vocabulary.merge.target"
+                  >Fusionner dans</label
+                >
+                <select
+                  class="select"
+                  [id]="'tag-merge-target-' + tag.id"
+                  [ngModel]="targetId()"
+                  (ngModelChange)="selectTarget($event)"
+                >
+                  <option
+                    value=""
+                    i18n="Option vide du choix du tag cible@@vocabulary.tags.merge.choose"
+                  >
+                    Choisir un tag…
+                  </option>
+                  @for (other of targetsFor(tag); track other.id) {
+                    <option [value]="other.id">{{ other.label }}</option>
+                  }
+                </select>
+              </div>
+              @if (target(); as target) {
+                <p class="merge-preview" aria-live="polite">
+                  <strong i18n="Question de la fusion de tag@@vocabulary.tags.merge.question"
+                    >Fusionner « {{ tag.label }} » dans « {{ target.label }} » ?</strong
+                  >
+                  <span i18n="Aperçu de la fusion de tag@@vocabulary.tags.merge.preview">
+                    Réétiquette
+                    {tag.usageCount, plural,
+                      =0 {les patients et les entrées}
+                      =1 {1 usage (patient ou entrée)}
+                      other {{{tag.usageCount}} usages (patients et entrées)}
+                    }
+                    : ils porteront « {{ target.label }} », et « {{ tag.label }} » disparaît de vos
+                    tags. Cette fusion ne s'annule pas.</span
+                  >
+                </p>
+              }
+              <div class="row-actions">
+                <button
+                  mat-flat-button
+                  type="button"
+                  [disabled]="!target() || busyId() === tag.id"
+                  (click)="confirmMerge(tag)"
+                  i18n="Bouton confirmer la fusion@@vocabulary.merge.confirm"
+                >
+                  Fusionner
+                </button>
+                <button
+                  mat-stroked-button
+                  type="button"
+                  (click)="cancel()"
+                  i18n="Bouton annuler la fusion@@vocabulary.merge.cancel"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      }
+    }
+  </tbody>
+</table>

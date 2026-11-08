@@ -1,0 +1,228 @@
+<table class="vocab-table">
+  <caption
+    class="sr-only"
+    i18n="Légende du tableau des émotions personnelles@@vocabulary.table.caption"
+  >
+    Mes émotions personnalisées
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col" i18n="Colonne émotion@@vocabulary.table.emotion">Émotion</th>
+      <th scope="col" i18n="Colonne famille@@vocabulary.table.family">Famille</th>
+      <th scope="col" class="actions-col" i18n="Colonne actions@@vocabulary.table.actions">
+        Actions
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (emotion of customs(); track emotion.code) {
+      <tr [attr.data-code]="emotion.code" [attr.aria-busy]="busyCode() === emotion.code">
+        <td>
+          @if (isEditing('rename', emotion.code)) {
+            <label class="sr-only" [for]="'rename-input-' + emotion.code">
+              <span i18n="Libellé du champ de renommage@@vocabulary.rename.label"
+                >Nouveau libellé de « {{ emotion.labelFr }} »</span
+              >
+            </label>
+            <input
+              class="inline-input"
+              type="text"
+              maxlength="80"
+              [id]="'rename-input-' + emotion.code"
+              [ngModel]="draft()"
+              (ngModelChange)="draft.set($event); rowError.set(null)"
+              (keydown.enter)="$event.preventDefault(); saveRename(emotion)"
+              (keydown.escape)="cancel()"
+              [attr.aria-invalid]="rowError() !== null"
+              [attr.aria-describedby]="rowError() ? 'row-error-' + emotion.code : null"
+            />
+          } @else {
+            <span class="name">{{ emotion.labelFr }}</span>
+            <span class="badge-perso" i18n="Badge émotion personnalisée@@vocabulary.badge.custom"
+              >perso</span
+            >
+          }
+        </td>
+        <td>
+          <span class="family-cell">
+            <span
+              class="dot"
+              [style.background]="familyColor(emotion.family)"
+              aria-hidden="true"
+            ></span>
+            {{ familyLabel(emotion.family) }}
+          </span>
+        </td>
+        <td class="actions-col">
+          @if (isEditing('rename', emotion.code)) {
+            <span class="row-actions">
+              <button
+                mat-flat-button
+                type="button"
+                [disabled]="busyCode() === emotion.code"
+                (click)="saveRename(emotion)"
+                i18n="Bouton enregistrer le renommage@@vocabulary.rename.save"
+              >
+                Enregistrer
+              </button>
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="cancel()"
+                i18n="Bouton annuler le renommage@@vocabulary.rename.cancel"
+              >
+                Annuler
+              </button>
+            </span>
+          } @else {
+            <span class="row-actions">
+              <button
+                mat-stroked-button
+                type="button"
+                [id]="'rename-btn-' + emotion.code"
+                (click)="startRename(emotion)"
+              >
+                <span i18n="Bouton renommer@@vocabulary.rename">Renommer</span>
+                <span class="sr-only"> {{ emotion.labelFr }}</span>
+              </button>
+              <button
+                mat-stroked-button
+                type="button"
+                [id]="'merge-btn-' + emotion.code"
+                [attr.aria-expanded]="isEditing('merge', emotion.code)"
+                (click)="startMerge(emotion)"
+              >
+                <span i18n="Bouton fusionner@@vocabulary.merge.open">Fusionner…</span>
+                <span class="sr-only"> {{ emotion.labelFr }}</span>
+              </button>
+            </span>
+          }
+        </td>
+      </tr>
+      @if (rowError() && editing()?.code === emotion.code) {
+        <tr class="sub-row">
+          <td colspan="3">
+            <p class="error" role="alert" [id]="'row-error-' + emotion.code">{{ rowError() }}</p>
+          </td>
+        </tr>
+      }
+      @if (isEditing('merge', emotion.code)) {
+        <tr class="sub-row">
+          <td colspan="3">
+            <div
+              class="merge-confirm"
+              role="group"
+              [attr.aria-labelledby]="'merge-title-' + emotion.code"
+              (keydown.escape)="cancel()"
+            >
+              <p class="merge-title" [id]="'merge-title-' + emotion.code">
+                <span i18n="Titre de la fusion d'émotion@@vocabulary.merge.title"
+                  >Fusionner « {{ emotion.labelFr }} » dans une autre émotion</span
+                >
+              </p>
+              <div class="merge-controls">
+                <label [for]="'merge-target-' + emotion.code">
+                  <span i18n="Libellé du choix de la cible@@vocabulary.merge.target"
+                    >Fusionner dans</span
+                  >
+                </label>
+                <select
+                  class="select"
+                  [id]="'merge-target-' + emotion.code"
+                  [ngModel]="targetCode()"
+                  (ngModelChange)="selectTarget($event)"
+                >
+                  <option value="" i18n="Option vide du choix de la cible@@vocabulary.merge.choose">
+                    Choisir une émotion…
+                  </option>
+                  @if (targets().globals.length) {
+                    <optgroup
+                      label="Vocabulaire global"
+                      i18n-label="Groupe des émotions globales@@vocabulary.merge.groupGlobal"
+                    >
+                      @for (target of targets().globals; track target.code) {
+                        <option [value]="target.code">
+                          {{ target.labelFr }} · {{ familyLabel(target.family) }}
+                        </option>
+                      }
+                    </optgroup>
+                  }
+                  @if (targets().customs.length) {
+                    <optgroup
+                      label="Mes émotions"
+                      i18n-label="Groupe des émotions personnelles@@vocabulary.merge.groupCustom"
+                    >
+                      @for (target of targets().customs; track target.code) {
+                        <option [value]="target.code">
+                          {{ target.labelFr }} · {{ familyLabel(target.family) }}
+                        </option>
+                      }
+                    </optgroup>
+                  }
+                </select>
+                <label class="check">
+                  <input
+                    type="checkbox"
+                    [checked]="allFamilies()"
+                    (change)="toggleAllFamilies($any($event.target).checked)"
+                  />
+                  <span i18n="Case pour proposer les autres familles@@vocabulary.merge.allFamilies"
+                    >Proposer les autres familles</span
+                  >
+                </label>
+              </div>
+
+              @if (target(); as target) {
+                <p class="merge-preview" aria-live="polite">
+                  <strong i18n="Question de la fusion d'émotion@@vocabulary.merge.question"
+                    >Fusionner « {{ emotion.labelFr }} » dans « {{ target.labelFr }} » ?</strong
+                  >
+                  <span i18n="Aperçu de la fusion d'émotion@@vocabulary.merge.preview">
+                    Les ressentis qui portent « {{ emotion.labelFr }} » gardent leur intensité et
+                    leur texte ; l'émotion affichée devient « {{ target.labelFr }} ». Opération
+                    réversible pendant 30 jours depuis le journal des fusions.</span
+                  >
+                </p>
+                @if (familyChange()) {
+                  <label class="check family-warning">
+                    <input
+                      type="checkbox"
+                      [checked]="familyConfirmed()"
+                      (change)="familyConfirmed.set($any($event.target).checked)"
+                    />
+                    <span
+                      i18n="Confirmation du changement de famille@@vocabulary.merge.familyChange"
+                      >« {{ target.labelFr }} » est dans la famille
+                      {{ familyLabel(target.family) }}, pas {{ familyLabel(emotion.family) }} : les
+                      courbes de ces ressentis changeront de couleur. Je confirme.</span
+                    >
+                  </label>
+                }
+              }
+
+              <div class="row-actions">
+                <button
+                  mat-flat-button
+                  type="button"
+                  [disabled]="!canMerge() || busyCode() === emotion.code"
+                  (click)="confirmMerge(emotion)"
+                  i18n="Bouton confirmer la fusion@@vocabulary.merge.confirm"
+                >
+                  Fusionner
+                </button>
+                <button
+                  mat-stroked-button
+                  type="button"
+                  (click)="cancel()"
+                  i18n="Bouton annuler la fusion@@vocabulary.merge.cancel"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      }
+    }
+  </tbody>
+</table>
