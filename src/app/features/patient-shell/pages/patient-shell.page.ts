@@ -24,6 +24,7 @@ import {
   ToastService,
 } from '../../../shared/ui';
 import { ENTRY_QUERY_PARAM, openEntryEditor } from '../../entries';
+import { connectLinkEditor } from '../../graph';
 import { StateKind } from '../../../shared/util';
 import { ShellTab } from '../data/patient-shell.model';
 import { PatientShellStore } from '../data/patient-shell.store';
@@ -121,6 +122,8 @@ export class PatientShellPage {
       if (!entryId || !patient) return;
       untracked(() => openEntryEditor(patient.id, { entryId, injector: this.injector }));
     });
+    // Éditeur de lien (M2-04) : L lie l'entrée ouverte ; ?link=<id> s'ouvre après ?entry=.
+    connectLinkEditor(() => this.store.patient());
   }
 
   /** N, bouton + ou Entrée dans la barre de capture (avec son texte) : nouvelle entrée. */

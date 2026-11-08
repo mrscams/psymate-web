@@ -1,0 +1,280 @@
+<pm-side-panel [title]="title">
+  @if (data.patientName) {
+    <span pmPanelHeader class="patient">{{ data.patientName }}</span>
+  }
+
+  @if (alert(); as message) {
+    <div class="alert" role="alert" tabindex="-1">
+      <p>{{ message }}</p>
+      @if (existingLinkId()) {
+        <button
+          type="button"
+          class="alert-action"
+          (click)="editExisting()"
+          i18n="Action du message de lien en double@@links.problem.editType"
+        >
+          Modifier le type
+        </button>
+      }
+    </div>
+  }
+
+  <form class="editor" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
+    <!-- Depuis : l'entrée ouverte -->
+    <section class="block" aria-labelledby="pm-link-from">
+      <h3 class="block-label" id="pm-link-from" i18n="Bloc de l'entrée source@@links.from.label">
+        Depuis
+      </h3>
+      @if (sourceState(); as kind) {
+        <pm-state
+          [kind]="kind"
+          skeleton="row"
+          [lines]="1"
+          compact
+          [title]="kind === 'error' ? sourceErrorTitle : undefined"
+          [action]="sourceRetry"
+        />
+      } @else if (sourceView(); as entry) {
+        <div class="card" [attr.data-type]="entry.type">
+          <pm-entry-icon [type]="entry.type" [size]="16" [labelled]="true" />
+          <div class="card-text">
+            <p class="card-name">{{ entry.name }}</p>
+            <p class="card-meta">
+              {{ entry.typeLabel }}
+              @if (entry.when) {
+                &ngsp;·&ngsp;{{ entry.when }}
+              }
+            </p>
+          </div>
+        </div>
+      }
+    </section>
+
+    <!-- Vers : la cible, cherchée dans le dossier -->
+    <section class="block" aria-labelledby="pm-link-to">
+      <h3 class="block-label" id="pm-link-to" i18n="Bloc de l'entrée cible@@links.to.label">
+        Vers
+      </h3>
+      <div class="search-row">
+        <label
+          class="sr-only"
+          for="pm-link-search"
+          i18n="Champ de recherche de cible@@links.search.label"
+          >Rechercher une entrée du dossier</label
+        >
+        <input
+          id="pm-link-search"
+          type="search"
+          [formControl]="search"
+          autocomplete="off"
+          i18n-placeholder="Indication du champ de recherche de cible@@links.search.placeholder"
+          placeholder="Rechercher une entrée…"
+        />
+        <label
+          class="sr-only"
+          for="pm-link-type-filter"
+          i18n="Filtre de type de la cible@@links.search.typeLabel"
+          >Type d'entrée cherché</label
+        >
+        <select id="pm-link-type-filter" [formControl]="typeFilter">
+          <option value="" i18n="Tous les types d'entrée@@links.search.allTypes">
+            Tous les types
+          </option>
+          @for (type of entryTypes; track type) {
+            <option [value]="type">{{ typeName(type) }}</option>
+          }
+        </select>
+      </div>
+
+      @if (targetsState(); as kind) {
+        <pm-state
+          [kind]="kind"
+          skeleton="row"
+          [lines]="3"
+          compact
+          [title]="
+            kind === 'error' ? targetsErrorTitle : kind === 'empty' ? targetsEmptyTitle : undefined
+          "
+          [message]="kind === 'empty' ? targetsEmptyMessage : undefined"
+          [action]="targetsRetry"
+        />
+      } @else {
+        <fieldset
+          class="targets"
+          [attr.aria-describedby]="invalid('targetId') ? fid('targetId') + '-error' : null"
+        >
+          <legend class="sr-only" i18n="Légende de la liste des cibles@@links.targets.legend">
+            Entrée à lier
+          </legend>
+          @for (item of candidates(); track item.entry.id) {
+            <label class="target" [class.linked]="item.linked">
+              <input
+                type="radio"
+                name="pm-link-target"
+                [value]="item.entry.id"
+                [checked]="form.controls.targetId.value === item.entry.id"
+                (change)="chooseTarget(item.entry)"
+              />
+              <pm-entry-icon [type]="item.entry.type" [size]="14" />
+              <span class="target-text">
+                <span class="target-name">{{ item.name }}</span>
+                <span class="target-meta">
+                  {{ item.typeLabel }}
+                  @if (item.when) {
+                    &ngsp;·&ngsp;{{ item.when }}
+                  }
+                  @if (item.linked) {
+                    &ngsp;·&ngsp;<span class="linked-text">{{ item.linkedText }}</span>
+                  }
+                </span>
+              </span>
+            </label>
+          }
+        </fieldset>
+      }
+      <pm-field-errors [control]="form.controls.targetId" [id]="fid('targetId') + '-error'" />
+    </section>
+
+    <!-- Relation : sens et type -->
+    <section class="block" aria-labelledby="pm-link-relation">
+      <div class="relation-head">
+        <h3
+          class="block-label"
+          id="pm-link-relation"
+          i18n="Bloc du type de lien@@links.relation.label"
+        >
+          Relation
+        </h3>
+        <button
+          type="button"
+          class="invert"
+          [attr.aria-pressed]="reversed()"
+          [disabled]="!source()"
+          (click)="invert()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M4 8h14l-4-4M20 16H6l4 4" />
+          </svg>
+          <span i18n="Bouton d'inversion du sens du lien@@links.relation.invert"
+            >Inverser le sens</span
+          >
+        </button>
+      </div>
+      @if (catalogState(); as kind) {
+        <pm-state
+          [kind]="kind"
+          skeleton="row"
+          [lines]="1"
+          compact
+          [title]="kind === 'error' ? catalogErrorTitle : undefined"
+          [action]="catalogRetry"
+        />
+      } @else {
+        <pm-link-type-chips
+          [label]="relationLabel"
+          [availability]="availability()"
+          [value]="selectedType()?.code ?? null"
+          [disabled]="store.saving()"
+          [describedBy]="invalid('linkType') ? fid('linkType') + '-error' : null"
+          (chosen)="chooseType($event)"
+        />
+      }
+      <pm-field-errors [control]="form.controls.linkType" [id]="fid('linkType') + '-error'" />
+    </section>
+
+    <!-- Le lien se lira -->
+    <section class="block" aria-labelledby="pm-link-sentence">
+      <h3
+        class="block-label"
+        id="pm-link-sentence"
+        i18n="Bloc de la phrase lisible@@links.sentence.label"
+      >
+        Le lien se lira
+      </h3>
+      @if (sentence(); as s) {
+        <p class="sentence" aria-live="polite">
+          <span class="end">{{ s.from }}</span
+          >&ngsp;<strong class="verb">{{ s.verb }}</strong
+          >&ngsp;<span class="end">{{ s.to }}</span>
+        </p>
+        @if (shape()) {
+          <p class="hint">{{ shape() }}</p>
+        }
+      }
+    </section>
+
+    <!-- Pourquoi -->
+    <div class="block">
+      <label
+        class="block-label"
+        [for]="fid('rationale')"
+        i18n="Champ de justification du lien@@links.rationale.label"
+        >Pourquoi (facultatif)</label
+      >
+      <textarea
+        [id]="fid('rationale')"
+        formControlName="rationale"
+        rows="2"
+        [attr.maxlength]="rationaleMax"
+        [attr.aria-invalid]="invalid('rationale') ? 'true' : null"
+        [attr.aria-describedby]="fid('rationale') + '-count ' + fid('rationale') + '-error'"
+      ></textarea>
+      <p class="hint count" [id]="fid('rationale') + '-count'">{{ rationaleCount() }}</p>
+      <pm-field-errors [control]="form.controls.rationale" [id]="fid('rationale') + '-error'" />
+    </div>
+  </form>
+
+  <!-- Liens déjà posés -->
+  <section class="block placed" aria-labelledby="pm-link-placed">
+    <h3 class="block-label" id="pm-link-placed">{{ linksHeading() }}</h3>
+    @if (linksState(); as kind) {
+      <pm-state
+        [kind]="kind"
+        skeleton="row"
+        [lines]="2"
+        compact
+        [title]="
+          kind === 'error' ? linksErrorTitle : kind === 'empty' ? linksEmptyTitle : undefined
+        "
+        [action]="linksRetry"
+      />
+    } @else {
+      <pm-placed-links
+        [links]="store.placed()"
+        [editingId]="editingId()"
+        [editAvailability]="editAvailability()"
+        [busyId]="store.busyLinkId()"
+        [problem]="store.linkProblem()"
+        (edit)="startEdit($event)"
+        (cancelEdit)="cancelEdit()"
+        (changeType)="changeType($event)"
+        (remove)="remove($event)"
+      />
+    }
+  </section>
+
+  <div pmPanelFooter class="footer">
+    <button
+      type="button"
+      class="primary"
+      [attr.aria-disabled]="ready() && !store.saving() ? null : 'true'"
+      (click)="submit(false)"
+    >
+      <span i18n="Bouton d'enregistrement du lien@@links.save">Enregistrer le lien</span>
+      <kbd aria-hidden="true">⏎</kbd>
+    </button>
+    <button
+      type="button"
+      class="secondary"
+      [attr.aria-disabled]="ready() && !store.saving() ? null : 'true'"
+      (click)="submit(true)"
+      i18n="Bouton d'enregistrement puis nouveau lien@@links.saveAnother"
+    >
+      Enregistrer et lier une autre
+    </button>
+    <button type="button" class="ghost" (click)="requestClose()">
+      <span i18n="Bouton d'annulation de l'éditeur de lien@@links.cancel">Annuler</span>
+      <kbd aria-hidden="true" i18n="Nom de la touche Échap@@shortcuts.escapeKey">Échap</kbd>
+    </button>
+  </div>
+</pm-side-panel>
