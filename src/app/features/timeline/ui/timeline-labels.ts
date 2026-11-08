@@ -138,6 +138,20 @@ export function periodLabel(preset: PeriodPreset): string {
   }
 }
 
+/** Nom accessible d'une période proposée (la puce affiche la forme courte). */
+export function periodAccessibleLabel(preset: PeriodPreset): string {
+  switch (preset) {
+    case '30d':
+      return $localize`:Nom accessible de la période de 30 jours de la timeline@@timeline.period.30d.name:30 derniers jours`;
+    case '90d':
+      return $localize`:Nom accessible de la période de 90 jours de la timeline@@timeline.period.90d.name:90 derniers jours`;
+    case '1y':
+      return $localize`:Nom accessible de la période d'un an de la timeline@@timeline.period.1y.name:12 derniers mois`;
+    case 'all':
+      return $localize`:Nom accessible de la période sans borne de la timeline@@timeline.period.all.name:Toute la période`;
+  }
+}
+
 /** Modalité d'une séance. */
 export function modalityLabel(modality: SessionModality | null): string {
   switch (modality) {

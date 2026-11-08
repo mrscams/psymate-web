@@ -1,5 +1,12 @@
-import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import { computed, effect, inject, untracked } from '@angular/core';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 
 import { ApiProblem, asProblem } from '../../../core/http';
 import { TimelineFiltersStore } from './timeline-filters.store';
@@ -58,11 +65,6 @@ interface TimelineState {
   emotionFamilies: Record<string, EmotionFamily>;
   /** Dernière carte ouverte (bordure primaire). */
   selectedId: string | null;
-  /**
-   * Mode par séance (M3-03) : les fenêtres en mémoire sont les trois premières (les plus récentes),
-   * quelle que soit la position de défilement ; le regroupement porte sur elles.
-   */
-  headOnly: boolean;
 }
 
 const emptyFacets: TimelineFacets = { types: {}, emotions: {}, tags: {} };
@@ -87,7 +89,6 @@ const initialState: TimelineState = {
   emotionLabels: {},
   emotionFamilies: {},
   selectedId: null,
-  headOnly: false,
 };
 
 function sum(counts: Record<string, number>): number {
@@ -104,11 +105,17 @@ function sum(counts: Record<string, number>): number {
  */
 export const TimelineStore = signalStore(
   withState(initialState),
-  withComputed((store) => {
+  withComputed((store, filters = inject(TimelineFiltersStore)) => {
     // Début du suivi du contrat (followedSince : followUp.since, sinon création du dossier).
     const followStart = computed(() => store.followedSince());
     const bands = computed(() => layoutBands(store.ongoing()));
     return {
+      /**
+       * Mode par séance (M3-03), dérivé du mode du TimelineFiltersStore (jamais copié) : les
+       * fenêtres en mémoire sont les trois premières (les plus récentes), quelle que soit la
+       * position de défilement ; le regroupement porte sur elles.
+       */
+      headOnly: computed(() => filters.mode() === 'session'),
       followStart,
       bands,
       count: computed(() => windowCount(store.total(), store.sizes())),
@@ -334,7 +341,6 @@ export const TimelineStore = signalStore(
             ...snapshot,
             windows: snapshot.windows.filter((w) => w.status === 'loaded'),
             current: windowOfSlot(snapshot.anchor, snapshot.sizes),
-            headOnly: store.headOnly(),
             sessionsReady: true,
             followedSince,
             status: 'loaded',
@@ -345,7 +351,6 @@ export const TimelineStore = signalStore(
         patchState(store, {
           ...initialState,
           zoom: snapshot?.zoom ?? initialState.zoom,
-          headOnly: store.headOnly(),
           patientId,
           followedSince,
           status: 'loading',
@@ -380,13 +385,11 @@ export const TimelineStore = signalStore(
       },
 
       /**
-       * Mode par séance (true) : les trois premières fenêtres restent en mémoire, le défilement ne
-       * déplace plus la fenêtre courante. Retour au chronologique (false) : le défilement reprend.
+       * Passage en mode par séance (withHooks) : les trois premières fenêtres reviennent en mémoire,
+       * la fenêtre courante ne suit plus le défilement.
        */
-      setHeadOnly(on: boolean): void {
-        if (on === store.headOnly()) return;
-        patchState(store, { headOnly: on });
-        if (on && store.status() === 'loaded') focus(home());
+      focusHead(): void {
+        if (store.headOnly() && store.status() === 'loaded') focus(home());
       },
 
       /** Réessayer après l'échec de la première fenêtre. */
@@ -436,6 +439,10 @@ export const TimelineStore = signalStore(
         patchState(store, { selectedId: id });
       },
 
+      /**
+       * Relit les projections après une écriture ; `side: false` garde l'index des séances et le
+       * vocabulaire (un lien ne les change pas).
+       */
       refresh,
 
       /**
@@ -492,7 +499,7 @@ export const TimelineStore = signalStore(
      * Relit les projections après une écriture (CLAUDE.md : on relit, on ne recalcule pas) : la
      * première page (total, facettes, situations) puis les fenêtres en mémoire, sans vider l'écran.
      */
-    async function refresh(): Promise<void> {
+    async function refresh(options: { side?: boolean } = {}): Promise<void> {
       const id = store.patientId();
       if (!id) return;
       generation++;
@@ -538,8 +545,16 @@ export const TimelineStore = signalStore(
         // L'écran garde ce qu'il montre ; l'échec ne touche que la relecture.
         void error;
       }
-      void loadSide(gen);
+      if (options.side !== false) void loadSide(gen);
     }
+  }),
+  withHooks({
+    onInit(store) {
+      // Le mode passe à « par séance » : on recentre sur les trois premières fenêtres.
+      effect(() => {
+        if (store.headOnly()) untracked(() => store.focusHead());
+      });
+    },
   }),
 );
 

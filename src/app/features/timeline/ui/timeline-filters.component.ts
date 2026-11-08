@@ -20,7 +20,7 @@ import {
   withPeriod,
 } from '../data/timeline-filters.model';
 import { EmotionFamily, TimelineFacets } from '../data/timeline.model';
-import { dayLabel, periodLabel } from './timeline-labels';
+import { dayLabel, periodAccessibleLabel, periodLabel } from './timeline-labels';
 
 /** Puces d'émotion et de tag montrées (les plus fréquentes, plus celles déjà choisies). */
 const MAX_CHIPS = 8;
@@ -101,6 +101,14 @@ export class TimelineFiltersComponent {
 
   protected periodText(preset: PeriodPreset): string {
     return periodLabel(preset);
+  }
+
+  /**
+   * Forme longue d'une période (« 30 derniers jours » pour « 30 j »), en description (title) : le
+   * nom accessible reste le texte visible (WCAG 2.5.3, commande vocale).
+   */
+  protected periodName(preset: PeriodPreset): string {
+    return periodAccessibleLabel(preset);
   }
 
   protected familyClass(code: string): string {

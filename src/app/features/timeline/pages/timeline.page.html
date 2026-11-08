@@ -1,4 +1,8 @@
-<section class="timeline" aria-labelledby="timeline-heading">
+<section
+  class="timeline"
+  [class.fill]="mode() === 'chronological'"
+  aria-labelledby="timeline-heading"
+>
   <h2
     id="timeline-heading"
     class="sr-only"

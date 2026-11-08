@@ -6,6 +6,7 @@ import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angul
 import { of } from 'rxjs';
 
 import { PreferencesStore } from '../../../core/preferences';
+import { ToastService } from '../../../shared/ui';
 import { PatientShellStore } from '../../patient-shell';
 import { NO_FILTERS } from '../data/timeline-filters.model';
 import { TimelineApi } from '../data/timeline.api';
@@ -391,5 +392,54 @@ describe('TimelinePage', () => {
     const again = await render(page, shellMock(snapshot));
     expect(again.el.querySelectorAll('pm-timeline-card')).toHaveLength(3);
     expect(page.mock.calls[0][1]).toEqual(expect.objectContaining({ draftsOnly: true }));
+  });
+
+  it('?focus= seul : les filtres de la mémoire de l’onglet ne sont pas repris', async () => {
+    const { fixture, shell } = await render(() =>
+      Promise.resolve(timelinePage({ items: items(3) })),
+    );
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    [...(fixture.nativeElement as HTMLElement).querySelectorAll('button')]
+      .find((b) => text(b).startsWith('Brouillons seulement'))!
+      .click();
+    await flush();
+    fixture.destroy();
+    const snapshot = shell.rememberTab.mock.calls[0][1] as TimelineSnapshot;
+    expect(snapshot.filters?.filters.draftsOnly).toBe(true);
+
+    TestBed.resetTestingModule();
+    const navigate = vi.spyOn(Router.prototype, 'navigate').mockResolvedValue(true);
+    const page = vi.fn<(id: string, query: TimelineQuery) => Promise<Page>>(() =>
+      Promise.resolve(timelinePage({ items: items(3) })),
+    );
+    await render(page, shellMock(snapshot), 'e-1');
+    await flush();
+    expect(page.mock.calls[0][1]).toEqual(expect.objectContaining({ draftsOnly: false }));
+    navigate.mockRestore();
+  });
+
+  it('?focus= exclu par les filtres de l’URL : filtres retirés, on prévient, l’entrée est cherchée sans eux', async () => {
+    const navigate = vi.spyOn(Router.prototype, 'navigate').mockResolvedValue(true);
+    const info = vi.spyOn(ToastService.prototype, 'info');
+    const page = vi.fn((_id: string, query: TimelineQuery) =>
+      Promise.resolve(
+        query.emotions.length
+          ? timelinePage({ items: items(2, 'f') })
+          : timelinePage({ items: items(5) }),
+      ),
+    );
+    const { fixture } = await render(page, shellMock(), 'e-3', { params: { emotion: 'anxiety' } });
+    await flush();
+    await fixture.whenStable();
+    await flush();
+    expect(page.mock.calls[0][1]).toEqual(expect.objectContaining({ emotions: ['anxiety'] }));
+    expect(page).toHaveBeenLastCalledWith('p-1', expect.objectContaining({ emotions: [] }));
+    expect(info).toHaveBeenCalledWith("Filtres retirés pour afficher l'entrée demandée.");
+    const instance = fixture.componentInstance as unknown as {
+      store: { selectedId(): string | null };
+    };
+    expect(instance.store.selectedId()).toBe('e-3');
+    navigate.mockRestore();
+    info.mockRestore();
   });
 });

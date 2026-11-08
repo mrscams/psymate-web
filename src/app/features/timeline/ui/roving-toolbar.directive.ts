@@ -1,4 +1,4 @@
-import { afterEveryRender, Directive, ElementRef, inject } from '@angular/core';
+import { afterNextRender, DestroyRef, Directive, ElementRef, inject } from '@angular/core';
 
 /** Contrôles atteignables de la barre (les désactivés sont sautés). */
 const CONTROLS = 'button:not([disabled])';
@@ -6,8 +6,9 @@ const CONTROLS = 'button:not([disabled])';
 /**
  * Barre d'outils au clavier (motif ARIA « toolbar », fiche 03 et revue M3-02) : un seul arrêt de
  * tabulation, celui du dernier contrôle utilisé ; `←` `→` passent au contrôle voisin (en boucle),
- * `Début` `Fin` au premier et au dernier. Les contrôles qui apparaissent ou disparaissent (puces
- * venues des facettes) sont repris après chaque rendu.
+ * `Début` `Fin` au premier et au dernier. Les contrôles qui apparaissent, disparaissent ou changent
+ * d'état (puces venues des facettes, zoom désactivé) sont repris par un MutationObserver limité à
+ * la barre.
  */
 @Directive({
   selector: '[pmRovingToolbar]',
@@ -21,7 +22,20 @@ export class RovingToolbarDirective {
   private active: HTMLElement | null = null;
 
   constructor() {
-    afterEveryRender(() => this.normalize());
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => {
+      this.normalize();
+      if (typeof MutationObserver === 'undefined') return;
+      // tabindex n'est pas observé : la normalisation ne se relance pas elle-même.
+      const observer = new MutationObserver(() => this.normalize());
+      observer.observe(this.host.nativeElement, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['disabled'],
+      });
+      destroyRef.onDestroy(() => observer.disconnect());
+    });
   }
 
   /** Donne le focus à l'arrêt courant de la barre (touche F de la timeline). */

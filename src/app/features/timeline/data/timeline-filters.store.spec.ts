@@ -108,4 +108,21 @@ describe('TimelineFiltersStore', () => {
     prefs.timelineGroupBy.set('chronological');
     expect(store.mode()).toBe('chronological');
   });
+
+  it('mode de la visite (?focus= hors des séances) : ni dans l’URL, ni dans la mémoire, tombe à la bascule', async () => {
+    const { store, prefs } = setup(prefsMock('session'));
+    store.init(convertToParamMap({ focus: 'e-1' }), null);
+    store.overrideForVisit('chronological');
+    expect(store.mode()).toBe('chronological');
+    expect(store.params()['mode']).toBeNull();
+    expect(store.snapshot().modeOverride).toBeNull();
+    await store.setMode('session');
+    expect(prefs.set).toHaveBeenCalledWith('timeline.groupBy', 'session');
+    expect(store.visitMode()).toBeNull();
+    expect(store.mode()).toBe('session');
+    // Une nouvelle ouverture repart sans lui.
+    store.overrideForVisit('chronological');
+    store.init(convertToParamMap({}), null);
+    expect(store.mode()).toBe('session');
+  });
 });

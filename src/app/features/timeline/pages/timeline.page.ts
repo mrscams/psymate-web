@@ -27,6 +27,7 @@ import { openEntryEditor } from '../../entries';
 import { openLinkEditor } from '../../graph';
 import { PatientShellStore } from '../../patient-shell';
 import {
+  hasFilterParams,
   NO_FILTERS,
   sameFilters,
   sameParam,
@@ -204,12 +205,15 @@ export class TimelinePage {
         const recalled = this.shell.recallTab<TimelineSnapshot>('timeline');
         const same = recalled?.patientId === patient.id ? recalled : undefined;
         const { offset, filters: ranged, ...snapshot } = same ?? ({} as Partial<TimelineSnapshot>);
-        this.filters.init(this.route.snapshot.queryParamMap, ranged ?? null);
+        // `?focus=` seul (recherche → timeline) : on part sans filtre, pour que l'entrée soit dans
+        // la plage ; les filtres de la mémoire de l'onglet pourraient l'exclure.
+        const url = this.route.snapshot.queryParamMap;
+        const focusOnly = url.has(TIMELINE_FOCUS_PARAM) && !hasFilterParams(url);
+        this.filters.init(url, focusOnly ? null : (ranged ?? null));
         const reuse = !!same && sameFilters(ranged?.filters ?? NO_FILTERS, this.filters.filters());
         this.restoreOffset = reuse ? (offset ?? null) : null;
         if (!reuse) this.restored = true;
         this.sessionDetails.reset();
-        this.store.setHeadOnly(this.mode() === 'session');
         void this.store.load(
           patient.id,
           patient.followedSince,
@@ -220,12 +224,6 @@ export class TimelinePage {
         // Repris : l'état ne vit plus que dans les stores (rangé à nouveau au départ).
         if (recalled) this.shell.rememberTab<TimelineSnapshot | undefined>('timeline', undefined);
       });
-    });
-
-    // Le mode (préférence, ?mode=, bascule) : en mode par séance, les trois premières fenêtres.
-    effect(() => {
-      const session = this.mode() === 'session';
-      untracked(() => this.store.setHeadOnly(session));
     });
 
     // Un seul sens de synchronisation : le TimelineFiltersStore réécrit l'URL (replaceUrl).
@@ -278,6 +276,27 @@ export class TimelinePage {
     });
 
     const destroyRef = inject(DestroyRef);
+
+    // Haut de l'onglet dans le document (en-tête du dossier au-dessus) : la colonne de la timeline
+    // prend la hauteur restante de la fenêtre. Relu quand la page change de taille.
+    afterNextRender(() => {
+      const host = this.host.nativeElement;
+      const view = host.ownerDocument.defaultView;
+      if (!view) return;
+      const update = () => {
+        const top = Math.round(host.getBoundingClientRect().top + view.scrollY);
+        host.style.setProperty('--timeline-top', `${top}px`);
+      };
+      update();
+      view.addEventListener('resize', update);
+      const observer =
+        typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => update());
+      observer?.observe(host.ownerDocument.body);
+      destroyRef.onDestroy(() => {
+        view.removeEventListener('resize', update);
+        observer?.disconnect();
+      });
+    });
     for (const [key, handler, label] of [
       ['+', () => this.zoom('in'), this.zoomInLabel],
       ['-', () => this.zoom('out'), this.zoomOutLabel],
@@ -307,6 +326,16 @@ export class TimelinePage {
     this.focusing = id;
     this.restored = true;
     const slot = await this.store.locate(id);
+    if (slot === null && this.filters.active()) {
+      // Les filtres excluent l'entrée : ils sont retirés (on prévient), la plage est relue et la
+      // recherche de l'entrée reprend une fois la liste recréée (?focus= est toujours là).
+      this.focusing = null;
+      this.toasts.info(
+        $localize`:Information quand les filtres excluaient l'entrée demandée@@timeline.focus.filtersCleared:Filtres retirés pour afficher l'entrée demandée.`,
+      );
+      this.changeFilters(NO_FILTERS);
+      return;
+    }
     if (slot !== null) {
       afterNextRender(
         () => {
@@ -329,7 +358,8 @@ export class TimelinePage {
   /**
    * `?focus=` en mode par séance : la séance de l'entrée (ou la séance elle-même) se déplie, la carte
    * est sélectionnée et prend le focus. Hors des entrées regroupées, l'écran passe en chronologique
-   * pour cette visite (`?mode=chronological`, préférence inchangée) et y cherche l'entrée.
+   * pour cette visite seulement (ni préférence, ni URL, ni mémoire de l'onglet) et y cherche
+   * l'entrée.
    */
   private focusInSessions(id: string): void {
     if (this.focusing === id) return;
@@ -337,7 +367,7 @@ export class TimelinePage {
       (g) => g.id === id || g.entries.some((item) => item.id === id),
     );
     if (!group) {
-      this.filters.overrideMode('chronological');
+      this.filters.overrideForVisit('chronological');
       return;
     }
     this.focusing = id;
@@ -346,14 +376,19 @@ export class TimelinePage {
     const host = this.host.nativeElement;
     const selector =
       group.id === id ? `[data-session-id="${id}"]` : `article[data-entry-id="${id}"]`;
-    afterNextRender(() => this.focusCard(host, selector, true), { injector: this.injector });
+    afterNextRender(
+      () => {
+        this.focusCard(host, selector, true);
+        this.focusing = null;
+      },
+      { injector: this.injector },
+    );
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { [TIMELINE_FOCUS_PARAM]: null },
       queryParamsHandling: 'merge',
       replaceUrl: true,
     });
-    this.focusing = null;
   }
 
   /** Donne le focus à la carte dès qu'elle est rendue (quelques trames au plus). */
@@ -541,7 +576,9 @@ export class TimelinePage {
       injector: this.injector,
       patientName: this.shell.patient()?.displayName ?? null,
     });
-    void ref?.closed.then(() => this.reread());
+    // Un lien ne change que les projections de la chronologie (nombre de liens) : ni l'index des
+    // séances, ni leur détail.
+    void ref?.closed.then(() => this.store.refresh({ side: false }));
   }
 
   /** Après une écriture : on relit la chronologie et le détail des séances dépliées. */

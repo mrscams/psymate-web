@@ -96,6 +96,7 @@
       type="button"
       class="chip"
       [attr.aria-pressed]="option === preset()"
+      [attr.title]="periodName(option)"
       (click)="choosePeriod(option)"
     >
       {{ periodText(option) }}

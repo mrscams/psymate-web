@@ -23,7 +23,15 @@
               >Hors séance</span
             >
           }
-          <span class="count">{{ countText(group.entries.length) }}</span>
+          <span
+            class="count"
+            i18n="Nombre d'entrées d'une séance, dans son en-tête@@timeline.session.entries"
+            >{group.entries.length, plural,
+              =0 {aucune entrée}
+              =1 {1 entrée}
+              other {{{ count(group.entries.length) }} entrées}
+            }</span
+          >
         </button>
       </h3>
       @if (expandedNow) {

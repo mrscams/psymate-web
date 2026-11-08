@@ -26,9 +26,18 @@ interface TimelineFiltersState {
    * suit la préférence `timeline.groupBy`.
    */
   modeOverride: TimelineMode | null;
+  /**
+   * Mode de cette visite seulement (`?focus=` hors des séances regroupées → chronologique) : ni
+   * dans l'URL, ni dans la mémoire de l'onglet ; il tombe à la prochaine ouverture ou bascule.
+   */
+  visitMode: TimelineMode | null;
 }
 
-const initialState: TimelineFiltersState = { filters: NO_FILTERS, modeOverride: null };
+const initialState: TimelineFiltersState = {
+  filters: NO_FILTERS,
+  modeOverride: null,
+  visitMode: null,
+};
 
 /**
  * Filtres et mode de la timeline (fiche 03, M3-03). Une seule source pendant la vie de l'onglet :
@@ -41,7 +50,7 @@ export const TimelineFiltersStore = signalStore(
   withState(initialState),
   withComputed((store, prefs = inject(PreferencesStore)) => ({
     mode: computed<TimelineMode>(
-      () => store.modeOverride() ?? modeOfGroupBy(prefs.timelineGroupBy()),
+      () => store.visitMode() ?? store.modeOverride() ?? modeOfGroupBy(prefs.timelineGroupBy()),
     ),
     /** Au moins un filtre posé (« Effacer les filtres » dans l'état vide). */
     active: computed(() => hasFilters(store.filters())),
@@ -57,13 +66,18 @@ export const TimelineFiltersStore = signalStore(
      */
     init(url: ParamSource, recalled?: TimelineFiltersSnapshot | null): 'url' | 'memory' | 'none' {
       if (hasFilterParams(url)) {
-        patchState(store, { filters: parseFilters(url), modeOverride: parseMode(url) });
+        patchState(store, {
+          filters: parseFilters(url),
+          modeOverride: parseMode(url),
+          visitMode: null,
+        });
         return 'url';
       }
       if (recalled) {
         patchState(store, {
           filters: { ...NO_FILTERS, ...recalled.filters },
           modeOverride: recalled.modeOverride ?? null,
+          visitMode: null,
         });
         return 'memory';
       }
@@ -85,15 +99,18 @@ export const TimelineFiltersStore = signalStore(
      * choisi reste sur cet écran et l'ApiProblem est renvoyé (la page prévient).
      */
     async setMode(mode: TimelineMode): Promise<ApiProblem | null> {
-      patchState(store, { modeOverride: null });
+      patchState(store, { modeOverride: null, visitMode: null });
       const problem = await prefs.set('timeline.groupBy', mode);
       if (problem) patchState(store, { modeOverride: mode });
       return problem;
     },
 
-    /** Impose un mode pour cet écran sans écrire la préférence (`?focus=` hors du regroupement). */
-    overrideMode(mode: TimelineMode): void {
-      patchState(store, { modeOverride: mode });
+    /**
+     * Impose un mode pour cette visite seulement, sans écrire la préférence ni l'URL ni la mémoire
+     * de l'onglet (`?focus=` sur une entrée hors des séances regroupées).
+     */
+    overrideForVisit(mode: TimelineMode): void {
+      patchState(store, { visitMode: mode });
     },
 
     snapshot(): TimelineFiltersSnapshot {

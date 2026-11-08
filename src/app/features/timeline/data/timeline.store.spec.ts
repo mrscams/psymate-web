@@ -428,8 +428,8 @@ describe('TimelineStore', () => {
 
   it('mode par séance (headOnly) : les trois premières fenêtres, le défilement ne les déplace pas', async () => {
     const { page } = paged(1000);
-    const { store } = setup({ page });
-    store.setHeadOnly(true);
+    const { store, filters } = setup({ page });
+    filters.overrideForVisit('session');
     await store.load('p-1', null);
     await flush();
     expect(store.windows().map((w) => w.index)).toEqual([0, 1, 2]);
@@ -442,7 +442,7 @@ describe('TimelineStore', () => {
     expect(store.windows().map((w) => w.index)).toEqual([0, 1, 2]);
 
     // Retour au chronologique : le défilement reprend la main.
-    store.setHeadOnly(false);
+    filters.overrideForVisit('chronological');
     store.visible(900, 910);
     await flush();
     expect(store.windows().map((w) => w.index)).toEqual([3, 4]);
@@ -450,8 +450,8 @@ describe('TimelineStore', () => {
 
   it('head : complet quand toute la plage tient dans les fenêtres lues', async () => {
     const { page } = paged(250);
-    const { store } = setup({ page });
-    store.setHeadOnly(true);
+    const { store, filters } = setup({ page });
+    filters.overrideForVisit('session');
     await store.load('p-1', null);
     await flush();
     expect(store.head()).toMatchObject({ ready: true, complete: true, failed: null });
@@ -465,11 +465,42 @@ describe('TimelineStore', () => {
         ? Promise.reject(serverError)
         : Promise.resolve(pages.get(query.cursor)!),
     );
-    const { store } = setup({ page });
-    store.setHeadOnly(true);
+    const { store, filters } = setup({ page });
+    filters.overrideForVisit('session');
     await store.load('p-1', null);
     await flush();
     expect(store.head().ready).toBe(false);
     expect(store.head().failed?.index).toBe(2);
+  });
+
+  it('passage en mode par séance (préférence, bascule) : recentrage sur les premières fenêtres', async () => {
+    const { page } = paged(1000);
+    const { store, filters } = setup({ page });
+    await store.load('p-1', null);
+    await flush();
+    store.visible(900, 910);
+    await flush();
+    expect(store.windows().map((w) => w.index)).toEqual([3, 4]);
+    expect(store.headOnly()).toBe(false);
+    filters.overrideForVisit('session');
+    TestBed.tick();
+    await flush();
+    expect(store.headOnly()).toBe(true);
+    expect(store.windows().map((w) => w.index)).toEqual([0, 1, 2]);
+  });
+
+  it('refresh({ side: false }) : l’index des séances n’est pas relu', async () => {
+    const { page } = paged(10);
+    const sessions = vi.fn().mockResolvedValue({});
+    const { store } = setup({ page, sessions });
+    await store.load('p-1', null);
+    await flush();
+    sessions.mockClear();
+    await store.refresh({ side: false });
+    await flush();
+    expect(sessions).not.toHaveBeenCalled();
+    await store.refresh();
+    await flush();
+    expect(sessions).toHaveBeenCalledTimes(1);
   });
 });

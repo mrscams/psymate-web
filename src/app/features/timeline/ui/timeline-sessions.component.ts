@@ -59,6 +59,7 @@ export class TimelineSessionsComponent {
   readonly retryDetail = output<string>();
 
   private readonly locale = inject(LOCALE_ID);
+  private readonly number = new Intl.NumberFormat(this.locale);
   private readonly open = signal<ReadonlySet<string>>(new Set());
   private initialized = false;
 
@@ -112,12 +113,9 @@ export class TimelineSessionsComponent {
       : kind;
   }
 
-  protected countText(count: number): string {
-    if (count === 0)
-      return $localize`:Séance sans entrée, dans son en-tête@@timeline.session.noEntry:aucune entrée`;
-    return count === 1
-      ? $localize`:Nombre d'entrées d'une séance@@timeline.session.entry:1 entrée`
-      : $localize`:Nombre d'entrées d'une séance@@timeline.session.entries:${count}:count: entrées`;
+  /** Nombre au format de la langue (« 1 204 »). */
+  protected count(value: number): string {
+    return this.number.format(value);
   }
 
   /** Le détail chargé d'une séance, ou null (en cours, en échec, pas encore demandé). */
