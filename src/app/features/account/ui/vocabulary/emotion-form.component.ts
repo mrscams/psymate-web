@@ -41,7 +41,6 @@ export type CreateEmotionFn = (
           formControlName="labelFr"
           autocomplete="off"
           required
-          maxlength="80"
           [attr.aria-invalid]="showError('labelFr')"
           [attr.aria-describedby]="describedBy()"
         />

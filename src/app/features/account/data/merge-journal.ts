@@ -1,4 +1,4 @@
-import { EmotionFamily, EmotionMerge } from './emotions.api';
+import { EmotionMerge } from './emotions.api';
 
 /**
  * Journal des fusions d'émotions (fiche 17). Le contrat ne liste pas les fusions (pas de
@@ -11,7 +11,6 @@ export interface MergeJournalEntry {
   merge: EmotionMerge;
   sourceLabel: string;
   targetLabel: string;
-  sourceFamily: EmotionFamily;
   /** Le serveur a répondu MERGE_UNDO_EXPIRED alors que l'horloge locale disait encore « annulable ». */
   expired?: boolean;
 }

@@ -61,7 +61,7 @@ export async function createFeeling(
 ): Promise<string> {
   const entry = await ok<{ id: string }>(
     api.post(`${API}/api/patients/${patientId}/entries`, {
-      data: { type: 'feeling', feeling: { emotionCode, intensity: 6 } },
+      data: { type: 'feeling', body: 'Fatigue du soir', feeling: { emotionCode, intensity: 6 } },
     }),
   );
   return entry.id;
@@ -71,6 +71,10 @@ export async function createFeeling(
 export async function readEntry(
   api: APIRequestContext,
   id: string,
-): Promise<{ tags: string[]; feeling: { emotionCode: string; intensity: number } | null }> {
+): Promise<{
+  tags: string[];
+  body: string | null;
+  feeling: { emotionCode: string; intensity: number } | null;
+}> {
   return ok(api.get(`${API}/api/entries/${id}`), 200);
 }

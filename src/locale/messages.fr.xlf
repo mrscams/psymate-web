@@ -299,7 +299,7 @@
         <note priority="1" from="description">Toast après l&apos;ajout d&apos;une émotion</note>
       </trans-unit>
       <trans-unit id="vocabulary.merge.done.one" datatype="html">
-        <source>« <x id="source" equiv-text="source"/> » fusionnée dans « <x id="target" equiv-text="target"/> » : 1 ressenti déplacé.</source>
+        <source>« <x id="source" equiv-text="source"/> » fusionnée dans « <x id="target" equiv-text="target"/> » : <x id="count" equiv-text="count"/> ressenti déplacé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
           <context context-type="linenumber">106</context>
@@ -4055,7 +4055,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">10,14</context>
+          <context context-type="linenumber">10,15</context>
         </context-group>
         <note priority="1" from="description">Colonne actions</note>
       </trans-unit>
@@ -4071,7 +4071,7 @@
         <source>perso</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">42,47</context>
+          <context context-type="linenumber">41,46</context>
         </context-group>
         <note priority="1" from="description">Badge émotion personnalisée</note>
       </trans-unit>
@@ -4079,11 +4079,11 @@
         <source> Enregistrer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">66,69</context>
+          <context context-type="linenumber">65,68</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">51,54</context>
+          <context context-type="linenumber">50,53</context>
         </context-group>
         <note priority="1" from="description">Bouton enregistrer le renommage</note>
       </trans-unit>
@@ -4091,11 +4091,11 @@
         <source> Annuler </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">74,77</context>
+          <context context-type="linenumber">73,76</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">59,62</context>
+          <context context-type="linenumber">58,61</context>
         </context-group>
         <note priority="1" from="description">Bouton annuler le renommage</note>
       </trans-unit>
@@ -4103,11 +4103,11 @@
         <source>Renommer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">85,86</context>
+          <context context-type="linenumber">84,85</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">68,69</context>
+          <context context-type="linenumber">67,68</context>
         </context-group>
         <note priority="1" from="description">Bouton renommer</note>
       </trans-unit>
@@ -4115,11 +4115,11 @@
         <source>Fusionner…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">95,96</context>
+          <context context-type="linenumber">94,95</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">79,80</context>
+          <context context-type="linenumber">78,79</context>
         </context-group>
         <note priority="1" from="description">Bouton fusionner</note>
       </trans-unit>
@@ -4127,7 +4127,7 @@
         <source>Fusionner « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> » dans une autre émotion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">120,121</context>
+          <context context-type="linenumber">119,120</context>
         </context-group>
         <note priority="1" from="description">Titre de la fusion d&apos;émotion</note>
       </trans-unit>
@@ -4135,11 +4135,11 @@
         <source>Fusionner dans</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">126,129</context>
+          <context context-type="linenumber">125,128</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">111,114</context>
+          <context context-type="linenumber">110,113</context>
         </context-group>
         <note priority="1" from="description">Libellé du choix de la cible</note>
       </trans-unit>
@@ -4147,7 +4147,7 @@
         <source> Choisir une émotion… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">136,138</context>
+          <context context-type="linenumber">135,137</context>
         </context-group>
         <note priority="1" from="description">Option vide du choix de la cible</note>
       </trans-unit>
@@ -4155,7 +4155,7 @@
         <source>Vocabulaire global</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">140,141</context>
+          <context context-type="linenumber">139,140</context>
         </context-group>
         <note priority="1" from="description">Groupe des émotions globales</note>
       </trans-unit>
@@ -4163,7 +4163,7 @@
         <source>Mes émotions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">152,153</context>
+          <context context-type="linenumber">151,152</context>
         </context-group>
         <note priority="1" from="description">Groupe des émotions personnelles</note>
       </trans-unit>
@@ -4171,7 +4171,7 @@
         <source>Proposer les autres familles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">170,175</context>
+          <context context-type="linenumber">169,174</context>
         </context-group>
         <note priority="1" from="description">Case pour proposer les autres familles</note>
       </trans-unit>
@@ -4179,7 +4179,7 @@
         <source>Fusionner « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> » dans « <x id="INTERPOLATION_1" equiv-text="{{ target.labelFr }}"/> » ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">178,179</context>
+          <context context-type="linenumber">177,178</context>
         </context-group>
         <note priority="1" from="description">Question de la fusion d&apos;émotion</note>
       </trans-unit>
@@ -4187,7 +4187,7 @@
         <source> Les ressentis qui portent « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> » gardent leur intensité et leur texte ; l&apos;émotion affichée devient « <x id="INTERPOLATION_1" equiv-text="{{ target.labelFr }}"/> ». Opération réversible pendant 30 jours depuis le journal des fusions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">181,183</context>
+          <context context-type="linenumber">180,182</context>
         </context-group>
         <note priority="1" from="description">Aperçu de la fusion d&apos;émotion</note>
       </trans-unit>
@@ -4195,7 +4195,7 @@
         <source>« <x id="INTERPOLATION" equiv-text="{{ target.labelFr }}"/> » est dans la famille <x id="INTERPOLATION_1" equiv-text="{{ familyLabel(target.family) }}"/>, pas <x id="INTERPOLATION_2" equiv-text="{{ familyLabel(emotion.family) }}"/> : les courbes de ces ressentis changeront de couleur. Je confirme.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">195,197</context>
+          <context context-type="linenumber">194,196</context>
         </context-group>
         <note priority="1" from="description">Confirmation du changement de famille</note>
       </trans-unit>
@@ -4203,11 +4203,11 @@
         <source> Fusionner </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">211,213</context>
+          <context context-type="linenumber">210,212</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">155,157</context>
+          <context context-type="linenumber">154,156</context>
         </context-group>
         <note priority="1" from="description">Bouton confirmer la fusion</note>
       </trans-unit>
@@ -4215,11 +4215,11 @@
         <source> Annuler </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
-          <context context-type="linenumber">219,221</context>
+          <context context-type="linenumber">218,220</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">163,165</context>
+          <context context-type="linenumber">162,164</context>
         </context-group>
         <note priority="1" from="description">Bouton annuler la fusion</note>
       </trans-unit>
@@ -4255,7 +4255,7 @@
         <source>Proche de « <x id="INTERPOLATION" equiv-text="{{ near.labelFr }}"/> » (vocabulaire global). Vérifiez que ce n&apos;est pas la même chose.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
-          <context context-type="linenumber">58,59</context>
+          <context context-type="linenumber">57,58</context>
         </context-group>
         <note priority="1" from="description">Avertissement de proximité, émotion globale</note>
       </trans-unit>
@@ -4263,7 +4263,7 @@
         <source>Proche de « <x id="INTERPOLATION" equiv-text="{{ near.labelFr }}"/> » (vos émotions). Vérifiez que ce n&apos;est pas la même chose.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
-          <context context-type="linenumber">64,65</context>
+          <context context-type="linenumber">63,64</context>
         </context-group>
         <note priority="1" from="description">Avertissement de proximité, émotion personnelle</note>
       </trans-unit>
@@ -4271,7 +4271,7 @@
         <source>Famille</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
-          <context context-type="linenumber">78,79</context>
+          <context context-type="linenumber">77,78</context>
         </context-group>
         <note priority="1" from="description">Légende des familles</note>
       </trans-unit>
@@ -4279,7 +4279,7 @@
         <source> · détermine la couleur des courbes et la place dans le graphe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
-          <context context-type="linenumber">81,84</context>
+          <context context-type="linenumber">80,83</context>
         </context-group>
         <note priority="1" from="description">Aide de la famille</note>
       </trans-unit>
@@ -4287,7 +4287,7 @@
         <source>Ajouter à mon vocabulaire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
-          <context context-type="linenumber">103,106</context>
+          <context context-type="linenumber">102,105</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;ajout d&apos;émotion</note>
       </trans-unit>
@@ -4295,7 +4295,7 @@
         <source> Visible de vous seul·e ; proposée dans la saisie des ressentis dès la prochaine entrée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
-          <context context-type="linenumber">107,111</context>
+          <context context-type="linenumber">106,110</context>
         </context-group>
         <note priority="1" from="description">Mention de visibilité d&apos;une émotion</note>
       </trans-unit>
@@ -4303,7 +4303,7 @@
         <source> L&apos;émotion n&apos;a pas été ajoutée. Vérifiez la connexion puis réessayez. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
-          <context context-type="linenumber">112,117</context>
+          <context context-type="linenumber">111,116</context>
         </context-group>
         <note priority="1" from="description">Échec de l&apos;ajout d&apos;émotion</note>
       </trans-unit>
@@ -4394,7 +4394,7 @@
         <source>Créer le tag</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-form.component.ts</context>
-          <context context-type="linenumber">42,45</context>
+          <context context-type="linenumber">41,44</context>
         </context-group>
         <note priority="1" from="description">Bouton de création de tag</note>
       </trans-unit>
@@ -4402,7 +4402,7 @@
         <source> Un mot-clé libre pour regrouper patients et entrées (« # » facultatif). Un ressenti se note avec une émotion, pas avec un tag. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-form.component.ts</context>
-          <context context-type="linenumber">53,58</context>
+          <context context-type="linenumber">52,57</context>
         </context-group>
         <note priority="1" from="description">Aide du champ tag</note>
       </trans-unit>
@@ -4410,7 +4410,7 @@
         <source>Saisissez un libellé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-form.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <note priority="1" from="description">Erreur, libellé de tag vide</note>
       </trans-unit>
@@ -4426,7 +4426,7 @@
         <source>Tag</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">7,8</context>
+          <context context-type="linenumber">8</context>
         </context-group>
         <note priority="1" from="description">Colonne tag</note>
       </trans-unit>
@@ -4450,7 +4450,7 @@
         <source>Fusionner « <x id="INTERPOLATION" equiv-text="{{ tag.label }}"/> » dans un autre tag</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">104,105</context>
+          <context context-type="linenumber">103,104</context>
         </context-group>
         <note priority="1" from="description">Titre de la fusion de tag</note>
       </trans-unit>
@@ -4458,7 +4458,7 @@
         <source> Choisir un tag… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">123,125</context>
+          <context context-type="linenumber">122,124</context>
         </context-group>
         <note priority="1" from="description">Option vide du choix du tag cible</note>
       </trans-unit>
@@ -4466,7 +4466,7 @@
         <source>Fusionner « <x id="INTERPOLATION" equiv-text="{{ tag.label }}"/> » dans « <x id="INTERPOLATION_1" equiv-text="{{ target.label }}"/> » ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">133,134</context>
+          <context context-type="linenumber">132,133</context>
         </context-group>
         <note priority="1" from="description">Question de la fusion de tag</note>
       </trans-unit>
@@ -4478,7 +4478,7 @@
                     }" xid="2428451736813176020"/> : ils porteront « <x id="INTERPOLATION_1" equiv-text="{{ target.label }}"/> », et « <x id="INTERPOLATION_2" equiv-text="{{ tag.label }}"/> » disparaît de vos tags. Cette fusion ne s&apos;annule pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">136,143</context>
+          <context context-type="linenumber">135,142</context>
         </context-group>
         <note priority="1" from="description">Aperçu de la fusion de tag</note>
       </trans-unit>
@@ -4486,7 +4486,7 @@
         <source>{VAR_PLURAL, plural, =0 {les patients et les entrées} =1 {1 usage (patient ou entrée)} other {<x id="INTERPOLATION"/> usages (patients et entrées)}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
-          <context context-type="linenumber">137,140</context>
+          <context context-type="linenumber">136,139</context>
         </context-group>
       </trans-unit>
       <trans-unit id="vocabulary.family.joy" datatype="html">

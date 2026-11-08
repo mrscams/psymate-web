@@ -31,7 +31,6 @@ export type CreateTagFn = (label: string) => Promise<ApiProblem | null>;
             name="label"
             type="text"
             autocomplete="off"
-            maxlength="80"
             [ngModel]="label()"
             (ngModelChange)="label.set($event); error.set(null)"
             [attr.aria-invalid]="error() !== null"

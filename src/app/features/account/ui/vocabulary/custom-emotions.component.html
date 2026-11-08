@@ -27,7 +27,6 @@
             <input
               class="inline-input"
               type="text"
-              maxlength="80"
               [id]="'rename-input-' + emotion.code"
               [ngModel]="draft()"
               (ngModelChange)="draft.set($event); rowError.set(null)"

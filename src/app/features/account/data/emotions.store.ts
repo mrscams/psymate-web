@@ -128,7 +128,6 @@ export const EmotionsStore = signalStore(
             merge,
             sourceLabel: source?.labelFr ?? sourceCode,
             targetLabel: target?.labelFr ?? targetCode,
-            sourceFamily: source?.family ?? 'joy',
           };
           saveJournal([entry, ...store.journal().filter((e) => e.merge.id !== merge.id)]);
           patchState(store, { busyCode: null });

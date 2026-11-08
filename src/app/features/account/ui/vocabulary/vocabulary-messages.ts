@@ -1,5 +1,5 @@
 import { ApiProblem } from '../../../../core/http';
-import { suggestedEmotion } from '../../data/tags.store';
+import { suggestedEmotion } from '../../data/tags.api';
 
 /**
  * Messages des refus du serveur sur le vocabulaire (le client ne traduit pas `detail`).

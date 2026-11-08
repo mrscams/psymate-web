@@ -24,7 +24,6 @@
             <input
               class="inline-input"
               type="text"
-              maxlength="80"
               [id]="'tag-rename-input-' + tag.id"
               [ngModel]="draft()"
               (ngModelChange)="draft.set($event); rowError.set(null)"

@@ -5,21 +5,6 @@ import { ApiProblem, asProblem } from '../../../core/http';
 import { failed, idle, Loadable, loaded, loading } from '../../../shared/util';
 import { Tag, TagsApi } from './tags.api';
 
-/** Émotion proposée par un 422 TAG_IS_EMOTION (propriété suggestedEmotion du problème). */
-export interface SuggestedEmotion {
-  code: string;
-  labelFr: string;
-}
-
-/** suggestedEmotion d'un TAG_IS_EMOTION, ou null (autre erreur, propriété absente ou illisible). */
-export function suggestedEmotion(problem: ApiProblem | null): SuggestedEmotion | null {
-  if (problem?.code !== 'TAG_IS_EMOTION') return null;
-  const raw = problem.extra?.['suggestedEmotion'];
-  if (typeof raw !== 'object' || raw === null) return null;
-  const { code, labelFr } = raw as Record<string, unknown>;
-  return typeof code === 'string' && typeof labelFr === 'string' ? { code, labelFr } : null;
-}
-
 interface TagsState {
   /** GET /api/tags : tags actifs du praticien. */
   tags: Loadable<Tag[]>;

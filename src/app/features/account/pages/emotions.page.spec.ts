@@ -96,6 +96,7 @@ describe('EmotionsPage', () => {
     expect(el.querySelector('pm-state [role="status"]')?.textContent).toContain(
       'Aucune émotion personnalisée',
     );
+    expect(el.querySelector('pm-state button')).toBeNull();
     expect(el.querySelector('#h-my-emotions')?.textContent).toContain('Mes émotions · 0');
     expect(el.querySelector('#h-global')?.textContent).toContain('3 émotions');
     expect(el.querySelector('pm-global-vocabulary')?.textContent).toContain('anxiété');
@@ -164,7 +165,7 @@ describe('EmotionsPage', () => {
       .fn()
       .mockResolvedValueOnce(EMOTIONS)
       .mockResolvedValue([SADNESS, { ...LASSITUDE, labelFr: 'Lassitude profonde' }, MOROSITE]);
-    const rename = vi.fn().mockResolvedValue({ ...LASSITUDE, labelFr: 'Lassitude profonde' });
+    const rename = vi.fn().mockResolvedValue(undefined);
     const { fixture, el } = await render({ list, rename });
     button(row(el, LASSITUDE.code), 'Renommer').click();
     await settle(fixture);
@@ -241,7 +242,6 @@ describe('EmotionsPage', () => {
         merge: { ...MERGE, undoUntil: '2999-01-01T00:00:00Z' },
         sourceLabel: 'Lassitude',
         targetLabel: 'Morosité',
-        sourceFamily: 'sadness',
       },
     ]);
     const undo = vi.fn().mockRejectedValue({ status: 409, code: 'MERGE_UNDO_EXPIRED' });

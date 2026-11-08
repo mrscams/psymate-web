@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TagsApi } from './tags.api';
-import { suggestedEmotion, TagsStore } from './tags.store';
+import { suggestedEmotion, TagsApi } from './tags.api';
+import { TagsStore } from './tags.store';
 import { BOULOT, SANTE, TAG_IS_EMOTION, TAGS, TRAVAIL } from './vocabulary.fixtures';
 
 function setup(api: Partial<TagsApi>) {

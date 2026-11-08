@@ -102,8 +102,8 @@ export class EmotionsPage {
     if (!merge) return this.afterRowFailure(this.store.rowProblem());
     const count = merge.affectedCount;
     this.toasts.success(
-      count === 1
-        ? $localize`:Toast après une fusion d'émotions, un ressenti@@vocabulary.merge.done.one:« ${source}:source: » fusionnée dans « ${target}:target: » : 1 ressenti déplacé.`
+      count <= 1
+        ? $localize`:Toast après une fusion d'émotions, un ressenti@@vocabulary.merge.done.one:« ${source}:source: » fusionnée dans « ${target}:target: » : ${count}:count: ressenti déplacé.`
         : $localize`:Toast après une fusion d'émotions@@vocabulary.merge.done:« ${source}:source: » fusionnée dans « ${target}:target: » : ${count}:count: ressentis déplacés.`,
       {
         label: $localize`:Action Annuler du toast de fusion@@vocabulary.merge.undo:Annuler`,

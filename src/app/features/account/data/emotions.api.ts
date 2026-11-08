@@ -58,7 +58,8 @@ export class EmotionsApi {
 
   /** GET /api/vocabulary/emotions : les 29 globales, puis les personnalisées actives. */
   async list(): Promise<Emotion[]> {
-    return (await firstValueFrom(this.vocabulary.emotions())).map(toEmotion);
+    const list = await firstValueFrom(this.vocabulary.emotions());
+    return list.map(toEmotion).filter((e): e is Emotion => e !== null);
   }
 
   /** POST /api/me/emotions → 201 ; 409 EMOTION_LABEL_EXISTS, 422 VALIDATION_FAILED. */
@@ -66,12 +67,12 @@ export class EmotionsApi {
     const created = await firstValueFrom(
       this.mine.create1({ labelFr, family: family as CreateEmotionRequestFamilyEnum }),
     );
-    return toEmotion(created);
+    return toEmotion(created) ?? fallback(created, labelFr, family);
   }
 
-  /** PATCH /api/me/emotions/{code} : seul le libellé français change, le code reste. */
-  async rename(code: string, labelFr: string): Promise<Emotion> {
-    return toEmotion(await firstValueFrom(this.mine.rename1(code, { labelFr })));
+  /** PATCH /api/me/emotions/{code} : seul le libellé français change ; la page relit la liste. */
+  async rename(code: string, labelFr: string): Promise<void> {
+    await firstValueFrom(this.mine.rename1(code, { labelFr }));
   }
 
   /** POST /api/me/emotions/{code}/merge → la fusion (id pour l'annuler, affectedCount). */
@@ -85,13 +86,28 @@ export class EmotionsApi {
   }
 }
 
-function toEmotion(dto: EmotionView): Emotion {
+/** Une émotion sans code, portée ou famille du contrat est écartée plutôt que devinée. */
+function toEmotion(dto: EmotionView): Emotion | null {
+  const family = dto.family as EmotionFamily | undefined;
+  if (!dto.code || (dto.scope !== 'global' && dto.scope !== 'custom')) return null;
+  if (!family || !EMOTION_FAMILIES.includes(family)) return null;
   return {
-    code: dto.code ?? '',
-    scope: dto.scope === 'custom' ? 'custom' : 'global',
-    family: (dto.family ?? 'joy') as EmotionFamily,
+    code: dto.code,
+    scope: dto.scope,
+    family,
     labelFr: dto.labelFr ?? '',
     labelEn: dto.labelEn ?? null,
+  };
+}
+
+/** Réponse d'écriture incomplète : les pages relisent la liste ensuite, seul le libellé sert. */
+function fallback(dto: EmotionView, labelFr: string, family: EmotionFamily): Emotion {
+  return {
+    code: dto.code ?? '',
+    scope: 'custom',
+    family,
+    labelFr: dto.labelFr ?? labelFr,
+    labelEn: null,
   };
 }
 

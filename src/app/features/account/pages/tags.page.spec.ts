@@ -73,6 +73,7 @@ describe('TagsPage', () => {
     el.querySelector<HTMLButtonElement>('pm-state button.retry')?.click();
     await settle(fixture);
     expect(el.querySelector('pm-state [role="status"]')?.textContent).toContain('Aucun tag');
+    expect(el.querySelector('pm-state button')).toBeNull();
   });
 
   it('chargé : libellé et date, sans colonne d’usages ; lien vers les émotions', async () => {

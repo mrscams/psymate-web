@@ -19,6 +19,14 @@ const EMOTIONS = '/fr/mon-compte/emotions';
 /** Réétiquette asynchrone côté API (G Q42, outbox) : délai borné. */
 const RELABEL_TIMEOUT = 20_000;
 
+function summary(entry: Awaited<ReturnType<typeof readEntry>>) {
+  return {
+    emotionCode: entry.feeling?.emotionCode,
+    intensity: entry.feeling?.intensity,
+    body: entry.body,
+  };
+}
+
 async function openTags(page: Page): Promise<void> {
   await page.goto(TAGS);
   await expect(page.getByRole('heading', { level: 1, name: 'Tags' })).toBeVisible();
@@ -128,7 +136,9 @@ test('fusionner deux émotions personnalisées puis annuler : la première revie
     (r) => r.url().endsWith('/api/me/emotions') && r.request().method() === 'POST',
   );
   await page.getByRole('button', { name: 'Ajouter à mon vocabulaire' }).click();
-  expect((await created).status()).toBe(201);
+  const createdResponse = await created;
+  expect(createdResponse.status()).toBe(201);
+  const morosite = ((await createdResponse.json()) as { code: string }).code;
   const table = page.getByRole('table', { name: 'Mes émotions personnalisées' });
   await expect(table.getByRole('row')).toHaveCount(3);
   await expect(page.getByRole('heading', { name: 'Mes émotions · 2' })).toBeVisible();
@@ -151,11 +161,10 @@ test('fusionner deux émotions personnalisées puis annuler : la première revie
     page.getByText('« Lassitude » fusionnée dans « Morosité » : 1 ressenti déplacé.'),
   ).toBeVisible();
   await expect(table.getByRole('row')).toHaveCount(2);
+  // Le ressenti pointe vers Morosité ; intensité et texte inchangés (fiche 17).
   await expect
-    .poll(async () => (await readEntry(request, feeling)).feeling?.emotionCode, {
-      timeout: RELABEL_TIMEOUT,
-    })
-    .not.toBe(lassitude.code);
+    .poll(async () => summary(await readEntry(request, feeling)), { timeout: RELABEL_TIMEOUT })
+    .toEqual({ emotionCode: morosite, intensity: 6, body: 'Fatigue du soir' });
 
   // Journal des fusions : annulation (le journal survit au rechargement de la page).
   await page.reload();
@@ -172,10 +181,8 @@ test('fusionner deux émotions personnalisées puis annuler : la première revie
   await expect(journal).toContainText('annulée le');
   await expect(journal.getByRole('button', { name: /Annuler la fusion/ })).toHaveCount(0);
   await expect
-    .poll(async () => (await readEntry(request, feeling)).feeling?.emotionCode, {
-      timeout: RELABEL_TIMEOUT,
-    })
-    .toBe(lassitude.code);
+    .poll(async () => summary(await readEntry(request, feeling)), { timeout: RELABEL_TIMEOUT })
+    .toEqual({ emotionCode: lassitude.code, intensity: 6, body: 'Fatigue du soir' });
   await expectNoAxeViolations(page);
 });
 
@@ -197,5 +204,42 @@ test('émotions : libellé déjà pris (sans accent) → 409 sous le champ', asy
     'aria-invalid',
     'true',
   );
+  await expectNoAxeViolations(page);
+});
+
+test('au clavier : renommer un tag, ouvrir la fusion puis Échap rend le focus', async ({
+  page,
+  request,
+}) => {
+  const account = await createAccount(request, 'm1-09.clavier', 'psychologist');
+  await createTag(request, 'boulot');
+  await createTag(request, 'travail');
+  await signIn(page, account);
+  await openTags(page);
+  const table = page.getByRole('table', { name: 'Mes tags' });
+
+  // Renommer : Entrée ouvre le champ (focus dedans), saisie, Entrée enregistre.
+  const renameButton = table.getByRole('button', { name: 'Renommer boulot' });
+  await renameButton.focus();
+  await page.keyboard.press('Enter');
+  const input = table.getByRole('textbox', { name: 'Nouveau libellé de « boulot »' });
+  await expect(input).toBeFocused();
+  await page.keyboard.press('ControlOrMeta+a');
+  await page.keyboard.type('Boulot');
+  const patch = page.waitForResponse((r) => r.request().method() === 'PATCH');
+  await page.keyboard.press('Enter');
+  expect((await patch).status()).toBe(200);
+  await expect(table.getByRole('button', { name: 'Renommer Boulot' })).toBeFocused();
+
+  // Fusionner… : la confirmation prend le focus (choix de la cible) ; Échap la ferme et le rend.
+  const mergeButton = table.getByRole('button', { name: 'Fusionner… Boulot' });
+  await mergeButton.focus();
+  await page.keyboard.press('Enter');
+  const confirm = page.getByRole('group', { name: 'Fusionner « Boulot » dans un autre tag' });
+  await expect(confirm.getByLabel('Fusionner dans')).toBeFocused();
+  await expect(mergeButton).toHaveAttribute('aria-expanded', 'true');
+  await page.keyboard.press('Escape');
+  await expect(confirm).toHaveCount(0);
+  await expect(mergeButton).toBeFocused();
   await expectNoAxeViolations(page);
 });

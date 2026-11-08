@@ -42,7 +42,7 @@
         [kind]="listState()"
         skeleton="row"
         [lines]="3"
-        [action]="retry"
+        [action]="listState() === 'error' ? retry : undefined"
         [title]="listState() === 'empty' ? empty.title : undefined"
         [message]="listState() === 'empty' ? empty.message : undefined"
       />

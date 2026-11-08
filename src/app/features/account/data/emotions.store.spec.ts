@@ -73,7 +73,7 @@ describe('EmotionsStore', () => {
   it('renameEmotion : PATCH puis relecture ; refus gardé dans rowProblem', async () => {
     const rename = vi
       .fn()
-      .mockResolvedValueOnce({ ...LASSITUDE, labelFr: 'Lassitude profonde' })
+      .mockResolvedValueOnce(undefined)
       .mockRejectedValueOnce({ status: 409, code: 'EMOTION_INACTIVE' });
     const list = vi.fn().mockResolvedValue(EMOTIONS);
     const store = setup({ list, rename });
@@ -99,16 +99,13 @@ describe('EmotionsStore', () => {
     expect(store.journal()[0]).toMatchObject({
       sourceLabel: 'Lassitude',
       targetLabel: 'Morosité',
-      sourceFamily: 'sadness',
     });
     expect(readJournal(CLAIRE.id)).toHaveLength(1);
     expect(readJournal('autre-compte')).toHaveLength(0);
   });
 
   it('load relit le journal du compte connecté', async () => {
-    writeJournal(CLAIRE.id, [
-      { merge: MERGE, sourceLabel: 'Lassitude', targetLabel: 'Morosité', sourceFamily: 'sadness' },
-    ]);
+    writeJournal(CLAIRE.id, [{ merge: MERGE, sourceLabel: 'Lassitude', targetLabel: 'Morosité' }]);
     const store = setup({ list: vi.fn().mockResolvedValue(EMOTIONS) });
     await store.load();
     expect(store.journal().map((e) => e.merge.id)).toEqual(['m-1']);
@@ -125,9 +122,7 @@ describe('EmotionsStore', () => {
     ],
     ['404 MERGE_NOT_FOUND', { status: 404, code: 'MERGE_NOT_FOUND' }, null, 0],
   ])('undoMerge %s', async (_, error, expected, remaining) => {
-    writeJournal(CLAIRE.id, [
-      { merge: MERGE, sourceLabel: 'Lassitude', targetLabel: 'Morosité', sourceFamily: 'sadness' },
-    ]);
+    writeJournal(CLAIRE.id, [{ merge: MERGE, sourceLabel: 'Lassitude', targetLabel: 'Morosité' }]);
     const undo = error
       ? vi.fn().mockRejectedValue(error)
       : vi.fn().mockResolvedValue({ ...MERGE, undoneAt: '2026-11-08T10:00:00Z' });
@@ -157,7 +152,6 @@ describe('merge-journal', () => {
       merge: MERGE,
       sourceLabel: 'Lassitude',
       targetLabel: 'Morosité',
-      sourceFamily: 'sadness' as const,
     };
     expect(isUndoable(entry, Date.parse('2026-11-20T00:00:00Z'))).toBe(true);
     expect(isUndoable(entry, Date.parse('2026-12-09T00:00:00Z'))).toBe(false);
