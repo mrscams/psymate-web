@@ -2067,6 +2067,34 @@
           <context context-type="linenumber">74</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/confirm-email.page.ts</context>
           <context context-type="linenumber">115</context>
         </context-group>
@@ -4649,29 +4677,2336 @@
         </context-group>
         <note priority="1" from="description">Erreur, fusion introuvable (404)</note>
       </trans-unit>
-      <trans-unit id="admin.home.pageTitle" datatype="html">
-        <source>Administration · PsyMate</source>
+      <trans-unit id="admin.validation.pageTitle" datatype="html">
+        <source>Validation des praticiens · Administration · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/admin.routes.ts</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">19</context>
         </context-group>
-        <note priority="1" from="description">Titre d&apos;onglet de l&apos;administration</note>
-      </trans-unit>
-      <trans-unit id="admin.home.title" datatype="html">
-        <source>Administration</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/admin/pages/admin-home.page.ts</context>
-          <context context-type="linenumber">12,13</context>
+          <context context-type="sourcefile">src/app/features/admin/admin.routes.ts</context>
+          <context context-type="linenumber">24</context>
         </context-group>
-        <note priority="1" from="description">Titre provisoire de l&apos;administration</note>
+        <note priority="1" from="description">Titre d&apos;onglet de la validation</note>
       </trans-unit>
-      <trans-unit id="admin.home.body" datatype="html">
-        <source> Votre compte administrateur est prêt : mot de passe choisi et double authentification active. Les écrans d&apos;administration (vérifications, comptes, journal) arrivent avec une prochaine version. </source>
+      <trans-unit id="admin.practitioners.pageTitle" datatype="html">
+        <source>Praticiens · Administration · PsyMate</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/admin/pages/admin-home.page.ts</context>
-          <context context-type="linenumber">14,20</context>
+          <context context-type="sourcefile">src/app/features/admin/admin.routes.ts</context>
+          <context context-type="linenumber">29</context>
         </context-group>
-        <note priority="1" from="description">Texte provisoire de l&apos;administration</note>
+        <note priority="1" from="description">Titre d&apos;onglet des praticiens</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.pageTitle" datatype="html">
+        <source>Journal · Administration · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/admin.routes.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.pageTitle" datatype="html">
+        <source>Vocabulaire de l&apos;annuaire · Administration · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/admin.routes.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.title" datatype="html">
+        <source>Journal</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">2,3</context>
+        </context-group>
+        <note priority="1" from="description">Titre du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.subtitle" datatype="html">
+        <source> Décisions d&apos;administration, accès aux justificatifs et événements de sécurité des comptes ; lecture seule, jamais d&apos;adresse IP ni de donnée patient. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">4,9</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.listTitle" datatype="html">
+        <source> Événements </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">15,20</context>
+        </context-group>
+        <note priority="1" from="description">Titre caché du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.segments" datatype="html">
+        <source>Type d&apos;événement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">20,21</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette des segments du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.actor" datatype="html">
+        <source>Par</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">35,36</context>
+        </context-group>
+        <note priority="1" from="description">Filtre administrateur</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.actorAll" datatype="html">
+        <source> Tous </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">42,44</context>
+        </context-group>
+        <note priority="1" from="description">Tous les auteurs</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.period" datatype="html">
+        <source>Période</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">52,53</context>
+        </context-group>
+        <note priority="1" from="description">Filtre période</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.from" datatype="html">
+        <source>Du</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">63,65</context>
+        </context-group>
+        <note priority="1" from="description">Début de période</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.to" datatype="html">
+        <source>Au</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">72,74</context>
+        </context-group>
+        <note priority="1" from="description">Fin de période</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.practitionerChip" datatype="html">
+        <source>Compte : <x id="INTERPOLATION" equiv-text="{{ practitionerName() ?? filters().practitionerId }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">84,86</context>
+        </context-group>
+        <note priority="1" from="description">Filtre praticien actif</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.practitionerClear" datatype="html">
+        <source> Retirer ce filtre </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">91,97</context>
+        </context-group>
+        <note priority="1" from="description">Retirer le filtre praticien</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.stale" datatype="html">
+        <source>Le journal n&apos;a pas pu être relu.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">100,102</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de rechargement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.error" datatype="html">
+        <source>Impossible de charger le journal</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">114,115</context>
+        </context-group>
+        <note priority="1" from="description">État erreur du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.empty" datatype="html">
+        <source>Aucun événement pour ces filtres</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">122,123</context>
+        </context-group>
+        <note priority="1" from="description">État vide du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.emptyHint" datatype="html">
+        <source>Élargissez la période ou retirez un filtre.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">124,125</context>
+        </context-group>
+        <note priority="1" from="description">Phrase de l&apos;état vide du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.col.at" datatype="html">
+        <source>Horodatage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">139,140</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.col.type" datatype="html">
+        <source>Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">140,141</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.col.event" datatype="html">
+        <source>Événement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">141,142</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.col.by" datatype="html">
+        <source>Par</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.col.context" datatype="html">
+        <source>Contexte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">143,147</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.filterBy" datatype="html">
+        <source>: voir seulement ses événements</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">164,167</context>
+        </context-group>
+        <note priority="1" from="description">Action d&apos;un nom du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.openDossier" datatype="html">
+        <source>Voir le dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">175,178</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers le dossier</note>
+      </trans-unit>
+      <trans-unit id="admin.list.more" datatype="html">
+        <source> Afficher plus </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">195,197</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">241,243</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">296,298</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">72,74</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de pagination</note>
+      </trans-unit>
+      <trans-unit id="admin.list.moreError" datatype="html">
+        <source> La suite de la liste n&apos;a pas pu être chargée. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">203,209</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">249,255</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">304,310</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">80,86</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de la page suivante</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.footnote" datatype="html">
+        <source> Journal en ajout seul : aucune ligne ne se modifie ni ne se supprime. Les adresses IP ne sont jamais affichées.
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">212,215</context>
+        </context-group>
+        <note priority="1" from="description">Note de bas de page du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.captionPractitioner" datatype="html">
+        <source>praticien <x id="name" equiv-text="name"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <note priority="1" from="description">Filtre praticien actif</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.caption" datatype="html">
+        <source>Journal d&apos;administration, du plus récent au plus ancien : <x id="filters" equiv-text="parts.join(&apos; · &apos;)"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <note priority="1" from="description">Légende du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.seg.admin" datatype="html">
+        <source>Décisions et actes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+        <note priority="1" from="description">Segment du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.seg.documents" datatype="html">
+        <source>Accès aux documents</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+        <note priority="1" from="description">Segment du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.seg.appeals" datatype="html">
+        <source>Recours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+        <note priority="1" from="description">Segment du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.seg.directory" datatype="html">
+        <source>Annuaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <note priority="1" from="description">Segment du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.seg.all" datatype="html">
+        <source>Tout</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+        <note priority="1" from="description">Segment du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.period.7d" datatype="html">
+        <source>7 derniers jours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <note priority="1" from="description">Période du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.period.30d" datatype="html">
+        <source>30 derniers jours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
+          <context context-type="linenumber">145</context>
+        </context-group>
+        <note priority="1" from="description">Période du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.period.custom" datatype="html">
+        <source>Période personnalisée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+        <note priority="1" from="description">Période du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.period.all" datatype="html">
+        <source>Depuis le début</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+        <note priority="1" from="description">Période du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.title" datatype="html">
+        <source>Praticiens</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">2,5</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la liste des comptes</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.breakdown" datatype="html">
+        <source>Répartition par statut</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">6,7</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la répartition</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.listTitle" datatype="html">
+        <source> Comptes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">25,29</context>
+        </context-group>
+        <note priority="1" from="description">Titre caché de la liste</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.search" datatype="html">
+        <source>Rechercher (nom ou e-mail)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">30,32</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche des comptes</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.profession" datatype="html">
+        <source>Profession</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">36,38</context>
+        </context-group>
+        <note priority="1" from="description">Filtre profession</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.allProfessions" datatype="html">
+        <source> Toutes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">44,46</context>
+        </context-group>
+        <note priority="1" from="description">Toutes les professions</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.role" datatype="html">
+        <source>Comptes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">54,55</context>
+        </context-group>
+        <note priority="1" from="description">Filtre rôle</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.rolePractitioner" datatype="html">
+        <source> Praticiens </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">61,64</context>
+        </context-group>
+        <note priority="1" from="description">Rôle praticien</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.roleAdmin" datatype="html">
+        <source> Administrateurs </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">68,71</context>
+        </context-group>
+        <note priority="1" from="description">Rôle administrateur</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.roleAll" datatype="html">
+        <source> Tous les comptes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">75,79</context>
+        </context-group>
+        <note priority="1" from="description">Tous les rôles</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.statusGroup" datatype="html">
+        <source>Statut</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette des segments de statut</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.stale" datatype="html">
+        <source>La liste n&apos;a pas pu être relue.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">103,105</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de rechargement des comptes</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.error" datatype="html">
+        <source>Impossible de charger les comptes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">117,118</context>
+        </context-group>
+        <note priority="1" from="description">État erreur des comptes</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.empty" datatype="html">
+        <source>Aucun compte ne correspond</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">125,126</context>
+        </context-group>
+        <note priority="1" from="description">État vide des comptes</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.emptyHint" datatype="html">
+        <source>Modifiez la recherche ou les filtres.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">127,128</context>
+        </context-group>
+        <note priority="1" from="description">Phrase de l&apos;état vide des comptes</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.caption" datatype="html">
+        <source> Comptes, du plus récemment créé au plus ancien </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">136,140</context>
+        </context-group>
+        <note priority="1" from="description">Légende du tableau des comptes</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.col.who" datatype="html">
+        <source>Praticien</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">140,141</context>
+        </context-group>
+        <note priority="1" from="description">Colonne</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.col.where" datatype="html">
+        <source>Profession · ville</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">141,142</context>
+        </context-group>
+        <note priority="1" from="description">Colonne</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.col.status" datatype="html">
+        <source>Vérification</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">142,143</context>
+        </context-group>
+        <note priority="1" from="description">Colonne</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.col.twoFactor" datatype="html">
+        <source>2FA</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+        <note priority="1" from="description">Colonne</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.col.dates" datatype="html">
+        <source> Inscrit · dernière connexion </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">145,147</context>
+        </context-group>
+        <note priority="1" from="description">Colonne</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.col.actions" datatype="html">
+        <source>Actions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">147,150</context>
+        </context-group>
+        <note priority="1" from="description">Colonne</note>
+      </trans-unit>
+      <trans-unit id="admin.queue.overdue" datatype="html">
+        <source>hors délai</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">170,173</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
+          <context context-type="linenumber">31,35</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/queue-list.component.ts</context>
+          <context context-type="linenumber">49,53</context>
+        </context-group>
+        <note priority="1" from="description">Mention d&apos;un dossier hors délai</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.twoFactorOn" datatype="html">
+        <source>Activée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">177,179</context>
+        </context-group>
+        <note priority="1" from="description">2FA activée</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.twoFactorOff" datatype="html">
+        <source>Non</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">179,182</context>
+        </context-group>
+        <note priority="1" from="description">2FA non activée</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.purge" datatype="html">
+        <source> Purge des données le <x id="INTERPOLATION" equiv-text="{{ row.purge }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">190,191</context>
+        </context-group>
+        <note priority="1" from="description">Date de purge d&apos;un compte refusé</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.openDossier" datatype="html">
+        <source>Ouvrir le dossier<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> · <x id="INTERPOLATION" equiv-text="{{ row.displayName }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">200,201</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers le dossier</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.journal" datatype="html">
+        <source>Journal<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> · <x id="INTERPOLATION" equiv-text="{{ row.displayName }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">207,208</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers le journal du compte</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.suspend" datatype="html">
+        <source>Suspendre…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">212,214</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de suspension</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.reactivate" datatype="html">
+        <source>Réactiver…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">220,222</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de réactivation</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.title" datatype="html">
+        <source>Recours ouverts</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">258,260</context>
+        </context-group>
+        <note priority="1" from="description">Titre des recours ouverts</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.error" datatype="html">
+        <source>Impossible de charger les recours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">268,269</context>
+        </context-group>
+        <note priority="1" from="description">État erreur des recours</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.empty" datatype="html">
+        <source>Aucun recours en attente</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">277,278</context>
+        </context-group>
+        <note priority="1" from="description">État vide des recours</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.footnote" datatype="html">
+        <source> Suspendre révoque toutes les sessions du compte et retire sa fiche de l&apos;annuaire ; le praticien reçoit le motif et peut déposer un recours. L&apos;administration ne voit aucune donnée patient.
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">313,316</context>
+        </context-group>
+        <note priority="1" from="description">Note de bas de page des praticiens</note>
+      </trans-unit>
+      <trans-unit id="admin.practitioners.all" datatype="html">
+        <source>Tous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+        <note priority="1" from="description">Segment de statut</note>
+      </trans-unit>
+      <trans-unit id="admin.suspend.title" datatype="html">
+        <source>Suspendre <x id="name" equiv-text="account.displayName"/> ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la suspension</note>
+      </trans-unit>
+      <trans-unit id="admin.suspend.description" datatype="html">
+        <source>Toutes ses sessions sont révoquées, la connexion est bloquée et sa fiche publique est retirée de l&apos;annuaire. Le praticien reçoit le motif par e-mail et peut déposer un recours.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">190</context>
+        </context-group>
+        <note priority="1" from="description">Effets de la suspension</note>
+      </trans-unit>
+      <trans-unit id="admin.suspend.label" datatype="html">
+        <source>Motif de la suspension</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">191</context>
+        </context-group>
+        <note priority="1" from="description">Champ motif de suspension</note>
+      </trans-unit>
+      <trans-unit id="admin.suspend.confirm" datatype="html">
+        <source>Suspendre le compte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de suspension</note>
+      </trans-unit>
+      <trans-unit id="admin.suspend.notice" datatype="html">
+        <source>Envoyer le motif au praticien (obligatoire)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">195</context>
+        </context-group>
+        <note priority="1" from="description">Case non décochable</note>
+      </trans-unit>
+      <trans-unit id="admin.suspend.toast" datatype="html">
+        <source><x id="name" equiv-text="account.displayName"/> suspendu · sessions révoquées, e-mail envoyé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">200</context>
+        </context-group>
+        <note priority="1" from="description">Toast après suspension</note>
+      </trans-unit>
+      <trans-unit id="admin.reactivate.rejected" datatype="html">
+        <source>Le dossier avait été refusé : le compte revient à « justificatifs à déposer », le praticien doit redéposer ses pièces.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">208</context>
+        </context-group>
+        <note priority="1" from="description">Effets d&apos;une réactivation après refus</note>
+      </trans-unit>
+      <trans-unit id="admin.reactivate.description" datatype="html">
+        <source>Le compte retrouve le statut qu&apos;il avait avant la suspension. Le praticien est prévenu par e-mail.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">209</context>
+        </context-group>
+        <note priority="1" from="description">Effets d&apos;une réactivation</note>
+      </trans-unit>
+      <trans-unit id="admin.reactivate.title" datatype="html">
+        <source>Réactiver <x id="name" equiv-text="account.displayName"/> ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">211</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la réactivation</note>
+      </trans-unit>
+      <trans-unit id="admin.reactivate.label" datatype="html">
+        <source>Motif de la réactivation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">213</context>
+        </context-group>
+        <note priority="1" from="description">Champ motif de réactivation</note>
+      </trans-unit>
+      <trans-unit id="admin.reactivate.confirm" datatype="html">
+        <source>Réactiver le compte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">215</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de réactivation</note>
+      </trans-unit>
+      <trans-unit id="admin.reactivate.toast" datatype="html">
+        <source><x id="name" equiv-text="account.displayName"/> réactivé · e-mail envoyé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">220</context>
+        </context-group>
+        <note priority="1" from="description">Toast après réactivation</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.acceptTitle" datatype="html">
+        <source>Accepter le recours de <x id="name" equiv-text="appeal.practitionerDisplayName"/> ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;acceptation d&apos;un recours</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.dismissTitle" datatype="html">
+        <source>Écarter le recours de <x id="name" equiv-text="appeal.practitionerDisplayName"/> ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+        <note priority="1" from="description">Titre du rejet d&apos;un recours</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.acceptDescription" datatype="html">
+        <source>Le compte est réactivé (statut d&apos;avant la suspension, ou justificatifs à déposer après un refus). Votre réponse est envoyée par e-mail.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+        <note priority="1" from="description">Effets de l&apos;acceptation d&apos;un recours</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.dismissDescription" datatype="html">
+        <source>Le compte reste en l&apos;état. Votre réponse est envoyée par e-mail ; le recours est clos.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">233</context>
+        </context-group>
+        <note priority="1" from="description">Effets du rejet d&apos;un recours</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.label" datatype="html">
+        <source>Réponse au praticien</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">234</context>
+        </context-group>
+        <note priority="1" from="description">Champ réponse à un recours</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.acceptConfirm" datatype="html">
+        <source>Accepter et réactiver</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">237</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;acceptation d&apos;un recours</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.dismissConfirm" datatype="html">
+        <source>Écarter le recours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">238</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de rejet d&apos;un recours</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.acceptToast" datatype="html">
+        <source>Recours accepté · compte réactivé, e-mail envoyé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">249</context>
+        </context-group>
+        <note priority="1" from="description">Toast après acceptation d&apos;un recours</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.dismissToast" datatype="html">
+        <source>Recours écarté · e-mail envoyé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">250</context>
+        </context-group>
+        <note priority="1" from="description">Toast après rejet d&apos;un recours</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.filterLabel" datatype="html">
+        <source>Filtrer la file</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du filtre de la file</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.queueStale" datatype="html">
+        <source>La file n&apos;a pas pu être relue.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">25,27</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de rechargement de la file</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.queueError" datatype="html">
+        <source>Impossible de charger la file</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">41,42</context>
+        </context-group>
+        <note priority="1" from="description">État erreur de la file</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.queueEmpty" datatype="html">
+        <source>Aucun dossier à vérifier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">49,50</context>
+        </context-group>
+        <note priority="1" from="description">État vide de la file</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.queueEmptyHint" datatype="html">
+        <source>Les dossiers soumis par les praticiens apparaîtront ici, du plus ancien au plus récent.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">51,52</context>
+        </context-group>
+        <note priority="1" from="description">Phrase de l&apos;état vide de la file</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.noDossier" datatype="html">
+        <source>Aucun dossier ouvert</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">97,98</context>
+        </context-group>
+        <note priority="1" from="description">Aucun dossier ouvert</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.noDossierHint" datatype="html">
+        <source>Choisissez un dossier dans la file.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">99,100</context>
+        </context-group>
+        <note priority="1" from="description">Phrase sans dossier ouvert</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.documents" datatype="html">
+        <source> Justificatifs · <x id="INTERPOLATION" equiv-text="{{ d.documents.length }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">117,119</context>
+        </context-group>
+        <note priority="1" from="description">Titre des justificatifs</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.reviewError" datatype="html">
+        <source> La qualification n&apos;a pas pu être enregistrée. Réessayez. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">125,128</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de qualification</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.noDocuments" datatype="html">
+        <source>Aucun justificatif déposé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">132,133</context>
+        </context-group>
+        <note priority="1" from="description">Dossier sans justificatif</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.notReviewable" datatype="html">
+        <source> Ce dossier n&apos;attend pas de décision : son statut ne permet ni approbation, ni complément, ni refus. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">165,171</context>
+        </context-group>
+        <note priority="1" from="description">Dossier hors examen</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.dossierRegion" datatype="html">
+        <source>Dossier ouvert</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la région du dossier</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.title" datatype="html">
+        <source>À vérifier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la file de vérification</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.titleCount" datatype="html">
+        <source>À vérifier · <x id="count" equiv-text="total"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la file de vérification avec total</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.notFound" datatype="html">
+        <source>Ce dossier n&apos;existe pas</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+        <note priority="1" from="description">Dossier introuvable</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.dossierError" datatype="html">
+        <source>Impossible de charger ce dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du dossier</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.filter.needsMore" datatype="html">
+        <source>Complément demandé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+        <note priority="1" from="description">Filtre de la file</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.filter.pending" datatype="html">
+        <source>En attente</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <note priority="1" from="description">Filtre de la file</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.toast.approved" datatype="html">
+        <source><x id="name" equiv-text="name"/> approuvé·e · e-mail envoyé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">165</context>
+        </context-group>
+        <note priority="1" from="description">Toast après approbation</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.toast.needsMore" datatype="html">
+        <source>Complément demandé à <x id="name" equiv-text="name"/> · e-mail envoyé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+        <note priority="1" from="description">Toast après demande de complément</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.toast.rejected" datatype="html">
+        <source>Dossier de <x id="name" equiv-text="name"/> refusé · compte suspendu, e-mail envoyé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+        <note priority="1" from="description">Toast après refus</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.title" datatype="html">
+        <source>Vocabulaire de l&apos;annuaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">2,3</context>
+        </context-group>
+        <note priority="1" from="description">Titre du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.subtitle" datatype="html">
+        <source> Liste fermée vue par les praticiens dans leur profil public et par les visiteurs dans les filtres de l&apos;annuaire. On désactive une entrée, on ne la supprime jamais. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">4,10</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.tabs" datatype="html">
+        <source>Listes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette des sous-onglets</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.fixed" datatype="html">
+        <source>fixe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">34,39</context>
+        </context-group>
+        <note priority="1" from="description">Mention d&apos;une liste fixe</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.showInactive" datatype="html">
+        <source>Afficher les désactivées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">44,50</context>
+        </context-group>
+        <note priority="1" from="description">Case d&apos;affichage des entrées désactivées</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.loadError" datatype="html">
+        <source>Impossible de charger le vocabulaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">62,63</context>
+        </context-group>
+        <note priority="1" from="description">État erreur du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.empty" datatype="html">
+        <source>Aucune entrée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">70,71</context>
+        </context-group>
+        <note priority="1" from="description">État vide du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.emptyHint" datatype="html">
+        <source>Ajoutez la première avec le formulaire ci-dessous.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">72,73</context>
+        </context-group>
+        <note priority="1" from="description">Phrase de l&apos;état vide du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.col.code" datatype="html">
+        <source>Code</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">87,88</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">186,187</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.col.labelFr" datatype="html">
+        <source> Libellé FR </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">89,91</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">188,190</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.col.labelEn" datatype="html">
+        <source> Libellé EN </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">92,94</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">191,194</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.col.order" datatype="html">
+        <source>Ordre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">94,95</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.col.usage" datatype="html">
+        <source> Utilisation </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">96,98</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.col.state" datatype="html">
+        <source>État</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">98,99</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.col.actions" datatype="html">
+        <source> Actions </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">100,103</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.usage" datatype="html">
+        <source> Utilisée par <x id="INTERPOLATION" equiv-text="{{ entry.usedByPublishedProfiles }}"/> profil(s) publié(s) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">112,113</context>
+        </context-group>
+        <note priority="1" from="description">Utilisation d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.active" datatype="html">
+        <source>Active</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">118,120</context>
+        </context-group>
+        <note priority="1" from="description">État actif</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.inactive" datatype="html">
+        <source>Désactivée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">120,122</context>
+        </context-group>
+        <note priority="1" from="description">État désactivé</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.rename" datatype="html">
+        <source>Renommer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">133,134</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de renommage</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.deactivate" datatype="html">
+        <source>Désactiver…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">144,146</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de désactivation</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.reactivate" datatype="html">
+        <source>Réactiver</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">152,154</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de réactivation d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.footnote" datatype="html">
+        <source> Modalités et langues sont des listes fixes du contrat, en lecture seule. Une entrée utilisée par une fiche publiée ne peut pas être désactivée ; une entrée désactivée n&apos;est plus proposée aux praticiens ni aux visiteurs.
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">217,221</context>
+        </context-group>
+        <note priority="1" from="description">Note de bas de page du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.addedToast" datatype="html">
+        <source>Entrée ajoutée · visible immédiatement dans l&apos;annuaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+        <note priority="1" from="description">Toast après ajout au vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.tab.audience" datatype="html">
+        <source>Publics</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Sous-onglet du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.tab.modality" datatype="html">
+        <source>Modalités</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <note priority="1" from="description">Sous-onglet du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.tab.language" datatype="html">
+        <source>Langues</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <note priority="1" from="description">Sous-onglet du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.tab.specialty" datatype="html">
+        <source>Spécialités</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <note priority="1" from="description">Sous-onglet du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.renamedToast" datatype="html">
+        <source>Libellé mis à jour · visible immédiatement dans l&apos;annuaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+        <note priority="1" from="description">Toast après renommage</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.reactivateError" datatype="html">
+        <source>La réactivation n&apos;a pas pu être enregistrée. Rien n&apos;a été modifié.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de réactivation d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.reactivatedToast" datatype="html">
+        <source>« <x id="label" equiv-text="entry.labelFr"/> » réactivée · visible immédiatement dans l&apos;annuaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+        <note priority="1" from="description">Toast après réactivation d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.code" datatype="html">
+        <source>Code</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
+          <context context-type="linenumber">24,27</context>
+        </context-group>
+        <note priority="1" from="description">Champ code du vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.labelFr" datatype="html">
+        <source>Libellé FR</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
+          <context context-type="linenumber">39,42</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/rename-panel.component.ts</context>
+          <context context-type="linenumber">22,25</context>
+        </context-group>
+        <note priority="1" from="description">Champ libellé français</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.labelEnOptional" datatype="html">
+        <source>Libellé EN (facultatif)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
+          <context context-type="linenumber">56,60</context>
+        </context-group>
+        <note priority="1" from="description">Champ libellé anglais facultatif</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.rules" datatype="html">
+        <source> Code : minuscules, chiffres et soulignés, 2 à 40 caractères, commence par une lettre ; il ne change plus ensuite. Libellés : 120 caractères au plus. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
+          <context context-type="linenumber">72,76</context>
+        </context-group>
+        <note priority="1" from="description">Règles de format du code</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.addAudience" datatype="html">
+        <source>Ajouter un public</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;ajout d&apos;un public</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.addSpecialty" datatype="html">
+        <source>Ajouter une spécialité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;ajout d&apos;une spécialité</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.add" datatype="html">
+        <source>Ajouter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;ajout au vocabulaire</note>
+      </trans-unit>
+      <trans-unit id="admin.profession.psychiatrist" datatype="html">
+        <source>Psychiatre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Profession</note>
+      </trans-unit>
+      <trans-unit id="admin.profession.coach" datatype="html">
+        <source>Coach</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Profession</note>
+      </trans-unit>
+      <trans-unit id="admin.profession.psychologist" datatype="html">
+        <source>Psychologue</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Profession</note>
+      </trans-unit>
+      <trans-unit id="admin.status.emailPending" datatype="html">
+        <source>E-mail à confirmer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Statut de vérification</note>
+      </trans-unit>
+      <trans-unit id="admin.status.docsPending" datatype="html">
+        <source>Justificatifs à déposer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <note priority="1" from="description">Statut de vérification</note>
+      </trans-unit>
+      <trans-unit id="admin.status.underReview" datatype="html">
+        <source>En vérification</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">Statut de vérification</note>
+      </trans-unit>
+      <trans-unit id="admin.status.approved" datatype="html">
+        <source>Approuvé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <note priority="1" from="description">Statut de vérification</note>
+      </trans-unit>
+      <trans-unit id="admin.status.needsMore" datatype="html">
+        <source>Complément demandé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">Statut de vérification</note>
+      </trans-unit>
+      <trans-unit id="admin.status.rejected" datatype="html">
+        <source>Refusé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <note priority="1" from="description">Statut de vérification</note>
+      </trans-unit>
+      <trans-unit id="admin.status.suspended" datatype="html">
+        <source>Suspendu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Statut de vérification</note>
+      </trans-unit>
+      <trans-unit id="admin.status.closed" datatype="html">
+        <source>Clos</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <note priority="1" from="description">Statut de vérification</note>
+      </trans-unit>
+      <trans-unit id="admin.doc.diploma" datatype="html">
+        <source>Diplôme</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif</note>
+      </trans-unit>
+      <trans-unit id="admin.doc.registration" datatype="html">
+        <source>Inscription au registre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif</note>
+      </trans-unit>
+      <trans-unit id="admin.doc.certification" datatype="html">
+        <source>Certification</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif</note>
+      </trans-unit>
+      <trans-unit id="admin.doc.professionalCard" datatype="html">
+        <source>Carte professionnelle</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif</note>
+      </trans-unit>
+      <trans-unit id="admin.doc.identity" datatype="html">
+        <source>Pièce d&apos;identité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif</note>
+      </trans-unit>
+      <trans-unit id="admin.doc.other" datatype="html">
+        <source>Autre pièce</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Type de justificatif</note>
+      </trans-unit>
+      <trans-unit id="admin.doc.conform" datatype="html">
+        <source>Conforme</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <note priority="1" from="description">Qualification d&apos;un justificatif</note>
+      </trans-unit>
+      <trans-unit id="admin.doc.nonConform" datatype="html">
+        <source>Non conforme</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <note priority="1" from="description">Qualification d&apos;un justificatif</note>
+      </trans-unit>
+      <trans-unit id="admin.doc.pending" datatype="html">
+        <source>À examiner</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <note priority="1" from="description">Qualification d&apos;un justificatif</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.approved" datatype="html">
+        <source>Dossier approuvé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+        <note priority="1" from="description">Décision d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.needsMore" datatype="html">
+        <source>Complément demandé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">Décision d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.rejected" datatype="html">
+        <source>Dossier refusé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+        <note priority="1" from="description">Décision d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.suspended" datatype="html">
+        <source>Compte suspendu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+        <note priority="1" from="description">Décision d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.reactivated" datatype="html">
+        <source>Compte réactivé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Décision d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.appealAccepted" datatype="html">
+        <source>Recours accepté</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <note priority="1" from="description">Décision d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.appealRejected" datatype="html">
+        <source>Recours écarté</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+        <note priority="1" from="description">Décision d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.other" datatype="html">
+        <source>Décision</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <note priority="1" from="description">Décision d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.actor.admin" datatype="html">
+        <source>administrateur</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <note priority="1" from="description">Auteur d&apos;une ligne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.actor.practitioner" datatype="html">
+        <source>praticien·ne</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+        <note priority="1" from="description">Auteur d&apos;une ligne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.actor.system" datatype="html">
+        <source>système</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+        <note priority="1" from="description">Auteur d&apos;une ligne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.type.document" datatype="html">
+        <source>Accès document</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+        <note priority="1" from="description">Type de ligne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.type.decision" datatype="html">
+        <source>Décision</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <note priority="1" from="description">Type de ligne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.type.appeal" datatype="html">
+        <source>Recours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+        <note priority="1" from="description">Type de ligne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.type.directory" datatype="html">
+        <source>Annuaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
+        <note priority="1" from="description">Type de ligne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.type.system" datatype="html">
+        <source>Système</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+        <note priority="1" from="description">Type de ligne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.type.security" datatype="html">
+        <source>Sécurité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">158</context>
+        </context-group>
+        <note priority="1" from="description">Type de ligne du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.loginOk" datatype="html">
+        <source>Connexion réussie</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">166</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.loginFailed" datatype="html">
+        <source>Échec de connexion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.locked" datatype="html">
+        <source>Compte verrouillé après plusieurs échecs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">168</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.logout" datatype="html">
+        <source>Déconnexion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.emailConfirmed" datatype="html">
+        <source>Adresse e-mail confirmée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">170</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.consent" datatype="html">
+        <source>Conditions d&apos;utilisation acceptées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.passwordChanged" datatype="html">
+        <source>Mot de passe changé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">172</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.twoFactorOn" datatype="html">
+        <source>Double authentification activée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.twoFactorOff" datatype="html">
+        <source>Double authentification désactivée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">174</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.recoveryUsed" datatype="html">
+        <source>Code de secours utilisé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">175</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.recoveryRegenerated" datatype="html">
+        <source>Codes de secours régénérés</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.sessionRevoked" datatype="html">
+        <source>Session révoquée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.submitted" datatype="html">
+        <source>Dossier soumis pour vérification</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.bootstrap" datatype="html">
+        <source>Compte administrateur créé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.documentRead" datatype="html">
+        <source>Ouverture d&apos;un justificatif (URL signée 5 min)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.appealSubmitted" datatype="html">
+        <source>Recours déposé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">181</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.accept" datatype="html">
+        <source>Accepter…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/appeal-list.component.ts</context>
+          <context context-type="linenumber">35,36</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;acceptation d&apos;un recours</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.dismiss" datatype="html">
+        <source>Écarter…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/appeal-list.component.ts</context>
+          <context context-type="linenumber">43,44</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de rejet d&apos;un recours</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.context" datatype="html">
+        <source><x id="decision" equiv-text="contested"/> contesté · déposé le <x id="date" equiv-text="when"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/appeal-list.component.ts</context>
+          <context context-type="linenumber">133</context>
+        </context-group>
+        <note priority="1" from="description">Contexte d&apos;un recours</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.deactivateTitle" datatype="html">
+        <source> Désactiver « <x id="INTERPOLATION" equiv-text="{{ data.entry.labelFr }}"/> » ? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
+          <context context-type="linenumber">36,38</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la désactivation</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.deactivateDescription" datatype="html">
+        <source> L&apos;entrée disparaît de la liste proposée aux praticiens et des filtres de l&apos;annuaire. Elle n&apos;est jamais supprimée : vous pourrez la réactiver. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
+          <context context-type="linenumber">43,47</context>
+        </context-group>
+        <note priority="1" from="description">Effets de la désactivation</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.inUse" datatype="html">
+        <source> Utilisée par <x id="INTERPOLATION" equiv-text="{{ inUse() }}"/> profil(s) publié(s) : demandez d&apos;abord aux praticiens de la retirer ou choisissez une spécialité de remplacement. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
+          <context context-type="linenumber">49,51</context>
+        </context-group>
+        <note priority="1" from="description">Encart d&apos;une entrée utilisée</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.inUseLink" datatype="html">
+        <source>Voir les praticiens approuvés</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
+          <context context-type="linenumber">57,61</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers les praticiens</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.deactivateConfirm" datatype="html">
+        <source> Désactiver </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
+          <context context-type="linenumber">84,88</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de désactivation</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.close" datatype="html">
+        <source> Fermer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
+          <context context-type="linenumber">94,97</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de fermeture</note>
+      </trans-unit>
+      <trans-unit id="confirm.cancel" datatype="html">
+        <source>Annuler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/rename-panel.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/confirm-dialog/confirm-dialog.component.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;annulation d&apos;une confirmation</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.deactivateError" datatype="html">
+        <source>La désactivation n&apos;a pas pu être enregistrée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
+          <context context-type="linenumber">161</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de désactivation</note>
+      </trans-unit>
+      <trans-unit id="admin.checklist.title" datatype="html">
+        <source>Liste de contrôle</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">2,4</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la liste de contrôle</note>
+      </trans-unit>
+      <trans-unit id="admin.checklist.registryLink" datatype="html">
+        <source>Ouvrir l&apos;annuaire santé (RPPS) dans un nouvel onglet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">19,25</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers le registre public</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.title" datatype="html">
+        <source>Décision</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc décision</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.noteLabel" datatype="html">
+        <source>Note interne (jamais envoyée au praticien)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">29,32</context>
+        </context-group>
+        <note priority="1" from="description">Champ note interne</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.messageLabel" datatype="html">
+        <source>Message au praticien (obligatoire pour un complément ou un refus)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">47,50</context>
+        </context-group>
+        <note priority="1" from="description">Champ message au praticien</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.messageHint" datatype="html">
+        <source> Envoyé par e-mail avec la décision. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">63,66</context>
+        </context-group>
+        <note priority="1" from="description">Aide du message au praticien</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.noteRequired" datatype="html">
+        <source> Écrivez d&apos;abord une note interne : elle justifie l&apos;approbation. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">80,84</context>
+        </context-group>
+        <note priority="1" from="description">Note interne exigée</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.approveAnyway" datatype="html">
+        <source> Approuver quand même </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">92,96</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de confirmation d&apos;une approbation forcée</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.cancel" datatype="html">
+        <source> Annuler </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">100,106</context>
+        </context-group>
+        <note priority="1" from="description">Annulation d&apos;une approbation forcée</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.approve" datatype="html">
+        <source> Approuver </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">115,118</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de décision</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.askMore" datatype="html">
+        <source> Demander un complément </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">125,128</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de décision</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.reject" datatype="html">
+        <source> Refuser et suspendre </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">135,138</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de décision</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.effects" datatype="html">
+        <source> Approuver : badge actif et e-mail « dossier validé ». Complément : e-mail avec votre message, le praticien complète et resoumet. Refus : compte suspendu, sessions révoquées, e-mail avec le motif et la voie de recours. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">139,144</context>
+        </context-group>
+        <note priority="1" from="description">Rappel des effets d&apos;une décision</note>
+      </trans-unit>
+      <trans-unit id="admin.checklist.name" datatype="html">
+        <source>Le nom concorde sur toutes les pièces</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <note priority="1" from="description">Point de la liste de contrôle</note>
+      </trans-unit>
+      <trans-unit id="admin.checklist.diploma" datatype="html">
+        <source>Le diplôme correspond à la profession déclarée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <note priority="1" from="description">Point de la liste de contrôle</note>
+      </trans-unit>
+      <trans-unit id="admin.checklist.registry" datatype="html">
+        <source>Le numéro est retrouvé dans le registre public</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Point de la liste de contrôle</note>
+      </trans-unit>
+      <trans-unit id="admin.checklist.readable" datatype="html">
+        <source>Les documents sont lisibles et non altérés</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">Point de la liste de contrôle</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.unchecked" datatype="html">
+        <source><x id="count" equiv-text="points"/> point(s) de contrôle non coché(s)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Points de contrôle non cochés</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.nonConform" datatype="html">
+        <source><x id="count" equiv-text="documents"/> justificatif(s) non marqué(s) conforme(s)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <note priority="1" from="description">Justificatifs non conformes</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.confirm" datatype="html">
+        <source><x id="summary" equiv-text="summary"/> — approuver quand même ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation d&apos;une approbation forcée</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.notReviewable" datatype="html">
+        <source>Ce dossier n&apos;est plus en attente de décision : il a peut-être été traité entre-temps. Rechargez la file.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+        <note priority="1" from="description">Dossier déjà décidé</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.notFound" datatype="html">
+        <source>Ce dossier n&apos;existe plus.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+        <note priority="1" from="description">Dossier introuvable</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.error" datatype="html">
+        <source>La décision n&apos;a pas pu être enregistrée. Rien n&apos;a été modifié.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
+          <context context-type="linenumber">186</context>
+        </context-group>
+        <note priority="1" from="description">Erreur d&apos;envoi d&apos;une décision</note>
+      </trans-unit>
+      <trans-unit id="admin.doc.purged" datatype="html">
+        <source>Fichier purgé : seules les informations restent.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-list.component.ts</context>
+          <context context-type="linenumber">30,33</context>
+        </context-group>
+        <note priority="1" from="description">Justificatif purgé</note>
+      </trans-unit>
+      <trans-unit id="admin.doc.conformBox" datatype="html">
+        <source>Conforme</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-list.component.ts</context>
+          <context context-type="linenumber">42,44</context>
+        </context-group>
+        <note priority="1" from="description">Case de qualification d&apos;un justificatif</note>
+      </trans-unit>
+      <trans-unit id="admin.doc.show" datatype="html">
+        <source>Afficher</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-list.component.ts</context>
+          <context context-type="linenumber">53,55</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;affichage d&apos;un justificatif</note>
+      </trans-unit>
+      <trans-unit id="admin.doc.listLabel" datatype="html">
+        <source>Justificatifs du dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-list.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la liste des justificatifs</note>
+      </trans-unit>
+      <trans-unit id="admin.viewer.zoomOut" datatype="html">
+        <source> Zoom − </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">38,40</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de la visionneuse</note>
+      </trans-unit>
+      <trans-unit id="admin.viewer.zoomIn" datatype="html">
+        <source> Zoom + </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">47,50</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de la visionneuse</note>
+      </trans-unit>
+      <trans-unit id="admin.viewer.rotate" datatype="html">
+        <source> Pivoter </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">54,58</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de la visionneuse</note>
+      </trans-unit>
+      <trans-unit id="admin.viewer.open" datatype="html">
+        <source>Ouvrir dans un nouvel onglet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">66,71</context>
+        </context-group>
+        <note priority="1" from="description">Lien d&apos;ouverture du justificatif dans un nouvel onglet</note>
+      </trans-unit>
+      <trans-unit id="admin.viewer.alt" datatype="html">
+        <source>Justificatif : <x id="title" equiv-text="title"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible de la visionneuse</note>
+      </trans-unit>
+      <trans-unit id="admin.viewer.empty" datatype="html">
+        <source>Aucun justificatif affiché</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+        <note priority="1" from="description">Visionneuse vide</note>
+      </trans-unit>
+      <trans-unit id="admin.viewer.purged" datatype="html">
+        <source>Ce fichier a été purgé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">133</context>
+        </context-group>
+        <note priority="1" from="description">Justificatif purgé</note>
+      </trans-unit>
+      <trans-unit id="admin.viewer.error" datatype="html">
+        <source>Impossible d&apos;afficher ce justificatif</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">135</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de la visionneuse</note>
+      </trans-unit>
+      <trans-unit id="admin.viewer.emptyHint" datatype="html">
+        <source>Choisissez « Afficher » sur un justificatif.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+        <note priority="1" from="description">Visionneuse vide</note>
+      </trans-unit>
+      <trans-unit id="admin.dossier.email" datatype="html">
+        <source>E-mail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
+          <context context-type="linenumber">40,43</context>
+        </context-group>
+        <note priority="1" from="description">Coordonnée du dossier</note>
+      </trans-unit>
+      <trans-unit id="admin.dossier.phone" datatype="html">
+        <source>Téléphone</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
+          <context context-type="linenumber">44,46</context>
+        </context-group>
+        <note priority="1" from="description">Coordonnée du dossier</note>
+      </trans-unit>
+      <trans-unit id="admin.dossier.number" datatype="html">
+        <source>N° professionnel déclaré</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
+          <context context-type="linenumber">48,49</context>
+        </context-group>
+        <note priority="1" from="description">Coordonnée du dossier</note>
+      </trans-unit>
+      <trans-unit id="admin.dossier.office" datatype="html">
+        <source>Cabinet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
+          <context context-type="linenumber">52,55</context>
+        </context-group>
+        <note priority="1" from="description">Coordonnée du dossier</note>
+      </trans-unit>
+      <trans-unit id="admin.dossier.created" datatype="html">
+        <source>Compte créé le <x id="date" equiv-text="created"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Date de création du compte</note>
+      </trans-unit>
+      <trans-unit id="admin.dossier.confirmed" datatype="html">
+        <source>e-mail confirmé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <note priority="1" from="description">E-mail confirmé</note>
+      </trans-unit>
+      <trans-unit id="admin.dossier.unconfirmed" datatype="html">
+        <source>e-mail non confirmé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <note priority="1" from="description">E-mail non confirmé</note>
+      </trans-unit>
+      <trans-unit id="admin.dossier.submitted" datatype="html">
+        <source>soumis <x id="age" equiv-text="age"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <note priority="1" from="description">Soumission du dossier</note>
+      </trans-unit>
+      <trans-unit id="admin.dossier.remote" datatype="html">
+        <source>À distance uniquement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+        <note priority="1" from="description">Cabinet absent, exercice à distance</note>
+      </trans-unit>
+      <trans-unit id="admin.queue.label.needsMore" datatype="html">
+        <source>Dossiers en attente d&apos;un complément</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/queue-list.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la file</note>
+      </trans-unit>
+      <trans-unit id="admin.queue.label.pending" datatype="html">
+        <source>Dossiers en attente de vérification</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/queue-list.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la file</note>
+      </trans-unit>
+      <trans-unit id="admin.queue.documents" datatype="html">
+        <source><x id="count" equiv-text="item.documentsCount"/> documents</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/queue-list.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Nombre de justificatifs d&apos;un dossier</note>
+      </trans-unit>
+      <trans-unit id="admin.queue.missing" datatype="html">
+        <source>Manque : <x id="missing" equiv-text="missing"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/queue-list.component.ts</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <note priority="1" from="description">Pièces obligatoires absentes</note>
+      </trans-unit>
+      <trans-unit id="admin.reason.hint" datatype="html">
+        <source>Au moins <x id="n" equiv-text="this.data.minLength"/> caractères ; enregistré au journal.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <note priority="1" from="description">Aide du champ motif</note>
+      </trans-unit>
+      <trans-unit id="admin.reason.hintShort" datatype="html">
+        <source>Envoyé par e-mail ; enregistré au journal.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <note priority="1" from="description">Aide du champ réponse</note>
+      </trans-unit>
+      <trans-unit id="admin.reason.selfSuspend" datatype="html">
+        <source>Vous ne pouvez pas suspendre votre propre compte.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <note priority="1" from="description">Suspension de soi-même</note>
+      </trans-unit>
+      <trans-unit id="admin.reason.lastAdmin" datatype="html">
+        <source>C&apos;est le dernier administrateur actif : il ne peut pas être suspendu.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Dernier administrateur</note>
+      </trans-unit>
+      <trans-unit id="admin.reason.notSuspendable" datatype="html">
+        <source>Ce compte est déjà suspendu, refusé ou clos.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <note priority="1" from="description">Compte non suspendable</note>
+      </trans-unit>
+      <trans-unit id="admin.reason.notReactivable" datatype="html">
+        <source>Ce compte n&apos;est ni suspendu ni refusé : il n&apos;y a rien à réactiver.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <note priority="1" from="description">Compte non réactivable</note>
+      </trans-unit>
+      <trans-unit id="admin.reason.selfReview" datatype="html">
+        <source>Vous êtes l&apos;auteur de la décision contestée : un autre administrateur doit examiner ce recours.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+        <note priority="1" from="description">Recours sur sa propre décision</note>
+      </trans-unit>
+      <trans-unit id="admin.reason.alreadyDecided" datatype="html">
+        <source>Ce recours a déjà été examiné.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+        <note priority="1" from="description">Recours déjà examiné</note>
+      </trans-unit>
+      <trans-unit id="admin.reason.error" datatype="html">
+        <source>L&apos;action n&apos;a pas pu être enregistrée. Rien n&apos;a été modifié.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
+          <context context-type="linenumber">142</context>
+        </context-group>
+        <note priority="1" from="description">Erreur d&apos;une action à motif</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.labelEn" datatype="html">
+        <source>Libellé EN (vide = effacé)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/rename-panel.component.ts</context>
+          <context context-type="linenumber">37,40</context>
+        </context-group>
+        <note priority="1" from="description">Champ libellé anglais</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.order" datatype="html">
+        <source>Ordre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/rename-panel.component.ts</context>
+          <context context-type="linenumber">52,55</context>
+        </context-group>
+        <note priority="1" from="description">Champ ordre d&apos;affichage</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.save" datatype="html">
+        <source> Enregistrer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/rename-panel.component.ts</context>
+          <context context-type="linenumber">73,75</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;enregistrement</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.renameNote" datatype="html">
+        <source> Le code ne change jamais ; les profils gardent l&apos;entrée et affichent le nouveau libellé. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/rename-panel.component.ts</context>
+          <context context-type="linenumber">80,83</context>
+        </context-group>
+        <note priority="1" from="description">Note du renommage</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.exists" datatype="html">
+        <source>Ce code existe déjà pour ce type.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/vocabulary-forms.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <note priority="1" from="description">Code déjà utilisé</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.notFound" datatype="html">
+        <source>Cette entrée n&apos;existe plus. Rechargez la page.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/vocabulary-forms.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Entrée introuvable</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.error" datatype="html">
+        <source>La modification n&apos;a pas pu être enregistrée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/vocabulary-forms.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">Erreur d&apos;écriture du vocabulaire</note>
       </trans-unit>
       <trans-unit id="auth.login.pageTitle" datatype="html">
         <source>Connexion · PsyMate</source>
@@ -9655,14 +11990,6 @@
           <context context-type="linenumber">48</context>
         </context-group>
         <note priority="1" from="description">Bouton par défaut d&apos;une confirmation</note>
-      </trans-unit>
-      <trans-unit id="confirm.cancel" datatype="html">
-        <source>Annuler</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/confirm-dialog/confirm-dialog.component.ts</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-        <note priority="1" from="description">Bouton d&apos;annulation d&apos;une confirmation</note>
       </trans-unit>
       <trans-unit id="confirm.word.label" datatype="html">
         <source>Tapez « <x id="word" equiv-text="this.options.confirmWord ?? &apos;&apos;"/> » pour confirmer</source>

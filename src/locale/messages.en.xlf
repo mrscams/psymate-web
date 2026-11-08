@@ -12969,6 +12969,7 @@
           <context context-type="linenumber">226</context>
         </context-group>
         <note priority="1" from="description">Erreur de réactivation d&apos;une entrée</note>
+      </trans-unit>
       <trans-unit id="vocabulary.pageTitle" datatype="html">
         <source>Émotions personnalisées · PsyMate</source>
         <target state="translated">Custom emotions · PsyMate</target>
