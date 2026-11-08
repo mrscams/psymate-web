@@ -74,6 +74,8 @@ export interface GraphProbe {
   layoutMs(): number | null;
   /** Identifiants des nœuds dessinés. */
   nodeIds(): string[];
+  /** Un layout est en cours (positions pas encore définitives). */
+  busy(): boolean;
 }
 
 const ANIMATION_MS = 400;
@@ -159,10 +161,12 @@ export class GraphCanvasComponent {
   private builtKey: string | null = null;
   private builtRelayout = 0;
   private lastLayoutMs: number | null = null;
+  private layoutRunning = false;
   private dragStart: Point | null = null;
   private dropTarget: NodeSingular | null = null;
   private viewportTimer: ReturnType<typeof setTimeout> | null = null;
   private destroyed = false;
+  private resizeObserver: ResizeObserver | null = null;
 
   constructor() {
     afterNextRender(() => void this.start());
@@ -196,6 +200,7 @@ export class GraphCanvasComponent {
     inject(DestroyRef).onDestroy(() => {
       this.destroyed = true;
       if (this.viewportTimer) clearTimeout(this.viewportTimer);
+      this.resizeObserver?.disconnect();
       this.cy?.destroy();
       this.cy = null;
     });
@@ -207,6 +212,8 @@ export class GraphCanvasComponent {
     if (!cy) return;
     const level = cy.zoom() * factor;
     cy.zoom({ level, renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } });
+    // Un bouton est un geste fini : rangé tout de suite (pas d'attente du délai des gestes continus).
+    this.emitViewport(cy);
   }
 
   private async start(): Promise<void> {
@@ -229,7 +236,16 @@ export class GraphCanvasComponent {
     this.cy = cy;
     this.listen(cy);
     this.exposeProbe(cy);
+    this.watchSize(cy);
     this.ready.set(true);
+  }
+
+  /** Le panneau de détail réduit la zone du graphe : Cytoscape reprend la taille de son conteneur. */
+  private watchSize(cy: Core): void {
+    if (typeof ResizeObserver !== 'function') return;
+    const observer = new ResizeObserver(() => cy.resize());
+    observer.observe(this.container().nativeElement);
+    this.resizeObserver = observer;
   }
 
   private tokens() {
@@ -290,12 +306,15 @@ export class GraphCanvasComponent {
 
   private viewportMoved(cy: Core): void {
     if (this.viewportTimer) clearTimeout(this.viewportTimer);
-    this.viewportTimer = setTimeout(() => {
-      this.viewportTimer = null;
-      if (!this.cy) return;
-      const pan = cy.pan();
-      this.viewportChanged.emit({ zoom: cy.zoom(), pan: { x: pan.x, y: pan.y } });
-    }, VIEWPORT_DEBOUNCE_MS);
+    this.viewportTimer = setTimeout(() => this.emitViewport(cy), VIEWPORT_DEBOUNCE_MS);
+  }
+
+  private emitViewport(cy: Core): void {
+    if (this.viewportTimer) clearTimeout(this.viewportTimer);
+    this.viewportTimer = null;
+    if (!this.cy) return;
+    const pan = cy.pan();
+    this.viewportChanged.emit({ zoom: cy.zoom(), pan: { x: pan.x, y: pan.y } });
   }
 
   private sync(
@@ -356,15 +375,16 @@ export class GraphCanvasComponent {
     });
   }
 
-  /** Position d'un nouveau nœud : près de ses voisins déjà placés, en couronne. */
+  /** Position d'un nouveau nœud : près de ses voisins déjà placés, en spirale. */
   private besideNeighbours(
     cy: Core,
     node: NodeSingular,
     index: number,
     pending: ReadonlySet<string>,
   ): Point {
-    const angle = (index * 2.4) % (2 * Math.PI);
-    const radius = 70 + (index % 5) * 12;
+    // Spirale de tournesol : les nœuds ajoutés (un groupe déplié) s'écartent sans se chevaucher.
+    const angle = index * 2.39996;
+    const radius = 70 + 30 * Math.sqrt(index);
     let x = 0;
     let y = 0;
     let count = 0;
@@ -417,7 +437,9 @@ export class GraphCanvasComponent {
       idealEdgeLength: 90,
       nodeRepulsion: 6500,
     } as unknown as Parameters<Core['layout']>[0]);
+    this.layoutRunning = true;
     layout.one('layoutstop', () => {
+      this.layoutRunning = false;
       this.lastLayoutMs = Math.round(performance.now() - started);
       if (!this.cy) return;
       const placed: GraphPositions = {};
@@ -457,6 +479,7 @@ export class GraphCanvasComponent {
       zoom: () => cy.zoom(),
       layoutMs: () => this.lastLayoutMs,
       nodeIds: () => cy.nodes().map((node) => node.id()),
+      busy: () => this.layoutRunning,
     };
     Object.defineProperty(this.host.nativeElement, 'pmGraphProbe', {
       value: probe,

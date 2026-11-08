@@ -213,6 +213,24 @@ describe('GraphStore', () => {
     expect(again.store.currentPositions()).toBeNull();
   });
 
+  it('autre racine : la clé du canevas suit le graphe reçu, pas la requête en cours', async () => {
+    let resolveSecond: (value: unknown) => void = () => undefined;
+    const neighbourhood = vi
+      .fn()
+      .mockResolvedValueOnce(graphView())
+      .mockImplementationOnce(() => new Promise((resolve) => (resolveSecond = resolve)));
+    const { store } = setup({ neighbourhood });
+    await store.load('p-1', rooted);
+    store.rememberViewport('e-situation', { zoom: 2, pan: { x: 0, y: 0 } });
+    const pending = store.load('p-1', { ...rooted, root: 'e-med' });
+    expect(store.key()).toBe('e-situation');
+    expect(store.currentViewport()?.zoom).toBe(2);
+    resolveSecond(graphView());
+    await pending;
+    expect(store.key()).toBe('e-med');
+    expect(store.currentViewport()).toBeNull();
+  });
+
   it('un autre dossier repart de zéro', async () => {
     const { store } = setup();
     await store.load('p-1', rooted);

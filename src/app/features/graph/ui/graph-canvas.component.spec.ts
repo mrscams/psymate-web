@@ -98,6 +98,7 @@ describe('GraphCanvasComponent', () => {
     expect(probe.point('e-event')).not.toBeNull();
     expect(probe.point('absent')).toBeNull();
     expect(probe.layoutMs()).not.toBeNull();
+    expect(probe.busy()).toBe(false);
     const canvas = host.querySelector('.canvas')!;
     expect(canvas.getAttribute('role')).toBe('img');
     expect(canvas.getAttribute('aria-label')).toBe('Graphe des liens : 4 nœuds, 3 liens.');
@@ -152,6 +153,18 @@ describe('GraphCanvasComponent', () => {
     expect(cy().pan()).toEqual({ x: 12, y: 34 });
     expect(events.positions).toEqual([]);
     expect(probe.layoutMs()).toBeNull();
+  });
+
+  it('zoom + / − : boutons nommés, zoom rangé tout de suite', async () => {
+    const { host, cy, events } = await render();
+    const before = cy().zoom();
+    const count = events.viewports.length;
+    host.querySelector<HTMLButtonElement>('button[aria-label="Zoom avant"]')!.click();
+    expect(cy().zoom()).toBeCloseTo(before * 1.25);
+    expect(events.viewports.length).toBe(count + 1);
+    expect(events.viewports.at(-1)).toMatchObject({ zoom: cy().zoom() });
+    host.querySelector<HTMLButtonElement>('button[aria-label="Zoom arrière"]')!.click();
+    expect(cy().zoom()).toBeCloseTo(before);
   });
 
   it('clic : sélection ; fond : désélection ; double-clic : activation', async () => {

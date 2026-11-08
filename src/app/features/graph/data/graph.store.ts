@@ -47,6 +47,11 @@ interface GraphState {
   patientId: string | null;
   query: GraphQuery;
   graph: Loadable<GraphView>;
+  /**
+   * Racine (layoutKey) du graphe reçu : pendant la lecture d'une autre racine, le canevas garde
+   * l'ancien graphe sous son ancienne clé, et ne repart d'un layout qu'à l'arrivée du nouveau.
+   */
+  graphKey: string | null;
   /** Super-nœuds dépliés (POST …/graph/expand), redépliés après une relecture. */
   expanded: string[];
   /** Types de liens (libellés, style de trait), lus une fois. */
@@ -68,6 +73,7 @@ const initialState: GraphState = {
   patientId: null,
   query: DEFAULT_QUERY,
   graph: idle(),
+  graphKey: null,
   expanded: [],
   catalog: idle(),
   emotionLabels: {},
@@ -89,7 +95,8 @@ const initialState: GraphState = {
 export const GraphStore = signalStore(
   withState(initialState),
   withComputed((store) => ({
-    key: computed(() => layoutKey(store.query())),
+    /** Clé des positions et du zoom : celle du graphe affiché, sinon celle de la requête. */
+    key: computed(() => store.graphKey() ?? layoutKey(store.query())),
     /** Le graphe montré : celui reçu, filtré par types d'entrées (la racine reste). */
     view: computed<GraphView | null>(() => {
       const data = store.graph().data;
@@ -122,8 +129,8 @@ export const GraphStore = signalStore(
       const root = store.query().root;
       return root ? (store.nodeIndex().get(root) ?? null) : null;
     }),
-    currentViewport: computed(() => store.viewports()[layoutKey(store.query())] ?? null),
-    currentPositions: computed(() => store.positions()[layoutKey(store.query())] ?? null),
+    currentViewport: computed(() => store.viewports()[store.key()] ?? null),
+    currentPositions: computed(() => store.positions()[store.key()] ?? null),
     lineStyles: computed(() => {
       const styles: Partial<Record<string, LinkTypeOption['lineStyle']>> = {};
       for (const type of store.catalog().data ?? []) styles[type.code] = type.lineStyle;
@@ -179,7 +186,7 @@ export const GraphStore = signalStore(
           }
         }
         if (seq !== graphSeq) return;
-        patchState(store, { graph: loaded(view), expanded });
+        patchState(store, { graph: loaded(view), graphKey: layoutKey(query), expanded });
         const selected = store.selectedId();
         if (selected && !stillThere(view, selected)) {
           patchState(store, { selectedId: null, detail: idle() });
@@ -240,6 +247,7 @@ export const GraphStore = signalStore(
           patientId: snapshot.patientId,
           query: snapshot.query,
           graph: snapshot.graph ? loaded(snapshot.graph) : idle(),
+          graphKey: snapshot.graph ? layoutKey(snapshot.query) : null,
           expanded: snapshot.expanded,
           selectedId: snapshot.selectedId,
           viewports: snapshot.viewports,

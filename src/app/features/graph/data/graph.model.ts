@@ -184,8 +184,11 @@ export function hasGraphParams(params: ParamReader): boolean {
 }
 
 export function sameQuery(a: GraphQuery, b: GraphQuery): boolean {
-  const sameList = (x: readonly string[], y: readonly string[]) =>
-    x.length === y.length && [...x].sort().every((value, i) => value === [...y].sort()[i]);
+  const sameList = (x: readonly string[], y: readonly string[]) => {
+    if (x.length !== y.length) return false;
+    const sorted = [...y].sort();
+    return [...x].sort().every((value, i) => value === sorted[i]);
+  };
   return (
     a.root === b.root &&
     a.depth === b.depth &&
