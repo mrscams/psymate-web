@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T22:40:37.705Z",
+  "task": "M6-02",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 38 fusionnee (squash 04b6b3a) : barre de commande dans l en-tete patient (apercu interprete en direct, rail lie a, Entree cree, Ctrl+Entree ouvre l editeur prerempli, Ctrl+S brouillon, creation d emotion personnalisee), CaptureStore ; ressenti lie cree en 3,5 s au clavier ; CI verte (checks + 128 e2e).",
+  "notes": "Apercu en panneau ancre sous le champ. Pas de prefixe /res. Cible > cherchee parmi les 5 cibles du rail. openEntryEditor accepte un preremplissage (features/entries). Suites : store de vocabulaire partage, double cast du corps de creation.",
+  "next": "M6-03 revue des etats (carte proposee) ; puis lot 7 (M7-03, M7-04)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/38",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
