@@ -13903,6 +13903,7 @@
           <context context-type="linenumber">59</context>
         </context-group>
         <note priority="1" from="description">Erreur, fusion introuvable (404)</note>
+      </trans-unit>
       <trans-unit id="entries.editor.draftBadge" datatype="html">
         <source>brouillon</source>
         <target state="translated">draft</target>
