@@ -88,7 +88,6 @@ export function source(overrides: Partial<SourceEntry> = {}): SourceEntry {
     occurredFrom: '2026-10-24T08:00:00Z',
     occurredTo: null,
     precision: 'day',
-    linkCount: 1,
     archived: false,
     ...overrides,
   };

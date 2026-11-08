@@ -139,10 +139,17 @@ export class LinkEditorPanel {
   /** Lien de la liste en cours de modification de type. */
   protected readonly editingId = signal<string | null>(null);
   protected readonly editTypes = signal<{ from: EntryType; to: EntryType } | null>(null);
+  /** Le type de l'autre extrémité du lien en modification n'a pas pu être lu. */
+  protected readonly editError = signal(false);
   private confirming = false;
 
   protected readonly source = computed(() => this.store.source().data);
   protected readonly sourceState = computed(() => stateKind(this.store.source()));
+  /** 403 et 404 sont définitifs : pas de « Réessayer » (comme le shell). */
+  protected readonly sourceRetryable = computed(() => {
+    const status = this.store.source().problem?.status ?? 0;
+    return status === 0 || status >= 500 || status === 429;
+  });
   protected readonly sourceRetry: StateAction = {
     label: $localize`:Bouton de l'état erreur@@state.error.retry:Réessayer`,
     handler: () => void this.store.retrySource(),
@@ -156,7 +163,16 @@ export class LinkEditorPanel {
   };
   protected readonly catalogErrorTitle = $localize`:Types de liens illisibles@@links.catalog.error:Impossible de charger les types de liens`;
 
-  protected readonly targetsState = computed(() => stateKind(this.store.targets()));
+  /**
+   * Une recherche relancée qui échoue le dit (même si l'ancienne liste existe) ; une recherche vide
+   * garde la cible déjà choisie visible.
+   */
+  protected readonly targetsState = computed(() => {
+    const targets = this.store.targets();
+    if (targets.status === 'error') return 'error' as const;
+    const kind = stateKind(targets);
+    return kind === 'empty' && this.target() ? null : kind;
+  });
   protected readonly targetsRetry: StateAction = {
     label: $localize`:Bouton de l'état erreur@@state.error.retry:Réessayer`,
     handler: () => void this.store.retryTargets(),
@@ -347,8 +363,9 @@ export class LinkEditorPanel {
   }
 
   /**
-   * ⏎ enregistre, sauf dans la justification (Ctrl+⏎), sur un bouton, un lien, une liste ou un
-   * bouton radio (activation native) ; Échap passe par requestClose quand un choix est fait.
+   * ⏎ enregistre (depuis la recherche ou une cible aussi), sauf dans la justification (Ctrl+⏎), sur
+   * un bouton, un lien ou une liste déroulante (activation native) ; Échap passe par requestClose
+   * quand un choix est fait.
    */
   protected onKey(event: KeyboardEvent): void {
     if (event.key === 'Escape') {
@@ -443,9 +460,14 @@ export class LinkEditorPanel {
     if (!link || !source) return;
     this.editingId.set(linkId);
     this.editTypes.set(null);
+    this.editError.set(false);
     const other = otherEnd(link, source.id);
     const otherType = await this.store.resolveEntryType(other);
-    if (this.editingId() !== linkId || !otherType) return;
+    if (this.editingId() !== linkId) return;
+    if (!otherType) {
+      this.editError.set(true);
+      return;
+    }
     this.editTypes.set(
       link.sourceId === source.id
         ? { from: source.type, to: otherType }
@@ -456,6 +478,7 @@ export class LinkEditorPanel {
   protected cancelEdit(): void {
     this.editingId.set(null);
     this.editTypes.set(null);
+    this.editError.set(false);
   }
 
   protected async changeType(change: { linkId: string; linkType: LinkTypeCode }): Promise<void> {

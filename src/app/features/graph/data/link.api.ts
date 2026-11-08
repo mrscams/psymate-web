@@ -3,6 +3,7 @@ import { firstValueFrom } from 'rxjs';
 
 import {
   CreateLinkRequest,
+  CreateLinkRequestDirectionEnum,
   EntreesService,
   EntryDto,
   EntrySearchItemDto,
@@ -89,7 +90,14 @@ export class LinkApi {
 
   /** POST /api/entries/{id}/links → 201, le lien vu depuis l'entrée (409 LINK_EXISTS, 422). */
   async create(entryId: string, draft: LinkDraft): Promise<EntryLink> {
-    const body = toCreateBody(draft) as unknown as CreateLinkRequest;
+    const { direction, ...rest } = toCreateBody(draft);
+    const body: CreateLinkRequest = {
+      ...rest,
+      direction:
+        direction === 'incoming'
+          ? CreateLinkRequestDirectionEnum.Incoming
+          : CreateLinkRequestDirectionEnum.Outgoing,
+    };
     return toLink(await firstValueFrom(this.links.createLink(entryId, body)));
   }
 
@@ -138,7 +146,6 @@ function toSource(dto: EntryDto): SourceEntry {
     occurredFrom: dto.occurred?.from ?? null,
     occurredTo: dto.occurred?.to ?? null,
     precision: (dto.occurred?.precision as OccurredPrecision | undefined) ?? null,
-    linkCount: dto.linkCount ?? 0,
     archived: !!dto.archivedAt,
   };
 }

@@ -279,6 +279,94 @@ describe('LinkEditorPanel', () => {
     expect(document.querySelector('pm-link-editor-panel')).not.toBeNull();
   });
 
+  it('422 LINK_TYPE_NOT_ALLOWED : message du serveur sous les puces, rien n’est fermé', async () => {
+    const problem = {
+      status: 422,
+      code: 'VALIDATION_FAILED',
+      errors: [
+        {
+          field: 'linkType',
+          code: 'LINK_TYPE_NOT_ALLOWED',
+          message: 'Type interdit pour ce couple.',
+        },
+      ],
+    };
+    const { el } = await render({ create: vi.fn().mockRejectedValue(problem) });
+    await chooseTarget(el, 'e-event');
+    await click(chip(el, 'follows'));
+    await click(el.querySelector<HTMLButtonElement>('.footer .primary'));
+    expect(text(el.querySelector('#field-linkType-error'))).toBe('Type interdit pour ce couple.');
+    expect(
+      el
+        .querySelector('.editor pm-link-type-chips [role="group"]')
+        ?.getAttribute('aria-describedby'),
+    ).toBe('field-linkType-error');
+    expect(el.querySelector('.alert')).toBeNull();
+    expect(document.querySelector('pm-link-editor-panel')).not.toBeNull();
+  });
+
+  it('422 sans contrôle relié (direction, SELF_LINK sur targetId) : alerte et message sous les cibles', async () => {
+    const problem = {
+      status: 422,
+      code: 'VALIDATION_FAILED',
+      errors: [
+        { field: 'direction', code: 'INVALID_VALUE', message: 'Sens inconnu.' },
+        { field: 'targetId', code: 'SELF_LINK', message: 'Une entrée ne se lie pas à elle-même.' },
+      ],
+    };
+    const { el } = await render({ create: vi.fn().mockRejectedValue(problem) });
+    await chooseTarget(el, 'e-event');
+    await click(chip(el, 'follows'));
+    await click(el.querySelector<HTMLButtonElement>('.footer .primary'));
+    expect(text(el.querySelector('.alert p'))).toBe('Sens inconnu.');
+    expect(text(el.querySelector('#field-targetId-error'))).toBe(
+      'Une entrée ne se lie pas à elle-même.',
+    );
+  });
+
+  it('Échap avec un type choisi seulement : confirmation, puis fermeture si « Abandonner »', async () => {
+    const confirm = vi.fn().mockResolvedValue(true);
+    const { el, ref } = await render({}, confirm);
+    const closed = ref.closed;
+    await click(chip(el, 'follows'));
+    el.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+    );
+    await settle();
+    expect(confirm).toHaveBeenCalledTimes(1);
+    expect(await closed).toBeUndefined();
+  });
+
+  it('modifier un lien dont l’autre extrémité est illisible : erreur et Réessayer', async () => {
+    const entry = vi
+      .fn()
+      .mockResolvedValueOnce(source())
+      .mockRejectedValueOnce({ status: 0, code: 'NETWORK_ERROR' })
+      .mockResolvedValue(source({ id: 'e-loin', type: 'situation' }));
+    const { el } = await render({
+      entry,
+      linksOf: vi.fn().mockResolvedValue([link({ sourceId: 'e-loin' })]),
+    });
+    const item = el.querySelector<HTMLElement>('[data-link-id="l-1"]')!;
+    await click(item.querySelector<HTMLButtonElement>('.actions button'));
+    await settle();
+    expect(text(item.querySelector('.error[role="alert"]'))).toContain(
+      'Impossible de lire les types possibles.',
+    );
+    await click(item.querySelector<HTMLButtonElement>('.error button'));
+    await settle();
+    expect(item.querySelector('pm-link-type-chips')).not.toBeNull();
+  });
+
+  it('source introuvable (404) : erreur sans « Réessayer »', async () => {
+    const { el } = await render({
+      entry: vi.fn().mockRejectedValue({ status: 404, code: 'ENTRY_NOT_FOUND' }),
+    });
+    const state = el.querySelector('section pm-state');
+    expect(text(state)).toContain('Impossible de charger cette entrée');
+    expect(state?.querySelector('button.retry, button.action')).toBeNull();
+  });
+
   it('filtre de type : relance la recherche dans le dossier', async () => {
     const { el, api } = await render();
     const select = el.querySelector<HTMLSelectElement>('#pm-link-type-filter')!;

@@ -82,6 +82,8 @@ describe('openLinkEditor, connectLinkEditor', () => {
     expect(document.querySelector('.pm-side-panel-pane--420')).not.toBeNull();
     expect(router.parseUrl(router.url).queryParams[LINK_QUERY_PARAM]).toBe('e-feeling');
     expect(TestBed.runInInjectionContext(() => openLinkEditor('e-feeling'))).toBeNull();
+    // Ouvert sur une entrée : une demande pour une autre ne remplace pas le panneau.
+    expect(TestBed.runInInjectionContext(() => openLinkEditor('e-event'))).toBeNull();
     expect(panels.depth()).toBe(1);
     ref!.close();
     await settle();

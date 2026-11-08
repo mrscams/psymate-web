@@ -70,7 +70,7 @@ function editor(page: Page) {
     target: (name: string) => dialog.getByRole('radio', { name: new RegExp(name) }),
     chip: (name: string) => relation.getByRole('button', { name, exact: true }),
     invert: dialog.getByRole('button', { name: 'Inverser le sens' }),
-    sentence: dialog.locator('.sentence'),
+    sentence: dialog.locator('form.editor .sentence'),
     rationale: dialog.getByLabel('Pourquoi (facultatif)'),
     search: dialog.getByRole('searchbox', { name: 'Rechercher une entrée du dossier' }),
     alert: dialog.locator('.alert[role="alert"]'),

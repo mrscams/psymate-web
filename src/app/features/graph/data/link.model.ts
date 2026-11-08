@@ -44,10 +44,9 @@ export interface LinkEntry {
   precision: OccurredPrecision | null;
 }
 
-/** La source, avec son dossier (l'URL de recherche) et son nombre de liens. */
+/** La source, avec son dossier (l'URL de recherche). */
 export interface SourceEntry extends LinkEntry {
   patientId: string;
-  linkCount: number;
   archived: boolean;
 }
 

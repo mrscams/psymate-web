@@ -100,7 +100,7 @@ describe('LinkEditorStore', () => {
     expect(store.query()).toEqual({ q: 'sertra', type: 'medication' });
   });
 
-  it('createLink : le lien rendu s’ajoute à la liste, l’entrée compte un lien de plus', async () => {
+  it('createLink : le lien rendu s’ajoute à la liste', async () => {
     const { store, api } = setup();
     await store.open('e-feeling');
     const created = await store.createLink({
@@ -117,7 +117,6 @@ describe('LinkEditorStore', () => {
     });
     expect(created?.id).toBe('l-new');
     expect(store.links().data?.map((item) => item.id)).toEqual(['l-1', 'l-new']);
-    expect(store.source().data?.linkCount).toBe(2);
     expect(store.linkedTo().get('e-event')).toEqual(['déclenché par']);
   });
 
@@ -145,7 +144,6 @@ describe('LinkEditorStore', () => {
     expect(store.links().data).toEqual([]);
     expect(store.placed()).toEqual([{ ...link(), removed: true }]);
     expect(store.linkedTo().size).toBe(0);
-    expect(store.source().data?.linkCount).toBe(0);
   });
 
   it('removeLink en échec : le lien reste actif, le problème est rattaché au lien', async () => {

@@ -180,13 +180,13 @@ export const LinkEditorStore = signalStore(
             entryId,
             source: idle(),
             links: idle(),
-            removed: [],
             targets: idle(),
             query: { q: '', type: null },
           });
         }
         patchState(store, {
           active: true,
+          removed: [],
           problem: null,
           saving: false,
           busyLinkId: null,
@@ -252,8 +252,8 @@ export const LinkEditorStore = signalStore(
       },
 
       /**
-       * Pose le lien (POST /api/entries/{id}/links). Succès : le lien rendu s'ajoute à la liste et
-       * l'entrée compte un lien de plus. Échec : le problème est rangé (409, 422, réseau).
+       * Pose le lien (POST /api/entries/{id}/links). Succès : le lien rendu s'ajoute à la liste.
+       * Échec : le problème est rangé (409, 422, réseau).
        */
       async createLink(draft: LinkDraft): Promise<EntryLink | null> {
         const entryId = store.entryId();
@@ -262,11 +262,9 @@ export const LinkEditorStore = signalStore(
         try {
           const link = await api.create(entryId, draft);
           if (store.entryId() !== entryId) return link;
-          const source = store.source().data;
           patchState(store, {
             saving: false,
             links: loaded([...(store.links().data ?? []), link]),
-            ...(source ? { source: loaded({ ...source, linkCount: source.linkCount + 1 }) } : {}),
           });
           return link;
         } catch (error) {
@@ -305,19 +303,19 @@ export const LinkEditorStore = signalStore(
         const link = store.links().data?.find((item) => item.id === linkId);
         if (!link || store.busyLinkId()) return false;
         patchState(store, { busyLinkId: linkId, linkProblem: null });
+        const entryId = store.entryId();
         try {
           await api.remove(linkId);
-          const source = store.source().data;
+          // Rouvert sur une autre entrée pendant le DELETE : rien à marquer dans sa liste.
+          if (store.entryId() !== entryId) return true;
           patchState(store, {
             busyLinkId: null,
             links: loaded((store.links().data ?? []).filter((item) => item.id !== linkId)),
             removed: [...store.removed(), link],
-            ...(source
-              ? { source: loaded({ ...source, linkCount: Math.max(0, source.linkCount - 1) }) }
-              : {}),
           });
           return true;
         } catch (error) {
+          if (store.entryId() !== entryId) return false;
           patchState(store, {
             busyLinkId: null,
             linkProblem: { linkId, problem: asProblem(error) },
@@ -338,13 +336,7 @@ export const LinkEditorStore = signalStore(
         }
         const data = store.links().data;
         if (data?.some((item) => item.id === link.id)) {
-          const source = store.source().data;
-          patchState(store, {
-            links: loaded(data.filter((item) => item.id !== link.id)),
-            ...(source
-              ? { source: loaded({ ...source, linkCount: Math.max(0, source.linkCount - 1) }) }
-              : {}),
-          });
+          patchState(store, { links: loaded(data.filter((item) => item.id !== link.id)) });
         }
         return true;
       },

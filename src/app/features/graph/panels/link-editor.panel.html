@@ -32,7 +32,7 @@
           [lines]="1"
           compact
           [title]="kind === 'error' ? sourceErrorTitle : undefined"
-          [action]="kind === 'error' ? sourceRetry : undefined"
+          [action]="kind === 'error' && sourceRetryable() ? sourceRetry : undefined"
         />
       } @else if (sourceView(); as entry) {
         <div class="card" [attr.data-type]="entry.type">
@@ -192,7 +192,7 @@
         Le lien se lira
       </h3>
       @if (sentence(); as s) {
-        <p class="sentence" aria-live="polite">
+        <p class="sentence" aria-live="polite" aria-atomic="true">
           <span class="end">{{ s.from }}</span
           >&ngsp;<strong class="verb">{{ s.verb }}</strong
           >&ngsp;<span class="end">{{ s.to }}</span>
@@ -243,6 +243,8 @@
         [links]="store.placed()"
         [editingId]="editingId()"
         [editAvailability]="editAvailability()"
+        [editError]="editError()"
+        (retryEdit)="startEdit($event)"
         [busyId]="store.busyLinkId()"
         [problem]="store.linkProblem()"
         (edit)="startEdit($event)"

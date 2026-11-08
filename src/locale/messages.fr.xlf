@@ -142,7 +142,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">277,281</context>
+          <context context-type="linenumber">279,283</context>
         </context-group>
         <note priority="1" from="description">Nom de la touche Échap</note>
       </trans-unit>
@@ -2140,10 +2140,6 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">147</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">154</context>
         </context-group>
         <context-group purpose="location">
@@ -2152,7 +2148,15 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">190</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">79,81</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
@@ -9919,7 +9923,7 @@
         <source>Enregistrer le lien</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">263,265</context>
+          <context context-type="linenumber">265,267</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;enregistrement du lien</note>
       </trans-unit>
@@ -9927,7 +9931,7 @@
         <source> Enregistrer et lier une autre </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">273,275</context>
+          <context context-type="linenumber">275,277</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;enregistrement puis nouveau lien</note>
       </trans-unit>
@@ -9935,7 +9939,7 @@
         <source>Annuler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">276,277</context>
+          <context context-type="linenumber">278,279</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;annulation de l&apos;éditeur de lien</note>
       </trans-unit>
@@ -9967,7 +9971,7 @@
         <source>Impossible de charger cette entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <note priority="1" from="description">Entrée source illisible</note>
       </trans-unit>
@@ -9975,7 +9979,7 @@
         <source>Impossible de charger les types de liens</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <note priority="1" from="description">Types de liens illisibles</note>
       </trans-unit>
@@ -9983,7 +9987,7 @@
         <source>Impossible de chercher dans le dossier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">164</context>
+          <context context-type="linenumber">180</context>
         </context-group>
         <note priority="1" from="description">Recherche de cible en erreur</note>
       </trans-unit>
@@ -9991,7 +9995,7 @@
         <source>Aucune autre entrée trouvée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">181</context>
         </context-group>
         <note priority="1" from="description">Aucune cible trouvée</note>
       </trans-unit>
@@ -9999,7 +10003,7 @@
         <source>Modifiez la recherche ou le type.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <note priority="1" from="description">Aucune cible, que faire</note>
       </trans-unit>
@@ -10007,7 +10011,7 @@
         <source>Impossible de charger les liens de cette entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">193</context>
         </context-group>
         <note priority="1" from="description">Liens illisibles</note>
       </trans-unit>
@@ -10015,7 +10019,7 @@
         <source>Aucun lien sur cette entrée pour le moment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">194</context>
         </context-group>
         <note priority="1" from="description">Aucun lien posé</note>
       </trans-unit>
@@ -10023,7 +10027,7 @@
         <source>Liens déjà posés sur cette entrée · <x id="count" equiv-text="count"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">198</context>
         </context-group>
         <note priority="1" from="description">Titre de la liste des liens posés</note>
       </trans-unit>
@@ -10031,7 +10035,7 @@
         <source>déjà lié (<x id="labels" equiv-text="labels.join(&apos;, &apos;)"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">201</context>
+          <context context-type="linenumber">217</context>
         </context-group>
         <note priority="1" from="description">Mention d&apos;une entrée déjà liée</note>
       </trans-unit>
@@ -10039,7 +10043,7 @@
         <source>Abandonner ce lien ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">339</context>
+          <context context-type="linenumber">355</context>
         </context-group>
         <note priority="1" from="description">Confirmation de fermeture de l&apos;éditeur de lien</note>
       </trans-unit>
@@ -10047,7 +10051,7 @@
         <source>La cible et le type choisis ne seront pas enregistrés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">340</context>
+          <context context-type="linenumber">356</context>
         </context-group>
         <note priority="1" from="description">Détail de la confirmation de fermeture</note>
       </trans-unit>
@@ -10055,7 +10059,7 @@
         <source>Abandonner</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">341</context>
+          <context context-type="linenumber">357</context>
         </context-group>
         <note priority="1" from="description">Bouton qui abandonne le lien</note>
       </trans-unit>
@@ -10063,7 +10067,7 @@
         <source>Continuer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">342</context>
+          <context context-type="linenumber">358</context>
         </context-group>
         <note priority="1" from="description">Bouton qui revient à l&apos;éditeur de lien</note>
       </trans-unit>
@@ -10071,7 +10075,7 @@
         <source>Choisissez une cible et un type de lien permis.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">381</context>
+          <context context-type="linenumber">398</context>
         </context-group>
         <note priority="1" from="description">Lien incomplet</note>
       </trans-unit>
@@ -10079,7 +10083,7 @@
         <source>Lien enregistré.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">399</context>
+          <context context-type="linenumber">416</context>
         </context-group>
         <note priority="1" from="description">Toast après la pose d&apos;un lien</note>
       </trans-unit>
@@ -10087,7 +10091,7 @@
         <source>Annuler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">402</context>
+          <context context-type="linenumber">419</context>
         </context-group>
         <note priority="1" from="description">Action du toast qui retire le lien posé</note>
       </trans-unit>
@@ -10095,7 +10099,7 @@
         <source>Type du lien modifié.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">467</context>
+          <context context-type="linenumber">490</context>
         </context-group>
         <note priority="1" from="description">Toast après un changement de type de lien</note>
       </trans-unit>
@@ -10103,7 +10107,7 @@
         <source>Lien retiré.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">475</context>
+          <context context-type="linenumber">498</context>
         </context-group>
         <note priority="1" from="description">Toast après le retrait d&apos;un lien</note>
       </trans-unit>
@@ -10111,7 +10115,7 @@
         <source>Lien annulé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">495</context>
+          <context context-type="linenumber">518</context>
         </context-group>
         <note priority="1" from="description">Toast après l&apos;annulation d&apos;un lien</note>
       </trans-unit>
@@ -10311,11 +10315,19 @@
         </context-group>
         <note priority="1" from="description">Bouton de retrait d&apos;un lien</note>
       </trans-unit>
+      <trans-unit id="links.placed.typesError" datatype="html">
+        <source>Impossible de lire les types possibles.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">71,74</context>
+        </context-group>
+        <note priority="1" from="description">Types possibles illisibles</note>
+      </trans-unit>
       <trans-unit id="links.placed.loadingTypes" datatype="html">
         <source> Lecture des types possibles… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
-          <context context-type="linenumber">74,77</context>
+          <context context-type="linenumber">88,91</context>
         </context-group>
         <note priority="1" from="description">Types en cours de lecture</note>
       </trans-unit>
@@ -10323,7 +10335,7 @@
         <source>Nouveau type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">197</context>
         </context-group>
         <note priority="1" from="description">Nom du groupe des types d&apos;un lien posé</note>
       </trans-unit>

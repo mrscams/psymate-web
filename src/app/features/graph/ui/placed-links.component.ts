@@ -65,6 +65,20 @@ import { LinkTypeChipsComponent } from './link-type-chips.component';
                     [disabled]="busyId() !== null"
                     (chosen)="choose(link.id, link.linkType, $event)"
                   />
+                } @else if (editError()) {
+                  <p class="error" role="alert">
+                    <span i18n="Types possibles illisibles@@links.placed.typesError"
+                      >Impossible de lire les types possibles.</span
+                    >
+                    &ngsp;<button
+                      type="button"
+                      class="text"
+                      (click)="retryEdit.emit(link.id)"
+                      i18n="Bouton de l'état erreur@@state.error.retry"
+                    >
+                      Réessayer
+                    </button>
+                  </p>
                 } @else {
                   <p
                     class="hint"
@@ -168,11 +182,14 @@ export class PlacedLinksComponent {
   readonly editingId = input<string | null>(null);
   /** Puces du lien en modification ; null tant que le type de l'autre extrémité est lu. */
   readonly editAvailability = input<readonly TypeAvailability[] | null>(null);
+  /** Le type de l'autre extrémité n'a pas pu être lu (GET /api/entries/{id}). */
+  readonly editError = input(false);
   readonly busyId = input<string | null>(null);
   readonly problem = input<LinkActionProblem | null>(null);
 
   readonly edit = output<string>();
   readonly cancelEdit = output<void>();
+  readonly retryEdit = output<string>();
   readonly changeType = output<{ linkId: string; linkType: LinkTypeCode }>();
   readonly remove = output<string>();
 

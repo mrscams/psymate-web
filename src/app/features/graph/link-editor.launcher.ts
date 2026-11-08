@@ -25,8 +25,8 @@ export type LinkEditorResult = EntryLink;
 /**
  * Ouvre l'éditeur de lien (fiche 06) sur une entrée, source proposée du lien : panneau 420 px,
  * empilé sur le panneau ouvert (l'éditeur d'entrée) s'il y en a un, seul sinon. L'URL porte
- * `?link=<entryId>` tant qu'il est ouvert (rechargement, lien partagé). Une seconde demande pour la
- * même entrée ne fait rien ; renvoie null si le panneau n'a pas pu s'ouvrir (pile pleine).
+ * `?link=<entryId>` tant qu'il est ouvert (rechargement, lien partagé). Tant qu'un éditeur de lien
+ * est ouvert, une nouvelle demande ne fait rien ; renvoie null aussi si la pile est pleine.
  */
 export function openLinkEditor(
   entryId: string,
@@ -34,10 +34,10 @@ export function openLinkEditor(
 ): SidePanelRef<LinkEditorResult> | null {
   const injector = options.injector ?? inject(Injector);
   const store = injector.get(LinkEditorStore);
-  if (store.isOpenOn(entryId)) return null;
+  // Déjà ouvert (sur cette entrée ou une autre) : on ne le remplace pas, un choix en cours se
+  // perdrait sans confirmation ; on le ferme d'abord (Annuler, Échap).
+  if (store.active()) return null;
   const panels = injector.get(SidePanelService);
-  // Ouvert sur une autre entrée : il est au-dessus de la pile, on le remplace.
-  if (store.active()) panels.closeTop();
 
   const data: LinkEditorData = { entryId, patientName: options.patientName ?? null };
   const ref = panels.open<LinkEditorPanel, LinkEditorData, LinkEditorResult>(LinkEditorPanel, {
