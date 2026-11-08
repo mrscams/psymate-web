@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T01:09:38.065Z",
+  "task": "M7-07",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 16 fusionnee (squash cab4310) : /admin/validation, /admin/praticiens, /admin/journal, /admin/vocabulaire, fixture ESLint admin → patients ; CI verte (checks + 65 e2e, 11 ignores). Lot 6 complet.",
+  "notes": "Visionneuse : fichier lu par le client genere et affiche en iframe blob: (X-Frame-Options: DENY cote API). Compteur Validation (n) de la barre admin non branche (app.component ne passe pas pendingCount : tache dediee). Scenarios admin ignores en CI. Contrat sur fiches : pas d export CSV, pas de tri colonne, pas de segment Securite du journal.",
+  "next": "Lot 2 : M1-08 ∥ M1-09 en cours ; lot 3 des que M1-08 est fusionnee",
+  "pr": "https://github.com/mrscams/psymate-web/pull/16",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
