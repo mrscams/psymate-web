@@ -174,7 +174,7 @@
         <source>Dossier professionnel · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">18</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet du dossier professionnel</note>
       </trans-unit>
@@ -182,7 +182,7 @@
         <source>Profil public · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet du profil public</note>
       </trans-unit>
@@ -190,7 +190,7 @@
         <source>Préférences · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">28</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet des préférences</note>
       </trans-unit>
@@ -198,7 +198,7 @@
         <source>Émotions personnalisées · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet des émotions personnalisées</note>
       </trans-unit>
@@ -206,7 +206,7 @@
         <source>Tags · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">38</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet des tags</note>
       </trans-unit>
@@ -214,9 +214,581 @@
         <source>Compte et sécurité · PsyMate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet de Compte et sécurité</note>
+      </trans-unit>
+      <trans-unit id="account.data.pageTitle" datatype="html">
+        <source>Données et export · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de Données et export</note>
+      </trans-unit>
+      <trans-unit id="account.data.title" datatype="html">
+        <source>Données et export</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la page Données et export</note>
+      </trans-unit>
+      <trans-unit id="account.data.intro" datatype="html">
+        <source> Récupérez vos dossiers dans des formats ouverts. Un export ne modifie et n&apos;efface rien : vos données restent dans PsyMate. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">12,17</context>
+        </context-group>
+        <note priority="1" from="description">Introduction de la page</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.title" datatype="html">
+        <source> Exporter un dossier </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+        <note priority="1" from="description">Carte export patient</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.help" datatype="html">
+        <source> Un seul dossier, téléchargé immédiatement. Le même export est disponible depuis la fiche de chaque dossier. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">24,29</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la carte export patient</note>
+      </trans-unit>
+      <trans-unit id="account.data.format" datatype="html">
+        <source>Format</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">61,63</context>
+        </context-group>
+        <note priority="1" from="description">Libellé du format</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.searchError" datatype="html">
+        <source> La recherche n&apos;a pas abouti : modifiez le texte pour réessayer. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">82,86</context>
+        </context-group>
+        <note priority="1" from="description">Recherche de patient en erreur</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.export" datatype="html">
+        <source> Exporter </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">94,96</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;export d&apos;un patient</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.fileNote" datatype="html">
+        <source>Séances et entrées en ordre chronologique, texte de la version courante.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">97,100</context>
+        </context-group>
+        <note priority="1" from="description">Contenu du fichier exporté</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.reminder" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Les entrées privées ne sont jamais exportées<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, ni les entrées archivées ; un lien vers une entrée non exportée est omis · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>thème clair<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> pour le PDF quel que soit votre réglage · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>ordre chronologique<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> · langue du document : celle de l&apos;interface. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">106,111</context>
+        </context-group>
+        <note priority="1" from="description">Rappel des règles d&apos;export</note>
+      </trans-unit>
+      <trans-unit id="account.data.account.title" datatype="html">
+        <source> Exporter tout mon compte </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">117,119</context>
+        </context-group>
+        <note priority="1" from="description">Carte export du compte</note>
+      </trans-unit>
+      <trans-unit id="account.data.account.help" datatype="html">
+        <source> Une archive complète, préparée en arrière-plan. Vous pouvez quitter la page : l&apos;état de l&apos;export est repris à votre retour. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">120,125</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la carte export du compte</note>
+      </trans-unit>
+      <trans-unit id="account.data.tile.content.title" datatype="html">
+        <source>Archive zip</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">126,127</context>
+        </context-group>
+        <note priority="1" from="description">Tuile contenu, titre</note>
+      </trans-unit>
+      <trans-unit id="account.data.tile.content.body" datatype="html">
+        <source>Pour chaque dossier, le PDF et le Markdown (comme l&apos;export individuel), plus <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>patients.md<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, la liste de vos dossiers.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">128,130</context>
+        </context-group>
+        <note priority="1" from="description">Tuile contenu, détail</note>
+      </trans-unit>
+      <trans-unit id="account.data.tile.link.title" datatype="html">
+        <source>Lien valable 7 jours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">134,136</context>
+        </context-group>
+        <note priority="1" from="description">Tuile lien, titre</note>
+      </trans-unit>
+      <trans-unit id="account.data.tile.link.body" datatype="html">
+        <source>Après l&apos;échéance, le fichier est purgé et le lien répond « expiré ». Il suffit de relancer un export.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">137,142</context>
+        </context-group>
+        <note priority="1" from="description">Tuile lien, détail</note>
+      </trans-unit>
+      <trans-unit id="account.data.tile.nothing.title" datatype="html">
+        <source>Rien n&apos;est effacé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">143,145</context>
+        </context-group>
+        <note priority="1" from="description">Tuile rien effacé, titre</note>
+      </trans-unit>
+      <trans-unit id="account.data.tile.nothing.body" datatype="html">
+        <source>Exporter ne modifie ni ne supprime aucune donnée. Les entrées privées ne font pas partie de l&apos;archive.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">146,151</context>
+        </context-group>
+        <note priority="1" from="description">Tuile rien effacé, détail</note>
+      </trans-unit>
+      <trans-unit id="account.data.account.prepare" datatype="html">
+        <source> Préparer l&apos;export </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">161,164</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui prépare l&apos;export du compte</note>
+      </trans-unit>
+      <trans-unit id="account.data.account.pendingNote" datatype="html">
+        <source>Un seul export à la fois : un export est en préparation. Le bouton se réactive dès qu&apos;il est terminé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">168,173</context>
+        </context-group>
+        <note priority="1" from="description">Pourquoi le bouton attend</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.title" datatype="html">
+        <source> Dernier export </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">185,187</context>
+        </context-group>
+        <note priority="1" from="description">Carte du dernier export</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.patientNote" datatype="html">
+        <source> Les exports d&apos;un seul dossier sont téléchargés immédiatement : ils ne sont pas conservés et n&apos;apparaissent pas ici. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">220,226</context>
+        </context-group>
+        <note priority="1" from="description">Exports patient non conservés</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.title" datatype="html">
+        <source>Vos données</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">227,230</context>
+        </context-group>
+        <note priority="1" from="description">Carte Vos données</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.hosting.title" datatype="html">
+        <source>Hébergement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">230,231</context>
+        </context-group>
+        <note priority="1" from="description">Fait hébergement, titre</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.hosting.body" datatype="html">
+        <source> Données hébergées en France, chiffrées au repos. Les archives d&apos;export le sont aussi, jusqu&apos;à leur purge. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">232,237</context>
+        </context-group>
+        <note priority="1" from="description">Fait hébergement, détail</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.journal.title" datatype="html">
+        <source>Journal des accès</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">237,238</context>
+        </context-group>
+        <note priority="1" from="description">Fait journal, titre</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.journal.body" datatype="html">
+        <source> Chaque export et chaque téléchargement sont consignés avec la date et l&apos;appareil. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">239,243</context>
+        </context-group>
+        <note priority="1" from="description">Fait journal, détail</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.nothing.title" datatype="html">
+        <source> Rien n&apos;est effacé </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">244,247</context>
+        </context-group>
+        <note priority="1" from="description">Fait rien effacé, titre</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.nothing.body" datatype="html">
+        <source>Exporter ne supprime rien ; aucune donnée clinique n&apos;est jamais supprimée physiquement.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">248,252</context>
+        </context-group>
+        <note priority="1" from="description">Fait rien effacé, détail</note>
+      </trans-unit>
+      <trans-unit id="account.data.yours.howItWorks" datatype="html">
+        <source>Comment ça marche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">254,259</context>
+        </context-group>
+        <note priority="1" from="description">Lien Comment ça marche</note>
+      </trans-unit>
+      <trans-unit id="account.data.format.pdf" datatype="html">
+        <source>PDF</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <note priority="1" from="description">Format d&apos;export PDF</note>
+      </trans-unit>
+      <trans-unit id="account.data.format.md" datatype="html">
+        <source>Markdown</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <note priority="1" from="description">Format d&apos;export Markdown</note>
+      </trans-unit>
+      <trans-unit id="state.error.retry" datatype="html">
+        <source>Réessayer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/confirm-email.page.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/suspended.page.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-preview.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">191</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">198</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">219</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
+          <context context-type="linenumber">280</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
+          <context context-type="linenumber">284</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">192</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.ts</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
+          <context context-type="linenumber">79,81</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">168</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;état erreur</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.emptyTitle" datatype="html">
+        <source>Aucun dossier à exporter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+        <note priority="1" from="description">Aucun patient à exporter</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.emptyMessage" datatype="html">
+        <source>Les dossiers que vous créez apparaîtront ici.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <note priority="1" from="description">Explication de l&apos;état vide</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.errorTitle" datatype="html">
+        <source>Impossible de charger vos dossiers</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <note priority="1" from="description">Liste des patients indisponible</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.downloadInvalid" datatype="html">
+        <source>Le lien de téléchargement n&apos;était plus valide : il vient d&apos;être relu. Réessayez.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+        <note priority="1" from="description">Lien signé refusé</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.downloadError" datatype="html">
+        <source>Téléchargement impossible pour le moment. Le lien reste valable : réessayez dans un instant.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+        <note priority="1" from="description">Téléchargement du zip impossible</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.elsewhereTitle" datatype="html">
+        <source>Un export est en préparation ailleurs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+        <note priority="1" from="description">Export lancé ailleurs</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.emptyTitle" datatype="html">
+        <source>Aucun export de compte en cours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+        <note priority="1" from="description">Aucun export de compte connu</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.elsewhereMessage" datatype="html">
+        <source>Il a été lancé depuis un autre appareil ou une autre session : son état et son lien s&apos;affichent là où il a été lancé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <note priority="1" from="description">Explication de l&apos;export lancé ailleurs</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.emptyMessage" datatype="html">
+        <source>Le dernier export lancé depuis ce navigateur s&apos;affichera ici, avec son lien de téléchargement.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+        <note priority="1" from="description">Explication de l&apos;état vide</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.errorTitle" datatype="html">
+        <source>Impossible de lire l&apos;état de l&apos;export</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
+        <note priority="1" from="description">Lecture de l&apos;état impossible</note>
+      </trans-unit>
+      <trans-unit id="account.data.dialog.title" datatype="html">
+        <source>Préparer l&apos;export du compte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">208</context>
+        </context-group>
+        <note priority="1" from="description">Titre du dialogue de l&apos;export du compte</note>
+      </trans-unit>
+      <trans-unit id="account.data.dialog.body" datatype="html">
+        <source>L&apos;archive zip contient patients.md, la liste de vos dossiers, puis le PDF et le Markdown de chaque dossier ; les entrées privées et archivées n&apos;en font pas partie. Elle est préparée en arrière-plan et son lien de téléchargement est valable 7 jours. Rien n&apos;est modifié ni supprimé dans vos dossiers.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">209</context>
+        </context-group>
+        <note priority="1" from="description">Contenu du dialogue de l&apos;export du compte</note>
+      </trans-unit>
+      <trans-unit id="account.data.dialog.confirm" datatype="html">
+        <source>Lancer l&apos;export</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">210</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du dialogue de l&apos;export du compte</note>
+      </trans-unit>
+      <trans-unit id="account.data.dialog.cancel" datatype="html">
+        <source>Annuler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">211</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;annulation du dialogue</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.error.offline" datatype="html">
+        <source>Connexion perdue : réessayez une fois le réseau revenu.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">243</context>
+        </context-group>
+        <note priority="1" from="description">Export patient hors ligne</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.error.forbidden" datatype="html">
+        <source>Ce dossier n&apos;est pas accessible depuis votre compte.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">245</context>
+        </context-group>
+        <note priority="1" from="description">Export patient refusé</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.error.notFound" datatype="html">
+        <source>Ce dossier n&apos;existe pas ou plus.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">247</context>
+        </context-group>
+        <note priority="1" from="description">Export patient introuvable</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.error.rateLimited" datatype="html">
+        <source>Trop de demandes rapprochées : réessayez dans quelques instants.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">249</context>
+        </context-group>
+        <note priority="1" from="description">Export patient limité</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.error.failed" datatype="html">
+        <source>La génération du fichier a échoué. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">251</context>
+        </context-group>
+        <note priority="1" from="description">Export patient en échec</note>
+      </trans-unit>
+      <trans-unit id="account.data.launch.inProgressKnown" datatype="html">
+        <source>Un export est déjà en cours : il est affiché ci-dessous. Le bouton se réactive dès qu&apos;il est terminé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">260</context>
+        </context-group>
+        <note priority="1" from="description">Export déjà en cours, job affiché</note>
+      </trans-unit>
+      <trans-unit id="account.data.launch.inProgress" datatype="html">
+        <source>Un export de votre compte est déjà en préparation, lancé depuis un autre appareil ou une autre session. Vous pourrez relancer un export ici dans un instant.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">261</context>
+        </context-group>
+        <note priority="1" from="description">Export déjà en cours, lancé ailleurs</note>
+      </trans-unit>
+      <trans-unit id="account.data.launch.error" datatype="html">
+        <source>Export impossible pour le moment. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">263</context>
+        </context-group>
+        <note priority="1" from="description">Export du compte impossible</note>
       </trans-unit>
       <trans-unit id="vocabulary.title" datatype="html">
         <source> Émotions personnalisées </source>
@@ -2076,138 +2648,6 @@
         </context-group>
         <note priority="1" from="description">Colonne annuaire</note>
       </trans-unit>
-      <trans-unit id="state.error.retry" datatype="html">
-        <source>Réessayer</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
-          <context context-type="linenumber">74</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
-          <context context-type="linenumber">113</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
-          <context context-type="linenumber">130</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
-          <context context-type="linenumber">134</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
-          <context context-type="linenumber">80</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
-          <context context-type="linenumber">84</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
-          <context context-type="linenumber">90</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
-          <context context-type="linenumber">144</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/confirm-email.page.ts</context>
-          <context context-type="linenumber">115</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/suspended.page.ts</context>
-          <context context-type="linenumber">147</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-preview.component.ts</context>
-          <context context-type="linenumber">69</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">189</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">131</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">191</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">198</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">219</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">232</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
-          <context context-type="linenumber">35</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
-          <context context-type="linenumber">122</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">280</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">284</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">156</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">163</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">179</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">192</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.ts</context>
-          <context context-type="linenumber">124</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
-          <context context-type="linenumber">79,81</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">166</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">87</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.ts</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
-          <context context-type="linenumber">126</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
-          <context context-type="linenumber">74</context>
-        </context-group>
-        <note priority="1" from="description">Bouton de l&apos;état erreur</note>
-      </trans-unit>
       <trans-unit id="account.verification.docs.empty.title" datatype="html">
         <source>Aucun justificatif déposé</source>
         <context-group purpose="location">
@@ -2717,6 +3157,154 @@
           <context context-type="linenumber">107</context>
         </context-group>
         <note priority="1" from="description">Bouton abandonner l&apos;activation</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.requested" datatype="html">
+        <source>Demandé le</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+        <note priority="1" from="description">Préfixe lu de la date de demande</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.queued" datatype="html">
+        <source>En attente</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">38,40</context>
+        </context-group>
+        <note priority="1" from="description">État du job : en attente</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.queuedBody" datatype="html">
+        <source>La préparation commence dans un instant ; actualisation automatique.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">41,44</context>
+        </context-group>
+        <note priority="1" from="description">Détail de l&apos;attente</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.running" datatype="html">
+        <source>En préparation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+        <note priority="1" from="description">État du job : en préparation</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.runningBody" datatype="html">
+        <source>Actualisation automatique.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">49,53</context>
+        </context-group>
+        <note priority="1" from="description">Détail de la préparation</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.ready" datatype="html">
+        <source>Prêt</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">53,54</context>
+        </context-group>
+        <note priority="1" from="description">État du job : prêt</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.validUntil" datatype="html">
+        <source>lien valable jusqu&apos;au <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ expiresAt() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">55,56</context>
+        </context-group>
+        <note priority="1" from="description">Validité du lien</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.download" datatype="html">
+        <source> Télécharger </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">65,68</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de téléchargement du zip</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.expired" datatype="html">
+        <source>Expiré</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">70,72</context>
+        </context-group>
+        <note priority="1" from="description">État du job : expiré</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.expiredBody" datatype="html">
+        <source>Le lien de 7 jours a expiré et le fichier a été purgé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">73,76</context>
+        </context-group>
+        <note priority="1" from="description">Détail du lien expiré</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.relaunch" datatype="html">
+        <source> Relancer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">83,86</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">101,105</context>
+        </context-group>
+        <note priority="1" from="description">Bouton relancer l&apos;export</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.failed" datatype="html">
+        <source>Échec</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">88,91</context>
+        </context-group>
+        <note priority="1" from="description">État du job : échec</note>
+      </trans-unit>
+      <trans-unit id="account.data.job.progress" datatype="html">
+        <source>Préparation de l&apos;export en cours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de l&apos;indicateur de préparation</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.none" datatype="html">
+        <source> Aucun dossier ne correspond à cette recherche. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
+          <context context-type="linenumber">76,83</context>
+        </context-group>
+        <note priority="1" from="description">Aucun patient ne correspond à la recherche</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.placeholder" datatype="html">
+        <source>Nom affiché…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
+          <context context-type="linenumber">170</context>
+        </context-group>
+        <note priority="1" from="description">Indication du sélecteur de patient</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.list" datatype="html">
+        <source>Dossiers correspondants</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.archived" datatype="html">
+        <source>archivé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
+          <context context-type="linenumber">194</context>
+        </context-group>
+        <note priority="1" from="description">Patient archivé dans le sélecteur</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.age" datatype="html">
+        <source><x id="age" equiv-text="age"/> ans</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+        <note priority="1" from="description">Âge dans le sélecteur</note>
       </trans-unit>
       <trans-unit id="account.verification.type.diploma" datatype="html">
         <source>Diplôme</source>
@@ -12036,27 +12624,11 @@
         </context-group>
         <note priority="1" from="description">Bandeau de relecture en échec</note>
       </trans-unit>
-      <trans-unit id="overview.simple.title" datatype="html">
-        <source>Récit : bientôt</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">43,44</context>
-        </context-group>
-        <note priority="1" from="description">Titre de l&apos;état provisoire de la vue simple</note>
-      </trans-unit>
-      <trans-unit id="overview.simple.message" datatype="html">
-        <source>La vue simple, un récit du dossier en quelques phrases, arrive bientôt. La vue complète présente dès maintenant les chiffres, la tendance et les dernières séances.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">45,46</context>
-        </context-group>
-        <note priority="1" from="description">Texte de l&apos;état provisoire de la vue simple</note>
-      </trans-unit>
       <trans-unit id="overview.summary.heading" datatype="html">
         <source>Résumé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc résumé</note>
       </trans-unit>
@@ -12064,7 +12636,7 @@
         <source>Résumé indisponible</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">59,60</context>
+          <context context-type="linenumber">56,57</context>
         </context-group>
         <note priority="1" from="description">Erreur du bloc résumé</note>
       </trans-unit>
@@ -12072,7 +12644,7 @@
         <source>Séances</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">68,69</context>
+          <context context-type="linenumber">65,66</context>
         </context-group>
         <note priority="1" from="description">Tuile du résumé</note>
       </trans-unit>
@@ -12080,7 +12652,7 @@
         <source>dont <x id="INTERPOLATION" equiv-text="{{ windowSessions() }}"/> sur <x id="INTERPOLATION_1" equiv-text="{{ windowLabel(v.window) }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">72,73</context>
+          <context context-type="linenumber">69,70</context>
         </context-group>
         <note priority="1" from="description">Contexte de la tuile séances</note>
       </trans-unit>
@@ -12088,7 +12660,7 @@
         <source> · suivi depuis le <x id="INTERPOLATION" equiv-text="{{ day(v.facts.followedSince) }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">76,77</context>
+          <context context-type="linenumber">73,74</context>
         </context-group>
         <note priority="1" from="description">Début du suivi dans la tuile séances</note>
       </trans-unit>
@@ -12096,7 +12668,7 @@
         <source>Ressentis</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">82,83</context>
+          <context context-type="linenumber">79,80</context>
         </context-group>
         <note priority="1" from="description">Tuile du résumé</note>
       </trans-unit>
@@ -12108,7 +12680,7 @@
                 }" xid="1238124282204395218"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">88,95</context>
+          <context context-type="linenumber">85,92</context>
         </context-group>
         <note priority="1" from="description">Contexte de la tuile ressentis</note>
       </trans-unit>
@@ -12116,14 +12688,14 @@
         <source>{VAR_PLURAL, plural, =0 {aucune émotion} =1 {1 émotion} other {<x id="INTERPOLATION"/> émotions}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">89,91</context>
+          <context context-type="linenumber">86,88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="overview.tile.intensity" datatype="html">
         <source> Intensité moyenne </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">98,100</context>
+          <context context-type="linenumber">95,97</context>
         </context-group>
         <note priority="1" from="description">Tuile du résumé</note>
       </trans-unit>
@@ -12131,7 +12703,7 @@
         <source> moyenne des 7 derniers jours </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">111,114</context>
+          <context context-type="linenumber">108,111</context>
         </context-group>
         <note priority="1" from="description">Contexte de la tuile intensité</note>
       </trans-unit>
@@ -12139,7 +12711,7 @@
         <source> Situations actives </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">116,118</context>
+          <context context-type="linenumber">113,115</context>
         </context-group>
         <note priority="1" from="description">Tuile du résumé</note>
       </trans-unit>
@@ -12147,7 +12719,7 @@
         <source> en cours, sans fin connue </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">123,127</context>
+          <context context-type="linenumber">120,124</context>
         </context-group>
         <note priority="1" from="description">Contexte de la tuile situations</note>
       </trans-unit>
@@ -12155,7 +12727,7 @@
         <source>Pas encore de ressentis sur cette période</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">135,136</context>
+          <context context-type="linenumber">132,133</context>
         </context-group>
         <note priority="1" from="description">Bloc tendance vide</note>
       </trans-unit>
@@ -12163,7 +12735,7 @@
         <source>La courbe apparaîtra ici quand des ressentis seront notés dans le dossier.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">137,138</context>
+          <context context-type="linenumber">134,135</context>
         </context-group>
         <note priority="1" from="description">Bloc tendance vide</note>
       </trans-unit>
@@ -12171,7 +12743,7 @@
         <source>Tendance indisponible</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">139,140</context>
+          <context context-type="linenumber">136,137</context>
         </context-group>
         <note priority="1" from="description">Erreur du bloc tendance</note>
       </trans-unit>
@@ -12179,7 +12751,7 @@
         <source>moyenne glissante 7 j · un point par ressenti</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">146,149</context>
+          <context context-type="linenumber">143,146</context>
         </context-group>
         <note priority="1" from="description">Sous-titre du bloc tendance</note>
       </trans-unit>
@@ -12187,7 +12759,7 @@
         <source>À surveiller · à compléter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">156,157</context>
+          <context context-type="linenumber">153,154</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc points d&apos;attention</note>
       </trans-unit>
@@ -12195,7 +12767,7 @@
         <source>Rien à signaler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">159,160</context>
+          <context context-type="linenumber">156,157</context>
         </context-group>
         <note priority="1" from="description">Bloc points d&apos;attention vide</note>
       </trans-unit>
@@ -12203,7 +12775,7 @@
         <source>Les drapeaux, brouillons et séances non clôturées apparaîtront ici.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">161,162</context>
+          <context context-type="linenumber">158,159</context>
         </context-group>
         <note priority="1" from="description">Bloc points d&apos;attention vide</note>
       </trans-unit>
@@ -12211,7 +12783,7 @@
         <source>Points d&apos;attention indisponibles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">163,164</context>
+          <context context-type="linenumber">160,161</context>
         </context-group>
         <note priority="1" from="description">Erreur du bloc points d&apos;attention</note>
       </trans-unit>
@@ -12219,7 +12791,7 @@
         <source>Modifier la fiche</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">173,177</context>
+          <context context-type="linenumber">170,174</context>
         </context-group>
         <note priority="1" from="description">Lien vers la fiche depuis la vue d&apos;ensemble</note>
       </trans-unit>
@@ -12227,7 +12799,7 @@
         <source>Drapeau : <x id="INTERPOLATION" equiv-text="{{ flagLabel(flag.kind) }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">185,186</context>
+          <context context-type="linenumber">182,183</context>
         </context-group>
         <note priority="1" from="description">Niveau d&apos;un drapeau dans les points d&apos;attention</note>
       </trans-unit>
@@ -12235,7 +12807,11 @@
         <source>posé le <x id="INTERPOLATION" equiv-text="{{ day(flag.setAt) }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">194,195</context>
+          <context context-type="linenumber">191,192</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">360,361</context>
         </context-group>
         <note priority="1" from="description">Date de pose d&apos;un drapeau</note>
       </trans-unit>
@@ -12243,7 +12819,7 @@
         <source>{VAR_PLURAL, plural, =1 {1 brouillon à compléter} other {<x id="INTERPOLATION"/> brouillons à compléter}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">211,216</context>
+          <context context-type="linenumber">208,213</context>
         </context-group>
         <note priority="1" from="description">Brouillons à compléter, lien vers la timeline filtrée</note>
       </trans-unit>
@@ -12251,7 +12827,7 @@
         <source>Séance du <x id="INTERPOLATION" equiv-text="{{ day(open.startedAt) }}"/> non clôturée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">231,232</context>
+          <context context-type="linenumber">228,229</context>
         </context-group>
         <note priority="1" from="description">Séance non clôturée, lien vers la timeline par
                     séance</note>
@@ -12260,7 +12836,7 @@
         <source>Situations actives</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">242,243</context>
+          <context context-type="linenumber">239,240</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc situations</note>
       </trans-unit>
@@ -12268,7 +12844,11 @@
         <source>Aucune situation en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">245,246</context>
+          <context context-type="linenumber">242,243</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">166,167</context>
         </context-group>
         <note priority="1" from="description">Bloc situations vide</note>
       </trans-unit>
@@ -12276,7 +12856,11 @@
         <source>Les situations sans fin connue apparaîtront ici, avec leurs ressentis liés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">247,248</context>
+          <context context-type="linenumber">244,245</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">168,169</context>
         </context-group>
         <note priority="1" from="description">Bloc situations vide</note>
       </trans-unit>
@@ -12284,7 +12868,11 @@
         <source>Situations indisponibles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">249,250</context>
+          <context context-type="linenumber">246,247</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">170,171</context>
         </context-group>
         <note priority="1" from="description">Erreur du bloc situations</note>
       </trans-unit>
@@ -12292,7 +12880,7 @@
         <source>depuis le <x id="INTERPOLATION" equiv-text="{{ day(situation.since) }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">265,266</context>
+          <context context-type="linenumber">262,263</context>
         </context-group>
         <note priority="1" from="description">Début d&apos;une situation active</note>
       </trans-unit>
@@ -12300,7 +12888,7 @@
         <source>{VAR_PLURAL, plural, =0 {aucun ressenti lié} =1 {1 ressenti lié} other {<x id="INTERPOLATION"/> ressentis liés}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">272,275</context>
+          <context context-type="linenumber">269,272</context>
         </context-group>
         <note priority="1" from="description">Ressentis liés à une situation</note>
       </trans-unit>
@@ -12308,7 +12896,7 @@
         <source> · intensité moy. <x id="INTERPOLATION" equiv-text="{{ intensity(situation.averageIntensity) }}"/>/10</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">280,281</context>
+          <context context-type="linenumber">277,278</context>
         </context-group>
         <note priority="1" from="description">Intensité moyenne d&apos;une situation</note>
       </trans-unit>
@@ -12320,7 +12908,7 @@
                     }" xid="1283275242237418421"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">284,291</context>
+          <context context-type="linenumber">281,288</context>
         </context-group>
         <note priority="1" from="description">Liens d&apos;une situation</note>
       </trans-unit>
@@ -12328,7 +12916,7 @@
         <source>{VAR_PLURAL, plural, =0 {aucun lien} =1 {1 lien} other {<x id="INTERPOLATION"/> liens}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">285,287</context>
+          <context context-type="linenumber">282,284</context>
         </context-group>
       </trans-unit>
       <trans-unit id="overview.situations.graph" datatype="html">
@@ -12336,7 +12924,11 @@
                   &gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">303,306</context>
+          <context context-type="linenumber">300,303</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">209,212</context>
         </context-group>
         <note priority="1" from="description">Lien d&apos;une situation vers le graphe centré sur elle</note>
       </trans-unit>
@@ -12344,7 +12936,7 @@
         <source>Traitement en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">316,317</context>
+          <context context-type="linenumber">313,314</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc traitement</note>
       </trans-unit>
@@ -12352,7 +12944,11 @@
         <source>Aucun traitement en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">319,320</context>
+          <context context-type="linenumber">316,317</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">276,277</context>
         </context-group>
         <note priority="1" from="description">Bloc traitement vide</note>
       </trans-unit>
@@ -12360,7 +12956,11 @@
         <source>Les médicaments notés dans le dossier, sans date de fin passée, apparaîtront ici.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">321,322</context>
+          <context context-type="linenumber">318,319</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">278,279</context>
         </context-group>
         <note priority="1" from="description">Bloc traitement vide</note>
       </trans-unit>
@@ -12368,7 +12968,11 @@
         <source>Traitement indisponible</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">323,324</context>
+          <context context-type="linenumber">320,321</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">280,281</context>
         </context-group>
         <note priority="1" from="description">Erreur du bloc traitement</note>
       </trans-unit>
@@ -12376,7 +12980,7 @@
         <source>en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">343,344</context>
+          <context context-type="linenumber">340,341</context>
         </context-group>
         <note priority="1" from="description">Médicament en cours</note>
       </trans-unit>
@@ -12384,7 +12988,11 @@
         <source> · depuis le <x id="INTERPOLATION" equiv-text="{{ day(from) }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">346,347</context>
+          <context context-type="linenumber">343,344</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">302,303</context>
         </context-group>
         <note priority="1" from="description">Début d&apos;un médicament</note>
       </trans-unit>
@@ -12392,7 +13000,11 @@
         <source> · prescrit par <x id="INTERPOLATION" equiv-text="{{ medication.prescriber }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">351,352</context>
+          <context context-type="linenumber">348,349</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">307,308</context>
         </context-group>
         <note priority="1" from="description">Prescripteur d&apos;un médicament</note>
       </trans-unit>
@@ -12400,7 +13012,7 @@
         <source>Dernières séances</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">364,365</context>
+          <context context-type="linenumber">361,362</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc dernières séances</note>
       </trans-unit>
@@ -12408,7 +13020,7 @@
         <source>Aucune séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">367,368</context>
+          <context context-type="linenumber">364,365</context>
         </context-group>
         <note priority="1" from="description">Bloc dernières séances vide</note>
       </trans-unit>
@@ -12416,7 +13028,7 @@
         <source>Les séances apparaîtront ici dès la première, démarrée depuis l&apos;en-tête.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">369,370</context>
+          <context context-type="linenumber">366,367</context>
         </context-group>
         <note priority="1" from="description">Bloc dernières séances vide</note>
       </trans-unit>
@@ -12424,7 +13036,7 @@
         <source>Séances indisponibles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">371,372</context>
+          <context context-type="linenumber">368,369</context>
         </context-group>
         <note priority="1" from="description">Erreur du bloc dernières séances</note>
       </trans-unit>
@@ -12432,7 +13044,7 @@
         <source>Toutes les séances</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">382,385</context>
+          <context context-type="linenumber">379,382</context>
         </context-group>
         <note priority="1" from="description">Lien vers la timeline par séance</note>
       </trans-unit>
@@ -12440,7 +13052,7 @@
         <source>Pas d&apos;émotion dominante</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">399,400</context>
+          <context context-type="linenumber">396,397</context>
         </context-group>
         <note priority="1" from="description">Bloc émotions vide</note>
       </trans-unit>
@@ -12448,7 +13060,7 @@
         <source>Les émotions les plus notées sur la période apparaîtront ici.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">401,402</context>
+          <context context-type="linenumber">398,399</context>
         </context-group>
         <note priority="1" from="description">Bloc émotions vide</note>
       </trans-unit>
@@ -12456,7 +13068,7 @@
         <source>Émotions indisponibles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">403,404</context>
+          <context context-type="linenumber">400,401</context>
         </context-group>
         <note priority="1" from="description">Erreur du bloc émotions</note>
       </trans-unit>
@@ -12464,7 +13076,7 @@
         <source> Variation par rapport à la période précédente de même durée </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">430,433</context>
+          <context context-type="linenumber">427,430</context>
         </context-group>
         <note priority="1" from="description">Pied du bloc émotions</note>
       </trans-unit>
@@ -12472,7 +13084,7 @@
         <source>Activité récente</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">438,439</context>
+          <context context-type="linenumber">435,436</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc activité récente</note>
       </trans-unit>
@@ -12480,7 +13092,7 @@
         <source>Aucune entrée pour le moment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">441,442</context>
+          <context context-type="linenumber">438,439</context>
         </context-group>
         <note priority="1" from="description">Bloc activité vide</note>
       </trans-unit>
@@ -12488,7 +13100,7 @@
         <source>Les dernières entrées saisies ou corrigées apparaîtront ici. Notez la première avec la barre de saisie ou la touche N.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">443,444</context>
+          <context context-type="linenumber">440,441</context>
         </context-group>
         <note priority="1" from="description">Bloc activité vide</note>
       </trans-unit>
@@ -12496,7 +13108,7 @@
         <source>Activité indisponible</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">445,446</context>
+          <context context-type="linenumber">442,443</context>
         </context-group>
         <note priority="1" from="description">Erreur du bloc activité</note>
       </trans-unit>
@@ -12504,7 +13116,11 @@
         <source>brouillon</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">464,467</context>
+          <context context-type="linenumber">461,464</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">255,258</context>
         </context-group>
         <note priority="1" from="description">Entrée en brouillon</note>
       </trans-unit>
@@ -12512,7 +13128,7 @@
         <source>v<x id="INTERPOLATION" equiv-text="{{ item.version }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">469,470</context>
+          <context context-type="linenumber">466,467</context>
         </context-group>
         <note priority="1" from="description">Version d&apos;une entrée</note>
       </trans-unit>
@@ -12520,7 +13136,7 @@
         <source>Mise à jour de la synthèse…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">485,488</context>
+          <context context-type="linenumber">482,485</context>
         </context-group>
         <note priority="1" from="description">Synthèse en cours de relecture</note>
       </trans-unit>
@@ -12528,7 +13144,7 @@
         <source>Dernière mise à jour de la synthèse : <x id="INTERPOLATION" equiv-text="{{ at }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">489,491</context>
+          <context context-type="linenumber">486,488</context>
         </context-group>
         <note priority="1" from="description">Heure de calcul de la synthèse</note>
       </trans-unit>
@@ -12536,7 +13152,7 @@
         <source>Réessayer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">142</context>
         </context-group>
         <note priority="1" from="description">Bouton du bandeau de relecture en échec</note>
       </trans-unit>
@@ -12544,7 +13160,7 @@
         <source>Tendance d&apos;intensité · <x id="period" equiv-text="windowLongLabel(this.shownWindow())"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">169</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc tendance</note>
       </trans-unit>
@@ -12552,25 +13168,41 @@
         <source>Émotions dominantes · <x id="period" equiv-text="windowLongLabel(this.shownWindow())"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">173</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc émotions dominantes</note>
-      </trans-unit>
-      <trans-unit id="overview.simple.action" datatype="html">
-        <source>Afficher la vue complète</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
-          <context context-type="linenumber">191</context>
-        </context-group>
-        <note priority="1" from="description">Action de l&apos;état provisoire de la vue simple</note>
       </trans-unit>
       <trans-unit id="overview.situations.untitled" datatype="html">
         <source>Situation sans titre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
-          <context context-type="linenumber">232</context>
+          <context context-type="linenumber">223</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.ts</context>
+          <context context-type="linenumber">115</context>
         </context-group>
         <note priority="1" from="description">Situation sans titre</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.failed" datatype="html">
+        <source>Graphe indisponible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/feelings-chart.component.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">236</context>
+        </context-group>
+        <note priority="1" from="description">Le graphe des ressentis ne s&apos;est pas chargé</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.failed.message" datatype="html">
+        <source>Le graphe n&apos;a pas pu s&apos;afficher ; les ressentis restent lisibles dans « Voir les données ».</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/feelings-chart.component.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">Le graphe des ressentis ne s&apos;est pas chargé</note>
       </trans-unit>
       <trans-unit id="overview.block.busy" datatype="html">
         <source>mise à jour…</source>
@@ -12588,11 +13220,140 @@
         </context-group>
         <note priority="1" from="description">Bouton d&apos;un bloc en erreur</note>
       </trans-unit>
+      <trans-unit id="overview.simple.feelings.hint" datatype="html">
+        <source> Chaque point est un ressenti noté, avec son intensité sur 10. Pas de moyenne : ce sont les valeurs réelles. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">36,41</context>
+        </context-group>
+        <note priority="1" from="description">Explication du graphe des ressentis réels</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.legend" datatype="html">
+        <source>Légende</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">Légende du graphe des ressentis</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.legend.emotion" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ item.label }}"/> (<x id="ICU" equiv-text="{item.count, plural, =1 {1 ressenti} other {{{item.count}} ressentis}
+            }" xid="86066212914156566"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">83,86</context>
+        </context-group>
+        <note priority="1" from="description">Émotion dans la légende du graphe des
+              ressentis</note>
+      </trans-unit>
+      <trans-unit id="872704196674217974" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 ressenti} other {<x id="INTERPOLATION"/> ressentis}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">83,84</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.legend.session" datatype="html">
+        <source>Séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">92,96</context>
+        </context-group>
+        <note priority="1" from="description">Légende du graphe des ressentis</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.data" datatype="html">
+        <source> Voir les données </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">107,112</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui déplie les données du graphe des ressentis</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.data.caption" datatype="html">
+        <source> Ressentis notés sur la période </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">114,118</context>
+        </context-group>
+        <note priority="1" from="description">Légende du tableau des ressentis de la vue simple</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.data.date" datatype="html">
+        <source> Date </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">119,121</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">83,85</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du tableau des ressentis</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.data.emotion" datatype="html">
+        <source> Émotion </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">122,124</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">86,89</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du tableau des ressentis</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.data.intensity" datatype="html">
+        <source> Intensité </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">125,129</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">92,96</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du tableau des ressentis</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.medicationStart" datatype="html">
+        <source>Début de traitement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">274</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-group>
+        <note priority="1" from="description">Repère de début de médicament</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.medicationEnd" datatype="html">
+        <source>Fin de traitement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">275</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+        <note priority="1" from="description">Repère de fin de médicament</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.session" datatype="html">
+        <source>Séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
+          <context context-type="linenumber">278</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">228</context>
+        </context-group>
+        <note priority="1" from="description">Repère de séance sur la courbe</note>
+      </trans-unit>
       <trans-unit id="overview.window.30d" datatype="html">
         <source>30 j</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">19</context>
         </context-group>
         <note priority="1" from="description">Sélecteur de fenêtre de la vue d&apos;ensemble</note>
       </trans-unit>
@@ -12600,7 +13361,7 @@
         <source>90 j</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">21</context>
         </context-group>
         <note priority="1" from="description">Sélecteur de fenêtre de la vue d&apos;ensemble</note>
       </trans-unit>
@@ -12608,7 +13369,7 @@
         <source>1 an</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <note priority="1" from="description">Sélecteur de fenêtre de la vue d&apos;ensemble</note>
       </trans-unit>
@@ -12616,7 +13377,7 @@
         <source>30 jours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">31</context>
         </context-group>
         <note priority="1" from="description">Fenêtre de la vue d&apos;ensemble en toutes lettres</note>
       </trans-unit>
@@ -12624,7 +13385,7 @@
         <source>90 jours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <note priority="1" from="description">Fenêtre de la vue d&apos;ensemble en toutes lettres</note>
       </trans-unit>
@@ -12632,7 +13393,7 @@
         <source>12 mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <note priority="1" from="description">Fenêtre de la vue d&apos;ensemble en toutes lettres</note>
       </trans-unit>
@@ -12640,7 +13401,7 @@
         <source>À surveiller</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <note priority="1" from="description">Drapeau du dossier</note>
       </trans-unit>
@@ -12648,7 +13409,7 @@
         <source>Risque</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">44</context>
         </context-group>
         <note priority="1" from="description">Drapeau du dossier</note>
       </trans-unit>
@@ -12656,7 +13417,7 @@
         <source>Suivi conjoint</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <note priority="1" from="description">Drapeau du dossier</note>
       </trans-unit>
@@ -12664,7 +13425,7 @@
         <source>Accueil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <note priority="1" from="description">Nature d&apos;une séance</note>
       </trans-unit>
@@ -12672,7 +13433,7 @@
         <source>Séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <note priority="1" from="description">Nature d&apos;une séance</note>
       </trans-unit>
@@ -12680,7 +13441,7 @@
         <source>Contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <note priority="1" from="description">Nature d&apos;une séance</note>
       </trans-unit>
@@ -12688,7 +13449,7 @@
         <source>Présentiel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <note priority="1" from="description">Modalité d&apos;une séance</note>
       </trans-unit>
@@ -12696,7 +13457,7 @@
         <source>Visio</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <note priority="1" from="description">Modalité d&apos;une séance</note>
       </trans-unit>
@@ -12704,7 +13465,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <note priority="1" from="description">Modalité d&apos;une séance</note>
       </trans-unit>
@@ -12712,7 +13473,7 @@
         <source>E-mail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <note priority="1" from="description">Modalité d&apos;une séance</note>
       </trans-unit>
@@ -12720,7 +13481,7 @@
         <source>Joie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotions</note>
       </trans-unit>
@@ -12728,7 +13489,7 @@
         <source>Confiance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotions</note>
       </trans-unit>
@@ -12736,7 +13497,7 @@
         <source>Peur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">81</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotions</note>
       </trans-unit>
@@ -12744,7 +13505,7 @@
         <source>Surprise</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotions</note>
       </trans-unit>
@@ -12752,7 +13513,7 @@
         <source>Tristesse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotions</note>
       </trans-unit>
@@ -12760,7 +13521,7 @@
         <source>Dégoût</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotions</note>
       </trans-unit>
@@ -12768,7 +13529,7 @@
         <source>Colère</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotions</note>
       </trans-unit>
@@ -12776,7 +13537,7 @@
         <source>Anticipation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotions</note>
       </trans-unit>
@@ -12784,15 +13545,23 @@
         <source>Autre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">93</context>
         </context-group>
         <note priority="1" from="description">Famille d&apos;émotions inconnue</note>
+      </trans-unit>
+      <trans-unit id="overview.sessions.duration" datatype="html">
+        <source><x id="minutes" equiv-text="session.durationMin"/> min</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+        <note priority="1" from="description">Durée d&apos;une séance</note>
       </trans-unit>
       <trans-unit id="overview.emotions.up" datatype="html">
         <source><x id="count" equiv-text="delta"/> de plus que les <x id="period" equiv-text="period"/> précédents</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <note priority="1" from="description">Variation d&apos;une émotion, en hausse</note>
       </trans-unit>
@@ -12800,7 +13569,7 @@
         <source><x id="count" equiv-text="count"/> de moins que les <x id="period" equiv-text="period"/> précédents</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">168</context>
         </context-group>
         <note priority="1" from="description">Variation d&apos;une émotion, en baisse</note>
       </trans-unit>
@@ -12808,7 +13577,7 @@
         <source>autant que les <x id="period" equiv-text="period"/> précédents</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">151</context>
+          <context context-type="linenumber">170</context>
         </context-group>
         <note priority="1" from="description">Variation d&apos;une émotion, stable</note>
       </trans-unit>
@@ -12816,7 +13585,7 @@
         <source>Ressentis sur la période : <x id="feelings" equiv-text="feelingCount"/> ; séances : <x id="sessions" equiv-text="sessions"/> ; repères de médicament : <x id="medications" equiv-text="medications"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">169</context>
+          <context context-type="linenumber">188</context>
         </context-group>
         <note priority="1" from="description">Résumé de la courbe, comptes</note>
       </trans-unit>
@@ -12824,7 +13593,7 @@
         <source>Intensité des ressentis sur <x id="period" equiv-text="period"/> : aucune moyenne.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">172</context>
+          <context context-type="linenumber">191</context>
         </context-group>
         <note priority="1" from="description">Résumé de la courbe sans moyenne</note>
       </trans-unit>
@@ -12832,15 +13601,63 @@
         <source>Intensité moyenne des ressentis sur <x id="period" equiv-text="period"/> (moyenne glissante sur 7 jours) : de <x id="min" equiv-text="min"/> à <x id="max" equiv-text="max"/> sur 10, dernière valeur <x id="last" equiv-text="last"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">200</context>
         </context-group>
         <note priority="1" from="description">Résumé de la courbe</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.summary.one" datatype="html">
+        <source><x id="emotion" equiv-text="label"/> (ressentis : <x id="count" equiv-text="count"/>) à <x id="value" equiv-text="min"/> sur 10</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">225</context>
+        </context-group>
+        <note priority="1" from="description">Description d&apos;une émotion du graphe, intensité unique</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.summary.range" datatype="html">
+        <source><x id="emotion" equiv-text="label"/> (ressentis : <x id="count" equiv-text="count"/>) de <x id="min" equiv-text="min"/> à <x id="max" equiv-text="max"/> sur 10</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+        <note priority="1" from="description">Description d&apos;une émotion du graphe</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.summary.counts" datatype="html">
+        <source>Jours de séance : <x id="sessions" equiv-text="sessions"/> ; repères de médicament : <x id="medications" equiv-text="medications"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">231</context>
+        </context-group>
+        <note priority="1" from="description">Description du graphe des ressentis, comptes</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.summary.none" datatype="html">
+        <source>Ressentis notés sur <x id="period" equiv-text="period"/>, une valeur par point. <x id="counts" equiv-text="counts"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">233</context>
+        </context-group>
+        <note priority="1" from="description">Description du graphe des ressentis, sans ressenti</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.summary.separator" datatype="html">
+        <source> ; </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">235</context>
+        </context-group>
+        <note priority="1" from="description">Séparateur entre deux émotions de la description du graphe</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.summary" datatype="html">
+        <source>Ressentis notés sur <x id="period" equiv-text="period"/>, une valeur par point : <x id="details" equiv-text="details"/>. <x id="counts" equiv-text="counts"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">237</context>
+        </context-group>
+        <note priority="1" from="description">Description du graphe des ressentis</note>
       </trans-unit>
       <trans-unit id="overview.saveRejected" datatype="html">
         <source>Réglage non enregistré : <x id="reason" equiv-text="fieldMessage"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">191</context>
+          <context context-type="linenumber">254</context>
         </context-group>
         <note priority="1" from="description">Toast quand le serveur refuse un réglage de la vue d&apos;ensemble (422)</note>
       </trans-unit>
@@ -12848,7 +13665,7 @@
         <source>Impossible d&apos;enregistrer ce réglage. La valeur précédente est rétablie.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">192</context>
+          <context context-type="linenumber">255</context>
         </context-group>
         <note priority="1" from="description">Toast quand l&apos;enregistrement d&apos;un réglage de la vue d&apos;ensemble échoue</note>
       </trans-unit>
@@ -12884,19 +13701,436 @@
         </context-group>
         <note priority="1" from="description">Lien d&apos;une séance vers la timeline par séance</note>
       </trans-unit>
-      <trans-unit id="overview.sessions.duration" datatype="html">
-        <source><x id="minutes" equiv-text="session.durationMin"/> min</source>
+      <trans-unit id="overview.simple.brief.heading" datatype="html">
+        <source>En bref</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">8</context>
         </context-group>
-        <note priority="1" from="description">Durée d&apos;une séance</note>
+        <note priority="1" from="description">Titre du résumé rédigé de la vue simple</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.brief.empty.title" datatype="html">
+        <source>Pas encore de résumé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+        <note priority="1" from="description">Bloc En bref vide</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.brief.empty.message" datatype="html">
+        <source>Le résumé apparaîtra ici quand le dossier aura des entrées.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">12,13</context>
+        </context-group>
+        <note priority="1" from="description">Bloc En bref vide</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.brief.error" datatype="html">
+        <source>Résumé indisponible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">14,15</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc En bref</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.brief.meta" datatype="html">
+        <source>Assemblé à partir des entrées, par règles, sans IA</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">21,24</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre du bloc En bref</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.attention.label" datatype="html">
+        <source>Point d&apos;attention :</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">38,41</context>
+        </context-group>
+        <note priority="1" from="description">Libellé du point d&apos;attention</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.empty.title" datatype="html">
+        <source>Pas encore de ressentis sur cette période</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">51,52</context>
+        </context-group>
+        <note priority="1" from="description">Bloc des ressentis vide</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.empty.message" datatype="html">
+        <source>Chaque ressenti noté apparaîtra ici, avec son intensité sur 10.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">53,54</context>
+        </context-group>
+        <note priority="1" from="description">Bloc des ressentis vide</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.error" datatype="html">
+        <source>Ressentis indisponibles</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">55,56</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc des ressentis</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.lastSession.heading" datatype="html">
+        <source>Dernière séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">68,69</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc dernière séance</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.lastSession.empty.title" datatype="html">
+        <source>Aucune séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">71,72</context>
+        </context-group>
+        <note priority="1" from="description">Bloc dernière séance vide</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.lastSession.empty.message" datatype="html">
+        <source>La dernière séance et son compte rendu apparaîtront ici dès la première, démarrée depuis l&apos;en-tête.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">73,74</context>
+        </context-group>
+        <note priority="1" from="description">Bloc dernière séance vide</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.lastSession.error" datatype="html">
+        <source>Dernière séance indisponible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">75,76</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc dernière séance</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.lastSession.all" datatype="html">
+        <source>Toutes les séances dans la timeline</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">86,89</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la timeline par séance</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.lastSession.open" datatype="html">
+        <source> Séance en cours, non clôturée. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">98,101</context>
+        </context-group>
+        <note priority="1" from="description">Séance non clôturée</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.lastSession.noSummary" datatype="html">
+        <source> Pas de compte rendu. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">105,109</context>
+        </context-group>
+        <note priority="1" from="description">Séance sans compte rendu</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.lastSession.entryCount" datatype="html">
+        <source>Noté pendant la séance : <x id="ICU" equiv-text="{session.entryCount, plural,
+              =0 {aucune entrée}
+              =1 {1 entrée}
+              other {{{session.entryCount}} entrées}
+            }" xid="4803743254943331189"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">111,118</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;entrées de la dernière séance</note>
+      </trans-unit>
+      <trans-unit id="1743914873907201463" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {aucune entrée} =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">112,115</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="overview.simple.lastSession.inTimeline" datatype="html">
+        <source>Voir la séance dans la timeline</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">123,127</context>
+        </context-group>
+        <note priority="1" from="description">Dernière séance vers la timeline</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.lastSession.previous" datatype="html">
+        <source> Séances précédentes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">129,132</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre des séances précédentes</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.lastSession.previousNoSummary" datatype="html">
+        <source>· pas de compte rendu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">150,154</context>
+        </context-group>
+        <note priority="1" from="description">Séance sans compte rendu</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.situations.heading" datatype="html">
+        <source>Situations en cours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">163,164</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc situations de la vue simple</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.situations.since" datatype="html">
+        <source>, depuis le <x id="INTERPOLATION" equiv-text="{{ day(situation.since) }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">184,185</context>
+        </context-group>
+        <note priority="1" from="description">Début d&apos;une situation en cours</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.situations.feelings" datatype="html">
+        <source> — <x id="ICU" equiv-text="{situation.linkedFeelingCount, plural,
+                    =0 {aucun ressenti lié}
+                    =1 {1 ressenti lié}
+                    other {{{situation.linkedFeelingCount}} ressentis liés}
+                  }" xid="7013680092873845053"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">188,195</context>
+        </context-group>
+        <note priority="1" from="description">Ressentis liés à une situation</note>
+      </trans-unit>
+      <trans-unit id="1049824313592611078" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {aucun ressenti lié} =1 {1 ressenti lié} other {<x id="INTERPOLATION"/> ressentis liés}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">189,191</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="overview.simple.situations.average" datatype="html">
+        <source> · intensité moyenne <x id="INTERPOLATION" equiv-text="{{ intensity(situation.averageIntensity) }}"/>/10</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">199,200</context>
+        </context-group>
+        <note priority="1" from="description">Intensité moyenne d&apos;une situation</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.side" datatype="html">
+        <source>Repères</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">225</context>
+        </context-group>
+        <note priority="1" from="description">Colonne latérale de la vue simple</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.since.empty.title" datatype="html">
+        <source>Rien de noté depuis</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">231,232</context>
+        </context-group>
+        <note priority="1" from="description">Bloc depuis la dernière séance vide</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.since.empty.message" datatype="html">
+        <source>Les entrées notées après la dernière séance clôturée apparaîtront ici.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">233,234</context>
+        </context-group>
+        <note priority="1" from="description">Bloc depuis la dernière séance vide</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.since.error" datatype="html">
+        <source>Entrées indisponibles</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">235,236</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc depuis la dernière séance</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.medications.heading" datatype="html">
+        <source>Traitement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">273,274</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc traitement de la vue simple</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.frame.heading" datatype="html">
+        <source>Cadre du suivi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">319,320</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc cadre du suivi</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.frame.empty.title" datatype="html">
+        <source>Cadre non renseigné</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">322,323</context>
+        </context-group>
+        <note priority="1" from="description">Bloc cadre du suivi vide</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.frame.empty.message" datatype="html">
+        <source>Le début du suivi, les séances et les drapeaux du dossier apparaîtront ici.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">324,325</context>
+        </context-group>
+        <note priority="1" from="description">Bloc cadre du suivi vide</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.frame.error" datatype="html">
+        <source>Cadre indisponible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">326,327</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc cadre du suivi</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.frame.sheetLink" datatype="html">
+        <source>Modifier la fiche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">336,340</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la fiche depuis le cadre du suivi</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.frame.since" datatype="html">
+        <source> Suivi depuis le <x id="INTERPOLATION" equiv-text="{{ day(v.facts.followedSince) }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">342,343</context>
+        </context-group>
+        <note priority="1" from="description">Début du suivi</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.frame.sessions" datatype="html">
+        <source> <x id="ICU" equiv-text="{v.facts.sessionCount, plural,
+              =0 {Aucune séance}
+              =1 {1 séance au total}
+              other {{{v.facts.sessionCount}} séances au total}
+            }" xid="6010630426692911243"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">346,352</context>
+        </context-group>
+        <note priority="1" from="description">Nombre de séances du dossier</note>
+      </trans-unit>
+      <trans-unit id="7378500494254613825" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {Aucune séance} =1 {1 séance au total} other {<x id="INTERPOLATION"/> séances au total}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">346,349</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="overview.simple.frame.flag" datatype="html">
+        <source>Drapeau « <x id="INTERPOLATION" equiv-text="{{ flagLabel(flag.kind) }}"/> »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">355,356</context>
+        </context-group>
+        <note priority="1" from="description">Drapeau du dossier dans le cadre du suivi</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.frame.flagReason" datatype="html">
+        <source>· motif : <x id="INTERPOLATION" equiv-text="{{ flag.reason }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">366,367</context>
+        </context-group>
+        <note priority="1" from="description">Motif d&apos;un drapeau</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.todo.heading" datatype="html">
+        <source>À compléter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">377,378</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc à compléter</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.todo.empty.title" datatype="html">
+        <source>Rien à compléter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">380,381</context>
+        </context-group>
+        <note priority="1" from="description">Bloc à compléter vide</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.todo.empty.message" datatype="html">
+        <source>Les brouillons et les séances non clôturées apparaîtront ici.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">382,383</context>
+        </context-group>
+        <note priority="1" from="description">Bloc à compléter vide</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.todo.error" datatype="html">
+        <source>À compléter indisponible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">384,385</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc à compléter</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.todo.drafts" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 brouillon à relire} other {<x id="INTERPOLATION"/> brouillons à relire}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">397,401</context>
+        </context-group>
+        <note priority="1" from="description">Brouillons, vers la timeline filtrée</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.todo.openSession" datatype="html">
+        <source>Séance du <x id="INTERPOLATION" equiv-text="{{ day(open.startedAt) }}"/> à clôturer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">410,411</context>
+        </context-group>
+        <note priority="1" from="description">Séance à clôturer, vers la timeline</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.heading" datatype="html">
+        <source>Comment évoluent les ressentis · <x id="period" equiv-text="windowLongLabel(window)"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc des ressentis de la vue simple</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.headingShort" datatype="html">
+        <source>Comment évoluent les ressentis</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc des ressentis de la vue simple, sans fenêtre</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.since.headingDate" datatype="html">
+        <source>Depuis la séance du <x id="date" equiv-text="formatDay(at, this.locale)"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc depuis la dernière séance, avec sa date</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.since.headingNone" datatype="html">
+        <source>Dernières entrées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc depuis la dernière séance, sans séance clôturée</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.since.heading" datatype="html">
+        <source>Depuis la dernière séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc depuis la dernière séance</note>
       </trans-unit>
       <trans-unit id="overview.trend.legend" datatype="html">
         <source>Légende</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <note priority="1" from="description">Légende de la courbe</note>
       </trans-unit>
@@ -12904,7 +14138,7 @@
         <source>Intensité moyenne (7 jours)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">63,66</context>
+          <context context-type="linenumber">51,54</context>
         </context-group>
         <note priority="1" from="description">Légende de la courbe</note>
       </trans-unit>
@@ -12912,7 +14146,7 @@
         <source>Séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">74,77</context>
+          <context context-type="linenumber">62,65</context>
         </context-group>
         <note priority="1" from="description">Légende de la courbe</note>
       </trans-unit>
@@ -12920,7 +14154,7 @@
         <source>Changement de médicament</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">79,83</context>
+          <context context-type="linenumber">67,71</context>
         </context-group>
         <note priority="1" from="description">Légende de la courbe</note>
       </trans-unit>
@@ -12928,7 +14162,7 @@
         <source> Voir les données </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">86,89</context>
+          <context context-type="linenumber">74,77</context>
         </context-group>
         <note priority="1" from="description">Bouton qui déplie les données de la courbe</note>
       </trans-unit>
@@ -12936,43 +14170,19 @@
         <source> Ressentis de la période </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">90,94</context>
+          <context context-type="linenumber">78,82</context>
         </context-group>
         <note priority="1" from="description">Légende du tableau des ressentis</note>
-      </trans-unit>
-      <trans-unit id="overview.trend.data.date" datatype="html">
-        <source> Date </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">95,97</context>
-        </context-group>
-        <note priority="1" from="description">Colonne du tableau des ressentis</note>
-      </trans-unit>
-      <trans-unit id="overview.trend.data.emotion" datatype="html">
-        <source> Émotion </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">98,101</context>
-        </context-group>
-        <note priority="1" from="description">Colonne du tableau des ressentis</note>
-      </trans-unit>
-      <trans-unit id="overview.trend.data.intensity" datatype="html">
-        <source> Intensité </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">104,108</context>
-        </context-group>
-        <note priority="1" from="description">Colonne du tableau des ressentis</note>
       </trans-unit>
       <trans-unit id="overview.trend.failed" datatype="html">
         <source>Tendance indisponible</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">213</context>
+          <context context-type="linenumber">201</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/trend-chart.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <note priority="1" from="description">La courbe ne s&apos;est pas chargée</note>
       </trans-unit>
@@ -12980,33 +14190,9 @@
         <source>Intensité moyenne (7 jours)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">239</context>
+          <context context-type="linenumber">227</context>
         </context-group>
         <note priority="1" from="description">Nom de la courbe des moyennes</note>
-      </trans-unit>
-      <trans-unit id="overview.trend.session" datatype="html">
-        <source>Séance</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">240</context>
-        </context-group>
-        <note priority="1" from="description">Repère de séance sur la courbe</note>
-      </trans-unit>
-      <trans-unit id="overview.trend.medicationStart" datatype="html">
-        <source>Début de traitement</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">241</context>
-        </context-group>
-        <note priority="1" from="description">Repère de début de médicament</note>
-      </trans-unit>
-      <trans-unit id="overview.trend.medicationEnd" datatype="html">
-        <source>Fin de traitement</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
-          <context context-type="linenumber">242</context>
-        </context-group>
-        <note priority="1" from="description">Repère de fin de médicament</note>
       </trans-unit>
       <trans-unit id="overview.view.group" datatype="html">
         <source>Niveau de détail de la vue d&apos;ensemble</source>
@@ -13052,7 +14238,7 @@
         <source>La courbe n&apos;a pas pu s&apos;afficher ; les données restent lisibles dans « Voir les données ».</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/trend-chart.component.ts</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <note priority="1" from="description">La courbe ne s&apos;est pas chargée</note>
       </trans-unit>
@@ -13657,11 +14843,19 @@
         </context-group>
         <note priority="1" from="description">Bouton d&apos;archivage</note>
       </trans-unit>
+      <trans-unit id="patients.export.title" datatype="html">
+        <source> Export du dossier </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">439,441</context>
+        </context-group>
+        <note priority="1" from="description">Encart d&apos;export du dossier</note>
+      </trans-unit>
       <trans-unit id="patients.form.onCreate.title" datatype="html">
         <source> À la création </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">439,441</context>
+          <context context-type="linenumber">447,449</context>
         </context-group>
         <note priority="1" from="description">Encart de création</note>
       </trans-unit>
@@ -13669,7 +14863,7 @@
         <source> Une séance d&apos;accueil est créée à la date du jour, puis la vue d&apos;ensemble s&apos;ouvre. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">442,446</context>
+          <context context-type="linenumber">450,454</context>
         </context-group>
         <note priority="1" from="description">Encart de création</note>
       </trans-unit>
@@ -13677,7 +14871,7 @@
         <source> Confidentialité </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">448,450</context>
+          <context context-type="linenumber">456,458</context>
         </context-group>
         <note priority="1" from="description">Encart confidentialité</note>
       </trans-unit>
@@ -13685,7 +14879,7 @@
         <source> Les coordonnées ne sont jamais synchronisées avec un agenda externe ni publiées dans l&apos;annuaire. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">451,455</context>
+          <context context-type="linenumber">459,463</context>
         </context-group>
         <note priority="1" from="description">Encart confidentialité</note>
       </trans-unit>
@@ -13693,7 +14887,7 @@
         <source> Historique des versions </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">462,465</context>
+          <context context-type="linenumber">470,473</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;historique</note>
       </trans-unit>
@@ -13701,7 +14895,7 @@
         <source>Modifier la fiche · <x id="name" equiv-text="patient.displayName"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">149</context>
         </context-group>
         <note priority="1" from="description">Titre de la fiche en modification</note>
       </trans-unit>
@@ -13709,7 +14903,7 @@
         <source>Nouveau <x id="subject" equiv-text="subject"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">152</context>
         </context-group>
         <note priority="1" from="description">Titre de la fiche en création</note>
       </trans-unit>
@@ -13717,7 +14911,7 @@
         <source>Impossible de charger cette fiche</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">169</context>
+          <context context-type="linenumber">171</context>
         </context-group>
         <note priority="1" from="description">État erreur de la fiche</note>
       </trans-unit>
@@ -13725,7 +14919,7 @@
         <source>Fiche enregistrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">222</context>
+          <context context-type="linenumber">224</context>
         </context-group>
         <note priority="1" from="description">Toast après enregistrement de la fiche</note>
       </trans-unit>
@@ -13733,7 +14927,7 @@
         <source>Archiver <x id="name" equiv-text="patient.displayName"/> ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">252</context>
+          <context context-type="linenumber">254</context>
         </context-group>
         <note priority="1" from="description">Titre de la confirmation d&apos;archivage</note>
       </trans-unit>
@@ -13741,7 +14935,7 @@
         <source>Le dossier disparaît de la liste ; rien n&apos;est supprimé et vous pourrez le restaurer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">253</context>
+          <context context-type="linenumber">255</context>
         </context-group>
         <note priority="1" from="description">Explication de l&apos;archivage</note>
       </trans-unit>
@@ -13749,7 +14943,7 @@
         <source>Archiver ce <x id="subject" equiv-text="subject"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">254</context>
+          <context context-type="linenumber">256</context>
         </context-group>
         <note priority="1" from="description">Bouton de confirmation d&apos;archivage</note>
       </trans-unit>
@@ -13757,7 +14951,7 @@
         <source>créée le <x id="date" equiv-text="created"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">342</context>
+          <context context-type="linenumber">344</context>
         </context-group>
         <note priority="1" from="description">Méta de la fiche</note>
       </trans-unit>
@@ -13765,7 +14959,7 @@
         <source><x id="count" equiv-text="count"/> versions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">347</context>
+          <context context-type="linenumber">349</context>
         </context-group>
         <note priority="1" from="description">Méta de la fiche, plusieurs versions</note>
       </trans-unit>
@@ -13773,7 +14967,7 @@
         <source>1 version</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">348</context>
+          <context context-type="linenumber">350</context>
         </context-group>
         <note priority="1" from="description">Méta de la fiche, une version</note>
       </trans-unit>
@@ -13781,7 +14975,7 @@
         <source>dernière modification le <x id="date" equiv-text="updated"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">353</context>
+          <context context-type="linenumber">355</context>
         </context-group>
         <note priority="1" from="description">Méta de la fiche</note>
       </trans-unit>
@@ -13872,6 +15066,126 @@
           <context context-type="linenumber">38</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet de la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.export.button" datatype="html">
+        <source>Exporter ce dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">32,36</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du menu d&apos;export du dossier</note>
+      </trans-unit>
+      <trans-unit id="patients.export.menu" datatype="html">
+        <source>Format d&apos;export</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">38,39</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du menu des formats d&apos;export</note>
+      </trans-unit>
+      <trans-unit id="patients.export.pdf" datatype="html">
+        <source>PDF</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">43,44</context>
+        </context-group>
+        <note priority="1" from="description">Format PDF du menu d&apos;export</note>
+      </trans-unit>
+      <trans-unit id="patients.export.pdfHint" datatype="html">
+        <source>thème clair · à imprimer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">45,49</context>
+        </context-group>
+        <note priority="1" from="description">Détail du format PDF</note>
+      </trans-unit>
+      <trans-unit id="patients.export.md" datatype="html">
+        <source>Markdown</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">51,52</context>
+        </context-group>
+        <note priority="1" from="description">Format Markdown du menu d&apos;export</note>
+      </trans-unit>
+      <trans-unit id="patients.export.mdHint" datatype="html">
+        <source>texte brut · réutilisable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">53,57</context>
+        </context-group>
+        <note priority="1" from="description">Détail du format Markdown</note>
+      </trans-unit>
+      <trans-unit id="patients.export.note" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Entrées privées exclues<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, ainsi que les entrées archivées. Ordre chronologique, version courante du texte. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">64,67</context>
+        </context-group>
+        <note priority="1" from="description">Rappel sous le menu d&apos;export</note>
+      </trans-unit>
+      <trans-unit id="patients.export.direct" datatype="html">
+        <source>Téléchargement immédiat, rien n&apos;est conservé côté serveur. Pour tous vos dossiers d&apos;un coup :</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">69,73</context>
+        </context-group>
+        <note priority="1" from="description">Téléchargement direct</note>
+      </trans-unit>
+      <trans-unit id="patients.export.accountLink" datatype="html">
+        <source>Mon compte › Données et export</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">75,82</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers Données et export</note>
+      </trans-unit>
+      <trans-unit id="patients.export.busy" datatype="html">
+        <source>Préparation du fichier…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+        <note priority="1" from="description">Fichier en préparation</note>
+      </trans-unit>
+      <trans-unit id="patients.export.error.offline" datatype="html">
+        <source>Connexion perdue : réessayez une fois le réseau revenu.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">154</context>
+        </context-group>
+        <note priority="1" from="description">Export patient hors ligne</note>
+      </trans-unit>
+      <trans-unit id="patients.export.error.forbidden" datatype="html">
+        <source>Ce dossier n&apos;est pas accessible depuis votre compte.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+        <note priority="1" from="description">Export patient refusé</note>
+      </trans-unit>
+      <trans-unit id="patients.export.error.notFound" datatype="html">
+        <source>Ce dossier n&apos;existe pas ou plus.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">158</context>
+        </context-group>
+        <note priority="1" from="description">Export patient introuvable</note>
+      </trans-unit>
+      <trans-unit id="patients.export.error.rateLimited" datatype="html">
+        <source>Trop de demandes rapprochées : réessayez dans quelques instants.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+        <note priority="1" from="description">Export patient limité</note>
+      </trans-unit>
+      <trans-unit id="patients.export.error.failed" datatype="html">
+        <source>La génération du fichier a échoué. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
+          <context context-type="linenumber">162</context>
+        </context-group>
+        <note priority="1" from="description">Export patient en échec</note>
       </trans-unit>
       <trans-unit id="patients.form.flag.watch.help" datatype="html">
         <source>Avec une raison, visible dans l&apos;en-tête et la liste.</source>

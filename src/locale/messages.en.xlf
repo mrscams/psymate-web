@@ -21032,6 +21032,7 @@
           <context context-type="linenumber">143</context>
         </context-group>
         <note priority="1" from="description">Explication de l&apos;export lancé ailleurs</note>
+</trans-unit>
       <trans-unit id="capture.warning.unknownPrefix" datatype="html">
         <source>Préfixe « <x id="prefix" equiv-text="prefix"/> » inconnu, la saisie reste une note : utilisez <x id="known" equiv-text="known"/>.</source>
         <target state="translated">Unknown prefix “<x id="prefix" equiv-text="prefix"/>”, the entry stays a note: use <x id="known" equiv-text="known"/>.</target>
