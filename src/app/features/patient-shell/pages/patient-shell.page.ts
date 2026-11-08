@@ -23,14 +23,14 @@ import {
   StateComponent,
   ToastService,
 } from '../../../shared/ui';
-import { ENTRY_QUERY_PARAM, openEntryEditor } from '../../entries';
+import { CapturedEntry, CommandBarComponent } from '../../capture';
+import { ENTRY_QUERY_PARAM, EntryPrefill, openEntryEditor } from '../../entries';
 import { connectLinkEditor, LINK_QUERY_PARAM } from '../../graph';
 import { OverviewViewToggleComponent } from '../../overview';
 import { StateKind } from '../../../shared/util';
 import { ShellTab } from '../data/patient-shell.model';
 import { PatientShellStore } from '../data/patient-shell.store';
 import { CloseSessionDialog, CloseSessionResult } from '../panels/close-session.dialog';
-import { CaptureBarComponent } from '../ui/capture-bar.component';
 import { finalLoadError, sessionProblemText, toHeaderInfo } from '../ui/shell-labels';
 
 /**
@@ -43,7 +43,7 @@ import { finalLoadError, sessionProblemText, toHeaderInfo } from '../ui/shell-la
 @Component({
   selector: 'pm-patient-shell-page',
   imports: [
-    CaptureBarComponent,
+    CommandBarComponent,
     OverviewViewToggleComponent,
     PatientHeaderComponent,
     RouterLink,
@@ -65,7 +65,7 @@ export class PatientShellPage {
   private readonly shortcuts = inject(ShortcutService);
   private readonly injector = inject(Injector);
   private readonly route = inject(ActivatedRoute);
-  private readonly captureBar = viewChild(CaptureBarComponent);
+  private readonly captureBar = viewChild(CommandBarComponent);
   private readonly panels = inject(SidePanelService);
 
   /** `?entry=<id>` : correction d'une entrée, le panneau se rouvre au rechargement (fiche 05). */
@@ -153,12 +153,18 @@ export class PatientShellPage {
     });
   }
 
-  /** N, bouton + ou Entrée dans la barre de capture (avec son texte) : nouvelle entrée. */
-  protected newEntry(text = ''): void {
+  /**
+   * N, bouton + ou barre de commande (Ctrl+Entrée : saisie interprétée ; Entrée sur un champ vide) :
+   * nouvelle entrée dans l'éditeur.
+   */
+  protected newEntry(prefill: EntryPrefill | null = null): void {
     if (this.panels.isOpen() || !this.store.patient()) return;
-    const ref = openEntryEditor(this.id(), { text, injector: this.injector });
-    // Le texte est dans le brouillon de l'éditeur : la barre se vide (pas de doublon à la 2e Entrée).
-    if (ref && text) this.captureBar()?.clear();
+    const ref = openEntryEditor(this.id(), {
+      prefill: prefill ?? undefined,
+      injector: this.injector,
+    });
+    // La saisie est dans le brouillon de l'éditeur : la barre se vide (pas de doublon à la 2e Entrée).
+    if (ref && prefill) this.captureBar()?.clear();
     // Une séance créée depuis l'éditeur s'ouvre : l'en-tête relit la séance courante. Toute
     // entrée enregistrée est une écriture : les projections (vue d'ensemble) se relisent.
     void ref?.closed.then((saved) => {
@@ -166,6 +172,11 @@ export class PatientShellPage {
       this.store.noteWrite();
       if (saved.type === 'session') void this.store.refreshSession();
     });
+  }
+
+  /** Entrée créée par la barre de commande (Entrée, Ctrl+S) : les projections se relisent. */
+  protected captured(entry: CapturedEntry): void {
+    if (entry.id) this.store.noteWrite();
   }
 
   protected reload(): void {

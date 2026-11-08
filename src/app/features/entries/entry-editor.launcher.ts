@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { EntryType, SidePanelRef, SidePanelService } from '../../shared/ui';
 import { EntryEditorStore } from './data/entry-editor.store';
-import { EntryView } from './data/entry.model';
+import { EntryPrefill, EntryView } from './data/entry.model';
 import { EntryEditorPanel } from './panels/entry-editor.panel';
 
 /** Paramètre de requête d'une correction : `?entry=<id>` rouvre le panneau au rechargement. */
@@ -16,6 +16,11 @@ export interface OpenEntryEditorOptions {
   type?: EntryType;
   /** Texte de la barre de capture, repris dans le texte de l'entrée. */
   text?: string;
+  /**
+   * Saisie interprétée par la barre de commande (features/capture, Ctrl+Entrée) : type, émotion,
+   * intensité, moment, texte et liens préremplis ; remplace `type` et `text`.
+   */
+  prefill?: EntryPrefill;
   /** Hors contexte d'injection (gestionnaire d'événement), l'injecteur de l'appelant. */
   injector?: Injector;
 }
@@ -41,7 +46,9 @@ export function openEntryEditor(
 
   const panels = injector.get(SidePanelService);
   const ref = panels.open<EntryEditorPanel, unknown, SavedEntry>(EntryEditorPanel, {
-    data: { patientId, entryId, type: options.type, text: options.text },
+    data: options.prefill
+      ? { patientId, entryId, type: options.prefill.type, prefill: options.prefill }
+      : { patientId, entryId, type: options.type, text: options.text },
     width: 480,
   });
   if (!ref) return null;

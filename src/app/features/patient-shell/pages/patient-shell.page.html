@@ -26,9 +26,17 @@
     (closeSession)="openClose()"
     (retry)="reload()"
   >
-    <!-- Barre de capture (Entrée) et bouton + : ouvrent l'éditeur d'entrée (M1-08, features/entries). -->
+    <!-- Barre de commande (M6-02, features/capture) : Entrée crée, Ctrl+Entrée ouvre l'éditeur
+         prérempli (M1-08, features/entries) ; le bouton + ouvre l'éditeur vide. -->
     <div pmCapture class="capture-row">
-      <pm-capture-bar class="capture-bar" (capture)="newEntry($event)" />
+      <pm-command-bar
+        class="capture-bar"
+        [patientId]="id()"
+        [session]="headerSession()"
+        [revision]="store.revision()"
+        (saved)="captured($event)"
+        (openEditor)="newEntry($event)"
+      />
       <button
         type="button"
         class="new-entry"

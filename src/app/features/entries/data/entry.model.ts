@@ -205,6 +205,36 @@ export function emptyDraft(
   };
 }
 
+/**
+ * Ce que la barre de commande (features/capture, M6-02) a interprété : de quoi préremplir l'éditeur
+ * (Ctrl+Entrée) ou construire le corps du POST (Entrée, Ctrl+S) avec les mêmes règles que lui. Le
+ * moment est au format du contrat (EntryOccurredRequest) ; absent ou null : « Maintenant ».
+ */
+export interface EntryPrefill {
+  type: EntryType;
+  title?: string;
+  body?: string;
+  feeling?: { emotionCode: string | null; intensity: number | null };
+  medication?: { molecule: string; dosage: string };
+  occurred?: { from: string; precision: OccurredPrecision; to?: string; label?: string } | null;
+  links?: RailLink[];
+}
+
+/** Le préremplissage de la barre de commande → brouillon du panneau (séance courante : sessionId vide). */
+export function draftFromPrefill(prefill: EntryPrefill, visibility: EntryVisibility): EntryDraft {
+  const draft = emptyDraft(prefill.type, visibility);
+  draft.title = prefill.title ?? '';
+  draft.body = prefill.body ?? '';
+  if (prefill.feeling) draft.feeling = { ...prefill.feeling };
+  if (prefill.medication) draft.medication = { ...prefill.medication };
+  if (prefill.occurred) {
+    const { from, to, precision, label } = prefill.occurred;
+    draft.occurred = occurredDraft({ from, to: to ?? null, precision, label: label ?? null });
+  }
+  draft.links = (prefill.links ?? []).map((link) => ({ ...link }));
+  return draft;
+}
+
 /** Le brouillon d'une entrée existante : ses valeurs courantes dans les champs du panneau. */
 export function draftFromEntry(entry: EntryView): EntryDraft {
   return {

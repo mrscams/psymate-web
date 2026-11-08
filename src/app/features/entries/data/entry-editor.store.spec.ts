@@ -468,4 +468,30 @@ describe('EntryEditorStore', () => {
       expect(store.entry().data?.linkCount).toBe(1);
     });
   });
+  it('préremplissage de la barre de commande (M6-02) : remplace le brouillon, garde son texte, relit une émotion inconnue', async () => {
+    const { store, api } = setup();
+    await store.open({ patientId: 'p-marie', text: 'Texte gardé' });
+    store.closed('create:p-marie');
+    expect(api.emotions).toHaveBeenCalledTimes(1);
+
+    await store.open({
+      patientId: 'p-marie',
+      type: 'feeling',
+      prefill: {
+        type: 'feeling',
+        feeling: { emotionCode: 'c_nouvelle', intensity: 7 },
+        body: "avant l'examen",
+        occurred: null,
+        links: [{ targetId: 'e-event', linkType: 'triggers', direction: 'incoming' }],
+      },
+    });
+    expect(store.currentDraft()).toMatchObject({
+      type: 'feeling',
+      feeling: { emotionCode: 'c_nouvelle', intensity: 7 },
+      body: "Texte gardé\navant l'examen",
+      links: [{ targetId: 'e-event', linkType: 'triggers', direction: 'incoming' }],
+    });
+    // Émotion créée depuis la barre : absente du vocabulaire gardé, il est relu.
+    expect(api.emotions).toHaveBeenCalledTimes(2);
+  });
 });

@@ -1,0 +1,80 @@
+<div class="anchor">
+  <div class="bar" [class.busy]="store.saving()">
+    <svg class="prompt" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+      <path d="M4 5l4 4-4 4M10 13h5" />
+    </svg>
+    <label
+      class="sr-only"
+      [for]="inputId"
+      i18n="Étiquette de la barre de commande@@capture.bar.label"
+      >Noter quelque chose</label
+    >
+    <input
+      class="field"
+      type="text"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="Noter quelque chose…"
+      i18n-placeholder="Texte indicatif de la barre de commande@@capture.bar.placeholder"
+      aria-keyshortcuts="Enter Control+Enter Control+S"
+      [id]="inputId"
+      [attr.aria-describedby]="describedBy()"
+      [attr.aria-busy]="store.saving() ? 'true' : null"
+      [value]="text()"
+      (input)="onInput($any($event.target).value)"
+    />
+    <span class="keys" i18n="Raccourcis de la barre de commande@@capture.bar.keys"
+      ><kbd>⏎</kbd> enregistre · <kbd>Ctrl+⏎</kbd> affine · <kbd>Ctrl+S</kbd> brouillon</span
+    >
+  </div>
+
+  @if (panelOpen()) {
+    <div class="panel">
+      <pm-capture-preview
+        [id]="previewId"
+        [preview]="preview()"
+        [state]="previewState()"
+        [emotions]="emotions()"
+        [session]="sessionText()"
+        (retry)="store.retryEmotions()"
+        (pickEmotion)="pickEmotion($event)"
+      />
+      @if (preview()?.unknownEmotion; as word) {
+        <pm-emotion-proposal
+          [word]="word"
+          [busy]="store.creatingEmotion()"
+          [problem]="emotionProblem()"
+          (create)="createEmotion($event)"
+        />
+      }
+      @if (preview(); as p) {
+        <fieldset class="rail">
+          <legend i18n="Rail des liens de la barre de commande@@capture.rail.legend">Lié à…</legend>
+          @if (railState(); as kind) {
+            <pm-state
+              [kind]="kind"
+              compact
+              skeleton="row"
+              [lines]="2"
+              [title]="
+                kind === 'error' ? railErrorTitle : kind === 'empty' ? railEmptyTitle : undefined
+              "
+              [action]="kind === 'error' ? railRetry : undefined"
+            />
+          } @else {
+            <pm-link-rail
+              [formControl]="linksControl"
+              [candidates]="candidates()"
+              [linkTypes]="linkTypes()"
+              [entryType]="p.type"
+              [emotions]="emotions()"
+              (picked)="onPicked($event)"
+            />
+          }
+        </fieldset>
+      }
+    </div>
+  }
+</div>
+
+<p class="alert" role="alert" [id]="alertId" [class.shown]="!!alert()">{{ alert() }}</p>
