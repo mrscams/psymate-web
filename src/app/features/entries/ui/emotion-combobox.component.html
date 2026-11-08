@@ -1,0 +1,146 @@
+<div class="combo">
+  @if (selected()?.family; as family) {
+    <span [class]="'dot lead family-' + family" aria-hidden="true"></span>
+  }
+  <input
+    [id]="inputId()"
+    type="text"
+    role="combobox"
+    autocomplete="off"
+    aria-autocomplete="list"
+    [class.with-dot]="!!selected()?.family"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="listId"
+    [attr.aria-activedescendant]="activeId()"
+    [attr.aria-invalid]="invalid() ? 'true' : null"
+    [attr.aria-describedby]="errorId() || null"
+    [disabled]="disabled()"
+    [value]="displayQuery()"
+    placeholder="Anxiété, colère…"
+    i18n-placeholder="Texte indicatif du champ émotion@@entries.emotion.placeholder"
+    (input)="onInput($any($event.target).value)"
+    (keydown)="onKey($event)"
+    (click)="open.set(true)"
+  />
+  <button
+    type="button"
+    class="toggle"
+    tabindex="-1"
+    aria-label="Afficher les émotions"
+    i18n-aria-label="Bouton qui déplie la liste des émotions@@entries.emotion.toggle"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="listId"
+    (click)="toggle()"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m7 10 5 5 5-5" /></svg>
+  </button>
+  <ul
+    class="list"
+    role="listbox"
+    [id]="listId"
+    [hidden]="!open()"
+    aria-label="Émotions"
+    i18n-aria-label="Nom de la liste des émotions@@entries.emotion.list"
+  >
+    @for (option of options(); track $index; let i = $index) {
+      <li
+        role="option"
+        [id]="optionId(i)"
+        [class.active]="i === active()"
+        [class.create]="option.kind === 'create'"
+        tabindex="-1"
+        [attr.aria-selected]="i === active()"
+        (mousedown)="$event.preventDefault()"
+        (click)="choose(option)"
+        (keydown.enter)="choose(option)"
+      >
+        @if (option.kind === 'emotion') {
+          <span [class]="'dot family-' + (familyOf(option) ?? 'none')" aria-hidden="true"></span>
+          <span class="label">{{ option.emotion.label }}</span>
+          @if (option.emotion.custom) {
+            <span class="tag" i18n="Marque d'une émotion personnalisée@@entries.emotion.customTag"
+              >personnalisée</span
+            >
+          }
+        } @else {
+          <span class="plus" aria-hidden="true">+</span>
+          <span class="label">{{ createText(option.label) }}</span>
+        }
+      </li>
+    }
+  </ul>
+</div>
+@switch (listState()) {
+  @case ('loading') {
+    @if (open()) {
+      <p class="hint" role="status" i18n="Chargement des émotions@@entries.emotion.loading">
+        Chargement des émotions…
+      </p>
+    }
+  }
+  @case ('error') {
+    <pm-state kind="error" compact [title]="errorTitle" [action]="retryAction" />
+  }
+  @case ('empty') {
+    @if (open()) {
+      <p class="hint" role="status" i18n="Aucune émotion ne correspond@@entries.emotion.empty">
+        Aucune émotion ne correspond. Tapez un libellé pour en créer une.
+      </p>
+    }
+  }
+}
+@if (creating(); as label) {
+  <fieldset class="create" [id]="familyId">
+    <legend i18n="Choix de la famille d'une nouvelle émotion@@entries.emotion.familyLegend">
+      Famille de « {{ label }} » (obligatoire)
+    </legend>
+    <div class="families">
+      @for (item of families; track item) {
+        <label class="family">
+          <input
+            type="radio"
+            name="pm-emotion-family"
+            [value]="item"
+            [checked]="family() === item"
+            [attr.aria-describedby]="createProblem() || familyMissing() ? createErrorId : null"
+            (change)="chooseFamily(item)"
+            (keydown)="onFamilyKey($event)"
+          />
+          <span [class]="'dot family-' + item" aria-hidden="true"></span>
+          {{ familyName(item) }}
+        </label>
+      }
+    </div>
+    @if (familyMissing()) {
+      <p
+        class="error"
+        [id]="createErrorId"
+        role="alert"
+        i18n="Famille manquante@@entries.emotion.familyRequired"
+      >
+        Choisissez une famille.
+      </p>
+    } @else if (createProblem(); as message) {
+      <p class="error" [id]="createErrorId" role="alert">{{ message }}</p>
+    }
+    <div class="actions">
+      <button
+        type="button"
+        class="create-button"
+        [disabled]="store.creatingEmotion()"
+        (click)="create()"
+        i18n="Bouton de création d'une émotion personnalisée@@entries.emotion.create"
+      >
+        Créer l'émotion
+      </button>
+      <button
+        type="button"
+        class="cancel-button"
+        (click)="cancelCreate()"
+        i18n="Annulation de la création d'une émotion@@entries.emotion.cancel"
+      >
+        Annuler
+      </button>
+    </div>
+  </fieldset>
+}

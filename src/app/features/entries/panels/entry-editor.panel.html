@@ -1,0 +1,394 @@
+<pm-side-panel [title]="title()">
+  @if (store.entry().data?.status === 'draft') {
+    <span
+      pmPanelHeader
+      class="badge"
+      i18n="Pastille d'une entrée en brouillon@@entries.editor.draftBadge"
+      >brouillon</span
+    >
+  }
+
+  @if (grace(); as info) {
+    <p class="grace" role="status" [class.in]="info.inGrace" [id]="graceId">
+      {{ graceText() }}
+    </p>
+  }
+
+  @if (alert(); as message) {
+    <p class="alert" role="alert" tabindex="-1">{{ message }}</p>
+  }
+
+  @if (entryState(); as kind) {
+    <pm-state
+      [kind]="kind"
+      skeleton="profile"
+      [title]="kind === 'error' ? entryErrorTitle : undefined"
+      [action]="entryRetry"
+    />
+  } @else if (form(); as f) {
+    <form class="editor" [formGroup]="f" novalidate (submit)="$event.preventDefault()">
+      <!-- 3. Type -->
+      <div class="block">
+        <span
+          class="block-label"
+          aria-hidden="true"
+          i18n="Bloc du type d'entrée@@entries.type.label"
+          >Type</span
+        >
+        <pm-type-chips formControlName="type" [label]="typeLabelGroup" />
+      </div>
+
+      <!-- 4. Champ principal selon le type -->
+      @switch (type()) {
+        @case ('feeling') {
+          <div class="block" formGroupName="feeling">
+            <label
+              class="block-label"
+              [for]="fid('feeling.emotionCode')"
+              i18n="Champ émotion d'un ressenti@@entries.feeling.emotion"
+              >Émotion</label
+            >
+            <pm-emotion-combobox
+              formControlName="emotionCode"
+              [inputId]="fid('feeling.emotionCode')"
+              [errorId]="fid('feeling.emotionCode') + '-error'"
+              [invalid]="invalid('feeling.emotionCode')"
+            />
+            <pm-field-errors
+              [control]="f.controls.feeling.controls.emotionCode"
+              [id]="fid('feeling.emotionCode') + '-error'"
+            />
+          </div>
+          <div class="block" formGroupName="feeling">
+            <span
+              class="block-label"
+              id="pm-entry-intensity-label"
+              i18n="Champ intensité d'un ressenti@@entries.feeling.intensity"
+              >Intensité</span
+            >
+            <pm-intensity-slider
+              formControlName="intensity"
+              [sliderId]="fid('feeling.intensity')"
+              labelledBy="pm-entry-intensity-label"
+              [describedBy]="fid('feeling.intensity') + '-error'"
+              [invalid]="invalid('feeling.intensity')"
+            />
+            <pm-field-errors
+              [control]="f.controls.feeling.controls.intensity"
+              [id]="fid('feeling.intensity') + '-error'"
+            />
+          </div>
+          <div class="block">
+            <label
+              class="block-label"
+              [for]="fid('body')"
+              i18n="Texte court d'un ressenti@@entries.feeling.text"
+              >Texte</label
+            >
+            <input
+              [id]="fid('body')"
+              type="text"
+              formControlName="body"
+              autocomplete="off"
+              [attr.aria-invalid]="invalid('body')"
+              [attr.aria-describedby]="fid('body') + '-error'"
+            />
+            <pm-field-errors [control]="f.controls.body" [id]="fid('body') + '-error'" />
+          </div>
+        }
+        @case ('medication') {
+          <div class="row" formGroupName="medication">
+            <div class="block grow">
+              <label
+                class="block-label"
+                [for]="fid('medication.molecule')"
+                i18n="Molécule d'un médicament@@entries.medication.molecule"
+                >Molécule</label
+              >
+              <input
+                [id]="fid('medication.molecule')"
+                type="text"
+                formControlName="molecule"
+                autocomplete="off"
+                [attr.aria-invalid]="invalid('medication.molecule')"
+                [attr.aria-describedby]="fid('medication.molecule') + '-error'"
+              />
+              <pm-field-errors
+                [control]="f.controls.medication.controls.molecule"
+                [id]="fid('medication.molecule') + '-error'"
+              />
+            </div>
+            <div class="block">
+              <label
+                class="block-label"
+                [for]="fid('medication.dosage')"
+                i18n="Dose d'un médicament@@entries.medication.dosage"
+                >Dose</label
+              >
+              <input
+                class="mono"
+                [id]="fid('medication.dosage')"
+                type="text"
+                formControlName="dosage"
+                autocomplete="off"
+                [attr.aria-invalid]="invalid('medication.dosage')"
+                [attr.aria-describedby]="fid('medication.dosage') + '-error'"
+              />
+              <pm-field-errors
+                [control]="f.controls.medication.controls.dosage"
+                [id]="fid('medication.dosage') + '-error'"
+              />
+            </div>
+          </div>
+          <ng-container *ngTemplateOutlet="longText" />
+        }
+        @case ('session') {
+          <div class="row" formGroupName="session">
+            <div class="block grow">
+              <label
+                class="block-label"
+                [for]="fid('session.modality')"
+                i18n="Modalité d'une séance@@entries.session.modality"
+                >Modalité</label
+              >
+              <select
+                [id]="fid('session.modality')"
+                formControlName="modality"
+                [attr.aria-invalid]="invalid('session.modality')"
+                [attr.aria-describedby]="fid('session.modality') + '-error'"
+              >
+                @for (modality of modalities; track modality) {
+                  <option [ngValue]="modality">{{ modalityName(modality) }}</option>
+                }
+              </select>
+              <pm-field-errors
+                [control]="f.controls.session.controls.modality"
+                [id]="fid('session.modality') + '-error'"
+              />
+            </div>
+            @if (editing) {
+              <div class="block">
+                <label
+                  class="block-label"
+                  [for]="fid('session.durationMin')"
+                  i18n="Durée d'une séance@@entries.session.duration"
+                  >Durée (min)</label
+                >
+                <input
+                  class="mono short"
+                  [id]="fid('session.durationMin')"
+                  type="text"
+                  inputmode="numeric"
+                  formControlName="durationMin"
+                  [attr.aria-invalid]="invalid('session.durationMin')"
+                  [attr.aria-describedby]="fid('session.durationMin') + '-error'"
+                />
+                <pm-field-errors
+                  [control]="f.controls.session.controls.durationMin"
+                  [id]="fid('session.durationMin') + '-error'"
+                />
+              </div>
+            }
+          </div>
+          @if (!editing) {
+            <p class="hint" i18n="Une séance créée ici démarre@@entries.session.startHint">
+              Une séance créée ici est ouverte maintenant ; sa durée se donne à la clôture.
+            </p>
+          }
+        }
+        @case ('note') {
+          <ng-container *ngTemplateOutlet="longText" />
+        }
+        @default {
+          <div class="block">
+            <label
+              class="block-label"
+              [for]="fid('title')"
+              i18n="Titre d'une entrée@@entries.field.title"
+              >Titre</label
+            >
+            <input
+              [id]="fid('title')"
+              type="text"
+              formControlName="title"
+              autocomplete="off"
+              [attr.aria-invalid]="invalid('title')"
+              [attr.aria-describedby]="fid('title') + '-error'"
+            />
+            <pm-field-errors [control]="f.controls.title" [id]="fid('title') + '-error'" />
+          </div>
+          <ng-container *ngTemplateOutlet="longText" />
+        }
+      }
+
+      <ng-template #longText>
+        <div class="block">
+          <label
+            class="block-label"
+            [for]="fid('body')"
+            i18n="Texte d'une entrée@@entries.field.body"
+            >Texte</label
+          >
+          <textarea
+            [id]="fid('body')"
+            rows="4"
+            formControlName="body"
+            [attr.aria-invalid]="invalid('body')"
+            [attr.aria-describedby]="fid('body') + '-error ' + fid('body') + '-hint'"
+          ></textarea>
+          <p
+            class="hint"
+            [id]="fid('body') + '-hint'"
+            i18n="Raccourci d'enregistrement depuis un texte@@entries.field.bodyHint"
+          >
+            <kbd>Ctrl</kbd>+<kbd>⏎</kbd> pour enregistrer depuis le texte.
+          </p>
+          <pm-field-errors [control]="f.controls.body" [id]="fid('body') + '-error'" />
+        </div>
+      </ng-template>
+
+      <!-- 5. Quand -->
+      <pm-occurred-fields [group]="f.controls.occurred" [type]="type()" [creating]="!editing" />
+
+      <!-- 6. Séance (création ; une séance n'est rattachée à aucune séance) -->
+      @if (!editing && type() !== 'session') {
+        <div class="block">
+          <label
+            class="block-label"
+            [for]="fid('sessionId')"
+            i18n="Bloc de la séance de rattachement@@entries.session.label"
+            >Séance</label
+          >
+          <select
+            [id]="fid('sessionId')"
+            formControlName="sessionId"
+            [attr.aria-invalid]="invalid('sessionId')"
+            [attr.aria-describedby]="fid('sessionId') + '-error'"
+          >
+            @if (!hasCurrentSession()) {
+              <option value="" i18n="Aucune séance pour ce patient@@entries.session.none">
+                Aucune séance
+              </option>
+            }
+            @for (option of sessionOptions(); track option.id) {
+              <option [value]="option.id">{{ option.label }}</option>
+            }
+          </select>
+          <pm-field-errors [control]="f.controls.sessionId" [id]="fid('sessionId') + '-error'" />
+          @if (sessionsError()) {
+            <pm-state kind="error" compact [title]="sessionsErrorTitle" [action]="sessionsRetry" />
+          }
+        </div>
+      }
+
+      <!-- Correction hors grâce : motif -->
+      @if (grace(); as info) {
+        @if (!info.inGrace) {
+          <div class="block">
+            <label
+              class="block-label"
+              [for]="fid('reason')"
+              i18n="Motif d'une correction@@entries.reason.label"
+              >Motif de la correction (facultatif)</label
+            >
+            <input
+              [id]="fid('reason')"
+              type="text"
+              formControlName="reason"
+              autocomplete="off"
+              [attr.aria-invalid]="invalid('reason')"
+              [attr.aria-describedby]="fid('reason') + '-error'"
+            />
+            <pm-field-errors [control]="f.controls.reason" [id]="fid('reason') + '-error'" />
+          </div>
+        }
+      }
+
+      <!-- 8. Plus -->
+      @if (type() !== 'session') {
+        <details class="more">
+          <summary i18n="Bloc replié des options@@entries.more.summary">
+            Plus · visibilité, tags
+          </summary>
+          <fieldset class="block">
+            <legend class="block-label" i18n="Visibilité d'une entrée@@entries.visibility.legend">
+              Visibilité
+            </legend>
+            <label class="check">
+              <input type="radio" formControlName="visibility" value="clinical" />
+              <span i18n="Visibilité clinique@@entries.visibility.clinical"
+                >Clinique : partagée avec l'équipe clinique</span
+              >
+            </label>
+            <label class="check">
+              <input type="radio" formControlName="visibility" value="private" />
+              <span i18n="Visibilité privée@@entries.visibility.private"
+                >Privée : vous seul, exclue de l'export</span
+              >
+            </label>
+            <pm-field-errors
+              [control]="f.controls.visibility"
+              [id]="fid('visibility') + '-error'"
+            />
+          </fieldset>
+          <fieldset class="block">
+            <legend class="block-label" i18n="Tags d'une entrée@@entries.tags.legend">Tags</legend>
+            @if (tagsState(); as kind) {
+              <pm-state
+                [kind]="kind"
+                compact
+                skeleton="row"
+                [lines]="2"
+                [title]="
+                  kind === 'error' ? tagsErrorTitle : kind === 'empty' ? tagsEmptyTitle : undefined
+                "
+                [message]="kind === 'empty' ? tagsEmptyMessage : undefined"
+                [action]="tagsRetry"
+              />
+            } @else {
+              <div class="tags">
+                @for (tag of store.tags().data ?? []; track tag) {
+                  <label class="check">
+                    <input
+                      type="checkbox"
+                      [checked]="selectedTags().includes(tag)"
+                      (change)="toggleTag(tag, $any($event.target).checked)"
+                    />
+                    <span>{{ tag }}</span>
+                  </label>
+                }
+              </div>
+            }
+          </fieldset>
+        </details>
+      }
+    </form>
+  }
+
+  <div pmPanelFooter class="footer">
+    @if (editing && store.versionCount() > 1) {
+      <button type="button" class="link" (click)="openHistory()">{{ historyLabel() }}</button>
+    }
+    <span class="spacer"></span>
+    <button type="button" class="secondary" (click)="cancel()">
+      <ng-container i18n="Bouton d'annulation du panneau@@entries.editor.cancel"
+        >Annuler</ng-container
+      >
+      <kbd i18n="Nom de la touche Échap@@shortcuts.escapeKey">Échap</kbd>
+    </button>
+    @if (!editing && type() !== 'session') {
+      <button type="button" class="secondary" [disabled]="store.saving()" (click)="submit('draft')">
+        <ng-container i18n="Bouton brouillon@@entries.editor.draft">Brouillon</ng-container>
+        <kbd>Ctrl+S</kbd>
+      </button>
+    }
+    <button
+      type="button"
+      class="primary"
+      [disabled]="store.saving() || !form()"
+      (click)="submit('final')"
+    >
+      {{ saveLabel() }} <kbd>⏎</kbd>
+    </button>
+  </div>
+</pm-side-panel>
