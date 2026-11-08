@@ -25,7 +25,7 @@ import { ENTRY_TYPES, EntryIconComponent, EntryType, entryTypeLabel } from '../.
   ],
   template: `
     <div class="chips" role="group" [attr.aria-label]="label()">
-      @for (type of types; track type) {
+      @for (type of types(); track type) {
         <button
           type="button"
           class="chip"
@@ -87,8 +87,8 @@ import { ENTRY_TYPES, EntryIconComponent, EntryType, entryTypeLabel } from '../.
 })
 export class TypeChipsComponent implements ControlValueAccessor {
   readonly label = input.required<string>();
-
-  protected readonly types = ENTRY_TYPES;
+  /** Types proposés (Médicament masqué selon les préférences) ; les six par défaut. */
+  readonly types = input<readonly EntryType[]>(ENTRY_TYPES);
   protected readonly value = signal<EntryType>('note');
   protected readonly disabled = signal(false);
 
@@ -116,8 +116,9 @@ export class TypeChipsComponent implements ControlValueAccessor {
           : 0;
     if (!step || this.disabled()) return;
     event.preventDefault();
-    const index = this.types.indexOf(type);
-    const next = this.types[(index + step + this.types.length) % this.types.length];
+    const types = this.types();
+    const index = types.indexOf(type);
+    const next = types[(index + step + types.length) % types.length];
     this.choose(next);
     this.host.nativeElement.querySelector<HTMLElement>(`[data-type="${next}"]`)?.focus();
   }

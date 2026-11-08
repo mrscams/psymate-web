@@ -35,7 +35,10 @@ function setup(api: Api = {}) {
       { provide: EntriesApi, useValue: mock },
       { provide: ToastService, useValue: toast },
       { provide: SessionStore, useValue: { me: signal({ id: 'u-claire' }) } },
-      { provide: PreferencesStore, useValue: { defaultVisibility: signal('clinical') } },
+      {
+        provide: PreferencesStore,
+        useValue: { defaultVisibility: signal('clinical'), medicationVisible: signal(true) },
+      },
     ],
   });
   return { api: mock, toast };

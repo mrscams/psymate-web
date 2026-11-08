@@ -46,6 +46,7 @@ async function render(api: Partial<Api> = {}, url = '/patients/p-marie', duratio
         useValue: {
           defaultDurationMin: signal(durationMin),
           defaultVisibility: signal('clinical'),
+          medicationVisible: signal(true),
         },
       },
       // L'éditeur d'entrée (features/entries) lit l'API par HttpClient : requêtes en attente ici.

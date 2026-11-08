@@ -24,7 +24,10 @@ async function render(versions: ReturnType<typeof vi.fn>) {
         },
       },
       { provide: SessionStore, useValue: { me: signal({ id: 'u-claire' }) } },
-      { provide: PreferencesStore, useValue: { defaultVisibility: signal('clinical') } },
+      {
+        provide: PreferencesStore,
+        useValue: { defaultVisibility: signal('clinical'), medicationVisible: signal(true) },
+      },
     ],
   });
   void TestBed.inject(EntryEditorStore).open({ patientId: 'p-marie', entryId: 'e-1' });

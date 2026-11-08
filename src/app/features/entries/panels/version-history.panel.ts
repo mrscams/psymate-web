@@ -29,7 +29,6 @@ export class VersionHistoryPanel {
   private readonly locale = inject(LOCALE_ID);
 
   protected readonly title = $localize`:Titre du panneau d'historique@@entries.history.title:Historique des versions`;
-  protected readonly headingId = 'pm-entry-history-heading';
 
   protected readonly state = computed(() => stateKind(this.store.versions()));
   protected readonly retry: StateAction = {

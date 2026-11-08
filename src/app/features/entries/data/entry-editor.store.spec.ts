@@ -18,7 +18,11 @@ import { emptyDraft, EntryDraft } from './entry.model';
 
 type Api = Partial<Record<keyof EntriesApi, ReturnType<typeof vi.fn>>>;
 
-function setup(api: Api = {}, me = signal<{ id: string } | null>({ id: 'u-claire' })) {
+function setup(
+  api: Api = {},
+  me = signal<{ id: string } | null>({ id: 'u-claire' }),
+  medicationVisible = true,
+) {
   const mock: Api = {
     emotions: vi.fn().mockResolvedValue(EMOTIONS),
     tagLabels: vi.fn().mockResolvedValue(TAGS),
@@ -39,7 +43,13 @@ function setup(api: Api = {}, me = signal<{ id: string } | null>({ id: 'u-claire
     providers: [
       { provide: EntriesApi, useValue: mock },
       { provide: SessionStore, useValue: { me } },
-      { provide: PreferencesStore, useValue: { defaultVisibility: signal('clinical') } },
+      {
+        provide: PreferencesStore,
+        useValue: {
+          defaultVisibility: signal('clinical'),
+          medicationVisible: signal(medicationVisible),
+        },
+      },
     ],
   });
   return { store: TestBed.inject(EntryEditorStore), api: mock, me };
@@ -74,6 +84,21 @@ describe('EntryEditorStore', () => {
     await store.open({ patientId: 'p-marie' });
     expect(api.emotions).toHaveBeenCalledTimes(1);
     expect(api.currentSession).toHaveBeenCalledTimes(2);
+  });
+
+  it('types proposés : Médicament masqué si entryTypes.medicationVisible = false, sauf en correction d’un médicament', async () => {
+    const { store } = setup({}, undefined, false);
+    await store.open({ patientId: 'p-marie' });
+    expect(store.types()).toEqual(['note', 'event', 'situation', 'feeling', 'session']);
+
+    TestBed.resetTestingModule();
+    const edit = setup(
+      { get: vi.fn().mockResolvedValue(entry({ type: 'medication' })) },
+      undefined,
+      false,
+    ).store;
+    await edit.open({ patientId: 'p-marie', entryId: 'e-1' });
+    expect(edit.types()).toContain('medication');
   });
 
   it('sans séance (404 NO_CURRENT_SESSION) : séance courante null, liste vide', async () => {

@@ -26,7 +26,6 @@ import {
   firstInvalidField,
 } from '../../../shared/forms';
 import {
-  entryTypeLabel,
   SidePanelComponent,
   SidePanelService,
   StateAction,
@@ -204,7 +203,7 @@ export class EntryEditorPanel {
     effect(() => {
       const current = this.store.currentSession();
       const form = untracked(this.form);
-      if (!current || !form) return;
+      if (!current || !form || this.editing) return;
       const control = form.controls.sessionId;
       if (!control.value && control.pristine) control.setValue(current.id);
     });
@@ -232,10 +231,6 @@ export class EntryEditorPanel {
       if (!this.saved && form) this.store.keepDraft(this.key, formDraft(form));
       this.store.closed(this.key);
     });
-  }
-
-  protected typeLabel(): string {
-    return entryTypeLabel(this.type());
   }
 
   protected modalityName(modality: SessionModality): string {

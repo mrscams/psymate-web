@@ -4,7 +4,7 @@ import { patchState, signalStore, withComputed, withMethods, withState } from '@
 import { SessionStore } from '../../../core/auth';
 import { ApiProblem, asProblem } from '../../../core/http';
 import { PreferencesStore } from '../../../core/preferences';
-import { EntryType } from '../../../shared/ui';
+import { ENTRY_TYPES, EntryType } from '../../../shared/ui';
 import { failed, idle, Loadable, loaded, loading } from '../../../shared/util';
 import { EntriesApi } from './entries.api';
 import {
@@ -100,7 +100,18 @@ export function draftKey(target: { patientId: string; entryId?: string | null })
 export const EntryEditorStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withComputed((store, session = inject(SessionStore)) => ({
+  withComputed((store, session = inject(SessionStore), prefs = inject(PreferencesStore)) => ({
+    /**
+     * Types proposés : Médicament seulement si la préférence entryTypes.medicationVisible l'autorise
+     * (fiche 14 ; psychiatre par défaut). Une correction garde le type de l'entrée, verrouillé.
+     */
+    types: computed<EntryType[]>(() => {
+      const entry = store.entry().data;
+      if (prefs.medicationVisible() !== false || entry?.type === 'medication') {
+        return [...ENTRY_TYPES];
+      }
+      return ENTRY_TYPES.filter((type) => type !== 'medication');
+    }),
     key: computed(() => {
       const patientId = store.patientId();
       return patientId ? draftKey({ patientId, entryId: store.entryId() }) : null;

@@ -35,7 +35,7 @@
           i18n="Bloc du type d'entrée@@entries.type.label"
           >Type</span
         >
-        <pm-type-chips formControlName="type" [label]="typeLabelGroup" />
+        <pm-type-chips formControlName="type" [label]="typeLabelGroup" [types]="store.types()" />
       </div>
 
       <!-- 4. Champ principal selon le type -->
