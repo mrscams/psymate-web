@@ -282,12 +282,14 @@ test('« Corriger » puis retour, « Voir dans le graphe » puis retour : positi
 
   // Voir dans le graphe : onglet 3 centré sur l'entrée ; retour par la touche 2.
   await card.click({ button: 'right' });
+  // Position au départ de l'onglet (le focus pris par la carte au clic a pu la faire glisser).
+  const leftAt = await t.viewport.evaluate((el) => el.scrollTop);
   await t.menu.getByRole('menuitem', { name: /^Voir dans le graphe/ }).click();
   await expect(page).toHaveURL(new RegExp(`/patients/${volume}/graph\\?root=`));
   await page.keyboard.press('2');
   await expect(page).toHaveURL(new RegExp(`/patients/${volume}/timeline$`));
   await expect(t.card(anchor)).toBeInViewport();
-  await expect.poll(() => t.viewport.evaluate((el) => el.scrollTop)).toBe(scrollTop);
+  await expect.poll(() => t.viewport.evaluate((el) => el.scrollTop)).toBe(leftAt);
   await expect(t.card(anchor)).toHaveClass(/\bselected\b/);
   await expectNoAxeViolations(page);
 });
