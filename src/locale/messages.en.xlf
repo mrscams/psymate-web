@@ -21727,6 +21727,15 @@
         </context-group>
         <note priority="1" from="description">Résumé lu de l&apos;aperçu, points bloquants</note>
       </trans-unit>
+      <trans-unit id="patients.shortcut.filter" datatype="html">
+        <source>Filtrer mes <x id="subjects" equiv-text="subjects"/></source>
+        <target state="translated">Filter my <x id="subjects" equiv-text="subjects"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis, liste des patients</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

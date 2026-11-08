@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 
 import { SessionApi } from '../../../core/auth/data/session.api';
+import { ShortcutService } from '../../../core/shortcuts';
 import { SubjectVocabulary } from '../../../core/i18n';
 import { PatientApi } from '../data/patient.api';
 import { OMAR, patient, TAGS } from '../data/patient.fixtures';
@@ -125,6 +126,14 @@ describe('PatientListPage', () => {
     expect(router.navigateByUrl).not.toHaveBeenCalled();
     key('n');
     expect(router.navigateByUrl).toHaveBeenCalledWith('/patients/nouveau');
+  });
+
+  it('aide des raccourcis : N et / décrits pour la liste (planche 29 §6)', async () => {
+    await render({ list: vi.fn().mockResolvedValue({ items: [patient()], nextCursor: null }) });
+    const active = TestBed.inject(ShortcutService).active();
+    const about = (k: string) => active.find((s) => s.key === k)?.description;
+    expect(about('n')).toBe('Nouveau patient');
+    expect(about('/')).toBe('Filtrer mes patients');
   });
 
   it('filtre : envoyé après la pause de frappe, Entrée ouvre le premier résultat, surlignage', async () => {
