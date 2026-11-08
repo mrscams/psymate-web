@@ -4,15 +4,18 @@
 
 import { ENTRY_TYPES, EntryType } from '../../../shared/ui';
 
-/** Mode d'affichage : état A (chronologique) ou état B (par séance). La vue décennie est M3-04. */
+/**
+ * Mode d'affichage : état A (chronologique) ou état B (par séance). La vue décennie (état C, M3-04)
+ * est le zoom maximal du mode chronologique (TimelineDecadeStore), pas un mode à part.
+ */
 export type TimelineMode = 'chronological' | 'session';
 
 /** Valeurs de la préférence `timeline.groupBy` (fiche 14). */
 export type TimelineGroupBy = 'session' | 'month' | 'chronological';
 
 /**
- * Mode de la préférence. `month` (état C forcé, vue décennie) n'existe qu'avec M3-04 : d'ici là il
- * s'affiche en chronologique, sans réécrire la préférence.
+ * Mode de la préférence. `month` (état C forcé, vue décennie) est le mode chronologique dont
+ * l'agrégat est forcé (TimelineFiltersStore.forcedDecade), sans réécrire la préférence.
  */
 export function modeOfGroupBy(groupBy: TimelineGroupBy | null | undefined): TimelineMode {
   return groupBy === 'chronological' || groupBy === 'month' ? 'chronological' : 'session';

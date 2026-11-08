@@ -19264,6 +19264,371 @@
           <context context-type="linenumber">30,33</context>
         </context-group>
         <note priority="1" from="description">Bloc en cours de relecture</note>
+      <trans-unit id="timeline.decade.back" datatype="html">
+        <source>Revenir à l&apos;agrégat par mois</source>
+        <target state="translated">Back to the monthly aggregate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">223</context>
+        </context-group>
+        <note priority="1" from="description">Aide du raccourci Échap après un double-clic sur un mois</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.error.title" datatype="html">
+        <source>Impossible de charger l&apos;agrégat par mois</source>
+        <target state="translated">Could not load the monthly aggregate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;erreur de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.empty.title" datatype="html">
+        <source>Aucune entrée sur cette plage</source>
+        <target state="translated">No entries in this range</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">17,18</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la vue décennie vide</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.empty.message" datatype="html">
+        <source>Élargissez la période, ou revenez au détail avec le zoom avant (+).</source>
+        <target state="translated">Widen the period, or go back to the detail with zoom in (+).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">19,20</context>
+        </context-group>
+        <note priority="1" from="description">Texte de la vue décennie vide</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.badge" datatype="html">
+        <source>Agrégé par mois · double-clic pour zoomer</source>
+        <target state="translated">Aggregated by month · double-click to zoom</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">33,36</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="4960777832908633315" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {} =1 {1 an} other {<x id="INTERPOLATION"/> ans}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =0 {} =1 {1 year} other {<x id="INTERPOLATION"/> years}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">39,40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="timeline.decade.duration" datatype="html">
+        <source><x id="ICU" equiv-text="{years(), plural, =0 {} =1 {1 an} other {{{ years() }} ans}}" xid="1947371557718191958"/> <x id="ICU_1" equiv-text="{extraMonths(), plural, =0 {} =1 {1 mois} other {{{ extraMonths() }} mois}}" xid="7074674437236966134"/></source>
+        <target state="translated"><x id="ICU" equiv-text="{years(), plural, =0 {} =1 {1 an} other {{{ years() }} ans}}" xid="1947371557718191958"/> <x id="ICU_1" equiv-text="{extraMonths(), plural, =0 {} =1 {1 mois} other {{{ extraMonths() }} mois}}" xid="7074674437236966134"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">39,42</context>
+        </context-group>
+        <note priority="1" from="description">Durée de la plage de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="5494495173981718140" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {} =1 {1 mois} other {<x id="INTERPOLATION"/> mois}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =0 {} =1 {1 month} other {<x id="INTERPOLATION"/> months}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="timeline.decade.facts" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ monthCount() }}"/> mois · <x id="INTERPOLATION_1" equiv-text="{{ filled().length }}"/> non vides · <x id="ICU" equiv-text="{entryCount(), plural, =1 {1 entrée} other {{{ entryText() }} entrées}}" xid="7995041518217856986"/></source>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ monthCount() }}"/> months · <x id="INTERPOLATION_1" equiv-text="{{ filled().length }}"/> non-empty · <x id="ICU" equiv-text="{entryCount(), plural, =1 {1 entrée} other {{{ entryText() }} entrées}}" xid="7995041518217856986"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">43,46</context>
+        </context-group>
+        <note priority="1" from="description">Comptes de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="5193809995596915518" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 entry} other {<x id="INTERPOLATION"/> entries}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">44,45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="timeline.decade.outside" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 entrée hors plage} other {<x id="INTERPOLATION"/> entrées hors plage}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 entry outside the range} other {<x id="INTERPOLATION"/> entries outside the range}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">49,54</context>
+        </context-group>
+        <note priority="1" from="description">Entrées hors de la plage de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.partial" datatype="html">
+        <source> Les filtres d&apos;émotion, de tag et de brouillon ne s&apos;appliquent pas à l&apos;agrégat par mois ; les types et la période, si. </source>
+        <target state="translated"> Emotion, tag and draft filters do not apply to the monthly aggregate; types and period do. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">60,66</context>
+        </context-group>
+        <note priority="1" from="description">Filtres sans effet sur la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.legend" datatype="html">
+        <source>Légende</source>
+        <target state="translated">Legend</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">186</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la légende de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.legend.intensity" datatype="html">
+        <source>Intensité moyenne des ressentis (axe droit, 0–10)</source>
+        <target state="translated">Average intensity of feelings (right axis, 0–10)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">195,199</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la courbe d&apos;intensité</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.legend.bands" datatype="html">
+        <source>Situations longues</source>
+        <target state="translated">Long situations</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">203,208</context>
+        </context-group>
+        <note priority="1" from="description">Légende des bandes de situations</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.hint" datatype="html">
+        <source> Survoler un mois : détail des comptes · double-clic : timeline au zoom « semaine » sur ce mois · Échap : retour </source>
+        <target state="translated"> Hover a month: counts · double-click: timeline at “week” zoom on that month · Esc: back </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">209,214</context>
+        </context-group>
+        <note priority="1" from="description">Aide des gestes de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.table" datatype="html">
+        <source> Tableau des mois non vides (<x id="INTERPOLATION" equiv-text="{{ filled().length }}"/>) · Entrée ouvre le détail d&apos;un mois </source>
+        <target state="translated"> Table of non-empty months (<x id="INTERPOLATION" equiv-text="{{ filled().length }}"/>) · Enter opens a month in detail </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">215,216</context>
+        </context-group>
+        <note priority="1" from="description">Ouverture du tableau des mois de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.caption" datatype="html">
+        <source> Nombre d&apos;entrées par type et intensité moyenne des ressentis, mois par mois </source>
+        <target state="translated"> Number of entries by type and average intensity of feelings, month by month </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">223,227</context>
+        </context-group>
+        <note priority="1" from="description">Légende du tableau des mois de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.month" datatype="html">
+        <source> Mois </source>
+        <target state="translated"> Month </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">228,230</context>
+        </context-group>
+        <note priority="1" from="description">Colonne des mois de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.average" datatype="html">
+        <source> Intensité moyenne </source>
+        <target state="translated"> Average intensity </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">238,241</context>
+        </context-group>
+        <note priority="1" from="description">Colonne de l&apos;intensité moyenne, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.noFeeling" datatype="html">
+        <source>aucun ressenti</source>
+        <target state="translated">no feelings</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
+          <context context-type="linenumber">268,271</context>
+        </context-group>
+        <note priority="1" from="description">Mois sans ressenti, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.followStart" datatype="html">
+        <source>début du suivi · <x id="month" equiv-text="month"/></source>
+        <target state="translated">start of follow-up · <x id="month" equiv-text="month"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+        <note priority="1" from="description">Marqueur de début du suivi sur l&apos;agrégat par mois</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.chartLabel" datatype="html">
+        <source>Agrégats par mois de <x id="start" equiv-text="start"/> à <x id="end" equiv-text="end"/> : <x id="entries" equiv-text="entries"/> entrées sur <x id="months" equiv-text="months"/> mois non vides, barres empilées par type.</source>
+        <target state="translated">Monthly aggregates from <x id="start" equiv-text="start"/> to <x id="end" equiv-text="end"/>: <x id="entries" equiv-text="entries"/> entries over <x id="months" equiv-text="months"/> non-empty months, bars stacked by type.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+        <note priority="1" from="description">Résumé du graphique de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.chartIntensity" datatype="html">
+        <source>Intensité moyenne des ressentis de <x id="min" equiv-text="min"/> à <x id="max" equiv-text="max"/><x id="trend" equiv-text="trend"/>.</source>
+        <target state="translated">Average intensity of feelings from <x id="min" equiv-text="min"/> to <x id="max" equiv-text="max"/><x id="trend" equiv-text="trend"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">170</context>
+        </context-group>
+        <note priority="1" from="description">Résumé de la courbe d&apos;intensité de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.chartBands" datatype="html">
+        <source>Situations longues : <x id="count" equiv-text="count"/>.</source>
+        <target state="translated">Long situations: <x id="count" equiv-text="count"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <note priority="1" from="description">Nombre de bandes de situations longues de la vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.trend.up" datatype="html">
+        <source>, en hausse</source>
+        <target state="translated">, rising</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">186</context>
+        </context-group>
+        <note priority="1" from="description">Tendance de l&apos;intensité moyenne, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.trend.down" datatype="html">
+        <source>, en baisse</source>
+        <target state="translated">, falling</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+        <note priority="1" from="description">Tendance de l&apos;intensité moyenne, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.trend.flat" datatype="html">
+        <source>, stable</source>
+        <target state="translated">, stable</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">190</context>
+        </context-group>
+        <note priority="1" from="description">Tendance de l&apos;intensité moyenne, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.openMonth" datatype="html">
+        <source><x id="month" equiv-text="label"/>, voir le détail</source>
+        <target state="translated"><x id="month" equiv-text="label"/>, see the detail</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">205</context>
+        </context-group>
+        <note priority="1" from="description">Nom du bouton qui ouvre un mois en détail, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.monthEmpty" datatype="html">
+        <source><x id="month" equiv-text="label"/> : aucune entrée</source>
+        <target state="translated"><x id="month" equiv-text="label"/>: no entries</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">216</context>
+        </context-group>
+        <note priority="1" from="description">Info-bulle d&apos;un mois vide, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.monthCounts" datatype="html">
+        <source><x id="month" equiv-text="label"/> : <x id="counts" equiv-text="counts"/></source>
+        <target state="translated"><x id="month" equiv-text="label"/>: <x id="counts" equiv-text="counts"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">223</context>
+        </context-group>
+        <note priority="1" from="description">Info-bulle d&apos;un mois, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.monthTitle" datatype="html">
+        <source><x id="month" equiv-text="label"/> : <x id="counts" equiv-text="counts"/> · intensité moyenne <x id="value" equiv-text="value"/></source>
+        <target state="translated"><x id="month" equiv-text="label"/>: <x id="counts" equiv-text="counts"/> · average intensity <x id="value" equiv-text="value"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+        <note priority="1" from="description">Info-bulle d&apos;un mois avec intensité, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.bandOngoing" datatype="html">
+        <source><x id="name" equiv-text="name"/> · en cours</source>
+        <target state="translated"><x id="name" equiv-text="name"/> · ongoing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
+          <context context-type="linenumber">242</context>
+        </context-group>
+        <note priority="1" from="description">Libellé d&apos;une bande de situation en cours, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.zoom.decade" datatype="html">
+        <source>Décennie</source>
+        <target state="translated">Decade</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">223</context>
+        </context-group>
+        <note priority="1" from="description">Granularité du zoom de la timeline en vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.type.note" datatype="html">
+        <source>Notes</source>
+        <target state="translated">Notes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+        <note priority="1" from="description">Type d&apos;entrée au pluriel, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.type.event" datatype="html">
+        <source>Événements</source>
+        <target state="translated">Events</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+        <note priority="1" from="description">Type d&apos;entrée au pluriel, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.type.situation" datatype="html">
+        <source>Situations</source>
+        <target state="translated">Situations</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">234</context>
+        </context-group>
+        <note priority="1" from="description">Type d&apos;entrée au pluriel, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.type.feeling" datatype="html">
+        <source>Ressentis</source>
+        <target state="translated">Feelings</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">236</context>
+        </context-group>
+        <note priority="1" from="description">Type d&apos;entrée au pluriel, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.type.session" datatype="html">
+        <source>Séances</source>
+        <target state="translated">Sessions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">238</context>
+        </context-group>
+        <note priority="1" from="description">Type d&apos;entrée au pluriel, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.decade.type.medication" datatype="html">
+        <source>Médicaments</source>
+        <target state="translated">Medications</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">240</context>
+        </context-group>
+        <note priority="1" from="description">Type d&apos;entrée au pluriel, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.mode.decadeHint" datatype="html">
+        <source>Revenez au détail (zoom avant, +) pour regrouper par séance</source>
+        <target state="translated">Go back to the detail (zoom in, +) to group by session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-mode.component.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <note priority="1" from="description">Aide du bouton Par séance désactivé en vue décennie</note>
       </trans-unit>
     </body>
   </file>

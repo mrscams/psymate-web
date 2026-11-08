@@ -21,7 +21,7 @@ import {
 const url = (params: Record<string, string | string[]>) => convertToParamMap(params);
 
 describe('timeline-filters.model', () => {
-  it('modeOfGroupBy : session par défaut, month affiché en chronologique jusqu’à M3-04', () => {
+  it('modeOfGroupBy : session par défaut, month affiché en chronologique (agrégat forcé)', () => {
     expect(modeOfGroupBy('session')).toBe('session');
     expect(modeOfGroupBy('chronological')).toBe('chronological');
     expect(modeOfGroupBy('month')).toBe('chronological');

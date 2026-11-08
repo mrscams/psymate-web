@@ -5,6 +5,7 @@
 import { ApiProblem } from '../../../core/http';
 import { EntryType } from '../../../shared/ui';
 import { Occurred } from '../../../shared/util';
+import { DecadeSnapshot } from './timeline-decade.model';
 import { TimelineFilterQuery, TimelineFiltersSnapshot } from './timeline-filters.model';
 
 /** Familles d'émotions du catalogue (pastilles, jamais en aplat). */
@@ -112,6 +113,8 @@ export interface TimelineSnapshot {
   offset?: number;
   /** Filtres et mode de l'onglet (M3-03), rangés par la page avec le reste. */
   filters?: TimelineFiltersSnapshot;
+  /** Vue décennie (M3-04) : résumé, choix de zoom, retour d'un double-clic sur un mois. */
+  decade?: DecadeSnapshot;
 }
 
 // ---------------------------------------------------------------- fenêtres et créneaux

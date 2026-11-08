@@ -8,9 +8,16 @@ import { of } from 'rxjs';
 import { PreferencesStore } from '../../../core/preferences';
 import { ToastService } from '../../../shared/ui';
 import { PatientShellStore } from '../../patient-shell';
+import { DecadeRange, TimelinePeriod } from '../data/timeline-decade.model';
 import { NO_FILTERS } from '../data/timeline-filters.model';
 import { TimelineApi } from '../data/timeline.api';
-import { items, pagedTimeline, timelineItem, timelinePage } from '../data/timeline.fixtures';
+import {
+  items,
+  monthlySummary,
+  pagedTimeline,
+  timelineItem,
+  timelinePage,
+} from '../data/timeline.fixtures';
 import { TimelinePage as Page, TimelineQuery, TimelineSnapshot } from '../data/timeline.model';
 import { TimelinePage } from './timeline.page';
 
@@ -49,12 +56,18 @@ async function render(
   page: (id: string, query: TimelineQuery) => Promise<Page>,
   shell = shellMock(),
   focus: string | null = null,
-  options: { prefs?: ReturnType<typeof prefsMock>; params?: Record<string, string> } = {},
+  options: {
+    prefs?: ReturnType<typeof prefsMock>;
+    params?: Record<string, string>;
+    summary?: (id: string, range: DecadeRange) => Promise<TimelinePeriod[]>;
+  } = {},
 ) {
   const prefs = options.prefs ?? prefsMock();
   const params = { ...(options.params ?? {}), ...(focus ? { focus } : {}) };
   const paramMap = convertToParamMap(params);
   const sessionDetail = vi.fn(() => never());
+  // Résumé mensuel : deux ans de suivi par défaut (la timeline reste au détail).
+  const summary = vi.fn(options.summary ?? (() => Promise.resolve(monthlySummary(24))));
   TestBed.configureTestingModule({
     providers: [
       provideRouter([]),
@@ -75,6 +88,7 @@ async function render(
           sessions: vi.fn().mockResolvedValue({}),
           emotions: vi.fn().mockResolvedValue({ labels: { anxiety: 'Anxiété' }, families: {} }),
           sessionDetail,
+          summary,
         },
       },
       { provide: PreferencesStore, useValue: prefs },
@@ -86,7 +100,7 @@ async function render(
   const fixture = TestBed.createComponent(TimelinePage);
   await flush();
   await fixture.whenStable();
-  return { fixture, el: fixture.nativeElement as HTMLElement, shell, prefs };
+  return { fixture, el: fixture.nativeElement as HTMLElement, shell, prefs, summary };
 }
 
 function text(el: Element | null | undefined): string {
@@ -155,12 +169,12 @@ describe('TimelinePage', () => {
     expect(el.querySelector('[role="toolbar"]')).not.toBeNull();
   });
 
-  it('zoom (+, −) : granularité affichée, aucune requête', async () => {
+  it('zoom (+, −) : granularité affichée, aucune requête ; − après « Mois » → agrégat', async () => {
     const { pages } = pagedTimeline(500);
     const page = vi.fn((_id: string, query: TimelineQuery) =>
       Promise.resolve(pages.get(query.cursor)!),
     );
-    const { el, fixture } = await render(page);
+    const { el, fixture, summary } = await render(page);
     const calls = page.mock.calls.length;
     expect(text(el.querySelector('.granularity'))).toBe('Semaine');
     document.body.dispatchEvent(
@@ -173,9 +187,99 @@ describe('TimelinePage', () => {
     out.click();
     await fixture.whenStable();
     expect(text(el.querySelector('.granularity'))).toBe('Mois');
+    expect(out.disabled).toBe(false);
+    // Zoom maximal : l'agrégat par mois (déjà lu), − n'a plus de cran, + revient au mois.
+    out.click();
+    await fixture.whenStable();
+    expect(el.querySelector('pm-timeline-decade svg[role="img"]')).not.toBeNull();
+    expect(text(el.querySelector('.granularity'))).toBe('Décennie');
     expect(out.disabled).toBe(true);
+    el.querySelectorAll<HTMLButtonElement>('.zoom-button')[1].click();
+    await fixture.whenStable();
+    expect(el.querySelector('pm-timeline-decade')).toBeNull();
+    expect(text(el.querySelector('.granularity'))).toBe('Mois');
     await flush();
     expect(page.mock.calls.length).toBe(calls);
+    expect(summary).toHaveBeenCalledOnce();
+  });
+
+  it('plus de 3 ans : bascule automatique sur l’agrégat ; « Par séance » désactivé', async () => {
+    const { el } = await render(
+      () => Promise.resolve(timelinePage({ items: items(3) })),
+      shellMock(),
+      null,
+      { summary: () => Promise.resolve(monthlySummary(60)) },
+    );
+    expect(el.querySelector('cdk-virtual-scroll-viewport')).toBeNull();
+    expect(text(el.querySelector('pm-timeline-decade .badge'))).toBe(
+      'Agrégé par mois · double-clic pour zoomer',
+    );
+    expect(el.querySelectorAll('pm-timeline-decade rect.hit')).toHaveLength(60);
+    expect(el.querySelector<HTMLButtonElement>('button[data-mode="session"]')!.disabled).toBe(true);
+    expect(el.querySelector('section.timeline')!.classList.contains('fill')).toBe(false);
+  });
+
+  it('résumé en attente : chargement, pas de bascule à vue', async () => {
+    const { el } = await render(
+      () => Promise.resolve(timelinePage({ items: items(3) })),
+      shellMock(),
+      null,
+      { summary: () => never() },
+    );
+    expect(el.querySelector('pm-state [aria-busy="true"]')).not.toBeNull();
+    expect(el.querySelector('cdk-virtual-scroll-viewport')).toBeNull();
+  });
+
+  it('double-clic sur un mois : détail du mois au zoom « semaine », Échap revient à l’agrégat', async () => {
+    const page = vi.fn<(id: string, query: TimelineQuery) => Promise<Page>>(() =>
+      Promise.resolve(timelinePage({ items: items(3) })),
+    );
+    const summary = (_id: string, range: DecadeRange) =>
+      Promise.resolve(range.fromDay ? monthlySummary(1, '2025-03') : monthlySummary(60));
+    const { el, fixture } = await render(page, shellMock(), null, { summary });
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    el.querySelector('rect.hit[data-month="2025-03"]')!.dispatchEvent(
+      new MouseEvent('dblclick', { bubbles: true }),
+    );
+    await flush();
+    await fixture.whenStable();
+    expect(page).toHaveBeenLastCalledWith(
+      'p-1',
+      expect.objectContaining({
+        from: new Date(2025, 2, 1).toISOString(),
+        to: new Date(2025, 3, 1).toISOString(),
+      }),
+    );
+    expect(navigate).toHaveBeenLastCalledWith(
+      [],
+      expect.objectContaining({
+        queryParams: expect.objectContaining({ from: '2025-03-01', to: '2025-03-31' }),
+      }),
+    );
+    expect(el.querySelector('pm-timeline-decade')).toBeNull();
+    expect(el.querySelectorAll('pm-timeline-card')).toHaveLength(3);
+    expect(text(el.querySelector('.granularity'))).toBe('Semaine');
+
+    document.body.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+    );
+    await flush();
+    await fixture.whenStable();
+    expect(page).toHaveBeenLastCalledWith('p-1', expect.objectContaining({ from: null, to: null }));
+    expect(el.querySelector('pm-timeline-decade svg[role="img"]')).not.toBeNull();
+  });
+
+  it('préférence timeline.groupBy = month : l’agrégat même sur deux ans', async () => {
+    const { el } = await render(
+      () => Promise.resolve(timelinePage({ items: items(3) })),
+      shellMock(),
+      null,
+      { prefs: prefsMock('month') },
+    );
+    expect(el.querySelector('pm-timeline-decade svg[role="img"]')).not.toBeNull();
+    expect(
+      el.querySelector('button[data-mode="chronological"]')?.getAttribute('aria-pressed'),
+    ).toBe('true');
   });
 
   it('menu « Voir dans le graphe » : onglet 3 centré sur l’entrée', async () => {

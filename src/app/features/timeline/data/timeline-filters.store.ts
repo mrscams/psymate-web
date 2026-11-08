@@ -52,6 +52,16 @@ export const TimelineFiltersStore = signalStore(
     mode: computed<TimelineMode>(
       () => store.visitMode() ?? store.modeOverride() ?? modeOfGroupBy(prefs.timelineGroupBy()),
     ),
+    /**
+     * Préférence `timeline.groupBy = month` (fiche 03 : état C forcé) : la vue décennie s'affiche
+     * même sur une plage courte, tant qu'aucun mode n'est imposé (URL, visite, échec d'écriture).
+     */
+    forcedDecade: computed(
+      () =>
+        store.visitMode() === null &&
+        store.modeOverride() === null &&
+        prefs.timelineGroupBy() === 'month',
+    ),
     /** Au moins un filtre posé (« Effacer les filtres » dans l'état vide). */
     active: computed(() => hasFilters(store.filters())),
     /** Paramètres d'URL à jour (une valeur par défaut retire le paramètre). */

@@ -5,7 +5,8 @@ import { modeLabel } from './timeline-labels';
 
 /**
  * Bascule Chronologique | Par séance de la timeline (fiche 03 ; touche M dans la page) : groupe
- * segmenté de deux boutons `aria-pressed`, le mode actif sur le fond primaire teinté.
+ * segmenté de deux boutons `aria-pressed`, le mode actif sur le fond primaire teinté. En vue
+ * décennie (état C, purement chronologique), « Par séance » est désactivé (fiche 03, écarts).
  */
 @Component({
   selector: 'pm-timeline-mode',
@@ -22,6 +23,8 @@ import { modeLabel } from './timeline-labels';
           aria-keyshortcuts="M"
           [attr.aria-pressed]="mode() === option"
           [attr.data-mode]="option"
+          [disabled]="option === 'session' && sessionDisabled()"
+          [attr.title]="option === 'session' && sessionDisabled() ? decadeHint : null"
           (click)="choose(option)"
         >
           {{ label(option) }}
@@ -50,6 +53,11 @@ import { modeLabel } from './timeline-labels';
         border-left: 1px solid var(--border-strong);
       }
 
+      &:disabled {
+        color: var(--text-disabled);
+        cursor: default;
+      }
+
       &[aria-pressed='true'] {
         background: var(--primary-tint);
         color: var(--primary-hover);
@@ -65,11 +73,16 @@ import { modeLabel } from './timeline-labels';
 })
 export class TimelineModeComponent {
   readonly mode = input.required<TimelineMode>();
+  /** Vue décennie affichée : « Par séance » attend le retour au détail (zoom avant). */
+  readonly sessionDisabled = input(false);
   readonly modeChange = output<TimelineMode>();
+
+  protected readonly decadeHint = $localize`:Aide du bouton Par séance désactivé en vue décennie@@timeline.mode.decadeHint:Revenez au détail (zoom avant, +) pour regrouper par séance`;
 
   protected readonly modes: readonly TimelineMode[] = ['chronological', 'session'];
 
   protected choose(option: TimelineMode): void {
+    if (option === 'session' && this.sessionDisabled()) return;
     if (option !== this.mode()) this.modeChange.emit(option);
   }
 
