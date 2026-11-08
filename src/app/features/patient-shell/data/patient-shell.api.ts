@@ -88,8 +88,15 @@ function toPatient(dto: PatientDto): ShellPatient {
     flags: (dto.flags ?? [])
       .map((flag) => flag.kind as FlagKind | undefined)
       .filter((kind): kind is FlagKind => !!kind),
-    archivedAt: dto.archivedAt ?? null,
+    sessionModality: toModality(dto.followUp?.['modality']),
   };
+}
+
+const SESSION_MODALITIES: readonly SessionModality[] = ['in_person', 'video', 'phone', 'email'];
+
+/** followUp.modality (texte libre côté contrat) si c'est une modalité de séance, sinon présentiel. */
+function toModality(value: unknown): SessionModality {
+  return SESSION_MODALITIES.find((modality) => modality === value) ?? 'in_person';
 }
 
 function toSession(dto: EntryDto): ShellSession {

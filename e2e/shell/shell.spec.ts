@@ -15,8 +15,12 @@ import { expectNoAxeViolations } from '../support/axe';
 
 const API = 'http://localhost:8080';
 
-async function createPatient(api: APIRequestContext, displayName: string): Promise<string> {
-  const response = await api.post(`${API}/api/patients`, { data: { displayName } });
+async function createPatient(
+  api: APIRequestContext,
+  displayName: string,
+  followUp?: Record<string, string>,
+): Promise<string> {
+  const response = await api.post(`${API}/api/patients`, { data: { displayName, followUp } });
   expect(response.status(), await response.text()).toBe(201);
   return ((await response.json()) as { id: string }).id;
 }
@@ -93,7 +97,8 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
 }) => {
   test.setTimeout(60_000);
   const account = await createAccount(request, 'm1-07.seance', 'psychologist');
-  const id = await createPatient(request, 'Louis R.');
+  // Suivi en visio (fiche 16) : les séances démarrées ici le sont en visio.
+  const id = await createPatient(request, 'Louis R.', { modality: 'video' });
   await signIn(page, account);
 
   await page.goto(`/fr/patients/${id}`);
@@ -109,9 +114,11 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
   );
   await h.start.click();
   expect((await started).status()).toBe(201);
+  expect((await started).request().postDataJSON()).toEqual({ modality: 'video' });
   await expect(h.session).toContainText('en cours depuis');
   await expect(h.close).toBeVisible();
-  await expect(h.close).toBeFocused();
+  // B3 flux 3 et 6 : après Démarrer, la barre de capture prend le focus pour noter au clavier.
+  await expect(h.capture).toBeFocused();
   await expect(page.getByText('Séance démarrée.')).toBeVisible();
   expect(await page.evaluate(() => (window as unknown as { m107?: number }).m107)).toBe(1);
   await expectNoAxeViolations(page);
@@ -174,6 +181,7 @@ test('Clôturer propose la durée de la préférence (45 min)', async ({ page, r
   await dialog.getByRole('button', { name: 'Clôturer', exact: true }).click();
   expect((await closed).request().postDataJSON()).toEqual({ durationMin: 45 });
   await expect(h.session).toContainText('Dernière séance :');
+  await expectNoAxeViolations(page);
 });
 
 test("patient d'un autre praticien : 403 PATIENT_FORBIDDEN, état erreur du shell, pas de redirection", async ({

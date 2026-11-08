@@ -140,6 +140,9 @@ describe('PatientShellPage', () => {
     expect(el.querySelector('.session-text')?.classList.contains('current')).toBe(true);
     expect(text(el.querySelector('.session-text'))).toContain('en cours depuis');
     expect(el.querySelector('button.close-session')).not.toBeNull();
+    await vi.waitFor(() =>
+      expect(document.activeElement).toBe(el.querySelector('pm-capture-bar input')),
+    );
   });
 
   it('Clôturer : dialogue avec la durée des préférences, POST close, « Dernière séance »', async () => {

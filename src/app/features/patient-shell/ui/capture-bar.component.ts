@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, output, signal } from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  Injector,
+  output,
+  signal,
+} from '@angular/core';
 
 /**
  * Barre de capture rapide repliée (fiche 00 §2, B5) : le champ « Noter quelque chose… » posé dans
@@ -58,6 +67,16 @@ export class CaptureBarComponent {
   readonly capture = output<string>();
 
   protected readonly text = signal('');
+
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly injector = inject(Injector);
+
+  /** Donne le focus au champ après le prochain rendu (l'en-tête vient de changer). */
+  focus(): void {
+    afterNextRender(() => this.host.nativeElement.querySelector('input')?.focus(), {
+      injector: this.injector,
+    });
+  }
 
   protected submit(event: Event): void {
     event.preventDefault();

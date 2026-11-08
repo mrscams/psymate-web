@@ -21,7 +21,8 @@ export interface ShellPatient {
   /** Début du suivi : followUp.since (fiche 16), sinon la création du dossier. */
   followedSince: string | null;
   flags: FlagKind[];
-  archivedAt: string | null;
+  /** Modalité habituelle (followUp.modality, fiche 16) : celle des séances démarrées ici. */
+  sessionModality: SessionModality;
 }
 
 /**

@@ -41,9 +41,9 @@ export function tabLabel(tab: ShellTab): string {
 }
 
 /**
- * Un dossier qui ne s'ouvrira pas en réessayant (403 PATIENT_FORBIDDEN, 404) : titre et message de
- * l'état erreur du shell, sans « Réessayer » ni redirection. Null pour les autres problèmes, que
- * l'en-tête montre avec « Réessayer ».
+ * Un dossier qui ne s'ouvrira pas en réessayant (403 PATIENT_FORBIDDEN, 404, 400 sur un :id qui
+ * n'est pas un UUID) : titre et message de l'état erreur du shell, sans « Réessayer » ni
+ * redirection. Null pour les autres problèmes, que l'en-tête montre avec « Réessayer ».
  */
 export function finalLoadError(
   problem: ApiProblem | null,
@@ -55,6 +55,7 @@ export function finalLoadError(
         message: $localize`:Erreur du dossier, patient d'un autre praticien@@patientShell.error.forbidden.message:Il appartient à un autre praticien : vous ne pouvez ni le lire ni y écrire.`,
       };
     case 'PATIENT_NOT_FOUND':
+    case 'MALFORMED_REQUEST':
       return {
         title: $localize`:Erreur du dossier introuvable@@patientShell.error.notFound.title:Ce dossier n'existe pas`,
         message: $localize`:Erreur du dossier introuvable@@patientShell.error.notFound.message:Le lien est peut-être incomplet ; retrouvez le dossier depuis la liste.`,

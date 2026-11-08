@@ -1,14 +1,13 @@
 import {
-  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
-  ElementRef,
   effect,
   inject,
   Injector,
   input,
   untracked,
+  viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
@@ -53,8 +52,8 @@ export class PatientShellPage {
   private readonly toast = inject(ToastService);
   private readonly shortcuts = inject(ShortcutService);
   private readonly injector = inject(Injector);
-  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly route = inject(ActivatedRoute);
+  private readonly captureBar = viewChild(CaptureBarComponent);
 
   private readonly navigated = toSignal(
     inject(Router).events.pipe(filter((event) => event instanceof NavigationEnd)),
@@ -109,7 +108,7 @@ export class PatientShellPage {
       this.toast.success(
         $localize`:Toast après le démarrage d'une séance@@patientShell.session.started:Séance démarrée.`,
       );
-      this.focusSessionButton('.close-session');
+      this.focusCapture();
     } else if (this.store.actionProblem()) {
       this.toast.warning(sessionProblemText(this.store.actionProblem()));
     }
@@ -133,7 +132,7 @@ export class PatientShellPage {
       this.toast.success(
         $localize`:Toast après la clôture d'une séance@@patientShell.session.closed:Séance clôturée.`,
       );
-      this.focusSessionButton('.start-session');
+      this.focusCapture();
     } else if (result === 'conflict') {
       this.toast.warning(sessionProblemText(this.store.actionProblem()));
     }
@@ -141,13 +140,10 @@ export class PatientShellPage {
   }
 
   /**
-   * Démarrer et Clôturer s'échangent dans l'en-tête : le focus suit le bouton qui remplace celui
-   * qu'on vient d'utiliser, au lieu de retomber sur le corps de la page.
+   * Après Démarrer ou Clôturer, le bouton utilisé disparaît de l'en-tête : la barre de capture prend
+   * le focus (B3 flux 3 et 6 : on démarre la séance puis on note au clavier).
    */
-  private focusSessionButton(selector: string): void {
-    afterNextRender(
-      () => this.host.nativeElement.querySelector<HTMLButtonElement>(selector)?.focus(),
-      { injector: this.injector },
-    );
+  private focusCapture(): void {
+    this.captureBar()?.focus();
   }
 }

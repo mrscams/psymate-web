@@ -5774,7 +5774,7 @@
         <source>Séance démarrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <note priority="1" from="description">Toast après le démarrage d&apos;une séance</note>
       </trans-unit>
@@ -5782,7 +5782,7 @@
         <source>Séance clôturée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <note priority="1" from="description">Toast après la clôture d&apos;une séance</note>
       </trans-unit>
@@ -5895,7 +5895,7 @@
         <source>Noter quelque chose</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/capture-bar.component.ts</context>
-          <context context-type="linenumber">16,21</context>
+          <context context-type="linenumber">25,30</context>
         </context-group>
         <note priority="1" from="description">Étiquette de la barre de capture</note>
       </trans-unit>
@@ -5903,7 +5903,7 @@
         <source>Noter quelque chose…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/capture-bar.component.ts</context>
-          <context context-type="linenumber">23,24</context>
+          <context context-type="linenumber">32,33</context>
         </context-group>
         <note priority="1" from="description">Texte indicatif de la barre de capture</note>
       </trans-unit>
@@ -5983,7 +5983,7 @@
         <source>Ce dossier n&apos;existe pas</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <note priority="1" from="description">Erreur du dossier introuvable</note>
       </trans-unit>
@@ -5991,7 +5991,7 @@
         <source>Le lien est peut-être incomplet ; retrouvez le dossier depuis la liste.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <note priority="1" from="description">Erreur du dossier introuvable</note>
       </trans-unit>
@@ -5999,7 +5999,7 @@
         <source>Une séance est déjà ouverte pour ce dossier : l&apos;en-tête a été mis à jour.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <note priority="1" from="description">Toast, séance déjà ouverte ailleurs</note>
       </trans-unit>
@@ -6007,7 +6007,7 @@
         <source>Cette séance est déjà clôturée : l&apos;en-tête a été mis à jour.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <note priority="1" from="description">Toast, séance déjà clôturée ailleurs</note>
       </trans-unit>
@@ -6015,7 +6015,7 @@
         <source>L&apos;action sur la séance n&apos;a pas abouti. Réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <note priority="1" from="description">Toast, action de séance échouée</note>
       </trans-unit>

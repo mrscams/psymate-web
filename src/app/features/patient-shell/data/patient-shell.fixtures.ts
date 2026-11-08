@@ -9,7 +9,7 @@ export function shellPatient(overrides: Partial<ShellPatient> = {}): ShellPatien
     birthDate: '1992-05-10',
     followedSince: '2025-03-04',
     flags: ['watch'],
-    archivedAt: null,
+    sessionModality: 'in_person',
     ...overrides,
   };
 }

@@ -120,12 +120,16 @@ export const PatientShellStore = signalStore(
 
       refreshSession,
 
-      /** POST …/sessions/start : l'en-tête passe « en cours » avec la réponse, sans rechargement. */
-      startSession(modality: SessionModality = 'in_person'): Promise<boolean> {
+      /**
+       * POST …/sessions/start : l'en-tête passe « en cours » avec la réponse, sans rechargement.
+       * Modalité : celle du suivi (fiche 16), présentiel à défaut.
+       */
+      startSession(modality?: SessionModality): Promise<boolean> {
         const id = store.patientId();
-        if (!id || store.currentSession()) return Promise.resolve(false);
+        const patient = store.patient();
+        if (!id || !patient || store.currentSession()) return Promise.resolve(false);
         return act(async () => {
-          const session = await api.start(id, modality);
+          const session = await api.start(id, modality ?? patient.sessionModality);
           if (store.patientId() === id) patchState(store, { currentSession: session });
         });
       },

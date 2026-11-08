@@ -125,6 +125,19 @@ describe('PatientShellStore', () => {
       expect(store.lastSession()?.id).toBe('s-closed');
     });
 
+    it.each([
+      ['modalité du suivi (fiche 16) : visio', 'video', undefined, 'video'],
+      ['modalité donnée explicitement', 'video', 'phone', 'phone'],
+    ] as const)('startSession, %s', async (_label, followed, given, sent) => {
+      const start = vi.fn().mockResolvedValue(openSession());
+      const store = await loaded(null, {
+        patient: vi.fn().mockResolvedValue(shellPatient({ sessionModality: followed })),
+        start,
+      });
+      await store.startSession(given);
+      expect(start).toHaveBeenCalledWith('p-marie', sent);
+    });
+
     it('startSession 409 SESSION_ALREADY_OPEN → problème et séance relue', async () => {
       const current = vi.fn().mockResolvedValueOnce(null).mockResolvedValueOnce(openSession());
       const store = await loaded(null, {
