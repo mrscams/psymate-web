@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T13:56:45.613Z",
+  "task": "M4-05",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Vue d'ensemble complète (/patients/:id/overview) : tuiles, courbe de tendance ECharts 6.1.0 en @defer (tokens, thème relu), À surveiller vers timeline filtrée, situations → graph?root=, traitement, dernières séances → timeline par séance, bascule Vue (overview.view, Simple = Récit : bientôt) et fenêtre 30 j/90 j/1 an (overview.window) ; relecture après écriture via PatientShellStore.revision/noteWrite ; 3 états par bloc ; revue traitée.",
+  "notes": "Écarts fiche ↔ contrat : pas de stale (jamais obsolète) donc pas de Recalculer, pied « Dernière mise à jour de la synthèse » ; pas d'alertes calculées (bloc À surveiller · à compléter, données serveur seulement) ; tuiles adaptées au contrat ; fenêtre 12m affichée 1 an. Hors overview : patient-shell (store revision/noteWrite, page : bascule, noteWrite à la fermeture de l'éditeur d'entrée et de lien, route lazy, tab-placeholder supprimé), e2e/shell. Dépendance : echarts 6.1.0 (zrender 6.1.0, tslib 2.3.0). Bundle initial 905,49 → 905,58 kB ; echarts-setup 531 kB paresseux. Mesure GET overview : à froid 12-36 ms, médiane à chaud 14-168 ms sous charge (< 200 ms). Tests : 1211 Vitest, e2e flux-6-vue-ensemble 7 tests.",
+  "next": "M4-07 (vue simple) réutilise la bascule, overview.window et echarts-setup ; suivis : exporter mode/drafts/emotion depuis l'index timeline (non-dérive), ThemeService n'applique pas onChange système (core).",
+  "branch": "claude/epic-meninsky-290e2b",
+  "checkout": "epic-meninsky-290e2b"
+}
