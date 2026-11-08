@@ -36,17 +36,14 @@
     <!-- Préférences du compte pas encore lues : ni vue simple ni vue complète (pas de flash). -->
     <pm-state kind="loading" skeleton="block" [lines]="4" />
   } @else if (mode() === 'simple') {
-    <!-- Vue simple « Récit » : M4-07. État provisoire en attendant. -->
-    <div class="simple">
-      <pm-state
-        kind="empty"
-        title="Récit : bientôt"
-        i18n-title="Titre de l'état provisoire de la vue simple@@overview.simple.title"
-        message="La vue simple, un récit du dossier en quelques phrases, arrive bientôt. La vue complète présente dès maintenant les chiffres, la tendance et les dernières séances."
-        i18n-message="Texte de l'état provisoire de la vue simple@@overview.simple.message"
-        [action]="simpleAction"
-      />
-    </div>
+    <!-- Vue simple « Récit » (défaut, B8) : même synthèse, autre présentation. -->
+    <pm-overview-simple
+      [overview]="store.overview()"
+      [patientId]="patientId()"
+      [refreshing]="store.refreshing()"
+      (retry)="refresh()"
+      (entrySelected)="openEntry($event)"
+    />
   } @else {
     <div class="grid">
       <!-- Résumé chiffré : quatre tuiles. -->

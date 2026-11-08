@@ -3,6 +3,7 @@
 // calcul clinique ici : la projection est calculée par le serveur ; le web ne fait que la présenter.
 // Aucun texte ici (les libellés sont dans ui/overview-labels.ts).
 import { EntryType } from '../../../shared/ui';
+import { Loadable, StateKind } from '../../../shared/util';
 
 /** Fenêtre de la tendance, des émotions dominantes et des ressentis (préférence overview.window). */
 export type OverviewWindow = '30d' | '90d' | '12m';
@@ -215,6 +216,31 @@ export const isMedicationsEmpty = (view: OverviewView): boolean =>
 export const isSessionsEmpty = (view: OverviewView): boolean => view.recentSessions.length === 0;
 export const isEmotionsEmpty = (view: OverviewView): boolean => view.emotions.length === 0;
 export const isActivityEmpty = (view: OverviewView): boolean => view.recentActivity.length === 0;
+
+// Vides des blocs de la vue simple « Récit » (B8, M4-07).
+export const isBriefEmpty = (view: OverviewView): boolean =>
+  view.narrative.sentences.length === 0 && view.narrative.attention === null;
+export const isFeelingsEmpty = (view: OverviewView): boolean => view.feelings.points.length === 0;
+export const isSinceEmpty = (view: OverviewView): boolean =>
+  view.sinceLastSession.entries.length === 0;
+export const isFrameEmpty = (view: OverviewView): boolean =>
+  view.facts.followedSince === null && view.facts.sessionCount === 0 && view.facts.flags.length === 0;
+export const isTodoEmpty = (view: OverviewView): boolean =>
+  view.drafts.count === 0 && view.drafts.openSession === null;
+
+/**
+ * L'un des trois états d'un bloc, ou null pour son contenu. Une synthèse déjà lue reste affichée
+ * pendant une relecture ou après son échec (bandeau à part) : un bloc vide reste vide, il ne
+ * repasse pas au squelette. Sans synthèse : squelette, puis erreur.
+ */
+export function blockState(
+  overview: Loadable<OverviewView>,
+  isEmpty: (view: OverviewView) => boolean,
+): StateKind | null {
+  const { status, data } = overview;
+  if (data) return isEmpty(data) ? 'empty' : null;
+  return status === 'error' ? 'error' : 'loading';
+}
 
 /**
  * Paramètres de la timeline (features/timeline) pour les liens « alerte → timeline filtrée » et

@@ -1,0 +1,406 @@
+<div class="columns">
+  <!-- Colonne de lecture. -->
+  <div class="main">
+    <!-- En bref : les phrases du serveur, telles quelles (une par paragraphe), et le point d'attention. -->
+    <pm-overview-block
+      class="brief-block"
+      heading="En bref"
+      i18n-heading="Titre du résumé rédigé de la vue simple@@overview.simple.brief.heading"
+      [state]="state('brief')"
+      emptyTitle="Pas encore de résumé"
+      i18n-emptyTitle="Bloc En bref vide@@overview.simple.brief.empty.title"
+      emptyMessage="Le résumé apparaîtra ici quand le dossier aura des entrées."
+      i18n-emptyMessage="Bloc En bref vide@@overview.simple.brief.empty.message"
+      errorTitle="Résumé indisponible"
+      i18n-errorTitle="Erreur du bloc En bref@@overview.simple.brief.error"
+      [refreshing]="refreshing()"
+      [lines]="4"
+      (retry)="retry.emit()"
+    >
+      <span blockMeta class="meta" i18n="Sous-titre du bloc En bref@@overview.simple.brief.meta"
+        >Assemblé à partir des entrées, par règles, sans IA</span
+      >
+      @if (view(); as v) {
+        @if (v.narrative.sentences.length) {
+          <div class="brief">
+            @for (sentence of v.narrative.sentences; track $index) {
+              <p class="sentence">{{ sentence }}</p>
+            }
+          </div>
+        }
+        @if (v.narrative.attention; as attention) {
+          <p class="attention">
+            <svg class="attention-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M8 2.5 1.8 13.5h12.4L8 2.5zM8 7v3M8 12h.01" />
+            </svg>
+            <span>
+              <strong i18n="Libellé du point d'attention@@overview.simple.attention.label"
+                >Point d'attention :</strong
+              >
+              {{ attention }}
+            </span>
+          </p>
+        }
+      }
+    </pm-overview-block>
+
+    <!-- Les vrais ressentis : graphe à points (ECharts en @defer), légende, données. -->
+    <pm-overview-block
+      [heading]="feelingsHeading()"
+      [state]="state('feelings')"
+      emptyTitle="Pas encore de ressentis sur cette période"
+      i18n-emptyTitle="Bloc des ressentis vide@@overview.simple.feelings.empty.title"
+      emptyMessage="Chaque ressenti noté apparaîtra ici, avec son intensité sur 10."
+      i18n-emptyMessage="Bloc des ressentis vide@@overview.simple.feelings.empty.message"
+      errorTitle="Ressentis indisponibles"
+      i18n-errorTitle="Erreur du bloc des ressentis@@overview.simple.feelings.error"
+      [refreshing]="refreshing()"
+      [lines]="4"
+      (retry)="retry.emit()"
+    >
+      @if (view(); as v) {
+        <pm-overview-feelings [view]="v" (pointSelected)="entrySelected.emit($event)" />
+      }
+    </pm-overview-block>
+
+    <!-- Dernière séance : compte rendu entier (seule la plus récente le porte), puis les précédentes. -->
+    <pm-overview-block
+      heading="Dernière séance"
+      i18n-heading="Titre du bloc dernière séance@@overview.simple.lastSession.heading"
+      [state]="state('lastSession')"
+      emptyTitle="Aucune séance"
+      i18n-emptyTitle="Bloc dernière séance vide@@overview.simple.lastSession.empty.title"
+      emptyMessage="La dernière séance et son compte rendu apparaîtront ici dès la première, démarrée depuis l'en-tête."
+      i18n-emptyMessage="Bloc dernière séance vide@@overview.simple.lastSession.empty.message"
+      errorTitle="Dernière séance indisponible"
+      i18n-errorTitle="Erreur du bloc dernière séance@@overview.simple.lastSession.error"
+      [refreshing]="refreshing()"
+      (retry)="retry.emit()"
+    >
+      <a
+        blockMeta
+        class="meta-link"
+        [routerLink]="['/patients', patientId(), 'timeline']"
+        [queryParams]="sessionsParams"
+        i18n="Lien vers la timeline par séance@@overview.simple.lastSession.all"
+        >Toutes les séances dans la timeline</a
+      >
+      @if (lastSession(); as session) {
+        <p class="session-head">
+          <pm-entry-icon type="session" [size]="14" />
+          <span>{{ heading(session) }}</span>
+        </p>
+        @if (session.title) {
+          <p class="session-title">{{ session.title }}</p>
+        }
+        @if (!session.closedAt) {
+          <p class="muted" i18n="Séance non clôturée@@overview.simple.lastSession.open">
+            Séance en cours, non clôturée.
+          </p>
+        }
+        @if (session.summary) {
+          <p class="summary">{{ session.summary }}</p>
+        } @else {
+          <p class="muted" i18n="Séance sans compte rendu@@overview.simple.lastSession.noSummary">
+            Pas de compte rendu.
+          </p>
+        }
+        <p class="session-foot">
+          <span i18n="Nombre d'entrées de la dernière séance@@overview.simple.lastSession.entryCount"
+            >Noté pendant la séance :
+            {session.entryCount, plural,
+              =0 {aucune entrée}
+              =1 {1 entrée}
+              other {{{session.entryCount}} entrées}
+            }</span
+          >
+          ·
+          <a
+            [routerLink]="['/patients', patientId(), 'timeline']"
+            [queryParams]="sessionParams(session.entryId)"
+            i18n="Lien de la dernière séance vers la timeline@@overview.simple.lastSession.inTimeline"
+            >Voir la séance dans la timeline</a
+          >
+        </p>
+        @if (previousSessions().length) {
+          <div class="previous">
+            <h4 i18n="Sous-titre des séances précédentes@@overview.simple.lastSession.previous">
+              Séances précédentes
+            </h4>
+            <ul>
+              @for (previous of previousSessions(); track previous.entryId) {
+                <li>
+                  <a
+                    [routerLink]="['/patients', patientId(), 'timeline']"
+                    [queryParams]="sessionParams(previous.entryId)"
+                    >{{ day(previous.occurredFrom) }}</a
+                  >
+                  @if (previous.modality) {
+                    <span class="muted"> ({{ modalityLabel(previous.modality) }})</span>
+                  }
+                  @if (previous.summaryFirstLine) {
+                    <span> — {{ previous.summaryFirstLine }}</span>
+                  } @else {
+                    <span
+                      class="muted"
+                      i18n="Séance précédente sans compte rendu@@overview.simple.lastSession.previousNoSummary"
+                    >
+                      — pas de compte rendu</span
+                    >
+                  }
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      }
+    </pm-overview-block>
+
+    <!-- Situations en cours : données structurées du serveur, « Voir dans le graphe ». -->
+    <pm-overview-block
+      heading="Situations en cours"
+      i18n-heading="Titre du bloc situations de la vue simple@@overview.simple.situations.heading"
+      [state]="state('situations')"
+      emptyTitle="Aucune situation en cours"
+      i18n-emptyTitle="Bloc situations vide@@overview.situations.empty.title"
+      emptyMessage="Les situations sans fin connue apparaîtront ici, avec leurs ressentis liés."
+      i18n-emptyMessage="Bloc situations vide@@overview.situations.empty.message"
+      errorTitle="Situations indisponibles"
+      i18n-errorTitle="Erreur du bloc situations@@overview.situations.error"
+      [refreshing]="refreshing()"
+      (retry)="retry.emit()"
+    >
+      @if (view(); as v) {
+        <ul class="situations">
+          @for (situation of v.situations; track situation.entryId) {
+            <li>
+              <span class="situation-key" aria-hidden="true"></span>
+              <span>
+                <strong>{{ situation.title ?? untitledSituation }}</strong>
+                @if (situation.since) {
+                  <span i18n="Début d'une situation en cours@@overview.simple.situations.since"
+                    >, depuis le {{ day(situation.since) }}</span
+                  >
+                }
+                <span i18n="Ressentis liés à une situation@@overview.simple.situations.feelings">
+                  —
+                  {situation.linkedFeelingCount, plural,
+                    =0 {aucun ressenti lié}
+                    =1 {1 ressenti lié}
+                    other {{{situation.linkedFeelingCount}} ressentis liés}
+                  }</span
+                >
+                @if (situation.averageIntensity !== null) {
+                  <span
+                    i18n="Intensité moyenne d'une situation@@overview.simple.situations.average"
+                  >
+                    · intensité moyenne {{ intensity(situation.averageIntensity) }}/10</span
+                  >
+                }
+                <a
+                  class="situation-link"
+                  [routerLink]="['/patients', patientId(), 'graph']"
+                  [queryParams]="graphParams(situation.entryId)"
+                  i18n="Lien d'une situation vers le graphe centré sur elle@@overview.situations.graph"
+                  >Voir dans le graphe<span class="sr-only">
+                    : {{ situation.title ?? untitledSituation }}</span
+                  ></a
+                >
+              </span>
+            </li>
+          }
+        </ul>
+      }
+    </pm-overview-block>
+  </div>
+
+  <!-- Colonne latérale : repères. -->
+  <div class="side">
+    <!-- Depuis la dernière séance : entrées postérieures à la dernière séance clôturée. -->
+    <pm-overview-block
+      [heading]="sinceHeading()"
+      [state]="state('since')"
+      emptyTitle="Rien de noté depuis"
+      i18n-emptyTitle="Bloc depuis la dernière séance vide@@overview.simple.since.empty.title"
+      emptyMessage="Les entrées notées après la dernière séance clôturée apparaîtront ici."
+      i18n-emptyMessage="Bloc depuis la dernière séance vide@@overview.simple.since.empty.message"
+      errorTitle="Entrées indisponibles"
+      i18n-errorTitle="Erreur du bloc depuis la dernière séance@@overview.simple.since.error"
+      [refreshing]="refreshing()"
+      (retry)="retry.emit()"
+    >
+      @if (view(); as v) {
+        <ul class="since">
+          @for (item of v.sinceLastSession.entries; track item.entryId) {
+            <li>
+              <pm-entry-icon [type]="item.type" [size]="14" [labelled]="true" />
+              <span class="since-body">
+                <span class="when">{{ day(item.occurredFrom) }}</span>
+                <a
+                  [routerLink]="[]"
+                  [queryParams]="entryParams(item.entryId)"
+                  queryParamsHandling="merge"
+                  >{{ item.title ?? typeLabel(item.type) }}</a
+                >
+                @if (item.status === 'draft') {
+                  <span class="badge" i18n="Entrée en brouillon@@overview.activity.draft"
+                    >brouillon</span
+                  >
+                }
+              </span>
+            </li>
+          }
+        </ul>
+      }
+    </pm-overview-block>
+
+    <!--
+      Emplacement réservé (B9) : le futur bloc « Reçu du patient » (lot envoyé par l'application du
+      patient avant la séance) se placera ici, entre « Depuis la dernière séance » et la suite.
+      Rien n'est dessiné en V1.
+    -->
+
+    <!-- Traitement en cours. -->
+    <pm-overview-block
+      heading="Traitement"
+      i18n-heading="Titre du bloc traitement de la vue simple@@overview.simple.medications.heading"
+      [state]="state('medications')"
+      emptyTitle="Aucun traitement en cours"
+      i18n-emptyTitle="Bloc traitement vide@@overview.medications.empty.title"
+      emptyMessage="Les médicaments notés dans le dossier, sans date de fin passée, apparaîtront ici."
+      i18n-emptyMessage="Bloc traitement vide@@overview.medications.empty.message"
+      errorTitle="Traitement indisponible"
+      i18n-errorTitle="Erreur du bloc traitement@@overview.medications.error"
+      [refreshing]="refreshing()"
+      (retry)="retry.emit()"
+    >
+      @if (view(); as v) {
+        <ul class="medications">
+          @for (medication of v.facts.medications; track medication.entryId) {
+            <li>
+              <span class="capsule" aria-hidden="true"></span>
+              <span>
+                <strong
+                  >{{ medication.molecule }}
+                  @if (medication.dosage) {
+                    {{ medication.dosage }}
+                  }</strong
+                >
+                @if (medication.frequency) {
+                  · {{ medication.frequency }}
+                }
+                @if (medication.periodFrom ?? medication.since; as from) {
+                  <span i18n="Début d'un médicament@@overview.medications.since">
+                    · depuis le {{ day(from) }}</span
+                  >
+                }
+                @if (medication.prescriber) {
+                  <span i18n="Prescripteur d'un médicament@@overview.medications.prescriber">
+                    · prescrit par {{ medication.prescriber }}</span
+                  >
+                }
+              </span>
+            </li>
+          }
+        </ul>
+      }
+    </pm-overview-block>
+
+    <!-- Cadre du suivi : début du suivi, nombre de séances, drapeaux actifs. -->
+    <pm-overview-block
+      heading="Cadre du suivi"
+      i18n-heading="Titre du bloc cadre du suivi@@overview.simple.frame.heading"
+      [state]="state('frame')"
+      emptyTitle="Cadre non renseigné"
+      i18n-emptyTitle="Bloc cadre du suivi vide@@overview.simple.frame.empty.title"
+      emptyMessage="Le début du suivi, les séances et les drapeaux du dossier apparaîtront ici."
+      i18n-emptyMessage="Bloc cadre du suivi vide@@overview.simple.frame.empty.message"
+      errorTitle="Cadre indisponible"
+      i18n-errorTitle="Erreur du bloc cadre du suivi@@overview.simple.frame.error"
+      [refreshing]="refreshing()"
+      (retry)="retry.emit()"
+    >
+      <a
+        blockMeta
+        class="meta-link"
+        [routerLink]="['/patients', patientId(), 'fiche']"
+        i18n="Lien vers la fiche depuis le cadre du suivi@@overview.simple.frame.sheetLink"
+        >Modifier la fiche</a
+      >
+      @if (view(); as v) {
+        <ul class="frame">
+          @if (v.facts.followedSince) {
+            <li i18n="Début du suivi@@overview.simple.frame.since">
+              Suivi depuis le {{ day(v.facts.followedSince) }}
+            </li>
+          }
+          <li i18n="Nombre de séances du dossier@@overview.simple.frame.sessions">
+            {v.facts.sessionCount, plural,
+              =0 {Aucune séance}
+              =1 {1 séance au total}
+              other {{{v.facts.sessionCount}} séances au total}
+            }
+          </li>
+          @for (flag of v.facts.flags; track $index) {
+            <li class="flag">
+              <span i18n="Drapeau du dossier dans le cadre du suivi@@overview.simple.frame.flag"
+                >Drapeau « {{ flagLabel(flag.kind) }} »</span
+              >
+              @if (flag.setAt) {
+                <span i18n="Date de pose d'un drapeau@@overview.attention.flagSince"
+                  >posé le {{ day(flag.setAt) }}</span
+                >
+              }
+              @if (flag.reason) {
+                <span class="muted"> : {{ flag.reason }}</span>
+              }
+            </li>
+          }
+        </ul>
+      }
+    </pm-overview-block>
+
+    <!-- À compléter : brouillons et séance non clôturée → timeline filtrée. -->
+    <pm-overview-block
+      heading="À compléter"
+      i18n-heading="Titre du bloc à compléter@@overview.simple.todo.heading"
+      [state]="state('todo')"
+      emptyTitle="Rien à compléter"
+      i18n-emptyTitle="Bloc à compléter vide@@overview.simple.todo.empty.title"
+      emptyMessage="Les brouillons et les séances non clôturées apparaîtront ici."
+      i18n-emptyMessage="Bloc à compléter vide@@overview.simple.todo.empty.message"
+      errorTitle="À compléter indisponible"
+      i18n-errorTitle="Erreur du bloc à compléter@@overview.simple.todo.error"
+      [refreshing]="refreshing()"
+      (retry)="retry.emit()"
+    >
+      @if (view(); as v) {
+        <ul class="todo">
+          @if (v.drafts.count) {
+            <li>
+              <a
+                [routerLink]="['/patients', patientId(), 'timeline']"
+                [queryParams]="draftParams"
+                i18n="Brouillons à relire, lien vers la timeline filtrée@@overview.simple.todo.drafts"
+                >{v.drafts.count, plural,
+                  =1 {1 brouillon à relire}
+                  other {{{v.drafts.count}} brouillons à relire}
+                }</a
+              >
+            </li>
+          }
+          @if (v.drafts.openSession; as open) {
+            <li>
+              <a
+                [routerLink]="['/patients', patientId(), 'timeline']"
+                [queryParams]="sessionParams(open.entryId)"
+                i18n="Séance à clôturer, lien vers la timeline par séance@@overview.simple.todo.openSession"
+                >Séance du {{ day(open.startedAt) }} à clôturer</a
+              >
+            </li>
+          }
+        </ul>
+      }
+    </pm-overview-block>
+  </div>
+</div>

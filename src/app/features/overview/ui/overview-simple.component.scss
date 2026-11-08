@@ -1,0 +1,193 @@
+:host {
+  display: block;
+}
+// Maquette 02b : une colonne de lecture large et une colonne de repères, qui passe dessous quand la
+// place manque. Chaque colonne peut recevoir un bloc de plus sans réorganisation (B9).
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+}
+.main,
+.side {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.main {
+  flex: 999 1 560px;
+}
+.side {
+  flex: 1 1 300px;
+}
+p,
+ul {
+  margin: 0;
+}
+ul {
+  padding: 0;
+  list-style: none;
+}
+a {
+  color: var(--primary);
+}
+a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.meta,
+.muted,
+.when {
+  font: var(--mat-sys-body-small);
+  color: var(--text-secondary);
+}
+.meta-link {
+  font: var(--mat-sys-label-medium);
+}
+// En bref : texte de lecture, une phrase du serveur par paragraphe.
+.brief {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 72ch;
+}
+.sentence {
+  font: var(--mat-sys-body-large);
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+.attention {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--warning-bg);
+  color: var(--warning);
+  font: var(--mat-sys-body-medium);
+}
+.attention strong {
+  font-weight: 600;
+}
+.attention-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  margin-top: 2px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+// Dernière séance.
+.session-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: var(--mat-sys-title-small);
+  color: var(--text-primary);
+}
+.session-title {
+  font: var(--mat-sys-body-large);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.summary {
+  max-width: 72ch;
+  white-space: pre-line;
+  font: var(--mat-sys-body-large);
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+.session-foot {
+  font: var(--mat-sys-body-medium);
+  color: var(--text-secondary);
+}
+.previous {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--surface-sunken);
+  font: var(--mat-sys-body-medium);
+  color: var(--text-primary);
+}
+.previous h4 {
+  margin: 0;
+  font: var(--mat-sys-label-medium);
+  color: var(--text-secondary);
+}
+.previous ul {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+// Situations en cours.
+.situations {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font: var(--mat-sys-body-large);
+  color: var(--text-primary);
+}
+.situations li,
+.medications li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.situations strong,
+.medications strong {
+  font-weight: 600;
+}
+.situation-key {
+  width: 14px;
+  height: 6px;
+  flex: 0 0 auto;
+  margin-top: 10px;
+  border-radius: 2px;
+  background: var(--entry-situation);
+}
+.situation-link {
+  margin-left: 8px;
+  font: var(--mat-sys-label-large);
+}
+// Colonne latérale.
+.since,
+.medications,
+.frame,
+.todo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font: var(--mat-sys-body-medium);
+  color: var(--text-primary);
+}
+.since li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.since-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.badge {
+  align-self: flex-start;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--warning-bg);
+  color: var(--warning);
+  font: var(--mat-sys-label-small);
+}
+.capsule {
+  width: 16px;
+  height: 8px;
+  flex: 0 0 auto;
+  margin-top: 7px;
+  border-radius: 999px;
+  background: var(--entry-medication);
+}

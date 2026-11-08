@@ -21,6 +21,7 @@ import {
 import { StateKind } from '../../../shared/util';
 import { PatientShellStore } from '../../patient-shell';
 import {
+  blockState,
   EmotionFamily,
   GRAPH_ROOT_PARAM,
   isActivityEmpty,
@@ -50,6 +51,7 @@ import {
   windowLongLabel,
 } from '../ui/overview-labels';
 import { OverviewSessionsComponent } from '../ui/overview-sessions.component';
+import { OverviewSimpleComponent } from '../ui/overview-simple.component';
 import { OverviewTrendComponent } from '../ui/overview-trend.component';
 
 /** Ce que l'onglet range dans la mémoire du dossier (B2) : les séances dépliées. */
@@ -89,7 +91,8 @@ const EMPTY: Record<Block, (view: OverviewView) => boolean> = {
  * actives (« Voir dans le graphe » → graph?root=), traitement en cours, dernières séances (timeline
  * par séance dépliée), émotions dominantes, activité récente, heure de la dernière mise à jour
  * (computedAt ; le serveur recalcule une projection en retard, la réponse n'est jamais obsolète).
- * Vue simple (préférence overview.view = simple) : M4-07 ; un état provisoire ici.
+ * Vue simple « Récit » (préférence overview.view = simple, le défaut) : pm-overview-simple (M4-07),
+ * sur la même synthèse ; la bascule entre les deux vues ne relit rien.
  * La fenêtre (30 j / 90 j / 1 an) est la préférence overview.window, relue par l'API (?window=).
  */
 @Component({
@@ -98,6 +101,7 @@ const EMPTY: Record<Block, (view: OverviewView) => boolean> = {
     EntryIconComponent,
     OverviewBlockComponent,
     OverviewSessionsComponent,
+    OverviewSimpleComponent,
     OverviewTrendComponent,
     RouterLink,
     StateComponent,
@@ -187,11 +191,6 @@ export class OverviewPage {
     return map;
   });
 
-  protected readonly simpleAction: StateAction = {
-    label: $localize`:Action de l'état provisoire de la vue simple@@overview.simple.action:Afficher la vue complète`,
-    handler: () => void this.setMode('complete'),
-  };
-
   constructor() {
     // Patient du dossier et fenêtre (préférence lue) → GET …/overview?window= (rien si déjà lu).
     effect(() => {
@@ -213,15 +212,9 @@ export class OverviewPage {
     });
   }
 
-  /**
-   * L'un des trois états d'un bloc, ou null pour son contenu. Une synthèse déjà lue reste affichée
-   * pendant une relecture ou après son échec (bandeau à part) : un bloc vide reste vide, il ne
-   * repasse pas au squelette. Sans synthèse : squelette, puis erreur.
-   */
+  /** L'un des trois états d'un bloc, ou null pour son contenu (blockState). */
   protected state(block: Block): StateKind | null {
-    const { status, data } = this.store.overview();
-    if (data) return EMPTY[block](data) ? 'empty' : null;
-    return status === 'error' ? 'error' : 'loading';
+    return blockState(this.store.overview(), EMPTY[block]);
   }
 
   protected windowLabel(window: OverviewWindow): string {
@@ -277,11 +270,6 @@ export class OverviewPage {
   protected async setWindow(window: OverviewWindow): Promise<void> {
     if (this.window() === window) return;
     const problem = await this.prefs.set('overview.window', window);
-    if (problem) this.toasts.warning(saveFailedMessage(problem));
-  }
-
-  protected async setMode(mode: 'simple' | 'complete'): Promise<void> {
-    const problem = await this.prefs.set('overview.view', mode);
     if (problem) this.toasts.warning(saveFailedMessage(problem));
   }
 

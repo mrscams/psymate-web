@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
 
 import { EntryIconComponent } from '../../../shared/ui';
 import { RecentSession, TIMELINE_PARAMS } from '../data/overview.model';
-import { formatLongDay, modalityLabel, sessionKindLabel } from './overview-labels';
+import { sessionHeading } from './overview-labels';
 
 /**
  * Dernières séances (fiche 02, B3 flux 6 : « un clic sur la dernière séance déplie ce qui y a été
@@ -170,16 +170,7 @@ export class OverviewSessionsComponent {
   private readonly locale = inject(LOCALE_ID);
 
   protected heading(session: RecentSession): string {
-    const parts: string[] = [];
-    parts.push(session.occurredFrom ? formatLongDay(session.occurredFrom, this.locale) : '—');
-    if (session.kind !== 'session') parts.push(sessionKindLabel(session.kind));
-    if (session.durationMin !== null) {
-      parts.push(
-        $localize`:Durée d'une séance@@overview.sessions.duration:${session.durationMin}:minutes: min`,
-      );
-    }
-    if (session.modality) parts.push(modalityLabel(session.modality));
-    return parts.join(' · ');
+    return sessionHeading(session, this.locale);
   }
 
   protected toggle(id: string): void {

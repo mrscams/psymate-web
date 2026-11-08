@@ -4,8 +4,10 @@ import { ApiProblem } from '../../../core/http';
 import {
   EmotionFamily,
   FlagKind,
+  OverviewFeelings,
   OverviewTrend,
   OverviewWindow,
+  RecentSession,
   SessionKind,
   SessionModality,
 } from '../data/overview.model';
@@ -124,6 +126,23 @@ export function formatLongDay(value: string, locale: string): string {
   }).format(date);
 }
 
+/**
+ * En-tête d'une séance : « samedi 17 octobre 2026 · 50 min · Présentiel » (nature si ce n'est pas
+ * une séance ordinaire). Des libellés et des valeurs, aucune phrase.
+ */
+export function sessionHeading(session: RecentSession, locale: string): string {
+  const parts: string[] = [];
+  parts.push(session.occurredFrom ? formatLongDay(session.occurredFrom, locale) : '—');
+  if (session.kind !== 'session') parts.push(sessionKindLabel(session.kind));
+  if (session.durationMin !== null) {
+    parts.push(
+      $localize`:Durée d'une séance@@overview.sessions.duration:${session.durationMin}:minutes: min`,
+    );
+  }
+  if (session.modality) parts.push(modalityLabel(session.modality));
+  return parts.join(' · ');
+}
+
 /** Date-heure ISO → « 8 nov. 2026, 14:32 » dans le fuseau du praticien. */
 export function formatDateTime(value: string, locale: string): string {
   const date = new Date(value);
@@ -182,6 +201,36 @@ export function trendSummary(
     ' ' +
     counts
   );
+}
+
+/**
+ * Description du graphe des ressentis réels pour les lecteurs d'écran (fiche 02 « Accessibilité »,
+ * comme la courbe de tendance) : fenêtre, puis pour chaque émotion son nombre de ressentis et ses
+ * intensités extrêmes, et les nombres de séances et de repères de médicament. Des valeurs posées
+ * dans des libellés : aucune interprétation (ni « monte » ni « baisse », qui sont du serveur).
+ */
+export function feelingsSummary(feelings: OverviewFeelings, window: OverviewWindow): string {
+  const period = windowLongLabel(window);
+  const parts = feelings.series
+    .map((series) => {
+      const values = feelings.points
+        .filter((p) => p.emotionCode === series.emotionCode)
+        .map((p) => p.intensity);
+      if (!values.length) return null;
+      const count = values.length;
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const label = series.label;
+      return min === max
+        ? $localize`:Description d'une émotion du graphe, intensité unique@@overview.simple.feelings.summary.one:${label}:emotion: (ressentis : ${count}:count:) à ${min}:value: sur 10`
+        : $localize`:Description d'une émotion du graphe@@overview.simple.feelings.summary.range:${label}:emotion: (ressentis : ${count}:count:) de ${min}:min: à ${max}:max: sur 10`;
+    })
+    .filter((part): part is string => part !== null);
+  const sessions = feelings.ticks.length;
+  const medications = feelings.markers.length;
+  const head = $localize`:Description du graphe des ressentis@@overview.simple.feelings.summary:Ressentis notés sur ${period}:period:, une valeur par point`;
+  const counts = $localize`:Description du graphe des ressentis, comptes@@overview.simple.feelings.summary.counts:Jours de séance : ${sessions}:sessions: ; repères de médicament : ${medications}:medications:.`;
+  return `${head} : ${parts.join(' ; ')}. ${counts}`;
 }
 
 /** Toast quand une bascule (vue, fenêtre) n'a pas pu s'enregistrer : la valeur serveur revient. */
