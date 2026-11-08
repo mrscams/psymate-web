@@ -128,6 +128,10 @@ test.describe('éditeur d’entrée', () => {
     expect(JSON.stringify(body)).not.toMatch(/authorType|submissionId/);
     expect(((await response.json()) as { sessionId: string }).sessionId).toBe(sessionId);
     await expect(page.getByText('Entrée enregistrée.')).toBeVisible();
+    // axe après la mesure (le chronomètre ne compte que la saisie) : panneau rouvert sur l'entrée.
+    await page.keyboard.press('n');
+    await settled(editor(page).dialog);
+    await expectNoAxeViolations(page);
   });
 
   test('Échap conserve le brouillon, N le retrouve ; Ctrl+S crée l’entrée en brouillon', async ({

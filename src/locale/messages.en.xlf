@@ -14398,24 +14398,6 @@
         </context-group>
         <note priority="1" from="description">Marque d&apos;une émotion personnalisée</note>
       </trans-unit>
-      <trans-unit id="entries.emotion.loading" datatype="html">
-        <source> Chargement des émotions… </source>
-        <target state="translated">Loading emotions…</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">77,82</context>
-        </context-group>
-        <note priority="1" from="description">Chargement des émotions</note>
-      </trans-unit>
-      <trans-unit id="entries.emotion.empty" datatype="html">
-        <source> Aucune émotion ne correspond. Tapez un libellé pour en créer une. </source>
-        <target state="translated">No emotion matches. Type a label to create one.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">87,93</context>
-        </context-group>
-        <note priority="1" from="description">Aucune émotion ne correspond</note>
-      </trans-unit>
       <trans-unit id="entries.emotion.familyLegend" datatype="html">
         <source> Famille de « <x id="INTERPOLATION" equiv-text="{{ label }}"/> » (obligatoire) </source>
         <target state="translated">Family of “<x id="INTERPOLATION" equiv-text="{{ label }}"/>” (required)</target>
@@ -14847,6 +14829,24 @@
           <context context-type="linenumber">35,36</context>
         </context-group>
         <note priority="1" from="description">Bouton plus de l&apos;en-tête patient</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.emptyTitle" datatype="html">
+        <source>Aucune émotion ne correspond</source>
+        <target state="translated">No emotion matches</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+        <note priority="1" from="description">Aucune émotion ne correspond</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.emptyMessage" datatype="html">
+        <source>Tapez un libellé pour créer une émotion personnalisée.</source>
+        <target state="translated">Type a label to create a custom emotion.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+        <note priority="1" from="description">Aucune émotion, comment en créer</note>
       </trans-unit>
     </body>
   </file>

@@ -134,7 +134,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">377,379</context>
+          <context context-type="linenumber">384,387</context>
         </context-group>
         <note priority="1" from="description">Nom de la touche Échap</note>
       </trans-unit>
@@ -2112,23 +2112,23 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">179</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">186</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">122</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
@@ -9083,7 +9083,7 @@
         <source>Motif de la correction (facultatif)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">292,295</context>
+          <context context-type="linenumber">299,302</context>
         </context-group>
         <note priority="1" from="description">Motif d&apos;une correction</note>
       </trans-unit>
@@ -9091,7 +9091,7 @@
         <source> Plus · visibilité, tags </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">311,313</context>
+          <context context-type="linenumber">318,320</context>
         </context-group>
         <note priority="1" from="description">Bloc replié des options</note>
       </trans-unit>
@@ -9099,7 +9099,7 @@
         <source> Visibilité </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">315,317</context>
+          <context context-type="linenumber">322,324</context>
         </context-group>
         <note priority="1" from="description">Visibilité d&apos;une entrée</note>
       </trans-unit>
@@ -9107,7 +9107,7 @@
         <source>Clinique : partagée avec l&apos;équipe clinique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">320,323</context>
+          <context context-type="linenumber">327,330</context>
         </context-group>
         <note priority="1" from="description">Visibilité clinique</note>
       </trans-unit>
@@ -9115,7 +9115,7 @@
         <source>Privée : vous seul, exclue de l&apos;export</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">326,329</context>
+          <context context-type="linenumber">333,336</context>
         </context-group>
         <note priority="1" from="description">Visibilité privée</note>
       </trans-unit>
@@ -9123,7 +9123,7 @@
         <source>Tags</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">335,337</context>
+          <context context-type="linenumber">342,344</context>
         </context-group>
         <note priority="1" from="description">Tags d&apos;une entrée</note>
       </trans-unit>
@@ -9131,7 +9131,7 @@
         <source>Annuler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">375,377</context>
+          <context context-type="linenumber">382,384</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;annulation du panneau</note>
       </trans-unit>
@@ -9139,7 +9139,7 @@
         <source>Brouillon</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">381,383</context>
+          <context context-type="linenumber">388,390</context>
         </context-group>
         <note priority="1" from="description">Bouton brouillon</note>
       </trans-unit>
@@ -9147,7 +9147,7 @@
         <source>Type d&apos;entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">88</context>
         </context-group>
         <note priority="1" from="description">Nom du groupe des types d&apos;entrée</note>
       </trans-unit>
@@ -9155,7 +9155,7 @@
         <source>Nouvelle entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <note priority="1" from="description">Titre du panneau en création</note>
       </trans-unit>
@@ -9163,7 +9163,7 @@
         <source>Modifier l&apos;entrée · v<x id="version" equiv-text="version"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">111</context>
         </context-group>
         <note priority="1" from="description">Titre du panneau en correction</note>
       </trans-unit>
@@ -9171,7 +9171,7 @@
         <source>Impossible de charger cette entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">122</context>
         </context-group>
         <note priority="1" from="description">Entrée illisible</note>
       </trans-unit>
@@ -9179,7 +9179,7 @@
         <source>Créée <x id="ago" equiv-text="ago"/> · dans la fenêtre de grâce (1 h 15) : la version 1 sera modifiée en place, sans nouvelle version.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">138</context>
         </context-group>
         <note priority="1" from="description">Bandeau de grâce, dans la fenêtre</note>
       </trans-unit>
@@ -9187,7 +9187,7 @@
         <source>Modifiée <x id="ago" equiv-text="ago"/> · hors fenêtre de grâce (1 h 15) : cette correction créera la version <x id="next" equiv-text="next"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">141</context>
         </context-group>
         <note priority="1" from="description">Bandeau de grâce, hors fenêtre</note>
       </trans-unit>
@@ -9195,7 +9195,7 @@
         <source>Enregistrer la version <x id="next" equiv-text="next"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;enregistrement d&apos;une correction</note>
       </trans-unit>
@@ -9203,7 +9203,7 @@
         <source>Enregistrer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">150</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;enregistrement</note>
       </trans-unit>
@@ -9211,7 +9211,7 @@
         <source>Version <x id="current" equiv-text="current"/> · Historique (<x id="count" equiv-text="count"/> versions)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <note priority="1" from="description">Lien vers l&apos;historique des versions</note>
       </trans-unit>
@@ -9219,7 +9219,7 @@
         <source>Impossible de charger les séances</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <note priority="1" from="description">Séances illisibles</note>
       </trans-unit>
@@ -9227,7 +9227,7 @@
         <source>Impossible de charger les tags</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">189</context>
         </context-group>
         <note priority="1" from="description">Tags illisibles</note>
       </trans-unit>
@@ -9235,7 +9235,7 @@
         <source>Aucun tag pour le moment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <note priority="1" from="description">Aucun tag</note>
       </trans-unit>
@@ -9243,31 +9243,35 @@
         <source>Les tags se créent dans Compte, Tags.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">191</context>
         </context-group>
         <note priority="1" from="description">Aucun tag, où en créer</note>
-      </trans-unit>
-      <trans-unit id="entries.saved.edit" datatype="html">
-        <source>Correction enregistrée (version <x id="version" equiv-text="version"/>).</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">315</context>
-        </context-group>
-        <note priority="1" from="description">Toast après une correction</note>
       </trans-unit>
       <trans-unit id="entries.saved.draft" datatype="html">
         <source>Brouillon enregistré.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">318</context>
+          <context context-type="linenumber">322</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">329</context>
         </context-group>
         <note priority="1" from="description">Toast après un brouillon</note>
+      </trans-unit>
+      <trans-unit id="entries.saved.edit" datatype="html">
+        <source>Correction enregistrée (version <x id="version" equiv-text="version"/>).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">326</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une correction</note>
       </trans-unit>
       <trans-unit id="entries.saved.create" datatype="html">
         <source>Entrée enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">319</context>
+          <context context-type="linenumber">330</context>
         </context-group>
         <note priority="1" from="description">Toast après une création</note>
       </trans-unit>
@@ -9275,7 +9279,7 @@
         <source>Séance du <x id="date" equiv-text="date"/> (en cours)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">325</context>
+          <context context-type="linenumber">336</context>
         </context-group>
         <note priority="1" from="description">Séance ouverte dans le bloc Séance</note>
       </trans-unit>
@@ -9283,7 +9287,7 @@
         <source>Séance du <x id="date" equiv-text="date"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">326</context>
+          <context context-type="linenumber">337</context>
         </context-group>
         <note priority="1" from="description">Séance dans le bloc Séance</note>
       </trans-unit>
@@ -9339,7 +9343,7 @@
         <source>Impossible de charger l&apos;historique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">38</context>
         </context-group>
         <note priority="1" from="description">Historique en erreur</note>
       </trans-unit>
@@ -9347,7 +9351,7 @@
         <source>Aucune version</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <note priority="1" from="description">Historique vide</note>
       </trans-unit>
@@ -9355,7 +9359,7 @@
         <source>v<x id="version" equiv-text="version"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">58</context>
         </context-group>
         <note priority="1" from="description">Nom court d&apos;une version</note>
       </trans-unit>
@@ -9363,7 +9367,7 @@
         <source>(vide)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <note priority="1" from="description">Valeur vide dans l&apos;historique</note>
       </trans-unit>
@@ -9399,27 +9403,11 @@
         </context-group>
         <note priority="1" from="description">Marque d&apos;une émotion personnalisée</note>
       </trans-unit>
-      <trans-unit id="entries.emotion.loading" datatype="html">
-        <source> Chargement des émotions… </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">77,82</context>
-        </context-group>
-        <note priority="1" from="description">Chargement des émotions</note>
-      </trans-unit>
-      <trans-unit id="entries.emotion.empty" datatype="html">
-        <source> Aucune émotion ne correspond. Tapez un libellé pour en créer une. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">87,93</context>
-        </context-group>
-        <note priority="1" from="description">Aucune émotion ne correspond</note>
-      </trans-unit>
       <trans-unit id="entries.emotion.familyLegend" datatype="html">
         <source> Famille de « <x id="INTERPOLATION" equiv-text="{{ label }}"/> » (obligatoire) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">95,97</context>
+          <context context-type="linenumber">91,93</context>
         </context-group>
         <note priority="1" from="description">Choix de la famille d&apos;une nouvelle émotion</note>
       </trans-unit>
@@ -9427,7 +9415,7 @@
         <source> Choisissez une famille. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">121,123</context>
+          <context context-type="linenumber">117,119</context>
         </context-group>
         <note priority="1" from="description">Famille manquante</note>
       </trans-unit>
@@ -9435,7 +9423,7 @@
         <source> Créer l&apos;émotion </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">134,138</context>
+          <context context-type="linenumber">130,134</context>
         </context-group>
         <note priority="1" from="description">Bouton de création d&apos;une émotion personnalisée</note>
       </trans-unit>
@@ -9443,15 +9431,31 @@
         <source> Annuler </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">142,147</context>
+          <context context-type="linenumber">138,143</context>
         </context-group>
         <note priority="1" from="description">Annulation de la création d&apos;une émotion</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.emptyTitle" datatype="html">
+        <source>Aucune émotion ne correspond</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+        <note priority="1" from="description">Aucune émotion ne correspond</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.emptyMessage" datatype="html">
+        <source>Tapez un libellé pour créer une émotion personnalisée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+        <note priority="1" from="description">Aucune émotion, comment en créer</note>
       </trans-unit>
       <trans-unit id="entries.emotion.loadError" datatype="html">
         <source>Impossible de charger les émotions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <note priority="1" from="description">Liste des émotions en erreur</note>
       </trans-unit>
@@ -9459,7 +9463,7 @@
         <source>Créer l&apos;émotion personnalisée « <x id="label" equiv-text="label"/> »</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <note priority="1" from="description">Dernière ligne de la liste des émotions</note>
       </trans-unit>
@@ -9819,7 +9823,7 @@
         <source>Séance démarrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <note priority="1" from="description">Toast après le démarrage d&apos;une séance</note>
       </trans-unit>
@@ -9827,7 +9831,7 @@
         <source>Séance clôturée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">169</context>
         </context-group>
         <note priority="1" from="description">Toast après la clôture d&apos;une séance</note>
       </trans-unit>

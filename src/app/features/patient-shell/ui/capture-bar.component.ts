@@ -78,6 +78,14 @@ export class CaptureBarComponent {
     });
   }
 
+  /** Vide le champ (son texte est passé dans le brouillon de l'éditeur d'entrée). */
+  clear(): void {
+    this.text.set('');
+    // Le champ peut avoir été rempli sans rendu intermédiaire : on vide aussi sa valeur DOM.
+    const input = this.host.nativeElement.querySelector('input');
+    if (input) input.value = '';
+  }
+
   protected submit(event: Event): void {
     event.preventDefault();
     this.capture.emit(this.text().trim());

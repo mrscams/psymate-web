@@ -265,7 +265,7 @@
             [attr.aria-invalid]="invalid('sessionId')"
             [attr.aria-describedby]="fid('sessionId') + '-error'"
           >
-            @if (!hasCurrentSession()) {
+            @if (!hasCurrentSession() && !sessionsLoading()) {
               <option value="" i18n="Aucune séance pour ce patient@@entries.session.none">
                 Aucune séance
               </option>
@@ -275,8 +275,15 @@
             }
           </select>
           <pm-field-errors [control]="f.controls.sessionId" [id]="fid('sessionId') + '-error'" />
-          @if (sessionsError()) {
-            <pm-state kind="error" compact [title]="sessionsErrorTitle" [action]="sessionsRetry" />
+          @if (sessionsState(); as kind) {
+            <pm-state
+              [kind]="kind"
+              compact
+              skeleton="row"
+              [lines]="1"
+              [title]="kind === 'error' ? sessionsErrorTitle : undefined"
+              [action]="sessionsRetry"
+            />
           }
         </div>
       }
@@ -376,7 +383,7 @@
       >
       <kbd i18n="Nom de la touche Échap@@shortcuts.escapeKey">Échap</kbd>
     </button>
-    @if (!editing && type() !== 'session') {
+    @if (draftAllowed()) {
       <button type="button" class="secondary" [disabled]="store.saving()" (click)="submit('draft')">
         <ng-container i18n="Bouton brouillon@@entries.editor.draft">Brouillon</ng-container>
         <kbd>Ctrl+S</kbd>

@@ -73,9 +73,7 @@
 @switch (listState()) {
   @case ('loading') {
     @if (open()) {
-      <p class="hint" role="status" i18n="Chargement des émotions@@entries.emotion.loading">
-        Chargement des émotions…
-      </p>
+      <pm-state kind="loading" compact skeleton="row" [lines]="2" />
     }
   }
   @case ('error') {
@@ -83,9 +81,7 @@
   }
   @case ('empty') {
     @if (open()) {
-      <p class="hint" role="status" i18n="Aucune émotion ne correspond@@entries.emotion.empty">
-        Aucune émotion ne correspond. Tapez un libellé pour en créer une.
-      </p>
+      <pm-state kind="empty" compact [title]="emptyTitle" [message]="emptyMessage" />
     }
   }
 }

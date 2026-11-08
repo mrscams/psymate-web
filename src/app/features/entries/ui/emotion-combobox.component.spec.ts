@@ -68,15 +68,14 @@ const options = (el: HTMLElement) =>
   );
 
 describe('EmotionComboboxComponent', () => {
-  it('chargement : « Chargement des émotions… » quand la liste est ouverte', async () => {
+  it('chargement : pm-state chargement quand la liste est ouverte', async () => {
     const { fixture, el, input } = await render({
       emotions: vi.fn(() => new Promise(() => undefined)),
     });
+    expect(el.querySelector('pm-state')).toBeNull();
     input.click();
     await fixture.whenStable();
-    expect(el.querySelector('.hint[role="status"]')?.textContent).toContain(
-      'Chargement des émotions',
-    );
+    expect(el.querySelector('pm-state [role="status"][aria-busy="true"]')).not.toBeNull();
   });
 
   it('erreur : état erreur et Réessayer relit le vocabulaire', async () => {

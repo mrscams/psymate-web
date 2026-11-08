@@ -122,6 +122,8 @@ export class EmotionComboboxComponent implements ControlValueAccessor {
     label: $localize`:Bouton de l'état erreur@@state.error.retry:Réessayer`,
     handler: () => void this.store.retryEmotions(),
   };
+  protected readonly emptyTitle = $localize`:Aucune émotion ne correspond@@entries.emotion.emptyTitle:Aucune émotion ne correspond`;
+  protected readonly emptyMessage = $localize`:Aucune émotion, comment en créer@@entries.emotion.emptyMessage:Tapez un libellé pour créer une émotion personnalisée.`;
   protected readonly errorTitle = $localize`:Liste des émotions en erreur@@entries.emotion.loadError:Impossible de charger les émotions`;
 
   private onChange: (value: string | null) => void = () => undefined;

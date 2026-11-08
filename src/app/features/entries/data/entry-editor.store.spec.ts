@@ -184,10 +184,15 @@ describe('EntryEditorStore', () => {
 
     await store.open({ patientId: 'p-autre' });
     expect(store.currentDraft()?.type).toBe('note');
-    await store.open({ patientId: 'p-marie', text: 'ignoré : le texte existe déjà' });
-    expect(store.currentDraft()).toEqual(typed);
+    // Le texte de la barre de capture s'ajoute au texte du brouillon : rien ne se perd.
+    await store.open({ patientId: 'p-marie', text: 'et fait des cauchemars' });
+    expect(store.currentDraft()).toEqual({ ...typed, body: 'x\net fait des cauchemars' });
     expect(store.isOpenOn({ patientId: 'p-marie' })).toBe(true);
 
+    // Déconnexion : les brouillons cliniques sont effacés aussitôt, sans attendre une ouverture.
+    me.set(null);
+    TestBed.tick();
+    expect(store.drafts()).toEqual({});
     me.set({ id: 'u-autre' });
     await store.open({ patientId: 'p-marie' });
     expect(store.currentDraft()?.body).toBe('');
@@ -226,6 +231,16 @@ describe('EntryEditorStore', () => {
       const saved = await store.save(store.currentDraft()!);
       expect(api.patch).not.toHaveBeenCalled();
       expect(saved?.id).toBe('e-feel');
+    });
+
+    it('brouillon corrigé : ⏎ le passe en définitif, Ctrl+S le garde en brouillon', async () => {
+      const { store, api } = setup({ get: vi.fn().mockResolvedValue(entry({ status: 'draft' })) });
+      await store.open({ patientId: 'p-marie', entryId: 'e-1' });
+      const unchanged = store.currentDraft()!;
+      await store.save(unchanged, 'draft');
+      expect(api.patch).not.toHaveBeenCalled();
+      await store.save(unchanged, 'final');
+      expect(api.patch).toHaveBeenCalledWith('e-1', { status: 'final' });
     });
 
     it('409 ENTRY_ARCHIVED : problème rangé', async () => {

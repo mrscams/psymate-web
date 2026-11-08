@@ -281,9 +281,14 @@ export function toCreateBody(draft: EntryDraft, status: EntryStatus = 'final'): 
 /**
  * La saisie comparée à l'entrée lue → corps du PATCH : seules les clés modifiées (champ absent =
  * inchangé) ; occurred et tags remplacés en entier ; le détail fusionné champ par champ côté
- * serveur. null quand rien n'a changé (pas de requête).
+ * serveur ; `status` passe le brouillon en définitif (⏎) ou l'y garde (Ctrl+S). null quand rien
+ * n'a changé (pas de requête).
  */
-export function toPatchBody(entry: EntryView, draft: EntryDraft): PatchEntryBody | null {
+export function toPatchBody(
+  entry: EntryView,
+  draft: EntryDraft,
+  status?: EntryStatus,
+): PatchEntryBody | null {
   const original = draftFromEntry(entry);
   const body: PatchEntryBody = {};
   if (trim(draft.title) !== trim(original.title)) body.title = trim(draft.title);
@@ -331,6 +336,8 @@ export function toPatchBody(entry: EntryView, draft: EntryDraft): PatchEntryBody
   }
   if (draft.visibility !== original.visibility) body.visibility = draft.visibility;
   if (!sameList(draft.tags, original.tags)) body.tags = [...draft.tags];
+  // Un brouillon enregistré par ⏎ devient définitif (Ctrl+S le garde en brouillon).
+  if (status && status !== entry.status) body.status = status;
   if (Object.keys(body).length === 0) return null;
   const reason = trim(draft.reason);
   if (reason) body.reason = reason;

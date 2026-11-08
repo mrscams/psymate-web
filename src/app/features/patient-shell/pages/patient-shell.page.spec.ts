@@ -322,6 +322,8 @@ describe('PatientShellPage', () => {
       expect(editor()?.querySelector<HTMLTextAreaElement>('#field-body')?.value).toBe(
         "n'a pas dormi",
       );
+      await settle(harness);
+      expect(input.value).toBe('');
     });
 
     it('?entry=<id> : ouvre la correction de l’entrée', async () => {

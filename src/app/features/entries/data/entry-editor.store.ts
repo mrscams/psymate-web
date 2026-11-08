@@ -1,5 +1,12 @@
-import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import { computed, effect, inject, untracked } from '@angular/core';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 
 import { SessionStore } from '../../../core/auth';
 import { ApiProblem, asProblem } from '../../../core/http';
@@ -262,8 +269,10 @@ export const EntryEditorStore = signalStore(
               const draft = emptyDraft(target.type ?? 'note', defaultVisibility());
               draft.body = text;
               setDraft(key, draft);
-            } else if (text && !existing.body.trim()) {
-              setDraft(key, { ...existing, body: text });
+            } else if (text) {
+              // Rien ne se perd (B5) : le texte de la barre s'ajoute à celui du brouillon.
+              const body = existing.body.trim() ? `${existing.body.trimEnd()}\n${text}` : text;
+              setDraft(key, { ...existing, body });
             } else if (target.type && target.type !== existing.type && !text) {
               setDraft(key, { ...existing, type: target.type });
             }
@@ -324,7 +333,7 @@ export const EntryEditorStore = signalStore(
             if (entryId) {
               const entry = store.entry().data;
               if (!entry) throw { status: 0, code: 'ENTRY_NOT_LOADED' } satisfies ApiProblem;
-              const body = toPatchBody(entry, draft);
+              const body = toPatchBody(entry, draft, status);
               saved = body ? await api.patch(entryId, body) : entry;
             } else {
               saved = await api.create(patientId, toCreateBody(draft, status));
@@ -399,4 +408,17 @@ export const EntryEditorStore = signalStore(
       };
     },
   ),
+  withHooks((store, session = inject(SessionStore)) => ({
+    onInit(): void {
+      // Déconnexion ou autre compte : les brouillons cliniques ne restent pas en mémoire.
+      effect(() => {
+        const owner = session.me()?.id ?? null;
+        untracked(() => {
+          if (store.ownerId() !== null && store.ownerId() !== owner) {
+            patchState(store, { ...initialState, ownerId: owner });
+          }
+        });
+      });
+    },
+  })),
 );

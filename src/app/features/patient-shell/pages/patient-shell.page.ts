@@ -127,6 +127,8 @@ export class PatientShellPage {
   protected newEntry(text = ''): void {
     if (this.panels.isOpen() || !this.store.patient()) return;
     const ref = openEntryEditor(this.id(), { text, injector: this.injector });
+    // Le texte est dans le brouillon de l'éditeur : la barre se vide (pas de doublon à la 2e Entrée).
+    if (ref && text) this.captureBar()?.clear();
     // Une séance créée depuis l'éditeur s'ouvre : l'en-tête relit la séance courante.
     void ref?.closed.then((saved) => {
       if (saved?.type === 'session') void this.store.refreshSession();

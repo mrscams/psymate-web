@@ -122,6 +122,11 @@ export class EntryEditorPanel {
   protected readonly entryErrorTitle = $localize`:Entrée illisible@@entries.editor.loadError:Impossible de charger cette entrée`;
 
   protected readonly grace = this.store.grace;
+
+  /** Ctrl+S / Brouillon : à la création (sauf séance), ou pour corriger une entrée encore brouillon. */
+  protected readonly draftAllowed = computed(() =>
+    this.editing ? this.store.entry().data?.status === 'draft' : this.type() !== 'session',
+  );
   protected readonly graceId = GRACE_ID;
 
   protected readonly graceText = computed(() => {
@@ -161,7 +166,15 @@ export class EntryEditorPanel {
     })),
   );
   protected readonly hasCurrentSession = computed(() => this.store.currentSession() !== null);
-  protected readonly sessionsError = computed(() => this.store.sessions().status === 'error');
+  /** Bloc Séance : chargement (le select attend) ou erreur ; « vide » = « Aucune séance » dans le select. */
+  protected readonly sessionsLoading = computed(() => {
+    const status = this.store.sessions().status;
+    return (status === 'loading' || status === 'idle') && !this.store.sessions().data;
+  });
+  protected readonly sessionsState = computed(() => {
+    if (this.sessionsLoading()) return 'loading' as const;
+    return this.store.sessions().status === 'error' ? ('error' as const) : null;
+  });
   protected readonly sessionsRetry: StateAction = {
     label: $localize`:Bouton de l'état erreur@@state.error.retry:Réessayer`,
     handler: () => void this.store.retrySessions(),
@@ -266,7 +279,7 @@ export class EntryEditorPanel {
     const ctrl = event.ctrlKey || event.metaKey;
     if (ctrl && event.key.toLowerCase() === 's') {
       event.preventDefault();
-      if (!this.editing && this.type() !== 'session') void this.submit('draft');
+      if (this.draftAllowed()) void this.submit('draft');
       return;
     }
     if (event.key !== 'Enter' || event.defaultPrevented || event.isComposing) return;
@@ -305,6 +318,9 @@ export class EntryEditorPanel {
   }
 
   private savedText(saved: EntryView, status: EntryStatus): string {
+    if (this.editing && status === 'draft') {
+      return $localize`:Toast après un brouillon@@entries.saved.draft:Brouillon enregistré.`;
+    }
     if (this.editing) {
       const version = saved.version;
       return $localize`:Toast après une correction@@entries.saved.edit:Correction enregistrée (version ${version}:version:).`;
