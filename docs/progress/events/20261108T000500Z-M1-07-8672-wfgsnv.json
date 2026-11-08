@@ -1,0 +1,9 @@
+{
+  "at": "2026-11-08T00:05:00.000Z",
+  "task": "M1-07",
+  "agent": "claude",
+  "status": "in-progress",
+  "summary": "M1-07 (page patient, en-tete) lancee dans son worktree depuis main, en parallele de M7-07",
+  "branch": "claude/m1-07-shell-281ad6",
+  "checkout": "psymate-web"
+}

@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T00:31:41.371Z",
+  "task": "M1-07",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 15 fusionnee (squash 62d09f5) : shell /patients/:id (onglets provisoires, redirection /overview), PatientShellStore (seances, memoire des onglets), en-tete branche, touches 1 2 3 ; CI verte (checks + 64 e2e, 6 ignores)",
+  "notes": "La fiche /patients/:id/fiche reste hors du shell (ecart fiche 00 §2, a traiter avec M1-08 ou une tache dediee). Suivis : liens /overview restants dans features/patients ; formatMonthYear (core/i18n) decale le mois a l ouest d UTC. Sortie capture de la barre a brancher par M1-08.",
+  "next": "M1-08 (editeur d entree) ∥ M1-09 (tags et emotions) debloquees ; M7-07 en cours",
+  "pr": "https://github.com/mrscams/psymate-web/pull/15",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
