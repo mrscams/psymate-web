@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T14:37:17.864Z",
+  "task": "M4-05",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 30 fusionnee (squash b31fa34) : vue d ensemble complete (/patients/:id/overview, tuiles, courbe ECharts en @defer, situations -> graphe, seances -> timeline), bascule Vue Simple | Complete (overview.view) et selecteur 30 j / 90 j / 1 an (overview.window), relecture apres toute ecriture via revision/noteWrite() du shell ; CI verte (checks + 107 e2e).",
+  "notes": "Dependance ajoutee : echarts 6.1.0 (exacte, hors bundle initial). Bouton Recalculer retire (contrat : synthese jamais obsolete, pas de stale). Pas d alertes calculees dans le contrat : bloc A surveiller a completer. e2e flux-6-graphe glisser instable sous charge depuis cette fusion (vert seul) : a stabiliser.",
+  "next": "M4-07 vue simple Recit (carte proposee) ; M6-03 en dernier",
+  "pr": "https://github.com/mrscams/psymate-web/pull/30",
+  "branch": "main",
+  "checkout": "psymate-web"
+}

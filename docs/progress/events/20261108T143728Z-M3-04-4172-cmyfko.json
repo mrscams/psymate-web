@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T14:37:28.173Z",
+  "task": "M3-04",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 31 fusionnee (squash 65e338f) : vue decennie agregee en SVG maison (barres par type, intensite moyenne, bandes longues, debut du suivi), bascule automatique au-dela de 3 ans et retour, double-clic sur un mois -> detail, tableau equivalent accessible, groupBy=month ; resume < 100 ms ; CI verte (checks + 112 e2e).",
+  "notes": "Aucune dependance (ECharts non ajoute). A arbitrer : la plage de 3 ans est celle du dossier, pas du zoom (tout dossier > 3 ans s ouvre sur l agregat en chronologique). Filtres emotion/tag/brouillon non appliques a l agregat. Mois UTC vs jours locaux aux bords. TimelineDecadeStore separe.",
+  "next": "Lot 5 : M6-01, M6-04, M6-06 (cartes proposees) ; M6-02 apres M6-01",
+  "pr": "https://github.com/mrscams/psymate-web/pull/31",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
