@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T11:56:13.657Z",
+  "task": "M2-06",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 28 fusionnee (squash 2848873) : vue graphe /patients/:id/graph (Cytoscape + cose-bilkent en @defer, styles par tokens relus au changement de theme, racine/profondeur, filtres, panneau de detail Lier/Corriger/Recentrer, glisser -> editeur de lien prerempli, double-clic -> timeline ?focus=, super-noeuds Depliez, liste equivalente clavier) ; 150 noeuds a 60 i/s ; CI verte (checks + 101 e2e).",
+  "notes": "Dependances ajoutees : cytoscape 3.34.4, cytoscape-cose-bilkent 4.1.0 (versions exactes). Filtre types cote client (absent du contrat). Liens accepted seuls ; pas de panneau d arete. Tokens --link/--link-proposed sans valeur sombre (tache tokens). Avertissements CJS (allowedCommonJsDependencies a prevoir). Bundle initial 905 kB (budget 500 kB, deja depasse).",
+  "next": "M4-05 vue d ensemble (carte proposee) puis M4-07 ; M3-04 en attente de lancement",
+  "pr": "https://github.com/mrscams/psymate-web/pull/28",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
