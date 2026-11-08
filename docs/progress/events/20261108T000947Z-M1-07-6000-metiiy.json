@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-08T00:09:47.535Z",
+  "task": "M1-07",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Page patient /patients/:id : en-tête permanent branché, PatientShellStore (séances, mémoire des onglets), onglets provisoires, 403 en état erreur ; 636 tests Vitest, 64 e2e verts",
+  "notes": "Overview = enfant vide, /patients/:id/overview redirige ; séance démarrée avec followUp.modality (présentiel à défaut) ; accueil ni en cours ni dernière ; 403/404/400 en pm-state sans redirection ; store fourni par la page (mémoire effacée en quittant le dossier, fiche :id/fiche hors shell) ; e2e flux 2 adapté (URL et retour par le logo) ; aucune dépendance npm",
+  "next": "M1-08 branche (capture) de pm-capture-bar et openEntryEditor ; M4-05 la bascule Vue et l'onglet overview ; suivi patients : liens /overview à remplacer par /patients/:id",
+  "branch": "claude/m1-07-shell-281ad6",
+  "checkout": "m1-06-patients-cca7bc"
+}

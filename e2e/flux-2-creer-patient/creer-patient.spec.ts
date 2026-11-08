@@ -78,10 +78,12 @@ test('créer un patient, le retrouver (marie, marié), modifier le rythme, archi
   );
   await displayName.press('Control+Enter');
   expect((await created).status()).toBe(201);
-  await expect(page).toHaveURL(/\/fr\/patients\/[0-9a-f-]{36}\/overview$/);
+  // /patients/:id/overview renvoie sur l'onglet 1 du dossier, /patients/:id (M1-07).
+  await expect(page).toHaveURL(/\/fr\/patients\/[0-9a-f-]{36}$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Marie D.' })).toBeVisible();
 
-  // Retrouver le patient dans la liste : / focalise le filtre, accents ignorés.
-  await page.getByRole('link', { name: 'Retour à la liste' }).click();
+  // Retrouver le patient dans la liste (logo, B2) : / focalise le filtre, accents ignorés.
+  await page.getByRole('link', { name: 'PsyMate' }).click();
   await expect(patientLink(page, 'Marie D.')).toBeVisible();
   await page.keyboard.press('/');
   const filter = page.getByRole('searchbox', { name: 'Filtrer les patients par nom' });
@@ -189,5 +191,5 @@ test('clavier seul : / puis le nom, Entrée ouvre le dossier', async ({ page, re
   await page.keyboard.type('eloise');
   await expect(patientLink(page, 'Paul T.')).toBeHidden();
   await page.keyboard.press('Enter');
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/overview$`));
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
 });

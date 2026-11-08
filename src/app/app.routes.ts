@@ -23,6 +23,13 @@ export const routes: Routes = [
     canActivate: [authGuard, statusGuard],
     loadChildren: () => import('./features/patients').then((m) => m.PATIENTS_ROUTES),
   },
+  // Page patient (M1-07, B2) : en-tête permanent et onglets. Après 'patients' : la liste, la
+  // création et la fiche (:id/fiche) y sont reconnues d'abord, le reste de /patients/:id/** arrive ici.
+  {
+    path: 'patients/:id',
+    canActivate: [authGuard, statusGuard],
+    loadChildren: () => import('./features/patient-shell').then((m) => m.PATIENT_SHELL_ROUTES),
+  },
   // Mon compte (fiche 00 §3) : dossier professionnel (M1-15), préférences (M1-16)…
   {
     path: 'mon-compte',

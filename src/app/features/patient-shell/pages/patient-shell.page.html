@@ -1,0 +1,38 @@
+@if (finalError(); as error) {
+  <section class="shell-error" aria-labelledby="shell-error-heading">
+    <h1
+      id="shell-error-heading"
+      class="sr-only"
+      i18n="Titre caché du dossier en erreur@@patientShell.error.heading"
+    >
+      Dossier patient
+    </h1>
+    <pm-state kind="error" [title]="error.title" [message]="error.message" />
+    <a
+      class="back"
+      routerLink="/patients"
+      i18n="Lien de retour depuis un dossier en erreur@@patientShell.error.back"
+      >Retour à la liste</a
+    >
+  </section>
+} @else {
+  <pm-patient-header
+    [patient]="headerPatient()"
+    [session]="headerSession()"
+    [state]="headerState()"
+    [busy]="store.busy()"
+    [showViewToggle]="activeTab() === 'overview'"
+    (startSession)="start()"
+    (closeSession)="openClose()"
+    (retry)="reload()"
+  >
+    <!-- Sortie (capture) : texte saisi + Entrée ; M1-08 y branche l'éditeur d'entrée. -->
+    <pm-capture-bar pmCapture />
+    <!-- Emplacement [pmViewToggle] : bascule « Vue : Simple · Complète », branchée en M4-05. -->
+  </pm-patient-header>
+  @if (store.patient()) {
+    <div class="tab-content">
+      <router-outlet />
+    </div>
+  }
+}
