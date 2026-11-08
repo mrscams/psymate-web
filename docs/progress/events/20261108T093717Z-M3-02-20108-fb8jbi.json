@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-08T09:37:17.478Z",
+  "task": "M3-02",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 23 fusionnee (squash e56fed0) : timeline etat A (TimelineStore keyset 3 fenetres, cartes, bandes de situations, dit en seance, Avant le suivi, zoom sans requete, menu contextuel clavier, ?focus=) ; defilement 2000 entrees p95 16,7 ms ; CI verte (checks + 87 e2e).",
+  "notes": "Debut du suivi = followUp.since (seed : presque tout en Avant le suivi). Lier desactive dans le menu : raccord prevu dans M3-03. e2e de recherche (M4-08) adapte : verifie la carte positionnee, l URL finale sans ?focus=. Tests du shell passent par l onglet Graphe provisoire (a revoir en M2-06).",
+  "next": "M3-03 filtres et mode par seance (carte proposee), puis M3-04",
+  "pr": "https://github.com/mrscams/psymate-web/pull/23",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
