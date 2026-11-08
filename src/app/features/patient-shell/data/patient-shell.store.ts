@@ -32,6 +32,12 @@ interface PatientShellState {
   problem: ApiProblem | null;
   /** Problème de la dernière action de séance (409, 422) : le dossier reste affiché. */
   actionProblem: ApiProblem | null;
+  /**
+   * Compteur des écritures faites depuis le dossier (entrée enregistrée, séance démarrée, clôturée,
+   * contact) : les onglets qui lisent une projection (vue d'ensemble) le suivent pour la relire
+   * (handbook §6.5, règle 11 : on relit, on ne recalcule pas). Croissant, jamais remis à zéro.
+   */
+  revision: number;
 }
 
 const initialState: PatientShellState = {
@@ -43,6 +49,7 @@ const initialState: PatientShellState = {
   status: 'idle',
   problem: null,
   actionProblem: null,
+  revision: 0,
 };
 
 /** Séance courante de l'API → (en cours, dernière) ; l'accueil ne compte ni pour l'un ni pour l'autre. */
@@ -88,7 +95,9 @@ export const PatientShellStore = signalStore(
       patchState(store, { status: 'saving', actionProblem: null });
       try {
         await action();
-        if (store.patientId() === id) patchState(store, { status: 'idle' });
+        if (store.patientId() === id) {
+          patchState(store, { status: 'idle', revision: store.revision() + 1 });
+        }
         return true;
       } catch (error) {
         if (store.patientId() !== id) return false;
@@ -106,7 +115,9 @@ export const PatientShellStore = signalStore(
        * mémoire des onglets comprise ; le même dossier (Réessayer) garde ce qui est affiché.
        */
       async load(id: string): Promise<void> {
-        if (store.patientId() !== id) patchState(store, { ...initialState, patientId: id });
+        if (store.patientId() !== id) {
+          patchState(store, { ...initialState, patientId: id, revision: store.revision() });
+        }
         patchState(store, { status: 'loading', problem: null, actionProblem: null });
         try {
           const [patient, session] = await Promise.all([api.patient(id), api.current(id)]);
@@ -162,6 +173,11 @@ export const PatientShellStore = signalStore(
           await api.contact(id, input);
           await refreshSession();
         });
+      },
+
+      /** Une écriture a abouti hors du store (éditeur d'entrée) : les projections se relisent. */
+      noteWrite(): void {
+        patchState(store, { revision: store.revision() + 1 });
       },
 
       /** Efface le problème de la dernière action (dialogue fermé, nouvelle saisie). */

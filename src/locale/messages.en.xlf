@@ -10108,42 +10108,6 @@
         </context-group>
         <note priority="1" from="description">Drapeau dans l&apos;en-tête patient</note>
       </trans-unit>
-      <trans-unit id="patientShell.tab.overview" datatype="html">
-        <source>Vue d&apos;ensemble</source>
-        <target state="translated">Overview</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
-          <context context-type="linenumber">33</context>
-        </context-group>
-        <note priority="1" from="description">Onglet du dossier</note>
-      </trans-unit>
-      <trans-unit id="patientShell.tab.timeline" datatype="html">
-        <source>Timeline</source>
-        <target state="translated">Timeline</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
-          <context context-type="linenumber">35</context>
-        </context-group>
-        <note priority="1" from="description">Onglet du dossier</note>
-      </trans-unit>
-      <trans-unit id="patientShell.tab.graph" datatype="html">
-        <source>Graphe</source>
-        <target state="translated">Graph</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
-          <context context-type="linenumber">37</context>
-        </context-group>
-        <note priority="1" from="description">Onglet du dossier</note>
-      </trans-unit>
-      <trans-unit id="patientShell.tab.search" datatype="html">
-        <source>Recherche</source>
-        <target state="translated">Search</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-        <note priority="1" from="description">Recherche dans le dossier</note>
-      </trans-unit>
       <trans-unit id="patientShell.error.forbidden.title" datatype="html">
         <source>Ce dossier n&apos;est pas le vôtre</source>
         <target state="translated">This record is not yours</target>
@@ -10315,33 +10279,6 @@
           <context context-type="linenumber">8,13</context>
         </context-group>
         <note priority="1" from="description">Lien de retour depuis un dossier en erreur</note>
-      </trans-unit>
-      <trans-unit id="patientShell.placeholder.text" datatype="html">
-        <source> Cet onglet s&apos;affichera ici. </source>
-        <target state="translated">This tab will appear here.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patient-shell/pages/tab-placeholder.page.ts</context>
-          <context context-type="linenumber">33,36</context>
-        </context-group>
-        <note priority="1" from="description">Texte d&apos;un onglet provisoire du dossier</note>
-      </trans-unit>
-      <trans-unit id="patientShell.placeholder.counter" datatype="html">
-        <source>Compteur : <x id="INTERPOLATION" equiv-text="{{ count() }}"/></source>
-        <target state="translated">Counter: <x id="INTERPOLATION" equiv-text="{{ count() }}"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patient-shell/pages/tab-placeholder.page.ts</context>
-          <context context-type="linenumber">38,39</context>
-        </context-group>
-        <note priority="1" from="description">Compteur d&apos;un onglet provisoire</note>
-      </trans-unit>
-      <trans-unit id="patientShell.placeholder.sheetLink" datatype="html">
-        <source>Modifier la fiche</source>
-        <target state="translated">Edit the record</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patient-shell/pages/tab-placeholder.page.ts</context>
-          <context context-type="linenumber">45,53</context>
-        </context-group>
-        <note priority="1" from="description">Lien vers la fiche depuis le dossier</note>
       </trans-unit>
       <trans-unit id="patientShell.overview.pageTitle" datatype="html">
         <source>Vue d&apos;ensemble · PsyMate</source>
@@ -18136,6 +18073,1197 @@
           <context context-type="linenumber">217</context>
         </context-group>
         <note priority="1" from="description">Nom accessible du bouton Déplier d&apos;un groupe</note>
+      </trans-unit>
+      <trans-unit id="overview.heading" datatype="html">
+        <source> Vue d&apos;ensemble </source>
+        <target state="translated">Overview</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">4,8</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;onglet 1 du dossier</note>
+      </trans-unit>
+      <trans-unit id="overview.window.group" datatype="html">
+        <source>Période de la vue d&apos;ensemble</source>
+        <target state="translated">Overview period</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+        <note priority="1" from="description">Groupe du sélecteur de fenêtre</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.title" datatype="html">
+        <source>Récit : bientôt</source>
+        <target state="translated">Story: coming soon</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">25,26</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état provisoire de la vue simple</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.message" datatype="html">
+        <source>La vue simple, un récit du dossier en quelques phrases, arrive bientôt. La vue complète présente dès maintenant les chiffres, la tendance et les dernières séances.</source>
+        <target state="translated">The simple view, a story of the record in a few sentences, is coming soon. The full view already shows figures, trend and recent sessions.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+        <note priority="1" from="description">Texte de l&apos;état provisoire de la vue simple</note>
+      </trans-unit>
+      <trans-unit id="overview.summary.heading" datatype="html">
+        <source>Résumé</source>
+        <target state="translated">Summary</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc résumé</note>
+      </trans-unit>
+      <trans-unit id="overview.summary.error" datatype="html">
+        <source>Résumé indisponible</source>
+        <target state="translated">Summary unavailable</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">41,42</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc résumé</note>
+      </trans-unit>
+      <trans-unit id="overview.tile.sessions" datatype="html">
+        <source>Séances</source>
+        <target state="translated">Sessions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">50,51</context>
+        </context-group>
+        <note priority="1" from="description">Tuile du résumé</note>
+      </trans-unit>
+      <trans-unit id="overview.tile.sessions.context" datatype="html">
+        <source>dont <x id="INTERPOLATION" equiv-text="{{ windowSessions() }}"/> sur <x id="INTERPOLATION_1" equiv-text="{{ windowLabel(v.window) }}"/></source>
+        <target state="translated">including <x id="INTERPOLATION" equiv-text="{{ windowSessions() }}"/> over <x id="INTERPOLATION_1" equiv-text="{{ windowLabel(v.window) }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">54,55</context>
+        </context-group>
+        <note priority="1" from="description">Contexte de la tuile séances</note>
+      </trans-unit>
+      <trans-unit id="overview.tile.sessions.since" datatype="html">
+        <source> · suivi depuis le <x id="INTERPOLATION" equiv-text="{{ day(v.facts.followedSince) }}"/></source>
+        <target state="translated"> · followed since <x id="INTERPOLATION" equiv-text="{{ day(v.facts.followedSince) }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">58,59</context>
+        </context-group>
+        <note priority="1" from="description">Début du suivi dans la tuile séances</note>
+      </trans-unit>
+      <trans-unit id="overview.tile.feelings" datatype="html">
+        <source>Ressentis</source>
+        <target state="translated">Feelings</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">64,65</context>
+        </context-group>
+        <note priority="1" from="description">Tuile du résumé</note>
+      </trans-unit>
+      <trans-unit id="overview.tile.feelings.context" datatype="html">
+        <source> sur <x id="INTERPOLATION" equiv-text="{{ windowLabel(v.window) }}"/> · <x id="ICU" equiv-text="{v.feelings.series.length, plural,
+                  =0 {aucune émotion}
+                  =1 {1 émotion}
+                  other {{{v.feelings.series.length}} émotions}
+                }" xid="1238124282204395218"/> </source>
+        <target state="translated"> over <x id="INTERPOLATION" equiv-text="{{ windowLabel(v.window) }}"/> · <x id="ICU" equiv-text="{v.feelings.series.length, plural,
+                  =0 {aucune émotion}
+                  =1 {1 émotion}
+                  other {{{v.feelings.series.length}} émotions}
+                }" xid="1238124282204395218"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">70,77</context>
+        </context-group>
+        <note priority="1" from="description">Contexte de la tuile ressentis</note>
+      </trans-unit>
+      <trans-unit id="4129504065595164418" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {aucune émotion} =1 {1 émotion} other {<x id="INTERPOLATION"/> émotions}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =0 {no emotion} =1 {1 emotion} other {<x id="INTERPOLATION"/> emotions}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">71,73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="overview.tile.intensity" datatype="html">
+        <source> Intensité moyenne </source>
+        <target state="translated"> Average intensity </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">80,82</context>
+        </context-group>
+        <note priority="1" from="description">Tuile du résumé</note>
+      </trans-unit>
+      <trans-unit id="overview.tile.intensity.context" datatype="html">
+        <source> moyenne des 7 derniers jours </source>
+        <target state="translated"> average of the last 7 days </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">93,96</context>
+        </context-group>
+        <note priority="1" from="description">Contexte de la tuile intensité</note>
+      </trans-unit>
+      <trans-unit id="overview.tile.situations" datatype="html">
+        <source> Situations actives </source>
+        <target state="translated"> Active situations </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">98,100</context>
+        </context-group>
+        <note priority="1" from="description">Tuile du résumé</note>
+      </trans-unit>
+      <trans-unit id="overview.tile.situations.context" datatype="html">
+        <source> en cours, sans fin connue </source>
+        <target state="translated"> ongoing, no known end </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">105,109</context>
+        </context-group>
+        <note priority="1" from="description">Contexte de la tuile situations</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.empty.title" datatype="html">
+        <source>Pas encore de ressentis sur cette période</source>
+        <target state="translated">No feelings yet for this period</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">117,118</context>
+        </context-group>
+        <note priority="1" from="description">Bloc tendance vide</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.empty.message" datatype="html">
+        <source>La courbe apparaîtra ici quand des ressentis seront notés dans le dossier.</source>
+        <target state="translated">The curve will appear here once feelings are recorded in the file.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">119,120</context>
+        </context-group>
+        <note priority="1" from="description">Bloc tendance vide</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.error" datatype="html">
+        <source>Tendance indisponible</source>
+        <target state="translated">Trend unavailable</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">121,122</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc tendance</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.meta" datatype="html">
+        <source>moyenne glissante 7 j · un point par ressenti</source>
+        <target state="translated">7-day rolling average · one dot per feeling</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">128,131</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre du bloc tendance</note>
+      </trans-unit>
+      <trans-unit id="overview.attention.heading" datatype="html">
+        <source>À surveiller · à compléter</source>
+        <target state="translated">To watch · to complete</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">138,139</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc points d&apos;attention</note>
+      </trans-unit>
+      <trans-unit id="overview.attention.empty.title" datatype="html">
+        <source>Rien à signaler</source>
+        <target state="translated">Nothing to report</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">141,142</context>
+        </context-group>
+        <note priority="1" from="description">Bloc points d&apos;attention vide</note>
+      </trans-unit>
+      <trans-unit id="overview.attention.empty.message" datatype="html">
+        <source>Les drapeaux, brouillons et séances non clôturées apparaîtront ici.</source>
+        <target state="translated">Flags, drafts and unclosed sessions will appear here.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">143,144</context>
+        </context-group>
+        <note priority="1" from="description">Bloc points d&apos;attention vide</note>
+      </trans-unit>
+      <trans-unit id="overview.attention.error" datatype="html">
+        <source>Points d&apos;attention indisponibles</source>
+        <target state="translated">Points of attention unavailable</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">145,146</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc points d&apos;attention</note>
+      </trans-unit>
+      <trans-unit id="overview.attention.sheetLink" datatype="html">
+        <source>Modifier la fiche</source>
+        <target state="translated">Edit the record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">155,159</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la fiche depuis la vue d&apos;ensemble</note>
+      </trans-unit>
+      <trans-unit id="overview.attention.flag" datatype="html">
+        <source>Drapeau : <x id="INTERPOLATION" equiv-text="{{ flagLabel(flag.kind) }}"/></source>
+        <target state="translated">Flag: <x id="INTERPOLATION" equiv-text="{{ flagLabel(flag.kind) }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">167,168</context>
+        </context-group>
+        <note priority="1" from="description">Niveau d&apos;un drapeau dans les points d&apos;attention</note>
+      </trans-unit>
+      <trans-unit id="overview.attention.flagSince" datatype="html">
+        <source>posé le <x id="INTERPOLATION" equiv-text="{{ day(flag.setAt) }}"/></source>
+        <target state="translated">set on <x id="INTERPOLATION" equiv-text="{{ day(flag.setAt) }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">176,177</context>
+        </context-group>
+        <note priority="1" from="description">Date de pose d&apos;un drapeau</note>
+      </trans-unit>
+      <trans-unit id="overview.attention.drafts" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 brouillon à compléter} other {<x id="INTERPOLATION"/> brouillons à compléter}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 draft to complete} other {<x id="INTERPOLATION"/> drafts to complete}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">193,198</context>
+        </context-group>
+        <note priority="1" from="description">Brouillons à compléter, lien vers la timeline filtrée</note>
+      </trans-unit>
+      <trans-unit id="overview.attention.openSession" datatype="html">
+        <source>Séance du <x id="INTERPOLATION" equiv-text="{{ day(open.startedAt) }}"/> non clôturée</source>
+        <target state="translated">Session of <x id="INTERPOLATION" equiv-text="{{ day(open.startedAt) }}"/> not closed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">213,214</context>
+        </context-group>
+        <note priority="1" from="description">Séance non clôturée, lien vers la timeline par
+                    séance</note>
+      </trans-unit>
+      <trans-unit id="overview.situations.heading" datatype="html">
+        <source>Situations actives</source>
+        <target state="translated">Active situations</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">224,225</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc situations</note>
+      </trans-unit>
+      <trans-unit id="overview.situations.empty.title" datatype="html">
+        <source>Aucune situation en cours</source>
+        <target state="translated">No ongoing situation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">227,228</context>
+        </context-group>
+        <note priority="1" from="description">Bloc situations vide</note>
+      </trans-unit>
+      <trans-unit id="overview.situations.empty.message" datatype="html">
+        <source>Les situations sans fin connue apparaîtront ici, avec leurs ressentis liés.</source>
+        <target state="translated">Situations with no known end will appear here, with their linked feelings.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">229,230</context>
+        </context-group>
+        <note priority="1" from="description">Bloc situations vide</note>
+      </trans-unit>
+      <trans-unit id="overview.situations.error" datatype="html">
+        <source>Situations indisponibles</source>
+        <target state="translated">Situations unavailable</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">231,232</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc situations</note>
+      </trans-unit>
+      <trans-unit id="overview.situations.since" datatype="html">
+        <source>depuis le <x id="INTERPOLATION" equiv-text="{{ day(situation.since) }}"/></source>
+        <target state="translated">since <x id="INTERPOLATION" equiv-text="{{ day(situation.since) }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">247,248</context>
+        </context-group>
+        <note priority="1" from="description">Début d&apos;une situation active</note>
+      </trans-unit>
+      <trans-unit id="overview.situations.feelings" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {aucun ressenti lié} =1 {1 ressenti lié} other {<x id="INTERPOLATION"/> ressentis liés}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =0 {no linked feeling} =1 {1 linked feeling} other {<x id="INTERPOLATION"/> linked feelings}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">254,257</context>
+        </context-group>
+        <note priority="1" from="description">Ressentis liés à une situation</note>
+      </trans-unit>
+      <trans-unit id="overview.situations.average" datatype="html">
+        <source> · intensité moy. <x id="INTERPOLATION" equiv-text="{{ intensity(situation.averageIntensity) }}"/>/10</source>
+        <target state="translated"> · avg. intensity <x id="INTERPOLATION" equiv-text="{{ intensity(situation.averageIntensity) }}"/>/10</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">262,263</context>
+        </context-group>
+        <note priority="1" from="description">Intensité moyenne d&apos;une situation</note>
+      </trans-unit>
+      <trans-unit id="overview.situations.links" datatype="html">
+        <source> · <x id="ICU" equiv-text="{situation.linkCount, plural,
+                      =0 {aucun lien}
+                      =1 {1 lien}
+                      other {{{situation.linkCount}} liens}
+                    }" xid="1283275242237418421"/></source>
+        <target state="translated"> · <x id="ICU" equiv-text="{situation.linkCount, plural,
+                      =0 {aucun lien}
+                      =1 {1 lien}
+                      other {{{situation.linkCount}} liens}
+                    }" xid="1283275242237418421"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">266,273</context>
+        </context-group>
+        <note priority="1" from="description">Liens d&apos;une situation</note>
+      </trans-unit>
+      <trans-unit id="8627068365951693733" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {aucun lien} =1 {1 lien} other {<x id="INTERPOLATION"/> liens}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =0 {no link} =1 {1 link} other {<x id="INTERPOLATION"/> links}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">267,269</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="overview.situations.graph" datatype="html">
+        <source>Voir dans le graphe<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> : <x id="INTERPOLATION" equiv-text="{{ situation.title ?? untitledSituation }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span
+                  &gt;"/></source>
+        <target state="translated">View in the graph<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/>: <x id="INTERPOLATION" equiv-text="{{ situation.title ?? untitledSituation }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span
+                  &gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">285,288</context>
+        </context-group>
+        <note priority="1" from="description">Lien d&apos;une situation vers le graphe centré sur elle</note>
+      </trans-unit>
+      <trans-unit id="overview.medications.heading" datatype="html">
+        <source>Traitement en cours</source>
+        <target state="translated">Current treatment</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">298,299</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc traitement</note>
+      </trans-unit>
+      <trans-unit id="overview.medications.empty.title" datatype="html">
+        <source>Aucun traitement en cours</source>
+        <target state="translated">No current treatment</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">301,302</context>
+        </context-group>
+        <note priority="1" from="description">Bloc traitement vide</note>
+      </trans-unit>
+      <trans-unit id="overview.medications.empty.message" datatype="html">
+        <source>Les médicaments notés dans le dossier, sans date de fin passée, apparaîtront ici.</source>
+        <target state="translated">Medications recorded in the file, with no past end date, will appear here.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">303,304</context>
+        </context-group>
+        <note priority="1" from="description">Bloc traitement vide</note>
+      </trans-unit>
+      <trans-unit id="overview.medications.error" datatype="html">
+        <source>Traitement indisponible</source>
+        <target state="translated">Treatment unavailable</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">305,306</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc traitement</note>
+      </trans-unit>
+      <trans-unit id="overview.medications.current" datatype="html">
+        <source>en cours</source>
+        <target state="translated">ongoing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">325,326</context>
+        </context-group>
+        <note priority="1" from="description">Médicament en cours</note>
+      </trans-unit>
+      <trans-unit id="overview.medications.since" datatype="html">
+        <source> · depuis le <x id="INTERPOLATION" equiv-text="{{ day(from) }}"/></source>
+        <target state="translated"> · since <x id="INTERPOLATION" equiv-text="{{ day(from) }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">328,329</context>
+        </context-group>
+        <note priority="1" from="description">Début d&apos;un médicament</note>
+      </trans-unit>
+      <trans-unit id="overview.medications.prescriber" datatype="html">
+        <source> · prescrit par <x id="INTERPOLATION" equiv-text="{{ medication.prescriber }}"/></source>
+        <target state="translated"> · prescribed by <x id="INTERPOLATION" equiv-text="{{ medication.prescriber }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">333,334</context>
+        </context-group>
+        <note priority="1" from="description">Prescripteur d&apos;un médicament</note>
+      </trans-unit>
+      <trans-unit id="overview.sessions.heading" datatype="html">
+        <source>Dernières séances</source>
+        <target state="translated">Recent sessions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">346,347</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc dernières séances</note>
+      </trans-unit>
+      <trans-unit id="overview.sessions.empty.title" datatype="html">
+        <source>Aucune séance</source>
+        <target state="translated">No session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">349,350</context>
+        </context-group>
+        <note priority="1" from="description">Bloc dernières séances vide</note>
+      </trans-unit>
+      <trans-unit id="overview.sessions.empty.message" datatype="html">
+        <source>Les séances apparaîtront ici dès la première, démarrée depuis l&apos;en-tête.</source>
+        <target state="translated">Sessions will appear here from the first one, started from the header.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">351,352</context>
+        </context-group>
+        <note priority="1" from="description">Bloc dernières séances vide</note>
+      </trans-unit>
+      <trans-unit id="overview.sessions.error" datatype="html">
+        <source>Séances indisponibles</source>
+        <target state="translated">Sessions unavailable</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">353,354</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc dernières séances</note>
+      </trans-unit>
+      <trans-unit id="overview.sessions.all" datatype="html">
+        <source>Toutes les séances</source>
+        <target state="translated">All sessions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">364,367</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la timeline par séance</note>
+      </trans-unit>
+      <trans-unit id="overview.emotions.empty.title" datatype="html">
+        <source>Pas d&apos;émotion dominante</source>
+        <target state="translated">No dominant emotion</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">381,382</context>
+        </context-group>
+        <note priority="1" from="description">Bloc émotions vide</note>
+      </trans-unit>
+      <trans-unit id="overview.emotions.empty.message" datatype="html">
+        <source>Les émotions les plus notées sur la période apparaîtront ici.</source>
+        <target state="translated">The emotions recorded most often over the period will appear here.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">383,384</context>
+        </context-group>
+        <note priority="1" from="description">Bloc émotions vide</note>
+      </trans-unit>
+      <trans-unit id="overview.emotions.error" datatype="html">
+        <source>Émotions indisponibles</source>
+        <target state="translated">Emotions unavailable</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">385,386</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc émotions</note>
+      </trans-unit>
+      <trans-unit id="overview.emotions.note" datatype="html">
+        <source> Variation par rapport à la période précédente de même durée </source>
+        <target state="translated"> Change compared with the previous period of the same length </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">418,421</context>
+        </context-group>
+        <note priority="1" from="description">Pied du bloc émotions</note>
+      </trans-unit>
+      <trans-unit id="overview.activity.heading" datatype="html">
+        <source>Activité récente</source>
+        <target state="translated">Recent activity</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">426,427</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc activité récente</note>
+      </trans-unit>
+      <trans-unit id="overview.activity.empty.title" datatype="html">
+        <source>Aucune entrée pour le moment</source>
+        <target state="translated">No entry yet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">429,430</context>
+        </context-group>
+        <note priority="1" from="description">Bloc activité vide</note>
+      </trans-unit>
+      <trans-unit id="overview.activity.empty.message" datatype="html">
+        <source>Les dernières entrées saisies ou corrigées apparaîtront ici. Notez la première avec la barre de saisie ou la touche N.</source>
+        <target state="translated">The latest entries recorded or corrected will appear here. Write the first one with the capture bar or the N key.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">431,432</context>
+        </context-group>
+        <note priority="1" from="description">Bloc activité vide</note>
+      </trans-unit>
+      <trans-unit id="overview.activity.error" datatype="html">
+        <source>Activité indisponible</source>
+        <target state="translated">Activity unavailable</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">433,434</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc activité</note>
+      </trans-unit>
+      <trans-unit id="overview.activity.draft" datatype="html">
+        <source>brouillon</source>
+        <target state="translated">draft</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">452,455</context>
+        </context-group>
+        <note priority="1" from="description">Entrée en brouillon</note>
+      </trans-unit>
+      <trans-unit id="overview.activity.version" datatype="html">
+        <source>v<x id="INTERPOLATION" equiv-text="{{ item.version }}"/></source>
+        <target state="translated">v<x id="INTERPOLATION" equiv-text="{{ item.version }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">457,458</context>
+        </context-group>
+        <note priority="1" from="description">Version d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="overview.updating" datatype="html">
+        <source>Mise à jour de la synthèse…</source>
+        <target state="translated">Updating the summary…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">472,475</context>
+        </context-group>
+        <note priority="1" from="description">Synthèse en cours de relecture</note>
+      </trans-unit>
+      <trans-unit id="overview.updated" datatype="html">
+        <source>Dernière mise à jour de la synthèse : <x id="INTERPOLATION" equiv-text="{{ at }}"/></source>
+        <target state="translated">Summary last updated: <x id="INTERPOLATION" equiv-text="{{ at }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">489,491</context>
+        </context-group>
+        <note priority="1" from="description">Heure de calcul de la synthèse</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.heading" datatype="html">
+        <source>Tendance d&apos;intensité · <x id="period" equiv-text="windowLongLabel(this.shownWindow())"/></source>
+        <target state="translated">Intensity trend · <x id="period" equiv-text="windowLongLabel(this.shownWindow())"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc tendance</note>
+      </trans-unit>
+      <trans-unit id="overview.emotions.heading" datatype="html">
+        <source>Émotions dominantes · <x id="period" equiv-text="windowLongLabel(this.shownWindow())"/></source>
+        <target state="translated">Dominant emotions · <x id="period" equiv-text="windowLongLabel(this.shownWindow())"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc émotions dominantes</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.action" datatype="html">
+        <source>Afficher la vue complète</source>
+        <target state="translated">Show the full view</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+        <note priority="1" from="description">Action de l&apos;état provisoire de la vue simple</note>
+      </trans-unit>
+      <trans-unit id="overview.situations.untitled" datatype="html">
+        <source>Situation sans titre</source>
+        <target state="translated">Untitled situation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
+          <context context-type="linenumber">200</context>
+        </context-group>
+        <note priority="1" from="description">Situation sans titre</note>
+      </trans-unit>
+      <trans-unit id="overview.block.retry" datatype="html">
+        <source>Réessayer</source>
+        <target state="translated">Retry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-block.component.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;un bloc en erreur</note>
+      </trans-unit>
+      <trans-unit id="overview.window.30d" datatype="html">
+        <source>30 j</source>
+        <target state="translated">30 d</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Sélecteur de fenêtre de la vue d&apos;ensemble</note>
+      </trans-unit>
+      <trans-unit id="overview.window.90d" datatype="html">
+        <source>90 j</source>
+        <target state="translated">90 d</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Sélecteur de fenêtre de la vue d&apos;ensemble</note>
+      </trans-unit>
+      <trans-unit id="overview.window.12m" datatype="html">
+        <source>1 an</source>
+        <target state="translated">1 yr</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">Sélecteur de fenêtre de la vue d&apos;ensemble</note>
+      </trans-unit>
+      <trans-unit id="overview.window.30d.long" datatype="html">
+        <source>30 jours</source>
+        <target state="translated">30 days</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Fenêtre de la vue d&apos;ensemble en toutes lettres</note>
+      </trans-unit>
+      <trans-unit id="overview.window.90d.long" datatype="html">
+        <source>90 jours</source>
+        <target state="translated">90 days</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Fenêtre de la vue d&apos;ensemble en toutes lettres</note>
+      </trans-unit>
+      <trans-unit id="overview.window.12m.long" datatype="html">
+        <source>12 mois</source>
+        <target state="translated">12 months</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">Fenêtre de la vue d&apos;ensemble en toutes lettres</note>
+      </trans-unit>
+      <trans-unit id="overview.flag.watch" datatype="html">
+        <source>À surveiller</source>
+        <target state="translated">To watch</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <note priority="1" from="description">Drapeau du dossier</note>
+      </trans-unit>
+      <trans-unit id="overview.flag.risk" datatype="html">
+        <source>Risque</source>
+        <target state="translated">Risk</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <note priority="1" from="description">Drapeau du dossier</note>
+      </trans-unit>
+      <trans-unit id="overview.flag.sharedCare" datatype="html">
+        <source>Suivi conjoint</source>
+        <target state="translated">Shared care</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <note priority="1" from="description">Drapeau du dossier</note>
+      </trans-unit>
+      <trans-unit id="overview.session.kind.intake" datatype="html">
+        <source>Accueil</source>
+        <target state="translated">Intake</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">Nature d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="overview.session.kind.session" datatype="html">
+        <source>Séance</source>
+        <target state="translated">Session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">Nature d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="overview.session.kind.contact" datatype="html">
+        <source>Contact</source>
+        <target state="translated">Contact</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <note priority="1" from="description">Nature d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="overview.session.modality.inPerson" datatype="html">
+        <source>Présentiel</source>
+        <target state="translated">In person</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <note priority="1" from="description">Modalité d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="overview.session.modality.video" datatype="html">
+        <source>Visio</source>
+        <target state="translated">Video</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <note priority="1" from="description">Modalité d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="overview.session.modality.phone" datatype="html">
+        <source>Téléphone</source>
+        <target state="translated">Phone</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <note priority="1" from="description">Modalité d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="overview.session.modality.email" datatype="html">
+        <source>E-mail</source>
+        <target state="translated">Email</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">Modalité d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="overview.family.joy" datatype="html">
+        <source>Joie</source>
+        <target state="translated">Joy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="overview.family.trust" datatype="html">
+        <source>Confiance</source>
+        <target state="translated">Trust</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="overview.family.fear" datatype="html">
+        <source>Peur</source>
+        <target state="translated">Fear</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="overview.family.surprise" datatype="html">
+        <source>Surprise</source>
+        <target state="translated">Surprise</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="overview.family.sadness" datatype="html">
+        <source>Tristesse</source>
+        <target state="translated">Sadness</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="overview.family.disgust" datatype="html">
+        <source>Dégoût</source>
+        <target state="translated">Disgust</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="overview.family.anger" datatype="html">
+        <source>Colère</source>
+        <target state="translated">Anger</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="overview.family.anticipation" datatype="html">
+        <source>Anticipation</source>
+        <target state="translated">Anticipation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions</note>
+      </trans-unit>
+      <trans-unit id="overview.family.unknown" datatype="html">
+        <source>Autre</source>
+        <target state="translated">Other</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <note priority="1" from="description">Famille d&apos;émotions inconnue</note>
+      </trans-unit>
+      <trans-unit id="overview.emotions.up" datatype="html">
+        <source><x id="count" equiv-text="delta"/> de plus que les <x id="period" equiv-text="period"/> précédents</source>
+        <target state="translated"><x id="count" equiv-text="delta"/> more than the previous <x id="period" equiv-text="period"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+        <note priority="1" from="description">Variation d&apos;une émotion, en hausse</note>
+      </trans-unit>
+      <trans-unit id="overview.emotions.down" datatype="html">
+        <source><x id="count" equiv-text="count"/> de moins que les <x id="period" equiv-text="period"/> précédents</source>
+        <target state="translated"><x id="count" equiv-text="count"/> fewer than the previous <x id="period" equiv-text="period"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+        <note priority="1" from="description">Variation d&apos;une émotion, en baisse</note>
+      </trans-unit>
+      <trans-unit id="overview.emotions.same" datatype="html">
+        <source>autant que les <x id="period" equiv-text="period"/> précédents</source>
+        <target state="translated">as many as the previous <x id="period" equiv-text="period"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+        <note priority="1" from="description">Variation d&apos;une émotion, stable</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.summary.counts" datatype="html">
+        <source>Ressentis sur la période : <x id="feelings" equiv-text="feelingCount"/> ; séances : <x id="sessions" equiv-text="sessions"/> ; repères de médicament : <x id="medications" equiv-text="medications"/>.</source>
+        <target state="translated">Feelings over the period: <x id="feelings" equiv-text="feelingCount"/>; sessions: <x id="sessions" equiv-text="sessions"/>; medication markers: <x id="medications" equiv-text="medications"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">175</context>
+        </context-group>
+        <note priority="1" from="description">Résumé de la courbe, comptes</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.summary.none" datatype="html">
+        <source>Intensité des ressentis sur <x id="period" equiv-text="period"/> : aucune moyenne.</source>
+        <target state="translated">Feeling intensity over <x id="period" equiv-text="period"/>: no average.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <note priority="1" from="description">Résumé de la courbe sans moyenne</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.summary" datatype="html">
+        <source>Intensité moyenne des ressentis sur <x id="period" equiv-text="period"/> (moyenne glissante sur 7 jours) : de <x id="min" equiv-text="min"/> à <x id="max" equiv-text="max"/> sur 10, dernière valeur <x id="last" equiv-text="last"/>.</source>
+        <target state="translated">Average feeling intensity over <x id="period" equiv-text="period"/> (7-day rolling average): from <x id="min" equiv-text="min"/> to <x id="max" equiv-text="max"/> out of 10, latest value <x id="last" equiv-text="last"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">187</context>
+        </context-group>
+        <note priority="1" from="description">Résumé de la courbe</note>
+      </trans-unit>
+      <trans-unit id="overview.saveRejected" datatype="html">
+        <source>Réglage non enregistré : <x id="reason" equiv-text="fieldMessage"/></source>
+        <target state="translated">Setting not saved: <x id="reason" equiv-text="fieldMessage"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+        <note priority="1" from="description">Toast quand le serveur refuse un réglage de la vue d&apos;ensemble (422)</note>
+      </trans-unit>
+      <trans-unit id="overview.saveFailed" datatype="html">
+        <source>Impossible d&apos;enregistrer ce réglage. La valeur précédente est rétablie.</source>
+        <target state="translated">This setting could not be saved. The previous value has been restored.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">198</context>
+        </context-group>
+        <note priority="1" from="description">Toast quand l&apos;enregistrement d&apos;un réglage de la vue d&apos;ensemble échoue</note>
+      </trans-unit>
+      <trans-unit id="overview.sessions.entryCount" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {aucune entrée} =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =0 {no entry} =1 {1 entry} other {<x id="INTERPOLATION"/> entries}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
+          <context context-type="linenumber">44,48</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;entrées d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="overview.sessions.open" datatype="html">
+        <source> Séance en cours, non clôturée. </source>
+        <target state="translated"> Session in progress, not closed. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
+          <context context-type="linenumber">55,58</context>
+        </context-group>
+        <note priority="1" from="description">Séance non clôturée</note>
+      </trans-unit>
+      <trans-unit id="overview.sessions.noSummary" datatype="html">
+        <source> Pas de compte rendu. </source>
+        <target state="translated"> No session notes. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
+          <context context-type="linenumber">64,67</context>
+        </context-group>
+        <note priority="1" from="description">Séance sans compte rendu</note>
+      </trans-unit>
+      <trans-unit id="overview.sessions.inTimeline" datatype="html">
+        <source>Voir la séance dans la timeline</source>
+        <target state="translated">View the session in the timeline</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
+          <context context-type="linenumber">71,79</context>
+        </context-group>
+        <note priority="1" from="description">Lien d&apos;une séance vers la timeline par séance</note>
+      </trans-unit>
+      <trans-unit id="overview.sessions.duration" datatype="html">
+        <source><x id="minutes" equiv-text="session.durationMin"/> min</source>
+        <target state="translated"><x id="minutes" equiv-text="session.durationMin"/> min</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <note priority="1" from="description">Durée d&apos;une séance</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.legend" datatype="html">
+        <source>Légende</source>
+        <target state="translated">Legend</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la courbe</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.legend.average" datatype="html">
+        <source>Intensité moyenne (7 jours)</source>
+        <target state="translated">Average intensity (7 days)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">61,64</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la courbe</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.legend.session" datatype="html">
+        <source>Séance</source>
+        <target state="translated">Session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">72,75</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la courbe</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.legend.medication" datatype="html">
+        <source>Changement de médicament</source>
+        <target state="translated">Medication change</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">77,81</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la courbe</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.data" datatype="html">
+        <source> Voir les données </source>
+        <target state="translated"> View the data </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">84,87</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui déplie les données de la courbe</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.data.caption" datatype="html">
+        <source> Ressentis de la période </source>
+        <target state="translated"> Feelings of the period </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">88,92</context>
+        </context-group>
+        <note priority="1" from="description">Légende du tableau des ressentis</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.data.date" datatype="html">
+        <source> Date </source>
+        <target state="translated"> Date </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">93,95</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du tableau des ressentis</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.data.emotion" datatype="html">
+        <source> Émotion </source>
+        <target state="translated"> Emotion </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">96,99</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du tableau des ressentis</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.data.intensity" datatype="html">
+        <source> Intensité </source>
+        <target state="translated"> Intensity </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">102,106</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du tableau des ressentis</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.failed" datatype="html">
+        <source>Tendance indisponible</source>
+        <target state="translated">Trend unavailable</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">211</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/trend-chart.component.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <note priority="1" from="description">La courbe ne s&apos;est pas chargée</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.average" datatype="html">
+        <source>Intensité moyenne (7 jours)</source>
+        <target state="translated">Average intensity (7 days)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">237</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la courbe des moyennes</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.session" datatype="html">
+        <source>Séance</source>
+        <target state="translated">Session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">238</context>
+        </context-group>
+        <note priority="1" from="description">Repère de séance sur la courbe</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.medicationStart" datatype="html">
+        <source>Début de traitement</source>
+        <target state="translated">Treatment start</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">239</context>
+        </context-group>
+        <note priority="1" from="description">Repère de début de médicament</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.medicationEnd" datatype="html">
+        <source>Fin de traitement</source>
+        <target state="translated">Treatment end</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-trend.component.ts</context>
+          <context context-type="linenumber">240</context>
+        </context-group>
+        <note priority="1" from="description">Repère de fin de médicament</note>
+      </trans-unit>
+      <trans-unit id="overview.view.group" datatype="html">
+        <source>Niveau de détail de la vue d&apos;ensemble</source>
+        <target state="translated">Overview level of detail</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-view-toggle.component.ts</context>
+          <context context-type="linenumber">21,22</context>
+        </context-group>
+        <note priority="1" from="description">Groupe de la bascule de vue</note>
+      </trans-unit>
+      <trans-unit id="overview.view.label" datatype="html">
+        <source>Vue</source>
+        <target state="translated">View</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-view-toggle.component.ts</context>
+          <context context-type="linenumber">29,33</context>
+        </context-group>
+        <note priority="1" from="description">Libellé de la bascule de vue</note>
+      </trans-unit>
+      <trans-unit id="overview.view.simple" datatype="html">
+        <source> Simple </source>
+        <target state="translated"> Simple </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-view-toggle.component.ts</context>
+          <context context-type="linenumber">38,41</context>
+        </context-group>
+        <note priority="1" from="description">Bascule de vue : récit</note>
+      </trans-unit>
+      <trans-unit id="overview.view.complete" datatype="html">
+        <source> Complète </source>
+        <target state="translated"> Full </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-view-toggle.component.ts</context>
+          <context context-type="linenumber">46,49</context>
+        </context-group>
+        <note priority="1" from="description">Bascule de vue : chiffres</note>
+      </trans-unit>
+      <trans-unit id="overview.view.hint" datatype="html">
+        <source>mémorisée dans vos préférences</source>
+        <target state="translated">saved in your preferences</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-view-toggle.component.ts</context>
+          <context context-type="linenumber">50,55</context>
+        </context-group>
+        <note priority="1" from="description">Sous la bascule de vue</note>
+      </trans-unit>
+      <trans-unit id="overview.trend.failed.message" datatype="html">
+        <source>La courbe n&apos;a pas pu s&apos;afficher ; les données restent lisibles dans « Voir les données ».</source>
+        <target state="translated">The curve could not be displayed; the data remain readable under “View the data”.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/trend-chart.component.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <note priority="1" from="description">La courbe ne s&apos;est pas chargée</note>
+      </trans-unit>
+      <trans-unit id="overview.reloadFailed.title" datatype="html">
+        <source>La synthèse n&apos;a pas pu être relue</source>
+        <target state="translated">The summary could not be reloaded</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">26,27</context>
+        </context-group>
+        <note priority="1" from="description">Bandeau de relecture en échec</note>
+      </trans-unit>
+      <trans-unit id="overview.reloadFailed.message" datatype="html">
+        <source>Les chiffres affichés sont ceux de la lecture précédente.</source>
+        <target state="translated">The figures shown come from the previous reading.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
+          <context context-type="linenumber">28,29</context>
+        </context-group>
+        <note priority="1" from="description">Bandeau de relecture en échec</note>
+      </trans-unit>
+      <trans-unit id="overview.reloadFailed.retry" datatype="html">
+        <source>Réessayer</source>
+        <target state="translated">Retry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du bandeau de relecture en échec</note>
+      </trans-unit>
+      <trans-unit id="overview.block.busy" datatype="html">
+        <source>mise à jour…</source>
+        <target state="translated">updating…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-block.component.ts</context>
+          <context context-type="linenumber">30,33</context>
+        </context-group>
+        <note priority="1" from="description">Bloc en cours de relecture</note>
       </trans-unit>
     </body>
   </file>

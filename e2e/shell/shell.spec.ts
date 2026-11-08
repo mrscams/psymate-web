@@ -36,8 +36,9 @@ function header(page: Page) {
   };
 }
 
-function counter(page: Page) {
-  return page.getByRole('button', { name: /^Compteur : \d+$/ });
+/** La séance d'accueil dans « Dernières séances » de la vue d'ensemble (M4-05), dépliable. */
+function intakeToggle(page: Page) {
+  return page.locator('pm-overview-sessions button[aria-expanded]').first();
 }
 
 test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre de capture', async ({
@@ -45,7 +46,18 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   request,
 }) => {
   const account = await createAccount(request, 'm1-07.onglets', 'psychologist');
+  // Vue complète (M4-05) : l'onglet 1 a des séances dépliables, son état rangé par rememberTab.
+  const prefs = await request.patch(`${API}/api/me/preferences`, {
+    data: { 'overview.view': 'complete' },
+  });
+  expect(prefs.status(), await prefs.text()).toBe(200);
   const id = await createPatient(request, 'Inès M.');
+  // La séance d'accueil est créée de façon asynchrone après le patient : on l'attend.
+  await expect
+    .poll(async () => (await request.get(`${API}/api/patients/${id}/sessions/current`)).status(), {
+      timeout: 10_000,
+    })
+    .toBe(200);
   await signIn(page, account);
 
   await page.goto(`/fr/patients/${id}`);
@@ -58,16 +70,16 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(page.getByRole('heading', { level: 2, name: "Vue d'ensemble" })).toBeVisible();
   await expectNoAxeViolations(page);
 
-  // L'onglet 1 (encore provisoire) range son compteur (rememberTab) ; on part sur le Graphe (M2-06)
-  // par clic : patient sans lien, l'état vide du graphe.
-  await counter(page).click();
-  await counter(page).click();
-  await expect(counter(page)).toHaveText('Compteur : 2');
+  // L'onglet 1 (vue d'ensemble, M4-05) range ses séances dépliées (rememberTab) : on replie la
+  // séance d'accueil, puis on part sur le Graphe (M2-06) par clic : patient sans lien, état vide.
+  await expect(intakeToggle(page)).toHaveAttribute('aria-expanded', 'true');
+  await intakeToggle(page).click();
+  await expect(intakeToggle(page)).toHaveAttribute('aria-expanded', 'false');
   await h.tabs.getByRole('link', { name: /Graphe/ }).click();
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph$`));
   await expect(page.getByRole('heading', { level: 2, name: 'Graphe des liens' })).toBeAttached();
   await expect(page.getByText('Les liens que vous créez apparaîtront ici')).toBeVisible();
-  await expect(counter(page)).toHaveCount(0);
+  await expect(intakeToggle(page)).toHaveCount(0);
 
   // Touches : 2 → Timeline (M3-02), 1 → retour à l'onglet 1 avec son état, 3 → Graphe.
   await page.keyboard.press('2');
@@ -75,7 +87,7 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(page.getByRole('heading', { level: 2, name: 'Timeline' })).toBeAttached();
   await page.keyboard.press('1');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
-  await expect(counter(page)).toHaveText('Compteur : 2');
+  await expect(intakeToggle(page)).toHaveAttribute('aria-expanded', 'false');
   await page.keyboard.press('3');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph$`));
   await expect(page.getByText('Les liens que vous créez apparaîtront ici')).toBeVisible();
