@@ -6,6 +6,7 @@ import { SubjectVocabulary } from '../../../core/i18n';
 import { PreferencesStore } from '../../../core/preferences';
 import { ConfirmDialogService, ToastService } from '../../../shared/ui';
 import { PatientApi } from '../data/patient.api';
+import { PatientExportApi } from '../data/patient-export.api';
 import { patient, TAGS, VERSIONS } from '../data/patient.fixtures';
 import { PatientFormPage } from './patient-form.page';
 
@@ -27,6 +28,7 @@ async function render(api: Partial<PatientApi>, options: Options = {}) {
       { provide: PatientApi, useValue: { listTags: vi.fn().mockResolvedValue(TAGS), ...api } },
       { provide: PreferencesStore, useValue: { defaultDurationMin: () => 60 } },
       { provide: ConfirmDialogService, useValue: { confirm } },
+      { provide: PatientExportApi, useValue: { exportPatient: vi.fn() } },
     ],
   });
   TestBed.inject(SubjectVocabulary).set(options.label ?? 'patient');
@@ -94,6 +96,7 @@ describe('PatientFormPage', () => {
       expect(el.querySelector('pm-state')).toBeNull();
       expect(el.querySelector('pm-version-history')).toBeNull();
       expect(el.querySelector('.danger-zone')).toBeNull();
+      expect(el.querySelector('pm-patient-export-menu')).toBeNull();
       expect(el.querySelectorAll('fieldset legend')).toHaveLength(5);
     });
 
@@ -188,6 +191,16 @@ describe('PatientFormPage', () => {
     const loaded = () => ({
       get: vi.fn().mockResolvedValue(patient({ currentVersion: 3 })),
       versions: vi.fn().mockResolvedValue(VERSIONS),
+    });
+
+    it('encart « Export du dossier » : menu « Exporter ce dossier » et note privées exclues', async () => {
+      const { el } = await render(loaded(), { id: 'p-marie' });
+      const aside = el.querySelector('aside');
+      expect(aside?.querySelector('#export-title')?.textContent).toContain('Export du dossier');
+      const trigger = aside?.querySelector('pm-patient-export-menu button');
+      expect(trigger?.textContent).toContain('Exporter ce dossier');
+      expect(trigger?.getAttribute('aria-haspopup')).toBe('menu');
+      expect(aside?.textContent).toContain('Entrées privées exclues');
     });
 
     it('chargement : squelette à la place du formulaire', async () => {

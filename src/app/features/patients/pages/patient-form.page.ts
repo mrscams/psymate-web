@@ -49,6 +49,7 @@ import {
 } from '../data/patient.model';
 import { PatientStore } from '../data/patient.store';
 import { TagStore } from '../data/tag.store';
+import { PatientExportMenuComponent } from '../ui/export-menu.component';
 import { FlagFieldsComponent } from '../ui/flag-fields.component';
 import { HeaderPreviewComponent } from '../ui/header-preview.component';
 import { buildPatientForm, toFormProblem } from '../ui/patient-form';
@@ -82,6 +83,7 @@ import { VersionHistoryComponent } from '../ui/version-history.component';
     StateComponent,
     FlagFieldsComponent,
     HeaderPreviewComponent,
+    PatientExportMenuComponent,
     TagEditorComponent,
     VersionHistoryComponent,
   ],

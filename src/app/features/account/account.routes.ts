@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { DataExportPage } from './pages/data-export.page';
 import { EmotionsPage } from './pages/emotions.page';
 import { PreferencesPage } from './pages/preferences.page';
 import { ProfilePage } from './pages/profile.page';
@@ -42,5 +43,10 @@ export const ACCOUNT_ROUTES: Routes = [
     title: $localize`:Titre d'onglet de Compte et sécurité@@account.security.pageTitle:Compte et sécurité · PsyMate`,
     // /mon-compte/securite/2fa : même page, le panneau d'activation ouvert (fiche 18 B).
     children: [{ path: TWO_FACTOR_SEGMENT, children: [] }],
+  },
+  {
+    path: 'donnees',
+    component: DataExportPage,
+    title: $localize`:Titre d'onglet de Données et export@@account.data.pageTitle:Données et export · PsyMate`,
   },
 ];
