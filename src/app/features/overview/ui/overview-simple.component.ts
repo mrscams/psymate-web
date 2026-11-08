@@ -11,6 +11,7 @@ import { RouterLink } from '@angular/router';
 
 import { EntryIconComponent, entryTypeLabel } from '../../../shared/ui';
 import { Loadable, StateKind } from '../../../shared/util';
+import { ENTRY_QUERY_PARAM } from '../../entries';
 import {
   blockState,
   GRAPH_ROOT_PARAM,
@@ -36,9 +37,6 @@ import {
   sessionHeading,
   windowLongLabel,
 } from './overview-labels';
-
-/** Paramètre de l'éditeur d'entrée (features/entries, ENTRY_QUERY_PARAM) : le shell l'ouvre. */
-const ENTRY_PARAM = 'entry';
 
 /** Les blocs de la vue simple, chacun avec ses trois états. */
 export type SimpleBlock =
@@ -148,6 +146,6 @@ export class OverviewSimpleComponent {
   }
 
   protected entryParams(entryId: string): Record<string, string> {
-    return { [ENTRY_PARAM]: entryId };
+    return { [ENTRY_QUERY_PARAM]: entryId };
   }
 }

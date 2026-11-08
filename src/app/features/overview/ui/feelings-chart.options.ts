@@ -198,7 +198,8 @@ export function feelingsChartOptions(
           position: 'end',
           color: tokens.textSecondary,
           fontSize: 11,
-          formatter: medicationName(marker, labels),
+          // Fonction, pas chaîne : le texte du serveur n'est pas lu comme gabarit ECharts ({a}, {b|…}).
+          formatter: () => medicationName(marker, labels),
         },
       })),
     tooltip: {

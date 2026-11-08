@@ -119,8 +119,7 @@
           <a
             [routerLink]="['/patients', patientId(), 'timeline']"
             [queryParams]="sessionParams(session.entryId)"
-            i18n="
-              Lien de la dernière séance vers la timeline@@overview.simple.lastSession.inTimeline"
+            i18n="Dernière séance vers la timeline@@overview.simple.lastSession.inTimeline"
             >Voir la séance dans la timeline</a
           >
         </p>
@@ -137,19 +136,18 @@
                     [queryParams]="sessionParams(previous.entryId)"
                     >{{ day(previous.occurredFrom) }}</a
                   >
+                  <!-- Séparateur neutre « · » entre les éléments (aucune ponctuation à traduire). -->
                   @if (previous.modality) {
-                    <span class="muted"> ({{ modalityLabel(previous.modality) }})</span>
+                    <span class="muted"> · {{ modalityLabel(previous.modality) }}</span>
                   }
                   @if (previous.summaryFirstLine) {
-                    <span> — {{ previous.summaryFirstLine }}</span>
+                    <span> · {{ previous.summaryFirstLine }}</span>
                   } @else {
+                    &ngsp;
                     <span
                       class="muted"
-                      i18n="
-                        Séance précédente sans compte
-                        rendu@@overview.simple.lastSession.previousNoSummary"
-                    >
-                      — pas de compte rendu</span
+                      i18n="Séance sans compte rendu@@overview.simple.lastSession.previousNoSummary"
+                      >· pas de compte rendu</span
                     >
                   }
                 </li>
@@ -220,8 +218,12 @@
     </pm-overview-block>
   </div>
 
-  <!-- Colonne latérale : repères. -->
-  <div class="side">
+  <!-- Colonne latérale : repères (région nommée, pas d'aside : elle est dans le main du shell). -->
+  <section
+    class="side"
+    aria-label="Repères"
+    i18n-aria-label="Colonne latérale de la vue simple@@overview.simple.side"
+  >
     <!-- Depuis la dernière séance : entrées postérieures à la dernière séance clôturée. -->
     <pm-overview-block
       [heading]="sinceHeading()"
@@ -359,7 +361,10 @@
                 >
               }
               @if (flag.reason) {
-                <span class="muted"> : {{ flag.reason }}</span>
+                &ngsp;
+                <span class="muted" i18n="Motif d'un drapeau@@overview.simple.frame.flagReason"
+                  >· motif : {{ flag.reason }}</span
+                >
               }
             </li>
           }
@@ -388,8 +393,7 @@
               <a
                 [routerLink]="['/patients', patientId(), 'timeline']"
                 [queryParams]="draftParams"
-                i18n="
-                  Brouillons à relire, lien vers la timeline filtrée@@overview.simple.todo.drafts"
+                i18n="Brouillons, vers la timeline filtrée@@overview.simple.todo.drafts"
                 >{v.drafts.count, plural,
                   =1 {1 brouillon à relire}
                   other {{{v.drafts.count}} brouillons à relire}
@@ -402,9 +406,7 @@
               <a
                 [routerLink]="['/patients', patientId(), 'timeline']"
                 [queryParams]="sessionParams(open.entryId)"
-                i18n="
-                  Séance à clôturer, lien vers la timeline par
-                  séance@@overview.simple.todo.openSession"
+                i18n="Séance à clôturer, vers la timeline@@overview.simple.todo.openSession"
                 >Séance du {{ day(open.startedAt) }} à clôturer</a
               >
             </li>
@@ -412,5 +414,5 @@
         </ul>
       }
     </pm-overview-block>
-  </div>
+  </section>
 </div>

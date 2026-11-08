@@ -78,10 +78,25 @@ test.describe('vue d’ensemble simple « Récit »', () => {
     await expect(page.getByText('Reçu du patient')).toHaveCount(0);
     await expectNoAxeViolations(page);
 
-    // « Voir les données » : le tableau des ressentis (en-tête + 4 lignes).
-    await feelings.getByText('Voir les données').click();
+    // Au clavier : « Voir les données » (Entrée sur le résumé) déplie le tableau des ressentis
+    // (en-tête + 4 lignes) ; Entrée sur une émotion ouvre l'éditeur de ce ressenti (?entry=).
+    const data = feelings.locator('details.data > summary');
+    await data.focus();
+    await expect(data).toBeFocused();
+    await page.keyboard.press('Enter');
     await expect(feelings.getByRole('table')).toBeVisible();
     await expect(feelings.getByRole('row')).toHaveCount(5);
+    await expectNoAxeViolations(page);
+    const first = feelings.getByRole('table').getByRole('link', { name: 'Anxiété' }).first();
+    await first.focus();
+    await expect(first).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(
+      new RegExp(`/fr/patients/${folder.patientId}\\?entry=[0-9a-f-]{36}$`),
+    );
+    const editor = page.getByRole('dialog').filter({ has: page.locator('pm-entry-editor-panel') });
+    await expect(editor).toBeVisible();
+    await expect(editor.locator('pm-state [aria-busy="true"]')).toHaveCount(0);
     await expectNoAxeViolations(page);
   });
 

@@ -19,6 +19,7 @@ import {
   ToastService,
 } from '../../../shared/ui';
 import { StateKind } from '../../../shared/util';
+import { ENTRY_QUERY_PARAM } from '../../entries';
 import { PatientShellStore } from '../../patient-shell';
 import {
   blockState,
@@ -58,9 +59,6 @@ import { OverviewTrendComponent } from '../ui/overview-trend.component';
 export interface OverviewTabState {
   expanded: string[];
 }
-
-/** Paramètre de l'éditeur d'entrée (features/entries, ENTRY_QUERY_PARAM) : le shell l'ouvre. */
-const ENTRY_PARAM = 'entry';
 
 /** Les blocs de la vue complète, chacun avec ses trois états. */
 type Block =
@@ -252,7 +250,7 @@ export class OverviewPage {
   }
 
   protected entryParams(entryId: string): Record<string, string> {
-    return { [ENTRY_PARAM]: entryId };
+    return { [ENTRY_QUERY_PARAM]: entryId };
   }
 
   protected readonly draftParams = { [TIMELINE_PARAMS.drafts]: '1' };
@@ -282,7 +280,7 @@ export class OverviewPage {
   protected openEntry(entryId: string): void {
     void this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { [ENTRY_PARAM]: entryId },
+      queryParams: { [ENTRY_QUERY_PARAM]: entryId },
       queryParamsHandling: 'merge',
     });
   }

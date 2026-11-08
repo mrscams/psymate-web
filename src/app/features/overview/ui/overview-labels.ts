@@ -227,10 +227,24 @@ export function feelingsSummary(feelings: OverviewFeelings, window: OverviewWind
     })
     .filter((part): part is string => part !== null);
   const sessions = feelings.ticks.length;
-  const medications = feelings.markers.length;
-  const head = $localize`:Description du graphe des ressentis@@overview.simple.feelings.summary:Ressentis notés sur ${period}:period:, une valeur par point`;
+  const medications = feelings.markers.filter((m) => m.kind === 'medication').length;
   const counts = $localize`:Description du graphe des ressentis, comptes@@overview.simple.feelings.summary.counts:Jours de séance : ${sessions}:sessions: ; repères de médicament : ${medications}:medications:.`;
-  return `${head} : ${parts.join(' ; ')}. ${counts}`;
+  if (!parts.length) {
+    return $localize`:Description du graphe des ressentis, sans ressenti@@overview.simple.feelings.summary.none:Ressentis notés sur ${period}:period:, une valeur par point. ${counts}:counts:`;
+  }
+  const separator = $localize`:Séparateur entre deux émotions de la description du graphe@@overview.simple.feelings.summary.separator: ; `;
+  const details = parts.join(separator);
+  return $localize`:Description du graphe des ressentis@@overview.simple.feelings.summary:Ressentis notés sur ${period}:period:, une valeur par point : ${details}:details:. ${counts}:counts:`;
+}
+
+/**
+ * Horodatage de l'axe du temps d'ECharts (il lit « AAAA-MM-JJ » comme minuit local) → le jour
+ * AAAA-MM-JJ qu'il représente.
+ */
+export function localDay(timestamp: number): string {
+  const date = new Date(timestamp);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
 /** Toast quand une bascule (vue, fenêtre) n'a pas pu s'enregistrer : la valeur serveur revient. */

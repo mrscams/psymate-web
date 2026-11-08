@@ -10,6 +10,7 @@ import {
 import { RouterLink } from '@angular/router';
 
 import { StateComponent } from '../../../shared/ui';
+import { ENTRY_QUERY_PARAM } from '../../entries';
 import { EmotionFamily, OverviewView, TrendMarker } from '../data/overview.model';
 import { FeelingsChartComponent } from './feelings-chart.component';
 import {
@@ -18,11 +19,7 @@ import {
   groupByEmotion,
   seriesSymbol,
 } from './feelings-chart.options';
-import { feelingsSummary, formatDay } from './overview-labels';
-import { localDay } from './overview-trend.component';
-
-/** Paramètre de l'éditeur d'entrée (features/entries, ENTRY_QUERY_PARAM) : le shell l'ouvre. */
-const ENTRY_PARAM = 'entry';
+import { feelingsSummary, formatDay, localDay } from './overview-labels';
 
 /**
  * Corps du bloc « Comment évoluent les ressentis » de la vue simple (B8, M4-07) : le graphe à
@@ -96,7 +93,7 @@ const ENTRY_PARAM = 'entry';
           >
         </li>
       }
-      @for (marker of view().feelings.markers; track marker.entryId + marker.date) {
+      @for (marker of medicationMarkers(); track marker.entryId + marker.date) {
         <li>
           <span class="key medication" aria-hidden="true"></span>
           <span>{{ markerText(marker) }}</span>
@@ -263,6 +260,11 @@ export class OverviewFeelingsComponent {
     })),
   );
 
+  /** Repères de médicament, comme sur le graphe (feelingsChartOptions). */
+  protected readonly medicationMarkers = computed(() =>
+    this.view().feelings.markers.filter((marker) => marker.kind === 'medication'),
+  );
+
   private readonly emotionLabels = computed(() => {
     const labels = new Map<string, string>();
     for (const series of this.view().feelings.series) labels.set(series.emotionCode, series.label);
@@ -294,7 +296,7 @@ export class OverviewFeelingsComponent {
   }
 
   protected entryParams(entryId: string): Record<string, string> {
-    return { [ENTRY_PARAM]: entryId };
+    return { [ENTRY_QUERY_PARAM]: entryId };
   }
 }
 

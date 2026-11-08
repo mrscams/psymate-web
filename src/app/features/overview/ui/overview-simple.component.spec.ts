@@ -207,7 +207,7 @@ describe('OverviewSimpleComponent', () => {
       '/patients/p-marie/timeline?mode=session',
     );
     expect(text(session.querySelector('.previous li'))).toBe(
-      '10 oct. 2026 (Visio) — Point sur le sommeil.',
+      '10 oct. 2026 · Visio · Point sur le sommeil.',
     );
     expect(link(session, '10 oct. 2026').getAttribute('href')).toBe(
       '/patients/p-marie/timeline?mode=session&focus=s-0',
@@ -268,7 +268,7 @@ describe('OverviewSimpleComponent', () => {
     expect([...frame.querySelectorAll('li')].map((li) => text(li))).toEqual([
       'Suivi depuis le 12 mars 2025',
       '31 séances au total',
-      'Drapeau « À surveiller » posé le 3 oct. 2026 : Sommeil',
+      'Drapeau « À surveiller » posé le 3 oct. 2026 · motif : Sommeil',
     ]);
     expect(link(frame, 'Modifier la fiche').getAttribute('href')).toBe('/patients/p-marie/fiche');
     const todo = block(el, 'À compléter');

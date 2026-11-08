@@ -19731,11 +19731,11 @@
         <note priority="1" from="description">Description d&apos;une émotion du graphe</note>
       </trans-unit>
       <trans-unit id="overview.simple.feelings.summary" datatype="html">
-        <source>Ressentis notés sur <x id="period" equiv-text="period"/>, une valeur par point</source>
-        <target state="translated">Feelings recorded over <x id="period" equiv-text="period"/>, one value per point</target>
+        <source>Ressentis notés sur <x id="period" equiv-text="period"/>, une valeur par point : <x id="details" equiv-text="details"/>. <x id="counts" equiv-text="counts"/></source>
+        <target state="translated">Feelings recorded over <x id="period" equiv-text="period"/>, one value per point: <x id="details" equiv-text="details"/>. <x id="counts" equiv-text="counts"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
-          <context context-type="linenumber">231</context>
+          <context context-type="linenumber">237</context>
         </context-group>
         <note priority="1" from="description">Description du graphe des ressentis</note>
       </trans-unit>
@@ -19922,9 +19922,9 @@
         <target state="translated">View the session in the timeline</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
-          <context context-type="linenumber">124,128</context>
+          <context context-type="linenumber">123,127</context>
         </context-group>
-        <note priority="1" from="description">Lien de la dernière séance vers la timeline</note>
+        <note priority="1" from="description">Dernière séance vers la timeline</note>
       </trans-unit>
       <trans-unit id="overview.simple.lastSession.previous" datatype="html">
         <source> Séances précédentes </source>
@@ -19936,14 +19936,13 @@
         <note priority="1" from="description">Sous-titre des séances précédentes</note>
       </trans-unit>
       <trans-unit id="overview.simple.lastSession.previousNoSummary" datatype="html">
-        <source> — pas de compte rendu</source>
-        <target state="translated"> — no session notes</target>
+        <source>· pas de compte rendu</source>
+        <target state="translated">· no session notes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
-          <context context-type="linenumber">152,157</context>
+          <context context-type="linenumber">150,154</context>
         </context-group>
-        <note priority="1" from="description">Séance précédente sans compte
-                        rendu</note>
+        <note priority="1" from="description">Séance sans compte rendu</note>
       </trans-unit>
       <trans-unit id="overview.simple.situations.heading" datatype="html">
         <source>Situations en cours</source>
@@ -20162,19 +20161,18 @@
         <target state="translated">{VAR_PLURAL, plural, =1 {1 draft to review} other {<x id="INTERPOLATION"/> drafts to review}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
-          <context context-type="linenumber">393,398</context>
+          <context context-type="linenumber">397,401</context>
         </context-group>
-        <note priority="1" from="description">Brouillons à relire, lien vers la timeline filtrée</note>
+        <note priority="1" from="description">Brouillons, vers la timeline filtrée</note>
       </trans-unit>
       <trans-unit id="overview.simple.todo.openSession" datatype="html">
         <source>Séance du <x id="INTERPOLATION" equiv-text="{{ day(open.startedAt) }}"/> à clôturer</source>
         <target state="translated">Session of <x id="INTERPOLATION" equiv-text="{{ day(open.startedAt) }}"/> to close</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
-          <context context-type="linenumber">408,409</context>
+          <context context-type="linenumber">410,411</context>
         </context-group>
-        <note priority="1" from="description">Séance à clôturer, lien vers la timeline par
-                  séance</note>
+        <note priority="1" from="description">Séance à clôturer, vers la timeline</note>
       </trans-unit>
       <trans-unit id="overview.simple.feelings.heading" datatype="html">
         <source>Comment évoluent les ressentis · <x id="period" equiv-text="windowLongLabel(window)"/></source>
@@ -20220,6 +20218,42 @@
           <context context-type="linenumber">110</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc depuis la dernière séance</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.summary.none" datatype="html">
+        <source>Ressentis notés sur <x id="period" equiv-text="period"/>, une valeur par point. <x id="counts" equiv-text="counts"/></source>
+        <target state="translated">Feelings recorded over <x id="period" equiv-text="period"/>, one value per point. <x id="counts" equiv-text="counts"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">233</context>
+        </context-group>
+        <note priority="1" from="description">Description du graphe des ressentis, sans ressenti</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.feelings.summary.separator" datatype="html">
+        <source> ; </source>
+        <target state="translated">; </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
+          <context context-type="linenumber">235</context>
+        </context-group>
+        <note priority="1" from="description">Séparateur entre deux émotions de la description du graphe</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.side" datatype="html">
+        <source>Repères</source>
+        <target state="translated">Key points</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">225</context>
+        </context-group>
+        <note priority="1" from="description">Colonne latérale de la vue simple</note>
+      </trans-unit>
+      <trans-unit id="overview.simple.frame.flagReason" datatype="html">
+        <source>· motif : <x id="INTERPOLATION" equiv-text="{{ flag.reason }}"/></source>
+        <target state="translated">· reason: <x id="INTERPOLATION" equiv-text="{{ flag.reason }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">366,367</context>
+        </context-group>
+        <note priority="1" from="description">Motif d&apos;un drapeau</note>
       </trans-unit>
     </body>
   </file>

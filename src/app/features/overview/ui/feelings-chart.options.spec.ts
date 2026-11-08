@@ -168,4 +168,17 @@ describe('feelingsChartOptions (vrais ressentis → options ECharts)', () => {
     // Sans bornes : celles des points.
     expect(option.xAxis).toMatchObject({ min: '2026-10-20', max: '2026-11-07' });
   });
+
+  it('repère de médicament : le libellé du serveur n’est pas lu comme gabarit ECharts', () => {
+    const feelings = overviewView().feelings;
+    const marker = { ...feelings.markers[0], label: '{a} {b|gras} {@[1]}' };
+    const [sessions] = series(options({ ...feelings, markers: [marker] })) as ScatterSeriesOption[];
+    const [item] = (sessions.markLine as MarkLineComponentOption).data as {
+      label: { formatter: unknown };
+    }[];
+    expect(typeof item.label.formatter).toBe('function');
+    expect((item.label.formatter as () => string)()).toBe(
+      'Début de traitement · {a} {b|gras} {@[1]}',
+    );
+  });
 });
