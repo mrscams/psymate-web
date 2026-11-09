@@ -1,6 +1,8 @@
 import { APIRequestContext, expect, request as playwrightRequest } from '@playwright/test';
 
 import { TestAccount } from '../support/accounts';
+import { apiDrained } from '../support/api-drain';
+import { exclusive } from '../support/exclusif';
 
 // Données des e2e de la timeline (M3-02), écrites par l'API réelle (jamais de mock) dans un compte
 // jetable : un patient « récit » (situations, séances passées, entrées d'avant le suivi) et un
@@ -11,6 +13,9 @@ const DAY = 86_400_000;
 
 /** Limite de débit de l'API : 600 requêtes par minute et par session (G Q24) ; 450 par session ici. */
 const PER_SESSION = 450;
+
+/** Taille d'une vague d'écritures du patient « volume » (voir volumePatient). */
+const WAVE = 200;
 
 export function daysAgo(days: number, hourUtc = 9): string {
   const date = new Date(Date.now() - days * DAY);
@@ -187,24 +192,35 @@ export async function volumePatient(
   );
   const step = ((span - 1) * DAY) / count;
   const start = Date.now() - span * DAY;
-  let next = 0;
-  await Promise.all(
-    contexts.flatMap((context, c) =>
-      Array.from({ length: 8 }, async () => {
-        for (;;) {
-          const i = next++;
-          if (i >= count) return;
-          await entry(context, id, {
-            type: 'note',
-            title: `Note ${String(i + 1).padStart(4, '0')}`,
-            body: `Note générée pour le volume (session API ${c}).`,
-            occurred: { from: new Date(start + i * step).toISOString() },
-            sessionId: session,
-          });
-        }
-      }),
-    ),
-  );
+  // Par vagues de WAVE notes, chacune suivie de la barrière apiDrained() : chaque note déclenche un
+  // recalcul de la vue d'ensemble dans la file asynchrone de l'API, partagée avec les e-mails des
+  // autres tests. Sans vagues, la file atteignait 2 000 recalculs et un e-mail de confirmation
+  // mettait plus de 15 s à partir (M7-04 : échecs « aucun e-mail » de flux-6-graphe). Chaque vague
+  // tient le verrou « charge-api » : aucune mesure de durée ne tombe pendant (e2e/support/exclusif.ts).
+  for (let from = 0; from < count; from += WAVE) {
+    const to = Math.min(count, from + WAVE);
+    await exclusive('charge-api', async () => {
+      let next = from;
+      await Promise.all(
+        contexts.flatMap((context, c) =>
+          Array.from({ length: 8 }, async () => {
+            for (;;) {
+              const i = next++;
+              if (i >= to) return;
+              await entry(context, id, {
+                type: 'note',
+                title: `Note ${String(i + 1).padStart(4, '0')}`,
+                body: `Note générée pour le volume (session API ${c}).`,
+                occurred: { from: new Date(start + i * step).toISOString() },
+                sessionId: session,
+              });
+            }
+          }),
+        ),
+      );
+      await apiDrained();
+    });
+  }
   await Promise.all(contexts.map((context) => context.dispose()));
   return id;
 }

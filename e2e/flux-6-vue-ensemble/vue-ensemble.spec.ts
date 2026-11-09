@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { exclusive } from '../support/exclusif';
 import {
   block,
   emptyPatient,
@@ -98,15 +99,18 @@ test.describe('vue d’ensemble', () => {
     await expect(page.getByRole('combobox', { name: 'Centré sur' })).toHaveValue(folder.situation);
 
     // Mesure à chaud (dossier relu, cache de la projection) : 5 lectures directes de l'API.
+    // Sous le verrou « charge-api » : la mesure ne tombe pas pendant une charge d'un autre test.
     const timings: number[] = [];
-    for (let i = 0; i < 5; i++) {
-      const started = performance.now();
-      const response = await request.get(
-        `${API}/api/patients/${folder.patientId}/overview?window=90d`,
-      );
-      timings.push(performance.now() - started);
-      expect(response.status()).toBe(200);
-    }
+    await exclusive('charge-api', async () => {
+      for (let i = 0; i < 5; i++) {
+        const started = performance.now();
+        const response = await request.get(
+          `${API}/api/patients/${folder.patientId}/overview?window=90d`,
+        );
+        timings.push(performance.now() - started);
+        expect(response.status()).toBe(200);
+      }
+    });
     const median = [...timings].sort((a, b) => a - b)[2];
     test
       .info()
@@ -194,37 +198,52 @@ test.describe('vue d’ensemble', () => {
     await dialog.getByRole('slider').focus();
     await page.keyboard.press('7');
     await expect(dialog.getByRole('slider')).toHaveAttribute('aria-valuenow', '7');
-    const created = page.waitForResponse(
-      (r) =>
-        r.request().method() === 'POST' &&
-        r.url().endsWith(`/api/patients/${folder.patientId}/entries`),
-    );
-    const reread = page.waitForResponse((r) => isOverview(r, folder.patientId));
-    await dialog.getByRole('button', { name: /^Enregistrer/ }).click();
-    const response = await created;
-    expect(response.status()).toBe(201);
-    expect(response.request().postDataJSON()).toMatchObject({
-      type: 'feeling',
-      feeling: { emotionCode: 'anxiety', intensity: 7 },
-    });
-    const saved = Date.now();
+    // Fenêtre mesurée sous le verrou « charge-api » : jamais pendant qu'un autre test écrit des
+    // centaines d'entrées (pool de connexions et file asynchrone de l'API saturés, M7-04).
+    await exclusive('charge-api', async () => {
+      // La relecture attendue est celle lancée après la réponse du POST (horloge du navigateur :
+      // début de la requête + arrivée de la réponse), pas une lecture antérieure encore en vol.
+      let postedAt = Number.POSITIVE_INFINITY;
+      const created = page.waitForResponse((r) => {
+        if (
+          r.request().method() !== 'POST' ||
+          !r.url().endsWith(`/api/patients/${folder.patientId}/entries`)
+        ) {
+          return false;
+        }
+        const timing = r.request().timing();
+        postedAt = timing.startTime + timing.responseStart;
+        return true;
+      });
+      const reread = page.waitForResponse(
+        (r) => isOverview(r, folder.patientId) && r.request().timing().startTime >= postedAt,
+      );
+      await dialog.getByRole('button', { name: /^Enregistrer/ }).click();
+      const response = await created;
+      expect(response.status()).toBe(201);
+      expect(response.request().postDataJSON()).toMatchObject({
+        type: 'feeling',
+        feeling: { emotionCode: 'anxiety', intensity: 7 },
+      });
+      const saved = Date.now();
 
-    // Nouvelle lecture de la projection après l'écriture (jamais de recalcul local).
-    const after = await reread;
-    expect(after.status()).toBe(200);
-    expect(after.request().timing().startTime).toBeGreaterThan(
-      response.request().timing().startTime,
-    );
-    await expect(feelings).toHaveText('4', { timeout: 2_000 });
-    await expect(trend.getByRole('img')).toHaveAttribute(
-      'aria-label',
-      /Ressentis sur la période : 4/,
-      { timeout: 2_000 },
-    );
-    const reflected = Date.now() - saved;
-    test.info().annotations.push({ type: 'overview-reflect-ms', description: String(reflected) });
-    console.log(`[M4-05] ressenti reflété par la vue d'ensemble en ${reflected} ms`);
-    expect(reflected).toBeLessThan(2_000);
+      // Nouvelle lecture de la projection après l'écriture (jamais de recalcul local).
+      const after = await reread;
+      expect(after.status()).toBe(200);
+      expect(after.request().timing().startTime).toBeGreaterThan(
+        response.request().timing().startTime,
+      );
+      await expect(feelings).toHaveText('4', { timeout: 2_000 });
+      await expect(trend.getByRole('img')).toHaveAttribute(
+        'aria-label',
+        /Ressentis sur la période : 4/,
+        { timeout: 2_000 },
+      );
+      const reflected = Date.now() - saved;
+      test.info().annotations.push({ type: 'overview-reflect-ms', description: String(reflected) });
+      console.log(`[M4-05] ressenti reflété par la vue d'ensemble en ${reflected} ms`);
+      expect(reflected).toBeLessThan(2_000);
+    });
     await expect(dialog).toHaveCount(0);
     await expectNoAxeViolations(page);
   });
