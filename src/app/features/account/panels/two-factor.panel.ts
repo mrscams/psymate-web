@@ -76,7 +76,11 @@ export class TwoFactorPanel {
     // Après le premier rendu : SidePanelService inscrit Échap juste après avoir créé le composant ;
     // l'inscription du panneau doit venir ensuite pour être la dernière (celle qui l'emporte).
     afterNextRender(() => {
-      release = shortcuts.register('Escape', () => void this.requestClose());
+      release = shortcuts.register(
+        'Escape',
+        () => void this.requestClose(),
+        $localize`:Aide des raccourcis, activation de la double authentification@@account.security.panel.escape:Fermer le panneau, après confirmation si l'activation n'est pas terminée`,
+      );
     });
     inject(DestroyRef).onDestroy(() => {
       release?.();

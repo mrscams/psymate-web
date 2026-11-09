@@ -1,18 +1,18 @@
 import { Routes } from '@angular/router';
 
-import { PatientShellPage } from './pages/patient-shell.page';
-
 /**
  * Montées sous /patients/:id par app.routes.ts (authGuard, statusGuard) : la page patient et ses
  * onglets (B2), chacun chargé à la demande avec son data.tab : overview (M4-05), timeline (M3-02),
  * graph (M2-06) et search (M4-08).
  * /patients/:id/overview (destination de M1-06 après création) renvoie sur l'onglet 1,
  * /patients/:id, celui que l'en-tête désigne.
+ * La page est chargée à la demande : app.component importe l'index (aide des raccourcis) sans
+ * embarquer le dossier dans le paquet initial.
  */
 export const PATIENT_SHELL_ROUTES: Routes = [
   {
     path: '',
-    component: PatientShellPage,
+    loadComponent: () => import('./pages/patient-shell.page').then((m) => m.PatientShellPage),
     children: [
       {
         path: '',
