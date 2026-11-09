@@ -4,20 +4,30 @@ import { provideRouter, Router } from '@angular/router';
 import { SessionApi } from '../../../core/auth/data/session.api';
 import { ShortcutService } from '../../../core/shortcuts';
 import { SubjectVocabulary } from '../../../core/i18n';
+import { ConfirmDialogService, ToastService } from '../../../shared/ui';
+import { ShortcutsHelp } from '../../patient-shell';
 import { PatientApi } from '../data/patient.api';
 import { OMAR, patient, TAGS } from '../data/patient.fixtures';
-import { SORT_STORAGE_KEY } from '../data/patient-list.store';
+import { PatientListStore, SORT_STORAGE_KEY } from '../data/patient-list.store';
 import { FILTER_DEBOUNCE_MS, PatientListPage } from './patient-list.page';
 
 const never = () => new Promise<never>(() => undefined);
 
-async function render(api: Partial<PatientApi>, label: 'patient' | 'client' = 'patient') {
+async function render(
+  api: Partial<PatientApi>,
+  label: 'patient' | 'client' = 'patient',
+  confirmed = true,
+) {
+  const help = { open: vi.fn() };
+  const confirm = { confirm: vi.fn().mockResolvedValue(confirmed) };
   TestBed.configureTestingModule({
     imports: [PatientListPage],
     providers: [
       provideRouter([]),
       { provide: SessionApi, useValue: {} },
       { provide: PatientApi, useValue: { listTags: vi.fn().mockResolvedValue(TAGS), ...api } },
+      { provide: ShortcutsHelp, useValue: help },
+      { provide: ConfirmDialogService, useValue: confirm },
     ],
   });
   TestBed.inject(SubjectVocabulary).set(label);
@@ -26,7 +36,13 @@ async function render(api: Partial<PatientApi>, label: 'patient' | 'client' = 'p
   vi.spyOn(router, 'navigate').mockResolvedValue(true);
   const fixture = TestBed.createComponent(PatientListPage);
   await settle(fixture);
-  return { fixture, el: fixture.nativeElement as HTMLElement, router };
+  return { fixture, el: fixture.nativeElement as HTMLElement, router, help, confirm };
+}
+
+const DEMO = patient({ id: 'p-demo', displayName: 'DEMO · Camille R.', pronoun: 'elle' });
+
+function text(el: Element | null | undefined): string {
+  return (el?.textContent ?? '').replace(/\s+/g, ' ').trim();
 }
 
 async function settle(fixture: ComponentFixture<unknown>): Promise<void> {
@@ -136,6 +152,155 @@ describe('PatientListPage', () => {
     expect(about('/')).toBe('Filtrer mes patients');
   });
 
+  describe('première connexion (M7-03)', () => {
+    it('vide sans filtre : état vide avec phrase et N, puis l’accueil en trois étapes (étape 1)', async () => {
+      const { el, help } = await render({
+        list: vi.fn().mockResolvedValue({ items: [], nextCursor: null }),
+      });
+      const empty = el.querySelector('pm-state [role="status"]');
+      expect(text(empty)).toContain('Créez votre premier patient');
+      expect(text(empty)).toContain('se construisent à partir de la première entrée');
+      expect(text(empty?.querySelector('button'))).toBe('Nouveau patient N');
+      const welcome = el.querySelector('pm-onboarding');
+      expect(welcome).not.toBeNull();
+      expect(welcome?.querySelectorAll('li')).toHaveLength(3);
+      expect(text(welcome?.querySelector('li[aria-current="step"] strong'))).toBe(
+        'Créez un patient',
+      );
+      expect(welcome?.querySelector('.demo')).toBeNull();
+      welcome?.querySelector<HTMLButtonElement>('button.shortcuts')?.click();
+      expect(help.open).toHaveBeenCalledTimes(1);
+    });
+
+    it('seulement la démo : accueil au-dessus de la liste, puce « Démo », Supprimer la démo', async () => {
+      const { el } = await render({
+        list: vi.fn().mockResolvedValue({ items: [DEMO], nextCursor: null }),
+      });
+      const welcome = el.querySelector('pm-onboarding');
+      expect(welcome).not.toBeNull();
+      expect(
+        welcome!.compareDocumentPosition(el.querySelector('table')!) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+      expect(welcome?.querySelector('.demo')).not.toBeNull();
+      const row = el.querySelector('tbody tr')!;
+      expect(text(row.querySelector('.demo-chip'))).toBe('Démo');
+      const remove = row.querySelector<HTMLButtonElement>('button.demo-action');
+      expect(text(remove)).toBe('Supprimer la démo');
+      expect(remove?.getAttribute('aria-label')).toBe('Supprimer la démo : DEMO · Camille R.');
+    });
+
+    it('un vrai patient : pas d’accueil ; puce et bouton seulement sur la démo', async () => {
+      const { el } = await render({
+        list: vi.fn().mockResolvedValue({ items: [DEMO, patient()], nextCursor: null }),
+      });
+      expect(el.querySelector('pm-onboarding')).toBeNull();
+      const rows = el.querySelectorAll('tbody tr');
+      expect(rows[0].querySelector('.demo-chip')).not.toBeNull();
+      expect(rows[1].querySelector('.demo-chip')).toBeNull();
+      expect(rows[1].querySelector('button.demo-action')).toBeNull();
+    });
+
+    it('Supprimer la démo : confirmation simple sans nom à retaper, archivage, liste relue, toast Restaurer', async () => {
+      const list = vi
+        .fn()
+        .mockResolvedValueOnce({ items: [DEMO], nextCursor: null })
+        .mockResolvedValueOnce({ items: [], nextCursor: null })
+        .mockResolvedValueOnce({ items: [DEMO], nextCursor: null });
+      const archive = vi.fn().mockResolvedValue(undefined);
+      const restore = vi.fn().mockResolvedValue(DEMO);
+      const { fixture, el, confirm } = await render({ list, archive, restore });
+      const toasts = TestBed.inject(ToastService);
+
+      el.querySelector<HTMLButtonElement>('button.demo-action')!.click();
+      await settle(fixture);
+      const options = confirm.confirm.mock.calls[0][0];
+      expect(options.title).toBe('Supprimer le patient de démonstration ?');
+      expect(options.confirmWord).toBeUndefined();
+      expect(options.destructive).toBe(true);
+      expect(archive).toHaveBeenCalledWith('p-demo');
+      expect(list).toHaveBeenCalledTimes(2);
+      expect(el.querySelector('table')).toBeNull();
+      expect(el.querySelector('pm-onboarding')).not.toBeNull();
+
+      const toast = toasts.toasts().at(-1)!;
+      expect(toast.message).toBe('Patient de démonstration retiré');
+      expect(toast.action?.label).toBe('Restaurer');
+      toast.action!.handler();
+      await settle(fixture);
+      expect(restore).toHaveBeenCalledWith('p-demo');
+      expect(list).toHaveBeenCalledTimes(3);
+      expect(el.querySelector('tbody .demo-chip')).not.toBeNull();
+      expect(toasts.toasts().at(-1)?.message).toBe('Patient de démonstration restauré');
+    });
+
+    it('Supprimer la démo annulé : rien n’est archivé', async () => {
+      const archive = vi.fn();
+      const { fixture, el } = await render(
+        { list: vi.fn().mockResolvedValue({ items: [DEMO], nextCursor: null }), archive },
+        'patient',
+        false,
+      );
+      el.querySelector<HTMLButtonElement>('button.demo-action')!.click();
+      await settle(fixture);
+      expect(archive).not.toHaveBeenCalled();
+    });
+
+    it('retrait refusé : avertissement dans la liste (pas de toast d’erreur), la démo reste', async () => {
+      const { fixture, el } = await render({
+        list: vi.fn().mockResolvedValue({ items: [DEMO], nextCursor: null }),
+        archive: vi.fn().mockRejectedValue({ status: 500, code: 'INTERNAL_ERROR' }),
+      });
+      el.querySelector<HTMLButtonElement>('button.demo-action')!.click();
+      await settle(fixture);
+      const alert = el.querySelector('p.warning[role="alert"]');
+      // Planche 29 : icône et mot du niveau, pas la couleur seule.
+      expect(alert?.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
+      expect(text(alert?.querySelector('strong'))).toBe('Avertissement');
+      expect(text(alert)).toContain("n'a pas pu être retiré");
+      expect(TestBed.inject(ToastService).toasts()).toHaveLength(0);
+      expect(el.querySelector('tbody .demo-chip')).not.toBeNull();
+    });
+
+    it('restauration refusée (toast de la fiche) : message générique, effacé au filtre suivant', async () => {
+      const list = vi.fn().mockResolvedValue({ items: [patient()], nextCursor: null });
+      const { fixture, el } = await render({
+        list,
+        restore: vi.fn().mockRejectedValue({ status: 403, code: 'PATIENT_FORBIDDEN' }),
+      });
+      await TestBed.inject(PatientListStore).restore('p-marie');
+      await settle(fixture);
+      const alert = el.querySelector('p.warning[role="alert"]');
+      expect(text(alert)).toContain("La restauration n'a pas abouti");
+      expect(text(alert)).not.toContain('démonstration');
+      el.querySelector<HTMLInputElement>('input[type="checkbox"]')?.click();
+      await settle(fixture);
+      expect(el.querySelector('p.warning')).toBeNull();
+    });
+
+    it('archivés : la démo archivée se restaure depuis sa ligne', async () => {
+      const archived = { ...DEMO, archivedAt: '2026-11-09T08:00:00Z' };
+      const list = vi
+        .fn()
+        .mockResolvedValueOnce({ items: [], nextCursor: null })
+        .mockResolvedValueOnce({ items: [archived], nextCursor: null })
+        .mockResolvedValue({ items: [], nextCursor: null });
+      const restore = vi.fn().mockResolvedValue(DEMO);
+      const { fixture, el } = await render({ list, restore });
+      el.querySelector<HTMLInputElement>('input[type="checkbox"]')?.click();
+      await settle(fixture);
+      expect(el.querySelector('pm-onboarding')).toBeNull();
+      const button = el.querySelector<HTMLButtonElement>('tbody button.demo-action');
+      expect(text(button)).toBe('Restaurer');
+      expect(button?.getAttribute('aria-label')).toBe(
+        'Restaurer le patient de démonstration DEMO · Camille R.',
+      );
+      button!.click();
+      await settle(fixture);
+      expect(restore).toHaveBeenCalledWith('p-demo');
+    });
+  });
+
   it('filtre : envoyé après la pause de frappe, Entrée ouvre le premier résultat, surlignage', async () => {
     vi.useFakeTimers();
     try {
@@ -166,6 +331,7 @@ async function renderWithFakeTimers(api: Partial<PatientApi>) {
       provideRouter([]),
       { provide: SessionApi, useValue: {} },
       { provide: PatientApi, useValue: { listTags: vi.fn().mockResolvedValue(TAGS), ...api } },
+      { provide: ShortcutsHelp, useValue: { open: vi.fn() } },
     ],
   });
   const router = TestBed.inject(Router);

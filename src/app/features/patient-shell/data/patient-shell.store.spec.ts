@@ -265,4 +265,92 @@ describe('PatientShellStore', () => {
       expect(store.revision()).toBe(1);
     });
   });
+
+  describe('première entrée (M7-03, parcours guidé)', () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+    it.each([
+      ['aucune séance', null],
+      ['accueil seul', intakeSession()],
+    ])('dossier neuf (%s) sans entrée : pending', async (_label, session) => {
+      const hasEntries = vi.fn().mockResolvedValue(false);
+      const store = await loaded(session, { hasEntries });
+      await tick();
+      expect(hasEntries).toHaveBeenCalledWith('p-marie');
+      expect(store.firstEntry()).toBe('pending');
+    });
+
+    it('dossier neuf avec une entrée : done', async () => {
+      const store = await loaded(intakeSession(), { hasEntries: vi.fn().mockResolvedValue(true) });
+      await tick();
+      expect(store.firstEntry()).toBe('done');
+    });
+
+    it('dossier déjà suivi (séance ordinaire) : aucune lecture, unknown', async () => {
+      const hasEntries = vi.fn();
+      const store = await loaded(closedSession(), { hasEntries });
+      await tick();
+      expect(hasEntries).not.toHaveBeenCalled();
+      expect(store.firstEntry()).toBe('unknown');
+    });
+
+    it('lecture en échec : unknown (pas d’indice plutôt qu’un indice faux)', async () => {
+      const store = await loaded(null, {
+        hasEntries: vi.fn().mockRejectedValue({ status: 500, code: 'INTERNAL_ERROR' }),
+      });
+      await tick();
+      expect(store.firstEntry()).toBe('unknown');
+    });
+
+    it('après une écriture, la chronologie est relue (pas de déduction locale)', async () => {
+      const hasEntries = vi.fn().mockResolvedValueOnce(false).mockResolvedValueOnce(true);
+      const store = await loaded(intakeSession(), { hasEntries });
+      await tick();
+      expect(store.firstEntry()).toBe('pending');
+      store.noteWrite();
+      await tick();
+      expect(hasEntries).toHaveBeenCalledTimes(2);
+      expect(store.firstEntry()).toBe('done');
+      store.noteWrite();
+      await tick();
+      expect(hasEntries).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('waitForSession (accueil créé en différé, M7-03)', () => {
+    it('relit la séance courante jusqu’à l’arrivée de l’accueil', async () => {
+      const current = vi
+        .fn()
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(intakeSession());
+      const store = await loaded(null, { current, hasEntries: vi.fn().mockResolvedValue(false) });
+      current.mockClear();
+      current.mockResolvedValueOnce(null).mockResolvedValueOnce(intakeSession());
+      await expect(store.waitForSession(5, 0)).resolves.toBe(true);
+      expect(current).toHaveBeenCalledTimes(2);
+    });
+
+    it('séance déjà là : une seule lecture', async () => {
+      const store = await loaded(openSession());
+      await expect(store.waitForSession(5, 0)).resolves.toBe(true);
+      expect(store.currentSession()?.id).toBe('s-open');
+    });
+
+    it('toujours aucune séance : false après le nombre de lectures prévu', async () => {
+      const current = vi.fn().mockResolvedValue(null);
+      const store = await loaded(null, { current, hasEntries: vi.fn().mockResolvedValue(false) });
+      current.mockClear();
+      await expect(store.waitForSession(3, 0)).resolves.toBe(false);
+      expect(current).toHaveBeenCalledTimes(3);
+    });
+
+    it('lecture en échec : false, sans relance', async () => {
+      const current = vi.fn().mockResolvedValue(null);
+      const store = await loaded(null, { current, hasEntries: vi.fn().mockResolvedValue(false) });
+      current.mockReset().mockRejectedValue({ status: 500, code: 'INTERNAL_ERROR' });
+      await expect(store.waitForSession(3, 0)).resolves.toBe(false);
+      expect(current).toHaveBeenCalledTimes(1);
+    });
+  });
 });

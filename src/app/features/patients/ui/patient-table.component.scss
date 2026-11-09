@@ -124,7 +124,29 @@ mark {
   font: var(--mat-sys-label-large);
 }
 
-a:focus-visible {
+// Puce du patient de démonstration (planche 29 §2) : information, jamais rouge sur un patient.
+.demo-chip {
+  align-self: flex-start;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: var(--info-bg);
+  color: var(--info);
+  font: 500 11px/18px var(--font-mono);
+}
+
+.demo-action {
+  min-height: 44px;
+  padding: 0 8px;
+  border: 0;
+  background: none;
+  color: var(--primary);
+  font: var(--mat-sys-label-large);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a:focus-visible,
+.demo-action:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }

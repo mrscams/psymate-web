@@ -61,7 +61,10 @@ function routesWithFakeOverview(): Routes {
   return [{ ...shell, children }];
 }
 
-type Api = Pick<PatientShellApi, 'patient' | 'current' | 'start' | 'close' | 'contact'>;
+type Api = Pick<
+  PatientShellApi,
+  'patient' | 'current' | 'start' | 'close' | 'contact' | 'hasEntries'
+>;
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
 
@@ -76,6 +79,7 @@ async function render(api: Partial<Api> = {}, url = '/patients/p-marie', duratio
     start: api.start ?? vi.fn().mockResolvedValue(openSession()),
     close: api.close ?? vi.fn().mockResolvedValue(closedSession({ id: 's-open' })),
     contact: api.contact ?? vi.fn(),
+    hasEntries: api.hasEntries ?? vi.fn().mockResolvedValue(true),
   };
   TestBed.configureTestingModule({
     providers: [
@@ -390,6 +394,38 @@ describe('PatientShellPage', () => {
       );
       await settle(harness);
       expect(document.querySelectorAll('pm-entry-editor-panel')).toHaveLength(1);
+    });
+
+    it('dossier neuf sans entrée (M7-03) : indice « Dernière étape », Nouvelle entrée N ouvre l’éditeur', async () => {
+      const { harness, el, api } = await render({
+        current: vi.fn().mockResolvedValue(intakeSession()),
+        hasEntries: vi.fn().mockResolvedValue(false),
+      });
+      await settle(harness);
+      const hint = el.querySelector<HTMLElement>('.first-entry[role="status"]');
+      expect(text(hint)).toContain('Dernière étape : notez la première entrée.');
+      // Rien n'affirme que l'accueil existe déjà (il est créé en différé par l'API).
+      expect(text(hint)).not.toContain('a été créée');
+      const action = hint?.querySelector('button');
+      expect(text(action?.querySelector('span'))).toBe('Nouvelle entrée');
+      expect(action?.getAttribute('aria-keyshortcuts')).toBe('N');
+      // L'accueil arrive en différé : la séance courante est relue avant d'ouvrir l'éditeur.
+      const reads = vi.mocked(api.current).mock.calls.length;
+      hint!.querySelector<HTMLButtonElement>('button')!.click();
+      await settle(harness);
+      await settle(harness);
+      expect(vi.mocked(api.current).mock.calls.length).toBeGreaterThan(reads);
+      expect(editor()).not.toBeNull();
+      expect(api.hasEntries).toHaveBeenCalledWith('p-marie');
+    });
+
+    it('dossier avec une entrée, ou déjà suivi : pas d’indice', async () => {
+      const { harness, el } = await render({
+        current: vi.fn().mockResolvedValue(intakeSession()),
+        hasEntries: vi.fn().mockResolvedValue(true),
+      });
+      await settle(harness);
+      expect(el.querySelector('.first-entry')).toBeNull();
     });
 
     it('Ctrl+Entrée dans la barre de commande : l’éditeur reprend la saisie interprétée', async () => {

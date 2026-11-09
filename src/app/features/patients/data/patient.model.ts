@@ -439,3 +439,18 @@ export function versionDiffs(versions: PatientVersion[]): VersionDiff[] {
 export function normalizeText(text: string): string {
   return text.normalize('NFD').replace(/\p{M}/gu, '').toLocaleLowerCase().replace(/\s+/g, ' ');
 }
+
+/**
+ * Préfixe du patient de démonstration (G Q22) : l'outil de seed de l'API le pose sur le nom affiché
+ * (« DEMO · Camille R. ») ; le contrat n'a aucun champ « démo », le nom est le seul indice.
+ */
+export const DEMO_PREFIX = 'DEMO · ';
+
+/**
+ * Patient de démonstration : nom affiché qui commence exactement par « DEMO · » (format de l'outil
+ * de seed, `Scenario.DEMO_PREFIX`), suivi d'un nom. « DEMO-Tristan » ou « Démo … » n'en sont pas.
+ */
+export function isDemoPatient(patient: Pick<PatientView, 'displayName'>): boolean {
+  const name = patient.displayName;
+  return name.startsWith(DEMO_PREFIX) && name.length > DEMO_PREFIX.length;
+}

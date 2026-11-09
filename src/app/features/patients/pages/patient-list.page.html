@@ -28,6 +28,19 @@
     </div>
   }
 
+  @if (actionProblem(); as problem) {
+    <!-- Planche 29 : icône et mot du niveau, l'information ne passe pas par la couleur seule. -->
+    <p class="warning" role="alert">
+      <svg class="warning-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 3 2 21h20L12 3z" />
+        <path d="M12 10v5" />
+        <circle cx="12" cy="18" r="0.6" />
+      </svg>
+      <strong>{{ warningLabel }}</strong>
+      <span>{{ problem }}</span>
+    </p>
+  }
+
   @if (kind(); as state) {
     @switch (state) {
       @case ('loading') {
@@ -37,15 +50,28 @@
         <pm-state kind="error" [title]="errorTitle()" [action]="retry" />
       }
       @case ('empty') {
-        <pm-state kind="empty" [title]="emptyTitle()" [action]="emptyAction()" />
+        <pm-state
+          kind="empty"
+          [title]="emptyTitle()"
+          [message]="emptyMessage()"
+          [action]="emptyAction()"
+        />
+        @if (store.welcome()) {
+          <pm-onboarding (showShortcuts)="showShortcuts()" />
+        }
       }
     }
   } @else {
+    @if (store.welcome()) {
+      <pm-onboarding [hasDemo]="hasDemo()" (showShortcuts)="showShortcuts()" />
+    }
     <pm-patient-table
       [patients]="store.items()"
       [query]="store.effectiveQuery()"
       [sort]="store.sort()"
       [refreshing]="refreshing()"
+      (removeDemo)="removeDemo($event)"
+      (restoreDemo)="restoreDemo($event)"
     />
     @if (store.hasMore()) {
       <div class="more">

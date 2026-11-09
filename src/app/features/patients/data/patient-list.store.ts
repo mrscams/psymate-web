@@ -13,7 +13,13 @@ import {
   loading,
 } from '../../../shared/util';
 import { PatientApi } from './patient.api';
-import { PATIENT_SORTS, PatientListQuery, PatientSort, PatientView } from './patient.model';
+import {
+  isDemoPatient,
+  PATIENT_SORTS,
+  PatientListQuery,
+  PatientSort,
+  PatientView,
+} from './patient.model';
 
 /** Clé du tri mémorisé (fiche 01 : « tri persistant par praticien, localStorage »). */
 export const SORT_STORAGE_KEY = 'patients.sort';
@@ -33,8 +39,18 @@ interface PatientListState {
   moreProblem: ApiProblem | null;
   /** Utilisateur de la session à qui appartiennent filtres et page (remise à zéro sinon). */
   owner: string | null;
-  /** Restauration lancée depuis le toast « Restaurer ». */
-  restoreProblem: ApiProblem | null;
+  /**
+   * Dernière écriture lancée depuis la liste et refusée : retrait de la démo, ou restauration (toast
+   * « Restaurer » de la liste comme de la fiche, ligne d'un archivé). Effacée par la relecture
+   * suivante (filtre, tri, Réessayer) et par toute nouvelle écriture.
+   */
+  actionProblem: ListActionProblem | null;
+}
+
+/** Écriture refusée depuis la liste : laquelle, et le problème de l'API. */
+export interface ListActionProblem {
+  action: 'removeDemo' | 'restore';
+  problem: ApiProblem;
 }
 
 const initialState: PatientListState = {
@@ -46,7 +62,7 @@ const initialState: PatientListState = {
   loadingMore: false,
   moreProblem: null,
   owner: null,
-  restoreProblem: null,
+  actionProblem: null,
 };
 
 export function effectiveQuery(query: string): string {
@@ -90,6 +106,18 @@ export const PatientListStore = signalStore(
       () => effectiveQuery(store.query()) !== '' || store.tag() !== null || store.archived(),
     ),
   })),
+  withComputed((store) => ({
+    /**
+     * Accueil de la première connexion (B3 flux 1, planche 29) : liste sans filtre lue, complète,
+     * et aucun patient en dehors des patients de démonstration (zéro patient compris). Dérivé de la
+     * page lue, jamais mémorisé : dès le premier vrai patient, la liste prend sa forme normale.
+     */
+    welcome: computed(() => {
+      const data = store.page().data;
+      if (!data || store.filtered() || data.nextCursor !== null) return false;
+      return data.items.every((patient) => isDemoPatient(patient));
+    }),
+  })),
   withMethods((store, api = inject(PatientApi), session = inject(SessionStore)) => {
     let request = 0;
 
@@ -105,7 +133,12 @@ export const PatientListStore = signalStore(
 
     async function reload(): Promise<void> {
       const ticket = ++request;
-      patchState(store, { page: loading(store.page()), loadingMore: false, moreProblem: null });
+      patchState(store, {
+        page: loading(store.page()),
+        loadingMore: false,
+        moreProblem: null,
+        actionProblem: null,
+      });
       try {
         const page = await api.list(query());
         if (ticket === request) patchState(store, { page: loaded(page) });
@@ -178,15 +211,36 @@ export const PatientListStore = signalStore(
         }
       },
 
-      /** Toast « Restaurer » après un archivage : POST /restore puis relecture de la liste. */
+      /**
+       * « Supprimer la démo » : DELETE /api/patients/{id} (archivage logique, restaurable), puis
+       * relecture de la liste (on relit, on ne retire pas la ligne localement). false si l'API refuse.
+       */
+      async removeDemo(id: string): Promise<boolean> {
+        patchState(store, { actionProblem: null });
+        try {
+          await api.archive(id);
+        } catch (error) {
+          patchState(store, {
+            actionProblem: { action: 'removeDemo', problem: asProblem(error) },
+          });
+          return false;
+        }
+        await reload();
+        return true;
+      },
+
+      /**
+       * « Restaurer » (toast après un archivage, depuis la fiche ou la liste ; ligne d'un archivé) :
+       * POST /restore puis relecture de la liste, qui efface aussi un retrait refusé auparavant.
+       */
       async restore(id: string): Promise<PatientView | null> {
-        patchState(store, { restoreProblem: null });
+        patchState(store, { actionProblem: null });
         try {
           const patient = await api.restore(id);
           await reload();
           return patient;
         } catch (error) {
-          patchState(store, { restoreProblem: asProblem(error) });
+          patchState(store, { actionProblem: { action: 'restore', problem: asProblem(error) } });
           return null;
         }
       },

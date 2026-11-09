@@ -5,12 +5,13 @@ import {
   inject,
   input,
   LOCALE_ID,
+  output,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { ageInYears, formatRelativeDay, SubjectLabelPipe } from '../../../core/i18n';
 import { initials } from '../../../shared/util';
-import { PatientSort, PatientView } from '../data/patient.model';
+import { isDemoPatient, PatientSort, PatientView } from '../data/patient.model';
 import { highlightParts } from './highlight';
 import { PatientFlagsComponent } from './patient-flags.component';
 
@@ -24,6 +25,8 @@ interface PatientRow {
   moreTags: number;
   changed: string;
   archived: boolean;
+  /** Patient de démonstration (« DEMO · … », G Q22) : puce « Démo », retrait en un clic. */
+  demo: boolean;
 }
 
 /**
@@ -31,7 +34,8 @@ interface PatientRow {
  * `aria-sort`, nom en lien vers le dossier (pas de ligne cliquable en JavaScript), lien « Fiche »
  * par ligne. Les correspondances du filtre sont surlignées sans tenir compte des accents.
  * Colonnes « dernière séance », « tendance » et émotions absentes : la liste du contrat ne les
- * fournit pas.
+ * fournit pas. Le patient de démonstration porte la puce « Démo » et, à la place de l'archivage par
+ * la fiche (nom à retaper), « Supprimer la démo » ; archivé, « Restaurer » (planche 29, M7-03).
  */
 @Component({
   selector: 'pm-patient-table',
@@ -46,6 +50,10 @@ export class PatientTableComponent {
   readonly sort = input<PatientSort>('name');
   /** Rechargement en cours avec la liste précédente affichée : grisée. */
   readonly refreshing = input(false);
+  /** « Supprimer la démo » sur la ligne d'un patient de démonstration actif. */
+  readonly removeDemo = output<PatientView>();
+  /** « Restaurer » sur la ligne d'un patient de démonstration archivé. */
+  readonly restoreDemo = output<PatientView>();
 
   private readonly locale = inject(LOCALE_ID);
 
@@ -64,6 +72,7 @@ export class PatientTableComponent {
         moreTags: Math.max(0, labels.length - 2),
         changed: when ? formatRelativeDay(when, this.locale, now) : '',
         archived,
+        demo: isDemoPatient(patient),
       };
     });
   });
@@ -72,6 +81,14 @@ export class PatientTableComponent {
   protected readonly changedSort = computed(() =>
     this.sort() === 'updated' ? 'descending' : null,
   );
+
+  protected removeLabel(name: string): string {
+    return $localize`:Nom accessible du retrait du patient de démonstration@@patients.demo.removeLabel:Supprimer la démo : ${name}:name:`;
+  }
+
+  protected restoreLabel(name: string): string {
+    return $localize`:Nom accessible de la restauration du patient de démonstration@@patients.demo.restoreLabel:Restaurer le patient de démonstration ${name}:name:`;
+  }
 
   protected openLabel(name: string): string {
     return $localize`:Lien vers la fiche d'un patient@@patients.table.editLabel:Modifier la fiche de ${name}:name:`;

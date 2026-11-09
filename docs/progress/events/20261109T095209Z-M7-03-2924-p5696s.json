@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-09T09:52:09.129Z",
+  "task": "M7-03",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Onboarding : accueil en trois étapes sur la liste vide, patient DEMO étiqueté supprimable en un clic et restaurable (toast + archivés), message neutre suggestions V2, indice de première entrée dans un dossier neuf, panneau d'aide des raccourcis (?) global alimenté par le registre de core/shortcuts ; e2e flux-1-premiere-connexion (première entrée chronométrée ~5-7 s depuis l'inscription, limite 180 s), Vitest, axe.",
+  "notes": "Écarts : l'API ne crée pas de DEMO à l'inscription (seed --size demo seulement) ; aucun champ démo au contrat, détection par préfixe exact « DEMO · » ; message suggestions classé hors V1 par la planche 29 mais demandé par C2 ; archivage = DELETE /api/patients/{id}. Hors périmètre : app.component (montage de pm-shortcuts-help), account/two-factor.panel.ts (description Échap), patient-shell.routes en loadComponent. Raccourcis non décrits faute de shared/ui : app-bar /, patient-header 1 2 3, side-panel Échap ; entrée « Voir les raccourcis » du menu du compte non faite. Accueil affiché aussi si tous les patients sont archivés. Éditeur d'entrées : message SESSION_REQUIRED peu explicite (features/entries). Paquet initial +7,5 kB. Test utilisateur humain de C5 non fait.",
+  "next": "Tâche shared/ui/shortcuts-help (panneau et descriptions dans shared/ui, entrée menu du compte) ; M7-04 accessibilité et e2e complets.",
+  "branch": "claude/eager-robinson-487510",
+  "checkout": "eager-robinson-487510"
+}

@@ -6,6 +6,7 @@ import { filter, map } from 'rxjs';
 
 import { AUTH_PATHS, SessionStore } from './core/auth';
 import { localeSwitchHref, otherLocale, toAppLocale } from './core/i18n';
+import { ShortcutsHelpComponent } from './features/patient-shell';
 import { DossierSearchBar } from './features/search';
 import { ThemeService } from './core/theme';
 import {
@@ -30,6 +31,7 @@ export type AppLayout = 'practitioner' | 'public' | 'admin' | 'bare';
 /**
  * Coquille de l'application (fiche 00) : choisit l'habillage selon la route, passe la session à la
  * barre d'application et au bandeau d'état, pose les toasts et le bandeau réseau une seule fois.
+ * Habillage praticien : la touche ? ouvre l'aide des raccourcis (features/patient-shell, M7-03).
  */
 @Component({
   selector: 'pm-root',
@@ -39,6 +41,7 @@ export type AppLayout = 'practitioner' | 'public' | 'admin' | 'bare';
     AppBarComponent,
     NetworkBannerComponent,
     PublicLayoutComponent,
+    ShortcutsHelpComponent,
     ToastOutletComponent,
     VerificationBannerComponent,
   ],

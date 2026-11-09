@@ -21660,6 +21660,366 @@
         </context-group>
         <note priority="1" from="description">Aide des raccourcis, liste des patients</note>
       </trans-unit>
+      <trans-unit id="account.security.panel.escape" datatype="html">
+        <source>Fermer le panneau, après confirmation si l&apos;activation n&apos;est pas terminée</source>
+        <target state="translated">Close the panel, after confirmation if activation is not finished</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis, activation de la double authentification</note>
+      </trans-unit>
+      <trans-unit id="patientShell.firstEntry.title" datatype="html">
+        <source>Dernière étape : notez la première entrée.</source>
+        <target state="translated">Last step: write the first entry.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
+          <context context-type="linenumber">61,63</context>
+        </context-group>
+        <note priority="1" from="description">Indice de première entrée, titre</note>
+      </trans-unit>
+      <trans-unit id="patientShell.firstEntry.text" datatype="html">
+        <source>Elle se rattache à la séance d&apos;accueil du dossier, ou à la séance que vous démarrez.</source>
+        <target state="translated">It is attached to the record's intake session, or to the session you start.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
+          <context context-type="linenumber">64,68</context>
+        </context-group>
+        <note priority="1" from="description">Indice de première entrée, explication</note>
+      </trans-unit>
+      <trans-unit id="patientShell.firstEntry.action" datatype="html">
+        <source>Nouvelle entrée</source>
+        <target state="translated">New entry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
+          <context context-type="linenumber">70,74</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;indice de première entrée</note>
+      </trans-unit>
+      <trans-unit id="patientShell.help.caption" datatype="html">
+        <source> Raccourcis disponibles et leur effet </source>
+        <target state="translated"> Available shortcuts and what they do </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
+          <context context-type="linenumber">28,32</context>
+        </context-group>
+        <note priority="1" from="description">Légende du tableau des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="patientShell.help.key" datatype="html">
+        <source> Touche </source>
+        <target state="translated">Key</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
+          <context context-type="linenumber">33,35</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du tableau des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="patientShell.help.effect" datatype="html">
+        <source> Effet </source>
+        <target state="translated">Effect</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
+          <context context-type="linenumber">36,40</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du tableau des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="patientShell.help.unavailable" datatype="html">
+        <source>indisponible ici</source>
+        <target state="translated">not available here</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
+          <context context-type="linenumber">57,62</context>
+        </context-group>
+        <note priority="1" from="description">Raccourci sans objet sur l&apos;écran courant</note>
+      </trans-unit>
+      <trans-unit id="patientShell.help.note" datatype="html">
+        <source> Les raccourcis à une lettre sont inactifs dans un champ de saisie. Sur Mac, Ctrl devient ⌘. </source>
+        <target state="translated"> Single-letter shortcuts are inactive in a text field. On Mac, Ctrl becomes ⌘. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
+          <context context-type="linenumber">66,71</context>
+        </context-group>
+        <note priority="1" from="description">Règle des raccourcis à une lettre</note>
+      </trans-unit>
+      <trans-unit id="patientShell.help.title" datatype="html">
+        <source>Raccourcis clavier</source>
+        <target state="translated">Keyboard shortcuts</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Titre du panneau d&apos;aide des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="patientShell.help.enterKey" datatype="html">
+        <source>Entrée</source>
+        <target state="translated">Enter</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/shortcuts-help.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la touche Entrée</note>
+      </trans-unit>
+      <trans-unit id="patientShell.help.enter" datatype="html">
+        <source>Barre de saisie du dossier : enregistrer l&apos;entrée</source>
+        <target state="translated">Record entry bar: save the entry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/shortcuts-help.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis, barre de saisie</note>
+      </trans-unit>
+      <trans-unit id="patientShell.help.ctrlEnter" datatype="html">
+        <source>Enregistrer le formulaire · depuis la barre de saisie, ouvrir l&apos;éditeur prérempli</source>
+        <target state="translated">Save the form · from the entry bar, open the prefilled editor</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/shortcuts-help.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis, Ctrl+Entrée</note>
+      </trans-unit>
+      <trans-unit id="patientShell.help.ctrlS" datatype="html">
+        <source>Enregistrer l&apos;entrée en brouillon, à compléter après la séance</source>
+        <target state="translated">Save the entry as a draft, to complete after the session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/shortcuts-help.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis, Ctrl+S</note>
+      </trans-unit>
+      <trans-unit id="patients.empty.message" datatype="html">
+        <source>Le dossier, la timeline et le graphe se construisent à partir de la première entrée.</source>
+        <target state="translated">The record, timeline and graph are built from the first entry.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+        <note priority="1" from="description">Phrase de l&apos;état vide de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.removeFailed" datatype="html">
+        <source>Le patient de démonstration n&apos;a pas pu être retiré. Réessayez.</source>
+        <target state="translated">The demo patient could not be removed. Try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <note priority="1" from="description">Avertissement, retrait de la démo refusé</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.restoreFailed" datatype="html">
+        <source>La restauration n&apos;a pas abouti. Réessayez depuis les archivés.</source>
+        <target state="translated">The restore did not go through. Try again from the archive.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">Avertissement, restauration refusée</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.confirmTitle" datatype="html">
+        <source>Supprimer le patient de démonstration ?</source>
+        <target state="translated">Remove the demo patient?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">195</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la confirmation de retrait de la démo</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.confirmText" datatype="html">
+        <source><x id="name" equiv-text="patient.displayName"/> quitte votre liste. Rien n&apos;est effacé : vous pourrez le restaurer depuis les archivés.</source>
+        <target state="translated"><x id="name" equiv-text="patient.displayName"/> leaves your list. Nothing is deleted: you can restore it from the archive.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">196</context>
+        </context-group>
+        <note priority="1" from="description">Explication du retrait de la démo</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.confirm" datatype="html">
+        <source>Supprimer la démo</source>
+        <target state="translated">Remove the demo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de confirmation du retrait de la démo</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.removed" datatype="html">
+        <source>Patient de démonstration retiré</source>
+        <target state="translated">Demo patient removed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">205</context>
+        </context-group>
+        <note priority="1" from="description">Toast après le retrait de la démo</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.restored" datatype="html">
+        <source>Patient de démonstration restauré</source>
+        <target state="translated">Demo patient restored</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">215</context>
+        </context-group>
+        <note priority="1" from="description">Toast après la restauration de la démo</note>
+      </trans-unit>
+      <trans-unit id="patients.onboarding.title" datatype="html">
+        <source> Bienvenue dans PsyMate </source>
+        <target state="translated"> Welcome to PsyMate </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;accueil de première connexion</note>
+      </trans-unit>
+      <trans-unit id="patients.onboarding.lead" datatype="html">
+        <source> Trois étapes jusqu&apos;à votre première entrée : </source>
+        <target state="translated"> Three steps to your first entry: </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
+          <context context-type="linenumber">34,37</context>
+        </context-group>
+        <note priority="1" from="description">Phrase d&apos;introduction de l&apos;accueil</note>
+      </trans-unit>
+      <trans-unit id="patients.onboarding.current" datatype="html">
+        <source>Étape en cours</source>
+        <target state="translated">Current step</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
+          <context context-type="linenumber">52,55</context>
+        </context-group>
+        <note priority="1" from="description">Marque de l&apos;étape en cours</note>
+      </trans-unit>
+      <trans-unit id="patients.onboarding.demo" datatype="html">
+        <source> Vous pouvez aussi explorer le dossier de démonstration ci-dessous, puis le supprimer. </source>
+        <target state="translated"> You can also explore the demo record below, then remove it. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
+          <context context-type="linenumber">69,72</context>
+        </context-group>
+        <note priority="1" from="description">Invitation à explorer le patient de démonstration</note>
+      </trans-unit>
+      <trans-unit id="patients.onboarding.shortcuts" datatype="html">
+        <source>Voir les raccourcis</source>
+        <target state="translated">See shortcuts</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
+          <context context-type="linenumber">74,78</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers l&apos;aide des raccourcis</note>
+      </trans-unit>
+      <trans-unit id="patients.onboarding.suggestions" datatype="html">
+        <source> Bientôt : des suggestions de liens entre vos entrées. Elles résumeront des régularités dans ce que vous avez saisi ; vous seul déciderez de ce qui fait sens. </source>
+        <target state="translated"> Coming soon: suggested links between your entries. They will summarise patterns in what you have entered; only you decide what makes sense. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
+          <context context-type="linenumber">82,89</context>
+        </context-group>
+        <note priority="1" from="description">Message préparé pour les suggestions (V2)</note>
+      </trans-unit>
+      <trans-unit id="patients.onboarding.step1.title" datatype="html">
+        <source>Créez un <x id="subject" equiv-text="one"/></source>
+        <target state="translated">Create a <x id="subject" equiv-text="one"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
+          <context context-type="linenumber">223</context>
+        </context-group>
+        <note priority="1" from="description">Étape 1 de l&apos;accueil</note>
+      </trans-unit>
+      <trans-unit id="patients.onboarding.step1.detail" datatype="html">
+        <source>Seul le nom affiché est obligatoire. Touche N depuis cette liste.</source>
+        <target state="translated">Only the display name is required. Press N from this list.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
+          <context context-type="linenumber">224</context>
+        </context-group>
+        <note priority="1" from="description">Détail de l&apos;étape 1</note>
+      </trans-unit>
+      <trans-unit id="patients.onboarding.step2.title" datatype="html">
+        <source>Ouvrez son dossier</source>
+        <target state="translated">Open their record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
+          <context context-type="linenumber">227</context>
+        </context-group>
+        <note priority="1" from="description">Étape 2 de l&apos;accueil</note>
+      </trans-unit>
+      <trans-unit id="patients.onboarding.step2.detail" datatype="html">
+        <source>Il s&apos;ouvre dès la création, sur la vue d&apos;ensemble.</source>
+        <target state="translated">It opens right after creation, on the overview.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
+          <context context-type="linenumber">228</context>
+        </context-group>
+        <note priority="1" from="description">Détail de l&apos;étape 2</note>
+      </trans-unit>
+      <trans-unit id="patients.onboarding.step3.title" datatype="html">
+        <source>Saisissez la première entrée</source>
+        <target state="translated">Write the first entry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
+          <context context-type="linenumber">231</context>
+        </context-group>
+        <note priority="1" from="description">Étape 3 de l&apos;accueil</note>
+      </trans-unit>
+      <trans-unit id="patients.onboarding.step3.detail" datatype="html">
+        <source>Dans le dossier : touche N, le bouton + ou la barre « Noter quelque chose ».</source>
+        <target state="translated">In the record: press N, the + button or the “Write something” bar.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+        <note priority="1" from="description">Détail de l&apos;étape 3</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.chip" datatype="html">
+        <source>Démo</source>
+        <target state="translated">Demo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
+          <context context-type="linenumber">38,41</context>
+        </context-group>
+        <note priority="1" from="description">Puce du patient de démonstration</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.remove" datatype="html">
+        <source> Supprimer la démo </source>
+        <target state="translated"> Remove the demo </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
+          <context context-type="linenumber">81,84</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de retrait du patient de démonstration</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.restore" datatype="html">
+        <source> Restaurer </source>
+        <target state="translated"> Restore </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
+          <context context-type="linenumber">91,96</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de restauration du patient de démonstration</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.removeLabel" datatype="html">
+        <source>Supprimer la démo : <x id="name" equiv-text="name"/></source>
+        <target state="translated">Remove the demo: <x id="name" equiv-text="name"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible du retrait du patient de démonstration</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.restoreLabel" datatype="html">
+        <source>Restaurer le patient de démonstration <x id="name" equiv-text="name"/></source>
+        <target state="translated">Restore the demo patient <x id="name" equiv-text="name"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible de la restauration du patient de démonstration</note>
+      </trans-unit>
+      <trans-unit id="patients.warning.level" datatype="html">
+        <source>Avertissement</source>
+        <target state="translated">Warning</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <note priority="1" from="description">Mot du niveau avertissement</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

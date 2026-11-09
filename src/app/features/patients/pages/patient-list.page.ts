@@ -13,10 +13,19 @@ import { Router, RouterLink } from '@angular/router';
 
 import { subjectLabel, SubjectVocabulary } from '../../../core/i18n';
 import { ShortcutService } from '../../../core/shortcuts';
-import { StateAction, StateComponent } from '../../../shared/ui';
+import {
+  ConfirmDialogService,
+  StateAction,
+  StateComponent,
+  ToastService,
+} from '../../../shared/ui';
 import { isRefreshing, stateKind } from '../../../shared/util';
+import { ShortcutsHelp } from '../../patient-shell';
+import { isDemoPatient, PatientView } from '../data/patient.model';
 import { PatientListStore } from '../data/patient-list.store';
 import { TagStore } from '../data/tag.store';
+import { OnboardingComponent } from '../ui/onboarding.component';
+import { RESTORE_LABEL } from '../ui/patient-labels';
 import { PatientFiltersComponent } from '../ui/patient-filters.component';
 import { PatientTableComponent } from '../ui/patient-table.component';
 
@@ -27,6 +36,10 @@ export const FILTER_DEBOUNCE_MS = 250;
  * /patients (fiche 01, B4 écran 1) : filtre, tri, puces de tags, archivés, tableau, « Afficher
  * plus » par curseur. Raccourcis : N ouvre la création, / focalise le filtre. Trois états par
  * pm-state ; une erreur de rechargement laisse la liste précédente affichée avec un bandeau.
+ * Première connexion (B3 flux 1, planche 29, M7-03) : tant que la liste sans filtre ne compte que
+ * des patients de démonstration (ou aucun), l'accueil en trois étapes s'affiche avec « Voir les
+ * raccourcis » ; le patient « DEMO · … » se supprime en un clic et une confirmation simple, sans
+ * retaper son nom, puis se restaure depuis le toast ou la liste des archivés.
  */
 @Component({
   selector: 'pm-patient-list-page',
@@ -34,6 +47,7 @@ export const FILTER_DEBOUNCE_MS = 250;
     MatButtonModule,
     RouterLink,
     StateComponent,
+    OnboardingComponent,
     PatientFiltersComponent,
     PatientTableComponent,
   ],
@@ -46,6 +60,9 @@ export class PatientListPage {
   protected readonly tags = inject(TagStore);
   private readonly router = inject(Router);
   private readonly vocabulary = inject(SubjectVocabulary);
+  private readonly confirm = inject(ConfirmDialogService);
+  private readonly toasts = inject(ToastService);
+  private readonly help = inject(ShortcutsHelp);
   private readonly filters = viewChild.required(PatientFiltersComponent);
 
   /** Texte du filtre affiché tout de suite ; envoyé au store après la pause de frappe. */
@@ -80,6 +97,30 @@ export class PatientListPage {
       ? $localize`:État vide de la liste filtrée@@patients.empty.filtered:Aucun ${subject}:subject: ne correspond`
       : $localize`:État vide de la liste@@patients.empty.title:Créez votre premier ${subject}:subject:`;
   });
+  /** Phrase de l'état vide : seulement à la première connexion (liste sans filtre). */
+  protected readonly emptyMessage = computed(() =>
+    this.store.filtered()
+      ? undefined
+      : $localize`:Phrase de l'état vide de la liste@@patients.empty.message:Le dossier, la timeline et le graphe se construisent à partir de la première entrée.`,
+  );
+  /**
+   * Écriture refusée depuis la liste : avertissement dans la liste (planche 29 : icône et mot du
+   * niveau), la liste reste affichée. La restauration couvre aussi le toast « Restaurer » posé par
+   * la fiche après un archivage : son message ne parle donc pas de la démo.
+   */
+  protected readonly actionProblem = computed(() => {
+    switch (this.store.actionProblem()?.action) {
+      case 'removeDemo':
+        return $localize`:Avertissement, retrait de la démo refusé@@patients.demo.removeFailed:Le patient de démonstration n'a pas pu être retiré. Réessayez.`;
+      case 'restore':
+        return $localize`:Avertissement, restauration refusée@@patients.demo.restoreFailed:La restauration n'a pas abouti. Réessayez depuis les archivés.`;
+      default:
+        return null;
+    }
+  });
+  protected readonly warningLabel = $localize`:Mot du niveau avertissement@@patients.warning.level:Avertissement`;
+  /** La liste affichée contient le patient de démonstration (accueil : « explorez-le »). */
+  protected readonly hasDemo = computed(() => this.store.items().some(isDemoPatient));
   protected readonly emptyAction = computed<StateAction>(() =>
     this.store.filtered()
       ? {
@@ -144,5 +185,41 @@ export class PatientListPage {
 
   protected create(): void {
     void this.router.navigateByUrl('/patients/nouveau');
+  }
+
+  /** « Voir les raccourcis » de l'accueil : le panneau d'aide, comme la touche ?. */
+  protected showShortcuts(): void {
+    void this.help.open();
+  }
+
+  /**
+   * « Supprimer la démo » (planche 29) : confirmation simple, sans nom à retaper ; archivage puis
+   * relecture de la liste ; toast « Restaurer » (10 s), sinon restauration depuis les archivés.
+   */
+  protected async removeDemo(patient: PatientView): Promise<void> {
+    const confirmed = await this.confirm.confirm({
+      title: $localize`:Titre de la confirmation de retrait de la démo@@patients.demo.confirmTitle:Supprimer le patient de démonstration ?`,
+      description: $localize`:Explication du retrait de la démo@@patients.demo.confirmText:${patient.displayName}:name: quitte votre liste. Rien n'est effacé : vous pourrez le restaurer depuis les archivés.`,
+      confirmLabel: $localize`:Bouton de confirmation du retrait de la démo@@patients.demo.confirm:Supprimer la démo`,
+      destructive: true,
+    });
+    if (!confirmed) return;
+    // Refus de l'API : message dans la liste (actionProblem), jamais de toast d'erreur (planche 29).
+    if (!(await this.store.removeDemo(patient.id))) return;
+    this.toasts.show({
+      level: 'info',
+      message: $localize`:Toast après le retrait de la démo@@patients.demo.removed:Patient de démonstration retiré`,
+      durationMs: 10_000,
+      action: { label: RESTORE_LABEL(), handler: () => void this.restoreDemo(patient) },
+    });
+  }
+
+  /** « Restaurer » (toast ou ligne archivée) : POST /restore, puis relecture de la liste. */
+  protected async restoreDemo(patient: PatientView): Promise<void> {
+    if (await this.store.restore(patient.id)) {
+      this.toasts.success(
+        $localize`:Toast après la restauration de la démo@@patients.demo.restored:Patient de démonstration restauré`,
+      );
+    }
   }
 }
