@@ -66,18 +66,14 @@ export async function capture(page: Page, testInfo: TestInfo, name: string): Pro
 /**
  * axe-core (WCAG 2.0 / 2.1 A, AA), mêmes attentes que e2e/support/axe.ts, mais en assertion
  * « soft » : un parcours de quinze écrans les analyse tous et échoue à la fin avec la liste complète,
- * au lieu de s'arrêter au premier. `exclude` : sélecteur à ignorer (canevas du graphe).
+ * au lieu de s'arrêter au premier. Toute la page est analysée, canevas du graphe compris (M7-04).
  */
-export async function expectNoAxeViolationsSoft(
-  page: Page,
-  screen: string,
-  exclude?: string,
-): Promise<void> {
+export async function expectNoAxeViolationsSoft(page: Page, screen: string): Promise<void> {
   await expect(page.locator('.mat-ripple-element')).toHaveCount(0);
   await expect(page.locator('.mdc-dialog--opening, .mdc-dialog--closing')).toHaveCount(0);
-  let builder = new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']);
-  if (exclude) builder = builder.exclude(exclude);
-  const results = await builder.analyze();
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+    .analyze();
   expect.soft(results.violations, `axe-core en sombre : ${screen}`).toEqual([]);
 }
 

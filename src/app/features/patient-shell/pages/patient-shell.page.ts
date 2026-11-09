@@ -30,6 +30,7 @@ import { connectLinkEditor, LINK_QUERY_PARAM } from '../../graph';
 import { OverviewViewToggleComponent } from '../../overview';
 import { StateKind } from '../../../shared/util';
 import { ShellTab } from '../data/patient-shell.model';
+import { CAPTURE_FOCUS_STATE } from '../patient-shell.params';
 import { PatientShellStore } from '../data/patient-shell.store';
 import { CloseSessionDialog, CloseSessionResult } from '../panels/close-session.dialog';
 import { finalLoadError, sessionProblemText, toHeaderInfo } from '../ui/shell-labels';
@@ -121,6 +122,19 @@ export class PatientShellPage {
         if (this.store.patientId() !== id) void this.store.load(id);
       });
     });
+
+    // Arrivée depuis la création du patient (B3 flux 2, étape 3) : une fois le dossier lu, la barre
+    // de capture prend le focus, une seule fois, panneau d'aperçu replié (il recouvrirait l'indice
+    // de première entrée ; la première frappe l'ouvre).
+    const state = inject(Router).currentNavigation()?.extras.state;
+    if (state?.[CAPTURE_FOCUS_STATE] === true) {
+      const arrival = effect(() => {
+        const bar = this.captureBar();
+        if (!bar || !this.store.patient()) return;
+        arrival.destroy();
+        untracked(() => bar.focus({ quiet: true }));
+      });
+    }
 
     // Éditeur d'entrée (M1-08) : N ouvre une nouvelle entrée ; ?entry=<id> ouvre sa correction.
     inject(DestroyRef).onDestroy(

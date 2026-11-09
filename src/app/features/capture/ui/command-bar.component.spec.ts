@@ -299,6 +299,24 @@ describe('CommandBarComponent', () => {
     expect(text(el.querySelector('.emotion-name'))).toBe('Anxiété');
   });
 
+  it('focus discret (arrivée sur un dossier créé) : champ focalisé, panneau replié jusqu’à la frappe', async () => {
+    const { el, input, fixture } = await render();
+    fixture.componentInstance.focus({ quiet: true });
+    await settle(fixture);
+    expect(document.activeElement).toBe(input);
+    expect(el.querySelector('.panel')).toBeNull();
+    await type(fixture, 'anx 8');
+    expect(el.querySelector('.panel')).not.toBeNull();
+  });
+
+  it('focus ordinaire (Démarrer, Clôturer) : le panneau s’ouvre avec le focus', async () => {
+    const { el, input, fixture } = await render();
+    fixture.componentInstance.focus();
+    await settle(fixture);
+    expect(document.activeElement).toBe(input);
+    expect(el.querySelector('.panel')).not.toBeNull();
+  });
+
   it('écriture ailleurs dans le dossier (revision) : rail relu au focus suivant ; Échap replie le panneau', async () => {
     const { el, input, fixture, api } = await render();
     await type(fixture, 'anx 8');

@@ -23,6 +23,7 @@ import {
   shellPatient,
 } from '../data/patient-shell.fixtures';
 import { PatientShellStore } from '../data/patient-shell.store';
+import { CAPTURE_FOCUS_STATE } from '../patient-shell.params';
 import { PATIENT_SHELL_ROUTES } from '../patient-shell.routes';
 import { PatientShellPage } from './patient-shell.page';
 
@@ -349,6 +350,23 @@ describe('PatientShellPage', () => {
     press(document.body, '1');
     await settle(harness);
     expect(router.url).toBe('/patients/p-marie');
+  });
+
+  it('arrivée depuis la création (état CAPTURE_FOCUS_STATE) : la barre de capture prend le focus', async () => {
+    const { el, harness } = await render({}, '/patients');
+    await TestBed.inject(Router).navigate(['/patients', 'p-marie', 'overview'], {
+      state: { [CAPTURE_FOCUS_STATE]: true },
+    });
+    await settle(harness);
+    await settle(harness);
+    const capture = el.querySelector<HTMLInputElement>('pm-command-bar input');
+    expect(capture).not.toBeNull();
+    expect(document.activeElement).toBe(capture);
+  });
+
+  it('arrivée ordinaire (lien, historique) : le focus n’est pas déplacé', async () => {
+    const { el } = await render();
+    expect(document.activeElement).not.toBe(el.querySelector('pm-command-bar input'));
   });
 
   it('/patients/:id/overview renvoie sur l’onglet 1, /patients/:id', async () => {

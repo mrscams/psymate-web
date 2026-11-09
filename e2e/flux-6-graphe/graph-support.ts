@@ -1,7 +1,8 @@
-import AxeBuilder from '@axe-core/playwright';
 import { APIRequestContext, expect, Locator, Page } from '@playwright/test';
 
 import { createPatient, daysAgo, entry, intakeOf } from '../flux-5-timeline/timeline-data';
+import { apiDrained } from '../support/api-drain';
+import { exclusive } from '../support/exclusif';
 
 // Données et outils des e2e du graphe (M2-06), contre l'API réelle (jamais de mock) : dossiers
 // créés par l'API dans un compte jetable, sonde du canevas, axe-core hors du canevas.
@@ -105,16 +106,6 @@ export async function emptySpot(page: Page): Promise<{ x: number; y: number }> {
   });
 }
 
-/** axe-core (WCAG 2.0 / 2.1 A, AA) sur toute la page sauf le canevas Cytoscape. */
-export async function expectNoAxeViolationsOutsideCanvas(page: Page): Promise<void> {
-  await expect(page.locator('.mat-ripple-element')).toHaveCount(0);
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .exclude('pm-graph-canvas .canvas')
-    .analyze();
-  expect(results.violations).toEqual([]);
-}
-
 async function ok<T>(response: Promise<import('@playwright/test').APIResponse>): Promise<T> {
   const res = await response;
   expect(res.ok(), `${res.url()} → ${res.status()} ${await res.text()}`).toBe(true);
@@ -187,20 +178,26 @@ export async function crowdedFolder(
     title: 'Déménagement',
     occurred: { from: daysAgo(90), precision: 'day' },
   });
-  let next = 0;
-  await Promise.all(
-    Array.from({ length: 8 }, async () => {
-      for (;;) {
-        const i = next++;
-        if (i >= count) return;
-        await entry(api, patientId, {
-          type: 'feeling',
-          title: `Inquiétude ${String(i + 1).padStart(3, '0')}`,
-          feeling: { emotionCode: 'anxiety', intensity: 1 + (i % 10) },
-          links: [{ targetId: situation, linkType: 'part_of' }],
-        });
-      }
-    }),
-  );
+  // Écritures en masse : sous le verrou « charge-api », suivies de la barrière apiDrained() (voir
+  // e2e/support/api-drain.ts et exclusif.ts), pour ne retarder ni les e-mails ni les mesures des
+  // autres tests.
+  await exclusive('charge-api', async () => {
+    let next = 0;
+    await Promise.all(
+      Array.from({ length: 8 }, async () => {
+        for (;;) {
+          const i = next++;
+          if (i >= count) return;
+          await entry(api, patientId, {
+            type: 'feeling',
+            title: `Inquiétude ${String(i + 1).padStart(3, '0')}`,
+            feeling: { emotionCode: 'anxiety', intensity: 1 + (i % 10) },
+            links: [{ targetId: situation, linkType: 'part_of' }],
+          });
+        }
+      }),
+    );
+    await apiDrained();
+  });
   return { patientId, situation };
 }

@@ -1,6 +1,10 @@
 :host {
   display: block;
   overflow-x: auto;
+  // Bloc conteneur des éléments en position absolue du tableau (libellé .sr-only « Actions ») :
+  // sans lui, ils échappent au défilement horizontal de l'hôte et élargissent la page quand le
+  // tableau déborde (zoom 200 %, polices plus larges sous Linux : +11 px, M7-04).
+  position: relative;
 }
 
 .patients {
@@ -8,10 +12,14 @@
   border-collapse: collapse;
   background: var(--surface-raised);
   color: var(--text-primary);
-  transition: opacity 150ms;
+  transition: background-color 150ms;
 
+  // Lecture en attente (rechargement, hors ligne : planche 29) : la liste reste affichée et se
+  // grise par son fond (surface-ground), pas par l'opacité, qui faisait tomber le texte secondaire à
+  // 2,5:1 (M7-04). Les couples texte / surface-ground sont vérifiés par check:tokens.
   &.refreshing {
-    opacity: 0.6;
+    background: var(--surface-ground);
+    cursor: progress;
   }
 }
 

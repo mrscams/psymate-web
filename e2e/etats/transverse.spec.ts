@@ -1,4 +1,3 @@
-import AxeBuilder from '@axe-core/playwright';
 import { APIRequestContext, expect, Page, test } from '@playwright/test';
 
 import { createPatient, intakeOf } from '../flux-5-timeline/timeline-data';
@@ -47,13 +46,10 @@ test('hors ligne : bandeau « Connexion perdue », lecture rejouée au retour du
   const banner = page.getByRole('status').filter({ hasText: 'Connexion perdue' });
   await expect(banner).toBeVisible();
   await shoot(page, '29-hors-ligne');
-  // Pendant l'attente, la liste déjà affichée reste grisée (planche 29, contraste réduit voulu) :
-  // axe vérifie toute la page sauf ce tableau ; la page entière est vérifiée au retour du réseau.
-  const waitingAxe = await new AxeBuilder({ page })
-    .exclude('pm-patient-table')
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .analyze();
-  expect(waitingAxe.violations).toEqual([]);
+  // Pendant l'attente, la liste déjà affichée reste grisée (planche 29) par son fond, sans perdre
+  // de contraste (M7-04) : axe vérifie toute la page, tableau compris.
+  await expect(page.locator('pm-patient-table table.refreshing')).toBeVisible();
+  await expectNoAxeViolations(page);
   const replayed = page.waitForResponse(
     (r) => new URL(r.url()).pathname === '/api/patients' && r.ok(),
   );

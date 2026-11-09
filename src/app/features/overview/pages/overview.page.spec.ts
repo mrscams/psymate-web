@@ -237,6 +237,8 @@ describe('OverviewPage', () => {
     });
     const attention = block(el, 'À surveiller · à compléter');
     expect(text(attention)).toContain('Drapeau : À surveiller · Sommeil');
+    // Un espace entre le motif et la date de pose (« Sommeilposé » avant M7-04).
+    expect(text(attention)).toMatch(/Sommeil posé le /);
     expect(link(attention, '2 brouillons à compléter').getAttribute('href')).toBe(
       '/patients/p-marie/timeline?drafts=1',
     );

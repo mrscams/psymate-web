@@ -37,6 +37,14 @@ async function confirmationTokens(
   return tokens;
 }
 
+/**
+ * Délai d'arrivée d'un e-mail dans Mailpit, le même que confirmationTokens et confirmEmail : l'API
+ * l'envoie par sa file asynchrone, partagée avec les recalculs de projection (1,3 s au repos, jusqu'à
+ * 5 s quand un autre test écrit en masse, mesuré en M7-04). Le délai par défaut d'expect.poll (5 s)
+ * échouait sous charge alors que l'e-mail arrivait.
+ */
+const MAIL_WAIT_MS = 15_000;
+
 async function messageCount(api: APIRequestContext, email: string): Promise<number> {
   const search = await api.get(`${MAILPIT}/api/v1/search`, { params: { query: `to:${email}` } });
   return (((await search.json()) as { messages?: unknown[] }).messages ?? []).length;
@@ -158,7 +166,7 @@ test('renvoi : 202, message, bouton désactivé une minute avec compte à rebour
   // Second clic pendant le délai : rien ne part (un seul renvoi par minute côté API aussi).
   // dispatchEvent : Playwright attendrait sinon la fin du délai (aria-disabled vaut « désactivé »).
   await resend.dispatchEvent('click');
-  await expect.poll(() => messageCount(request, account.email)).toBe(2);
+  await expect.poll(() => messageCount(request, account.email), { timeout: MAIL_WAIT_MS }).toBe(2);
   await page.waitForTimeout(1500);
   expect(await messageCount(request, account.email)).toBe(2);
 
@@ -247,6 +255,6 @@ test('page expirée : « Recevoir un nouveau lien » au clavier → statut, dél
     'aria-disabled',
     'true',
   );
-  await expect.poll(() => messageCount(request, account.email)).toBe(2);
+  await expect.poll(() => messageCount(request, account.email), { timeout: MAIL_WAIT_MS }).toBe(2);
   await expectNoAxeViolations(page);
 });

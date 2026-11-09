@@ -109,6 +109,7 @@
           <label class="card" [class.selected]="form.controls.profession.value === card.value">
             <input
               type="radio"
+              name="profession"
               formControlName="profession"
               [value]="card.value"
               [id]="fieldId('profession') + '-' + card.value"

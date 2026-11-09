@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-09T13:22:17.220Z",
+  "task": "M7-04",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Accessibilite et e2e complets : un e2e clavier par flux B3 (1 a 10, sans souris), axe-core 0 violation sur 34 ecrans V1 x 2 themes, zoom 200 %, liste equivalente du graphe par roles et noms, tableau UC -> e2e dans docs/e2e-couverture.md",
+  "notes": "Branche claude/cranky-jennings-ddae5a, 18 commits. lint, check:tokens, test (162 fichiers, 1717 tests), build verts ; e2e complet --workers=2 : 210 passes, 29 ignores (admin), 0 echec (9,7 min). Exclusions axe existantes retirees (canevas du graphe, pm-patient-table masquait 2,5:1). Corrections : radios nommees (auth, account, entries), focus de la barre de capture apres creation de patient (B3 flux 2), contraste de la liste grisee, vue d'ensemble a 200 %. Aucun fichier shared/ui ni core, aucune dependance. Instabilites stabilisees : file asynchrone de l'API saturee par le patient volume (creation par vagues, barriere apiDrained, verrou charge-api equitable). Revue faite, points corriges.",
+  "next": "Passe e2e avec PSYMATE_E2E_ADMIN_* jamais faite (flux 10 clavier, 6 ecrans axe par theme, flux principal UC-14 et UC-15) ; une seule passe admin complete par heure (limite de contact). Parseur : 'anx 8 nuit courte' lu comme note, a confirmer. Puis verification finale, PR, fusion.",
+  "branch": "claude/cranky-jennings-ddae5a",
+  "checkout": "screen-comparison-ux-prompt-7c2e2e"
+}

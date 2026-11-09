@@ -1,6 +1,3 @@
-import { mkdirSync } from 'node:fs';
-import { join } from 'node:path';
-
 import {
   APIRequestContext,
   BrowserContext,
@@ -12,6 +9,7 @@ import {
 
 import { createAccount } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { shoot } from '../support/captures';
 
 // Revue des trois états (M6-03, planche 29) contre l'API réelle (seed small, Mailpit) :
 // - « vide » vient toujours de données réelles (compte jetable sans patient, dossier sans entrée…) ;
@@ -101,13 +99,7 @@ export async function expectState(
   return located;
 }
 
-/** Capture pleine page pour la revue visuelle, seulement si PSYMATE_E2E_CAPTURES est défini. */
-export async function shoot(page: Page, name: string): Promise<void> {
-  const dir = process.env['PSYMATE_E2E_CAPTURES'];
-  if (!dir) return;
-  mkdirSync(dir, { recursive: true });
-  await page.screenshot({ path: join(dir, `${name}.png`), fullPage: true, animations: 'disabled' });
-}
+export { shoot } from '../support/captures';
 
 /** Compte praticien jetable (docs_pending) dont la session sert ensuite au navigateur. */
 export async function practitioner(prefix: string): Promise<APIRequestContext> {
