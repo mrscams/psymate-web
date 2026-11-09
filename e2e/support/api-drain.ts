@@ -18,6 +18,10 @@ const MAILPIT = 'http://localhost:8025';
  * La barrière inscrit une adresse jetable et attend son e-mail : il est mis en file après tout ce
  * qui précède, donc quand il arrive, la file en attente a été prise en charge. Renvoie la durée
  * d'attente (ms). `timeoutMs` borne l'attente de la barrière elle-même, pas celle d'un autre test.
+ *
+ * Hypothèse : la barrière ne vaut que tant que l'API envoie ses e-mails par la même file que ses
+ * abonnés de projection (psymate-api, AuthService et @ApplicationModuleListener sur l'exécuteur
+ * unique). Si l'API leur donne un jour des exécuteurs séparés, elle ne prouve plus rien : la revoir.
  */
 export async function apiDrained(timeoutMs = 120_000): Promise<number> {
   const api = await playwrightRequest.newContext();

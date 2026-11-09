@@ -8,6 +8,7 @@ import { ConfirmDialogService, ToastService } from '../../../shared/ui';
 import { PatientApi } from '../data/patient.api';
 import { PatientExportApi } from '../data/patient-export.api';
 import { patient, TAGS, VERSIONS } from '../data/patient.fixtures';
+import { CAPTURE_FOCUS_STATE } from '../../patient-shell';
 import { PatientFormPage } from './patient-form.page';
 
 const never = () => new Promise<never>(() => undefined);
@@ -167,7 +168,7 @@ describe('PatientFormPage', () => {
         followUp: { rhythm: 'weekly', durationMin: 60 },
       });
       expect(router.navigate).toHaveBeenCalledWith(['/patients', 'p-new', 'overview'], {
-        state: { pmFocusCapture: true },
+        state: { [CAPTURE_FOCUS_STATE]: true },
       });
     });
 

@@ -133,9 +133,9 @@ test('praticien à 200 % : liste, création, vue d’ensemble, capture, timeline
   await expect(editor).toBeHidden();
 
   // Graphe : le canevas (zone en deux dimensions) et sa liste équivalente au clavier.
+  // Touche 3 (le focus est revenu sur la carte, hors champ) : le graphe de tout le dossier.
   await page.keyboard.press('3');
   await expect(page).toHaveURL(/\/graph/);
-  await page.goto(`/fr/patients/${folder.patientId}/graph?root=${folder.situation}`);
   await graphReady(page, { count: 3 });
   const listToggle = page.getByRole('button', { name: 'Liste des liens', exact: true });
   await tabTo(page, listToggle, { max: 60 });

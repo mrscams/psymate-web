@@ -1,6 +1,3 @@
-import { mkdirSync } from 'node:fs';
-import { join } from 'node:path';
-
 import AxeBuilder from '@axe-core/playwright';
 import { expect, Page, test } from '@playwright/test';
 
@@ -58,14 +55,4 @@ export async function axeScreen(page: Page, theme: Theme, screen: string): Promi
     .toEqual([]);
 }
 
-/**
- * Capture pleine page pour la revue, seulement si PSYMATE_E2E_CAPTURES désigne un dossier (hors du
- * dépôt) : rien n'est écrit par défaut.
- */
-export async function shoot(page: Page, name: string, fullPage = true): Promise<void> {
-  const dir = process.env['PSYMATE_E2E_CAPTURES'];
-  if (!dir) return;
-  mkdirSync(dir, { recursive: true });
-  await expect(page.locator('.mat-ripple-element')).toHaveCount(0);
-  await page.screenshot({ path: join(dir, `${name}.png`), fullPage, animations: 'disabled' });
-}
+export { shoot } from '../support/captures';

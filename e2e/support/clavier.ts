@@ -8,6 +8,14 @@ import { expect, Locator, Page } from '@playwright/test';
  * molette, toucher) et les rapporte au test. `expectNoPointer()` échoue si un seul a eu lieu : un
  * parcours qui passe par un `click()`, un `hover()` ou `page.mouse` ne peut pas se dire « au
  * clavier ». Entrée ou Espace sur un bouton produisent un `click` sans pointeur : ils ne comptent pas.
+ *
+ * Limites : la garde ne voit que les événements de pointeur. Elle ne détecte pas `fill`,
+ * `locator.focus()`, `selectOption`, `check`, `dispatchEvent`, `setInputFiles` ni `page.evaluate`,
+ * qui n'en produisent pas : les parcours au clavier s'en abstiennent (seul `setInputFiles` sert, sur
+ * le champ fichier déjà focalisé, la boîte du système n'étant pas pilotable), et cela se vérifie à la
+ * relecture. Dans les parcours des flux 2 à 6 et 8 (et la démo du flux 1), la connexion se fait
+ * avant `keyboardOnly()`, par l'outil commun signIn (souris) : la connexion au clavier est couverte
+ * par les flux 1, 9 et 10 et par inscription-dossier.spec.ts (« connexion au clavier »).
  */
 export interface KeyboardOnly {
   /** Aucun geste de pointeur depuis `keyboardOnly()`. */
@@ -76,15 +84,4 @@ export async function tabTo(
     await page.keyboard.press(key);
   }
   throw new Error(`le focus n'a pas atteint ${target.toString()} en ${max} appuis sur ${key}`);
-}
-
-/** Saisie au clavier dans l'élément qui a le focus (frappe réelle, pas `fill`). */
-export async function typeInto(page: Page, field: Locator, text: string): Promise<void> {
-  await expect(field).toBeFocused();
-  await page.keyboard.type(text);
-}
-
-/** Le focus revient sur le document (aucun champ actif) : les raccourcis à une touche s'appliquent. */
-export async function leaveField(page: Page): Promise<void> {
-  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
 }
