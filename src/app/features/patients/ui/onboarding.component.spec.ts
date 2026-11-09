@@ -1,16 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 
 import { SubjectVocabulary } from '../../../core/i18n';
-import { OnboardingComponent, OnboardingStep } from './onboarding.component';
+import { OnboardingComponent } from './onboarding.component';
 
-function render(
-  current: OnboardingStep = 1,
-  hasDemo = false,
-  label: 'patient' | 'client' = 'patient',
-) {
+function render(hasDemo = false, label: 'patient' | 'client' = 'patient') {
   TestBed.inject(SubjectVocabulary).set(label);
   const fixture = TestBed.createComponent(OnboardingComponent);
-  fixture.componentRef.setInput('current', current);
   fixture.componentRef.setInput('hasDemo', hasDemo);
   fixture.detectChanges();
   const el = fixture.nativeElement as HTMLElement;
@@ -23,7 +18,7 @@ const text = (el: Element | null | undefined) =>
 
 describe('OnboardingComponent (accueil de première connexion)', () => {
   it('titre, trois étapes, l’étape 1 en cours (aria-current, en toutes lettres)', () => {
-    const { el, steps } = render(1);
+    const { el, steps } = render();
     expect(text(el.querySelector('h2'))).toBe('Bienvenue dans PsyMate');
     expect(el.querySelector('section')?.getAttribute('aria-labelledby')).toBe(
       el.querySelector('h2')?.id,
@@ -36,17 +31,13 @@ describe('OnboardingComponent (accueil de première connexion)', () => {
     expect(text(steps[0])).toContain('Étape en cours');
     expect(steps[1].getAttribute('aria-current')).toBeNull();
     expect(text(steps[1])).not.toContain('Étape en cours');
-  });
-
-  it('étape 3 : les deux premières marquées « Fait »', () => {
-    const { steps } = render(3);
-    expect(text(steps[0])).toContain('Fait');
-    expect(text(steps[1])).toContain('Fait');
-    expect(steps[2].getAttribute('aria-current')).toBe('step');
+    expect(steps[2].getAttribute('aria-current')).toBeNull();
+    // Sans puces (list-style: none), la liste garde son rôle pour les lecteurs d'écran.
+    expect(el.querySelector('ol')?.getAttribute('role')).toBe('list');
   });
 
   it('coach : « Créez un client »', () => {
-    const { steps } = render(1, false, 'client');
+    const { steps } = render(false, 'client');
     expect(text(steps[0].querySelector('strong'))).toBe('Créez un client');
   });
 
@@ -71,8 +62,8 @@ describe('OnboardingComponent (accueil de première connexion)', () => {
   });
 
   it('patient de démonstration présent : invitation à l’explorer, sinon rien', () => {
-    expect(render(1, true).el.querySelector('.demo')).not.toBeNull();
+    expect(render(true).el.querySelector('.demo')).not.toBeNull();
     TestBed.resetTestingModule();
-    expect(render(1, false).el.querySelector('.demo')).toBeNull();
+    expect(render(false).el.querySelector('.demo')).toBeNull();
   });
 });

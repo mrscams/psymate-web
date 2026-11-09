@@ -9,15 +9,23 @@ interface StepView {
   n: OnboardingStep;
   title: string;
   detail: string;
-  state: 'done' | 'current' | 'upcoming';
+  current: boolean;
 }
+
+/**
+ * L'accueil ne s'affiche que tant qu'aucun vrai patient n'existe (PatientListStore.welcome) : l'étape
+ * en cours y est donc toujours la première. La troisième est annoncée dans le dossier
+ * (features/patient-shell, indice « première entrée »), la deuxième se fait d'elle-même (la
+ * création ouvre le dossier).
+ */
+const CURRENT_STEP: OnboardingStep = 1;
 
 /**
  * Accueil de la première connexion (planche 29 §2, M7-03) : trois étapes jusqu'à la première
  * entrée, l'étape en cours marquée (`aria-current="step"`, et en toutes lettres), le lien « Voir les
  * raccourcis ? » et une phrase neutre sur les suggestions, préparée pour la V2 (aucune fonction,
- * aucun appel). L'étape en cours vient de la page, qui la dérive des données lues ; rien n'est
- * mémorisé ici.
+ * aucun appel). Rien n'est mémorisé ici. `role="list"` sur la liste numérotée : sans puces, Safari
+ * et VoiceOver ne l'annonceraient plus comme une liste.
  */
 @Component({
   selector: 'pm-onboarding',
@@ -33,30 +41,22 @@ interface StepView {
       <p class="lead" i18n="Phrase d'introduction de l'accueil@@patients.onboarding.lead">
         Trois étapes jusqu'à votre première entrée :
       </p>
-      <ol class="steps">
+      <ol class="steps" role="list">
         @for (step of steps(); track step.n) {
           <li
             class="step"
-            [class.current]="step.state === 'current'"
-            [class.done]="step.state === 'done'"
-            [attr.aria-current]="step.state === 'current' ? 'step' : null"
+            [class.current]="step.current"
+            [attr.aria-current]="step.current ? 'step' : null"
           >
             <span class="num" aria-hidden="true">{{ step.n }}</span>
             <span class="text">
               <strong>{{ step.title }}</strong>
               <span class="detail">{{ step.detail }}</span>
             </span>
-            @switch (step.state) {
-              @case ('current') {
-                <span class="badge" i18n="Marque de l'étape en cours@@patients.onboarding.current"
-                  >Étape en cours</span
-                >
-              }
-              @case ('done') {
-                <span class="badge done" i18n="Marque d'une étape faite@@patients.onboarding.done"
-                  >Fait</span
-                >
-              }
+            @if (step.current) {
+              <span class="badge" i18n="Marque de l'étape en cours@@patients.onboarding.current"
+                >Étape en cours</span
+              >
             }
           </li>
         }
@@ -176,11 +176,6 @@ interface StepView {
       background: var(--surface-raised);
       color: var(--text-primary);
       font: var(--mat-sys-label-medium);
-
-      &.done {
-        background: var(--success-bg);
-        color: var(--success);
-      }
     }
 
     .shortcuts {
@@ -206,8 +201,6 @@ interface StepView {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OnboardingComponent {
-  /** Étape en cours, dérivée des données par la page (1 tant qu'aucun vrai patient n'existe). */
-  readonly current = input<OnboardingStep>(1);
   /** Un patient de démonstration est dans la liste : on invite à l'explorer. */
   readonly hasDemo = input(false);
   /** « Voir les raccourcis » : la page ouvre l'aide (features/patient-shell). */
@@ -217,7 +210,6 @@ export class OnboardingComponent {
 
   protected readonly steps = computed<StepView[]>(() => {
     const one = subjectLabel(this.vocabulary.label(), 'one');
-    const current = this.current();
     const texts: Record<OnboardingStep, { title: string; detail: string }> = {
       1: {
         title: $localize`:Étape 1 de l'accueil@@patients.onboarding.step1.title:Créez un ${one}:subject:`,
@@ -235,7 +227,7 @@ export class OnboardingComponent {
     return ([1, 2, 3] as const).map((n) => ({
       n,
       ...texts[n],
-      state: n < current ? 'done' : n === current ? 'current' : 'upcoming',
+      current: n === CURRENT_STEP,
     }));
   });
 }

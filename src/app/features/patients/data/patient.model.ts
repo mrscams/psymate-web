@@ -446,9 +446,11 @@ export function normalizeText(text: string): string {
  */
 export const DEMO_PREFIX = 'DEMO · ';
 
-const DEMO_PATTERN = /^DEMO\s*[·•-]\s*\S/;
-
-/** Patient de démonstration : nom affiché qui commence par « DEMO · » (espaces tolérés). */
+/**
+ * Patient de démonstration : nom affiché qui commence exactement par « DEMO · » (format de l'outil
+ * de seed, `Scenario.DEMO_PREFIX`), suivi d'un nom. « DEMO-Tristan » ou « Démo … » n'en sont pas.
+ */
 export function isDemoPatient(patient: Pick<PatientView, 'displayName'>): boolean {
-  return DEMO_PATTERN.test(patient.displayName.trim());
+  const name = patient.displayName;
+  return name.startsWith(DEMO_PREFIX) && name.length > DEMO_PREFIX.length;
 }
