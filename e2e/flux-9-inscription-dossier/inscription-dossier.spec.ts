@@ -400,7 +400,13 @@ test('dossier professionnel au clavier : type, intitulé, fichier, Ajouter, Reti
   await page.keyboard.press('Enter');
   await expect(dialog).toBeVisible();
   await tabToName(page, 'Retirer');
+  // Le retrait attendu est la réponse du DELETE (et non un délai) : la liste vide n'est vérifiée
+  // qu'après elle (échec isolé en passe complète, M7-04 : liste encore pleine au bout de 5 s).
+  const removed = page.waitForResponse(
+    (r) => r.request().method() === 'DELETE' && r.url().includes('/api/me/verification/documents/'),
+  );
   await page.keyboard.press('Enter');
+  expect((await removed).status()).toBe(204);
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(page.getByText('Aucun justificatif déposé')).toBeVisible();
 
