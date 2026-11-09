@@ -1,6 +1,10 @@
 :host {
   display: block;
   overflow-x: auto;
+  // Bloc conteneur des éléments en position absolue du tableau (libellé .sr-only « Actions ») :
+  // sans lui, ils échappent au défilement horizontal de l'hôte et élargissent la page quand le
+  // tableau déborde (zoom 200 %, polices plus larges sous Linux : +11 px, M7-04).
+  position: relative;
 }
 
 .patients {
