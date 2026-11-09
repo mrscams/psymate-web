@@ -1,4 +1,3 @@
-import AxeBuilder from '@axe-core/playwright';
 import { APIRequestContext, expect, Locator, Page } from '@playwright/test';
 
 import { createPatient, daysAgo, entry, intakeOf } from '../flux-5-timeline/timeline-data';
@@ -105,16 +104,6 @@ export async function emptySpot(page: Page): Promise<{ x: number; y: number }> {
     }
     return best;
   });
-}
-
-/** axe-core (WCAG 2.0 / 2.1 A, AA) sur toute la page sauf le canevas Cytoscape. */
-export async function expectNoAxeViolationsOutsideCanvas(page: Page): Promise<void> {
-  await expect(page.locator('.mat-ripple-element')).toHaveCount(0);
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .exclude('pm-graph-canvas .canvas')
-    .analyze();
-  expect(results.violations).toEqual([]);
 }
 
 async function ok<T>(response: Promise<import('@playwright/test').APIResponse>): Promise<T> {

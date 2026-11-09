@@ -236,14 +236,14 @@ test.describe('thème', () => {
       });
     }
 
-    // Graphe : axe hors du canevas (Cytoscape dessine dans un <canvas>, sans DOM à analyser).
+    // Graphe : toute la page, canevas Cytoscape compris (role=img nommé, M7-04).
     await test.step('06-graphe', async () => {
       await page.goto(`/fr/patients/${folder.patientId}/graph?root=${folder.situation}`);
       // Situation racine, l'événement qui la déclenche et le ressenti qu'elle aggrave.
       await graphReady(page, { count: 3 });
       await settled(page);
       await expectTheme(page, 'dark');
-      await expectNoAxeViolationsSoft(page, '06-graphe', 'pm-graph-canvas .canvas');
+      await expectNoAxeViolationsSoft(page, '06-graphe');
       await capture(page, testInfo, '06-graphe');
     });
   });

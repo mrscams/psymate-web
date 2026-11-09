@@ -3,12 +3,12 @@ import { expect, test } from '@playwright/test';
 import { signedInContext } from '../flux-5-timeline/timeline-data';
 import { createAccount, signIn } from '../preferences/accounts';
 import { SEED } from '../support/accounts';
+import { expectNoAxeViolations } from '../support/axe';
 import {
   canvas,
   crowdedFolder,
   emptySpot,
   enableProbe,
-  expectNoAxeViolationsOutsideCanvas,
   graphReady,
   layoutMs,
   linksOf,
@@ -112,7 +112,7 @@ test.describe('vue graphe', () => {
     expect(layout).toBeLessThan(2000);
     expect(median).toBeLessThan(34);
 
-    await expectNoAxeViolationsOutsideCanvas(page);
+    await expectNoAxeViolations(page);
   });
 
   test('glisser un nœud sur un autre : éditeur prérempli, lien manual/accepted, compteur à jour', async ({
@@ -126,7 +126,7 @@ test.describe('vue graphe', () => {
     await page.goto(`/fr/patients/${folder.patientId}/graph?root=${folder.situation}`);
     await graphReady(page, { count: 4 });
     await expect(page.locator('.count')).toHaveText('4 nœuds · 3 liens');
-    await expectNoAxeViolationsOutsideCanvas(page);
+    await expectNoAxeViolations(page);
 
     // Événement → ressenti : glisser l'un sur l'autre (souris réelle sur le canevas).
     const from = await point(page, folder.event);
@@ -204,7 +204,7 @@ test.describe('vue graphe', () => {
     );
     await graphReady(page, { count: 4 });
     await expect.poll(() => zoom(page)).toBeCloseTo(zoomed, 3);
-    await expectNoAxeViolationsOutsideCanvas(page);
+    await expectNoAxeViolations(page);
   });
 
   test('liste équivalente : tableau des liens et détail, au clavier seulement ; axe hors canevas', async ({
@@ -256,7 +256,7 @@ test.describe('vue graphe', () => {
     await page.keyboard.press('Enter');
     await expect(page.getByRole('complementary', { name: 'Surcharge au travail' })).toBeVisible();
 
-    await expectNoAxeViolationsOutsideCanvas(page);
+    await expectNoAxeViolations(page);
   });
 
   test('super-nœud : au-delà de 150 nœuds, les ressentis sont regroupés et se déplient', async ({
@@ -284,7 +284,7 @@ test.describe('vue graphe', () => {
       name: `${members} ressentis regroupés · anxiété majoritaire`,
     });
     await expect(detail).toBeVisible();
-    await expectNoAxeViolationsOutsideCanvas(page);
+    await expectNoAxeViolations(page);
     const expanded = page.waitForResponse(
       (response) =>
         response.request().method() === 'POST' && response.url().endsWith('/graph/expand'),
@@ -303,7 +303,7 @@ test.describe('vue graphe', () => {
       if (await expand.evaluate((el) => el === document.activeElement)) break;
     }
     await expect(expand).toBeFocused();
-    await expectNoAxeViolationsOutsideCanvas(page);
+    await expectNoAxeViolations(page);
     await page.keyboard.press('Enter');
     expect((await expanded).status()).toBe(200);
     await expect(groups).toHaveCount(0);
