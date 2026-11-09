@@ -187,9 +187,7 @@ describe('PatientListPage', () => {
       expect(text(row.querySelector('.demo-chip'))).toBe('Démo');
       const remove = row.querySelector<HTMLButtonElement>('button.demo-action');
       expect(text(remove)).toBe('Supprimer la démo');
-      expect(remove?.getAttribute('aria-label')).toBe(
-        'Supprimer la démo : DEMO · Camille R.',
-      );
+      expect(remove?.getAttribute('aria-label')).toBe('Supprimer la démo : DEMO · Camille R.');
     });
 
     it('un vrai patient : pas d’accueil ; puce et bouton seulement sur la démo', async () => {

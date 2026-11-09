@@ -227,9 +227,7 @@ test('patient DEMO de Claire : étiqueté, supprimé en un clic sans retaper le 
     await expectNoAxeViolations(page);
 
     // Un clic, puis une confirmation simple : aucun champ où retaper le nom.
-    await row
-      .getByRole('button', { name: `Supprimer la démo : ${demo.displayName}` })
-      .click();
+    await row.getByRole('button', { name: `Supprimer la démo : ${demo.displayName}` }).click();
     const confirm = page.getByRole('dialog', { name: 'Supprimer le patient de démonstration ?' });
     await expect(confirm).toBeVisible();
     await expect(confirm.getByRole('textbox')).toHaveCount(0);
