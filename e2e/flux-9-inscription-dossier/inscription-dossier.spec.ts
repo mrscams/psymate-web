@@ -1,8 +1,9 @@
-import { APIRequestContext, expect, Page, test } from '@playwright/test';
+import { APIRequestContext, expect, test } from '@playwright/test';
 
 import { confirmEmail, enableTwoFactor, register, uniqueEmail } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { totp, totpStep } from '../support/totp';
+import { expectFocus, registerByKeyboard, tabTo, tabToName } from './keyboard';
 
 // B3 flux 9 (M1-15, fiches 11, 12, 13) : inscription, confirmation par Mailpit, dossier
 // professionnel, bandeau d'état. Contre l'API locale (seed small) et Mailpit, jamais de mock.
@@ -25,85 +26,6 @@ async function mailSubjects(
     if (subjects.length < atLeast) await new Promise((resolve) => setTimeout(resolve, 500));
   }
   return subjects;
-}
-
-/** Tabule jusqu'au champ voulu (sans souris) ; échoue après 40 tabulations. */
-async function tabTo(page: Page, id: string): Promise<void> {
-  for (let i = 0; i < 40; i++) {
-    if ((await page.evaluate(() => document.activeElement?.id)) === id) return;
-    await page.keyboard.press('Tab');
-  }
-  throw new Error(`le focus n'a jamais atteint #${id}`);
-}
-
-async function expectFocus(page: Page, id: string): Promise<void> {
-  await expect(page.locator(`#${id}`)).toBeFocused();
-}
-
-/** Tabule jusqu'au bouton, lien ou champ dont le nom accessible (aria-label ou texte) vaut `name`. */
-async function tabToName(page: Page, name: string): Promise<void> {
-  for (let i = 0; i < 60; i++) {
-    const current = await page.evaluate(() => {
-      const el = document.activeElement as HTMLElement | null;
-      if (!el || !el.matches('button, a, input, select, textarea')) return null;
-      return (el.getAttribute('aria-label') ?? el.textContent ?? '').trim();
-    });
-    if (current === name) return;
-    await page.keyboard.press('Tab');
-  }
-  throw new Error(`le focus n'a jamais atteint « ${name} »`);
-}
-
-/** Remplit l'inscription entièrement au clavier, dans l'ordre des champs de la fiche 12. */
-async function registerByKeyboard(page: Page, email: string, password: string): Promise<void> {
-  await page.goto('/fr/inscription');
-  await expect(
-    page.getByRole('heading', { level: 1, name: 'Créer votre compte praticien' }),
-  ).toBeVisible();
-
-  await tabTo(page, 'field-firstName');
-  await page.keyboard.type('Alix');
-  await page.keyboard.press('Tab');
-  await expectFocus(page, 'field-lastName');
-  await page.keyboard.type('Essai');
-  await page.keyboard.press('Tab');
-  await expectFocus(page, 'field-email');
-  await page.keyboard.type(email);
-  // Cartes de profession : vrais boutons radio, un seul arrêt de tabulation, flèches pour choisir.
-  await page.keyboard.press('Tab');
-  await expectFocus(page, 'field-profession-psychologist');
-  await page.keyboard.press('ArrowRight');
-  await page.keyboard.press('ArrowRight');
-  await expect(page.locator('#field-profession-coach')).toBeChecked();
-  await page.keyboard.press('Tab');
-  await expectFocus(page, 'field-professionalNumber');
-  await page.keyboard.press('Tab');
-  await expectFocus(page, 'field-phone');
-  await page.keyboard.type('06 12 34 56 78');
-  await page.keyboard.press('Tab');
-  await expectFocus(page, 'field-address-street');
-  await page.keyboard.type('12 rue des Lilas');
-  await page.keyboard.press('Tab');
-  await expectFocus(page, 'field-address-postalCode');
-  await page.keyboard.type('69001');
-  await page.keyboard.press('Tab');
-  await expectFocus(page, 'field-address-city');
-  await page.keyboard.type('Lyon');
-  await page.keyboard.press('Tab');
-  await expectFocus(page, 'field-remoteOnly');
-  await page.keyboard.press('Tab');
-  await expectFocus(page, 'field-password');
-  await page.keyboard.type(password);
-  await page.keyboard.press('Tab');
-  await expectFocus(page, 'field-passwordConfirm');
-  await page.keyboard.type(password);
-  await page.keyboard.press('Tab');
-  await expectFocus(page, 'field-terms');
-  await page.keyboard.press('Space');
-  await expect(page.locator('#field-terms')).toBeChecked();
-  await page.keyboard.press('Tab');
-  await expect(page.getByRole('button', { name: 'Créer mon compte' })).toBeFocused();
-  await page.keyboard.press('Enter');
 }
 
 test('inscription complète au clavier → 201, /confirmer-email, e-mail de confirmation dans Mailpit', async ({
@@ -138,7 +60,11 @@ test('e-mail déjà utilisé : même 201, même écran, e-mail « vous avez déj
   request,
 }) => {
   const existing = await register(request, 'm1-15.doublon');
-  await expect.poll(() => mailSubjects(request, existing.email, 1)).toHaveLength(1);
+  // mailSubjects attend lui-même l'e-mail jusqu'à 15 s (file asynchrone de l'API, voir
+  // e2e/support/api-drain.ts) : le poll lui laisse ce délai au lieu des 5 s par défaut.
+  await expect
+    .poll(() => mailSubjects(request, existing.email, 1), { timeout: 15_000 })
+    .toHaveLength(1);
 
   await page.goto('/fr/inscription');
   await page.locator('#field-firstName').fill('Alix');

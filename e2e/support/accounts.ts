@@ -43,8 +43,8 @@ export async function register(api: APIRequestContext, prefix: string): Promise<
   return account;
 }
 
-/** Lit le lien de confirmation dans Mailpit et le consomme : compte docs_pending, session ouverte. */
-export async function confirmEmail(api: APIRequestContext, email: string): Promise<void> {
+/** Jeton du lien de confirmation reçu par `email` dans Mailpit (attend jusqu'à 15 s). */
+export async function confirmationToken(api: APIRequestContext, email: string): Promise<string> {
   let token: string | null = null;
   for (let attempt = 0; attempt < 30 && !token; attempt++) {
     const search = await api.get(`${MAILPIT}/api/v1/search`, { params: { query: `to:${email}` } });
@@ -57,6 +57,12 @@ export async function confirmEmail(api: APIRequestContext, email: string): Promi
     if (!token) await new Promise((resolve) => setTimeout(resolve, 500));
   }
   expect(token, `aucun e-mail de confirmation pour ${email} dans Mailpit`).not.toBeNull();
+  return token!;
+}
+
+/** Lit le lien de confirmation dans Mailpit et le consomme : compte docs_pending, session ouverte. */
+export async function confirmEmail(api: APIRequestContext, email: string): Promise<void> {
+  const token = await confirmationToken(api, email);
   const confirm = await api.post(`${API}/api/auth/email/confirm`, { data: { token } });
   expect(confirm.status(), await confirm.text()).toBe(204);
 }
