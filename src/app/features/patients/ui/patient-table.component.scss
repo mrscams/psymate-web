@@ -8,10 +8,14 @@
   border-collapse: collapse;
   background: var(--surface-raised);
   color: var(--text-primary);
-  transition: opacity 150ms;
+  transition: background-color 150ms;
 
+  // Lecture en attente (rechargement, hors ligne : planche 29) : la liste reste affichée et se
+  // grise par son fond (surface-ground), pas par l'opacité, qui faisait tomber le texte secondaire à
+  // 2,5:1 (M7-04). Les couples texte / surface-ground sont vérifiés par check:tokens.
   &.refreshing {
-    opacity: 0.6;
+    background: var(--surface-ground);
+    cursor: progress;
   }
 }
 
