@@ -34,6 +34,7 @@ import {
   ToastService,
 } from '../../../shared/ui';
 import { stateKind } from '../../../shared/util';
+import { CAPTURE_FOCUS_STATE } from '../../patient-shell';
 import { PatientListStore } from '../data/patient-list.store';
 import {
   diffPatient,
@@ -213,7 +214,10 @@ export class PatientFormPage {
     if (!patient) {
       const created = await this.store.create(toCreateInput(value, this.tags()));
       if (created) {
-        await this.router.navigate(['/patients', created.id, 'overview']);
+        // Le dossier s'ouvre avec la barre de capture focalisée (B3 flux 2, étape 3).
+        await this.router.navigate(['/patients', created.id, 'overview'], {
+          state: { [CAPTURE_FOCUS_STATE]: true },
+        });
         return;
       }
     } else {

@@ -166,7 +166,9 @@ describe('PatientFormPage', () => {
         displayName: 'Marie D.',
         followUp: { rhythm: 'weekly', durationMin: 60 },
       });
-      expect(router.navigate).toHaveBeenCalledWith(['/patients', 'p-new', 'overview']);
+      expect(router.navigate).toHaveBeenCalledWith(['/patients', 'p-new', 'overview'], {
+        state: { pmFocusCapture: true },
+      });
     });
 
     it('tag égal à une émotion : refus avec le message du serveur', async () => {

@@ -5,6 +5,8 @@ export type { ShellPatient, ShellSession, ShellTab } from './data/patient-shell.
 export type { ShellStatus } from './data/patient-shell.store';
 export { PatientShellStore } from './data/patient-shell.store';
 export { PATIENT_SHELL_ROUTES } from './patient-shell.routes';
+// Arrivée depuis la création d'un patient : la barre de capture prend le focus (B3 flux 2).
+export { CAPTURE_FOCUS_STATE } from './patient-shell.params';
 // Aide des raccourcis (planche 29 §6, M7-03) : `pm-shortcuts-help` branche la touche ? (posé une fois
 // par app.component) ; ShortcutsHelp l'ouvre depuis une autre feature (« Voir les raccourcis »).
 // L'index reste léger : la page du shell est chargée à la demande par ses routes.
