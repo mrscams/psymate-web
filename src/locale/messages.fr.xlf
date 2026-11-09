@@ -10156,7 +10156,7 @@
         <source>Émotion « <x id="label" equiv-text="label"/> » créée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">338</context>
+          <context context-type="linenumber">348</context>
         </context-group>
         <note priority="1" from="description">Toast après la création d&apos;une émotion depuis la barre</note>
       </trans-unit>
@@ -10164,7 +10164,7 @@
         <source>Les émotions n&apos;ont pas pu être chargées : réessayez, ou ouvrez l&apos;éditeur (Ctrl+Entrée).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">357</context>
+          <context context-type="linenumber">367</context>
         </context-group>
         <note priority="1" from="description">Erreur de la barre de commande</note>
       </trans-unit>
@@ -10172,7 +10172,7 @@
         <source>Rien n&apos;est enregistré. <x id="reason" equiv-text="reason"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">367</context>
+          <context context-type="linenumber">377</context>
         </context-group>
         <note priority="1" from="description">Entrée bloquée par un avertissement de la barre de commande</note>
       </trans-unit>
@@ -10180,7 +10180,7 @@
         <source>Brouillon enregistré.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">381</context>
+          <context context-type="linenumber">391</context>
         </context-group>
         <note priority="1" from="description">Toast après un brouillon depuis la barre</note>
       </trans-unit>
@@ -10188,7 +10188,7 @@
         <source>Entrée enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">382</context>
+          <context context-type="linenumber">392</context>
         </context-group>
         <note priority="1" from="description">Toast après une création depuis la barre</note>
       </trans-unit>
