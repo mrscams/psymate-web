@@ -10,7 +10,8 @@ import { publishPsychologistInParis, PublishedPractitioner } from './published-p
 // une (administrateur e2e, voir e2e/support/admin.ts).
 //
 // Limite du contrat : 5 envois de formulaire par heure et par IP (G Q24). Ce fichier en fait deux
-// par lancement ; au-delà de deux lancements dans l'heure, l'API répond 429 (attendu, pas un bug).
+// par lancement, flux-7-visiteur/clavier.spec.ts un troisième : au-delà d'une passe complète avec
+// administrateur dans l'heure, l'API répond 429 (attendu, pas un bug).
 
 const MAILPIT = 'http://localhost:8025';
 const EMERGENCY = /3114|\bSAMU\b|numéros? d.urgence/i;

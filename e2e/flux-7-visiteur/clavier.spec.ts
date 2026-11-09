@@ -11,7 +11,9 @@ import { publishPsychologistInParis, PublishedPractitioner } from './published-p
 // - La recherche, les filtres et l'état « aucun résultat » (UC-14 A1) se testent sans données.
 // - Le parcours complet exige une fiche publiée, donc un dossier approuvé par un administrateur
 //   (G Q14) : il s'ignore sans PSYMATE_E2E_ADMIN_* (e2e/support/admin.ts). Il fait un envoi de
-//   formulaire (limite de l'API : 5 par heure et par IP, G Q24).
+//   formulaire. Limite de l'API : 5 envois par heure et par IP (G Q24) ; avec ce test, une passe
+//   complète avec administrateur en fait 3 (visiteur.spec.ts : message et piège à robots ; ici :
+//   message au clavier), soit une seule passe par heure.
 
 /** Ouvre un mat-select au clavier (Espace), choisit l'option par les flèches, Entrée. */
 async function chooseByKeyboard(page: Page, label: string, option: RegExp): Promise<void> {
@@ -142,56 +144,4 @@ test.describe('flux 7 au clavier, fiche publiée', () => {
     await expectNoAxeViolations(page);
     keys.expectNoPointer();
   });
-});
-
-/**
- * UC-15 sans administrateur : une fiche déjà publiée dans l'annuaire de l'API locale (laissée par
- * un lancement précédent avec administrateur, ou par la base de développement) est ouverte et
- * reçoit un message, au clavier. Lecture seule de l'annuaire, aucune donnée fabriquée : sur une
- * base neuve (CI), il n'y a aucune fiche et le test s'ignore en le disant.
- */
-test('flux 7 au clavier, fiche déjà publiée : ouvrir la première fiche de l’annuaire et lui écrire', async ({
-  page,
-  request,
-}) => {
-  test.setTimeout(90_000);
-  const listed = await request.get('http://localhost:8080/api/public/directory?page=1');
-  expect(listed.status()).toBe(200);
-  const first = ((await listed.json()) as { items: { displayName: string; slug: string }[] })
-    .items[0];
-  test.skip(!first, 'Aucune fiche publiée dans l’annuaire de l’API locale (base neuve).');
-
-  const keys = await keyboardOnly(page);
-  await page.goto('/fr/annuaire');
-  const card = page.locator('pm-practitioner-card').filter({ hasText: first.displayName }).first();
-  await tabTo(page, card.getByRole('link', { name: `Voir la fiche ${first.displayName}` }), {
-    max: 120,
-  });
-  await page.keyboard.press('Enter');
-  await expect(page).toHaveURL(new RegExp(`/fr/praticiens/${first.slug}$`));
-  await expect(page.getByRole('heading', { level: 1, name: first.displayName })).toBeVisible();
-  await expectNoAxeViolations(page);
-
-  const contact = page.locator('#contact');
-  await tabTo(page, contact.getByLabel('Votre nom'), { max: 80 });
-  await page.keyboard.type('Sam Clavier');
-  await tabTo(page, contact.getByLabel('Votre e-mail'), { max: 5 });
-  await page.keyboard.type('sam.clavier@example.test');
-  await tabTo(page, contact.getByLabel('Message', { exact: true }), { max: 5 });
-  await page.keyboard.type('Bonjour, prenez-vous de nouveaux patients ?');
-  const consent = contact.getByRole('checkbox', { name: /J'accepte que mes coordonnées/ });
-  await tabTo(page, consent, { max: 5 });
-  await page.keyboard.press('Space');
-  const sent = page.waitForResponse(
-    (r) =>
-      r.url().endsWith(`/practitioners/${first.slug}/contact`) && r.request().method() === 'POST',
-  );
-  await tabTo(page, contact.getByRole('button', { name: 'Envoyer le message' }), { max: 5 });
-  await page.keyboard.press('Enter');
-  expect((await sent).status(), 'au-delà de 5 envois par heure et par IP : 429 (G Q24)').toBe(202);
-  await expect(contact.getByRole('status')).toContainText(
-    `Votre message a été transmis à ${first.displayName}.`,
-  );
-  await expectNoAxeViolations(page);
-  keys.expectNoPointer();
 });
