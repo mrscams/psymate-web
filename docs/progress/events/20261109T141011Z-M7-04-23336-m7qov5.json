@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-09T14:10:11.268Z",
+  "task": "M7-04",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 44 fusionnee en squash (fdf5453) : axe-core sur 34 ecrans en deux themes, parcours clavier des dix flux, zoom 200 %, liste equivalente du graphe, tableau UC -> e2e (docs/e2e-couverture.md), stabilisation des e2e (vagues, barriere apiDrained, verrou charge-api). Fin du lot 7 et du plan C.",
+  "notes": "Verification complete apres rebase : lint, check:tokens, Vitest 1717, build verts ; e2e 210 passes, 29 ignores, 0 echec. Premiere CI rouge sur zoom-200 (liste des patients debordant de 10 px sous Linux : libelle masque Actions en position absolue hors du rognage du tableau, polices Linux plus larges) corrigee par position: relative sur l'hote pm-patient-table ; seconde CI verte. Tests administrateur jamais executes (PSYMATE_E2E_ADMIN_* absent en local et en CI) : flux 10 clavier, 6 ecrans axe par theme, UC-14 et UC-15.",
+  "next": "Hors plan : tache shared/ui/shortcuts-help (descriptions / 1 2 3 Echap, entree Voir les raccourcis) ; core/shortcuts (Entree, Ctrl+Entree, Ctrl+S dans globalShortcuts) ; sortie export dans patient-header ; saveFile partage ; lecture des erreurs en blob (core/http) ; executer une fois les e2e admin avec un compte e2e ; arbitrages produit (exceptions de contraste M6-04, plage decennie M3-04) ; test utilisateur humain C5 ; parseur « anx 8 nuit courte » lu comme une note.",
+  "pr": "https://github.com/mrscams/psymate-web/pull/44",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
