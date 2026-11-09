@@ -83,7 +83,7 @@ export type CreateEmotionFn = (
         <div class="grid">
           @for (family of families; track family) {
             <label class="family" [class.checked]="form.controls.family.value === family">
-              <input type="radio" formControlName="family" [value]="family" />
+              <input type="radio" name="family" formControlName="family" [value]="family" />
               <span class="dot" [style.background]="color(family)" aria-hidden="true"></span>
               <span>{{ label(family) }}</span>
             </label>
