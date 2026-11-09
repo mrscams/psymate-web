@@ -196,7 +196,8 @@ export async function volumePatient(
   // recalcul de la vue d'ensemble dans la file asynchrone de l'API, partagée avec les e-mails des
   // autres tests. Sans vagues, la file atteignait 2 000 recalculs et un e-mail de confirmation
   // mettait plus de 15 s à partir (M7-04 : échecs « aucun e-mail » de flux-6-graphe). Chaque vague
-  // tient le verrou « charge-api » : aucune mesure de durée ne tombe pendant (e2e/support/exclusif.ts).
+  // tient le verrou « charge-api » : aucune mesure de durée ne tombe pendant ; entre deux vagues,
+  // exclusive() cède la place à un test qui attend (e2e/support/exclusif.ts).
   for (let from = 0; from < count; from += WAVE) {
     const to = Math.min(count, from + WAVE);
     await exclusive('charge-api', async () => {
