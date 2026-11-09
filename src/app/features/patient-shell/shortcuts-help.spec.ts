@@ -17,6 +17,13 @@ const settle = async () => {
 };
 const dialogs = () => [...document.querySelectorAll<HTMLElement>('[role="dialog"]')];
 const help = () => dialogs().find((d) => d.querySelector('pm-shortcuts-help-panel'));
+/** Le panneau est chargé à la demande (import dynamique) : on attend qu'il soit là. */
+async function opened(): Promise<void> {
+  await vi.waitFor(() => {
+    if (!help()) throw new Error('aide pas encore ouverte');
+  });
+  await settle();
+}
 
 function press(key: string, target: EventTarget = document.body): KeyboardEvent {
   const event = new KeyboardEvent('keydown', {
@@ -83,7 +90,7 @@ describe('ShortcutsHelpComponent et ShortcutsHelp (touche ?)', () => {
   it('? ouvre le panneau « Raccourcis clavier » (role dialog), alimenté par le registre', async () => {
     const release = shortcuts.register('n', () => undefined, 'Nouveau patient');
     press('?');
-    await settle();
+    await opened();
     const dialog = help();
     expect(dialog).toBeDefined();
     expect(dialog?.getAttribute('aria-modal')).toBe('true');
@@ -118,7 +125,7 @@ describe('ShortcutsHelpComponent et ShortcutsHelp (touche ?)', () => {
   it('Échap ferme l’aide ; ? une seconde fois la ferme aussi', async () => {
     const service = TestBed.inject(ShortcutsHelp);
     press('?');
-    await settle();
+    await opened();
     expect(service.isOpen()).toBe(true);
     press('Escape');
     await settle();
@@ -126,7 +133,7 @@ describe('ShortcutsHelpComponent et ShortcutsHelp (touche ?)', () => {
     expect(service.isOpen()).toBe(false);
 
     press('?');
-    await settle();
+    await opened();
     expect(help()).toBeDefined();
     press('?');
     await settle();
@@ -135,9 +142,9 @@ describe('ShortcutsHelpComponent et ShortcutsHelp (touche ?)', () => {
 
   it('open() depuis une autre feature (« Voir les raccourcis ») : un seul panneau d’aide', async () => {
     const service = TestBed.inject(ShortcutsHelp);
-    service.open();
-    service.open();
-    await settle();
+    void service.open();
+    void service.open();
+    await opened();
     expect(dialogs().filter((d) => d.querySelector('pm-shortcuts-help-panel'))).toHaveLength(1);
   });
 });

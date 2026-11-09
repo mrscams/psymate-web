@@ -189,7 +189,7 @@ export class PatientListPage {
 
   /** « Voir les raccourcis » de l'accueil : le panneau d'aide, comme la touche ?. */
   protected showShortcuts(): void {
-    this.help.open();
+    void this.help.open();
   }
 
   /**

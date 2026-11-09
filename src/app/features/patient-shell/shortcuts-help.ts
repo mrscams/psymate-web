@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 
 import { globalShortcuts, ShortcutService } from '../../core/shortcuts';
 import { SidePanelRef, SidePanelService } from '../../shared/ui';
-import { ShortcutsHelpData, ShortcutsHelpPanel } from './panels/shortcuts-help.panel';
+import type { ShortcutsHelpData } from './panels/shortcuts-help.panel';
 import { HelpRow, helpRows } from './ui/shortcuts-help.model';
 
 /** Où l'on est, pour griser les gestes de formulaire sans objet (planche 29 §6). */
@@ -61,7 +61,9 @@ export function formShortcuts(context: HelpContext): HelpRow[] {
  * de l'ouverture (core/shortcuts : liste de référence et inscriptions actives avec leur
  * description) et par les gestes de formulaire décrits ci-dessus. Ouvert par `?`
  * (ShortcutsHelpComponent), par « Voir les raccourcis » de l'accueil (features/patients). Le
- * panneau s'empile sur un panneau déjà ouvert (éditeur d'entrée) au lieu de le fermer.
+ * panneau s'empile sur un panneau déjà ouvert (éditeur d'entrée) au lieu de le fermer. Le
+ * composant du panneau est chargé à la première ouverture : seuls la touche et ce service sont dans
+ * le paquet initial.
  */
 @Injectable({ providedIn: 'root' })
 export class ShortcutsHelp {
@@ -69,23 +71,31 @@ export class ShortcutsHelp {
   private readonly panels = inject(SidePanelService);
   private readonly router = inject(Router);
   private ref: SidePanelRef | null = null;
+  /** Chargement du panneau en cours (première ouverture) : un second ? n'ouvre rien de plus. */
+  private opening = false;
 
   /** Le panneau d'aide est ouvert. */
   readonly isOpen = signal(false);
 
-  open(): void {
-    if (this.ref) return;
+  async open(): Promise<void> {
+    if (this.ref || this.opening) return;
     // Photo avant l'ouverture : le panneau inscrit ensuite son propre Échap, sans description.
     const rows = helpRows(
       globalShortcuts(),
       this.shortcuts.active(),
       formShortcuts(helpContext(this.router.url)),
     );
-    const ref = this.panels.open<ShortcutsHelpPanel, ShortcutsHelpData>(ShortcutsHelpPanel, {
-      data: { rows },
-      width: 420,
-      stack: true,
-    });
+    this.opening = true;
+    let ref: SidePanelRef | null;
+    try {
+      const { ShortcutsHelpPanel } = await import('./panels/shortcuts-help.panel');
+      ref = this.panels.open<InstanceType<typeof ShortcutsHelpPanel>, ShortcutsHelpData>(
+        ShortcutsHelpPanel,
+        { data: { rows }, width: 420, stack: true },
+      );
+    } finally {
+      this.opening = false;
+    }
     if (!ref) return;
     this.ref = ref;
     this.isOpen.set(true);
@@ -104,7 +114,7 @@ export class ShortcutsHelp {
   /** `?` : ouvre, ou ferme si l'aide est déjà ouverte. */
   toggle(): void {
     if (this.ref) this.close();
-    else this.open();
+    else void this.open();
   }
 }
 
