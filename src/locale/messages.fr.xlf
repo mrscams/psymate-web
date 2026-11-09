@@ -74,7 +74,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">144</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis</note>
       </trans-unit>
@@ -598,7 +598,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">169</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
@@ -8719,7 +8719,7 @@
         <source> Pour la vérification de votre dossier. Jamais affiché sans votre accord. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">161,163</context>
+          <context context-type="linenumber">162,164</context>
         </context-group>
         <note priority="1" from="description">Aide du champ téléphone</note>
       </trans-unit>
@@ -8727,7 +8727,7 @@
         <source>J&apos;exerce uniquement en visioconsultation (pas d&apos;adresse de cabinet)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">239,245</context>
+          <context context-type="linenumber">240,246</context>
         </context-group>
         <note priority="1" from="description">Case exercice en visio uniquement</note>
       </trans-unit>
@@ -8735,7 +8735,7 @@
         <source> Après la création du compte, vous déposerez votre diplôme et une pièce d&apos;identité (et, si vous en avez, votre attestation ADELI, RPPS ou de certification). Un administrateur vérifie le dossier sous 2 jours ouvrés ; l&apos;annuaire public n&apos;est accessible qu&apos;une fois le dossier validé. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">247,254</context>
+          <context context-type="linenumber">248,255</context>
         </context-group>
         <note priority="1" from="description">Encart annonçant le dépôt des justificatifs</note>
       </trans-unit>
@@ -8743,7 +8743,7 @@
         <source>Votre accès</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">258,261</context>
+          <context context-type="linenumber">259,262</context>
         </context-group>
         <note priority="1" from="description">Section 3 de l&apos;inscription</note>
       </trans-unit>
@@ -8751,7 +8751,7 @@
         <source> 12 caractères minimum. La double authentification pourra être activée dans vos paramètres ; elle est recommandée pour un dossier clinique. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">314,320</context>
+          <context context-type="linenumber">315,321</context>
         </context-group>
         <note priority="1" from="description">Rappel 2FA de la section accès</note>
       </trans-unit>
@@ -8759,7 +8759,7 @@
         <source> Consentements </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">326,330</context>
+          <context context-type="linenumber">327,331</context>
         </context-group>
         <note priority="1" from="description">Section consentements</note>
       </trans-unit>
@@ -8767,7 +8767,7 @@
         <source> J&apos;accepte les conditions d&apos;utilisation et j&apos;ai lu la politique de confidentialité. Je comprends que je suis responsable du traitement des données de mes patients et que PsyMate en est l&apos;hébergeur. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">340,345</context>
+          <context context-type="linenumber">341,346</context>
         </context-group>
         <note priority="1" from="description">Case CGU et confidentialité, avec responsable du traitement</note>
       </trans-unit>
@@ -8775,7 +8775,7 @@
         <source> Créer mon compte </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">359,361</context>
+          <context context-type="linenumber">360,362</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;inscription</note>
       </trans-unit>
@@ -8783,7 +8783,7 @@
         <source> Vous recevrez un e-mail pour confirmer votre adresse avant la première connexion. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">362,367</context>
+          <context context-type="linenumber">363,368</context>
         </context-group>
         <note priority="1" from="description">Mention sous le bouton d&apos;inscription</note>
       </trans-unit>
@@ -8791,7 +8791,7 @@
         <source>Ensuite</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">368,370</context>
+          <context context-type="linenumber">369,371</context>
         </context-group>
         <note priority="1" from="description">Titre de la colonne Ensuite</note>
       </trans-unit>
@@ -8799,7 +8799,7 @@
         <source>Confirmez votre e-mail.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">370,371</context>
+          <context context-type="linenumber">371,372</context>
         </context-group>
         <note priority="1" from="description">Étape 1 après l&apos;inscription</note>
       </trans-unit>
@@ -8807,7 +8807,7 @@
         <source> Déposez votre diplôme et une pièce d&apos;identité (plusieurs documents possibles). Vous pouvez déjà utiliser l&apos;outil pendant la vérification. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">372,375</context>
+          <context context-type="linenumber">373,376</context>
         </context-group>
         <note priority="1" from="description">Étape 2 après l&apos;inscription</note>
       </trans-unit>
@@ -8815,7 +8815,7 @@
         <source> Un administrateur valide votre dossier sous 2 jours ouvrés. Vous recevez un e-mail. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">376,378</context>
+          <context context-type="linenumber">377,379</context>
         </context-group>
         <note priority="1" from="description">Étape 3 après l&apos;inscription</note>
       </trans-unit>
@@ -8823,7 +8823,7 @@
         <source> Quand vous voulez, remplissez votre profil public pour apparaître dans l&apos;annuaire. Rien n&apos;est publié sans votre accord. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">379,383</context>
+          <context context-type="linenumber">380,384</context>
         </context-group>
         <note priority="1" from="description">Étape 4 après l&apos;inscription</note>
       </trans-unit>
@@ -8831,7 +8831,7 @@
         <source>Vos données</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">383,384</context>
+          <context context-type="linenumber">384,385</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc Vos données</note>
       </trans-unit>
@@ -8839,7 +8839,7 @@
         <source> Hébergement en France, chiffrement au repos et en transit, sauvegardes quotidiennes. Chaque praticien ne voit que ses propres patients. Export complet de votre dossier à tout moment. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">385,388</context>
+          <context context-type="linenumber">386,389</context>
         </context-group>
         <note priority="1" from="description">Texte du bloc Vos données</note>
       </trans-unit>
@@ -8847,7 +8847,7 @@
         <source>Bêta : vos retours façonnent la V1.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">388,391</context>
+          <context context-type="linenumber">389,392</context>
         </context-group>
         <note priority="1" from="description">Mention bêta</note>
       </trans-unit>
@@ -12819,7 +12819,7 @@
         <source>posé le <x id="INTERPOLATION" equiv-text="{{ day(flag.setAt) }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">191,192</context>
+          <context context-type="linenumber">192,193</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
@@ -12831,7 +12831,7 @@
         <source>{VAR_PLURAL, plural, =1 {1 brouillon à compléter} other {<x id="INTERPOLATION"/> brouillons à compléter}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">208,213</context>
+          <context context-type="linenumber">209,214</context>
         </context-group>
         <note priority="1" from="description">Brouillons à compléter, lien vers la timeline filtrée</note>
       </trans-unit>
@@ -12839,7 +12839,7 @@
         <source>Séance du <x id="INTERPOLATION" equiv-text="{{ day(open.startedAt) }}"/> non clôturée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">228,229</context>
+          <context context-type="linenumber">229,230</context>
         </context-group>
         <note priority="1" from="description">Séance non clôturée, lien vers la timeline par
                     séance</note>
@@ -12848,7 +12848,7 @@
         <source>Situations actives</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">239,240</context>
+          <context context-type="linenumber">240,241</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc situations</note>
       </trans-unit>
@@ -12856,7 +12856,7 @@
         <source>Aucune situation en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">242,243</context>
+          <context context-type="linenumber">243,244</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
@@ -12868,7 +12868,7 @@
         <source>Les situations sans fin connue apparaîtront ici, avec leurs ressentis liés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">244,245</context>
+          <context context-type="linenumber">245,246</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
@@ -12880,7 +12880,7 @@
         <source>Situations indisponibles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">246,247</context>
+          <context context-type="linenumber">247,248</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
@@ -12892,7 +12892,7 @@
         <source>depuis le <x id="INTERPOLATION" equiv-text="{{ day(situation.since) }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">262,263</context>
+          <context context-type="linenumber">263,264</context>
         </context-group>
         <note priority="1" from="description">Début d&apos;une situation active</note>
       </trans-unit>
@@ -12900,7 +12900,7 @@
         <source>{VAR_PLURAL, plural, =0 {aucun ressenti lié} =1 {1 ressenti lié} other {<x id="INTERPOLATION"/> ressentis liés}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">269,272</context>
+          <context context-type="linenumber">270,273</context>
         </context-group>
         <note priority="1" from="description">Ressentis liés à une situation</note>
       </trans-unit>
@@ -12908,7 +12908,7 @@
         <source> · intensité moy. <x id="INTERPOLATION" equiv-text="{{ intensity(situation.averageIntensity) }}"/>/10</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">277,278</context>
+          <context context-type="linenumber">278,279</context>
         </context-group>
         <note priority="1" from="description">Intensité moyenne d&apos;une situation</note>
       </trans-unit>
@@ -12920,7 +12920,7 @@
                     }" xid="1283275242237418421"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">281,288</context>
+          <context context-type="linenumber">282,289</context>
         </context-group>
         <note priority="1" from="description">Liens d&apos;une situation</note>
       </trans-unit>
@@ -12928,7 +12928,7 @@
         <source>{VAR_PLURAL, plural, =0 {aucun lien} =1 {1 lien} other {<x id="INTERPOLATION"/> liens}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">282,284</context>
+          <context context-type="linenumber">283,285</context>
         </context-group>
       </trans-unit>
       <trans-unit id="overview.situations.graph" datatype="html">
@@ -12936,7 +12936,7 @@
                   &gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">300,303</context>
+          <context context-type="linenumber">301,304</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
@@ -12948,7 +12948,7 @@
         <source>Traitement en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">313,314</context>
+          <context context-type="linenumber">314,315</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc traitement</note>
       </trans-unit>
@@ -12956,7 +12956,7 @@
         <source>Aucun traitement en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">316,317</context>
+          <context context-type="linenumber">317,318</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
@@ -12968,7 +12968,7 @@
         <source>Les médicaments notés dans le dossier, sans date de fin passée, apparaîtront ici.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">318,319</context>
+          <context context-type="linenumber">319,320</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
@@ -12980,7 +12980,7 @@
         <source>Traitement indisponible</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">320,321</context>
+          <context context-type="linenumber">321,322</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
@@ -12992,7 +12992,7 @@
         <source>en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">340,341</context>
+          <context context-type="linenumber">341,342</context>
         </context-group>
         <note priority="1" from="description">Médicament en cours</note>
       </trans-unit>
@@ -13000,7 +13000,7 @@
         <source> · depuis le <x id="INTERPOLATION" equiv-text="{{ day(from) }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">343,344</context>
+          <context context-type="linenumber">344,345</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
@@ -13012,7 +13012,7 @@
         <source> · prescrit par <x id="INTERPOLATION" equiv-text="{{ medication.prescriber }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">348,349</context>
+          <context context-type="linenumber">349,350</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
@@ -13024,7 +13024,7 @@
         <source>Dernières séances</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">361,362</context>
+          <context context-type="linenumber">362,363</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc dernières séances</note>
       </trans-unit>
@@ -13032,7 +13032,7 @@
         <source>Aucune séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">364,365</context>
+          <context context-type="linenumber">365,366</context>
         </context-group>
         <note priority="1" from="description">Bloc dernières séances vide</note>
       </trans-unit>
@@ -13040,7 +13040,7 @@
         <source>Les séances apparaîtront ici dès la première, démarrée depuis l&apos;en-tête.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">366,367</context>
+          <context context-type="linenumber">367,368</context>
         </context-group>
         <note priority="1" from="description">Bloc dernières séances vide</note>
       </trans-unit>
@@ -13048,7 +13048,7 @@
         <source>Séances indisponibles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">368,369</context>
+          <context context-type="linenumber">369,370</context>
         </context-group>
         <note priority="1" from="description">Erreur du bloc dernières séances</note>
       </trans-unit>
@@ -13056,7 +13056,7 @@
         <source>Toutes les séances</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">379,382</context>
+          <context context-type="linenumber">380,383</context>
         </context-group>
         <note priority="1" from="description">Lien vers la timeline par séance</note>
       </trans-unit>
@@ -13064,7 +13064,7 @@
         <source>Pas d&apos;émotion dominante</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">396,397</context>
+          <context context-type="linenumber">397,398</context>
         </context-group>
         <note priority="1" from="description">Bloc émotions vide</note>
       </trans-unit>
@@ -13072,7 +13072,7 @@
         <source>Les émotions les plus notées sur la période apparaîtront ici.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">398,399</context>
+          <context context-type="linenumber">399,400</context>
         </context-group>
         <note priority="1" from="description">Bloc émotions vide</note>
       </trans-unit>
@@ -13080,7 +13080,7 @@
         <source>Émotions indisponibles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">400,401</context>
+          <context context-type="linenumber">401,402</context>
         </context-group>
         <note priority="1" from="description">Erreur du bloc émotions</note>
       </trans-unit>
@@ -13088,7 +13088,7 @@
         <source> Variation par rapport à la période précédente de même durée </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">427,430</context>
+          <context context-type="linenumber">428,431</context>
         </context-group>
         <note priority="1" from="description">Pied du bloc émotions</note>
       </trans-unit>
@@ -13096,7 +13096,7 @@
         <source>Activité récente</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">435,436</context>
+          <context context-type="linenumber">436,437</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc activité récente</note>
       </trans-unit>
@@ -13104,7 +13104,7 @@
         <source>Aucune entrée pour le moment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">438,439</context>
+          <context context-type="linenumber">439,440</context>
         </context-group>
         <note priority="1" from="description">Bloc activité vide</note>
       </trans-unit>
@@ -13112,7 +13112,7 @@
         <source>Les dernières entrées saisies ou corrigées apparaîtront ici. Notez la première avec la barre de saisie ou la touche N.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">440,441</context>
+          <context context-type="linenumber">441,442</context>
         </context-group>
         <note priority="1" from="description">Bloc activité vide</note>
       </trans-unit>
@@ -13120,7 +13120,7 @@
         <source>Activité indisponible</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">442,443</context>
+          <context context-type="linenumber">443,444</context>
         </context-group>
         <note priority="1" from="description">Erreur du bloc activité</note>
       </trans-unit>
@@ -13128,7 +13128,7 @@
         <source>brouillon</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">461,464</context>
+          <context context-type="linenumber">462,465</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
@@ -13140,7 +13140,7 @@
         <source>v<x id="INTERPOLATION" equiv-text="{{ item.version }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">466,467</context>
+          <context context-type="linenumber">467,468</context>
         </context-group>
         <note priority="1" from="description">Version d&apos;une entrée</note>
       </trans-unit>
@@ -13148,7 +13148,7 @@
         <source>Mise à jour de la synthèse…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">482,485</context>
+          <context context-type="linenumber">483,486</context>
         </context-group>
         <note priority="1" from="description">Synthèse en cours de relecture</note>
       </trans-unit>
@@ -13156,7 +13156,7 @@
         <source>Dernière mise à jour de la synthèse : <x id="INTERPOLATION" equiv-text="{{ at }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
-          <context context-type="linenumber">486,488</context>
+          <context context-type="linenumber">487,489</context>
         </context-group>
         <note priority="1" from="description">Heure de calcul de la synthèse</note>
       </trans-unit>
@@ -14306,7 +14306,7 @@
         <source>Séance démarrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">210</context>
+          <context context-type="linenumber">224</context>
         </context-group>
         <note priority="1" from="description">Toast après le démarrage d&apos;une séance</note>
       </trans-unit>
@@ -14314,7 +14314,7 @@
         <source>Séance clôturée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">234</context>
+          <context context-type="linenumber">248</context>
         </context-group>
         <note priority="1" from="description">Toast après la clôture d&apos;une séance</note>
       </trans-unit>
@@ -15011,7 +15011,7 @@
         <source>Modifier la fiche · <x id="name" equiv-text="patient.displayName"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">150</context>
         </context-group>
         <note priority="1" from="description">Titre de la fiche en modification</note>
       </trans-unit>
@@ -15019,7 +15019,7 @@
         <source>Nouveau <x id="subject" equiv-text="subject"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">153</context>
         </context-group>
         <note priority="1" from="description">Titre de la fiche en création</note>
       </trans-unit>
@@ -15027,7 +15027,7 @@
         <source>Impossible de charger cette fiche</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">172</context>
         </context-group>
         <note priority="1" from="description">État erreur de la fiche</note>
       </trans-unit>
@@ -15035,7 +15035,7 @@
         <source>Fiche enregistrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">224</context>
+          <context context-type="linenumber">228</context>
         </context-group>
         <note priority="1" from="description">Toast après enregistrement de la fiche</note>
       </trans-unit>
@@ -15043,7 +15043,7 @@
         <source>Archiver <x id="name" equiv-text="patient.displayName"/> ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">254</context>
+          <context context-type="linenumber">258</context>
         </context-group>
         <note priority="1" from="description">Titre de la confirmation d&apos;archivage</note>
       </trans-unit>
@@ -15051,7 +15051,7 @@
         <source>Le dossier disparaît de la liste ; rien n&apos;est supprimé et vous pourrez le restaurer.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">255</context>
+          <context context-type="linenumber">259</context>
         </context-group>
         <note priority="1" from="description">Explication de l&apos;archivage</note>
       </trans-unit>
@@ -15059,7 +15059,7 @@
         <source>Archiver ce <x id="subject" equiv-text="subject"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">256</context>
+          <context context-type="linenumber">260</context>
         </context-group>
         <note priority="1" from="description">Bouton de confirmation d&apos;archivage</note>
       </trans-unit>
@@ -15067,7 +15067,7 @@
         <source>créée le <x id="date" equiv-text="created"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">344</context>
+          <context context-type="linenumber">348</context>
         </context-group>
         <note priority="1" from="description">Méta de la fiche</note>
       </trans-unit>
@@ -15075,7 +15075,7 @@
         <source><x id="count" equiv-text="count"/> versions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">349</context>
+          <context context-type="linenumber">353</context>
         </context-group>
         <note priority="1" from="description">Méta de la fiche, plusieurs versions</note>
       </trans-unit>
@@ -15083,7 +15083,7 @@
         <source>1 version</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">350</context>
+          <context context-type="linenumber">354</context>
         </context-group>
         <note priority="1" from="description">Méta de la fiche, une version</note>
       </trans-unit>
@@ -15091,7 +15091,7 @@
         <source>dernière modification le <x id="date" equiv-text="updated"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">355</context>
+          <context context-type="linenumber">359</context>
         </context-group>
         <note priority="1" from="description">Méta de la fiche</note>
       </trans-unit>

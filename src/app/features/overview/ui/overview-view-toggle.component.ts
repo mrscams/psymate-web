@@ -52,15 +52,21 @@ import { saveFailedMessage } from './overview-labels';
     </div>
   `,
   styles: `
+    /* Fenêtre étroite (zoom 200 %, M7-04) : l'indication passe sous les boutons au lieu de les
+       comprimer ; le groupe de boutons ne rétrécit jamais (overflow: hidden lui permettait de
+       descendre à 0 et rognait « Complète »). */
     .toggle {
       display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
       align-items: center;
-      gap: 8px;
+      gap: 4px 8px;
       font: var(--mat-sys-label-medium);
       color: var(--text-secondary);
     }
     .buttons {
       display: inline-flex;
+      flex: none;
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
       overflow: hidden;
