@@ -85,9 +85,9 @@ describe('PasswordResetPage', () => {
 
   it.each([
     { status: 429, code: 'RATE_LIMITED', retryAfterSeconds: 3600 },
-    { status: 503, code: 'SERVICE_UNAVAILABLE' },
+    { status: 500, code: 'INTERNAL_ERROR' },
     { status: 0, code: 'NETWORK_ERROR' },
-  ])('$status : message générique (fiche 26), on peut réessayer', async (problem) => {
+  ])('$status $code : message générique (fiche 26), on peut réessayer', async (problem) => {
     const request = vi.fn().mockRejectedValueOnce(problem).mockResolvedValueOnce(undefined);
     const { fixture, el } = await render(request);
     await submit(fixture, el);

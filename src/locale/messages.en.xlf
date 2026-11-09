@@ -3551,19 +3551,6 @@
         </context-group>
         <note priority="1" from="description">Thème qui suit le système</note>
       </trans-unit>
-      <trans-unit id="appBar.avatar.menu" datatype="html">
-        <source>· <x id="INTERPOLATION" equiv-text="{{ me.displayName }}"/>, menu du compte</source>
-        <target state="translated">· <x id="INTERPOLATION" equiv-text="{{ me.displayName }}"/>, account menu</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
-          <context context-type="linenumber">48,50</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
-          <context context-type="linenumber">69,71</context>
-        </context-group>
-        <note priority="1" from="description">Suite du nom accessible de l&apos;avatar</note>
-      </trans-unit>
       <trans-unit id="preferences.retry" datatype="html">
         <source>Réessayer</source>
         <target state="translated">Try again</target>

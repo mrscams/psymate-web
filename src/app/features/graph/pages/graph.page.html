@@ -130,10 +130,8 @@
     </label>
 
     <span class="spacer"></span>
-    <!-- Compteur seulement une fois le graphe lu : « 0 nœuds » pendant le chargement ou après une
-         erreur serait faux (planche 29). La région reste en place pour les lecteurs d'écran. -->
     <span class="count" aria-live="polite" [class.refreshing]="refreshing()">{{
-      store.view() ? countText() : ''
+      countText()
     }}</span>
     <button
       type="button"

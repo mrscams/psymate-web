@@ -562,11 +562,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">280</context>
+          <context context-type="linenumber">285</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">284</context>
+          <context context-type="linenumber">289</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
@@ -11308,7 +11308,7 @@
         <source> Recentrer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">144,148</context>
+          <context context-type="linenumber">142,146</context>
         </context-group>
         <note priority="1" from="description">Bouton qui relance le layout du graphe</note>
       </trans-unit>
@@ -11316,7 +11316,7 @@
         <source> Liste des liens </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">154,159</context>
+          <context context-type="linenumber">152,157</context>
         </context-group>
         <note priority="1" from="description">Bouton qui montre la liste équivalente des liens</note>
       </trans-unit>
@@ -11324,7 +11324,7 @@
         <source> Graphe partiel : au-delà de 150 nœuds, des entrées sont regroupées ou retirées. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">160,164</context>
+          <context context-type="linenumber">158,162</context>
         </context-group>
         <note priority="1" from="description">Graphe tronqué</note>
       </trans-unit>
@@ -11332,7 +11332,7 @@
         <source>Le dernier graphe reçu reste affiché.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">167,169</context>
+          <context context-type="linenumber">165,167</context>
         </context-group>
         <note priority="1" from="description">Le dernier graphe reste affiché</note>
       </trans-unit>
@@ -11348,7 +11348,7 @@
         <source><x id="nodes" equiv-text="nodes"/> nœuds · <x id="edges" equiv-text="edges"/> liens</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <note priority="1" from="description">Compteur du graphe</note>
       </trans-unit>
@@ -11356,7 +11356,7 @@
         <source>Graphe des liens : <x id="nodes" equiv-text="nodes"/> nœuds, <x id="edges" equiv-text="edges"/> liens. Le bouton « Liste des liens » en donne la version texte.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">167</context>
         </context-group>
         <note priority="1" from="description">Nom accessible du canevas du graphe</note>
       </trans-unit>
@@ -11364,7 +11364,7 @@
         <source>Types d&apos;entrées : tous</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">173</context>
         </context-group>
         <note priority="1" from="description">Filtre des types d&apos;entrées, tous</note>
       </trans-unit>
@@ -11372,7 +11372,7 @@
         <source>Types d&apos;entrées : <x id="count" equiv-text="count"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">176</context>
         </context-group>
         <note priority="1" from="description">Filtre des types d&apos;entrées, nombre retenu</note>
       </trans-unit>
@@ -11380,7 +11380,7 @@
         <source>Liens : tous</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <note priority="1" from="description">Filtre des types de liens, tous</note>
       </trans-unit>
@@ -11388,7 +11388,7 @@
         <source>Liens : <x id="count" equiv-text="count"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">184</context>
         </context-group>
         <note priority="1" from="description">Filtre des types de liens, nombre retenu</note>
       </trans-unit>
@@ -11396,7 +11396,7 @@
         <source>Aucun lien entre les types d&apos;entrées retenus</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">204</context>
+          <context context-type="linenumber">209</context>
         </context-group>
         <note priority="1" from="description">Graphe vide à cause du filtre des types</note>
       </trans-unit>
@@ -11404,7 +11404,7 @@
         <source>Aucun lien autour de cette entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">207</context>
+          <context context-type="linenumber">212</context>
         </context-group>
         <note priority="1" from="description">Graphe vide autour d&apos;une entrée</note>
       </trans-unit>
@@ -11412,7 +11412,7 @@
         <source>Les liens que vous créez apparaîtront ici</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">208</context>
+          <context context-type="linenumber">213</context>
         </context-group>
         <note priority="1" from="description">Graphe vide</note>
       </trans-unit>
@@ -11420,7 +11420,7 @@
         <source>Liez deux entrées depuis la timeline ou l&apos;éditeur d&apos;entrée, ou glissez un nœud sur un autre.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">226</context>
         </context-group>
         <note priority="1" from="description">Que faire quand le graphe est vide</note>
       </trans-unit>
@@ -11428,7 +11428,7 @@
         <source>Groupe sélectionné : <x id="label" equiv-text="label"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">266</context>
+          <context context-type="linenumber">271</context>
         </context-group>
         <note priority="1" from="description">Annonce de la sélection d&apos;un super-nœud</note>
       </trans-unit>
@@ -11436,7 +11436,7 @@
         <source>Entrée sélectionnée : <x id="name" equiv-text="name"/>, <x id="type" equiv-text="type"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">272</context>
+          <context context-type="linenumber">277</context>
         </context-group>
         <note priority="1" from="description">Annonce de la sélection d&apos;un nœud</note>
       </trans-unit>
@@ -11444,7 +11444,7 @@
         <source>Impossible de charger les types de liens</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">287</context>
+          <context context-type="linenumber">292</context>
         </context-group>
         <note priority="1" from="description">Types de liens illisibles dans le graphe</note>
       </trans-unit>
@@ -11452,7 +11452,7 @@
         <source>Voir tout le dossier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">288</context>
+          <context context-type="linenumber">293</context>
         </context-group>
         <note priority="1" from="description">Action qui centre le graphe sur tout le dossier</note>
       </trans-unit>
@@ -11460,7 +11460,7 @@
         <source>Filtres par défaut</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">289</context>
+          <context context-type="linenumber">294</context>
         </context-group>
         <note priority="1" from="description">Action qui remet les filtres du graphe par défaut</note>
       </trans-unit>
@@ -11468,7 +11468,7 @@
         <source>Montrer tous les types</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">290</context>
+          <context context-type="linenumber">295</context>
         </context-group>
         <note priority="1" from="description">Action qui montre tous les types d&apos;entrées</note>
       </trans-unit>
@@ -11476,7 +11476,7 @@
         <source>Ouvrir la timeline</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">291</context>
+          <context context-type="linenumber">296</context>
         </context-group>
         <note priority="1" from="description">Action qui ouvre la timeline depuis le graphe vide</note>
       </trans-unit>
@@ -11484,7 +11484,7 @@
         <source>Préparation du graphe…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">292</context>
+          <context context-type="linenumber">297</context>
         </context-group>
         <note priority="1" from="description">Chargement du moteur du graphe</note>
       </trans-unit>
@@ -11492,7 +11492,7 @@
         <source>Impossible d&apos;afficher le graphe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">293</context>
+          <context context-type="linenumber">298</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-canvas.component.ts</context>
@@ -11504,7 +11504,7 @@
         <source>Rechargez la page pour réessayer. La liste des liens reste disponible (bouton « Liste des liens »).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">294</context>
+          <context context-type="linenumber">299</context>
         </context-group>
         <note priority="1" from="description">Que faire quand le moteur du graphe manque</note>
       </trans-unit>
@@ -11512,7 +11512,7 @@
         <source>Lier l&apos;entrée sélectionnée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">333</context>
+          <context context-type="linenumber">338</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis, graphe</note>
       </trans-unit>
@@ -17219,7 +17219,7 @@
         <source>Réessayer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">147</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;état erreur</note>
       </trans-unit>
@@ -17227,7 +17227,7 @@
         <source>Sélection : <x id="title" equiv-text="title"/>, <x id="position" equiv-text="position"/> sur <x id="count" equiv-text="hits.length"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
-          <context context-type="linenumber">160</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <note priority="1" from="description">Annonce du résultat sélectionné</note>
       </trans-unit>
@@ -17235,7 +17235,7 @@
         <source>Aucun résultat pour « <x id="query" equiv-text="this.store.effectiveQuery()"/> »</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">169</context>
         </context-group>
         <note priority="1" from="description">État vide de la recherche</note>
       </trans-unit>
@@ -17243,7 +17243,7 @@
         <source>Fermer la recherche</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">203</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis</note>
       </trans-unit>
