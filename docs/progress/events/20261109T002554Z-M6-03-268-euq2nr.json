@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-09T00:25:54.464Z",
+  "task": "M6-03",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Revue des trois états et des raccourcis : faux compteurs 0 retirés (graphe, timeline, recherche), fiche 26 testée, page provisoire auth retirée, / décrit pour l'aide, 70 e2e d'états dans e2e/etats (axe 0 violation), revue traitée.",
+  "notes": "11 commits, 25 fichiers, aucune dépendance. lint, check:tokens, test (1640), build verts ; e2e etats 60 passés, 10 ignorés (admin, écran 27 sans identifiants). Erreur provoquée par route.abort une fois (coupure réseau, pas de réponse fabriquée), à valider. 429 et 403 couverts en Vitest seulement. Fuseau rétabli dans parse.spec (M6-01) qui faisait échouer patient-header.spec.",
+  "next": "Ouvrir : panneau d'aide ? (shared/ui shortcuts-help + app.component), globalShortcuts sans Entrée/Ctrl+Entrée/Ctrl+S (core), descriptions des raccourcis de patient-header/app-bar/side-panel (shared/ui), M7-04 contraste liste grisée hors ligne, practitioners.page.spec instable ; exécuter e2e/etats admin avec identifiants.",
+  "branch": "claude/frosty-cohen-7e743c",
+  "checkout": "frosty-cohen-7e743c"
+}
