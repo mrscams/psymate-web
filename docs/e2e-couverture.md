@@ -5,18 +5,27 @@
 ## Règles communes
 
 - **API réelle.** Tous les e2e tournent contre psymate-api (seed `small`, Mailpit). Aucune réponse n'est fabriquée : il n'y a pas de `route.fulfill`. Les états « chargement » retiennent une requête qui part ensuite vers l'API. Les états « erreur » coupent une seule requête (`route.abort`), comme une coupure réseau.
-- **Administrateur.** Certains tests exigent l'administrateur e2e local, avec la 2FA. Il se crée par `make admin` dans `../psymate-api`, et ses identifiants passent par `PSYMATE_E2E_ADMIN_EMAIL`, `PSYMATE_E2E_ADMIN_PASSWORD` et `PSYMATE_E2E_ADMIN_TOTP_SECRET`. Sans ces variables, ces tests s'ignorent et le disent. Ils sont marqués **(admin)** ci-dessous. Publier une fiche exige un dossier approuvé par un administrateur (G Q14). C'est pourquoi UC-13, UC-14 et UC-15 dépendent en partie de l'administrateur.
+- **Administrateur.** Certains tests exigent l'administrateur e2e local, avec la 2FA. Il se crée par `make admin` dans `../psymate-api`, et ses identifiants passent par `PSYMATE_E2E_ADMIN_EMAIL`, `PSYMATE_E2E_ADMIN_PASSWORD` et `PSYMATE_E2E_ADMIN_TOTP_SECRET`. Sans ces variables, ces tests s'ignorent et le disent. Ils sont marqués **(admin)** ci-dessous. Publier une fiche exige un dossier approuvé par un administrateur (G Q14). C'est pourquoi UC-13, UC-14 et UC-15 dépendent en partie de l'administrateur. **Aucune passe avec `PSYMATE_E2E_ADMIN_*` n'a été faite pour M7-04**, et la CI n'en fournit pas : les tests **(admin)** n'ont jamais été exécutés.
 - **Clavier seul.** Les parcours « au clavier » appellent `keyboardOnly(page)` (`support/clavier.ts`). La fonction écoute les gestes de pointeur réels : appui, déplacement, molette, toucher. Le test échoue si un seul de ces gestes a eu lieu, donc ni `click()`, ni `hover()`, ni `page.mouse`.
   - `tabTo()` prouve qu'un élément est dans l'ordre de tabulation : le test y arrive par Tab ou Maj+Tab.
   - Seules exceptions, qui ne sont pas des gestes dans l'application :
     - `page.goto`, pour suivre le lien d'un e-mail ou taper une adresse ;
     - `setInputFiles` sur un champ fichier déjà focalisé, car la boîte de sélection du système n'est pas pilotable.
+  - Limite de la garde : elle ne voit que les événements de pointeur. `fill`, `locator.focus()`, `selectOption`, `check`, `dispatchEvent` et `page.evaluate` n'en produisent pas et passeraient inaperçus : les parcours au clavier n'en utilisent aucun (vérifié à la relecture).
+  - Dans les parcours des flux 2 à 6 et 8, et dans celui du patient de démonstration (flux 1), la connexion se fait avant `keyboardOnly()`, par l'outil commun `signIn` (souris). La connexion au clavier est couverte par les parcours des flux 1, 9 et 10 et par `flux-9-inscription-dossier/inscription-dossier.spec.ts:277`.
 - **axe-core.** L'analyse porte sur WCAG 2.0 et 2.1, niveaux A et AA. Toutes les gravités comptent : le seuil est 0 violation, au-delà du seul « serious » demandé. Aucune règle n'est désactivée et aucun élément n'est exclu, le canevas du graphe compris. Avant chaque analyse, le test attend la fin des ondulations Material et des fondus de dialogue (`support/axe.ts`).
 - **Stabilité.** Les écritures en masse se font par vagues, chacune suivie de la barrière `apiDrained()` (`support/api-drain.ts`). Elles passent sous le verrou `charge-api` (`support/exclusif.ts`), tout comme les fenêtres de mesure de durée. Le journal M7-04 explique pourquoi.
 
 ## Cas d'usage → e2e
 
-Chaque cas d'usage a au moins un e2e qui passe sans administrateur. La seule exception est le flux principal de UC-15 : il passe ici sur une fiche déjà publiée, et ses tests complets demandent l'administrateur.
+Ce qui passe sans administrateur (passes du 9 novembre) :
+
+- **UC-01 à UC-12** : le flux principal de chacun passe.
+- **UC-13** : remplir le profil, l'aperçu et le refus de publication tant que le dossier n'est pas approuvé passent ; la publication elle-même est **(admin)**.
+- **UC-14** : le flux principal (liste des fiches publiées, filtres qui la réduisent) est **(admin)**. Sans administrateur ne passent que l'annuaire sans aucune fiche, la recherche sans résultat avec ses suggestions (A1) et l'annuaire prérendu.
+- **UC-15** : le flux principal (fiche, contact) est **(admin)**. Sans administrateur ne passe que la fiche inconnue (404).
+
+UC-14 et UC-15 n'ont donc pas de flux principal vérifié tant qu'une passe avec administrateur n'a pas eu lieu.
 
 ### UC-01 · S'inscrire / se connecter
 
@@ -129,21 +138,19 @@ Chaque cas d'usage a au moins un e2e qui passe sans administrateur. La seule exc
 
 ### UC-14 · Consulter l'annuaire
 
-- **Flux principal :** `flux-7-visiteur/visiteur.spec.ts:52` **(admin)**.
+- **Flux principal :** `flux-7-visiteur/visiteur.spec.ts:53` **(admin)**.
 - **Alternatives :**
-  - A1, aucun résultat avec suggestions : `flux-7-visiteur/clavier.spec.ts:38` et `etats/public-auth.spec.ts:21` ;
-  - annuaire prérendu : `visiteur.spec.ts:279`.
-- **Au clavier :** `flux-7-visiteur/clavier.spec.ts:38` ; `flux-7-visiteur/clavier.spec.ts:87` **(admin)**.
+  - A1, aucun résultat avec suggestions : `flux-7-visiteur/clavier.spec.ts:40` et `etats/public-auth.spec.ts:21` ;
+  - annuaire prérendu : `visiteur.spec.ts:280`.
+- **Au clavier :** `flux-7-visiteur/clavier.spec.ts:40` ; `flux-7-visiteur/clavier.spec.ts:89` **(admin)**.
 
 ### UC-15 · Voir une fiche et contacter un praticien
 
-- **Flux principal :**
-  - `flux-7-visiteur/visiteur.spec.ts:52` **(admin)** ;
-  - `flux-7-visiteur/clavier.spec.ts:153`, sur une fiche déjà publiée de l'API locale (ignoré sur une base neuve).
+- **Flux principal :** `flux-7-visiteur/visiteur.spec.ts:53` **(admin)**.
 - **Alternatives :**
-  - A2, spam : `visiteur.spec.ts:197` **(admin)** ;
-  - fiche inconnue : `visiteur.spec.ts:226`.
-- **Au clavier :** `flux-7-visiteur/clavier.spec.ts:153` ; `flux-7-visiteur/clavier.spec.ts:87` **(admin)**.
+  - A2, spam : `visiteur.spec.ts:198` **(admin)** ;
+  - fiche inconnue : `visiteur.spec.ts:227`.
+- **Au clavier :** `flux-7-visiteur/clavier.spec.ts:89` **(admin)**.
 
 ### Cas d'usage ajoutés le 25 octobre (A10)
 
@@ -173,16 +180,15 @@ Un e2e par flux, sans aucun geste de pointeur (`keyboardOnly`) et avec axe-core 
    - Parcours : /, saisie, facette « Ressentis », ↓, aperçu, « Ouvrir dans la timeline » (l'entrée est positionnée), puis Échap qui rend l'onglet.
 6. **Flux 6, préparer une séance.** `flux-6-vue-ensemble/clavier.spec.ts:14`.
    - Parcours : / puis le nom, Entrée, la séance passée dépliée, une situation qui ouvre le graphe centré, touche 1, « Démarrer la séance » (les séances se replient, la capture prend le focus).
-7. **Flux 7, un visiteur trouve et contacte.** Trois tests :
-   - `flux-7-visiteur/clavier.spec.ts:38` : ville, profession (liste Material au clavier), facette, aucun résultat, critère retiré ;
-   - `:153` : sur une fiche publiée, formulaire rempli et envoyé ;
-   - `:87` **(admin)** : le parcours complet.
+7. **Flux 7, un visiteur trouve et contacte.** Deux tests :
+   - `flux-7-visiteur/clavier.spec.ts:40` : ville, profession (liste Material au clavier), facette, aucun résultat, critère retiré ;
+   - `:89` **(admin)** : le parcours complet, fiche ouverte et formulaire envoyé. Une passe complète avec administrateur fait 3 envois de contact (limite de l'API : 5 par heure et par IP, G Q24), donc une seule passe par heure.
 8. **Flux 8, publier son profil.** `flux-8-profil-public/clavier.spec.ts:59`.
    - Parcours : avatar, « Mon compte », « Profil public », champs, aperçu, motif du refus et son lien.
    - `:104` **(admin)** : publier puis retirer à l'Espace.
 9. **Flux 9, s'inscrire et faire vérifier son dossier.** `flux-9-inscription-dossier/clavier.spec.ts:54`.
    - Parcours : inscription, confirmation, bandeau et son lien, deux justificatifs, soumission, outil clinique toujours utilisable.
-10. **Flux 10, valider un praticien.** `flux-10-admin/clavier.spec.ts:50` **(admin)**.
+10. **Flux 10, valider un praticien.** `flux-10-admin/clavier.spec.ts:50` **(admin)**. Ce parcours n'existe que sous administrateur ; la CI n'en fournit pas et il n'a jamais été exécuté.
     - Parcours : connexion 2FA au clavier, la file, les cases « Conforme », la liste de contrôle, « Demander un complément » qui attend un message, puis « Approuver ».
 
 ## Écrans V1 → axe-core, deux thèmes
@@ -193,7 +199,9 @@ Un e2e par flux, sans aucun geste de pointeur (`keyboardOnly`) et avec axe-core 
 - Praticien : préférence `theme` du compte, plus `prefers-color-scheme`.
 - Pages sans session : `prefers-color-scheme` seul.
 
-**Résultat.** Chaque écran donne une annotation `axe <thème>` dans le rapport Playwright. Le 9 novembre, les 34 écrans analysés par thème donnent **0 violation, en clair comme en sombre**.
+**Résultat.** Chaque écran donne une annotation `axe <thème>` dans le rapport Playwright. Le 9 novembre, les 34 écrans sans administrateur analysés par thème donnent **0 violation, en clair comme en sombre**.
+
+Six écrans par thème sont écrits mais ignorés sans administrateur, et n'ont jamais été analysés : `08-annuaire-resultats`, `09-fiche-publique`, `20-admin-validation`, `21-admin-praticiens`, `22-admin-journal`, `28-admin-vocabulaire`.
 
 ### Écrans praticien
 
@@ -219,8 +227,8 @@ Un e2e par flux, sans aucun geste de pointeur (`keyboardOnly`) et avec axe-core 
 | Fiche | Écran (étape du test) | Autres e2e avec axe |
 | --- | --- | --- |
 | 08 | annuaire ; résultats **(admin)** | `etats/public-auth.spec.ts`, `flux-7-visiteur/*` |
-| 09 | fiche introuvable ; fiche publiée **(admin)** | `etats/public-auth.spec.ts`, `flux-7-visiteur/clavier.spec.ts:153` |
-| 24 | comment ça marche | `flux-7-visiteur/visiteur.spec.ts:235` |
+| 09 | fiche introuvable ; fiche publiée **(admin)** | `etats/public-auth.spec.ts`, `flux-7-visiteur/visiteur.spec.ts:227` |
+| 24 | comment ça marche | `flux-7-visiteur/visiteur.spec.ts:236` |
 | 11 | connexion ; bloc code 2FA | `flux-9-inscription-dossier/inscription-dossier.spec.ts:277` |
 | 12 | inscription ; erreurs (résumé et champs) | `flux-9-inscription-dossier/*` |
 | 25 | confirmation d'e-mail, lien expiré | `flux-9-confirmation/*` |
@@ -239,7 +247,11 @@ Un e2e par flux, sans aucun geste de pointeur (`keyboardOnly`) et avec axe-core 
 
 `accessibilite/zoom-200.spec.ts` simule une fenêtre CSS de 640 × 360 px avec un `deviceScaleFactor` de 2. C'est la fenêtre 1280 × 720 de la configuration vue à 200 %, comme le fait le zoom de Chrome : la largeur CSS est divisée par deux, les media queries se déclenchent et le texte double en pixels physiques. Playwright ne pilote pas le zoom du navigateur en mode sans tête. La propriété CSS `zoom` a été écartée parce qu'elle ne réduit pas la largeur CSS.
 
-Chaque écran vérifie trois choses : aucun défilement horizontal de la page, le titre visible, et l'action principale menée au clavier jusqu'à l'API.
+Chaque écran vérifie l'absence de défilement horizontal de la page et que son contenu est visible. Ce qui est fait au clavier diffère selon l'écran :
+
+- **jusqu'à l'API** : création d'un patient (N, Ctrl+Entrée), note saisie dans la barre de capture (Entrée, POST vérifié), refus 401 de la connexion ;
+- **ouverture d'un élément, sans écriture** : éditeur d'entrée (ouvert, bouton d'enregistrement atteint, refermé par Échap), liste équivalente du graphe, recherche par /, bascule Simple · Complète, filtres de l'annuaire dépliés, résumé des erreurs de l'inscription et son lien vers le champ ;
+- **navigation seulement** : Préférences puis Compte et sécurité, par la navigation « Mon compte ».
 
 - **Praticien (`:43`).**
   - Écrans : liste, création (N, Ctrl+Entrée), vue d'ensemble, timeline, éditeur, graphe, recherche, Mon compte.
@@ -267,10 +279,10 @@ Les captures ne sont écrites que si `PSYMATE_E2E_CAPTURES` désigne un dossier,
 
 ## Ce qui n'est pas couvert
 
-- **Tests administrateur.** Ils sont écrits mais ignorés sans `PSYMATE_E2E_ADMIN_*` :
+- **Tests administrateur.** Ils sont écrits mais ignorés sans `PSYMATE_E2E_ADMIN_*`, et n'ont jamais été exécutés (ni en local pour M7-04, ni en CI) :
   - flux 10 ;
   - publication (UC-13 A1, A2) ;
-  - parcours complet du flux 7 ;
+  - flux principal de UC-14 et UC-15, et parcours complet du flux 7 au clavier ;
   - axe en administration et sur une fiche publiée ;
   - états 20, 21, 22, 27 et 28.
 - **Alternatives sans écran en V1 :**
