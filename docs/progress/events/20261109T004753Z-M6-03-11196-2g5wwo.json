@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-09T00:47:53.998Z",
+  "task": "M6-03",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR  fusionnee (squash cc4374c) : revue des trois etats et des raccourcis sur tous les ecrans V1 (faux 0 supprimes sur graphe/timeline/recherche, etats auth testes, 70 e2e etats avec axe, 59 captures) ; lot 5 complet ; CI verte.",
+  "notes": "Etat d erreur e2e par coupure reseau (route.abort), 429/403 en Vitest seulement. Panneau d aide ? inexistant : tache shared/ui a ouvrir ; core/shortcuts sans Entree/Ctrl+Entree/Ctrl+S ; descriptions de raccourcis manquantes dans shared/ui ; e2e admin jamais executes en local.",
+  "next": "Lot 7 : M7-03 onboarding puis M7-04 accessibilite et e2e complets ; taches shared/ui et core a ouvrir",
+  "pr": "https://github.com/mrscams/psymate-web/pull/",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
