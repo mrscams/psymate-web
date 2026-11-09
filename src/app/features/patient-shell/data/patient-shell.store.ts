@@ -18,6 +18,12 @@ import {
 /** idle | loading (lecture du dossier) | saving (action de séance) | error (lecture échouée). */
 export type ShellStatus = 'idle' | 'loading' | 'saving' | 'error';
 
+/**
+ * Première entrée du dossier (M7-03) : unknown tant que rien n'est lu (ou dossier déjà suivi :
+ * pas de lecture), pending si le dossier n'a encore aucune entrée saisie, done sinon.
+ */
+export type FirstEntryState = 'unknown' | 'pending' | 'done';
+
 interface PatientShellState {
   patientId: string | null;
   patient: ShellPatient | null;
@@ -38,6 +44,8 @@ interface PatientShellState {
    * (handbook §6.5, règle 11 : on relit, on ne recalcule pas). Croissant, jamais remis à zéro.
    */
   revision: number;
+  /** Indice « notez la première entrée » : lu sur la chronologie, jamais déduit localement. */
+  firstEntry: FirstEntryState;
 }
 
 const initialState: PatientShellState = {
@@ -50,6 +58,7 @@ const initialState: PatientShellState = {
   problem: null,
   actionProblem: null,
   revision: 0,
+  firstEntry: 'unknown',
 };
 
 /** Séance courante de l'API → (en cours, dernière) ; l'accueil ne compte ni pour l'un ni pour l'autre. */
@@ -89,6 +98,22 @@ export const PatientShellStore = signalStore(
       }
     }
 
+    /**
+     * Le dossier a-t-il une entrée saisie ? Lu seulement pour un dossier neuf (aucune séance, ou
+     * l'accueil seul) et relu après chaque écriture tant que la réponse est « non ». Un échec laisse
+     * unknown : pas d'indice plutôt qu'un indice faux.
+     */
+    async function checkFirstEntry(): Promise<void> {
+      const id = store.patientId();
+      if (!id) return;
+      try {
+        const has = await api.hasEntries(id);
+        if (store.patientId() === id) patchState(store, { firstEntry: has ? 'done' : 'pending' });
+      } catch {
+        if (store.patientId() === id) patchState(store, { firstEntry: 'unknown' });
+      }
+    }
+
     /** Lance une action de séance ; true si elle a abouti, sinon le problème est dans actionProblem. */
     async function act(action: () => Promise<void>): Promise<boolean> {
       const id = store.patientId();
@@ -123,6 +148,7 @@ export const PatientShellStore = signalStore(
           const [patient, session] = await Promise.all([api.patient(id), api.current(id)]);
           if (store.patientId() !== id) return;
           patchState(store, { patient, ...split(session), status: 'idle' });
+          if (!session || session.kind === 'intake') void checkFirstEntry();
         } catch (error) {
           if (store.patientId() !== id) return;
           patchState(store, { status: 'error', problem: asProblem(error) });
@@ -178,6 +204,7 @@ export const PatientShellStore = signalStore(
       /** Une écriture a abouti hors du store (éditeur d'entrée) : les projections se relisent. */
       noteWrite(): void {
         patchState(store, { revision: store.revision() + 1 });
+        if (store.firstEntry() === 'pending') void checkFirstEntry();
       },
 
       /** Efface le problème de la dernière action (dialogue fermé, nouvelle saisie). */

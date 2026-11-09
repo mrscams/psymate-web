@@ -53,6 +53,26 @@
     <!-- Bascule « Vue : Simple · Complète » (features/overview, M4-05) : visible sur l'onglet 1. -->
     <pm-overview-view-toggle pmViewToggle />
   </pm-patient-header>
+  @if (store.patient() && store.firstEntry() === 'pending') {
+    <!-- Parcours guidé (M7-03) : dossier sans entrée saisie, lu sur la chronologie. -->
+    <div class="first-entry" role="status">
+      <p>
+        <strong i18n="Indice de première entrée, titre@@patientShell.firstEntry.title"
+          >Dernière étape : notez la première entrée.</strong
+        >
+        <span i18n="Indice de première entrée, explication@@patientShell.firstEntry.text"
+          >La séance d'accueil a été créée avec le dossier : ce que vous saisissez maintenant s'y
+          rattache.</span
+        >
+      </p>
+      <button type="button" class="first-entry-action" aria-keyshortcuts="N" (click)="newEntry()">
+        <span i18n="Bouton de l'indice de première entrée@@patientShell.firstEntry.action"
+          >Nouvelle entrée</span
+        >
+        <kbd aria-hidden="true">N</kbd>
+      </button>
+    </div>
+  }
   @if (store.patient()) {
     <div class="tab-content">
       <router-outlet />

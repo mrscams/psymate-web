@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import {
+  ChronologieService,
   EntryDto,
   PatientDto,
   PatientsService,
@@ -21,13 +22,15 @@ import {
 
 /**
  * Service de données de features/patient-shell (handbook §2, couche 4) : le seul fichier de la
- * feature qui importe le client généré (Patients pour l'en-tête, Séances). Traduit les DTO en
+ * feature qui importe le client généré (Patients pour l'en-tête, Séances, Chronologie pour l'indice
+ * de première entrée). Traduit les DTO en
  * modèles de vue ; les erreurs arrivent déjà en ApiProblem (core/http).
  */
 @Injectable({ providedIn: 'root' })
 export class PatientShellApi {
   private readonly patients = inject(PatientsService);
   private readonly sessions = inject(SeancesService);
+  private readonly timeline = inject(ChronologieService);
 
   /** GET /api/patients/{id} (403 PATIENT_FORBIDDEN, 404 PATIENT_NOT_FOUND pour l'écran). */
   async patient(id: string): Promise<ShellPatient> {
@@ -46,6 +49,29 @@ export class PatientShellApi {
       if (isApiProblem(error) && error.code === 'NO_CURRENT_SESSION') return null;
       throw error;
     }
+  }
+
+  /**
+   * Le dossier a-t-il au moins une entrée saisie (hors séances, dont l'accueil créé avec le
+   * patient) ? GET /api/patients/{id}/timeline, une seule entrée demandée, brouillons et entrées
+   * privées compris (M7-03 : indice « première entrée »).
+   */
+  async hasEntries(patientId: string): Promise<boolean> {
+    const page = await firstValueFrom(
+      this.timeline.getTimeline(
+        patientId,
+        undefined,
+        undefined,
+        [...ENTRY_TYPES_WITHOUT_SESSION],
+        undefined,
+        undefined,
+        undefined,
+        true,
+        undefined,
+        1,
+      ),
+    );
+    return (page.items ?? []).length > 0;
   }
 
   /** POST /api/patients/{id}/sessions/start → 201, la séance ouverte (409 SESSION_ALREADY_OPEN). */
@@ -77,6 +103,15 @@ export class PatientShellApi {
     return toSession(dto);
   }
 }
+
+/** Types d'entrée saisis par le praticien : tout sauf la séance (accueil compris). */
+const ENTRY_TYPES_WITHOUT_SESSION = [
+  'note',
+  'event',
+  'situation',
+  'feeling',
+  'medication',
+] as const;
 
 function toPatient(dto: PatientDto): ShellPatient {
   const since = dto.followUp?.['since'];

@@ -57,3 +57,45 @@
     outline-offset: 2px;
   }
 }
+
+// Indice de première entrée (M7-03) : information, une seule action, sans couleur d'alerte.
+.first-entry {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding: 10px 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--info-bg);
+  color: var(--text-primary);
+  font: var(--mat-sys-body-medium);
+
+  p {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+  }
+}
+
+.first-entry-action {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--primary);
+  font: var(--mat-sys-label-large);
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
