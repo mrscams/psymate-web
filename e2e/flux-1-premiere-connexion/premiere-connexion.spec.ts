@@ -1,16 +1,13 @@
-import {
-  APIRequestContext,
-  expect,
-  Page,
-  request as playwrightRequest,
-  test,
-} from '@playwright/test';
+import { APIRequestContext, expect, Page, test } from '@playwright/test';
 
-import { SEED, uniqueEmail } from '../support/accounts';
+import { createAccount, signIn } from '../preferences/accounts';
+import { uniqueEmail } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 
 // B3 flux 1, première connexion (M7-03, planche 29 §2 et §6, C5 « première entrée en moins de
-// 3 minutes ») : contre l'API locale (seed small + demo, Mailpit), jamais de mock du backend.
+// 3 minutes ») : contre l'API locale (seed small, Mailpit), jamais de mock du backend. Chaque test
+// crée son compte et ses patients : aucune donnée partagée, rien ne dépend du seed demo (absent en
+// CI) ; le patient « DEMO · … » est créé par POST /api/patients avec le préfixe exact du seed.
 
 const API = 'http://localhost:8080';
 const MAILPIT = 'http://localhost:8025';
@@ -55,33 +52,24 @@ function helpDialog(page: Page) {
   return page.getByRole('dialog', { name: 'Raccourcis clavier' });
 }
 
-/** Contexte API connecté avec Claire (seed small), pour préparer et nettoyer. */
-async function claireApi(): Promise<APIRequestContext> {
-  const api = await playwrightRequest.newContext({ baseURL: API });
-  const login = await api.post('/api/auth/login', { data: SEED.claire });
-  expect(login.status(), await login.text()).toBe(200);
-  return api;
+/** Patient créé par l'API dans le compte jetable (session portée par `api`). */
+async function createPatient(
+  api: APIRequestContext,
+  displayName: string,
+): Promise<{ id: string; displayName: string }> {
+  const response = await api.post(`${API}/api/patients`, { data: { displayName } });
+  expect(response.status(), await response.text()).toBe(201);
+  return (await response.json()) as { id: string; displayName: string };
 }
 
-/** Le patient « DEMO · … » de Claire (seed demo), actif ou archivé. */
-async function demoPatient(api: APIRequestContext): Promise<{ id: string; displayName: string }> {
-  for (const archived of [false, true]) {
-    const response = await api.get('/api/patients', { params: { q: 'DEMO', archived } });
-    expect(response.status()).toBe(200);
-    const items = ((await response.json()) as { items: { id: string; displayName: string }[] })
-      .items;
-    const demo = items.find((p) => p.displayName.startsWith('DEMO · '));
-    if (demo) return demo;
-  }
-  throw new Error('patient DEMO absent : lancer make seed SIZE=demo dans ../psymate-api');
+/** Patient de démonstration du compte : même préfixe que l'outil de seed (« DEMO · »). */
+function demoName(): string {
+  return `DEMO · E2E ${Date.now()}${Math.floor(Math.random() * 1000)}`;
 }
 
-async function signInClaire(page: Page): Promise<void> {
-  await page.goto('/fr/connexion');
-  await page.getByLabel('Adresse e-mail').fill(SEED.claire.email);
-  await page.getByLabel('Mot de passe', { exact: true }).fill(SEED.claire.password);
-  await page.getByRole('button', { name: 'Se connecter' }).click();
-  await expect(page).toHaveURL(/\/fr\/patients$/);
+/** Nettoyage : archivage (DELETE, idempotent), sans masquer l'échec éventuel du test. */
+async function archive(api: APIRequestContext, id: string): Promise<void> {
+  await api.delete(`${API}/api/patients/${id}`).catch(() => undefined);
 }
 
 test('nouveau praticien : inscription, confirmation, accueil, premier patient, première entrée en moins de 3 minutes', async ({
@@ -158,21 +146,13 @@ test('nouveau praticien : inscription, confirmation, accueil, premier patient, p
   await expect(hint).toBeVisible();
   await watch.axe(page);
 
-  // La séance d'accueil est créée en différé avec le patient : le praticien lit l'indice entre-temps.
-  await expect
-    .poll(
-      async () => (await page.request.get(`/api/patients/${patient.id}/sessions/current`)).status(),
-      {
-        timeout: 15_000,
-      },
-    )
-    .toBe(200);
-
-  // Étape 3 : Nouvelle entrée depuis l'indice, une note dans la séance d'accueil.
+  // Étape 3 : Nouvelle entrée depuis l'indice. La séance d'accueil est créée en différé par l'API :
+  // le bouton l'attend (relecture de la séance courante) avant d'ouvrir l'éditeur, sans aide du test.
   await hint.getByRole('button', { name: 'Nouvelle entrée' }).click();
   const editor = page.locator('[role="dialog"]:has(pm-entry-editor-panel)');
   await expect(editor).toBeVisible();
   await expect(editor.locator('pm-state [aria-busy="true"]')).toHaveCount(0);
+  await expect(editor.getByLabel('Séance', { exact: true })).not.toHaveValue('');
   await editor
     .getByLabel('Texte', { exact: true })
     .fill('Premier entretien : motif de la consultation.');
@@ -198,7 +178,7 @@ test('nouveau praticien : inscription, confirmation, accueil, premier patient, p
     );
   expect(total).toBeLessThan(FIRST_ENTRY_BUDGET_MS);
 
-  // Après l'écriture, la chronologie est relue : l'indice disparaît.
+  // Après l'écriture, le résumé de la chronologie est relu : l'indice disparaît.
   await expect(hint).toBeHidden();
   await expectNoAxeViolations(page);
 
@@ -210,17 +190,18 @@ test('nouveau praticien : inscription, confirmation, accueil, premier patient, p
   await expect(page.getByRole('region', { name: 'Bienvenue dans PsyMate' })).toHaveCount(0);
 });
 
-test('patient DEMO de Claire : étiqueté, supprimé en un clic sans retaper le nom, restauré (toast puis archivés)', async ({
+test('patient DEMO : étiqueté, supprimé en un clic sans retaper le nom, restauré (toast puis archivés)', async ({
   page,
+  request,
 }) => {
-  test.setTimeout(90_000);
-  const api = await claireApi();
-  const demo = await demoPatient(api);
+  test.setTimeout(120_000);
+  const account = await createAccount(request, 'm7-03.demo', 'psychologist');
+  const demo = await createPatient(request, demoName());
   try {
-    // Point de départ connu : le patient DEMO actif.
-    expect((await api.post(`/api/patients/${demo.id}/restore`)).status()).toBe(200);
-    await signInClaire(page);
-    await page.locator('#patients-filter').fill('DEMO');
+    await signIn(page, account);
+    // Seulement la démo : l'accueil reste au-dessus de la liste et invite à l'explorer.
+    const welcome = page.getByRole('region', { name: 'Bienvenue dans PsyMate' });
+    await expect(welcome).toContainText('explorer le dossier de démonstration');
     const row = page.getByRole('row').filter({ hasText: demo.displayName });
     await expect(row).toBeVisible();
     await expect(row.locator('.demo-chip')).toHaveText('Démo');
@@ -238,23 +219,35 @@ test('patient DEMO de Claire : étiqueté, supprimé en un clic sans retaper le 
     );
     await confirm.getByRole('button', { name: 'Supprimer la démo' }).click();
     expect((await archived).status()).toBe(204);
+    // Liste relue : vide, l'état vide de première connexion revient.
     await expect(row).toHaveCount(0);
+    await expect(
+      page.getByRole('status').filter({ hasText: 'Créez votre premier patient' }),
+    ).toBeVisible();
 
-    // Toast « Patient de démonstration retiré · Restaurer ».
-    const toast = page.getByText('Patient de démonstration retiré');
-    await expect(toast).toBeVisible();
-    await expectNoAxeViolations(page);
+    // Toast « Patient de démonstration retiré · Restaurer » : Restaurer d'abord, axe ensuite (pas
+    // d'analyse pendant que le toast de 10 s peut disparaître).
+    await expect(page.getByText('Patient de démonstration retiré')).toBeVisible();
     await page.getByRole('button', { name: 'Restaurer', exact: true }).click();
     await expect(row).toBeVisible();
-    await expect(page.getByText('Patient de démonstration restauré')).toBeVisible();
+    const restored = page.getByText('Patient de démonstration restauré');
+    await expect(restored).toBeVisible();
+    await page
+      .locator('pm-toast-outlet .toast')
+      .filter({ hasText: 'Patient de démonstration restauré' })
+      .getByRole('button', { name: 'Fermer' })
+      .click();
+    await expect(restored).toBeHidden();
+    await expectNoAxeViolations(page);
 
-    // Deuxième retrait, restauration depuis les archivés (le toast a pu disparaître).
+    // Deuxième retrait, restauration depuis les archivés (sans le toast).
     await row.getByRole('button', { name: /Supprimer la démo :/ }).click();
     await page.getByRole('dialog').getByRole('button', { name: 'Supprimer la démo' }).click();
     await expect(row).toHaveCount(0);
     await page.getByRole('checkbox', { name: 'Afficher les archivés' }).check();
     const archivedRow = page.getByRole('row').filter({ hasText: demo.displayName });
     await expect(archivedRow).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Bienvenue dans PsyMate' })).toHaveCount(0);
     await expectNoAxeViolations(page);
     await archivedRow
       .getByRole('button', { name: `Restaurer le patient de démonstration ${demo.displayName}` })
@@ -263,68 +256,73 @@ test('patient DEMO de Claire : étiqueté, supprimé en un clic sans retaper le 
     await page.getByRole('checkbox', { name: 'Afficher les archivés' }).uncheck();
     await expect(page.getByRole('row').filter({ hasText: demo.displayName })).toBeVisible();
   } finally {
-    // Quoi qu'il arrive, le patient DEMO redevient actif pour les autres tests.
-    await api.post(`/api/patients/${demo.id}/restore`);
-    await api.dispose();
+    // Compte jetable : son patient de démonstration est archivé quoi qu'il arrive.
+    await archive(request, demo.id);
   }
 });
 
 test('? ouvre l’aide sur la liste, dans un dossier, dans Mon compte ; rien dans un champ ; Échap ferme', async ({
   page,
+  request,
 }) => {
-  test.setTimeout(90_000);
-  const api = await claireApi();
-  const demo = await demoPatient(api);
-  await api.post(`/api/patients/${demo.id}/restore`);
-  await api.dispose();
-  await signInClaire(page);
+  test.setTimeout(120_000);
+  const account = await createAccount(request, 'm7-03.aide', 'psychologist');
+  const patient = await createPatient(request, 'Nina K.');
+  const demo = await createPatient(request, demoName());
+  try {
+    await signIn(page, account);
 
-  // Liste : N et / décrits pour la liste ; M sans objet ici.
-  await expect(page.getByRole('heading', { level: 1, name: 'Mes patients' })).toBeVisible();
-  await page.keyboard.press('?');
-  const help = helpDialog(page);
-  await expect(help).toBeVisible();
-  await expect(help.getByRole('row', { name: /Filtrer mes patients/ })).toBeVisible();
-  await expect(help.getByRole('row', { name: /^N Nouveau patient/ })).toBeVisible();
-  await expect(help.getByRole('row', { name: /^M .*indisponible ici/ })).toBeVisible();
-  await expectNoAxeViolations(page);
-  await page.keyboard.press('Escape');
-  await expect(help).toBeHidden();
+    // Liste : N et / décrits pour la liste ; M sans objet ici.
+    await expect(page.getByRole('heading', { level: 1, name: 'Mes patients' })).toBeVisible();
+    await expect(page.getByRole('row').filter({ hasText: 'Nina K.' })).toBeVisible();
+    await page.keyboard.press('?');
+    const help = helpDialog(page);
+    await expect(help).toBeVisible();
+    await expect(help.getByRole('row', { name: /Filtrer mes patients/ })).toBeVisible();
+    await expect(help.getByRole('row', { name: /^N Nouveau patient/ })).toBeVisible();
+    await expect(help.getByRole('row', { name: /^M .*indisponible ici/ })).toBeVisible();
+    await expectNoAxeViolations(page);
+    await page.keyboard.press('Escape');
+    await expect(help).toBeHidden();
 
-  // Dans un champ, ? s'écrit et n'ouvre rien.
-  const filter = page.locator('#patients-filter');
-  await filter.focus();
-  await page.keyboard.press('?');
-  await expect(filter).toHaveValue('?');
-  await expect(help).toHaveCount(0);
-  await filter.fill('');
+    // Dans un champ, ? s'écrit et n'ouvre rien.
+    const filter = page.locator('#patients-filter');
+    await filter.focus();
+    await page.keyboard.press('?');
+    await expect(filter).toHaveValue('?');
+    await expect(help).toHaveCount(0);
+    await filter.fill('');
 
-  // Dossier : 1 2 3 et L disponibles, gestes de la barre de saisie décrits.
-  await page.goto(`/fr/patients/${demo.id}`);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText(demo.displayName);
-  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-  await page.keyboard.press('?');
-  await expect(help).toBeVisible();
-  await expect(
-    help.getByRole('row', { name: /Vue d'ensemble · Timeline · Graphe/ }),
-  ).not.toContainText('indisponible ici');
-  await expect(help.getByRole('row', { name: /^N Nouvelle entrée/ })).toBeVisible();
-  await expect(help.getByRole('row', { name: /Barre de saisie du dossier/ })).not.toContainText(
-    'indisponible ici',
-  );
-  await expectNoAxeViolations(page);
-  // ? une seconde fois referme l'aide.
-  await page.keyboard.press('?');
-  await expect(help).toBeHidden();
+    // Dossier : 1 2 3 et L disponibles, gestes de la barre de saisie décrits.
+    await page.goto(`/fr/patients/${patient.id}`);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Nina K.');
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    await page.keyboard.press('?');
+    await expect(help).toBeVisible();
+    await expect(
+      help.getByRole('row', { name: /Vue d'ensemble · Timeline · Graphe/ }),
+    ).not.toContainText('indisponible ici');
+    await expect(help.getByRole('row', { name: /^N Nouvelle entrée/ })).toBeVisible();
+    await expect(help.getByRole('row', { name: /Barre de saisie du dossier/ })).not.toContainText(
+      'indisponible ici',
+    );
+    await expectNoAxeViolations(page);
+    // ? une seconde fois referme l'aide.
+    await page.keyboard.press('?');
+    await expect(help).toBeHidden();
 
-  // Mon compte : l'aide s'ouvre aussi ; les touches du dossier y sont sans objet.
-  await page.goto('/fr/mon-compte/preferences');
-  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-  await page.keyboard.press('?');
-  await expect(help).toBeVisible();
-  await expect(help.getByRole('row', { name: /^N .*indisponible ici/ })).toBeVisible();
-  await expectNoAxeViolations(page);
-  await page.keyboard.press('Escape');
-  await expect(help).toBeHidden();
+    // Mon compte : l'aide s'ouvre aussi ; les touches du dossier y sont sans objet.
+    await page.goto('/fr/mon-compte/preferences');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    await page.keyboard.press('?');
+    await expect(help).toBeVisible();
+    await expect(help.getByRole('row', { name: /^N .*indisponible ici/ })).toBeVisible();
+    await expectNoAxeViolations(page);
+    await page.keyboard.press('Escape');
+    await expect(help).toBeHidden();
+  } finally {
+    await archive(request, demo.id);
+    await archive(request, patient.id);
+  }
 });
