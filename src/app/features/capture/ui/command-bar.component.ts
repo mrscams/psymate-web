@@ -229,9 +229,19 @@ export class CommandBarComponent {
     });
   }
 
-  /** Donne le focus au champ après le prochain rendu (Démarrer, Clôturer, après un enregistrement). */
-  focus(): void {
-    afterNextRender(() => this.field()?.focus(), { injector: this.injector });
+  /**
+   * Donne le focus au champ après le prochain rendu (Démarrer, Clôturer, après un enregistrement).
+   * `quiet` : le panneau d'aperçu reste replié jusqu'à la première frappe (arrivée sur un dossier
+   * créé : il ne recouvre pas l'indice « Dernière étape » du dossier, M7-04).
+   */
+  focus(options: { quiet?: boolean } = {}): void {
+    afterNextRender(
+      () => {
+        this.field()?.focus();
+        if (options.quiet) this.collapsed.set(true);
+      },
+      { injector: this.injector },
+    );
   }
 
   /** Vide la barre (son texte est parti dans une entrée ou dans le brouillon de l'éditeur). */

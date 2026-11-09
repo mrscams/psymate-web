@@ -1,5 +1,4 @@
 import {
-  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -125,14 +124,15 @@ export class PatientShellPage {
     });
 
     // Arrivée depuis la création du patient (B3 flux 2, étape 3) : une fois le dossier lu, la barre
-    // de capture prend le focus, une seule fois.
+    // de capture prend le focus, une seule fois, panneau d'aperçu replié (il recouvrirait l'indice
+    // de première entrée ; la première frappe l'ouvre).
     const state = inject(Router).currentNavigation()?.extras.state;
     if (state?.[CAPTURE_FOCUS_STATE] === true) {
       const arrival = effect(() => {
         const bar = this.captureBar();
         if (!bar || !this.store.patient()) return;
         arrival.destroy();
-        afterNextRender(() => bar.focus(), { injector: this.injector });
+        untracked(() => bar.focus({ quiet: true }));
       });
     }
 
