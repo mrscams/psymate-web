@@ -44,7 +44,7 @@ interface PatientShellState {
    * (handbook §6.5, règle 11 : on relit, on ne recalcule pas). Croissant, jamais remis à zéro.
    */
   revision: number;
-  /** Indice « notez la première entrée » : lu sur la chronologie, jamais déduit localement. */
+  /** Indice « notez la première entrée » : lu sur le résumé de la chronologie, jamais déduit localement. */
   firstEntry: FirstEntryState;
 }
 

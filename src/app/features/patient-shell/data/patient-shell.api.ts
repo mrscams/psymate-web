@@ -53,25 +53,17 @@ export class PatientShellApi {
 
   /**
    * Le dossier a-t-il au moins une entrée saisie (hors séances, dont l'accueil créé avec le
-   * patient) ? GET /api/patients/{id}/timeline, une seule entrée demandée, brouillons et entrées
-   * privées compris (M7-03 : indice « première entrée »).
+   * patient) ? GET /api/patients/{id}/timeline/summary par année (un agrégat léger, sans
+   * pagination), brouillons et entrées privées compris (M7-03 : indice « première entrée »). La
+   * chronologie elle-même n'est pas lue : son chargement reste celui de l'onglet Timeline.
    */
   async hasEntries(patientId: string): Promise<boolean> {
-    const page = await firstValueFrom(
-      this.timeline.getTimeline(
-        patientId,
-        undefined,
-        undefined,
-        [...ENTRY_TYPES_WITHOUT_SESSION],
-        undefined,
-        undefined,
-        undefined,
-        true,
-        undefined,
-        1,
-      ),
+    const summary = await firstValueFrom(
+      this.timeline.getTimelineSummary(patientId, 'year', undefined, undefined, true),
     );
-    return (page.items ?? []).length > 0;
+    return (summary.periods ?? []).some((period) =>
+      Object.entries(period.counts ?? {}).some(([type, count]) => type !== 'session' && count > 0),
+    );
   }
 
   /** POST /api/patients/{id}/sessions/start → 201, la séance ouverte (409 SESSION_ALREADY_OPEN). */
@@ -103,15 +95,6 @@ export class PatientShellApi {
     return toSession(dto);
   }
 }
-
-/** Types d'entrée saisis par le praticien : tout sauf la séance (accueil compris). */
-const ENTRY_TYPES_WITHOUT_SESSION = [
-  'note',
-  'event',
-  'situation',
-  'feeling',
-  'medication',
-] as const;
 
 function toPatient(dto: PatientDto): ShellPatient {
   const since = dto.followUp?.['since'];
