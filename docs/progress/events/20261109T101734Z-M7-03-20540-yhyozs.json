@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-09T10:17:34.374Z",
+  "task": "M7-03",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR 42 fusionnee en squash (5d87623) : onboarding de premiere connexion, patient DEMO supprimable et restaurable, aide des raccourcis par la touche ?",
+  "notes": "Verification complete apres rebase : lint, check:tokens, Vitest 1713, build verts ; e2e 192 passes, 1 echec instable (flux-6-graphe glisser) vert rejoue seul ; CI verte. Tache shared/ui/shortcuts-help a ouvrir (descriptions / 1 2 3 Echap, entree Voir les raccourcis).",
+  "next": "M7-04 Accessibilite et e2e complets (relit tout, y compris M7-03) ; PR de suivi de fin de lot 7.",
+  "pr": "https://github.com/mrscams/psymate-web/pull/42",
+  "branch": "main",
+  "checkout": "psymate-web"
+}
