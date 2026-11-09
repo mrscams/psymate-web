@@ -20,7 +20,8 @@ export interface ShortcutsHelpData {
   imports: [SidePanelComponent],
   template: `
     <pm-side-panel [title]="title">
-      <table class="shortcuts">
+      <!-- Focalisable : le corps du panneau défile, le clavier doit pouvoir y descendre. -->
+      <table class="shortcuts" tabindex="0">
         <caption
           class="sr-only"
           i18n="Légende du tableau des raccourcis@@patientShell.help.caption"

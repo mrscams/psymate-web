@@ -22003,8 +22003,8 @@
         <note priority="1" from="description">Bouton de restauration du patient de démonstration</note>
       </trans-unit>
       <trans-unit id="patients.demo.removeLabel" datatype="html">
-        <source>Supprimer le patient de démonstration <x id="name" equiv-text="name"/></source>
-        <target state="translated">Remove the demo patient <x id="name" equiv-text="name"/></target>
+        <source>Supprimer la démo : <x id="name" equiv-text="name"/></source>
+        <target state="translated">Remove the demo: <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
           <context context-type="linenumber">86</context>

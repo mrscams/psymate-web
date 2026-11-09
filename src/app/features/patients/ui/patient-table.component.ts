@@ -83,7 +83,7 @@ export class PatientTableComponent {
   );
 
   protected removeLabel(name: string): string {
-    return $localize`:Nom accessible du retrait du patient de démonstration@@patients.demo.removeLabel:Supprimer le patient de démonstration ${name}:name:`;
+    return $localize`:Nom accessible du retrait du patient de démonstration@@patients.demo.removeLabel:Supprimer la démo : ${name}:name:`;
   }
 
   protected restoreLabel(name: string): string {

@@ -14371,7 +14371,7 @@
         <source> Raccourcis disponibles et leur effet </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
-          <context context-type="linenumber">28,32</context>
+          <context context-type="linenumber">29,33</context>
         </context-group>
         <note priority="1" from="description">Légende du tableau des raccourcis</note>
       </trans-unit>
@@ -14379,7 +14379,7 @@
         <source> Touche </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
-          <context context-type="linenumber">33,35</context>
+          <context context-type="linenumber">34,36</context>
         </context-group>
         <note priority="1" from="description">Colonne du tableau des raccourcis</note>
       </trans-unit>
@@ -14387,7 +14387,7 @@
         <source> Effet </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
-          <context context-type="linenumber">36,40</context>
+          <context context-type="linenumber">37,41</context>
         </context-group>
         <note priority="1" from="description">Colonne du tableau des raccourcis</note>
       </trans-unit>
@@ -14395,7 +14395,7 @@
         <source>indisponible ici</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
-          <context context-type="linenumber">57,62</context>
+          <context context-type="linenumber">58,63</context>
         </context-group>
         <note priority="1" from="description">Raccourci sans objet sur l&apos;écran courant</note>
       </trans-unit>
@@ -14403,7 +14403,7 @@
         <source> Les raccourcis à une lettre sont inactifs dans un champ de saisie. Sur Mac, Ctrl devient ⌘. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
-          <context context-type="linenumber">66,71</context>
+          <context context-type="linenumber">67,72</context>
         </context-group>
         <note priority="1" from="description">Règle des raccourcis à une lettre</note>
       </trans-unit>
@@ -14411,7 +14411,7 @@
         <source>Raccourcis clavier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <note priority="1" from="description">Titre du panneau d&apos;aide des raccourcis</note>
       </trans-unit>
@@ -15924,7 +15924,7 @@
         <note priority="1" from="description">Lien vers la fiche d&apos;un patient</note>
       </trans-unit>
       <trans-unit id="patients.demo.removeLabel" datatype="html">
-        <source>Supprimer le patient de démonstration <x id="name" equiv-text="name"/></source>
+        <source>Supprimer la démo : <x id="name" equiv-text="name"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
           <context context-type="linenumber">86</context>

@@ -188,7 +188,7 @@ describe('PatientListPage', () => {
       const remove = row.querySelector<HTMLButtonElement>('button.demo-action');
       expect(text(remove)).toBe('Supprimer la démo');
       expect(remove?.getAttribute('aria-label')).toBe(
-        'Supprimer le patient de démonstration DEMO · Camille R.',
+        'Supprimer la démo : DEMO · Camille R.',
       );
     });
 
