@@ -27,7 +27,7 @@ const API = 'http://localhost:8080';
 test.describe('vue graphe', () => {
   test.describe.configure({ timeout: 120_000 });
 
-  test('150 nœuds du seed : layout et pan/zoom mesurés (fluide), axe hors canevas', async ({
+  test('150 nœuds du seed : layout et pan/zoom mesurés (fluide), axe sur toute la page', async ({
     page,
   }) => {
     // Le patient du seed dont le graphe (sans racine) est le plus grand : 150 nœuds en seed small.
@@ -207,7 +207,7 @@ test.describe('vue graphe', () => {
     await expectNoAxeViolations(page);
   });
 
-  test('liste équivalente : tableau des liens et détail, au clavier seulement ; axe hors canevas', async ({
+  test('liste équivalente : tableau des liens et détail, au clavier seulement ; axe sur toute la page', async ({
     page,
     request,
   }) => {
