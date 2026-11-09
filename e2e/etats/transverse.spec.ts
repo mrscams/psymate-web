@@ -3,10 +3,12 @@ import { APIRequestContext, expect, Page, test } from '@playwright/test';
 
 import { createPatient, intakeOf } from '../flux-5-timeline/timeline-data';
 import { expectNoAxeViolations } from '../support/axe';
-import { getOf, practitioner, shareSession, shoot } from './etats-support';
+import { practitioner, shareSession, shoot } from './etats-support';
 
-// Planche 29 (M6-03) : états transverses (hors ligne, 429) et raccourcis de B2 (1 2 3, M, N, L,
-// Échap, /) branchés et inactifs dans un champ, contre l'API réelle sur un compte jetable.
+// Planche 29 (M6-03) : état transverse hors ligne et raccourcis de B2 (1 2 3, M, N, L,
+// Échap, /) branchés et inactifs dans un champ, contre l'API réelle sur un compte jetable. Le 429
+// n'est pas provoqué ici (il faudrait saturer le quota de 600 requêtes par minute) : il est couvert
+// en Vitest par core/http (retry-after.interceptor.spec.ts) et shared/ui/toast.
 
 let api: APIRequestContext;
 let patientId: string;
@@ -45,13 +47,13 @@ test('hors ligne : bandeau « Connexion perdue », lecture rejouée au retour du
   const banner = page.getByRole('status').filter({ hasText: 'Connexion perdue' });
   await expect(banner).toBeVisible();
   await shoot(page, '29-hors-ligne');
-  // Pendant l'attente, la liste déjà affichée reste grisée (planche 29) : axe ne vérifie ici que le
-  // bandeau ; la page entière est vérifiée au retour du réseau.
-  const bannerAxe = await new AxeBuilder({ page })
-    .include('pm-network-banner')
+  // Pendant l'attente, la liste déjà affichée reste grisée (planche 29, contraste réduit voulu) :
+  // axe vérifie toute la page sauf ce tableau ; la page entière est vérifiée au retour du réseau.
+  const waitingAxe = await new AxeBuilder({ page })
+    .exclude('pm-patient-table')
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
     .analyze();
-  expect(bannerAxe.violations).toEqual([]);
+  expect(waitingAxe.violations).toEqual([]);
   const replayed = page.waitForResponse(
     (r) => new URL(r.url()).pathname === '/api/patients' && r.ok(),
   );
@@ -61,38 +63,6 @@ test('hors ligne : bandeau « Connexion perdue », lecture rejouée au retour du
   await expect(page.locator('pm-state .state.error')).toHaveCount(0);
   await expect(page.getByRole('link', { name: /Noé T\./ }).first()).toBeVisible();
   await expectNoAxeViolations(page);
-});
-
-test('429 : avertissement avec le délai, lecture rejouée sans action', async ({ page }) => {
-  let refused = false;
-  const timeline = getOf(`/api/patients/${patientId}/timeline`);
-  await page.route('**/api/**', async (route) => {
-    const request = route.request();
-    if (refused || !timeline(new URL(request.url()), request.method())) return route.fallback();
-    refused = true;
-    await route.fulfill({
-      status: 429,
-      contentType: 'application/problem+json',
-      headers: { 'Retry-After': '2' },
-      body: JSON.stringify({
-        type: 'about:blank',
-        title: 'Too Many Requests',
-        status: 429,
-        detail: 'Trop de requêtes.',
-        code: 'RATE_LIMITED',
-        retryAfterSeconds: 2,
-      }),
-    });
-  });
-  const replayed = page.waitForResponse(
-    (r) => new URL(r.url()).pathname === `/api/patients/${patientId}/timeline` && r.ok(),
-  );
-  await page.goto(`/fr/patients/${patientId}/timeline`);
-  await expect(page.getByText(/Trop de requêtes, réessayez dans/)).toBeVisible();
-  await expectNoAxeViolations(page);
-  await shoot(page, '29-trop-de-requetes');
-  await replayed;
-  await expect(page.locator('pm-state .state.error')).toHaveCount(0);
 });
 
 test('raccourcis 1 2 3 et M : branchés hors champ, inactifs dans la barre de saisie', async ({
@@ -139,7 +109,6 @@ test('raccourcis N, L et Échap : éditeur d’entrée, éditeur de lien, fermet
   const intake = await intakeOf(api, patientId);
   await page.goto(`/fr/patients/${patientId}?entry=${intake}`);
   await expect(editor).toBeVisible();
-  await page.locator('body').focus();
   await editor.getByRole('heading').first().click();
   await page.keyboard.press('l');
   const links = page.locator('pm-link-editor-panel');
@@ -159,4 +128,5 @@ test('liste des patients : / donne le focus au filtre, où N s’écrit', async 
   await page.keyboard.type('n');
   await expect(filter).toHaveValue('n');
   await expect(page).toHaveURL(/\/fr\/patients(\?.*)?$/);
+  await expectNoAxeViolations(page);
 });

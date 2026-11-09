@@ -29,7 +29,7 @@ test.describe('08 annuaire public', () => {
     await shoot(page, '08-annuaire-empty');
   });
 
-  test('erreur : la recherche est conservée, Réessayer', async ({ page }) => {
+  test('erreur (coupure réseau) : la recherche est conservée, Réessayer', async ({ page }) => {
     await fail(page, getOf('/api/public/directory'));
     await page.goto('/fr/annuaire?q=psychologue');
     const error = await expectState(page, 'error', '08-annuaire', {
@@ -78,7 +78,8 @@ test('24 comment ça marche : page statique, aucun bloc de données', async ({ p
 
 test('11 connexion, erreur : message unique sous le formulaire (401)', async ({ page }) => {
   await page.goto('/fr/connexion');
-  await page.getByLabel('Adresse e-mail').fill('inconnu.m6-03@example.test');
+  // Adresse unique : 5 échecs sur la même adresse verrouillent (423), relances comprises.
+  await page.getByLabel('Adresse e-mail').fill(uniqueEmail('m6-03.login'));
   await page.getByLabel('Mot de passe', { exact: true }).fill('Pas-Le-Bon-2026');
   await page.getByRole('button', { name: 'Se connecter' }).click();
   await expect(page.getByRole('alert')).toHaveText('E-mail, mot de passe ou code incorrect.');
@@ -106,7 +107,7 @@ test.describe('25 confirmation d’e-mail (lien)', () => {
     await held.release();
   });
 
-  test('erreur serveur : Réessayer', async ({ page }) => {
+  test('coupure réseau : Réessayer', async ({ page }) => {
     await fail(page, confirm);
     await page.goto('/fr/confirmer-email/jeton-m6-03');
     const error = await expectState(page, 'error', '25-confirmation-email');
@@ -115,7 +116,7 @@ test.describe('25 confirmation d’e-mail (lien)', () => {
 });
 
 test.describe('26 mot de passe oublié', () => {
-  test('erreur serveur : message générique, saisie conservée', async ({ page }) => {
+  test('coupure réseau : message générique, saisie conservée', async ({ page }) => {
     await fail(page, postOf('/api/auth/password-reset/request'));
     await page.goto('/fr/mot-de-passe-oublie');
     await page.getByLabel('Adresse e-mail').fill('inconnu.m6-03@example.test');

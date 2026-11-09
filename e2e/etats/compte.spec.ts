@@ -28,30 +28,56 @@ interface Screen {
   url: string;
   read: string;
   empty?: string;
+  /** Contenu de l'écran une fois lu (après « Réessayer »). */
+  content: RegExp | string;
 }
 
 const SCREENS: Screen[] = [
-  { fiche: '10-profil-public', url: '/fr/mon-compte/profil-public', read: '/api/me/profile' },
+  {
+    fiche: '10-profil-public',
+    url: '/fr/mon-compte/profil-public',
+    read: '/api/me/profile',
+    content: 'Identité',
+  },
   {
     fiche: '13-dossier-professionnel',
     url: '/fr/mon-compte/dossier-professionnel',
     read: '/api/me/verification',
     empty: 'Aucun justificatif déposé',
+    content: 'Aucun justificatif déposé',
   },
-  { fiche: '14-preferences', url: '/fr/mon-compte/preferences', read: '/api/me/preferences' },
-  { fiche: '14-tags', url: '/fr/mon-compte/tags', read: '/api/tags', empty: 'Aucun tag' },
+  {
+    fiche: '14-preferences',
+    url: '/fr/mon-compte/preferences',
+    read: '/api/me/preferences',
+    content: 'Affichage',
+  },
+  {
+    fiche: '14-tags',
+    url: '/fr/mon-compte/tags',
+    read: '/api/tags',
+    empty: 'Aucun tag',
+    content: 'Aucun tag',
+  },
   {
     fiche: '17-emotions',
     url: '/fr/mon-compte/emotions',
     read: '/api/vocabulary/emotions',
     empty: 'Aucune émotion personnalisée',
+    content: 'Aucune émotion personnalisée',
   },
-  { fiche: '18-securite', url: '/fr/mon-compte/securite', read: '/api/me/security' },
+  {
+    fiche: '18-securite',
+    url: '/fr/mon-compte/securite',
+    read: '/api/me/security',
+    content: 'Cet appareil · session courante',
+  },
   {
     fiche: '19-donnees',
     url: '/fr/mon-compte/donnees',
     read: '/api/patients',
     empty: 'Aucun dossier à exporter',
+    content: 'Aucun dossier à exporter',
   },
 ];
 
@@ -78,10 +104,11 @@ for (const screen of SCREENS) {
       await page.goto(screen.url);
       const error = await expectState(page, 'error', screen.fiche);
       await expect(error.getByRole('button', { name: 'Réessayer' })).toBeVisible();
-      // Réessayer relit la vraie API : l'erreur disparaît.
-      await page.unrouteAll({ behavior: 'ignoreErrors' });
+      // Réessayer relit la vraie API (la coupure ne vaut qu'une fois) : l'écran s'affiche.
       await error.getByRole('button', { name: 'Réessayer' }).click();
       await expect(page.locator('pm-state .state.error')).toHaveCount(0);
+      await expect(page.locator('pm-state .state.loading')).toHaveCount(0);
+      await expect(page.locator('main').getByText(screen.content).first()).toBeVisible();
     });
   });
 }

@@ -40,14 +40,19 @@ test.describe('01 liste des patients', () => {
     context,
   }) => {
     const fresh = await practitioner('m6-03.liste');
-    await context.clearCookies();
-    await shareSession(fresh, context);
-    const held = await hold(page, getOf('/api/patients'));
-    await page.goto('/fr/patients');
-    await expectState(page, 'loading', '01-liste-patients');
-    await held.release();
-    await expectState(page, 'empty', '01-liste-patients', { text: 'Créez votre premier patient' });
-    await fresh.dispose();
+    try {
+      await context.clearCookies();
+      await shareSession(fresh, context);
+      const held = await hold(page, getOf('/api/patients'));
+      await page.goto('/fr/patients');
+      await expectState(page, 'loading', '01-liste-patients');
+      await held.release();
+      await expectState(page, 'empty', '01-liste-patients', {
+        text: 'Créez votre premier patient',
+      });
+    } finally {
+      await fresh.dispose();
+    }
   });
 
   test('erreur : bloc erreur avec Réessayer, qui relit la liste', async ({ page }) => {
@@ -55,7 +60,6 @@ test.describe('01 liste des patients', () => {
     await page.goto('/fr/patients');
     const error = await expectState(page, 'error', '01-liste-patients');
     await expect(error.getByRole('button', { name: 'Réessayer' })).toBeVisible();
-    await page.unrouteAll({ behavior: 'ignoreErrors' });
     await error.getByRole('button', { name: 'Réessayer' }).click();
     await expect(page.getByRole('link', { name: /Lou R\./ }).first()).toBeVisible();
   });
@@ -209,8 +213,18 @@ test.describe('06 éditeur de lien (?link=)', () => {
   });
 
   test('erreur des liens posés', async ({ page }) => {
-    await fail(page, links());
-    await page.goto(url());
+    // L'éditeur d'entrée lit d'abord les mêmes liens : on attend sa lecture, puis la coupure (une
+    // seule fois) vise celle de l'éditeur de lien, ouvert par L.
+    const { patientId, entryId } = withIntake;
+    const read = links();
+    const editorRead = page.waitForResponse((r) => read(new URL(r.url()), r.request().method()));
+    await page.goto(`/fr/patients/${patientId}?entry=${entryId}`);
+    await editorRead;
+    const editor = page.locator('pm-entry-editor-panel');
+    await expect(editor).toBeVisible();
+    await fail(page, read);
+    await editor.getByRole('heading').first().click();
+    await page.keyboard.press('l');
     await expectState(page, 'error', '06-editeur-lien', { scope: panel(page) });
   });
 });

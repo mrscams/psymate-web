@@ -1,8 +1,8 @@
 import { APIRequestContext, expect, test } from '@playwright/test';
 
-import { adminApi, shareSession } from '../flux-10-admin/helpers';
+import { adminApi } from '../flux-10-admin/helpers';
 import { ADMIN_AVAILABLE, ADMIN_MISSING } from '../support/admin';
-import { expectState, fail, getOf, hold } from './etats-support';
+import { expectState, fail, getOf, hold, shareSession } from './etats-support';
 
 // Planche 29 (M6-03) : chargement et erreur des écrans d'administration (fiches 20, 21, 22, 28),
 // contre l'API réelle. Les états vides dépendent des données de la base partagée (file de

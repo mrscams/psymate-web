@@ -18,9 +18,10 @@ import { expectNoAxeViolations } from '../support/axe';
 // - « chargement » : la requête part vers l'API réelle, mais le navigateur la retient (page.route)
 //   le temps de vérifier le squelette, puis la laisse passer ; l'API ne peut pas être ralentie à la
 //   demande ;
-// - « erreur » : le navigateur répond 503 problem+json à la place de l'API (page.route) pour une seule
-//   lecture ; l'API réelle ne sait pas tomber en panne à la demande. Le reste de la page (session,
-//   en-tête, autres blocs) parle à la vraie API.
+// - « erreur » : le navigateur coupe une seule lecture (page.route + abort, comme une coupure
+//   réseau) ; aucune réponse HTTP n'est fabriquée, l'API réelle ne sait pas tomber en panne à la
+//   demande. Le reste de la page (session, en-tête, autres blocs) et « Réessayer » parlent à la
+//   vraie API.
 
 export type StateKind = 'empty' | 'loading' | 'error';
 
@@ -56,21 +57,18 @@ export async function hold(page: Page, match: Matcher): Promise<{ release: () =>
   };
 }
 
-/** Répond 503 (problem+json du contrat) à la place de l'API pour les requêtes visées. */
-export async function fail(page: Page, match: Matcher, status = 503): Promise<void> {
+/**
+ * Coupe la première requête visée (route.abort : aucune réponse, statut 0 côté client), une seule
+ * fois : aucune réponse HTTP n'est fabriquée, et « Réessayer » relit ensuite l'API réelle.
+ */
+export async function fail(page: Page, match: Matcher): Promise<void> {
+  let done = false;
   await page.route('**/api/**', async (route) => {
-    if (!match(new URL(route.request().url()), route.request().method())) return route.fallback();
-    await route.fulfill({
-      status,
-      contentType: 'application/problem+json',
-      body: JSON.stringify({
-        type: 'about:blank',
-        title: 'Service Unavailable',
-        status,
-        detail: 'Service momentanément indisponible.',
-        code: 'SERVICE_UNAVAILABLE',
-      }),
-    });
+    if (done || !match(new URL(route.request().url()), route.request().method())) {
+      return route.fallback();
+    }
+    done = true;
+    await route.abort('failed');
   });
 }
 
