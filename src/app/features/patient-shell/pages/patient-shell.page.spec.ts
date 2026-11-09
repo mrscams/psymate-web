@@ -404,11 +404,17 @@ describe('PatientShellPage', () => {
       await settle(harness);
       const hint = el.querySelector<HTMLElement>('.first-entry[role="status"]');
       expect(text(hint)).toContain('Dernière étape : notez la première entrée.');
+      // Rien n'affirme que l'accueil existe déjà (il est créé en différé par l'API).
+      expect(text(hint)).not.toContain('a été créée');
       const action = hint?.querySelector('button');
       expect(text(action?.querySelector('span'))).toBe('Nouvelle entrée');
       expect(action?.getAttribute('aria-keyshortcuts')).toBe('N');
+      // L'accueil arrive en différé : la séance courante est relue avant d'ouvrir l'éditeur.
+      const reads = vi.mocked(api.current).mock.calls.length;
       hint!.querySelector<HTMLButtonElement>('button')!.click();
       await settle(harness);
+      await settle(harness);
+      expect(vi.mocked(api.current).mock.calls.length).toBeGreaterThan(reads);
       expect(editor()).not.toBeNull();
       expect(api.hasEntries).toHaveBeenCalledWith('p-marie');
     });

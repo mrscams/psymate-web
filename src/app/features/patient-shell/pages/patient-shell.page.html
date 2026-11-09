@@ -54,18 +54,24 @@
     <pm-overview-view-toggle pmViewToggle />
   </pm-patient-header>
   @if (store.patient() && store.firstEntry() === 'pending') {
-    <!-- Parcours guidé (M7-03) : dossier sans entrée saisie, lu sur la chronologie. -->
+    <!-- Parcours guidé (M7-03) : dossier sans entrée saisie, lu sur le résumé de la chronologie. -->
     <div class="first-entry" role="status">
       <p>
         <strong i18n="Indice de première entrée, titre@@patientShell.firstEntry.title"
           >Dernière étape : notez la première entrée.</strong
         >
         <span i18n="Indice de première entrée, explication@@patientShell.firstEntry.text"
-          >La séance d'accueil a été créée avec le dossier : ce que vous saisissez maintenant s'y
-          rattache.</span
+          >Elle se rattache à la séance d'accueil du dossier, ou à la séance que vous
+          démarrez.</span
         >
       </p>
-      <button type="button" class="first-entry-action" aria-keyshortcuts="N" (click)="newEntry()">
+      <button
+        type="button"
+        class="first-entry-action"
+        aria-keyshortcuts="N"
+        [attr.aria-busy]="preparingFirstEntry()"
+        (click)="firstEntry()"
+      >
         <span i18n="Bouton de l'indice de première entrée@@patientShell.firstEntry.action"
           >Nouvelle entrée</span
         >

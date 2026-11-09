@@ -7,6 +7,7 @@ import {
   inject,
   Injector,
   input,
+  signal,
   untracked,
   viewChild,
 } from '@angular/core';
@@ -151,6 +152,26 @@ export class PatientShellPage {
       link = current;
       if (closed) untracked(() => this.store.noteWrite());
     });
+  }
+
+  /** L'indice de première entrée attend la séance d'accueil avant d'ouvrir l'éditeur. */
+  protected readonly preparingFirstEntry = signal(false);
+
+  /**
+   * « Nouvelle entrée » de l'indice de première entrée (M7-03) : la séance d'accueil arrive en
+   * différé après la création du patient ; on s'assure qu'une séance existe (relecture de la séance
+   * courante) avant d'ouvrir l'éditeur, qui la présélectionne. Sans séance au bout de l'attente,
+   * l'éditeur s'ouvre quand même et affiche le refus de l'API sous le champ Séance.
+   */
+  protected async firstEntry(): Promise<void> {
+    if (this.preparingFirstEntry()) return;
+    this.preparingFirstEntry.set(true);
+    try {
+      await this.store.waitForSession();
+    } finally {
+      this.preparingFirstEntry.set(false);
+    }
+    this.newEntry();
   }
 
   /**

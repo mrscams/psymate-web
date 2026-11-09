@@ -158,6 +158,30 @@ export const PatientShellStore = signalStore(
       refreshSession,
 
       /**
+       * Attend que l'API connaisse une séance pour ce dossier : la séance d'accueil est créée en
+       * différé après le patient, et tant qu'elle manque, POST …/entries répond 422
+       * SESSION_REQUIRED. Quelques relectures de GET …/sessions/current espacées, bornées ; true dès
+       * qu'une séance (accueil compris) existe, false sinon (l'éditeur dira alors quoi faire).
+       */
+      async waitForSession(attempts = 6, delayMs = 500): Promise<boolean> {
+        const id = store.patientId();
+        if (!id) return false;
+        for (let attempt = 0; attempt < attempts; attempt++) {
+          let session: ShellSession | null;
+          try {
+            session = await api.current(id);
+          } catch {
+            return false;
+          }
+          if (store.patientId() !== id) return false;
+          patchState(store, split(session));
+          if (session) return true;
+          if (attempt < attempts - 1) await new Promise((resolve) => setTimeout(resolve, delayMs));
+        }
+        return false;
+      },
+
+      /**
        * POST …/sessions/start : l'en-tête passe « en cours » avec la réponse, sans rechargement.
        * Modalité : celle du suivi (fiche 16), présentiel à défaut.
        */
