@@ -181,4 +181,58 @@ describe('PatientListStore', () => {
     expect(store.tag()).toBeNull();
     expect(list).toHaveBeenLastCalledWith(expect.objectContaining({ q: '', tag: null }));
   });
+
+  describe('première connexion (M7-03)', () => {
+    const DEMO = patient({ id: 'p-demo', displayName: 'DEMO · Camille R.' });
+
+    it.each([
+      ['aucun patient', [], null, true],
+      ['seulement le patient de démonstration', [DEMO], null, true],
+      ['un vrai patient en plus de la démo', [DEMO, patient()], null, false],
+      ['un vrai patient', [patient()], null, false],
+      ['démo, mais une page suivante (liste incomplète)', [DEMO], 'c-2', false],
+    ])('welcome : %s → %s', async (_label, items, cursor, expected) => {
+      const store = setup({ list: vi.fn().mockResolvedValue(page(items, cursor)) });
+      expect(store.welcome()).toBe(false);
+      await store.load();
+      expect(store.welcome()).toBe(expected);
+    });
+
+    it('welcome : jamais sur une liste filtrée (archivés, texte, tag)', async () => {
+      const store = setup({ list: vi.fn().mockResolvedValue(page([])) });
+      await store.load();
+      expect(store.welcome()).toBe(true);
+      await store.setArchived(true);
+      expect(store.welcome()).toBe(false);
+      await store.clearFilters();
+      await store.setQuery('marie');
+      expect(store.welcome()).toBe(false);
+    });
+
+    it('removeDemo : DELETE (archivage) puis relecture de la liste, sans retrait local', async () => {
+      const list = vi
+        .fn()
+        .mockResolvedValueOnce(page([DEMO]))
+        .mockResolvedValueOnce(page([]));
+      const archive = vi.fn().mockResolvedValue(undefined);
+      const store = setup({ list, archive });
+      await store.load();
+      await expect(store.removeDemo('p-demo')).resolves.toBe(true);
+      expect(archive).toHaveBeenCalledWith('p-demo');
+      expect(list).toHaveBeenCalledTimes(2);
+      expect(store.items()).toEqual([]);
+      expect(store.welcome()).toBe(true);
+    });
+
+    it('removeDemo refusé : problème gardé, liste intacte et non relue', async () => {
+      const list = vi.fn().mockResolvedValue(page([DEMO]));
+      const archive = vi.fn().mockRejectedValue({ status: 403, code: 'PATIENT_FORBIDDEN' });
+      const store = setup({ list, archive });
+      await store.load();
+      await expect(store.removeDemo('p-demo')).resolves.toBe(false);
+      expect(store.removeProblem()?.code).toBe('PATIENT_FORBIDDEN');
+      expect(list).toHaveBeenCalledTimes(1);
+      expect(store.items()).toEqual([DEMO]);
+    });
+  });
 });

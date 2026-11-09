@@ -28,6 +28,10 @@
     </div>
   }
 
+  @if (demoProblem(); as problem) {
+    <p class="warning" role="alert">{{ problem }}</p>
+  }
+
   @if (kind(); as state) {
     @switch (state) {
       @case ('loading') {
@@ -37,15 +41,28 @@
         <pm-state kind="error" [title]="errorTitle()" [action]="retry" />
       }
       @case ('empty') {
-        <pm-state kind="empty" [title]="emptyTitle()" [action]="emptyAction()" />
+        <pm-state
+          kind="empty"
+          [title]="emptyTitle()"
+          [message]="emptyMessage()"
+          [action]="emptyAction()"
+        />
+        @if (store.welcome()) {
+          <pm-onboarding (showShortcuts)="showShortcuts()" />
+        }
       }
     }
   } @else {
+    @if (store.welcome()) {
+      <pm-onboarding [hasDemo]="hasDemo()" (showShortcuts)="showShortcuts()" />
+    }
     <pm-patient-table
       [patients]="store.items()"
       [query]="store.effectiveQuery()"
       [sort]="store.sort()"
       [refreshing]="refreshing()"
+      (removeDemo)="removeDemo($event)"
+      (restoreDemo)="restoreDemo($event)"
     />
     @if (store.hasMore()) {
       <div class="more">

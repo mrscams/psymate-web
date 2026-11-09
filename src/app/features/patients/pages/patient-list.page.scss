@@ -47,6 +47,15 @@
   font: var(--mat-sys-body-medium);
 }
 
+.warning {
+  margin: 0;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: var(--warning-bg);
+  color: var(--warning);
+  font: var(--mat-sys-body-medium);
+}
+
 .more {
   display: flex;
   flex-direction: column;

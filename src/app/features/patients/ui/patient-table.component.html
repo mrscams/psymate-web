@@ -33,6 +33,11 @@
                 }
               }
             </a>
+            @if (row.demo) {
+              <span class="demo-chip" i18n="Puce du patient de démonstration@@patients.demo.chip"
+                >Démo</span
+              >
+            }
             @if (row.age !== null) {
               <span class="age" i18n="Âge dans la liste des patients@@patients.table.age"
                 >{{ row.age }} ans</span
@@ -65,6 +70,27 @@
           }
         </td>
         <td class="actions">
+          @if (row.demo && !row.archived) {
+            <button
+              type="button"
+              class="demo-action"
+              [attr.aria-label]="removeLabel(row.patient.displayName)"
+              (click)="removeDemo.emit(row.patient)"
+              i18n="Bouton de retrait du patient de démonstration@@patients.demo.remove"
+            >
+              Supprimer la démo
+            </button>
+          } @else if (row.demo) {
+            <button
+              type="button"
+              class="demo-action"
+              [attr.aria-label]="restoreLabel(row.patient.displayName)"
+              (click)="restoreDemo.emit(row.patient)"
+              i18n="Bouton de restauration du patient de démonstration@@patients.demo.restore"
+            >
+              Restaurer
+            </button>
+          }
           <a
             class="edit"
             [routerLink]="['/patients', row.patient.id, 'fiche']"

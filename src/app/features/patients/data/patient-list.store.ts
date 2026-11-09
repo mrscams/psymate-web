@@ -13,7 +13,13 @@ import {
   loading,
 } from '../../../shared/util';
 import { PatientApi } from './patient.api';
-import { PATIENT_SORTS, PatientListQuery, PatientSort, PatientView } from './patient.model';
+import {
+  isDemoPatient,
+  PATIENT_SORTS,
+  PatientListQuery,
+  PatientSort,
+  PatientView,
+} from './patient.model';
 
 /** Clé du tri mémorisé (fiche 01 : « tri persistant par praticien, localStorage »). */
 export const SORT_STORAGE_KEY = 'patients.sort';
@@ -35,6 +41,8 @@ interface PatientListState {
   owner: string | null;
   /** Restauration lancée depuis le toast « Restaurer ». */
   restoreProblem: ApiProblem | null;
+  /** Retrait du patient de démonstration (archivage) en échec. */
+  removeProblem: ApiProblem | null;
 }
 
 const initialState: PatientListState = {
@@ -47,6 +55,7 @@ const initialState: PatientListState = {
   moreProblem: null,
   owner: null,
   restoreProblem: null,
+  removeProblem: null,
 };
 
 export function effectiveQuery(query: string): string {
@@ -89,6 +98,18 @@ export const PatientListStore = signalStore(
     filtered: computed(
       () => effectiveQuery(store.query()) !== '' || store.tag() !== null || store.archived(),
     ),
+  })),
+  withComputed((store) => ({
+    /**
+     * Accueil de la première connexion (B3 flux 1, planche 29) : liste sans filtre lue, complète,
+     * et aucun patient en dehors des patients de démonstration (zéro patient compris). Dérivé de la
+     * page lue, jamais mémorisé : dès le premier vrai patient, la liste prend sa forme normale.
+     */
+    welcome: computed(() => {
+      const data = store.page().data;
+      if (!data || store.filtered() || data.nextCursor !== null) return false;
+      return data.items.every((patient) => isDemoPatient(patient));
+    }),
   })),
   withMethods((store, api = inject(PatientApi), session = inject(SessionStore)) => {
     let request = 0;
@@ -176,6 +197,22 @@ export const PatientListStore = signalStore(
             patchState(store, { loadingMore: false, moreProblem: asProblem(error) });
           }
         }
+      },
+
+      /**
+       * « Supprimer la démo » : DELETE /api/patients/{id} (archivage logique, restaurable), puis
+       * relecture de la liste (on relit, on ne retire pas la ligne localement). false si l'API refuse.
+       */
+      async removeDemo(id: string): Promise<boolean> {
+        patchState(store, { removeProblem: null });
+        try {
+          await api.archive(id);
+        } catch (error) {
+          patchState(store, { removeProblem: asProblem(error) });
+          return false;
+        }
+        await reload();
+        return true;
       },
 
       /** Toast « Restaurer » après un archivage : POST /restore puis relecture de la liste. */
