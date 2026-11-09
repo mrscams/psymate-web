@@ -21679,8 +21679,8 @@
         <note priority="1" from="description">Indice de première entrée, titre</note>
       </trans-unit>
       <trans-unit id="patientShell.firstEntry.text" datatype="html">
-        <source>La séance d&apos;accueil a été créée avec le dossier : ce que vous saisissez maintenant s&apos;y rattache.</source>
-        <target state="translated">The intake session was created with the record: what you enter now is attached to it.</target>
+        <source>Elle se rattache à la séance d&apos;accueil du dossier, ou à la séance que vous démarrez.</source>
+        <target state="translated">It is attached to the record's intake session, or to the session you start.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
           <context context-type="linenumber">64,68</context>
@@ -21885,15 +21885,6 @@
         </context-group>
         <note priority="1" from="description">Marque de l&apos;étape en cours</note>
       </trans-unit>
-      <trans-unit id="patients.onboarding.done" datatype="html">
-        <source>Fait</source>
-        <target state="translated">Done</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
-          <context context-type="linenumber">57,61</context>
-        </context-group>
-        <note priority="1" from="description">Marque d&apos;une étape faite</note>
-      </trans-unit>
       <trans-unit id="patients.onboarding.demo" datatype="html">
         <source> Vous pouvez aussi explorer le dossier de démonstration ci-dessous, puis le supprimer. </source>
         <target state="translated"> You can also explore the demo record below, then remove it. </target>
@@ -22019,6 +22010,15 @@
           <context context-type="linenumber">90</context>
         </context-group>
         <note priority="1" from="description">Nom accessible de la restauration du patient de démonstration</note>
+      </trans-unit>
+      <trans-unit id="patients.warning.level" datatype="html">
+        <source>Avertissement</source>
+        <target state="translated">Warning</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <note priority="1" from="description">Mot du niveau avertissement</note>
       </trans-unit>
     </body>
   </file>

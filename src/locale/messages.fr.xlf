@@ -74,7 +74,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis</note>
       </trans-unit>
@@ -162,7 +162,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/shortcuts-help.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">138</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis</note>
       </trans-unit>
@@ -602,7 +602,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.ts</context>
@@ -14287,10 +14287,10 @@
         <note priority="1" from="description">Indice de première entrée, titre</note>
       </trans-unit>
       <trans-unit id="patientShell.firstEntry.text" datatype="html">
-        <source>La séance d&apos;accueil a été créée avec le dossier : ce que vous saisissez maintenant s&apos;y rattache.</source>
+        <source>Elle se rattache à la séance d&apos;accueil du dossier, ou à la séance que vous démarrez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
-          <context context-type="linenumber">64,68</context>
+          <context context-type="linenumber">64,70</context>
         </context-group>
         <note priority="1" from="description">Indice de première entrée, explication</note>
       </trans-unit>
@@ -14298,7 +14298,7 @@
         <source>Nouvelle entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
-          <context context-type="linenumber">70,74</context>
+          <context context-type="linenumber">76,80</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;indice de première entrée</note>
       </trans-unit>
@@ -14306,7 +14306,7 @@
         <source>Séance démarrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">210</context>
         </context-group>
         <note priority="1" from="description">Toast après le démarrage d&apos;une séance</note>
       </trans-unit>
@@ -14314,7 +14314,7 @@
         <source>Séance clôturée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">213</context>
+          <context context-type="linenumber">234</context>
         </context-group>
         <note priority="1" from="description">Toast après la clôture d&apos;une séance</note>
       </trans-unit>
@@ -15099,7 +15099,7 @@
         <source> Afficher plus </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
-          <context context-type="linenumber">76,79</context>
+          <context context-type="linenumber">85,88</context>
         </context-group>
         <note priority="1" from="description">Bouton de pagination de la liste</note>
       </trans-unit>
@@ -15107,7 +15107,7 @@
         <source> La suite de la liste n&apos;a pas pu être chargée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
-          <context context-type="linenumber">84,90</context>
+          <context context-type="linenumber">93,99</context>
         </context-group>
         <note priority="1" from="description">Erreur de la page suivante</note>
       </trans-unit>
@@ -15163,7 +15163,7 @@
         <source>Le patient de démonstration n&apos;a pas pu être retiré. Réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">114</context>
         </context-group>
         <note priority="1" from="description">Avertissement, retrait de la démo refusé</note>
       </trans-unit>
@@ -15171,15 +15171,23 @@
         <source>La restauration n&apos;a pas abouti. Réessayez depuis les archivés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">116</context>
         </context-group>
         <note priority="1" from="description">Avertissement, restauration refusée</note>
+      </trans-unit>
+      <trans-unit id="patients.warning.level" datatype="html">
+        <source>Avertissement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <note priority="1" from="description">Mot du niveau avertissement</note>
       </trans-unit>
       <trans-unit id="patients.empty.clear" datatype="html">
         <source>Effacer les filtres</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <note priority="1" from="description">Action de l&apos;état vide filtré</note>
       </trans-unit>
@@ -15187,7 +15195,7 @@
         <source>Impossible de charger vos <x id="subjects" equiv-text="subjects"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">138</context>
         </context-group>
         <note priority="1" from="description">État erreur de la liste</note>
       </trans-unit>
@@ -15195,7 +15203,7 @@
         <source>Supprimer le patient de démonstration ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">201</context>
         </context-group>
         <note priority="1" from="description">Titre de la confirmation de retrait de la démo</note>
       </trans-unit>
@@ -15203,7 +15211,7 @@
         <source><x id="name" equiv-text="patient.displayName"/> quitte votre liste. Rien n&apos;est effacé : vous pourrez le restaurer depuis les archivés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">202</context>
         </context-group>
         <note priority="1" from="description">Explication du retrait de la démo</note>
       </trans-unit>
@@ -15211,7 +15219,7 @@
         <source>Supprimer la démo</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="linenumber">203</context>
         </context-group>
         <note priority="1" from="description">Bouton de confirmation du retrait de la démo</note>
       </trans-unit>
@@ -15219,7 +15227,7 @@
         <source>Patient de démonstration retiré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">205</context>
+          <context context-type="linenumber">211</context>
         </context-group>
         <note priority="1" from="description">Toast après le retrait de la démo</note>
       </trans-unit>
@@ -15227,7 +15235,7 @@
         <source>Patient de démonstration restauré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">221</context>
         </context-group>
         <note priority="1" from="description">Toast après la restauration de la démo</note>
       </trans-unit>
@@ -15455,7 +15463,7 @@
         <source> Bienvenue dans PsyMate </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
-          <context context-type="linenumber">31,33</context>
+          <context context-type="linenumber">39,41</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;accueil de première connexion</note>
       </trans-unit>
@@ -15463,7 +15471,7 @@
         <source> Trois étapes jusqu&apos;à votre première entrée : </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
-          <context context-type="linenumber">34,37</context>
+          <context context-type="linenumber">42,45</context>
         </context-group>
         <note priority="1" from="description">Phrase d&apos;introduction de l&apos;accueil</note>
       </trans-unit>
@@ -15471,17 +15479,9 @@
         <source>Étape en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
-          <context context-type="linenumber">52,55</context>
+          <context context-type="linenumber">58,63</context>
         </context-group>
         <note priority="1" from="description">Marque de l&apos;étape en cours</note>
-      </trans-unit>
-      <trans-unit id="patients.onboarding.done" datatype="html">
-        <source>Fait</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
-          <context context-type="linenumber">57,61</context>
-        </context-group>
-        <note priority="1" from="description">Marque d&apos;une étape faite</note>
       </trans-unit>
       <trans-unit id="patients.onboarding.demo" datatype="html">
         <source> Vous pouvez aussi explorer le dossier de démonstration ci-dessous, puis le supprimer. </source>
@@ -15511,7 +15511,7 @@
         <source>Créez un <x id="subject" equiv-text="one"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">215</context>
         </context-group>
         <note priority="1" from="description">Étape 1 de l&apos;accueil</note>
       </trans-unit>
@@ -15519,7 +15519,7 @@
         <source>Seul le nom affiché est obligatoire. Touche N depuis cette liste.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
-          <context context-type="linenumber">224</context>
+          <context context-type="linenumber">216</context>
         </context-group>
         <note priority="1" from="description">Détail de l&apos;étape 1</note>
       </trans-unit>
@@ -15527,7 +15527,7 @@
         <source>Ouvrez son dossier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
-          <context context-type="linenumber">227</context>
+          <context context-type="linenumber">219</context>
         </context-group>
         <note priority="1" from="description">Étape 2 de l&apos;accueil</note>
       </trans-unit>
@@ -15535,7 +15535,7 @@
         <source>Il s&apos;ouvre dès la création, sur la vue d&apos;ensemble.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">220</context>
         </context-group>
         <note priority="1" from="description">Détail de l&apos;étape 2</note>
       </trans-unit>
@@ -15543,7 +15543,7 @@
         <source>Saisissez la première entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
-          <context context-type="linenumber">231</context>
+          <context context-type="linenumber">223</context>
         </context-group>
         <note priority="1" from="description">Étape 3 de l&apos;accueil</note>
       </trans-unit>
@@ -15551,7 +15551,7 @@
         <source>Dans le dossier : touche N, le bouton + ou la barre « Noter quelque chose ».</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
-          <context context-type="linenumber">232</context>
+          <context context-type="linenumber">224</context>
         </context-group>
         <note priority="1" from="description">Détail de l&apos;étape 3</note>
       </trans-unit>
