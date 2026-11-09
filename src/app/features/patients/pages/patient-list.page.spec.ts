@@ -8,7 +8,7 @@ import { ConfirmDialogService, ToastService } from '../../../shared/ui';
 import { ShortcutsHelp } from '../../patient-shell';
 import { PatientApi } from '../data/patient.api';
 import { OMAR, patient, TAGS } from '../data/patient.fixtures';
-import { SORT_STORAGE_KEY } from '../data/patient-list.store';
+import { PatientListStore, SORT_STORAGE_KEY } from '../data/patient-list.store';
 import { FILTER_DEBOUNCE_MS, PatientListPage } from './patient-list.page';
 
 const never = () => new Promise<never>(() => undefined);
@@ -253,9 +253,29 @@ describe('PatientListPage', () => {
       });
       el.querySelector<HTMLButtonElement>('button.demo-action')!.click();
       await settle(fixture);
-      expect(text(el.querySelector('p.warning[role="alert"]'))).toContain("n'a pas pu être retiré");
+      const alert = el.querySelector('p.warning[role="alert"]');
+      // Planche 29 : icône et mot du niveau, pas la couleur seule.
+      expect(alert?.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
+      expect(text(alert?.querySelector('strong'))).toBe('Avertissement');
+      expect(text(alert)).toContain("n'a pas pu être retiré");
       expect(TestBed.inject(ToastService).toasts()).toHaveLength(0);
       expect(el.querySelector('tbody .demo-chip')).not.toBeNull();
+    });
+
+    it('restauration refusée (toast de la fiche) : message générique, effacé au filtre suivant', async () => {
+      const list = vi.fn().mockResolvedValue({ items: [patient()], nextCursor: null });
+      const { fixture, el } = await render({
+        list,
+        restore: vi.fn().mockRejectedValue({ status: 403, code: 'PATIENT_FORBIDDEN' }),
+      });
+      await TestBed.inject(PatientListStore).restore('p-marie');
+      await settle(fixture);
+      const alert = el.querySelector('p.warning[role="alert"]');
+      expect(text(alert)).toContain("La restauration n'a pas abouti");
+      expect(text(alert)).not.toContain('démonstration');
+      el.querySelector<HTMLInputElement>('input[type="checkbox"]')?.click();
+      await settle(fixture);
+      expect(el.querySelector('p.warning')).toBeNull();
     });
 
     it('archivés : la démo archivée se restaure depuis sa ligne', async () => {

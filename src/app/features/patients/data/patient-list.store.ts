@@ -39,10 +39,18 @@ interface PatientListState {
   moreProblem: ApiProblem | null;
   /** Utilisateur de la session à qui appartiennent filtres et page (remise à zéro sinon). */
   owner: string | null;
-  /** Restauration lancée depuis le toast « Restaurer ». */
-  restoreProblem: ApiProblem | null;
-  /** Retrait du patient de démonstration (archivage) en échec. */
-  removeProblem: ApiProblem | null;
+  /**
+   * Dernière écriture lancée depuis la liste et refusée : retrait de la démo, ou restauration (toast
+   * « Restaurer » de la liste comme de la fiche, ligne d'un archivé). Effacée par la relecture
+   * suivante (filtre, tri, Réessayer) et par toute nouvelle écriture.
+   */
+  actionProblem: ListActionProblem | null;
+}
+
+/** Écriture refusée depuis la liste : laquelle, et le problème de l'API. */
+export interface ListActionProblem {
+  action: 'removeDemo' | 'restore';
+  problem: ApiProblem;
 }
 
 const initialState: PatientListState = {
@@ -54,8 +62,7 @@ const initialState: PatientListState = {
   loadingMore: false,
   moreProblem: null,
   owner: null,
-  restoreProblem: null,
-  removeProblem: null,
+  actionProblem: null,
 };
 
 export function effectiveQuery(query: string): string {
@@ -126,7 +133,12 @@ export const PatientListStore = signalStore(
 
     async function reload(): Promise<void> {
       const ticket = ++request;
-      patchState(store, { page: loading(store.page()), loadingMore: false, moreProblem: null });
+      patchState(store, {
+        page: loading(store.page()),
+        loadingMore: false,
+        moreProblem: null,
+        actionProblem: null,
+      });
       try {
         const page = await api.list(query());
         if (ticket === request) patchState(store, { page: loaded(page) });
@@ -204,26 +216,31 @@ export const PatientListStore = signalStore(
        * relecture de la liste (on relit, on ne retire pas la ligne localement). false si l'API refuse.
        */
       async removeDemo(id: string): Promise<boolean> {
-        patchState(store, { removeProblem: null });
+        patchState(store, { actionProblem: null });
         try {
           await api.archive(id);
         } catch (error) {
-          patchState(store, { removeProblem: asProblem(error) });
+          patchState(store, {
+            actionProblem: { action: 'removeDemo', problem: asProblem(error) },
+          });
           return false;
         }
         await reload();
         return true;
       },
 
-      /** Toast « Restaurer » après un archivage : POST /restore puis relecture de la liste. */
+      /**
+       * « Restaurer » (toast après un archivage, depuis la fiche ou la liste ; ligne d'un archivé) :
+       * POST /restore puis relecture de la liste, qui efface aussi un retrait refusé auparavant.
+       */
       async restore(id: string): Promise<PatientView | null> {
-        patchState(store, { restoreProblem: null });
+        patchState(store, { actionProblem: null });
         try {
           const patient = await api.restore(id);
           await reload();
           return patient;
         } catch (error) {
-          patchState(store, { restoreProblem: asProblem(error) });
+          patchState(store, { actionProblem: { action: 'restore', problem: asProblem(error) } });
           return null;
         }
       },

@@ -159,7 +159,10 @@ describe('PatientListStore', () => {
     await expect(store.restore('p-marie')).resolves.toMatchObject({ id: 'p-marie' });
     expect(list).toHaveBeenCalledTimes(1);
     await expect(store.restore('p-x')).resolves.toBeNull();
-    expect(store.restoreProblem()?.code).toBe('PATIENT_NOT_FOUND');
+    expect(store.actionProblem()).toMatchObject({
+      action: 'restore',
+      problem: { code: 'PATIENT_NOT_FOUND' },
+    });
   });
 
   it('autre compte dans le même onglet : ni patients ni filtres du précédent', async () => {
@@ -230,9 +233,59 @@ describe('PatientListStore', () => {
       const store = setup({ list, archive });
       await store.load();
       await expect(store.removeDemo('p-demo')).resolves.toBe(false);
-      expect(store.removeProblem()?.code).toBe('PATIENT_FORBIDDEN');
+      expect(store.actionProblem()).toMatchObject({
+        action: 'removeDemo',
+        problem: { code: 'PATIENT_FORBIDDEN' },
+      });
       expect(list).toHaveBeenCalledTimes(1);
       expect(store.items()).toEqual([DEMO]);
+    });
+  });
+
+  describe('écriture refusée (actionProblem)', () => {
+    const DEMO = patient({ id: 'p-demo', displayName: 'DEMO · Camille R.' });
+    const forbidden = { status: 403, code: 'PATIENT_FORBIDDEN' };
+
+    it('effacée par la relecture suivante (filtre, tag, archivés)', async () => {
+      const list = vi.fn().mockResolvedValue(page([DEMO]));
+      const store = setup({ list, archive: vi.fn().mockRejectedValue(forbidden) });
+      await store.load();
+      await store.removeDemo('p-demo');
+      expect(store.actionProblem()?.action).toBe('removeDemo');
+      await store.setQuery('cam');
+      expect(store.actionProblem()).toBeNull();
+
+      await store.removeDemo('p-demo');
+      await store.setTag('travail');
+      expect(store.actionProblem()).toBeNull();
+
+      await store.removeDemo('p-demo');
+      await store.setArchived(true);
+      expect(store.actionProblem()).toBeNull();
+    });
+
+    it('un retrait refusé est effacé par une restauration réussie', async () => {
+      const store = setup({
+        list: vi.fn().mockResolvedValue(page([DEMO])),
+        archive: vi.fn().mockRejectedValue(forbidden),
+        restore: vi.fn().mockResolvedValue(DEMO),
+      });
+      await store.load();
+      await store.removeDemo('p-demo');
+      expect(store.actionProblem()?.action).toBe('removeDemo');
+      await store.restore('p-demo');
+      expect(store.actionProblem()).toBeNull();
+    });
+
+    it('restauration refusée (toast de la fiche compris) : action restore, sans lien avec la démo', async () => {
+      const list = vi.fn().mockResolvedValue(page([patient()]));
+      const store = setup({ list, restore: vi.fn().mockRejectedValue(forbidden) });
+      await store.load();
+      await expect(store.restore('p-marie')).resolves.toBeNull();
+      expect(store.actionProblem()?.action).toBe('restore');
+      expect(list).toHaveBeenCalledTimes(1);
+      await store.reload();
+      expect(store.actionProblem()).toBeNull();
     });
   });
 });

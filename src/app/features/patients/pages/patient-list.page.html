@@ -28,8 +28,17 @@
     </div>
   }
 
-  @if (demoProblem(); as problem) {
-    <p class="warning" role="alert">{{ problem }}</p>
+  @if (actionProblem(); as problem) {
+    <!-- Planche 29 : icône et mot du niveau, l'information ne passe pas par la couleur seule. -->
+    <p class="warning" role="alert">
+      <svg class="warning-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 3 2 21h20L12 3z" />
+        <path d="M12 10v5" />
+        <circle cx="12" cy="18" r="0.6" />
+      </svg>
+      <strong>{{ warningLabel }}</strong>
+      <span>{{ problem }}</span>
+    </p>
   }
 
   @if (kind(); as state) {

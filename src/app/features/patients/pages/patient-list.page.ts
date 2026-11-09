@@ -103,16 +103,22 @@ export class PatientListPage {
       ? undefined
       : $localize`:Phrase de l'état vide de la liste@@patients.empty.message:Le dossier, la timeline et le graphe se construisent à partir de la première entrée.`,
   );
-  /** Retrait ou restauration refusés : avertissement dans la liste, la liste reste affichée. */
-  protected readonly demoProblem = computed(() => {
-    if (this.store.removeProblem()) {
-      return $localize`:Avertissement, retrait de la démo refusé@@patients.demo.removeFailed:Le patient de démonstration n'a pas pu être retiré. Réessayez.`;
+  /**
+   * Écriture refusée depuis la liste : avertissement dans la liste (planche 29 : icône et mot du
+   * niveau), la liste reste affichée. La restauration couvre aussi le toast « Restaurer » posé par
+   * la fiche après un archivage : son message ne parle donc pas de la démo.
+   */
+  protected readonly actionProblem = computed(() => {
+    switch (this.store.actionProblem()?.action) {
+      case 'removeDemo':
+        return $localize`:Avertissement, retrait de la démo refusé@@patients.demo.removeFailed:Le patient de démonstration n'a pas pu être retiré. Réessayez.`;
+      case 'restore':
+        return $localize`:Avertissement, restauration refusée@@patients.demo.restoreFailed:La restauration n'a pas abouti. Réessayez depuis les archivés.`;
+      default:
+        return null;
     }
-    if (this.store.restoreProblem()) {
-      return $localize`:Avertissement, restauration refusée@@patients.demo.restoreFailed:La restauration n'a pas abouti. Réessayez depuis les archivés.`;
-    }
-    return null;
   });
+  protected readonly warningLabel = $localize`:Mot du niveau avertissement@@patients.warning.level:Avertissement`;
   /** La liste affichée contient le patient de démonstration (accueil : « explorez-le »). */
   protected readonly hasDemo = computed(() => this.store.items().some(isDemoPatient));
   protected readonly emptyAction = computed<StateAction>(() =>
@@ -198,7 +204,7 @@ export class PatientListPage {
       destructive: true,
     });
     if (!confirmed) return;
-    // Refus de l'API : message dans la liste (removeProblem), jamais de toast d'erreur (planche 29).
+    // Refus de l'API : message dans la liste (actionProblem), jamais de toast d'erreur (planche 29).
     if (!(await this.store.removeDemo(patient.id))) return;
     this.toasts.show({
       level: 'info',
