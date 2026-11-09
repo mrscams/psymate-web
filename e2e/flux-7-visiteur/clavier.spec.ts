@@ -143,3 +143,55 @@ test.describe('flux 7 au clavier, fiche publiée', () => {
     keys.expectNoPointer();
   });
 });
+
+/**
+ * UC-15 sans administrateur : une fiche déjà publiée dans l'annuaire de l'API locale (laissée par
+ * un lancement précédent avec administrateur, ou par la base de développement) est ouverte et
+ * reçoit un message, au clavier. Lecture seule de l'annuaire, aucune donnée fabriquée : sur une
+ * base neuve (CI), il n'y a aucune fiche et le test s'ignore en le disant.
+ */
+test('flux 7 au clavier, fiche déjà publiée : ouvrir la première fiche de l’annuaire et lui écrire', async ({
+  page,
+  request,
+}) => {
+  test.setTimeout(90_000);
+  const listed = await request.get('http://localhost:8080/api/public/directory?page=1');
+  expect(listed.status()).toBe(200);
+  const first = ((await listed.json()) as { items: { displayName: string; slug: string }[] })
+    .items[0];
+  test.skip(!first, 'Aucune fiche publiée dans l’annuaire de l’API locale (base neuve).');
+
+  const keys = await keyboardOnly(page);
+  await page.goto('/fr/annuaire');
+  const card = page.locator('pm-practitioner-card').filter({ hasText: first.displayName }).first();
+  await tabTo(page, card.getByRole('link', { name: `Voir la fiche ${first.displayName}` }), {
+    max: 120,
+  });
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(new RegExp(`/fr/praticiens/${first.slug}$`));
+  await expect(page.getByRole('heading', { level: 1, name: first.displayName })).toBeVisible();
+  await expectNoAxeViolations(page);
+
+  const contact = page.locator('#contact');
+  await tabTo(page, contact.getByLabel('Votre nom'), { max: 80 });
+  await page.keyboard.type('Sam Clavier');
+  await tabTo(page, contact.getByLabel('Votre e-mail'), { max: 5 });
+  await page.keyboard.type('sam.clavier@example.test');
+  await tabTo(page, contact.getByLabel('Message', { exact: true }), { max: 5 });
+  await page.keyboard.type('Bonjour, prenez-vous de nouveaux patients ?');
+  const consent = contact.getByRole('checkbox', { name: /J'accepte que mes coordonnées/ });
+  await tabTo(page, consent, { max: 5 });
+  await page.keyboard.press('Space');
+  const sent = page.waitForResponse(
+    (r) =>
+      r.url().endsWith(`/practitioners/${first.slug}/contact`) && r.request().method() === 'POST',
+  );
+  await tabTo(page, contact.getByRole('button', { name: 'Envoyer le message' }), { max: 5 });
+  await page.keyboard.press('Enter');
+  expect((await sent).status(), 'au-delà de 5 envois par heure et par IP : 429 (G Q24)').toBe(202);
+  await expect(contact.getByRole('status')).toContainText(
+    `Votre message a été transmis à ${first.displayName}.`,
+  );
+  await expectNoAxeViolations(page);
+  keys.expectNoPointer();
+});
