@@ -121,6 +121,10 @@ export class PatientSearchPage {
     stateKind(this.store.results(), (page) => page.exact.length + page.approximate.length === 0),
   );
   protected readonly refreshing = computed(() => isRefreshing(this.store.results()));
+  /** Compteur de « Tous » : null tant qu'aucune lecture n'a réussi (pas de « Tous 0 »). */
+  protected readonly allCount = computed(() =>
+    this.store.results().data ? this.store.allCount() : null,
+  );
   protected readonly problem = computed(() => this.store.results().problem);
   protected readonly problemText = computed(() => searchProblemText(this.problem()));
 

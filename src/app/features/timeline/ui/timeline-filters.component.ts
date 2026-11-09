@@ -49,6 +49,9 @@ interface ValueChip {
 export class TimelineFiltersComponent {
   readonly filters = input.required<TimelineFilters>();
   readonly facets = input.required<TimelineFacets>();
+  /** Compteurs affichés seulement quand les facettes viennent d'une lecture réussie : pas de « 0 »
+   * pendant le chargement ni après une erreur (planche 29). */
+  readonly counted = input.required<boolean>();
   readonly emotionLabels = input<Record<string, string>>({});
   readonly emotionFamilies = input<Record<string, EmotionFamily>>({});
   /** Préférence `entryTypes.medicationVisible` : sans elle, la puce Médicament n'est montrée que choisie. */

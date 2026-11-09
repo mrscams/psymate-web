@@ -21,7 +21,7 @@
     <div class="filters">
       <pm-search-type-chips
         [counts]="store.results().data?.counts ?? []"
-        [allCount]="store.allCount()"
+        [allCount]="allCount()"
         [selected]="filters().type"
         (selectType)="setType($event)"
       />

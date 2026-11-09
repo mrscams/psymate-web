@@ -23,6 +23,7 @@
       class="filters"
       [filters]="filters.filters()"
       [facets]="store.facets()"
+      [counted]="store.status() === 'loaded'"
       [emotionLabels]="store.emotionLabels()"
       [emotionFamilies]="store.emotionFamilies()"
       [medicationVisible]="prefs.medicationVisible()"

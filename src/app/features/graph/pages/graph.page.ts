@@ -152,7 +152,12 @@ export class GraphPage {
       .sort((a, b) => a.name.localeCompare(b.name, this.locale));
   });
 
+  /**
+   * Compteur seulement une fois le graphe lu : « 0 nœuds » pendant le chargement ou après une
+   * erreur serait faux (planche 29). La région aria-live reste en place, vide.
+   */
   protected readonly countText = computed(() => {
+    if (!this.store.view()) return '';
     const { nodes, edges } = this.store.counts();
     return $localize`:Compteur du graphe@@graph.count:${nodes}:nodes: nœuds · ${edges}:edges: liens`;
   });

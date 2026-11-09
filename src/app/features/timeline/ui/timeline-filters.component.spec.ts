@@ -13,6 +13,7 @@ import { TimelineFiltersComponent } from './timeline-filters.component';
       <pm-timeline-filters
         [filters]="filters()"
         [facets]="facets()"
+        [counted]="counted()"
         [emotionLabels]="{ anxiety: 'Anxiété', joy: 'Joie' }"
         [emotionFamilies]="{ anxiety: 'fear', joy: 'joy' }"
         [medicationVisible]="medicationVisible()"
@@ -30,6 +31,7 @@ class HostComponent {
     tags: { sommeil: 4 },
   });
   readonly medicationVisible = signal(true);
+  readonly counted = signal(true);
   readonly today = new Date(2026, 10, 8, 14);
   readonly changes: TimelineFilters[] = [];
 }
@@ -51,6 +53,14 @@ function text(el: Element | null | undefined): string {
 }
 
 describe('TimelineFiltersComponent', () => {
+  it('sans lecture réussie (chargement, erreur) : puces sans compteur, pas de « 0 »', async () => {
+    const { el, group } = await render((host) => host.counted.set(false));
+    expect(el.querySelector('.count')).toBeNull();
+    const types = [...group('Types')!.querySelectorAll('button')].map(text);
+    expect(types).toContain('Note');
+    expect(types).toContain('Événement');
+  });
+
   it('Types : Tous + un par type, compteurs des facettes (0 si absent), aria-pressed', async () => {
     const { group, button } = await render();
     const types = [...group('Types')!.querySelectorAll('button')].map(text);

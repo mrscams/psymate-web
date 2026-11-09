@@ -117,6 +117,8 @@ describe('TimelinePage', () => {
     const { el } = await render(() => never());
     expect(el.querySelector('pm-state [aria-busy="true"]')).not.toBeNull();
     expect(el.querySelector('[role="list"]')).toBeNull();
+    // Pas de compteur « 0 » sur les puces avant la première lecture.
+    expect(el.querySelector('pm-timeline-filters .count')).toBeNull();
   });
 
   it('erreur : bloc erreur, Réessayer relit la première fenêtre', async () => {
@@ -127,6 +129,7 @@ describe('TimelinePage', () => {
     const { el, fixture } = await render(page);
     const alert = el.querySelector('pm-state [role="alert"]');
     expect(text(alert)).toContain('Impossible de charger la timeline');
+    expect(el.querySelector('pm-timeline-filters .count')).toBeNull();
     alert!.querySelector<HTMLButtonElement>('button')!.click();
     await flush();
     await fixture.whenStable();

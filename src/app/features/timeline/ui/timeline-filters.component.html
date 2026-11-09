@@ -23,7 +23,9 @@
     >
       <pm-entry-icon [type]="chip.type" [size]="12" />
       <span class="label">{{ chip.label }}</span>
-      <span class="count"> {{ chip.count }}</span>
+      @if (counted()) {
+        <span class="count"> {{ chip.count }}</span>
+      }
     </button>
   }
 </div>
@@ -45,7 +47,9 @@
       >
         <span [class]="familyClass(chip.value)" aria-hidden="true"></span>
         <span class="label">{{ chip.label }}</span>
-        <span class="count"> {{ chip.count }}</span>
+        @if (counted()) {
+          <span class="count"> {{ chip.count }}</span>
+        }
       </button>
     }
   </div>
@@ -67,7 +71,9 @@
         (click)="toggleTag(chip.value)"
       >
         <span class="label">{{ chip.label }}</span>
-        <span class="count"> {{ chip.count }}</span>
+        @if (counted()) {
+          <span class="count"> {{ chip.count }}</span>
+        }
       </button>
     }
   </div>

@@ -23,10 +23,10 @@ import { typeChipLabel } from './search-labels';
         [attr.aria-pressed]="selected() === null"
         (click)="choose(null)"
       >
-        <span i18n="Puce de tous les types@@search.types.all">Tous</span>&ngsp;<span
-          class="count"
-          >{{ allCount() }}</span
-        >
+        <span i18n="Puce de tous les types@@search.types.all">Tous</span>
+        @if (allCount() !== null) {
+          &ngsp;<span class="count">{{ allCount() }}</span>
+        }
       </button>
       @for (item of counts(); track item.type) {
         <button
@@ -94,7 +94,8 @@ import { typeChipLabel } from './search-labels';
 })
 export class TypeChipsComponent {
   readonly counts = input.required<TypeCount[]>();
-  readonly allCount = input.required<number>();
+  /** null tant qu'aucune lecture n'a réussi : pas de « Tous 0 » en chargement ni en erreur. */
+  readonly allCount = input.required<number | null>();
   readonly selected = input<EntryType | null>(null);
   readonly selectType = output<EntryType | null>();
 

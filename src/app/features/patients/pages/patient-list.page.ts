@@ -57,6 +57,11 @@ export class PatientListPage {
     const subjects = subjectLabel(this.vocabulary.label(), 'many');
     return $localize`:Titre de la liste des patients@@patients.list.title:Mes ${subjects}:subjects:`;
   });
+  /** Ce que fait `/` ici, pour l'aide des raccourcis (planche 29 §6). */
+  protected readonly filterShortcutLabel = computed(() => {
+    const subjects = subjectLabel(this.vocabulary.label(), 'many');
+    return $localize`:Aide des raccourcis, liste des patients@@patients.shortcut.filter:Filtrer mes ${subjects}:subjects:`;
+  });
   protected readonly newLabel = computed(() => {
     const subject = subjectLabel(this.vocabulary.label(), 'one');
     return $localize`:Bouton de création@@patients.list.new:Nouveau ${subject}:subject:`;
@@ -107,7 +112,7 @@ export class PatientListPage {
       if (this.destroyed) return;
       releases.push(
         shortcuts.register('n', () => this.create(), this.newLabel()),
-        shortcuts.register('/', () => this.filters().focus()),
+        shortcuts.register('/', () => this.filters().focus(), this.filterShortcutLabel()),
       );
     });
     inject(DestroyRef).onDestroy(() => {

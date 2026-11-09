@@ -33,6 +33,9 @@ describe('parse — pureté', () => {
     const host = (globalThis as { process?: { env: Record<string, string | undefined> } }).process;
     if (!host) return;
     const saved = host.env['TZ'];
+    // Fuseau effectif avant le test : retirer TZ ne remet pas Node sur le fuseau du système (il
+    // garderait America/Adak pour les fichiers suivants du même worker), on le repose donc.
+    const original = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const run = (): unknown[] =>
       PARSE_CASES.map((parseCase) => parse(parseCase.input, caseOptions(parseCase)));
     try {
@@ -43,8 +46,7 @@ describe('parse — pureté', () => {
       expect(east).toEqual(west);
       expect(east).toEqual(PARSE_CASES.map((parseCase) => parseCase.expected));
     } finally {
-      if (saved === undefined) delete host.env['TZ'];
-      else host.env['TZ'] = saved;
+      host.env['TZ'] = saved ?? original;
     }
   });
 
