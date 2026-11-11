@@ -147,6 +147,15 @@ export class FirstLoginPage {
     });
   }
 
+  /**
+   * Lien d'évitement (UX-A10b) : le focus passe au contenu, après la barre. Sans cela, `#contenu`
+   * se résoudrait contre `<base href="/fr/">` et quitterait la page (/fr/#contenu).
+   */
+  protected skipToContent(event: Event, content: HTMLElement): void {
+    event.preventDefault();
+    content.focus();
+  }
+
   protected invalid(control: AbstractControl): boolean {
     return control.invalid && (control.touched || control.dirty);
   }

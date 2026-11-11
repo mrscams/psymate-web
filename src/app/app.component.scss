@@ -7,6 +7,22 @@
 }
 
 /*
+ * Habillage nu (UX-A10b) : la coquille en colonne flex, le `<main>` nu (sans classe) remplit la
+ * fenêtre sous le bandeau réseau et passe lui-même en colonne : une page plein écran pose `flex: 1`
+ * sur son hôte, sans `100vh`. Le document défile.
+ */
+:host(.bare) {
+  display: flex;
+  flex-direction: column;
+
+  > main {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+  }
+}
+
+/*
  * `<main>` de l'habillage public : mêmes règles que celui de pm-public-layout (fiche 00 §4), plus la
  * couleur de texte et le fond que posait l'hôte de ce layout (UX-A10). Le fond, de la même couleur que
  * celui de la coquille, garde le lissage du texte des liens `.pm-link-target` identique à celui d'un
