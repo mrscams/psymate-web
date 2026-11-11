@@ -172,13 +172,12 @@ describe('AppComponent', () => {
     const bare = await render('fr', { url: '/_demo' });
     expect(bare.el.querySelector('pm-app-bar')).toBeNull();
     expect(bare.el.querySelector('pm-admin-bar')).toBeNull();
-    expect(bare.el.querySelector('main')).toBeNull();
-    expect(tags(bare.el)).toEqual([
-      'pm-network-banner',
-      'router-outlet',
-      'pm-blank',
-      'pm-toast-outlet',
-    ]);
+    // Habillage nu : le même <main id="main">, sans classe ni marge ; la page n'en pose pas d'autre.
+    expect(tags(bare.el)).toEqual(['pm-network-banner', 'main', 'pm-toast-outlet']);
+    const bareMain = bare.el.querySelector('main#main')!;
+    expect(bareMain.className).toBe('');
+    expect(tags(bareMain)).toEqual(['router-outlet', 'pm-blank']);
+    expect(['0', '0px']).toContain(getComputedStyle(bareMain).paddingTop);
   });
 
   it('UX-A8 : sans data.contentWidth, aucun main large (rendu inchangé)', async () => {
@@ -254,16 +253,14 @@ describe('AppComponent', () => {
         expect(created).toEqual([pathOf(layout)]);
         expect(el.querySelectorAll('pm-counted')).toHaveLength(1);
         expect(el.querySelectorAll('router-outlet')).toHaveLength(1);
-        if (layout === 'bare') expect(el.querySelector('main')).toBeNull();
-        else expect(el.querySelector('main#main pm-counted')).not.toBeNull();
+        expect(el.querySelectorAll('main')).toHaveLength(1);
+        expect(el.querySelector('main#main pm-counted')).not.toBeNull();
       });
     }
 
-    // L'habillage nu (/_demo, page de revue hors du produit, sans lien entrant) garde son propre
-    // outlet hors du <main> : il n'est couvert qu'à l'ouverture directe, ci-dessus.
-    const WITH_BARS = LAYOUTS.filter((layout) => layout !== 'bare');
-    for (const from of WITH_BARS) {
-      for (const to of WITH_BARS.filter((layout) => layout !== from)) {
+    // Les 12 transitions, habillage nu compris (connexion en deux panneaux ↔ liste des patients).
+    for (const from of LAYOUTS) {
+      for (const to of LAYOUTS.filter((layout) => layout !== from)) {
         it(`navigation interne ${from} → ${to} : la page de destination est créée une fois`, async () => {
           const { fixture, el } = await render('fr', { url: `/c/${from}`, firstRender: true });
           const main = el.querySelector('main#main');
@@ -275,8 +272,9 @@ describe('AppComponent', () => {
           expect(created).toEqual([pathOf(to)]);
           expect(el.querySelectorAll('pm-counted')).toHaveLength(1);
           expect(el.querySelectorAll('router-outlet')).toHaveLength(1);
-          // Le même <main> : seul l'habillage autour a changé.
+          // Le même <main>, seul de la page : seul l'habillage autour a changé.
           expect(el.querySelector('main#main')).toBe(main);
+          expect(el.querySelectorAll('main')).toHaveLength(1);
         });
       }
     }
