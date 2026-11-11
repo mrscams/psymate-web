@@ -116,11 +116,13 @@ test.describe('1440 × 900', () => {
     expect(logo.y).toBeLessThan(h1.y);
     expect(h1.y + h1.height).toBeLessThan(preview.y);
     expect(preview.y + preview.height).toBeLessThan(foot.y);
-    // Accroche centrée entre le logo et le pied (justify-content: space-between de la maquette).
+    // Accroche centrée entre le logo et le pied (justify-content: space-between de la maquette) :
+    // même espace au-dessus (40 px + marge auto) et au-dessous (marge auto + 40 px), à 1 px près,
+    // quelle que soit la police (sans espace libre, les deux marges valent 0).
     const pitch = (await page.locator('.pitch').boundingBox())!;
     const above = pitch.y - (logo.y + logo.height);
     const below = foot.y - (pitch.y + pitch.height);
-    expect(Math.abs(above - below)).toBeLessThanOrEqual(42);
+    expect(Math.abs(above - below)).toBeLessThanOrEqual(1);
 
     // Couleurs par tokens : panneau gauche et carte sur surface-raised, panneau droit sur le fond.
     const raised = await token(page, '--surface-raised');

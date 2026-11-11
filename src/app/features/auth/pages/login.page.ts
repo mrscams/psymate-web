@@ -28,7 +28,7 @@ export const PASSWORD_CHANGED_STATE = 'passwordChanged';
 
 /**
  * /connexion (fiche 11, maquette 11, UX-D1bis) : deux panneaux, sans le bandeau ni le pied du layout
- * public (habillage nu, `data.layout: 'bare'` ; la page pose son propre `<main id="main">`).
+ * public (habillage nu, `data.layout: 'bare'` ; la page est l'enfant du `<main id="main">` de la coquille et n'en pose pas, UX-A10c).
  * Panneau gauche : logo PsyMate, accroche (h1), sous-titre, aperçu décoratif d'une timeline
  * (aria-hidden), pied hébergement et liens Confidentialité, Mentions légales, Annuaire public.
  * Panneau droit : carte formulaire de 420 px, libellés au-dessus des champs, « Mot de passe oublié ? »

@@ -271,7 +271,8 @@ a,
   }
 }
 
-// Liens dans une ligne de texte (intro) : soulignés au survol seulement, distingués par la graisse.
+// Bouton à l'allure de lien (code de secours) : liens de la maquette sans soulignement, couleur
+// primary-hover au survol (a:hover de 11-connexion.html).
 .link-button {
   padding: 0;
   border: 0;
@@ -447,6 +448,8 @@ input[type='password'] {
     flex: 0 0 auto;
     width: 16px;
     height: 16px;
+    // La maquette ne déclare pas de marge mais garde celle du navigateur (3px 3px 3px 4px) : la case y
+    // est à 4 px du bord du label (mesuré, x = 892 pour un label à 888). Même retrait ici.
     margin: 0 0 0 4px;
     accent-color: var(--primary);
   }

@@ -52,21 +52,33 @@ test('/connexion : aucune cible autonome sous 24 px, rendu inchangé', async ({ 
 
   expect(await smallTargets(page)).toEqual([]);
 
-  // UX-D1bis : liens du pied du panneau gauche (maquette 11) et du formulaire, de 16 à 22 px à
-  // 24 px au moins. La connexion n'a plus le bandeau ni le pied du layout public (test suivant).
-  const links = [
-    'Confidentialité',
-    'Mentions légales',
-    'Annuaire public',
-    'Créer un compte',
-    'Mot de passe oublié ?',
-  ];
+  // UX-D1bis : liens du pied du panneau gauche (maquette 11) et « Mot de passe oublié ? », de 16 à
+  // 22 px à 24 px au moins. La connexion n'a plus le bandeau ni le pied du layout public (test
+  // suivant). « Créer un compte » est un lien dans une phrase (« Espace réservé aux praticiens.
+  // Créer un compte ») : exempté (WCAG 2.5.8, exception « en ligne »), sans `.pm-link-target`.
+  const links = ['Confidentialité', 'Mentions légales', 'Annuaire public', 'Mot de passe oublié ?'];
+  const inSentence = page.getByRole('link', { name: 'Créer un compte', exact: true });
+  await expect(inSentence).not.toHaveClass(/pm-link-target/);
+  expect(
+    await inSentence.evaluate((link) => {
+      const own = [...link.parentElement!.childNodes].filter(
+        (node) => node.nodeType === Node.TEXT_NODE,
+      );
+      return [
+        getComputedStyle(link).display,
+        own
+          .map((node) => node.textContent)
+          .join('')
+          .trim(),
+      ];
+    }),
+  ).toEqual(['inline', 'Espace réservé aux praticiens.']);
   for (const name of links) {
     const box = await page.getByRole('link', { name, exact: true }).boundingBox();
     expect(box!.height, `hauteur de « ${name} »`).toBeGreaterThanOrEqual(24);
   }
 
-  // Témoin : sans la classe, la sonde retrouve ces cinq liens (16 à 22 px selon la police).
+  // Témoin : sans la classe, la sonde retrouve ces quatre liens (16 à 22 px selon la police).
   const restore = await withoutLinkTargets(page);
   const before = await smallTargets(page);
   await restore();
@@ -96,7 +108,7 @@ test('layout public (/mentions-legales) : liens du pied et de la langue à 24 px
   const restore = await withoutLinkTargets(page);
   const before = await smallTargets(page);
   await restore();
-  expect(before.map((target) => target.text)).toEqual(expect.arrayContaining(links));
+  expect(before.map((target) => target.text).sort()).toEqual([...links].sort());
 
   await expectLinkTargetsFontIndependent(page);
   await expectSameRendering(page);
