@@ -93,6 +93,27 @@ describe('EntryEditorStore', () => {
     expect(api.currentSession).toHaveBeenCalledTimes(2);
   });
 
+  it('nom du patient (sous-titre) : lu une fois par patient, oublié au changement, vide en erreur', async () => {
+    const patientName = vi
+      .fn()
+      .mockImplementation(async (id: string) => (id === 'p-marie' ? 'Marie D.' : 'Paul R.'));
+    const { store } = setup({ patientName });
+    await store.open({ patientId: 'p-marie' });
+    expect(store.patientName()).toBe('Marie D.');
+    await store.open({ patientId: 'p-marie', entryId: 'e-1' });
+    expect(patientName).toHaveBeenCalledTimes(1);
+    await store.open({ patientId: 'p-paul' });
+    expect(store.patientName()).toBe('Paul R.');
+
+    TestBed.resetTestingModule();
+    const failing = setup({
+      patientName: vi.fn().mockRejectedValue({ status: 0, code: 'NETWORK_ERROR' }),
+    }).store;
+    await failing.open({ patientId: 'p-marie' });
+    expect(failing.patientName()).toBe('');
+    expect(failing.emotions().status).toBe('loaded');
+  });
+
   it('types proposés : Médicament masqué si entryTypes.medicationVisible = false, sauf en correction d’un médicament', async () => {
     const { store } = setup({}, undefined, false);
     await store.open({ patientId: 'p-marie' });

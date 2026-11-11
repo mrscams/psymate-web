@@ -54,6 +54,8 @@ interface EntryEditorState {
   /** Compte pour lequel le vocabulaire et les brouillons sont gardés (remis à zéro s'il change). */
   ownerId: string | null;
   patientId: string | null;
+  /** Nom affiché du patient (GET /api/patients/{id}) : sous-titre du panneau ; vide tant qu'inconnu. */
+  patientName: string;
   mode: EditorMode;
   entryId: string | null;
   /** Entrée corrigée (GET /api/entries/{id}). */
@@ -89,6 +91,7 @@ interface EntryEditorState {
 const initialState: EntryEditorState = {
   ownerId: null,
   patientId: null,
+  patientName: '',
   mode: 'create',
   entryId: null,
   entry: idle(),
@@ -205,6 +208,17 @@ export const EntryEditorStore = signalStore(
         }
       }
 
+      /** Sous-titre seulement : un échec laisse le nom vide (le panneau ne montre que la provenance). */
+      async function loadPatientName(patientId: string): Promise<void> {
+        if (store.patientName()) return;
+        try {
+          const name = await api.patientName(patientId);
+          if (store.patientId() === patientId) patchState(store, { patientName: name });
+        } catch {
+          // Le nom n'est qu'un rappel : l'en-tête du dossier le montre déjà derrière le voile.
+        }
+      }
+
       async function loadSessions(patientId: string): Promise<void> {
         patchState(store, { sessions: loading(store.sessions()) });
         try {
@@ -316,7 +330,12 @@ export const EntryEditorStore = signalStore(
             now: Date.now(),
             ...(samePatient
               ? {}
-              : { currentSession: null, sessions: idle(), linkCandidates: idle() }),
+              : {
+                  patientName: '',
+                  currentSession: null,
+                  sessions: idle(),
+                  linkCandidates: idle(),
+                }),
           });
           const key = draftKey({ patientId: target.patientId, entryId });
           let refreshEmotions = false;
@@ -346,7 +365,11 @@ export const EntryEditorStore = signalStore(
               setDraft(key, { ...existing, type: target.type });
             }
           }
-          const work: Promise<void>[] = [loadEmotions(refreshEmotions), loadTags()];
+          const work: Promise<void>[] = [
+            loadEmotions(refreshEmotions),
+            loadTags(),
+            loadPatientName(target.patientId),
+          ];
           if (entryId)
             work.push(loadEntry(entryId), loadVersions(entryId), loadPlacedLinks(entryId));
           else

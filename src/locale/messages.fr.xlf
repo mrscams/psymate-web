@@ -138,7 +138,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">457,460</context>
+          <context context-type="linenumber">535,538</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
@@ -538,23 +538,23 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">191</context>
+          <context context-type="linenumber">217</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">198</context>
+          <context context-type="linenumber">224</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">219</context>
+          <context context-type="linenumber">245</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">232</context>
+          <context context-type="linenumber">258</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/version-history.panel.ts</context>
@@ -562,7 +562,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">168</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
@@ -606,7 +606,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">220</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.ts</context>
@@ -10320,23 +10320,39 @@
         <source>brouillon</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">7,12</context>
+          <context context-type="linenumber">7,11</context>
         </context-group>
         <note priority="1" from="description">Pastille d&apos;une entrée en brouillon</note>
       </trans-unit>
       <trans-unit id="entries.type.label" datatype="html">
-        <source>Type</source>
+        <source> Type </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">36,38</context>
+          <context context-type="linenumber">43,46</context>
         </context-group>
         <note priority="1" from="description">Bloc du type d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.type.locked" datatype="html">
+        <source>le type ne se modifie pas</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">47,50</context>
+        </context-group>
+        <note priority="1" from="description">Le type d&apos;une entrée ne se modifie pas</note>
+      </trans-unit>
+      <trans-unit id="entries.type.prefixes" datatype="html">
+        <source>ou <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>/evt /sit /res /med<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> dans la barre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">51,52</context>
+        </context-group>
+        <note priority="1" from="description">Préfixes de la barre de capture</note>
       </trans-unit>
       <trans-unit id="entries.feeling.emotion" datatype="html">
         <source>Émotion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">49,52</context>
+          <context context-type="linenumber">68,71</context>
         </context-group>
         <note priority="1" from="description">Champ émotion d&apos;un ressenti</note>
       </trans-unit>
@@ -10344,7 +10360,7 @@
         <source>Intensité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">67,70</context>
+          <context context-type="linenumber">93,96</context>
         </context-group>
         <note priority="1" from="description">Champ intensité d&apos;un ressenti</note>
       </trans-unit>
@@ -10352,15 +10368,23 @@
         <source>Texte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">86,89</context>
+          <context context-type="linenumber">107,110</context>
         </context-group>
         <note priority="1" from="description">Texte court d&apos;un ressenti</note>
+      </trans-unit>
+      <trans-unit id="entries.field.optional" datatype="html">
+        <source>(facultatif)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">113,116</context>
+        </context-group>
+        <note priority="1" from="description">Mention d&apos;un champ facultatif</note>
       </trans-unit>
       <trans-unit id="entries.medication.molecule" datatype="html">
         <source>Molécule</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">106,109</context>
+          <context context-type="linenumber">134,137</context>
         </context-group>
         <note priority="1" from="description">Molécule d&apos;un médicament</note>
       </trans-unit>
@@ -10368,7 +10392,7 @@
         <source>Dose</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">126,129</context>
+          <context context-type="linenumber">154,157</context>
         </context-group>
         <note priority="1" from="description">Dose d&apos;un médicament</note>
       </trans-unit>
@@ -10376,7 +10400,7 @@
         <source>Modalité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">152,155</context>
+          <context context-type="linenumber">180,183</context>
         </context-group>
         <note priority="1" from="description">Modalité d&apos;une séance</note>
       </trans-unit>
@@ -10384,7 +10408,7 @@
         <source>Durée (min)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">175,178</context>
+          <context context-type="linenumber">203,206</context>
         </context-group>
         <note priority="1" from="description">Durée d&apos;une séance</note>
       </trans-unit>
@@ -10392,7 +10416,7 @@
         <source> Une séance créée ici est ouverte maintenant ; sa durée se donne à la clôture. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">195,199</context>
+          <context context-type="linenumber">223,227</context>
         </context-group>
         <note priority="1" from="description">Une séance créée ici démarre</note>
       </trans-unit>
@@ -10400,7 +10424,7 @@
         <source>Titre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">208,211</context>
+          <context context-type="linenumber">236,239</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;une entrée</note>
       </trans-unit>
@@ -10408,7 +10432,7 @@
         <source>Texte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">230,233</context>
+          <context context-type="linenumber">259,262</context>
         </context-group>
         <note priority="1" from="description">Texte d&apos;une entrée</note>
       </trans-unit>
@@ -10416,7 +10440,7 @@
         <source><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/>+<x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> pour enregistrer depuis le texte. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">244,246</context>
+          <context context-type="linenumber">273,275</context>
         </context-group>
         <note priority="1" from="description">Raccourci d&apos;enregistrement depuis un texte</note>
       </trans-unit>
@@ -10424,7 +10448,7 @@
         <source>Séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">260,263</context>
+          <context context-type="linenumber">289,292</context>
         </context-group>
         <note priority="1" from="description">Bloc de la séance de rattachement</note>
       </trans-unit>
@@ -10432,7 +10456,7 @@
         <source> Aucune séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">270,273</context>
+          <context context-type="linenumber">299,302</context>
         </context-group>
         <note priority="1" from="description">Aucune séance pour ce patient</note>
       </trans-unit>
@@ -10440,23 +10464,39 @@
         <source> Lié à… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">295,297</context>
+          <context context-type="linenumber">324,326</context>
         </context-group>
         <note priority="1" from="description">Bloc du rail des liens</note>
       </trans-unit>
-      <trans-unit id="entries.rail.hint" datatype="html">
-        <source> Situations en cours et entrées récentes. <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Espace<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> coche ; les liens cochés sont posés avec l&apos;entrée, tout ou rien. </source>
+      <trans-unit id="entries.rail.aside" datatype="html">
+        <source>récentes et actives · <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>Espace<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> pour cocher</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">321,323</context>
+          <context context-type="linenumber">327,328</context>
+        </context-group>
+        <note priority="1" from="description">Rappel du rail des liens</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.hint" datatype="html">
+        <source> Les liens cochés sont posés dans la même transaction que l&apos;entrée (tout ou rien, 20 au plus). </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">353,356</context>
         </context-group>
         <note priority="1" from="description">Aide du rail des liens</note>
+      </trans-unit>
+      <trans-unit id="entries.links.aside" datatype="html">
+        <source>les liens se modifient dans l&apos;éditeur de lien</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">370,374</context>
+        </context-group>
+        <note priority="1" from="description">Les liens se modifient dans l&apos;éditeur de lien</note>
       </trans-unit>
       <trans-unit id="entries.links.edit" datatype="html">
         <source>Lier ou modifier les liens</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">358,364</context>
+          <context context-type="linenumber">397,403</context>
         </context-group>
         <note priority="1" from="description">Ouvrir l&apos;éditeur de lien depuis une correction</note>
       </trans-unit>
@@ -10464,15 +10504,15 @@
         <source>Motif de la correction (facultatif)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">372,375</context>
+          <context context-type="linenumber">411,414</context>
         </context-group>
         <note priority="1" from="description">Motif d&apos;une correction</note>
       </trans-unit>
       <trans-unit id="entries.more.summary" datatype="html">
-        <source> Plus · visibilité, tags </source>
+        <source>Plus</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">391,393</context>
+          <context context-type="linenumber">433,434</context>
         </context-group>
         <note priority="1" from="description">Bloc replié des options</note>
       </trans-unit>
@@ -10480,7 +10520,7 @@
         <source> Visibilité </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">395,397</context>
+          <context context-type="linenumber">439,441</context>
         </context-group>
         <note priority="1" from="description">Visibilité d&apos;une entrée</note>
       </trans-unit>
@@ -10488,7 +10528,7 @@
         <source>Clinique : partagée avec l&apos;équipe clinique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">400,403</context>
+          <context context-type="linenumber">449,452</context>
         </context-group>
         <note priority="1" from="description">Visibilité clinique</note>
       </trans-unit>
@@ -10496,39 +10536,47 @@
         <source>Privée : vous seul, exclue de l&apos;export</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">406,409</context>
+          <context context-type="linenumber">460,463</context>
         </context-group>
         <note priority="1" from="description">Visibilité privée</note>
       </trans-unit>
       <trans-unit id="entries.tags.legend" datatype="html">
-        <source>Tags</source>
+        <source> Tags </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">415,417</context>
+          <context context-type="linenumber">470,472</context>
         </context-group>
         <note priority="1" from="description">Tags d&apos;une entrée</note>
-      </trans-unit>
-      <trans-unit id="entries.editor.cancel" datatype="html">
-        <source>Annuler</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">455,457</context>
-        </context-group>
-        <note priority="1" from="description">Bouton d&apos;annulation du panneau</note>
       </trans-unit>
       <trans-unit id="entries.editor.draft" datatype="html">
         <source>Brouillon</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
-          <context context-type="linenumber">461,463</context>
+          <context context-type="linenumber">526,528</context>
         </context-group>
         <note priority="1" from="description">Bouton brouillon</note>
+      </trans-unit>
+      <trans-unit id="entries.editor.cancel" datatype="html">
+        <source>Annuler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">533,535</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;annulation du panneau</note>
+      </trans-unit>
+      <trans-unit id="entries.editor.keys" datatype="html">
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>Échap<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> ferme en gardant le brouillon · <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> enregistre depuis le texte multi-ligne · <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>Tab<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> suit l&apos;ordre des blocs </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">543,547</context>
+        </context-group>
+        <note priority="1" from="description">Rappel des raccourcis de l&apos;éditeur</note>
       </trans-unit>
       <trans-unit id="entries.type.group" datatype="html">
         <source>Type d&apos;entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <note priority="1" from="description">Nom du groupe des types d&apos;entrée</note>
       </trans-unit>
@@ -10536,7 +10584,7 @@
         <source>Nouvelle entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">122</context>
         </context-group>
         <note priority="1" from="description">Titre du panneau en création</note>
       </trans-unit>
@@ -10544,15 +10592,39 @@
         <source>Modifier l&apos;entrée · v<x id="version" equiv-text="version"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">125</context>
         </context-group>
         <note priority="1" from="description">Titre du panneau en correction</note>
+      </trans-unit>
+      <trans-unit id="entries.editor.fromCaptureBar" datatype="html">
+        <source>préremplie depuis la barre de capture</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+        <note priority="1" from="description">Provenance d&apos;une entrée préremplie</note>
+      </trans-unit>
+      <trans-unit id="entries.more.asidePrivate" datatype="html">
+        <source>visibilité privée, tags</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+        <note priority="1" from="description">Résumé du bloc Plus, visibilité privée</note>
+      </trans-unit>
+      <trans-unit id="entries.more.asideClinical" datatype="html">
+        <source>visibilité clinique, tags</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+        <note priority="1" from="description">Résumé du bloc Plus, visibilité clinique</note>
       </trans-unit>
       <trans-unit id="entries.editor.loadError" datatype="html">
         <source>Impossible de charger cette entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <note priority="1" from="description">Entrée illisible</note>
       </trans-unit>
@@ -10560,7 +10632,7 @@
         <source>Créée <x id="ago" equiv-text="ago"/> · dans la fenêtre de grâce (1 h 15) : la version 1 sera modifiée en place, sans nouvelle version.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">176</context>
         </context-group>
         <note priority="1" from="description">Bandeau de grâce, dans la fenêtre</note>
       </trans-unit>
@@ -10568,7 +10640,7 @@
         <source>Modifiée <x id="ago" equiv-text="ago"/> · hors fenêtre de grâce (1 h 15) : cette correction créera la version <x id="next" equiv-text="next"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">179</context>
         </context-group>
         <note priority="1" from="description">Bandeau de grâce, hors fenêtre</note>
       </trans-unit>
@@ -10576,7 +10648,7 @@
         <source>Enregistrer la version <x id="next" equiv-text="next"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">160</context>
+          <context context-type="linenumber">186</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;enregistrement d&apos;une correction</note>
       </trans-unit>
@@ -10584,7 +10656,7 @@
         <source>Enregistrer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">188</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;enregistrement</note>
       </trans-unit>
@@ -10592,7 +10664,7 @@
         <source>Version <x id="current" equiv-text="current"/> · Historique (<x id="count" equiv-text="count"/> versions)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">194</context>
         </context-group>
         <note priority="1" from="description">Lien vers l&apos;historique des versions</note>
       </trans-unit>
@@ -10600,7 +10672,7 @@
         <source>Impossible de charger les séances</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">220</context>
         </context-group>
         <note priority="1" from="description">Séances illisibles</note>
       </trans-unit>
@@ -10608,7 +10680,7 @@
         <source>Impossible de charger les tags</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">201</context>
+          <context context-type="linenumber">227</context>
         </context-group>
         <note priority="1" from="description">Tags illisibles</note>
       </trans-unit>
@@ -10616,7 +10688,7 @@
         <source>Aucun tag pour le moment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">228</context>
         </context-group>
         <note priority="1" from="description">Aucun tag</note>
       </trans-unit>
@@ -10624,7 +10696,7 @@
         <source>Les tags se créent dans Compte, Tags.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">203</context>
+          <context context-type="linenumber">229</context>
         </context-group>
         <note priority="1" from="description">Aucun tag, où en créer</note>
       </trans-unit>
@@ -10632,7 +10704,7 @@
         <source>Impossible de proposer des entrées à lier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">222</context>
+          <context context-type="linenumber">248</context>
         </context-group>
         <note priority="1" from="description">Rail illisible</note>
       </trans-unit>
@@ -10640,7 +10712,7 @@
         <source>Aucune entrée récente à lier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">249</context>
         </context-group>
         <note priority="1" from="description">Rail vide</note>
       </trans-unit>
@@ -10648,7 +10720,7 @@
         <source>Les situations en cours et les dernières entrées du dossier apparaîtront ici.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">224</context>
+          <context context-type="linenumber">250</context>
         </context-group>
         <note priority="1" from="description">Rail vide, explication</note>
       </trans-unit>
@@ -10656,7 +10728,7 @@
         <source>Impossible de charger les liens de cette entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">235</context>
+          <context context-type="linenumber">261</context>
         </context-group>
         <note priority="1" from="description">Liens illisibles</note>
       </trans-unit>
@@ -10664,7 +10736,7 @@
         <source>Aucun lien pour le moment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">236</context>
+          <context context-type="linenumber">262</context>
         </context-group>
         <note priority="1" from="description">Aucun lien posé</note>
       </trans-unit>
@@ -10672,7 +10744,7 @@
         <source>Lié à… · <x id="count" equiv-text="count"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">266</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc des liens en correction, avec leur nombre</note>
       </trans-unit>
@@ -10680,7 +10752,7 @@
         <source>Lié à…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">241</context>
+          <context context-type="linenumber">267</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc des liens</note>
       </trans-unit>
@@ -10688,11 +10760,11 @@
         <source>Brouillon enregistré.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">428</context>
+          <context context-type="linenumber">466</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">435</context>
+          <context context-type="linenumber">473</context>
         </context-group>
         <note priority="1" from="description">Toast après un brouillon</note>
       </trans-unit>
@@ -10700,7 +10772,7 @@
         <source>Correction enregistrée (version <x id="version" equiv-text="version"/>).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">432</context>
+          <context context-type="linenumber">470</context>
         </context-group>
         <note priority="1" from="description">Toast après une correction</note>
       </trans-unit>
@@ -10708,7 +10780,7 @@
         <source>Entrée enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">436</context>
+          <context context-type="linenumber">474</context>
         </context-group>
         <note priority="1" from="description">Toast après une création</note>
       </trans-unit>
@@ -10716,7 +10788,7 @@
         <source>Séance du <x id="date" equiv-text="date"/> (en cours)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">442</context>
+          <context context-type="linenumber">480</context>
         </context-group>
         <note priority="1" from="description">Séance ouverte dans le bloc Séance</note>
       </trans-unit>
@@ -10724,7 +10796,7 @@
         <source>Séance du <x id="date" equiv-text="date"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
-          <context context-type="linenumber">443</context>
+          <context context-type="linenumber">481</context>
         </context-group>
         <note priority="1" from="description">Séance dans le bloc Séance</note>
       </trans-unit>
@@ -10820,7 +10892,7 @@
         <source>Afficher les émotions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">29,30</context>
+          <context context-type="linenumber">32,33</context>
         </context-group>
         <note priority="1" from="description">Bouton qui déplie la liste des émotions</note>
       </trans-unit>
@@ -10828,23 +10900,15 @@
         <source>Émotions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">42,43</context>
+          <context context-type="linenumber">46,47</context>
         </context-group>
         <note priority="1" from="description">Nom de la liste des émotions</note>
-      </trans-unit>
-      <trans-unit id="entries.emotion.customTag" datatype="html">
-        <source>personnalisée</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">62,66</context>
-        </context-group>
-        <note priority="1" from="description">Marque d&apos;une émotion personnalisée</note>
       </trans-unit>
       <trans-unit id="entries.emotion.familyLegend" datatype="html">
         <source> Famille de « <x id="INTERPOLATION" equiv-text="{{ label }}"/> » (obligatoire) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">91,93</context>
+          <context context-type="linenumber">103,105</context>
         </context-group>
         <note priority="1" from="description">Choix de la famille d&apos;une nouvelle émotion</note>
       </trans-unit>
@@ -10852,7 +10916,7 @@
         <source> Choisissez une famille. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">117,119</context>
+          <context context-type="linenumber">129,131</context>
         </context-group>
         <note priority="1" from="description">Famille manquante</note>
       </trans-unit>
@@ -10860,7 +10924,7 @@
         <source> Créer l&apos;émotion </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">130,134</context>
+          <context context-type="linenumber">142,146</context>
         </context-group>
         <note priority="1" from="description">Bouton de création d&apos;une émotion personnalisée</note>
       </trans-unit>
@@ -10868,7 +10932,7 @@
         <source> Annuler </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.html</context>
-          <context context-type="linenumber">138,143</context>
+          <context context-type="linenumber">150,155</context>
         </context-group>
         <note priority="1" from="description">Annulation de la création d&apos;une émotion</note>
       </trans-unit>
@@ -10876,7 +10940,7 @@
         <source>Aucune émotion ne correspond</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">171</context>
         </context-group>
         <note priority="1" from="description">Aucune émotion ne correspond</note>
       </trans-unit>
@@ -10884,7 +10948,7 @@
         <source>Tapez un libellé pour créer une émotion personnalisée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">172</context>
         </context-group>
         <note priority="1" from="description">Aucune émotion, comment en créer</note>
       </trans-unit>
@@ -10892,15 +10956,59 @@
         <source>Impossible de charger les émotions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">173</context>
         </context-group>
         <note priority="1" from="description">Liste des émotions en erreur</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.levelLow" datatype="html">
+        <source>faible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+        <note priority="1" from="description">Niveau lexical faible d&apos;une émotion (Plutchik)</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.levelHigh" datatype="html">
+        <source>forte</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">205</context>
+        </context-group>
+        <note priority="1" from="description">Niveau lexical fort d&apos;une émotion (Plutchik)</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.customTag" datatype="html">
+        <source>personnalisée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">210</context>
+        </context-group>
+        <note priority="1" from="description">Marque d&apos;une émotion personnalisée</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.familySuffix" datatype="html">
+        <source>famille <x id="family" equiv-text="name"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">219</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-group>
+        <note priority="1" from="description">Famille de l&apos;émotion choisie, à droite du champ</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.createFamily" datatype="html">
+        <source>famille</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+        <note priority="1" from="description">Famille à choisir pour une émotion à créer</note>
       </trans-unit>
       <trans-unit id="entries.emotion.createOption" datatype="html">
         <source>Créer l&apos;émotion personnalisée « <x id="label" equiv-text="label"/> »</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">237</context>
         </context-group>
         <note priority="1" from="description">Dernière ligne de la liste des émotions</note>
       </trans-unit>
@@ -11212,7 +11320,7 @@
         <source>Non renseignée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/intensity-slider.component.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">202</context>
         </context-group>
         <note priority="1" from="description">Valeur lue du curseur d&apos;intensité non réglé</note>
       </trans-unit>
@@ -11220,7 +11328,7 @@
         <source><x id="value" equiv-text="value"/> sur <x id="max" equiv-text="max"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/intensity-slider.component.ts</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">203</context>
         </context-group>
         <note priority="1" from="description">Valeur lue du curseur d&apos;intensité</note>
       </trans-unit>
@@ -11244,15 +11352,15 @@
         <source><x id="emotion" equiv-text="emotion"/> <x id="intensity" equiv-text="intensity"/>/10</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/link-rail.component.ts</context>
-          <context context-type="linenumber">185</context>
+          <context context-type="linenumber">188</context>
         </context-group>
         <note priority="1" from="description">Nom d&apos;un ressenti sans titre dans le rail</note>
       </trans-unit>
       <trans-unit id="entries.when.legend" datatype="html">
-        <source>Quand</source>
+        <source> Quand </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
-          <context context-type="linenumber">2,5</context>
+          <context context-type="linenumber">3,8</context>
         </context-group>
         <note priority="1" from="description">Bloc du moment d&apos;une entrée</note>
       </trans-unit>
@@ -11260,7 +11368,7 @@
         <source> Maintenant </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
-          <context context-type="linenumber">11,15</context>
+          <context context-type="linenumber">12,16</context>
         </context-group>
         <note priority="1" from="description">Bouton du moment présent</note>
       </trans-unit>
@@ -11268,15 +11376,23 @@
         <source>Précision</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
-          <context context-type="linenumber">16,17</context>
+          <context context-type="linenumber">17,18</context>
         </context-group>
         <note priority="1" from="description">Groupe des précisions de date</note>
+      </trans-unit>
+      <trans-unit id="entries.when.nowHint" datatype="html">
+        <source> Maintenant : l&apos;instant de l&apos;enregistrement est retenu. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">34,37</context>
+        </context-group>
+        <note priority="1" from="description">Aide du moment présent</note>
       </trans-unit>
       <trans-unit id="entries.when.lifePhase" datatype="html">
         <source>Phase de vie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
-          <context context-type="linenumber">38,41</context>
+          <context context-type="linenumber">42,45</context>
         </context-group>
         <note priority="1" from="description">Libellé d&apos;une phase de vie</note>
       </trans-unit>
@@ -11284,7 +11400,7 @@
         <source>enfance, adolescence…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
-          <context context-type="linenumber">44,45</context>
+          <context context-type="linenumber">48,49</context>
         </context-group>
         <note priority="1" from="description">Exemples de phases de vie</note>
       </trans-unit>
@@ -11292,7 +11408,7 @@
         <source>Début</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
-          <context context-type="linenumber">60,63</context>
+          <context context-type="linenumber">64,67</context>
         </context-group>
         <note priority="1" from="description">Début d&apos;une période ou d&apos;une situation</note>
       </trans-unit>
@@ -11300,23 +11416,43 @@
         <source>Date</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
-          <context context-type="linenumber">63,66</context>
+          <context context-type="linenumber">67,70</context>
         </context-group>
         <note priority="1" from="description">Date d&apos;une entrée</note>
+      </trans-unit>
+      <trans-unit id="entries.when.yearPlaceholder" datatype="html">
+        <source>aaaa</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">202</context>
+        </context-group>
+        <note priority="1" from="description">Format d&apos;une année</note>
       </trans-unit>
       <trans-unit id="entries.when.end" datatype="html">
         <source>Fin</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
-          <context context-type="linenumber">83,85</context>
+          <context context-type="linenumber">127,129</context>
         </context-group>
         <note priority="1" from="description">Fin d&apos;une période</note>
+      </trans-unit>
+      <trans-unit id="entries.when.dayHint" datatype="html">
+        <source> précision « jour » : l&apos;heure n&apos;est pas enregistrée </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">140,143</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la précision jour</note>
       </trans-unit>
       <trans-unit id="entries.when.periodLabel" datatype="html">
         <source>Libellé de la période</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
-          <context context-type="linenumber">101,104</context>
+          <context context-type="linenumber">148,151</context>
         </context-group>
         <note priority="1" from="description">Libellé d&apos;une période</note>
       </trans-unit>
@@ -11324,7 +11460,7 @@
         <source>En cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
-          <context context-type="linenumber">123,126</context>
+          <context context-type="linenumber">170,173</context>
         </context-group>
         <note priority="1" from="description">Situation sans fin</note>
       </trans-unit>
@@ -11332,7 +11468,7 @@
         <source>Fin</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
-          <context context-type="linenumber">128,131</context>
+          <context context-type="linenumber">175,177</context>
         </context-group>
         <note priority="1" from="description">Fin d&apos;une situation</note>
       </trans-unit>
@@ -14931,7 +15067,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -14951,7 +15087,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -14963,7 +15099,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">111</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -14975,7 +15111,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">113</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -14987,7 +15123,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">114</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15015,7 +15151,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">115</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15027,7 +15163,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">116</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15055,7 +15191,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">118</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15067,7 +15203,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15079,7 +15215,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">122</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15091,7 +15227,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">124</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15103,7 +15239,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">126</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15123,7 +15259,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">128</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15135,7 +15271,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15147,7 +15283,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15159,7 +15295,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">134</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15171,7 +15307,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15191,7 +15327,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">137</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15403,11 +15539,35 @@
         </context-group>
         <note priority="1" from="description">Méta de la fiche</note>
       </trans-unit>
+      <trans-unit id="patients.archived.toggle" datatype="html">
+        <source>Afficher les archivés</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
+          <context context-type="linenumber">20,23</context>
+        </context-group>
+        <note priority="1" from="description">Bascule de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.welcome.explore" datatype="html">
+        <source> ou explorez un patient de démonstration </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
+          <context context-type="linenumber">104,108</context>
+        </context-group>
+        <note priority="1" from="description">Invitation à explorer la démo</note>
+      </trans-unit>
+      <trans-unit id="patients.footer.keys" datatype="html">
+        <source><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>↑<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>↓<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> choisir · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Entrée<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> ouvrir · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>N<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> nouveau</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
+          <context context-type="linenumber">146,149</context>
+        </context-group>
+        <note priority="1" from="description">Pied de la liste : raccourcis</note>
+      </trans-unit>
       <trans-unit id="patients.list.more" datatype="html">
         <source> Afficher plus </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
-          <context context-type="linenumber">85,88</context>
+          <context context-type="linenumber">160,163</context>
         </context-group>
         <note priority="1" from="description">Bouton de pagination de la liste</note>
       </trans-unit>
@@ -15415,15 +15575,23 @@
         <source> La suite de la liste n&apos;a pas pu être chargée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
-          <context context-type="linenumber">93,99</context>
+          <context context-type="linenumber">168,173</context>
         </context-group>
         <note priority="1" from="description">Erreur de la page suivante</note>
+      </trans-unit>
+      <trans-unit id="patients.list.legend" datatype="html">
+        <source> Les pastilles d&apos;émotions résument les 30 derniers jours ; la flèche indique l&apos;évolution par rapport aux 30 jours précédents. Aucune couleur d&apos;alerte n&apos;est appliquée automatiquement : les flags sont posés par vous. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
+          <context context-type="linenumber">174,179</context>
+        </context-group>
+        <note priority="1" from="description">Légende sous la liste des patients</note>
       </trans-unit>
       <trans-unit id="patients.list.title" datatype="html">
         <source>Mes <x id="subjects" equiv-text="subjects"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <note priority="1" from="description">Titre de la liste des patients</note>
       </trans-unit>
@@ -15431,7 +15599,7 @@
         <source>Filtrer mes <x id="subjects" equiv-text="subjects"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis, liste des patients</note>
       </trans-unit>
@@ -15439,7 +15607,7 @@
         <source>Nouveau <x id="subject" equiv-text="subject"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <note priority="1" from="description">Bouton de création</note>
       </trans-unit>
@@ -15447,7 +15615,11 @@
         <source>Aucun <x id="subject" equiv-text="subject"/> ne correspond</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">189</context>
         </context-group>
         <note priority="1" from="description">État vide de la liste filtrée</note>
       </trans-unit>
@@ -15455,7 +15627,7 @@
         <source>Créez votre premier <x id="subject" equiv-text="subject"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">103</context>
         </context-group>
         <note priority="1" from="description">État vide de la liste</note>
       </trans-unit>
@@ -15463,7 +15635,7 @@
         <source>Le dossier, la timeline et le graphe se construisent à partir de la première entrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <note priority="1" from="description">Phrase de l&apos;état vide de la liste</note>
       </trans-unit>
@@ -15471,7 +15643,7 @@
         <source>Le patient de démonstration n&apos;a pas pu être retiré. Réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <note priority="1" from="description">Avertissement, retrait de la démo refusé</note>
       </trans-unit>
@@ -15479,7 +15651,7 @@
         <source>La restauration n&apos;a pas abouti. Réessayez depuis les archivés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">Avertissement, restauration refusée</note>
       </trans-unit>
@@ -15487,15 +15659,143 @@
         <source>Avertissement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">126</context>
         </context-group>
         <note priority="1" from="description">Mot du niveau avertissement</note>
+      </trans-unit>
+      <trans-unit id="patients.counter.more" datatype="html">
+        <source>plus de <x id="count" equiv-text="total"/> suivis actifs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+        <note priority="1" from="description">Compteur de la liste, liste incomplète</note>
+      </trans-unit>
+      <trans-unit id="patients.counter.none" datatype="html">
+        <source>0 suivi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+        <note priority="1" from="description">Compteur de la liste, aucun patient</note>
+      </trans-unit>
+      <trans-unit id="patients.counter.one" datatype="html">
+        <source>1 suivi actif</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <note priority="1" from="description">Compteur de la liste, un patient</note>
+      </trans-unit>
+      <trans-unit id="patients.counter.many" datatype="html">
+        <source><x id="count" equiv-text="total"/> suivis actifs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+        <note priority="1" from="description">Compteur de la liste, plusieurs patients</note>
+      </trans-unit>
+      <trans-unit id="patients.counter.todayNone" datatype="html">
+        <source>aucune séance aujourd&apos;hui</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+        <note priority="1" from="description">Compteur de la liste, aucune séance du jour</note>
+      </trans-unit>
+      <trans-unit id="patients.counter.todayOne" datatype="html">
+        <source>1 séance aujourd&apos;hui</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+        <note priority="1" from="description">Compteur de la liste, une séance du jour</note>
+      </trans-unit>
+      <trans-unit id="patients.counter.todayMany" datatype="html">
+        <source><x id="count" equiv-text="today"/> séances aujourd&apos;hui</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+        <note priority="1" from="description">Compteur de la liste, séances du jour</note>
+      </trans-unit>
+      <trans-unit id="patients.footer.shownMany" datatype="html">
+        <source><x id="shown" equiv-text="shown"/> <x id="subjects" equiv-text="subjects"/> affichés sur <x id="total" equiv-text="of"/> · filtrés par « <x id="filter" equiv-text="filter"/> »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">166</context>
+        </context-group>
+        <note priority="1" from="description">Pied de la liste, plusieurs lignes</note>
+      </trans-unit>
+      <trans-unit id="patients.footer.shownOne" datatype="html">
+        <source><x id="shown" equiv-text="shown"/> <x id="subjects" equiv-text="subjects"/> affiché sur <x id="total" equiv-text="of"/> · filtré par « <x id="filter" equiv-text="filter"/> »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+        <note priority="1" from="description">Pied de la liste, une ligne ou aucune</note>
+      </trans-unit>
+      <trans-unit id="patients.footer.partialNote" datatype="html">
+        <source>Résumé d&apos;activité affiché pour les <x id="limit" equiv-text="ACTIVITY_LIMIT"/> premiers patients</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">174</context>
+        </context-group>
+        <note priority="1" from="description">Pied de la liste, résumé partiel</note>
+      </trans-unit>
+      <trans-unit id="patients.activity.failedOne" datatype="html">
+        <source>Le résumé d&apos;une ligne n&apos;a pas pu être chargé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+        <note priority="1" from="description">Avertissement, un résumé non chargé</note>
+      </trans-unit>
+      <trans-unit id="patients.activity.failedMany" datatype="html">
+        <source>Le résumé de <x id="count" equiv-text="failures"/> lignes n&apos;a pas pu être chargé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+        <note priority="1" from="description">Avertissement, résumés non chargés</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.emptyPartial" datatype="html">
+        <source>Aucune ligne pour le filtre « <x id="filter" equiv-text="filter"/> » parmi les <x id="loaded" equiv-text="loaded"/> patients chargés : seuls ceux-là sont filtrés.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">195</context>
+        </context-group>
+        <note priority="1" from="description">Phrase du filtre rapide sans résultat, liste incomplète</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.emptyMessage" datatype="html">
+        <source>Aucune ligne pour le filtre « <x id="filter" equiv-text="filter"/> ».</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+        <note priority="1" from="description">Phrase du filtre rapide sans résultat</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.showAll" datatype="html">
+        <source>Afficher tous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">200</context>
+        </context-group>
+        <note priority="1" from="description">Action du filtre rapide sans résultat</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.loadMore" datatype="html">
+        <source>Charger la suite</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">204</context>
+        </context-group>
+        <note priority="1" from="description">Action du filtre rapide sans résultat, liste incomplète</note>
       </trans-unit>
       <trans-unit id="patients.empty.clear" datatype="html">
         <source>Effacer les filtres</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">214</context>
         </context-group>
         <note priority="1" from="description">Action de l&apos;état vide filtré</note>
       </trans-unit>
@@ -15503,7 +15803,7 @@
         <source>Impossible de charger vos <x id="subjects" equiv-text="subjects"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">225</context>
         </context-group>
         <note priority="1" from="description">État erreur de la liste</note>
       </trans-unit>
@@ -15511,7 +15811,7 @@
         <source>Supprimer le patient de démonstration ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">201</context>
+          <context context-type="linenumber">293</context>
         </context-group>
         <note priority="1" from="description">Titre de la confirmation de retrait de la démo</note>
       </trans-unit>
@@ -15519,7 +15819,7 @@
         <source><x id="name" equiv-text="patient.displayName"/> quitte votre liste. Rien n&apos;est effacé : vous pourrez le restaurer depuis les archivés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">294</context>
         </context-group>
         <note priority="1" from="description">Explication du retrait de la démo</note>
       </trans-unit>
@@ -15527,7 +15827,7 @@
         <source>Supprimer la démo</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">203</context>
+          <context context-type="linenumber">295</context>
         </context-group>
         <note priority="1" from="description">Bouton de confirmation du retrait de la démo</note>
       </trans-unit>
@@ -15535,7 +15835,7 @@
         <source>Patient de démonstration retiré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">211</context>
+          <context context-type="linenumber">303</context>
         </context-group>
         <note priority="1" from="description">Toast après le retrait de la démo</note>
       </trans-unit>
@@ -15543,7 +15843,7 @@
         <source>Patient de démonstration restauré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">313</context>
         </context-group>
         <note priority="1" from="description">Toast après la restauration de la démo</note>
       </trans-unit>
@@ -15723,7 +16023,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">139</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
@@ -15867,7 +16167,7 @@
         <source>Accents et majuscules ignorés, à partir de 2 caractères.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
-          <context context-type="linenumber">16,21</context>
+          <context context-type="linenumber">24,29</context>
         </context-group>
         <note priority="1" from="description">Aide du filtre de la liste</note>
       </trans-unit>
@@ -15875,47 +16175,79 @@
         <source>Trier par</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
-          <context context-type="linenumber">23,25</context>
+          <context context-type="linenumber">30,32</context>
         </context-group>
         <note priority="1" from="description">Étiquette du tri de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.label" datatype="html">
+        <source>Filtres rapides</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
+          <context context-type="linenumber">44,45</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette des filtres rapides de la liste</note>
       </trans-unit>
       <trans-unit id="patients.chips.label" datatype="html">
         <source>Filtrer par tag</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
-          <context context-type="linenumber">37,38</context>
+          <context context-type="linenumber">76,77</context>
         </context-group>
-        <note priority="1" from="description">Étiquette des puces rapides</note>
+        <note priority="1" from="description">Étiquette du menu des tags</note>
       </trans-unit>
-      <trans-unit id="patients.chips.all" datatype="html">
-        <source> Tous </source>
+      <trans-unit id="patients.tags.all" datatype="html">
+        <source>Tous les tags</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
-          <context context-type="linenumber">48,51</context>
+          <context context-type="linenumber">87,89</context>
         </context-group>
-        <note priority="1" from="description">Puce rapide sans filtre de tag</note>
+        <note priority="1" from="description">Entrée du menu des tags sans filtre</note>
       </trans-unit>
-      <trans-unit id="patients.archived.toggle" datatype="html">
-        <source>Afficher les archivés</source>
+      <trans-unit id="patients.quick.coverageHint" datatype="html">
+        <source>« Aujourd&apos;hui », « Brouillons » et le tri par dernière séance demandent le résumé de chaque patient : disponibles jusqu&apos;à 20 patients.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
-          <context context-type="linenumber">71,75</context>
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
+          <context context-type="linenumber">69</context>
         </context-group>
-        <note priority="1" from="description">Bascule de la liste des patients</note>
+        <note priority="1" from="description">Explication des filtres désactivés</note>
       </trans-unit>
       <trans-unit id="patients.filter.label" datatype="html">
         <source>Filtrer les <x id="subjects" equiv-text="subjects"/> par nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <note priority="1" from="description">Étiquette du filtre de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.filter.placeholder" datatype="html">
+        <source>Filtrer par nom… (accents ignorés)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">Texte indicatif du filtre de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.tags.button" datatype="html">
+        <source>Tags</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du menu des tags</note>
+      </trans-unit>
+      <trans-unit id="patients.tags.buttonActive" datatype="html">
+        <source>Tag : #<x id="tag" equiv-text="tag"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du menu des tags, un tag choisi</note>
       </trans-unit>
       <trans-unit id="patients.flags.list" datatype="html">
         <source>Drapeaux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-flags.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <note priority="1" from="description">Étiquette de la liste des drapeaux d&apos;un patient</note>
       </trans-unit>
@@ -15923,7 +16255,7 @@
         <source><x id="label" equiv-text="label"/> depuis le <x id="date" equiv-text="date"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-flags.component.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">95</context>
         </context-group>
         <note priority="1" from="description">Drapeau à surveiller avec sa date</note>
       </trans-unit>
@@ -15931,7 +16263,7 @@
         <source>À surveiller</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <note priority="1" from="description">Drapeau patient</note>
       </trans-unit>
@@ -15939,7 +16271,7 @@
         <source>Risque</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">19</context>
         </context-group>
         <note priority="1" from="description">Drapeau patient</note>
       </trans-unit>
@@ -15947,7 +16279,7 @@
         <source>Suivi conjoint</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">21</context>
         </context-group>
         <note priority="1" from="description">Drapeau patient</note>
       </trans-unit>
@@ -15955,7 +16287,7 @@
         <source>Elle</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">28</context>
         </context-group>
         <note priority="1" from="description">Pronom du patient</note>
       </trans-unit>
@@ -15963,7 +16295,7 @@
         <source>Il</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">30</context>
         </context-group>
         <note priority="1" from="description">Pronom du patient</note>
       </trans-unit>
@@ -15971,7 +16303,7 @@
         <source>Iel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <note priority="1" from="description">Pronom du patient</note>
       </trans-unit>
@@ -15979,7 +16311,7 @@
         <source>Neutre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <note priority="1" from="description">Pronom du patient</note>
       </trans-unit>
@@ -15987,7 +16319,7 @@
         <source>Hebdomadaire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <note priority="1" from="description">Rythme de suivi</note>
       </trans-unit>
@@ -15995,7 +16327,7 @@
         <source>Toutes les 1 à 2 semaines</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <note priority="1" from="description">Rythme de suivi</note>
       </trans-unit>
@@ -16003,7 +16335,7 @@
         <source>Mensuel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <note priority="1" from="description">Rythme de suivi</note>
       </trans-unit>
@@ -16011,7 +16343,7 @@
         <source>Irrégulier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <note priority="1" from="description">Rythme de suivi</note>
       </trans-unit>
@@ -16019,7 +16351,7 @@
         <source>Cabinet</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <note priority="1" from="description">Modalité de séance</note>
       </trans-unit>
@@ -16027,7 +16359,7 @@
         <source>Visio</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <note priority="1" from="description">Modalité de séance</note>
       </trans-unit>
@@ -16035,15 +16367,31 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">58</context>
         </context-group>
         <note priority="1" from="description">Modalité de séance</note>
+      </trans-unit>
+      <trans-unit id="patients.sort.lastSession" datatype="html">
+        <source>Dernière séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">Tri de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.sort.flags" datatype="html">
+        <source>Flags d&apos;abord</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Tri de la liste des patients</note>
       </trans-unit>
       <trans-unit id="patients.sort.name" datatype="html">
         <source>Nom A → Z</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">69</context>
         </context-group>
         <note priority="1" from="description">Tri de la liste des patients</note>
       </trans-unit>
@@ -16051,7 +16399,7 @@
         <source>Dernière modification</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <note priority="1" from="description">Tri de la liste des patients</note>
       </trans-unit>
@@ -16059,15 +16407,79 @@
         <source>Date de création</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <note priority="1" from="description">Tri de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.session.inPerson" datatype="html">
+        <source>cabinet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+        <note priority="1" from="description">Modalité d&apos;une séance dans la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.session.video" datatype="html">
+        <source>visio</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+        <note priority="1" from="description">Modalité d&apos;une séance dans la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.session.phone" datatype="html">
+        <source>téléphone</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <note priority="1" from="description">Modalité d&apos;une séance dans la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.session.email" datatype="html">
+        <source>e-mail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <note priority="1" from="description">Modalité d&apos;une séance dans la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.all" datatype="html">
+        <source>Tous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">Filtre rapide de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.today" datatype="html">
+        <source>Aujourd&apos;hui</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+        <note priority="1" from="description">Filtre rapide de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.flags" datatype="html">
+        <source>Flags</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+        <note priority="1" from="description">Filtre rapide de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.drafts" datatype="html">
+        <source>Brouillons</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Filtre rapide de la liste</note>
       </trans-unit>
       <trans-unit id="patients.archived.toast.f" datatype="html">
         <source><x id="name" equiv-text="name"/> archivée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <note priority="1" from="description">Toast après archivage, accord féminin</note>
       </trans-unit>
@@ -16075,7 +16487,7 @@
         <source><x id="name" equiv-text="name"/> archivé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">153</context>
         </context-group>
         <note priority="1" from="description">Toast après archivage, accord masculin</note>
       </trans-unit>
@@ -16083,7 +16495,7 @@
         <source><x id="name" equiv-text="name"/> archivé·e</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">155</context>
         </context-group>
         <note priority="1" from="description">Toast après archivage, accord inclusif</note>
       </trans-unit>
@@ -16091,7 +16503,7 @@
         <source><x id="name" equiv-text="name"/> restaurée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <note priority="1" from="description">Toast après restauration, accord féminin</note>
       </trans-unit>
@@ -16099,7 +16511,7 @@
         <source><x id="name" equiv-text="name"/> restauré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">124</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <note priority="1" from="description">Toast après restauration, accord masculin</note>
       </trans-unit>
@@ -16107,7 +16519,7 @@
         <source><x id="name" equiv-text="name"/> restauré·e</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <note priority="1" from="description">Toast après restauration, accord inclusif</note>
       </trans-unit>
@@ -16115,7 +16527,7 @@
         <source>Restaurer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">171</context>
         </context-group>
         <note priority="1" from="description">Action du toast d&apos;archivage</note>
       </trans-unit>
@@ -16123,7 +16535,7 @@
         <source>Ce dossier est archivé : restaurez-le avant de le modifier.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">177</context>
         </context-group>
         <note priority="1" from="description">Erreur d&apos;écriture, patient archivé</note>
       </trans-unit>
@@ -16131,7 +16543,7 @@
         <source>Ce drapeau est déjà posé : la fiche a été rechargée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">179</context>
         </context-group>
         <note priority="1" from="description">Erreur d&apos;écriture, drapeau déjà posé</note>
       </trans-unit>
@@ -16139,7 +16551,7 @@
         <source>Ce dossier n&apos;existe pas ou ne vous appartient pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <note priority="1" from="description">Erreur d&apos;écriture, dossier introuvable</note>
       </trans-unit>
@@ -16147,71 +16559,95 @@
         <source>L&apos;enregistrement n&apos;a pas abouti. Vos saisies sont conservées : réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">184</context>
         </context-group>
         <note priority="1" from="description">Erreur d&apos;écriture générique</note>
       </trans-unit>
-      <trans-unit id="patients.table.flags" datatype="html">
-        <source>Drapeaux</source>
+      <trans-unit id="patients.table.lastSession" datatype="html">
+        <source> Dernière séance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
-          <context context-type="linenumber">5,6</context>
+          <context context-type="linenumber">10,12</context>
         </context-group>
         <note priority="1" from="description">Colonne de la liste des patients</note>
       </trans-unit>
-      <trans-unit id="patients.table.tags" datatype="html">
-        <source>Tags</source>
+      <trans-unit id="patients.table.emotions" datatype="html">
+        <source> Émotions dominantes · 30 j </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
-          <context context-type="linenumber">6,9</context>
+          <context context-type="linenumber">13,15</context>
         </context-group>
         <note priority="1" from="description">Colonne de la liste des patients</note>
       </trans-unit>
-      <trans-unit id="patients.table.changed" datatype="html">
-        <source> Dernière modification </source>
+      <trans-unit id="patients.table.situations" datatype="html">
+        <source> Situations actives </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
-          <context context-type="linenumber">12,15</context>
+          <context context-type="linenumber">16,19</context>
         </context-group>
         <note priority="1" from="description">Colonne de la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.table.flagsColumn" datatype="html">
+        <source> Flags </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
+          <context context-type="linenumber">20,24</context>
+        </context-group>
+        <note priority="1" from="description">Colonne Flags de la liste des patients</note>
       </trans-unit>
       <trans-unit id="patients.table.actions" datatype="html">
         <source>Actions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
-          <context context-type="linenumber">16,22</context>
+          <context context-type="linenumber">25,31</context>
         </context-group>
         <note priority="1" from="description">Colonne de la liste des patients</note>
       </trans-unit>
-      <trans-unit id="patients.demo.chip" datatype="html">
-        <source>Démo</source>
+      <trans-unit id="patients.table.noSession" datatype="html">
+        <source>aucune séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
-          <context context-type="linenumber">38,41</context>
+          <context context-type="linenumber">70,74</context>
         </context-group>
-        <note priority="1" from="description">Puce du patient de démonstration</note>
+        <note priority="1" from="description">Liste, patient sans séance</note>
       </trans-unit>
-      <trans-unit id="patients.table.age" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ row.age }}"/> ans</source>
+      <trans-unit id="patients.table.noSituation" datatype="html">
+        <source>aucune situation active</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
-          <context context-type="linenumber">43,44</context>
+          <context context-type="linenumber">127,130</context>
         </context-group>
-        <note priority="1" from="description">Âge dans la liste des patients</note>
+        <note priority="1" from="description">Liste, aucune situation active</note>
       </trans-unit>
-      <trans-unit id="patients.table.archivedOn" datatype="html">
-        <source>Archivé·e <x id="INTERPOLATION" equiv-text="{{ row.changed }}"/></source>
+      <trans-unit id="patients.table.draftOne" datatype="html">
+        <source>1 brouillon</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
-          <context context-type="linenumber">66,67</context>
+          <context context-type="linenumber">147,150</context>
         </context-group>
-        <note priority="1" from="description">Date d&apos;archivage dans la liste</note>
+        <note priority="1" from="description">Puce d&apos;un brouillon dans la liste</note>
       </trans-unit>
-      <trans-unit id="patients.demo.remove" datatype="html">
-        <source> Supprimer la démo </source>
+      <trans-unit id="patients.table.drafts" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ row.drafts }}"/> brouillons</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
-          <context context-type="linenumber">81,84</context>
+          <context context-type="linenumber">152,153</context>
+        </context-group>
+        <note priority="1" from="description">Puce de plusieurs brouillons dans la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.table.open" datatype="html">
+        <source>Ouvrir</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
+          <context context-type="linenumber">168,172</context>
+        </context-group>
+        <note priority="1" from="description">Indication d&apos;ouverture d&apos;une ligne</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.removeShort" datatype="html">
+        <source> Supprimer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
+          <context context-type="linenumber">180,183</context>
         </context-group>
         <note priority="1" from="description">Bouton de retrait du patient de démonstration</note>
       </trans-unit>
@@ -16219,23 +16655,47 @@
         <source> Restaurer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
-          <context context-type="linenumber">91,96</context>
+          <context context-type="linenumber">190,194</context>
         </context-group>
         <note priority="1" from="description">Bouton de restauration du patient de démonstration</note>
       </trans-unit>
-      <trans-unit id="patients.table.edit" datatype="html">
-        <source>Fiche</source>
+      <trans-unit id="patients.table.editItem" datatype="html">
+        <source>Modifier la fiche</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
-          <context context-type="linenumber">100,105</context>
+          <context context-type="linenumber">207,211</context>
         </context-group>
-        <note priority="1" from="description">Lien vers la fiche d&apos;un patient</note>
+        <note priority="1" from="description">Entrée du menu d&apos;une ligne : la fiche</note>
+      </trans-unit>
+      <trans-unit id="patients.table.unavailable" datatype="html">
+        <source>Résumé indisponible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+        <note priority="1" from="description">Cellule de la liste sans résumé</note>
+      </trans-unit>
+      <trans-unit id="patients.table.notLoaded" datatype="html">
+        <source>Résumé chargé pour les 20 premiers seulement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <note priority="1" from="description">Cellule de la liste au-delà des résumés chargés</note>
+      </trans-unit>
+      <trans-unit id="patients.table.loading" datatype="html">
+        <source>Chargement…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+        <note priority="1" from="description">Cellule de la liste en cours de chargement</note>
       </trans-unit>
       <trans-unit id="patients.demo.removeLabel" datatype="html">
         <source>Supprimer la démo : <x id="name" equiv-text="name"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">141</context>
         </context-group>
         <note priority="1" from="description">Nom accessible du retrait du patient de démonstration</note>
       </trans-unit>
@@ -16243,17 +16703,121 @@
         <source>Restaurer le patient de démonstration <x id="name" equiv-text="name"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <note priority="1" from="description">Nom accessible de la restauration du patient de démonstration</note>
+      </trans-unit>
+      <trans-unit id="patients.table.moreLabel" datatype="html">
+        <source>Plus d&apos;actions pour <x id="name" equiv-text="name"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du menu d&apos;actions d&apos;une ligne</note>
       </trans-unit>
       <trans-unit id="patients.table.editLabel" datatype="html">
         <source>Modifier la fiche de <x id="name" equiv-text="name"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">153</context>
         </context-group>
         <note priority="1" from="description">Lien vers la fiche d&apos;un patient</note>
+      </trans-unit>
+      <trans-unit id="patients.table.archivedSince" datatype="html">
+        <source>Archivé·e <x id="when" equiv-text="when"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+        <note priority="1" from="description">Date d&apos;archivage dans la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.demo.detail" datatype="html">
+        <source>données fictives · supprimable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">202</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre du patient de démonstration</note>
+      </trans-unit>
+      <trans-unit id="patients.table.ageYears" datatype="html">
+        <source><x id="age" equiv-text="age"/> ans</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">208</context>
+        </context-group>
+        <note priority="1" from="description">Âge dans la liste des patients</note>
+      </trans-unit>
+      <trans-unit id="patients.emotions.noneYet" datatype="html">
+        <source>pas de ressenti sur 30 j</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">246</context>
+        </context-group>
+        <note priority="1" from="description">Liste, aucune émotion sur 30 jours après une séance</note>
+      </trans-unit>
+      <trans-unit id="patients.emotions.none" datatype="html">
+        <source>aucun ressenti</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">247</context>
+        </context-group>
+        <note priority="1" from="description">Liste, aucune séance ni émotion</note>
+      </trans-unit>
+      <trans-unit id="patients.emotions.few" datatype="html">
+        <source>peu de données</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">253</context>
+        </context-group>
+        <note priority="1" from="description">Liste, émotions dominantes avec peu de ressentis</note>
+      </trans-unit>
+      <trans-unit id="patients.emotions.upSpoken" datatype="html">
+        <source><x id="names" equiv-text="names"/> ; <x id="label" equiv-text="label"/> en hausse</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">259</context>
+        </context-group>
+        <note priority="1" from="description">Liste, émotion dominante en hausse (lecteur d&apos;écran)</note>
+      </trans-unit>
+      <trans-unit id="patients.emotions.downSpoken" datatype="html">
+        <source><x id="names" equiv-text="names"/> ; <x id="label" equiv-text="label"/> en baisse</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">265</context>
+        </context-group>
+        <note priority="1" from="description">Liste, émotion dominante en baisse (lecteur d&apos;écran)</note>
+      </trans-unit>
+      <trans-unit id="patients.emotions.stable" datatype="html">
+        <source>stable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">268</context>
+        </context-group>
+        <note priority="1" from="description">Liste, émotions dominantes stables</note>
+      </trans-unit>
+      <trans-unit id="patients.table.since.f" datatype="html">
+        <source>suivie depuis <x id="month" equiv-text="month"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">295</context>
+        </context-group>
+        <note priority="1" from="description">Début du suivi dans la liste, accord féminin</note>
+      </trans-unit>
+      <trans-unit id="patients.table.since.m" datatype="html">
+        <source>suivi depuis <x id="month" equiv-text="month"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">297</context>
+        </context-group>
+        <note priority="1" from="description">Début du suivi dans la liste, accord masculin</note>
+      </trans-unit>
+      <trans-unit id="patients.table.since.n" datatype="html">
+        <source>suivi·e depuis <x id="month" equiv-text="month"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
+          <context context-type="linenumber">299</context>
+        </context-group>
+        <note priority="1" from="description">Début du suivi dans la liste, accord inclusif</note>
       </trans-unit>
       <trans-unit id="patients.tags.add" datatype="html">
         <source>Ajouter un tag</source>
@@ -20106,6 +20670,110 @@
           <context context-type="linenumber">52</context>
         </context-group>
         <note priority="1" from="description">Étiquette du champ où retaper le nom</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.calendar" datatype="html">
+        <source>Calendrier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier du champ date</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.open" datatype="html">
+        <source>Ouvrir le calendrier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du champ date</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.close" datatype="html">
+        <source>Fermer le calendrier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.prevMonth" datatype="html">
+        <source>Mois précédent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.nextMonth" datatype="html">
+        <source>Mois suivant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.prevYear" datatype="html">
+        <source>Année précédente</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.nextYear" datatype="html">
+        <source>Année suivante</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.prevYears" datatype="html">
+        <source>24 années précédentes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.nextYears" datatype="html">
+        <source>24 années suivantes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.toMonthView" datatype="html">
+        <source>Choisir la date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.toYearView" datatype="html">
+        <source>Choisir le mois et l&apos;année</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.placeholder.day" datatype="html">
+        <source>jj/mm/aaaa</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-field.component.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+        <note priority="1" from="description">Format affiché dans un champ date vide</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.placeholder.month" datatype="html">
+        <source>mm/aaaa</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-field.component.ts</context>
+          <context context-type="linenumber">181</context>
+        </context-group>
+        <note priority="1" from="description">Format affiché dans un champ mois vide</note>
       </trans-unit>
       <trans-unit id="entry.type.note" datatype="html">
         <source>Note</source>

@@ -7,7 +7,7 @@ import { PreferencesStore } from '../../../core/preferences';
 import { EntriesApi } from '../data/entries.api';
 import { EntryEditorStore } from '../data/entry-editor.store';
 import { EMOTIONS } from '../data/entry.fixtures';
-import { EmotionComboboxComponent } from './emotion-combobox.component';
+import { EmotionComboboxComponent, labelParts } from './emotion-combobox.component';
 
 @Component({
   selector: 'pm-test-host',
@@ -117,6 +117,63 @@ describe('EmotionComboboxComponent', () => {
     expect(key(input, 'Enter').defaultPrevented).toBe(false);
   });
 
+  it('maquette 05 : pastille et famille en suffixe, partie trouvée surlignée, « famille peur » dans le champ', async () => {
+    const { fixture, el, input } = await render({
+      emotions: vi.fn().mockResolvedValue([
+        ...EMOTIONS,
+        {
+          code: 'apprehension',
+          label: 'Appréhension',
+          family: 'fear',
+          custom: false,
+          intensityLevel: 1,
+        },
+        { code: 'c_perf', label: 'Anxiété de performance', family: 'fear', custom: true },
+      ]),
+    });
+    type(input, 'anx');
+    await fixture.whenStable();
+    const rows = [...el.querySelectorAll('[role="option"]')];
+    const cells = (row: Element) =>
+      [row.querySelector('.label'), row.querySelector('.tag')].map((cell) =>
+        (cell?.textContent ?? '').replace(/\s+/g, ' ').trim(),
+      );
+    expect(rows.map(cells)).toEqual([
+      ['Anxiété', 'peur'],
+      ['Anxiété de performance', 'peur · personnalisée'],
+      ["Créer l'émotion personnalisée « anx »", 'famille peur'],
+    ]);
+    expect(rows[0].querySelector('mark')?.textContent).toBe('Anx');
+    expect(rows[0].querySelector('.dot.family-fear')).not.toBeNull();
+    type(input, 'appr');
+    await fixture.whenStable();
+    expect(el.querySelector('[role="option"] .tag')?.textContent).toBe('peur · faible');
+
+    key(input, 'ArrowDown');
+    key(input, 'Enter');
+    await fixture.whenStable();
+    expect(input.value).toBe('Appréhension');
+    expect(el.querySelector('.field .suffix')?.textContent?.trim()).toBe('famille peur');
+    expect(el.querySelector('.field .dot.family-fear')).not.toBeNull();
+  });
+
+  it('création proposée dès 3 lettres, famille préremplie d’après la première émotion trouvée', async () => {
+    const { fixture, el, input } = await render();
+    type(input, 'an');
+    await fixture.whenStable();
+    // Anxiété (libellé) et Colère (code anger) : filtrées dès la 1re lettre, sans ligne de création.
+    expect(options(el)).toEqual(['Anxiété', 'Colère']);
+    type(input, 'anx');
+    await fixture.whenStable();
+    expect(options(el)).toEqual(['Anxiété', "Créer l'émotion personnalisée « anx »"]);
+    key(input, 'ArrowDown');
+    key(input, 'ArrowDown');
+    key(input, 'Enter');
+    await fixture.whenStable();
+    const checked = el.querySelector<HTMLInputElement>('fieldset.create input:checked');
+    expect(checked?.value).toBe('fear');
+  });
+
   it('Échap referme la liste sans remonter au panneau', async () => {
     const { fixture, input } = await render();
     type(input, 'co');
@@ -175,5 +232,20 @@ describe('EmotionComboboxComponent', () => {
       'Une émotion porte déjà ce libellé',
     );
     expect(host.control.value).toBeNull();
+  });
+});
+
+describe('labelParts', () => {
+  it('surligne le début du libellé ou d’un mot, sans casse ni accents', () => {
+    expect(labelParts('Anxiété', 'anx')).toEqual({ before: '', match: 'Anx', after: 'iété' });
+    expect(labelParts('Anxiété de performance', 'perf')).toEqual({
+      before: 'Anxiété de ',
+      match: 'perf',
+      after: 'ormance',
+    });
+    expect(labelParts('Écœurement', 'ec')).toEqual({ before: '', match: 'Éc', after: 'œurement' });
+    // Pas au milieu d'un mot, rien sans saisie.
+    expect(labelParts('Panique', 'niq')).toEqual({ before: 'Panique', match: '', after: '' });
+    expect(labelParts('Peur', '')).toEqual({ before: 'Peur', match: '', after: '' });
   });
 });
