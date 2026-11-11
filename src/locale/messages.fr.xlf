@@ -9444,13 +9444,21 @@
         </context-group>
         <note priority="1" from="description">Aide du champ téléphone</note>
       </trans-unit>
-      <trans-unit id="auth.register.remoteOnly" datatype="html">
-        <source>J&apos;exerce uniquement en visioconsultation (pas d&apos;adresse de cabinet)</source>
+      <trans-unit id="auth.register.remoteOnly.label" datatype="html">
+        <source>J&apos;exerce uniquement en visioconsultation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">248,253</context>
+          <context context-type="linenumber">254,256</context>
         </context-group>
         <note priority="1" from="description">Case exercice en visio uniquement</note>
+      </trans-unit>
+      <trans-unit id="auth.register.remoteOnly.desc" datatype="html">
+        <source> (pas d&apos;adresse de cabinet)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">259,264</context>
+        </context-group>
+        <note priority="1" from="description">Précision de la case visio uniquement</note>
       </trans-unit>
       <trans-unit id="auth.register.docsNotice" datatype="html">
         <source> Après la création du compte, vous déposerez votre diplôme et une pièce d&apos;identité (et, si vous en avez, votre attestation ADELI, RPPS ou de certification). Un administrateur vérifie le dossier sous 2 jours ouvrés ; l&apos;annuaire public n&apos;est accessible qu&apos;une fois le dossier validé. </source>
@@ -9484,16 +9492,25 @@
         </context-group>
         <note priority="1" from="description">Section consentements</note>
       </trans-unit>
-      <trans-unit id="auth.register.terms" datatype="html">
-        <source> J&apos;accepte les <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;legalPath&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;"/>conditions d&apos;utilisation<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-            &gt;"/> et j&apos;ai lu la <x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;privacyPath&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;
-              &gt;"/>politique de confidentialité<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-            &gt;"/>. Je comprends que je suis responsable du traitement des données de mes patients et que PsyMate en est l&apos;hébergeur. </source>
+      <trans-unit id="auth.register.terms.accept" datatype="html">
+        <source><x id="START_TAG_LABEL" ctype="x-label" equiv-text="&lt;label [for]=&quot;fieldId(&apos;terms&apos;)&quot;&gt;"/>J&apos;accepte les <x id="CLOSE_TAG_LABEL" ctype="x-label" equiv-text="&lt;/label&gt;"/><x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;legalPath&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;
+                &gt;"/>conditions d&apos;utilisation<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
+              &gt;"/><x id="START_TAG_LABEL" ctype="x-label" equiv-text="&lt;label [for]=&quot;fieldId(&apos;terms&apos;)&quot;&gt;"/> et j&apos;ai lu la <x id="CLOSE_TAG_LABEL" ctype="x-label" equiv-text="&lt;/label&gt;"/><x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;privacyPath&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;
+                &gt;"/>politique de confidentialité<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
+              &gt;"/><x id="START_TAG_LABEL" ctype="x-label" equiv-text="&lt;label [for]=&quot;fieldId(&apos;terms&apos;)&quot;&gt;"/>.<x id="CLOSE_TAG_LABEL" ctype="x-label" equiv-text="&lt;/label&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">355,362</context>
+          <context context-type="linenumber">373,380</context>
         </context-group>
-        <note priority="1" from="description">Case CGU et confidentialité, avec responsable du traitement</note>
+        <note priority="1" from="description">Case CGU et confidentialité, première phrase</note>
+      </trans-unit>
+      <trans-unit id="auth.register.terms.responsibility" datatype="html">
+        <source> Je comprends que je suis responsable du traitement des données de mes patients et que PsyMate en est l&apos;hébergeur.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">385,390</context>
+        </context-group>
+        <note priority="1" from="description">Case CGU, responsable du traitement</note>
       </trans-unit>
       <trans-unit id="auth.register.submit" datatype="html">
         <source> Créer mon compte </source>
