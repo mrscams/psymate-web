@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T13:56:26.108Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-D1bis Connexion en deux panneaux (maquette 11) : habillage nu, panneau identité + carte 420 px, empilé sous 900 px ; PR brouillon en attente de la règle UX-A10b",
+  "notes": "Page de destination créée 2 fois après connexion (outlet nu séparé, socle) ; hauteur pleine fenêtre attendue de la coquille en colonne flex. e2e : rouges restants = Mailpit sans e-mail depuis 12:45 UTC + ces 2 points socle.",
+  "pr": "https://github.com/mrscams/psymate-web/pull/75",
+  "branch": "claude/ux-login-two-panels",
+  "checkout": "agent-a4cca259574b749eb"
+}
