@@ -290,6 +290,9 @@ test('connexion au clavier : erreur 401, afficher le mot de passe, bloc code (2F
   await page.keyboard.press('Tab');
   await expect(page.getByLabel('Adresse e-mail')).toBeFocused();
   await page.keyboard.type(account.email);
+  // UX-D1 : « Mot de passe oublié ? » est à droite du libellé, donc avant le champ (maquette 11).
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: 'Mot de passe oublié ?' })).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(page.getByLabel('Mot de passe', { exact: true })).toBeFocused();
   await page.keyboard.type('Pas-le-bon-mot-de-passe-1');
@@ -302,12 +305,10 @@ test('connexion au clavier : erreur 401, afficher le mot de passe, bloc code (2F
     'type',
     'text',
   );
-  // Le bouton garde le focus (le clic ne remonte pas au conteneur mat-form-field).
+  // Le bouton garde le focus.
   await expect(toggle).toBeFocused();
   await page.keyboard.press('Space');
   await expect(toggle).toHaveAttribute('aria-pressed', 'false');
-  await page.keyboard.press('Tab');
-  await expect(page.getByRole('link', { name: 'Mot de passe oublié ?' })).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('checkbox', { name: /Rester connecté/ })).toBeFocused();
   await page.keyboard.press('Space');

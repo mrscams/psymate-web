@@ -90,6 +90,11 @@ export async function registerByKeyboard(
   await expectFocus(page, 'field-terms');
   await page.keyboard.press('Space');
   await expect(page.locator('#field-terms')).toBeChecked();
+  // UX-D2 : liens « conditions d'utilisation » et « politique de confidentialité » dans la case.
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: "conditions d'utilisation" })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: 'politique de confidentialité' })).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Créer mon compte' })).toBeFocused();
   await page.keyboard.press('Enter');

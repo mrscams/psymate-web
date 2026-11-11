@@ -1,3 +1,10 @@
+<p
+  class="tagline"
+  i18n="Accroche au-dessus de la carte de connexion (maquette 11)@@auth.login.tagline"
+>
+  Le fil de vos patients, séance après séance.
+</p>
+
 <section class="login-card">
   <h1 id="login-title" i18n="Titre de l'écran de connexion@@auth.login.title">Connexion</h1>
   <p class="intro">
@@ -12,6 +19,16 @@
     >
   </p>
 
+  @if (passwordChanged()) {
+    <p
+      class="banner banner--success"
+      role="status"
+      i18n="Mot de passe réinitialisé, invitation à se connecter@@auth.login.passwordChanged"
+    >
+      Mot de passe modifié. Toutes vos sessions ont été fermées : connectez-vous avec le nouveau.
+    </p>
+  }
+
   <form
     [formGroup]="form"
     (ngSubmit)="submit()"
@@ -19,102 +36,132 @@
     novalidate
     autocomplete="on"
   >
-    <mat-form-field appearance="outline">
-      <mat-label i18n="Champ e-mail de la connexion@@auth.login.email">Adresse e-mail</mat-label>
-      <input matInput type="email" formControlName="email" autocomplete="username" required />
-      @if (form.controls.email.hasError('required')) {
-        <mat-error i18n="E-mail manquant@@auth.login.email.required"
-          >Saisissez votre adresse e-mail.</mat-error
-        >
-      } @else if (form.controls.email.invalid) {
-        <mat-error i18n="E-mail mal formé@@auth.login.email.invalid"
-          >Cette adresse e-mail n'est pas valide.</mat-error
-        >
-      }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label i18n="Champ mot de passe de la connexion@@auth.login.password"
-        >Mot de passe</mat-label
+    <div class="field">
+      <label for="login-email" i18n="Champ e-mail de la connexion@@auth.login.email"
+        >Adresse e-mail</label
       >
       <input
-        #passwordInput
-        matInput
-        [type]="showPassword() ? 'text' : 'password'"
-        [class.masked]="!showPassword()"
-        formControlName="password"
-        autocomplete="current-password"
+        id="login-email"
+        type="email"
+        formControlName="email"
+        autocomplete="username"
         required
+        [attr.aria-invalid]="invalid('email')"
+        [attr.aria-describedby]="invalid('email') ? 'login-email-error' : null"
       />
-      <button
-        matSuffix
-        mat-icon-button
-        type="button"
-        class="toggle-password"
-        [attr.aria-pressed]="showPassword()"
-        [attr.aria-label]="showPasswordLabel"
-        (click)="togglePassword($event)"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          @if (showPassword()) {
-            <path
-              d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.1A10.5 10.5 0 0 1 12 5c5 0 9 4 10 7a12 12 0 0 1-2.6 3.7M6.6 6.6C4.4 8 2.8 10 2 12c1 3 5 7 10 7 1.5 0 2.9-.3 4.1-.9"
-            />
-          } @else {
-            <path d="M2 12c1-3 5-7 10-7s9 4 10 7c-1 3-5 7-10 7S3 15 2 12Z" />
-            <circle cx="12" cy="12" r="3" />
-          }
-        </svg>
-      </button>
-      @if (form.controls.password.invalid) {
-        <mat-error i18n="Mot de passe manquant@@auth.login.password.required"
-          >Saisissez votre mot de passe.</mat-error
-        >
+      @if (invalid('email')) {
+        @if (form.controls.email.hasError('required')) {
+          <p
+            id="login-email-error"
+            class="field-error"
+            i18n="E-mail manquant@@auth.login.email.required"
+          >
+            Saisissez votre adresse e-mail.
+          </p>
+        } @else {
+          <p
+            id="login-email-error"
+            class="field-error"
+            i18n="E-mail mal formé@@auth.login.email.invalid"
+          >
+            Cette adresse e-mail n'est pas valide.
+          </p>
+        }
       }
-    </mat-form-field>
-    <p class="aside-link">
-      <a
-        class="pm-link-target"
-        [routerLink]="paths.passwordReset"
-        i18n="Lien mot de passe oublié@@auth.login.forgot"
-        >Mot de passe oublié ?</a
-      >
-    </p>
+    </div>
+
+    <div class="field">
+      <div class="label-row">
+        <label for="login-password" i18n="Champ mot de passe de la connexion@@auth.login.password"
+          >Mot de passe</label
+        >
+        <a
+          class="pm-link-target forgot"
+          [routerLink]="paths.passwordReset"
+          i18n="Lien mot de passe oublié@@auth.login.forgot"
+          >Mot de passe oublié ?</a
+        >
+      </div>
+      <div class="password" data-focus-ring="container" [class.invalid]="invalid('password')">
+        <input
+          #passwordInput
+          id="login-password"
+          [type]="showPassword() ? 'text' : 'password'"
+          [class.masked]="!showPassword()"
+          formControlName="password"
+          autocomplete="current-password"
+          required
+          [attr.aria-invalid]="invalid('password')"
+          [attr.aria-describedby]="invalid('password') ? 'login-password-error' : null"
+        />
+        <button
+          type="button"
+          class="toggle-password"
+          [attr.aria-pressed]="showPassword()"
+          [attr.aria-label]="showPasswordLabel"
+          (click)="togglePassword($event)"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            @if (showPassword()) {
+              <path
+                d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.1A10.5 10.5 0 0 1 12 5c5 0 9 4 10 7a12 12 0 0 1-2.6 3.7M6.6 6.6C4.4 8 2.8 10 2 12c1 3 5 7 10 7 1.5 0 2.9-.3 4.1-.9"
+              />
+            } @else {
+              <path d="M2 12c1-3 5-7 10-7s9 4 10 7c-1 3-5 7-10 7S3 15 2 12Z" />
+              <circle cx="12" cy="12" r="3" />
+            }
+          </svg>
+        </button>
+      </div>
+      @if (invalid('password')) {
+        <p
+          id="login-password-error"
+          class="field-error"
+          i18n="Mot de passe manquant@@auth.login.password.required"
+        >
+          Saisissez votre mot de passe.
+        </p>
+      }
+    </div>
 
     @if (store.otpRequired()) {
       <div class="otp" role="group" aria-labelledby="otp-title">
         <p id="otp-title" class="otp-title" i18n="Titre du bloc code 2FA@@auth.login.otp.title">
           Double authentification activée
         </p>
-        <mat-form-field appearance="outline">
-          <mat-label i18n="Champ code de vérification@@auth.login.otp"
-            >Code de vérification</mat-label
+        <label for="login-otp" i18n="Champ code de vérification@@auth.login.otp"
+          >Code de vérification</label
+        >
+        @if (recoveryCode()) {
+          <p
+            id="login-otp-hint"
+            class="hint"
+            i18n="Aide du champ code de secours@@auth.login.otp.recoveryHint"
           >
+            Un de vos 10 codes de secours ; il ne servira qu'une fois.
+          </p>
+        } @else {
+          <p id="login-otp-hint" class="hint" i18n="Aide du champ code 2FA@@auth.login.otp.hint">
+            Les 6 chiffres de votre application d'authentification.
+          </p>
+        }
+        <div class="otp-row">
           <input
             #otpInput
-            matInput
+            id="login-otp"
             class="otp-input"
+            [class.recovery]="recoveryCode()"
             type="text"
             [attr.inputmode]="recoveryCode() ? 'text' : 'numeric'"
             autocomplete="one-time-code"
             formControlName="otp"
             required
+            aria-describedby="login-otp-hint"
           />
-          @if (recoveryCode()) {
-            <mat-hint i18n="Aide du champ code de secours@@auth.login.otp.recoveryHint"
-              >Un de vos 10 codes de secours ; il ne servira qu'une fois.</mat-hint
-            >
-          } @else {
-            <mat-hint i18n="Aide du champ code 2FA@@auth.login.otp.hint"
-              >Les 6 chiffres de votre application d'authentification.</mat-hint
-            >
-          }
-        </mat-form-field>
-        <p class="aside-link">
           @if (recoveryCode()) {
             <button
               type="button"
-              class="link-button"
+              class="link-button pm-link-target"
               (click)="useRecoveryCode(false)"
               i18n="Revenir au code de l'application@@auth.login.otp.useApp"
             >
@@ -123,22 +170,23 @@
           } @else {
             <button
               type="button"
-              class="link-button"
+              class="link-button pm-link-target"
               (click)="useRecoveryCode(true)"
               i18n="Basculer vers un code de secours@@auth.login.otp.useRecovery"
             >
               Utiliser un code de secours
             </button>
           }
-        </p>
+        </div>
       </div>
     }
 
-    <mat-checkbox
-      formControlName="rememberMe"
-      i18n="Case rester connecté (G Q6)@@auth.login.remember"
-      >Rester connecté 30 jours</mat-checkbox
-    >
+    <label class="check">
+      <input type="checkbox" formControlName="rememberMe" />
+      <span i18n="Case rester connecté (G Q6)@@auth.login.remember"
+        >Rester connecté·e sur cet appareil pendant 30 jours</span
+      >
+    </label>
 
     @if (locked()) {
       <p
@@ -166,3 +214,11 @@
     </p>
   </form>
 </section>
+
+<p
+  class="hosting"
+  i18n="Mention hébergement sous la carte de connexion (maquette 11)@@auth.login.hosting"
+>
+  Données hébergées en France · chiffrées au repos et en transit · vous restez seul·e propriétaire
+  de vos dossiers.
+</p>

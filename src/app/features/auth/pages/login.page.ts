@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -13,9 +14,6 @@ import {
 } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
 
 import { afterLogin } from '../../../core/auth';
@@ -24,8 +22,13 @@ import { AUTH_FEATURE_PATHS } from '../auth-feature-paths';
 import { ConfirmEmailStore } from '../data/confirm-email.store';
 import { LoginStore } from '../data/login.store';
 
+/** État de navigation posé par l'étape 2 du mot de passe oublié après un 204 (fiche 26). */
+export const PASSWORD_CHANGED_STATE = 'passwordChanged';
+
 /**
- * /connexion (fiche 11) : e-mail, mot de passe avec bouton afficher, « rester connecté » (G Q6),
+ * /connexion (fiche 11, UX-D1) : accroche au-dessus de la carte et mention d'hébergement dessous
+ * (layout public à une carte, fiche 00 §4, au lieu des deux panneaux de la maquette), libellés
+ * au-dessus des champs, « Mot de passe oublié ? » à droite du libellé, e-mail, mot de passe avec bouton afficher, « rester connecté » (G Q6),
  * bloc code de vérification après un 202 (code de l'application ou code de secours), message unique
  * 401, verrou 423 avec compte à rebours, liens Créer un compte et Mot de passe oublié. Les 403
  * d'état (e-mail non confirmé, compte suspendu, mot de passe à changer) sont redirigés par
@@ -33,14 +36,7 @@ import { LoginStore } from '../data/login.store';
  */
 @Component({
   selector: 'pm-login-page',
-  imports: [
-    ReactiveFormsModule,
-    RouterLink,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatInputModule,
-  ],
+  imports: [ReactiveFormsModule, RouterLink, MatButtonModule],
   providers: [LoginStore],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss',
@@ -54,6 +50,7 @@ export class LoginPage {
   private readonly confirmEmail = inject(ConfirmEmailStore);
   private readonly router = inject(Router);
   private readonly injector = inject(Injector);
+  private readonly document = inject(DOCUMENT);
 
   protected readonly paths = AUTH_FEATURE_PATHS;
 
@@ -82,6 +79,22 @@ export class LoginPage {
   protected readonly lockDelay = computed(() => formatDelay(this.lockSeconds()));
   protected readonly message = computed(() => errorMessage(this.store.problem()));
 
+  /** Arrivée depuis l'étape 2 du mot de passe oublié : le mot de passe vient d'être remplacé. */
+  protected readonly passwordChanged = signal(this.readPasswordChanged());
+
+  /** Le champ a été touché et il est invalide : message sous le champ, aria-invalid. */
+  protected invalid(name: 'email' | 'password'): boolean {
+    const control = this.form.controls[name];
+    return control.invalid && control.touched;
+  }
+
+  private readPasswordChanged(): boolean {
+    const state =
+      this.router.getCurrentNavigation()?.extras.state ??
+      (this.document.defaultView?.history.state as Record<string, unknown> | null);
+    return state?.[PASSWORD_CHANGED_STATE] === true;
+  }
+
   constructor() {
     // Compte à rebours du verrou (423 + Retry-After) : une seconde à la fois, arrêté à zéro.
     effect((onCleanup) => {
@@ -95,10 +108,7 @@ export class LoginPage {
     });
   }
 
-  /**
-   * Afficher / masquer le mot de passe. Le clic ne remonte pas au conteneur mat-form-field, qui
-   * sinon rend le focus au champ : au clavier, le bouton garderait son état sans garder le focus.
-   */
+  /** Afficher / masquer le mot de passe ; le bouton garde le focus (le clic ne remonte pas). */
   protected togglePassword(event: Event): void {
     event.stopPropagation();
     this.showPassword.set(!this.showPassword());
@@ -115,6 +125,7 @@ export class LoginPage {
       this.form.markAllAsTouched();
       return;
     }
+    this.passwordChanged.set(false);
     const { email, password, otp, rememberMe } = this.form.getRawValue();
     const wasOtpRequired = this.store.otpRequired();
     const user = await this.store.submit({

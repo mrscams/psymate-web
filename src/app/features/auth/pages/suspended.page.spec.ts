@@ -288,7 +288,7 @@ describe('SuspendedPage · recours', () => {
       MESSAGE,
     );
     expect(el.querySelector('form.appeal')).toBeNull();
-    const status = el.querySelector('aside [role=status]');
+    const status = el.querySelector('.appeal-card [role=status]');
     expect(status?.textContent).toContain('Recours envoyé le');
     expect(status?.textContent).toContain('2026');
   });
@@ -301,7 +301,7 @@ describe('SuspendedPage · recours', () => {
     type(el, 'field-message', MESSAGE);
     await click(fixture, el, 'Envoyer le recours');
     expect(el.querySelector('form.appeal')).toBeNull();
-    expect(el.querySelector('aside [role=status]')?.textContent).toContain(
+    expect(el.querySelector('.appeal-card [role=status]')?.textContent).toContain(
       "Un recours est déjà en cours d'examen",
     );
   });
