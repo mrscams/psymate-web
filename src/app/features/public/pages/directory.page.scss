@@ -1,17 +1,7 @@
-// Largeur de la maquette 08 (1 360 px, marges de 40 px, soit 1 280 px de contenu) : le layout
-// public partagé plafonne son contenu à 1 072 px (1 120 px moins 2 × 24 px) ; l'annuaire, seul écran
-// à trois colonnes (filtres, fiche, actions), déborde de part et d'autre dès que la fenêtre le permet,
-// en gardant 40 px de marge. Sous 1 152 px de fenêtre la marge vaut 0 : rien ne change.
-$layout-content: 1072px;
-$mockup-max: 1360px;
-$mockup-gutter: 40px;
-
+// Largeur de la maquette 08 : portée par la route (`data.contentWidth: 'wide'`, UX-A8 et UX-A9c),
+// le layout public élargit son contenu ; la page ne déborde plus de son conteneur.
 :host {
   display: block;
-  margin-inline: min(
-    0px,
-    calc((min(100vw, #{$mockup-max}) - 2 * #{$mockup-gutter} - #{$layout-content}) / -2)
-  );
 }
 
 .intro {

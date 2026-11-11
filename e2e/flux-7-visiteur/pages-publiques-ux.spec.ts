@@ -184,6 +184,63 @@ test.describe('annuaire (UX-D6)', () => {
   });
 });
 
+test.describe('largeur de l’annuaire par la route (UX-A9c)', () => {
+  /** Largeur du `<main>` du layout public et de la page qu'il contient. */
+  async function widths(page: Page): Promise<{ main: number; page: number }> {
+    return page.evaluate(() => {
+      const main = document.querySelector('main#main')!;
+      const host = [...main.children].find((el) => el.tagName.endsWith('-PAGE'))!;
+      return {
+        main: Math.round(main.getBoundingClientRect().width),
+        page: Math.round(host.getBoundingClientRect().width),
+      };
+    });
+  }
+
+  test('annuaire à 1 280 px par data.contentWidth, sans marge négative ; autres pages inchangées', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/fr/annuaire');
+    await resultsShown(page);
+    // Le layout porte la largeur ; la page remplit son conteneur, sans en déborder.
+    expect(await widths(page)).toEqual({ main: 1328, page: 1280 });
+    await expect(page.locator('pm-directory-page')).toHaveCSS('margin-left', '0px');
+    const chip = page.locator('pm-practitioner-card .availability').first();
+    if (await chip.count()) {
+      // Puce de disponibilité sur une ligne (12 px × 1,4 + marges : moins de deux lignes).
+      const box = await chip.boundingBox();
+      expect(box!.height).toBeLessThan(2 * 12 * 1.4);
+    }
+
+    // Comment ça marche et la fiche publique gardent la largeur par défaut (1 120 px).
+    await page.goto('/fr/comment-ca-marche');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    expect(await widths(page)).toEqual({ main: 1120, page: 1072 });
+
+    await page.goto('/fr/annuaire');
+    await resultsShown(page);
+    const card = page.locator('pm-practitioner-card').first();
+    if (await card.count()) {
+      await card.getByRole('link', { name: /^Voir la fiche/ }).click();
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+      expect(await widths(page)).toEqual({ main: 1120, page: 1072 });
+    }
+  });
+
+  for (const width of [1072, 1120, 1152, 1200, 1250, 1300, 1328, 1360, 1400]) {
+    test(`annuaire à ${width} px : pas de défilement horizontal`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/fr/annuaire');
+      await resultsShown(page);
+      await noHorizontalScroll(page);
+      const { main, page: inner } = await widths(page);
+      expect(main).toBeLessThanOrEqual(width);
+      expect(inner).toBe(main - 48);
+    });
+  }
+});
+
 test.describe('fiche publique (UX-D7)', () => {
   test('libellés au-dessus, compteur à droite de l’aide, lien vers la confidentialité', async ({
     page,

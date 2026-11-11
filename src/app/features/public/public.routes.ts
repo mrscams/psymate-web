@@ -7,13 +7,15 @@ import { PractitionerPage } from './pages/practitioner.page';
 /**
  * Pages publiques (fiches 08, 09, 24), montées à la racine par app.routes.ts avec le layout public,
  * sans garde ni session. Pleine largeur (`wide`) : la colonne de 480 px est celle des formulaires.
- * Prérendu : app.routes.server.ts.
+ * L'annuaire (maquette 08, filtres et liste côte à côte) déclare `contentWidth: 'wide'` (UX-A8,
+ * UX-A9c) : le layout public lui donne sa largeur de 1 280 px ; les autres pages gardent la largeur
+ * par défaut. Prérendu : app.routes.server.ts.
  */
 export const PUBLIC_ROUTES: Routes = [
   {
     path: 'annuaire',
     component: DirectoryPage,
-    data: { wide: true },
+    data: { contentWidth: 'wide' },
     title: $localize`:Titre d'onglet de l'annuaire@@public.directory.pageTitle:Annuaire des praticiens · PsyMate`,
   },
   {
