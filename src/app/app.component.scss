@@ -1,7 +1,19 @@
+@use './shared/ui/public-layout/public-main';
+
 :host {
   display: block;
   min-height: 100%;
   background: var(--surface-ground);
+}
+
+/* Habillage public (UX-A10) : la couleur de texte que posait l'hôte de pm-public-layout. */
+:host(.public) {
+  color: var(--text-primary);
+}
+
+/* `<main>` de l'habillage public : mêmes règles que celui de pm-public-layout (fiche 00 §4). */
+.public-main {
+  @include public-main.public-main;
 }
 
 .app-main {

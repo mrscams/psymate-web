@@ -1,5 +1,15 @@
-import { PlatformLocation } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, LOCALE_ID } from '@angular/core';
+import { DOCUMENT, PlatformLocation } from '@angular/common';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  Injector,
+  LOCALE_ID,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
@@ -13,7 +23,8 @@ import {
   AdminBarComponent,
   AppBarComponent,
   NetworkBannerComponent,
-  PublicLayoutComponent,
+  PublicFooterComponent,
+  PublicHeaderComponent,
   ToastOutletComponent,
   VerificationBannerComponent,
 } from './shared/ui';
@@ -43,6 +54,15 @@ export type ContentWidth = 'default' | 'wide';
  * Coquille de l'application (fiche 00) : choisit l'habillage selon la route, passe la session à la
  * barre d'application et au bandeau d'état, pose les toasts et le bandeau réseau une seule fois.
  * Habillage praticien : la touche ? ouvre l'aide des raccourcis (features/patient-shell, M7-03).
+ *
+ * UX-A10 : un seul `<main id="main">` et un seul `<router-outlet>` servent les habillages praticien,
+ * public et admin ; autour, seuls la barre, les bandeaux, le pied et les classes du `<main>` suivent
+ * l'habillage. La page n'est donc jamais détruite ni recréée quand l'habillage change (fin de la
+ * première navigation, connexion, déconnexion, passage à /admin) : avant, chaque branche d'un
+ * `@switch` portait son outlet et la page était créée deux fois, ses lectures parties deux fois.
+ * L'outlet n'est rendu qu'après la première navigation (`navigated`) : la route déjà activée s'y
+ * attache une fois, dans l'habillage de sa route, y compris l'habillage nu, qui garde son propre
+ * outlet hors du `<main>` (la page de démonstration pose déjà un layout public complet).
  */
 @Component({
   selector: 'pm-root',
@@ -51,7 +71,8 @@ export type ContentWidth = 'default' | 'wide';
     AdminBarComponent,
     AppBarComponent,
     NetworkBannerComponent,
-    PublicLayoutComponent,
+    PublicFooterComponent,
+    PublicHeaderComponent,
     ShortcutsHelpComponent,
     ToastOutletComponent,
     VerificationBannerComponent,
@@ -59,6 +80,7 @@ export type ContentWidth = 'default' | 'wide';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { '[class.public]': "layout() === 'public'" },
 })
 export class AppComponent {
   private readonly router = inject(Router);
@@ -90,6 +112,19 @@ export class AppComponent {
     },
   );
 
+  /**
+   * Vrai dès la fin de la première navigation réussie (ou déjà vrai si elle a eu lieu avant la
+   * création de la coquille). Avant, l'habillage n'est pas connu : aucun outlet, la route activée
+   * entre-temps attend dans son contexte et l'outlet l'affiche à sa création, une seule fois.
+   */
+  protected readonly navigated = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map(() => true),
+    ),
+    { initialValue: this.router.navigated },
+  );
+
   protected readonly layout = computed(() => this.navigation().layout);
   protected readonly contentWidth = computed(() => this.navigation().contentWidth);
   /** Formulaires publics à 480 px, sauf route `data.wide` ou `data.contentWidth: 'wide'`. */
@@ -104,9 +139,39 @@ export class AppComponent {
     return me ? { displayName: me.displayName } : null;
   });
 
+  private readonly host: HTMLElement = inject(ElementRef).nativeElement;
+  private readonly document = inject(DOCUMENT);
+
   constructor() {
     // Applique data-theme dès le démarrage ; la clé `theme` des préférences le pilote (core/preferences).
     inject(ThemeService);
+
+    // Changement d'habillage (connexion, déconnexion…) : la tabulation repart du haut de la coquille,
+    // comme quand l'habillage entier était reconstruit (avant UX-A10), et non de la place qu'occupait
+    // dans le <main> le contrôle disparu avec l'ancienne page.
+    const injector = inject(Injector);
+    let shown: AppLayout | null = null;
+    effect(() => {
+      const layout = this.layout();
+      if (shown !== null && layout !== shown) {
+        afterNextRender(() => this.restartSequentialFocus(), { injector });
+      }
+      shown = layout;
+    });
+  }
+
+  /**
+   * Si le focus est perdu (sur `body`), ramène le point de départ de la navigation au clavier au
+   * début de la coquille : la touche Tab atteint alors d'abord le lien d'évitement. Un focus vivant
+   * (posé par la page, ou dans un menu) n'est pas touché.
+   */
+  private restartSequentialFocus(): void {
+    const active = this.document.activeElement;
+    if (active && active !== this.document.body && active.isConnected) return;
+    this.host.setAttribute('tabindex', '-1');
+    this.host.focus({ preventScroll: true });
+    this.host.blur();
+    this.host.removeAttribute('tabindex');
   }
 
   /** POST /api/auth/logout, puis retour à la connexion. */

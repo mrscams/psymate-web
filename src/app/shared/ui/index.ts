@@ -1,4 +1,5 @@
-// Composants partagés (fiche 00) : barres, layouts, en-tête patient, panneau latéral, états,
+// Composants partagés (fiche 00) : barres, layouts (le layout public aussi en pièces, bandeau et
+// pied, pour la coquille, UX-A10), en-tête patient, panneau latéral, états,
 // toasts, confirmation, icônes et titre de repli des entrées, résumé des erreurs de formulaire
 // (pm-form-errors). Ne se modifient que par une tâche dédiée.
 // Champs date et mois (pm-date-field, pm-month-field) : importés depuis 'shared/ui/date-field', hors
@@ -23,6 +24,8 @@ export {
   PatientHeaderComponent,
   UNCLOSED_SESSION_AFTER_MIN,
 } from './patient-header/patient-header.component';
+export { PublicFooterComponent } from './public-layout/public-footer.component';
+export { PublicHeaderComponent } from './public-layout/public-header.component';
 export { PUBLIC_PATHS, PublicLayoutComponent } from './public-layout/public-layout.component';
 export * from './side-panel';
 export type { SkeletonVariant, StateAction } from './state/state.component';
