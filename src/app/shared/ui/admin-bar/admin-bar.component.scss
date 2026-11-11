@@ -98,6 +98,18 @@
   cursor: pointer;
 }
 
+// Focus sur la barre sombre (UX-A2) : le cobalt global ferait 2,71:1 sur admin-bar-bg ; anneau
+// admin-focus (pnpm check:tokens : couple admin-focus / admin-bar-bg), sans le halo primary-tint, qui
+// glisserait une bande claire entre l'élément et l'anneau.
+.brand,
+.tabs a,
+.avatar {
+  &:focus-visible {
+    outline-color: var(--admin-focus);
+    box-shadow: none;
+  }
+}
+
 .reminder {
   margin: 0;
   padding: 4px 16px 6px;
