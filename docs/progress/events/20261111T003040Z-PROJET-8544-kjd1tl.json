@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-11T00:30:40.201Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-A6 : pages statiques du pied public (mentions légales, confidentialité, accessibilité), contenu provisoire à compléter par le propriétaire",
+  "notes": "progress:log refuse l'ID UX-A6 (motif M..-.. ou PROJET) ; layout inchangé ; pages noindex ; objectif WCAG 2.1 AA (B-ux)",
+  "next": "Fournir le contenu juridique définitif puis passer les pages en index,follow",
+  "pr": "https://github.com/mrscams/psymate-web/pull/46",
+  "branch": "claude/ux-a6-pages-pied-afe5d4",
+  "checkout": "ux-a6-pages-pied-afe5d4"
+}
