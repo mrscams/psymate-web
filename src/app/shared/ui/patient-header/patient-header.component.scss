@@ -113,3 +113,47 @@
 .view-toggle {
   padding-bottom: 6px;
 }
+
+.tabs {
+  min-width: 0;
+}
+
+/* Sous 760 px (UX-A1) : chip de séance et bouton empilés sous le nom ; onglets sur une ligne,
+   bascule « Vue » et sa mention sur la suivante. */
+@media (max-width: 760px) {
+  .patient-header {
+    padding: 12px 16px 0;
+  }
+  .identity {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .session {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .tabs-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+  .tabs {
+    overflow-x: auto;
+
+    a {
+      flex-shrink: 0;
+      padding: 0 10px;
+    }
+  }
+  .view-toggle {
+    padding-bottom: 8px;
+  }
+}
+
+/* Raccourcis clavier masqués sur téléphone : le libellé suffit et la ligne tient en 375 px. */
+@media (max-width: 600px) {
+  .tabs kbd {
+    display: none;
+  }
+}

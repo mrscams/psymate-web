@@ -1,5 +1,6 @@
 :host {
   display: block;
+  min-width: 0;
 }
 
 .account-nav {
@@ -73,17 +74,25 @@ a {
   }
 }
 
-@media (max-width: 390px) {
+/* Sous 760 px (fiche 00 §3, UX-A1) : la colonne devient des onglets horizontaux défilants, pastilles
+   conservées. L'hôte prend toute la ligne du conteneur flex de la page ; la liste défile seule. */
+@media (max-width: 760px) {
+  :host {
+    min-width: 100%;
+  }
   .account-nav {
     width: 100%;
   }
   .who {
-    padding: 0 0 8px;
+    padding: 0 12px 8px;
   }
   ul {
     flex-direction: row;
     overflow-x: auto;
     border-bottom: 1px solid var(--border-subtle);
+  }
+  li {
+    flex-shrink: 0;
   }
   a {
     border-radius: 0;

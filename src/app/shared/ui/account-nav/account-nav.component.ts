@@ -39,7 +39,7 @@ export function verificationBadge(
 /**
  * Navigation Mon compte (fiche 00 §3) : colonne 220 px avec le nom, profession · ville, et six
  * entrées ; pastille « publié » sur Profil public, pastille d'état sur Dossier professionnel. Sous
- * 390 px, onglets horizontaux. `aria-current="page"` sur l'entrée active.
+ * 760 px, onglets horizontaux. `aria-current="page"` sur l'entrée active.
  */
 @Component({
   selector: 'pm-account-nav',
