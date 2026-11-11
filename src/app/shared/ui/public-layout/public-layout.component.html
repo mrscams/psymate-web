@@ -4,8 +4,8 @@
   [switchLang]="switchLang()"
 />
 
-<main id="main" class="public-main" [class.narrow]="narrow()" [class.wide]="wide() && !narrow()">
+<div class="public-main" [class.narrow]="narrow()" [class.wide]="wide() && !narrow()">
   <ng-content />
-</main>
+</div>
 
 <pm-public-footer />
