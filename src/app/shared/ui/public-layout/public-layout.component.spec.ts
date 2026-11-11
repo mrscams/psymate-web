@@ -93,4 +93,15 @@ describe('PublicLayoutComponent', () => {
     expect(bothMain.classList.contains('narrow')).toBe(true);
     expect(bothMain.classList.contains('wide')).toBe(false);
   });
+
+  it('UX-A9c : wide plafonne à 1 280 px de contenu, marges intérieures en plus (border-box)', async () => {
+    const { el } = await render({ wide: true });
+    const main = el.querySelector('main')!;
+    const style = getComputedStyle(main);
+    // Une seule source pour la marge latérale : le padding et le plafond du mode large la lisent.
+    expect(style.getPropertyValue('--public-main-inline').trim()).toBe('24px');
+    expect(style.maxWidth.replace(/\s+/g, ' ')).toBe(
+      'calc(1280px + 2 * var(--public-main-inline))',
+    );
+  });
 });

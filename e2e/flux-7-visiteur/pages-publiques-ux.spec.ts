@@ -204,7 +204,7 @@ test.describe('largeur de l’annuaire par la route (UX-A9c)', () => {
     await page.goto('/fr/annuaire');
     await resultsShown(page);
     // Le layout porte la largeur ; la page remplit son conteneur, sans en déborder.
-    expect(await widths(page)).toEqual({ main: 1280, page: 1232 });
+    expect(await widths(page)).toEqual({ main: 1328, page: 1280 });
     await expect(page.locator('pm-directory-page')).toHaveCSS('margin-left', '0px');
     const chip = page.locator('pm-practitioner-card .availability').first();
     if (await chip.count()) {
@@ -228,7 +228,7 @@ test.describe('largeur de l’annuaire par la route (UX-A9c)', () => {
     }
   });
 
-  for (const width of [1072, 1120, 1152, 1200, 1250, 1300]) {
+  for (const width of [1072, 1120, 1152, 1200, 1250, 1300, 1328, 1360, 1400]) {
     test(`annuaire à ${width} px : pas de défilement horizontal`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto('/fr/annuaire');

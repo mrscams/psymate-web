@@ -18,7 +18,11 @@ export type {
   PatientHeaderInfo,
   PatientSessionInfo,
 } from './patient-header/patient-header.component';
-export { PATIENT_TABS, PatientHeaderComponent } from './patient-header/patient-header.component';
+export {
+  PATIENT_TABS,
+  PatientHeaderComponent,
+  UNCLOSED_SESSION_AFTER_MIN,
+} from './patient-header/patient-header.component';
 export { PUBLIC_PATHS, PublicLayoutComponent } from './public-layout/public-layout.component';
 export * from './side-panel';
 export type { SkeletonVariant, StateAction } from './state/state.component';
