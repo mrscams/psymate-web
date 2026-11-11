@@ -182,7 +182,7 @@ test('localStorage.prefs corrompu : l’application démarre quand même', async
   const account = await createAccount(request, 'm1-16.cache', 'psychologist');
   await page.addInitScript(() => localStorage.setItem('prefs', '{{{ pas du json'));
   await page.goto('/fr/connexion');
-  await expect(page.getByRole('heading', { level: 1, name: 'Connexion' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Connexion' })).toBeVisible();
   await signIn(page, account);
   await openPreferences(page);
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
@@ -213,7 +213,7 @@ test('langue : English recharge la page dans l’autre bundle, et la préférenc
   const other = await browser.newContext();
   const otherPage = await other.newPage();
   await otherPage.goto('/fr/connexion');
-  await otherPage.getByLabel('Adresse e-mail').fill(account.email);
+  await otherPage.getByLabel('E-mail professionnel').fill(account.email);
   await otherPage.getByLabel('Mot de passe', { exact: true }).fill(account.password);
   await otherPage.getByRole('button', { name: 'Se connecter' }).click();
   await expect(otherPage).toHaveURL(/\/en\/patients$/);

@@ -38,7 +38,9 @@ export async function createAccount(
 /** Connexion par l'écran (fiche 11), puis attente de /patients. */
 export async function signIn(page: Page, account: TestAccount, locale = 'fr'): Promise<void> {
   await page.goto(`/${locale}/connexion`);
-  await page.getByLabel(locale === 'fr' ? 'Adresse e-mail' : 'Email address').fill(account.email);
+  await page
+    .getByLabel(locale === 'fr' ? 'E-mail professionnel' : 'Work email')
+    .fill(account.email);
   await page
     .getByLabel(locale === 'fr' ? 'Mot de passe' : 'Password', { exact: true })
     .fill(account.password);

@@ -114,7 +114,7 @@ test('activer la 2FA par le panneau (QR, code faux puis juste, 10 codes), puis l
   // Reconnexion : 202 otpRequired, code faux → message unique, code juste → /patients.
   await signOut(page);
   await page.goto('/fr/connexion');
-  await page.getByLabel('Adresse e-mail').fill(account.email);
+  await page.getByLabel('E-mail professionnel').fill(account.email);
   await page.getByLabel('Mot de passe', { exact: true }).fill(account.password);
   await page.getByRole('button', { name: 'Se connecter' }).click();
   const otp = page.getByLabel('Code de vérification');

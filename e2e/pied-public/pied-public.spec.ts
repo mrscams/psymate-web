@@ -5,6 +5,7 @@ import { expectNoAxeViolations } from '../support/axe';
 // UX-A6 (fiche 00 §4) : les trois liens du pied public mènent à leur page, sans session et sans
 // redirection (avant : route `**` puis /connexion). axe-core à 0 dans les deux thèmes, aucun
 // débordement horizontal à 375 px. Contre l'application construite, jamais de mock du backend.
+// Point de départ : « Comment ça marche » (UX-D1bis : la connexion n'a plus le pied public, maquette 11).
 
 const LINKS = [
   { name: 'Mentions légales', path: '/fr/mentions-legales', tab: 'Mentions légales · PsyMate' },
@@ -13,10 +14,11 @@ const LINKS = [
 ] as const;
 
 for (const link of LINKS) {
-  test(`pied public : « ${link.name} » ouvre sa page depuis /connexion, sans redirection`, async ({
+  test(`pied public : « ${link.name} » ouvre sa page depuis « Comment ça marche », sans redirection`, async ({
     page,
   }) => {
-    await page.goto('/fr/connexion');
+    await page.goto('/fr/comment-ca-marche');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     const footer = page.getByRole('navigation', { name: 'Informations légales' });
     await expect(footer).toBeVisible();
 

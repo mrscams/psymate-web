@@ -61,25 +61,68 @@ describe('LoginPage', () => {
     const links = [...el.querySelectorAll('a')].map((a) => a.textContent?.trim());
     expect(links).toContain('Créer un compte');
     expect(links).toContain('Mot de passe oublié ?');
+    // Une espace entre la phrase et le lien (maquette 11), que la suppression des blancs ne retire pas.
+    expect(el.querySelector('.intro')?.textContent?.trim()).toBe(
+      'Espace réservé aux praticiens. Créer un compte',
+    );
     expect(el.textContent).toContain('verrouillé 15 minutes');
   });
 
-  it('UX-D1 · accroche au-dessus de la carte, mention d’hébergement dessous', async () => {
+  it('UX-D1bis · deux panneaux (maquette 11) : identité à gauche, carte à droite, pied après la carte', async () => {
     const { el } = await render(vi.fn());
-    const tagline = el.querySelector('.tagline');
-    const card = el.querySelector('.login-card');
-    const hosting = el.querySelector('.hosting');
-    expect(tagline?.textContent).toContain('Le fil de vos patients, séance après séance.');
-    expect(tagline?.nextElementSibling).toBe(card);
-    expect(card?.nextElementSibling).toBe(hosting);
-    expect(hosting?.textContent).toContain('Données hébergées en France');
+    const main = el.querySelector('.login');
+    expect(main).not.toBeNull();
+    const blocks = [...(main?.children ?? [])].map((child) => child.className);
+    expect(blocks).toEqual(['brand-panel', 'form-panel', 'panel-foot']);
+
+    const brand = el.querySelector('.brand-panel');
+    expect(brand?.querySelector('.logo')?.textContent).toContain('PsyMate');
+    const h1 = el.querySelector('h1');
+    expect(brand?.contains(h1)).toBe(true);
+    expect(h1?.textContent).toContain('Le fil de vos patients, séance après séance.');
+    expect(brand?.querySelector('.pitch-text')?.textContent).toContain(
+      'Pour psychologues, psychiatres et coachs.',
+    );
+
+    const foot = el.querySelector('.panel-foot');
+    expect(foot?.querySelector('.hosting')?.textContent).toContain('Données hébergées en France');
+    const links = [...(foot?.querySelectorAll('a') ?? [])];
+    expect(links.map((a) => a.textContent?.trim())).toEqual([
+      'Confidentialité',
+      'Mentions légales',
+      'Annuaire public',
+    ]);
+    expect(links.map((a) => a.getAttribute('href'))).toEqual([
+      '/confidentialite',
+      '/mentions-legales',
+      '/annuaire',
+    ]);
+  });
+
+  it('UX-D1bis · aperçu de la timeline décoratif : masqué aux lecteurs d’écran, sans texte', async () => {
+    const { el } = await render(vi.fn());
+    const preview = el.querySelector('.preview');
+    expect(preview?.getAttribute('aria-hidden')).toBe('true');
+    expect(preview?.querySelectorAll('.preview-row')).toHaveLength(4);
+    expect(preview?.textContent?.trim()).toBe('');
+    expect(el.querySelector('.logo-mark')?.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('UX-D1bis · titre de la carte en h2 sous l’accroche, la carte est le formulaire étiqueté', async () => {
+    const { el } = await render(vi.fn());
+    expect(el.querySelectorAll('h1')).toHaveLength(1);
+    const title = el.querySelector('h2#login-title');
+    expect(title?.textContent?.trim()).toBe('Connexion');
+    const form = el.querySelector('.form-panel > form.login-card');
+    expect(form).not.toBeNull();
+    expect(form?.contains(title)).toBe(true);
   });
 
   it('UX-D1 · libellés au-dessus des champs, « Mot de passe oublié ? » à droite du libellé', async () => {
     const { el } = await render(vi.fn());
     expect(el.querySelector('mat-form-field')).toBeNull();
     const email = el.querySelector('label[for=login-email]');
-    expect(email?.textContent).toContain('Adresse e-mail');
+    expect(email?.textContent).toContain('E-mail professionnel');
     expect(email?.nextElementSibling?.id).toBe('login-email');
     const row = el.querySelector('.label-row');
     expect(row?.querySelector('label[for=login-password]')).not.toBeNull();
@@ -136,7 +179,15 @@ describe('LoginPage', () => {
       ?.click();
     await fixture.whenStable();
     expect(otp?.getAttribute('inputmode')).toBe('text');
+    expect(otp?.hasAttribute('placeholder')).toBe(false);
     expect(el.textContent).toContain('codes de secours');
+
+    // Un code de secours part tel quel (seuls les blancs autour sont retirés).
+    login.mockResolvedValueOnce({ kind: 'signed-in', user: claire });
+    type(el, 'input[autocomplete=one-time-code]', ' abcd-efgh ');
+    el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();
+    await fixture.whenStable();
+    expect(login).toHaveBeenLastCalledWith(expect.objectContaining({ otp: 'abcd-efgh' }));
   });
 
   it('champs vides : rien n’est envoyé', async () => {
@@ -171,8 +222,17 @@ describe('LoginPage', () => {
     const otp = el.querySelector<HTMLInputElement>('input[autocomplete=one-time-code]');
     expect(otp).not.toBeNull();
     expect(otp?.getAttribute('inputmode')).toBe('numeric');
+    expect(otp?.getAttribute('placeholder')).toBe('000 000');
+    expect(el.querySelector('label[for=login-otp]')?.textContent).toContain('Code de vérification');
+    expect(el.querySelector('#login-otp-hint')?.textContent).toContain(
+      "Six chiffres de votre application d'authentification",
+    );
+    // Le focus passe au champ code dès qu'il est demandé (fiche 11).
+    await fixture.whenStable();
+    expect(document.activeElement).toBe(otp);
 
-    type(el, 'input[autocomplete=one-time-code]', ' 123456 ');
+    // Saisi comme l'exemple « 000 000 » : les espaces sont retirés.
+    type(el, 'input[autocomplete=one-time-code]', ' 123 456 ');
     el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();
     await fixture.whenStable();
     expect(login).toHaveBeenLastCalledWith(expect.objectContaining({ otp: '123456' }));
@@ -185,6 +245,37 @@ describe('LoginPage', () => {
     await submit(fixture, el);
     const alert = el.querySelector('[role=alert]');
     expect(alert?.textContent).toContain('E-mail, mot de passe ou code incorrect.');
+    // Bandeau au-dessus du bouton, champs conservés, focus sur le mot de passe (fiche 11).
+    expect(alert?.nextElementSibling?.matches('button[type=submit]')).toBe(true);
+    expect(el.querySelector<HTMLInputElement>('#login-email')?.value).toBe('claire@example.test');
+    await fixture.whenStable();
+    expect(document.activeElement?.id).toBe('login-password');
+  });
+
+  it('erreur serveur ou réseau : message générique, formulaire réutilisable', async () => {
+    const login = vi
+      .fn()
+      .mockRejectedValueOnce({ status: 503, code: 'UNAVAILABLE' })
+      .mockResolvedValueOnce({ kind: 'signed-in', user: claire });
+    const { fixture, el, navigate } = await render(login);
+    await submit(fixture, el);
+    expect(el.querySelector('[role=alert]')?.textContent).toContain(
+      'Connexion impossible pour le moment.',
+    );
+    const button = el.querySelector<HTMLButtonElement>('button[type=submit]');
+    expect(button?.disabled).toBe(false);
+    button?.click();
+    await fixture.whenStable();
+    expect(navigate).toHaveBeenCalledWith('/patients');
+  });
+
+  it('422 : message de forme', async () => {
+    const login = vi.fn().mockRejectedValue({ status: 422, code: 'VALIDATION_FAILED' });
+    const { fixture, el } = await render(login);
+    await submit(fixture, el);
+    expect(el.querySelector('[role=alert]')?.textContent).toContain(
+      "Vérifiez l'adresse e-mail et le mot de passe saisis.",
+    );
   });
 
   it('arrivée après l’étape 2 du mot de passe oublié : message « mot de passe modifié »', async () => {

@@ -79,7 +79,7 @@ test('24 comment ça marche : page statique, aucun bloc de données', async ({ p
 test('11 connexion, erreur : message unique sous le formulaire (401)', async ({ page }) => {
   await page.goto('/fr/connexion');
   // Adresse unique : 5 échecs sur la même adresse verrouillent (423), relances comprises.
-  await page.getByLabel('Adresse e-mail').fill(uniqueEmail('m6-03.login'));
+  await page.getByLabel('E-mail professionnel').fill(uniqueEmail('m6-03.login'));
   await page.getByLabel('Mot de passe', { exact: true }).fill('Pas-Le-Bon-2026');
   await page.getByRole('button', { name: 'Se connecter' }).click();
   await expect(page.getByRole('alert')).toHaveText('E-mail, mot de passe ou code incorrect.');

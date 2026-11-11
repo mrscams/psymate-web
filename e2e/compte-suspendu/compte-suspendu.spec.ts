@@ -74,7 +74,7 @@ test.describe('compte suspendu par un administrateur', () => {
 
     // Écran : la connexion mène à /compte-suspendu (intercepteur 403, M0-07).
     await page.goto('/fr/connexion');
-    await page.getByLabel('Adresse e-mail').fill(account.email);
+    await page.getByLabel('E-mail professionnel').fill(account.email);
     await page.getByLabel('Mot de passe', { exact: true }).fill(account.password);
     await page.getByRole('button', { name: 'Se connecter' }).click();
     await expect(page).toHaveURL(/\/fr\/compte-suspendu$/);

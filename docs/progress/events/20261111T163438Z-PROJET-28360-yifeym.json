@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T16:34:38.565Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "blocked",
+  "summary": "UX-D1bis Connexion en deux panneaux : branche à jour de main (UX-A10b, UX-A10c), page nue sans repère main, remplissage 1440×900 vérifié ; lint, tokens, test, build verts",
+  "notes": "e2e locaux non joués : Docker Desktop arrêté (Postgres, Mailpit), API sans réponse. PR 75 laissée en brouillon jusqu'à la suite complète.",
+  "pr": "https://github.com/mrscams/psymate-web/pull/75",
+  "branch": "claude/ux-login-two-panels",
+  "checkout": "agent-a4cca259574b749eb"
+}

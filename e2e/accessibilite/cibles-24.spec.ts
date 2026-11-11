@@ -12,7 +12,7 @@ import {
 } from '../support/cibles';
 
 // UX-A3 (WCAG 2.5.8, cibles de 24 px) : plus aucune cible autonome sous 24 × 24 px sur
-// /connexion, /mon-compte/emotions et /admin/journal (liens dans une phrase exemptés, cases et
+// /connexion, le layout public (/mentions-legales), /mon-compte/emotions et /admin/journal (liens dans une phrase exemptés, cases et
 // radios mesurées par leur label englobant). La classe `.pm-link-target` agrandit la zone cliquable
 // sans bouger le rendu : à 1440 px, la capture est identique au pixel près avec et sans la classe.
 // Contre l'API locale (seed small), jamais de mock du backend ; axe-core à 0.
@@ -47,38 +47,56 @@ async function expectSameRendering(page: Page): Promise<void> {
 
 test('/connexion : aucune cible autonome sous 24 px, rendu inchangé', async ({ page }) => {
   await page.goto('/fr/connexion');
-  await expect(page.getByRole('heading', { level: 1, name: 'Connexion' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Connexion' })).toBeVisible();
   await settled(page);
 
   expect(await smallTargets(page)).toEqual([]);
 
-  // Les liens du pied, de la langue et du formulaire passent de 16 à 22 px à 24 px au moins.
-  for (const name of [
-    'Mentions légales',
+  // UX-D1bis : liens du pied du panneau gauche (maquette 11) et du formulaire, de 16 à 22 px à
+  // 24 px au moins. La connexion n'a plus le bandeau ni le pied du layout public (test suivant).
+  const links = [
     'Confidentialité',
-    'Accessibilité',
-    'English',
+    'Mentions légales',
+    'Annuaire public',
     'Créer un compte',
     'Mot de passe oublié ?',
-  ]) {
+  ];
+  for (const name of links) {
     const box = await page.getByRole('link', { name, exact: true }).boundingBox();
     expect(box!.height, `hauteur de « ${name} »`).toBeGreaterThanOrEqual(24);
   }
 
-  // Témoin : sans la classe, la sonde retrouve les six liens de l'audit (16 à 22 px selon la police).
+  // Témoin : sans la classe, la sonde retrouve ces cinq liens (16 à 22 px selon la police).
   const restore = await withoutLinkTargets(page);
   const before = await smallTargets(page);
   await restore();
-  expect(before.map((target) => target.text).sort()).toEqual(
-    [
-      'Accessibilité',
-      'Confidentialité',
-      'Créer un compte',
-      'English',
-      'Mentions légales',
-      'Mot de passe oublié ?',
-    ].sort(),
-  );
+  expect(before.map((target) => target.text).sort()).toEqual([...links].sort());
+
+  await expectLinkTargetsFontIndependent(page);
+  await expectSameRendering(page);
+  await expectNoAxeViolations(page);
+});
+
+test('layout public (/mentions-legales) : liens du pied et de la langue à 24 px, rendu inchangé', async ({
+  page,
+}) => {
+  // Mesurés sur /connexion jusqu'à UX-D1bis ; le layout public se vérifie depuis une autre page.
+  await page.goto('/fr/mentions-legales');
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await settled(page);
+
+  expect(await smallTargets(page)).toEqual([]);
+  const links = ['Mentions légales', 'Confidentialité', 'Accessibilité', 'English'];
+  for (const name of links) {
+    const box = await page.getByRole('link', { name, exact: true }).boundingBox();
+    expect(box!.height, `hauteur de « ${name} »`).toBeGreaterThanOrEqual(24);
+  }
+
+  // Témoin : sans la classe, la sonde retrouve les quatre liens du layout public.
+  const restore = await withoutLinkTargets(page);
+  const before = await smallTargets(page);
+  await restore();
+  expect(before.map((target) => target.text)).toEqual(expect.arrayContaining(links));
 
   await expectLinkTargetsFontIndependent(page);
   await expectSameRendering(page);

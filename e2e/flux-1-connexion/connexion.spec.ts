@@ -9,7 +9,7 @@ import { totp, totpStep } from '../support/totp';
 const WRONG_CREDENTIALS = 'E-mail, mot de passe ou code incorrect.';
 
 async function fillCredentials(page: Page, email: string, password: string): Promise<void> {
-  await page.getByLabel('Adresse e-mail').fill(email);
+  await page.getByLabel('E-mail professionnel').fill(email);
   // exact : le bouton « Afficher le mot de passe » (M1-15) porte aussi ce texte.
   await page.getByLabel('Mot de passe', { exact: true }).fill(password);
 }
@@ -18,7 +18,7 @@ test('sans session, /patients mène à /connexion?next=/patients', async ({ page
   await page.goto('/fr/patients');
 
   await expect(page).toHaveURL(/\/fr\/connexion\?next=%2Fpatients$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'Connexion' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Connexion' })).toBeVisible();
   await expect(page.getByLabel('Code de vérification')).toHaveCount(0);
   await expectNoAxeViolations(page);
 });
@@ -63,11 +63,11 @@ test('identifiants faux : le même message unique, e-mail connu ou non', async (
   const alert = page.getByRole('alert');
   await expect(alert).toHaveText(WRONG_CREDENTIALS);
   await expect(page).toHaveURL(/\/fr\/connexion$/);
-  await expect(page.getByLabel('Adresse e-mail')).toHaveValue(account.email);
+  await expect(page.getByLabel('E-mail professionnel')).toHaveValue(account.email);
   await expect(page.getByLabel('Mot de passe', { exact: true })).toBeFocused();
   await expectNoAxeViolations(page);
 
-  await page.getByLabel('Adresse e-mail').fill(uniqueEmail('m0-07.inconnu'));
+  await page.getByLabel('E-mail professionnel').fill(uniqueEmail('m0-07.inconnu'));
   await page.getByRole('button', { name: 'Se connecter' }).click();
   await expect(alert).toHaveText(WRONG_CREDENTIALS);
 });

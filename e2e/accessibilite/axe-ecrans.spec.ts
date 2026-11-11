@@ -299,7 +299,7 @@ for (const theme of THEMES) {
           [
             '11-connexion-code',
             async () => {
-              await page.getByLabel('Adresse e-mail').focus();
+              await page.getByLabel('E-mail professionnel').focus();
               await page.keyboard.type(otpAccount.email);
               // UX-D1 : « Mot de passe oublié ? » (à droite du libellé) précède le champ.
               await page.keyboard.press('Tab');

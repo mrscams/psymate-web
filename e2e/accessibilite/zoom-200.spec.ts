@@ -220,7 +220,7 @@ test('pages publiques à 200 % : annuaire (filtres repliés), connexion, inscrip
 
   await page.goto('/fr/connexion');
   await expect(h1).toBeVisible();
-  await tabTo(page, page.getByLabel('Adresse e-mail'), { max: 40 });
+  await tabTo(page, page.getByLabel('E-mail professionnel'), { max: 40 });
   await page.keyboard.type('personne@example.test');
   await tabTo(page, page.getByLabel('Mot de passe', { exact: true }), { max: 3 });
   await page.keyboard.type('Pas-le-bon-mot-de-passe-1');
