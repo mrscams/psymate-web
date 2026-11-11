@@ -46,17 +46,15 @@ a:focus-visible {
 .meta-link {
   font: var(--mat-sys-label-medium);
 }
-// En bref : texte de lecture, une phrase du serveur par paragraphe.
+// En bref : texte de lecture en un paragraphe (maquette 02b), faits du serveur en gras.
 .brief {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
   max-width: 72ch;
-}
-.sentence {
-  font: var(--mat-sys-body-large);
+  font-size: 16px;
   line-height: 1.7;
   color: var(--text-primary);
+}
+.brief strong {
+  font-weight: 600;
 }
 .attention {
   display: flex;

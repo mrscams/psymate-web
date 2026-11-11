@@ -27,14 +27,14 @@ function deferred<T>() {
   return { promise, resolve, reject };
 }
 
+/** Les blocs de la vue complète, dans l'ordre de la maquette 02. */
 const BLOCKS = [
-  'Résumé',
+  'Faits clés',
   "Tendance d'intensité · 90 jours",
-  'À surveiller · à compléter',
   'Situations actives',
-  'Traitement en cours',
   'Dernières séances',
   'Émotions dominantes · 90 jours',
+  'À compléter',
   'Activité récente',
 ];
 
@@ -136,20 +136,21 @@ describe('OverviewPage', () => {
   it('chargement : chaque bloc garde son titre et montre un squelette', async () => {
     const { el, overview } = await render({ overview: () => never() });
     expect(overview).toHaveBeenCalledWith('p-marie', '90d');
+    const headings = [...el.querySelectorAll('pm-overview-block h3')].map((h) => text(h));
+    expect(headings).toEqual(BLOCKS);
     for (const heading of BLOCKS) {
       expect(block(el, heading).querySelector('[aria-busy="true"]')).not.toBeNull();
     }
   });
 
-  it('vide (patient sans données) : chaque bloc a son état vide, le résumé ses zéros', async () => {
+  it('vide (patient sans données) : chaque bloc a son état vide, les faits clés leurs zéros', async () => {
     const { el } = await render({ overview: () => Promise.resolve(emptyOverview()) });
     const empties: Record<string, string> = {
       "Tendance d'intensité · 90 jours": 'Pas encore de ressentis sur cette période',
-      'À surveiller · à compléter': 'Rien à signaler',
       'Situations actives': 'Aucune situation en cours',
-      'Traitement en cours': 'Aucun traitement en cours',
       'Dernières séances': 'Aucune séance',
       'Émotions dominantes · 90 jours': "Pas d'émotion dominante",
+      'À compléter': 'Rien à compléter',
       'Activité récente': 'Aucune entrée pour le moment',
     };
     for (const [heading, title] of Object.entries(empties)) {
@@ -157,14 +158,16 @@ describe('OverviewPage', () => {
       expect(section.querySelector('[role="status"]')).not.toBeNull();
       expect(text(section)).toContain(title);
     }
-    const summary = block(el, 'Résumé');
-    expect(summary.querySelector('pm-state')).toBeNull();
-    expect([...summary.querySelectorAll('.figure')].map((f) => text(f))).toEqual([
+    const facts = block(el, 'Faits clés');
+    expect(facts.querySelector('pm-state')).toBeNull();
+    expect([...facts.querySelectorAll('.figure')].map((f) => text(f))).toEqual([
       '0',
       '0',
       '—',
       '0',
     ]);
+    expect(text(facts)).toContain('moyenne des ressentis sur 90 j');
+    expect(text(facts)).toContain('Aucun traitement en cours');
   });
 
   it('erreur : chaque bloc en erreur avec « Réessayer », qui relit la synthèse', async () => {
@@ -186,17 +189,28 @@ describe('OverviewPage', () => {
     expect(text(block(el, 'Situations actives'))).toContain('Surcharge au travail');
   });
 
-  it('chargé : tuiles chiffrées, tendance (résumé accessible, données), émotions avec variation', async () => {
+  it('chargé : tuiles chiffrées sur la fenêtre, tendance (résumé accessible, données), émotions avec variation', async () => {
     const { el } = await render();
-    const figures = [...block(el, 'Résumé').querySelectorAll('.figure')].map((f) => text(f));
-    expect(figures).toEqual(['31', '2', '7,0/10', '1']);
-    expect(text(block(el, 'Résumé'))).toContain('dont 1 sur 90 j');
+    const facts = block(el, 'Faits clés');
+    const figures = [...facts.querySelectorAll('.figure')].map((f) => text(f));
+    // Intensité moyenne : les ressentis de la fenêtre (8 et 4), pas les 7 derniers jours.
+    expect(figures).toEqual(['31', '2', '6,0/10', '1']);
+    const contexts = [...facts.querySelectorAll('.context')].map((c) => text(c));
+    expect(contexts).toEqual([
+      'dont 1 sur 90 j',
+      'sur 90 j · 2 émotions',
+      '↑ en hausse, de 5,5 à 7,0',
+      'en cours, sans fin connue',
+    ]);
 
     const trend = block(el, "Tendance d'intensité · 90 jours");
     const figure = trend.querySelector('[role="img"]');
     expect(figure?.getAttribute('aria-label')).toContain('de 5,5 à 7,0 sur 10');
     expect(figure?.getAttribute('aria-label')).toContain('Ressentis sur la période : 2');
-    expect(text(trend.querySelector('.legend'))).toContain('Peur');
+    // Légende de la maquette : trois éléments, plus de famille d'émotion.
+    const legend = [...trend.querySelectorAll('.legend li')].map((li) => text(li));
+    expect(legend).toEqual(['Intensité des ressentis', 'Séance', 'Changement de médicament']);
+    expect(text(trend.querySelector('header'))).toContain('moyenne glissante 7 j');
     const rows = [...trend.querySelectorAll('tbody tr')].map((r) => text(r));
     expect(rows[0]).toContain('Anxiété');
     expect(link(trend, 'Anxiété').getAttribute('href')).toBe('/?entry=f-1');
@@ -214,16 +228,42 @@ describe('OverviewPage', () => {
     );
   });
 
-  it('situation active : métriques et « Voir dans le graphe » → graph?root=<id>', async () => {
+  it('situation active : la carte entière mène au graphe centré (graph?root=<id>), compte dans le titre', async () => {
     const { el } = await render();
     const situations = block(el, 'Situations actives');
-    expect(text(situations)).toContain('5 ressentis liés · intensité moy. 7,4/10 · 7 liens');
-    expect(link(situations, 'Voir dans le graphe').getAttribute('href')).toBe(
-      '/patients/p-marie/graph?root=e-sit',
+    expect(text(situations.querySelector('header'))).toContain('· 1');
+    const card = link(situations, 'Surcharge au travail');
+    expect(card.getAttribute('href')).toBe('/patients/p-marie/graph?root=e-sit');
+    expect(text(card)).toContain('5 ressentis liés · intensité moy. 7,4/10 · voir dans le graphe');
+    expect(text(card)).toContain('depuis le 1 avr. 2026');
+  });
+
+  it('faits clés : traitement, début du suivi, drapeau avec « Modifier » vers la fiche', async () => {
+    const { el } = await render();
+    const facts = [...block(el, 'Faits clés').querySelectorAll('.facts li')].map((li) => text(li));
+    expect(facts[0]).toBe(
+      'Sertraline 75 mg · matin · prescrit par Dr Lemaire depuis le 12 sept. 2026',
+    );
+    expect(facts[1]).toBe('Suivi depuis le 12 mars 2025');
+    // Un espace entre le libellé, la date de pose, le motif et le lien (lu d'un trait).
+    expect(facts[2]).toBe(
+      'Drapeau « À surveiller » posé le 3 oct. 2026 · Sommeil Modifier le drapeau « À surveiller » dans la fiche',
+    );
+    expect(link(block(el, 'Faits clés'), 'Modifier').getAttribute('href')).toBe(
+      '/patients/p-marie/fiche',
     );
   });
 
-  it('points d’attention : drapeau en texte, brouillons → timeline filtrée, lien vers la fiche', async () => {
+  it('faits clés : dossier créé après ses séances → suivi depuis la première séance connue', async () => {
+    const view = overviewView();
+    view.facts = { ...view.facts, followedSince: '2026-11-07' };
+    const { el } = await render({ overview: () => Promise.resolve(view) });
+    expect(text(block(el, 'Faits clés'))).toContain(
+      'Suivi depuis le 10 oct. 2026 (première séance connue)',
+    );
+  });
+
+  it('à compléter : brouillons et séance ouverte en lignes ambre, vers la timeline filtrée', async () => {
     const { el } = await render({
       overview: () =>
         Promise.resolve(
@@ -235,27 +275,14 @@ describe('OverviewPage', () => {
           }),
         ),
     });
-    const attention = block(el, 'À surveiller · à compléter');
-    expect(text(attention)).toContain('Drapeau : À surveiller · Sommeil');
-    // Un espace entre le motif et la date de pose (« Sommeilposé » avant M7-04).
-    expect(text(attention)).toMatch(/Sommeil posé le /);
-    expect(link(attention, '2 brouillons à compléter').getAttribute('href')).toBe(
+    const todo = block(el, 'À compléter');
+    expect(link(todo, '2 brouillons').getAttribute('href')).toBe(
       '/patients/p-marie/timeline?drafts=1',
     );
-    expect(link(attention, 'Séance du').getAttribute('href')).toBe(
-      '/patients/p-marie/timeline?mode=session&focus=s-open',
-    );
-    expect(link(attention, 'Modifier la fiche').getAttribute('href')).toBe(
-      '/patients/p-marie/fiche',
-    );
-  });
-
-  it('traitement en cours : molécule, dose, depuis, prescripteur', async () => {
-    const { el } = await render();
-    const medications = text(block(el, 'Traitement en cours'));
-    expect(medications).toContain('Sertraline 75 mg · matin');
-    expect(medications).toContain('en cours · depuis le 12 sept. 2026');
-    expect(medications).toContain('prescrit par Dr Lemaire');
+    expect(text(link(todo, '2 brouillons'))).toBe('2 brouillons ouvrir');
+    const open = link(todo, 'Séance du');
+    expect(open.getAttribute('href')).toBe('/patients/p-marie/timeline?mode=session&focus=s-open');
+    expect(text(open)).toBe('Séance du 8 nov. 2026 non clôturée clôturer');
   });
 
   it('dernières séances : la plus récente dépliée (compte rendu entier), vers la timeline par séance', async () => {
@@ -267,7 +294,7 @@ describe('OverviewPage', () => {
     expect(link(sessions, 'Voir la séance dans la timeline').getAttribute('href')).toBe(
       '/patients/p-marie/timeline?mode=session&focus=s-1',
     );
-    expect(link(sessions, 'Toutes les séances').getAttribute('href')).toBe(
+    expect(link(sessions, 'Toutes dans la timeline').getAttribute('href')).toBe(
       '/patients/p-marie/timeline?mode=session',
     );
     toggles[1].click();
@@ -287,8 +314,42 @@ describe('OverviewPage', () => {
   it('activité récente : chaque entrée ouvre l’éditeur (?entry=)', async () => {
     const { el } = await render();
     const activity = block(el, 'Activité récente');
+    expect(text(activity.querySelector('header'))).toContain(
+      'toutes versions confondues · en direct',
+    );
     expect(text(activity)).toContain('brouillon');
     expect(link(activity, 'Joie après la randonnée').getAttribute('href')).toBe('/?entry=f-2');
+  });
+
+  it('activité récente : titre de repli, badge « vN » au-delà de la v1 seulement, deux colonnes', async () => {
+    const base = overviewView();
+    const item = base.recentActivity[0];
+    const view = overviewView({
+      recentActivity: [
+        // Ressenti sans titre : émotion et intensité lues dans feelings.points.
+        { ...item, entryId: 'f-1', title: null, status: 'final', version: 1 },
+        // Séance sans titre : première ligne du compte rendu.
+        { ...item, entryId: 's-1', type: 'session', title: null, status: 'final', version: 3 },
+        // Note sans titre ni texte connu : « Note · 22 oct. ».
+        {
+          ...item,
+          entryId: 'e-note',
+          type: 'note',
+          title: null,
+          status: 'final',
+          version: 1,
+          occurredFrom: '2026-10-22T09:00:00Z',
+        },
+      ],
+    });
+    const { el } = await render({ overview: () => Promise.resolve(view) });
+    const rows = [...block(el, 'Activité récente').querySelectorAll('li')];
+    const titles = rows.map((li) => text(li.querySelector('a')));
+    expect(titles[0]).toMatch(/^Anxiété 8\/10 · 7 nov\./);
+    expect(titles[1]).toBe('Reprise du thème du travail.');
+    expect(titles[2]).toMatch(/^Note · 22 oct\./);
+    expect(rows.map((li) => text(li.querySelector('.badge')))).toEqual(['', 'v3', '']);
+    expect(el.querySelector('pm-overview-activity')).not.toBeNull();
   });
 
   it('sélecteur de fenêtre : écrit overview.window, la synthèse est relue avec ?window=', async () => {

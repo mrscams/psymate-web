@@ -50,7 +50,7 @@ test('flux 6 au clavier : / nom Entrée, séance dépliée, situation → graphe
   );
 
   // 4. Situation active → graphe centré sur elle ; touche 1 : retour à la vue d'ensemble.
-  await tabTo(page, situations.getByRole('link', { name: /Voir dans le graphe/ }), {
+  await tabTo(page, situations.getByRole('link', { name: /voir dans le graphe/i }), {
     max: 80,
     backwards: true,
   });
