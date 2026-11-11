@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-11T03:41:01.566Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-B8 recherche : « … » en fin et début d'extrait tronqué, puces de type à 0 grisées et inactives dans l'état vide, titres de repli par entryTitle (liste, annonce, aperçu), case archivées 18 px et titres 24 px ; tri omis (pas de paramètre sort dans le contrat)",
+  "next": "Fusion après revue ; tâche API : paramètre sort et extraits ts_headline avec « … »",
+  "branch": "claude/ux-b8-search",
+  "checkout": "agent-aecb9d5ff9adbc6a6"
+}
