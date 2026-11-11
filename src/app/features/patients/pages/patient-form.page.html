@@ -1,11 +1,13 @@
 <nav class="crumbs" aria-label="Fil d'Ariane" i18n-aria-label="Fil d'Ariane@@patients.form.crumbs">
   <ol>
     <li>
-      <a routerLink="/patients">{{ subjects() }}</a>
+      <a class="pm-link-target" routerLink="/patients">{{ subjects() }}</a>
     </li>
     @if (patient(); as p) {
       <li>
-        <a [routerLink]="['/patients', p.id, 'overview']">{{ p.displayName }}</a>
+        <a class="pm-link-target" [routerLink]="['/patients', p.id, 'overview']">{{
+          p.displayName
+        }}</a>
       </li>
       <li aria-current="page" i18n="Fil d'Ariane, fiche@@patients.form.crumbs.sheet">Fiche</li>
     } @else {

@@ -60,6 +60,14 @@ describe('PublicLayoutComponent', () => {
     expect(footer?.textContent).not.toMatch(/3114|\b15\b/);
   });
 
+  it('UX-A3 : liens autonomes du pied et de la langue en cible de 24 px (.pm-link-target)', async () => {
+    const { el } = await render({ authenticated: false });
+    const footerLinks = [...el.querySelectorAll('footer a')];
+    expect(footerLinks).toHaveLength(3);
+    for (const link of footerLinks) expect(link.classList).toContain('pm-link-target');
+    expect(el.querySelector('a.locale-switch')?.classList).toContain('pm-link-target');
+  });
+
   it('connecté : Espace praticien mène à /patients ; narrow : conteneur 480 px', async () => {
     const { el } = await render({ authenticated: true, narrow: true });
     expect(el.querySelector('a.practitioner')?.getAttribute('href')).toBe('/patients');

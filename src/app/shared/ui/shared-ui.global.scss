@@ -1,5 +1,6 @@
 // Styles globaux des composants partagés (fiche 00) qui vivent hors de l'arbre d'un composant :
-// panneaux latéraux rendus dans l'overlay du CDK, classe utilitaire sr-only, touches <kbd>.
+// panneaux latéraux rendus dans l'overlay du CDK, classes utilitaires sr-only et pm-link-target,
+// touches <kbd>, anneau de focus et taille minimale des contrôles natifs.
 // Importé une fois par src/styles.scss.
 
 // Texte lu par les lecteurs d'écran, invisible à l'écran.
@@ -58,6 +59,28 @@ $container-focused-fields: "[data-focus-ring='container'] *, pm-app-bar .search 
 :is(input, textarea, select):is(#{$container-focused-fields}):focus-visible {
   outline: none;
   box-shadow: none;
+}
+
+// Cible de 24 px des liens autonomes (UX-A3, WCAG 2.5.8) : un lien texte seul (pied de page, fil
+// d'Ariane, action de ligne, lien d'en-tête) mesure 16 à 21 px de haut. 4 px de marge intérieure
+// verticale agrandissent la zone cliquable ; la marge extérieure négative de même valeur la rend au
+// flux, si bien que la mise en page ne bouge pas (élément en ligne : ni l'une ni l'autre ne compte
+// dans la ligne ; élément de bloc ou de flex : elles s'annulent). Jamais sur un lien dans une
+// phrase (exempté par 2.5.8, et la zone agrandie couvrirait la ligne voisine). Classe posée
+// volontairement par l'écran : !important l'emporte sur un `padding: 0` encapsulé (bouton-lien
+// du journal admin), plus spécifique qu'une règle globale.
+.pm-link-target {
+  padding-block: 4px !important;
+  margin-block: -4px !important;
+}
+
+// Cases et boutons radio natifs à 18 px au moins (UX-A3) : 13 px par défaut dans Chromium. Ils
+// vivent dans un <label> englobant, qui porte la cible de 24 px. min-* et non width/height : un
+// écran qui dessine sa propre taille (18 px, interrupteur) garde la sienne. Les contrôles Material
+// (classes mdc-*, déjà dimensionnés et invisibles) ne sont pas concernés.
+input:is([type='checkbox'], [type='radio']):not([class*='mdc-']) {
+  min-width: 18px;
+  min-height: 18px;
 }
 
 // Panneau latéral (shared/ui/side-panel) : pane de l'overlay ancrée à droite, voile sur la page.
