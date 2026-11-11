@@ -100,7 +100,13 @@ test.describe('vue d’ensemble', () => {
     await expect(page).toHaveURL(
       new RegExp(`/fr/patients/${folder.patientId}/graph\\?root=${folder.situation}$`),
     );
-    await expect(page.getByRole('combobox', { name: 'Centré sur' })).toHaveValue(folder.situation);
+    // « Centré sur » (UX-B3) : bouton de la liste filtrable, qui montre le titre de la racine.
+    const rootPicker = page.getByRole('button', {
+      name: 'Centré sur Surcharge au travail',
+      exact: true,
+    });
+    await expect(rootPicker).toHaveAttribute('aria-haspopup', 'listbox');
+    await expect(rootPicker.locator('.value')).toHaveText('Surcharge au travail');
 
     // Mesure à chaud (dossier relu, cache de la projection) : 5 lectures directes de l'API.
     // Sous le verrou « charge-api » : la mesure ne tombe pas pendant une charge d'un autre test.

@@ -20,6 +20,7 @@ import { ShortcutService } from '../../../core/shortcuts';
 import {
   ENTRY_TYPES,
   EntryType,
+  entryTitle,
   entryTypeLabel,
   StateAction,
   StateComponent,
@@ -41,6 +42,7 @@ import {
   isSuperNodeId,
   LINK_TYPE_CODES,
   LinkDrop,
+  needsDefaultRoot,
   parseQuery,
   sameQuery,
   TIMELINE_FOCUS,
@@ -51,25 +53,31 @@ import { LinkTypeCode } from '../data/link.model';
 import { openLinkEditor } from '../link-editor.launcher';
 import { GraphCanvasComponent } from '../ui/graph-canvas.component';
 import { GraphDetailComponent } from '../ui/graph-detail.component';
-import { GraphElementLabels } from '../ui/graph-elements';
+import { GraphElementLabels, labelsShown } from '../ui/graph-elements';
 import {
   graphProblemMessage,
   graphProblemTitle,
   groupLabel,
   isRetryable,
   isRootProblem,
+  nodeDate,
   nodeLabel,
   nodeName,
   periodLabel,
 } from '../ui/graph-labels';
 import { GraphLegendComponent } from '../ui/graph-legend.component';
 import { GraphLinksTableComponent } from '../ui/graph-links-table.component';
+import { RootChoice, RootOption, RootPickerComponent } from '../ui/root-picker.component';
+
+/** Délai sans frappe avant la recherche de « Centré sur » dans le dossier. */
+const ROOT_SEARCH_DEBOUNCE_MS = 250;
 
 /**
  * Onglet 3 du dossier, /patients/:id/graph?root=&depth= (fiche 04, B4 écran 4) : barre d'outils
  * (centré sur, profondeur 1–3, types d'entrées, liens, période, compteur, Recentrer, liste des
- * liens), canevas Cytoscape chargé en @defer, panneau de détail du nœud sélectionné et liste
- * équivalente des liens (B7). Glisser un nœud sur un autre ouvre l'éditeur de lien prérempli ;
+ * liens, Lier L), canevas Cytoscape chargé en @defer, panneau de détail du nœud sélectionné et liste
+ * équivalente des liens (B7). Sans ?root=, le graphe se centre sur la situation en cours la plus
+ * liée, en profondeur 2 (UX-B3) ; « Tout le dossier » s'écrit ?root=all. Glisser un nœud sur un autre ouvre l'éditeur de lien prérempli ;
  * double-clic : la timeline sur l'entrée (B2) ; un super-nœud se déplie. Racine, profondeur et
  * filtres vivent dans l'URL ; zoom, positions et sélection sont rangés dans le shell au départ.
  */
@@ -81,6 +89,7 @@ import { GraphLinksTableComponent } from '../ui/graph-links-table.component';
     GraphLegendComponent,
     GraphLinksTableComponent,
     MatMenuModule,
+    RootPickerComponent,
     StateComponent,
   ],
   providers: [GraphStore],
@@ -110,10 +119,15 @@ export class GraphPage {
   protected readonly relayoutCount = signal(0);
   /** Page quittée : un éditeur fermé ensuite ne relit plus le graphe. */
   private destroyed = false;
+  private searchTimer: ReturnType<typeof setTimeout> | null = null;
 
   private readonly params = toSignal(this.route.queryParamMap);
 
   // ── Données dérivées ────────────────────────────────────────────────────────────────
+
+  /** Avertissement de « Tout le dossier » dans « Centré sur » (UX-B3). */
+  protected readonly allWarning = $localize`:Avertissement de l'option Tout le dossier@@graph.root.allWarning:jusqu'à 150 nœuds, étiquettes masquées`;
+  protected readonly linkDisabledHint = $localize`:Pourquoi Lier est inactif dans la barre du graphe@@graph.toolbar.linkDisabled:Choisissez d'abord une entrée dans le graphe.`;
 
   protected readonly linkTypeLabels = computed(() => {
     const labels: Record<string, string> = {};
@@ -130,7 +144,7 @@ export class GraphPage {
     const labels = this.store.emotionLabels();
     const names: Record<string, string> = {};
     for (const node of this.store.graph().data?.nodes ?? []) {
-      names[node.id] = nodeName(node, labels);
+      names[node.id] = nodeName(node, labels, this.locale);
     }
     return names;
   });
@@ -144,12 +158,69 @@ export class GraphPage {
     };
   });
 
-  /** Choix de « Centré sur » : tout le dossier, puis les entrées du graphe par nom. */
-  protected readonly rootOptions = computed(() => {
+  /**
+   * Choix de « Centré sur » sans texte : les entrées du graphe reçu (le sélecteur les groupe par
+   * type), les plus liées d'abord. Une entrée sans titre porte son titre de repli (UX-A5).
+   */
+  protected readonly rootOptions = computed<RootOption[]>(() => {
     const names = this.names();
-    return (this.store.graph().data?.nodes ?? [])
-      .map((node) => ({ id: node.id, name: `${names[node.id]} · ${entryTypeLabel(node.type)}` }))
-      .sort((a, b) => a.name.localeCompare(b.name, this.locale));
+    return [...(this.store.graph().data?.nodes ?? [])]
+      .sort(
+        (a, b) =>
+          b.degree - a.degree || (names[a.id] ?? '').localeCompare(names[b.id] ?? '', this.locale),
+      )
+      .map((node) => ({
+        id: node.id,
+        type: node.type,
+        name: names[node.id] ?? '',
+        date: nodeDate(node.occurred, this.locale),
+      }));
+  });
+
+  /** Résultats de la recherche du dossier pour le texte de « Centré sur ». */
+  protected readonly remoteRootOptions = computed<RootOption[]>(() =>
+    (this.store.rootSearch().data ?? []).map((entry) => ({
+      id: entry.id,
+      type: entry.type,
+      name: entryTitle(
+        { type: entry.type, title: entry.title, text: entry.excerpt, occurred: entry.occurredFrom },
+        this.locale,
+      ),
+      date: nodeDate(entry.occurredFrom, this.locale),
+    })),
+  );
+
+  /** La racine montrée par « Centré sur » ; null : tout le dossier. */
+  protected readonly rootChoice = computed<RootChoice | null>(() => {
+    const root = this.store.query().root;
+    if (!root) return null;
+    const node = this.store.rootNode();
+    if (node) return { type: node.type, name: this.names()[node.id] ?? '' };
+    const found = this.remoteRootOptions().find((option) => option.id === root);
+    if (found) return { type: found.type, name: found.name };
+    return { type: null, name: this.pendingRootLabel };
+  });
+
+  protected readonly periodText = computed(() => {
+    const label = periodLabel(this.store.query().period);
+    return $localize`:Filtre de période du graphe@@graph.filter.period:Période : ${label}:period:`;
+  });
+
+  /**
+   * Avertissement de « Tout le dossier » (UX-B3) : au-delà de LABELS_MAX_NODES nœuds, les
+   * étiquettes sont masquées ; centrer le graphe le rend lisible.
+   */
+  protected readonly wholeFolderNote = computed(() => {
+    const view = this.store.view();
+    if (this.store.query().root || !view || labelsShown(view)) return null;
+    const count = view.nodes.length + view.superNodes.length;
+    return $localize`:Avertissement du graphe de tout le dossier@@graph.wholeFolder.note:Tout le dossier : ${count}:count: nœuds, étiquettes masquées. Choisissez une entrée dans « Centré sur » pour lire le graphe.`;
+  });
+
+  /** Source de « Lier » : l'entrée sélectionnée, sinon la racine. */
+  protected readonly linkSource = computed(() => {
+    const selected = this.store.selectedNode()?.id;
+    return selected ?? this.store.query().root;
   });
 
   /**
@@ -290,6 +361,7 @@ export class GraphPage {
     handler: () => void this.store.retryCatalog(),
   };
   protected readonly catalogErrorTitle = $localize`:Types de liens illisibles dans le graphe@@graph.catalog.error:Impossible de charger les types de liens`;
+  private readonly pendingRootLabel = $localize`:Racine pas encore lue@@graph.root.pending:Entrée choisie`;
   private readonly wholeFolderLabel = $localize`:Action qui centre le graphe sur tout le dossier@@graph.action.wholeFolder:Voir tout le dossier`;
   private readonly resetFiltersLabel = $localize`:Action qui remet les filtres du graphe par défaut@@graph.action.resetFilters:Filtres par défaut`;
   private readonly allTypesLabel = $localize`:Action qui montre tous les types d'entrées@@graph.action.allTypes:Montrer tous les types`;
@@ -310,17 +382,26 @@ export class GraphPage {
         if (this.store.patientId() !== patient.id) {
           const recalled = this.shell.recallTab<GraphSnapshot>('graph');
           const snapshot = recalled?.patientId === patient.id ? recalled : undefined;
-          if (snapshot && (!hasGraphParams(params) || sameQuery(snapshot.query, query))) {
-            void this.store.restore(snapshot);
-            if (!sameQuery(snapshot.query, query)) this.navigate(snapshot.query, true);
-          } else {
-            void this.store.load(patient.id, query);
-          }
           // Repris : l'état ne vit plus que dans le GraphStore (rangé à nouveau au départ).
           if (recalled) this.shell.rememberTab<GraphSnapshot | undefined>('graph', undefined);
+          if (snapshot && (!hasGraphParams(params) || sameQuery(snapshot.query, query))) {
+            void this.store.restore(snapshot);
+            this.navigate(snapshot.query, true);
+            return;
+          }
+        }
+        // Sans ?root= : la racine par défaut (situation en cours la plus liée), écrite dans l'URL.
+        if (needsDefaultRoot(params)) {
+          void this.pickDefaultRoot(patient.id, query);
           return;
         }
-        if (!sameQuery(this.store.query(), query)) void this.store.load(patient.id, query);
+        if (
+          this.store.patientId() !== patient.id ||
+          this.store.graph().status === 'idle' ||
+          !sameQuery(this.store.query(), query)
+        ) {
+          void this.store.load(patient.id, query);
+        }
       });
     });
 
@@ -331,8 +412,7 @@ export class GraphPage {
         'l',
         () => {
           const open = this.params()?.get(ENTRY_QUERY_PARAM);
-          const selected = this.store.selectedNode()?.id;
-          const entryId = open || selected;
+          const entryId = open || this.linkSource();
           if (entryId) this.link(entryId);
         },
         $localize`:Aide des raccourcis, graphe@@shortcuts.graph.l:Lier l'entrée sélectionnée`,
@@ -342,24 +422,52 @@ export class GraphPage {
     // Départ de l'onglet : requête, graphe, zoom, positions et sélection rangés dans le shell (B2).
     destroyRef.onDestroy(() => {
       this.destroyed = true;
+      if (this.searchTimer) clearTimeout(this.searchTimer);
       const snapshot = this.store.snapshot();
       if (snapshot) this.shell.rememberTab<GraphSnapshot>('graph', snapshot);
     });
   }
 
+  /**
+   * Racine par défaut (UX-B3) : la situation en cours la plus liée, sinon tout le dossier ; écrite
+   * dans l'URL (sans nouvelle entrée d'historique), ce qui lance la lecture du graphe.
+   */
+  private async pickDefaultRoot(patientId: string, query: GraphQuery): Promise<void> {
+    const root = await this.store.resolveDefaultRoot(patientId);
+    if (this.destroyed || this.shell.patient()?.id !== patientId) return;
+    const params = this.params();
+    if (params && !needsDefaultRoot(params)) return;
+    this.navigate({ ...query, root }, true);
+  }
+
   // ── Barre d'outils ──────────────────────────────────────────────────────────────────
 
-  protected onRootChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
-    this.recenter(value || null);
+  /** Texte de « Centré sur » : recherche du dossier après 250 ms sans frappe. */
+  protected searchRoots(text: string): void {
+    if (this.searchTimer) clearTimeout(this.searchTimer);
+    this.searchTimer = null;
+    if (!text.trim()) {
+      void this.store.searchRoots('');
+      return;
+    }
+    this.searchTimer = setTimeout(() => {
+      this.searchTimer = null;
+      void this.store.searchRoots(text);
+    }, ROOT_SEARCH_DEBOUNCE_MS);
   }
 
   protected setDepth(depth: GraphDepth): void {
     this.update({ depth });
   }
 
-  protected onPeriodChange(event: Event): void {
-    this.update({ period: (event.target as HTMLSelectElement).value as GraphPeriod });
+  protected setPeriod(period: GraphPeriod): void {
+    if (period !== this.store.query().period) this.update({ period });
+  }
+
+  /** « Lier L » de la barre : l'entrée sélectionnée, sinon la racine, est la source. */
+  protected linkFromToolbar(): void {
+    const source = this.linkSource();
+    if (source) this.link(source);
   }
 
   protected typeChecked(type: EntryType): boolean {

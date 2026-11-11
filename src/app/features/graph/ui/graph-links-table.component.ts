@@ -1,8 +1,18 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  linkedSignal,
+  output,
+} from '@angular/core';
 
 import { EntryIconComponent, EntryType, StateComponent } from '../../../shared/ui';
 import { GraphView } from '../data/graph.model';
 import { groupLabel, provenanceLabel, statusLabel } from './graph-labels';
+
+/** Liens par page de la liste équivalente (UX-B3 : 150 lignes faisaient 8 000 px). */
+export const LINKS_PAGE_SIZE = 20;
 
 /**
  * Liste équivalente du graphe (fiche 04 « Accessibilité », B7) : un tableau « source · type ·
@@ -40,7 +50,7 @@ import { groupLabel, provenanceLabel, statusLabel } from './graph-labels';
           </tr>
         </thead>
         <tbody>
-          @for (row of rows(); track row.id) {
+          @for (row of pageRows(); track row.id) {
             <tr [attr.data-link-id]="row.id">
               <td>
                 <button type="button" class="entry" (click)="selectEntry.emit(row.source.id)">
@@ -61,6 +71,29 @@ import { groupLabel, provenanceLabel, statusLabel } from './graph-labels';
           }
         </tbody>
       </table>
+      @if (pages() > 1) {
+        <nav class="pager" [attr.aria-label]="pagerLabel">
+          <button
+            type="button"
+            class="entry"
+            [attr.aria-disabled]="page() === 0 ? 'true' : null"
+            (click)="goTo(page() - 1)"
+            i18n="Page précédente de la liste des liens@@graph.table.previous"
+          >
+            Précédents
+          </button>
+          <span class="range" aria-live="polite">{{ rangeText() }}</span>
+          <button
+            type="button"
+            class="entry"
+            [attr.aria-disabled]="page() >= pages() - 1 ? 'true' : null"
+            (click)="goTo(page() + 1)"
+            i18n="Page suivante de la liste des liens@@graph.table.next"
+          >
+            Suivants
+          </button>
+        </nav>
+      }
     } @else {
       <pm-state kind="empty" [title]="emptyTitle" compact />
     }
@@ -168,9 +201,28 @@ import { groupLabel, provenanceLabel, statusLabel } from './graph-labels';
     .expand {
       color: var(--primary-hover);
     }
-    .entry:disabled {
+    .entry:disabled,
+    .entry[aria-disabled='true'] {
       color: var(--text-disabled);
       cursor: default;
+    }
+    .pager {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px 12px;
+      padding: 8px 0;
+      font: var(--mat-sys-body-medium);
+    }
+    .pager .entry {
+      color: var(--primary-hover);
+    }
+    .pager .entry[aria-disabled='true'] {
+      color: var(--text-disabled);
+    }
+    .range {
+      color: var(--text-secondary);
     }
     .entry:focus-visible {
       outline: 2px solid var(--primary);
@@ -197,6 +249,34 @@ export class GraphLinksTableComponent {
   protected readonly caption = $localize`:Légende du tableau équivalent au graphe@@graph.table.caption:Liens du graphe (même contenu que le canevas)`;
   protected readonly emptyTitle = $localize`:Liste des liens du graphe vide@@graph.table.empty:Aucun lien dans ce graphe`;
   protected readonly groupsCaption = $localize`:Légende du tableau des super-nœuds@@graph.table.groupsCaption:Groupes d'entrées regroupées (à déplier)`;
+  protected readonly pagerLabel = $localize`:Nom de la pagination de la liste des liens@@graph.table.pager:Pages de la liste des liens`;
+
+  /** Page affichée (20 liens par page, UX-B3) ; revient à la première quand le graphe change. */
+  protected readonly page = linkedSignal<GraphView, number>({
+    source: this.view,
+    computation: () => 0,
+  });
+
+  protected readonly pages = computed(() =>
+    Math.max(1, Math.ceil(this.rows().length / LINKS_PAGE_SIZE)),
+  );
+
+  protected readonly pageRows = computed(() => {
+    const start = Math.min(this.page(), this.pages() - 1) * LINKS_PAGE_SIZE;
+    return this.rows().slice(start, start + LINKS_PAGE_SIZE);
+  });
+
+  protected readonly rangeText = computed(() => {
+    const total = this.rows().length;
+    const first = Math.min(this.page(), this.pages() - 1) * LINKS_PAGE_SIZE + 1;
+    const last = Math.min(first + LINKS_PAGE_SIZE - 1, total);
+    return $localize`:Liens montrés dans la liste paginée@@graph.table.range:Liens ${first}:first: à ${last}:last: sur ${total}:total:`;
+  });
+
+  protected goTo(page: number): void {
+    if (page < 0 || page >= this.pages()) return;
+    this.page.set(page);
+  }
 
   protected readonly groups = computed(() => {
     const view = this.view();

@@ -20,7 +20,7 @@ import {
   visibleView,
 } from './graph.model';
 import { LinkApi } from './link.api';
-import { EntryLink, LinkTypeOption, SourceEntry } from './link.model';
+import { EntryLink, LinkEntry, LinkTypeOption, SourceEntry } from './link.model';
 
 /** Le détail d'un nœud sélectionné : l'entrée (GET /api/entries/{id}) et ses liens acceptés. */
 export interface NodeDetail {
@@ -67,6 +67,11 @@ interface GraphState {
   viewports: Record<string, GraphViewport>;
   /** Positions des nœuds par racine : le layout ne bouge pas à chaque lien ajouté (fiche 04). */
   positions: Record<string, GraphPositions>;
+  /**
+   * Recherche de « Centré sur » dans tout le dossier (GET /api/patients/{id}/search, une page) :
+   * idle sans texte, le sélecteur montre alors les entrées du graphe reçu.
+   */
+  rootSearch: Loadable<LinkEntry[]>;
 }
 
 const initialState: GraphState = {
@@ -83,6 +88,7 @@ const initialState: GraphState = {
   expandProblem: null,
   viewports: {},
   positions: {},
+  rootSearch: idle(),
 };
 
 /**
@@ -140,6 +146,7 @@ export const GraphStore = signalStore(
   withMethods((store, api = inject(GraphApi), links = inject(LinkApi)) => {
     let graphSeq = 0;
     let detailSeq = 0;
+    let rootSearchSeq = 0;
 
     async function loadCatalog(force = false): Promise<void> {
       if (!force && (store.catalog().status === 'loaded' || store.catalog().status === 'loading'))
@@ -217,6 +224,46 @@ export const GraphStore = signalStore(
     }
 
     return {
+      /**
+       * Racine par défaut (UX-B3) quand l'URL n'en donne pas : la situation en cours la plus liée
+       * (null : tout le dossier, aussi quand la synthèse est illisible). Un autre dossier repart de
+       * zéro (le bloc graphe reste « en chargement ») ; la page écrit ensuite la racine dans l'URL,
+       * qui lance `load`.
+       */
+      async resolveDefaultRoot(patientId: string): Promise<string | null> {
+        if (store.patientId() !== patientId) {
+          patchState(store, { ...initialState, catalog: store.catalog(), patientId });
+        }
+        try {
+          return await api.defaultRoot(patientId);
+        } catch {
+          return null;
+        }
+      },
+
+      /**
+       * « Centré sur » : cherche une entrée dans tout le dossier (une page de 20, la plus récente
+       * d'abord) ; sans texte, rien n'est lu. Seule la dernière réponse compte.
+       */
+      async searchRoots(q: string): Promise<void> {
+        const patientId = store.patientId();
+        const text = q.trim();
+        const seq = ++rootSearchSeq;
+        if (!patientId || !text) {
+          patchState(store, { rootSearch: idle() });
+          return;
+        }
+        patchState(store, { rootSearch: loading(store.rootSearch()) });
+        try {
+          const found = await links.targets(patientId, { q: text, type: null });
+          if (seq === rootSearchSeq) patchState(store, { rootSearch: loaded(found) });
+        } catch (error) {
+          if (seq === rootSearchSeq) {
+            patchState(store, { rootSearch: failed(asProblem(error), store.rootSearch()) });
+          }
+        }
+      },
+
       /**
        * Le graphe d'un dossier pour une requête (URL). Un autre dossier repart de zéro ; un simple
        * changement du filtre des types d'entrées ne relit rien (filtre local) ; sinon le graphe est

@@ -1,0 +1,198 @@
+// La liste s'ouvre sous tout le bloc (libellé compris) : à 375 px, elle tient dans la fenêtre.
+:host {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.label {
+  flex: 0 0 auto;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+.anchor {
+  min-width: 0;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 280px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: var(--mat-sys-body-medium);
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  &[aria-expanded='true'] {
+    border-color: var(--primary);
+  }
+}
+
+.value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron,
+.all-icon {
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.all-icon {
+  color: var(--text-secondary);
+
+  circle {
+    fill: currentColor;
+    stroke: none;
+  }
+}
+
+.popup {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  width: min(380px, calc(100vw - 32px));
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  box-shadow: 0 12px 32px var(--scrim);
+  color: var(--text-primary);
+}
+
+.search {
+  box-sizing: border-box;
+  margin: 8px;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: var(--mat-sys-body-medium);
+
+  &:focus-visible {
+    border-color: var(--primary);
+    outline: 2px solid var(--primary);
+    outline-offset: 0;
+  }
+}
+
+.list {
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 0 4px 4px;
+}
+
+.group {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.group-label {
+  padding: 8px 8px 4px;
+  color: var(--text-secondary);
+  font: var(--mat-sys-label-small);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-sunken);
+  }
+
+  &.active {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+    background: var(--primary-tint);
+  }
+
+  &[aria-selected='true'] .option-name {
+    font-weight: 600;
+  }
+}
+
+.option-text {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.all .option-text {
+  flex-direction: column;
+  gap: 0;
+}
+
+.option-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: var(--mat-sys-body-medium);
+}
+
+.option-meta {
+  flex: 0 0 auto;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.warning {
+  color: var(--warning);
+}
+
+.empty,
+.status {
+  margin: 0;
+  padding: 0 12px 8px;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+// Région aria-live toujours présente (une région ajoutée d'un coup ne serait pas annoncée).
+.status:empty {
+  padding: 0;
+}

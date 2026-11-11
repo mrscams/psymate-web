@@ -1,7 +1,8 @@
 import { EntryType } from '../../../shared/ui';
 import { CATALOG } from './link.fixtures';
 import {
-  entryName,
+  LinkEntry,
+  linkEntryName,
   LinkTypeCode,
   orient,
   otherEnd,
@@ -112,13 +113,22 @@ describe('orient, toCreateBody : inversion du sens', () => {
   });
 });
 
-describe('entryName, plainText', () => {
-  it('titre, sinon extrait de 60 caractères, sinon « une entrée »', () => {
-    expect(entryName({ title: ' Anxiété ', excerpt: 'x' }, 'une entrée')).toBe('Anxiété');
-    expect(entryName({ title: null, excerpt: 'court' }, 'une entrée')).toBe('court');
-    const long = 'a'.repeat(80);
-    expect(entryName({ title: null, excerpt: long }, 'une entrée')).toBe(`${'a'.repeat(60)}…`);
-    expect(entryName({ title: '', excerpt: '  ' }, 'une entrée')).toBe('une entrée');
+describe('linkEntryName, plainText', () => {
+  const entry = (overrides: Partial<LinkEntry>): LinkEntry => ({
+    id: 'e-1',
+    type: 'note',
+    title: null,
+    excerpt: null,
+    occurredFrom: '2026-10-24T09:00:00Z',
+    occurredTo: null,
+    precision: 'day',
+    ...overrides,
+  });
+
+  it('titre, sinon extrait coupé au mot, sinon le titre de repli « Note · 24 oct. »', () => {
+    expect(linkEntryName(entry({ title: ' Anxiété ', excerpt: 'x' }), 'fr')).toBe('Anxiété');
+    expect(linkEntryName(entry({ excerpt: 'court' }), 'fr')).toBe('court');
+    expect(linkEntryName(entry({}), 'fr')).toMatch(/^Note · 24 oct\./);
   });
 
   it('retire les <mark> et décode les entités, sans interpréter de HTML', () => {

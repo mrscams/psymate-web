@@ -142,7 +142,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">279,283</context>
+          <context context-type="linenumber">368,372</context>
         </context-group>
         <note priority="1" from="description">Nom de la touche Échap</note>
       </trans-unit>
@@ -566,27 +566,31 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">285</context>
+          <context context-type="linenumber">356</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">289</context>
+          <context context-type="linenumber">360</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">169</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">185</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">192</context>
+          <context context-type="linenumber">198</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">212</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.ts</context>
@@ -11476,35 +11480,11 @@
         </context-group>
         <note priority="1" from="description">Titre de l&apos;onglet graphe</note>
       </trans-unit>
-      <trans-unit id="graph.root.label" datatype="html">
-        <source>Centré sur</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">9,11</context>
-        </context-group>
-        <note priority="1" from="description">Sélecteur de la racine du graphe</note>
-      </trans-unit>
-      <trans-unit id="graph.root.all" datatype="html">
-        <source> Tout le dossier </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">17,19</context>
-        </context-group>
-        <note priority="1" from="description">Racine : tout le dossier</note>
-      </trans-unit>
-      <trans-unit id="graph.root.pending" datatype="html">
-        <source> Entrée choisie </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">25,28</context>
-        </context-group>
-        <note priority="1" from="description">Racine pas encore lue</note>
-      </trans-unit>
       <trans-unit id="graph.depth.label" datatype="html">
         <source>Profondeur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">38,41</context>
+          <context context-type="linenumber">21,24</context>
         </context-group>
         <note priority="1" from="description">Profondeur du graphe</note>
       </trans-unit>
@@ -11512,7 +11492,7 @@
         <source>Tous les types</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">65,68</context>
+          <context context-type="linenumber">53,56</context>
         </context-group>
         <note priority="1" from="description">Filtre : tous les types d&apos;entrées</note>
       </trans-unit>
@@ -11520,23 +11500,15 @@
         <source>Tous les liens</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">93,95</context>
+          <context context-type="linenumber">86,88</context>
         </context-group>
         <note priority="1" from="description">Filtre : tous les types de liens</note>
-      </trans-unit>
-      <trans-unit id="graph.period.label" datatype="html">
-        <source>Période</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">122,123</context>
-        </context-group>
-        <note priority="1" from="description">Période du graphe</note>
       </trans-unit>
       <trans-unit id="graph.relayout" datatype="html">
         <source> Recentrer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">142,146</context>
+          <context context-type="linenumber">148,152</context>
         </context-group>
         <note priority="1" from="description">Bouton qui relance le layout du graphe</note>
       </trans-unit>
@@ -11544,15 +11516,23 @@
         <source> Liste des liens </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">152,157</context>
+          <context context-type="linenumber">158,162</context>
         </context-group>
         <note priority="1" from="description">Bouton qui montre la liste équivalente des liens</note>
+      </trans-unit>
+      <trans-unit id="graph.toolbar.link" datatype="html">
+        <source>Lier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
+          <context context-type="linenumber">171,174</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Lier de la barre du graphe</note>
       </trans-unit>
       <trans-unit id="graph.truncated" datatype="html">
         <source> Graphe partiel : au-delà de 150 nœuds, des entrées sont regroupées ou retirées. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">158,162</context>
+          <context context-type="linenumber">182,186</context>
         </context-group>
         <note priority="1" from="description">Graphe tronqué</note>
       </trans-unit>
@@ -11560,23 +11540,55 @@
         <source>Le dernier graphe reçu reste affiché.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">165,167</context>
+          <context context-type="linenumber">189,191</context>
         </context-group>
         <note priority="1" from="description">Le dernier graphe reste affiché</note>
+      </trans-unit>
+      <trans-unit id="graph.root.allWarning" datatype="html">
+        <source>jusqu&apos;à 150 nœuds, étiquettes masquées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Avertissement de l&apos;option Tout le dossier</note>
+      </trans-unit>
+      <trans-unit id="graph.toolbar.linkDisabled" datatype="html">
+        <source>Choisissez d&apos;abord une entrée dans le graphe.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+        <note priority="1" from="description">Pourquoi Lier est inactif dans la barre du graphe</note>
       </trans-unit>
       <trans-unit id="graph.proposed" datatype="html">
         <source>suggéré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <note priority="1" from="description">Étiquette d&apos;un lien proposé (V2)</note>
+      </trans-unit>
+      <trans-unit id="graph.filter.period" datatype="html">
+        <source>Période : <x id="period" equiv-text="label"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+        <note priority="1" from="description">Filtre de période du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.wholeFolder.note" datatype="html">
+        <source>Tout le dossier : <x id="count" equiv-text="count"/> nœuds, étiquettes masquées. Choisissez une entrée dans « Centré sur » pour lire le graphe.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
+          <context context-type="linenumber">217</context>
+        </context-group>
+        <note priority="1" from="description">Avertissement du graphe de tout le dossier</note>
       </trans-unit>
       <trans-unit id="graph.count" datatype="html">
         <source><x id="nodes" equiv-text="nodes"/> nœuds · <x id="edges" equiv-text="edges"/> liens</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">233</context>
         </context-group>
         <note priority="1" from="description">Compteur du graphe</note>
       </trans-unit>
@@ -11584,7 +11596,7 @@
         <source>Graphe des liens : <x id="nodes" equiv-text="nodes"/> nœuds, <x id="edges" equiv-text="edges"/> liens. Le bouton « Liste des liens » en donne la version texte.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">238</context>
         </context-group>
         <note priority="1" from="description">Nom accessible du canevas du graphe</note>
       </trans-unit>
@@ -11592,7 +11604,7 @@
         <source>Types d&apos;entrées : tous</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">173</context>
+          <context context-type="linenumber">244</context>
         </context-group>
         <note priority="1" from="description">Filtre des types d&apos;entrées, tous</note>
       </trans-unit>
@@ -11600,7 +11612,7 @@
         <source>Types d&apos;entrées : <x id="count" equiv-text="count"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">247</context>
         </context-group>
         <note priority="1" from="description">Filtre des types d&apos;entrées, nombre retenu</note>
       </trans-unit>
@@ -11608,7 +11620,7 @@
         <source>Liens : tous</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">253</context>
         </context-group>
         <note priority="1" from="description">Filtre des types de liens, tous</note>
       </trans-unit>
@@ -11616,7 +11628,7 @@
         <source>Liens : <x id="count" equiv-text="count"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">255</context>
         </context-group>
         <note priority="1" from="description">Filtre des types de liens, nombre retenu</note>
       </trans-unit>
@@ -11624,7 +11636,7 @@
         <source>Aucun lien entre les types d&apos;entrées retenus</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">209</context>
+          <context context-type="linenumber">280</context>
         </context-group>
         <note priority="1" from="description">Graphe vide à cause du filtre des types</note>
       </trans-unit>
@@ -11632,7 +11644,7 @@
         <source>Aucun lien autour de cette entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">283</context>
         </context-group>
         <note priority="1" from="description">Graphe vide autour d&apos;une entrée</note>
       </trans-unit>
@@ -11640,7 +11652,7 @@
         <source>Les liens que vous créez apparaîtront ici</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">213</context>
+          <context context-type="linenumber">284</context>
         </context-group>
         <note priority="1" from="description">Graphe vide</note>
       </trans-unit>
@@ -11648,7 +11660,7 @@
         <source>Liez deux entrées depuis la timeline ou l&apos;éditeur d&apos;entrée, ou glissez un nœud sur un autre.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">226</context>
+          <context context-type="linenumber">297</context>
         </context-group>
         <note priority="1" from="description">Que faire quand le graphe est vide</note>
       </trans-unit>
@@ -11656,7 +11668,7 @@
         <source>Groupe sélectionné : <x id="label" equiv-text="label"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">271</context>
+          <context context-type="linenumber">342</context>
         </context-group>
         <note priority="1" from="description">Annonce de la sélection d&apos;un super-nœud</note>
       </trans-unit>
@@ -11664,7 +11676,7 @@
         <source>Entrée sélectionnée : <x id="name" equiv-text="name"/>, <x id="type" equiv-text="type"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">277</context>
+          <context context-type="linenumber">348</context>
         </context-group>
         <note priority="1" from="description">Annonce de la sélection d&apos;un nœud</note>
       </trans-unit>
@@ -11672,15 +11684,23 @@
         <source>Impossible de charger les types de liens</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">292</context>
+          <context context-type="linenumber">363</context>
         </context-group>
         <note priority="1" from="description">Types de liens illisibles dans le graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.root.pending" datatype="html">
+        <source>Entrée choisie</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
+          <context context-type="linenumber">364</context>
+        </context-group>
+        <note priority="1" from="description">Racine pas encore lue</note>
       </trans-unit>
       <trans-unit id="graph.action.wholeFolder" datatype="html">
         <source>Voir tout le dossier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">293</context>
+          <context context-type="linenumber">365</context>
         </context-group>
         <note priority="1" from="description">Action qui centre le graphe sur tout le dossier</note>
       </trans-unit>
@@ -11688,7 +11708,7 @@
         <source>Filtres par défaut</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">294</context>
+          <context context-type="linenumber">366</context>
         </context-group>
         <note priority="1" from="description">Action qui remet les filtres du graphe par défaut</note>
       </trans-unit>
@@ -11696,7 +11716,7 @@
         <source>Montrer tous les types</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">295</context>
+          <context context-type="linenumber">367</context>
         </context-group>
         <note priority="1" from="description">Action qui montre tous les types d&apos;entrées</note>
       </trans-unit>
@@ -11704,7 +11724,7 @@
         <source>Ouvrir la timeline</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">296</context>
+          <context context-type="linenumber">368</context>
         </context-group>
         <note priority="1" from="description">Action qui ouvre la timeline depuis le graphe vide</note>
       </trans-unit>
@@ -11712,7 +11732,7 @@
         <source>Préparation du graphe…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">297</context>
+          <context context-type="linenumber">369</context>
         </context-group>
         <note priority="1" from="description">Chargement du moteur du graphe</note>
       </trans-unit>
@@ -11720,7 +11740,7 @@
         <source>Impossible d&apos;afficher le graphe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">298</context>
+          <context context-type="linenumber">370</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-canvas.component.ts</context>
@@ -11732,7 +11752,7 @@
         <source>Rechargez la page pour réessayer. La liste des liens reste disponible (bouton « Liste des liens »).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">299</context>
+          <context context-type="linenumber">371</context>
         </context-group>
         <note priority="1" from="description">Que faire quand le moteur du graphe manque</note>
       </trans-unit>
@@ -11740,7 +11760,7 @@
         <source>Lier l&apos;entrée sélectionnée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
-          <context context-type="linenumber">338</context>
+          <context context-type="linenumber">418</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis, graphe</note>
       </trans-unit>
@@ -11756,63 +11776,39 @@
         <source> Depuis </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">26,28</context>
+          <context context-type="linenumber">27,29</context>
         </context-group>
         <note priority="1" from="description">Bloc de l&apos;entrée source</note>
       </trans-unit>
-      <trans-unit id="links.to.label" datatype="html">
-        <source> Vers </source>
+      <trans-unit id="links.from.change" datatype="html">
+        <source> Changer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">56,59</context>
+          <context context-type="linenumber">59,62</context>
         </context-group>
-        <note priority="1" from="description">Bloc de l&apos;entrée cible</note>
+        <note priority="1" from="description">Bouton qui change l&apos;entrée source du lien</note>
       </trans-unit>
-      <trans-unit id="links.search.label" datatype="html">
-        <source>Rechercher une entrée du dossier</source>
+      <trans-unit id="links.from.searchLabel" datatype="html">
+        <source>Rechercher la nouvelle source</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">63,66</context>
+          <context context-type="linenumber">68,71</context>
         </context-group>
-        <note priority="1" from="description">Champ de recherche de cible</note>
+        <note priority="1" from="description">Champ de recherche de la nouvelle source</note>
       </trans-unit>
-      <trans-unit id="links.search.placeholder" datatype="html">
-        <source>Rechercher une entrée…</source>
+      <trans-unit id="links.from.searchPlaceholder" datatype="html">
+        <source>Rechercher la nouvelle source…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">71,75</context>
+          <context context-type="linenumber">77,80</context>
         </context-group>
-        <note priority="1" from="description">Indication du champ de recherche de cible</note>
-      </trans-unit>
-      <trans-unit id="links.search.typeLabel" datatype="html">
-        <source>Type d&apos;entrée cherché</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">77,79</context>
-        </context-group>
-        <note priority="1" from="description">Filtre de type de la cible</note>
-      </trans-unit>
-      <trans-unit id="links.search.allTypes" datatype="html">
-        <source> Tous les types </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">81,83</context>
-        </context-group>
-        <note priority="1" from="description">Tous les types d&apos;entrée</note>
-      </trans-unit>
-      <trans-unit id="links.targets.legend" datatype="html">
-        <source> Entrée à lier </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">107,109</context>
-        </context-group>
-        <note priority="1" from="description">Légende de la liste des cibles</note>
+        <note priority="1" from="description">Indication du champ de recherche de source</note>
       </trans-unit>
       <trans-unit id="links.relation.label" datatype="html">
         <source> Relation </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">146,149</context>
+          <context context-type="linenumber">136,139</context>
         </context-group>
         <note priority="1" from="description">Bloc du type de lien</note>
       </trans-unit>
@@ -11820,31 +11816,87 @@
         <source>Inverser le sens</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">159,163</context>
+          <context context-type="linenumber">149,153</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;inversion du sens du lien</note>
+      </trans-unit>
+      <trans-unit id="links.to.label" datatype="html">
+        <source> Vers </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">178,181</context>
+        </context-group>
+        <note priority="1" from="description">Bloc de l&apos;entrée cible</note>
+      </trans-unit>
+      <trans-unit id="links.search.label" datatype="html">
+        <source>Rechercher une entrée du dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">185,187</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche de cible</note>
+      </trans-unit>
+      <trans-unit id="links.search.placeholder" datatype="html">
+        <source>Rechercher une entrée…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">195,199</context>
+        </context-group>
+        <note priority="1" from="description">Indication du champ de recherche de cible</note>
+      </trans-unit>
+      <trans-unit id="links.search.typeLabel" datatype="html">
+        <source>Type d&apos;entrée cherché</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">201,203</context>
+        </context-group>
+        <note priority="1" from="description">Filtre de type de la cible</note>
+      </trans-unit>
+      <trans-unit id="links.search.allTypes" datatype="html">
+        <source> Tous les types </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">205,207</context>
+        </context-group>
+        <note priority="1" from="description">Tous les types d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="links.targets.legend" datatype="html">
+        <source> Entrée à lier </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">232,234</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la liste des cibles</note>
+      </trans-unit>
+      <trans-unit id="links.rationale.title" datatype="html">
+        <source>Pourquoi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">273,276</context>
+        </context-group>
+        <note priority="1" from="description">Champ de justification du lien</note>
+      </trans-unit>
+      <trans-unit id="links.rationale.optional" datatype="html">
+        <source>(facultatif)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">277,281</context>
+        </context-group>
+        <note priority="1" from="description">Mention facultatif du champ Pourquoi</note>
       </trans-unit>
       <trans-unit id="links.sentence.label" datatype="html">
         <source> Le lien se lira </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">192,195</context>
+          <context context-type="linenumber">332,334</context>
         </context-group>
         <note priority="1" from="description">Bloc de la phrase lisible</note>
-      </trans-unit>
-      <trans-unit id="links.rationale.label" datatype="html">
-        <source>Pourquoi (facultatif)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">212,216</context>
-        </context-group>
-        <note priority="1" from="description">Champ de justification du lien</note>
       </trans-unit>
       <trans-unit id="links.save" datatype="html">
         <source>Enregistrer le lien</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">265,267</context>
+          <context context-type="linenumber">354,356</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;enregistrement du lien</note>
       </trans-unit>
@@ -11852,7 +11904,7 @@
         <source> Enregistrer et lier une autre </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">275,277</context>
+          <context context-type="linenumber">364,366</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;enregistrement puis nouveau lien</note>
       </trans-unit>
@@ -11860,7 +11912,7 @@
         <source>Annuler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">278,279</context>
+          <context context-type="linenumber">367,368</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;annulation de l&apos;éditeur de lien</note>
       </trans-unit>
@@ -11880,19 +11932,19 @@
         </context-group>
         <note priority="1" from="description">Nom du groupe des types de lien</note>
       </trans-unit>
-      <trans-unit id="links.editor.unnamed" datatype="html">
-        <source>une entrée</source>
+      <trans-unit id="links.from.listLabel" datatype="html">
+        <source>Entrées du dossier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">115</context>
         </context-group>
-        <note priority="1" from="description">Nom d&apos;une entrée sans titre ni texte</note>
+        <note priority="1" from="description">Nom de la liste des sources possibles</note>
       </trans-unit>
       <trans-unit id="links.source.error" datatype="html">
         <source>Impossible de charger cette entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">159</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <note priority="1" from="description">Entrée source illisible</note>
       </trans-unit>
@@ -11900,7 +11952,7 @@
         <source>Impossible de charger les types de liens</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">172</context>
         </context-group>
         <note priority="1" from="description">Types de liens illisibles</note>
       </trans-unit>
@@ -11908,7 +11960,7 @@
         <source>Impossible de chercher dans le dossier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">188</context>
         </context-group>
         <note priority="1" from="description">Recherche de cible en erreur</note>
       </trans-unit>
@@ -11916,7 +11968,7 @@
         <source>Aucune autre entrée trouvée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">189</context>
         </context-group>
         <note priority="1" from="description">Aucune cible trouvée</note>
       </trans-unit>
@@ -11924,7 +11976,7 @@
         <source>Modifiez la recherche ou le type.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <note priority="1" from="description">Aucune cible, que faire</note>
       </trans-unit>
@@ -11932,7 +11984,7 @@
         <source>Impossible de charger les liens de cette entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">201</context>
         </context-group>
         <note priority="1" from="description">Liens illisibles</note>
       </trans-unit>
@@ -11940,7 +11992,7 @@
         <source>Aucun lien sur cette entrée pour le moment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">202</context>
         </context-group>
         <note priority="1" from="description">Aucun lien posé</note>
       </trans-unit>
@@ -11948,15 +12000,31 @@
         <source>Liens déjà posés sur cette entrée · <x id="count" equiv-text="count"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">206</context>
         </context-group>
         <note priority="1" from="description">Titre de la liste des liens posés</note>
+      </trans-unit>
+      <trans-unit id="links.targets.found" datatype="html">
+        <source>Résultats de la recherche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">228</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la liste des cibles trouvées</note>
+      </trans-unit>
+      <trans-unit id="links.targets.recent" datatype="html">
+        <source>Entrées récentes du dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la liste des cibles récentes</note>
       </trans-unit>
       <trans-unit id="links.targets.linked" datatype="html">
         <source>déjà lié (<x id="labels" equiv-text="labels.join(&apos;, &apos;)"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">219</context>
+          <context context-type="linenumber">248</context>
         </context-group>
         <note priority="1" from="description">Mention d&apos;une entrée déjà liée</note>
       </trans-unit>
@@ -11964,7 +12032,7 @@
         <source>Abandonner ce lien ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">365</context>
+          <context context-type="linenumber">462</context>
         </context-group>
         <note priority="1" from="description">Confirmation de fermeture de l&apos;éditeur de lien</note>
       </trans-unit>
@@ -11972,7 +12040,7 @@
         <source>La cible et le type choisis ne seront pas enregistrés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">366</context>
+          <context context-type="linenumber">463</context>
         </context-group>
         <note priority="1" from="description">Détail de la confirmation de fermeture</note>
       </trans-unit>
@@ -11980,7 +12048,7 @@
         <source>Abandonner</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">367</context>
+          <context context-type="linenumber">464</context>
         </context-group>
         <note priority="1" from="description">Bouton qui abandonne le lien</note>
       </trans-unit>
@@ -11988,7 +12056,7 @@
         <source>Continuer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">368</context>
+          <context context-type="linenumber">465</context>
         </context-group>
         <note priority="1" from="description">Bouton qui revient à l&apos;éditeur de lien</note>
       </trans-unit>
@@ -11996,7 +12064,7 @@
         <source>Choisissez une cible et un type de lien permis.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">408</context>
+          <context context-type="linenumber">507</context>
         </context-group>
         <note priority="1" from="description">Lien incomplet</note>
       </trans-unit>
@@ -12004,7 +12072,7 @@
         <source>Lien enregistré.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">426</context>
+          <context context-type="linenumber">525</context>
         </context-group>
         <note priority="1" from="description">Toast après la pose d&apos;un lien</note>
       </trans-unit>
@@ -12012,7 +12080,7 @@
         <source>Annuler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">429</context>
+          <context context-type="linenumber">528</context>
         </context-group>
         <note priority="1" from="description">Action du toast qui retire le lien posé</note>
       </trans-unit>
@@ -12020,7 +12088,7 @@
         <source>Type du lien modifié.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">500</context>
+          <context context-type="linenumber">599</context>
         </context-group>
         <note priority="1" from="description">Toast après un changement de type de lien</note>
       </trans-unit>
@@ -12028,7 +12096,7 @@
         <source>Lien retiré.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">508</context>
+          <context context-type="linenumber">607</context>
         </context-group>
         <note priority="1" from="description">Toast après le retrait d&apos;un lien</note>
       </trans-unit>
@@ -12036,7 +12104,7 @@
         <source>Lien annulé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">528</context>
+          <context context-type="linenumber">627</context>
         </context-group>
         <note priority="1" from="description">Toast après l&apos;annulation d&apos;un lien</note>
       </trans-unit>
@@ -12200,19 +12268,11 @@
         </context-group>
         <note priority="1" from="description">Entrée du graphe sans lien</note>
       </trans-unit>
-      <trans-unit id="graph.unnamed" datatype="html">
-        <source>une entrée</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-        <note priority="1" from="description">Nom d&apos;une entrée sans titre dans le graphe</note>
-      </trans-unit>
       <trans-unit id="graph.plural.note" datatype="html">
         <source>notes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <note priority="1" from="description">Type d&apos;entrée au pluriel</note>
       </trans-unit>
@@ -12220,7 +12280,7 @@
         <source>événements</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <note priority="1" from="description">Type d&apos;entrée au pluriel</note>
       </trans-unit>
@@ -12228,7 +12288,7 @@
         <source>situations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <note priority="1" from="description">Type d&apos;entrée au pluriel</note>
       </trans-unit>
@@ -12236,7 +12296,7 @@
         <source>ressentis</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <note priority="1" from="description">Type d&apos;entrée au pluriel</note>
       </trans-unit>
@@ -12244,7 +12304,7 @@
         <source>séances</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <note priority="1" from="description">Type d&apos;entrée au pluriel</note>
       </trans-unit>
@@ -12252,7 +12312,7 @@
         <source>médicaments</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <note priority="1" from="description">Type d&apos;entrée au pluriel</note>
       </trans-unit>
@@ -12260,7 +12320,7 @@
         <source><x id="count" equiv-text="count"/> <x id="types" equiv-text="types"/> regroupés</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <note priority="1" from="description">Super-nœud du graphe, nombre et type des entrées regroupées</note>
       </trans-unit>
@@ -12268,7 +12328,7 @@
         <source><x id="emotion" equiv-text="emotion"/> majoritaire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <note priority="1" from="description">Émotion la plus fréquente d&apos;un super-nœud</note>
       </trans-unit>
@@ -12276,7 +12336,7 @@
         <source>Toute la période</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="description">Période du graphe</note>
       </trans-unit>
@@ -12284,7 +12344,7 @@
         <source>30 derniers jours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">93</context>
         </context-group>
         <note priority="1" from="description">Période du graphe</note>
       </trans-unit>
@@ -12292,7 +12352,7 @@
         <source>90 derniers jours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">95</context>
         </context-group>
         <note priority="1" from="description">Période du graphe</note>
       </trans-unit>
@@ -12300,7 +12360,7 @@
         <source>12 derniers mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <note priority="1" from="description">Période du graphe</note>
       </trans-unit>
@@ -12308,7 +12368,7 @@
         <source>manuel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">104</context>
         </context-group>
         <note priority="1" from="description">Provenance d&apos;un lien</note>
       </trans-unit>
@@ -12316,7 +12376,7 @@
         <source>suggéré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">106</context>
         </context-group>
         <note priority="1" from="description">Provenance d&apos;un lien</note>
       </trans-unit>
@@ -12324,7 +12384,7 @@
         <source>suggéré, confirmé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <note priority="1" from="description">Provenance d&apos;un lien</note>
       </trans-unit>
@@ -12332,7 +12392,7 @@
         <source>accepté</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <note priority="1" from="description">Statut d&apos;un lien</note>
       </trans-unit>
@@ -12340,7 +12400,7 @@
         <source>suggéré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <note priority="1" from="description">Statut d&apos;un lien</note>
       </trans-unit>
@@ -12348,7 +12408,7 @@
         <source>Cette entrée n&apos;appartient pas à ce dossier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">124</context>
+          <context context-type="linenumber">141</context>
         </context-group>
         <note priority="1" from="description">Racine du graphe d&apos;un autre dossier (422 DIFFERENT_PATIENT)</note>
       </trans-unit>
@@ -12356,7 +12416,7 @@
         <source>Cette entrée n&apos;existe plus</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <note priority="1" from="description">Racine du graphe introuvable (404)</note>
       </trans-unit>
@@ -12364,7 +12424,7 @@
         <source>Cette entrée est archivée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">147</context>
         </context-group>
         <note priority="1" from="description">Racine du graphe archivée (409)</note>
       </trans-unit>
@@ -12372,7 +12432,7 @@
         <source>Ces filtres ne sont pas valides</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">149</context>
         </context-group>
         <note priority="1" from="description">Paramètres du graphe refusés (422)</note>
       </trans-unit>
@@ -12380,7 +12440,7 @@
         <source>Ce dossier n&apos;est pas accessible</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">152</context>
         </context-group>
         <note priority="1" from="description">Dossier inaccessible</note>
       </trans-unit>
@@ -12388,7 +12448,7 @@
         <source>Impossible de charger le graphe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">154</context>
         </context-group>
         <note priority="1" from="description">Graphe illisible</note>
       </trans-unit>
@@ -12396,7 +12456,7 @@
         <source>Le graphe peut se centrer sur tout le dossier.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">161</context>
         </context-group>
         <note priority="1" from="description">Que faire quand la racine est perdue</note>
       </trans-unit>
@@ -12404,39 +12464,39 @@
         <source>Revenez aux filtres par défaut.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">167</context>
         </context-group>
         <note priority="1" from="description">Que faire quand les filtres sont refusés</note>
       </trans-unit>
       <trans-unit id="graph.legend.toggle" datatype="html">
-        <source> Légende </source>
+        <source>Légende</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">29,32</context>
+          <context context-type="linenumber">31,36</context>
         </context-group>
-        <note priority="1" from="description">Bouton qui déplie la légende du graphe</note>
+        <note priority="1" from="description">Bouton qui replie ou déplie la légende du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.root" datatype="html">
+        <source>Racine</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">56,59</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la racine du graphe</note>
       </trans-unit>
       <trans-unit id="graph.legend.group" datatype="html">
         <source>Groupe d&apos;entrées (à déplier)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">43,47</context>
+          <context context-type="linenumber">61,65</context>
         </context-group>
         <note priority="1" from="description">Légende du super-nœud</note>
-      </trans-unit>
-      <trans-unit id="graph.legend.feeling" datatype="html">
-        <source> Ressenti : la taille suit l&apos;intensité. Racine : bordure bleue. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">67,73</context>
-        </context-group>
-        <note priority="1" from="description">Légende de la taille des ressentis</note>
       </trans-unit>
       <trans-unit id="graph.legend.shapes" datatype="html">
         <source>Formes des entrées</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <note priority="1" from="description">Nom de la liste des formes de la légende</note>
       </trans-unit>
@@ -12444,63 +12504,119 @@
         <source>Traits des liens</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">191</context>
         </context-group>
         <note priority="1" from="description">Nom de la liste des traits de la légende</note>
       </trans-unit>
-      <trans-unit id="graph.legend.solid" datatype="html">
-        <source>trait plein : déclenche, est causé par</source>
+      <trans-unit id="graph.legend.feelingSize" datatype="html">
+        <source>Ressenti · taille et chiffre = intensité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">193</context>
         </context-group>
-        <note priority="1" from="description">Légende d&apos;un trait de lien</note>
+        <note priority="1" from="description">Légende des ressentis du graphe</note>
       </trans-unit>
-      <trans-unit id="graph.legend.longDash" datatype="html">
-        <source>tirets longs : aggrave</source>
+      <trans-unit id="graph.legend.solidName" datatype="html">
+        <source>trait plein</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">201</context>
         </context-group>
-        <note priority="1" from="description">Légende d&apos;un trait de lien</note>
+        <note priority="1" from="description">Nom d&apos;un trait de lien de la légende</note>
       </trans-unit>
-      <trans-unit id="graph.legend.shortDash" datatype="html">
-        <source>tirets courts : soulage</source>
+      <trans-unit id="graph.legend.solidTypes" datatype="html">
+        <source>déclenche, est causé par</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">202</context>
         </context-group>
-        <note priority="1" from="description">Légende d&apos;un trait de lien</note>
+        <note priority="1" from="description">Types de lien d&apos;un trait de la légende</note>
       </trans-unit>
-      <trans-unit id="graph.legend.dotted" datatype="html">
-        <source>pointillé sans flèche : co-occurrence</source>
+      <trans-unit id="graph.legend.longDashName" datatype="html">
+        <source>tirets longs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">164</context>
+          <context context-type="linenumber">208</context>
         </context-group>
-        <note priority="1" from="description">Légende d&apos;un trait de lien</note>
+        <note priority="1" from="description">Nom d&apos;un trait de lien de la légende</note>
       </trans-unit>
-      <trans-unit id="graph.legend.thin" datatype="html">
-        <source>trait fin : suit, fait partie de</source>
+      <trans-unit id="graph.legend.longDashTypes" datatype="html">
+        <source>aggrave</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">209</context>
         </context-group>
-        <note priority="1" from="description">Légende d&apos;un trait de lien</note>
+        <note priority="1" from="description">Types de lien d&apos;un trait de la légende</note>
       </trans-unit>
-      <trans-unit id="graph.legend.double" datatype="html">
-        <source>trait double : traite</source>
+      <trans-unit id="graph.legend.shortDashName" datatype="html">
+        <source>tirets courts</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">215</context>
         </context-group>
-        <note priority="1" from="description">Légende d&apos;un trait de lien</note>
+        <note priority="1" from="description">Nom d&apos;un trait de lien de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.shortDashTypes" datatype="html">
+        <source>soulage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">216</context>
+        </context-group>
+        <note priority="1" from="description">Types de lien d&apos;un trait de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.dottedName" datatype="html">
+        <source>pointillé sans flèche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">222</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;un trait de lien de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.dottedTypes" datatype="html">
+        <source>co-occurrence</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">223</context>
+        </context-group>
+        <note priority="1" from="description">Types de lien d&apos;un trait de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.thinName" datatype="html">
+        <source>trait fin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;un trait de lien de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.thinTypes" datatype="html">
+        <source>suit, fait partie de</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+        <note priority="1" from="description">Types de lien d&apos;un trait de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.doubleName" datatype="html">
+        <source>trait double</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">236</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;un trait de lien de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.doubleTypes" datatype="html">
+        <source>traite</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">237</context>
+        </context-group>
+        <note priority="1" from="description">Types de lien d&apos;un trait de la légende</note>
       </trans-unit>
       <trans-unit id="graph.table.source" datatype="html">
         <source> Source </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
-          <context context-type="linenumber">28,30</context>
+          <context context-type="linenumber">38,40</context>
         </context-group>
         <note priority="1" from="description">Colonne source de la liste des liens</note>
       </trans-unit>
@@ -12508,7 +12624,7 @@
         <source>Lien</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
-          <context context-type="linenumber">30,31</context>
+          <context context-type="linenumber">40,41</context>
         </context-group>
         <note priority="1" from="description">Colonne type de la liste des liens</note>
       </trans-unit>
@@ -12516,7 +12632,7 @@
         <source> Cible </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
-          <context context-type="linenumber">32,34</context>
+          <context context-type="linenumber">42,44</context>
         </context-group>
         <note priority="1" from="description">Colonne cible de la liste des liens</note>
       </trans-unit>
@@ -12524,7 +12640,7 @@
         <source> Provenance </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
-          <context context-type="linenumber">35,37</context>
+          <context context-type="linenumber">45,47</context>
         </context-group>
         <note priority="1" from="description">Colonne provenance de la liste des liens</note>
       </trans-unit>
@@ -12532,15 +12648,31 @@
         <source> Statut </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
-          <context context-type="linenumber">38,42</context>
+          <context context-type="linenumber">48,52</context>
         </context-group>
         <note priority="1" from="description">Colonne statut de la liste des liens</note>
+      </trans-unit>
+      <trans-unit id="graph.table.previous" datatype="html">
+        <source> Précédents </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">83,85</context>
+        </context-group>
+        <note priority="1" from="description">Page précédente de la liste des liens</note>
+      </trans-unit>
+      <trans-unit id="graph.table.next" datatype="html">
+        <source> Suivants </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">93,97</context>
+        </context-group>
+        <note priority="1" from="description">Page suivante de la liste des liens</note>
       </trans-unit>
       <trans-unit id="graph.table.group" datatype="html">
         <source> Groupe </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
-          <context context-type="linenumber">77,79</context>
+          <context context-type="linenumber">110,112</context>
         </context-group>
         <note priority="1" from="description">Colonne groupe de la liste des super-nœuds</note>
       </trans-unit>
@@ -12548,7 +12680,7 @@
         <source> Relié à </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
-          <context context-type="linenumber">80,82</context>
+          <context context-type="linenumber">113,115</context>
         </context-group>
         <note priority="1" from="description">Colonne voisin de la liste des super-nœuds</note>
       </trans-unit>
@@ -12556,7 +12688,7 @@
         <source> Action </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
-          <context context-type="linenumber">83,87</context>
+          <context context-type="linenumber">116,120</context>
         </context-group>
         <note priority="1" from="description">Colonne action de la liste des super-nœuds</note>
       </trans-unit>
@@ -12564,7 +12696,7 @@
         <source> Déplier </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
-          <context context-type="linenumber">111,114</context>
+          <context context-type="linenumber">144,147</context>
         </context-group>
         <note priority="1" from="description">Bouton qui déplie un super-nœud depuis la liste</note>
       </trans-unit>
@@ -12572,7 +12704,7 @@
         <source>Liens du graphe (même contenu que le canevas)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="linenumber">249</context>
         </context-group>
         <note priority="1" from="description">Légende du tableau équivalent au graphe</note>
       </trans-unit>
@@ -12580,7 +12712,7 @@
         <source>Aucun lien dans ce graphe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
-          <context context-type="linenumber">198</context>
+          <context context-type="linenumber">250</context>
         </context-group>
         <note priority="1" from="description">Liste des liens du graphe vide</note>
       </trans-unit>
@@ -12588,15 +12720,31 @@
         <source>Groupes d&apos;entrées regroupées (à déplier)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">251</context>
         </context-group>
         <note priority="1" from="description">Légende du tableau des super-nœuds</note>
+      </trans-unit>
+      <trans-unit id="graph.table.pager" datatype="html">
+        <source>Pages de la liste des liens</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">252</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la pagination de la liste des liens</note>
+      </trans-unit>
+      <trans-unit id="graph.table.range" datatype="html">
+        <source>Liens <x id="first" equiv-text="first"/> à <x id="last" equiv-text="last"/> sur <x id="total" equiv-text="total"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">273</context>
+        </context-group>
+        <note priority="1" from="description">Liens montrés dans la liste paginée</note>
       </trans-unit>
       <trans-unit id="graph.table.expandLabel" datatype="html">
         <source>Déplier : <x id="label" equiv-text="label"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
-          <context context-type="linenumber">217</context>
+          <context context-type="linenumber">297</context>
         </context-group>
         <note priority="1" from="description">Nom accessible du bouton Déplier d&apos;un groupe</note>
       </trans-unit>
@@ -12819,6 +12967,78 @@
           <context context-type="linenumber">197</context>
         </context-group>
         <note priority="1" from="description">Nom du groupe des types d&apos;un lien posé</note>
+      </trans-unit>
+      <trans-unit id="graph.root.label" datatype="html">
+        <source>Centré sur</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">59,63</context>
+        </context-group>
+        <note priority="1" from="description">Sélecteur de la racine du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.root.none" datatype="html">
+        <source> Aucune entrée ne correspond. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">158,161</context>
+        </context-group>
+        <note priority="1" from="description">Aucune entrée trouvée par Centré sur</note>
+      </trans-unit>
+      <trans-unit id="graph.root.all" datatype="html">
+        <source>Tout le dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+        <note priority="1" from="description">Racine du graphe, tout le dossier</note>
+      </trans-unit>
+      <trans-unit id="graph.root.searchLabel" datatype="html">
+        <source>Chercher l&apos;entrée au centre du graphe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">200</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche de la racine du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.root.searchPlaceholder" datatype="html">
+        <source>Titre, type ou date…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+        <note priority="1" from="description">Indication du champ de recherche de la racine</note>
+      </trans-unit>
+      <trans-unit id="graph.root.listLabel" datatype="html">
+        <source>Entrées du dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">202</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la liste des racines possibles</note>
+      </trans-unit>
+      <trans-unit id="graph.root.searching" datatype="html">
+        <source>Recherche dans tout le dossier…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">254</context>
+        </context-group>
+        <note priority="1" from="description">Recherche de la racine dans le dossier en cours</note>
+      </trans-unit>
+      <trans-unit id="graph.root.searchFailed" datatype="html">
+        <source>La recherche dans le dossier a échoué ; seules les entrées du graphe sont proposées.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">257</context>
+        </context-group>
+        <note priority="1" from="description">Recherche de la racine en échec</note>
+      </trans-unit>
+      <trans-unit id="graph.root.count" datatype="html">
+        <source><x id="count" equiv-text="count"/> entrées proposées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">260</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;entrées proposées par Centré sur</note>
       </trans-unit>
       <trans-unit id="overview.heading" datatype="html">
         <source> Vue d&apos;ensemble </source>
