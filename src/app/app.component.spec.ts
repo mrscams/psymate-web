@@ -136,7 +136,6 @@ describe('AppComponent', () => {
     const { el } = await render('fr', { url: '/connexion' });
     // Bandeau public (lien d'évitement compris), <main> étroit avec le bandeau réseau, pied.
     expect(tags(el)).toEqual(['pm-public-header', 'main', 'pm-public-footer', 'pm-toast-outlet']);
-    expect(el.classList.contains('public')).toBe(true);
     expect(el.querySelector('pm-public-header a.skip-link[href="#main"]')).not.toBeNull();
     expect(el.querySelector('pm-public-header header .tagline')?.textContent).toBe(
       'Annuaire des praticiens',
@@ -330,14 +329,93 @@ describe('AppComponent', () => {
       expect(created).toHaveLength(1);
     });
 
-    it('avant la fin de la première navigation, aucun outlet : rien n’est activé dans un habillage provisoire', async () => {
+    it('avant la fin de la première navigation, aucun habillage supposé : ni barre, ni <main>, ni outlet', async () => {
       TestBed.configureTestingModule({
         imports: [AppComponent],
         providers: [provideRouter([]), { provide: SessionApi, useValue: sessionApi }],
       });
       const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
-      expect((fixture.nativeElement as HTMLElement).querySelector('router-outlet')).toBeNull();
+      const el = fixture.nativeElement as HTMLElement;
+      expect(tags(el)).toEqual(['pm-toast-outlet']);
+      expect(el.querySelector('pm-app-bar, pm-shortcuts-help, main, router-outlet')).toBeNull();
+    });
+
+    it('ouverture directe : la coquille ne prend pas le focus (aucun changement d’habillage vu)', async () => {
+      const focus = vi.spyOn(HTMLElement.prototype, 'focus');
+      try {
+        for (const layout of ['public', 'admin', 'practitioner']) {
+          const { fixture, el } = await render('fr', { url: `/c/${layout}`, firstRender: true });
+          await fixture.whenStable();
+          expect(focus.mock.contexts).not.toContain(el);
+          expect(document.activeElement).toBe(document.body);
+          TestBed.resetTestingModule();
+        }
+      } finally {
+        focus.mockRestore();
+      }
+    });
+
+    it('première navigation annulée par un garde qui redirige : l’outlet apparaît, la page est créée une fois', async () => {
+      TestBed.configureTestingModule({
+        imports: [AppComponent],
+        providers: [
+          provideRouter([
+            {
+              path: 'prive',
+              canActivate: [() => inject(Router).parseUrl('/c/public')],
+              component: Blank,
+            },
+            { path: 'c/public', component: Counted, data: { layout: 'public' } },
+          ]),
+          { provide: SessionApi, useValue: sessionApi },
+        ],
+      });
+      const fixture = TestBed.createComponent(AppComponent);
+      await fixture.whenStable();
+      const router = TestBed.inject(Router);
+      const events: string[] = [];
+      router.events.subscribe((event) => events.push(event.constructor.name));
+
+      await router.navigateByUrl('/prive');
+      await fixture.whenStable();
+
+      expect(events).toContain('NavigationCancel');
+      expect(events.at(-1)).toBe('NavigationEnd');
+      expect(created).toEqual(['/c/public']);
+      const el = fixture.nativeElement as HTMLElement;
+      expect(el.querySelectorAll('router-outlet')).toHaveLength(1);
+      expect(el.querySelector('main#main.public-main pm-counted')).not.toBeNull();
+      expect(el.querySelector('pm-app-bar')).toBeNull();
+    });
+
+    it('première navigation en erreur (loadComponent rejeté) puis navigation réussie : la page est créée une fois', async () => {
+      TestBed.configureTestingModule({
+        imports: [AppComponent],
+        providers: [
+          provideRouter([
+            { path: 'casse', loadComponent: () => Promise.reject(new Error('chunk absent')) },
+            { path: 'c/practitioner', component: Counted },
+          ]),
+          { provide: SessionApi, useValue: sessionApi },
+        ],
+      });
+      const fixture = TestBed.createComponent(AppComponent);
+      await fixture.whenStable();
+      const router = TestBed.inject(Router);
+      const el = fixture.nativeElement as HTMLElement;
+
+      await expect(router.navigateByUrl('/casse')).rejects.toThrow('chunk absent');
+      await fixture.whenStable();
+      // Échec sans suite : l'écran n'est pas laissé vide (habillage par défaut, outlet vide).
+      expect(el.querySelectorAll('router-outlet')).toHaveLength(1);
+      expect(el.querySelector('pm-counted')).toBeNull();
+
+      await router.navigateByUrl('/c/practitioner');
+      await fixture.whenStable();
+      expect(created).toEqual(['/c/practitioner']);
+      expect(el.querySelectorAll('router-outlet')).toHaveLength(1);
+      expect(el.querySelector('main#main.app-main pm-counted')).not.toBeNull();
     });
   });
 });

@@ -1,5 +1,11 @@
+/*
+ * Fond propre, comme quand le pied était peint sur l'hôte de pm-public-layout : sans fond opaque dans
+ * sa boîte, Chromium (Linux, polices DejaVu) ne lisse pas le texte d'un lien `.pm-link-target`
+ * (inline-flex) comme celui d'un lien en ligne, et la capture change d'une colonne de pixels (UX-A10).
+ */
 :host {
   display: block;
+  background: var(--surface-ground);
 }
 
 .public-footer {

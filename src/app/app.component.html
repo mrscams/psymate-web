@@ -1,55 +1,55 @@
-@if (layout() === 'bare') {
-  <pm-network-banner />
-  <router-outlet />
-} @else {
-  @switch (layout()) {
-    @case ('public') {
-      <pm-public-header
-        [authenticated]="session.authenticated()"
-        [switchHref]="switchHref()"
-        [switchLang]="other"
-      />
-    }
-    @case ('admin') {
-      <pm-admin-bar [user]="user()" (logout)="logout()" />
-      <pm-network-banner />
-    }
-    @default {
-      <pm-app-bar
-        [user]="user()"
-        [switchHref]="switchHref()"
-        [switchLang]="other"
-        [query]="searchBar.query()"
-        [searchPlaceholder]="searchBar.placeholder()"
-        (queryChange)="searchBar.input($event)"
-        (searchSubmit)="searchBar.submit($event)"
-        (logout)="logout()"
-      />
-      @if (session.authenticated()) {
-        <pm-verification-banner [status]="session.verificationStatus()" />
+@if (navigated()) {
+  @if (layout() === 'bare') {
+    <pm-network-banner />
+    <router-outlet />
+  } @else {
+    @switch (layout()) {
+      @case ('public') {
+        <pm-public-header
+          [authenticated]="session.authenticated()"
+          [switchHref]="switchHref()"
+          [switchLang]="other"
+        />
       }
-      <pm-network-banner />
+      @case ('admin') {
+        <pm-admin-bar [user]="user()" (logout)="logout()" />
+        <pm-network-banner />
+      }
+      @default {
+        <pm-app-bar
+          [user]="user()"
+          [switchHref]="switchHref()"
+          [switchLang]="other"
+          [query]="searchBar.query()"
+          [searchPlaceholder]="searchBar.placeholder()"
+          (queryChange)="searchBar.input($event)"
+          (searchSubmit)="searchBar.submit($event)"
+          (logout)="logout()"
+        />
+        @if (session.authenticated()) {
+          <pm-verification-banner [status]="session.verificationStatus()" />
+        }
+        <pm-network-banner />
+      }
     }
-  }
-  <main
-    id="main"
-    [class.app-main]="layout() !== 'public'"
-    [class.admin]="layout() === 'admin'"
-    [class.public-main]="layout() === 'public'"
-    [class.narrow]="layout() === 'public' && narrow()"
-    [class.wide]="contentWidth() === 'wide'"
-  >
-    @if (layout() === 'public') {
-      <pm-network-banner />
-    }
-    @if (navigated()) {
+    <main
+      id="main"
+      [class.app-main]="layout() !== 'public'"
+      [class.admin]="layout() === 'admin'"
+      [class.public-main]="layout() === 'public'"
+      [class.narrow]="layout() === 'public' && narrow()"
+      [class.wide]="contentWidth() === 'wide'"
+    >
+      @if (layout() === 'public') {
+        <pm-network-banner />
+      }
       <router-outlet />
+    </main>
+    @if (layout() === 'public') {
+      <pm-public-footer />
+    } @else if (layout() === 'practitioner') {
+      <pm-shortcuts-help />
     }
-  </main>
-  @if (layout() === 'public') {
-    <pm-public-footer />
-  } @else if (layout() === 'practitioner') {
-    <pm-shortcuts-help />
   }
 }
 <pm-toast-outlet />

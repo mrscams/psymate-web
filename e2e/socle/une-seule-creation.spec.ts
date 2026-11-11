@@ -49,6 +49,111 @@ async function settle(page: Page): Promise<void> {
   await page.waitForLoadState('networkidle');
 }
 
+/** Ce que la coquille a posé pendant le démarrage, observé dès le début du document. */
+interface Startup {
+  appBar: number;
+  shortcuts: number;
+  publicHeader: number;
+  appMainSeen: boolean;
+  shellFocus: number;
+  cls: number;
+}
+
+/**
+ * Réseau ralenti (latence 400 ms, 1,5 Mbit/s) et observateurs posés avant le chargement : insertions
+ * de la barre praticien, de l'aide des raccourcis et du bandeau public, classe `app-main` vue sur le
+ * <main>, focus reçu par `pm-root`, décalage de mise en page cumulé (CLS, `layout-shift`).
+ */
+async function watchStartup(page: Page): Promise<() => Promise<Startup>> {
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Network.enable');
+  await cdp.send('Network.emulateNetworkConditions', {
+    offline: false,
+    latency: 400,
+    downloadThroughput: (1.5 * 1024 * 1024) / 8,
+    uploadThroughput: (750 * 1024) / 8,
+  });
+  await page.addInitScript(() => {
+    const seen = { appBar: 0, shortcuts: 0, publicHeader: 0, appMainSeen: false, shellFocus: 0 };
+    let cls = 0;
+    const scope = window as unknown as { __startup: () => Startup };
+    scope.__startup = () => ({ ...seen, cls });
+    new MutationObserver((records) => {
+      for (const record of records) {
+        for (const node of record.addedNodes) {
+          if (!(node instanceof Element)) continue;
+          if (node.localName === 'pm-app-bar') seen.appBar++;
+          if (node.localName === 'pm-shortcuts-help') seen.shortcuts++;
+          if (node.localName === 'pm-public-header') seen.publicHeader++;
+        }
+      }
+      if (document.querySelector('main#main.app-main')) seen.appMainSeen = true;
+    }).observe(document, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+    document.addEventListener(
+      'focus',
+      (event) => {
+        if ((event.target as Element | null)?.localName === 'pm-root') seen.shellFocus++;
+      },
+      true,
+    );
+    new PerformanceObserver((list) => {
+      for (const entry of list.getEntries() as (PerformanceEntry & {
+        value: number;
+        hadRecentInput: boolean;
+      })[]) {
+        if (!entry.hadRecentInput) cls += entry.value;
+      }
+    }).observe({ type: 'layout-shift', buffered: true });
+  });
+  return () => page.evaluate(() => (window as unknown as { __startup: () => Startup }).__startup());
+}
+
+/** Erreurs d'hydratation (NG05xx) ou d'exécution en console. */
+function watchHydrationErrors(page: Page): string[] {
+  const errors: string[] = [];
+  page.on('console', (message) => {
+    if (/NG0\d{3}|hydrat/i.test(message.text())) errors.push(message.text());
+  });
+  page.on('pageerror', (error) => errors.push(error.message));
+  return errors;
+}
+
+for (const { url, heading, prerendered } of [
+  { url: '/fr/annuaire', heading: /Trouver un psychologue/, prerendered: true },
+  { url: '/fr/connexion', heading: 'Connexion', prerendered: false },
+]) {
+  test(`démarrage ralenti sur ${url} : aucun habillage supposé avant la fin de la navigation`, async ({
+    page,
+  }) => {
+    const startup = await watchStartup(page);
+    const errors = watchHydrationErrors(page);
+
+    await page.goto(url);
+    await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible();
+    await settle(page);
+    const measured = await startup();
+    test.info().annotations.push({ type: 'démarrage', description: JSON.stringify(measured) });
+
+    // Jamais de barre praticien, d'aide des raccourcis ni de <main class="app-main"> sur une page
+    // publique, même un instant ; le bandeau public n'est posé qu'une fois (le HTML prérendu, repris
+    // par l'hydratation, ou le rendu client).
+    expect(measured.appBar).toBe(0);
+    expect(measured.shortcuts).toBe(0);
+    expect(measured.appMainSeen).toBe(false);
+    expect(measured.publicHeader).toBe(1);
+    // Ni focus ni blur de la coquille à l'ouverture directe.
+    expect(measured.shellFocus).toBe(0);
+    // Pas de décalage de mise en page dû à la coquille (l'annuaire prérendu ne se redimensionne pas).
+    expect(measured.cls).toBeLessThan(prerendered ? 0.05 : 0.1);
+    expect(errors).toEqual([]);
+  });
+}
+
 test('ouverture directe de /fr/annuaire : page créée une fois, recherche et vocabulaire lus une fois', async ({
   page,
 }) => {
