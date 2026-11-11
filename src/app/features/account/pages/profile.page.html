@@ -13,26 +13,30 @@
         Ce que les visiteurs de l'annuaire voient. Rien n'est publié sans l'interrupteur « Publié ».
       </p>
       @if (values()) {
-        <p class="saved" data-testid="save-status">
-          <span role="status">{{ saveStatus() }}</span>
-          @if (savedAgo(); as ago) {
-            <span> · {{ ago }}</span>
-          }
-          @for (message of serverMessages(); track message) {
-            <span> · {{ message }}</span>
-          }
-          @if (store.autosave().status === 'error') {
-            @if (saveProblemText(); as detail) {
-              <span> · {{ detail }}</span>
-            }
-            <button
+        <p class="saved" data-testid="save-status" [class.error]="saveFailed()">
+          @if (saveFailed()) {
+            <!-- « Erreur, réessayer » (fiche 10) : l'état est annoncé, le bouton relance l'envoi. -->
+            <span role="status" i18n="Enregistrement automatique en échec@@profile.save.error"
+              >Erreur<span class="sr-only"> d'enregistrement</span>,</span
+            >&ngsp;<button
               type="button"
               class="link"
               (click)="retrySave()"
               i18n="Bouton pour relancer l'enregistrement@@profile.save.retry"
             >
-              Réessayer
+              réessayer
             </button>
+            @if (saveProblemText(); as detail) {
+              <span> · {{ detail }}</span>
+            }
+          } @else {
+            <span role="status">{{ saveStatus() }}</span>
+            @if (savedAgo(); as ago) {
+              <span> · {{ ago }}</span>
+            }
+          }
+          @for (message of serverMessages(); track message) {
+            <span> · {{ message }}</span>
           }
         </p>
       }
@@ -49,7 +53,7 @@
     @if (values(); as current) {
       <div class="columns">
         <form class="form" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
-          <!-- Identité -->
+          <!-- Identité : photo, puis grille 2 colonnes (nom / profession, titre / n° pro, disponibilité). -->
           <section class="card" aria-labelledby="h-identity">
             <h2 id="h-identity" i18n="Section Identité@@profile.section.identity">Identité</h2>
             <div class="identity">
@@ -107,15 +111,41 @@
                   />
                 </div>
                 <div class="field">
-                  <span class="label" i18n="Champ numéro professionnel@@profile.professionalNumber"
-                    >N° professionnel</span
-                  >
-                  <label class="switch">
-                    <input type="checkbox" role="switch" formControlName="showProfessionalNumber" />
-                    <span i18n="Interrupteur numéro professionnel@@profile.showProfessionalNumber"
-                      >Afficher le numéro de mon dossier professionnel</span
+                  <span class="label">
+                    <span i18n="Champ numéro professionnel@@profile.professionalNumber"
+                      >N° professionnel</span
+                    >&ngsp;
+                    <span
+                      class="muted"
+                      i18n="Numéro affiché si rempli@@profile.professionalNumber.hint"
+                      >(affiché si rempli)</span
                     >
-                  </label>
+                  </span>
+                  <mat-slide-toggle
+                    class="toggle"
+                    formControlName="showProfessionalNumber"
+                    i18n="Interrupteur numéro professionnel@@profile.showProfessionalNumberShort"
+                    >Afficher mon numéro<span class="sr-only">
+                      professionnel</span
+                    ></mat-slide-toggle
+                  >
+                </div>
+                <div class="field">
+                  <label
+                    [for]="id('nextSlotAt')"
+                    i18n="Champ prochain créneau@@profile.nextSlotAtShort"
+                    >Prochain créneau (facultatif)</label
+                  >
+                  <pm-date-field
+                    formControlName="nextSlotAt"
+                    [inputId]="id('nextSlotAt')"
+                    [errorId]="id('nextSlotAt') + '-error'"
+                    [invalid]="form.controls.nextSlotAt.invalid"
+                  />
+                  <pm-field-errors
+                    [control]="form.controls.nextSlotAt"
+                    [id]="id('nextSlotAt') + '-error'"
+                  />
                 </div>
                 <div class="field wide">
                   <span
@@ -137,22 +167,6 @@
                     [id]="id('availability') + '-error'"
                   />
                 </div>
-                <div class="field">
-                  <label [for]="id('nextSlotAt')" i18n="Champ prochain créneau@@profile.nextSlotAt"
-                    >Prochain créneau disponible (facultatif)</label
-                  >
-                  <input
-                    class="input"
-                    type="date"
-                    formControlName="nextSlotAt"
-                    [id]="id('nextSlotAt')"
-                    [attr.aria-describedby]="id('nextSlotAt') + '-error'"
-                  />
-                  <pm-field-errors
-                    [control]="form.controls.nextSlotAt"
-                    [id]="id('nextSlotAt') + '-error'"
-                  />
-                </div>
               </div>
             </div>
           </section>
@@ -171,7 +185,7 @@
               </div>
               <textarea
                 class="input textarea"
-                rows="6"
+                rows="4"
                 formControlName="bio"
                 [id]="id('bio')"
                 [attr.maxlength]="limits.bio"
@@ -180,17 +194,20 @@
               <pm-field-errors [control]="form.controls.bio" [id]="id('bio') + '-error'" />
             </div>
 
-            <pm-state
-              [kind]="vocabularyState()"
-              skeleton="block"
-              [lines]="2"
-              compact
-              [action]="retryVocabulary"
-              title="Listes de l'annuaire indisponibles"
-              i18n-title="Titre de l'erreur de la liste fermée@@profile.vocabulary.errorTitle"
-            />
-            @if (vocabularyState() === null) {
-              <div class="grid">
+            @if (vocabularyState(); as kind) {
+              <pm-state
+                [kind]="kind"
+                skeleton="block"
+                [lines]="2"
+                compact
+                [action]="retryVocabulary"
+                title="Listes de l'annuaire indisponibles"
+                i18n-title="Titre de l'erreur de la liste fermée@@profile.vocabulary.errorTitle"
+              />
+            }
+            <!-- Spécialités | Publics ; Modalités (deux rangées) | Langues, puis Tarif. -->
+            <div class="grid practice">
+              @if (vocabularyState() === null) {
                 <div class="field">
                   <pm-chip-picker
                     formControlName="specialties"
@@ -224,7 +241,10 @@
                     [id]="id('audiences') + '-error'"
                   />
                 </div>
-                <fieldset class="field" [attr.aria-describedby]="id('modalities') + '-error'">
+                <fieldset
+                  class="field modalities"
+                  [attr.aria-describedby]="id('modalities') + '-error'"
+                >
                   <legend i18n="Champ modalités@@profile.modalities">Modalités</legend>
                   @for (option of modalityOptions(); track option.code) {
                     <label class="check">
@@ -257,23 +277,24 @@
                     [id]="id('languages') + '-error'"
                   />
                 </div>
+              }
+              <div class="field fees">
+                <label [for]="id('fees')" i18n="Champ tarif@@profile.fees"
+                  >Tarif (facultatif)</label
+                >
+                <input
+                  class="input"
+                  type="text"
+                  formControlName="fees"
+                  [id]="id('fees')"
+                  [attr.maxlength]="limits.fees"
+                  [attr.aria-describedby]="id('fees') + '-help ' + id('fees') + '-error'"
+                />
+                <p class="help" [id]="id('fees') + '-help'" i18n="Aide du tarif@@profile.fees.help">
+                  Texte libre, par exemple « 60 € la séance de 50 min ». Vide : rien n'est affiché.
+                </p>
+                <pm-field-errors [control]="form.controls.fees" [id]="id('fees') + '-error'" />
               </div>
-            }
-
-            <div class="field">
-              <label [for]="id('fees')" i18n="Champ tarif@@profile.fees">Tarif (facultatif)</label>
-              <input
-                class="input"
-                type="text"
-                formControlName="fees"
-                [id]="id('fees')"
-                [attr.maxlength]="limits.fees"
-                [attr.aria-describedby]="id('fees') + '-help ' + id('fees') + '-error'"
-              />
-              <p class="help" [id]="id('fees') + '-help'" i18n="Aide du tarif@@profile.fees.help">
-                Texte libre, par exemple « 60 € la séance de 50 min ». Vide : rien n'est affiché.
-              </p>
-              <pm-field-errors [control]="form.controls.fees" [id]="id('fees') + '-error'" />
             </div>
           </section>
 
@@ -305,12 +326,12 @@
                   [id]="id('contactPhone') + '-error'"
                 />
               </div>
-              <label class="switch">
-                <input type="checkbox" role="switch" formControlName="showPhone" />
-                <span i18n="Interrupteur afficher le téléphone@@profile.showPhone"
-                  >Afficher<span class="sr-only"> le téléphone</span></span
-                >
-              </label>
+              <mat-slide-toggle
+                class="toggle"
+                formControlName="showPhone"
+                i18n="Interrupteur afficher le téléphone@@profile.showPhone"
+                >Afficher<span class="sr-only"> le téléphone</span></mat-slide-toggle
+              >
 
               <label [for]="id('contactEmail')" i18n="Champ e-mail public@@profile.contactEmail"
                 >E-mail public</label
@@ -331,12 +352,12 @@
                   [id]="id('contactEmail') + '-error'"
                 />
               </div>
-              <label class="switch">
-                <input type="checkbox" role="switch" formControlName="showEmail" />
-                <span i18n="Interrupteur afficher l'e-mail@@profile.showEmail"
-                  >Afficher<span class="sr-only"> l'e-mail</span></span
-                >
-              </label>
+              <mat-slide-toggle
+                class="toggle"
+                formControlName="showEmail"
+                i18n="Interrupteur afficher l'e-mail@@profile.showEmail"
+                >Afficher<span class="sr-only"> l'e-mail</span></mat-slide-toggle
+              >
 
               <label [for]="id('websiteUrl')" i18n="Champ site web@@profile.websiteUrl"
                 >Site web</label
@@ -387,29 +408,41 @@
             </div>
           </section>
 
-          <!-- Cabinet -->
+          <!-- Cabinet : adresse, puis code postal | ville. -->
           <section class="card" aria-labelledby="h-office">
             <h2 id="h-office" i18n="Section Cabinet@@profile.section.office">Cabinet</h2>
-            <div class="field">
-              <label [for]="id('address')" i18n="Champ adresse@@profile.address">Adresse</label>
-              <input
-                class="input"
-                type="text"
-                formControlName="address"
-                [id]="id('address')"
-                [attr.maxlength]="limits.address"
-                [attr.aria-describedby]="id('address') + '-error'"
-                autocomplete="street-address"
-              />
-              <pm-field-errors [control]="form.controls.address" [id]="id('address') + '-error'" />
-            </div>
             <div class="grid">
+              <div class="field wide">
+                <label [for]="id('address')" i18n="Champ adresse@@profile.address">Adresse</label>
+                <!-- Interrupteur « Afficher » à droite du champ, comme les moyens de contact. -->
+                <div class="inline">
+                  <input
+                    class="input"
+                    type="text"
+                    formControlName="address"
+                    [id]="id('address')"
+                    [attr.maxlength]="limits.address"
+                    [attr.aria-describedby]="id('address') + '-error'"
+                    autocomplete="street-address"
+                  />
+                  <mat-slide-toggle
+                    class="toggle"
+                    formControlName="showAddress"
+                    i18n="Interrupteur afficher l'adresse@@profile.showAddressShort"
+                    >Afficher<span class="sr-only"> l'adresse sur la fiche</span></mat-slide-toggle
+                  >
+                </div>
+                <pm-field-errors
+                  [control]="form.controls.address"
+                  [id]="id('address') + '-error'"
+                />
+              </div>
               <div class="field">
                 <label [for]="id('postalCode')" i18n="Champ code postal@@profile.postalCode"
                   >Code postal</label
                 >
                 <input
-                  class="input"
+                  class="input mono"
                   type="text"
                   formControlName="postalCode"
                   [id]="id('postalCode')"
@@ -443,12 +476,6 @@
                 <pm-field-errors [control]="form.controls.city" [id]="id('city') + '-error'" />
               </div>
             </div>
-            <label class="switch">
-              <input type="checkbox" role="switch" formControlName="showAddress" />
-              <span i18n="Interrupteur afficher l'adresse@@profile.showAddress"
-                >Afficher l'adresse sur la fiche</span
-              >
-            </label>
           </section>
         </form>
 

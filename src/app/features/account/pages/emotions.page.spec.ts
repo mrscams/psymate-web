@@ -117,6 +117,28 @@ describe('EmotionsPage', () => {
     expect(el.querySelector('a[href="/mon-compte/tags"]')).not.toBeNull();
   });
 
+  it('UX-C4 : avertissement dès 3 lettres ; cartes de famille = label englobant le radio', async () => {
+    const { fixture, el } = await render({ list: vi.fn().mockResolvedValue(EMOTIONS) });
+    const input = el.querySelector<HTMLInputElement>('#field-labelFr')!;
+    type(input, 'An');
+    await settle(fixture);
+    expect(el.querySelector('.proximity')).toBeNull();
+    type(input, 'Anx');
+    await settle(fixture);
+    expect(el.querySelector('.proximity')?.textContent).toContain(
+      'Proche de « Anxiété » (vocabulaire global)',
+    );
+
+    const cards = el.querySelectorAll<HTMLLabelElement>('fieldset.families label.family');
+    expect(cards).toHaveLength(8);
+    // Cliquer n'importe où sur la carte coche son radio (label englobant).
+    const fear = [...cards].find((card) => card.textContent?.includes('Peur'))!;
+    fear.click();
+    await settle(fixture);
+    expect(fear.querySelector<HTMLInputElement>('input[type=radio]')?.checked).toBe(true);
+    expect(fear.classList.contains('checked')).toBe(true);
+  });
+
   it('ajout : avertissement de proximité, 409 sous le champ, puis succès avec toast', async () => {
     const create = vi
       .fn()

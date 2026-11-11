@@ -173,6 +173,20 @@ import {
       height: 100%;
       object-fit: cover;
     }
+    /* Carte Identité étroite (conteneur pm-profile-card de la page) : photo et boutons en ligne,
+       au-dessus de la grille des champs, pour que celle-ci garde ses deux colonnes. */
+    @container pm-profile-card (max-width: 639px) {
+      .photo {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .avatar {
+        width: 64px;
+        height: 64px;
+        font-size: 22px;
+      }
+    }
     .note,
     .help {
       margin: 0;

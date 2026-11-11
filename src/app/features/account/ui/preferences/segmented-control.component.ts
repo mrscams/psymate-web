@@ -35,19 +35,25 @@ export interface SegmentOption<T extends string> {
     </div>
   `,
   styles: `
+    /* Jamais plus large que sa colonne (375 px, UX-C1) : les libellés longs passent à la ligne
+       dans leur segment plutôt que de faire défiler la page. */
     :host {
       display: inline-block;
+      max-width: 100%;
     }
     .segments {
       display: inline-flex;
+      max-width: 100%;
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
       overflow: hidden;
       background: var(--surface-raised);
     }
     button {
+      flex: 0 1 auto;
+      min-width: 0;
       min-height: 36px;
-      padding: 0 16px;
+      padding: 4px 14px;
       border: 0;
       border-left: 1px solid var(--border-subtle);
       background: transparent;

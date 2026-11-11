@@ -25,6 +25,7 @@ import {
 import { StateKind, stateKind } from '../../../shared/util';
 import { PatientExportFormat, PatientOption } from '../data/data-export.api';
 import { ExportStore } from '../data/export.store';
+import { expectedExportFileName } from '../ui/data-export/export-file-name';
 import { ExportJobRowComponent } from '../ui/data-export/export-job-row.component';
 import { PatientComboboxComponent } from '../ui/data-export/patient-combobox.component';
 import { saveFile } from '../ui/data-export/save-file';
@@ -88,6 +89,19 @@ export class DataExportPage {
   private readonly vocabulary = inject(SubjectVocabulary);
   /** « Patient » ou « Client » selon le vocabulaire du praticien (fiche 00). */
   protected readonly patientLabel = computed(() => subjectLabel(this.vocabulary.label(), 'One'));
+
+  /** Aide sous le sélecteur (UX-C6). */
+  protected readonly patientHint = $localize`:Aide du sélecteur de patient@@account.data.patient.hint:Tapez un nom ; les dossiers archivés sont en gris.`;
+  /** Note du bouton inactif : « Choisissez un patient pour exporter » (ou « un client »). */
+  protected readonly chooseFirst = computed(() => {
+    const subject = subjectLabel(this.vocabulary.label(), 'one');
+    return $localize`:Exporter inactif sans patient choisi@@account.data.patient.chooseFirst:Choisissez un ${subject}:subject: pour exporter.`;
+  });
+  /** Fichier attendu une fois le patient choisi (« export-marie-d-20261026.pdf »). */
+  protected readonly expectedFile = computed(() => {
+    const patient = this.selected();
+    return patient ? expectedExportFileName(patient.displayName, this.format()) : null;
+  });
 
   /**
    * Bloc patient : vide (aucun patient du tout), chargement et erreur du premier chargement

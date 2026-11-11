@@ -1190,33 +1190,6 @@
         </context-group>
         <note priority="1" from="description">Étiquette de la progression du dossier</note>
       </trans-unit>
-      <trans-unit id="account.verification.progress.docs.submitted" datatype="html">
-        <source><x id="count" equiv-text="count"/> déposés · dossier soumis</source>
-        <target state="translated"><x id="count" equiv-text="count"/> uploaded · file submitted</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">100</context>
-        </context-group>
-        <note priority="1" from="description">Jalon justificatifs, dossier soumis</note>
-      </trans-unit>
-      <trans-unit id="account.verification.progress.docs.missing" datatype="html">
-        <source><x id="count" equiv-text="count"/> déposés · <x id="missing" equiv-text="missing"/> manquant(s)</source>
-        <target state="translated"><x id="count" equiv-text="count"/> uploaded · <x id="missing" equiv-text="missing"/> missing</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">102</context>
-        </context-group>
-        <note priority="1" from="description">Jalon justificatifs, pièces manquantes</note>
-      </trans-unit>
-      <trans-unit id="account.verification.progress.docs.complete" datatype="html">
-        <source><x id="count" equiv-text="count"/> déposés · prêt à soumettre</source>
-        <target state="translated"><x id="count" equiv-text="count"/> uploaded · ready to submit</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">103</context>
-        </context-group>
-        <note priority="1" from="description">Jalon justificatifs, complet</note>
-      </trans-unit>
       <trans-unit id="account.verification.progress.created" datatype="html">
         <source>Compte créé</source>
         <target state="translated">Account created</target>
@@ -3344,15 +3317,6 @@
         </context-group>
         <note priority="1" from="description">Statut pendant l&apos;enregistrement d&apos;un réglage</note>
       </trans-unit>
-      <trans-unit id="preferences.saved" datatype="html">
-        <source>Enregistré à <x id="time" equiv-text="time"/></source>
-        <target state="translated">Saved at <x id="time" equiv-text="time"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-        <note priority="1" from="description">Statut après l&apos;enregistrement d&apos;un réglage</note>
-      </trans-unit>
       <trans-unit id="preferences.security.twoFactor.on" datatype="html">
         <source>Activée</source>
         <target state="translated">Enabled</target>
@@ -4798,42 +4762,6 @@
           <context context-type="linenumber">228,229</context>
         </context-group>
         <note priority="1" from="description">Étiquette de la liste des sessions</note>
-      </trans-unit>
-      <trans-unit id="account.security.sessions.current" datatype="html">
-        <source>Cet appareil · session courante</source>
-        <target state="translated">This device · current session</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
-          <context context-type="linenumber">239,242</context>
-        </context-group>
-        <note priority="1" from="description">Session courante</note>
-      </trans-unit>
-      <trans-unit id="account.security.sessions.openedAt" datatype="html">
-        <source> Ouverte le </source>
-        <target state="translated">Opened on</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
-          <context context-type="linenumber">249,251</context>
-        </context-group>
-        <note priority="1" from="description">Ouverture de la session</note>
-      </trans-unit>
-      <trans-unit id="account.security.sessions.lastAccessAt" datatype="html">
-        <source> Dernière activité </source>
-        <target state="translated">Last activity</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
-          <context context-type="linenumber">255,257</context>
-        </context-group>
-        <note priority="1" from="description">Dernier appel de la session</note>
-      </trans-unit>
-      <trans-unit id="account.security.sessions.expiresAt" datatype="html">
-        <source> Expire le </source>
-        <target state="translated">Expires on</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
-          <context context-type="linenumber">261,263</context>
-        </context-group>
-        <note priority="1" from="description">Expiration de la session</note>
       </trans-unit>
       <trans-unit id="account.security.sessions.durations" datatype="html">
         <source> Une session dure 12 h d&apos;inactivité, ou 30 jours avec « rester connecté ». « Déconnecter les autres appareils » conserve cet appareil et consigne l&apos;opération. </source>
@@ -7650,11 +7578,11 @@
         <note priority="1" from="description">Introduction de la page Profil public</note>
       </trans-unit>
       <trans-unit id="profile.save.retry" datatype="html">
-        <source> Réessayer </source>
-        <target state="translated">Retry</target>
+        <source> réessayer </source>
+        <target state="translated">retry</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">31,36</context>
+          <context context-type="linenumber">27,29</context>
         </context-group>
         <note priority="1" from="description">Bouton pour relancer l&apos;enregistrement</note>
       </trans-unit>
@@ -7712,15 +7640,6 @@
         </context-group>
         <note priority="1" from="description">Champ numéro professionnel</note>
       </trans-unit>
-      <trans-unit id="profile.showProfessionalNumber" datatype="html">
-        <source>Afficher le numéro de mon dossier professionnel</source>
-        <target state="translated">Show the number from my professional file</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">109,112</context>
-        </context-group>
-        <note priority="1" from="description">Interrupteur numéro professionnel</note>
-      </trans-unit>
       <trans-unit id="profile.availability" datatype="html">
         <source>Disponibilité</source>
         <target state="translated">Availability</target>
@@ -7729,15 +7648,6 @@
           <context context-type="linenumber">115,117</context>
         </context-group>
         <note priority="1" from="description">Champ disponibilité</note>
-      </trans-unit>
-      <trans-unit id="profile.nextSlotAt" datatype="html">
-        <source>Prochain créneau disponible (facultatif)</source>
-        <target state="translated">Next available slot (optional)</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">127,130</context>
-        </context-group>
-        <note priority="1" from="description">Champ prochain créneau</note>
       </trans-unit>
       <trans-unit id="profile.section.practice" datatype="html">
         <source> Présentation et pratique </source>
@@ -7982,15 +7892,6 @@
         </context-group>
         <note priority="1" from="description">Aide de la ville</note>
       </trans-unit>
-      <trans-unit id="profile.showAddress" datatype="html">
-        <source>Afficher l&apos;adresse sur la fiche</source>
-        <target state="translated">Show the address on the page</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">418,422</context>
-        </context-group>
-        <note priority="1" from="description">Interrupteur afficher l&apos;adresse</note>
-      </trans-unit>
       <trans-unit id="profile.retry" datatype="html">
         <source>Réessayer</source>
         <target state="translated">Retry</target>
@@ -8091,11 +7992,11 @@
         <note priority="1" from="description">Enregistrement automatique réussi</note>
       </trans-unit>
       <trans-unit id="profile.save.error" datatype="html">
-        <source>Erreur d&apos;enregistrement</source>
-        <target state="translated">Save failed</target>
+        <source>Erreur<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> d&apos;enregistrement<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>,</source>
+        <target state="translated">Error<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> while saving<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>,</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">241</context>
+          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
+          <context context-type="linenumber">20,21</context>
         </context-group>
         <note priority="1" from="description">Enregistrement automatique en échec</note>
       </trans-unit>
@@ -8602,24 +8503,6 @@
           <context context-type="linenumber">64,69</context>
         </context-group>
         <note priority="1" from="description">Lien vers le dossier professionnel</note>
-      </trans-unit>
-      <trans-unit id="profile.publish.on" datatype="html">
-        <source>Votre fiche est visible à l&apos;adresse</source>
-        <target state="translated">Your page is visible at</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">71,73</context>
-        </context-group>
-        <note priority="1" from="description">Fiche publiée</note>
-      </trans-unit>
-      <trans-unit id="profile.publish.off" datatype="html">
-        <source>Une fois publiée, votre fiche sera visible à l&apos;adresse</source>
-        <target state="translated">Once published, your page will be visible at</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">74,77</context>
-        </context-group>
-        <note priority="1" from="description">Fiche non publiée</note>
       </trans-unit>
       <trans-unit id="profile.publish.unpublishNote" datatype="html">
         <source>Désactiver retire la fiche immédiatement de l&apos;annuaire.</source>
@@ -20251,15 +20134,6 @@
         </context-group>
         <note priority="1" from="description">Bouton d&apos;export d&apos;un patient</note>
       </trans-unit>
-      <trans-unit id="account.data.patient.fileNote" datatype="html">
-        <source>Séances et entrées en ordre chronologique, texte de la version courante.</source>
-        <target state="translated">Sessions and entries in chronological order, current version of the text.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">97,100</context>
-        </context-group>
-        <note priority="1" from="description">Contenu du fichier exporté</note>
-      </trans-unit>
       <trans-unit id="account.data.patient.reminder" datatype="html">
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Les entrées privées ne sont jamais exportées<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, ni les entrées archivées ; un lien vers une entrée non exportée est omis · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>thème clair<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> pour le PDF quel que soit votre réglage · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>ordre chronologique<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> · langue du document : celle de l&apos;interface. </source>
         <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Private entries are never exported<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, nor archived entries; a link to an entry that is not exported is left out · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>light theme<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> for the PDF whatever your setting · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>chronological order<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> · document language: the interface language.</target>
@@ -22645,6 +22519,439 @@
           <context context-type="linenumber">81</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;état erreur de la régénération des codes</note>
+      </trans-unit>
+      <trans-unit id="1236922393516943706" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 appareil} other {<x id="INTERPOLATION"/> appareils}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 device} other {<x id="INTERPOLATION"/> devices}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">303,305</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3269664571840477809" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 manquant} other {<x id="INTERPOLATION"/> manquants}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 missing} other {<x id="INTERPOLATION"/> missing}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">52,54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="53252064574172960" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {Aucun déposé} =1 {1 déposé} other {<x id="INTERPOLATION"/> déposés}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =0 {None uploaded} =1 {1 uploaded} other {<x id="INTERPOLATION"/> uploaded}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">33,35</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">62,64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8336249631710697339" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {l&apos;autre session} other {les <x id="INTERPOLATION"/> autres sessions}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {the other session} other {the <x id="INTERPOLATION"/> other sessions}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">260,262</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">268,270</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8686457947694665380" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 session} other {<x id="INTERPOLATION"/> sessions}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 session} other {<x id="INTERPOLATION"/> sessions}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">288,290</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="account.data.patient.chooseFirst" datatype="html">
+        <source>Choisissez un <x id="subject" equiv-text="subject"/> pour exporter.</source>
+        <target state="translated">Choose a <x id="subject" equiv-text="subject"/> to export.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+        <note priority="1" from="description">Exporter inactif sans patient choisi</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.fileName" datatype="html">
+        <source>Fichier</source>
+        <target state="translated">File</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">101,102</context>
+        </context-group>
+        <note priority="1" from="description">Nom du fichier exporté</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.fileNoteShort" datatype="html">
+        <source>· séances et entrées en ordre chronologique, texte de la version courante</source>
+        <target state="translated">· sessions and entries in chronological order, current version text</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">104,108</context>
+        </context-group>
+        <note priority="1" from="description">Contenu du fichier exporté</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.hint" datatype="html">
+        <source>Tapez un nom ; les dossiers archivés sont en gris.</source>
+        <target state="translated">Type a name; archived records are greyed out.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Aide du sélecteur de patient</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.currentBadge" datatype="html">
+        <source>session courante</source>
+        <target state="translated">current session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">349,352</context>
+        </context-group>
+        <note priority="1" from="description">Session courante</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.expiresOn" datatype="html">
+        <source>expire le <x id="INTERPOLATION" equiv-text="{{ formatDate(s.expiresAt) }}"/></source>
+        <target state="translated">expires <x id="INTERPOLATION" equiv-text="{{ formatDate(s.expiresAt) }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">372,373</context>
+        </context-group>
+        <note priority="1" from="description">Expiration de la session</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.group" datatype="html">
+        <source><x id="ICU" equiv-text="{group.sessions.length, plural,
+                        =1 {1 session}
+                        other {{{ group.sessions.length }} sessions}
+                      }" xid="7755167482662868766"/> · dernière activité <x id="INTERPOLATION_1" equiv-text="{{ ago(group.lastAccessAt) }}"/></source>
+        <target state="translated"><x id="ICU" equiv-text="{group.sessions.length, plural,
+                        =1 {1 session}
+                        other {{{ group.sessions.length }} sessions}
+                      }" xid="7755167482662868766"/> · last active <x id="INTERPOLATION_1" equiv-text="{{ ago(group.lastAccessAt) }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">288,293</context>
+        </context-group>
+        <note priority="1" from="description">Résumé d&apos;un appareil</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.groupHide" datatype="html">
+        <source>Masquer le détail</source>
+        <target state="translated">Hide details</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">305,308</context>
+        </context-group>
+        <note priority="1" from="description">Masquer le détail d&apos;un appareil</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.groupShow" datatype="html">
+        <source>Voir le détail</source>
+        <target state="translated">Show details</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">310,313</context>
+        </context-group>
+        <note priority="1" from="description">Voir le détail d&apos;un appareil</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.hideOlder" datatype="html">
+        <source>Masquer <x id="ICU" equiv-text="{store.olderSessions().length, plural,
+                  =1 {l&apos;autre session}
+                  other {les {{ store.olderSessions().length }} autres sessions}
+                }" xid="6250628017317285049"/></source>
+        <target state="translated">Hide <x id="ICU" equiv-text="{store.olderSessions().length, plural,
+                  =1 {l&apos;autre session}
+                  other {les {{ store.olderSessions().length }} autres sessions}
+                }" xid="6250628017317285049"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">260,265</context>
+        </context-group>
+        <note priority="1" from="description">Replier les sessions plus anciennes</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.lastActivity" datatype="html">
+        <source>Dernière activité <x id="INTERPOLATION" equiv-text="{{ ago(s.lastAccessAt) }}"/></source>
+        <target state="translated">Last active <x id="INTERPOLATION" equiv-text="{{ ago(s.lastAccessAt) }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">369,370</context>
+        </context-group>
+        <note priority="1" from="description">Dernier appel de la session</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.olderList" datatype="html">
+        <source>Autres sessions, par appareil</source>
+        <target state="translated">Other sessions, by device</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">279,281</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette des sessions plus anciennes</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.openedOn" datatype="html">
+        <source>Ouverte le <x id="INTERPOLATION" equiv-text="{{ formatDate(s.createdAt) }}"/></source>
+        <target state="translated">Opened <x id="INTERPOLATION" equiv-text="{{ formatDate(s.createdAt) }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">360,361</context>
+        </context-group>
+        <note priority="1" from="description">Ouverture de la session</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.showOlder" datatype="html">
+        <source>Afficher <x id="ICU" equiv-text="{store.olderSessions().length, plural,
+                  =1 {l&apos;autre session}
+                  other {les {{ store.olderSessions().length }} autres sessions}
+                }" xid="6250628017317285049"/></source>
+        <target state="translated">Show <x id="ICU" equiv-text="{store.olderSessions().length, plural,
+                  =1 {l&apos;autre session}
+                  other {les {{ store.olderSessions().length }} autres sessions}
+                }" xid="6250628017317285049"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">268,273</context>
+        </context-group>
+        <note priority="1" from="description">Déplier les sessions plus anciennes</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.thisDevice" datatype="html">
+        <source>Cet appareil</source>
+        <target state="translated">This device</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">344,347</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la session courante</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.docs.completeIcu" datatype="html">
+        <source><x id="ICU" equiv-text="{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }" xid="4858505258601418427"/> · prêt à soumettre</source>
+        <target state="translated"><x id="ICU" equiv-text="{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }" xid="4858505258601418427"/> · ready to submit</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">62,68</context>
+        </context-group>
+        <note priority="1" from="description">Jalon justificatifs, complet</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.docs.missingIcu" datatype="html">
+        <source><x id="ICU" equiv-text="{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }" xid="4858505258601418427"/> · <x id="ICU_1" equiv-text="{missingCount(), plural,
+                    =1 {1 manquant}
+                    other {{{missingCount()}} manquants}
+                  }" xid="5940867077365447752"/></source>
+        <target state="translated"><x id="ICU" equiv-text="{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }" xid="4858505258601418427"/> · <x id="ICU_1" equiv-text="{missingCount(), plural,
+                    =1 {1 manquant}
+                    other {{{missingCount()}} manquants}
+                  }" xid="5940867077365447752"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">46,57</context>
+        </context-group>
+        <note priority="1" from="description">Jalon justificatifs, pièces
+                    manquantes</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.docs.submittedIcu" datatype="html">
+        <source><x id="ICU" equiv-text="{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }" xid="4858505258601418427"/> · dossier soumis</source>
+        <target state="translated"><x id="ICU" equiv-text="{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }" xid="4858505258601418427"/> · file submitted</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">33,39</context>
+        </context-group>
+        <note priority="1" from="description">Jalon justificatifs, dossier
+                    soumis</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.chosen" datatype="html">
+        <source>Fichier choisi :</source>
+        <target state="translated">Chosen file:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">126,128</context>
+        </context-group>
+        <note priority="1" from="description">Fichier choisi</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.none" datatype="html">
+        <source>Aucun fichier choisi.</source>
+        <target state="translated">No file chosen.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">130,134</context>
+        </context-group>
+        <note priority="1" from="description">Aucun fichier choisi</note>
+      </trans-unit>
+      <trans-unit id="preferences.savedAuto" datatype="html">
+        <source>Enregistré automatiquement</source>
+        <target state="translated">Saved automatically</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <note priority="1" from="description">Statut avant tout changement de réglage</note>
+      </trans-unit>
+      <trans-unit id="preferences.savedNow" datatype="html">
+        <source>Enregistré</source>
+        <target state="translated">Saved</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Statut après l&apos;enregistrement d&apos;un réglage</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.devices" datatype="html">
+        <source> <x id="ICU" equiv-text="{security.deviceCount(), plural,
+                  =1 {1 appareil}
+                  other {{{ security.deviceCount() }} appareils}
+                }" xid="5498395555114795449"/> </source>
+        <target state="translated"> <x id="ICU" equiv-text="{security.deviceCount(), plural,
+                  =1 {1 appareil}
+                  other {{{ security.deviceCount() }} appareils}
+                }" xid="5498395555114795449"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">303,308</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;appareils connectés</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.email.edit" datatype="html">
+        <source>Modifier<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> l&apos;e-mail de connexion<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">Change<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> sign-in email<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">261,262</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la modification de l&apos;e-mail</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.lastLogin" datatype="html">
+        <source>Connexion précédente :</source>
+        <target state="translated">Previous sign-in:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">332,334</context>
+        </context-group>
+        <note priority="1" from="description">Connexion précédente, résumé</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.recoveryCodes" datatype="html">
+        <source>Codes de secours</source>
+        <target state="translated">Recovery codes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">277,281</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers les codes de secours</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.revokeOthers" datatype="html">
+        <source> Déconnecter les autres </source>
+        <target state="translated"> Sign out other devices </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">319,323</context>
+        </context-group>
+        <note priority="1" from="description">Déconnecter les autres appareils</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.sessions" datatype="html">
+        <source>Sessions actives</source>
+        <target state="translated">Active sessions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">289,290</context>
+        </context-group>
+        <note priority="1" from="description">Sessions actives</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.twoFactor.enable" datatype="html">
+        <source>Activer<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> la double authentification<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">Enable<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> two-factor authentication<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">283,284</context>
+        </context-group>
+        <note priority="1" from="description">Lien d&apos;activation de la 2FA</note>
+      </trans-unit>
+      <trans-unit id="profile.professionalNumber.hint" datatype="html">
+        <source>(affiché si rempli)</source>
+        <target state="translated">(shown if filled in)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
+          <context context-type="linenumber">121,124</context>
+        </context-group>
+        <note priority="1" from="description">Numéro affiché si rempli</note>
+      </trans-unit>
+      <trans-unit id="profile.publish.hidden" datatype="html">
+        <source> Une fois publiée, votre fiche sera visible dans l&apos;annuaire. </source>
+        <target state="translated"> Once published, your profile will be visible in the directory. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
+          <context context-type="linenumber">86,89</context>
+        </context-group>
+        <note priority="1" from="description">Fiche non publiée</note>
+      </trans-unit>
+      <trans-unit id="profile.publish.urlLabel" datatype="html">
+        <source>Adresse publique :</source>
+        <target state="translated">Public address:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
+          <context context-type="linenumber">92,93</context>
+        </context-group>
+        <note priority="1" from="description">Libellé de l&apos;adresse publique</note>
+      </trans-unit>
+      <trans-unit id="profile.publish.visible" datatype="html">
+        <source> Votre fiche est visible dans l&apos;annuaire. </source>
+        <target state="translated"> Your profile is visible in the directory. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
+          <context context-type="linenumber">82,85</context>
+        </context-group>
+        <note priority="1" from="description">Fiche publiée</note>
+      </trans-unit>
+      <trans-unit id="profile.nextSlotAtShort" datatype="html">
+        <source>Prochain créneau (facultatif)</source>
+        <target state="translated">Next available slot (optional)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
+          <context context-type="linenumber">137,139</context>
+        </context-group>
+        <note priority="1" from="description">Champ prochain créneau</note>
+      </trans-unit>
+      <trans-unit id="profile.showAddressShort" datatype="html">
+        <source>Afficher<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> l&apos;adresse sur la fiche<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">Show<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> the address on the profile<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
+          <context context-type="linenumber">432</context>
+        </context-group>
+        <note priority="1" from="description">Interrupteur afficher l&apos;adresse</note>
+      </trans-unit>
+      <trans-unit id="profile.showProfessionalNumberShort" datatype="html">
+        <source>Afficher mon numéro<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> professionnel<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span
+                    &gt;"/></source>
+        <target state="translated">Show my number<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> (professional)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
+          <context context-type="linenumber">128,130</context>
+        </context-group>
+        <note priority="1" from="description">Interrupteur numéro professionnel</note>
       </trans-unit>
     </body>
   </file>

@@ -4,8 +4,11 @@ import { VerificationStatus } from '../../../core/auth';
 
 interface Milestone {
   label: string;
+  /** Détail en texte ; vide pour le jalon des justificatifs, rendu en ICU par le gabarit. */
   detail: string;
   state: 'done' | 'current' | 'todo';
+  /** Jalon des justificatifs : variante du détail (pluriels ICU, UX-C2). */
+  docs?: 'submitted' | 'missing' | 'complete';
 }
 
 /**
@@ -20,7 +23,55 @@ interface Milestone {
         <li [class]="step.state" [attr.aria-current]="step.state === 'current' ? 'step' : null">
           <span class="dot" aria-hidden="true"></span>
           <span class="label">{{ step.label }}</span>
-          <span class="detail">{{ step.detail }}</span>
+          <span class="detail">
+            @switch (step.docs) {
+              @case ('submitted') {
+                <span
+                  i18n="
+                    Jalon justificatifs, dossier
+                    soumis@@account.verification.progress.docs.submittedIcu"
+                  >{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }
+                  · dossier soumis</span
+                >
+              }
+              @case ('missing') {
+                <span
+                  i18n="
+                    Jalon justificatifs, pièces
+                    manquantes@@account.verification.progress.docs.missingIcu"
+                  >{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }
+                  ·
+                  {missingCount(), plural,
+                    =1 {1 manquant}
+                    other {{{missingCount()}} manquants}
+                  }</span
+                >
+              }
+              @case ('complete') {
+                <span
+                  i18n="
+                    Jalon justificatifs, complet@@account.verification.progress.docs.completeIcu"
+                  >{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }
+                  · prêt à soumettre</span
+                >
+              }
+              @default {
+                {{ step.detail }}
+              }
+            }
+          </span>
         </li>
       }
     </ol>
@@ -94,13 +145,7 @@ export class VerificationProgressComponent {
   protected readonly steps = computed<Milestone[]>(() => {
     const status = this.status();
     const docsDone = status === 'under_review' || status === 'approved';
-    const count = this.documentCount();
-    const missing = this.missingCount();
-    const docsDetail = docsDone
-      ? $localize`:Jalon justificatifs, dossier soumis@@account.verification.progress.docs.submitted:${count}:count: déposés · dossier soumis`
-      : missing > 0
-        ? $localize`:Jalon justificatifs, pièces manquantes@@account.verification.progress.docs.missing:${count}:count: déposés · ${missing}:missing: manquant(s)`
-        : $localize`:Jalon justificatifs, complet@@account.verification.progress.docs.complete:${count}:count: déposés · prêt à soumettre`;
+    const docs = docsDone ? 'submitted' : this.missingCount() > 0 ? 'missing' : 'complete';
     return [
       {
         label: $localize`:Jalon 1@@account.verification.progress.created:Compte créé`,
@@ -114,7 +159,8 @@ export class VerificationProgressComponent {
       },
       {
         label: $localize`:Jalon 3@@account.verification.progress.docs:Justificatifs`,
-        detail: docsDetail,
+        detail: '',
+        docs,
         state: docsDone ? 'done' : 'current',
       },
       {

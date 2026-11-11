@@ -43,7 +43,9 @@ test('thème : appliqué sans rechargement, PATCH envoyé, conservé dans un aut
   expect(response.status()).toBe(200);
   expect(response.request().postDataJSON()).toEqual({ theme: 'dark' });
   expect((await response.json()).theme).toBe('dark');
-  await expect(page.getByRole('status').filter({ hasText: /^Enregistré à/ })).toBeVisible();
+  // Indicateur sous le titre (UX-C3) : « Enregistré · il y a n s ».
+  await expect(page.getByRole('status').filter({ hasText: /^Enregistré$/ })).toBeVisible();
+  await expect(page.getByTestId('save-status')).toContainText(/Enregistré · (à l'instant|il y a)/);
   await expect(page.getByRole('radio', { name: 'Sombre' })).toBeChecked();
   await expectNoAxeViolations(page);
 

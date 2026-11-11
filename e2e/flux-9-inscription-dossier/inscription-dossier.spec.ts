@@ -224,7 +224,7 @@ test('dossier professionnel : 11 Mo refusé, .exe renommé → 415, complétude,
   await expect(submit).toBeDisabled();
   await expect(page.locator('.missing')).toHaveText("Il manque : pièce d'identité.");
   await expect(page.locator('.recommended')).toContainText('attestation ADELI / RPPS');
-  await expect(steps.nth(2)).toContainText('1 déposés · 1 manquant(s)');
+  await expect(steps.nth(2)).toContainText('1 déposé · 1 manquant');
 
   // Pièce d'identité (PNG) : la règle de complétude du serveur est satisfaite, Soumettre s'active.
   await page.locator('#field-document-type').selectOption('identity');

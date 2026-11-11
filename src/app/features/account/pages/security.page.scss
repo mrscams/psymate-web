@@ -163,24 +163,53 @@ button.danger {
   list-style: none;
 }
 
+// Une session par ligne (maquette 18) : appareil et méta à gauche, activité et échéance à droite,
+// « Déconnecter » au bout ; lignes séparées par un filet plutôt qu'encadrées.
 .session {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 6px 16px;
-  padding: 12px 16px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    'main times action'
+    'meta times action';
+  gap: 2px 16px;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid var(--border-subtle);
 
-  &.current {
-    border-color: var(--primary);
+  &:first-child {
+    border-top: 0;
   }
 }
 
 .session-main {
+  grid-area: main;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 12px;
+  gap: 4px 10px;
+}
+
+.session-meta {
+  grid-area: meta;
+  margin: 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+.session-times {
+  grid-area: times;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  margin: 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+  text-align: right;
+
+  .mono {
+    font-size: 12px;
+  }
 }
 
 .device {
@@ -188,31 +217,66 @@ button.danger {
   font-weight: 500;
 }
 
-.session-dates {
-  grid-column: 1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 20px;
-  margin: 0;
+.revoke {
+  grid-area: action;
+}
 
-  div {
-    display: flex;
-    gap: 6px;
-  }
-  dt {
-    color: var(--text-secondary);
-    font: var(--mat-sys-body-small);
-  }
-  dd {
-    margin: 0;
-    font: var(--mat-sys-body-small);
+// « Afficher les n autres sessions » et « Voir le détail » : liens d'action, cible ≥ 24 px.
+.disclosure,
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--primary);
+  font: var(--mat-sys-label-large);
+  cursor: pointer;
+}
+
+.disclosure {
+  align-self: flex-start;
+}
+
+.chevron {
+  width: 12px;
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.group {
+  padding: 10px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--surface-ground);
+
+  .sessions {
+    margin-top: 6px;
   }
 }
 
-.revoke {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  align-self: center;
+.group-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+
+  .link {
+    margin-left: auto;
+  }
+}
+
+.last-login .mono {
+  font-size: 13px;
 }
 
 @media (max-width: 720px) {
@@ -221,10 +285,17 @@ button.danger {
   }
   .session {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'main'
+      'meta'
+      'times'
+      'action';
+  }
+  .session-times {
+    align-items: flex-start;
+    text-align: left;
   }
   .revoke {
-    grid-column: 1;
-    grid-row: auto;
     justify-self: start;
   }
 }
