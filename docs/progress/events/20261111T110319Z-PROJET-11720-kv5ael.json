@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T11:03:19.119Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-A10 Coquille : un seul <main> et un seul router-outlet pour les habillages praticien, public et admin, outlet rendu après la première navigation ; la page n'est plus créée deux fois (ouverture directe et changement d'habillage)",
+  "notes": "Mesuré : 2 créations → 1 (public, admin, nu, connexion → patients) ; GET /api/patients et /api/tags 2 → 1 après connexion. Suite e2e complète : rouges restants identiques sur main (flux-7 visiteur clavier, flux-8 profil-public, flux-9 clavier).",
+  "pr": "https://github.com/mrscams/psymate-web/pull/71",
+  "branch": "claude/ux-a10-single-outlet",
+  "checkout": "agent-abcb4267217d1ef05"
+}
