@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T16:57:02.372Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-D1bis suivi : réserves de la relecture de la connexion (lien en phrase sans pm-link-target, commentaires, témoin exact, centrage à 1 px)",
+  "notes": "e2e locaux cibles-24, ux-d-identite, flux-1-connexion, socle : 47 verts, 2 sautés (admin).",
+  "pr": "https://github.com/mrscams/psymate-web/pull/77",
+  "branch": "claude/ux-login-two-panels-suivi",
+  "checkout": "agent-a4cca259574b749eb"
+}
