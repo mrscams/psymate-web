@@ -16027,6 +16027,158 @@
         </context-group>
         <note priority="1" from="description">Valeur vide dans l&apos;historique</note>
       </trans-unit>
+      <trans-unit id="public.accessibility.title" datatype="html">
+        <source> Accessibilité </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la page accessibilité</note>
+      </trans-unit>
+      <trans-unit id="public.accessibility.lead" datatype="html">
+        <source> PsyMate doit pouvoir être utilisé au clavier, avec un lecteur d&apos;écran et avec un zoom important. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">7,12</context>
+        </context-group>
+        <note priority="1" from="description">Introduction de la page accessibilité</note>
+      </trans-unit>
+      <trans-unit id="public.info.pending" datatype="html">
+        <source> Contenu provisoire, à compléter par le propriétaire : le texte juridique définitif n&apos;est pas encore publié. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">13,18</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/legal-notice.page.html</context>
+          <context context-type="linenumber">10,15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">12,17</context>
+        </context-group>
+        <note priority="1" from="description">Avertissement de contenu provisoire</note>
+      </trans-unit>
+      <trans-unit id="public.accessibility.goal.title" datatype="html">
+        <source> Objectif </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">19,21</context>
+        </context-group>
+        <note priority="1" from="description">Section objectif de l&apos;accessibilité</note>
+      </trans-unit>
+      <trans-unit id="public.accessibility.goal.text" datatype="html">
+        <source> Le site vise le niveau AA des règles pour l&apos;accessibilité des contenus web (WCAG 2.1). </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">22,27</context>
+        </context-group>
+        <note priority="1" from="description">Texte objectif de l&apos;accessibilité</note>
+      </trans-unit>
+      <trans-unit id="public.accessibility.checks.title" datatype="html">
+        <source> Ce qui est vérifié </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">31,34</context>
+        </context-group>
+        <note priority="1" from="description">Section vérifications de l&apos;accessibilité</note>
+      </trans-unit>
+      <trans-unit id="public.accessibility.checks.contrast" datatype="html">
+        <source> Les contrastes des couleurs, dans le thème clair comme dans le thème sombre. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">35,37</context>
+        </context-group>
+        <note priority="1" from="description">Vérification : contrastes</note>
+      </trans-unit>
+      <trans-unit id="public.accessibility.checks.automated" datatype="html">
+        <source> Une analyse automatique des écrans à chaque évolution du site. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">38,40</context>
+        </context-group>
+        <note priority="1" from="description">Vérification : tests automatiques</note>
+      </trans-unit>
+      <trans-unit id="public.accessibility.checks.keyboard" datatype="html">
+        <source> Les parcours principaux au clavier seul et l&apos;affichage avec un zoom à 200 %. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">41,46</context>
+        </context-group>
+        <note priority="1" from="description">Vérification : clavier et zoom</note>
+      </trans-unit>
+      <trans-unit id="public.accessibility.status.title" datatype="html">
+        <source> État de conformité </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">48,50</context>
+        </context-group>
+        <note priority="1" from="description">Section état de conformité</note>
+      </trans-unit>
+      <trans-unit id="public.accessibility.status.text" datatype="html">
+        <source> Aucun audit de conformité n&apos;a encore été réalisé. La déclaration d&apos;accessibilité et son niveau de conformité restent à établir. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">51,54</context>
+        </context-group>
+        <note priority="1" from="description">Texte état de conformité</note>
+      </trans-unit>
+      <trans-unit id="public.info.todo" datatype="html">
+        <source> À compléter par le propriétaire. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">55,59</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">68,72</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/legal-notice.page.html</context>
+          <context context-type="linenumber">26,30</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/legal-notice.page.html</context>
+          <context context-type="linenumber">41,45</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/legal-notice.page.html</context>
+          <context context-type="linenumber">53,57</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">28,32</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">85,89</context>
+        </context-group>
+        <note priority="1" from="description">Mention à compléter</note>
+      </trans-unit>
+      <trans-unit id="public.accessibility.contact.title" datatype="html">
+        <source> Signaler un problème </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">61,63</context>
+        </context-group>
+        <note priority="1" from="description">Section signaler un problème</note>
+      </trans-unit>
+      <trans-unit id="public.accessibility.contact.text" datatype="html">
+        <source> Si un contenu ou un service vous est inaccessible, vous pourrez le signaler à une adresse dédiée afin d&apos;obtenir une alternative. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.html</context>
+          <context context-type="linenumber">64,67</context>
+        </context-group>
+        <note priority="1" from="description">Texte signaler un problème</note>
+      </trans-unit>
+      <trans-unit id="public.accessibility.meta.description" datatype="html">
+        <source>Accessibilité de PsyMate : objectif, vérifications en place et moyen de signaler un problème.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/accessibility.page.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <note priority="1" from="description">Description de la page accessibilité pour les moteurs de recherche</note>
+      </trans-unit>
       <trans-unit id="public.directory.title" datatype="html">
         <source> Trouver un psychologue, un psychiatre ou un coach </source>
         <context-group purpose="location">
@@ -16662,6 +16814,78 @@
         </context-group>
         <note priority="1" from="description">Description de comment ça marche pour les moteurs de recherche</note>
       </trans-unit>
+      <trans-unit id="public.legal.title" datatype="html">
+        <source>Mentions légales</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/legal-notice.page.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+        <note priority="1" from="description">Titre des mentions légales</note>
+      </trans-unit>
+      <trans-unit id="public.legal.lead" datatype="html">
+        <source> Les informations qui identifient l&apos;éditeur et l&apos;hébergeur du site PsyMate. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/legal-notice.page.html</context>
+          <context context-type="linenumber">5,9</context>
+        </context-group>
+        <note priority="1" from="description">Introduction des mentions légales</note>
+      </trans-unit>
+      <trans-unit id="public.legal.publisher.title" datatype="html">
+        <source> Éditeur du site </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/legal-notice.page.html</context>
+          <context context-type="linenumber">19,21</context>
+        </context-group>
+        <note priority="1" from="description">Section éditeur des mentions légales</note>
+      </trans-unit>
+      <trans-unit id="public.legal.publisher.text" datatype="html">
+        <source> Dénomination, forme juridique, adresse du siège, numéro d&apos;immatriculation et directeur de la publication. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/legal-notice.page.html</context>
+          <context context-type="linenumber">22,25</context>
+        </context-group>
+        <note priority="1" from="description">Texte éditeur des mentions légales</note>
+      </trans-unit>
+      <trans-unit id="public.legal.hosting.title" datatype="html">
+        <source> Hébergement </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/legal-notice.page.html</context>
+          <context context-type="linenumber">35,37</context>
+        </context-group>
+        <note priority="1" from="description">Section hébergement des mentions légales</note>
+      </trans-unit>
+      <trans-unit id="public.legal.hosting.text" datatype="html">
+        <source> Nom, adresse et moyen de contact de l&apos;hébergeur du site et des données. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/legal-notice.page.html</context>
+          <context context-type="linenumber">38,40</context>
+        </context-group>
+        <note priority="1" from="description">Texte hébergement des mentions légales</note>
+      </trans-unit>
+      <trans-unit id="public.legal.contact.title" datatype="html">
+        <source> Contact </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/legal-notice.page.html</context>
+          <context context-type="linenumber">47,49</context>
+        </context-group>
+        <note priority="1" from="description">Section contact des mentions légales</note>
+      </trans-unit>
+      <trans-unit id="public.legal.contact.text" datatype="html">
+        <source> Adresse à laquelle écrire à l&apos;éditeur au sujet du site. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/legal-notice.page.html</context>
+          <context context-type="linenumber">50,52</context>
+        </context-group>
+        <note priority="1" from="description">Texte contact des mentions légales</note>
+      </trans-unit>
+      <trans-unit id="public.legal.meta.description" datatype="html">
+        <source>Mentions légales de PsyMate : éditeur et hébergement du site.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/legal-notice.page.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">Description des mentions légales pour les moteurs de recherche</note>
+      </trans-unit>
       <trans-unit id="public.practitioner.crumbs" datatype="html">
         <source>Fil d&apos;Ariane</source>
         <context-group purpose="location">
@@ -16966,6 +17190,118 @@
         </context-group>
         <note priority="1" from="description">Description par défaut d&apos;une fiche</note>
       </trans-unit>
+      <trans-unit id="public.privacy.title" datatype="html">
+        <source> Confidentialité </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la page confidentialité</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.lead" datatype="html">
+        <source> Ce que PsyMate fait des données qui lui sont confiées. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">7,11</context>
+        </context-group>
+        <note priority="1" from="description">Introduction de la page confidentialité</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.controller.title" datatype="html">
+        <source> Responsable du traitement </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+        <note priority="1" from="description">Section responsable du traitement</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.controller.text" datatype="html">
+        <source> Identité du responsable du traitement, finalités, bases légales et, le cas échéant, délégué à la protection des données. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">24,27</context>
+        </context-group>
+        <note priority="1" from="description">Texte responsable du traitement</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.visitors.title" datatype="html">
+        <source> Visiteurs de l&apos;annuaire </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">37,40</context>
+        </context-group>
+        <note priority="1" from="description">Section visiteurs de la confidentialité</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.visitors.noAccount" datatype="html">
+        <source> Aucun compte n&apos;est demandé pour consulter l&apos;annuaire ou contacter un praticien. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">41,43</context>
+        </context-group>
+        <note priority="1" from="description">Point visiteurs : sans compte</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.visitors.contact" datatype="html">
+        <source> Un message envoyé par le formulaire de contact est transmis au praticien ; il n&apos;est rattaché à aucun dossier et il est effacé après <x id="INTERPOLATION" equiv-text="{{ facts.contactRetentionDays }}"/> jours. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">44,47</context>
+        </context-group>
+        <note priority="1" from="description">Point visiteurs : formulaire de contact</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.practitioners.title" datatype="html">
+        <source> Praticiens et dossiers de suivi </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">55,58</context>
+        </context-group>
+        <note priority="1" from="description">Section praticiens de la confidentialité</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.practitioners.records" datatype="html">
+        <source> Les dossiers patients appartiennent au praticien. L&apos;équipe d&apos;administration vérifie des diplômes, jamais des dossiers. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">59,62</context>
+        </context-group>
+        <note priority="1" from="description">Point praticiens : dossiers</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.practitioners.documents" datatype="html">
+        <source> Les scans de diplômes et de pièces d&apos;identité sont supprimés <x id="INTERPOLATION" equiv-text="{{ facts.documentsPurgeDays }}"/> jours après la décision. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">63,66</context>
+        </context-group>
+        <note priority="1" from="description">Point praticiens : justificatifs</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.practitioners.export" datatype="html">
+        <source> Le praticien peut à tout moment exporter ses données depuis son compte, puis supprimer son compte. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">67,73</context>
+        </context-group>
+        <note priority="1" from="description">Point praticiens : export</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.rights.title" datatype="html">
+        <source> Vos droits </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">78,80</context>
+        </context-group>
+        <note priority="1" from="description">Section droits de la confidentialité</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.rights.text" datatype="html">
+        <source> Durées de conservation détaillées, modalités d&apos;exercice de vos droits et adresse à laquelle les exercer. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.html</context>
+          <context context-type="linenumber">81,84</context>
+        </context-group>
+        <note priority="1" from="description">Texte droits de la confidentialité</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.meta.description" datatype="html">
+        <source>Confidentialité sur PsyMate : quelles données sont traitées et combien de temps elles sont gardées.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/privacy.page.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">Description de la page confidentialité pour les moteurs de recherche</note>
+      </trans-unit>
       <trans-unit id="public.directory.pageTitle" datatype="html">
         <source>Annuaire des praticiens · PsyMate</source>
         <context-group purpose="location">
@@ -16989,6 +17325,30 @@
           <context context-type="linenumber">29</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet de comment ça marche</note>
+      </trans-unit>
+      <trans-unit id="public.legal.pageTitle" datatype="html">
+        <source>Mentions légales · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/public.routes.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet des mentions légales</note>
+      </trans-unit>
+      <trans-unit id="public.privacy.pageTitle" datatype="html">
+        <source>Confidentialité · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/public.routes.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de la page confidentialité</note>
+      </trans-unit>
+      <trans-unit id="public.accessibility.pageTitle" datatype="html">
+        <source>Accessibilité · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/public.routes.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de la page accessibilité</note>
       </trans-unit>
       <trans-unit id="public.contact.sent" datatype="html">
         <source> Votre message a été transmis à <x id="INTERPOLATION" equiv-text="{{ practitionerName() }}"/>. </source>
@@ -19454,110 +19814,6 @@
           <context context-type="linenumber">52</context>
         </context-group>
         <note priority="1" from="description">Étiquette du champ où retaper le nom</note>
-      </trans-unit>
-      <trans-unit id="shared.dateField.calendar" datatype="html">
-        <source>Calendrier</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
-          <context context-type="linenumber">67</context>
-        </context-group>
-        <note priority="1" from="description">Calendrier du champ date</note>
-      </trans-unit>
-      <trans-unit id="shared.dateField.open" datatype="html">
-        <source>Ouvrir le calendrier</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
-        <note priority="1" from="description">Bouton du champ date</note>
-      </trans-unit>
-      <trans-unit id="shared.dateField.close" datatype="html">
-        <source>Fermer le calendrier</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
-          <context context-type="linenumber">69</context>
-        </context-group>
-        <note priority="1" from="description">Bouton du calendrier</note>
-      </trans-unit>
-      <trans-unit id="shared.dateField.prevMonth" datatype="html">
-        <source>Mois précédent</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
-          <context context-type="linenumber">70</context>
-        </context-group>
-        <note priority="1" from="description">Calendrier</note>
-      </trans-unit>
-      <trans-unit id="shared.dateField.nextMonth" datatype="html">
-        <source>Mois suivant</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
-          <context context-type="linenumber">71</context>
-        </context-group>
-        <note priority="1" from="description">Calendrier</note>
-      </trans-unit>
-      <trans-unit id="shared.dateField.prevYear" datatype="html">
-        <source>Année précédente</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
-          <context context-type="linenumber">72</context>
-        </context-group>
-        <note priority="1" from="description">Calendrier</note>
-      </trans-unit>
-      <trans-unit id="shared.dateField.nextYear" datatype="html">
-        <source>Année suivante</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
-          <context context-type="linenumber">73</context>
-        </context-group>
-        <note priority="1" from="description">Calendrier</note>
-      </trans-unit>
-      <trans-unit id="shared.dateField.prevYears" datatype="html">
-        <source>24 années précédentes</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
-          <context context-type="linenumber">74</context>
-        </context-group>
-        <note priority="1" from="description">Calendrier</note>
-      </trans-unit>
-      <trans-unit id="shared.dateField.nextYears" datatype="html">
-        <source>24 années suivantes</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
-          <context context-type="linenumber">75</context>
-        </context-group>
-        <note priority="1" from="description">Calendrier</note>
-      </trans-unit>
-      <trans-unit id="shared.dateField.toMonthView" datatype="html">
-        <source>Choisir la date</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
-          <context context-type="linenumber">76</context>
-        </context-group>
-        <note priority="1" from="description">Calendrier</note>
-      </trans-unit>
-      <trans-unit id="shared.dateField.toYearView" datatype="html">
-        <source>Choisir le mois et l&apos;année</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
-          <context context-type="linenumber">77</context>
-        </context-group>
-        <note priority="1" from="description">Calendrier</note>
-      </trans-unit>
-      <trans-unit id="shared.dateField.placeholder.day" datatype="html">
-        <source>jj/mm/aaaa</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/date-field/date-field.component.ts</context>
-          <context context-type="linenumber">146</context>
-        </context-group>
-        <note priority="1" from="description">Format affiché dans un champ date vide</note>
-      </trans-unit>
-      <trans-unit id="shared.dateField.placeholder.month" datatype="html">
-        <source>mm/aaaa</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/date-field/date-field.component.ts</context>
-          <context context-type="linenumber">170</context>
-        </context-group>
-        <note priority="1" from="description">Format affiché dans un champ mois vide</note>
       </trans-unit>
       <trans-unit id="entry.type.note" datatype="html">
         <source>Note</source>
