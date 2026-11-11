@@ -164,6 +164,66 @@ describe('EntryEditorPanel', () => {
     expect(JSON.stringify(body)).not.toMatch(/authorType|submissionId/);
   });
 
+  it('maquette 05 état A : sous-titre, sections, curseur à 5, pied Enregistrer · Brouillon · Annuler', async () => {
+    const { api } = setup({
+      patientName: vi.fn().mockResolvedValue('Marie D.'),
+      create: vi.fn().mockResolvedValue(entry({ id: 'e-f', type: 'feeling' })),
+    });
+    TestBed.runInInjectionContext(() =>
+      openEntryEditor('p-marie', { type: 'feeling', text: "n'a pas dormi" }),
+    );
+    await settle();
+    expect(api.patientName).toHaveBeenCalledWith('p-marie');
+    expect(text(panel().querySelector('.subtitle'))).toBe(
+      'Marie D. · préremplie depuis la barre de capture',
+    );
+    // Titres de section dans l'ordre de la maquette ; le champ principal porte le nom du type.
+    expect([...panel().querySelectorAll('.section-title')].map((item) => text(item))).toEqual([
+      'Type',
+      'Ressenti',
+      'Quand',
+      'Séance',
+      'Lié à…',
+    ]);
+    // Intensité réglée sur 5 à l'ouverture d'un ressenti ; la valeur à droite du libellé.
+    const slider = panel().querySelector('[role="slider"]')!;
+    expect(slider.getAttribute('aria-valuenow')).toBe('5');
+    expect(slider.getAttribute('aria-valuemin')).toBe('1');
+    expect(text(panel().querySelector('pm-intensity-slider .head #pm-entry-intensity-label'))).toBe(
+      'Intensité',
+    );
+    expect(text(panel().querySelector('pm-intensity-slider .head .value'))).toBe('5/10');
+    // « (facultatif) » hors du libellé : le nom accessible du champ reste « Texte ».
+    expect(text(panel().querySelector('label[for="field-body"]'))).toBe('Texte');
+    expect(text(panel().querySelector('.label-row .optional'))).toBe('(facultatif)');
+    // Pied : Enregistrer, Brouillon, puis Annuler à droite ; rappel des touches dessous.
+    const buttons = [...panel().querySelectorAll('.footer .actions button')].map((b) => text(b));
+    expect(buttons).toEqual(['Enregistrer ⏎', 'BrouillonCtrl+S', 'AnnulerÉchap']);
+    expect(text(panel().querySelector('.footer .keys'))).toContain('ferme en gardant le brouillon');
+
+    const combo = panel().querySelector<HTMLInputElement>('#field-feeling-emotionCode')!;
+    combo.value = 'anx';
+    combo.dispatchEvent(new Event('input'));
+    await settle();
+    key(combo, 'Enter');
+    await settle();
+    panel().querySelector<HTMLButtonElement>('.footer .primary')!.click();
+    await settle();
+    expect(api.create!.mock.calls[0][1]).toMatchObject({
+      type: 'feeling',
+      feeling: { emotionCode: 'anxiety', intensity: 5 },
+    });
+  });
+
+  it('sous-titre : absent si le patient est illisible et la saisie ne vient pas de la barre', async () => {
+    setup({ patientName: vi.fn().mockRejectedValue({ status: 0, code: 'NETWORK_ERROR' }) });
+    TestBed.runInInjectionContext(() => openEntryEditor('p-marie'));
+    await settle();
+    expect(panel().querySelector('.subtitle')).toBeNull();
+    // Le reste du panneau n'en dépend pas.
+    expect(panel().querySelectorAll('pm-type-chips button')).toHaveLength(6);
+  });
+
   it('SESSION_REQUIRED : message sous le bloc Séance, saisie conservée, panneau ouvert', async () => {
     setup({
       currentSession: vi.fn().mockResolvedValue(null),

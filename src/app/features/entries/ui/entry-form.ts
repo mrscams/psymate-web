@@ -88,6 +88,8 @@ export function formDraft(form: EntryForm): EntryDraft {
   const duration = value.session.durationMin;
   return {
     ...value,
+    // pm-date-field et pm-month-field rendent null pour un champ vide : le brouillon garde ''.
+    occurred: { ...value.occurred, from: value.occurred.from ?? '', to: value.occurred.to ?? '' },
     session: {
       modality: value.session.modality,
       durationMin: duration === null || (duration as unknown) === '' ? null : Number(duration),

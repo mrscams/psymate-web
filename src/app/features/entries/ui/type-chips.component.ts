@@ -37,7 +37,7 @@ import { ENTRY_TYPES, EntryIconComponent, EntryType, entryTypeLabel } from '../.
           (click)="choose(type)"
           (keydown)="onKey($event, type)"
         >
-          <pm-entry-icon [type]="type" [size]="14" />
+          <pm-entry-icon [type]="type" [size]="12" />
           <span>{{ labelOf(type) }}</span>
         </button>
       }
@@ -47,28 +47,30 @@ import { ENTRY_TYPES, EntryIconComponent, EntryType, entryTypeLabel } from '../.
     .chips {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
     }
     .chip {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      min-height: 36px;
-      padding: 0 12px;
-      border: 1px solid var(--border-strong);
-      border-radius: 18px;
+      gap: 7px;
+      min-height: 32px;
+      padding: 0 11px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 999px;
       background: var(--surface-raised);
       color: var(--text-primary);
-      font: var(--mat-sys-label-large);
+      font: inherit;
+      font-size: 13px;
       cursor: pointer;
     }
     .chip[aria-pressed='true'] {
-      border-color: var(--primary-hover);
+      border-color: var(--primary);
       background: var(--primary-tint);
       color: var(--primary-hover);
+      font-weight: 600;
     }
     .chip.feeling[aria-pressed='true'] {
-      border-color: var(--feeling-text);
+      border-color: var(--feeling);
       background: var(--feeling-tint);
       color: var(--feeling-text);
     }

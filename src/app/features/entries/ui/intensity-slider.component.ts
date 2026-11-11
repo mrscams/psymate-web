@@ -8,16 +8,19 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { INTENSITY_MAX, INTENSITY_MIN } from '../data/entry.model';
+import { INTENSITY_MAX, INTENSITY_MIN, SLIDER_MIN } from '../data/entry.model';
 
 /** Délai pour taper « 1 » puis « 0 » et obtenir 10. */
 const TEN_DELAY_MS = 900;
 
 /**
- * Curseur d'intensité d'un ressenti (fiche 05 §4, contrat 0 à 10) : `role="slider"` avec
+ * Curseur d'intensité d'un ressenti (fiche 05 §4) : gradué de 1 à 10, valeur en JetBrains Mono à
+ * droite du libellé (projeté), repères 1 à 10 sous la piste. `role="slider"` avec
  * `aria-valuemin/max/now/valuetext`, pilotable au clavier (← → ↑ ↓ ±1, Page ±2, Début / Fin, et
- * les chiffres : « 8 » donne 8, « 1 » puis « 0 » donne 10) et au pointeur. Sans valeur tant qu'on
- * ne l'a pas réglé (le serveur exige l'intensité : REQUIRED). Lavande réservée au ressenti.
+ * les chiffres : « 8 » donne 8, « 1 » puis « 0 » donne 10) et au pointeur. Le panneau règle 5 à
+ * l'ouverture d'un ressenti ; sans valeur (null), le curseur l'annonce « Non renseignée ». Une
+ * intensité 0 venue de la barre de capture (le contrat va de 0 à 10) reste affichée telle quelle :
+ * le minimum descend alors à 0. Lavande réservée au ressenti.
  */
 @Component({
   selector: 'pm-intensity-slider',
@@ -29,53 +32,79 @@ const TEN_DELAY_MS = 900;
     },
   ],
   template: `
-    <div class="row">
-      <div
-        class="slider"
-        role="slider"
-        [attr.id]="sliderId()"
-        [attr.tabindex]="disabled() ? -1 : 0"
-        [attr.aria-labelledby]="labelledBy()"
-        [attr.aria-describedby]="describedBy() || null"
-        [attr.aria-valuemin]="min"
-        [attr.aria-valuemax]="max"
-        [attr.aria-valuenow]="value() ?? min"
-        [attr.aria-valuetext]="valueText()"
-        [attr.aria-invalid]="invalid() ? 'true' : null"
-        [attr.aria-disabled]="disabled() ? 'true' : null"
-        (keydown)="onKey($event)"
-        (pointerdown)="onPointer($event)"
-        (blur)="onTouched()"
+    <div class="head">
+      <ng-content />
+      <span class="value" aria-hidden="true"
+        >{{ shown() }}<span class="max">/{{ max }}</span></span
       >
-        <span class="track" aria-hidden="true">
-          <span class="fill" [style.width.%]="percent()"></span>
-          @if (value() !== null) {
-            <span class="thumb" [style.left.%]="percent()"></span>
-          }
-        </span>
-      </div>
-      <span class="value" aria-hidden="true">{{ display() }}</span>
+    </div>
+    <div
+      class="slider"
+      role="slider"
+      [attr.id]="sliderId()"
+      [attr.tabindex]="disabled() ? -1 : 0"
+      [attr.aria-labelledby]="labelledBy()"
+      [attr.aria-describedby]="describedBy() || null"
+      [attr.aria-valuemin]="min()"
+      [attr.aria-valuemax]="max"
+      [attr.aria-valuenow]="value() ?? min()"
+      [attr.aria-valuetext]="valueText()"
+      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-disabled]="disabled() ? 'true' : null"
+      (keydown)="onKey($event)"
+      (pointerdown)="onPointer($event)"
+      (blur)="onTouched()"
+    >
+      <span class="track" aria-hidden="true">
+        <span class="fill" [style.width.%]="percent()"></span>
+        @if (value() !== null) {
+          <span class="thumb" [style.left.%]="percent()"></span>
+        }
+      </span>
+    </div>
+    <div class="ticks" aria-hidden="true">
+      @for (tick of ticks(); track tick.value) {
+        <span class="tick" [class.on]="tick.value === value()" [style.left.%]="tick.left">{{
+          tick.value
+        }}</span>
+      }
     </div>
   `,
   styles: `
-    .row {
+    :host {
       display: flex;
-      align-items: center;
-      gap: 16px;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .value {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--feeling-text);
+    }
+    .max {
+      font-size: 11px;
+      color: var(--text-secondary);
     }
     .slider {
-      flex: 1;
       display: flex;
       align-items: center;
-      min-height: 44px;
-      padding: 0 10px;
-      border-radius: 10px;
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 8px;
       cursor: pointer;
       touch-action: none;
     }
     .slider:focus-visible {
       outline: 2px solid var(--primary);
-      outline-offset: 1px;
+      outline-offset: 2px;
+      box-shadow: 0 0 0 4px var(--primary-tint);
     }
     .slider[aria-invalid='true'] .track {
       outline: 1px solid var(--danger);
@@ -84,32 +113,45 @@ const TEN_DELAY_MS = 900;
     .track {
       position: relative;
       flex: 1;
-      height: 6px;
-      border-radius: 3px;
-      background: var(--surface-sunken);
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border-subtle);
     }
     .fill {
       position: absolute;
       inset: 0 auto 0 0;
-      border-radius: 3px;
+      border-radius: 2px;
       background: var(--feeling);
     }
     .thumb {
       position: absolute;
       top: 50%;
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--surface-raised);
+      box-sizing: border-box;
+      width: 16px;
+      height: 16px;
+      border: 2.5px solid var(--feeling);
       border-radius: 50%;
-      background: var(--feeling-text);
+      background: var(--surface-raised);
+      box-shadow: 0 1px 3px var(--scrim);
       transform: translate(-50%, -50%);
     }
-    .value {
-      min-width: 5ch;
+    .ticks {
+      position: relative;
+      height: 14px;
+      margin: 0 8px;
       font-family: var(--font-mono);
-      font-size: 15px;
+      font-size: 10px;
+      line-height: 14px;
+      color: var(--text-secondary);
+    }
+    .tick {
+      position: absolute;
+      top: 0;
+      transform: translateX(-50%);
+    }
+    .tick.on {
+      font-weight: 600;
       color: var(--feeling-text);
-      text-align: right;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -120,19 +162,29 @@ export class IntensitySliderComponent implements ControlValueAccessor {
   readonly describedBy = input<string>();
   readonly invalid = input(false);
 
-  protected readonly min = INTENSITY_MIN;
   protected readonly max = INTENSITY_MAX;
   protected readonly value = signal<number | null>(null);
   protected readonly disabled = signal(false);
+  /** 1, sauf pour une intensité 0 reçue (contrat 0 à 10) : le curseur ne la travestit pas. */
+  protected readonly min = computed(() =>
+    this.value() === INTENSITY_MIN ? INTENSITY_MIN : SLIDER_MIN,
+  );
+
+  protected readonly ticks = computed(() => {
+    const min = this.min();
+    const span = this.max - min;
+    return Array.from({ length: span + 1 }, (_, i) => ({
+      value: min + i,
+      left: (i / span) * 100,
+    }));
+  });
 
   protected readonly percent = computed(() => {
     const value = this.value();
-    return value === null ? 0 : ((value - this.min) / (this.max - this.min)) * 100;
+    const min = this.min();
+    return value === null ? 0 : ((value - min) / (this.max - min)) * 100;
   });
-  protected readonly display = computed(() => {
-    const value = this.value();
-    return value === null ? `–/${this.max}` : `${value}/${this.max}`;
-  });
+  protected readonly shown = computed(() => this.value() ?? '–');
   protected readonly valueText = computed(() => {
     const value = this.value();
     const max = this.max;
@@ -148,16 +200,16 @@ export class IntensitySliderComponent implements ControlValueAccessor {
   protected onKey(event: KeyboardEvent): void {
     if (this.disabled() || event.ctrlKey || event.metaKey || event.altKey) return;
     const current = this.value();
-    const base = current ?? this.min;
+    const base = current ?? SLIDER_MIN;
     let next: number | null = null;
     switch (event.key) {
       case 'ArrowRight':
       case 'ArrowUp':
-        next = current === null ? this.min : base + 1;
+        next = current === null ? SLIDER_MIN : base + 1;
         break;
       case 'ArrowLeft':
       case 'ArrowDown':
-        next = base - 1;
+        next = current === null ? SLIDER_MIN : base - 1;
         break;
       case 'PageUp':
         next = base + 2;
@@ -166,7 +218,7 @@ export class IntensitySliderComponent implements ControlValueAccessor {
         next = base - 2;
         break;
       case 'Home':
-        next = this.min;
+        next = SLIDER_MIN;
         break;
       case 'End':
         next = this.max;
@@ -185,7 +237,7 @@ export class IntensitySliderComponent implements ControlValueAccessor {
     const box = track?.getBoundingClientRect();
     if (!box || box.width === 0) return;
     const ratio = (event.clientX - box.left) / box.width;
-    this.set(Math.round(this.min + ratio * (this.max - this.min)));
+    this.set(Math.round(SLIDER_MIN + ratio * (this.max - SLIDER_MIN)));
   }
 
   private fromDigit(digit: number): number {
@@ -196,8 +248,9 @@ export class IntensitySliderComponent implements ControlValueAccessor {
     return digit;
   }
 
+  /** Toute saisie reste dans 1 à 10 (le 0 n'est jamais choisi depuis le curseur). */
   private set(value: number): void {
-    const clamped = Math.min(this.max, Math.max(this.min, value));
+    const clamped = Math.min(this.max, Math.max(SLIDER_MIN, value));
     if (clamped === this.value()) return;
     this.value.set(clamped);
     this.onChange(clamped);

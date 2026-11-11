@@ -6,6 +6,7 @@ import {
   forwardRef,
   inject,
   input,
+  LOCALE_ID,
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -15,23 +16,59 @@ import { uniqueId } from '../../../shared/util';
 import { EntryEditorStore } from '../data/entry-editor.store';
 import {
   Emotion,
+  EMOTION_CREATE_MIN,
   EmotionFamily,
   EMOTION_FAMILIES,
   filterEmotions,
   hasEmotionLabel,
+  normalize,
 } from '../data/entry.model';
 import { emotionProblemText, familyLabel } from './entry-labels';
 
 /** Une ligne de la liste : une émotion, ou la création d'une émotion personnalisée. */
 type Option = { kind: 'emotion'; emotion: Emotion } | { kind: 'create'; label: string };
 
+/** Libellé découpé autour de la partie qui correspond à la saisie (surlignée par `<mark>`). */
+export interface LabelParts {
+  before: string;
+  match: string;
+  after: string;
+}
+
+/**
+ * Où la saisie correspond dans le libellé (début du libellé ou d'un de ses mots, sans casse ni
+ * accents), comme filterEmotions. Sans correspondance lisible (code seul, normalisation qui change la
+ * longueur), le libellé entier sans surlignage.
+ */
+export function labelParts(label: string, query: string): LabelParts {
+  const q = normalize(query);
+  const whole = { before: label, match: '', after: '' };
+  if (!q) return whole;
+  const text = normalize(label);
+  if (text.length !== label.length) return whole;
+  for (let i = 0; i <= text.length - q.length; i++) {
+    const start = i === 0 || /[\s'’-]/.test(text[i - 1]);
+    if (start && text.startsWith(q, i)) {
+      return {
+        before: label.slice(0, i),
+        match: label.slice(i, i + q.length),
+        after: label.slice(i + q.length),
+      };
+    }
+  }
+  return whole;
+}
+
 /**
  * Choix de l'émotion d'un ressenti (fiche 05 §4, fiche 17) : `role="combobox"` sur un
- * `role="listbox"` filtré par préfixe (sans casse ni accents), pastille de famille, ↓ ↑ pour
- * parcourir, ⏎ pour choisir, Échap pour refermer la liste (sans fermer le panneau). Dernière ligne
- * « Créer l'émotion personnalisée « … » » : la famille est obligatoire, puis POST /api/me/emotions
- * crée l'émotion sans quitter le panneau et la sélectionne ; 409 EMOTION_LABEL_EXISTS s'affiche
- * sous le champ. La valeur du contrôle est le code de l'émotion.
+ * `role="listbox"` filtré par préfixe (sans casse ni accents, partie trouvée surlignée), pastille
+ * et famille de chaque émotion en suffixe (« peur · faible », « peur · personnalisée »), ↓ ↑ pour
+ * parcourir, ⏎ pour choisir, Échap pour refermer la liste (sans fermer le panneau). L'émotion
+ * choisie garde sa pastille et « famille peur » dans le champ. Dès 3 lettres sans libellé
+ * identique, dernière ligne « Créer l'émotion personnalisée « … » · famille ▾ » : la famille est
+ * obligatoire (proposée d'après la première émotion trouvée), puis POST /api/me/emotions crée
+ * l'émotion sans quitter le panneau et la sélectionne ; 409 EMOTION_LABEL_EXISTS s'affiche sous le
+ * champ. La valeur du contrôle est le code de l'émotion.
  */
 @Component({
   selector: 'pm-emotion-combobox',
@@ -57,6 +94,7 @@ export class EmotionComboboxComponent implements ControlValueAccessor {
 
   protected readonly store = inject(EntryEditorStore);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly locale = inject(LOCALE_ID);
 
   protected readonly listId = uniqueId('pm-emotion-list');
   protected readonly familyId = uniqueId('pm-emotion-family');
@@ -87,13 +125,21 @@ export class EmotionComboboxComponent implements ControlValueAccessor {
       emotion,
     }));
     if (
-      query &&
+      query.length >= EMOTION_CREATE_MIN &&
       this.store.emotions().status === 'loaded' &&
       !hasEmotionLabel(this.emotions(), query)
     ) {
       matches.push({ kind: 'create', label: query });
     }
     return matches;
+  });
+
+  /** Famille proposée pour une émotion à créer : celle de la première émotion trouvée. */
+  protected readonly suggestedFamily = computed<EmotionFamily | null>(() => {
+    for (const option of this.options()) {
+      if (option.kind === 'emotion' && option.emotion.family) return option.emotion.family;
+    }
+    return null;
   });
 
   /** Aucune option active tant qu'on n'a pas appuyé sur ↓ ou ↑ (fiche 05 : « anx » → ↓ → ⏎). */
@@ -139,6 +185,52 @@ export class EmotionComboboxComponent implements ControlValueAccessor {
 
   protected familyName(family: EmotionFamily): string {
     return familyLabel(family);
+  }
+
+  /** « peur » : la famille en minuscules, pour les suffixes. */
+  protected familyWord(family: EmotionFamily): string {
+    return familyLabel(family).toLocaleLowerCase(this.locale);
+  }
+
+  /** Suffixe d'une émotion de la liste : « peur », « peur · faible », « tristesse · personnalisée ». */
+  protected suffixOf(emotion: Emotion): string {
+    const parts: string[] = [];
+    if (emotion.family) parts.push(this.familyWord(emotion.family));
+    if (emotion.intensityLevel === 1) {
+      parts.push(
+        $localize`:Niveau lexical faible d'une émotion (Plutchik)@@entries.emotion.levelLow:faible`,
+      );
+    } else if (emotion.intensityLevel === 3) {
+      parts.push(
+        $localize`:Niveau lexical fort d'une émotion (Plutchik)@@entries.emotion.levelHigh:forte`,
+      );
+    }
+    if (emotion.custom) {
+      parts.push(
+        $localize`:Marque d'une émotion personnalisée@@entries.emotion.customTag:personnalisée`,
+      );
+    }
+    return parts.join(' · ');
+  }
+
+  /** Suffixe du champ une fois l'émotion choisie : « famille peur ». */
+  protected fieldSuffix(family: EmotionFamily): string {
+    const name = this.familyWord(family);
+    return $localize`:Famille de l'émotion choisie, à droite du champ@@entries.emotion.familySuffix:famille ${name}:family:`;
+  }
+
+  /** Suffixe de la ligne de création : « famille peur ▾ » (proposée), ou « famille ▾ ». */
+  protected createSuffix(): string {
+    const family = this.suggestedFamily();
+    if (!family) {
+      return $localize`:Famille à choisir pour une émotion à créer@@entries.emotion.createFamily:famille`;
+    }
+    const name = this.familyWord(family);
+    return $localize`:Famille de l'émotion choisie, à droite du champ@@entries.emotion.familySuffix:famille ${name}:family:`;
+  }
+
+  protected parts(label: string): LabelParts {
+    return labelParts(label, this.query());
   }
 
   protected createText(label: string): string {
@@ -206,7 +298,7 @@ export class EmotionComboboxComponent implements ControlValueAccessor {
       return;
     }
     this.creating.set(option.label);
-    this.family.set(null);
+    this.family.set(this.suggestedFamily());
     this.familyMissing.set(false);
     this.open.set(false);
     // La famille est le champ suivant : le focus y va (fiche 17, famille obligatoire).
