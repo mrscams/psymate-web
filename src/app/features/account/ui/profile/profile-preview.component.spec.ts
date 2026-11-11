@@ -79,7 +79,11 @@ describe('ProfilePreviewComponent', () => {
     const { el } = await render(fields());
     const card = el.querySelector<HTMLElement>('[data-testid="preview"]')!;
     expect(card.getAttribute('aria-live')).toBeNull();
-    el.querySelector<HTMLButtonElement>('.refresh')!.click();
+    // UX-G2b : visible pour tous (plus masqué hors focus), nom accessible = texte du bouton.
+    const refresh = el.querySelector<HTMLButtonElement>('.refresh')!;
+    expect(refresh.className).not.toContain('sr-only');
+    expect(refresh.textContent?.trim()).toBe("Rafraîchir l'aperçu");
+    refresh.click();
     expect(document.activeElement).toBe(card);
   });
 });

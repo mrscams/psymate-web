@@ -110,6 +110,64 @@ describe('JournalPage', () => {
     expect(el.querySelector('tbody a')?.textContent).toContain('Voir le dossier');
   });
 
+  it('UX-G2b : décision et ligne admin.decision nommées en français, jamais « approved » seul', async () => {
+    const { el } = await render({
+      journal: vi.fn().mockResolvedValue({
+        items: [
+          journalItem({
+            id: 'j-1',
+            kind: 'admin.approved',
+            source: 'verification_decision',
+            summary: 'approved',
+          }),
+          journalItem({
+            id: 'j-2',
+            kind: 'admin.decision',
+            summary: 'admin.decision',
+            detailKind: 'approved',
+          }),
+          journalItem({
+            id: 'j-3',
+            kind: 'system.journal_export',
+            summary: 'system.journal_export',
+          }),
+        ],
+        nextCursor: null,
+      }),
+    });
+    const events = [...el.querySelectorAll('tbody tr')].map(
+      (row) => row.querySelector('.event > span')?.textContent?.trim() ?? '',
+    );
+    expect(events).toEqual([
+      'Dossier approuvé',
+      'Décision enregistrée : Dossier approuvé',
+      'Événement non répertorié (system.journal_export)',
+    ]);
+  });
+
+  it('UX-G2b : liste des administrateurs en erreur, ligne discrète et « Réessayer » qui la relit', async () => {
+    const accounts = vi
+      .fn()
+      .mockRejectedValueOnce({ status: 503, code: 'INTERNAL_ERROR' })
+      .mockResolvedValueOnce(accountPage([]));
+    const { fixture, el } = await render({
+      journal: vi.fn().mockResolvedValue({ items: [journalItem()], nextCursor: null }),
+      accounts,
+    });
+    const error = el.querySelector('[data-testid="journal-actor-error"]');
+    expect(error?.textContent).toContain('Liste des administrateurs indisponible.');
+    expect(el.querySelector('#journal-actor')?.getAttribute('aria-describedby')).toBe(
+      'journal-actor-error',
+    );
+    // Le journal reste affiché : l'échec ne touche que le filtre.
+    expect(el.querySelectorAll('tbody tr')).toHaveLength(1);
+    error!.querySelector('button')!.click();
+    await settle(fixture);
+    expect(accounts).toHaveBeenCalledTimes(2);
+    expect(el.querySelector('[data-testid="journal-actor-error"]')).toBeNull();
+    expect(el.querySelector('#journal-actor')?.hasAttribute('aria-describedby')).toBe(false);
+  });
+
   it('lignes identiques consécutives du même acteur dans la minute : regroupées, dépliables', async () => {
     const { fixture, el } = await render({
       journal: vi.fn().mockResolvedValue({

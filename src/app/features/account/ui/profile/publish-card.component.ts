@@ -69,6 +69,7 @@ export interface ChecklistItem {
             déjà la remplir : rien n'est visible tant qu'elle n'est pas publiée.
           </span>
           <a
+            class="pm-link-target"
             [routerLink]="paths.verification"
             i18n="Lien vers le dossier professionnel@@profile.publish.lockedLink"
             >Voir mon dossier professionnel</a
@@ -143,7 +144,7 @@ export interface ChecklistItem {
                     >Voir mon dossier</a
                   >
                 } @else {
-                  <button type="button" class="link" (click)="fix.emit(item)">
+                  <button type="button" class="link pm-link-target" (click)="fix.emit(item)">
                     {{ label(item) }}
                   </button>
                 }
@@ -258,6 +259,11 @@ export interface ChecklistItem {
     .locked a,
     .refused a {
       color: var(--primary);
+    }
+    /* Lien seul sur sa ligne (pas dans une phrase) : 24 px de haut par .pm-link-target (UX-G2b),
+       à la largeur de son texte. */
+    .locked a {
+      align-self: flex-start;
     }
     .url {
       display: block;

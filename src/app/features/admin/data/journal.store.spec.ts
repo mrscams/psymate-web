@@ -96,4 +96,18 @@ describe('JournalStore', () => {
     expect(accounts).toHaveBeenCalledWith(expect.objectContaining({ role: 'admin' }));
     expect(store.admins().data).toHaveLength(1);
   });
+
+  it('loadAdmins en erreur : état error, un nouvel appel relit la liste (UX-G2b)', async () => {
+    const accounts = vi
+      .fn()
+      .mockRejectedValueOnce({ status: 503, code: 'INTERNAL_ERROR' })
+      .mockResolvedValueOnce(accountPage([account({ role: 'admin' })]));
+    const store = setup({ accounts });
+    await store.loadAdmins();
+    expect(store.admins().status).toBe('error');
+    await store.loadAdmins();
+    expect(accounts).toHaveBeenCalledTimes(2);
+    expect(store.admins().status).toBe('loaded');
+    expect(store.admins().data).toHaveLength(1);
+  });
 });

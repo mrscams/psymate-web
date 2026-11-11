@@ -116,6 +116,48 @@ test('/mon-compte/emotions : liens et radios des familles à 24 px au moins', as
   await expectNoAxeViolations(page);
 });
 
+test('/mon-compte/profil-public : « Rafraîchir l’aperçu » et lien du dossier à 24 px au moins', async ({
+  page,
+  request,
+}) => {
+  // UX-G2b : le bouton « Rafraîchir l'aperçu », masqué hors focus, mesurait 18 × 10 px pour la
+  // sonde de l'audit ; « Voir mon dossier professionnel » (publication verrouillée, dossier en
+  // attente) 16 px. Compte jetable en attente de dossier : la publication est verrouillée.
+  const account = await createAccount(request, 'ux-g2b.cibles', 'psychologist');
+  await signIn(page, account);
+  await page.goto('/fr/mon-compte/profil-public');
+  await expect(page.getByLabel('Nom affiché')).toBeVisible();
+  await settled(page);
+
+  expect(await smallTargets(page)).toEqual([]);
+  const refresh = page.getByRole('button', { name: "Rafraîchir l'aperçu", exact: true });
+  await expect(refresh).toBeVisible();
+  const check = async (label: string) => {
+    const box = (await refresh.boundingBox())!;
+    expect(box.width, `largeur du bouton (${label})`).toBeGreaterThanOrEqual(24);
+    expect(box.height, `hauteur du bouton (${label})`).toBeGreaterThanOrEqual(24);
+    const link = page.getByRole('link', { name: 'Voir mon dossier professionnel', exact: true });
+    expect((await link.boundingBox())!.height, `lien du dossier (${label})`).toBeGreaterThanOrEqual(
+      24,
+    );
+  };
+  await check('police de la page');
+  // Police de repli large et lignes resserrées (CI Linux) : le bouton garde sa hauteur minimale.
+  const wide = await page.addStyleTag({
+    content:
+      'pm-profile-preview .refresh { font-family: monospace !important; line-height: 12px !important; }',
+  });
+  await check('police de repli');
+  await wide.evaluate((node) => node.remove());
+
+  await expectLinkTargetsFontIndependent(page);
+  await expectSameRendering(page);
+  await expectNoAxeViolations(page);
+  // Le bouton amène toujours le focus sur la carte d'aperçu.
+  await refresh.click();
+  await expect(page.getByTestId('preview')).toBeFocused();
+});
+
 test('/admin/journal : noms et liens d’action à 24 px au moins, rendu inchangé', async ({
   page,
   context,

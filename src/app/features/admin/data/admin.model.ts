@@ -176,7 +176,45 @@ export interface JournalItem {
   practitionerId: string | null;
   practitionerDisplayName: string | null;
   summary: string;
+  /**
+   * details.kind du contrat quand c'est une chaîne : décision portée par une ligne admin.decision
+   * (approved, needs_more…) ; null sinon. Seul détail lu, pour nommer la décision (UX-G2b).
+   */
+  detailKind: string | null;
 }
+
+/**
+ * Types d'événement de sécurité que le journal peut renvoyer (JournalItemDto.kind) : ceux que la
+ * description du contrat nomme (admin.decision, admin.suspend, admin.reactivate, admin.appeal,
+ * admin.document_read, appeal.submitted, verification_submitted, session_revoked, login_failed,
+ * locked…) et les autres types écrits par l'API dans security_event. Les décisions arrivent sous
+ * admin.<DecisionKind> (énumération du contrat, voir CONTRACT_DECISION_KINDS dans admin.api.ts).
+ * Chacun a un libellé (admin-labels.ts, vérifié par admin-labels.spec.ts) ; un type absent de la
+ * liste reçoit un libellé de repli lisible, jamais sa clé seule.
+ */
+export const JOURNAL_SECURITY_KINDS = [
+  'admin.decision',
+  'admin.suspend',
+  'admin.reactivate',
+  'admin.appeal',
+  'admin.document_read',
+  'appeal.submitted',
+  'verification_submitted',
+  'session_revoked',
+  'login_ok',
+  'login_failed',
+  'locked',
+  'logout',
+  'email_confirmed',
+  'email_changed',
+  'consent_given',
+  'password_changed',
+  '2fa_enabled',
+  '2fa_disabled',
+  'recovery_code_used',
+  'recovery_codes_regenerated',
+  'admin_bootstrap',
+] as const;
 
 export interface JournalQuery {
   kind: string | null;

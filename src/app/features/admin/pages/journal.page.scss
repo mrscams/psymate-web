@@ -117,3 +117,16 @@ tr:focus-visible {
 #journal-actor {
   width: 320px;
 }
+
+// Liste des administrateurs illisible (UX-G2b) : une ligne discrète sous le filtre, qui garde sa
+// largeur ; « Réessayer » en bouton-lien de 24 px de haut au moins (.pm-link-target).
+.filter-error {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 8px;
+  align-items: center;
+  max-width: 320px;
+  margin: 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}

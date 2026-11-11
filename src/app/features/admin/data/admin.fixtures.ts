@@ -135,6 +135,7 @@ export function journalItem(overrides: Partial<JournalItem> = {}): JournalItem {
     practitionerId: 'acc-1',
     practitionerDisplayName: 'Claire Moreau',
     summary: 'admin.document_read',
+    detailKind: null,
     ...overrides,
   };
 }

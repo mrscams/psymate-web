@@ -156,6 +156,19 @@ test.describe('administration', () => {
     // Le dossier sort de la file : la page passe au suivant (ou à la file vide).
     await expect(page).not.toHaveURL(new RegExp(practitioner.id));
 
+    // Journal du praticien (UX-G2b) : la décision et sa ligne admin.decision sont nommées en
+    // français ; ni « approved » ni « admin.decision » seuls dans la colonne Événement.
+    await page.goto(`/fr/admin/journal?period=all&practitioner=${practitioner.id}`);
+    const events = page.locator('tbody tr td:nth-child(3) .event > span:not(.times)');
+    await expect(events.filter({ hasText: /^Dossier approuvé$/ })).toHaveCount(1);
+    await expect(
+      events.filter({ hasText: /^Décision enregistrée : Dossier approuvé$/ }),
+    ).toHaveCount(1);
+    for (const text of await events.allTextContents()) {
+      expect(text.trim()).not.toMatch(/^[a-z0-9_.]+$/);
+    }
+    await expectNoAxeViolations(page);
+
     // Le praticien, reconnecté : plus de bandeau, et il peut publier sa fiche.
     const after = await browser.newContext({ baseURL, locale: 'fr-FR' });
     const approvedPage = await after.newPage();

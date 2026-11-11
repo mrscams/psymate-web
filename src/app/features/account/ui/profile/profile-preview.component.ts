@@ -22,7 +22,8 @@ const SPECIALTIES_SHOWN = 3;
  * Aperçu « ce que voit un visiteur » (fiche 10, colonne droite) : carte réduite de la fiche
  * publique, mise à jour pendant la saisie. Même règle que la fiche (écran 9) : un champ vide n'est
  * pas rendu, un contact n'apparaît que si son interrupteur « Afficher » est actif. Pas d'aria-live
- * (trop bavard) : le bouton « Rafraîchir l'aperçu » amène le lecteur d'écran sur la carte à jour.
+ * (trop bavard) : le bouton « Rafraîchir l'aperçu » amène le focus sur la carte à jour (lecteur
+ * d'écran, et à 390 px où l'aperçu est sous le formulaire). Visible pour tous depuis UX-G2b.
  */
 @Component({
   selector: 'pm-profile-preview',
@@ -33,9 +34,9 @@ const SPECIALTIES_SHOWN = 3;
       </h2>
       <button
         type="button"
-        class="refresh sr-only-focusable"
+        class="refresh"
         (click)="focusCard()"
-        i18n="Bouton pour lecteur d'écran@@profile.preview.refresh"
+        i18n="Bouton qui place le focus sur la carte d'aperçu@@profile.preview.refresh"
       >
         Rafraîchir l'aperçu
       </button>
@@ -126,6 +127,7 @@ const SPECIALTIES_SHOWN = 3;
     }
     .head {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       gap: 8px;
@@ -138,21 +140,25 @@ const SPECIALTIES_SHOWN = 3;
       text-transform: uppercase;
       color: var(--text-secondary);
     }
-    .sr-only-focusable:not(:focus) {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-    }
+    /*
+     * Visible (UX-G2b) : masqué hors focus, il mesurait 18 × 10 px pour la sonde des cibles. Même
+     * registre que les boutons de la carte de publication (bordure, rayon 8 px), en plus compact :
+     * 32 px de haut quelle que soit la police.
+     */
     .refresh {
-      padding: 4px 8px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 12px;
       border: 1px solid var(--border-strong);
-      border-radius: 6px;
+      border-radius: 8px;
       background: var(--surface-raised);
       color: var(--text-primary);
       font: var(--mat-sys-label-medium);
+      cursor: pointer;
+    }
+    .refresh:hover {
+      background: var(--surface-sunken);
     }
     .card {
       display: flex;

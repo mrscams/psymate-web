@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-11T08:49:24.387Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-G2b Profil public : « Rafraîchir l'aperçu » visible (124 × 32 au lieu de 18 × 10), lien du dossier à 24 px ; journal admin : libellés de toutes les décisions et types de sécurité, repli pour un type inconnu, test Vitest sur les énumérations du contrat ; erreur discrète du filtre des administrateurs ; e2e clavier du flux 10 indépendant de la file",
+  "pr": "https://github.com/mrscams/psymate-web/pull/68",
+  "branch": "claude/ux-g2b-account-admin-fixes",
+  "checkout": "agent-a6416a2a1e5dfd12c"
+}

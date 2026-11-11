@@ -4374,9 +4374,9 @@
         <source> Rafraîchir l&apos;aperçu </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-preview.component.ts</context>
-          <context context-type="linenumber">40,43</context>
+          <context context-type="linenumber">41,44</context>
         </context-group>
-        <note priority="1" from="description">Bouton pour lecteur d&apos;écran</note>
+        <note priority="1" from="description">Bouton qui place le focus sur la carte d&apos;aperçu</note>
       </trans-unit>
       <trans-unit id="profile.preview.fees" datatype="html">
         <source>Tarif :</source>
@@ -22279,6 +22279,86 @@
           <context context-type="linenumber">81</context>
         </context-group>
         <note priority="1" from="description">Texte indicatif du champ tag</note>
+      </trans-unit>
+      <trans-unit id="admin.decision.reportResolved" datatype="html">
+        <source>Signalement traité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+        <note priority="1" from="description">Décision d&apos;administration</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.emailChanged" datatype="html">
+        <source>Adresse e-mail de connexion changée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.decision" datatype="html">
+        <source>Décision enregistrée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.suspend" datatype="html">
+        <source>Compte suspendu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">194</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.reactivate" datatype="html">
+        <source>Compte réactivé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">195</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.appealDecided" datatype="html">
+        <source>Recours tranché</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">196</context>
+        </context-group>
+        <note priority="1" from="description">Événement du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.decisionWithMessage" datatype="html">
+        <source><x id="decision" equiv-text="decision"/> : <x id="message" equiv-text="text"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">224</context>
+        </context-group>
+        <note priority="1" from="description">Décision du journal suivie du message au praticien</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.decisionOf" datatype="html">
+        <source>Décision enregistrée : <x id="decision" equiv-text="decision"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">231</context>
+        </context-group>
+        <note priority="1" from="description">Décision enregistrée, avec la décision</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.kind.unknown" datatype="html">
+        <source>Événement non répertorié (<x id="kind" equiv-text="kind"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
+          <context context-type="linenumber">237</context>
+        </context-group>
+        <note priority="1" from="description">Type d&apos;événement absent de la table des libellés</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.actorError" datatype="html">
+        <source>Liste des administrateurs indisponible.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">59,61</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de la liste des administrateurs</note>
       </trans-unit>
     </body>
   </file>
