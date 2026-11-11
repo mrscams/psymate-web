@@ -2,20 +2,40 @@
   display: block;
 }
 
+// Maquette 09 : grille de deux colonnes, libellés au-dessus, 14 px entre les lignes.
 form {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 14px 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field-label {
+  color: var(--text-primary);
+  font: 500 13px/1.4 var(--font-ui);
+}
+
+// Aide à gauche (elle passe à la ligne), compteur mono à droite sur une seule ligne.
+.help {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .length {
+  flex: none;
+  padding-left: 16px;
   font-family: var(--font-mono);
+  white-space: nowrap;
 }
 
 // Hors écran, pas display:none : certains robots ne remplissent que les champs « visibles ».
@@ -27,11 +47,29 @@ form {
   overflow: hidden;
 }
 
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
 .consent {
   display: flex;
+  flex: 1 1 360px;
   flex-direction: column;
   gap: 4px;
-  margin-top: 8px;
+  max-width: 600px;
+  color: var(--text-secondary);
+}
+
+.privacy {
+  color: var(--primary);
+
+  &:hover {
+    color: var(--primary-hover);
+  }
 }
 
 .error {
@@ -41,7 +79,7 @@ form {
 }
 
 .notice {
-  margin: 8px 0 0;
+  margin: 0;
   padding: 10px 14px;
   border-radius: 10px;
   background: var(--warning-bg);
@@ -51,9 +89,8 @@ form {
 .actions {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 12px;
-  margin-top: 8px;
+  margin-left: auto;
 }
 
 .sending {
@@ -76,11 +113,15 @@ form {
 }
 
 @media (max-width: 640px) {
-  .row {
+  form {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .actions button {
+  .actions {
     width: 100%;
+
+    button {
+      width: 100%;
+    }
   }
 }

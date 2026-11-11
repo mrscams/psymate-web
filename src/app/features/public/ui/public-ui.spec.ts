@@ -85,12 +85,21 @@ describe('features/public ui', () => {
       expect(el.querySelector('h3 a')?.getAttribute('href')).toBe('/praticiens/claire-moreau');
       expect(el.textContent).toContain('Psychologue');
       expect(el.textContent).toContain('Profil vérifié');
-      expect(el.textContent).toContain('Accepte de nouveaux patients');
+      // Une seule puce de disponibilité (UX-D6).
+      expect(el.querySelectorAll('.availability')).toHaveLength(1);
+      expect(el.querySelector('.availability')?.textContent).toContain(
+        'Accepte de nouveaux patients',
+      );
       expect(el.querySelectorAll('.tags li')).toHaveLength(4);
       expect(el.querySelector('.tags')?.textContent).toContain('Anxiété');
-      expect(el.querySelector('.excerpt')?.textContent).toBe(
-        'Je reçois des adultes. Premier échange gratuit',
+      // Titre et extrait sur une ligne, puis une ligne de méta (ville, modalités, publics, langues).
+      expect(el.querySelector('.excerpt')?.textContent?.trim()).toBe(
+        'Psychologue clinicienne · Je reçois des adultes. Premier échange gratuit',
       );
+      const meta = [...el.querySelectorAll('.meta dd')].map((dd) => dd.textContent?.trim());
+      expect(meta).toEqual(['Paris', 'Au cabinet, En visio', 'Adultes', 'Français, Anglais']);
+      const terms = [...el.querySelectorAll('.meta dt')].map((dt) => dt.textContent?.trim());
+      expect(terms).toEqual(['Ville', 'Modalités', 'Publics', 'Langues']);
       const contact = [...el.querySelectorAll('a')].find((a) =>
         a.textContent?.includes('Contacter'),
       );
@@ -114,6 +123,20 @@ describe('features/public ui', () => {
       expect(el.querySelector('.availability')).toBeNull();
       expect(el.textContent).toContain('Coach');
     });
+
+    it('un extrait qui commence par le titre ne le répète pas', async () => {
+      TestBed.configureTestingModule({ providers: [provideRouter([])] });
+      const fixture = TestBed.createComponent(PractitionerCardComponent);
+      fixture.componentRef.setInput('card', {
+        ...CLAIRE_CARD,
+        bioExcerpt: 'Psychologue clinicienne, je reçois des adultes.',
+      });
+      await fixture.whenStable();
+      const el = fixture.nativeElement as HTMLElement;
+      expect(el.querySelector('.excerpt')?.textContent?.trim()).toBe(
+        'Psychologue clinicienne, je reçois des adultes.',
+      );
+    });
   });
 
   describe('filtres', () => {
@@ -126,21 +149,89 @@ describe('features/public ui', () => {
       return { fixture, el: fixture.nativeElement as HTMLElement };
     }
 
-    it('fieldset par facette, compteurs de la réponse, facette à 0 désactivée, cochée reste active', async () => {
+    const option = (el: HTMLElement, text: string) =>
+      [...el.querySelectorAll('label.option')].find((label) =>
+        label.querySelector('.option-label')?.textContent?.trim().startsWith(text),
+      );
+    const box = (el: HTMLElement, text: string) =>
+      option(el, text)?.querySelector('input') as HTMLInputElement;
+    const button = (el: HTMLElement, text: string | RegExp) =>
+      [...el.querySelectorAll('button')].find((b) =>
+        typeof text === 'string' ? b.textContent?.includes(text) : text.test(b.textContent ?? ''),
+      ) as HTMLButtonElement;
+
+    it('en-tête « Filtres » + « Tout effacer », compteurs de la réponse, 0 désactivé, cochée active', async () => {
       const { el } = await renderFilters(
         { ...NO_FACETS, professions: [{ code: 'psychologist', count: 3 }] },
         { ...EMPTY_QUERY, audiences: ['children'] },
       );
+      expect(el.querySelector('h2')?.textContent?.trim()).toBe('Filtres');
       const legends = [...el.querySelectorAll('legend')].map((l) => l.textContent?.trim());
+      // Aucune spécialité dans la réponse : pas de facette Spécialités.
       expect(legends).toEqual(['Profession', 'Publics', 'Modalités', 'Langues', 'Disponibilité']);
-      const option = (text: string) =>
-        [...el.querySelectorAll('mat-checkbox')].find((box) => box.textContent?.includes(text));
-      expect(option('Psychologue')?.textContent).toContain('3');
-      expect(option('Psychologue')?.querySelector('input')?.disabled).toBe(false);
-      expect(option('Psychiatre')?.querySelector('input')?.disabled).toBe(true);
-      expect(option('Enfants')?.querySelector('input')?.checked).toBe(true);
-      expect(option('Enfants')?.querySelector('input')?.disabled).toBe(false);
-      expect(el.textContent).toContain('Tout effacer');
+      expect(option(el, 'Psychologue')?.querySelector('.count')?.textContent).toBe('3');
+      expect(box(el, 'Psychologue').disabled).toBe(false);
+      expect(box(el, 'Psychiatre').disabled).toBe(true);
+      expect(box(el, 'Enfants').checked).toBe(true);
+      expect(box(el, 'Enfants').disabled).toBe(false);
+      expect(button(el, 'Tout effacer').disabled).toBe(false);
+    });
+
+    it('sans filtre actif, « Tout effacer » est désactivé ; sans réponse, aucun compteur', async () => {
+      const { el } = await renderFilters(null as never);
+      expect(button(el, 'Tout effacer').disabled).toBe(true);
+      expect(el.querySelector('.count')).toBeNull();
+    });
+
+    it('publics et langues : valeurs présentes visibles, les autres sous « Autres langues (n) »', async () => {
+      const { fixture, el } = await renderFilters({
+        ...NO_FACETS,
+        audiences: [{ code: 'adults', count: 4 }],
+        languages: [{ code: 'fr', count: 4 }],
+      });
+      expect(option(el, 'Français')).toBeDefined();
+      expect(option(el, 'Anglais')).toBeUndefined();
+      expect(option(el, 'Enfants')).toBeUndefined();
+      const languages = button(el, /Autres langues \(1\)/);
+      expect(languages.getAttribute('aria-expanded')).toBe('false');
+      expect(button(el, /Autres publics \(1\)/)).toBeDefined();
+      languages.click();
+      await fixture.whenStable();
+      expect(languages.getAttribute('aria-expanded')).toBe('true');
+      const panel = el.querySelector(`#${languages.getAttribute('aria-controls')}`);
+      expect(panel?.textContent).toContain('Anglais');
+      expect(box(el, 'Anglais').disabled).toBe(true);
+    });
+
+    it('spécialités : facette de la réponse, 6 visibles puis « Afficher les n autres »', async () => {
+      const codes = ['anxiety', 'burnout', 'grief', 'adhd', 'ocd', 'eating', 'sleep', 'trauma'];
+      const { fixture, el } = await renderFilters(
+        {
+          ...NO_FACETS,
+          specialties: codes.map((code, i) => ({ code, count: 10 - i })),
+        },
+        { ...EMPTY_QUERY, specialties: ['trauma'] },
+      );
+      const fieldset = [...el.querySelectorAll('fieldset')].find(
+        (f) => f.querySelector('legend')?.textContent?.trim() === 'Spécialités',
+      )!;
+      const visible = () =>
+        [...fieldset.querySelectorAll('.option-label')].map((l) => l.textContent?.trim());
+      // Six premières + la cochée, toujours visible.
+      expect(visible()).toEqual([
+        'Anxiété',
+        'Burn-out',
+        'Deuil',
+        'adhd',
+        'ocd',
+        'eating',
+        'trauma',
+      ]);
+      const more = button(el, 'Afficher 1 autre');
+      more.click();
+      await fixture.whenStable();
+      expect(visible()).toContain('sleep');
+      expect(more.textContent).toContain('Afficher moins');
     });
 
     it('coche → filterToggle ; accepte → acceptingChange ; Tout effacer → clearAll', async () => {
@@ -154,15 +245,9 @@ describe('features/public ui', () => {
       fixture.componentInstance.filterToggle.subscribe((t) => toggles.push(t));
       fixture.componentInstance.acceptingChange.subscribe((v) => accepting.push(v));
       fixture.componentInstance.clearAll.subscribe(() => cleared++);
-      const box = (text: string) =>
-        [...el.querySelectorAll('mat-checkbox')]
-          .find((b) => b.textContent?.includes(text))
-          ?.querySelector('input') as HTMLInputElement;
-      box('En visio').click();
-      box('Accepte de nouveaux patients').click();
-      [...el.querySelectorAll('button')]
-        .find((b) => b.textContent?.includes('Tout effacer'))
-        ?.click();
+      box(el, 'En visio').click();
+      box(el, 'Accepte de nouveaux patients').click();
+      button(el, 'Tout effacer').click();
       expect(toggles).toEqual([{ filter: 'modalities', code: 'video', checked: true }]);
       expect(accepting).toEqual([false]);
       expect(cleared).toBe(1);

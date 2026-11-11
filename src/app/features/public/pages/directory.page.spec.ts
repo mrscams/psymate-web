@@ -1,7 +1,9 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { DOCUMENT } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { of } from 'rxjs';
 
 import { HttpNotices } from '../../../core/http';
 import { DirectoryApi } from '../data/directory.api';
@@ -14,7 +16,7 @@ interface Api {
   vocabulary: ReturnType<typeof vi.fn>;
 }
 
-async function render(url: string, api: Partial<Api> = {}) {
+async function render(url: string, api: Partial<Api> = {}, options: { compact?: boolean } = {}) {
   const mock: Api = {
     search: api.search ?? vi.fn().mockResolvedValue(page([CLAIRE_CARD])),
     vocabulary: api.vocabulary ?? vi.fn().mockResolvedValue(VOCABULARY),
@@ -23,6 +25,11 @@ async function render(url: string, api: Partial<Api> = {}) {
     providers: [
       provideRouter([{ path: 'annuaire', component: DirectoryPage }]),
       { provide: DirectoryApi, useValue: mock },
+      // Largeur simulée : sous 760 px, les filtres passent en panneau (fiche 08, UX-D6).
+      {
+        provide: BreakpointObserver,
+        useValue: { observe: () => of({ matches: !!options.compact, breakpoints: {} }) },
+      },
     ],
   });
   const harness = await RouterTestingHarness.create(url);
@@ -100,7 +107,9 @@ describe('DirectoryPage', () => {
       );
     const { el, harness } = await render('/annuaire', { search });
     const psychologist = () =>
-      [...el.querySelectorAll('mat-checkbox')].find((b) => b.textContent?.includes('Psychologue'));
+      [...el.querySelectorAll('aside label.option')].find((b) =>
+        b.textContent?.includes('Psychologue'),
+      );
     expect(psychologist()?.textContent).toContain('1');
     await harness.navigateByUrl('/annuaire?ville=Lyon');
     await vi.waitFor(() => expect(search).toHaveBeenCalledTimes(2));
@@ -111,7 +120,7 @@ describe('DirectoryPage', () => {
   it('filtre : visible tout de suite, URL et requête après 300 ms, retour en page 1', async () => {
     const { el, api, harness } = await render('/annuaire?page=2');
     vi.useFakeTimers();
-    const box = [...el.querySelectorAll('mat-checkbox')]
+    const box = [...el.querySelectorAll('aside label.option')]
       .find((b) => b.textContent?.includes('Psychologue'))
       ?.querySelector('input') as HTMLInputElement;
     box.click();
@@ -211,5 +220,86 @@ describe('DirectoryPage', () => {
     );
     expect(TestBed.inject(Router).url).toBe('/annuaire?q=deuil');
     await harness.fixture.whenStable();
+  });
+
+  it('« Tout effacer » en tête de colonne : filtres retirés, mot-clé et ville gardés', async () => {
+    const { el, api, harness } = await render('/annuaire?ville=Paris&profession=coach&accepte=oui');
+    const clear = [...el.querySelectorAll<HTMLButtonElement>('aside button')].find((b) =>
+      b.textContent?.includes('Tout effacer'),
+    )!;
+    clear.click();
+    await vi.waitFor(() =>
+      expect(api.search).toHaveBeenLastCalledWith({ ...EMPTY_QUERY, city: 'Paris' }),
+    );
+    await harness.fixture.whenStable();
+  });
+
+  it('un filtre appliqué pendant la saisie de la ville ne l’efface pas', async () => {
+    const { el, harness } = await render('/annuaire');
+    const city = el.querySelector<HTMLInputElement>('#directory-city')!;
+    city.value = 'Lyon';
+    city.dispatchEvent(new Event('input'));
+    await harness.navigateByUrl('/annuaire?profession=coach');
+    await harness.fixture.whenStable();
+    expect(city.value).toBe('Lyon');
+    await harness.navigateByUrl('/annuaire?ville=Nantes');
+    await harness.fixture.whenStable();
+    expect(city.value).toBe('Nantes');
+  });
+
+  it('nombre de résultats : nombre en gras, ville en texte secondaire', async () => {
+    const { el } = await render('/annuaire?ville=Paris');
+    const count = el.querySelector('.results-head .count')!;
+    expect(count.querySelector('strong')?.textContent?.trim()).toBe('1 praticien');
+    expect(count.querySelector('.where')?.textContent?.trim()).toBe('à Paris');
+  });
+
+  it('grand écran : colonne de filtres en place, ni dialogue ni bouton de fermeture', async () => {
+    const { el } = await render('/annuaire');
+    const panel = el.querySelector('.filters-panel')!;
+    expect(panel.getAttribute('role')).toBeNull();
+    expect(el.querySelector('.panel-close')).toBeNull();
+  });
+
+  it('petit écran : « Filtres (n) » ouvre un dialogue modal ; Échap le ferme et rend le focus', async () => {
+    const { el, harness } = await render(
+      '/annuaire?profession=psychologist',
+      {},
+      {
+        compact: true,
+      },
+    );
+    const toggle = el.querySelector<HTMLButtonElement>('.filters-toggle')!;
+    // jsdom ignore les media queries : le bouton, affiché sous 760 px, est rendu visible à la main.
+    toggle.style.display = 'inline-flex';
+    expect(toggle.textContent?.trim()).toBe('Filtres (1)');
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    toggle.click();
+    await harness.fixture.whenStable();
+    const panel = el.querySelector<HTMLElement>('.filters-panel')!;
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(panel.getAttribute('role')).toBe('dialog');
+    expect(panel.getAttribute('aria-modal')).toBe('true');
+    // La page derrière le panneau ne défile plus.
+    expect(document.documentElement.style.overflow).toBe('hidden');
+    expect(panel.getAttribute('aria-labelledby')).toBe('directory-filters-title');
+    expect(el.querySelector('#directory-filters-title')?.textContent?.trim()).toBe('Filtres');
+    await vi.waitFor(() => expect(document.activeElement).toBe(panel));
+    expect(el.querySelector('.panel-close')?.getAttribute('aria-label')).toBe('Fermer les filtres');
+    expect(el.querySelector('.panel-foot button')?.textContent?.trim()).toBe('Voir 1 praticien');
+
+    panel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await harness.fixture.whenStable();
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(panel.getAttribute('role')).toBeNull();
+    expect(document.documentElement.style.overflow).toBe('');
+    await vi.waitFor(() => expect(document.activeElement).toBe(toggle));
+
+    // « Voir 1 praticien » ferme aussi le panneau.
+    toggle.click();
+    await harness.fixture.whenStable();
+    el.querySelector<HTMLButtonElement>('.panel-foot button')!.click();
+    await harness.fixture.whenStable();
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
   });
 });

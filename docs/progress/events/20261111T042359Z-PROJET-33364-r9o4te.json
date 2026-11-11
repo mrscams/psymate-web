@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-11T04:23:59.883Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-D6 à UX-D8 : annuaire fidèle à la maquette 08 (facettes présentes, Spécialités, Tout effacer, fiches denses, panneau de filtres mobile modal), formulaire de la fiche publique (libellés au-dessus, compteur, lien confidentialité), titre et FAQ de Comment ça marche",
+  "pr": "https://github.com/mrscams/psymate-web/pull/61",
+  "branch": "claude/ux-d-public",
+  "checkout": "agent-ae742f4fffc2e8c1c"
+}
