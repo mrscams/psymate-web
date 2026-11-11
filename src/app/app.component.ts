@@ -43,7 +43,9 @@ import {
  * - public : layout public (fiche 00 §4), sans barre d'application ; conteneur étroit (480 px) des
  *   formulaires, sauf si une route déclare `data.wide` (annuaire, fiche praticien, comment ça marche) ;
  * - admin : barre d'administration (fiche 00 §5) ;
- * - bare : la route seule (page de démonstration).
+ * - bare : la route seule, sans barre ni pied, dans le `<main id="main">` de la coquille, sans
+ *   classe ni marge (page de démonstration ; page de connexion en deux panneaux). La page nue ne pose
+ *   jamais son propre `<main>` : un seul repère `main` par page.
  */
 export type AppLayout = 'practitioner' | 'public' | 'admin' | 'bare';
 
@@ -63,15 +65,14 @@ export type ContentWidth = 'default' | 'wide';
  * barre d'application et au bandeau d'état, pose les toasts et le bandeau réseau une seule fois.
  * Habillage praticien : la touche ? ouvre l'aide des raccourcis (features/patient-shell, M7-03).
  *
- * UX-A10 : un seul `<main id="main">` et un seul `<router-outlet>` servent les habillages praticien,
- * public et admin ; autour, seuls la barre, les bandeaux, le pied et les classes du `<main>` suivent
- * l'habillage. La page n'est donc jamais détruite ni recréée quand l'habillage change (fin de la
- * première navigation, connexion, déconnexion, passage à /admin) : avant, chaque branche d'un
- * `@switch` portait son outlet et la page était créée deux fois, ses lectures parties deux fois.
+ * UX-A10 : un seul `<main id="main">` et un seul `<router-outlet>` servent les quatre habillages ;
+ * autour, seuls la barre, les bandeaux, le pied et les classes du `<main>` suivent l'habillage. La
+ * page n'est donc jamais détruite ni recréée quand l'habillage change (fin de la première
+ * navigation, connexion, déconnexion, 401, passage à /admin) : avant, chaque branche d'un `@switch`
+ * portait son outlet et la page était créée deux fois, ses lectures parties deux fois.
  * Rien n'est rendu avant la fin de la première navigation (`navigated`) : l'habillage n'est pas
  * supposé (ni barre praticien ni classe `app-main` sur une page publique), la route déjà activée
- * s'attache une fois à l'outlet, dans l'habillage de sa route, y compris l'habillage nu, qui garde
- * son propre outlet hors du `<main>` (la page de démonstration pose déjà un layout public complet).
+ * s'attache une fois à l'outlet, dans l'habillage de sa route.
  * Pages prérendues : le HTML du serveur reste en place, inerte, jusqu'à cette fin de navigation,
  * puis l'hydratation reprend les mêmes blocs (même habillage, même page) sans les reconstruire.
  */

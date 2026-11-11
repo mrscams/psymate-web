@@ -52,7 +52,9 @@ describe('PublicLayoutComponent', () => {
     ]);
     expect(el.querySelector('a.practitioner')?.getAttribute('href')).toBe('/connexion');
     expect(el.querySelector('a.locale-switch')?.getAttribute('href')).toBe('/en/annuaire');
-    expect(el.querySelector('main#main h1')?.textContent).toBe('Contenu');
+    // Contenu dans un conteneur sans repère : la page hôte est déjà dans le <main> de la coquille.
+    expect(el.querySelector('div.public-main h1')?.textContent).toBe('Contenu');
+    expect(el.querySelector('main, [role="main"], #main')).toBeNull();
     const footer = el.querySelector('footer');
     expect([...footer!.querySelectorAll('a')].map((a) => a.getAttribute('href'))).toEqual([
       '/mentions-legales',
@@ -73,30 +75,30 @@ describe('PublicLayoutComponent', () => {
   it('connecté : Espace praticien mène à /patients ; narrow : conteneur 480 px', async () => {
     const { el } = await render({ authenticated: true, narrow: true });
     expect(el.querySelector('a.practitioner')?.getAttribute('href')).toBe('/patients');
-    expect(el.querySelector('main')?.classList.contains('narrow')).toBe(true);
+    expect(el.querySelector('.public-main')?.classList.contains('narrow')).toBe(true);
   });
 
   it('UX-A8 : par défaut ni narrow ni wide (1 120 px) ; wide : contenu jusqu’à 1 280 px', async () => {
     const plain = await render();
-    const main = plain.el.querySelector('main')!;
+    const main = plain.el.querySelector('.public-main')!;
     expect(main.classList.contains('wide')).toBe(false);
     expect(main.classList.contains('narrow')).toBe(false);
     TestBed.resetTestingModule();
 
     const wide = await render({ wide: true });
-    expect(wide.el.querySelector('main')?.classList.contains('wide')).toBe(true);
+    expect(wide.el.querySelector('.public-main')?.classList.contains('wide')).toBe(true);
     TestBed.resetTestingModule();
 
     // narrow l'emporte : un formulaire reste à 480 px même sous une route large.
     const both = await render({ wide: true, narrow: true });
-    const bothMain = both.el.querySelector('main')!;
+    const bothMain = both.el.querySelector('.public-main')!;
     expect(bothMain.classList.contains('narrow')).toBe(true);
     expect(bothMain.classList.contains('wide')).toBe(false);
   });
 
   it('UX-A9c : wide plafonne à 1 280 px de contenu, marges intérieures en plus (border-box)', async () => {
     const { el } = await render({ wide: true });
-    const main = el.querySelector('main')!;
+    const main = el.querySelector('.public-main')!;
     const style = getComputedStyle(main);
     // Une seule source pour la marge latérale : le padding et le plafond du mode large la lisent.
     expect(style.getPropertyValue('--public-main-inline').trim()).toBe('24px');

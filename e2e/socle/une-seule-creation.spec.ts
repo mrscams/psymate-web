@@ -243,6 +243,46 @@ test('changement d’habillage au clavier : la tabulation repart du haut, par le
   await expect(skipLink).toBeFocused();
 });
 
+test('habillage nu ↔ praticien : chaque page de destination créée une fois, un seul <main>', async ({
+  page,
+}) => {
+  // Habillage nu : /_demo aujourd'hui, la connexion en deux panneaux ensuite. Session ouverte
+  // d'abord (la liste des patients est gardée).
+  await page.goto('/fr/connexion');
+  await page.getByLabel('Adresse e-mail').fill(SEED.claire.email);
+  await page.getByLabel('Mot de passe', { exact: true }).fill(SEED.claire.password);
+  await page.getByRole('button', { name: 'Se connecter' }).click();
+  await expect(page).toHaveURL(/\/fr\/patients$/);
+
+  const demo = await watchInsertions(page, 'pm-demo-page');
+  const list = await watchInsertions(page, 'pm-patient-list-page');
+  const patients = countGets(page, '/api/patients');
+  await page.goto('/fr/_demo');
+  await expect(page.getByRole('heading', { level: 1, name: /démonstration/ })).toBeVisible();
+  await settle(page);
+  expect(await demo()).toBe(1);
+  await expect(page.getByRole('main')).toHaveCount(1);
+  expect(await page.locator('main#main').evaluate((main) => main.className)).toBe('');
+
+  // Nu → praticien : le logo de la barre montrée par la démonstration mène à la liste (routerLink).
+  await page.locator('pm-app-bar a.brand').first().click();
+  await expect(page).toHaveURL(/\/fr\/patients$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Mes patients' })).toBeVisible();
+  await settle(page);
+  expect(await list()).toBe(1);
+  expect(patients()).toBe(1);
+  await expect(page.getByRole('main')).toHaveCount(1);
+  await expect(page.locator('main#main')).toHaveClass('app-main');
+
+  // Praticien → nu, par le retour arrière (navigation du routeur, sans rechargement).
+  await page.goBack();
+  await expect(page.getByRole('heading', { level: 1, name: /démonstration/ })).toBeVisible();
+  await settle(page);
+  expect(await demo()).toBe(2); // ouverture directe, puis retour : une création chacune
+  expect(await list()).toBe(1);
+  await expect(page.getByRole('main')).toHaveCount(1);
+});
+
 test.describe('administration', () => {
   test.skip(!ADMIN_AVAILABLE, ADMIN_MISSING);
 
