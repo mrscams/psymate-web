@@ -4,12 +4,13 @@ import type { MarkLineComponentOption } from 'echarts/components';
 import { overviewView } from '../data/overview.fixtures';
 import { OverviewFeelings } from '../data/overview.model';
 import {
+  DOMINANT_EMOTIONS,
+  dominantGroups,
   FEELINGS_TOKEN_NAMES,
   FeelingDatum,
   FeelingsChartLabels,
   feelingsChartOptions,
   groupByEmotion,
-  MAX_VALUE_LABELS,
   readFeelingsTokens,
   seriesSymbol,
 } from './feelings-chart.options';
@@ -19,6 +20,7 @@ const tokens = readFeelingsTokens((name) => ` tok(${name}) `);
 
 const labels: FeelingsChartLabels = {
   session: 'Séance',
+  others: 'Autres émotions',
   medicationStart: 'Début de traitement',
   medicationEnd: 'Fin de traitement',
   day: (value) => String(value),
@@ -106,12 +108,14 @@ describe('feelingsChartOptions (vrais ressentis → options ECharts)', () => {
     expect(seriesSymbol(5)).toBe(seriesSymbol(0));
   });
 
-  it('séances : traits sur l’axe en --entry-session ; médicaments : repères verticaux nommés', () => {
+  it('séances : traits sous l’axe en --entry-session ; médicaments : repères verticaux nommés', () => {
     const [sessions] = series(options()) as ScatterSeriesOption[];
     expect(sessions).toMatchObject({
       id: 'sessions',
       type: 'scatter',
       symbol: 'rect',
+      symbolOffset: [0, 8],
+      clip: false,
       itemStyle: { color: 'tok(--entry-session)' },
       data: [
         ['2026-10-10', 0],
@@ -128,26 +132,76 @@ describe('feelingsChartOptions (vrais ressentis → options ECharts)', () => {
     ]);
   });
 
-  it('axes : intensité 0 à 10, temps sur la fenêtre du serveur ; valeurs écrites sauf au-delà du seuil', () => {
+  it('axes : intensité 0 à 10, temps sur la fenêtre du serveur ; valeur écrite sur le dernier point seulement', () => {
     const option = options();
     expect(option.yAxis).toMatchObject({ min: 0, max: 10 });
     expect(option.xAxis).toMatchObject({ type: 'time', min: '2026-08-11', max: '2026-11-08' });
-    const [, anxiety] = series(option) as LineSeriesOption[];
-    expect(anxiety.label?.show).toBe(true);
 
     const many: OverviewFeelings = {
       ...overviewView().feelings,
-      points: Array.from({ length: MAX_VALUE_LABELS + 1 }, (_, i) => ({
+      points: [4, 5, 7, 8].map((intensity, i) => ({
         entryId: `f-${i}`,
-        date: '2026-10-01',
+        date: `2026-10-0${i + 1}`,
         emotionCode: 'anxiety',
         family: 'fear' as const,
-        intensity: 5,
+        intensity,
         sessionId: null,
       })),
     };
-    const [, crowded] = series(options(many)) as LineSeriesOption[];
-    expect(crowded.label?.show).toBe(false);
+    const [, anxiety] = series(options(many)) as LineSeriesOption[];
+    expect(anxiety.label?.show).toBe(false);
+    const data = anxiety.data as FeelingDatum[];
+    expect(data.map((d) => d.label?.show ?? false)).toEqual([false, false, false, true]);
+    expect(data[3].symbolSize).toBe(11);
+  });
+
+  it('trois émotions dominantes en séries, les autres en une série grise « Autres » sans ligne', () => {
+    const codes = ['anxiety', 'sadness', 'anger', 'joy', 'trust'];
+    const feelings: OverviewFeelings = {
+      points: codes.flatMap((code, i) =>
+        Array.from({ length: 5 - i }, (_, j) => ({
+          entryId: `${code}-${j}`,
+          date: `2026-10-${String(10 + j).padStart(2, '0')}`,
+          emotionCode: code,
+          family: 'fear' as const,
+          intensity: 5,
+          sessionId: null,
+        })),
+      ),
+      series: codes.map((code, i) => ({
+        emotionCode: code,
+        family: 'fear' as const,
+        label: code,
+        count: 5 - i,
+      })),
+      markers: [],
+      ticks: [],
+    };
+    expect(DOMINANT_EMOTIONS).toBe(3);
+    const groups = dominantGroups(feelings);
+    expect(groups.dominant.map((g) => g.series.emotionCode)).toEqual([
+      'anxiety',
+      'sadness',
+      'anger',
+    ]);
+    expect(groups.others.emotions).toBe(2);
+    expect(groups.others.points).toHaveLength(3);
+
+    const all = series(options(feelings));
+    expect(all.map((s) => s.id)).toEqual([
+      'sessions',
+      'emotion-anxiety',
+      'emotion-sadness',
+      'emotion-anger',
+      'others',
+    ]);
+    const others = all.at(-1) as ScatterSeriesOption;
+    expect(others).toMatchObject({
+      type: 'scatter',
+      name: 'Autres émotions',
+      itemStyle: { color: 'tok(--text-disabled)' },
+    });
+    expect((others.data as FeelingDatum[]).map((d) => d.emotion)).toEqual(['joy', 'trust', 'joy']);
   });
 
   it('infobulle : le texte du serveur est échappé', () => {

@@ -38,7 +38,7 @@
     i18n-aria-label="Étiquette de la navigation de langue@@app.localeNav.label"
   >
     <a
-      class="locale-switch"
+      class="locale-switch pm-link-target"
       [href]="switchHref()"
       [attr.hreflang]="switchLang()"
       [attr.lang]="switchLang()"
@@ -64,13 +64,22 @@
     aria-label="Informations légales"
     i18n-aria-label="Étiquette de la navigation du pied@@public.footer.label"
   >
-    <a [routerLink]="paths.legal" i18n="Lien du pied public@@public.footer.legal"
+    <a
+      class="pm-link-target"
+      [routerLink]="paths.legal"
+      i18n="Lien du pied public@@public.footer.legal"
       >Mentions légales</a
     >
-    <a [routerLink]="paths.privacy" i18n="Lien du pied public@@public.footer.privacy"
+    <a
+      class="pm-link-target"
+      [routerLink]="paths.privacy"
+      i18n="Lien du pied public@@public.footer.privacy"
       >Confidentialité</a
     >
-    <a [routerLink]="paths.accessibility" i18n="Lien du pied public@@public.footer.accessibility"
+    <a
+      class="pm-link-target"
+      [routerLink]="paths.accessibility"
+      i18n="Lien du pied public@@public.footer.accessibility"
       >Accessibilité</a
     >
   </nav>

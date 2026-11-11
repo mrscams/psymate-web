@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-11T02:03:22.699Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-A3 Cibles de 24 px (WCAG 2.5.8) : classe .pm-link-target et cases/radios natives à 18 px dans shared-ui.global.scss, posée sur les liens autonomes (pied public, langue, bandeau, fils d'Ariane, connexion, émotions, journal admin) ; e2e cibles-24 vert sur /connexion, /mon-compte/emotions, /admin/journal, rendu 1440 identique, axe 0",
+  "pr": "https://github.com/mrscams/psymate-web/pull/52",
+  "branch": "claude/ux-a3-link-targets",
+  "checkout": "agent-a4bcc87da92cfb942"
+}

@@ -100,7 +100,8 @@ import { sessionHeading } from './overview-labels';
       border: 0;
       background: var(--surface-raised);
       color: var(--text-primary);
-      font: var(--mat-sys-body-medium);
+      font-size: 13px;
+      line-height: 1.4;
       text-align: left;
       cursor: pointer;
     }
@@ -128,18 +129,24 @@ import { sessionHeading } from './overview-labels';
       flex: 1 1 auto;
       font-weight: 600;
     }
+    .count {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
     .count,
     .none,
     .status {
       color: var(--text-secondary);
-      font: var(--mat-sys-body-small);
+      font-size: 12px;
+      line-height: 16px;
     }
     .details {
       display: flex;
       flex-direction: column;
       gap: 6px;
       padding: 8px 12px 12px;
-      font: var(--mat-sys-body-medium);
+      font-size: 13px;
+      line-height: 1.5;
       color: var(--text-primary);
     }
     .details p {
@@ -149,8 +156,11 @@ import { sessionHeading } from './overview-labels';
       white-space: pre-line;
     }
     a {
+      align-self: flex-start;
+      padding: 4px 0;
       color: var(--primary);
-      font: var(--mat-sys-label-large);
+      font-size: 13px;
+      font-weight: 500;
     }
     @media (prefers-reduced-motion: reduce) {
       .chevron {
