@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { EntryIconComponent, EntryType, entryTypeLabel } from '../../../shared/ui';
+import { EntryIconComponent, entryTitle, EntryType, entryTypeLabel } from '../../../shared/ui';
 import { formatOccurred } from '../../../shared/util';
 import { LinkTypeOption } from '../../graph';
 import {
@@ -75,7 +75,7 @@ export class LinkRailComponent implements ControlValueAccessor {
     return this.candidates()
       .map((candidate) => ({
         candidate,
-        name: candidateName(candidate, emotions),
+        name: railTitle(candidate, emotions, this.locale),
         meta: this.metaOf(candidate),
         choices: linkChoices(types, entryType, candidate.type),
       }))
@@ -174,15 +174,49 @@ export class LinkRailComponent implements ControlValueAccessor {
   }
 }
 
-/** Nom d'une cible : son titre, sinon « Anxiété 6/10 » pour un ressenti, sinon son type. */
+/**
+ * Nom court d'une cible : son titre, sinon « Anxiété 6/10 » pour un ressenti, sinon son type. Exporté
+ * pour la barre de commande (features/capture), qui en compare le début à la saisie ; le rail et ses
+ * messages d'erreur nomment les cibles par railTitle (avec la date).
+ */
 export function candidateName(candidate: LinkCandidate, emotions: readonly Emotion[]): string {
   if (candidate.title) return candidate.title;
-  if (candidate.type === 'feeling' && candidate.emotionCode) {
-    const emotion =
-      emotions.find((item) => item.code === candidate.emotionCode)?.label ?? candidate.emotionCode;
+  const emotion = emotionLabel(candidate, emotions);
+  if (emotion) {
     if (candidate.intensity === null) return emotion;
     const intensity = candidate.intensity;
     return $localize`:Nom d'un ressenti sans titre dans le rail@@entries.rail.feelingName:${emotion}:emotion: ${intensity}:intensity:/10`;
   }
   return entryTypeLabel(candidate.type);
+}
+
+/**
+ * Nom d'une cible dans le rail (titre de repli partagé, UX-A5) : son titre, sinon « Anxiété 6/10 ·
+ * 24 oct. » pour un ressenti, sinon « Note · 24 oct. » (type et date courte) : deux notes sans titre
+ * ne se confondent plus. La chronologie ne rend pas le texte des entrées : pas d'extrait. Date lue en
+ * UTC hors précision exacte (bornes en jours entiers).
+ */
+export function railTitle(
+  candidate: LinkCandidate,
+  emotions: readonly Emotion[],
+  locale: string,
+): string {
+  return entryTitle(
+    {
+      type: candidate.type,
+      title: candidate.title,
+      occurred: candidate.occurred.from,
+      emotion: emotionLabel(candidate, emotions),
+      intensity: candidate.intensity,
+    },
+    locale,
+    candidate.occurred.precision === 'exact' ? {} : { timeZone: 'UTC' },
+  );
+}
+
+function emotionLabel(candidate: LinkCandidate, emotions: readonly Emotion[]): string | null {
+  if (candidate.type !== 'feeling' || !candidate.emotionCode) return null;
+  return (
+    emotions.find((item) => item.code === candidate.emotionCode)?.label ?? candidate.emotionCode
+  );
 }
