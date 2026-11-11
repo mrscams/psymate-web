@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T07:11:22.948Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-A9b Dossier patient : sous-titre de l'éditeur d'entrée et de l'éditeur de lien par pm-side-panel, éditeur de lien à 520 px (seul et empilé) avec pied sur une ligne, « non clôturée » au-delà de 3 h dans l'en-tête, describedBy de la date de naissance",
+  "notes": "Profil public : aucun champ date avec note, rien à brancher. UNCLOSED_SESSION_AFTER_MIN importé directement (non réexporté par shared/ui/index.ts). zoom-200 public rouge en passe complète par limite de connexion de l'API partagée.",
+  "pr": "https://github.com/mrscams/psymate-web/pull/66",
+  "branch": "claude/ux-a9b-patient-wiring",
+  "checkout": "agent-ab97402eb80781d2a"
+}
