@@ -44,6 +44,8 @@ interface LinkEditorState {
   query: TargetQuery;
   /** Cibles trouvées (une page de la recherche du dossier), sans l'entrée ouverte. */
   targets: Loadable<LinkEntry[]>;
+  /** « Changer » la source (UX-B7) : entrées trouvées pour la nouvelle source ; idle hors recherche. */
+  sources: Loadable<LinkEntry[]>;
   /** Types d'entrée connus par identifiant (source, cibles trouvées, extrémités lues). */
   entryTypes: Record<string, EntryType>;
   saving: boolean;
@@ -64,6 +66,7 @@ const initialState: LinkEditorState = {
   removed: [],
   query: { q: '', type: null },
   targets: idle(),
+  sources: idle(),
   entryTypes: {},
   saving: false,
   problem: null,
@@ -102,6 +105,7 @@ export const LinkEditorStore = signalStore(
   })),
   withMethods((store, api = inject(LinkApi), session = inject(SessionStore)) => {
     let searchSeq = 0;
+    let sourceSeq = 0;
 
     function checkOwner(): void {
       const owner = session.me()?.id ?? null;
@@ -181,6 +185,7 @@ export const LinkEditorStore = signalStore(
             source: idle(),
             links: idle(),
             targets: idle(),
+            sources: idle(),
             query: { q: '', type: null },
           });
         }
@@ -231,6 +236,34 @@ export const LinkEditorStore = signalStore(
       async searchTargets(query: TargetQuery): Promise<void> {
         patchState(store, { query });
         await loadTargets();
+      },
+
+      /**
+       * « Changer » la source (UX-B7) : entrées du dossier pour la nouvelle source (une page, les
+       * plus récentes d'abord sans texte), sans la source actuelle. Seule la dernière réponse compte.
+       */
+      async searchSources(q: string): Promise<void> {
+        const entryId = store.entryId();
+        const patientId = store.source().data?.patientId;
+        if (!entryId || !patientId) return;
+        const seq = ++sourceSeq;
+        patchState(store, { sources: loading(store.sources()) });
+        try {
+          const found = await api.targets(patientId, { q, type: null });
+          if (seq !== sourceSeq) return;
+          rememberTypes(found);
+          patchState(store, { sources: loaded(found.filter((entry) => entry.id !== entryId)) });
+        } catch (error) {
+          if (seq === sourceSeq) {
+            patchState(store, { sources: failed(asProblem(error), store.sources()) });
+          }
+        }
+      },
+
+      /** Fin du choix d'une nouvelle source : la liste est oubliée. */
+      clearSources(): void {
+        sourceSeq++;
+        patchState(store, { sources: idle() });
       },
 
       /** Type d'une entrée, lu au besoin (l'autre extrémité d'un lien, pour les types permis). */

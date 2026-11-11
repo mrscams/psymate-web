@@ -19,8 +19,9 @@
     </div>
   }
 
+  <!-- Ordre de la maquette 06 (UX-B7) : Depuis → Relation → Vers → Pourquoi → liens posés. -->
   <form class="editor" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
-    <!-- Depuis : l'entrée ouverte -->
+    <!-- Depuis : l'entrée ouverte, « Changer » pour en prendre une autre -->
     <section class="block" aria-labelledby="pm-link-from">
       <h3 class="block-label" id="pm-link-from" i18n="Bloc de l'entrée source@@links.from.label">
         Depuis
@@ -42,12 +43,133 @@
             <p class="card-meta">
               {{ entry.typeLabel }}
               @if (entry.when) {
-                &ngsp;·&ngsp;{{ entry.when }}
+                &ngsp;·&ngsp;<span class="mono">{{ entry.when }}</span>
               }
             </p>
           </div>
+          <button
+            type="button"
+            class="small"
+            aria-controls="pm-link-source-picker"
+            [attr.aria-expanded]="changingSource()"
+            [disabled]="store.saving()"
+            (click)="toggleSourcePicker()"
+            i18n="Bouton qui change l'entrée source du lien@@links.from.change"
+          >
+            Changer
+          </button>
         </div>
+        @if (changingSource()) {
+          <div class="source-picker" id="pm-link-source-picker">
+            <label
+              class="sr-only"
+              for="pm-link-source-search"
+              i18n="Champ de recherche de la nouvelle source@@links.from.searchLabel"
+              >Rechercher la nouvelle source</label
+            >
+            <input
+              id="pm-link-source-search"
+              type="search"
+              [formControl]="sourceSearch"
+              autocomplete="off"
+              i18n-placeholder="
+                Indication du champ de recherche de source@@links.from.searchPlaceholder"
+              placeholder="Rechercher la nouvelle source…"
+              (keydown.escape)="closeSourcePicker($event)"
+            />
+            @if (sourcesState(); as kind) {
+              <pm-state
+                [kind]="kind"
+                skeleton="row"
+                [lines]="2"
+                compact
+                [title]="
+                  kind === 'error'
+                    ? targetsErrorTitle
+                    : kind === 'empty'
+                      ? targetsEmptyTitle
+                      : undefined
+                "
+                [action]="kind === 'error' ? sourcesRetry : undefined"
+              />
+            } @else {
+              <ul class="source-list" [attr.aria-label]="sourceListLabel">
+                @for (item of sourceCandidates(); track item.id) {
+                  <li>
+                    <button
+                      type="button"
+                      class="source-option"
+                      [attr.aria-labelledby]="'pm-link-source-name-' + item.id"
+                      [attr.aria-describedby]="'pm-link-source-' + item.id"
+                      (click)="changeSource(item.entry)"
+                    >
+                      <pm-entry-icon [type]="item.entry.type" [size]="14" />
+                      <span class="row-text">
+                        <span class="row-name" [id]="'pm-link-source-name-' + item.id">{{
+                          item.name
+                        }}</span
+                        >&ngsp;<span class="row-meta" [id]="'pm-link-source-' + item.id">
+                          {{ item.typeLabel }}
+                          @if (item.when) {
+                            &ngsp;·&ngsp;{{ item.when }}
+                          }
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        }
       }
+    </section>
+
+    <!-- Relation : sens et type -->
+    <section class="block" aria-labelledby="pm-link-relation">
+      <div class="relation-head">
+        <h3
+          class="block-label"
+          id="pm-link-relation"
+          i18n="Bloc du type de lien@@links.relation.label"
+        >
+          Relation
+        </h3>
+        <button
+          type="button"
+          class="small invert"
+          [attr.aria-pressed]="reversed()"
+          [disabled]="!source()"
+          (click)="invert()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M7 16V4m0 0L3 8m4-4 4 4M17 8v12m0 0 4-4m-4 4-4-4" />
+          </svg>
+          <span i18n="Bouton d'inversion du sens du lien@@links.relation.invert"
+            >Inverser le sens</span
+          >
+        </button>
+      </div>
+      @if (catalogState(); as kind) {
+        <pm-state
+          [kind]="kind"
+          skeleton="row"
+          [lines]="1"
+          compact
+          [title]="kind === 'error' ? catalogErrorTitle : undefined"
+          [action]="kind === 'error' ? catalogRetry : undefined"
+        />
+      } @else {
+        <pm-link-type-chips
+          [label]="relationLabel"
+          [availability]="availability()"
+          [value]="selectedType()?.code ?? null"
+          [disabled]="store.saving()"
+          [describedBy]="invalid('linkType') ? fid('linkType') + '-error' : null"
+          (chosen)="chooseType($event)"
+        />
+      }
+      <pm-field-errors [control]="form.controls.linkType" [id]="fid('linkType') + '-error'" />
     </section>
 
     <!-- Vers : la cible, cherchée dans le dossier -->
@@ -62,8 +184,10 @@
           i18n="Champ de recherche de cible@@links.search.label"
           >Rechercher une entrée du dossier</label
         >
+        <!-- Focus initial (fiche 06) : la recherche de cible, même si Depuis et Relation la précèdent. -->
         <input
           id="pm-link-search"
+          cdkFocusInitial
           type="search"
           [formControl]="search"
           autocomplete="off"
@@ -99,6 +223,7 @@
           [action]="kind === 'error' ? targetsRetry : undefined"
         />
       } @else {
+        <p class="hint list-caption" aria-hidden="true">{{ targetsCaption() }}</p>
         <fieldset
           class="targets"
           [attr.aria-describedby]="invalid('targetId') ? fid('targetId') + '-error' : null"
@@ -113,12 +238,19 @@
                 name="pm-link-target"
                 [value]="item.entry.id"
                 [checked]="form.controls.targetId.value === item.entry.id"
+                [attr.aria-labelledby]="'pm-link-target-name-' + item.entry.id"
+                [attr.aria-describedby]="'pm-link-target-meta-' + item.entry.id"
                 (change)="chooseTarget(item.entry)"
               />
               <pm-entry-icon [type]="item.entry.type" [size]="14" />
-              <span class="target-text">
-                <span class="target-name">{{ item.name }}</span>
-                <span class="target-meta">
+              <span class="row-text">
+                <span
+                  class="row-name"
+                  [id]="'pm-link-target-name-' + item.entry.id"
+                  [attr.title]="item.name"
+                  >{{ item.name }}</span
+                >
+                <span class="row-meta" [id]="'pm-link-target-meta-' + item.entry.id">
                   {{ item.typeLabel }}
                   @if (item.when) {
                     &ngsp;·&ngsp;{{ item.when }}
@@ -135,81 +267,15 @@
       <pm-field-errors [control]="form.controls.targetId" [id]="fid('targetId') + '-error'" />
     </section>
 
-    <!-- Relation : sens et type -->
-    <section class="block" aria-labelledby="pm-link-relation">
-      <div class="relation-head">
-        <h3
-          class="block-label"
-          id="pm-link-relation"
-          i18n="Bloc du type de lien@@links.relation.label"
-        >
-          Relation
-        </h3>
-        <button
-          type="button"
-          class="invert"
-          [attr.aria-pressed]="reversed()"
-          [disabled]="!source()"
-          (click)="invert()"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M4 8h14l-4-4M20 16H6l4 4" />
-          </svg>
-          <span i18n="Bouton d'inversion du sens du lien@@links.relation.invert"
-            >Inverser le sens</span
-          >
-        </button>
-      </div>
-      @if (catalogState(); as kind) {
-        <pm-state
-          [kind]="kind"
-          skeleton="row"
-          [lines]="1"
-          compact
-          [title]="kind === 'error' ? catalogErrorTitle : undefined"
-          [action]="kind === 'error' ? catalogRetry : undefined"
-        />
-      } @else {
-        <pm-link-type-chips
-          [label]="relationLabel"
-          [availability]="availability()"
-          [value]="selectedType()?.code ?? null"
-          [disabled]="store.saving()"
-          [describedBy]="invalid('linkType') ? fid('linkType') + '-error' : null"
-          (chosen)="chooseType($event)"
-        />
-      }
-      <pm-field-errors [control]="form.controls.linkType" [id]="fid('linkType') + '-error'" />
-    </section>
-
-    <!-- Le lien se lira -->
-    <section class="block" aria-labelledby="pm-link-sentence">
-      <h3
-        class="block-label"
-        id="pm-link-sentence"
-        i18n="Bloc de la phrase lisible@@links.sentence.label"
-      >
-        Le lien se lira
-      </h3>
-      @if (sentence(); as s) {
-        <p class="sentence" aria-live="polite" aria-atomic="true">
-          <span class="end">{{ s.from }}</span
-          >&ngsp;<strong class="verb">{{ s.verb }}</strong
-          >&ngsp;<span class="end">{{ s.to }}</span>
-        </p>
-        @if (shape()) {
-          <p class="hint">{{ shape() }}</p>
-        }
-      }
-    </section>
-
     <!-- Pourquoi -->
     <div class="block">
-      <label
-        class="block-label"
-        [for]="fid('rationale')"
-        i18n="Champ de justification du lien@@links.rationale.label"
-        >Pourquoi (facultatif)</label
+      <label class="block-label" [for]="fid('rationale')"
+        ><span i18n="Champ de justification du lien@@links.rationale.title">Pourquoi</span
+        >&ngsp;<span
+          class="optional"
+          i18n="Mention facultatif du champ Pourquoi@@links.rationale.optional"
+          >(facultatif)</span
+        ></label
       >
       <textarea
         [id]="fid('rationale')"
@@ -256,27 +322,51 @@
   </section>
 
   <div pmPanelFooter class="footer">
-    <button
-      type="button"
-      class="primary"
-      [attr.aria-disabled]="ready() && !store.saving() ? null : 'true'"
-      (click)="submit(false)"
-    >
-      <span i18n="Bouton d'enregistrement du lien@@links.save">Enregistrer le lien</span>
-      <kbd aria-hidden="true">⏎</kbd>
-    </button>
-    <button
-      type="button"
-      class="secondary"
-      [attr.aria-disabled]="ready() && !store.saving() ? null : 'true'"
-      (click)="submit(true)"
-      i18n="Bouton d'enregistrement puis nouveau lien@@links.saveAnother"
-    >
-      Enregistrer et lier une autre
-    </button>
-    <button type="button" class="ghost" (click)="requestClose()">
-      <span i18n="Bouton d'annulation de l'éditeur de lien@@links.cancel">Annuler</span>
-      <kbd aria-hidden="true" i18n="Nom de la touche Échap@@shortcuts.escapeKey">Échap</kbd>
-    </button>
+    <!-- Le lien se lira : épinglé au-dessus des boutons, toujours visible (UX-B7). -->
+    <section class="reading" aria-labelledby="pm-link-sentence">
+      <h3
+        class="block-label"
+        id="pm-link-sentence"
+        i18n="Bloc de la phrase lisible@@links.sentence.label"
+      >
+        Le lien se lira
+      </h3>
+      <div aria-live="polite" aria-atomic="true">
+        @if (sentence(); as s) {
+          <p class="sentence">
+            <span class="end">{{ s.from }}</span
+            >&ngsp;<strong class="verb">{{ s.verb }}</strong
+            >&ngsp;<span class="end">{{ s.to }}</span>
+          </p>
+          @if (shape()) {
+            <p class="hint">{{ shape() }}</p>
+          }
+        }
+      </div>
+    </section>
+    <div class="actions">
+      <button
+        type="button"
+        class="primary"
+        [attr.aria-disabled]="ready() && !store.saving() ? null : 'true'"
+        (click)="submit(false)"
+      >
+        <span i18n="Bouton d'enregistrement du lien@@links.save">Enregistrer le lien</span>
+        <kbd aria-hidden="true">⏎</kbd>
+      </button>
+      <button
+        type="button"
+        class="secondary"
+        [attr.aria-disabled]="ready() && !store.saving() ? null : 'true'"
+        (click)="submit(true)"
+        i18n="Bouton d'enregistrement puis nouveau lien@@links.saveAnother"
+      >
+        Enregistrer et lier une autre
+      </button>
+      <button type="button" class="ghost" (click)="requestClose()">
+        <span i18n="Bouton d'annulation de l'éditeur de lien@@links.cancel">Annuler</span>
+        <kbd aria-hidden="true" i18n="Nom de la touche Échap@@shortcuts.escapeKey">Échap</kbd>
+      </button>
+    </div>
   </div>
 </pm-side-panel>

@@ -14,6 +14,7 @@ import {
 import { ENTRY_TYPES, EntryType } from '../../../shared/ui';
 import { OCCURRED_PRECISIONS, OccurredPrecision } from '../../../shared/util';
 import {
+  elideSnippet,
   EntryPreview,
   parseMarked,
   PreviewLink,
@@ -123,7 +124,15 @@ export function toHit(dto: EntrySearchItemDto): SearchHit {
 }
 
 export function toPage(dto: EntrySearchResultDto): SearchPage {
-  const hits = (dto.items ?? []).filter((item) => !!item.entryId).map(toHit);
+  // Avec un texte, les extraits exacts viennent de ts_headline, dont les fragments sont séparés
+  // par « ... » ; les approchés et ceux d'une recherche sans texte n'en ont pas (contrat).
+  const headline = !!dto.query?.text?.trim();
+  const hits = (dto.items ?? [])
+    .filter((item) => !!item.entryId)
+    .map(toHit)
+    .map((hit) =>
+      headline && !hit.approximate ? { ...hit, snippet: elideSnippet(hit.snippet) } : hit,
+    );
   const counts: TypeCount[] = ENTRY_TYPES.map((type) => ({
     type,
     count: dto.facets?.types?.find((facet) => facet.code === type)?.count ?? 0,

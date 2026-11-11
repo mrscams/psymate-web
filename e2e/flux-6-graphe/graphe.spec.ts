@@ -53,11 +53,13 @@ test.describe('vue graphe', () => {
     await enableProbe(page);
     await signIn(page, SEED.claire);
     const started = Date.now();
-    await page.goto(`/fr/patients/${biggest.id}/graph`);
+    // « Tout le dossier » : choix explicite (?root=all), plus l'arrivée par défaut (UX-B3).
+    await page.goto(`/fr/patients/${biggest.id}/graph?root=all`);
     await graphReady(page, { count: biggest.nodes });
     const ready = Date.now() - started;
     const layout = (await layoutMs(page)) ?? -1;
     await expect(page.locator('.count')).toContainText(`${biggest.nodes} nœuds`);
+    await expect(page.locator('.warning-note')).toContainText('étiquettes masquées');
 
     // Images pendant un déplacement (glisser le fond) puis un zoom à la molette.
     await page.evaluate(() => {
@@ -147,7 +149,7 @@ test.describe('vue graphe', () => {
 
     const relation = dialog.getByRole('group', { name: 'Relation', exact: true });
     await relation.getByRole('button', { name: 'déclenche', exact: true }).click();
-    await expect(dialog.locator('form.editor .sentence')).toHaveText(
+    await expect(dialog.locator('.reading .sentence')).toHaveText(
       "Entretien d'évaluation déclenche Anxiété 8/10",
     );
     const created = page.waitForResponse(

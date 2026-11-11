@@ -4,34 +4,17 @@
   </h2>
 
   <div class="toolbar">
-    <label class="field">
-      <span class="field-label" i18n="Sélecteur de la racine du graphe@@graph.root.label"
-        >Centré sur</span
-      >
-      <select class="select root-select" (change)="onRootChange($event)">
-        <option
-          value=""
-          [selected]="!store.query().root"
-          i18n="Racine : tout le dossier@@graph.root.all"
-        >
-          Tout le dossier
-        </option>
-        @if (store.query().root && !store.rootNode()) {
-          <option
-            [value]="store.query().root"
-            selected
-            i18n="Racine pas encore lue@@graph.root.pending"
-          >
-            Entrée choisie
-          </option>
-        }
-        @for (option of rootOptions(); track option.id) {
-          <option [value]="option.id" [selected]="option.id === store.query().root">
-            {{ option.name }}
-          </option>
-        }
-      </select>
-    </label>
+    <pm-graph-root-picker
+      [current]="rootChoice()"
+      [selectedId]="store.query().root"
+      [options]="rootOptions()"
+      [remote]="remoteRootOptions()"
+      [searching]="store.rootSearch().status === 'loading'"
+      [searchFailed]="store.rootSearch().status === 'error'"
+      [allWarning]="allWarning"
+      (picked)="recenter($event)"
+      (searched)="searchRoots($event)"
+    />
 
     <div class="field" role="group" [attr.aria-labelledby]="depthLabelId">
       <span class="field-label" [id]="depthLabelId" i18n="Profondeur du graphe@@graph.depth.label"
@@ -52,7 +35,12 @@
       </div>
     </div>
 
-    <button type="button" class="filter" [matMenuTriggerFor]="typesMenu">{{ typesText() }}</button>
+    <button type="button" class="filter" [matMenuTriggerFor]="typesMenu">
+      {{ typesText() }}
+      <svg class="chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+        <path d="M2 4l3 3 3-3" />
+      </svg>
+    </button>
     <mat-menu #typesMenu="matMenu">
       <button
         mat-menu-item
@@ -78,7 +66,12 @@
       }
     </mat-menu>
 
-    <button type="button" class="filter" [matMenuTriggerFor]="linksMenu">{{ linksText() }}</button>
+    <button type="button" class="filter" [matMenuTriggerFor]="linksMenu">
+      {{ linksText() }}
+      <svg class="chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+        <path d="M2 4l3 3 3-3" />
+      </svg>
+    </button>
     <mat-menu #linksMenu="matMenu">
       <button
         mat-menu-item
@@ -118,41 +111,72 @@
       </span>
     }
 
-    <label class="field">
-      <span class="field-label" i18n="Période du graphe@@graph.period.label">Période</span>
-      <select class="select" (change)="onPeriodChange($event)">
-        @for (period of periods; track period) {
-          <option [value]="period" [selected]="store.query().period === period">
-            {{ periodLabel(period) }}
-          </option>
-        }
-      </select>
-    </label>
+    <button type="button" class="filter" [matMenuTriggerFor]="periodMenu">
+      {{ periodText() }}
+      <svg class="chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+        <path d="M2 4l3 3 3-3" />
+      </svg>
+    </button>
+    <mat-menu #periodMenu="matMenu">
+      @for (period of periods; track period) {
+        <button
+          mat-menu-item
+          type="button"
+          role="menuitemradio"
+          [attr.aria-checked]="store.query().period === period"
+          (click)="setPeriod(period)"
+        >
+          <span class="check" aria-hidden="true">{{
+            store.query().period === period ? '✓' : ''
+          }}</span>
+          {{ periodLabel(period) }}
+        </button>
+      }
+    </mat-menu>
 
-    <span class="spacer"></span>
-    <span class="count" aria-live="polite" [class.refreshing]="refreshing()">{{
-      countText()
-    }}</span>
-    <button
-      type="button"
-      class="tool"
-      (click)="relayout()"
-      i18n="Bouton qui relance le layout du graphe@@graph.relayout"
-    >
-      Recentrer
-    </button>
-    <button
-      type="button"
-      class="tool"
-      aria-controls="graph-links-list"
-      [attr.aria-expanded]="listOpen()"
-      (click)="toggleList()"
-      i18n="Bouton qui montre la liste équivalente des liens@@graph.list.toggle"
-    >
-      Liste des liens
-    </button>
+    <!-- À droite (maquette 04) ; passe à la ligne d'un bloc, aligné à droite. -->
+    <div class="tools">
+      <span class="count" aria-live="polite" [class.refreshing]="refreshing()">{{
+        countText()
+      }}</span>
+      <button
+        type="button"
+        class="tool"
+        (click)="relayout()"
+        i18n="Bouton qui relance le layout du graphe@@graph.relayout"
+      >
+        Recentrer
+      </button>
+      <button
+        type="button"
+        class="tool"
+        aria-controls="graph-links-list"
+        [attr.aria-expanded]="listOpen()"
+        (click)="toggleList()"
+        i18n="Bouton qui montre la liste équivalente des liens@@graph.list.toggle"
+      >
+        Liste des liens
+      </button>
+      <button
+        type="button"
+        class="tool link"
+        aria-keyshortcuts="L"
+        [attr.aria-disabled]="linkSource() ? null : 'true'"
+        [attr.title]="linkSource() ? null : linkDisabledHint"
+        (click)="linkFromToolbar()"
+      >
+        <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+          <path d="M1 6h8M6 3l3 3-3 3" />
+        </svg>
+        <span i18n="Bouton Lier de la barre du graphe@@graph.toolbar.link">Lier</span>
+        <kbd aria-hidden="true">L</kbd>
+      </button>
+    </div>
   </div>
 
+  @if (wholeFolderNote(); as note) {
+    <p class="note warning-note">{{ note }}</p>
+  }
   @if (store.graph().data?.truncated) {
     <p class="note" i18n="Graphe tronqué@@graph.truncated">
       Graphe partiel : au-delà de 150 nœuds, des entrées sont regroupées ou retirées.

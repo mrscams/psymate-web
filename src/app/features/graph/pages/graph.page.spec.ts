@@ -10,7 +10,7 @@ import { SessionStore } from '../../../core/auth';
 import { PreferencesStore } from '../../../core/preferences';
 import { PatientShellStore } from '../../patient-shell';
 import { GraphApi } from '../data/graph.api';
-import { expansion, graphView, superNode } from '../data/graph.fixtures';
+import { edge, expansion, graphView, node, superNode } from '../data/graph.fixtures';
 import { GraphView } from '../data/graph.model';
 import { GraphSnapshot } from '../data/graph.store';
 import { LinkApi } from '../data/link.api';
@@ -34,6 +34,7 @@ function shellMock(snapshot?: GraphSnapshot) {
 
 interface Setup {
   neighbourhood?: (...args: unknown[]) => Promise<GraphView>;
+  defaultRoot?: (...args: unknown[]) => Promise<string | null>;
   expand?: (...args: unknown[]) => Promise<GraphView>;
   linkTypes?: (...args: unknown[]) => Promise<unknown>;
   shell?: ReturnType<typeof shellMock>;
@@ -46,6 +47,7 @@ async function render(setup: Setup = {}) {
     neighbourhood: vi.fn(setup.neighbourhood ?? (() => Promise.resolve(graphView()))),
     expand: vi.fn(setup.expand ?? (() => Promise.resolve(expansion()))),
     emotionLabels: vi.fn().mockResolvedValue({ anxiety: 'Anxiété' }),
+    defaultRoot: vi.fn(setup.defaultRoot ?? (() => Promise.resolve(null))),
   };
   const linkApi = {
     linkTypes: vi.fn(setup.linkTypes ?? (() => Promise.resolve(CATALOG))),
@@ -56,8 +58,9 @@ async function render(setup: Setup = {}) {
   const shell = setup.shell ?? shellMock();
   vi.stubGlobal(
     'matchMedia',
-    vi.fn(() => ({
-      matches: true,
+    // prefers-reduced-motion (layout sans animation) ; écran large (légende dépliée).
+    vi.fn((query: string) => ({
+      matches: query.includes('reduced-motion'),
       addEventListener: () => undefined,
       removeEventListener: () => undefined,
     })),
@@ -111,6 +114,22 @@ async function settle(harness: RouterTestingHarness): Promise<void> {
 
 const url = () => TestBed.inject(Router).url;
 
+/** Choisit une période dans le menu « Période : … » (mat-menu, dans l'overlay). */
+async function choosePeriod(
+  el: HTMLElement,
+  harness: RouterTestingHarness,
+  label: string,
+): Promise<void> {
+  [...el.querySelectorAll<HTMLButtonElement>('.toolbar .filter')]
+    .find((b) => text(b).startsWith('Période'))!
+    .click();
+  await settle(harness);
+  [...document.querySelectorAll<HTMLButtonElement>('[role="menuitemradio"]')]
+    .find((b) => text(b).endsWith(label))!
+    .click();
+  await settle(harness);
+}
+
 describe('GraphPage', () => {
   afterEach(() => {
     TestBed.inject(HttpTestingController).match(() => true);
@@ -149,7 +168,7 @@ describe('GraphPage', () => {
     expect(button('Réessayer')).toBeUndefined();
     button('Voir tout le dossier').click();
     await settle(harness);
-    expect(url()).toBe('/patients/p-1/graph');
+    expect(url()).toBe('/patients/p-1/graph?root=all');
     expect(graphApi.neighbourhood).toHaveBeenLastCalledWith(
       'p-1',
       expect.objectContaining({ root: null }),
@@ -172,7 +191,7 @@ describe('GraphPage', () => {
     expect(button('Filtres par défaut')).toBeUndefined();
     button('Voir tout le dossier').click();
     await settle(harness);
-    expect(url()).toBe('/patients/p-1/graph');
+    expect(url()).toBe('/patients/p-1/graph?root=all');
   });
 
   it('422 sur les filtres : « Filtres par défaut » (profondeur par défaut, sans période)', async () => {
@@ -201,10 +220,7 @@ describe('GraphPage', () => {
       .mockRejectedValueOnce(serverError)
       .mockResolvedValue(graphView({ edges: graphView().edges.slice(0, 2) }));
     const { el, harness } = await render({ neighbourhood });
-    const period = el.querySelectorAll<HTMLSelectElement>('select')[1];
-    period.value = '30d';
-    period.dispatchEvent(new Event('change'));
-    await settle(harness);
+    await choosePeriod(el, harness, '30 derniers jours');
     const alert = el.querySelector('.alert[role="alert"]');
     expect(text(alert)).toContain('Impossible de charger le graphe');
     expect(text(alert)).toContain('Le dernier graphe reçu reste affiché.');
@@ -265,29 +281,145 @@ describe('GraphPage', () => {
   });
 
   it('sans racine : profondeur désactivée ; période dans l’URL et en requête', async () => {
-    const { el, harness, graphApi } = await render({ url: '/patients/p-1/graph' });
+    const { el, harness, graphApi } = await render({ url: '/patients/p-1/graph?root=all' });
     expect(el.querySelector<HTMLButtonElement>('.segment')?.disabled).toBe(true);
-    const period = el.querySelectorAll<HTMLSelectElement>('select')[1];
-    period.value = '90d';
-    period.dispatchEvent(new Event('change'));
-    await settle(harness);
-    expect(url()).toBe('/patients/p-1/graph?period=90d');
+    // Plus de select natif dans la barre (UX-B3) : « Période » est un menu.
+    expect(el.querySelectorAll('.toolbar select')).toHaveLength(0);
+    await choosePeriod(el, harness, '90 derniers jours');
+    expect(url()).toBe('/patients/p-1/graph?root=all&period=90d');
     expect(graphApi.neighbourhood).toHaveBeenLastCalledWith(
       'p-1',
       expect.objectContaining({ from: expect.any(String) }),
     );
   });
 
-  it('« Centré sur » : une entrée du graphe devient la racine', async () => {
-    const { el, harness } = await render({ url: '/patients/p-1/graph' });
-    const root = el.querySelector<HTMLSelectElement>('select.root-select')!;
-    const options = [...root.options].map((option) => text(option));
-    expect(options[0]).toBe('Tout le dossier');
-    expect(options).toContain('Sertraline 50 mg · Médicament');
-    root.value = 'e-med';
-    root.dispatchEvent(new Event('change'));
+  it('sans ?root= : centré sur la situation en cours la plus liée, en profondeur 2', async () => {
+    const { graphApi } = await render({
+      url: '/patients/p-1/graph',
+      defaultRoot: () => Promise.resolve('e-situation'),
+    });
+    expect(graphApi.defaultRoot).toHaveBeenCalledWith('p-1');
+    expect(url()).toBe('/patients/p-1/graph?root=e-situation');
+    expect(graphApi.neighbourhood).toHaveBeenCalledTimes(1);
+    expect(graphApi.neighbourhood).toHaveBeenCalledWith(
+      'p-1',
+      expect.objectContaining({ root: 'e-situation', depth: 2 }),
+    );
+  });
+
+  it('sans ?root= et sans situation en cours reliée (ou synthèse illisible) : tout le dossier', async () => {
+    const { graphApi } = await render({
+      url: '/patients/p-1/graph?period=90d',
+      defaultRoot: () => Promise.reject(serverError),
+    });
+    expect(url()).toBe('/patients/p-1/graph?period=90d&root=all');
+    expect(graphApi.neighbourhood).toHaveBeenCalledWith(
+      'p-1',
+      expect.objectContaining({ root: null }),
+    );
+  });
+
+  it('tout le dossier au-delà de 60 nœuds : avertissement « étiquettes masquées »', async () => {
+    const nodes = Array.from({ length: 70 }, (_, i) =>
+      node({ id: `e-${i}`, type: 'note', title: `Note ${i}` }),
+    );
+    const edges = nodes
+      .slice(1)
+      .map((item, i) => edge({ id: `l-${i}`, source: 'e-0', target: item.id }));
+    const { el } = await render({
+      url: '/patients/p-1/graph?root=all',
+      neighbourhood: () => Promise.resolve(graphView({ nodes, edges })),
+    });
+    expect(text(el.querySelector('.warning-note'))).toBe(
+      'Tout le dossier : 70 nœuds, étiquettes masquées. Choisissez une entrée dans « Centré sur » pour lire le graphe.',
+    );
+  });
+
+  it('« Centré sur » : liste filtrable groupée par type, une entrée devient la racine', async () => {
+    const { el, harness } = await render({ url: '/patients/p-1/graph?root=all' });
+    const trigger = el.querySelector<HTMLButtonElement>('pm-graph-root-picker .trigger')!;
+    expect(text(trigger)).toBe('Tout le dossier');
+    expect(trigger.getAttribute('aria-haspopup')).toBe('listbox');
+    trigger.click();
+    await settle(harness);
+    const listbox = el.querySelector('[role="listbox"]')!;
+    const first = listbox.querySelector('[role="option"]')!;
+    expect(text(first)).toBe("Tout le dossier jusqu'à 150 nœuds, étiquettes masquées");
+    expect(first.getAttribute('aria-selected')).toBe('true');
+    expect([...listbox.querySelectorAll('[role="group"] .group-label')].map(text)).toEqual([
+      'Événement',
+      'Situation',
+      'Ressenti',
+      'Médicament',
+    ]);
+    const search = el.querySelector<HTMLInputElement>('[role="combobox"]')!;
+    expect(document.activeElement).toBe(search);
+    search.value = 'sertra';
+    search.dispatchEvent(new Event('input'));
+    await settle(harness);
+    const options = [...el.querySelectorAll('[role="option"]')];
+    expect(options.map((option) => text(option.querySelector('.option-name')))).toEqual([
+      'Sertraline 50 mg',
+    ]);
+    search.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     await settle(harness);
     expect(url()).toBe('/patients/p-1/graph?root=e-med');
+    expect(el.querySelector('[role="listbox"]')).toBeNull();
+  });
+
+  it('« Centré sur » : un texte cherche aussi dans tout le dossier (après un délai)', async () => {
+    const { el, harness, linkApi } = await render({ url: '/patients/p-1/graph?root=e-situation' });
+    linkApi.targets.mockResolvedValue([
+      {
+        id: 'e-far',
+        type: 'note',
+        title: null,
+        excerpt: null,
+        occurredFrom: '2026-10-24T10:00:00Z',
+        occurredTo: null,
+        precision: 'day',
+      },
+    ]);
+    el.querySelector<HTMLButtonElement>('pm-graph-root-picker .trigger')!.click();
+    await settle(harness);
+    const search = el.querySelector<HTMLInputElement>('[role="combobox"]')!;
+    search.value = 'note';
+    search.dispatchEvent(new Event('input'));
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    await settle(harness);
+    expect(linkApi.targets).toHaveBeenCalledWith('p-1', { q: 'note', type: null });
+    const names = [...el.querySelectorAll('[role="option"] .option-name')].map(text);
+    expect(names.some((name) => /^Note · 24 oct\./.test(name))).toBe(true);
+  });
+
+  it('« Lier L » : source = l’entrée sélectionnée, sinon la racine ; inactif sur tout le dossier', async () => {
+    const { el, harness } = await render();
+    const link = el.querySelector<HTMLButtonElement>('.tool.link')!;
+    expect(text(link.querySelector('span'))).toBe('Lier');
+    expect(text(link.querySelector('kbd'))).toBe('L');
+    expect(link.getAttribute('aria-keyshortcuts')).toBe('L');
+    expect(link.getAttribute('aria-disabled')).toBeNull();
+    link.click();
+    await settle(harness);
+    expect(url()).toContain('link=e-situation');
+    expect(document.querySelector('pm-link-editor-panel')).not.toBeNull();
+    document.querySelector<HTMLButtonElement>('pm-side-panel button.close')?.click();
+    await settle(harness);
+
+    await harness.navigateByUrl('/patients/p-1/graph?root=all');
+    await settle(harness);
+    expect(el.querySelector('.tool.link')?.getAttribute('aria-disabled')).toBe('true');
+  });
+
+  it('légende dépliée à l’arrivée (écran large), repliable', async () => {
+    const { el, harness } = await render();
+    const toggle = el.querySelector<HTMLButtonElement>('pm-graph-legend .toggle')!;
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(el.querySelector('#graph-legend-body')).not.toBeNull();
+    toggle.click();
+    await settle(harness);
+    expect(el.querySelector('#graph-legend-body')).toBeNull();
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
   });
 
   it('filtre des types d’entrées : local (pas de requête), compteur mis à jour', async () => {
@@ -423,7 +555,7 @@ describe('GraphPage', () => {
     TestBed.resetTestingModule();
     const again = await render({ shell: shellMock(snapshot), url: '/patients/p-1/graph' });
     expect(url()).toBe('/patients/p-1/graph?root=e-situation');
-    expect(text(again.el.querySelector('pm-graph-detail h2'))).toBe('Anxiété 8');
+    expect(text(again.el.querySelector('pm-graph-detail h2'))).toMatch(/^Anxiété 8\/10/);
     expect(again.shell.rememberTab).toHaveBeenCalledWith('graph', undefined);
     // Positions reprises : pas de layout, le nœud est là où il était.
     expect(again.cy().getElementById('e-med').position()).toEqual(

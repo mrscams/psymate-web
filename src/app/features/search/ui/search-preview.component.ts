@@ -16,7 +16,13 @@ import {
 } from '../../../shared/ui';
 import { formatOccurred, Loadable, stateKind } from '../../../shared/util';
 import { EntryPreview, SearchHit, SessionOption } from '../data/search.model';
-import { formatDateTime, precisionLabel, sessionLabel, visibilityLabel } from './search-labels';
+import {
+  formatDateTime,
+  precisionLabel,
+  sessionLabel,
+  titleOf,
+  visibilityLabel,
+} from './search-labels';
 import { SyntaxHelpComponent } from './syntax-help.component';
 
 /**
@@ -63,11 +69,11 @@ export class SearchPreviewComponent {
   protected readonly typeLabel = entryTypeLabel;
 
   protected title(entry: EntryPreview): string {
-    if (entry.title) return entry.title;
-    if (entry.type === 'session' && entry.occurred.from) {
-      return sessionLabel({ id: entry.id, startedAt: entry.occurred.from }, this.locale);
-    }
-    return entryTypeLabel(entry.type);
+    return titleOf(
+      { type: entry.type, title: entry.title, occurredFrom: entry.occurred.from },
+      entry.occurred.precision,
+      this.locale,
+    );
   }
 
   protected when(entry: EntryPreview): string {

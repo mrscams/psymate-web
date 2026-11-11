@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-11T02:49:10.803Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-B1 Liste des patients fidèle à la fiche 01 : colonnes Dernière séance, Émotions dominantes 30 j, Situations actives, Flags (résumé lu dans overview pour les 20 premières lignes), compteur, filtres Tous · Aujourd'hui · Flags · Brouillons, menu Tags, tri dernière séance, DEMO (badge, avatar pointillé, Supprimer), ligne cliquable, pied clavier ; colonne Prochaine omise (absente du contrat)",
+  "notes": "Champs à demander côté API : lastSession, nextSession, dominantEmotions30d (avec family), activeSituations, draftCount, openSession, demo, PatientPage.total, sort=lastSession et filtres serveur.",
+  "next": "Tâche API M11-xx liste enrichie, puis retrait des appels overview par ligne ; UX-F1 pour aligner la fiche 01 sur la maquette.",
+  "pr": "https://github.com/mrscams/psymate-web/pull/57",
+  "branch": "claude/ux-b1-patient-list",
+  "checkout": "agent-a95b80388128701f6"
+}

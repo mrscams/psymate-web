@@ -1,4 +1,4 @@
-import { PatientVersion, PatientView, PractitionerTag } from './patient.model';
+import { PatientActivity, PatientVersion, PatientView, PractitionerTag } from './patient.model';
 
 // Données de test de features/patients (fichier à part : un spec n'importe pas un autre spec).
 
@@ -79,3 +79,20 @@ export const VERSIONS: PatientVersion[] = [
     },
   },
 ];
+
+/** Résumé d'activité d'une ligne (projection vue d'ensemble, fenêtre 30 j). */
+export function activity(overrides: Partial<PatientActivity> = {}): PatientActivity {
+  return {
+    lastSession: { at: '2026-11-03T13:00:00Z', modality: 'in_person' },
+    openSessionAt: null,
+    emotions: [
+      { code: 'anxiety', label: 'Anxiété', family: 'fear', count: 4, delta: 2 },
+      { code: 'sadness', label: 'Tristesse', family: 'sadness', count: 2, delta: 0 },
+    ],
+    feelingCount: 6,
+    situations: { count: 3, first: 'Surcharge au travail' },
+    drafts: 0,
+    followedSince: '2025-03-01',
+    ...overrides,
+  };
+}
