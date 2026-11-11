@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T07:20:32.887Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-A9c Annuaire : largeur portée par data.contentWidth 'wide' sur /annuaire, marge négative de directory.page.scss retirée ; 1 440 px ≤ 2 400 px pour 10 fiches, puce sur une ligne, aucun débordement de 1 072 à 1 300 px ni à 375 px ; fiche publique et Comment ça marche inchangées",
+  "next": "Tâche socle : pm-public-layout wide à max-width 1328px pour 1 280 px de contenu (aujourd'hui 1 232), puis mettre à jour l'e2e UX-A9c",
+  "pr": "https://github.com/mrscams/psymate-web/pull/67",
+  "branch": "claude/ux-a9c-directory-wiring",
+  "checkout": "agent-a222ff5b3c6c550d0"
+}
