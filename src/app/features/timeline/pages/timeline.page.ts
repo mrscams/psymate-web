@@ -528,6 +528,13 @@ export class TimelinePage {
       (g) => g.id === id || g.entries.some((item) => item.id === id),
     );
     if (!group) {
+      // Séance ou entrée plus ancienne que la période par défaut : la visite passe d'abord à
+      // « Tout » (les séances sont relues et la recherche reprend, ?focus= est toujours là) ; le
+      // repli sur le chronologique ne vient qu'ensuite.
+      if (this.filters.atDefaults() && this.filters.widenDefaults()) {
+        this.reapplyFilters();
+        return;
+      }
       this.filters.overrideForVisit('chronological');
       return;
     }

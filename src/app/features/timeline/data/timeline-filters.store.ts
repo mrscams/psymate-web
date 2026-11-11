@@ -100,7 +100,7 @@ export const TimelineFiltersStore = signalStore(
         defaultFilters(defaultPreset(prefs.overviewWindow(), prefs.timelineGroupBy()), today);
       if (hasFilterParams(url)) {
         patchState(store, {
-          filters: parseFilters(url, defaults),
+          filters: parseFilters(url),
           modeOverride: parseMode(url),
           visitMode: null,
           defaults,

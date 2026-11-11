@@ -120,14 +120,12 @@ export function hasFilterParams(source: ParamSource): boolean {
 }
 
 /**
- * Filtres lus dans l'URL ; les valeurs illisibles sont ignorées (le serveur juge le reste). Sans
- * `from` ni `to`, la période est celle des filtres par défaut (`defaults`, 90 j en général) ;
- * `?period=all` demande « Tout ».
+ * Filtres lus dans une URL qui porte au moins un paramètre de filtre ou de mode (lien partagé, lien
+ * profond de la vue d'ensemble : `?drafts=1`, `?mode=session`…). Les valeurs illisibles sont
+ * ignorées (le serveur juge le reste). Sans `from` ni `to`, la période est « Tout », comme avant
+ * UX-B2 : seule l'URL nue prend la période par défaut (TimelineFiltersStore.init).
  */
-export function parseFilters(
-  source: ParamSource,
-  defaults: TimelineFilters = NO_FILTERS,
-): TimelineFilters {
+export function parseFilters(source: ParamSource): TimelineFilters {
   const types = listOf(source, FILTER_PARAMS.types, true).filter((t): t is EntryType =>
     (ENTRY_TYPES as readonly string[]).includes(t),
   );
@@ -138,9 +136,6 @@ export function parseFilters(
   if (source.get(FILTER_PARAMS.period) === PERIOD_ALL) {
     from = null;
     to = null;
-  } else if (!source.has(FILTER_PARAMS.from) && !source.has(FILTER_PARAMS.to)) {
-    from = defaults.from;
-    to = defaults.to;
   }
   return {
     types,
@@ -160,8 +155,9 @@ export function parseMode(source: ParamSource): TimelineMode | null {
 
 /**
  * Paramètres d'URL des filtres : une valeur par défaut retire le paramètre (une URL sans filtre
- * reste `/timeline`). Les listes sont des paramètres répétés. La période par défaut (`defaults`)
- * n'est pas écrite ; « Tout », quand le défaut est borné, s'écrit `?period=all`.
+ * reste `/timeline`). Les listes sont des paramètres répétés. L'URL nue vaut les filtres par défaut
+ * (`defaults`, période de l'arrivée) ; une URL avec un autre paramètre et sans période vaut « Tout »
+ * (parseFilters) : la période par défaut s'y écrit donc en dates, et « Tout » seul en `?period=all`.
  */
 export function filterParams(
   filters: TimelineFilters,
@@ -169,17 +165,21 @@ export function filterParams(
   defaults: TimelineFilters = NO_FILTERS,
 ): Record<string, FilterParamValue> {
   const list = (values: readonly string[]) => (values.length ? [...values] : null);
-  const defaultPeriod = filters.from === defaults.from && filters.to === defaults.to;
-  const all = !filters.from && !filters.to;
-  return {
+  const others: Record<string, FilterParamValue> = {
     [FILTER_PARAMS.types]: list(filters.types),
     [FILTER_PARAMS.emotions]: list(filters.emotions),
     [FILTER_PARAMS.tags]: list(filters.tags),
     [FILTER_PARAMS.draftsOnly]: filters.draftsOnly ? '1' : null,
-    [FILTER_PARAMS.from]: defaultPeriod ? null : filters.from,
-    [FILTER_PARAMS.to]: defaultPeriod ? null : filters.to,
     [FILTER_PARAMS.mode]: mode,
-    [FILTER_PARAMS.period]: !defaultPeriod && all ? PERIOD_ALL : null,
+  };
+  const alone = Object.values(others).every((value) => value === null);
+  const bare = alone && filters.from === defaults.from && filters.to === defaults.to;
+  const all = !filters.from && !filters.to;
+  return {
+    ...others,
+    [FILTER_PARAMS.from]: bare ? null : filters.from,
+    [FILTER_PARAMS.to]: bare ? null : filters.to,
+    [FILTER_PARAMS.period]: !bare && alone && all ? PERIOD_ALL : null,
   };
 }
 

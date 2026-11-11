@@ -11,16 +11,27 @@ import { TestAccount } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { shoot } from '../support/captures';
 import { API, setGroupBy } from './filters-data';
-import { StoryPatient, storyPatient } from './timeline-data';
+import {
+  createPatient,
+  daysAgo,
+  entry,
+  intakeOf,
+  StoryPatient,
+  storyPatient,
+} from './timeline-data';
 
 // UX-B2 (audit UX du 9 nov. 2026, fiche 03 état A) contre l'API locale (jamais de mock) : la
 // timeline s'ouvre sur la période « 90 j » (cartes récentes, jamais la vue décennie), barre d'outils
 // en deux rangées, ligne d'état en mono 12 px, bouton de mode non sélectionné lisible (text-secondary),
 // zone des cartes d'au moins 480 px à 1440 × 900, rien ne déborde à 375 px, axe-core sans violation.
-// « Tout » s'écrit `?period=all` ; la période par défaut ne s'écrit pas.
+// « Tout » s'écrit `?period=all` ; la période par défaut ne s'écrit pas. Les liens profonds de la
+// vue d'ensemble qui portent un filtre sans période (`?drafts=1`, `?mode=session&focus=`) gardent
+// « Tout ».
 
 let account: TestAccount;
 let story: StoryPatient;
+/** Patient dont le seul brouillon a 150 jours (hors de la période par défaut). */
+let drafty: string;
 let api: APIRequestContext;
 
 test.describe.configure({ mode: 'serial', timeout: 90_000 });
@@ -31,6 +42,15 @@ test.beforeAll(async () => {
   account = await createAccount(api, 'ux-b2.periode', 'psychologist');
   await setGroupBy(api, 'chronological');
   story = await storyPatient(api);
+  drafty = await createPatient(api, 'Brouillon A.');
+  await intakeOf(api, drafty);
+  await entry(api, drafty, {
+    type: 'note',
+    status: 'draft',
+    title: 'Brouillon ancien',
+    body: 'Noté il y a cinq mois, jamais relu.',
+    occurred: { from: daysAgo(150) },
+  });
 });
 
 test.afterAll(async () => {
@@ -170,5 +190,48 @@ test('thème sombre : mêmes contrastes, axe sans violation', async ({ page }) =
     await shoot(page, 'ux-b2-1440-03-timeline-90j-sombre', false);
   } finally {
     await api.patch(`${API}/api/me/preferences`, { data: { theme: 'light' } });
+  }
+});
+
+test('lien « N brouillons » (?drafts=1) : tout le dossier, pas seulement 90 jours', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await signIn(page, account);
+  await page.goto(`/fr/patients/${drafty}/timeline?drafts=1`);
+  const t = timeline(page);
+  await expect(t.count).toHaveText('1 entrée · 1 fenêtre en mémoire');
+  await expect(t.card('Brouillon ancien')).toBeVisible();
+  await expect(t.period.getByRole('button', { name: 'Tout', exact: true })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await expect(page).toHaveURL(new RegExp(`/patients/${drafty}/timeline\\?drafts=1$`));
+  await expectNoAxeViolations(page);
+});
+
+test('par séance, ?focus= sur une séance de plus de 90 jours : dépliée, sans repli chronologique', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await signIn(page, account);
+  const toggle = page.locator(`button.toggle[data-session-id="${story.sessionFirst}"]`);
+
+  // Lien de la vue d'ensemble : ?mode=session&focus=<séance>.
+  await page.goto(`/fr/patients/${story.id}/timeline?mode=session&focus=${story.sessionFirst}`);
+  await expect(page.locator('pm-timeline-sessions')).toBeVisible();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.locator('cdk-virtual-scroll-viewport')).toHaveCount(0);
+
+  // Préférence « par séance » et ?focus= seul : la période par défaut s'élargit, la séance se déplie.
+  await setGroupBy(api, 'session');
+  try {
+    await page.goto(`/fr/patients/${story.id}/timeline?focus=${story.sessionFirst}`);
+    await expect(page.locator('pm-timeline-sessions')).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('cdk-virtual-scroll-viewport')).toHaveCount(0);
+    await expectNoAxeViolations(page);
+  } finally {
+    await setGroupBy(api, 'chronological');
   }
 });

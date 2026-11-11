@@ -179,7 +179,7 @@ test(`${VOLUME} entrées : défilement fluide, trois fenêtres au plus, zoom san
   await page.waitForLoadState('networkidle');
   const settled = requests.length;
 
-  // Zoom : −, −, Ctrl+molette ; la granularité change, aucune requête (les fenêtres couvrent).
+  // Zoom : −, −, Ctrl+molette, + ; la granularité change, aucune requête (les fenêtres couvrent).
   await page.keyboard.press('-');
   await expect(t.granularity).toHaveText('Semaine');
   await page.keyboard.press('-');
@@ -189,6 +189,11 @@ test(`${VOLUME} entrées : défilement fluide, trois fenêtres au plus, zoom san
   await page.keyboard.down('Control');
   await page.mouse.wheel(0, -120);
   await page.keyboard.up('Control');
+  await expect(t.granularity).toHaveText('Semaine');
+  // Raccourci + : vers le jour ; − ramène à la semaine pour la mesure du défilement.
+  await page.keyboard.press('+');
+  await expect(t.granularity).toHaveText('Jour');
+  await page.keyboard.press('-');
   await expect(t.granularity).toHaveText('Semaine');
   await page.waitForTimeout(500);
   expect(requests.length, requests.slice(settled).join('\n')).toBe(settled);

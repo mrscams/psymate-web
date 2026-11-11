@@ -97,13 +97,9 @@ describe('TimelineFiltersStore', () => {
       modeOverride: null,
     });
     expect(source).toBe('url');
-    // Sans from ni to dans l'URL : la période par défaut (90 j).
-    expect(store.filters()).toEqual({
-      ...NO_FILTERS,
-      emotions: ['anxiety'],
-      from: store.defaults().from,
-    });
-    expect(store.filters().from).not.toBeNull();
+    // Lien avec filtre sans from ni to : « Tout » (seule l'URL nue prend la période par défaut).
+    expect(store.filters()).toEqual({ ...NO_FILTERS, emotions: ['anxiety'] });
+    expect(store.defaults().from).not.toBeNull();
     expect(store.mode()).toBe('chronological');
     expect(store.params()).toMatchObject({ emotion: ['anxiety'], mode: 'chronological' });
     // La préférence n'est pas écrite par ?mode=.

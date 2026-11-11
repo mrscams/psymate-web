@@ -773,6 +773,46 @@ describe('TimelinePage', () => {
     info.mockRestore();
   });
 
+  it('par séance, ?focus= sur une séance plus ancienne que la période par défaut : « Tout » puis la séance dépliée', async () => {
+    const navigate = vi.spyOn(Router.prototype, 'navigate').mockResolvedValue(true);
+    const old = timelineItem({
+      id: 's-old',
+      type: 'session',
+      title: null,
+      sessionId: null,
+      occurred: { from: '2025-01-10T15:00:00Z', to: null, precision: 'exact', label: null },
+    });
+    const recent = timelineItem({
+      id: 's-new',
+      type: 'session',
+      title: null,
+      sessionId: null,
+      occurred: { from: '2026-11-01T15:00:00Z', to: null, precision: 'exact', label: null },
+    });
+    const page = vi.fn((_id: string, query: TimelineQuery) =>
+      Promise.resolve(
+        timelinePage({
+          items: query.from ? [recent] : [recent, old],
+          facets: { types: { session: query.from ? 1 : 2 }, emotions: {}, tags: {} },
+        }),
+      ),
+    );
+    const { el, fixture } = await render(page, shellMock(), 's-old', {
+      prefs: prefsMock('session'),
+    });
+    for (let i = 0; i < 3; i++) {
+      await flush();
+      await fixture.whenStable();
+    }
+    expect(page.mock.calls[0][1]).toEqual(expect.objectContaining({ from: daysAgoMidnight(90) }));
+    expect(page).toHaveBeenLastCalledWith('p-1', expect.objectContaining({ from: null }));
+    // Toujours par séance (pas de repli sur le chronologique), la séance demandée dépliée.
+    expect(el.querySelector('pm-timeline-sessions')).not.toBeNull();
+    const toggle = el.querySelector('button.toggle[data-session-id="s-old"]');
+    expect(toggle?.getAttribute('aria-expanded')).toBe('true');
+    navigate.mockRestore();
+  });
+
   it('?focus= exclu par les filtres de l’URL : filtres retirés, on prévient, l’entrée est cherchée sans eux', async () => {
     const navigate = vi.spyOn(Router.prototype, 'navigate').mockResolvedValue(true);
     const info = vi.spyOn(ToastService.prototype, 'info');
