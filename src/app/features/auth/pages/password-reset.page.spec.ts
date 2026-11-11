@@ -50,10 +50,13 @@ describe('PasswordResetPage', () => {
     await submit(fixture, el, 'pas-un-email');
     fixture.detectChanges();
     expect(request).not.toHaveBeenCalled();
-    expect(el.querySelector('mat-error')?.textContent).toContain("n'est pas valide");
+    expect(el.querySelector('#reset-email-error')?.textContent).toContain("n'est pas valide");
+    expect(el.querySelector('#reset-email')?.getAttribute('aria-describedby')).toBe(
+      'reset-email-error',
+    );
   });
 
-  it('envoi en cours : bouton inactif ; envoyé : message role=status, sans formulaire', async () => {
+  it('envoi en cours : bouton inactif ; envoyé : message role=status, formulaire conservé', async () => {
     let resolve!: () => void;
     const request = vi.fn(() => new Promise<void>((r) => (resolve = r)));
     const { fixture, el } = await render(request);
@@ -65,9 +68,24 @@ describe('PasswordResetPage', () => {
     resolve();
     await new Promise((done) => setTimeout(done));
     await fixture.whenStable();
-    expect(el.querySelector('form')).toBeNull();
+    // Le formulaire reste en place (nouvelle demande possible, elle remplace le lien).
+    expect(el.querySelector('form')).not.toBeNull();
     const sent = el.querySelector('[role=status]');
     expect(sent?.textContent).toContain('Si un compte existe pour cette adresse');
+    expect(sent?.textContent).toContain('valable 30 minutes');
+  });
+
+  it('UX-D4 · textes de confiance : étape 1 sur 2, lien valable 30 minutes, même message, retour en haut', async () => {
+    const { el } = await render(vi.fn());
+    const card = el.querySelector('section.card');
+    const first = card?.firstElementChild;
+    expect(first?.querySelector('a')?.textContent).toContain('Retour à la connexion');
+    expect(el.querySelector('.eyebrow')?.textContent).toContain('Étape 1 sur 2');
+    expect(el.querySelector('.intro')?.textContent).toMatch(/valable\s+30 minutes/);
+    expect(el.querySelector('.note')?.textContent).toContain(
+      "le message est le même qu'un compte existe ou non",
+    );
+    expect(el.querySelector('label[for=reset-email]')?.textContent).toContain('Adresse e-mail');
   });
 
   it('422 : « Vérifiez l’adresse », role=alert, saisie conservée', async () => {

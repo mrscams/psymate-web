@@ -64,6 +64,51 @@ describe('LoginPage', () => {
     expect(el.textContent).toContain('verrouillé 15 minutes');
   });
 
+  it('UX-D1 · accroche au-dessus de la carte, mention d’hébergement dessous', async () => {
+    const { el } = await render(vi.fn());
+    const tagline = el.querySelector('.tagline');
+    const card = el.querySelector('.login-card');
+    const hosting = el.querySelector('.hosting');
+    expect(tagline?.textContent).toContain('Le fil de vos patients, séance après séance.');
+    expect(tagline?.nextElementSibling).toBe(card);
+    expect(card?.nextElementSibling).toBe(hosting);
+    expect(hosting?.textContent).toContain('Données hébergées en France');
+  });
+
+  it('UX-D1 · libellés au-dessus des champs, « Mot de passe oublié ? » à droite du libellé', async () => {
+    const { el } = await render(vi.fn());
+    expect(el.querySelector('mat-form-field')).toBeNull();
+    const email = el.querySelector('label[for=login-email]');
+    expect(email?.textContent).toContain('Adresse e-mail');
+    expect(email?.nextElementSibling?.id).toBe('login-email');
+    const row = el.querySelector('.label-row');
+    expect(row?.querySelector('label[for=login-password]')).not.toBeNull();
+    expect(row?.querySelector('a')?.textContent).toContain('Mot de passe oublié ?');
+    expect(el.querySelector('label.check')?.textContent).toContain(
+      'Rester connecté·e sur cet appareil pendant 30 jours',
+    );
+  });
+
+  it('UX-D1 · champ vide touché : message sous le champ, aria-invalid et aria-describedby', async () => {
+    const { fixture, el } = await render(vi.fn());
+    el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();
+    await fixture.whenStable();
+    const input = el.querySelector('#login-email');
+    expect(input?.getAttribute('aria-invalid')).toBe('true');
+    expect(input?.getAttribute('aria-describedby')).toBe('login-email-error');
+    expect(el.querySelector('#login-email-error')?.textContent).toContain(
+      'Saisissez votre adresse e-mail.',
+    );
+  });
+
+  it('« Rester connecté·e » : rememberMe envoyé (contrat LoginRequest)', async () => {
+    const login = vi.fn().mockResolvedValue({ kind: 'signed-in', user: claire });
+    const { fixture, el } = await render(login);
+    el.querySelector<HTMLInputElement>('label.check input')?.click();
+    await submit(fixture, el);
+    expect(login).toHaveBeenCalledWith(expect.objectContaining({ rememberMe: true }));
+  });
+
   it('afficher le mot de passe : aria-pressed et type text', async () => {
     const { fixture, el } = await render(vi.fn());
     const toggle = el.querySelector<HTMLButtonElement>('button.toggle-password');
@@ -140,6 +185,18 @@ describe('LoginPage', () => {
     await submit(fixture, el);
     const alert = el.querySelector('[role=alert]');
     expect(alert?.textContent).toContain('E-mail, mot de passe ou code incorrect.');
+  });
+
+  it('arrivée après l’étape 2 du mot de passe oublié : message « mot de passe modifié »', async () => {
+    history.replaceState({ passwordChanged: true }, '');
+    try {
+      const { el } = await render(vi.fn());
+      expect(el.querySelector('.banner--success[role=status]')?.textContent).toContain(
+        'Mot de passe modifié',
+      );
+    } finally {
+      history.replaceState(null, '');
+    }
   });
 
   it('423 : compte à rebours, bouton désactivé', async () => {

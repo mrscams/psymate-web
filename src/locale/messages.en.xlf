@@ -1500,11 +1500,11 @@
         <note priority="1" from="description">Basculer vers un code de secours</note>
       </trans-unit>
       <trans-unit id="auth.login.remember" datatype="html">
-        <source>Rester connecté 30 jours</source>
-        <target state="translated">Stay signed in for 30 days</target>
+        <source>Rester connecté·e sur cet appareil pendant 30 jours</source>
+        <target state="translated">Stay signed in on this device for 30 days</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">134,139</context>
+          <context context-type="linenumber">187,193</context>
         </context-group>
         <note priority="1" from="description">Case rester connecté (G Q6)</note>
       </trans-unit>
@@ -1581,11 +1581,11 @@
         <note priority="1" from="description">Titre de l&apos;écran mot de passe oublié</note>
       </trans-unit>
       <trans-unit id="auth.reset.sent" datatype="html">
-        <source> Si un compte existe pour cette adresse, un e-mail avec un lien de réinitialisation vient de partir. Le lien est valable 30 minutes. </source>
-        <target state="translated">If an account exists for this address, an e-mail with a reset link has just been sent. The link is valid for 30 minutes.</target>
+        <source>Si un compte existe pour cette adresse, un e-mail avec un lien de réinitialisation vient de partir. Vérifiez aussi le courrier indésirable. Le lien est valable <x id="INTERPOLATION" equiv-text="{{ minutes }}"/> minutes ; une nouvelle demande remplace le précédent.</source>
+        <target state="translated">If an account exists for this address, an e-mail with a reset link has just been sent. Also check your spam folder. The link is valid for <x id="INTERPOLATION" equiv-text="{{ minutes }}"/> minutes; a new request replaces the previous one.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
-          <context context-type="linenumber">27,30</context>
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.html</context>
+          <context context-type="linenumber">73,76</context>
         </context-group>
         <note priority="1" from="description">Confirmation d&apos;envoi du lien</note>
       </trans-unit>
@@ -1603,11 +1603,11 @@
         <note priority="1" from="description">Retour à la connexion</note>
       </trans-unit>
       <trans-unit id="auth.reset.intro" datatype="html">
-        <source> Indiquez l&apos;adresse e-mail de votre compte : vous recevrez un lien pour choisir un nouveau mot de passe. </source>
-        <target state="translated">Enter your account e-mail address: you will receive a link to choose a new password.</target>
+        <source> Indiquez l&apos;adresse e-mail de votre compte. Si un compte existe, vous recevrez un lien de réinitialisation valable <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ minutes }}"/> minutes<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. </source>
+        <target state="translated"> Enter your account e-mail address. If an account exists, you will receive a reset link valid for <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ minutes }}"/> minutes<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
-          <context context-type="linenumber">35,38</context>
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.html</context>
+          <context context-type="linenumber">15,19</context>
         </context-group>
         <note priority="1" from="description">Explication de l&apos;écran mot de passe oublié</note>
       </trans-unit>
@@ -1765,11 +1765,17 @@
         <note priority="1" from="description">Section consentements</note>
       </trans-unit>
       <trans-unit id="auth.register.terms" datatype="html">
-        <source> J&apos;accepte les conditions d&apos;utilisation et j&apos;ai lu la politique de confidentialité. Je comprends que je suis responsable du traitement des données de mes patients et que PsyMate en est l&apos;hébergeur. </source>
-        <target state="translated">I accept the terms of use and I have read the privacy policy. I understand that I am the controller of my patients’ data and that PsyMate is its host.</target>
+        <source> J&apos;accepte les <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;legalPath&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;"/>conditions d&apos;utilisation<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
+            &gt;"/> et j&apos;ai lu la <x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;privacyPath&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;
+              &gt;"/>politique de confidentialité<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
+            &gt;"/>. Je comprends que je suis responsable du traitement des données de mes patients et que PsyMate en est l&apos;hébergeur. </source>
+        <target state="translated"> I accept the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;legalPath&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;"/>terms of use<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
+            &gt;"/> and I have read the <x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;privacyPath&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;
+              &gt;"/>privacy policy<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
+            &gt;"/>. I understand that I am the controller of my patients’ data and that PsyMate is its host. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
-          <context context-type="linenumber">338,343</context>
+          <context context-type="linenumber">355,362</context>
         </context-group>
         <note priority="1" from="description">Case CGU et confidentialité, avec responsable du traitement</note>
       </trans-unit>
@@ -2106,20 +2112,20 @@
         <note priority="1" from="description">Jauge de force, faible</note>
       </trans-unit>
       <trans-unit id="auth.register.strength.good" datatype="html">
-        <source>Bon · <x id="length" equiv-text="length"/> caractères.</source>
-        <target state="translated">Good · <x id="length" equiv-text="length"/> characters.</target>
+        <source>Bon · <x id="length" equiv-text="length"/> caractères. Les fuites connues sont vérifiées à l&apos;envoi.</source>
+        <target state="translated">Good · <x id="length" equiv-text="length"/> characters. Known leaks are checked on submit.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
-          <context context-type="linenumber">303</context>
+          <context context-type="sourcefile">src/app/features/auth/data/password-strength.ts</context>
+          <context context-type="linenumber">44</context>
         </context-group>
         <note priority="1" from="description">Jauge de force, bon</note>
       </trans-unit>
       <trans-unit id="auth.register.strength.strong" datatype="html">
-        <source>Fort · <x id="length" equiv-text="length"/> caractères.</source>
-        <target state="translated">Strong · <x id="length" equiv-text="length"/> characters.</target>
+        <source>Fort · <x id="length" equiv-text="length"/> caractères. Les fuites connues sont vérifiées à l&apos;envoi.</source>
+        <target state="translated">Strong · <x id="length" equiv-text="length"/> characters. Known leaks are checked on submit.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/register.page.ts</context>
-          <context context-type="linenumber">305</context>
+          <context context-type="sourcefile">src/app/features/auth/data/password-strength.ts</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <note priority="1" from="description">Jauge de force, fort</note>
       </trans-unit>
@@ -3741,13 +3747,13 @@
         <note priority="1" from="description">Étape 3 de la confirmation</note>
       </trans-unit>
       <trans-unit id="auth.confirm.pending.resend" datatype="html">
-        <source> Renvoyer l&apos;e-mail </source>
-        <target state="translated"> Resend the email </target>
+        <source> Renvoyer le lien </source>
+        <target state="translated"> Resend the link </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/confirm-email.page.html</context>
-          <context context-type="linenumber">184,187</context>
+          <context context-type="linenumber">192,195</context>
         </context-group>
-        <note priority="1" from="description">Bouton de renvoi de l&apos;e-mail</note>
+        <note priority="1" from="description">Bouton de renvoi du lien de confirmation</note>
       </trans-unit>
       <trans-unit id="auth.confirm.pending.wrongAddress" datatype="html">
         <source>Mauvaise adresse ?</source>
@@ -3851,8 +3857,8 @@
         <note priority="1" from="description">E-mail renvoyé</note>
       </trans-unit>
       <trans-unit id="auth.confirm.field.email" datatype="html">
-        <source>E-mail du compte</source>
-        <target state="translated">Account email</target>
+        <source>Adresse du compte</source>
+        <target state="translated">Account address</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/confirm-email.page.ts</context>
           <context context-type="linenumber">82</context>
@@ -4251,11 +4257,11 @@
         <note priority="1" from="description">Bouton d&apos;envoi du recours</note>
       </trans-unit>
       <trans-unit id="auth.suspended.appeal.once" datatype="html">
-        <source> Un seul recours par décision. Après son examen, la décision devient définitive. Le recours utilise l&apos;identité saisie dans la carte principale. </source>
-        <target state="translated"> One appeal per decision. Once reviewed, the decision becomes final. The appeal uses the identity entered in the main card. </target>
+        <source> Un seul recours par décision. Après son examen, la décision devient définitive. Le recours utilise l&apos;identité confirmée plus haut. </source>
+        <target state="translated"> One appeal per decision. After it is reviewed, the decision becomes final. The appeal uses the identity confirmed above. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/suspended.page.html</context>
-          <context context-type="linenumber">394,398</context>
+          <context context-type="linenumber">433,436</context>
         </context-group>
         <note priority="1" from="description">Rappel : un seul recours</note>
       </trans-unit>
@@ -23626,6 +23632,264 @@
           <context context-type="linenumber">101,102</context>
         </context-group>
         <note priority="1" from="description">Lien d&apos;ouverture du justificatif</note>
+      </trans-unit>
+      <trans-unit id="auth.confirm.pending.emailHint" datatype="html">
+        <source> Pas reçu ? Saisissez l&apos;adresse du compte et renvoyez le lien. </source>
+        <target state="translated"> Didn't get it? Enter the account address and resend the link. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/confirm-email.page.html</context>
+          <context context-type="linenumber">164,167</context>
+        </context-group>
+        <note priority="1" from="description">Aide du champ adresse, page en attente</note>
+      </trans-unit>
+      <trans-unit id="auth.login.hosting" datatype="html">
+        <source> Données hébergées en France · chiffrées au repos et en transit · vous restez seul·e propriétaire de vos dossiers.
+</source>
+        <target state="translated"> Data hosted in France · encrypted at rest and in transit · you remain the sole owner of your records. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">222,225</context>
+        </context-group>
+        <note priority="1" from="description">Mention hébergement sous la carte de connexion (maquette 11)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.passwordChanged" datatype="html">
+        <source> Mot de passe modifié. Toutes vos sessions ont été fermées : connectez-vous avec le nouveau. </source>
+        <target state="translated"> Password changed. All your sessions have been closed: sign in with the new one. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">28,35</context>
+        </context-group>
+        <note priority="1" from="description">Mot de passe réinitialisé, invitation à se connecter</note>
+      </trans-unit>
+      <trans-unit id="auth.login.tagline" datatype="html">
+        <source> Le fil de vos patients, séance après séance.
+</source>
+        <target state="translated"> Your patients’ story, session after session. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">5,9</context>
+        </context-group>
+        <note priority="1" from="description">Accroche au-dessus de la carte de connexion (maquette 11)</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.confirm" datatype="html">
+        <source>Confirmer le mot de passe</source>
+        <target state="translated">Confirm the password</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.html</context>
+          <context context-type="linenumber">127,131</context>
+        </context-group>
+        <note priority="1" from="description">Champ confirmation du nouveau mot de passe</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.criterion.case" datatype="html">
+        <source>Majuscules et minuscules</source>
+        <target state="translated">Upper and lower case</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <note priority="1" from="description">Critère du nouveau mot de passe</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.criterion.compromised" datatype="html">
+        <source>Absent des listes de mots de passe compromis</source>
+        <target state="translated">Not in lists of compromised passwords</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Critère du nouveau mot de passe, vérifié par le serveur</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.criterion.digit" datatype="html">
+        <source>Un chiffre ou un symbole (conseillé)</source>
+        <target state="translated">A digit or a symbol (recommended)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+        <note priority="1" from="description">Critère conseillé du nouveau mot de passe</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.criterion.length" datatype="html">
+        <source>12 caractères minimum</source>
+        <target state="translated">12 characters minimum</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Critère du nouveau mot de passe</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.criterion.met" datatype="html">
+        <source>validé</source>
+        <target state="translated">done</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <note priority="1" from="description">État d&apos;un critère, lu par les lecteurs d&apos;écran</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.criterion.pending" datatype="html">
+        <source>à faire</source>
+        <target state="translated">to do</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <note priority="1" from="description">État d&apos;un critère, lu par les lecteurs d&apos;écran</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.criterion.server" datatype="html">
+        <source>vérifié à l&apos;enregistrement</source>
+        <target state="translated">checked when saved</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.ts</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+        <note priority="1" from="description">État d&apos;un critère vérifié par le serveur</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.error.invalid" datatype="html">
+        <source>Ce mot de passe n&apos;a pas été accepté. Vérifiez les critères ci-dessus.</source>
+        <target state="translated">This password was not accepted. Check the criteria above.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.ts</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
+        <note priority="1" from="description">Nouveau mot de passe refusé sans champ</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.error.unavailable" datatype="html">
+        <source>Enregistrement impossible pour le moment. Votre mot de passe n&apos;a pas changé ; réessayez dans un instant.</source>
+        <target state="translated">Unable to save right now. Your password has not changed; try again in a moment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.ts</context>
+          <context context-type="linenumber">186</context>
+        </context-group>
+        <note priority="1" from="description">Nouveau mot de passe, serveur ou réseau</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.expired.again" datatype="html">
+        <source>Demander un nouveau lien</source>
+        <target state="translated">Request a new link</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.html</context>
+          <context context-type="linenumber">35,38</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers une nouvelle demande de réinitialisation</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.expired.lead" datatype="html">
+        <source> Les liens sont valables <x id="INTERPOLATION" equiv-text="{{ minutes }}"/> minutes et ne servent qu&apos;une fois ; une demande plus récente remplace aussi le précédent. Votre mot de passe n&apos;a pas changé. </source>
+        <target state="translated"> Links are valid for <x id="INTERPOLATION" equiv-text="{{ minutes }}"/> minutes and can be used only once; a more recent request also replaces the previous one. Your password has not changed. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.html</context>
+          <context context-type="linenumber">27,30</context>
+        </context-group>
+        <note priority="1" from="description">Explication du lien de réinitialisation expiré</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.expired.title" datatype="html">
+        <source> Ce lien de réinitialisation n&apos;est plus valable </source>
+        <target state="translated"> This reset link is no longer valid </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.html</context>
+          <context context-type="linenumber">21,25</context>
+        </context-group>
+        <note priority="1" from="description">Titre, lien de réinitialisation expiré</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.lead" datatype="html">
+        <source> Ce lien est valable <x id="INTERPOLATION" equiv-text="{{ minutes }}"/> minutes après votre demande et ne sert qu&apos;une fois. </source>
+        <target state="translated"> This link is valid for <x id="INTERPOLATION" equiv-text="{{ minutes }}"/> minutes after your request and can be used only once. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.html</context>
+          <context context-type="linenumber">49,52</context>
+        </context-group>
+        <note priority="1" from="description">Explication de l&apos;étape 2</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.note" datatype="html">
+        <source> Si la double authentification est activée, votre code vous sera demandé à la connexion. </source>
+        <target state="translated"> If two-factor authentication is on, your code will be requested when you sign in. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.html</context>
+          <context context-type="linenumber">175,179</context>
+        </context-group>
+        <note priority="1" from="description">Note sous l&apos;étape 2</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.pageTitle" datatype="html">
+        <source>Nouveau mot de passe · PsyMate</source>
+        <target state="translated">New password · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/auth.routes.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de l&apos;étape 2 du mot de passe oublié</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.password" datatype="html">
+        <source>Nouveau mot de passe</source>
+        <target state="translated">New password</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.html</context>
+          <context context-type="linenumber">55,59</context>
+        </context-group>
+        <note priority="1" from="description">Champ nouveau mot de passe</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.sessions" datatype="html">
+        <source> Par sécurité, toutes les sessions ouvertes avec l&apos;ancien mot de passe seront fermées, sur tous vos appareils. Vous vous reconnecterez ensuite avec le nouveau. </source>
+        <target state="translated"> For security, every session opened with the old password will be closed, on all your devices. You will then sign in again with the new one. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.html</context>
+          <context context-type="linenumber">157,162</context>
+        </context-group>
+        <note priority="1" from="description">Conséquence du nouveau mot de passe sur les sessions (contrat)</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.submit" datatype="html">
+        <source> Enregistrer le mot de passe </source>
+        <target state="translated"> Save the password </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.html</context>
+          <context context-type="linenumber">171,174</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;enregistrement du nouveau mot de passe</note>
+      </trans-unit>
+      <trans-unit id="auth.newPassword.title" datatype="html">
+        <source> Choisissez un nouveau mot de passe </source>
+        <target state="translated"> Choose a new password </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.html</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;étape 2 du mot de passe oublié</note>
+      </trans-unit>
+      <trans-unit id="auth.register.side.label" datatype="html">
+        <source>Après l&apos;inscription</source>
+        <target state="translated">After signing up</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
+          <context context-type="linenumber">390,391</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la colonne latérale de l&apos;inscription</note>
+      </trans-unit>
+      <trans-unit id="auth.reset.sameMessage" datatype="html">
+        <source> Par sécurité, le message est le même qu&apos;un compte existe ou non. </source>
+        <target state="translated"> For security, the message is the same whether or not an account exists. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.html</context>
+          <context context-type="linenumber">81,84</context>
+        </context-group>
+        <note priority="1" from="description">Note anti-énumération (fiche 26)</note>
+      </trans-unit>
+      <trans-unit id="auth.reset.step1" datatype="html">
+        <source> Étape 1 sur 2 </source>
+        <target state="translated"> Step 1 of 2 </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.html</context>
+          <context context-type="linenumber">9,11</context>
+        </context-group>
+        <note priority="1" from="description">Étape du parcours mot de passe oublié</note>
+      </trans-unit>
+      <trans-unit id="auth.reset.step2" datatype="html">
+        <source> Étape 2 sur 2 </source>
+        <target state="translated"> Step 2 of 2 </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/new-password.page.html</context>
+          <context context-type="linenumber">39,43</context>
+        </context-group>
+        <note priority="1" from="description">Étape du parcours mot de passe oublié</note>
       </trans-unit>
     </body>
   </file>
