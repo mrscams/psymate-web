@@ -120,13 +120,13 @@ describe('timeline-filters.model', () => {
   });
 
   it('parseFilters : un lien profond avec filtre sans période (?drafts=1, ?mode=session, ?types=) garde « Tout »', () => {
-    for (const params of <Record<string, string>[]>[
+    for (const params of [
       { drafts: '1' },
       { mode: 'session' },
       { types: 'note' },
       { emotion: 'anxiety' },
       { tag: 'sommeil' },
-    ]) {
+    ] as Record<string, string>[]) {
       expect(parseFilters(url(params))).toMatchObject({ from: null, to: null });
     }
     expect(parseFilters(url({ drafts: '1' })).draftsOnly).toBe(true);
