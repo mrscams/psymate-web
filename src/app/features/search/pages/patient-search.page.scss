@@ -112,9 +112,14 @@ select {
   cursor: pointer;
 }
 
+.archived {
+  min-height: 24px;
+}
+
 .archived input {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
   accent-color: var(--primary);
 }
 

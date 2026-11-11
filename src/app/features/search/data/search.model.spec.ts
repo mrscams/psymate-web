@@ -2,6 +2,7 @@ import { toPage } from './search.api';
 import {
   decodeEntities,
   effectiveQuery,
+  elideSnippet,
   EMPTY_FILTERS,
   filtersFromParams,
   filtersToParams,
@@ -160,5 +161,56 @@ describe('search.model', () => {
     expect(page.counts.find((c) => c.type === 'event')?.count).toBe(1);
     expect(page.counts.find((c) => c.type === 'feeling')?.count).toBe(0);
     expect(page.query.before).toBeNull();
+  });
+
+  describe('elideSnippet (« … » d’un extrait tronqué)', () => {
+    const elided = (fragment: string) => plainText(elideSnippet(parseMarked(fragment)));
+
+    it('coupé sans ponctuation finale : « … » à la fin', () => {
+      expect(elided('Moment de concentration agréable, sans')).toBe(
+        'Moment de concentration agréable, sans …',
+      );
+    });
+
+    it('commence au milieu d’une phrase : « … » au début, mark conservé', () => {
+      const segments = elideSnippet(parseMarked('<mark>entretien</mark> du 18.'));
+      expect(segments).toEqual([
+        { text: '… ', mark: false },
+        { text: 'entretien', mark: true },
+        { text: ' du 18.', mark: false },
+      ]);
+    });
+
+    it('finit sur un mot surligné : « … » hors du mark', () => {
+      expect(elideSnippet(parseMarked('Le <mark>manager</mark>'))?.at(-1)).toEqual({
+        text: ' …',
+        mark: false,
+      });
+    });
+
+    it('séparateur de fragments « ... » → « … » ; phrase complète intacte', () => {
+      expect(elided('Annoncé en séance. ... Trois phrases pour l&#39;entretien.')).toBe(
+        "Annoncé en séance. … Trois phrases pour l'entretien.",
+      );
+      expect(elided('« Je sais que ça va se passer. »')).toBe('« Je sais que ça va se passer. »');
+      expect(elided('Déjà tronqué …')).toBe('Déjà tronqué …');
+      expect(elideSnippet(null)).toBeNull();
+    });
+  });
+
+  it('toPage : « … » sur les extraits exacts avec texte seulement', () => {
+    const items = [
+      { entryId: 'a', type: 'note', snippet: 'sans <mark>pensées</mark>', approximate: false },
+      { entryId: 'b', type: 'note', snippet: 'manager', approximate: true },
+    ];
+    const withText = toPage({ items, query: { text: 'pensees' } } as unknown as Parameters<
+      typeof toPage
+    >[0]);
+    expect(plainText(withText.exact[0].snippet)).toBe('… sans pensées …');
+    expect(plainText(withText.approximate[0].snippet)).toBe('manager');
+    const noText = toPage({ items, query: { text: '' } } as unknown as Parameters<
+      typeof toPage
+    >[0]);
+    expect(plainText(noText.exact[0].snippet)).toBe('sans pensées');
   });
 });

@@ -86,6 +86,39 @@ describe('PatientSearchPage', () => {
     expect(el.querySelector('pm-search-syntax-help')).not.toBeNull();
   });
 
+  it('vide : les puces à 0 sont grisées et inactives, « Tous » et la puce active restent', async () => {
+    const { el } = await render(
+      {
+        find: vi
+          .fn()
+          .mockResolvedValue(searchPage({ exact: [], total: 0, counts: counts({ note: 2 }) })),
+      },
+      '/patients/8943f30b-07b2-4933-8a06-7bb3ac736ea7/search?q=entretien&types=feeling',
+    );
+    const chip = (label: string) =>
+      [...el.querySelectorAll<HTMLButtonElement>('pm-search-type-chips button')].find((b) =>
+        text(b).startsWith(label),
+      ) as HTMLButtonElement;
+    expect(chip('Tous').disabled).toBe(false);
+    expect(chip('Notes').disabled).toBe(false);
+    expect(chip('Ressentis').disabled).toBe(false);
+    expect(chip('Ressentis').getAttribute('aria-pressed')).toBe('true');
+    expect(chip('Événements').disabled).toBe(true);
+    expect(chip('Médicaments').disabled).toBe(true);
+  });
+
+  it('avec résultats : une puce à 0 reste active (les approchés ne sont pas comptés)', async () => {
+    const { el } = await render();
+    const chips = [...el.querySelectorAll<HTMLButtonElement>('pm-search-type-chips button')];
+    expect(chips.some((b) => b.disabled)).toBe(false);
+  });
+
+  it('titre de repli par entryTitle : « Ressenti · 17 oct. », sans titre ni texte', async () => {
+    const { el } = await render();
+    const title = text(el.querySelector('li[data-entry-id="e-anxiete"] button.title'));
+    expect(title).toMatch(/^Ressenti · 17 oct\./);
+  });
+
   it('erreur : « Recherche indisponible », Réessayer relance', async () => {
     const find = vi
       .fn()
@@ -257,8 +290,9 @@ describe('PatientSearchPage', () => {
     try {
       key(bar, 'ArrowDown');
       await settle(harness);
-      expect(text(el.querySelector('.sr-only[aria-live="polite"]'))).toBe(
-        'Sélection : Ressenti, 2 sur 2',
+      // Titre de repli entryTitle : l'année n'apparaît que hors de l'année en cours.
+      expect(text(el.querySelector('.sr-only[aria-live="polite"]'))).toMatch(
+        /^Sélection : Ressenti · 17 oct\.( 2026)?, 2 sur 2$/,
       );
     } finally {
       bar.remove();
