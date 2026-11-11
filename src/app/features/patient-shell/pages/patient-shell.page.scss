@@ -4,6 +4,12 @@
 
 .tab-content {
   padding-top: 20px;
+
+  // La timeline occupe la hauteur restante de la fenêtre : 8 px de plus pour la zone des cartes
+  // (480 px au moins à 1440 × 900, UX-G2c).
+  &.dense {
+    padding-top: 12px;
+  }
 }
 
 .shell-error {

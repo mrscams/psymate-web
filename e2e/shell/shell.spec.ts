@@ -106,6 +106,58 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(h.name).toHaveText('Inès M.');
 });
 
+test('« suivi·e depuis » : même début de suivi dans l’en-tête et les faits clés (UX-G2c)', async ({
+  page,
+  request,
+}) => {
+  test.setTimeout(60_000);
+  const account = await createAccount(request, 'ux-g2c.suivi', 'psychologist');
+  const prefs = await request.patch(`${API}/api/me/preferences`, {
+    data: { 'overview.view': 'complete', 'overview.window': '12m' },
+  });
+  expect(prefs.status(), await prefs.text()).toBe(200);
+  // Dossier neuf : le suivi commence à la création, que la séance d'accueil confirme.
+  const fresh = await createPatient(request, 'Agathe N.');
+  // Dossier repris après coup : créé aujourd'hui, avec un contact daté de deux mois plus tôt.
+  const resumed = await createPatient(request, 'Basile P.');
+  const past = new Date(Date.now() - 60 * 24 * 3600 * 1000);
+  past.setUTCHours(10, 0, 0, 0);
+  const contact = await request.post(`${API}/api/patients/${resumed}/sessions/contact`, {
+    data: { modality: 'phone', occurredFrom: past.toISOString(), body: 'Appel de reprise.' },
+  });
+  expect(contact.status(), await contact.text()).toBe(201);
+  await signIn(page, account);
+
+  const meta = page.locator('pm-patient-header .meta');
+  const facts = page.getByRole('list', { name: 'Traitement, suivi et drapeaux' });
+  const paris = { timeZone: 'Europe/Paris' } as const;
+  const today = new Date();
+
+  await page.goto(`/fr/patients/${fresh}`);
+  await expect(header(page).name).toHaveText('Agathe N.');
+  const month = new Intl.DateTimeFormat('fr-FR', { ...paris, month: 'long', year: 'numeric' });
+  const day = new Intl.DateTimeFormat('fr-FR', { ...paris, dateStyle: 'medium' });
+  await expect(meta).toContainText(`suivi·e depuis ${month.format(today)}`);
+  await expect(facts).toContainText(`Suivi depuis le ${day.format(today)}`);
+  await expectNoAxeViolations(page);
+
+  // La création ne vaut plus début de suivi : l'en-tête ne dit pas « depuis <ce mois> » au-dessus
+  // de faits clés qui montrent une séance plus ancienne.
+  // L'en-tête lit le mois de la première séance (résumé de la chronologie) : on l'attend, sans quoi
+  // l'absence de mention serait vraie avant même la lecture.
+  const summary = page.waitForResponse(
+    (r) =>
+      r.url().includes(`/api/patients/${resumed}/timeline/summary`) &&
+      r.url().includes('granularity=month'),
+  );
+  await page.goto(`/fr/patients/${resumed}`);
+  expect((await summary).status()).toBe(200);
+  await expect(header(page).name).toHaveText('Basile P.');
+  await expect(facts).toContainText(`Suivi depuis le ${day.format(past)} (première séance connue)`);
+  await expect(meta).not.toContainText('suivi·e depuis');
+  await expectNoAxeViolations(page);
+});
+
 test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée par défaut, dernière séance', async ({
   page,
   request,

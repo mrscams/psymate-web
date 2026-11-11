@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T09:19:15.691Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-G2c Dossier patient : « suivi·e depuis » de l'en-tête retiré quand une séance le précède (mois de la première séance lu avec le dossier, plus de contradiction avec les faits clés) ; timeline : zone des cartes 427 → 489 px à 1 440 × 900 (bandeau compris, aussi avec police de repli large) par la liste des situations dépliable, une barre d'outils resserrée et la marge haute de l'onglet ; e2e 480 px durci ; graphe : détail à l'arrivée non ouvert (ni fiche 04 ni maquette ne le demandent)",
+  "next": "API : firstSessionAt (ou followedSince = première séance) pour afficher la vraie date dans l'en-tête, les faits clés et la zone « Avant le suivi » de la timeline",
+  "pr": "https://github.com/mrscams/psymate-web/pull/70",
+  "branch": "claude/ux-g2c-patient-fixes",
+  "checkout": "agent-aff8fa7f2fb63cd1e"
+}

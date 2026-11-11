@@ -16,13 +16,16 @@ export function flagLabel(kind: FlagKind): string {
   }
 }
 
-/** Le patient du store → ce que pm-patient-header affiche. */
-export function toHeaderInfo(patient: ShellPatient): PatientHeaderInfo {
+/** Le patient du store et le début de suivi retenu (store.followedSince) → pm-patient-header. */
+export function toHeaderInfo(
+  patient: ShellPatient,
+  followedSince: string | null,
+): PatientHeaderInfo {
   return {
     id: patient.id,
     displayName: patient.displayName,
     birthDate: patient.birthDate,
-    followedSince: patient.followedSince,
+    followedSince,
     flags: patient.flags.map((kind) => ({ code: kind, label: flagLabel(kind) })),
   };
 }

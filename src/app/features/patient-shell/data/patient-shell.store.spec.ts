@@ -21,7 +21,11 @@ function setup(api: Partial<PatientShellApi>, defaultDurationMin = 60) {
   TestBed.configureTestingModule({
     providers: [
       PatientShellStore,
-      { provide: PatientShellApi, useValue: api },
+      // Mois de la première séance (UX-G2c) : aucune séance par défaut.
+      {
+        provide: PatientShellApi,
+        useValue: { firstSessionMonth: vi.fn().mockResolvedValue(null), ...api },
+      },
       { provide: PreferencesStore, useValue: { defaultDurationMin: signal(defaultDurationMin) } },
     ],
   });
@@ -314,6 +318,63 @@ describe('PatientShellStore', () => {
       store.noteWrite();
       await tick();
       expect(hasEntries).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('followedSince : « suivi·e depuis » de l’en-tête (UX-G2c)', () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+    it.each([
+      ['aucune séance : la fiche', null, '2025-03-04'],
+      ['première séance après le début du suivi', '2025-04', '2025-03-04'],
+      ['première séance le même mois', '2025-03', '2025-03-04'],
+      ['dossier créé après ses séances : mention retirée', '2023-11', null],
+    ])('%s', async (_label, month, expected) => {
+      const firstSessionMonth = vi.fn().mockResolvedValue(month);
+      const store = await loaded(closedSession(), { firstSessionMonth });
+      await tick();
+      expect(firstSessionMonth).toHaveBeenCalledWith('p-marie');
+      expect(store.followedSince()).toBe(expected);
+    });
+
+    it('lu avec le dossier : l’en-tête ne s’affiche qu’une fois la première séance connue', async () => {
+      let resolve: (month: string | null) => void = () => undefined;
+      const store = setup({
+        patient: vi.fn().mockResolvedValue(shellPatient()),
+        current: vi.fn().mockResolvedValue(closedSession()),
+        firstSessionMonth: vi.fn(() => new Promise<string | null>((r) => (resolve = r))),
+      });
+      const pending = store.load('p-marie');
+      await tick();
+      expect(store.status()).toBe('loading');
+      expect(store.patient()).toBeNull();
+      resolve('2025-04');
+      await pending;
+      expect(store.status()).toBe('idle');
+      expect(store.followedSince()).toBe('2025-03-04');
+    });
+
+    it('lecture des séances en échec : le dossier s’ouvre, sans date de suivi', async () => {
+      const store = await loaded(closedSession(), {
+        firstSessionMonth: vi.fn().mockRejectedValue({ status: 500, code: 'INTERNAL_ERROR' }),
+      });
+      expect(store.status()).toBe('idle');
+      expect(store.patient()?.displayName).toBe('Marie D.');
+      expect(store.followedSince()).toBeNull();
+    });
+
+    it('relue après une écriture (séance saisie à une date passée)', async () => {
+      const firstSessionMonth = vi
+        .fn()
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce('2024-01');
+      const store = await loaded(closedSession(), { firstSessionMonth });
+      await tick();
+      expect(store.followedSince()).toBe('2025-03-04');
+      store.noteWrite();
+      await tick();
+      expect(firstSessionMonth).toHaveBeenCalledTimes(2);
+      expect(store.followedSince()).toBeNull();
     });
   });
 

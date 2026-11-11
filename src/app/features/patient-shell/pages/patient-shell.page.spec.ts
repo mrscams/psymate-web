@@ -64,7 +64,7 @@ function routesWithFakeOverview(): Routes {
 
 type Api = Pick<
   PatientShellApi,
-  'patient' | 'current' | 'start' | 'close' | 'contact' | 'hasEntries'
+  'patient' | 'current' | 'start' | 'close' | 'contact' | 'hasEntries' | 'firstSessionMonth'
 >;
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
@@ -81,6 +81,7 @@ async function render(api: Partial<Api> = {}, url = '/patients/p-marie', duratio
     close: api.close ?? vi.fn().mockResolvedValue(closedSession({ id: 's-open' })),
     contact: api.contact ?? vi.fn(),
     hasEntries: api.hasEntries ?? vi.fn().mockResolvedValue(true),
+    firstSessionMonth: api.firstSessionMonth ?? vi.fn().mockResolvedValue('2025-03'),
   };
   TestBed.configureTestingModule({
     providers: [
@@ -161,6 +162,21 @@ describe('PatientShellPage', () => {
     );
     expect(text(el.querySelector('pm-fake-overview-tab h2'))).toBe("Vue d'ensemble");
     expect(el.querySelector('.view-toggle pm-overview-view-toggle [role="group"]')).not.toBeNull();
+  });
+
+  it('« suivi·e depuis » : la fiche quand aucune séance ne la précède (UX-G2c)', async () => {
+    const { el, api } = await render();
+    expect(api.firstSessionMonth).toHaveBeenCalledWith('p-marie');
+    expect(text(el.querySelector('.meta'))).toBe('34 ans·suivi·e depuis mars 2025');
+  });
+
+  it('« suivi·e depuis » retiré quand des séances le précèdent (dossier créé après coup)', async () => {
+    const { el } = await render({
+      patient: vi.fn().mockResolvedValue(shellPatient({ followedSince: '2026-11-07' })),
+      firstSessionMonth: vi.fn().mockResolvedValue('2023-11'),
+    });
+    expect(text(el.querySelector('.meta'))).toBe('34 ans');
+    expect(text(el.querySelector('pm-patient-header'))).not.toContain('suivi·e depuis');
   });
 
   it('séance d’accueil seule : ni « en cours » ni « dernière séance »', async () => {

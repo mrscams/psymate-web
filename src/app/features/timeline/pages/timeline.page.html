@@ -230,32 +230,55 @@
       </p>
 
       @if (bandItems().length) {
-        <ul
-          class="bands-legend"
-          aria-label="Situations sur la période"
-          i18n-aria-label="Nom de la liste des situations en bande@@timeline.bands"
+        <!-- Situations en bande (UX-G2c) : le nom de chacune est déjà écrit le long de sa bande ;
+             la liste complète se déplie ici, pour ne pas prendre deux lignes à la zone des cartes. -->
+        <button
+          type="button"
+          class="bands-toggle"
+          aria-controls="timeline-bands"
+          [attr.aria-expanded]="bandsOpen()"
+          (click)="bandsOpen.set(!bandsOpen())"
         >
-          @for (entry of bandItems(); track entry.band.item.id) {
-            <li
-              [attr.aria-label]="entry.label"
-              [attr.title]="entry.label"
-              [class.ongoing]="entry.band.item.ongoing"
-            >
-              <span class="swatch" aria-hidden="true"></span>
-              <span class="band-title" aria-hidden="true">{{ entry.name }}</span>
-              @if (entry.band.item.ongoing) {
-                <span
-                  class="band-state"
-                  aria-hidden="true"
-                  i18n="Mention d'une situation en cours@@timeline.band.ongoingShort"
-                  >en cours</span
-                >
-              }
-            </li>
-          }
-        </ul>
+          <span class="swatch" aria-hidden="true"></span>
+          <span
+            i18n="Bouton qui déplie la liste des situations en bande@@timeline.bands.toggle"
+            >{bandItems().length, plural,
+              =1 {1 situation sur la période}
+              other {{{ bandItems().length }} situations sur la période}
+            }</span
+          >
+          <span class="chevron" aria-hidden="true"></span>
+        </button>
       }
     </div>
+    @if (bandItems().length) {
+      <ul
+        id="timeline-bands"
+        class="bands-legend"
+        [class.open]="bandsOpen()"
+        aria-label="Situations sur la période"
+        i18n-aria-label="Nom de la liste des situations en bande@@timeline.bands"
+      >
+        @for (entry of bandItems(); track entry.band.item.id) {
+          <li
+            [attr.aria-label]="entry.label"
+            [attr.title]="entry.label"
+            [class.ongoing]="entry.band.item.ongoing"
+          >
+            <span class="swatch" aria-hidden="true"></span>
+            <span class="band-title" aria-hidden="true">{{ entry.name }}</span>
+            @if (entry.band.item.ongoing) {
+              <span
+                class="band-state"
+                aria-hidden="true"
+                i18n="Mention d'une situation en cours@@timeline.band.ongoingShort"
+                >en cours</span
+              >
+            }
+          </li>
+        }
+      </ul>
+    }
 
     <cdk-virtual-scroll-viewport
       class="viewport"

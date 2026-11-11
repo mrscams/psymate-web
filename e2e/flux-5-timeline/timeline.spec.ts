@@ -78,6 +78,11 @@ test('situations en bande, pastille « dit en séance du … », zone « Avant l
 
   // Bandes : la situation en cours (commencée il y a 200 jours) va jusqu'en haut, avec la flèche ;
   // la situation terminée ne couvre que sa plage ; les deux ne partagent pas de colonne.
+  // La liste des situations se déplie depuis la ligne d'état (UX-G2c).
+  const bandsToggle = page.getByRole('button', { name: '3 situations sur la période' });
+  await expect(bandsToggle).toHaveAttribute('aria-expanded', 'false');
+  await bandsToggle.click();
+  await expect(bandsToggle).toHaveAttribute('aria-expanded', 'true');
   const legend = page.getByRole('list', { name: 'Situations sur la période' });
   await expect(
     legend.getByRole('listitem', { name: /Réorganisation du service.*en cours/ }),

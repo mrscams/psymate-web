@@ -65,7 +65,7 @@ import { dayLabel, periodAccessibleLabel, periodLabel } from './timeline-labels'
     }
 
     button {
-      min-height: 28px;
+      min-height: 26px;
       padding: 0 10px;
       border: 0;
       background: var(--surface-raised);

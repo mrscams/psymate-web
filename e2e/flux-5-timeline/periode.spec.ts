@@ -32,6 +32,8 @@ let account: TestAccount;
 let story: StoryPatient;
 /** Patient dont le seul brouillon a 150 jours (hors de la période par défaut). */
 let drafty: string;
+/** Patient à six situations en cours (UX-G2c : la liste des situations ne mange pas la zone). */
+let crowded: string;
 let api: APIRequestContext;
 
 test.describe.configure({ mode: 'serial', timeout: 90_000 });
@@ -51,7 +53,27 @@ test.beforeAll(async () => {
     body: 'Noté il y a cinq mois, jamais relu.',
     occurred: { from: daysAgo(150) },
   });
+  // Les six situations en cours du dossier mesuré par l'audit (bilan UX-G1, zone des cartes à 431 px).
+  crowded = await createPatient(api, 'Situations Q.');
+  const intake = await intakeOf(api, crowded);
+  for (const [title, days] of SIX_SITUATIONS) {
+    await entry(api, crowded, {
+      type: 'situation',
+      title,
+      occurred: { from: daysAgo(days), precision: 'day' },
+      sessionId: intake,
+    });
+  }
 });
+
+const SIX_SITUATIONS: readonly (readonly [string, number])[] = [
+  ['Séparation envisagée', 80],
+  ['Projet de voyage', 70],
+  ['Changement de poste imposé', 60],
+  ['Reprise d’une activité manuelle', 50],
+  ['Troubles de la vue : suivi ophtalmologique', 40],
+  ['Tensions dans l’équipe', 30],
+];
 
 test.afterAll(async () => {
   await api?.dispose();
@@ -112,12 +134,12 @@ test('arrivée : période « 90 j », cartes récentes, URL sans paramètre ; «
   // Mise en page (maquette 03, état A ; audit UX-B2).
   expect(await toolbarRows(page)).toBe(2);
   // La liste tient dans la fenêtre (une carte focalisée n'est jamais sous le bas de l'écran) et
-  // mesure au moins 480 px, hors bandeau « dossier professionnel incomplet » du compte de test
-  // (un praticien vérifié ne l'a pas).
+  // mesure au moins 480 px, bandeau « dossier professionnel incomplet » du compte de test compris
+  // (UX-G2c : l'audit mesurait la zone avec ce bandeau, comme ici).
+  await expect(page.locator('pm-verification-banner')).toBeVisible();
   const box = (await t.viewport.boundingBox())!;
   expect(box.y + box.height).toBeLessThanOrEqual(900);
-  const banner = await page.locator('pm-verification-banner').boundingBox();
-  expect(box.height + (banner?.height ?? 0)).toBeGreaterThanOrEqual(480);
+  expect(box.height).toBeGreaterThanOrEqual(480);
   const status = await t.statusLine.evaluate((el) => {
     const style = getComputedStyle(el);
     return { size: style.fontSize, family: style.fontFamily };
@@ -151,6 +173,47 @@ test('arrivée : période « 90 j », cartes récentes, URL sans paramètre ; «
   await expect(t.count).toHaveText('4 entrées · 1 fenêtre en mémoire');
   await expect(page).toHaveURL(new RegExp(`/patients/${story.id}/timeline$`));
   await expectNoAxeViolations(page);
+});
+
+test('six situations en bande : une seule ligne avant la liste, zone des cartes ≥ 480 px, liste dépliable', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await signIn(page, account);
+  await page.goto(`/fr/patients/${crowded}/timeline`);
+  const t = timeline(page);
+  await expect(t.count).toHaveText('7 entrées · 1 fenêtre en mémoire');
+  await expect(page.locator('pm-verification-banner')).toBeVisible();
+
+  // Barre d'outils en deux rangées, puis une seule ligne : l'état et « 6 situations sur la période ».
+  expect(await toolbarRows(page)).toBe(2);
+  const toggle = page.getByRole('button', { name: '6 situations sur la période' });
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  const status = (await t.statusLine.boundingBox())!;
+  const toggleBox = (await toggle.boundingBox())!;
+  expect(
+    Math.abs(toggleBox.y + toggleBox.height / 2 - (status.y + status.height / 2)),
+  ).toBeLessThan(4);
+  expect(toggleBox.height).toBeGreaterThanOrEqual(24);
+  const box = (await t.viewport.boundingBox())!;
+  expect(box.y + box.height).toBeLessThanOrEqual(900);
+  expect(box.height).toBeGreaterThanOrEqual(480);
+  // Les bandes portent leur nom à leur tête (quatre colonnes au plus : au-delà, des situations
+  // partagent une colonne, d'où la liste complète dépliable).
+  await expect(page.locator('.lane-label').first()).toBeVisible();
+  await expectNoAxeViolations(page);
+
+  // Déplié : les six situations, avec leur nom complet pour les lecteurs d'écran.
+  await toggle.click();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  const legend = page.getByRole('list', { name: 'Situations sur la période' });
+  await expect(legend.getByRole('listitem')).toHaveCount(6);
+  for (const [title] of SIX_SITUATIONS) {
+    await expect(legend.getByRole('listitem', { name: new RegExp(title) })).toBeVisible();
+  }
+  await expectNoAxeViolations(page);
+  await toggle.click();
+  await expect(legend).toBeHidden();
 });
 
 test('mode par séance : en-têtes avec horaires et durée, axe sans violation', async ({ page }) => {

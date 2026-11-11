@@ -20095,6 +20095,14 @@
         </context-group>
         <note priority="1" from="description">Fenêtres en mémoire de la ligne d&apos;état de la timeline</note>
       </trans-unit>
+      <trans-unit id="timeline.bands.toggle" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 situation sur la période} other {<x id="INTERPOLATION"/> situations sur la période}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">245,250</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui déplie la liste des situations en bande</note>
+      </trans-unit>
       <trans-unit id="timeline.bands" datatype="html">
         <source>Situations sur la période</source>
         <context-group purpose="location">
