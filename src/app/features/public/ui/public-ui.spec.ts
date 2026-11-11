@@ -83,6 +83,8 @@ describe('features/public ui', () => {
       await fixture.whenStable();
       const el = fixture.nativeElement as HTMLElement;
       expect(el.querySelector('h3 a')?.getAttribute('href')).toBe('/praticiens/claire-moreau');
+      // Lien du nom à 24 px de haut (UX-G2a, sonde de l'audit : 21 px).
+      expect(el.querySelector('h3 a')?.classList).toContain('pm-link-target');
       expect(el.textContent).toContain('Psychologue');
       expect(el.textContent).toContain('Profil vérifié');
       // Une seule puce de disponibilité (UX-D6).
@@ -201,6 +203,21 @@ describe('features/public ui', () => {
       const panel = el.querySelector(`#${languages.getAttribute('aria-controls')}`);
       expect(panel?.textContent).toContain('Anglais');
       expect(box(el, 'Anglais').disabled).toBe(true);
+    });
+
+    it('UX-G2a : chaque bouton « Autres … » dans sa rangée, après la dernière case', async () => {
+      const { el } = await renderFilters(
+        { ...NO_FACETS, audiences: [{ code: 'adults', count: 4 }] },
+        { ...EMPTY_QUERY, languages: ['fr'] },
+      );
+      for (const name of [/Autres publics/, /Autres langues/]) {
+        const toggle = button(el, name);
+        const row = toggle.parentElement!;
+        // L'écart avec la case précédente est porté par la rangée (marge du bouton forcée par
+        // .pm-link-target) ; la rangée suit la dernière valeur de la facette.
+        expect(row.classList).toContain('more-row');
+        expect(row.previousElementSibling?.matches('label.option')).toBe(true);
+      }
     });
 
     it('spécialités : facette de la réponse, 6 visibles puis « Afficher les n autres »', async () => {

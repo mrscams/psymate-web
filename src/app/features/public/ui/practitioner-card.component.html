@@ -3,7 +3,7 @@
   <div class="body">
     <div class="identity">
       <h3 class="name">
-        <a class="name-link" [routerLink]="link()">{{ card().displayName }}</a>
+        <a class="name-link pm-link-target" [routerLink]="link()">{{ card().displayName }}</a>
       </h3>
       <pm-profession-chip [profession]="card().profession" />
       @if (card().verified) {

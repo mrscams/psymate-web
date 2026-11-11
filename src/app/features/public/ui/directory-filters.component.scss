@@ -103,12 +103,21 @@
   }
 }
 
+// Rangée du bouton « Autres … » / « Afficher les n autres » (UX-G2a, WCAG 2.5.8) : la case native
+// de la dernière valeur (18 px) doit avoir 12 px libres autour de son centre. `.pm-link-target`
+// agrandit le bouton à 24 px par une marge négative (forcée) de (1lh - 24 px) / 2, qui le remontait
+// à 10,4 px de ce centre. L'écart vit donc sur la rangée : 6 px + la demi-ligne de 28 px de la
+// case (14 px) - 3,6 px de marge négative = 16,4 px, et 14 px encore si la hauteur de ligne du
+// bouton tombe à 12 px (polices de repli). Le libellé de la case garde ses 28 px de cible.
+.more-row {
+  display: flex;
+  margin-top: 6px;
+}
+
 .more-toggle {
-  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-top: 4px;
   color: var(--primary);
 
   &:hover {

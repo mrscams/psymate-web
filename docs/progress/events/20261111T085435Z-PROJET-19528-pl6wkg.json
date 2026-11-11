@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T08:54:35.836Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-G2a annuaire : axe target-size 2 -> 0 (clair, sombre, panneau 375, facettes repliées et dépliées), sonde 34 -> 14 cibles < 24 px, nom des fiches à 24 px ; inscription : 4 -> 0 noms accessibles pollués ; e2e cibles-facettes ajouté (valeurs cochées dans l'URL, axe WCAG 2.2), mesure de hauteur UX-D6 rendue exacte",
+  "notes": "Les e2e existants ne voyaient pas target-size : expectNoAxeViolations s'arrête à WCAG 2.1 et la CI n'a pas de fiche publiée. Contact POST en 429 (5/h/IP) après passages répétés.",
+  "pr": "https://github.com/mrscams/psymate-web/pull/69",
+  "branch": "claude/ux-g2a-public-auth-fixes",
+  "checkout": "agent-a31290c123fd49dc3"
+}

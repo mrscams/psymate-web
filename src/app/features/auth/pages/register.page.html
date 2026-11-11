@@ -237,15 +237,27 @@
           </div>
           <pm-field-errors [control]="form.controls.address" [id]="fieldId('address') + '-error'" />
         </div>
+        <!-- Nom accessible = libellé seul, la parenthèse en description (UX-G2a). -->
         <label class="check">
           <input
             [id]="fieldId('remoteOnly')"
             type="checkbox"
             formControlName="remoteOnly"
+            [attr.aria-labelledby]="fieldId('remoteOnly') + '-label'"
+            [attr.aria-describedby]="fieldId('remoteOnly') + '-desc'"
             (change)="toggleRemoteOnly()"
           />
-          <span i18n="Case exercice en visio uniquement@@auth.register.remoteOnly"
-            >J'exerce uniquement en visioconsultation (pas d'adresse de cabinet)</span
+          <span class="check-text"
+            ><span
+              [id]="fieldId('remoteOnly') + '-label'"
+              i18n="Case exercice en visio uniquement@@auth.register.remoteOnly.label"
+              >J'exerce uniquement en visioconsultation</span
+            ><span
+              [id]="fieldId('remoteOnly') + '-desc'"
+              i18n="Précision de la case visio uniquement@@auth.register.remoteOnly.desc"
+            >
+              (pas d'adresse de cabinet)</span
+            ></span
           >
         </label>
 
@@ -339,28 +351,42 @@
         >
           Consentements
         </h2>
-        <label class="check">
+        <!-- UX-G2a : les liens restent hors de tout <label> (un lien dans un label englobant prend
+             le texte de toute la phrase comme nom). Nom accessible de la case = la première phrase
+             (aria-labelledby), la seconde en description. Chaque fragment de texte est un
+             <label for> : un clic sur la phrase coche la case, comme avant. -->
+        <div class="check">
           <input
             [id]="fieldId('terms')"
             type="checkbox"
             formControlName="terms"
             required
             [attr.aria-invalid]="isInvalid(form.controls.terms)"
-            [attr.aria-describedby]="fieldId('terms') + '-error'"
+            [attr.aria-labelledby]="fieldId('terms') + '-label'"
+            [attr.aria-describedby]="fieldId('terms') + '-desc ' + fieldId('terms') + '-error'"
           />
           <!-- Liens dans la phrase, ouverts dans un nouvel onglet : la saisie reste en place. -->
-          <span
-            i18n="Case CGU et confidentialité, avec responsable du traitement@@auth.register.terms"
+          <span class="check-text"
+            ><span
+              [id]="fieldId('terms') + '-label'"
+              i18n="Case CGU et confidentialité, première phrase@@auth.register.terms.accept"
+              ><label [for]="fieldId('terms')">J'accepte les </label
+              ><a [routerLink]="legalPath" target="_blank" rel="noopener"
+                >conditions d'utilisation</a
+              ><label [for]="fieldId('terms')"> et j'ai lu la </label
+              ><a [routerLink]="privacyPath" target="_blank" rel="noopener"
+                >politique de confidentialité</a
+              ><label [for]="fieldId('terms')">.</label></span
+            ><label
+              [for]="fieldId('terms')"
+              [id]="fieldId('terms') + '-desc'"
+              i18n="Case CGU, responsable du traitement@@auth.register.terms.responsibility"
+            >
+              Je comprends que je suis responsable du traitement des données de mes patients et que
+              PsyMate en est l'hébergeur.</label
+            ></span
           >
-            J'accepte les
-            <a [routerLink]="legalPath" target="_blank" rel="noopener">conditions d'utilisation</a>
-            et j'ai lu la
-            <a [routerLink]="privacyPath" target="_blank" rel="noopener"
-              >politique de confidentialité</a
-            >. Je comprends que je suis responsable du traitement des données de mes patients et que
-            PsyMate en est l'hébergeur.
-          </span>
-        </label>
+        </div>
         @if (isInvalid(form.controls.terms) && !form.controls.terms.hasError('server')) {
           <p class="field-error" [id]="fieldId('terms') + '-error'">{{ termsMessage }}</p>
         } @else {

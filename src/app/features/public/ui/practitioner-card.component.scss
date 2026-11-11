@@ -47,7 +47,8 @@
   font: 600 16px/1.4 var(--font-ui);
 }
 
-// Lien du nom étendu à toute la carte (fiche 08 : clic sur la fiche résumée entière).
+// Lien du nom étendu à toute la carte (fiche 08 : clic sur la fiche résumée entière). Le lien
+// lui-même porte .pm-link-target (UX-G2a) : 24 px de haut sans bouger la ligne (21 px avant).
 .name-link {
   color: var(--text-primary);
   text-decoration: none;

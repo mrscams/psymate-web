@@ -85,6 +85,47 @@ describe('RegisterPage', () => {
     expect(el.querySelector('.register')?.lastElementChild).toBe(side);
   });
 
+  it('UX-G2a · cases visio et consentements : nom court, précision en description, liens hors label', async () => {
+    const { el } = await render(vi.fn());
+    const text = (id: string) =>
+      el.querySelector(`#${id}`)?.textContent?.replace(/\s+/g, ' ').trim();
+
+    const remote = el.querySelector<HTMLInputElement>('#field-remoteOnly')!;
+    expect(text(remote.getAttribute('aria-labelledby')!)).toBe(
+      "J'exerce uniquement en visioconsultation",
+    );
+    expect(text(remote.getAttribute('aria-describedby')!)).toBe("(pas d'adresse de cabinet)");
+
+    const terms = el.querySelector<HTMLInputElement>('#field-terms')!;
+    expect(text(terms.getAttribute('aria-labelledby')!)).toBe(
+      "J'accepte les conditions d'utilisation et j'ai lu la politique de confidentialité.",
+    );
+    const [desc, error] = terms.getAttribute('aria-describedby')!.split(' ');
+    expect(text(desc)).toMatch(/^Je comprends que je suis responsable du traitement/);
+    expect(error).toBe('field-terms-error');
+    // Texte visible inchangé, une seule phrase continue.
+    expect(
+      el.querySelector('.consents .check-text')?.textContent?.replace(/\s+/g, ' ').trim(),
+    ).toBe(
+      "J'accepte les conditions d'utilisation et j'ai lu la politique de confidentialité. " +
+        "Je comprends que je suis responsable du traitement des données de mes patients et que PsyMate en est l'hébergeur.",
+    );
+    expect(el.querySelector('.check-text')?.textContent?.replace(/\s+/g, ' ').trim()).toBe(
+      "J'exerce uniquement en visioconsultation (pas d'adresse de cabinet)",
+    );
+    // Aucun lien dans un <label> ; chaque fragment de la phrase coche la case.
+    expect(el.querySelectorAll('label a')).toHaveLength(0);
+    const fragments = el.querySelectorAll<HTMLLabelElement>('.consents label');
+    expect(fragments.length).toBeGreaterThan(1);
+    for (const label of fragments) expect(label.htmlFor).toBe('field-terms');
+    // Aucun label englobant de plus de 60 caractères (règle de la sonde de l'audit).
+    for (const label of el.querySelectorAll('label')) {
+      if (label.querySelector('input:not([aria-labelledby])')) {
+        expect(label.textContent!.replace(/\s+/g, ' ').trim().length).toBeLessThanOrEqual(60);
+      }
+    }
+  });
+
   it('formulaire vide : rien n’est envoyé, résumé des erreurs en tête', async () => {
     const register = vi.fn();
     const { fixture, el } = await render(register);

@@ -9,16 +9,25 @@ import { shoot } from '../support/captures';
 // le nombre de fiches publiées ; la fiche publique s'ignore si l'annuaire est vide (seed small sans
 // administrateur).
 
-/** Hauteur de la page ramenée à 10 fiches (critère UX-D6), à partir des fiches affichées. */
+/**
+ * Hauteur de la page ramenée à 10 fiches (critère UX-D6), à partir des fiches affichées. Avec 10
+ * fiches ou plus, mesure exacte : on retire la place des fiches au-delà de la dixième. Avant UX-G2a,
+ * le pas entre les deux premières fiches servait pour toutes : le résultat dépendait de l'ordre des
+ * fiches (une fiche courte publiée par un autre e2e en tête donnait 2 453 px au lieu de 2 273).
+ * Sous 10 fiches, extrapolation par le plus grand pas observé (hypothèse la plus défavorable).
+ */
 async function heightForTenCards(page: Page): Promise<number | null> {
   return page.evaluate(() => {
-    const cards = [...document.querySelectorAll('pm-practitioner-card')];
+    const cards = [...document.querySelectorAll('pm-practitioner-card')].map((card) =>
+      card.getBoundingClientRect(),
+    );
     if (cards.length < 2) return null;
-    const first = cards[0].getBoundingClientRect();
-    const second = cards[1].getBoundingClientRect();
-    const stride = second.top - first.top;
     const total = document.documentElement.scrollHeight;
-    return Math.round(total - (cards.length - 10) * stride);
+    if (cards.length >= 10) {
+      return Math.round(total - (cards[cards.length - 1].bottom - cards[9].bottom));
+    }
+    const stride = Math.max(...cards.slice(1).map((card, i) => card.top - cards[i].top));
+    return Math.round(total + (10 - cards.length) * stride);
   });
 }
 

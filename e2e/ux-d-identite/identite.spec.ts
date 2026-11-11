@@ -151,6 +151,69 @@ test.describe('1440 px', () => {
     expect(height, 'hauteur de /inscription à 1440 px').toBeLessThanOrEqual(1800);
   });
 
+  test('UX-G2a inscription : 0 nom accessible pollué (libellé seul, précision en description)', async ({
+    page,
+  }) => {
+    await page.goto('/fr/inscription');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+
+    // Même règle que la sonde de l'audit (bilan UX-G1, écran 12) : un contrôle nommé par un label
+    // englobant dont le texte dépasse 60 caractères ou avale ses options / boutons est pollué. Un
+    // lien placé dans un label englobant y est compté (la sonde lui prête le texte du label).
+    const polluted = await page.evaluate(() => {
+      const selector =
+        'a[href], button, input:not([type="hidden"]), select, textarea, summary, [role=button], [role=link], [role=checkbox], [tabindex]:not([tabindex="-1"])';
+      const out: string[] = [];
+      for (const el of document.querySelectorAll<HTMLElement>(selector)) {
+        if (el.getBoundingClientRect().width === 0) continue;
+        if (el.getAttribute('aria-label')?.trim() || el.getAttribute('aria-labelledby')) continue;
+        if (el.id && document.querySelector(`label[for="${CSS.escape(el.id)}"]`)) continue;
+        const wrap = el.closest('label');
+        if (!wrap) continue;
+        const name = wrap.innerText.trim().replace(/\s+/g, ' ');
+        const options = [...wrap.querySelectorAll('option, button')]
+          .map((o) => o.textContent?.trim() ?? '')
+          .filter(Boolean);
+        const swallows = options.length > 1 && options.every((o) => name.includes(o));
+        if (swallows || name.length > 60) out.push(`${el.tagName} ${el.id}: ${name.slice(0, 70)}`);
+      }
+      return out;
+    });
+    expect(polluted).toEqual([]);
+
+    const remote = page.locator('#field-remoteOnly');
+    await expect(remote).toHaveAccessibleName("J'exerce uniquement en visioconsultation");
+    await expect(remote).toHaveAccessibleDescription("(pas d'adresse de cabinet)");
+    const terms = page.locator('#field-terms');
+    await expect(terms).toHaveAccessibleName(
+      "J'accepte les conditions d'utilisation et j'ai lu la politique de confidentialité.",
+    );
+    await expect(terms).toHaveAccessibleDescription(
+      /^Je comprends que je suis responsable du traitement des données de mes patients et que PsyMate en est l'hébergeur\.$/,
+    );
+    const consents = page.locator('.consents');
+    await expect(
+      consents.getByRole('link', { name: "conditions d'utilisation", exact: true }),
+    ).toBeVisible();
+    await expect(
+      consents.getByRole('link', { name: 'politique de confidentialité', exact: true }),
+    ).toBeVisible();
+    // Texte visible inchangé ; un clic sur la phrase (hors liens) coche toujours la case.
+    await expect(consents.locator('.check-text')).toHaveText(
+      "J'accepte les conditions d'utilisation et j'ai lu la politique de confidentialité. Je comprends que je suis responsable du traitement des données de mes patients et que PsyMate en est l'hébergeur.",
+    );
+    await expect(page.locator('label.check .check-text')).toHaveText(
+      "J'exerce uniquement en visioconsultation (pas d'adresse de cabinet)",
+    );
+    await consents.getByText('Je comprends que je suis responsable').click();
+    await expect(terms).toBeChecked();
+    await consents.getByText("J'accepte les", { exact: true }).click();
+    await expect(terms).not.toBeChecked();
+    await page.getByText("(pas d'adresse de cabinet)").click();
+    await expect(remote).toBeChecked();
+    await expectNoAxeViolations(page);
+  });
+
   test('UX-D5 compte suspendu : deux colonnes (identité, export, recours), hauteur ≤ 1 200 px', async ({
     page,
   }) => {

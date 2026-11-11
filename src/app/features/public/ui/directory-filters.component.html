@@ -33,18 +33,22 @@
           }
         </div>
       }
-      <button
-        type="button"
-        class="more-toggle pm-link-target"
-        [attr.aria-expanded]="open"
-        [attr.aria-controls]="open ? idPrefix + '-' + group.filter : null"
-        (click)="toggleMore(group.filter)"
-      >
-        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" [class.open]="open">
-          <path d="M4 6l4 4 4-4" />
-        </svg>
-        {{ moreLabel(group) }}
-      </button>
+      <!-- Rangée du bouton : l'écart avec la dernière case vit ici (UX-G2a), pas sur le bouton,
+           dont .pm-link-target impose les marges verticales. -->
+      <div class="more-row">
+        <button
+          type="button"
+          class="more-toggle pm-link-target"
+          [attr.aria-expanded]="open"
+          [attr.aria-controls]="open ? idPrefix + '-' + group.filter : null"
+          (click)="toggleMore(group.filter)"
+        >
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" [class.open]="open">
+            <path d="M4 6l4 4 4-4" />
+          </svg>
+          {{ moreLabel(group) }}
+        </button>
+      </div>
     }
   </fieldset>
 }
