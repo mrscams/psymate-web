@@ -14,6 +14,7 @@ import { Loadable, StateKind } from '../../../shared/util';
 import { ENTRY_QUERY_PARAM } from '../../entries';
 import {
   blockState,
+  followedSinceOf,
   GRAPH_ROOT_PARAM,
   isBriefEmpty,
   isFeelingsEmpty,
@@ -24,19 +25,21 @@ import {
   isSituationsEmpty,
   isTodoEmpty,
   OverviewView,
+  OverviewWindow,
   RecentSession,
   TIMELINE_PARAMS,
 } from '../data/overview.model';
 import { OverviewBlockComponent } from './overview-block.component';
 import { OverviewFeelingsComponent } from './overview-feelings.component';
 import {
+  emphasize,
   flagLabel,
   formatDay,
   formatIntensity,
   modalityLabel,
   sessionHeading,
-  windowLongLabel,
 } from './overview-labels';
+import { OverviewWindowComponent } from './overview-window.component';
 
 /** Les blocs de la vue simple, chacun avec ses trois états. */
 export type SimpleBlock =
@@ -65,7 +68,13 @@ const EMPTY: Record<SimpleBlock, (view: OverviewView) => boolean> = {
  */
 @Component({
   selector: 'pm-overview-simple',
-  imports: [EntryIconComponent, OverviewBlockComponent, OverviewFeelingsComponent, RouterLink],
+  imports: [
+    EntryIconComponent,
+    OverviewBlockComponent,
+    OverviewFeelingsComponent,
+    OverviewWindowComponent,
+    RouterLink,
+  ],
   templateUrl: './overview-simple.component.html',
   styleUrl: './overview-simple.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -76,6 +85,9 @@ export class OverviewSimpleComponent {
   readonly patientId = input.required<string>();
   /** Relecture en cours, le contenu précédent reste affiché. */
   readonly refreshing = input(false);
+  /** Fenêtre choisie (préférence overview.window) : sélecteur dans la carte des ressentis. */
+  readonly window = input.required<OverviewWindow>();
+  readonly windowChange = output<OverviewWindow>();
   /** « Réessayer » d'un bloc en erreur. */
   readonly retry = output<void>();
   /** Clic sur un point du graphe : l'entrée du ressenti. */
@@ -85,11 +97,15 @@ export class OverviewSimpleComponent {
 
   protected readonly view = computed(() => this.overview().data);
 
-  protected readonly feelingsHeading = computed(() => {
-    const window = this.view()?.window;
-    return window
-      ? $localize`:Titre du bloc des ressentis de la vue simple@@overview.simple.feelings.heading:Comment évoluent les ressentis · ${windowLongLabel(window)}:period:`
-      : $localize`:Titre du bloc des ressentis de la vue simple, sans fenêtre@@overview.simple.feelings.headingShort:Comment évoluent les ressentis`;
+  /** Phrases « En bref » du serveur, découpées pour mettre leurs faits en gras (texte inchangé). */
+  protected readonly brief = computed(
+    () => this.view()?.narrative.sentences.map((sentence) => emphasize(sentence)) ?? [],
+  );
+
+  /** Début du suivi : la fiche, sinon la première séance connue (UX-B5). */
+  protected readonly followedSince = computed(() => {
+    const view = this.view();
+    return view ? followedSinceOf(view) : null;
   });
 
   /**

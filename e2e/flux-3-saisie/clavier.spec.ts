@@ -102,7 +102,8 @@ test('flux 3 au clavier : démarrer, /res anxiété 8, Tab + Espace dans le rail
   const recent = page
     .locator('pm-overview-block section')
     .filter({ has: page.getByRole('heading', { level: 3, name: 'Activité récente' }) });
-  await expect(recent.getByText('Ressenti', { exact: true })).toBeVisible();
+  // Ressenti sans titre : nommé par son émotion et son intensité (titre de repli, UX-A5, UX-B4).
+  await expect(recent.getByRole('link', { name: /^Anxiété 8\/10/ })).toBeVisible();
 
   // Ctrl+S : brouillon, à compléter après la séance.
   await page.keyboard.type('note à compléter après la séance');

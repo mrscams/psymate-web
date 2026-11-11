@@ -2,7 +2,6 @@
 // locale de l'interface, UTC en transit). Les codes viennent du contrat.
 import { ApiProblem } from '../../../core/http';
 import {
-  EmotionFamily,
   FlagKind,
   OverviewFeelings,
   OverviewTrend,
@@ -71,29 +70,6 @@ export function modalityLabel(modality: SessionModality): string {
   }
 }
 
-export function familyLabel(family: EmotionFamily | null): string {
-  switch (family) {
-    case 'joy':
-      return $localize`:Famille d'émotions@@overview.family.joy:Joie`;
-    case 'trust':
-      return $localize`:Famille d'émotions@@overview.family.trust:Confiance`;
-    case 'fear':
-      return $localize`:Famille d'émotions@@overview.family.fear:Peur`;
-    case 'surprise':
-      return $localize`:Famille d'émotions@@overview.family.surprise:Surprise`;
-    case 'sadness':
-      return $localize`:Famille d'émotions@@overview.family.sadness:Tristesse`;
-    case 'disgust':
-      return $localize`:Famille d'émotions@@overview.family.disgust:Dégoût`;
-    case 'anger':
-      return $localize`:Famille d'émotions@@overview.family.anger:Colère`;
-    case 'anticipation':
-      return $localize`:Famille d'émotions@@overview.family.anticipation:Anticipation`;
-    default:
-      return $localize`:Famille d'émotions inconnue@@overview.family.unknown:Autre`;
-  }
-}
-
 /** « 4,5 » : une décimale, séparateur de la locale. */
 export function formatIntensity(value: number, locale: string): string {
   return new Intl.NumberFormat(locale, {
@@ -114,15 +90,18 @@ export function formatDay(value: string, locale: string): string {
   }).format(date);
 }
 
-/** Date-heure ISO → « samedi 17 octobre 2026 » dans le fuseau du praticien. */
-export function formatLongDay(value: string, locale: string): string {
+/**
+ * Date-heure ISO → « samedi 17 octobre » dans le fuseau du praticien, l'année seulement si ce
+ * n'est pas l'année en cours (maquettes 02 et 02b).
+ */
+export function formatLongDay(value: string, locale: string, now: Date = new Date()): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   return new Intl.DateTimeFormat(locale, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
-    year: 'numeric',
+    year: date.getFullYear() === now.getFullYear() ? undefined : 'numeric',
   }).format(date);
 }
 
@@ -235,6 +214,124 @@ export function feelingsSummary(feelings: OverviewFeelings, window: OverviewWind
   const separator = $localize`:Séparateur entre deux émotions de la description du graphe@@overview.simple.feelings.summary.separator: ; `;
   const details = parts.join(separator);
   return $localize`:Description du graphe des ressentis@@overview.simple.feelings.summary:Ressentis notés sur ${period}:period:, une valeur par point : ${details}:details:. ${counts}:counts:`;
+}
+
+const MINUTE_MS = 60_000;
+const DAY_MS = 86_400_000;
+
+function startOfLocalDay(date: Date): number {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+}
+
+/**
+ * Moment de saisie d'une entrée récente (Activité récente, maquette 02) : « maintenant »,
+ * « il y a 6 min », « il y a 3 h » le jour même, « hier », « il y a 4 j » dans la semaine, puis la
+ * date courte « 12 sept. » (l'année seulement si ce n'est pas l'année en cours). Intl, locale de
+ * l'interface, fuseau du navigateur.
+ */
+export function formatRecorded(value: string, locale: string, now: Date = new Date()): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  const relative = new Intl.RelativeTimeFormat(locale, { numeric: 'auto', style: 'short' });
+  const days = Math.round((startOfLocalDay(date) - startOfLocalDay(now)) / DAY_MS);
+  if (days === 0) {
+    const minutes = Math.max(0, Math.floor((now.getTime() - date.getTime()) / MINUTE_MS));
+    if (minutes < 1) return relative.format(0, 'second');
+    if (minutes < 60) return relative.format(-minutes, 'minute');
+    return relative.format(-Math.floor(minutes / 60), 'hour');
+  }
+  if (days < 0 && days >= -6) return relative.format(days, 'day');
+  return new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    month: 'short',
+    year: date.getFullYear() === now.getFullYear() ? undefined : 'numeric',
+  }).format(date);
+}
+
+/**
+ * Ancienneté d'une situation (« 7 mois », « 6 sem. », « 3 ans », « 5 j ») : unités courtes Intl,
+ * comme la maquette 02 ; la date exacte reste dans le libellé accessible.
+ */
+export function formatElapsed(since: string, locale: string, now: Date = new Date()): string {
+  const start = new Date(since.length === 10 ? `${since}T00:00:00Z` : since);
+  if (Number.isNaN(start.getTime())) return '';
+  const days = Math.max(0, Math.floor((now.getTime() - start.getTime()) / DAY_MS));
+  // Jours et semaines en abrégé (« 5 j », « 6 sem. ») ; mois et années en toutes lettres, déjà
+  // courts (« 7 mois » : l'abrégé Intl français donne « 7 m. »).
+  const unit = (value: number, name: 'day' | 'week' | 'month' | 'year') =>
+    new Intl.NumberFormat(locale, {
+      style: 'unit',
+      unit: name,
+      unitDisplay: name === 'day' || name === 'week' ? 'short' : 'long',
+    }).format(value);
+  if (days < 14) return unit(days, 'day');
+  if (days < 60) return unit(Math.floor(days / 7), 'week');
+  const months = Math.floor(days / 30.44);
+  if (months < 12) return unit(months, 'month');
+  return unit(Math.floor(months / 12), 'year');
+}
+
+/** Un morceau d'une phrase du serveur : en gras s'il porte un fait (date, chiffre, citation). */
+export interface Emphasis {
+  text: string;
+  strong: boolean;
+}
+
+const MONTHS =
+  'janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre|' +
+  'janv\\.|févr\\.|avr\\.|juil\\.|sept\\.|oct\\.|nov\\.|déc\\.|' +
+  'January|February|March|April|May|June|July|August|September|October|November|December|' +
+  'Jan\\.|Feb\\.|Mar\\.|Apr\\.|Aug\\.|Sept?\\.|Oct\\.|Nov\\.|Dec\\.';
+
+/**
+ * Faits d'une phrase : dates (« 12 mars 2025 », « March 12, 2025 »), citations (« … », “…”) et
+ * nombres avec leur unité courte (« 4,5 », « 8/10 », « 31 »). Jamais à l'intérieur d'un mot.
+ */
+const FACTS = new RegExp(
+  [
+    `\\d{1,2}(?:er)?\\s(?:${MONTHS})(?:\\s\\d{4})?`,
+    `(?:${MONTHS})\\s\\d{1,2}(?:,\\s\\d{4})?`,
+    '«[^»]+»',
+    '“[^”]+”',
+    '(?<![\\p{L}\\d])\\d+(?:[.,]\\d+)?(?:\\s?/\\s?10)?(?![\\p{L}\\d])',
+  ].join('|'),
+  'gu',
+);
+
+/**
+ * « En bref » (UX-B5, maquette 02b) : les phrases du serveur restent mot pour mot ; seuls leurs
+ * faits (dates, chiffres, citations) sont mis en gras, comme la maquette. Aucun texte ajouté.
+ */
+export function emphasize(sentence: string): Emphasis[] {
+  const parts: Emphasis[] = [];
+  let last = 0;
+  for (const match of sentence.matchAll(FACTS)) {
+    const start = match.index ?? 0;
+    if (start > last) parts.push({ text: sentence.slice(last, start), strong: false });
+    parts.push({ text: match[0], strong: true });
+    last = start + match[0].length;
+  }
+  if (last < sentence.length) parts.push({ text: sentence.slice(last), strong: false });
+  return parts;
+}
+
+/**
+ * Valeurs d'une série de ressentis pour la phrase-titre du graphe (UX-B5) : « 4/10 → 8/10 » du
+ * premier au dernier ressenti, « 3–5/10 » pour une fourchette, « 6/10 » pour une seule valeur.
+ * Des valeurs, aucune interprétation.
+ */
+export function intensityPath(values: readonly number[]): string {
+  if (!values.length) return '';
+  const first = values[0];
+  const last = values[values.length - 1];
+  return values.length === 1 || first === last ? `${last}/10` : `${first}/10 → ${last}/10`;
+}
+
+export function intensitySpan(values: readonly number[]): string {
+  if (!values.length) return '';
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  return min === max ? `${min}/10` : `${min}–${max}/10`;
 }
 
 /**

@@ -2,9 +2,10 @@ import { TIMELINE_FOCUS_PARAM } from '../../timeline';
 import { emptyOverview, overviewView } from './overview.fixtures';
 import { failed, idle, loaded, loading } from '../../../shared/util';
 import {
+  averageRange,
   blockState,
+  followedSinceOf,
   isActivityEmpty,
-  isAttentionEmpty,
   isBriefEmpty,
   isEmotionsEmpty,
   isFeelingsEmpty,
@@ -15,32 +16,44 @@ import {
   isSituationsEmpty,
   isTodoEmpty,
   isTrendEmpty,
-  lastWeekAverage,
   TIMELINE_PARAMS,
+  trendDirection,
+  windowAverage,
 } from './overview.model';
 
 describe('overview.model', () => {
-  it('lastWeekAverage : le dernier point (aujourd’hui) seulement, null s’il n’a pas de moyenne', () => {
-    expect(lastWeekAverage([])).toBeNull();
-    expect(
-      lastWeekAverage([
-        { date: '2026-11-06', average: 4.5 },
-        { date: '2026-11-07', average: null },
-      ]),
-    ).toBeNull();
-    expect(
-      lastWeekAverage([
-        { date: '2026-11-06', average: null },
-        { date: '2026-11-07', average: 3.25 },
-      ]),
-    ).toBe(3.25);
+  it('windowAverage : moyenne des ressentis renvoyés pour la fenêtre, null sans ressenti', () => {
+    expect(windowAverage([])).toBeNull();
+    // Fixture : anxiété 8 et joie 4 sur 90 jours.
+    expect(windowAverage(overviewView().feelings.points)).toBe(6);
+  });
+
+  it('averageRange / trendDirection : première et dernière moyenne du serveur, seuil d’un demi-point', () => {
+    expect(averageRange([{ date: '2026-11-08', average: null }])).toBeNull();
+    const range = averageRange(overviewView().trend.points)!;
+    expect(range).toEqual({ first: 5.5, last: 7 });
+    expect(trendDirection(range)).toBe('up');
+    expect(trendDirection({ first: 7, last: 5 })).toBe('down');
+    expect(trendDirection({ first: 5, last: 5.4 })).toBe('flat');
+  });
+
+  it('followedSinceOf : la fiche, sauf si une séance connue est plus ancienne (dossier créé après coup)', () => {
+    expect(followedSinceOf(emptyOverview())).toBeNull();
+    // Fiche du 12 mars 2025, séances d'octobre 2026 : la fiche.
+    expect(followedSinceOf(overviewView())).toEqual({ date: '2025-03-12', fromSessions: false });
+    // Dossier créé le 7 nov. 2026 (follow_up.since vide), séances depuis le 10 oct. : la séance.
+    const created = overviewView();
+    created.facts = { ...created.facts, followedSince: '2026-11-07' };
+    expect(followedSinceOf(created)).toEqual({ date: '2026-10-10', fromSessions: true });
+    // Sans début renseigné : la première séance connue.
+    created.facts = { ...created.facts, followedSince: null };
+    expect(followedSinceOf(created)).toEqual({ date: '2026-10-10', fromSessions: true });
   });
 
   it('vides par bloc : un dossier sans données est vide partout', () => {
     const empty = emptyOverview();
     for (const isEmpty of [
       isTrendEmpty,
-      isAttentionEmpty,
       isSituationsEmpty,
       isMedicationsEmpty,
       isSessionsEmpty,
@@ -57,9 +70,9 @@ describe('overview.model', () => {
     }
   });
 
-  it('points d’attention : une séance ouverte suffit', () => {
+  it('à compléter : une séance ouverte suffit', () => {
     expect(
-      isAttentionEmpty(
+      isTodoEmpty(
         emptyOverview({ drafts: { count: 0, openSession: { entryId: 's', startedAt: null } } }),
       ),
     ).toBe(false);

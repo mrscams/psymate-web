@@ -56,11 +56,22 @@ test.describe('vue d’ensemble simple « Récit »', () => {
       'aria-label',
       /Anxiété \(ressentis : 3\) de 3 à 8 sur 10/,
     );
+    // Phrase-titre, légende de quatre éléments au plus, repères de médicament hors légende.
+    await expect(feelings.locator('.headline')).toHaveText(
+      'Anxiété domine : 3/10 → 6/10. Joie : 4/10.',
+    );
     const legend = feelings.getByRole('list', { name: 'Légende' });
-    await expect(legend).toContainText('Anxiété (3 ressentis)');
-    await expect(legend).toContainText('Joie (1 ressenti)');
-    await expect(legend).toContainText('Séance');
-    await expect(legend).toContainText('Début de traitement · Sertraline 50 mg');
+    await expect(legend.getByRole('listitem')).toHaveText([
+      'Anxiété (3 ressentis)',
+      'Joie (1 ressenti)',
+    ]);
+    await expect(feelings.locator('.markers')).toContainText(
+      'Début de traitement · Sertraline 50 mg',
+    );
+    // Le sélecteur de fenêtre est dans la carte de la courbe (maquette 02b).
+    await expect(
+      feelings.getByRole('group', { name: "Période de la vue d'ensemble" }),
+    ).toBeVisible();
 
     // Dernière séance (la plus récente : l'accueil, ouvert à la création), situations, repères.
     await expect(block(page, /^Dernière séance$/)).toContainText('Accueil');
@@ -73,7 +84,19 @@ test.describe('vue d’ensemble simple « Récit »', () => {
     await expect(block(page, /^Depuis la séance du/)).toBeVisible();
     await expect(block(page, 'Traitement')).toContainText('Sertraline 50 mg');
     await expect(block(page, 'Cadre du suivi')).toContainText('séances au total');
-    await expect(block(page, 'À compléter')).toContainText('à clôturer');
+    const todo = block(page, 'À compléter');
+    await expect(todo).toContainText('à clôturer');
+    // « À compléter » sur fond ambre (warning-bg), comme la maquette 02b.
+    expect(await todo.evaluate((section) => getComputedStyle(section).backgroundColor)).toBe(
+      await page.evaluate(() => {
+        const probe = document.createElement('div');
+        probe.style.background = 'var(--warning-bg)';
+        document.body.append(probe);
+        const color = getComputedStyle(probe).backgroundColor;
+        probe.remove();
+        return color;
+      }),
+    );
     // B9 : la place du bloc « Reçu du patient » est réservée, rien n'est dessiné.
     await expect(page.getByText('Reçu du patient')).toHaveCount(0);
     await expectNoAxeViolations(page);
@@ -133,7 +156,7 @@ test.describe('vue d’ensemble simple « Récit »', () => {
     const completeSaved = await toComplete;
     expect(completeSaved.status()).toBe(200);
     expect(completeSaved.request().postDataJSON()).toEqual({ 'overview.view': 'complete' });
-    await expect(block(page, 'Résumé')).toBeVisible();
+    await expect(block(page, 'Faits clés')).toBeVisible();
     await expect(block(page, 'En bref')).toHaveCount(0);
     let stored = await request.get(`${API}/api/me/preferences`);
     expect((await stored.json())['overview.view']).toBe('complete');
@@ -147,7 +170,7 @@ test.describe('vue d’ensemble simple « Récit »', () => {
     await expect(
       feelingsBlock(page).locator('pm-overview-feelings-chart svg').first(),
     ).toBeVisible();
-    await expect(block(page, 'Résumé')).toHaveCount(0);
+    await expect(block(page, 'Faits clés')).toHaveCount(0);
     stored = await request.get(`${API}/api/me/preferences`);
     expect((await stored.json())['overview.view']).toBe('simple');
 
