@@ -35,7 +35,13 @@ test.describe('vue d’ensemble', () => {
     // Ouverture du patient (défaut du compte : vue simple, 90 jours). Mesure à froid : durée de la
     // réponse GET …/overview relue par le navigateur (de l'envoi au premier octet), consignée
     // seulement (premier calcul de la projection) ; le seuil porte sur la médiane à chaud.
-    const opened = page.waitForResponse((r) => isOverview(r, folder.patientId));
+    // Seulement une lecture partie après la navigation : la liste des patients, où arrive la
+    // connexion, lit aussi GET …/overview?window=30d pour chaque ligne (résumé d'activité), et
+    // cette réponse peut arriver après l'inscription de l'attente.
+    const navigatedAt = Date.now();
+    const opened = page.waitForResponse(
+      (r) => isOverview(r, folder.patientId) && r.request().timing().startTime >= navigatedAt,
+    );
     await page.goto(`/fr/patients/${folder.patientId}`);
     const first = await opened;
     expect(first.status()).toBe(200);
@@ -160,7 +166,11 @@ test.describe('vue d’ensemble', () => {
     const other = await browser.newContext();
     const otherPage = await other.newPage();
     await signIn(otherPage, account);
-    const opened = otherPage.waitForResponse((r) => isOverview(r, folder.patientId));
+    // Même filtre qu'au premier test : pas la lecture 30d de la ligne de la liste des patients.
+    const navigatedAt = Date.now();
+    const opened = otherPage.waitForResponse(
+      (r) => isOverview(r, folder.patientId) && r.request().timing().startTime >= navigatedAt,
+    );
     await otherPage.goto(`/fr/patients/${folder.patientId}`);
     expect(overviewWindow(await opened)).toBe('12m');
     await expect(viewToggle(otherPage).getByRole('button', { name: 'Complète' })).toHaveAttribute(

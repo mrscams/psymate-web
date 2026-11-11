@@ -21668,7 +21668,7 @@
         <source>jj/mm/aaaa</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-field.component.ts</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">169</context>
         </context-group>
         <note priority="1" from="description">Format affiché dans un champ date vide</note>
       </trans-unit>
@@ -21676,7 +21676,7 @@
         <source>mm/aaaa</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-field.component.ts</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">193</context>
         </context-group>
         <note priority="1" from="description">Format affiché dans un champ mois vide</note>
       </trans-unit>
