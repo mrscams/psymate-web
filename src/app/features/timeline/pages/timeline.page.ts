@@ -72,6 +72,9 @@ import { TimelineSessionsComponent } from '../ui/timeline-sessions.component';
 /** Délai minimal entre deux crans de zoom à la molette (un geste = un cran). */
 const WHEEL_STEP_MS = 180;
 
+/** Durée pendant laquelle la position rangée est tenue au retour sur l'onglet. */
+const RESTORE_HOLD_MS = 3000;
+
 /**
  * Onglet 2 du dossier, /patients/:id/timeline (fiche 03 ; B4 écran 3). Barre d'outils (filtres,
  * Chronologique | Par séance, zoom) parcourue aux flèches. Mode chronologique (état A) : axe
@@ -284,6 +287,8 @@ export class TimelinePage {
   /** Position rangée au départ précédent (px), null sans reprise. */
   private restoreOffset: number | null = null;
   private lastOffset = 0;
+  /** Position rangée tenue au retour sur l'onglet, jusqu'au premier geste ou à l'échéance. */
+  private restoreTarget: { offset: number; until: number } | null = null;
 
   constructor() {
     // Le patient du dossier (en-tête) : la chronologie se charge, ou reprend l'état rangé.
@@ -387,18 +392,42 @@ export class TimelinePage {
       this.restored = true;
       const anchor = untracked(() => this.store.anchor());
       const offset = this.restoreOffset;
-      if (anchor > 0 || offset)
-        afterNextRender(() => this.scrollTo(viewport, anchor, offset), { injector: this.injector });
+      if (anchor > 0 || offset) {
+        const target = offset ?? anchor * untracked(() => this.rowHeight());
+        // La position est tenue jusqu'au premier geste du praticien (ou 3 s) : une relecture des
+        // fenêtres, un redimensionnement ou un viewport recréé pendant le retour ne la déplacent pas.
+        this.restoreTarget = { offset: target, until: Date.now() + RESTORE_HOLD_MS };
+        afterNextRender(() => this.holdRestore(viewport), { injector: this.injector });
+      }
     });
 
     // Position exacte, suivie au défilement, pour la reprendre au pixel près au retour sur l'onglet.
     effect((onCleanup) => {
       const viewport = this.viewport();
       if (!viewport) return;
-      const subscription = viewport
-        .elementScrolled()
-        .subscribe(() => (this.lastOffset = viewport.measureScrollOffset('top')));
-      onCleanup(() => subscription.unsubscribe());
+      // Un viewport recréé pendant le retour (état de chargement intermédiaire) reprend la position.
+      if (this.restoreTarget)
+        untracked(() =>
+          afterNextRender(() => this.holdRestore(viewport), { injector: this.injector }),
+        );
+      const element = viewport.elementRef.nativeElement;
+      const release = () => (this.restoreTarget = null);
+      const events = ['wheel', 'pointerdown', 'keydown', 'touchstart'] as const;
+      for (const name of events) element.addEventListener(name, release, { passive: true });
+      const subscription = viewport.elementScrolled().subscribe(() => {
+        const hold = this.restoreTarget;
+        const top = viewport.measureScrollOffset('top');
+        if (hold && Date.now() < hold.until && Math.abs(top - hold.offset) > 1) {
+          // Déplacement qui ne vient pas du praticien : la position rangée est remise.
+          viewport.scrollToOffset(hold.offset);
+          return;
+        }
+        this.lastOffset = top;
+      });
+      onCleanup(() => {
+        subscription.unsubscribe();
+        for (const name of events) element.removeEventListener(name, release);
+      });
     });
 
     // ?focus=<id> : la timeline lit ses fenêtres jusqu'à l'entrée, la met en haut de l'écran,
@@ -473,6 +502,7 @@ export class TimelinePage {
   private focusing: string | null = null;
 
   private async focusEntry(id: string, viewport: CdkVirtualScrollViewport): Promise<void> {
+    this.restoreTarget = null;
     if (this.focusing === id) return;
     this.focusing = id;
     this.restored = true;
@@ -598,6 +628,7 @@ export class TimelinePage {
     next: TimelineFilters,
     origin: 'user' | 'drill' | 'back' = 'user',
   ): boolean {
+    this.restoreTarget = null;
     const current = this.filters.filters();
     if (sameFilters(next, current)) return false;
     const periodChanged = next.from !== current.from || next.to !== current.to;
@@ -681,6 +712,24 @@ export class TimelinePage {
    * Amène le créneau `slot` en haut de l'écran. La hauteur totale du défilement n'est connue du CDK
    * qu'une trame après le rendu : on réessaie quelques trames tant que la position n'est pas atteinte.
    */
+  /**
+   * Remet la position rangée tant qu'elle est tenue : quelques trames au plus, jusqu'à ce que le
+   * CDK connaisse la hauteur totale et que la position soit stable sur trois trames.
+   */
+  private holdRestore(viewport: CdkVirtualScrollViewport, attempts = 40, stable = 0): void {
+    const hold = this.restoreTarget;
+    if (!hold || Date.now() > hold.until) return;
+    viewport.checkViewportSize();
+    if (Math.abs(viewport.measureScrollOffset('top') - hold.offset) > 1) {
+      viewport.scrollToOffset(hold.offset);
+      stable = 0;
+    } else {
+      stable++;
+    }
+    if (stable < 3 && attempts > 0)
+      requestAnimationFrame(() => this.holdRestore(viewport, attempts - 1, stable));
+  }
+
   private scrollTo(
     viewport: CdkVirtualScrollViewport,
     slot: number,
@@ -705,6 +754,7 @@ export class TimelinePage {
 
   /** `+` / `-` / boutons / Ctrl+molette : la granularité change, le haut de l'écran reste en place. */
   protected zoom(direction: 'in' | 'out'): void {
+    this.restoreTarget = null;
     if (this.mode() !== 'chronological') return;
     if (this.decade()) {
       // + depuis l'agrégat : le détail au zoom « Mois » ; − n'a plus de cran.
