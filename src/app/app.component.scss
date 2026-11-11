@@ -9,3 +9,10 @@
   margin: 0 auto;
   padding: 24px;
 }
+
+/* Sous 600 px (UX-A1) : marges latérales réduites pour que le contenu tienne en 375 px. */
+@media (max-width: 600px) {
+  .app-main {
+    padding: 16px;
+  }
+}

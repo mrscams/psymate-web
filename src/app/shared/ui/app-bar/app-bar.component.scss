@@ -126,11 +126,29 @@
   cursor: pointer;
 }
 
+.brand,
+.locale,
+.avatar {
+  flex-shrink: 0;
+}
+
+/* Sous 600 px (UX-A1) : marque, langue et avatar sur la première ligne, recherche en pleine
+   largeur sur la seconde ; rien ne dépasse la largeur de l'écran. */
 @media (max-width: 600px) {
+  .app-bar {
+    flex-wrap: wrap;
+    row-gap: 8px;
+    height: auto;
+    min-height: 48px;
+    padding: 8px 16px;
+  }
   .section {
     display: none;
   }
   .search {
-    width: 160px;
+    order: 1;
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
   }
 }

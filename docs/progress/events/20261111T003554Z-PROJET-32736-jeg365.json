@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-11T00:35:54.550Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-A1 : barre, en-tête patient et navigation Mon compte sans débordement à 375 px ; e2e mobile-375 (4 routes, axe 0) et contrôle à 1440.",
+  "notes": "progress.mjs refuse les ID UX-xx : enregistré sous PROJET comme UX-A5 et UX-A6.",
+  "next": "Relecture et fusion par la session principale ; captures dans le dossier de notes ux-a1-captures.",
+  "pr": "48",
+  "branch": "claude/ux-a1-mobile-375-75b310",
+  "checkout": "screen-comparison-ux-prompt-7c2e2e"
+}
