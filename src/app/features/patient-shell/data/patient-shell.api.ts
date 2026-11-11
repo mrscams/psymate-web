@@ -23,7 +23,7 @@ import {
 /**
  * Service de données de features/patient-shell (handbook §2, couche 4) : le seul fichier de la
  * feature qui importe le client généré (Patients pour l'en-tête, Séances, Chronologie pour l'indice
- * de première entrée). Traduit les DTO en
+ * de première entrée et le mois de la première séance). Traduit les DTO en
  * modèles de vue ; les erreurs arrivent déjà en ApiProblem (core/http).
  */
 @Injectable({ providedIn: 'root' })
@@ -64,6 +64,20 @@ export class PatientShellApi {
     return (summary.periods ?? []).some((period) =>
       Object.entries(period.counts ?? {}).some(([type, count]) => type !== 'session' && count > 0),
     );
+  }
+
+  /**
+   * Mois (AAAA-MM, UTC) de la plus ancienne séance du dossier, accueil et contacts compris, ou null
+   * s'il n'y en a aucune : GET /api/patients/{id}/timeline/summary par mois, sans fenêtre, privées
+   * comprises (UX-G2c). Sert à ne pas afficher dans l'en-tête un « suivi·e depuis » (follow_up.since
+   * ou, à défaut, création du dossier) que les séances contredisent.
+   */
+  async firstSessionMonth(patientId: string): Promise<string | null> {
+    const summary = await firstValueFrom(
+      this.timeline.getTimelineSummary(patientId, 'month', undefined, undefined, true),
+    );
+    const first = (summary.periods ?? []).find((period) => (period.counts?.['session'] ?? 0) > 0);
+    return first ? monthOf(first) : null;
   }
 
   /** POST /api/patients/{id}/sessions/start → 201, la séance ouverte (409 SESSION_ALREADY_OPEN). */
@@ -108,6 +122,12 @@ function toPatient(dto: PatientDto): ShellPatient {
       .filter((kind): kind is FlagKind => !!kind),
     sessionModality: toModality(dto.followUp?.['modality']),
   };
+}
+
+/** AAAA-MM d'une période mensuelle : le libellé, sinon le début de la période (UTC). */
+function monthOf(period: { period?: string; from?: string }): string | null {
+  const value = period.period ?? period.from ?? '';
+  return /^\d{4}-\d{2}/.test(value) ? value.slice(0, 7) : null;
 }
 
 const SESSION_MODALITIES: readonly SessionModality[] = ['in_person', 'video', 'phone', 'email'];

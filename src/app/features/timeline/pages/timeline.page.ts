@@ -135,6 +135,11 @@ export class TimelinePage {
   protected readonly sessionCount = computed(() => this.groups().filter((g) => g.id).length);
   /** Les filtres sont appliqués : avant, l'URL n'est pas réécrite (elle n'a pas encore été lue). */
   private readonly ready = signal(false);
+  /**
+   * Liste des situations en bande dépliée (état d'écran, UX-G2c) : repliée à l'arrivée sur grand
+   * écran, le nom de chaque situation étant écrit le long de sa bande ; toujours visible sous 600 px.
+   */
+  protected readonly bandsOpen = signal(false);
 
   protected readonly rowHeight = computed(() => ROW_HEIGHT[this.store.zoom()]);
   protected readonly zoomText = computed(() =>
@@ -453,23 +458,54 @@ export class TimelinePage {
     const destroyRef = inject(DestroyRef);
 
     // Haut de l'onglet dans le document (en-tête du dossier au-dessus) : la colonne de la timeline
-    // prend la hauteur restante de la fenêtre. Relu quand la page change de taille.
+    // prend la hauteur restante de la fenêtre. Relu quand la fenêtre change de taille, et quand ce
+    // qui la précède change de hauteur (bandeau, indice de première entrée, ligne de l'en-tête) :
+    // body a une hauteur fixe (100 %), on observe donc les ancêtres et leurs aînés (UX-G2c).
     afterNextRender(() => {
       const host = this.host.nativeElement;
-      const view = host.ownerDocument.defaultView;
+      const doc = host.ownerDocument;
+      const view = doc.defaultView;
       if (!view) return;
       const update = () => {
         const top = Math.round(host.getBoundingClientRect().top + view.scrollY);
-        host.style.setProperty('--timeline-top', `${top}px`);
+        const value = `${top}px`;
+        if (host.style.getPropertyValue('--timeline-top') !== value) {
+          host.style.setProperty('--timeline-top', value);
+        }
       };
       update();
       view.addEventListener('resize', update);
       const observer =
         typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => update());
-      observer?.observe(host.ownerDocument.body);
+      const ancestors: Element[] = [];
+      for (let el = host.parentElement; el && el !== doc.body; el = el.parentElement) {
+        ancestors.push(el);
+      }
+      const watch = () => {
+        for (const el of ancestors) {
+          for (let before = el.previousElementSibling; before;) {
+            observer?.observe(before);
+            before = before.previousElementSibling;
+          }
+        }
+      };
+      observer?.observe(doc.body);
+      watch();
+      // Un bloc inséré au-dessus (indice de première entrée, bandeau) : relu, puis observé.
+      const inserted =
+        typeof MutationObserver === 'undefined'
+          ? null
+          : new MutationObserver(() => {
+              update();
+              watch();
+            });
+      for (const el of ancestors) {
+        if (el.parentElement) inserted?.observe(el.parentElement, { childList: true });
+      }
       destroyRef.onDestroy(() => {
         view.removeEventListener('resize', update);
         observer?.disconnect();
+        inserted?.disconnect();
       });
     });
     for (const [key, handler, label] of [

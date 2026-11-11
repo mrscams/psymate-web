@@ -46,6 +46,11 @@ interface PatientShellState {
   revision: number;
   /** Indice « notez la première entrée » : lu sur le résumé de la chronologie, jamais déduit localement. */
   firstEntry: FirstEntryState;
+  /**
+   * Mois (AAAA-MM) de la plus ancienne séance du dossier, null s'il n'y en a aucune, undefined tant
+   * qu'il n'est pas lu (ou si la lecture a échoué) : borne le « suivi·e depuis » de l'en-tête.
+   */
+  firstSessionMonth: string | null | undefined;
 }
 
 const initialState: PatientShellState = {
@@ -59,6 +64,7 @@ const initialState: PatientShellState = {
   actionProblem: null,
   revision: 0,
   firstEntry: 'unknown',
+  firstSessionMonth: undefined,
 };
 
 /** Séance courante de l'API → (en cours, dernière) ; l'accueil ne compte ni pour l'un ni pour l'autre. */
@@ -82,6 +88,19 @@ export const PatientShellStore = signalStore(
   withState(initialState),
   withComputed((store, prefs = inject(PreferencesStore)) => ({
     busy: computed(() => store.status() === 'saving'),
+    /**
+     * « suivi·e depuis » de l'en-tête (UX-G2c) : followedSince du dossier (follow_up.since, sinon
+     * création), seulement si aucune séance ne le précède d'un mois ou plus. Un dossier créé après
+     * ses séances (reprise d'un suivi) dirait sinon « depuis novembre 2026 » au-dessus d'une page
+     * qui montre des séances de 2025 : la mention est retirée plutôt que contredite. Rien tant que
+     * les séances ne sont pas lues (pas de date que la lecture viendrait démentir).
+     */
+    followedSince: computed(() => {
+      const since = store.patient()?.followedSince ?? null;
+      const first = store.firstSessionMonth();
+      if (!since || first === undefined) return null;
+      return first === null || since.slice(0, 7) <= first ? since : null;
+    }),
     /** Durée proposée à la clôture : préférence sessions.defaultDurationMin (60 par défaut). */
     defaultDurationMin: computed(() => prefs.defaultDurationMin()),
   })),
@@ -114,6 +133,21 @@ export const PatientShellStore = signalStore(
       }
     }
 
+    /**
+     * Mois de la première séance (résumé de la chronologie). Un échec garde la valeur connue :
+     * jamais lue, la mention reste absente ; déjà lue, elle ne change pas.
+     */
+    async function checkFirstSession(): Promise<void> {
+      const id = store.patientId();
+      if (!id) return;
+      try {
+        const month = await api.firstSessionMonth(id);
+        if (store.patientId() === id) patchState(store, { firstSessionMonth: month });
+      } catch {
+        // Pas de date de suivi plutôt qu'une date que les séances pourraient démentir.
+      }
+    }
+
     /** Lance une action de séance ; true si elle a abouti, sinon le problème est dans actionProblem. */
     async function act(action: () => Promise<void>): Promise<boolean> {
       const id = store.patientId();
@@ -122,6 +156,7 @@ export const PatientShellStore = signalStore(
         await action();
         if (store.patientId() === id) {
           patchState(store, { status: 'idle', revision: store.revision() + 1 });
+          void checkFirstSession();
         }
         return true;
       } catch (error) {
@@ -136,7 +171,8 @@ export const PatientShellStore = signalStore(
 
     return {
       /**
-       * GET /api/patients/{id} et GET …/sessions/current en parallèle. Un autre dossier efface tout,
+       * GET /api/patients/{id}, GET …/sessions/current et le résumé mensuel de la chronologie
+       * (mois de la première séance) en parallèle. Un autre dossier efface tout,
        * mémoire des onglets comprise ; le même dossier (Réessayer) garde ce qui est affiché.
        */
       async load(id: string): Promise<void> {
@@ -145,9 +181,16 @@ export const PatientShellStore = signalStore(
         }
         patchState(store, { status: 'loading', problem: null, actionProblem: null });
         try {
-          const [patient, session] = await Promise.all([api.patient(id), api.current(id)]);
+          // Le mois de la première séance est lu avec le dossier : l'en-tête s'affiche une fois,
+          // sans ligne « suivi·e depuis » qui apparaîtrait ou disparaîtrait ensuite (la timeline
+          // mesure sa hauteur sous l'en-tête). Son échec n'empêche pas d'ouvrir le dossier.
+          const [patient, session, firstSessionMonth] = await Promise.all([
+            api.patient(id),
+            api.current(id),
+            api.firstSessionMonth(id).catch(() => store.firstSessionMonth()),
+          ]);
           if (store.patientId() !== id) return;
-          patchState(store, { patient, ...split(session), status: 'idle' });
+          patchState(store, { patient, ...split(session), firstSessionMonth, status: 'idle' });
           if (!session || session.kind === 'intake') void checkFirstEntry();
         } catch (error) {
           if (store.patientId() !== id) return;
@@ -229,6 +272,8 @@ export const PatientShellStore = signalStore(
       noteWrite(): void {
         patchState(store, { revision: store.revision() + 1 });
         if (store.firstEntry() === 'pending') void checkFirstEntry();
+        // Une séance ou un contact saisi à une date passée peut avancer la première séance.
+        void checkFirstSession();
       },
 
       /** Efface le problème de la dernière action (dialogue fermé, nouvelle saisie). */

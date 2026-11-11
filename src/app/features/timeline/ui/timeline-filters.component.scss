@@ -1,10 +1,11 @@
-// Première rangée de la barre d'outils (maquette 03, état A) : « Types F », puces 28 px, puces
-// actives, « Filtres (n) », « Brouillons seulement », sur une ligne qui se replie si besoin.
+// Première rangée de la barre d'outils (maquette 03, état A) : « Types F », puces 26 px en 13 px
+// (maquette), puces actives, « Filtres (n) », « Brouillons seulement », sur une ligne qui ne se
+// replie qu'en dessous de la largeur du dossier, même avec une police de repli plus large (UX-G2c).
 :host {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
 }
 
@@ -12,9 +13,10 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-right: 4px;
+  margin-right: 2px;
   color: var(--text-secondary);
   font: var(--mat-sys-body-medium);
+  font-size: 13px;
 }
 
 kbd {
@@ -30,7 +32,7 @@ kbd {
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
 }
 
@@ -45,14 +47,15 @@ kbd {
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 28px;
-  padding: 0 10px;
+  gap: 5px;
+  height: 26px;
+  padding: 0 8px;
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
   background: var(--surface-raised);
   color: var(--text-primary);
   font: var(--mat-sys-body-medium);
+  font-size: 13px;
   white-space: nowrap;
   cursor: pointer;
 

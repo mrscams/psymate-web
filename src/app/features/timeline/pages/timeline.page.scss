@@ -5,7 +5,7 @@
 .timeline {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 
   // Mode chronologique : la colonne occupe la hauteur restante de la fenêtre (--timeline-top,
   // mesuré par la page), la liste prend ce que laissent la barre d'outils (deux rangées) et la
@@ -13,15 +13,24 @@
   &.fill {
     height: calc(100dvh - var(--timeline-top, 300px) - 8px);
   }
+
+  // Ce qui précède la liste garde sa hauteur : seule la liste se réduit (sinon, à 375 px, la ligne
+  // d'état repliée sur deux lignes passait sous la liste des situations).
+  > .toolbar,
+  > .status-row,
+  > .bands-legend {
+    flex: none;
+  }
 }
 
 // Barre d'outils (maquette 03, état A) : une carte blanche, deux rangées. Rangée 1 : types, filtres
-// actifs, « Filtres (n) », brouillons. Rangée 2 : période, mode (M), zoom à droite.
+// actifs, « Filtres (n) », brouillons. Rangée 2 : période, mode (M), zoom à droite. Marges serrées
+// (UX-G2c) : la zone des cartes garde 480 px à 1440 × 900, cibles de 24 px au moins.
 .toolbar {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 8px 14px;
+  gap: 4px;
+  padding: 4px 12px;
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
   background: var(--surface-raised);
@@ -67,8 +76,8 @@ kbd {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   padding: 0;
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
@@ -128,13 +137,15 @@ kbd {
   white-space: nowrap;
 }
 
-// Ligne d'état (maquette : mono 12 px, sous la barre) et, à droite, les situations en bande.
+// Ligne d'état (maquette : mono 12 px, sous la barre) et, à droite, le bouton qui déplie la liste
+// des situations en bande (UX-G2c) : une seule ligne avant la liste, quel que soit leur nombre.
 .status-row {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: 4px 16px;
+  gap: 0 16px;
+  min-height: 24px;
   padding: 0 4px;
 }
 
@@ -148,14 +159,68 @@ kbd {
   font-size: 12px;
 }
 
+.swatch {
+  flex: none;
+  width: 8px;
+  height: 14px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--entry-situation) 25%, transparent);
+  box-shadow: inset 0 0 0 1px var(--entry-situation);
+}
+
+.bands-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+  margin-left: auto;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--text-primary);
+  font: var(--mat-sys-body-small);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-sunken);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  // Chevron : vers le bas replié, vers le haut déplié.
+  .chevron {
+    width: 6px;
+    height: 6px;
+    margin: 0 2px 3px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+  }
+
+  &[aria-expanded='true'] .chevron {
+    margin: 3px 2px 0;
+    transform: rotate(-135deg);
+  }
+}
+
+// Liste des situations : repliée par défaut sur grand écran (le nom de chaque situation est écrit le
+// long de sa bande) ; toujours visible sous 600 px, où les libellés des bandes sont masqués.
 .bands-legend {
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   gap: 4px 14px;
   min-width: 0;
   margin: 0;
-  padding: 0;
+  padding: 0 4px;
   list-style: none;
+
+  &.open {
+    display: flex;
+  }
 
   li {
     display: inline-flex;
@@ -165,15 +230,6 @@ kbd {
     max-width: 280px;
     color: var(--text-primary);
     font: var(--mat-sys-body-small);
-  }
-
-  .swatch {
-    flex: none;
-    width: 8px;
-    height: 14px;
-    border-radius: 3px;
-    background: color-mix(in srgb, var(--entry-situation) 25%, transparent);
-    box-shadow: inset 0 0 0 1px var(--entry-situation);
   }
 
   .band-title {
@@ -372,6 +428,14 @@ kbd {
 
   .viewport {
     --lane-width: 8px;
+  }
+
+  .bands-toggle {
+    display: none;
+  }
+
+  .bands-legend {
+    display: flex;
   }
 
   .row {

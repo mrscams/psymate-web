@@ -37,3 +37,42 @@ describe('PatientShellApi.hasEntries (indice de première entrée, M7-03)', () =
     },
   );
 });
+
+describe('PatientShellApi.firstSessionMonth (borne du « suivi·e depuis », UX-G2c)', () => {
+  afterEach(() => TestBed.inject(HttpTestingController).verify());
+
+  it.each([
+    ['aucune période', [], null],
+    ['pas de séance', [{ period: '2003-07', counts: { event: 2 } }], null],
+    [
+      'la plus ancienne période avec une séance',
+      [
+        { period: '2003-07', counts: { event: 2 } },
+        { period: '2023-11', counts: { event: 1, session: 1 } },
+        { period: '2023-12', counts: { session: 2 } },
+      ],
+      '2023-11',
+    ],
+    ['compteur à zéro', [{ period: '2024-01', counts: { session: 0 } }], null],
+    [
+      'libellé absent : début de période',
+      [{ from: '2024-02-01T00:00:00Z', counts: { session: 1 } }],
+      '2024-02',
+    ],
+  ])(
+    'résumé par mois, sans fenêtre, privées comprises : %s → %s',
+    async (_label, periods, expected) => {
+      const { api, http } = setup();
+      const pending = api.firstSessionMonth('p-1');
+      const req = http.expectOne(
+        (r) => r.url === '/api/patients/p-1/timeline/summary' && r.method === 'GET',
+      );
+      expect(req.request.params.get('granularity')).toBe('month');
+      expect(req.request.params.get('includePrivate')).toBe('true');
+      expect(req.request.params.has('from')).toBe(false);
+      expect(req.request.params.has('to')).toBe(false);
+      req.flush({ granularity: 'month', periods });
+      await expect(pending).resolves.toBe(expected);
+    },
+  );
+});

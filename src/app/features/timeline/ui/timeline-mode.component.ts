@@ -53,7 +53,7 @@ let nextId = 0;
     // 3,06:1). « Par séance » inactif en vue décennie garde ce contraste : l'état est porté par
     // aria-disabled et le curseur, pas par une couleur illisible.
     button {
-      min-height: 28px;
+      min-height: 26px;
       padding: 0 12px;
       border: 0;
       background: var(--surface-raised);

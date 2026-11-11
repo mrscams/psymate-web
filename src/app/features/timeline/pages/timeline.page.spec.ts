@@ -285,7 +285,7 @@ describe('TimelinePage', () => {
       ongoing: true,
     });
     const list = [timelineItem({ id: 'a', title: 'Entretien annuel' }), reorg];
-    const { el } = await render(() =>
+    const { el, fixture } = await render(() =>
       Promise.resolve(
         timelinePage({
           items: list,
@@ -300,6 +300,16 @@ describe('TimelinePage', () => {
     const band = el.querySelector('.bands-legend li');
     expect(band?.getAttribute('aria-label')).toContain('Réorganisation du service');
     expect(band?.getAttribute('aria-label')).toContain('en cours');
+    // Une seule ligne avant la liste (UX-G2c) : la liste des situations se déplie sur demande.
+    const toggle = el.querySelector<HTMLButtonElement>('.status-row button.bands-toggle');
+    expect(text(toggle)).toBe('1 situation sur la période');
+    expect(toggle?.getAttribute('aria-expanded')).toBe('false');
+    expect(toggle?.getAttribute('aria-controls')).toBe('timeline-bands');
+    expect(el.querySelector('#timeline-bands')?.classList.contains('open')).toBe(false);
+    toggle?.click();
+    await fixture.whenStable();
+    expect(toggle?.getAttribute('aria-expanded')).toBe('true');
+    expect(el.querySelector('#timeline-bands')?.classList.contains('open')).toBe(true);
     expect(el.querySelectorAll('.lane.on')).toHaveLength(2);
     expect(el.querySelector('.arrow')).not.toBeNull();
     expect(el.querySelector('[role="toolbar"]')).not.toBeNull();

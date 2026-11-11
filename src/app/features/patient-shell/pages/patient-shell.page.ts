@@ -96,7 +96,7 @@ export class PatientShellPage {
 
   protected readonly headerPatient = computed(() => {
     const patient = this.store.patient();
-    return patient ? toHeaderInfo(patient) : null;
+    return patient ? toHeaderInfo(patient, this.store.followedSince()) : null;
   });
 
   protected readonly headerSession = computed<PatientSessionInfo>(() => {

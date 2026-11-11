@@ -81,7 +81,8 @@
     </div>
   }
   @if (store.patient()) {
-    <div class="tab-content">
+    <!-- Timeline (UX-G2c) : surface de travail pleine hauteur, marge haute resserrée. -->
+    <div class="tab-content" [class.dense]="activeTab() === 'timeline'">
       <router-outlet />
     </div>
   }
