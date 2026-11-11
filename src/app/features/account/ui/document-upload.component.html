@@ -83,28 +83,54 @@
     </div>
   </div>
 
+  <!-- Fichier (UX-C2) : l'<input type="file"> réel reste dans l'ordre de tabulation et porte le
+       nom accessible, mais il est masqué (sr-only) : son bouton natif « Choose File · No file
+       chosen » ne s'affiche jamais. Le libellé « Choisir un fichier » l'ouvre au clic et montre son
+       focus ; le fichier choisi s'affiche en mono. -->
   <div class="dropzone" [class.has-file]="file()">
-    <label [for]="fieldId('file')" class="file-label">
-      <span class="choose" i18n="Bouton choisir un fichier@@account.verification.upload.choose"
-        >Choisir un fichier</span
+    <div class="file-row">
+      <input
+        #fileInput
+        class="sr-only file-input"
+        [id]="fieldId('file')"
+        type="file"
+        [accept]="accept"
+        [disabled]="disabled() || uploading()"
+        (change)="onFileInput($event)"
+        [attr.aria-invalid]="fileMessage() !== null"
+        [attr.aria-describedby]="fieldId('file') + '-error ' + fieldId('file') + '-name'"
+      />
+      <label [for]="fieldId('file')" class="file-label">
+        <span class="choose">
+          <span class="glyph" aria-hidden="true">↑</span>
+          <span i18n="Bouton choisir un fichier@@account.verification.upload.choose"
+            >Choisir un fichier</span
+          >
+        </span>
+        <span class="or" i18n="Zone de dépôt@@account.verification.upload.dropHint"
+          >ou glissez-le ici · PDF, JPG ou PNG, 10 Mo maximum</span
+        >
+      </label>
+      <button
+        mat-flat-button
+        type="submit"
+        class="submit"
+        [disabled]="disabled() || uploading()"
+        i18n="Bouton ajouter au dossier@@account.verification.upload.submit"
       >
-      <span class="or" i18n="Zone de dépôt@@account.verification.upload.dropHint"
-        >ou glissez-le ici · PDF, JPG ou PNG, 10 Mo maximum</span
-      >
-    </label>
-    <input
-      #fileInput
-      [id]="fieldId('file')"
-      type="file"
-      [accept]="accept"
-      [disabled]="disabled() || uploading()"
-      (change)="onFileInput($event)"
-      [attr.aria-invalid]="fileMessage() !== null"
-      [attr.aria-describedby]="fieldId('file') + '-error ' + fieldId('file') + '-name'"
-    />
-    @if (file(); as f) {
-      <p class="file-name mono" [id]="fieldId('file') + '-name'">{{ f.name }}</p>
-    }
+        Ajouter au dossier
+      </button>
+    </div>
+    <p class="file-name" [id]="fieldId('file') + '-name'">
+      @if (file(); as f) {
+        <span i18n="Fichier choisi@@account.verification.upload.chosen">Fichier choisi :</span>
+        <span class="mono">{{ f.name }}</span>
+      } @else {
+        <span i18n="Aucun fichier choisi@@account.verification.upload.none"
+          >Aucun fichier choisi.</span
+        >
+      }
+    </p>
     @if (fileMessage(); as message) {
       <p class="field-error" [id]="fieldId('file') + '-error'" role="alert">{{ message }}</p>
     }
@@ -116,18 +142,8 @@
     }
   </div>
 
-  <div class="actions">
-    <button
-      mat-stroked-button
-      type="submit"
-      [disabled]="disabled() || uploading()"
-      i18n="Bouton ajouter au dossier@@account.verification.upload.submit"
-    >
-      Ajouter au dossier
-    </button>
-    <p class="retention" i18n="Mention de rétention@@account.verification.upload.retention">
-      Les fichiers sont chiffrés et supprimés 90 jours après la décision de l'administrateur ; seule
-      la mention « vérifié le … » est conservée.
-    </p>
-  </div>
+  <p class="retention" i18n="Mention de rétention@@account.verification.upload.retention">
+    Les fichiers sont chiffrés et supprimés 90 jours après la décision de l'administrateur ; seule
+    la mention « vérifié le … » est conservée.
+  </p>
 </form>

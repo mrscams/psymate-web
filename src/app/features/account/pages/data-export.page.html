@@ -48,6 +48,7 @@
           <pm-patient-combobox
             class="combobox"
             [label]="patientLabel()"
+            [hint]="patientHint"
             [options]="store.patients().data ?? []"
             [loading]="patientsLoading()"
             (queryChange)="search($event)"
@@ -88,14 +89,28 @@
             type="button"
             class="export-patient"
             [disabled]="!selected() || patientBusy()"
+            [attr.aria-describedby]="selected() ? 'export-file' : 'export-choose'"
             (click)="exportPatient()"
             i18n="Bouton d'export d'un patient@@account.data.patient.export"
           >
             Exporter
           </button>
-          <span class="note" i18n="Contenu du fichier exporté@@account.data.patient.fileNote"
-            >Séances et entrées en ordre chronologique, texte de la version courante.</span
-          >
+          <!-- UX-C6 : pourquoi le bouton attend, puis le nom du fichier attendu, en mono. -->
+          @if (expectedFile(); as file) {
+            <span class="note" id="export-file">
+              <span
+                i18n="
+                  Nom indicatif du fichier exporté (le serveur fixe le nom
+                  réel)@@account.data.patient.expectedFile"
+                >Fichier attendu :</span
+              >&ngsp;<span class="mono file">{{ file }}</span
+              >&ngsp;<span i18n="Contenu du fichier exporté@@account.data.patient.fileNoteShort"
+                >· séances et entrées en ordre chronologique, texte de la version courante</span
+              >
+            </span>
+          } @else {
+            <span class="note" id="export-choose">{{ chooseFirst() }}</span>
+          }
         </div>
         @if (patientError(); as text) {
           <p class="error" role="alert">{{ text }}</p>

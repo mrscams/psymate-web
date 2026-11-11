@@ -175,11 +175,46 @@ test('pages publiques à 200 % : annuaire (filtres repliés), connexion, inscrip
 
   await page.goto('/fr/annuaire');
   await expect(h1).toBeVisible();
-  // À cette largeur, les filtres sont derrière un bouton : il les déplie au clavier.
+  // À cette largeur (640 px CSS, sous 760 px), les filtres sont derrière un bouton qui les ouvre
+  // en panneau plein écran (dialogue modal, UX-D6). Fermé, le repère « Filtres » n'est pas exposé
+  // (pas de repère vide pour les lecteurs d'écran).
   const filters = page.getByRole('button', { name: /^Filtres \(\d+\)$/ });
+  const landmark = page.getByRole('complementary', { name: 'Filtres' });
+  await expect(filters).toBeVisible();
+  await expect(landmark).toHaveCount(0);
   await tabTo(page, filters, { max: 40 });
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('complementary', { name: 'Filtres' })).toBeVisible();
+  const dialog = page.getByRole('dialog', { name: 'Filtres' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeFocused();
+
+  // Reflow (WCAG 1.4.10) : le panneau tient dans la largeur, sans défilement horizontal ni case
+  // coupée ; il défile seulement en hauteur.
+  expect(await dialog.evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(0);
+  const clipped = await dialog.evaluate((el) => {
+    const panel = el.getBoundingClientRect();
+    return [...el.querySelectorAll('label, button, legend, h2')]
+      .map((node) => node.getBoundingClientRect())
+      .filter((rect) => rect.width > 0 && (rect.left < panel.left || rect.right > panel.right))
+      .length;
+  });
+  expect(clipped, 'éléments du panneau coupés horizontalement à 200 %').toBe(0);
+
+  // Les filtres s'utilisent au clavier : la dernière case du panneau, cochée par Espace, filtre.
+  const accepting = dialog.getByRole('checkbox', { name: /Accepte de nouveaux patients/ });
+  await tabTo(page, accepting, { max: 60 });
+  await expect(accepting).toBeInViewport();
+  await page.keyboard.press('Space');
+  await expect(page).toHaveURL(/accepte=oui/);
+  await screen(page, '08-annuaire-filtres');
+  await expectNoAxeViolations(page);
+
+  // Échap ferme le panneau et rend le focus au bouton, qui compte le filtre.
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(filters).toBeFocused();
+  await expect(filters).toHaveText('Filtres (1)');
+  await expect(landmark).toHaveCount(0);
   await screen(page, '08-annuaire');
   await expectNoAxeViolations(page);
 

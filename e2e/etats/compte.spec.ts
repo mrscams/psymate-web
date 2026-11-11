@@ -78,7 +78,7 @@ const SCREENS: Screen[] = [
     url: '/fr/mon-compte/securite',
     read: '/api/me/security',
     error: 'Impossible de charger vos sessions',
-    content: 'Cet appareil · session courante',
+    content: 'session courante',
   },
   {
     fiche: '19-donnees',

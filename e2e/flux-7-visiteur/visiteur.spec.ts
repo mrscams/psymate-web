@@ -88,7 +88,7 @@ test.describe('flux 7 : un visiteur trouve et contacte un praticien', () => {
     await expect(card).toBeVisible();
     const psychologues = page
       .getByRole('complementary', { name: 'Filtres' })
-      .locator('mat-checkbox')
+      .locator('label.option')
       .filter({ hasText: 'Psychologue' });
     await expect(psychologues).toContainText(/\d+/);
     await expectNoAxeViolations(page);
@@ -310,7 +310,8 @@ test.describe('pages publiques sans données', () => {
         await expect(toggle).toBeVisible();
         await expect(page.getByRole('complementary', { name: 'Filtres' })).toBeHidden();
         await toggle.click();
-        await expect(page.getByRole('complementary', { name: 'Filtres' })).toBeVisible();
+        // Sous 760 px, la colonne s'ouvre en panneau plein écran (dialogue modal, UX-D6).
+        await expect(page.getByRole('dialog', { name: 'Filtres' })).toBeVisible();
       }
       await expectNoAxeViolations(page);
     });

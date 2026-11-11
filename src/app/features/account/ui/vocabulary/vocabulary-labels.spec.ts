@@ -21,6 +21,12 @@ describe('vocabulary-labels', () => {
     ['Émerveillement', null],
     ['Jo', null],
     ['Ennui', null],
+    // UX-C4 : dès 3 lettres, un début de mot suffit.
+    ['Anx', 'Anxiété'],
+    ['tri', 'Tristesse'],
+    ['Appr', 'Appréhension'],
+    ['Las', 'Lassitude'],
+    ['Xyz', null],
   ])('closestEmotion(%s) → %s', (label, expected) => {
     expect(closestEmotion(label, EMOTIONS)?.labelFr ?? null).toBe(expected);
   });

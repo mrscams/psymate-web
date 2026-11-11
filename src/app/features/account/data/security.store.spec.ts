@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { SessionApi } from '../../../core/auth/data/session.api';
 import { SecurityApi, SecurityOverview } from './security.api';
-import { OVERVIEW } from './security.fixtures';
+import { manySessions, OVERVIEW } from './security.fixtures';
 import { SecurityStore } from './security.store';
 
 function setup(api: Partial<SecurityApi>) {
@@ -26,6 +26,39 @@ describe('SecurityStore', () => {
     expect(store.sessions()).toHaveLength(2);
     expect(store.otherSessions().map((s) => s.id)).toEqual(['s-ipad']);
     expect(store.lastLogin()?.device).toBe('Chrome · Windows');
+  });
+
+  it('UX-C5 : sessions bornées, cet appareil + 4 plus récentes, le reste regroupé par appareil', async () => {
+    const store = setup({ loadSecurity: vi.fn().mockResolvedValue(manySessions(10)) });
+    await store.load();
+    expect(store.currentSession()?.id).toBe('s-current');
+    expect(store.recentSessions().map((s) => s.id)).toEqual(['s-1', 's-2', 's-3', 's-4']);
+    expect(store.olderSessions().map((s) => s.id)).toEqual([
+      's-5',
+      's-6',
+      's-7',
+      's-8',
+      's-9',
+      's-10',
+    ]);
+    const groups = store.olderGroups();
+    expect(groups.map((g) => [g.device, g.sessions.length])).toEqual([
+      ['Chrome · Windows', 2],
+      ['Firefox · Linux', 2],
+      [null, 1],
+      ['Safari · iPadOS', 1],
+    ]);
+    expect(groups[0].lastAccessAt).toBe(store.olderSessions()[0].lastAccessAt);
+    // Toutes les sessions : Chrome (dont la courante), Firefox, inconnu, Safari.
+    expect(store.deviceCount()).toBe(4);
+  });
+
+  it('UX-C5 : 4 autres sessions ou moins, rien n’est replié', async () => {
+    const store = setup({ loadSecurity: vi.fn().mockResolvedValue(manySessions(4)) });
+    await store.load();
+    expect(store.recentSessions()).toHaveLength(4);
+    expect(store.olderSessions()).toEqual([]);
+    expect(store.olderGroups()).toEqual([]);
   });
 
   it('load en erreur : état erreur avec le problème, donnée précédente conservée', async () => {

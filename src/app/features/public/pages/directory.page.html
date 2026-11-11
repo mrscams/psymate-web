@@ -15,74 +15,100 @@
     i18n-aria-label="Étiquette du formulaire de recherche de l'annuaire@@public.search.label"
     (ngSubmit)="submit()"
   >
-    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field-q">
-      <mat-label i18n="Champ mot-clé de l'annuaire@@public.search.q">Mot-clé</mat-label>
-      <input
-        matInput
-        id="directory-q"
-        name="q"
-        type="search"
-        [maxlength]="textMax"
-        [ngModel]="qText()"
-        (ngModelChange)="qText.set($event)"
-        placeholder="Nom, spécialité…"
-        i18n-placeholder="Exemple de mot-clé de l'annuaire@@public.search.q.placeholder"
-      />
-    </mat-form-field>
-    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field-city">
-      <mat-label i18n="Champ ville de l'annuaire@@public.search.city">Ville</mat-label>
-      <input
-        matInput
-        id="directory-city"
-        name="city"
-        type="text"
-        autocomplete="address-level2"
-        [maxlength]="textMax"
-        [ngModel]="cityText()"
-        (ngModelChange)="cityText.set($event)"
-      />
-    </mat-form-field>
-    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field-profession">
-      <mat-label i18n="Sélecteur de profession de l'annuaire@@public.search.profession"
-        >Profession</mat-label
+    <div class="field field-q">
+      <label
+        for="directory-q"
+        class="field-label"
+        i18n="Champ mot-clé de l'annuaire@@public.search.q"
+        >Mot-clé</label
       >
-      <mat-select
-        name="profession"
-        [value]="selectedProfession()"
-        [disabled]="rateLimited()"
-        (selectionChange)="setProfession($event.value)"
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <input
+          matInput
+          id="directory-q"
+          name="q"
+          type="search"
+          [maxlength]="textMax"
+          [ngModel]="qText()"
+          (ngModelChange)="qText.set($event)"
+          placeholder="Nom, spécialité…"
+          i18n-placeholder="Exemple de mot-clé de l'annuaire@@public.search.q.placeholder"
+        />
+      </mat-form-field>
+    </div>
+    <div class="field field-city">
+      <label
+        for="directory-city"
+        class="field-label"
+        i18n="Champ ville de l'annuaire@@public.search.city"
+        >Ville</label
       >
-        <mat-option value="" i18n="Option toutes professions@@public.search.profession.all"
-          >Toutes</mat-option
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <input
+          matInput
+          id="directory-city"
+          name="city"
+          type="text"
+          autocomplete="address-level2"
+          [maxlength]="textMax"
+          [ngModel]="cityText()"
+          (ngModelChange)="cityText.set($event)"
+        />
+      </mat-form-field>
+    </div>
+    <div class="field field-profession">
+      <span
+        id="directory-profession-label"
+        class="field-label"
+        i18n="Sélecteur de profession de l'annuaire@@public.search.profession"
+        >Profession</span
+      >
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-select
+          name="profession"
+          aria-labelledby="directory-profession-label"
+          [value]="selectedProfession()"
+          [disabled]="rateLimited()"
+          (selectionChange)="setProfession($event.value)"
         >
-        @for (profession of professions; track profession) {
-          <mat-option [value]="profession">{{ professionLabel(profession) }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field-specialty">
-      <mat-label i18n="Sélecteur de spécialité de l'annuaire@@public.search.specialty"
-        >Spécialité</mat-label
-      >
-      <mat-select
-        name="specialty"
-        [value]="selectedSpecialty()"
-        [disabled]="rateLimited()"
-        (selectionChange)="setSpecialty($event.value)"
-      >
-        <mat-option value="" i18n="Option toutes spécialités@@public.search.specialty.all"
-          >Toutes</mat-option
-        >
-        @for (option of specialtyOptions(); track option.code) {
-          <mat-option
-            [value]="option.code"
-            [disabled]="option.count === 0 && option.code !== selectedSpecialty()"
+          <mat-option value="" i18n="Option toutes professions@@public.search.profession.all"
+            >Toutes</mat-option
           >
-            {{ option.label }} <span class="count">({{ option.count }})</span>
-          </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+          @for (profession of professions; track profession) {
+            <mat-option [value]="profession">{{ professionLabel(profession) }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="field field-specialty">
+      <span
+        id="directory-specialty-label"
+        class="field-label"
+        i18n="Sélecteur de spécialité de l'annuaire@@public.search.specialty"
+        >Spécialité</span
+      >
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-select
+          name="specialty"
+          aria-labelledby="directory-specialty-label"
+          [value]="selectedSpecialty()"
+          [disabled]="rateLimited()"
+          (selectionChange)="setSpecialty($event.value)"
+        >
+          <mat-option value="" i18n="Option toutes spécialités@@public.search.specialty.all"
+            >Toutes</mat-option
+          >
+          @for (option of specialtyOptions(); track option.code) {
+            <mat-option
+              [value]="option.code"
+              [disabled]="option.count === 0 && option.code !== selectedSpecialty()"
+            >
+              {{ option.label }} <span class="count">({{ option.count }})</span>
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
     <button
       mat-flat-button
       type="submit"
@@ -102,12 +128,14 @@
 
   <div class="layout">
     <button
+      #filtersToggle
       mat-stroked-button
       type="button"
       class="filters-toggle"
       aria-controls="directory-filters"
+      aria-haspopup="dialog"
       [attr.aria-expanded]="filtersOpen()"
-      (click)="toggleFiltersPanel()"
+      (click)="openFilters()"
       i18n="Bouton qui déplie les filtres sur petit écran@@public.filters.toggle"
     >
       Filtres ({{ filterCount() }})
@@ -119,16 +147,61 @@
       aria-label="Filtres"
       i18n-aria-label="Étiquette de la colonne de filtres@@public.filters.label"
     >
-      <pm-directory-filters
-        [query]="query()"
-        [facets]="store.facets()"
-        [vocabulary]="vocabulary()"
-        [locale]="locale"
-        [disabled]="rateLimited()"
-        (filterToggle)="toggleFilter($event)"
-        (acceptingChange)="setAccepting($event)"
-        (clearAll)="clearFilters()"
-      />
+      <!-- Sous 760 px : panneau plein écran, dialogue modal (focus piégé, Échap ferme). -->
+      <div
+        #filtersPanel
+        class="filters-panel"
+        [cdkTrapFocus]="panelMode()"
+        [attr.role]="panelMode() ? 'dialog' : null"
+        [attr.aria-modal]="panelMode() ? 'true' : null"
+        [attr.aria-labelledby]="panelMode() ? 'directory-filters-title' : null"
+        [attr.tabindex]="panelMode() ? -1 : null"
+        (keydown.escape)="closeFilters()"
+      >
+        <pm-directory-filters
+          titleId="directory-filters-title"
+          [query]="query()"
+          [facets]="store.facets()"
+          [vocabulary]="vocabulary()"
+          [locale]="locale"
+          [disabled]="rateLimited()"
+          (filterToggle)="toggleFilter($event)"
+          (acceptingChange)="setAccepting($event)"
+          (clearAll)="clearFilters()"
+        >
+          @if (compact()) {
+            <button
+              type="button"
+              class="panel-close"
+              aria-label="Fermer les filtres"
+              i18n-aria-label="Croix du panneau de filtres sur petit écran@@public.filters.close"
+              (click)="closeFilters()"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M6 6l12 12M18 6 6 18" />
+              </svg>
+            </button>
+          }
+        </pm-directory-filters>
+        @if (compact()) {
+          <div class="panel-foot">
+            <button
+              mat-flat-button
+              type="button"
+              (click)="closeFilters()"
+              i18n="
+                Bouton qui ferme le panneau de filtres et montre les
+                résultats@@public.filters.showResults"
+            >
+              {resultTotal(), plural,
+                =0 {Aucun résultat}
+                =1 {Voir 1 praticien}
+                other {Voir les {{ resultTotal() }} praticiens}
+              }
+            </button>
+          </div>
+        }
+      </div>
     </aside>
 
     <section class="results" aria-labelledby="results-title" [attr.aria-busy]="refreshing()">
@@ -140,37 +213,48 @@
           @if (page(); as data) {
             @if (searchedCity()) {
               <ng-container i18n="Nombre de résultats dans une ville@@public.results.countInCity"
-                >{data.total, plural,
+                ><strong>{data.total, plural,
                   =0 {Aucun praticien}
                   =1 {1 praticien}
                   other {{{ data.total }} praticiens}
-                }
-                à {{ searchedCity() }}</ng-container
+                }</strong
+                >&ngsp;<span class="where">à {{ searchedCity() }}</span></ng-container
               >
             } @else {
-              <ng-container i18n="Nombre de résultats@@public.results.count">{data.total, plural,
+              <strong i18n="Nombre de résultats@@public.results.count">{data.total, plural,
                 =0 {Aucun praticien}
                 =1 {1 praticien}
                 other {{{ data.total }} praticiens}
-              }</ng-container>
+              }</strong>
             }
           }
         </p>
-        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="sort">
-          <mat-label i18n="Sélecteur de tri des résultats@@public.results.sort"
-            >Trier par</mat-label
+        <div class="sort">
+          <label for="directory-sort" i18n="Sélecteur de tri des résultats@@public.results.sort"
+            >Trier par</label
           >
-          <mat-select
+          <select
+            id="directory-sort"
             [value]="query().sort"
             [disabled]="rateLimited()"
-            (selectionChange)="setSort($event.value)"
+            (change)="setSort($any($event.target).value)"
           >
-            <mat-option value="relevance" i18n="Tri par pertinence@@public.results.sort.relevance"
-              >Pertinence</mat-option
+            <option
+              value="relevance"
+              [selected]="query().sort === 'relevance'"
+              i18n="Tri par pertinence@@public.results.sort.relevance"
             >
-            <mat-option value="name" i18n="Tri par nom@@public.results.sort.name">Nom</mat-option>
-          </mat-select>
-        </mat-form-field>
+              Pertinence
+            </option>
+            <option
+              value="name"
+              [selected]="query().sort === 'name'"
+              i18n="Tri par nom@@public.results.sort.name"
+            >
+              Nom
+            </option>
+          </select>
+        </div>
       </div>
 
       @if (result().status === 'error' && page()) {

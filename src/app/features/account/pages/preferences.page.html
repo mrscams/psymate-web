@@ -7,14 +7,20 @@
 
   <div class="content">
     <header class="page-header">
-      <div>
-        <h1 i18n="Titre de la page Préférences@@preferences.title">Préférences</h1>
-        <p class="intro" i18n="Introduction de la page Préférences@@preferences.intro">
-          Mémorisées sur votre compte : vous les retrouvez sur tous vos appareils. Chaque changement
-          est enregistré immédiatement.
+      <h1 i18n="Titre de la page Préférences@@preferences.title">Préférences</h1>
+      <p class="intro" i18n="Introduction de la page Préférences@@preferences.intro">
+        Mémorisées sur votre compte : vous les retrouvez sur tous vos appareils. Chaque changement
+        est enregistré immédiatement.
+      </p>
+      <!-- Indicateur sous le titre (fiche 14, UX-C3) : l'état est annoncé, « il y a n s » ne l'est pas. -->
+      @if (stateKind() === null) {
+        <p class="saved" data-testid="save-status">
+          <span role="status">{{ savedText() }}</span>
+          @if (savedAgo(); as ago) {
+            <span> · {{ ago }}</span>
+          }
         </p>
-      </div>
-      <p class="saved" role="status" aria-live="polite">{{ savedText() }}</p>
+      }
     </header>
 
     <pm-state
@@ -242,18 +248,93 @@
             >Tout voir</a
           >
         </div>
+        <!-- Trois tuiles (maquette 14) ; sessions et connexion précédente viennent de
+             GET /api/me/security (M10-06), avec leurs états chargement et erreur. -->
         <dl class="summary">
           <div class="tile">
             <dt i18n="E-mail de connexion@@preferences.security.email">E-mail de connexion</dt>
-            <dd>{{ session.me()?.email }}</dd>
+            <dd class="value">{{ session.me()?.email }}</dd>
+            <dd class="tile-action">
+              <a
+                [routerLink]="paths.security"
+                i18n="Lien vers la modification de l'e-mail@@preferences.security.email.edit"
+                >Modifier<span class="sr-only"> l'e-mail de connexion</span></a
+              >
+            </dd>
           </div>
           <div class="tile">
             <dt i18n="Double authentification@@preferences.security.twoFactor">
               Double authentification
             </dt>
-            <dd [class.success]="session.twoFactorEnabled()">{{ twoFactorText() }}</dd>
+            <dd class="value" [class.success]="session.twoFactorEnabled()">
+              {{ twoFactorText() }}
+            </dd>
+            <dd class="tile-action">
+              @if (session.twoFactorEnabled()) {
+                <a
+                  [routerLink]="paths.security"
+                  i18n="Lien vers les codes de secours@@preferences.security.recoveryCodes"
+                  >Codes de secours</a
+                >
+              } @else {
+                <a
+                  [routerLink]="twoFactorPath"
+                  i18n="Lien d'activation de la 2FA@@preferences.security.twoFactor.enable"
+                  >Activer<span class="sr-only"> la double authentification</span></a
+                >
+              }
+            </dd>
+          </div>
+          <div class="tile">
+            <dt i18n="Sessions actives@@preferences.security.sessions">Sessions actives</dt>
+            @if (stateOf(security.overview()); as kind) {
+              <dd>
+                <pm-state
+                  [kind]="kind"
+                  skeleton="row"
+                  [lines]="1"
+                  compact
+                  [title]="sessionsErrorTitle"
+                  [action]="retrySecurity"
+                />
+              </dd>
+            } @else {
+              <dd class="value" i18n="Nombre d'appareils connectés@@preferences.security.devices">
+                {security.deviceCount(), plural,
+                  =1 {1 appareil}
+                  other {{{ security.deviceCount() }} appareils}
+                }
+              </dd>
+              <dd class="tile-action">
+                <button
+                  type="button"
+                  class="link"
+                  [disabled]="
+                    security.revokeOthersStatus() === 'busy' ||
+                    security.otherSessions().length === 0
+                  "
+                  (click)="revokeOthers()"
+                  i18n="Déconnecter les autres appareils@@preferences.security.revokeOthers"
+                >
+                  Déconnecter les autres
+                </button>
+              </dd>
+            }
           </div>
         </dl>
+        <p class="note" role="status" aria-live="polite">{{ revokedText() }}</p>
+        @if (revokeError()) {
+          <p class="note error" role="alert">{{ unavailable }}</p>
+        }
+        @if (security.lastLogin(); as last) {
+          <p class="last-login">
+            <span i18n="Connexion précédente, résumé@@preferences.security.lastLogin"
+              >Connexion précédente :</span
+            >
+            <span class="mono">{{ formatDate(last.at) }}</span>
+            <span>· {{ deviceLabel(last.device) }}</span>
+          </p>
+        }
       </section>
     }
   </div>

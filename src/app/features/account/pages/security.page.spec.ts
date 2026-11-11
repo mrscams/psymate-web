@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 
 import { SessionStore, SessionUser } from '../../../core/auth';
 import { SessionApi } from '../../../core/auth/data/session.api';
 import { ConfirmDialogService, SidePanelService, ToastService } from '../../../shared/ui';
 import { SecurityApi, SecurityOverview } from '../data/security.api';
-import { OVERVIEW } from '../data/security.fixtures';
+import { manySessions, OVERVIEW } from '../data/security.fixtures';
 import { SecurityPage } from './security.page';
 
 const claire: SessionUser = {
@@ -109,6 +110,46 @@ describe('SecurityPage', () => {
     expect(el.querySelectorAll('ul.sessions li')).toHaveLength(1);
   });
 
+  it('UX-C5 : 10 autres sessions → cet appareil + 4, « Afficher les 6 autres sessions », groupes par appareil', async () => {
+    const { fixture, el } = await render({
+      loadSecurity: vi.fn().mockResolvedValue(manySessions(10)),
+    });
+    const list = el.querySelector('ul[aria-label="Sessions actives"]')!;
+    const rows = list.querySelectorAll(':scope > li');
+    expect(rows).toHaveLength(5);
+    expect(rows[0].textContent).toContain('Cet appareil');
+    expect(rows[0].textContent).toContain('session courante');
+    expect(el.querySelector('h2#h-sessions')?.textContent).toContain('11');
+
+    const more = el.querySelector<HTMLButtonElement>('button.disclosure')!;
+    expect(more.textContent?.replace(/\s+/g, ' ')).toContain('Afficher les 6 autres sessions');
+    expect(more.getAttribute('aria-expanded')).toBe('false');
+    expect(el.querySelector('#older-sessions')).toBeNull();
+
+    more.click();
+    await settle(fixture);
+    expect(more.getAttribute('aria-expanded')).toBe('true');
+    expect(more.textContent?.replace(/\s+/g, ' ')).toContain('Masquer les 6 autres sessions');
+    const groups = el.querySelectorAll('#older-sessions > li');
+    expect(groups).toHaveLength(4);
+    expect(groups[0].textContent?.replace(/\s+/g, ' ')).toContain('Chrome · Windows');
+    expect(groups[0].textContent?.replace(/\s+/g, ' ')).toContain('2 sessions');
+    expect(groups[2].textContent).toContain('Appareil non identifié');
+    // Le détail d'un appareil se déplie à la demande, avec ses « Déconnecter ».
+    expect(groups[0].querySelectorAll('li.session')).toHaveLength(0);
+    groups[0].querySelector<HTMLButtonElement>('.group-head button')!.click();
+    await settle(fixture);
+    expect(groups[0].querySelectorAll('li.session')).toHaveLength(2);
+    expect(groups[0].querySelectorAll('li.session button')).toHaveLength(2);
+  });
+
+  it('UX-C5 : une seule session plus ancienne → « Afficher l’autre session »', async () => {
+    const { el } = await render({ loadSecurity: vi.fn().mockResolvedValue(manySessions(5)) });
+    expect(el.querySelector('button.disclosure')?.textContent?.replace(/\s+/g, ' ')).toContain(
+      "Afficher l'autre session",
+    );
+  });
+
   it('Déconnecter les autres : confirmation puis « N appareils déconnectés » (0 compris) en aria-live', async () => {
     const revokeOtherSessions = vi.fn().mockResolvedValueOnce(1).mockResolvedValueOnce(0);
     const { fixture, el, confirm } = await render({
@@ -158,6 +199,29 @@ describe('SecurityPage', () => {
     const navigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);
     buttons(el, 'Activer')[0].click();
     expect(navigate).toHaveBeenCalledWith(['2fa'], expect.anything());
+  });
+
+  it('UX-C5 : l’adresse directe /mon-compte/securite/2fa ouvre le panneau d’activation', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([
+          {
+            path: 'mon-compte/securite',
+            component: SecurityPage,
+            children: [{ path: '2fa', children: [] }],
+          },
+        ]),
+        { provide: SecurityApi, useValue: { loadSecurity: vi.fn().mockResolvedValue(OVERVIEW) } },
+        { provide: SessionApi, useValue: { me: vi.fn().mockResolvedValue(claire) } },
+      ],
+    });
+    TestBed.inject(SessionStore).signIn(claire);
+    const panels = TestBed.inject(SidePanelService);
+    const open = vi.spyOn(panels, 'open').mockReturnValue(null);
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/mon-compte/securite/2fa');
+    expect(TestBed.inject(Router).url).toBe('/mon-compte/securite/2fa');
+    expect(open).toHaveBeenCalledTimes(1);
   });
 
   it('Modifier le mot de passe : sur « changed », session oubliée et retour à /connexion avec un toast', async () => {

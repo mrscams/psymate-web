@@ -4,6 +4,7 @@ import { patchState, signalStore, withComputed, withMethods, withState } from '@
 import { ApiProblem, asProblem } from '../../../core/http';
 import { failed, idle, Loadable, loaded, loading } from '../../../shared/util';
 import { SecurityApi, SecurityOverview } from './security.api';
+import { byRecentActivity, groupByDevice, RECENT_SESSIONS_SHOWN } from './session-groups';
 
 interface SecurityState {
   overview: Loadable<SecurityOverview>;
@@ -31,11 +32,25 @@ const initialState: SecurityState = {
  */
 export const SecurityStore = signalStore(
   withState(initialState),
-  withComputed(({ overview }) => ({
-    sessions: computed(() => overview().data?.sessions ?? []),
-    lastLogin: computed(() => overview().data?.lastLogin ?? null),
-    otherSessions: computed(() => overview().data?.sessions.filter((s) => !s.current) ?? []),
-  })),
+  withComputed(({ overview }) => {
+    const sessions = computed(() => overview().data?.sessions ?? []);
+    /** Les autres sessions, la plus récemment utilisée d'abord. */
+    const otherSessions = computed(() => byRecentActivity(sessions().filter((s) => !s.current)));
+    const olderSessions = computed(() => otherSessions().slice(RECENT_SESSIONS_SHOWN));
+    return {
+      sessions,
+      lastLogin: computed(() => overview().data?.lastLogin ?? null),
+      otherSessions,
+      currentSession: computed(() => sessions().find((s) => s.current) ?? null),
+      /** « Cet appareil » + les 4 plus récentes (UX-C5) : la liste visible d'emblée. */
+      recentSessions: computed(() => otherSessions().slice(0, RECENT_SESSIONS_SHOWN)),
+      /** Les suivantes, repliées derrière « Afficher les n autres », regroupées par appareil. */
+      olderSessions,
+      olderGroups: computed(() => groupByDevice(olderSessions())),
+      /** Appareils distincts parmi toutes les sessions (résumé des préférences). */
+      deviceCount: computed(() => groupByDevice(sessions()).length),
+    };
+  }),
   withMethods((store, api = inject(SecurityApi)) => {
     async function reload(): Promise<void> {
       patchState(store, { overview: loading(store.overview()) });
