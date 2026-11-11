@@ -13,8 +13,10 @@ h2 {
   font: var(--mat-sys-headline-small);
 }
 
+// Surtitre, titre et introduction (UX-D8) : le titre se groupe avec son paragraphe, pas avec le
+// surtitre (4 px au-dessus, 20 px au-dessous) ; 36 px, graisse et interlettrage de la maquette 24.
 .eyebrow {
-  margin: 0 0 8px;
+  margin: 0 0 4px;
   color: var(--primary);
   font: var(--mat-sys-label-large);
   letter-spacing: 0.08em;
@@ -26,12 +28,13 @@ h2 {
 
   h1 {
     margin: 0;
-    font: var(--mat-sys-headline-large);
+    font: 700 36px/1.2 var(--font-ui);
+    letter-spacing: -0.02em;
   }
 }
 
 .lead {
-  margin: 16px 0 0;
+  margin: 20px 0 0;
   color: var(--text-secondary);
   font: var(--mat-sys-body-large);
 }
@@ -189,17 +192,19 @@ h2 {
   align-items: start;
 }
 
+// Résumés de FAQ : 12 px de marge intérieure verticale (cible de 44 px, UX-D8).
 details {
   @extend .card-like;
-  padding: 16px 20px;
+  padding: 4px 20px;
 
   summary {
+    padding: 12px 0;
     cursor: pointer;
     font: var(--mat-sys-title-small);
   }
 
   p {
-    margin: 10px 0 0;
+    margin: 0 0 16px;
     color: var(--text-secondary);
   }
 }
@@ -218,6 +223,10 @@ details {
 }
 
 @media (max-width: 560px) {
+  .hero h1 {
+    font-size: 28px;
+  }
+
   .steps ol {
     grid-template-columns: minmax(0, 1fr);
   }

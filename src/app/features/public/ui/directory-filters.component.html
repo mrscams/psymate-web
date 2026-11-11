@@ -1,45 +1,88 @@
-@for (group of groups(); track group.filter) {
-  <fieldset class="facet">
-    <legend>{{ group.legend }}</legend>
-    @for (option of group.options; track option.code) {
-      <mat-checkbox
-        class="option"
-        [checked]="option.checked"
-        [disabled]="option.disabled || disabled()"
-        (change)="
-          filterToggle.emit({ filter: group.filter, code: option.code, checked: $event.checked })
-        "
-      >
-        <span class="option-label">{{ option.label }}</span>
-        <span class="count">{{ option.count }}</span>
-      </mat-checkbox>
-    }
-  </fieldset>
-}
-
-<fieldset class="facet">
-  <legend i18n="Légende de la facette disponibilité@@public.filters.availability">
-    Disponibilité
-  </legend>
-  <mat-checkbox
-    class="option"
-    [checked]="query().accepting"
-    [disabled]="disabled()"
-    (change)="acceptingChange.emit($event.checked)"
-    i18n="Case de la facette disponibilité@@public.filters.accepting"
-    >Accepte de nouveaux patients</mat-checkbox
-  >
-</fieldset>
-
-@if (hasFilters()) {
+<div class="head">
+  <h2 [id]="titleId()" i18n="Titre de la colonne de filtres de l'annuaire@@public.filters.title">
+    Filtres
+  </h2>
   <button
-    mat-button
     type="button"
-    class="clear"
-    [disabled]="disabled()"
+    class="clear pm-link-target"
+    [disabled]="disabled() || !hasFilters()"
     (click)="clearAll.emit()"
     i18n="Bouton qui retire tous les filtres de l'annuaire@@public.filters.clear"
   >
     Tout effacer
   </button>
+  <ng-content />
+</div>
+
+@for (group of groups(); track group.filter) {
+  <fieldset class="facet">
+    <legend>{{ group.legend }}</legend>
+    @for (option of group.options; track option.code) {
+      <ng-container
+        *ngTemplateOutlet="optionRow; context: { $implicit: option, filter: group.filter }"
+      />
+    }
+    @if (group.more.length) {
+      @let open = isExpanded(group.filter);
+      @if (open) {
+        <div class="more" [id]="idPrefix + '-' + group.filter">
+          @for (option of group.more; track option.code) {
+            <ng-container
+              *ngTemplateOutlet="optionRow; context: { $implicit: option, filter: group.filter }"
+            />
+          }
+        </div>
+      }
+      <button
+        type="button"
+        class="more-toggle pm-link-target"
+        [attr.aria-expanded]="open"
+        [attr.aria-controls]="open ? idPrefix + '-' + group.filter : null"
+        (click)="toggleMore(group.filter)"
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" [class.open]="open">
+          <path d="M4 6l4 4 4-4" />
+        </svg>
+        {{ moreLabel(group) }}
+      </button>
+    }
+  </fieldset>
 }
+
+<fieldset class="facet availability">
+  <legend class="sr-only" i18n="Légende de la facette disponibilité@@public.filters.availability">
+    Disponibilité
+  </legend>
+  <label class="option">
+    <input
+      type="checkbox"
+      [checked]="query().accepting"
+      [disabled]="disabled()"
+      (change)="acceptingChange.emit($any($event.target).checked)"
+    />
+    <span class="option-label" i18n="Case de la facette disponibilité@@public.filters.accepting"
+      >Accepte de nouveaux patients</span
+    >
+  </label>
+</fieldset>
+
+<ng-template #optionRow let-option let-filter="filter">
+  <label class="option" [class.off]="option.disabled">
+    <input
+      type="checkbox"
+      [checked]="option.checked"
+      [disabled]="option.disabled || disabled()"
+      (change)="
+        filterToggle.emit({
+          filter: filter,
+          code: option.code,
+          checked: $any($event.target).checked,
+        })
+      "
+    />
+    <span class="option-label">{{ option.label }}</span>
+    @if (option.count !== null) {
+      <span class="count">{{ option.count }}</span>
+    }
+  </label>
+</ng-template>

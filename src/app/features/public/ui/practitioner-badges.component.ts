@@ -67,6 +67,11 @@ export class PractitionerAvatarComponent {
       font: var(--mat-sys-label-medium);
       white-space: nowrap;
     }
+    @media (max-width: 720px) {
+      .verified {
+        padding: 2px 6px;
+      }
+    }
     svg {
       width: 14px;
       height: 14px;
@@ -118,23 +123,48 @@ export class ProfessionChipComponent {
   selector: 'pm-availability',
   template: `
     @if (label(); as text) {
-      <span class="availability" [class.accepting]="availability() === 'accepting'">{{
-        text
-      }}</span>
+      <span class="availability" [class.accepting]="availability() === 'accepting'">
+        @if (availability() === 'accepting') {
+          <span class="dot" aria-hidden="true"></span>
+        }
+        {{ text }}
+      </span>
     }
   `,
+  // Maquette 08 : « Accepte… » en primaire pâle avec un point vert ; les autres neutres bordés.
   styles: `
     .availability {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
       padding: 2px 8px;
+      border: 1px solid var(--border-subtle);
       border-radius: 999px;
-      font: var(--mat-sys-label-medium);
-      background: var(--surface-sunken);
+      font: 500 12px/1.4 var(--font-ui);
+      background: var(--surface-ground);
       color: var(--text-secondary);
+      white-space: nowrap;
     }
     .availability.accepting {
+      border-color: transparent;
       background: var(--primary-tint);
       color: var(--primary-hover);
+      font-weight: 600;
+    }
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+    /* Liste mobile : vérifié et disponibilité tiennent sur une ligne. */
+    @media (max-width: 720px) {
+      .availability {
+        padding: 2px 6px;
+      }
+      .availability.accepting {
+        font-weight: 500;
+      }
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -40,6 +40,46 @@ describe('ContactFormComponent', () => {
     expect(trap?.querySelector('input')?.getAttribute('autocomplete')).toBe('off');
   });
 
+  it('libellés au-dessus des champs, hors du champ Material (maquette 09, UX-D7)', async () => {
+    const { el } = await render();
+    for (const [id, text] of [
+      ['field-name', 'Votre nom'],
+      ['field-email', 'Votre e-mail'],
+      ['field-message', 'Message'],
+    ]) {
+      const label = el.querySelector(`label[for="${id}"]`);
+      expect(label?.textContent?.trim()).toBe(text);
+      expect(label?.closest('mat-form-field')).toBeNull();
+    }
+    expect(el.querySelector('mat-label')).toBeNull();
+    const subject = el.querySelector('mat-select');
+    expect(subject?.getAttribute('aria-labelledby')).toContain('field-subject-label');
+    expect(el.querySelector('#field-subject-label')?.textContent?.trim()).toBe('Objet');
+  });
+
+  it('compteur du message sur la ligne de l’aide, à droite, et mis à jour', async () => {
+    const { fixture, el } = await render();
+    const hints = [...el.querySelectorAll('mat-hint')];
+    expect(hints).toHaveLength(2);
+    expect(hints[0].classList).toContain('help');
+    expect(hints[1].classList).toContain('mat-mdc-form-field-hint-end');
+    expect(hints[0].parentElement).toBe(hints[1].parentElement);
+    expect(hints[1].textContent?.trim()).toBe('0 / 4000');
+    type(el, '#field-message', 'Bonjour');
+    await fixture.whenStable();
+    expect(hints[1].textContent?.trim()).toBe('7 / 4000');
+  });
+
+  it('lien « En savoir plus sur la protection des données » vers Confidentialité, nouvel onglet', async () => {
+    const { el } = await render();
+    const link = el.querySelector<HTMLAnchorElement>('mat-checkbox a');
+    expect(link?.textContent).toContain('En savoir plus sur la protection des données');
+    expect(link?.getAttribute('href')).toBe('/confidentialite');
+    expect(link?.getAttribute('target')).toBe('_blank');
+    expect(link?.getAttribute('rel')).toBe('noopener');
+    expect(link?.querySelector('.sr-only')?.textContent).toContain('nouvel onglet');
+  });
+
   it('consentement obligatoire : rien ne part sans la case, message sous la case', async () => {
     const { fixture, el, sent } = await render();
     fill(el);
