@@ -112,7 +112,13 @@ test('créer un patient, le retrouver (marie, marié), modifier le rythme, archi
   // Méta (maquette 16) : création, séance d'accueil créée par l'API ; versions dans l'encart
   // Confidentialité, lien vers l'historique.
   await expect(page.locator('.page-header .meta')).toContainText('Créée le');
-  await expect(page.locator('.page-header .meta')).toContainText('1 séance');
+  // La séance d'accueil vient d'un écouteur asynchrone de l'API, puis de la projection : relire.
+  await expect(async () => {
+    await page.reload();
+    await expect(page.locator('.page-header .meta')).toContainText('1 séance', {
+      timeout: 3_000,
+    });
+  }).toPass({ timeout: 30_000 });
   const privacy = page.getByRole('region', { name: 'Confidentialité' });
   await expect(privacy.getByRole('button', { name: '1 version', exact: true })).toBeVisible();
   await expect(page.getByLabel('Rythme habituel')).toHaveValue('weekly');

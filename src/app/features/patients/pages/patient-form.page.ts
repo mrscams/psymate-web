@@ -254,6 +254,7 @@ export class PatientFormPage {
       this.focusFirstInvalid();
       return;
     }
+    if (!(await this.commitTagDraft())) return;
     const value = readPatientForm(this.form);
     const patient = this.patient();
     if (!patient) {
@@ -283,11 +284,31 @@ export class PatientFormPage {
     void this.router.navigate(patient ? ['/patients', patient.id, 'overview'] : ['/patients']);
   }
 
-  protected async addTag(label: string): Promise<void> {
+  protected async addTag(label: string): Promise<boolean> {
     const tag = await this.tagStore.resolve(label);
-    if (!tag) return;
+    if (!tag) return false;
     if (!this.tags().includes(tag.label)) this.tags.update((tags) => [...tags, tag.label]);
     this.tagDraft.set('');
+    return true;
+  }
+
+  /**
+   * Libellé tapé dans « Ajouter un tag… » sans Entrée : ajouté comme tag avant l'envoi (même
+   * résolution que la touche Entrée). Refusé (émotion, erreur) → envoi bloqué, message sous le
+   * champ des tags, focus dessus. Un brouillon vide après normalisation (« # ») est ignoré.
+   */
+  private async commitTagDraft(): Promise<boolean> {
+    const draft = this.tagDraft().trim();
+    if (!draft) return true;
+    if (await this.addTag(draft)) return true;
+    if (!this.tagStore.problem()) {
+      this.tagDraft.set('');
+      return true;
+    }
+    afterNextRender(() => this.document.getElementById('field-tags')?.focus(), {
+      injector: this.injector,
+    });
+    return false;
   }
 
   protected removeTag(label: string): void {

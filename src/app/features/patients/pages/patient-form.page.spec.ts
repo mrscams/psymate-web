@@ -260,6 +260,56 @@ describe('PatientFormPage', () => {
     });
   });
 
+  describe('tag tapé sans Entrée (brouillon) à l’enregistrement', () => {
+    it('création : le brouillon part comme tag dans le POST', async () => {
+      const create = vi.fn().mockResolvedValue(patient({ id: 'p-new' }));
+      const { fixture, el } = await render({ create });
+      type(el, 'displayName', 'Marie D.');
+      type(el, 'tags', ' #santé ');
+      submit(el);
+      await settle(fixture);
+      expect(create).toHaveBeenCalledWith(expect.objectContaining({ tags: ['santé'] }));
+    });
+
+    it('modification : le brouillon s’ajoute aux tags envoyés, puis le toast', async () => {
+      const replaceTags = vi
+        .fn()
+        .mockResolvedValue(patient({ tags: [{ id: 't-travail', label: 'travail' }] }));
+      const { fixture, el, toasts } = await render(
+        {
+          get: vi.fn().mockResolvedValue(patient()),
+          versions: vi.fn().mockResolvedValue([]),
+          replaceTags,
+        },
+        { id: 'p-marie' },
+      );
+      type(el, 'tags', 'santé');
+      submit(el);
+      await settle(fixture);
+      expect(replaceTags).toHaveBeenCalledWith('p-marie', ['travail', 'santé']);
+      expect(toasts.toasts().map((t) => t.message)).toEqual(['Fiche enregistrée']);
+    });
+
+    it('brouillon refusé (émotion) : aucun envoi, message sous le champ, focus dessus', async () => {
+      const create = vi.fn();
+      const createTag = vi.fn().mockRejectedValue({
+        status: 422,
+        code: 'TAG_IS_EMOTION',
+        errors: [
+          { field: 'label', code: 'TAG_IS_EMOTION', message: '« anxiété » est une émotion.' },
+        ],
+      });
+      const { fixture, el } = await render({ create, createTag });
+      type(el, 'displayName', 'Marie D.');
+      type(el, 'tags', 'anxiété');
+      submit(el);
+      await settle(fixture);
+      expect(create).not.toHaveBeenCalled();
+      expect(el.querySelector('#field-tags-error')?.textContent).toContain('est une émotion');
+      expect(document.activeElement).toBe(field(el, 'tags'));
+    });
+  });
+
   describe('modification', () => {
     const loaded = () => ({
       get: vi.fn().mockResolvedValue(patient({ currentVersion: 3 })),

@@ -43,10 +43,21 @@ async function createMarie(api: APIRequestContext): Promise<string> {
   return ((await response.json()) as { id: string }).id;
 }
 
-/** Fiche lue et méta complète (nombre de séances lu dans la projection). */
+/**
+ * Fiche lue et méta complète. La séance d'accueil est créée par un écouteur asynchrone de l'API
+ * (PatientCreated) et la projection vue d'ensemble la compte ensuite : juste après la création,
+ * la méta peut encore dire « aucune séance » ; on relit la fiche jusqu'à « 1 séance ».
+ */
 async function ready(page: Page): Promise<void> {
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Modifier la fiche · Marie D.');
-  await expect(page.locator('.page-header .meta')).toContainText('1 séance');
+  await expect(async () => {
+    await page.reload();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      'Modifier la fiche · Marie D.',
+    );
+    await expect(page.locator('.page-header .meta')).toContainText('1 séance', {
+      timeout: 3_000,
+    });
+  }).toPass({ timeout: 30_000 });
 }
 
 test('maquette 16 : méta, dates jj/mm/aaaa, Suivi en 3 colonnes, drapeaux, tags ; axe clair et sombre ; 375 px', async ({
@@ -152,4 +163,66 @@ test('maquette 16 : méta, dates jj/mm/aaaa, Suivi en 3 colonnes, drapeaux, tags
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Nouveau patient');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(375);
   await expectNoAxeViolations(page);
+});
+
+test('tag tapé sans Entrée : ajouté à l’enregistrement (modification et création), refusé → envoi bloqué', async ({
+  page,
+  request,
+}) => {
+  test.setTimeout(90_000);
+  const account = await createAccount(request, 'ux-b8.brouillon', 'psychologist');
+  const id = await createMarie(request);
+  await createTag(request, 'famille');
+  await signIn(page, account);
+
+  // Modification : « famille » tapé, puis Enregistrer → PUT /tags le contient, toast, puce.
+  await page.goto(`/fr/patients/${id}/fiche`);
+  await ready(page);
+  const tagInput = page.getByRole('combobox', { name: 'Ajouter un tag' });
+  await tagInput.fill('famille');
+  const put = page.waitForResponse(
+    (r) => r.url().endsWith(`/api/patients/${id}/tags`) && r.request().method() === 'PUT',
+  );
+  await page.getByRole('button', { name: /Enregistrer/ }).click();
+  const response = await put;
+  expect(response.status()).toBe(200);
+  expect(response.request().postDataJSON()).toEqual({ tags: ['sommeil', 'travail', 'famille'] });
+  await expect(page.getByText('Fiche enregistrée')).toBeVisible();
+  await expect(tagInput).toHaveValue('');
+  await page.reload();
+  await ready(page);
+  await expect(page.locator('pm-tag-editor .chip')).toHaveText([
+    '#famille',
+    '#sommeil',
+    '#travail',
+  ]);
+
+  // Création : nom et brouillon de tag, Ctrl+Entrée → le POST porte le tag.
+  await page.goto('/fr/patients/nouveau');
+  await page.getByRole('textbox', { name: /Nom affiché/ }).fill('Paul R.');
+  await tagInput.fill('famille');
+  const created = page.waitForResponse(
+    (r) => r.url().endsWith('/api/patients') && r.request().method() === 'POST',
+  );
+  await tagInput.press('Control+Enter');
+  const post = await created;
+  expect(post.status()).toBe(201);
+  expect(post.request().postDataJSON()).toMatchObject({
+    displayName: 'Paul R.',
+    tags: ['famille'],
+  });
+
+  // Brouillon refusé (émotion) : aucun POST du patient, message sous le champ, focus dessus.
+  await page.goto('/fr/patients/nouveau');
+  await page.getByRole('textbox', { name: /Nom affiché/ }).fill('Léa M.');
+  let posts = 0;
+  page.on('request', (r) => {
+    if (r.method() === 'POST' && r.url().endsWith('/api/patients')) posts += 1;
+  });
+  await tagInput.fill('anxiété');
+  await page.getByRole('button', { name: /Enregistrer/ }).click();
+  await expect(page.locator('#field-tags-error')).toBeVisible();
+  await expect(tagInput).toBeFocused();
+  expect(posts).toBe(0);
+  await expect(page).toHaveURL(/\/fr\/patients\/nouveau$/);
 });
