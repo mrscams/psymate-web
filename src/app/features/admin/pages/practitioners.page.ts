@@ -154,7 +154,9 @@ export class PractitionersPage {
         void this.store.setFilters(filters);
       });
     });
-    void this.appeals.load();
+    // Au premier rendu, comme les autres lectures (voir VocabularyPage : une instance créée puis
+    // aussitôt remplacée par l'habillage admin ne doit rien lire).
+    effect(() => untracked(() => void this.appeals.load()));
     inject(DestroyRef).onDestroy(() => clearTimeout(this.timer));
   }
 

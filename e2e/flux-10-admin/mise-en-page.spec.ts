@@ -8,8 +8,9 @@ import { adminApi, shareSession, SubmittedAccount, submittedAccount } from './he
 // UX-E1 à UX-E4 (audit UX du 9 nov. 2026, fiches 20, 21, 22, 28) : mise en page des écrans
 // d'administration mesurée contre l'API locale (seed small), jamais de mock. Décision de validation
 // visible sans défilement à 1440 × 900 et collante ; lignes de 56 px chez les praticiens ;
-// aucun débordement horizontal à 375 px ; captures 1440 px jointes au rapport pour la comparaison
-// avec les maquettes. axe-core à 0 sur chaque écran mesuré.
+// aucun débordement horizontal à 375 px, barre d'administration comprise (UX-A9a) ; captures
+// 1440 px jointes au rapport pour la comparaison avec les maquettes. axe-core à 0 sur chaque écran
+// mesuré, sans exclusion.
 
 const SCREENS = [
   { name: '20-validation', url: '/fr/admin/validation' },
@@ -133,13 +134,18 @@ test.describe('administration : mise en page (UX-E1 à UX-E4)', () => {
     for (const screen of SCREENS) {
       await page.goto(screen.url);
       await settled(page);
-      // Contenu de la page (main) : aucun élément ne dépasse la fenêtre ; le message nomme les
-      // fautifs. La barre d'administration partagée (pm-admin-bar, shared/ui) n'est pas repliée à
-      // 375 px : hors du périmètre de la feature, signalée pour le lot A.
+      // Page entière, barre d'administration comprise (repliée à 375 px depuis UX-A8) : la page ne
+      // défile pas horizontalement, et aucun élément ne dépasse la fenêtre ; le message nomme les
+      // fautifs.
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth),
+        `${screen.url} : largeur défilable à 375 px`,
+      ).toBe(375);
       const overflow = await page.evaluate(() =>
-        [...document.querySelectorAll('main, main *')]
-          // Tableaux : ils défilent dans leur propre conteneur (.table-wrap), qui reste dans la page.
-          .filter((el) => !el.parentElement?.closest('.table-wrap'))
+        [...document.querySelectorAll('body *')]
+          // Cadres défilants qui restent dans la page : tableaux (.table-wrap) et onglets de la
+          // barre d'administration (nav.tabs, overflow-x: auto sous 720 px).
+          .filter((el) => !el.parentElement?.closest('.table-wrap, pm-admin-bar nav.tabs'))
           .filter((el) => el.getBoundingClientRect().right > 375.5)
           .slice(0, 5)
           .map((el) => `${el.tagName.toLowerCase()}.${[...el.classList].join('.')}`),
@@ -149,11 +155,9 @@ test.describe('administration : mise en page (UX-E1 à UX-E4)', () => {
         path: testInfo.outputPath(`${screen.name}-375.png`),
         fullPage: true,
       });
-      // axe sur le contenu de la page : la barre partagée, débordante à 375 px, est exclue (voir
-      // ci-dessus) ; elle est mesurée à 1440 px par les deux premiers tests.
+      // axe sur toute la page, barre comprise, sans exclusion.
       const results = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-        .exclude('pm-admin-bar')
         .analyze();
       expect(results.violations, screen.url).toEqual([]);
     }
