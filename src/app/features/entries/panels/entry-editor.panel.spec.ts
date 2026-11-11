@@ -178,6 +178,11 @@ describe('EntryEditorPanel', () => {
     expect(text(panel().querySelector('.subtitle'))).toBe(
       'Marie D. · préremplie depuis la barre de capture',
     );
+    // Sous l'en-tête du panneau (subtitle de pm-side-panel), plus dans le corps ; il décrit le dialogue.
+    const subtitle = panel().querySelector('.panel-header .subtitle')!;
+    expect(subtitle).not.toBeNull();
+    expect(panel().querySelector('.panel-body .subtitle')).toBeNull();
+    expect(panel().closest('[role="dialog"]')?.getAttribute('aria-describedby')).toBe(subtitle.id);
     // Titres de section dans l'ordre de la maquette ; le champ principal porte le nom du type.
     expect([...panel().querySelectorAll('.section-title')].map((item) => text(item))).toEqual([
       'Type',
@@ -571,7 +576,7 @@ describe('EntryEditorPanel', () => {
     });
 
     it('correction : liens posés en lecture, « Lier ou modifier » ouvre l’éditeur de lien, pas de rail', async () => {
-      const { api } = setup();
+      const { api } = setup({ patientName: vi.fn().mockResolvedValue('Marie D.') });
       TestBed.runInInjectionContext(() => openEntryEditor('p-marie', { entryId: 'e-1' }));
       await settle();
       expect(panel().querySelector('fieldset.rail')).toBeNull();
@@ -581,6 +586,10 @@ describe('EntryEditorPanel', () => {
       links.querySelector<HTMLButtonElement>('button.link-editor')!.click();
       await settle();
       expect(document.querySelector('pm-link-editor-panel')).not.toBeNull();
+      // Le patient passe au sous-titre de l'éditeur de lien (maquette 06).
+      expect(text(document.querySelector('pm-link-editor-panel .subtitle'))).toBe(
+        'Marie D. · le lien est visible dans le graphe et la timeline',
+      );
       expect(TestBed.inject(Router).url).toContain('link=e-1');
       expect(api.create).not.toHaveBeenCalled();
     });

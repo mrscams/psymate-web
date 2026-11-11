@@ -51,7 +51,7 @@ async function render(
   });
   const ref = TestBed.inject(SidePanelService).open<LinkEditorPanel, LinkEditorData, EntryLink>(
     LinkEditorPanel,
-    { data: { entryId: 'e-feeling', patientName: 'Marie D.', targetId }, width: 420 },
+    { data: { entryId: 'e-feeling', patientName: 'Marie D.', targetId }, width: 520 },
   ) as SidePanelRef<EntryLink>;
   await settle();
   const el = document.querySelector<HTMLElement>('pm-link-editor-panel')!;
@@ -126,7 +126,12 @@ describe('LinkEditorPanel', () => {
   it('contenu : titre, rappel patient, source, cibles ; entrée déjà liée grisée avec le verbe', async () => {
     const { el } = await render();
     expect(text(el.querySelector('h2'))).toBe('Lier deux entrées');
-    expect(text(el.querySelector('.patient'))).toBe('Marie D.');
+    expect(text(el.querySelector('.subtitle'))).toBe(
+      'Marie D. · le lien est visible dans le graphe et la timeline',
+    );
+    // Le sous-titre décrit le dialogue (pm-side-panel).
+    const dialog = el.closest('[role="dialog"]')!;
+    expect(dialog.getAttribute('aria-describedby')).toBe(el.querySelector('.subtitle')!.id);
     expect(text(el.querySelector('.card-name'))).toBe('Anxiété 8/10');
     const targets = [...el.querySelectorAll('label.target')];
     expect(targets.map((item) => text(item.querySelector('.row-name')))).toEqual([

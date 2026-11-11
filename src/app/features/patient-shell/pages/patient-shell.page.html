@@ -19,6 +19,7 @@
   <pm-patient-header
     [patient]="headerPatient()"
     [session]="headerSession()"
+    [unclosedAfterMin]="unclosedAfterMin"
     [state]="headerState()"
     [busy]="store.busy()"
     [showViewToggle]="activeTab() === 'overview'"

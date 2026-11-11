@@ -37,11 +37,6 @@
   text-transform: none;
 }
 
-.patient {
-  font: var(--mat-sys-body-small);
-  color: var(--text-secondary);
-}
-
 .hint {
   margin: 0;
   font: var(--mat-sys-body-small);
@@ -398,18 +393,25 @@ textarea {
   color: var(--primary-hover);
 }
 
+// Une seule ligne, « Annuler Échap » à droite (maquette 06) : quand la place manque (police de
+// repli plus large, zoom, 375 px), le texte passe à la ligne dans le bouton, pas le bouton.
 .actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 8px;
 
   button {
     display: inline-flex;
+    flex: 0 1 auto;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 0 6px;
+    min-width: 0;
     min-height: 36px;
-    padding: 0 12px;
+    padding: 4px 12px;
+    text-align: center;
     border: 1px solid var(--border-subtle);
     border-radius: 10px;
     background: var(--surface-raised);

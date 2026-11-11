@@ -79,6 +79,25 @@ function editor(page: Page) {
   };
 }
 
+/**
+ * Maquette 06 (UX-A9b) : panneau de 520 px, sous-titre « patient · portée du lien » sous le titre, et
+ * les trois boutons du pied sur une même ligne, « Annuler Échap » compris (centres alignés : le texte
+ * passe à la ligne dans un bouton plutôt que le bouton sous les autres, même avec une police large).
+ */
+async function expectMockup06(dialog: Locator, patient: string): Promise<void> {
+  expect((await dialog.boundingBox())?.width).toBe(520);
+  await expect(dialog.locator('.panel-header .subtitle')).toHaveText(
+    `${patient} · le lien est visible dans le graphe et la timeline`,
+  );
+  const centers: number[] = [];
+  for (const button of await dialog.locator('.footer .actions button').all()) {
+    const box = (await button.boundingBox())!;
+    centers.push(box.y + box.height / 2);
+  }
+  expect(centers).toHaveLength(3);
+  expect(Math.max(...centers) - Math.min(...centers)).toBeLessThan(2);
+}
+
 /** Le panneau a fini de glisser et ses blocs sont chargés : axe peut mesurer. */
 async function settled(dialog: Locator): Promise<void> {
   await expect(dialog).toBeVisible();
@@ -106,6 +125,7 @@ test.describe('lier deux entrées', () => {
     await expect(e.dialog.getByRole('heading', { name: 'Lier deux entrées' })).toBeVisible();
     await expect(e.source).toHaveText('Anxiété 8/10');
     await expect(e.search).toBeFocused();
+    await expectMockup06(e.dialog, 'Inès L.');
     await expectNoAxeViolations(page);
 
     await e.target("Entretien d'évaluation").check();
@@ -183,6 +203,8 @@ test.describe('lier deux entrées', () => {
     await expect(page.locator('[role="dialog"]')).toHaveCount(2);
     await expect(page).toHaveURL(new RegExp(`entry=${folder.eventId}`));
     await expect(page).toHaveURL(new RegExp(`link=${folder.eventId}`));
+    // Empilé, même largeur et même pied que seul : il couvre l'éditeur d'entrée (480 px).
+    await expectMockup06(e.dialog, 'Inès L.');
     await expectNoAxeViolations(page);
 
     // Échap sans choix ferme l'éditeur de lien seul ; l'éditeur d'entrée reste ouvert.
