@@ -280,6 +280,8 @@ describe('DirectoryPage', () => {
     expect(toggle.getAttribute('aria-expanded')).toBe('true');
     expect(panel.getAttribute('role')).toBe('dialog');
     expect(panel.getAttribute('aria-modal')).toBe('true');
+    // La page derrière le panneau ne défile plus.
+    expect(document.documentElement.style.overflow).toBe('hidden');
     expect(panel.getAttribute('aria-labelledby')).toBe('directory-filters-title');
     expect(el.querySelector('#directory-filters-title')?.textContent?.trim()).toBe('Filtres');
     await vi.waitFor(() => expect(document.activeElement).toBe(panel));
@@ -290,6 +292,7 @@ describe('DirectoryPage', () => {
     await harness.fixture.whenStable();
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
     expect(panel.getAttribute('role')).toBeNull();
+    expect(document.documentElement.style.overflow).toBe('');
     await vi.waitFor(() => expect(document.activeElement).toBe(toggle));
 
     // « Voir 1 praticien » ferme aussi le panneau.

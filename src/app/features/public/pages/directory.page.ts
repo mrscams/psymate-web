@@ -1,6 +1,6 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -220,6 +220,16 @@ export class DirectoryPage {
       destroyRef,
     );
     destroyRef.onDestroy(() => this.cancelDebounce());
+
+    // Panneau de filtres ouvert (sous 760 px) : la page derrière ne défile plus ; rétablie à la
+    // fermeture, au passage en grand écran et à la sortie de la page.
+    const root = inject(DOCUMENT).documentElement;
+    effect((onCleanup) => {
+      if (!this.panelMode()) return;
+      const previous = root.style.overflow;
+      root.style.overflow = 'hidden';
+      onCleanup(() => (root.style.overflow = previous));
+    });
 
     // La saisie libre suit le mot-clé et la ville de l'URL (lien partagé, retour arrière), mais
     // seulement quand ils changent : un filtre appliqué pendant la saisie ne l'efface pas.

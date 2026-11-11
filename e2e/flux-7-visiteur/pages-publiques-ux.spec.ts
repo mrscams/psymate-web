@@ -62,6 +62,21 @@ test.describe('annuaire (UX-D6)', () => {
     await expectNoAxeViolations(page);
     await shoot(page, 'ux-d6-annuaire-375-filtres', false);
 
+    // Défilement retenu : en bas du panneau, la molette ne fait pas défiler la page derrière.
+    await expect(dialog).toHaveCSS('overscroll-behavior-y', 'contain');
+    expect(await page.evaluate(() => getComputedStyle(document.documentElement).overflow)).toBe(
+      'hidden',
+    );
+    const pageScroll = await page.evaluate(() => window.scrollY);
+    await dialog.hover();
+    for (let i = 0; i < 6; i++) await page.mouse.wheel(0, 600);
+    await expect
+      .poll(() => dialog.evaluate((el) => el.scrollTop + el.clientHeight >= el.scrollHeight - 1))
+      .toBe(true);
+    await page.mouse.wheel(0, 600);
+    await page.waitForTimeout(200);
+    expect(await page.evaluate(() => window.scrollY)).toBe(pageScroll);
+
     // Focus piégé : 40 tabulations restent dans le panneau.
     for (let i = 0; i < 40; i++) {
       await page.keyboard.press('Tab');
@@ -145,13 +160,26 @@ test.describe('annuaire (UX-D6)', () => {
     await expectNoAxeViolations(page);
   });
 
-  test('375 px : pas de défilement horizontal, ≤ 3 000 px pour 10 fiches', async ({ page }) => {
+  test('375 px : pas de défilement horizontal, ≤ 3 600 px pour 10 fiches (extrait et avatar gardés)', async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/fr/annuaire');
     await resultsShown(page);
     await noHorizontalScroll(page);
     const height = await heightForTenCards(page);
-    if (height !== null) expect(height).toBeLessThanOrEqual(3000);
+    if (height !== null) expect(height).toBeLessThanOrEqual(3600);
+    const card = page.locator('pm-practitioner-card').first();
+    if (await card.count()) {
+      // Mobile : avatar et extrait gardés, extrait limité à 2 lignes (texte complet dans le DOM).
+      await expect(card.getByRole('img', { name: /^Photo de / })).toBeVisible();
+      const excerpt = card.locator('.excerpt');
+      await expect(excerpt).toBeVisible();
+      const lines = await excerpt.evaluate(
+        (el) => el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight),
+      );
+      expect(Math.round(lines)).toBeLessThanOrEqual(2);
+    }
     await shoot(page, 'ux-d6-annuaire-375');
   });
 });

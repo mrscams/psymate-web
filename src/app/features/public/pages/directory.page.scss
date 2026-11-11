@@ -290,6 +290,8 @@ $mockup-gutter: 40px;
     inset: 0;
     z-index: 1000;
     overflow-y: auto;
+    // Arrivé en bas du panneau, le défilement ne passe pas à la page (verrouillée par la page).
+    overscroll-behavior: contain;
     border: 0;
     border-radius: 0;
   }

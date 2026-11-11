@@ -18,12 +18,13 @@ import { availabilityLabel, professionLabel } from './labels';
       display: inline-grid;
       place-items: center;
       flex: none;
-      width: 56px;
-      height: 56px;
+      /* Taille réglable par le parent (fiche résumée mobile : 44 px). */
+      width: var(--pm-avatar-size, 56px);
+      height: var(--pm-avatar-size, 56px);
       border-radius: 50%;
       background: var(--primary-tint);
       color: var(--primary-hover);
-      font: 600 20px/1 var(--font-ui);
+      font: 600 calc(var(--pm-avatar-size, 56px) * 0.36) / 1 var(--font-ui);
     }
     .avatar.large {
       width: 112px;

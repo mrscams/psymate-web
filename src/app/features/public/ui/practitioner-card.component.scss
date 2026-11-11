@@ -159,30 +159,42 @@ $meta-separator: 18px;
   gap: 8px;
 }
 
-// Petit écran (fiche 08, 390 px) : sans avatar ni extrait, corps en pleine largeur,
-// boutons côte à côte en pleine largeur (fiche de 3 000 px au plus pour 10 fiches, UX-D6).
+// Petit écran (fiche 08, 390 px) : avatar de 44 px à côté de l'identité, puis extrait (2 lignes,
+// texte complet dans le DOM), spécialités, méta et boutons côte à côte en pleine largeur. Le corps
+// passe en `display: contents` pour que ses lignes occupent toute la largeur de la carte.
 @media (max-width: 720px) {
   .card {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 10px;
-    padding: 14px 12px;
-  }
+    --pm-avatar-size: 44px;
 
-  .body {
-    gap: 6px;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 6px 12px;
+    padding: 12px;
   }
 
   .avatar {
-    display: none;
+    grid-row: 1;
+    align-self: start;
+  }
+
+  .body {
+    display: contents;
+  }
+
+  .identity {
+    grid-column: 2;
+    align-self: center;
+    row-gap: 4px;
+  }
+
+  .excerpt,
+  .tags,
+  .meta,
+  .actions {
+    grid-column: 1 / -1;
   }
 
   .availability-slot {
     margin-left: 0;
-  }
-
-  // L'extrait se lit sur la fiche : la liste mobile garde identité, spécialités et méta.
-  .excerpt {
-    display: none;
   }
 
   .tags li {
