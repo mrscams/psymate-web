@@ -810,7 +810,7 @@
         <source> Le vocabulaire global (29 émotions, inspiré de Plutchik) couvre l&apos;essentiel. Quand il manque un mot à votre pratique, ajoutez-le ici : il sera proposé dans la saisie, marqué « perso », et rattaché à une famille pour entrer dans les courbes et le graphe. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
-          <context context-type="linenumber">14,19</context>
+          <context context-type="linenumber">14,20</context>
         </context-group>
         <note priority="1" from="description">Introduction de la page Émotions personnalisées</note>
       </trans-unit>
@@ -818,7 +818,7 @@
         <source>Gérer mes tags</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
-          <context context-type="linenumber">20,25</context>
+          <context context-type="linenumber">23,28</context>
         </context-group>
         <note priority="1" from="description">Lien vers la page des tags</note>
       </trans-unit>
@@ -826,7 +826,7 @@
         <source> Mes émotions · <x id="INTERPOLATION" equiv-text="{{ store.customs().length }}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
-          <context context-type="linenumber">35,37</context>
+          <context context-type="linenumber">38,40</context>
         </context-group>
         <note priority="1" from="description">Titre de la liste des émotions personnelles</note>
       </trans-unit>
@@ -834,7 +834,7 @@
         <source> Une émotion utilisée ne se supprime pas : elle se fusionne. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
-          <context context-type="linenumber">38,42</context>
+          <context context-type="linenumber">41,45</context>
         </context-group>
         <note priority="1" from="description">Mention sous le titre de la liste</note>
       </trans-unit>
@@ -842,7 +842,7 @@
         <source> Journal des fusions </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
-          <context context-type="linenumber">66,69</context>
+          <context context-type="linenumber">69,72</context>
         </context-group>
         <note priority="1" from="description">Titre du journal des fusions</note>
       </trans-unit>
@@ -850,7 +850,7 @@
         <source> Vocabulaire global · <x id="INTERPOLATION" equiv-text="{{ store.globals().length }}"/> émotions </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
-          <context context-type="linenumber">78,80</context>
+          <context context-type="linenumber">81,83</context>
         </context-group>
         <note priority="1" from="description">Titre du vocabulaire global</note>
       </trans-unit>
@@ -858,7 +858,7 @@
         <source> Géré par la plateforme, en lecture seule. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
-          <context context-type="linenumber">81,84</context>
+          <context context-type="linenumber">84,87</context>
         </context-group>
         <note priority="1" from="description">Mention du vocabulaire global</note>
       </trans-unit>
@@ -5653,7 +5653,7 @@
         <source>Voir le dossier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
-          <context context-type="linenumber">175,178</context>
+          <context context-type="linenumber">176,179</context>
         </context-group>
         <note priority="1" from="description">Lien vers le dossier</note>
       </trans-unit>
@@ -5661,7 +5661,7 @@
         <source> Afficher plus </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
-          <context context-type="linenumber">195,197</context>
+          <context context-type="linenumber">196,198</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
@@ -5681,7 +5681,7 @@
         <source> La suite de la liste n&apos;a pas pu être chargée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
-          <context context-type="linenumber">203,209</context>
+          <context context-type="linenumber">204,210</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
@@ -5702,7 +5702,7 @@
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
-          <context context-type="linenumber">212,215</context>
+          <context context-type="linenumber">213,216</context>
         </context-group>
         <note priority="1" from="description">Note de bas de page du journal</note>
       </trans-unit>
@@ -8491,7 +8491,7 @@
         <source>Espace réservé aux praticiens.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">5,7</context>
+          <context context-type="linenumber">5,9</context>
         </context-group>
         <note priority="1" from="description">Sous-titre de l&apos;écran de connexion</note>
       </trans-unit>
@@ -8499,7 +8499,7 @@
         <source>Créer un compte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">8,14</context>
+          <context context-type="linenumber">11,17</context>
         </context-group>
         <note priority="1" from="description">Lien vers l&apos;inscription</note>
       </trans-unit>
@@ -8507,7 +8507,7 @@
         <source>Adresse e-mail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">20,21</context>
+          <context context-type="linenumber">23,24</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
@@ -8519,7 +8519,7 @@
         <source>Saisissez votre adresse e-mail.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">24,26</context>
+          <context context-type="linenumber">27,29</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
@@ -8531,7 +8531,7 @@
         <source>Cette adresse e-mail n&apos;est pas valide.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">28,33</context>
+          <context context-type="linenumber">31,36</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.ts</context>
@@ -8543,7 +8543,7 @@
         <source>Mot de passe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">35,39</context>
+          <context context-type="linenumber">38,42</context>
         </context-group>
         <note priority="1" from="description">Champ mot de passe de la connexion</note>
       </trans-unit>
@@ -8551,7 +8551,7 @@
         <source>Saisissez votre mot de passe.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">68,72</context>
+          <context context-type="linenumber">71,75</context>
         </context-group>
         <note priority="1" from="description">Mot de passe manquant</note>
       </trans-unit>
@@ -8559,7 +8559,7 @@
         <source>Mot de passe oublié ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">74,79</context>
+          <context context-type="linenumber">80,85</context>
         </context-group>
         <note priority="1" from="description">Lien mot de passe oublié</note>
       </trans-unit>
@@ -8567,7 +8567,7 @@
         <source> Double authentification activée </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">81,83</context>
+          <context context-type="linenumber">87,89</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc code 2FA</note>
       </trans-unit>
@@ -8575,7 +8575,7 @@
         <source>Code de vérification</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">85,88</context>
+          <context context-type="linenumber">91,94</context>
         </context-group>
         <note priority="1" from="description">Champ code de vérification</note>
       </trans-unit>
@@ -8583,7 +8583,7 @@
         <source>Un de vos 10 codes de secours ; il ne servira qu&apos;une fois.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">99,102</context>
+          <context context-type="linenumber">105,108</context>
         </context-group>
         <note priority="1" from="description">Aide du champ code de secours</note>
       </trans-unit>
@@ -8591,7 +8591,7 @@
         <source>Les 6 chiffres de votre application d&apos;authentification.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">103,106</context>
+          <context context-type="linenumber">109,112</context>
         </context-group>
         <note priority="1" from="description">Aide du champ code 2FA</note>
       </trans-unit>
@@ -8599,7 +8599,7 @@
         <source> Utiliser le code de l&apos;application </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">115,118</context>
+          <context context-type="linenumber">121,124</context>
         </context-group>
         <note priority="1" from="description">Revenir au code de l&apos;application</note>
       </trans-unit>
@@ -8607,7 +8607,7 @@
         <source> Utiliser un code de secours </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">124,128</context>
+          <context context-type="linenumber">130,134</context>
         </context-group>
         <note priority="1" from="description">Basculer vers un code de secours</note>
       </trans-unit>
@@ -8615,7 +8615,7 @@
         <source>Rester connecté 30 jours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">134,139</context>
+          <context context-type="linenumber">140,145</context>
         </context-group>
         <note priority="1" from="description">Case rester connecté (G Q6)</note>
       </trans-unit>
@@ -8623,7 +8623,7 @@
         <source> Trop d&apos;essais. Réessayez dans <x id="INTERPOLATION" equiv-text="{{ lockDelay() }}"/>. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">143,145</context>
+          <context context-type="linenumber">149,151</context>
         </context-group>
         <note priority="1" from="description">Compte verrouillé, compte à rebours</note>
       </trans-unit>
@@ -8631,7 +8631,7 @@
         <source> Se connecter </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">155,157</context>
+          <context context-type="linenumber">161,163</context>
         </context-group>
         <note priority="1" from="description">Bouton de connexion</note>
       </trans-unit>
@@ -8639,7 +8639,7 @@
         <source> Après 5 tentatives échouées, le compte est verrouillé 15 minutes. Les connexions sont consignées dans votre journal de sécurité. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">158,163</context>
+          <context context-type="linenumber">164,169</context>
         </context-group>
         <note priority="1" from="description">Mention verrouillage et journal sous le bouton</note>
       </trans-unit>
@@ -14879,7 +14879,7 @@
         <source>Fiche</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">10,12</context>
+          <context context-type="linenumber">12,14</context>
         </context-group>
         <note priority="1" from="description">Fil d&apos;Ariane, fiche</note>
       </trans-unit>
@@ -14887,7 +14887,7 @@
         <source>Nouveau</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">12,18</context>
+          <context context-type="linenumber">14,20</context>
         </context-group>
         <note priority="1" from="description">Fil d&apos;Ariane, création</note>
       </trans-unit>
@@ -14895,7 +14895,7 @@
         <source> historique </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">30,37</context>
+          <context context-type="linenumber">32,39</context>
         </context-group>
         <note priority="1" from="description">Lien vers l&apos;historique</note>
       </trans-unit>
@@ -14903,7 +14903,7 @@
         <source>Ce dossier est archivé : il n&apos;apparaît plus dans la liste et ne peut pas être modifié.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">47,52</context>
+          <context context-type="linenumber">49,54</context>
         </context-group>
         <note priority="1" from="description">Bandeau d&apos;un dossier archivé</note>
       </trans-unit>
@@ -14911,7 +14911,7 @@
         <source> Restaurer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">57,62</context>
+          <context context-type="linenumber">59,64</context>
         </context-group>
         <note priority="1" from="description">Bouton de restauration</note>
       </trans-unit>
@@ -14919,7 +14919,7 @@
         <source>Identité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">82,84</context>
+          <context context-type="linenumber">84,86</context>
         </context-group>
         <note priority="1" from="description">Section de la fiche</note>
       </trans-unit>
@@ -14927,7 +14927,7 @@
         <source>Nom affiché</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">85,86</context>
+          <context context-type="linenumber">87,88</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -14939,7 +14939,7 @@
         <source> Obligatoire. Un prénom et une initiale suffisent. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">104,107</context>
+          <context context-type="linenumber">106,109</context>
         </context-group>
         <note priority="1" from="description">Aide du nom affiché</note>
       </trans-unit>
@@ -14947,7 +14947,7 @@
         <source>Prénom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">116,119</context>
+          <context context-type="linenumber">118,121</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -14959,7 +14959,7 @@
         <source>Nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">135,138</context>
+          <context context-type="linenumber">137,140</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -14971,7 +14971,7 @@
         <source>Date de naissance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">154,157</context>
+          <context context-type="linenumber">156,159</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -14983,7 +14983,7 @@
         <source>Pronom / accord</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">171,174</context>
+          <context context-type="linenumber">173,176</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -14995,15 +14995,15 @@
         <source> Non renseigné </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">180,182</context>
+          <context context-type="linenumber">182,184</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">301,303</context>
+          <context context-type="linenumber">303,305</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">316,318</context>
+          <context context-type="linenumber">318,320</context>
         </context-group>
         <note priority="1" from="description">Option vide d&apos;une liste</note>
       </trans-unit>
@@ -15011,7 +15011,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">190,193</context>
+          <context context-type="linenumber">192,195</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -15023,7 +15023,7 @@
         <source>E-mail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">205,208</context>
+          <context context-type="linenumber">207,210</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -15035,7 +15035,7 @@
         <source> Pour les rappels, plus tard. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">220,222</context>
+          <context context-type="linenumber">222,224</context>
         </context-group>
         <note priority="1" from="description">Aide de l&apos;e-mail</note>
       </trans-unit>
@@ -15043,7 +15043,7 @@
         <source>Contexte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">228,230</context>
+          <context context-type="linenumber">230,232</context>
         </context-group>
         <note priority="1" from="description">Section de la fiche</note>
       </trans-unit>
@@ -15051,7 +15051,7 @@
         <source>Situation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">234,236</context>
+          <context context-type="linenumber">236,238</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -15063,7 +15063,7 @@
         <source>Activité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">242,244</context>
+          <context context-type="linenumber">244,246</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -15075,7 +15075,7 @@
         <source>Adressé·e par</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">250,252</context>
+          <context context-type="linenumber">252,254</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -15087,7 +15087,7 @@
         <source>Motif initial</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">258,261</context>
+          <context context-type="linenumber">260,263</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -15099,7 +15099,7 @@
         <source>Histoire et éléments à garder en tête</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">271,273</context>
+          <context context-type="linenumber">273,275</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -15111,7 +15111,7 @@
         <source>Suivi</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">278,280</context>
+          <context context-type="linenumber">280,282</context>
         </context-group>
         <note priority="1" from="description">Section de la fiche</note>
       </trans-unit>
@@ -15119,7 +15119,7 @@
         <source>Suivi·e depuis</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">284,287</context>
+          <context context-type="linenumber">286,289</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -15131,7 +15131,7 @@
         <source>Rythme habituel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">297,299</context>
+          <context context-type="linenumber">299,301</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -15143,7 +15143,7 @@
         <source>Modalité par défaut</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">312,314</context>
+          <context context-type="linenumber">314,316</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -15155,7 +15155,7 @@
         <source>Durée de séance (min)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">327,330</context>
+          <context context-type="linenumber">329,332</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -15167,7 +15167,7 @@
         <source>Tarif</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">347,350</context>
+          <context context-type="linenumber">349,352</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -15179,7 +15179,7 @@
         <source>[TARIF]</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">355</context>
+          <context context-type="linenumber">357</context>
         </context-group>
         <note priority="1" from="description">Exemple du champ tarif</note>
       </trans-unit>
@@ -15187,7 +15187,7 @@
         <source>Médecin / prescripteur</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">362,364</context>
+          <context context-type="linenumber">364,366</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
@@ -15199,7 +15199,7 @@
         <source>Drapeaux</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">370,371</context>
+          <context context-type="linenumber">372,373</context>
         </context-group>
         <note priority="1" from="description">Section de la fiche</note>
       </trans-unit>
@@ -15207,7 +15207,7 @@
         <source>Tags du dossier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">375,377</context>
+          <context context-type="linenumber">377,379</context>
         </context-group>
         <note priority="1" from="description">Section de la fiche</note>
       </trans-unit>
@@ -15215,7 +15215,7 @@
         <source> Chaque modification est horodatée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">390,393</context>
+          <context context-type="linenumber">392,395</context>
         </context-group>
         <note priority="1" from="description">Mention sous le formulaire</note>
       </trans-unit>
@@ -15223,7 +15223,7 @@
         <source> Annuler </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">398,400</context>
+          <context context-type="linenumber">400,402</context>
         </context-group>
         <note priority="1" from="description">Bouton annuler</note>
       </trans-unit>
@@ -15231,7 +15231,7 @@
         <source>Enregistrer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">401,402</context>
+          <context context-type="linenumber">403,404</context>
         </context-group>
         <note priority="1" from="description">Bouton enregistrer</note>
       </trans-unit>
@@ -15239,7 +15239,7 @@
         <source>Ctrl+Entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">403,407</context>
+          <context context-type="linenumber">405,409</context>
         </context-group>
         <note priority="1" from="description">Raccourci d&apos;enregistrement</note>
       </trans-unit>
@@ -15247,7 +15247,7 @@
         <source> Archiver ce dossier </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">413,415</context>
+          <context context-type="linenumber">415,417</context>
         </context-group>
         <note priority="1" from="description">Titre de la zone d&apos;archivage</note>
       </trans-unit>
@@ -15255,7 +15255,7 @@
         <source> Le dossier disparaît de la liste. Rien n&apos;est supprimé : entrées, liens et séances sont conservés, et la restauration est possible à tout moment. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">416,420</context>
+          <context context-type="linenumber">418,422</context>
         </context-group>
         <note priority="1" from="description">Explication de la zone d&apos;archivage</note>
       </trans-unit>
@@ -15263,7 +15263,7 @@
         <source> Archiver… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">426,428</context>
+          <context context-type="linenumber">428,430</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;archivage</note>
       </trans-unit>
@@ -15271,7 +15271,7 @@
         <source> Export du dossier </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">443,445</context>
+          <context context-type="linenumber">445,447</context>
         </context-group>
         <note priority="1" from="description">Encart d&apos;export du dossier</note>
       </trans-unit>
@@ -15279,7 +15279,7 @@
         <source> À la création </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">451,453</context>
+          <context context-type="linenumber">453,455</context>
         </context-group>
         <note priority="1" from="description">Encart de création</note>
       </trans-unit>
@@ -15287,7 +15287,7 @@
         <source> Une séance d&apos;accueil est créée à la date du jour, puis la vue d&apos;ensemble s&apos;ouvre. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">454,458</context>
+          <context context-type="linenumber">456,460</context>
         </context-group>
         <note priority="1" from="description">Encart de création</note>
       </trans-unit>
@@ -15295,7 +15295,7 @@
         <source> Confidentialité </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">460,462</context>
+          <context context-type="linenumber">462,464</context>
         </context-group>
         <note priority="1" from="description">Encart confidentialité</note>
       </trans-unit>
@@ -15303,7 +15303,7 @@
         <source> Les coordonnées ne sont jamais synchronisées avec un agenda externe ni publiées dans l&apos;annuaire. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">463,467</context>
+          <context context-type="linenumber">465,469</context>
         </context-group>
         <note priority="1" from="description">Encart confidentialité</note>
       </trans-unit>
@@ -15311,7 +15311,7 @@
         <source> Historique des versions </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">474,477</context>
+          <context context-type="linenumber">476,479</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;historique</note>
       </trans-unit>
@@ -17206,7 +17206,7 @@
         <source>Annuaire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">12,15</context>
+          <context context-type="linenumber">13,16</context>
         </context-group>
         <note priority="1" from="description">Fil d&apos;Ariane, annuaire</note>
       </trans-unit>
@@ -17214,7 +17214,7 @@
         <source>n°</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">42,44</context>
+          <context context-type="linenumber">45,47</context>
         </context-group>
         <note priority="1" from="description">Préfixe du numéro professionnel</note>
       </trans-unit>
@@ -17222,7 +17222,7 @@
         <source> Répond en général <x id="INTERPOLATION" equiv-text="{{ p.responseDelay }}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">59,60</context>
+          <context context-type="linenumber">62,63</context>
         </context-group>
         <note priority="1" from="description">Délai de réponse déclaré</note>
       </trans-unit>
@@ -17230,7 +17230,7 @@
         <source> Prochain créneau : <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ nextSlot() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">64,65</context>
+          <context context-type="linenumber">67,68</context>
         </context-group>
         <note priority="1" from="description">Prochain créneau</note>
       </trans-unit>
@@ -17238,7 +17238,7 @@
         <source>Prendre contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">76,80</context>
+          <context context-type="linenumber">79,83</context>
         </context-group>
         <note priority="1" from="description">Bouton vers le formulaire de contact</note>
       </trans-unit>
@@ -17246,7 +17246,7 @@
         <source> Partager </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">84,88</context>
+          <context context-type="linenumber">87,91</context>
         </context-group>
         <note priority="1" from="description">Bouton de partage de la fiche</note>
       </trans-unit>
@@ -17254,7 +17254,7 @@
         <source> Présentation </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">93,95</context>
+          <context context-type="linenumber">96,98</context>
         </context-group>
         <note priority="1" from="description">Titre de la présentation</note>
       </trans-unit>
@@ -17262,7 +17262,7 @@
         <source> Pratique </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">134,137</context>
+          <context context-type="linenumber">137,140</context>
         </context-group>
         <note priority="1" from="description">Titre caché de la pratique</note>
       </trans-unit>
@@ -17270,7 +17270,7 @@
         <source>Spécialités</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">138,140</context>
+          <context context-type="linenumber">141,143</context>
         </context-group>
         <note priority="1" from="description">Titre des spécialités</note>
       </trans-unit>
@@ -17278,7 +17278,7 @@
         <source>Publics</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">148,150</context>
+          <context context-type="linenumber">151,153</context>
         </context-group>
         <note priority="1" from="description">Titre des publics</note>
       </trans-unit>
@@ -17286,7 +17286,7 @@
         <source>Modalités</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">158,160</context>
+          <context context-type="linenumber">161,163</context>
         </context-group>
         <note priority="1" from="description">Titre des modalités</note>
       </trans-unit>
@@ -17294,7 +17294,7 @@
         <source>· non proposé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">166,169</context>
+          <context context-type="linenumber">169,172</context>
         </context-group>
         <note priority="1" from="description">Modalité non proposée</note>
       </trans-unit>
@@ -17302,7 +17302,7 @@
         <source> Langues et tarifs </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">177,180</context>
+          <context context-type="linenumber">180,183</context>
         </context-group>
         <note priority="1" from="description">Titre langues et tarifs</note>
       </trans-unit>
@@ -17310,7 +17310,7 @@
         <source> Envoyer un message à <x id="INTERPOLATION" equiv-text="{{ p.displayName }}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">196,198</context>
+          <context context-type="linenumber">199,201</context>
         </context-group>
         <note priority="1" from="description">Titre du formulaire de contact</note>
       </trans-unit>
@@ -17318,7 +17318,7 @@
         <source> Votre message est transmis par e-mail à <x id="INTERPOLATION" equiv-text="{{ p.displayName }}"/>. Il n&apos;est rattaché à aucun dossier patient. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">199,201</context>
+          <context context-type="linenumber">202,204</context>
         </context-group>
         <note priority="1" from="description">Introduction du formulaire de contact</note>
       </trans-unit>
@@ -17326,7 +17326,7 @@
         <source>Coordonnées</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">215,216</context>
+          <context context-type="linenumber">218,219</context>
         </context-group>
         <note priority="1" from="description">Étiquette de la colonne latérale de la fiche</note>
       </trans-unit>
@@ -17334,7 +17334,7 @@
         <source> Contact </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">224,227</context>
+          <context context-type="linenumber">227,230</context>
         </context-group>
         <note priority="1" from="description">Titre des moyens de contact</note>
       </trans-unit>
@@ -17342,7 +17342,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">229,231</context>
+          <context context-type="linenumber">232,234</context>
         </context-group>
         <note priority="1" from="description">Téléphone du praticien</note>
       </trans-unit>
@@ -17350,7 +17350,7 @@
         <source>E-mail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">237,239</context>
+          <context context-type="linenumber">240,242</context>
         </context-group>
         <note priority="1" from="description">E-mail du praticien</note>
       </trans-unit>
@@ -17358,7 +17358,7 @@
         <source>Site web</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">245,247</context>
+          <context context-type="linenumber">248,250</context>
         </context-group>
         <note priority="1" from="description">Site web du praticien</note>
       </trans-unit>
@@ -17366,7 +17366,7 @@
         <source> Seuls les moyens de contact choisis par le praticien sont affichés. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">258,264</context>
+          <context context-type="linenumber">261,267</context>
         </context-group>
         <note priority="1" from="description">Note sous les moyens de contact</note>
       </trans-unit>
@@ -17374,7 +17374,7 @@
         <source> Cabinet </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">266,269</context>
+          <context context-type="linenumber">269,272</context>
         </context-group>
         <note priority="1" from="description">Titre du cabinet</note>
       </trans-unit>
@@ -17382,7 +17382,7 @@
         <source>Ouvrir dans un plan</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">277,279</context>
+          <context context-type="linenumber">280,282</context>
         </context-group>
         <note priority="1" from="description">Lien vers un plan</note>
       </trans-unit>
@@ -17390,7 +17390,7 @@
         <source>(nouvel onglet, OpenStreetMap)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">280,284</context>
+          <context context-type="linenumber">283,287</context>
         </context-group>
         <note priority="1" from="description">Mention lien externe</note>
       </trans-unit>
@@ -17398,7 +17398,7 @@
         <source> Les informations de cette fiche sont publiées par le praticien lui-même. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">288,293</context>
+          <context context-type="linenumber">291,296</context>
         </context-group>
         <note priority="1" from="description">Mention sous la fiche</note>
       </trans-unit>
@@ -17406,7 +17406,7 @@
         <source> Fiche introuvable </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">296,298</context>
+          <context context-type="linenumber">299,301</context>
         </context-group>
         <note priority="1" from="description">Titre de la fiche introuvable</note>
       </trans-unit>
@@ -17414,7 +17414,7 @@
         <source> Cette fiche n&apos;existe pas ou n&apos;est plus publiée dans l&apos;annuaire. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">299,303</context>
+          <context context-type="linenumber">302,306</context>
         </context-group>
         <note priority="1" from="description">Texte de la fiche introuvable</note>
       </trans-unit>
@@ -17422,7 +17422,7 @@
         <source>Retour à l&apos;annuaire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">305,311</context>
+          <context context-type="linenumber">308,314</context>
         </context-group>
         <note priority="1" from="description">Lien vers l&apos;annuaire depuis la fiche introuvable</note>
       </trans-unit>
@@ -17430,7 +17430,7 @@
         <source> Fiche d&apos;un praticien </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">313,317</context>
+          <context context-type="linenumber">316,320</context>
         </context-group>
         <note priority="1" from="description">Titre caché pendant le chargement de la fiche</note>
       </trans-unit>
@@ -17438,7 +17438,7 @@
         <source>Impossible d&apos;afficher cette fiche</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">318,319</context>
+          <context context-type="linenumber">321,322</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;erreur de la fiche</note>
       </trans-unit>
@@ -17446,7 +17446,7 @@
         <source>L&apos;annuaire est momentanément indisponible. Réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/practitioner.page.html</context>
-          <context context-type="linenumber">320,321</context>
+          <context context-type="linenumber">323,324</context>
         </context-group>
         <note priority="1" from="description">Texte de l&apos;erreur de la fiche</note>
       </trans-unit>
@@ -20335,7 +20335,7 @@
         <source>Mentions légales</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
-          <context context-type="linenumber">68,70</context>
+          <context context-type="linenumber">71,75</context>
         </context-group>
         <note priority="1" from="description">Lien du pied public</note>
       </trans-unit>
@@ -20343,7 +20343,7 @@
         <source>Confidentialité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
-          <context context-type="linenumber">71,73</context>
+          <context context-type="linenumber">77,81</context>
         </context-group>
         <note priority="1" from="description">Lien du pied public</note>
       </trans-unit>
@@ -20351,7 +20351,7 @@
         <source>Accessibilité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
-          <context context-type="linenumber">74,78</context>
+          <context context-type="linenumber">83,87</context>
         </context-group>
         <note priority="1" from="description">Lien du pied public</note>
       </trans-unit>
