@@ -29,8 +29,8 @@ import {
   FieldErrorsComponent,
   firstMessage,
   PmValidators,
-  ProblemSummaryComponent,
 } from '../../../shared/forms';
+import { FormErrorsComponent } from '../../../shared/ui';
 import { passwordStrength, PasswordStrengthLevel } from '../data/password-strength';
 import { RegisterStore } from '../data/register.store';
 
@@ -57,7 +57,7 @@ const POSTAL_CODE = /^\d{5}$/;
     RouterLink,
     MatButtonModule,
     FieldErrorsComponent,
-    ProblemSummaryComponent,
+    FormErrorsComponent,
   ],
   providers: [RegisterStore],
   templateUrl: './register.page.html',

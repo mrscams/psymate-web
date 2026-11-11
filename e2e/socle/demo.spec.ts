@@ -164,7 +164,7 @@ test('429 → toast « réessayez dans 12 s » ; 422 → résumé et champs faut
   await expect(toast).toContainText('Avertissement');
 
   await page.locator('button.simulate-422').click();
-  const summary = page.locator('pm-problem-summary [role="alert"]');
+  const summary = page.locator('pm-form-errors [role="alert"]');
   await expect(summary).toContainText('2 champs à corriger.');
   await expect(summary).toBeFocused();
   await expect(page.locator('#field-displayName')).toHaveAttribute('aria-invalid', 'true');

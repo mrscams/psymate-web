@@ -14,11 +14,7 @@
     </p>
   </header>
 
-  <pm-problem-summary
-    [errors]="summaryErrors()"
-    [labels]="labels"
-    [unmatched]="unmatchedFields()"
-  />
+  <pm-form-errors [errors]="summaryErrors()" [labels]="labels" [unmatched]="unmatchedFields()" />
 
   <form [formGroup]="form" (ngSubmit)="submit()" aria-labelledby="register-title" novalidate>
     <!-- 1 · Qui vous êtes -->

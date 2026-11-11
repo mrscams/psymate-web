@@ -25,10 +25,10 @@ import {
   fieldId,
   FieldErrorsComponent,
   firstInvalidField,
-  ProblemSummaryComponent,
 } from '../../../shared/forms';
 import {
   ConfirmDialogService,
+  FormErrorsComponent,
   StateAction,
   StateComponent,
   ToastService,
@@ -69,8 +69,9 @@ import { VersionHistoryComponent } from '../ui/version-history.component';
 
 /**
  * /patients/nouveau et /patients/:id/fiche (fiche 16) : un seul formulaire pour créer et
- * modifier. Validation à la soumission ; un 422 se lit sous les champs (applyProblem) et le focus
- * va au premier champ fautif. Ctrl/Cmd+Entrée enregistre. Archivage avec le nom à retaper, puis
+ * modifier. Validation à la soumission (focus sur le premier champ fautif) ; un 422 se lit sous
+ * les champs (applyProblem) et dans le résumé en tête, qui prend le focus et mène à chaque champ
+ * (planche 29, UX-A7). Ctrl/Cmd+Entrée enregistre. Archivage avec le nom à retaper, puis
  * retour à la liste avec le toast « Restaurer ». Historique des versions champ par champ.
  */
 @Component({
@@ -80,7 +81,7 @@ import { VersionHistoryComponent } from '../ui/version-history.component';
     MatButtonModule,
     RouterLink,
     FieldErrorsComponent,
-    ProblemSummaryComponent,
+    FormErrorsComponent,
     StateComponent,
     FlagFieldsComponent,
     HeaderPreviewComponent,
@@ -117,8 +118,12 @@ export class PatientFormPage {
   });
   protected readonly tags = signal<string[]>([]);
   protected readonly tagDraft = signal('');
-  /** Erreurs d'un 422 sans champ du formulaire (tags[i]…), et message d'une autre erreur. */
-  protected readonly unmatched = signal<FieldProblem[]>([]);
+  /**
+   * errors[] du dernier 422, résumées en tête (pm-form-errors, UX-A7) ; les champs sans contrôle
+   * du formulaire (tags[i]…) y restent en texte, sans lien. Message d'une autre erreur à part.
+   */
+  protected readonly serverErrors = signal<FieldProblem[]>([]);
+  protected readonly unmatchedFields = signal<string[]>([]);
   protected readonly message = signal<string | null>(null);
 
   protected readonly fid = fieldId;
@@ -129,9 +134,27 @@ export class PatientFormPage {
     label: modalityLabel(value),
   }));
   protected readonly labels = Object.fromEntries(
-    ['displayName', 'birthDate', 'firstName', 'lastName', 'pronoun', 'flags.watchReason'].map(
-      (field) => [field, fieldLabel(field)],
-    ),
+    [
+      'displayName',
+      'birthDate',
+      'firstName',
+      'lastName',
+      'pronoun',
+      'phone',
+      'email',
+      'context.situation',
+      'context.activity',
+      'context.referredBy',
+      'context.initialReason',
+      'context.history',
+      'followUp.since',
+      'followUp.rhythm',
+      'followUp.modality',
+      'followUp.durationMin',
+      'followUp.fee',
+      'followUp.prescriber',
+      'flags.watchReason',
+    ].map((field) => [field, fieldLabel(field)]),
   );
 
   protected readonly editing = computed(() => !!this.id());
@@ -202,7 +225,8 @@ export class PatientFormPage {
   protected async submit(): Promise<void> {
     if (this.store.busy() || this.readOnly()) return;
     this.message.set(null);
-    this.unmatched.set([]);
+    this.serverErrors.set([]);
+    this.unmatchedFields.set([]);
     this.form.controls.flags.controls.watchReason.updateValueAndValidity();
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -315,9 +339,11 @@ export class PatientFormPage {
   private showProblem(problem: ApiProblem | null): void {
     if (!problem) return;
     if (problem.status === 422 && problem.errors?.length) {
-      const { unmatched } = applyProblem(this.form, toFormProblem(problem));
-      this.unmatched.set(unmatched);
-      this.focusFirstInvalid();
+      // Messages sous les champs, résumé en tête : il prend le focus, ses liens mènent aux champs.
+      const formProblem = toFormProblem(problem);
+      const { unmatched } = applyProblem(this.form, formProblem);
+      this.unmatchedFields.set(unmatched.map((error) => error.field));
+      this.serverErrors.set(formProblem.errors ?? []);
       return;
     }
     if (problem.code === 'FLAG_ALREADY_ACTIVE') void this.load();

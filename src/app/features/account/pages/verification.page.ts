@@ -72,6 +72,7 @@ export class VerificationPage {
   protected readonly homePath = AUTH_PATHS.home;
   protected readonly stateKind = stateKind;
   protected readonly retryLabel = $localize`:Bouton de l'état erreur@@state.error.retry:Réessayer`;
+  protected readonly errorTitle = $localize`:Titre de l'état erreur du dossier professionnel@@account.verification.errorTitle:Impossible de charger votre dossier professionnel`;
   protected readonly emptyTitle = $localize`:État vide de la liste des justificatifs@@account.verification.docs.empty.title:Aucun justificatif déposé`;
   protected readonly emptyMessage = $localize`:Texte de l'état vide@@account.verification.docs.empty.message:Ajoutez votre diplôme et votre pièce d'identité avec le formulaire ci-dessous.`;
   protected readonly retry = (): void => {

@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-11T01:26:28.803Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-A7 pm-form-errors partagé (shared/ui) branché sur l'inscription et la fiche patient (422 résumé en tête avec focus et liens), titres d'erreur nommés dans Mon compte",
+  "pr": "https://github.com/mrscams/psymate-web/pull/51",
+  "branch": "claude/ux-a7-form-errors",
+  "checkout": "agent-a2e958be2fa661657"
+}

@@ -38,7 +38,13 @@
       }
     </header>
 
-    <pm-state [kind]="profileState()" skeleton="profile" [lines]="4" [action]="retry" />
+    <pm-state
+      [kind]="profileState()"
+      skeleton="profile"
+      [lines]="4"
+      [title]="errorTitle"
+      [action]="retry"
+    />
 
     @if (values(); as current) {
       <div class="columns">

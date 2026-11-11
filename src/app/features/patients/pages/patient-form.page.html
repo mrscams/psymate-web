@@ -71,7 +71,11 @@
         aria-labelledby="patient-form-title"
       >
         <h2 id="patient-form-title" class="sr-only">{{ title() }}</h2>
-        <pm-problem-summary [errors]="unmatched()" [labels]="labels" />
+        <pm-form-errors
+          [errors]="serverErrors()"
+          [labels]="labels"
+          [unmatched]="unmatchedFields()"
+        />
         @if (message(); as text) {
           <p class="banner banner--danger" role="alert">{{ text }}</p>
         }

@@ -49,7 +49,9 @@ describe('VerificationPage', () => {
       .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
       .mockResolvedValueOnce(DOSSIER);
     const { fixture, el } = await render({ load });
-    expect(el.querySelector('pm-state [role=alert]')).not.toBeNull();
+    expect(el.querySelector('pm-state [role=alert]')?.textContent).toContain(
+      'Impossible de charger votre dossier professionnel',
+    );
     el.querySelector<HTMLButtonElement>('pm-state button')?.click();
     await fixture.whenStable();
     expect(load).toHaveBeenCalledTimes(2);

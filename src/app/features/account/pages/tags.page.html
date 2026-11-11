@@ -34,7 +34,7 @@
         skeleton="row"
         [lines]="4"
         [action]="listState() === 'error' ? retry : undefined"
-        [title]="listState() === 'empty' ? empty.title : undefined"
+        [title]="listState() === 'empty' ? empty.title : errorTitle"
         [message]="listState() === 'empty' ? empty.message : undefined"
       />
       @if (listState() === null) {
