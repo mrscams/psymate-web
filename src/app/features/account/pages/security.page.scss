@@ -20,7 +20,7 @@ pm-account-nav {
   max-width: 960px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 
 h1 {
@@ -47,8 +47,8 @@ h1 {
 .card {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 22px 26px;
+  gap: 12px;
+  padding: 18px 24px;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
@@ -173,7 +173,7 @@ button.danger {
     'meta times action';
   gap: 2px 16px;
   align-items: center;
-  padding: 10px 0;
+  padding: 6px 0;
   border-top: 1px solid var(--border-subtle);
 
   &:first-child {
@@ -219,6 +219,9 @@ button.danger {
 
 .revoke {
   grid-area: action;
+  // Bouton compact : une ligne de session tient sur la hauteur de ses deux lignes de texte.
+  --mat-button-outlined-container-height: 32px;
+  --mat-button-outlined-horizontal-padding: 12px;
 }
 
 // « Afficher les n autres sessions » et « Voir le détail » : liens d'action, cible ≥ 24 px.

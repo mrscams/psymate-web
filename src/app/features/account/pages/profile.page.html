@@ -185,7 +185,7 @@
               </div>
               <textarea
                 class="input textarea"
-                rows="4"
+                rows="3"
                 formControlName="bio"
                 [id]="id('bio')"
                 [attr.maxlength]="limits.bio"
@@ -246,16 +246,18 @@
                   [attr.aria-describedby]="id('modalities') + '-error'"
                 >
                   <legend i18n="Champ modalités@@profile.modalities">Modalités</legend>
-                  @for (option of modalityOptions(); track option.code) {
-                    <label class="check">
-                      <input
-                        type="checkbox"
-                        [checked]="current.modalities.includes(option.code)"
-                        (change)="toggleModality(option.code, $event)"
-                      />
-                      <span>{{ option.label }}</span>
-                    </label>
-                  }
+                  <div class="checks">
+                    @for (option of modalityOptions(); track option.code) {
+                      <label class="check">
+                        <input
+                          type="checkbox"
+                          [checked]="current.modalities.includes(option.code)"
+                          (change)="toggleModality(option.code, $event)"
+                        />
+                        <span>{{ option.label }}</span>
+                      </label>
+                    }
+                  </div>
                   <pm-field-errors
                     [control]="form.controls.modalities"
                     [id]="id('modalities') + '-error'"
@@ -362,7 +364,7 @@
               <label [for]="id('websiteUrl')" i18n="Champ site web@@profile.websiteUrl"
                 >Site web</label
               >
-              <div class="field">
+              <div class="field span-end">
                 <input
                   class="input"
                   type="url"
@@ -387,14 +389,13 @@
                   [id]="id('websiteUrl') + '-error'"
                 />
               </div>
-              <span></span>
 
               <label
                 [for]="id('responseDelay')"
                 i18n="Champ délai de réponse@@profile.responseDelay"
                 >Délai de réponse</label
               >
-              <div class="field">
+              <div class="field span-end">
                 <select class="input" formControlName="responseDelay" [id]="id('responseDelay')">
                   <option value="" i18n="Délai de réponse non affiché@@profile.responseDelay.none">
                     Ne pas afficher
@@ -404,7 +405,6 @@
                   }
                 </select>
               </div>
-              <span></span>
             </div>
           </section>
 

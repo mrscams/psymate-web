@@ -50,8 +50,10 @@ export interface SegmentOption<T extends string> {
       background: var(--surface-raised);
     }
     button {
-      flex: 0 1 auto;
-      min-width: 0;
+      /* Jamais plus étroit que son mot le plus long (aucun libellé rogné) ; au-delà, les segments
+         passent sur une seconde rangée. */
+      flex: 1 1 auto;
+      min-width: min-content;
       min-height: 36px;
       padding: 4px 14px;
       border: 0;
@@ -72,6 +74,12 @@ export interface SegmentOption<T extends string> {
     button:focus-visible {
       outline-offset: -3px;
       box-shadow: none;
+    }
+    /* Écran étroit : si les segments ne tiennent plus côte à côte, ils passent à la ligne. */
+    @media (max-width: 600px) {
+      .segments {
+        flex-wrap: wrap;
+      }
     }
     button[disabled] {
       cursor: default;
