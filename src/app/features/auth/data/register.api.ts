@@ -56,4 +56,13 @@ export class RegisterApi {
   async requestPasswordReset(email: string): Promise<void> {
     await firstValueFrom(this.auth.requestReset({ email }));
   }
+
+  /**
+   * POST /api/auth/password-reset/confirm { token, password } → 204 : mot de passe remplacé, toutes
+   * les sessions du compte révoquées, aucune session ouverte (contrat). 410 TOKEN_INVALID_OR_EXPIRED
+   * (jeton inconnu, expiré, déjà utilisé ou remplacé) et 422 PASSWORD_POLICY en ApiProblem.
+   */
+  async confirmPasswordReset(token: string, password: string): Promise<void> {
+    await firstValueFrom(this.auth.confirmReset({ token, password }));
+  }
 }

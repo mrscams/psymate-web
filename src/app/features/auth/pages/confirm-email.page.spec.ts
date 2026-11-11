@@ -77,15 +77,30 @@ describe('ConfirmEmailPage · en attente', () => {
     const resend = vi.fn();
     const { fixture, el } = await render({ resend });
     expect(el.querySelector('#field-email')).not.toBeNull();
-    await click(fixture, el, "Renvoyer l'e-mail");
+    await click(fixture, el, 'Renvoyer le lien');
     expect(resend).not.toHaveBeenCalled();
     expect(el.querySelector('#field-email-error')?.textContent).toContain('obligatoire');
+  });
+
+  it('UX-D3 · adresse inconnue : un seul geste (« Adresse du compte » + « Renvoyer le lien »), pas de « Corriger l’e-mail »', async () => {
+    const { el } = await render({});
+    expect(el.querySelector('label[for=field-email]')?.textContent).toContain('Adresse du compte');
+    expect(el.querySelector('#field-email-hint')?.textContent).toContain('Pas reçu ?');
+    const buttons = [...el.querySelectorAll('button')].map((b) => b.textContent?.trim());
+    expect(buttons).toContain('Renvoyer le lien');
+    expect(el.querySelector('#change-toggle')).toBeNull();
+  });
+
+  it('UX-D3 · adresse connue : « Corriger l’e-mail » proposé, sans champ d’adresse', async () => {
+    const { el } = await render({}, { email: 'alix@example.test' });
+    expect(el.querySelector('#field-email')).toBeNull();
+    expect(el.querySelector('#change-toggle')?.textContent).toContain("Corriger l'e-mail");
   });
 
   it('Renvoyer : 202 → message role=status, bouton aria-disabled et compte à rebours (fiche 25)', async () => {
     const resend = vi.fn().mockResolvedValue(undefined);
     const { fixture, el } = await render({ resend }, { email: 'alix@example.test' });
-    await click(fixture, el, "Renvoyer l'e-mail");
+    await click(fixture, el, 'Renvoyer le lien');
     expect(resend).toHaveBeenCalledWith('alix@example.test');
     expect(el.querySelector('.banner.ok')?.getAttribute('role')).toBe('status');
     const button = el.querySelector<HTMLButtonElement>('button.resend');
@@ -97,7 +112,7 @@ describe('ConfirmEmailPage · en attente', () => {
     expect(cooldown?.getAttribute('role')).toBe('status');
     expect(cooldown?.textContent).toMatch(/Nouveau renvoi possible dans\s+(1:00|0:59)/);
     // Second clic pendant le délai : rien ne part (le serveur refuserait en silence).
-    await click(fixture, el, "Renvoyer l'e-mail");
+    await click(fixture, el, 'Renvoyer le lien');
     expect(resend).toHaveBeenCalledTimes(1);
   });
 
@@ -106,7 +121,7 @@ describe('ConfirmEmailPage · en attente', () => {
       { resend: vi.fn().mockRejectedValue({ status: 0, code: 'NETWORK_ERROR' }) },
       { email: 'alix@example.test' },
     );
-    await click(fixture, el, "Renvoyer l'e-mail");
+    await click(fixture, el, 'Renvoyer le lien');
     expect(el.querySelector('.banner.error')?.getAttribute('role')).toBe('alert');
     expect(el.querySelector('.banner.error')?.textContent).toContain('Envoi impossible');
   });

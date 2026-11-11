@@ -17,6 +17,7 @@ export const GRAPH_TOKEN_NAMES = {
   primaryTint: '--primary-tint',
   feeling: '--feeling',
   feelingTint: '--feeling-tint',
+  feelingText: '--feeling-text',
   link: '--link',
   linkProposed: '--link-proposed',
   font: '--font-ui',
@@ -55,6 +56,41 @@ export const DEFAULT_LINE_STYLES: Record<LinkTypeCode, LinkLineStyle> = {
 export function feelingDiameter(intensity: number | null): number {
   const value = Math.min(10, Math.max(0, intensity ?? 0));
   return Math.round(2 * (14 + 2.2 * value));
+}
+
+/**
+ * Un ressenti assez grand pour porter son chiffre d'intensité en aplat lavande et texte clair
+ * (UX-B3, fiche 04 « Accessibilité ») : rayon ≥ 24 px, chiffre en gras ≥ 19 px (grand texte, 3:1
+ * suffit : blanc sur #8B7BD6 fait 3,6:1). En dessous, teinte légère et `feeling-text`.
+ */
+export const STRONG_FEELING_DIAMETER = 48;
+
+/** Taille du chiffre d'intensité dans un cercle de ce diamètre. */
+export function intensityFontSize(diameter: number): number {
+  return Math.max(11, Math.min(26, Math.round(diameter * 0.4)));
+}
+
+/**
+ * Le chiffre d'intensité au centre d'un ressenti (fiche 04 : « chiffre d'intensité à l'intérieur ») :
+ * Cytoscape n'a qu'une étiquette par nœud (« titre · date », dessous), le chiffre est donc une image
+ * SVG de fond, dans la couleur et la police des tokens. 'none' sans intensité.
+ */
+export function intensityImage(
+  intensity: number | null | undefined,
+  diameter: number,
+  tokens: Pick<GraphTokens, 'font' | 'surface' | 'feelingText'>,
+): string {
+  if (intensity === null || intensity === undefined || !Number.isFinite(intensity)) return 'none';
+  const value = Math.round(Math.min(10, Math.max(0, intensity)));
+  const size = Math.max(1, Math.round(diameter));
+  const strong = size >= STRONG_FEELING_DIAMETER;
+  const colour = strong ? tokens.surface : tokens.feelingText;
+  const font = tokens.font.replace(/"/g, "'");
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">` +
+    `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-family="${font}" ` +
+    `font-size="${intensityFontSize(size)}" font-weight="700" fill="${colour}">${value}</text></svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
 const ENTRY_TOKEN: Record<EntryType, keyof GraphTokens> = {
@@ -110,12 +146,12 @@ export function graphStylesheet(tokens: GraphTokens): StylesheetJson {
         label: 'data(label)',
         color: tokens.text,
         'font-family': tokens.font,
-        'font-size': 11,
+        'font-size': 12,
         'text-valign': 'bottom',
         'text-halign': 'center',
         'text-margin-y': 6,
         'text-wrap': 'ellipsis',
-        'text-max-width': '150px',
+        'text-max-width': '160px',
         'text-background-color': tokens.surface,
         'text-background-opacity': 0.85,
         'text-background-padding': '2px',
@@ -147,7 +183,22 @@ export function graphStylesheet(tokens: GraphTokens): StylesheetJson {
         'border-color': tokens.feeling,
         'background-color': tokens.feelingTint,
         'background-opacity': 1,
+        // Le chiffre d'intensité, image SVG centrée (une seule étiquette par nœud dans Cytoscape).
+        'background-image': (node: { data(name: string): unknown }) =>
+          intensityImage(
+            node.data('intensity') as number | null,
+            Number(node.data('size')) || 0,
+            tokens,
+          ),
+        'background-fit': 'none',
+        'background-clip': 'none',
+        'background-image-containment': 'over',
       },
+    },
+    {
+      // Grand cercle : aplat lavande, chiffre clair (voir STRONG_FEELING_DIAMETER).
+      selector: 'node.type-feeling.strong',
+      style: { 'background-color': tokens.feeling },
     },
     {
       selector: 'node.root',
@@ -223,8 +274,10 @@ export function graphStylesheet(tokens: GraphTokens): StylesheetJson {
       style: { 'line-style': 'dashed', 'line-dash-pattern': [2, 4], width: 1 },
     },
     {
+      // Nœud sélectionné : son étiquette revient même au-delà de LABELS_MAX_NODES.
       selector: 'node:selected',
       style: {
+        label: 'data(name)',
         'border-color': tokens.primary,
         'border-width': 3,
         'underlay-color': tokens.primaryTint,

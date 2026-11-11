@@ -32,7 +32,11 @@ function setup(api: Partial<Record<keyof TimelineApi, unknown>>) {
       { provide: TimelineApi, useValue: mock },
       {
         provide: PreferencesStore,
-        useValue: { timelineGroupBy: signal('chronological'), set: vi.fn() },
+        useValue: {
+          timelineGroupBy: signal('chronological'),
+          overviewWindow: signal('90d'),
+          set: vi.fn(),
+        },
       },
     ],
   });
@@ -217,6 +221,8 @@ describe('TimelineStore', () => {
     await first.store.load('p-1', null);
     await flush();
     first.store.visible(450, 460);
+    // Zoom par défaut « Jour » : deux crans vers « Mois ».
+    first.store.zoomOut();
     first.store.zoomOut();
     first.store.select('e-455');
     await flush();
@@ -251,12 +257,12 @@ describe('TimelineStore', () => {
     const { page } = paged(10);
     const { store } = setup({ page });
     await store.load('p-1', null);
-    store.zoomIn();
+    store.zoomOut();
     const snapshot = store.snapshot()!;
 
     await store.load('p-2', null, snapshot);
     expect(store.patientId()).toBe('p-2');
-    expect(store.zoom()).toBe('day');
+    expect(store.zoom()).toBe('week');
     expect(page).toHaveBeenLastCalledWith('p-2', expect.objectContaining({ cursor: null }));
   });
 

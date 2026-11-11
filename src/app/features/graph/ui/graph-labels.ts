@@ -1,39 +1,56 @@
 // Textes de la vue graphe (fiche 04) : étiquettes des nœuds et des super-nœuds, périodes,
 // problèmes de lecture.
 import { ApiProblem } from '../../../core/http';
-import { EntryType } from '../../../shared/ui';
+import { EntryType, entryTitle } from '../../../shared/ui';
 import { GraphNode, GraphPeriod, GraphSuperNode } from '../data/graph.model';
 
-/** Nom d'une entrée sans titre (comme la phrase du serveur). */
-export const UNNAMED = $localize`:Nom d'une entrée sans titre dans le graphe@@graph.unnamed:une entrée`;
-
-/** « Anxiété 8 » pour un ressenti sans titre, sinon le titre, sinon « une entrée ». */
-export function nodeName(node: GraphNode, emotionLabels: Record<string, string>): string {
-  if (node.title) return node.title;
-  if (node.type === 'feeling' && node.emotion) {
-    const emotion = emotionLabels[node.emotion] ?? node.emotion;
-    return node.intensity !== null ? `${emotion} ${node.intensity}` : emotion;
-  }
-  return UNNAMED;
+/**
+ * Nom d'une entrée du graphe (UX-A5, titre de repli partagé) : son titre ; sans titre, « Anxiété
+ * 8/10 · 24 oct. » pour un ressenti, « Note · 24 oct. » sinon. Le graphe ne reçoit pas le texte des
+ * entrées (GraphNodeDto) : pas d'extrait.
+ */
+export function nodeName(
+  node: GraphNode,
+  emotionLabels: Record<string, string>,
+  locale: string,
+): string {
+  return entryTitle(
+    {
+      type: node.type,
+      title: node.title,
+      occurred: node.occurred,
+      emotion: node.emotion ? (emotionLabels[node.emotion] ?? node.emotion) : null,
+      intensity: node.intensity,
+    },
+    locale,
+  );
 }
 
-/** Date courte d'un nœud (« 24 oct. 2026 »), dans la langue et le fuseau de l'interface. */
-export function nodeDate(occurred: string | null, locale: string): string {
+/** Date courte d'un nœud (« 24 oct. », l'année seulement si ce n'est pas l'année en cours). */
+export function nodeDate(occurred: string | null, locale: string, now = new Date()): string {
   if (!occurred) return '';
   const date = new Date(occurred);
   if (Number.isNaN(date.getTime())) return '';
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date);
+  const sameYear = date.getFullYear() === now.getFullYear();
+  return new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    month: 'short',
+    ...(sameYear ? {} : { year: 'numeric' }),
+  }).format(date);
 }
 
-/** Étiquette sous le nœud : « titre · date ». */
+/**
+ * Étiquette sous le nœud (fiche 04) : « titre · date courte » ; une entrée sans titre porte déjà sa
+ * date dans son nom de repli (« Note · 24 oct. »).
+ */
 export function nodeLabel(
   node: GraphNode,
   emotionLabels: Record<string, string>,
   locale: string,
 ): string {
-  const name = nodeName(node, emotionLabels);
+  if (!node.title) return nodeName(node, emotionLabels, locale);
   const date = nodeDate(node.occurred, locale);
-  return date ? `${name} · ${date}` : name;
+  return date ? `${node.title} · ${date}` : node.title;
 }
 
 /** Type d'entrée au pluriel, en minuscules (« 12 ressentis »). */

@@ -1,4 +1,22 @@
-import { toView } from './graph.api';
+import { mostLinkedSituation, toView } from './graph.api';
+
+describe('GraphApi · mostLinkedSituation (racine par défaut)', () => {
+  it('la situation en cours la plus liée (triées par le serveur), reliée au moins une fois', () => {
+    expect(
+      mostLinkedSituation([
+        { linkCount: 30 },
+        { entryId: 'e-1', linkCount: 21 },
+        { entryId: 'e-2', linkCount: 4 },
+        { entryId: 'e-sans-lien', linkCount: 0 },
+      ]),
+    ).toBe('e-1');
+  });
+
+  it('aucune situation en cours reliée : null (tout le dossier)', () => {
+    expect(mostLinkedSituation([{ entryId: 'e-1', linkCount: 0 }])).toBeNull();
+    expect(mostLinkedSituation(undefined)).toBeNull();
+  });
+});
 
 describe('GraphApi · toView', () => {
   it('nœuds, arêtes, super-nœuds ; authorType gardé en lecture seule (practitioner par défaut)', () => {

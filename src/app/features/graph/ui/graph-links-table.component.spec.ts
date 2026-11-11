@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { graphView, superNode } from '../data/graph.fixtures';
+import { edge, graphView, superNode } from '../data/graph.fixtures';
 import { GraphView } from '../data/graph.model';
 import { GraphLinksTableComponent } from './graph-links-table.component';
 
@@ -78,6 +78,37 @@ describe('GraphLinksTableComponent', () => {
     fixture.componentRef.setInput('expanding', true);
     fixture.detectChanges();
     expect(groups.querySelector<HTMLButtonElement>('button.expand')?.disabled).toBe(true);
+  });
+
+  it('plus de 20 liens : paginés par 20, « Précédents / Suivants », retour page 1 si le graphe change', () => {
+    const edges = Array.from({ length: 45 }, (_, i) =>
+      edge({ id: `l-${i}`, source: 'e-situation', target: 'e-feeling' }),
+    );
+    const { el, fixture } = render(graphView({ edges }));
+    expect(el.querySelectorAll('tbody tr')).toHaveLength(20);
+    const range = () => text(el.querySelector('.pager .range'));
+    expect(range()).toBe('Liens 1 à 20 sur 45');
+    expect(el.querySelector('.pager .range')?.getAttribute('aria-live')).toBe('polite');
+    const [previous, next] = [...el.querySelectorAll<HTMLButtonElement>('.pager button')];
+    expect(previous.getAttribute('aria-disabled')).toBe('true');
+    next.click();
+    fixture.detectChanges();
+    next.click();
+    fixture.detectChanges();
+    expect(range()).toBe('Liens 41 à 45 sur 45');
+    expect(el.querySelectorAll('tbody tr')).toHaveLength(5);
+    expect(next.getAttribute('aria-disabled')).toBe('true');
+    previous.click();
+    fixture.detectChanges();
+    expect(range()).toBe('Liens 21 à 40 sur 45');
+    fixture.componentRef.setInput('view', graphView({ edges: edges.slice(0, 30) }));
+    fixture.detectChanges();
+    expect(range()).toBe('Liens 1 à 20 sur 30');
+  });
+
+  it('20 liens ou moins : pas de pagination', () => {
+    const { el } = render(graphView());
+    expect(el.querySelector('.pager')).toBeNull();
   });
 
   it('aucun lien : état vide', () => {

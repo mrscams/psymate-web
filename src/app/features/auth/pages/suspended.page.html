@@ -53,6 +53,11 @@
       </h2>
       <ul class="can">
         <li>
+          <span class="can-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" focusable="false">
+              <path d="M8 2.5v7M5 7l3 3 3-3M3 12.5h10" />
+            </svg>
+          </span>
           <strong i18n="Possibilité 1, titre@@auth.suspended.can.export.title"
             >Exporter vos dossiers</strong
           >
@@ -62,6 +67,11 @@
           >
         </li>
         <li>
+          <span class="can-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" focusable="false">
+              <path d="M3 3.5h10v7H7l-3 2.5v-2.5H3Z" />
+            </svg>
+          </span>
           <strong i18n="Possibilité 2, titre@@auth.suspended.can.appeal.title"
             >Contester la décision</strong
           >
@@ -71,6 +81,11 @@
           >
         </li>
         <li>
+          <span class="can-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" focusable="false">
+              <path d="M8 2 13 4v4c0 3-2.2 5-5 6-2.8-1-5-3-5-6V4Z" />
+            </svg>
+          </span>
           <strong i18n="Possibilité 3, titre@@auth.suspended.can.protected.title"
             >Vos dossiers restent protégés</strong
           >
@@ -82,6 +97,29 @@
       </ul>
     </section>
 
+    <section class="help" aria-labelledby="help-title">
+      <h2 id="help-title" i18n="Titre de l'encart d'aide@@auth.suspended.help.title">
+        Besoin de parler à quelqu'un ?
+      </h2>
+      <p class="note" i18n="Texte de l'encart d'aide@@auth.suspended.help.body">
+        L'adresse de l'équipe vérification figure dans l'e-mail de décision. Merci de ne jamais
+        joindre de document contenant des informations sur vos patients.
+      </p>
+    </section>
+    @if (!session.me()) {
+      <p class="alt">
+        <a
+          class="pm-link-target"
+          [routerLink]="loginPath"
+          i18n="Retour à la connexion@@auth.suspended.backToLogin"
+          >Retour à la connexion</a
+        >
+      </p>
+    }
+  </section>
+
+  <!-- Colonne complémentaire (UX-D5), dans l'ordre d'usage : identité, export, recours. -->
+  <aside class="side">
     <form
       class="identity"
       [formGroup]="credentials"
@@ -89,84 +127,86 @@
       aria-labelledby="identity-title"
       novalidate
     >
-      <fieldset>
-        <legend
-          id="identity-title"
-          i18n="Légende du bloc d'identité@@auth.suspended.identity.title"
-        >
-          Confirmez votre identité
-        </legend>
-        <p class="note" i18n="Pourquoi saisir ses identifiants@@auth.suspended.identity.lead">
-          Votre compte n'a plus de session : l'export et le recours se font avec votre e-mail et
-          votre mot de passe, sans ouvrir de session.
-        </p>
-        <div class="field">
-          <label [for]="fieldId('email')">{{ labels.email }}</label>
-          <input
-            [id]="fieldId('email')"
-            type="email"
-            formControlName="email"
-            autocomplete="username"
-            required
-            [attr.aria-invalid]="
-              credentials.controls.email.invalid && credentials.controls.email.touched
-            "
-            [attr.aria-describedby]="fieldId('email') + '-error'"
-          />
-          <pm-field-errors
-            [control]="credentials.controls.email"
-            [id]="fieldId('email') + '-error'"
-          />
-        </div>
-        <div class="field">
-          <label [for]="fieldId('password')">{{ labels.password }}</label>
-          <input
-            [id]="fieldId('password')"
-            type="password"
-            formControlName="password"
-            autocomplete="current-password"
-            required
-            [attr.aria-invalid]="
-              credentials.controls.password.invalid && credentials.controls.password.touched
-            "
-            [attr.aria-describedby]="fieldId('password') + '-error'"
-          />
-          <pm-field-errors
-            [control]="credentials.controls.password"
-            [id]="fieldId('password') + '-error'"
-          />
-        </div>
-        @if (store.otpRequired()) {
+      <div class="card identity-card">
+        <fieldset>
+          <legend
+            id="identity-title"
+            i18n="Légende du bloc d'identité@@auth.suspended.identity.title"
+          >
+            Confirmez votre identité
+          </legend>
+          <p class="note" i18n="Pourquoi saisir ses identifiants@@auth.suspended.identity.lead">
+            Votre compte n'a plus de session : l'export et le recours se font avec votre e-mail et
+            votre mot de passe, sans ouvrir de session.
+          </p>
           <div class="field">
-            <label [for]="fieldId('otp')">{{ labels.otp }}</label>
+            <label [for]="fieldId('email')">{{ labels.email }}</label>
             <input
-              [id]="fieldId('otp')"
-              type="text"
-              formControlName="otp"
-              autocomplete="one-time-code"
-              inputmode="numeric"
+              [id]="fieldId('email')"
+              type="email"
+              formControlName="email"
+              autocomplete="username"
+              required
               [attr.aria-invalid]="
-                credentials.controls.otp.invalid && credentials.controls.otp.touched
+                credentials.controls.email.invalid && credentials.controls.email.touched
               "
-              [attr.aria-describedby]="fieldId('otp') + '-error otp-note'"
+              [attr.aria-describedby]="fieldId('email') + '-error'"
             />
-            <p
-              id="otp-note"
-              class="note"
-              i18n="Explication du champ code@@auth.suspended.identity.otpNote"
-            >
-              La double authentification est active sur ce compte : saisissez le code de votre
-              application, ou un code de secours.
-            </p>
             <pm-field-errors
-              [control]="credentials.controls.otp"
-              [id]="fieldId('otp') + '-error'"
+              [control]="credentials.controls.email"
+              [id]="fieldId('email') + '-error'"
             />
           </div>
-        }
-      </fieldset>
+          <div class="field">
+            <label [for]="fieldId('password')">{{ labels.password }}</label>
+            <input
+              [id]="fieldId('password')"
+              type="password"
+              formControlName="password"
+              autocomplete="current-password"
+              required
+              [attr.aria-invalid]="
+                credentials.controls.password.invalid && credentials.controls.password.touched
+              "
+              [attr.aria-describedby]="fieldId('password') + '-error'"
+            />
+            <pm-field-errors
+              [control]="credentials.controls.password"
+              [id]="fieldId('password') + '-error'"
+            />
+          </div>
+          @if (store.otpRequired()) {
+            <div class="field">
+              <label [for]="fieldId('otp')">{{ labels.otp }}</label>
+              <input
+                [id]="fieldId('otp')"
+                type="text"
+                formControlName="otp"
+                autocomplete="one-time-code"
+                inputmode="numeric"
+                [attr.aria-invalid]="
+                  credentials.controls.otp.invalid && credentials.controls.otp.touched
+                "
+                [attr.aria-describedby]="fieldId('otp') + '-error otp-note'"
+              />
+              <p
+                id="otp-note"
+                class="note"
+                i18n="Explication du champ code@@auth.suspended.identity.otpNote"
+              >
+                La double authentification est active sur ce compte : saisissez le code de votre
+                application, ou un code de secours.
+              </p>
+              <pm-field-errors
+                [control]="credentials.controls.otp"
+                [id]="fieldId('otp') + '-error'"
+              />
+            </div>
+          }
+        </fieldset>
+      </div>
 
-      <section class="export" aria-labelledby="export-title">
+      <section class="card export" aria-labelledby="export-title">
         <h2 id="export-title" i18n="Titre de la section export@@auth.suspended.export.title">
           Exporter mes dossiers
         </h2>
@@ -311,109 +351,92 @@
         </div>
       </section>
     </form>
-  </section>
 
-  <aside class="card side" aria-labelledby="appeal-title">
-    <h2 id="appeal-title" i18n="Titre du recours@@auth.suspended.appeal.title">
-      Contester la décision
-    </h2>
-    @if (!appealAllowed()) {
-      <p
-        class="banner neutral"
-        role="status"
-        i18n="Compte clos : plus de recours@@auth.suspended.appeal.closedAccount"
-      >
-        Un compte clos ne peut plus déposer de recours ni lancer d'export depuis cette page :
-        écrivez à l'adresse indiquée dans l'e-mail de décision.
-      </p>
-    } @else {
-      @switch (store.appeal().status) {
-        @case ('submitted') {
-          <p
-            class="banner ok"
-            role="status"
-            i18n="État du recours envoyé@@auth.suspended.appeal.submitted"
-          >
-            Recours envoyé le <span class="mono">{{ appealSubmittedAt() }}</span> · en examen par un
-            administrateur différent de celui qui a pris la décision. Réponse sous 5 jours ouvrés, à
-            titre indicatif, par e-mail.
-          </p>
-        }
-        @case ('closed') {
-          <p class="banner neutral" role="status">{{ appealClosedText() }}</p>
-        }
-        @default {
-          <p class="lead" i18n="Explication du recours@@auth.suspended.appeal.lead">
-            Expliquez ce qui, selon vous, a été mal apprécié. Le recours est examiné par une autre
-            personne que celle qui a pris la décision.
-          </p>
-          <form
-            class="appeal"
-            [formGroup]="appealForm"
-            (ngSubmit)="submitAppeal()"
-            aria-labelledby="appeal-title"
-            novalidate
-          >
-            <div class="field">
-              <label [for]="fieldId('message')">{{ labels.message }}</label>
-              <textarea
-                [id]="fieldId('message')"
-                formControlName="message"
-                rows="7"
-                required
-                [attr.minlength]="appealMin"
-                [attr.maxlength]="appealMax"
-                [attr.aria-invalid]="
-                  appealForm.controls.message.invalid && appealForm.controls.message.touched
-                "
-                [attr.aria-describedby]="fieldId('message') + '-error message-count'"
-              ></textarea>
-              <p id="message-count" class="count mono">
-                {{ messageLength() }} / {{ appealMax }}
-                <span i18n="Minimum du message de recours@@auth.suspended.appeal.min"
-                  >· {{ appealMin }} caractères au moins</span
-                >
-              </p>
-              <pm-field-errors
-                [control]="appealForm.controls.message"
-                [id]="fieldId('message') + '-error'"
-              />
-            </div>
-            @if (appealError(); as text) {
-              <p class="banner error" role="alert">{{ text }}</p>
-            }
-            <button
-              mat-flat-button
-              type="submit"
-              [disabled]="store.appeal().status === 'busy' || locked()"
-              i18n="Bouton d'envoi du recours@@auth.suspended.appeal.submit"
+    <section class="card appeal-card" aria-labelledby="appeal-title">
+      <h2 id="appeal-title" i18n="Titre du recours@@auth.suspended.appeal.title">
+        Contester la décision
+      </h2>
+      @if (!appealAllowed()) {
+        <p
+          class="banner neutral"
+          role="status"
+          i18n="Compte clos : plus de recours@@auth.suspended.appeal.closedAccount"
+        >
+          Un compte clos ne peut plus déposer de recours ni lancer d'export depuis cette page :
+          écrivez à l'adresse indiquée dans l'e-mail de décision.
+        </p>
+      } @else {
+        @switch (store.appeal().status) {
+          @case ('submitted') {
+            <p
+              class="banner ok"
+              role="status"
+              i18n="État du recours envoyé@@auth.suspended.appeal.submitted"
             >
-              Envoyer le recours
-            </button>
-            <p class="note" i18n="Rappel : un seul recours@@auth.suspended.appeal.once">
-              Un seul recours par décision. Après son examen, la décision devient définitive. Le
-              recours utilise l'identité saisie dans la carte principale.
+              Recours envoyé le <span class="mono">{{ appealSubmittedAt() }}</span> · en examen par
+              un administrateur différent de celui qui a pris la décision. Réponse sous 5 jours
+              ouvrés, à titre indicatif, par e-mail.
             </p>
-          </form>
+          }
+          @case ('closed') {
+            <p class="banner neutral" role="status">{{ appealClosedText() }}</p>
+          }
+          @default {
+            <p class="lead" i18n="Explication du recours@@auth.suspended.appeal.lead">
+              Expliquez ce qui, selon vous, a été mal apprécié. Le recours est examiné par une autre
+              personne que celle qui a pris la décision.
+            </p>
+            <form
+              class="appeal"
+              [formGroup]="appealForm"
+              (ngSubmit)="submitAppeal()"
+              aria-labelledby="appeal-title"
+              novalidate
+            >
+              <div class="field">
+                <label [for]="fieldId('message')">{{ labels.message }}</label>
+                <textarea
+                  [id]="fieldId('message')"
+                  formControlName="message"
+                  rows="5"
+                  required
+                  [attr.minlength]="appealMin"
+                  [attr.maxlength]="appealMax"
+                  [attr.aria-invalid]="
+                    appealForm.controls.message.invalid && appealForm.controls.message.touched
+                  "
+                  [attr.aria-describedby]="fieldId('message') + '-error message-count'"
+                ></textarea>
+                <p id="message-count" class="count mono">
+                  {{ messageLength() }} / {{ appealMax }}
+                  <span i18n="Minimum du message de recours@@auth.suspended.appeal.min"
+                    >· {{ appealMin }} caractères au moins</span
+                  >
+                </p>
+                <pm-field-errors
+                  [control]="appealForm.controls.message"
+                  [id]="fieldId('message') + '-error'"
+                />
+              </div>
+              @if (appealError(); as text) {
+                <p class="banner error" role="alert">{{ text }}</p>
+              }
+              <button
+                mat-flat-button
+                type="submit"
+                [disabled]="store.appeal().status === 'busy' || locked()"
+                i18n="Bouton d'envoi du recours@@auth.suspended.appeal.submit"
+              >
+                Envoyer le recours
+              </button>
+              <p class="note" i18n="Rappel : un seul recours@@auth.suspended.appeal.once">
+                Un seul recours par décision. Après son examen, la décision devient définitive. Le
+                recours utilise l'identité confirmée plus haut.
+              </p>
+            </form>
+          }
         }
       }
-    }
-
-    <section class="help" aria-labelledby="help-title">
-      <h2 id="help-title" i18n="Titre de l'encart d'aide@@auth.suspended.help.title">
-        Besoin de parler à quelqu'un ?
-      </h2>
-      <p class="note" i18n="Texte de l'encart d'aide@@auth.suspended.help.body">
-        L'adresse de l'équipe vérification figure dans l'e-mail de décision. Merci de ne jamais
-        joindre de document contenant des informations sur vos patients.
-      </p>
     </section>
-    @if (!session.me()) {
-      <p class="alt">
-        <a [routerLink]="loginPath" i18n="Retour à la connexion@@auth.suspended.backToLogin"
-          >Retour à la connexion</a
-        >
-      </p>
-    }
   </aside>
 </div>

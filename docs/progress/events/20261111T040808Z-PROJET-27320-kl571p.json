@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T04:08:08.024Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-D1 à UX-D5 : connexion (accroche, mention hébergement, libellés au-dessus, lien à droite du libellé, rester connecté·e), inscription large (740 + colonne Ensuite/Vos données, cartes de profession, aria-describedby, liens CGU/confidentialité), confirmation à un geste, mot de passe oublié étapes 1 et 2 (nouvelle page), compte suspendu en deux colonnes",
+  "notes": "Écarts contrat : pas de GET jeton reset ni revokeOtherSessions, lien e-mail /reset-password?token=, pas de GET /api/me/suspension ni documents[], pas de newsletter ; requestReset non journalisé",
+  "pr": "https://github.com/mrscams/psymate-web/pull/60",
+  "branch": "claude/ux-d-auth",
+  "checkout": "agent-a49cd69fef6faf440"
+}

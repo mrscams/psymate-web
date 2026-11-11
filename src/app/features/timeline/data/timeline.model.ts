@@ -76,8 +76,11 @@ export type TimelineZoom = 'day' | 'week' | 'month';
 
 export const ZOOM_LEVELS: readonly TimelineZoom[] = ['day', 'week', 'month'];
 
+/** Position du curseur de zoom de la barre d'outils, en % de la piste (la décennie est à 100 %). */
+export const ZOOM_POSITION: Record<TimelineZoom, number> = { day: 0, week: 33, month: 67 };
+
 /** Hauteur fixe d'une ligne par granularité (défilement virtuel CDK à taille fixe). */
-export const ROW_HEIGHT: Record<TimelineZoom, number> = { day: 128, week: 96, month: 60 };
+export const ROW_HEIGHT: Record<TimelineZoom, number> = { day: 80, week: 68, month: 48 };
 
 /** Éléments par fenêtre : une requête = une fenêtre (limit maximal du contrat). */
 export const WINDOW_SIZE = 200;
@@ -156,6 +159,19 @@ export function neighbourhood(current: number, count: number): number[] {
   const wanted: number[] = [];
   for (let k = current - 1; k <= current + 1; k++) if (k >= 0 && k < count) wanted.push(k);
   return wanted;
+}
+
+/** Nombre d'éléments rattachés à chaque séance (sessionId), dans les fenêtres chargées. */
+export function sessionEntryCounts(windows: readonly TimelineWindow[]): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const win of windows) {
+    if (win.status !== 'loaded') continue;
+    for (const item of win.items) {
+      if (item.sessionId && item.type !== 'session')
+        counts[item.sessionId] = (counts[item.sessionId] ?? 0) + 1;
+    }
+  }
+  return counts;
 }
 
 // ---------------------------------------------------------------- dates
@@ -295,6 +311,11 @@ export interface TimelineRow {
   bands: boolean[];
   /** Colonnes dont la bande commence (côté récent) sur cette ligne : libellé et flèche. */
   bandHeads: (SituationBand | null)[];
+  /**
+   * Pour chaque colonne dont la bande commence ici : le nombre de lignes qu'elle couvre d'affilée
+   * (la place de son libellé vertical) ; 0 ailleurs.
+   */
+  bandRuns: number[];
 }
 
 export interface RowsInput {
@@ -318,6 +339,7 @@ export function buildRows(input: RowsInput): TimelineRow[] {
   const lanes = bands.length ? Math.max(...bands.map((band) => band.lane)) + 1 : 0;
   const empty = Array.from({ length: lanes }, () => false);
   const noHeads: (SituationBand | null)[] = Array.from({ length: lanes }, () => null);
+  const noRuns: number[] = Array.from({ length: lanes }, () => 0);
   const rows: TimelineRow[] = new Array(total);
   const count = windowCount(total, sizes);
   let slot = 0;
@@ -342,6 +364,7 @@ export function buildRows(input: RowsInput): TimelineRow[] {
           saidIn: null,
           bands: empty,
           bandHeads: noHeads,
+          bandRuns: noRuns,
         };
         previous = null;
         previousBands = empty;
@@ -372,9 +395,24 @@ export function buildRows(input: RowsInput): TimelineRow[] {
         saidIn: saidInSession(item, sessions),
         bands: covered,
         bandHeads: heads,
+        bandRuns: noRuns,
       };
       previous = item;
       previousBands = covered;
+    }
+  }
+  // Longueur de chaque bande depuis sa tête (de bas en haut : une passe, pas de rescan).
+  if (lanes) {
+    const run = Array.from({ length: lanes }, () => 0);
+    for (let i = rows.length - 1; i >= 0; i--) {
+      const row = rows[i];
+      if (!row) continue;
+      let runs: number[] | null = null;
+      for (let lane = 0; lane < lanes; lane++) {
+        run[lane] = row.bands[lane] ? run[lane] + 1 : 0;
+        if (row.bandHeads[lane]) (runs ??= [...noRuns])[lane] = run[lane];
+      }
+      if (runs) rows[i] = { ...row, bandRuns: runs };
     }
   }
   return rows;

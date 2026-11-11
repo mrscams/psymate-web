@@ -35,9 +35,16 @@ export const GRAPH_PARAMS = {
   period: 'period',
 } as const;
 
+/**
+ * Valeur de `?root=` pour « Tout le dossier » (UX-B3) : sans `root`, la page centre le graphe sur la
+ * racine par défaut (la situation en cours la plus liée) ; « Tout le dossier » reste un choix
+ * explicite, gardé dans l'URL.
+ */
+export const ROOT_ALL = 'all';
+
 /** Ce que l'URL porte : la racine, la profondeur et les filtres. */
 export interface GraphQuery {
-  /** Entrée racine ; null : les entrées les plus liées du dossier. */
+  /** Entrée racine ; null : tout le dossier (les entrées les plus liées, `?root=all`). */
   root: string | null;
   depth: GraphDepth;
   /** Types de liens suivis (paramètre linkTypes du contrat) ; vide : tous. */
@@ -161,7 +168,8 @@ function unique<T>(values: T[]): T[] {
 
 /** La requête du graphe depuis l'URL ; une valeur inconnue est ignorée (défaut). */
 export function parseQuery(params: ParamReader): GraphQuery {
-  const root = params.get(GRAPH_PARAMS.root)?.trim() || null;
+  const raw = params.get(GRAPH_PARAMS.root)?.trim() || null;
+  const root = raw === ROOT_ALL ? null : raw;
   const depth = Number(params.get(GRAPH_PARAMS.depth));
   const period = params.get(GRAPH_PARAMS.period) as GraphPeriod | null;
   return {
@@ -183,16 +191,23 @@ export function parseQuery(params: ParamReader): GraphQuery {
 
 /**
  * Les paramètres d'URL d'une requête, à fusionner (queryParamsHandling: 'merge') : null retire un
- * paramètre à sa valeur par défaut, pour une URL courte (?root=…&depth=… seulement si utiles).
+ * paramètre à sa valeur par défaut, pour une URL courte (?root=…&depth=… seulement si utiles). La
+ * racine est toujours écrite (`all` pour tout le dossier) : sans elle, la page choisit la racine
+ * par défaut.
  */
 export function toQueryParams(query: GraphQuery): Record<string, string | null> {
   return {
-    [GRAPH_PARAMS.root]: query.root,
+    [GRAPH_PARAMS.root]: query.root ?? ROOT_ALL,
     [GRAPH_PARAMS.depth]: query.root && query.depth !== DEFAULT_DEPTH ? String(query.depth) : null,
     [GRAPH_PARAMS.linkTypes]: query.linkTypes.length ? query.linkTypes.join(',') : null,
     [GRAPH_PARAMS.types]: query.types.length ? query.types.join(',') : null,
     [GRAPH_PARAMS.period]: query.period !== 'all' ? query.period : null,
   };
+}
+
+/** L'URL ne dit pas sur quoi centrer le graphe : la racine par défaut est à choisir (UX-B3). */
+export function needsDefaultRoot(params: ParamReader): boolean {
+  return !params.get(GRAPH_PARAMS.root)?.trim();
 }
 
 /** L'URL porte-t-elle au moins un paramètre du graphe ? (sinon : reprise de l'état rangé) */
@@ -286,6 +301,12 @@ export function mergeExpansion(
     truncated: view.truncated || expansion.truncated,
   };
 }
+
+/**
+ * Au-delà de ce nombre de nœuds, les étiquettes « titre · date » se masquent (UX-B3) : elles ne se
+ * lisent plus et chevauchent tout. La racine et le nœud sélectionné gardent la leur.
+ */
+export const LABELS_MAX_NODES = 60;
 
 /** Le graphe est-il vide (aucun lien, aucun groupe) ? Une racine seule ne montre rien de relié. */
 export function isEmptyGraph(view: GraphView): boolean {

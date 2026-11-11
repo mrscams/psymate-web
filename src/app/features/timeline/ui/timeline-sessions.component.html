@@ -1,5 +1,5 @@
 <ul class="sessions" [attr.aria-label]="listLabel">
-  @for (group of groups(); track key(group)) {
+  @for (group of shown(); track key(group)) {
     @let expandedNow = isOpen(group);
     <li class="session" [class.outside]="!group.id" [class.open]="expandedNow">
       <h3 class="heading">
@@ -16,6 +16,20 @@
           @if (group.id) {
             <pm-entry-icon type="session" [size]="14" />
             <span class="title">{{ title(group) }}</span>
+            @if (headerFacts(group); as facts) {
+              <span class="header-facts">{{ facts }}</span>
+            }
+            @if (loaded(group); as detail) {
+              @if (!detail.closedAt) {
+                <span
+                  class="header-open"
+                  i18n="
+                    Statut d'une séance non clôturée, dans son
+                    en-tête@@timeline.session.notClosedShort"
+                  >non clôturée</span
+                >
+              }
+            }
           } @else {
             <span
               class="title"
@@ -132,3 +146,17 @@
     </li>
   }
 </ul>
+@if (hidden() > 0) {
+  <div class="more-sessions">
+    <button type="button" class="show-more" (click)="showMore()">
+      <span
+        i18n="
+          Bouton qui affiche les séances plus anciennes du mode par séance@@timeline.sessions.more"
+        >{hidden(), plural,
+          =1 {Afficher la séance plus ancienne}
+          other {Afficher les {{ count(hidden()) }} séances plus anciennes}
+        }</span
+      >
+    </button>
+  </div>
+}

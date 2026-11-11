@@ -74,7 +74,7 @@ async function click(element: HTMLElement | null): Promise<void> {
   await settle();
 }
 
-const sentence = (el: HTMLElement) => text(el.querySelector('.sentence'));
+const sentence = (el: HTMLElement) => text(el.querySelector('.reading .sentence'));
 
 describe('LinkEditorPanel', () => {
   afterEach(async () => {
@@ -129,13 +129,13 @@ describe('LinkEditorPanel', () => {
     expect(text(el.querySelector('.patient'))).toBe('Marie D.');
     expect(text(el.querySelector('.card-name'))).toBe('Anxiété 8/10');
     const targets = [...el.querySelectorAll('label.target')];
-    expect(targets.map((item) => text(item.querySelector('.target-name')))).toEqual([
+    expect(targets.map((item) => text(item.querySelector('.row-name')))).toEqual([
       "Entretien d'évaluation",
       'Recherche d’emploi depuis septembre, avec beaucoup de refus.',
     ]);
     expect(targets[0].classList.contains('linked')).toBe(false);
     expect(targets[1].classList.contains('linked')).toBe(true);
-    expect(text(targets[1])).toContain('déjà lié (aggravé par)');
+    expect(text(targets[1].querySelector('.linked-text'))).toBe('déjà lié (aggravé par)');
     expect(text(el.querySelector('#pm-link-placed'))).toBe('Liens déjà posés sur cette entrée · 1');
   });
 
@@ -149,7 +149,7 @@ describe('LinkEditorPanel', () => {
     expect(api.entry).toHaveBeenCalledWith('e-medication');
     const checked = el.querySelector<HTMLInputElement>('input[type="radio"]:checked');
     expect(checked?.value).toBe('e-medication');
-    expect(text(el.querySelector('form.editor .sentence'))).toBe('Anxiété 8/10 … Sertraline 50 mg');
+    expect(sentence(el)).toBe('Anxiété 8/10 … Sertraline 50 mg');
     // Ressenti → médicament : « traite » n'est permis que dans l'autre sens.
     expect(chip(el, 'treats').getAttribute('aria-disabled')).toBe('true');
   });
@@ -178,7 +178,9 @@ describe('LinkEditorPanel', () => {
     expect(sentence(el)).toBe(
       'Anxiété 8/10 fait suite à Recherche d’emploi depuis septembre, avec beaucoup de refus.',
     );
-    expect(el.querySelector('.sentence')?.getAttribute('aria-live')).toBe('polite');
+    expect(
+      el.querySelector('.reading .sentence')?.closest('[aria-live]')?.getAttribute('aria-live'),
+    ).toBe('polite');
     const invert = el.querySelector<HTMLButtonElement>('button.invert')!;
     await click(invert);
     expect(invert.getAttribute('aria-pressed')).toBe('true');
@@ -384,6 +386,64 @@ describe('LinkEditorPanel', () => {
     const state = el.querySelector('section pm-state');
     expect(text(state)).toContain('Impossible de charger cette entrée');
     expect(state?.querySelector('button.retry, button.action')).toBeNull();
+  });
+
+  it('ordre de la maquette 06 : Depuis, Relation, Vers ; phrase épinglée dans le pied', async () => {
+    const { el } = await render();
+    expect([...el.querySelectorAll('form.editor h3.block-label')].map(text)).toEqual([
+      'Depuis',
+      'Relation',
+      'Vers',
+    ]);
+    const reading = el.querySelector('.footer .reading');
+    expect(text(reading?.querySelector('h3'))).toBe('Le lien se lira');
+    expect(reading?.querySelector('[aria-live="polite"]')).not.toBeNull();
+    // Cibles : nom accessible = titre seul, type et date en description.
+    const radio = el.querySelector<HTMLInputElement>('input[type="radio"][value="e-event"]')!;
+    const name = el.querySelector(`#${radio.getAttribute('aria-labelledby')}`);
+    expect(text(name)).toBe("Entretien d'évaluation");
+    expect(text(el.querySelector(`#${radio.getAttribute('aria-describedby')}`))).toMatch(
+      /^Événement · /,
+    );
+  });
+
+  it('puces refusées : raison en infobulle, une seule ligne d’aide visible (dernière touchée)', async () => {
+    const { el } = await render();
+    await chooseTarget(el, 'e-event');
+    const triggers = chip(el, 'triggers');
+    expect(triggers.getAttribute('title')).toBe(
+      '« déclenche » : seulement depuis événement, situation, séance. Possible en inversant le sens.',
+    );
+    expect(el.querySelector('.editor pm-link-type-chips .hint')).toBeNull();
+    await click(triggers);
+    expect(text(el.querySelector('.editor pm-link-type-chips .hint'))).toBe(
+      triggers.getAttribute('title'),
+    );
+  });
+
+  it('« Changer » : une autre entrée du dossier devient la source, le choix en cours est effacé', async () => {
+    const entry = vi.fn((id: string) =>
+      Promise.resolve(
+        id === 'e-event' ? { ...EVENT, patientId: 'p-marie', archived: false } : source(),
+      ),
+    );
+    const { el, api } = await render({ entry });
+    await chooseTarget(el, 'e-situation');
+    const change = [...el.querySelectorAll<HTMLButtonElement>('.card button')].find(
+      (button) => text(button) === 'Changer',
+    )!;
+    await click(change);
+    expect(change.getAttribute('aria-expanded')).toBe('true');
+    expect(api.targets).toHaveBeenLastCalledWith('p-marie', { q: '', type: null });
+    const option = [...el.querySelectorAll<HTMLButtonElement>('.source-option')].find((button) =>
+      text(button).startsWith("Entretien d'évaluation"),
+    )!;
+    await click(option);
+    expect(entry).toHaveBeenLastCalledWith('e-event');
+    expect(api.linksOf).toHaveBeenLastCalledWith('e-event');
+    expect(text(el.querySelector('.card-name'))).toBe("Entretien d'évaluation");
+    expect(el.querySelector('input[type="radio"]:checked')).toBeNull();
+    expect(el.querySelector('.source-picker')).toBeNull();
   });
 
   it('filtre de type : relance la recherche dans le dossier', async () => {

@@ -152,9 +152,17 @@
         aria-labelledby="confirm-title"
         novalidate
       >
+        <!-- Un seul geste (UX-D3) : l'adresse du compte, si la page ne la connaît pas, puis « Renvoyer le lien ». -->
         @if (!store.email()) {
           <div class="field">
             <label [for]="fieldId('email')">{{ labels.email }}</label>
+            <p
+              class="note"
+              [id]="fieldId('email') + '-hint'"
+              i18n="Aide du champ adresse, page en attente@@auth.confirm.pending.emailHint"
+            >
+              Pas reçu ? Saisissez l'adresse du compte et renvoyez le lien.
+            </p>
             <input
               [id]="fieldId('email')"
               type="email"
@@ -164,7 +172,7 @@
               [attr.aria-invalid]="
                 emailForm.controls.email.invalid && emailForm.controls.email.touched
               "
-              [attr.aria-describedby]="fieldId('email') + '-error'"
+              [attr.aria-describedby]="fieldId('email') + '-hint ' + fieldId('email') + '-error'"
             />
             <pm-field-errors
               [control]="emailForm.controls.email"
@@ -172,39 +180,52 @@
             />
           </div>
         }
-        <div class="actions">
+        <div class="actions resend-row">
           <button
             mat-flat-button
             type="submit"
             class="resend"
             [attr.aria-disabled]="!canResend()"
             [attr.aria-describedby]="cooldownSeconds() > 0 ? 'resend-cooldown' : null"
-            i18n="Bouton de renvoi de l'e-mail@@auth.confirm.pending.resend"
+            i18n="Bouton de renvoi du lien de confirmation@@auth.confirm.pending.resend"
           >
-            Renvoyer l'e-mail
+            Renvoyer le lien
           </button>
-          <p class="alt">
-            <span i18n="Mauvaise adresse ?@@auth.confirm.pending.wrongAddress"
-              >Mauvaise adresse ?</span
-            >
-            <button
-              type="button"
-              class="link-button"
-              id="change-toggle"
-              (click)="toggleChange()"
-              [attr.aria-expanded]="changing()"
-              aria-controls="change-form"
-              i18n="Lien qui déplie la correction d'adresse@@auth.confirm.pending.change"
-            >
-              Corriger l'e-mail
-            </button>
-            <span class="note" i18n="Conséquence de la correction@@auth.confirm.pending.changeNote"
-              >— le lien précédent sera invalidé.</span
-            >
-          </p>
+          @if (cooldownSeconds() > 0) {
+            <p id="resend-cooldown" class="cooldown" role="status">
+              <span i18n="Compte à rebours avant le prochain renvoi@@auth.confirm.cooldown"
+                >Nouveau renvoi possible dans</span
+              >
+              &ngsp;<span class="mono">{{ cooldownText() }}</span>
+            </p>
+          }
         </div>
       </form>
-      <ng-container *ngTemplateOutlet="resendStatus" />
+      <ng-container *ngTemplateOutlet="resendResult" />
+
+      <!-- « Corriger l'e-mail » seulement quand l'adresse est connue (session, ou inscription et
+           connexion refusée qui viennent de la donner) : sans adresse, le champ ci-dessus suffit. -->
+      @if (store.email()) {
+        <p class="alt change-row">
+          <span i18n="Mauvaise adresse ?@@auth.confirm.pending.wrongAddress"
+            >Mauvaise adresse ?</span
+          >
+          <button
+            type="button"
+            class="link-button pm-link-target"
+            id="change-toggle"
+            (click)="toggleChange()"
+            [attr.aria-expanded]="changing()"
+            aria-controls="change-form"
+            i18n="Lien qui déplie la correction d'adresse@@auth.confirm.pending.change"
+          >
+            Corriger l'e-mail
+          </button>
+          <span class="note" i18n="Conséquence de la correction@@auth.confirm.pending.changeNote"
+            >— le lien précédent sera invalidé.</span
+          >
+        </p>
+      }
 
       @if (changing()) {
         <form
@@ -222,26 +243,6 @@
             Votre mot de passe prouve que la demande vient de vous. Un nouveau lien partira à la
             nouvelle adresse ; l'ancienne reste celle du compte jusqu'à la confirmation.
           </p>
-          @if (!store.email()) {
-            <div class="field">
-              <label [for]="fieldId('email')">{{ labels.email }}</label>
-              <input
-                [id]="fieldId('email')"
-                type="email"
-                formControlName="email"
-                autocomplete="username"
-                required
-                [attr.aria-invalid]="
-                  changeForm.controls.email.invalid && changeForm.controls.email.touched
-                "
-                [attr.aria-describedby]="fieldId('email') + '-error'"
-              />
-              <pm-field-errors
-                [control]="changeForm.controls.email"
-                [id]="fieldId('email') + '-error'"
-              />
-            </div>
-          }
           <div class="field">
             <label [for]="fieldId('password')">{{ labels.password }}</label>
             <input
@@ -329,13 +330,17 @@
 
 <ng-template #resendStatus>
   @if (cooldownSeconds() > 0) {
-    <p id="resend-cooldown" class="cooldown mono" role="status">
+    <p id="resend-cooldown" class="cooldown" role="status">
       <span i18n="Compte à rebours avant le prochain renvoi@@auth.confirm.cooldown"
         >Nouveau renvoi possible dans</span
       >
-      {{ cooldownText() }}
+      &ngsp;<span class="mono">{{ cooldownText() }}</span>
     </p>
   }
+  <ng-container *ngTemplateOutlet="resendResult" />
+</ng-template>
+
+<ng-template #resendResult>
   @if (store.resend().status === 'done') {
     <p class="banner ok" role="status" i18n="E-mail renvoyé@@auth.confirm.resent">
       Demande envoyée. Si cette adresse correspond à un compte à confirmer, un nouvel e-mail arrive

@@ -38,6 +38,8 @@ export interface TimelineFilters {
 export interface TimelineFiltersSnapshot {
   filters: TimelineFilters;
   modeOverride: TimelineMode | null;
+  /** Filtres par défaut de la visite (période de l'arrivée, ou « Tout » une fois élargie). */
+  defaults?: TimelineFilters;
 }
 
 export const NO_FILTERS: TimelineFilters = {
@@ -69,7 +71,12 @@ export const FILTER_PARAMS = {
   from: 'from',
   to: 'to',
   mode: 'mode',
+  /** `?period=all` : « Tout » choisi alors que la période par défaut est bornée (90 j). */
+  period: 'period',
 } as const;
+
+/** Valeur de `?period=` pour « Tout ». */
+export const PERIOD_ALL = 'all';
 
 /** Lecture d'une URL : ce qu'Angular donne par ParamMap (getAll). */
 export interface ParamSource {
@@ -112,15 +119,24 @@ export function hasFilterParams(source: ParamSource): boolean {
   return Object.values(FILTER_PARAMS).some((name) => source.has(name));
 }
 
-/** Filtres lus dans l'URL ; les valeurs illisibles sont ignorées (le serveur juge le reste). */
+/**
+ * Filtres lus dans une URL qui porte au moins un paramètre de filtre ou de mode (lien partagé, lien
+ * profond de la vue d'ensemble : `?drafts=1`, `?mode=session`…). Les valeurs illisibles sont
+ * ignorées (le serveur juge le reste). Sans `from` ni `to`, la période est « Tout », comme avant
+ * UX-B2 : seule l'URL nue prend la période par défaut (TimelineFiltersStore.init).
+ */
 export function parseFilters(source: ParamSource): TimelineFilters {
   const types = listOf(source, FILTER_PARAMS.types, true).filter((t): t is EntryType =>
     (ENTRY_TYPES as readonly string[]).includes(t),
   );
   const drafts = source.get(FILTER_PARAMS.draftsOnly);
-  const from = validDay(source.get(FILTER_PARAMS.from));
+  let from = validDay(source.get(FILTER_PARAMS.from));
   let to = validDay(source.get(FILTER_PARAMS.to));
   if (from && to && to < from) to = null;
+  if (source.get(FILTER_PARAMS.period) === PERIOD_ALL) {
+    from = null;
+    to = null;
+  }
   return {
     types,
     emotions: listOf(source, FILTER_PARAMS.emotions, true),
@@ -139,21 +155,31 @@ export function parseMode(source: ParamSource): TimelineMode | null {
 
 /**
  * Paramètres d'URL des filtres : une valeur par défaut retire le paramètre (une URL sans filtre
- * reste `/timeline`). Les listes sont des paramètres répétés.
+ * reste `/timeline`). Les listes sont des paramètres répétés. L'URL nue vaut les filtres par défaut
+ * (`defaults`, période de l'arrivée) ; une URL avec un autre paramètre et sans période vaut « Tout »
+ * (parseFilters) : la période par défaut s'y écrit donc en dates, et « Tout » seul en `?period=all`.
  */
 export function filterParams(
   filters: TimelineFilters,
   mode: TimelineMode | null,
+  defaults: TimelineFilters = NO_FILTERS,
 ): Record<string, FilterParamValue> {
   const list = (values: readonly string[]) => (values.length ? [...values] : null);
-  return {
+  const others: Record<string, FilterParamValue> = {
     [FILTER_PARAMS.types]: list(filters.types),
     [FILTER_PARAMS.emotions]: list(filters.emotions),
     [FILTER_PARAMS.tags]: list(filters.tags),
     [FILTER_PARAMS.draftsOnly]: filters.draftsOnly ? '1' : null,
-    [FILTER_PARAMS.from]: filters.from,
-    [FILTER_PARAMS.to]: filters.to,
     [FILTER_PARAMS.mode]: mode,
+  };
+  const alone = Object.values(others).every((value) => value === null);
+  const bare = alone && filters.from === defaults.from && filters.to === defaults.to;
+  const all = !filters.from && !filters.to;
+  return {
+    ...others,
+    [FILTER_PARAMS.from]: bare ? null : filters.from,
+    [FILTER_PARAMS.to]: bare ? null : filters.to,
+    [FILTER_PARAMS.period]: !bare && alone && all ? PERIOD_ALL : null,
   };
 }
 
@@ -177,6 +203,11 @@ export function sameFilters(a: TimelineFilters, b: TimelineFilters): boolean {
 
 export function hasFilters(filters: TimelineFilters): boolean {
   return !sameFilters(filters, NO_FILTERS);
+}
+
+/** Au moins un filtre autre que la période (types, émotions, tags, brouillons). */
+export function hasNarrowing(filters: TimelineFilters): boolean {
+  return !sameFilters({ ...filters, from: null, to: null }, NO_FILTERS);
 }
 
 /** Minuit local d'un jour AAAA-MM-JJ décalé de `days`, en ISO UTC (bornes de la requête). */
@@ -243,6 +274,26 @@ export function presetStart(preset: PeriodPreset, today: Date): string | null {
     case 'all':
       return null;
   }
+}
+
+/**
+ * Période par défaut à l'arrivée (UX-B2) : la fenêtre de la vue d'ensemble (`overview.window`,
+ * 90 j par défaut), jamais « Tout » ; sauf préférence `timeline.groupBy = month` (agrégat par mois
+ * forcé, fiche 03), qui n'a de sens que sur toute la plage.
+ */
+export function defaultPreset(
+  window: string | null | undefined,
+  groupBy: TimelineGroupBy | null | undefined,
+): PeriodPreset {
+  if (groupBy === 'month') return 'all';
+  if (window === '30d') return '30d';
+  if (window === '12m') return '1y';
+  return '90d';
+}
+
+/** Filtres de l'arrivée : aucun filtre, la période par défaut qui finit aujourd'hui. */
+export function defaultFilters(preset: PeriodPreset, today: Date): TimelineFilters {
+  return withPeriod(NO_FILTERS, preset, today);
 }
 
 export function withPeriod(

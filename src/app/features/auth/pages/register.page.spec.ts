@@ -61,6 +61,30 @@ describe('RegisterPage', () => {
     expect(el.textContent).not.toMatch(/invitation/i);
   });
 
+  it('UX-D2 · cartes de profession : nom = libellé seul, description en aria-describedby', async () => {
+    const { el } = await render(vi.fn());
+    const radio = el.querySelector<HTMLInputElement>('#field-profession-psychologist');
+    const labelId = radio?.getAttribute('aria-labelledby');
+    const descId = radio?.getAttribute('aria-describedby');
+    expect(el.querySelector(`#${labelId}`)?.textContent?.trim()).toBe('Psychologue');
+    expect(el.querySelector(`#${descId}`)?.textContent).toContain('Suivi psychothérapeutique');
+  });
+
+  it('UX-D2 · liens CGU et confidentialité dans la case, colonne « Ensuite / Vos données »', async () => {
+    const { el } = await render(vi.fn());
+    const links = [...el.querySelectorAll<HTMLAnchorElement>('.consents a')];
+    expect(links.map((a) => a.getAttribute('href'))).toEqual([
+      '/mentions-legales',
+      '/confidentialite',
+    ]);
+    expect(links.every((a) => a.target === '_blank' && a.rel === 'noopener')).toBe(true);
+    const side = el.querySelector('aside.side');
+    expect(side?.querySelectorAll('ol li')).toHaveLength(4);
+    expect(side?.textContent).toContain('Vos données');
+    // La colonne suit le formulaire dans l'ordre du document (lecture après la saisie).
+    expect(el.querySelector('.register')?.lastElementChild).toBe(side);
+  });
+
   it('formulaire vide : rien n’est envoyé, résumé des erreurs en tête', async () => {
     const register = vi.fn();
     const { fixture, el } = await render(register);

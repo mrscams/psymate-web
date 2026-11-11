@@ -15,7 +15,9 @@ import { createPatient, intakeOf } from './timeline-data';
 // Filtres et mode par séance de la timeline (M3-03, fiche 03, C2) contre l'API locale (jamais de
 // mock) : filtrer « anxiété » (compteurs des facettes), « Brouillons seulement », filtres dans
 // l'URL et au rechargement, bascule par séance avec M (préférence écrite), dernière séance dépliée,
-// préférence relue sur un autre patient, « Lier » depuis le menu et la touche L.
+// préférence relue sur un autre patient, « Lier » depuis le menu et la touche L. Depuis UX-B2, les
+// émotions et tags non actifs sont dans le menu « Filtres (n) », les actifs en puces « Filtres actifs ».
+// Toutes les entrées de Nora B. ont moins de 90 jours : la période par défaut les montre toutes.
 
 let account: TestAccount;
 let nora: FilterPatient;
@@ -44,7 +46,9 @@ function timeline(page: Page) {
     count: page.locator('.status-line .count'),
     cards: page.locator('pm-timeline-card article'),
     types: toolbar.getByRole('group', { name: 'Types' }),
-    emotions: toolbar.getByRole('group', { name: 'Émotions' }),
+    active: toolbar.getByRole('group', { name: 'Filtres actifs' }),
+    filtersMenu: toolbar.getByRole('button', { name: /^Filtres/ }),
+    menu: page.getByRole('menu'),
     mode: toolbar.getByRole('group', { name: "Mode d'affichage (M)" }),
     sessions: page.locator('pm-timeline-sessions'),
     toggles: page.locator('pm-timeline-sessions button.toggle'),
@@ -58,7 +62,19 @@ async function blur(page: Page): Promise<void> {
 
 /** Bouton de puce par le début de son nom (« Anxiété 3 »). */
 function chip(group: ReturnType<typeof timeline>['types'], name: string) {
-  return group.getByRole('button', { name: new RegExp(`^${name}(\\s|$)`) });
+  return group.getByRole('button', { name: new RegExp(`^${name}(\\s|,|$)`) });
+}
+
+/** Élément du menu « Filtres » (émotion ou tag), par le début de son nom. */
+function menuChoice(t: ReturnType<typeof timeline>, name: string) {
+  return t.menu.getByRole('menuitemcheckbox', { name: new RegExp(`^${name}(\\s|$)`) });
+}
+
+/** Ouvre le menu « Filtres » et y choisit une émotion ou un tag. */
+async function pick(page: Page, t: ReturnType<typeof timeline>, name: string): Promise<void> {
+  await t.filtersMenu.click();
+  await menuChoice(t, name).click();
+  await expect(t.menu).toBeHidden();
 }
 
 test('filtrer « anxiété » : seules ses entrées, compteurs des facettes ; brouillons ; URL et rechargement', async ({
@@ -70,8 +86,15 @@ test('filtrer « anxiété » : seules ses entrées, compteurs des facettes ; br
   const t = timeline(page);
   await expect(t.count).toHaveText('9 entrées · 1 fenêtre en mémoire');
   await expect(chip(t.types, 'Ressenti')).toHaveText(/Ressenti\s*4$/);
-  await expect(chip(t.emotions, 'Anxiété')).toHaveText(/Anxiété\s*3$/);
   await expect(chip(t.types, 'Tous')).toHaveAttribute('aria-pressed', 'true');
+  // Émotions non actives : dans le menu « Filtres », avec le compteur des facettes.
+  await expect(t.active).toHaveCount(0);
+  await t.filtersMenu.click();
+  await expect(menuChoice(t, 'Anxiété')).toHaveText(/Anxiété\s*3$/);
+  await expect(menuChoice(t, 'Anxiété')).toHaveAttribute('aria-checked', 'false');
+  await expectNoAxeViolations(page);
+  await page.keyboard.press('Escape');
+  await expect(t.menu).toBeHidden();
   await expectNoAxeViolations(page);
 
   // Anxiété : la requête porte emotions=anxiety, les compteurs viennent des facettes de la réponse.
@@ -80,7 +103,7 @@ test('filtrer « anxiété » : seules ses entrées, compteurs des facettes ; br
       r.url().includes(`/api/patients/${nora.id}/timeline?`) &&
       r.url().includes('emotions=anxiety'),
   );
-  await chip(t.emotions, 'Anxiété').click();
+  await pick(page, t, 'Anxiété');
   const response = await filtered;
   const body = (await response.json()) as {
     items: { type: string; emotion: { code: string } | null }[];
@@ -94,11 +117,16 @@ test('filtrer « anxiété » : seules ses entrées, compteurs des facettes ; br
   for (const card of await t.cards.all()) {
     await expect(card.locator('.title')).toHaveText('Anxiété');
   }
-  await expect(chip(t.emotions, 'Anxiété')).toHaveAttribute('aria-pressed', 'true');
-  await expect(chip(t.emotions, 'Anxiété')).toHaveText(/Anxiété\s*3$/);
+  await expect(chip(t.active, 'Anxiété')).toHaveAttribute('aria-pressed', 'true');
+  await expect(chip(t.active, 'Anxiété')).toHaveText(/Anxiété\s*3$/);
+  await expect(t.filtersMenu).toHaveText('Filtres (1)');
   await expect(chip(t.types, 'Ressenti')).toHaveText(/Ressenti\s*3$/);
   await expect(chip(t.types, 'Note')).toHaveText(/Note\s*0$/);
-  await expect(chip(t.emotions, 'Joie')).toHaveCount(0);
+  await t.filtersMenu.click();
+  await expect(menuChoice(t, 'Anxiété')).toHaveAttribute('aria-checked', 'true');
+  await expect(menuChoice(t, 'Joie')).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await expect(t.menu).toBeHidden();
   await expectNoAxeViolations(page);
 
   // Brouillons seulement : l'anxiété en brouillon, seule.
@@ -113,7 +141,7 @@ test('filtrer « anxiété » : seules ses entrées, compteurs des facettes ; br
   await page.reload();
   await expect(page).toHaveURL(url);
   await expect(t.count).toHaveText('1 entrée · 1 fenêtre en mémoire');
-  await expect(chip(t.emotions, 'Anxiété')).toHaveAttribute('aria-pressed', 'true');
+  await expect(chip(t.active, 'Anxiété')).toHaveAttribute('aria-pressed', 'true');
   await expect(t.toolbar.getByRole('button', { name: 'Brouillons seulement' })).toHaveAttribute(
     'aria-pressed',
     'true',
@@ -198,7 +226,7 @@ test('basculer par séance avec M (préférence écrite) ; la dernière séance 
   await expect(t.toggles.nth(2)).toContainText("Séance d'accueil du");
 
   // Le filtre s'applique aussi par séance : anxiété → les deux séances où elle a été notée.
-  await chip(t.emotions, 'Anxiété').click();
+  await pick(page, t, 'Anxiété');
   await expect(t.count).toHaveText('3 entrées · 2 séances');
   await expect(t.toggles.nth(0)).toContainText('2 entrées');
   await expect(t.toggles.nth(1)).toContainText('1 entrée');
