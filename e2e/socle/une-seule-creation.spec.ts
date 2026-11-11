@@ -286,7 +286,7 @@ test('habillage nu ↔ praticien : chaque page de destination créée une fois, 
   // Habillage nu : /_demo aujourd'hui, la connexion en deux panneaux ensuite. Session ouverte
   // d'abord (la liste des patients est gardée).
   await page.goto('/fr/connexion');
-  await page.getByLabel('Adresse e-mail').fill(SEED.claire.email);
+  await page.getByLabel('E-mail professionnel').fill(SEED.claire.email);
   await page.getByLabel('Mot de passe', { exact: true }).fill(SEED.claire.password);
   await page.getByRole('button', { name: 'Se connecter' }).click();
   await expect(page).toHaveURL(/\/fr\/patients$/);

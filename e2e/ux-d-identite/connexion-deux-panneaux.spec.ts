@@ -51,10 +51,24 @@ test.describe('1440 × 900', () => {
   }) => {
     await open(page);
 
-    // Ni bandeau, ni pied, ni barre : l'habillage nu ; un seul <main>, posé par la page.
+    // Ni bandeau, ni pied, ni barre : l'habillage nu. Un seul <main id="main">, celui de la coquille
+    // (UX-A10c) : la page en est l'enfant et n'en pose pas.
     await expect(page.locator('pm-public-header, pm-public-footer, pm-app-bar')).toHaveCount(0);
     await expect(page.getByRole('main')).toHaveCount(1);
+    await expect(page.locator('#main')).toHaveCount(1);
+    await expect(page.locator('pm-root > main#main pm-login-page')).toHaveCount(1);
+    await expect(page.locator('pm-login-page main, pm-login-page [role="main"]')).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'English' })).toHaveCount(0);
+
+    // La page remplit la fenêtre de 1 440 × 900, sans défilement (ni vertical ni horizontal).
+    const scroll = await page.evaluate(() => ({
+      height: document.documentElement.scrollHeight - window.innerHeight,
+      width: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    }));
+    expect(scroll).toEqual({ height: 0, width: 0 });
+    const host = (await page.locator('pm-login-page').boundingBox())!;
+    expect(host.y).toBe(0);
+    expect(host.height).toBe(900);
 
     const brand = (await page.locator('.brand-panel').boundingBox())!;
     const form = (await page.locator('.form-panel').boundingBox())!;
