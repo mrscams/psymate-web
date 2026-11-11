@@ -26,6 +26,7 @@ import {
   firstInvalidField,
 } from '../../../shared/forms';
 import {
+  entryTypeLabel,
   SidePanelComponent,
   SidePanelService,
   StateAction,
@@ -38,6 +39,7 @@ import { draftKey, EditorTarget, EntryEditorStore } from '../data/entry-editor.s
 import {
   EntryStatus,
   EntryView,
+  INTENSITY_DEFAULT,
   linkChoices,
   reconcileLinks,
   sameLinks,
@@ -48,7 +50,7 @@ import { EmotionComboboxComponent } from '../ui/emotion-combobox.component';
 import { buildEntryForm, EntryForm, formDraft } from '../ui/entry-form';
 import { linkProblemText, modalityLabel, saveProblemText } from '../ui/entry-labels';
 import { IntensitySliderComponent } from '../ui/intensity-slider.component';
-import { candidateName, LinkRailComponent } from '../ui/link-rail.component';
+import { LinkRailComponent, railTitle } from '../ui/link-rail.component';
 import { OccurredFieldsComponent } from '../ui/occurred-fields.component';
 import { relativeAgo } from '../ui/relative-time';
 import { TypeChipsComponent } from '../ui/type-chips.component';
@@ -121,6 +123,30 @@ export class EntryEditorPanel {
     }
     const version = entry?.version ?? 1;
     return $localize`:Titre du panneau en correction@@entries.editor.titleEdit:Modifier l'entrée · v${version}:version:`;
+  });
+
+  /** Titre de la section du champ principal : le type choisi (« Ressenti », « Événement »…). */
+  protected readonly typeName = computed(() => entryTypeLabel(this.type()));
+
+  /**
+   * Sous-titre : le patient et la provenance de la saisie (« Marie D. · préremplie depuis la barre
+   * de capture »). Le nom arrive de GET /api/patients/{id} ; tant qu'il manque, la provenance seule.
+   */
+  protected readonly subtitle = computed(() => {
+    const name = this.store.patientName();
+    const fromBar = !this.editing && (!!this.target.prefill || !!this.target.text?.trim());
+    if (!fromBar) return name;
+    const source = $localize`:Provenance d'une entrée préremplie@@entries.editor.fromCaptureBar:préremplie depuis la barre de capture`;
+    return name ? `${name} · ${source}` : source;
+  });
+
+  /** Résumé du bloc Plus replié : la visibilité choisie, puis les tags. */
+  protected readonly moreSummary = computed(() => {
+    this.revision();
+    const visibility = this.form()?.controls.visibility.value ?? 'clinical';
+    return visibility === 'private'
+      ? $localize`:Résumé du bloc Plus, visibilité privée@@entries.more.asidePrivate:visibilité privée, tags`
+      : $localize`:Résumé du bloc Plus, visibilité clinique@@entries.more.asideClinical:visibilité clinique, tags`;
   });
 
   /** Correction : chargement ou erreur de l'entrée (pm-state). */
@@ -272,6 +298,18 @@ export class EntryEditorPanel {
       if (!control.value && control.pristine) control.setValue(current.id);
     });
 
+    // Ressenti créé ici : le curseur part de 5 (fiche 05 §4), tant qu'aucune intensité n'est saisie.
+    // Jamais en correction : un brouillon sans intensité reste « non renseigné » (pas de valeur
+    // inventée dans le PATCH, pas de version créée sans geste du praticien).
+    effect(() => {
+      const form = this.form();
+      if (!form || this.editing || this.type() !== 'feeling') return;
+      untracked(() => {
+        const control = form.controls.feeling.controls.intensity;
+        if (control.value === null) control.setValue(INTENSITY_DEFAULT);
+      });
+    });
+
     // Rail : un lien coché suit le type de l'entrée (type proposé de nouveau s'il sort de la
     // matrice) et les cibles relues ; rien d'invisible ne part dans le POST.
     effect(() => {
@@ -399,7 +437,7 @@ export class EntryEditorPanel {
       const names = new Map(
         (this.store.linkCandidates().data ?? []).map((candidate) => [
           candidate.id,
-          candidateName(candidate, emotions),
+          railTitle(candidate, emotions, this.locale),
         ]),
       );
       this.railError.set(linkProblemText(linkErrors, draft.links, names));

@@ -13775,8 +13775,8 @@
         <note priority="1" from="description">Pastille d&apos;une entrée en brouillon</note>
       </trans-unit>
       <trans-unit id="entries.type.label" datatype="html">
-        <source>Type</source>
-        <target state="translated">Type</target>
+        <source> Type </source>
+        <target state="translated"> Type </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
           <context context-type="linenumber">36,38</context>
@@ -13910,8 +13910,8 @@
         <note priority="1" from="description">Motif d&apos;une correction</note>
       </trans-unit>
       <trans-unit id="entries.more.summary" datatype="html">
-        <source> Plus · visibilité, tags </source>
-        <target state="translated">More · visibility, tags</target>
+        <source>Plus</source>
+        <target state="translated">More</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
           <context context-type="linenumber">311,313</context>
@@ -13946,8 +13946,8 @@
         <note priority="1" from="description">Visibilité privée</note>
       </trans-unit>
       <trans-unit id="entries.tags.legend" datatype="html">
-        <source>Tags</source>
-        <target state="translated">Tags</target>
+        <source> Tags </source>
+        <target state="translated"> Tags </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
           <context context-type="linenumber">335,337</context>
@@ -14585,8 +14585,8 @@
         <note priority="1" from="description">Valeur lue du curseur d&apos;intensité</note>
       </trans-unit>
       <trans-unit id="entries.when.legend" datatype="html">
-        <source>Quand</source>
-        <target state="translated">When</target>
+        <source> Quand </source>
+        <target state="translated"> When </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
           <context context-type="linenumber">2,5</context>
@@ -16433,8 +16433,8 @@
         <note priority="1" from="description">Bloc du rail des liens</note>
       </trans-unit>
       <trans-unit id="entries.rail.hint" datatype="html">
-        <source> Situations en cours et entrées récentes. <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Espace<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> coche ; les liens cochés sont posés avec l&apos;entrée, tout ou rien. </source>
-        <target state="translated"> Ongoing situations and recent entries. <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Space<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> checks; checked links are created with the entry, all or nothing. </target>
+        <source> Les liens cochés sont posés dans la même transaction que l&apos;entrée (tout ou rien, 20 au plus). </source>
+        <target state="translated"> Checked links are created in the same transaction as the entry (all or nothing, 20 at most). </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
           <context context-type="linenumber">321,323</context>
@@ -22651,6 +22651,158 @@
           <context context-type="linenumber">234</context>
         </context-group>
         <note priority="1" from="description">Nom des repères de médicament de la courbe</note>
+      </trans-unit>
+      <trans-unit id="entries.type.locked" datatype="html">
+        <source>le type ne se modifie pas</source>
+        <target state="translated">the type cannot be changed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">47,50</context>
+        </context-group>
+        <note priority="1" from="description">Le type d&apos;une entrée ne se modifie pas</note>
+      </trans-unit>
+      <trans-unit id="entries.type.prefixes" datatype="html">
+        <source>ou <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>/evt /sit /res /med<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> dans la barre</source>
+        <target state="translated">or <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>/evt /sit /res /med<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> in the bar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">51,52</context>
+        </context-group>
+        <note priority="1" from="description">Préfixes de la barre de capture</note>
+      </trans-unit>
+      <trans-unit id="entries.field.optional" datatype="html">
+        <source>(facultatif)</source>
+        <target state="translated">(optional)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">113,116</context>
+        </context-group>
+        <note priority="1" from="description">Mention d&apos;un champ facultatif</note>
+      </trans-unit>
+      <trans-unit id="entries.rail.aside" datatype="html">
+        <source>récentes et actives · <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>Espace<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> pour cocher</source>
+        <target state="translated">recent and active · <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>Space<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> to check</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">327,328</context>
+        </context-group>
+        <note priority="1" from="description">Rappel du rail des liens</note>
+      </trans-unit>
+      <trans-unit id="entries.links.aside" datatype="html">
+        <source>les liens se modifient dans l&apos;éditeur de lien</source>
+        <target state="translated">links are edited in the link editor</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">370,374</context>
+        </context-group>
+        <note priority="1" from="description">Les liens se modifient dans l&apos;éditeur de lien</note>
+      </trans-unit>
+      <trans-unit id="entries.editor.keys" datatype="html">
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>Échap<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> ferme en gardant le brouillon · <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> enregistre depuis le texte multi-ligne · <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>Tab<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> suit l&apos;ordre des blocs </source>
+        <target state="translated"><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>Esc<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> closes and keeps the draft · <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> saves from multi-line text · <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>Tab<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> follows the order of the blocks </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.html</context>
+          <context context-type="linenumber">543,546</context>
+        </context-group>
+        <note priority="1" from="description">Rappel des raccourcis de l&apos;éditeur</note>
+      </trans-unit>
+      <trans-unit id="entries.editor.fromCaptureBar" datatype="html">
+        <source>préremplie depuis la barre de capture</source>
+        <target state="translated">prefilled from the capture bar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+        <note priority="1" from="description">Provenance d&apos;une entrée préremplie</note>
+      </trans-unit>
+      <trans-unit id="entries.more.asidePrivate" datatype="html">
+        <source>visibilité privée, tags</source>
+        <target state="translated">private visibility, tags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+        <note priority="1" from="description">Résumé du bloc Plus, visibilité privée</note>
+      </trans-unit>
+      <trans-unit id="entries.more.asideClinical" datatype="html">
+        <source>visibilité clinique, tags</source>
+        <target state="translated">clinical visibility, tags</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/panels/entry-editor.panel.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+        <note priority="1" from="description">Résumé du bloc Plus, visibilité clinique</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.levelLow" datatype="html">
+        <source>faible</source>
+        <target state="translated">low</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">200</context>
+        </context-group>
+        <note priority="1" from="description">Niveau lexical faible d&apos;une émotion (Plutchik)</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.levelHigh" datatype="html">
+        <source>forte</source>
+        <target state="translated">strong</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">202</context>
+        </context-group>
+        <note priority="1" from="description">Niveau lexical fort d&apos;une émotion (Plutchik)</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.familySuffix" datatype="html">
+        <source>famille <x id="family" equiv-text="name"/></source>
+        <target state="translated">family <x id="family" equiv-text="name"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">213</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">223</context>
+        </context-group>
+        <note priority="1" from="description">Famille de l&apos;émotion choisie, à droite du champ</note>
+      </trans-unit>
+      <trans-unit id="entries.emotion.createFamily" datatype="html">
+        <source>famille</source>
+        <target state="translated">family</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/emotion-combobox.component.ts</context>
+          <context context-type="linenumber">220</context>
+        </context-group>
+        <note priority="1" from="description">Famille à choisir pour une émotion à créer</note>
+      </trans-unit>
+      <trans-unit id="entries.when.nowHint" datatype="html">
+        <source> Maintenant : l&apos;instant de l&apos;enregistrement est retenu. </source>
+        <target state="translated"> Now: the time of saving is recorded. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">34,37</context>
+        </context-group>
+        <note priority="1" from="description">Aide du moment présent</note>
+      </trans-unit>
+      <trans-unit id="entries.when.yearPlaceholder" datatype="html">
+        <source>aaaa</source>
+        <target state="translated">yyyy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">202</context>
+        </context-group>
+        <note priority="1" from="description">Format d&apos;une année</note>
+      </trans-unit>
+      <trans-unit id="entries.when.dayHint" datatype="html">
+        <source> précision « jour » : l&apos;heure n&apos;est pas enregistrée </source>
+        <target state="translated"> “day” precision: the time is not recorded </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/entries/ui/occurred-fields.component.html</context>
+          <context context-type="linenumber">140,143</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la précision jour</note>
       </trans-unit>
     </body>
   </file>

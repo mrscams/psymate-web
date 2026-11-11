@@ -8,6 +8,11 @@
     >
   }
 
+  <!-- Sous-titre : patient et provenance (pm-side-panel n'a pas d'emplacement sous le titre). -->
+  @if (subtitle(); as line) {
+    <p class="subtitle">{{ line }}</p>
+  }
+
   @if (grace(); as info) {
     <p class="grace" role="status" [class.in]="info.inGrace" [id]="graceId">
       {{ graceText() }}
@@ -28,198 +33,222 @@
   } @else if (form(); as f) {
     <form class="editor" [formGroup]="f" novalidate (submit)="$event.preventDefault()">
       <!-- 3. Type -->
-      <div class="block">
-        <span
-          class="block-label"
-          aria-hidden="true"
-          i18n="Bloc du type d'entrée@@entries.type.label"
-          >Type</span
-        >
+      <section class="section" aria-labelledby="pm-entry-type-title">
+        <div class="section-head">
+          <h3
+            class="section-title"
+            id="pm-entry-type-title"
+            i18n="Bloc du type d'entrée@@entries.type.label"
+          >
+            Type
+          </h3>
+          @if (editing) {
+            <span class="aside" i18n="Le type d'une entrée ne se modifie pas@@entries.type.locked"
+              >le type ne se modifie pas</span
+            >
+          } @else {
+            <span class="aside" i18n="Préfixes de la barre de capture@@entries.type.prefixes"
+              >ou <span class="mono">/evt /sit /res /med</span> dans la barre</span
+            >
+          }
+        </div>
         <pm-type-chips formControlName="type" [label]="typeLabelGroup" [types]="store.types()" />
-      </div>
+      </section>
 
       <!-- 4. Champ principal selon le type -->
-      @switch (type()) {
-        @case ('feeling') {
-          <div class="block" formGroupName="feeling">
-            <label
-              class="block-label"
-              [for]="fid('feeling.emotionCode')"
-              i18n="Champ émotion d'un ressenti@@entries.feeling.emotion"
-              >Émotion</label
-            >
-            <pm-emotion-combobox
-              formControlName="emotionCode"
-              [inputId]="fid('feeling.emotionCode')"
-              [errorId]="fid('feeling.emotionCode') + '-error'"
-              [invalid]="invalid('feeling.emotionCode')"
-            />
-            <pm-field-errors
-              [control]="f.controls.feeling.controls.emotionCode"
-              [id]="fid('feeling.emotionCode') + '-error'"
-            />
-          </div>
-          <div class="block" formGroupName="feeling">
-            <span
-              class="block-label"
-              id="pm-entry-intensity-label"
-              i18n="Champ intensité d'un ressenti@@entries.feeling.intensity"
-              >Intensité</span
-            >
-            <pm-intensity-slider
-              formControlName="intensity"
-              [sliderId]="fid('feeling.intensity')"
-              labelledBy="pm-entry-intensity-label"
-              [describedBy]="fid('feeling.intensity') + '-error'"
-              [invalid]="invalid('feeling.intensity')"
-            />
-            <pm-field-errors
-              [control]="f.controls.feeling.controls.intensity"
-              [id]="fid('feeling.intensity') + '-error'"
-            />
-          </div>
-          <div class="block">
-            <label
-              class="block-label"
-              [for]="fid('body')"
-              i18n="Texte court d'un ressenti@@entries.feeling.text"
-              >Texte</label
-            >
-            <input
-              [id]="fid('body')"
-              type="text"
-              formControlName="body"
-              autocomplete="off"
-              [attr.aria-invalid]="invalid('body')"
-              [attr.aria-describedby]="fid('body') + '-error'"
-            />
-            <pm-field-errors [control]="f.controls.body" [id]="fid('body') + '-error'" />
-          </div>
-        }
-        @case ('medication') {
-          <div class="row" formGroupName="medication">
-            <div class="block grow">
+      <section class="section main" aria-labelledby="pm-entry-main-title">
+        <h3 class="section-title" id="pm-entry-main-title">{{ typeName() }}</h3>
+        @switch (type()) {
+          @case ('feeling') {
+            <div class="block" formGroupName="feeling">
               <label
                 class="block-label"
-                [for]="fid('medication.molecule')"
-                i18n="Molécule d'un médicament@@entries.medication.molecule"
-                >Molécule</label
+                [for]="fid('feeling.emotionCode')"
+                i18n="Champ émotion d'un ressenti@@entries.feeling.emotion"
+                >Émotion</label
               >
-              <input
-                [id]="fid('medication.molecule')"
-                type="text"
-                formControlName="molecule"
-                autocomplete="off"
-                [attr.aria-invalid]="invalid('medication.molecule')"
-                [attr.aria-describedby]="fid('medication.molecule') + '-error'"
+              <pm-emotion-combobox
+                formControlName="emotionCode"
+                [inputId]="fid('feeling.emotionCode')"
+                [errorId]="fid('feeling.emotionCode') + '-error'"
+                [invalid]="invalid('feeling.emotionCode')"
               />
               <pm-field-errors
-                [control]="f.controls.medication.controls.molecule"
-                [id]="fid('medication.molecule') + '-error'"
+                [control]="f.controls.feeling.controls.emotionCode"
+                [id]="fid('feeling.emotionCode') + '-error'"
+              />
+            </div>
+            <div class="block" formGroupName="feeling">
+              <pm-intensity-slider
+                formControlName="intensity"
+                [sliderId]="fid('feeling.intensity')"
+                labelledBy="pm-entry-intensity-label"
+                [describedBy]="fid('feeling.intensity') + '-error'"
+                [invalid]="invalid('feeling.intensity')"
+              >
+                <span
+                  class="block-label"
+                  id="pm-entry-intensity-label"
+                  i18n="Champ intensité d'un ressenti@@entries.feeling.intensity"
+                  >Intensité</span
+                >
+              </pm-intensity-slider>
+              <pm-field-errors
+                [control]="f.controls.feeling.controls.intensity"
+                [id]="fid('feeling.intensity') + '-error'"
               />
             </div>
             <div class="block">
-              <label
-                class="block-label"
-                [for]="fid('medication.dosage')"
-                i18n="Dose d'un médicament@@entries.medication.dosage"
-                >Dose</label
-              >
+              <div class="label-row">
+                <label
+                  class="block-label"
+                  [for]="fid('body')"
+                  i18n="Texte court d'un ressenti@@entries.feeling.text"
+                  >Texte</label
+                >
+                <span
+                  class="optional"
+                  aria-hidden="true"
+                  i18n="Mention d'un champ facultatif@@entries.field.optional"
+                  >(facultatif)</span
+                >
+              </div>
               <input
-                class="mono"
-                [id]="fid('medication.dosage')"
+                [id]="fid('body')"
                 type="text"
-                formControlName="dosage"
+                formControlName="body"
                 autocomplete="off"
-                [attr.aria-invalid]="invalid('medication.dosage')"
-                [attr.aria-describedby]="fid('medication.dosage') + '-error'"
+                [attr.aria-invalid]="invalid('body')"
+                [attr.aria-describedby]="fid('body') + '-error'"
               />
-              <pm-field-errors
-                [control]="f.controls.medication.controls.dosage"
-                [id]="fid('medication.dosage') + '-error'"
-              />
+              <pm-field-errors [control]="f.controls.body" [id]="fid('body') + '-error'" />
             </div>
-          </div>
-          <ng-container *ngTemplateOutlet="longText" />
-        }
-        @case ('session') {
-          <div class="row" formGroupName="session">
-            <div class="block grow">
-              <label
-                class="block-label"
-                [for]="fid('session.modality')"
-                i18n="Modalité d'une séance@@entries.session.modality"
-                >Modalité</label
-              >
-              <select
-                [id]="fid('session.modality')"
-                formControlName="modality"
-                [attr.aria-invalid]="invalid('session.modality')"
-                [attr.aria-describedby]="fid('session.modality') + '-error'"
-              >
-                @for (modality of modalities; track modality) {
-                  <option [ngValue]="modality">{{ modalityName(modality) }}</option>
-                }
-              </select>
-              <pm-field-errors
-                [control]="f.controls.session.controls.modality"
-                [id]="fid('session.modality') + '-error'"
-              />
-            </div>
-            @if (editing) {
+          }
+          @case ('medication') {
+            <div class="row" formGroupName="medication">
+              <div class="block grow">
+                <label
+                  class="block-label"
+                  [for]="fid('medication.molecule')"
+                  i18n="Molécule d'un médicament@@entries.medication.molecule"
+                  >Molécule</label
+                >
+                <input
+                  [id]="fid('medication.molecule')"
+                  type="text"
+                  formControlName="molecule"
+                  autocomplete="off"
+                  [attr.aria-invalid]="invalid('medication.molecule')"
+                  [attr.aria-describedby]="fid('medication.molecule') + '-error'"
+                />
+                <pm-field-errors
+                  [control]="f.controls.medication.controls.molecule"
+                  [id]="fid('medication.molecule') + '-error'"
+                />
+              </div>
               <div class="block">
                 <label
                   class="block-label"
-                  [for]="fid('session.durationMin')"
-                  i18n="Durée d'une séance@@entries.session.duration"
-                  >Durée (min)</label
+                  [for]="fid('medication.dosage')"
+                  i18n="Dose d'un médicament@@entries.medication.dosage"
+                  >Dose</label
                 >
                 <input
-                  class="mono short"
-                  [id]="fid('session.durationMin')"
+                  class="mono"
+                  [id]="fid('medication.dosage')"
                   type="text"
-                  inputmode="numeric"
-                  formControlName="durationMin"
-                  [attr.aria-invalid]="invalid('session.durationMin')"
-                  [attr.aria-describedby]="fid('session.durationMin') + '-error'"
+                  formControlName="dosage"
+                  autocomplete="off"
+                  [attr.aria-invalid]="invalid('medication.dosage')"
+                  [attr.aria-describedby]="fid('medication.dosage') + '-error'"
                 />
                 <pm-field-errors
-                  [control]="f.controls.session.controls.durationMin"
-                  [id]="fid('session.durationMin') + '-error'"
+                  [control]="f.controls.medication.controls.dosage"
+                  [id]="fid('medication.dosage') + '-error'"
                 />
               </div>
+            </div>
+            <ng-container *ngTemplateOutlet="longText" />
+          }
+          @case ('session') {
+            <div class="row" formGroupName="session">
+              <div class="block grow">
+                <label
+                  class="block-label"
+                  [for]="fid('session.modality')"
+                  i18n="Modalité d'une séance@@entries.session.modality"
+                  >Modalité</label
+                >
+                <select
+                  [id]="fid('session.modality')"
+                  formControlName="modality"
+                  [attr.aria-invalid]="invalid('session.modality')"
+                  [attr.aria-describedby]="fid('session.modality') + '-error'"
+                >
+                  @for (modality of modalities; track modality) {
+                    <option [ngValue]="modality">{{ modalityName(modality) }}</option>
+                  }
+                </select>
+                <pm-field-errors
+                  [control]="f.controls.session.controls.modality"
+                  [id]="fid('session.modality') + '-error'"
+                />
+              </div>
+              @if (editing) {
+                <div class="block">
+                  <label
+                    class="block-label"
+                    [for]="fid('session.durationMin')"
+                    i18n="Durée d'une séance@@entries.session.duration"
+                    >Durée (min)</label
+                  >
+                  <input
+                    class="mono short"
+                    [id]="fid('session.durationMin')"
+                    type="text"
+                    inputmode="numeric"
+                    formControlName="durationMin"
+                    [attr.aria-invalid]="invalid('session.durationMin')"
+                    [attr.aria-describedby]="fid('session.durationMin') + '-error'"
+                  />
+                  <pm-field-errors
+                    [control]="f.controls.session.controls.durationMin"
+                    [id]="fid('session.durationMin') + '-error'"
+                  />
+                </div>
+              }
+            </div>
+            @if (!editing) {
+              <p class="hint" i18n="Une séance créée ici démarre@@entries.session.startHint">
+                Une séance créée ici est ouverte maintenant ; sa durée se donne à la clôture.
+              </p>
             }
-          </div>
-          @if (!editing) {
-            <p class="hint" i18n="Une séance créée ici démarre@@entries.session.startHint">
-              Une séance créée ici est ouverte maintenant ; sa durée se donne à la clôture.
-            </p>
+          }
+          @case ('note') {
+            <ng-container *ngTemplateOutlet="longText" />
+          }
+          @default {
+            <div class="block">
+              <label
+                class="block-label"
+                [for]="fid('title')"
+                i18n="Titre d'une entrée@@entries.field.title"
+                >Titre</label
+              >
+              <input
+                [id]="fid('title')"
+                type="text"
+                formControlName="title"
+                autocomplete="off"
+                [attr.aria-invalid]="invalid('title')"
+                [attr.aria-describedby]="fid('title') + '-error'"
+              />
+              <pm-field-errors [control]="f.controls.title" [id]="fid('title') + '-error'" />
+            </div>
+            <ng-container *ngTemplateOutlet="longText" />
           }
         }
-        @case ('note') {
-          <ng-container *ngTemplateOutlet="longText" />
-        }
-        @default {
-          <div class="block">
-            <label
-              class="block-label"
-              [for]="fid('title')"
-              i18n="Titre d'une entrée@@entries.field.title"
-              >Titre</label
-            >
-            <input
-              [id]="fid('title')"
-              type="text"
-              formControlName="title"
-              autocomplete="off"
-              [attr.aria-invalid]="invalid('title')"
-              [attr.aria-describedby]="fid('title') + '-error'"
-            />
-            <pm-field-errors [control]="f.controls.title" [id]="fid('title') + '-error'" />
-          </div>
-          <ng-container *ngTemplateOutlet="longText" />
-        }
-      }
+      </section>
 
       <ng-template #longText>
         <div class="block">
@@ -252,9 +281,9 @@
 
       <!-- 6. Séance (création ; une séance n'est rattachée à aucune séance) -->
       @if (!editing && type() !== 'session') {
-        <div class="block">
+        <div class="block section">
           <label
-            class="block-label"
+            class="section-title"
             [for]="fid('sessionId')"
             i18n="Bloc de la séance de rattachement@@entries.session.label"
             >Séance</label
@@ -290,10 +319,13 @@
 
       <!-- 7. Lié à… (création ; une séance ne porte pas de lien à la création) -->
       @if (!editing && type() !== 'session') {
-        <fieldset class="block rail" aria-describedby="pm-entry-links-hint">
-          <legend class="block-label" i18n="Bloc du rail des liens@@entries.rail.legend">
+        <fieldset class="block section rail" aria-describedby="pm-entry-links-hint">
+          <legend class="section-title" i18n="Bloc du rail des liens@@entries.rail.legend">
             Lié à…
           </legend>
+          <span class="aside rail-aside" i18n="Rappel du rail des liens@@entries.rail.aside"
+            >récentes et actives · <span class="mono">Espace</span> pour cocher</span
+          >
           @if (railState(); as kind) {
             <pm-state
               [kind]="kind"
@@ -318,8 +350,8 @@
             />
           }
           <p class="hint" id="pm-entry-links-hint" i18n="Aide du rail des liens@@entries.rail.hint">
-            Situations en cours et entrées récentes. <kbd>Espace</kbd> coche ; les liens cochés sont
-            posés avec l'entrée, tout ou rien.
+            Les liens cochés sont posés dans la même transaction que l'entrée (tout ou rien, 20 au
+            plus).
           </p>
           @if (railError(); as message) {
             <p class="rail-error" role="alert" tabindex="-1" [id]="railErrorId">{{ message }}</p>
@@ -329,8 +361,15 @@
 
       <!-- 7. Lié à… (correction : en lecture, modifiés dans l'éditeur de lien) -->
       @if (editing) {
-        <section class="block links" aria-labelledby="pm-entry-links-title">
-          <h3 class="block-label" id="pm-entry-links-title">{{ placedTitle() }}</h3>
+        <section class="block section links" aria-labelledby="pm-entry-links-title">
+          <div class="section-head">
+            <h3 class="section-title" id="pm-entry-links-title">{{ placedTitle() }}</h3>
+            <span
+              class="aside"
+              i18n="Les liens se modifient dans l'éditeur de lien@@entries.links.aside"
+              >les liens se modifient dans l'éditeur de lien</span
+            >
+          </div>
           @if (placedState(); as kind) {
             <pm-state
               [kind]="kind"
@@ -387,88 +426,124 @@
       <!-- 8. Plus -->
       @if (type() !== 'session') {
         <details class="more">
-          <summary i18n="Bloc replié des options@@entries.more.summary">
-            Plus · visibilité, tags
+          <summary>
+            <svg class="chevron" viewBox="0 0 10 10" aria-hidden="true" focusable="false">
+              <path d="M3 2l4 3-4 3" />
+            </svg>
+            <span i18n="Bloc replié des options@@entries.more.summary">Plus</span>
+            <span class="summary-aside">{{ moreSummary() }}</span>
           </summary>
-          <fieldset class="block">
-            <legend class="block-label" i18n="Visibilité d'une entrée@@entries.visibility.legend">
-              Visibilité
-            </legend>
-            <label class="check">
-              <input type="radio" name="visibility" formControlName="visibility" value="clinical" />
-              <span i18n="Visibilité clinique@@entries.visibility.clinical"
-                >Clinique : partagée avec l'équipe clinique</span
-              >
-            </label>
-            <label class="check">
-              <input type="radio" name="visibility" formControlName="visibility" value="private" />
-              <span i18n="Visibilité privée@@entries.visibility.private"
-                >Privée : vous seul, exclue de l'export</span
-              >
-            </label>
-            <pm-field-errors
-              [control]="f.controls.visibility"
-              [id]="fid('visibility') + '-error'"
-            />
-          </fieldset>
-          <fieldset class="block">
-            <legend class="block-label" i18n="Tags d'une entrée@@entries.tags.legend">Tags</legend>
-            @if (tagsState(); as kind) {
-              <pm-state
-                [kind]="kind"
-                compact
-                skeleton="row"
-                [lines]="2"
-                [title]="
-                  kind === 'error' ? tagsErrorTitle : kind === 'empty' ? tagsEmptyTitle : undefined
-                "
-                [message]="kind === 'empty' ? tagsEmptyMessage : undefined"
-                [action]="tagsRetry"
+          <div class="more-body">
+            <fieldset class="block">
+              <legend class="block-label" i18n="Visibilité d'une entrée@@entries.visibility.legend">
+                Visibilité
+              </legend>
+              <label class="check">
+                <input
+                  type="radio"
+                  name="visibility"
+                  formControlName="visibility"
+                  value="clinical"
+                />
+                <span i18n="Visibilité clinique@@entries.visibility.clinical"
+                  >Clinique : partagée avec l'équipe clinique</span
+                >
+              </label>
+              <label class="check">
+                <input
+                  type="radio"
+                  name="visibility"
+                  formControlName="visibility"
+                  value="private"
+                />
+                <span i18n="Visibilité privée@@entries.visibility.private"
+                  >Privée : vous seul, exclue de l'export</span
+                >
+              </label>
+              <pm-field-errors
+                [control]="f.controls.visibility"
+                [id]="fid('visibility') + '-error'"
               />
-            } @else {
-              <div class="tags">
-                @for (tag of store.tags().data ?? []; track tag) {
-                  <label class="check">
-                    <input
-                      type="checkbox"
-                      [checked]="selectedTags().includes(tag)"
-                      (change)="toggleTag(tag, $any($event.target).checked)"
-                    />
-                    <span>{{ tag }}</span>
-                  </label>
-                }
-              </div>
-            }
-          </fieldset>
+            </fieldset>
+            <fieldset class="block">
+              <legend class="block-label" i18n="Tags d'une entrée@@entries.tags.legend">
+                Tags
+              </legend>
+              @if (tagsState(); as kind) {
+                <pm-state
+                  [kind]="kind"
+                  compact
+                  skeleton="row"
+                  [lines]="2"
+                  [title]="
+                    kind === 'error'
+                      ? tagsErrorTitle
+                      : kind === 'empty'
+                        ? tagsEmptyTitle
+                        : undefined
+                  "
+                  [message]="kind === 'empty' ? tagsEmptyMessage : undefined"
+                  [action]="tagsRetry"
+                />
+              } @else {
+                <div class="tags">
+                  @for (tag of store.tags().data ?? []; track tag) {
+                    <label class="check">
+                      <input
+                        type="checkbox"
+                        [checked]="selectedTags().includes(tag)"
+                        (change)="toggleTag(tag, $any($event.target).checked)"
+                      />
+                      <span>{{ tag }}</span>
+                    </label>
+                  }
+                </div>
+              }
+            </fieldset>
+          </div>
         </details>
       }
     </form>
   }
 
   <div pmPanelFooter class="footer">
-    @if (editing && store.versionCount() > 1) {
-      <button type="button" class="link" (click)="openHistory()">{{ historyLabel() }}</button>
-    }
-    <span class="spacer"></span>
-    <button type="button" class="secondary" (click)="cancel()">
-      <ng-container i18n="Bouton d'annulation du panneau@@entries.editor.cancel"
-        >Annuler</ng-container
+    <div class="actions">
+      <button
+        type="button"
+        class="primary"
+        [disabled]="store.saving() || !form()"
+        (click)="submit('final')"
       >
-      <kbd i18n="Nom de la touche Échap@@shortcuts.escapeKey">Échap</kbd>
-    </button>
-    @if (draftAllowed()) {
-      <button type="button" class="secondary" [disabled]="store.saving()" (click)="submit('draft')">
-        <ng-container i18n="Bouton brouillon@@entries.editor.draft">Brouillon</ng-container>
-        <kbd>Ctrl+S</kbd>
+        {{ saveLabel() }} <kbd>⏎</kbd>
       </button>
-    }
-    <button
-      type="button"
-      class="primary"
-      [disabled]="store.saving() || !form()"
-      (click)="submit('final')"
-    >
-      {{ saveLabel() }} <kbd>⏎</kbd>
-    </button>
+      @if (draftAllowed()) {
+        <button
+          type="button"
+          class="secondary"
+          [disabled]="store.saving()"
+          (click)="submit('draft')"
+        >
+          <ng-container i18n="Bouton brouillon@@entries.editor.draft">Brouillon</ng-container>
+          <kbd>Ctrl+S</kbd>
+        </button>
+      }
+      <span class="spacer"></span>
+      <button type="button" class="cancel" (click)="cancel()">
+        <ng-container i18n="Bouton d'annulation du panneau@@entries.editor.cancel"
+          >Annuler</ng-container
+        >
+        <kbd i18n="Nom de la touche Échap@@shortcuts.escapeKey">Échap</kbd>
+      </button>
+    </div>
+    <div class="footnote">
+      @if (editing && store.versionCount() > 1) {
+        <button type="button" class="link" (click)="openHistory()">{{ historyLabel() }}</button>
+      }
+      <p class="keys" i18n="Rappel des raccourcis de l'éditeur@@entries.editor.keys">
+        <span class="mono">Échap</span> ferme en gardant le brouillon ·
+        <span class="mono">Ctrl+⏎</span> enregistre depuis le texte multi-ligne ·
+        <span class="mono">Tab</span> suit l'ordre des blocs
+      </p>
+    </div>
   </div>
 </pm-side-panel>

@@ -5,7 +5,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { EntryType } from '../../../shared/ui';
 import { CANDIDATES, candidate, EMOTIONS, LINK_TYPES } from '../data/entry.fixtures';
 import { LinkCandidate, RailLink } from '../data/entry.model';
-import { candidateName, LinkRailComponent } from './link-rail.component';
+import { candidateName, LinkRailComponent, railTitle } from './link-rail.component';
 
 @Component({
   selector: 'pm-test-rail-host',
@@ -106,7 +106,7 @@ describe('LinkRailComponent', () => {
     expect(rows()).toHaveLength(0);
   });
 
-  it('candidateName : titre, sinon émotion et intensité, sinon type', () => {
+  it('candidateName (barre de commande) : titre, sinon émotion et intensité, sinon type', () => {
     expect(candidateName(candidate(), EMOTIONS)).toBe('Entretien annuel');
     expect(
       candidateName(
@@ -115,5 +115,33 @@ describe('LinkRailComponent', () => {
       ),
     ).toBe('Colère 3/10');
     expect(candidateName(candidate({ type: 'note', title: null }), EMOTIONS)).toBe('Note');
+  });
+
+  it('railTitle : titre, sinon « Anxiété 6/10 · 24 oct. », sinon « Note · 24 oct. » (UX-A5)', () => {
+    expect(railTitle(candidate(), EMOTIONS, 'fr')).toBe('Entretien annuel');
+    // L'année n'est écrite que hors de l'année en cours : on ne vérifie que le début.
+    expect(
+      railTitle(
+        candidate({ type: 'feeling', title: null, emotionCode: 'anger', intensity: 3 }),
+        EMOTIONS,
+        'fr',
+      ),
+    ).toMatch(/^Colère 3\/10 · 18 oct\./);
+    // Précision jour : la date se lit en UTC (pas de veille à l'ouest de Greenwich).
+    expect(railTitle(candidate({ type: 'note', title: null }), EMOTIONS, 'fr')).toMatch(
+      /^Note · 18 oct\./,
+    );
+    // Sans date (phase de vie) : le libellé du type seul.
+    expect(
+      railTitle(
+        candidate({
+          type: 'note',
+          title: null,
+          occurred: { from: null, to: null, precision: 'life_phase', label: 'enfance' },
+        }),
+        EMOTIONS,
+        'fr',
+      ),
+    ).toBe('Note');
   });
 });

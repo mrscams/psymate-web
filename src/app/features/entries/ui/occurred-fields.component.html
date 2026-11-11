@@ -1,35 +1,39 @@
 <fieldset class="when" [formGroup]="group()" [attr.aria-describedby]="fid('occurred') + '-error'">
-  <legend i18n="Bloc du moment d'une entrée@@entries.when.legend">Quand</legend>
-  <div class="bar">
-    <button
-      type="button"
-      class="toggle now"
-      [attr.aria-pressed]="now()"
-      (click)="setNow()"
-      i18n="Bouton du moment présent@@entries.when.now"
-    >
-      Maintenant
-    </button>
-    <div
-      class="precisions"
-      role="group"
-      aria-label="Précision"
-      i18n-aria-label="Groupe des précisions de date@@entries.when.precision"
-    >
-      @for (item of precisions; track item) {
-        <button
-          type="button"
-          class="toggle"
-          [attr.aria-pressed]="!now() && precision() === item"
-          (click)="choose(item)"
-        >
-          {{ labelOf(item) }}
-        </button>
-      }
-    </div>
+  <legend class="section-title" i18n="Bloc du moment d'une entrée@@entries.when.legend">
+    Quand
+  </legend>
+  <button
+    type="button"
+    class="now"
+    [attr.aria-pressed]="now()"
+    (click)="setNow()"
+    i18n="Bouton du moment présent@@entries.when.now"
+  >
+    Maintenant
+  </button>
+  <div
+    class="precisions"
+    role="group"
+    aria-label="Précision"
+    i18n-aria-label="Groupe des précisions de date@@entries.when.precision"
+  >
+    @for (item of precisions; track item) {
+      <button
+        type="button"
+        class="segment"
+        [attr.aria-pressed]="!now() && precision() === item"
+        (click)="choose(item)"
+      >
+        {{ labelOf(item) }}
+      </button>
+    }
   </div>
 
-  @if (!now()) {
+  @if (now()) {
+    <p class="hint" i18n="Aide du moment présent@@entries.when.nowHint">
+      Maintenant : l'instant de l'enregistrement est retenu.
+    </p>
+  } @else {
     @if (precision() === 'life_phase') {
       <div class="field">
         <label
@@ -63,16 +67,56 @@
               <ng-container i18n="Date d'une entrée@@entries.when.date">Date</ng-container>
             }
           </label>
-          <input
-            class="mono"
-            [id]="fid('occurred.from')"
-            [type]="inputType()"
-            [attr.inputmode]="precision() === 'year' ? 'numeric' : null"
-            [attr.maxlength]="precision() === 'year' ? 4 : null"
-            formControlName="from"
-            [attr.aria-invalid]="invalid('from')"
-            [attr.aria-describedby]="fid('occurred.from') + '-error'"
-          />
+          @switch (precision()) {
+            @case ('day') {
+              <pm-date-field
+                formControlName="from"
+                [inputId]="fid('occurred.from')"
+                [errorId]="fid('occurred.from') + '-error'"
+                [invalid]="invalid('from')"
+              />
+            }
+            @case ('period') {
+              <pm-date-field
+                formControlName="from"
+                [inputId]="fid('occurred.from')"
+                [errorId]="fid('occurred.from') + '-error'"
+                [invalid]="invalid('from')"
+              />
+            }
+            @case ('month') {
+              <pm-month-field
+                formControlName="from"
+                [inputId]="fid('occurred.from')"
+                [errorId]="fid('occurred.from') + '-error'"
+                [invalid]="invalid('from')"
+              />
+            }
+            @case ('year') {
+              <input
+                class="mono year"
+                [id]="fid('occurred.from')"
+                type="text"
+                inputmode="numeric"
+                maxlength="4"
+                placeholder="aaaa"
+                i18n-placeholder="Format d'une année@@entries.when.yearPlaceholder"
+                formControlName="from"
+                [attr.aria-invalid]="invalid('from')"
+                [attr.aria-describedby]="fid('occurred.from') + '-error'"
+              />
+            }
+            @default {
+              <input
+                class="mono"
+                [id]="fid('occurred.from')"
+                type="datetime-local"
+                formControlName="from"
+                [attr.aria-invalid]="invalid('from')"
+                [attr.aria-describedby]="fid('occurred.from') + '-error'"
+              />
+            }
+          }
           <pm-field-errors
             [control]="group().controls.from"
             [id]="fid('occurred.from') + '-error'"
@@ -81,18 +125,21 @@
         @if (precision() === 'period') {
           <div class="field">
             <label [for]="fid('occurred.to')" i18n="Fin d'une période@@entries.when.end">Fin</label>
-            <input
-              class="mono"
-              [id]="fid('occurred.to')"
-              type="date"
+            <pm-date-field
               formControlName="to"
-              [attr.aria-invalid]="invalid('to')"
-              [attr.aria-describedby]="fid('occurred.to') + '-error'"
+              [inputId]="fid('occurred.to')"
+              [errorId]="fid('occurred.to') + '-error'"
+              [invalid]="invalid('to')"
             />
             <pm-field-errors [control]="group().controls.to" [id]="fid('occurred.to') + '-error'" />
           </div>
         }
       </div>
+      @if (precision() === 'day') {
+        <p class="hint" i18n="Aide de la précision jour@@entries.when.dayHint">
+          précision « jour » : l'heure n'est pas enregistrée
+        </p>
+      }
       @if (precision() === 'period') {
         <div class="field">
           <label
@@ -127,14 +174,48 @@
           <label [for]="fid('occurred.to')" i18n="Fin d'une situation@@entries.when.situationEnd"
             >Fin</label
           >
-          <input
-            class="mono"
-            [id]="fid('occurred.to')"
-            [type]="now() ? 'datetime-local' : inputType()"
-            formControlName="to"
-            [attr.aria-invalid]="invalid('to')"
-            [attr.aria-describedby]="fid('occurred.to') + '-error'"
-          />
+          @switch (now() ? 'exact' : precision()) {
+            @case ('day') {
+              <pm-date-field
+                formControlName="to"
+                [inputId]="fid('occurred.to')"
+                [errorId]="fid('occurred.to') + '-error'"
+                [invalid]="invalid('to')"
+              />
+            }
+            @case ('month') {
+              <pm-month-field
+                formControlName="to"
+                [inputId]="fid('occurred.to')"
+                [errorId]="fid('occurred.to') + '-error'"
+                [invalid]="invalid('to')"
+              />
+            }
+            @case ('year') {
+              <input
+                class="mono year"
+                [id]="fid('occurred.to')"
+                type="text"
+                inputmode="numeric"
+                maxlength="4"
+                placeholder="aaaa"
+                i18n-placeholder="Format d'une année@@entries.when.yearPlaceholder"
+                formControlName="to"
+                [attr.aria-invalid]="invalid('to')"
+                [attr.aria-describedby]="fid('occurred.to') + '-error'"
+              />
+            }
+            @default {
+              <input
+                class="mono"
+                [id]="fid('occurred.to')"
+                type="datetime-local"
+                formControlName="to"
+                [attr.aria-invalid]="invalid('to')"
+                [attr.aria-describedby]="fid('occurred.to') + '-error'"
+              />
+            }
+          }
           <pm-field-errors [control]="group().controls.to" [id]="fid('occurred.to') + '-error'" />
         </div>
       }
