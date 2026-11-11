@@ -39,11 +39,15 @@ function shellMock(snapshot?: TimelineSnapshot) {
   };
 }
 
-function prefsMock(groupBy: 'session' | 'month' | 'chronological' = 'chronological') {
+function prefsMock(
+  groupBy: 'session' | 'month' | 'chronological' = 'chronological',
+  window: '30d' | '90d' | '12m' = '90d',
+) {
   const timelineGroupBy = signal(groupBy);
   return {
     defaultVisibility: signal('clinical'),
     medicationVisible: signal(true),
+    overviewWindow: signal(window),
     timelineGroupBy,
     set: vi.fn(async (_key: string, value: 'session' | 'month' | 'chronological') => {
       timelineGroupBy.set(value);
@@ -107,6 +111,15 @@ function text(el: Element | null | undefined): string {
   return (el?.textContent ?? '').replace(/\s+/g, ' ').trim();
 }
 
+/** Premier jour de la période « 90 j » (ou autre) qui finit aujourd'hui, en ISO UTC de minuit local. */
+function daysAgoMidnight(days: number): string {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate() - days).toISOString();
+}
+
+/** « Toute la période » demandée par l'URL (?period=all) : vue décennie possible au-delà de 3 ans. */
+const ALL = { period: 'all' };
+
 describe('TimelinePage', () => {
   afterEach(() => {
     TestBed.inject(HttpTestingController).match(() => true);
@@ -136,11 +149,131 @@ describe('TimelinePage', () => {
     expect(el.querySelectorAll('pm-timeline-card')).toHaveLength(2);
   });
 
-  it('vide : message vers la barre de capture', async () => {
-    const { el } = await render(() =>
+  it('vide : la période par défaut s’élargit à « Tout » (sans URL), puis message vers la barre de capture', async () => {
+    const page = vi.fn<(id: string, query: TimelineQuery) => Promise<Page>>(() =>
       Promise.resolve(timelinePage({ facets: { types: {}, emotions: {}, tags: {} } })),
     );
-    expect(text(el.querySelector('pm-state [role="status"]'))).toContain('Aucune entrée');
+    const navigate = vi.spyOn(Router.prototype, 'navigate').mockResolvedValue(true);
+    const { el, fixture } = await render(page);
+    await flush();
+    await fixture.whenStable();
+    expect(page.mock.calls[0][1]).toEqual(expect.objectContaining({ from: daysAgoMidnight(90) }));
+    expect(page).toHaveBeenLastCalledWith('p-1', expect.objectContaining({ from: null, to: null }));
+    expect(text(el.querySelector('pm-state [role="status"]'))).toContain(
+      "Aucune entrée pour l'instant",
+    );
+    // L'élargissement est celui de la visite : rien n'est écrit dans l'URL.
+    for (const [, extras] of navigate.mock.calls) {
+      expect(extras?.queryParams).not.toEqual(expect.objectContaining({ period: 'all' }));
+    }
+    navigate.mockRestore();
+  });
+
+  it('période par défaut 90 j (UX-B2) : requête bornée, « 90 j » actif, cartes et non la vue décennie', async () => {
+    const page = vi.fn().mockResolvedValue(timelinePage({ items: items(3) }));
+    const { el, summary } = await render(page, shellMock(), null, {
+      summary: () => Promise.resolve(monthlySummary(60)),
+    });
+    expect(page.mock.calls[0][1]).toEqual(
+      expect.objectContaining({ from: daysAgoMidnight(90), to: null }),
+    );
+    const pressed = el.querySelector('[aria-label="Période"] [aria-pressed="true"]');
+    expect(text(pressed)).toBe('90 j');
+    expect(el.querySelector('pm-timeline-decade')).toBeNull();
+    expect(el.querySelectorAll('pm-timeline-card')).toHaveLength(3);
+    expect(summary).toHaveBeenCalledWith(
+      'p-1',
+      expect.objectContaining({ from: daysAgoMidnight(90) }),
+    );
+  });
+
+  it('période par défaut : la fenêtre de la vue d’ensemble (overview.window = 12m → « 1 an »)', async () => {
+    const page = vi.fn().mockResolvedValue(timelinePage({ items: items(2) }));
+    const { el } = await render(page, shellMock(), null, {
+      prefs: prefsMock('chronological', '12m'),
+    });
+    const now = new Date();
+    expect(page.mock.calls[0][1]).toEqual(
+      expect.objectContaining({
+        from: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()).toISOString(),
+      }),
+    );
+    expect(text(el.querySelector('[aria-label="Période"] [aria-pressed="true"]'))).toBe('1 an');
+  });
+
+  it('« Tout » : la requête n’a plus de borne et l’URL porte ?period=all', async () => {
+    const page = vi.fn().mockResolvedValue(timelinePage({ items: items(2) }));
+    const { el, fixture } = await render(page);
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    el.querySelector<HTMLButtonElement>(
+      '[aria-label="Période"] button[data-period="all"]',
+    )!.click();
+    await flush();
+    await fixture.whenStable();
+    expect(page).toHaveBeenLastCalledWith('p-1', expect.objectContaining({ from: null, to: null }));
+    expect(navigate).toHaveBeenCalledWith(
+      [],
+      expect.objectContaining({
+        queryParams: expect.objectContaining({ period: 'all', from: null, to: null }),
+      }),
+    );
+  });
+
+  it('vide sur une période choisie (?from=) : « Aucune entrée sur cette période », Afficher tout', async () => {
+    const page = vi
+      .fn()
+      .mockResolvedValueOnce(
+        timelinePage({ items: [], facets: { types: {}, emotions: {}, tags: {} } }),
+      )
+      .mockResolvedValue(timelinePage({ items: items(2) }));
+    const { el, fixture } = await render(page, shellMock(), null, {
+      params: { from: '2026-10-01' },
+    });
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const empty = el.querySelector('pm-state [role="status"]');
+    expect(text(empty)).toContain('Aucune entrée sur cette période');
+    const action = empty!.querySelector<HTMLButtonElement>('button')!;
+    expect(text(action)).toBe('Afficher tout');
+    action.click();
+    await flush();
+    await fixture.whenStable();
+    expect(page).toHaveBeenLastCalledWith('p-1', expect.objectContaining({ from: null }));
+    expect(el.querySelectorAll('pm-timeline-card')).toHaveLength(2);
+  });
+
+  it('carte de séance : durée d’après ses bornes, modalité et clôture du détail, nombre d’entrées', async () => {
+    const session = timelineItem({
+      id: 's-1',
+      type: 'session',
+      title: null,
+      sessionId: null,
+      occurred: {
+        from: '2026-10-30T15:00:00Z',
+        to: '2026-10-30T15:50:00Z',
+        precision: 'exact',
+        label: null,
+      },
+    });
+    const notes = items(2).map((item) => ({ ...item, sessionId: 's-1' }));
+    const { el, fixture } = await render(() =>
+      Promise.resolve(
+        timelinePage({
+          items: [...notes, session],
+          facets: { types: { note: 2, session: 1 }, emotions: {}, tags: {} },
+        }),
+      ),
+    );
+    const api = TestBed.inject(TimelineApi) as unknown as {
+      sessionDetail: ReturnType<typeof vi.fn>;
+    };
+    expect(api.sessionDetail).toHaveBeenCalledWith('s-1');
+    const card = [...el.querySelectorAll('pm-timeline-card article')].find(
+      (c) => c.getAttribute('data-entry-id') === 's-1',
+    )!;
+    expect(text(card.querySelector('.title'))).toBe('Séance · 50 min');
+    expect(text(card.querySelector('.session-count'))).toBe('2 entrées');
+    expect(card.querySelector('.precision')).toBeNull();
+    void fixture;
   });
 
   it('chargée : ligne d’état, liste étiquetée, cartes, axe et bandes', async () => {
@@ -179,14 +312,15 @@ describe('TimelinePage', () => {
     );
     const { el, fixture, summary } = await render(page);
     const calls = page.mock.calls.length;
-    expect(text(el.querySelector('.granularity'))).toBe('Semaine');
+    expect(text(el.querySelector('.granularity'))).toBe('Jour');
+    // Zoom par défaut « Jour » (axe : une date par carte, comme la maquette) ; + n'a plus de cran.
+    expect(el.querySelectorAll<HTMLButtonElement>('.zoom-button')[1].disabled).toBe(true);
     document.body.dispatchEvent(
-      new KeyboardEvent('keydown', { key: '+', bubbles: true, cancelable: true }),
+      new KeyboardEvent('keydown', { key: '-', bubbles: true, cancelable: true }),
     );
     await fixture.whenStable();
-    expect(text(el.querySelector('.granularity'))).toBe('Jour');
+    expect(text(el.querySelector('.granularity'))).toBe('Semaine');
     const out = el.querySelectorAll<HTMLButtonElement>('.zoom-button')[0];
-    out.click();
     out.click();
     await fixture.whenStable();
     expect(text(el.querySelector('.granularity'))).toBe('Mois');
@@ -211,7 +345,7 @@ describe('TimelinePage', () => {
       () => Promise.resolve(timelinePage({ items: items(3) })),
       shellMock(),
       null,
-      { summary: () => Promise.resolve(monthlySummary(60)) },
+      { summary: () => Promise.resolve(monthlySummary(60)), params: ALL },
     );
     expect(el.querySelector('cdk-virtual-scroll-viewport')).toBeNull();
     expect(text(el.querySelector('pm-timeline-decade .badge'))).toBe(
@@ -242,7 +376,7 @@ describe('TimelinePage', () => {
       () => Promise.resolve(timelinePage({ items: items(3) })),
       shellMock(),
       null,
-      { summary: () => never() },
+      { summary: () => never(), params: ALL },
     );
     expect(el.querySelector('pm-state [aria-busy="true"]')).not.toBeNull();
     expect(el.querySelector('cdk-virtual-scroll-viewport')).toBeNull();
@@ -254,7 +388,7 @@ describe('TimelinePage', () => {
     );
     const summary = (_id: string, range: DecadeRange) =>
       Promise.resolve(range.fromDay ? monthlySummary(1, '2025-03') : monthlySummary(60));
-    const { el, fixture } = await render(page, shellMock(), null, { summary });
+    const { el, fixture } = await render(page, shellMock(), null, { summary, params: ALL });
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
     el.querySelector('rect.hit[data-month="2025-03"]')!.dispatchEvent(
       new MouseEvent('dblclick', { bubbles: true }),
@@ -307,7 +441,7 @@ describe('TimelinePage', () => {
       () => Promise.resolve(timelinePage({ items: items(3) })),
       shellMock(),
       'e-1',
-      { summary: () => Promise.resolve(monthlySummary(60)) },
+      { summary: () => Promise.resolve(monthlySummary(60)), params: ALL },
     );
     await flush();
     await fixture.whenStable();
@@ -332,6 +466,7 @@ describe('TimelinePage', () => {
           id === 'p-1'
             ? new Promise((resolve) => (resolveFirst = resolve))
             : Promise.resolve(monthlySummary(12)),
+        params: ALL,
       },
     );
     expect(el.querySelector('pm-state [aria-busy="true"]')).not.toBeNull();
@@ -391,8 +526,11 @@ describe('TimelinePage', () => {
       expect.objectContaining({
         patientId: 'p-1',
         total: 3,
-        zoom: 'week',
-        filters: { filters: NO_FILTERS, modeOverride: null },
+        zoom: 'day',
+        filters: expect.objectContaining({
+          filters: { ...NO_FILTERS, from: expect.any(String) },
+          modeOverride: null,
+        }),
       }),
     );
     const snapshot = shell.rememberTab.mock.calls[0][1] as TimelineSnapshot;
@@ -434,7 +572,15 @@ describe('TimelinePage', () => {
     );
     const { el, fixture } = await render(page);
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
-    const anxiety = el.querySelector<HTMLButtonElement>('button[data-emotion="anxiety"]')!;
+    // Émotions et tags non actifs : dans le menu « Filtres ».
+    expect(el.querySelector('button[data-emotion="anxiety"]')).toBeNull();
+    [...el.querySelectorAll<HTMLButtonElement>('pm-timeline-filters button')]
+      .find((b) => text(b).startsWith('Filtres'))!
+      .click();
+    await fixture.whenStable();
+    const anxiety = document.querySelector<HTMLButtonElement>(
+      '[role="menuitemcheckbox"][data-emotion="anxiety"]',
+    )!;
     expect(text(anxiety)).toBe('Anxiété 1');
     anxiety.click();
     await flush();
@@ -597,6 +743,34 @@ describe('TimelinePage', () => {
     await flush();
     expect(page.mock.calls[0][1]).toEqual(expect.objectContaining({ draftsOnly: false }));
     navigate.mockRestore();
+  });
+
+  it('?focus= hors de la période par défaut : elle s’élargit à « Tout », on prévient, l’entrée est trouvée', async () => {
+    const navigate = vi.spyOn(Router.prototype, 'navigate').mockResolvedValue(true);
+    const info = vi.spyOn(ToastService.prototype, 'info');
+    const page = vi.fn((_id: string, query: TimelineQuery) =>
+      Promise.resolve(
+        query.from ? timelinePage({ items: items(2, 'r') }) : timelinePage({ items: items(5) }),
+      ),
+    );
+    const { fixture } = await render(page, shellMock(), 'e-4');
+    await flush();
+    await fixture.whenStable();
+    await flush();
+    expect(page.mock.calls[0][1]).toEqual(expect.objectContaining({ from: daysAgoMidnight(90) }));
+    expect(page).toHaveBeenLastCalledWith('p-1', expect.objectContaining({ from: null }));
+    expect(info).toHaveBeenCalledWith(
+      "Période élargie à « Tout » pour afficher l'entrée demandée.",
+    );
+    const instance = fixture.componentInstance as unknown as {
+      store: { selectedId(): string | null };
+    };
+    expect(instance.store.selectedId()).toBe('e-4');
+    for (const [, extras] of navigate.mock.calls) {
+      expect(extras?.queryParams).not.toEqual(expect.objectContaining({ period: 'all' }));
+    }
+    navigate.mockRestore();
+    info.mockRestore();
   });
 
   it('?focus= exclu par les filtres de l’URL : filtres retirés, on prévient, l’entrée est cherchée sans eux', async () => {

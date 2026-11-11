@@ -215,12 +215,16 @@ export function decadeChart(input: DecadeChartInput): DecadeChart {
     }
   }
 
-  // Bandes : situations longues qui chevauchent la plage, rangées en colonnes sans chevauchement.
+  // Bandes : situations longues qui chevauchent la plage, une par ligne (UX-B2 : deux libellés ne se
+  // recouvrent jamais), de la plus ancienne à la plus récente.
   const startMs = monthStart(plage.start).getTime();
   const endMs = monthStart(plage.end + 1).getTime();
   // Filtrées sur la plage avant la mise en colonnes : une situation hors plage ne prend pas de colonne.
   const visible = input.situations.filter((item) => isLong(item) && overlaps(item, startMs, endMs));
-  const bands: ChartBand[] = layoutBands(visible).map((band) => {
+  const sorted = layoutBands(visible).sort(
+    (a, b) => a.from - b.from || a.item.id.localeCompare(b.item.id),
+  );
+  const bands: ChartBand[] = sorted.map((band, lane) => {
     const from = Math.max(band.from, startMs);
     const to = Math.min(band.to, endMs);
     const x = xOf(monthFloat(from));
@@ -228,10 +232,10 @@ export function decadeChart(input: DecadeChartInput): DecadeChart {
     const width = round(Math.max(3, right - x));
     return {
       item: band.item,
-      lane: band.lane,
+      lane,
       x,
       width,
-      y: BAND_TOP + band.lane * (BAND_HEIGHT + BAND_GAP),
+      y: BAND_TOP + lane * (BAND_HEIGHT + BAND_GAP),
       ongoing: band.item.ongoing,
       clippedStart: band.from < startMs,
       inside: width >= 160,

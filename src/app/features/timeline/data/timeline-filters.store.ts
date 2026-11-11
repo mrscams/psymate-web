@@ -4,10 +4,13 @@ import { patchState, signalStore, withComputed, withMethods, withState } from '@
 import { ApiProblem } from '../../../core/http';
 import { PreferencesStore } from '../../../core/preferences';
 import {
+  defaultFilters,
+  defaultPreset,
   filterParams,
   filterQuery,
   hasFilterParams,
   hasFilters,
+  hasNarrowing,
   modeOfGroupBy,
   NO_FILTERS,
   ParamSource,
@@ -16,6 +19,7 @@ import {
   TimelineFilters,
   TimelineFiltersSnapshot,
   TimelineMode,
+  sameFilters,
 } from './timeline-filters.model';
 
 interface TimelineFiltersState {
@@ -31,12 +35,19 @@ interface TimelineFiltersState {
    * dans l'URL, ni dans la mémoire de l'onglet ; il tombe à la prochaine ouverture ou bascule.
    */
   visitMode: TimelineMode | null;
+  /**
+   * Filtres de l'arrivée (UX-B2) : la période par défaut (90 j, ou `overview.window`), fixée à
+   * l'entrée sur l'onglet. Elle n'est pas écrite dans l'URL ; « Tout » s'y écrit `?period=all`.
+   * Élargie à « Tout » pour la visite quand elle ne montre rien ou exclut l'entrée demandée.
+   */
+  defaults: TimelineFilters;
 }
 
 const initialState: TimelineFiltersState = {
   filters: NO_FILTERS,
   modeOverride: null,
   visitMode: null,
+  defaults: NO_FILTERS,
 };
 
 /**
@@ -62,24 +73,37 @@ export const TimelineFiltersStore = signalStore(
         store.modeOverride() === null &&
         prefs.timelineGroupBy() === 'month',
     ),
-    /** Au moins un filtre posé (« Effacer les filtres » dans l'état vide). */
+    /** Au moins un filtre posé, période comprise (« Effacer les filtres » dans l'état vide). */
     active: computed(() => hasFilters(store.filters())),
+    /** Un filtre autre que la période : type, émotion, tag, brouillons. */
+    narrowed: computed(() => hasNarrowing(store.filters())),
+    /** Les filtres sont ceux de l'arrivée (période par défaut, rien d'autre). */
+    atDefaults: computed(() => sameFilters(store.filters(), store.defaults())),
     /** Paramètres d'URL à jour (une valeur par défaut retire le paramètre). */
-    params: computed(() => filterParams(store.filters(), store.modeOverride())),
+    params: computed(() => filterParams(store.filters(), store.modeOverride(), store.defaults())),
     /** Paramètres de la requête GET …/timeline. */
     query: computed(() => filterQuery(store.filters())),
   })),
   withMethods((store, prefs = inject(PreferencesStore)) => ({
     /**
      * Entrée sur l'onglet : l'URL l'emporte si elle porte un filtre ou un mode (lien partagé,
-     * rechargement), sinon la mémoire de l'onglet, sinon aucun filtre. Renvoie la source retenue.
+     * rechargement), sinon la mémoire de l'onglet, sinon les filtres de l'arrivée (période par
+     * défaut, UX-B2). Renvoie la source retenue.
      */
-    init(url: ParamSource, recalled?: TimelineFiltersSnapshot | null): 'url' | 'memory' | 'none' {
+    init(
+      url: ParamSource,
+      recalled?: TimelineFiltersSnapshot | null,
+      today: Date = new Date(),
+    ): 'url' | 'memory' | 'none' {
+      const defaults =
+        recalled?.defaults ??
+        defaultFilters(defaultPreset(prefs.overviewWindow(), prefs.timelineGroupBy()), today);
       if (hasFilterParams(url)) {
         patchState(store, {
-          filters: parseFilters(url),
+          filters: parseFilters(url, defaults),
           modeOverride: parseMode(url),
           visitMode: null,
+          defaults,
         });
         return 'url';
       }
@@ -88,11 +112,24 @@ export const TimelineFiltersStore = signalStore(
           filters: { ...NO_FILTERS, ...recalled.filters },
           modeOverride: recalled.modeOverride ?? null,
           visitMode: null,
+          defaults,
         });
         return 'memory';
       }
-      patchState(store, initialState);
+      patchState(store, { ...initialState, filters: defaults, defaults });
       return 'none';
+    },
+
+    /**
+     * Les filtres de l'arrivée ne montrent rien, ou excluent l'entrée demandée (`?focus=`) : la
+     * période passe à « Tout » pour cette visite, sans rien écrire dans l'URL (le défaut devient
+     * « Tout »). Faux si les filtres ne sont pas ceux de l'arrivée ou si le défaut est déjà « Tout ».
+     */
+    widenDefaults(): boolean {
+      if (!sameFilters(store.filters(), store.defaults()) || !hasFilters(store.defaults()))
+        return false;
+      patchState(store, { filters: NO_FILTERS, defaults: NO_FILTERS });
+      return true;
     },
 
     set(filters: TimelineFilters): void {
@@ -124,7 +161,11 @@ export const TimelineFiltersStore = signalStore(
     },
 
     snapshot(): TimelineFiltersSnapshot {
-      return { filters: store.filters(), modeOverride: store.modeOverride() };
+      return {
+        filters: store.filters(),
+        modeOverride: store.modeOverride(),
+        defaults: store.defaults(),
+      };
     },
   })),
 );

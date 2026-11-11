@@ -5,57 +5,80 @@
 .timeline {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 
   // Mode chronologique : la colonne occupe la hauteur restante de la fenêtre (--timeline-top,
-  // mesuré par la page), la liste prend ce que laissent la barre d'outils (une à quatre lignes),
-  // la ligne d'état et les bandes. Par séance, la page défile normalement.
+  // mesuré par la page), la liste prend ce que laissent la barre d'outils (deux rangées) et la
+  // ligne d'état. Par séance, la page défile normalement.
   &.fill {
-    height: calc(100dvh - var(--timeline-top, 300px) - 16px);
+    height: calc(100dvh - var(--timeline-top, 300px) - 12px);
   }
 }
 
+// Barre d'outils (maquette 03, état A) : une carte blanche, deux rangées. Rangée 1 : types, filtres
+// actifs, « Filtres (n) », brouillons. Rangée 2 : période, mode (M), zoom à droite.
 .toolbar {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px 24px;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-raised);
 }
 
-.filters {
-  flex: 1 1 520px;
-  min-width: 0;
-}
-
-.toolbar-end {
+.toolbar-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px 16px;
+  gap: 8px 12px;
+  min-width: 0;
+}
+
+.row-label {
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+.separator {
+  width: 1px;
+  height: 22px;
+  background: var(--border-subtle);
+}
+
+kbd {
+  padding: 1px 5px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 11px;
 }
 
 .zoom {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+  margin-left: auto;
 }
 
 .zoom-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   padding: 0;
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
   background: var(--surface-raised);
   color: var(--text-primary);
-  font: var(--mat-sys-title-medium);
+  font: var(--mat-sys-title-small);
   cursor: pointer;
 
   &:disabled {
+    background: var(--surface-sunken);
     color: var(--text-disabled);
     cursor: default;
   }
@@ -66,23 +89,59 @@
   }
 }
 
+// Piste du zoom (décorative : les boutons, +, − et Ctrl+molette la pilotent).
+.track {
+  position: relative;
+  display: inline-block;
+  width: 96px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--surface-sunken);
+}
+
+.track-fill {
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--primary);
+}
+
+.track-thumb {
+  position: absolute;
+  top: -5px;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  background: var(--surface-raised);
+}
+
 .granularity {
-  min-width: 72px;
-  text-align: center;
   color: var(--text-primary);
-  font: var(--mat-sys-label-large);
+  font: var(--mat-sys-label-medium);
 }
 
 .hint {
   color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font: var(--mat-sys-body-small);
+  white-space: nowrap;
+}
+
+// Ligne d'état (maquette : mono 12 px, sous la barre) et, à droite, les situations en bande.
+.status-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+  padding: 0 4px;
 }
 
 .status-line {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 16px;
+  gap: 4px 8px;
   margin: 0;
   color: var(--text-secondary);
   font-family: var(--font-mono);
@@ -92,7 +151,8 @@
 .bands-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 16px;
+  gap: 4px 14px;
+  min-width: 0;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -101,29 +161,38 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    min-width: 0;
+    max-width: 280px;
     color: var(--text-primary);
     font: var(--mat-sys-body-small);
   }
 
   .swatch {
-    width: 10px;
-    height: 16px;
+    flex: none;
+    width: 8px;
+    height: 14px;
     border-radius: 3px;
     background: color-mix(in srgb, var(--entry-situation) 25%, transparent);
     box-shadow: inset 0 0 0 1px var(--entry-situation);
   }
 
+  .band-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .band-state {
+    flex: none;
     color: var(--text-secondary);
   }
 }
 
 .viewport {
-  --lane-width: 14px;
+  --lane-width: 18px;
 
   flex: 1 1 0;
-  min-height: 240px;
-  border-top: 1px solid var(--border-subtle);
+  min-height: 480px;
 }
 
 .list {
@@ -132,8 +201,9 @@
 
 .row {
   display: grid;
-  grid-template-columns: calc(var(--lanes, 0) * var(--lane-width)) 132px minmax(0, 1fr);
+  grid-template-columns: calc(var(--lanes, 0) * var(--lane-width)) 120px minmax(0, 1fr);
   column-gap: 8px;
+  padding-left: 4px;
   box-sizing: border-box;
 
   &.before {
@@ -171,12 +241,13 @@
 
 .lane-label {
   position: absolute;
+  z-index: 1;
   top: 12px;
   left: 50%;
-  max-height: calc(100% - 16px);
   overflow: hidden;
   color: var(--entry-situation);
   font: var(--mat-sys-label-small);
+  font-weight: 500;
   white-space: nowrap;
   text-overflow: ellipsis;
   transform: translateX(-50%) rotate(180deg);
@@ -188,16 +259,18 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  padding: 10px 18px 0 0;
+  padding: 10px 20px 0 0;
   border-right: 2px solid var(--border-subtle);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font: var(--mat-sys-body-small);
   text-align: right;
   white-space: nowrap;
 }
 
+// Axe (maquette 03) : la date en gras 13 px, le jour ou l'année dessous en secondaire.
 .axis-main {
   color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .axis-sub {
@@ -235,8 +308,10 @@
   align-items: baseline;
   padding-bottom: 2px;
   border-top: 2px solid var(--border-strong);
+  overflow: hidden;
   color: var(--text-primary);
   font: var(--mat-sys-label-medium);
+  white-space: nowrap;
 }
 
 .follow-start-text {
@@ -275,4 +350,38 @@
   color: var(--text-secondary);
   font-family: var(--font-mono);
   font-size: 12px;
+}
+
+// Petit écran (375 px) : la grille bandes | axe | cartes se resserre (pas de déclinaison mobile en
+// V1, fiche 03 ; rien ne déborde), les séparateurs de la barre disparaissent quand elle se replie.
+@media (max-width: 599px) {
+  .toolbar {
+    padding: 10px;
+  }
+
+  .separator {
+    display: none;
+  }
+
+  .zoom {
+    margin-left: 0;
+  }
+
+  .viewport {
+    --lane-width: 8px;
+  }
+
+  .row {
+    grid-template-columns: calc(var(--lanes, 0) * var(--lane-width)) 64px minmax(0, 1fr);
+    column-gap: 6px;
+  }
+
+  .lane-label {
+    display: none;
+  }
+
+  .axis {
+    padding-right: 12px;
+    white-space: normal;
+  }
 }

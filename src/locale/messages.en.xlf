@@ -16045,15 +16045,6 @@
         </context-group>
         <note priority="1" from="description">Nom du groupe de zoom de la timeline</note>
       </trans-unit>
-      <trans-unit id="timeline.zoomHint" datatype="html">
-        <source>Ctrl + molette</source>
-        <target state="translated">Ctrl + wheel</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">43,48</context>
-        </context-group>
-        <note priority="1" from="description">Aide du zoom à la molette</note>
-      </trans-unit>
       <trans-unit id="timeline.error.title" datatype="html">
         <source>Impossible de charger la timeline</source>
         <target state="translated">Unable to load the timeline</target>
@@ -16188,15 +16179,6 @@
           <context context-type="linenumber">81</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;état erreur de la timeline</note>
-      </trans-unit>
-      <trans-unit id="timeline.status.bounds" datatype="html">
-        <source>Fenêtre : <x id="oldest" equiv-text="oldest"/> → <x id="newest" equiv-text="newest"/></source>
-        <target state="translated">Window: <x id="oldest" equiv-text="oldest"/> → <x id="newest" equiv-text="newest"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">96</context>
-        </context-group>
-        <note priority="1" from="description">Bornes de la fenêtre courante de la timeline</note>
       </trans-unit>
       <trans-unit id="timeline.followStart" datatype="html">
         <source>Début du suivi · <x id="date" equiv-text="date"/></source>
@@ -22645,6 +22627,267 @@
           <context context-type="linenumber">81</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;état erreur de la régénération des codes</note>
+      </trans-unit>
+      <trans-unit id="timeline.periodLabel" datatype="html">
+        <source>Période</source>
+        <target state="translated">Period</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+        <note priority="1" from="description">Libellé visible du groupe de période de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.modeLabel" datatype="html">
+        <source>Mode</source>
+        <target state="translated">Mode</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">45,49</context>
+        </context-group>
+        <note priority="1" from="description">Libellé visible de la bascule de mode de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.zoomLabel" datatype="html">
+        <source>Zoom</source>
+        <target state="translated">Zoom</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">65,69</context>
+        </context-group>
+        <note priority="1" from="description">Libellé visible du zoom de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.zoomWheel" datatype="html">
+        <source>+ molette</source>
+        <target state="translated">+ wheel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">94,98</context>
+        </context-group>
+        <note priority="1" from="description">Aide du zoom à la molette</note>
+      </trans-unit>
+      <trans-unit id="timeline.empty.period.title" datatype="html">
+        <source>Aucune entrée sur cette période</source>
+        <target state="translated">No entries in this period</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">130,131</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la timeline vide sur la période choisie</note>
+      </trans-unit>
+      <trans-unit id="timeline.empty.period.message" datatype="html">
+        <source>Les entrées plus anciennes restent visibles avec la période « Tout ».</source>
+        <target state="translated">Older entries remain visible with the “All” period.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">132,133</context>
+        </context-group>
+        <note priority="1" from="description">Texte de la timeline vide sur la période choisie</note>
+      </trans-unit>
+      <trans-unit id="timeline.empty.showAll" datatype="html">
+        <source>Afficher tout</source>
+        <target state="translated">Show all</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">196</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;état vide de la timeline sur une période</note>
+      </trans-unit>
+      <trans-unit id="timeline.status.current" datatype="html">
+        <source>fenêtre courante <x id="newest" equiv-text="newest"/> → <x id="oldest" equiv-text="oldest"/></source>
+        <target state="translated">current window <x id="newest" equiv-text="newest"/> → <x id="oldest" equiv-text="oldest"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">215</context>
+        </context-group>
+        <note priority="1" from="description">Bornes de la fenêtre courante de la timeline, de la plus récente à la plus ancienne</note>
+      </trans-unit>
+      <trans-unit id="timeline.focus.periodWidened" datatype="html">
+        <source>Période élargie à « Tout » pour afficher l&apos;entrée demandée.</source>
+        <target state="translated">Period widened to “All” to show the requested entry.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">480</context>
+        </context-group>
+        <note priority="1" from="description">Information quand la période par défaut excluait l&apos;entrée demandée</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.notClosed" datatype="html">
+        <source>non clôturée</source>
+        <target state="translated">not closed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">161</context>
+        </context-group>
+        <note priority="1" from="description">Statut d&apos;une séance non clôturée, sur sa carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.ongoing" datatype="html">
+        <source>en cours</source>
+        <target state="translated">ongoing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">162</context>
+        </context-group>
+        <note priority="1" from="description">Statut d&apos;une situation en cours, sur sa carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.entry" datatype="html">
+        <source>1 entrée</source>
+        <target state="translated">1 entry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;entrées d&apos;une séance, sur sa carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.noEntry" datatype="html">
+        <source>aucune entrée</source>
+        <target state="translated">no entries</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">184</context>
+        </context-group>
+        <note priority="1" from="description">Séance sans entrée, sur sa carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.entries" datatype="html">
+        <source><x id="count" equiv-text="value"/> entrées</source>
+        <target state="translated"><x id="count" equiv-text="value"/> entries</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;entrées d&apos;une séance, sur sa carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.typesLabel" datatype="html">
+        <source>Types</source>
+        <target state="translated">Types</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
+          <context context-type="linenumber">3,10</context>
+        </context-group>
+        <note priority="1" from="description">Libellé visible des puces de type de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.active" datatype="html">
+        <source>Filtres actifs</source>
+        <target state="translated">Active filters</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
+          <context context-type="linenumber">44,45</context>
+        </context-group>
+        <note priority="1" from="description">Nom du groupe des puces d&apos;émotion et de tag actives</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.emotionsHeading" datatype="html">
+        <source> Émotions </source>
+        <target state="translated"> Emotions </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
+          <context context-type="linenumber">123,127</context>
+        </context-group>
+        <note priority="1" from="description">Titre visible du groupe d&apos;émotions du menu des filtres</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.tagsHeading" datatype="html">
+        <source> Tags </source>
+        <target state="translated"> Tags </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
+          <context context-type="linenumber">157,161</context>
+        </context-group>
+        <note priority="1" from="description">Titre visible du groupe de tags du menu des filtres</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.menuCount" datatype="html">
+        <source>Filtres (<x id="count" equiv-text="count"/>)</source>
+        <target state="translated">Filters (<x id="count" equiv-text="count"/>)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du menu des filtres d&apos;émotion et de tag, avec le nombre de filtres actifs</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.menu" datatype="html">
+        <source>Filtres</source>
+        <target state="translated">Filters</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du menu des filtres d&apos;émotion et de tag</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.remove" datatype="html">
+        <source><x id="text" equiv-text="text"/>, retirer le filtre</source>
+        <target state="translated"><x id="text" equiv-text="text"/>, remove filter</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;une puce de filtre active de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.modalityShort.inPerson" datatype="html">
+        <source>cabinet</source>
+        <target state="translated">in person</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+        <note priority="1" from="description">Modalité courte d&apos;une séance (en-tête, carte)</note>
+      </trans-unit>
+      <trans-unit id="timeline.modalityShort.video" datatype="html">
+        <source>visio</source>
+        <target state="translated">video</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <note priority="1" from="description">Modalité courte d&apos;une séance (en-tête, carte)</note>
+      </trans-unit>
+      <trans-unit id="timeline.modalityShort.phone" datatype="html">
+        <source>téléphone</source>
+        <target state="translated">phone</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+        <note priority="1" from="description">Modalité courte d&apos;une séance (en-tête, carte)</note>
+      </trans-unit>
+      <trans-unit id="timeline.modalityShort.email" datatype="html">
+        <source>e-mail</source>
+        <target state="translated">email</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+        <note priority="1" from="description">Modalité courte d&apos;une séance (en-tête, carte)</note>
+      </trans-unit>
+      <trans-unit id="timeline.session.notClosedShort" datatype="html">
+        <source>non clôturée</source>
+        <target state="translated">not closed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
+          <context context-type="linenumber">27,32</context>
+        </context-group>
+        <note priority="1" from="description">Statut d&apos;une séance non clôturée, dans son en-tête</note>
+      </trans-unit>
+      <trans-unit id="timeline.sessions.more" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {Afficher la séance plus ancienne} other {Afficher les <x id="INTERPOLATION"/> séances plus anciennes}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {Show the older session} other {Show the <x id="INTERPOLATION"/> older sessions}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
+          <context context-type="linenumber">151,159</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui affiche les séances plus anciennes du mode par séance</note>
+      </trans-unit>
+      <trans-unit id="timeline.lane.ongoing" datatype="html">
+        <source><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/> · en cours</source>
+        <target state="translated"><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/> · ongoing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">845</context>
+        </context-group>
+        <note priority="1" from="description">Libellé vertical d&apos;une bande de situation en cours</note>
+      </trans-unit>
+      <trans-unit id="timeline.lane.closed" datatype="html">
+        <source><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/></source>
+        <target state="translated"><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">846</context>
+        </context-group>
+        <note priority="1" from="description">Libellé vertical d&apos;une bande de situation terminée</note>
       </trans-unit>
     </body>
   </file>

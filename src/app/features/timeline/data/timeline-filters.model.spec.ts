@@ -1,10 +1,13 @@
 import { convertToParamMap } from '@angular/router';
 
 import {
+  defaultFilters,
+  defaultPreset,
   filterParams,
   filterQuery,
   hasFilterParams,
   hasFilters,
+  hasNarrowing,
   modeOfGroupBy,
   NO_FILTERS,
   parseFilters,
@@ -80,11 +83,45 @@ describe('timeline-filters.model', () => {
       from: '2026-08-10',
       to: null,
       mode: 'session',
+      period: null,
     });
     const back = Object.fromEntries(
       Object.entries(params).filter((entry): entry is [string, string | string[]] => !!entry[1]),
     );
     expect(parseFilters(url(back))).toEqual(filters);
+  });
+
+  it('période par défaut (UX-B2) : non écrite dans l’URL, relue sans from ni to ; « Tout » = ?period=all', () => {
+    const today = new Date(2026, 10, 8, 14);
+    const defaults = defaultFilters('90d', today);
+    expect(defaults).toEqual({ ...NO_FILTERS, from: '2026-08-10' });
+    expect(filterParams(defaults, null, defaults)).toMatchObject({ from: null, period: null });
+    expect(filterParams(NO_FILTERS, null, defaults)).toMatchObject({ from: null, period: 'all' });
+    expect(filterParams(NO_FILTERS, null, NO_FILTERS)['period']).toBeNull();
+    expect(parseFilters(url({ emotion: 'anxiety' }), defaults)).toEqual({
+      ...defaults,
+      emotions: ['anxiety'],
+    });
+    expect(parseFilters(url({ period: 'all', from: '2026-01-01' }), defaults)).toMatchObject({
+      from: null,
+      to: null,
+    });
+    expect(parseFilters(url({ from: '2026-01-01' }), defaults).from).toBe('2026-01-01');
+    expect(hasFilterParams(url({ period: 'all' }))).toBe(true);
+  });
+
+  it('defaultPreset : overview.window, 90 j à défaut, « Tout » sous groupBy = month', () => {
+    expect(defaultPreset('90d', 'chronological')).toBe('90d');
+    expect(defaultPreset('30d', 'session')).toBe('30d');
+    expect(defaultPreset('12m', 'session')).toBe('1y');
+    expect(defaultPreset(null, null)).toBe('90d');
+    expect(defaultPreset('30d', 'month')).toBe('all');
+  });
+
+  it('hasNarrowing : un filtre autre que la période', () => {
+    expect(hasNarrowing({ ...NO_FILTERS, from: '2026-01-01' })).toBe(false);
+    expect(hasNarrowing({ ...NO_FILTERS, draftsOnly: true })).toBe(true);
+    expect(hasNarrowing({ ...NO_FILTERS, tags: ['sommeil'] })).toBe(true);
   });
 
   it('sameParam : valeur seule ou liste, absent = null', () => {

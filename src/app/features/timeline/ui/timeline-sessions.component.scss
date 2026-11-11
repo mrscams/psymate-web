@@ -68,7 +68,7 @@
 }
 
 .title {
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -76,6 +76,8 @@
 }
 
 .count {
+  flex: none;
+  margin-left: auto;
   color: var(--text-secondary);
   font-family: var(--font-mono);
   font-size: 12px;
@@ -190,4 +192,43 @@
 
 .outside-note {
   grid-area: summary;
+}
+
+// En-tête (maquette 03, état B) : horaires · durée · modalité, puis « non clôturée ».
+.header-facts {
+  flex: none;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-medium);
+  white-space: nowrap;
+}
+
+.header-open {
+  flex: none;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--warning-bg);
+  color: var(--warning);
+  font: var(--mat-sys-label-small);
+}
+
+.more-sessions {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 0;
+}
+
+.show-more {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: var(--mat-sys-label-large);
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
 }

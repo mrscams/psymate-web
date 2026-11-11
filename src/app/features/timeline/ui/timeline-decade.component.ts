@@ -8,7 +8,13 @@ import {
   output,
 } from '@angular/core';
 
-import { EntryIconComponent, EntryType, StateAction, StateComponent } from '../../../shared/ui';
+import {
+  EntryIconComponent,
+  entryTitle,
+  EntryType,
+  StateAction,
+  StateComponent,
+} from '../../../shared/ui';
 import { formatOccurred } from '../../../shared/util';
 import {
   DecadeStatus,
@@ -18,7 +24,13 @@ import {
   TimelinePeriod,
 } from '../data/timeline-decade.model';
 import { TimelineItem } from '../data/timeline.model';
-import { ChartBand, ChartMonth, decadeChart, intensityTrend } from './timeline-decade.chart';
+import {
+  CHART_WIDTH,
+  ChartBand,
+  ChartMonth,
+  decadeChart,
+  intensityTrend,
+} from './timeline-decade.chart';
 import { averageLabel, monthLabel, typePluralLabel } from './timeline-labels';
 
 /** Une ligne du tableau des mois (équivalent accessible du graphique). */
@@ -243,7 +255,11 @@ export class TimelineDecadeComponent {
 
   /** Libellé d'une bande : titre et bornes (« depuis juin 2023 · en cours »). */
   protected bandLabel(band: ChartBand): string {
-    const title = band.item.title ?? '';
+    const title = entryTitle(
+      { type: band.item.type, title: band.item.title, occurred: band.item.occurred.from },
+      this.locale,
+      { timeZone: 'UTC' },
+    );
     // Une période (« Arrêt maladie (mai–nov. 2024) ») porte déjà son libellé : pas de doublon.
     const occurred = formatOccurred(band.item.occurred, this.locale);
     const when =
@@ -259,7 +275,13 @@ export class TimelineDecadeComponent {
   /** Libellé tronqué à la largeur de la bande (caractères de 10 unités : environ 5,6 de large). */
   protected bandText(band: ChartBand): string {
     const label = this.bandLabel(band);
-    const room = band.inside ? Math.floor((band.width - 12) / 5.6) : 60;
+    // Une bande par ligne : un libellé hors de la bande a toute la place jusqu'au bord du graphique.
+    const space = band.inside
+      ? band.width - 12
+      : this.bandAnchor(band) === 'end'
+        ? band.x - 6 - 8
+        : CHART_WIDTH - (band.x + band.width + 6) - 8;
+    const room = Math.max(4, Math.floor(space / 6.2));
     return label.length > room ? `${label.slice(0, Math.max(1, room - 1))}…` : label;
   }
 

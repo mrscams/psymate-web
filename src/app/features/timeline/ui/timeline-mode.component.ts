@@ -38,34 +38,43 @@ let nextId = 0;
     <span class="sr-only" [id]="hintId">{{ decadeHint }}</span>
   `,
   styles: `
+    :host {
+      display: inline-flex;
+    }
+
     .mode {
       display: inline-flex;
-      border: 1px solid var(--border-strong);
+      border: 1px solid var(--border-subtle);
       border-radius: 8px;
       overflow: hidden;
     }
 
+    // Bouton non sélectionné en text-secondary (UX-B2 : 6,2:1 ; l'ancien text-disabled faisait
+    // 3,06:1). « Par séance » inactif en vue décennie garde ce contraste : l'état est porté par
+    // aria-disabled et le curseur, pas par une couleur illisible.
     button {
-      min-height: 36px;
-      padding: 0 14px;
+      min-height: 28px;
+      padding: 0 12px;
       border: 0;
       background: var(--surface-raised);
-      color: var(--text-primary);
-      font: var(--mat-sys-label-large);
+      color: var(--text-secondary);
+      font: var(--mat-sys-label-medium);
+      white-space: nowrap;
       cursor: pointer;
 
       & + button {
-        border-left: 1px solid var(--border-strong);
+        border-left: 1px solid var(--border-subtle);
       }
 
       &[aria-disabled='true'] {
-        color: var(--text-disabled);
-        cursor: default;
+        background: var(--surface-sunken);
+        cursor: not-allowed;
       }
 
       &[aria-pressed='true'] {
         background: var(--primary-tint);
         color: var(--primary-hover);
+        font-weight: 600;
       }
 
       &:focus-visible {
