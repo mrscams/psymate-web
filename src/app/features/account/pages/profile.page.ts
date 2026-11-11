@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { SessionStore } from '../../../core/auth';
 import { ApiProblem } from '../../../core/http';
@@ -24,6 +25,7 @@ import {
   firstInvalidField,
 } from '../../../shared/forms';
 import { AccountNavComponent, StateComponent, ToastService } from '../../../shared/ui';
+import { DateFieldComponent } from '../../../shared/ui/date-field';
 import { stateKind } from '../../../shared/util';
 import {
   Availability,
@@ -49,12 +51,10 @@ import {
 } from '../ui/profile/profile-labels';
 import { ProfilePreviewComponent } from '../ui/profile/profile-preview.component';
 import { ChecklistItem, PublishCardComponent } from '../ui/profile/publish-card.component';
+import { RELATIVE_TICK_MS, relativeAgo } from '../ui/relative-time';
 
 /** Adresse http(s) avec un nom d'hôte (contrat : websiteUrl). */
 const WEBSITE_PATTERN = /^https?:\/\/[^\s/.]+(\.[^\s/.]+)+(\/\S*)?$/i;
-
-/** Rafraîchissement de « il y a n s ». */
-const TICK_MS = 5_000;
 
 /**
  * /mon-compte/profil-public (fiche 10, M5-04, flux 8) : formulaire en enregistrement automatique
@@ -67,7 +67,9 @@ const TICK_MS = 5_000;
   selector: 'pm-profile-page',
   imports: [
     ReactiveFormsModule,
+    MatSlideToggleModule,
     AccountNavComponent,
+    DateFieldComponent,
     StateComponent,
     FieldErrorsComponent,
     SegmentedControlComponent,
@@ -100,7 +102,8 @@ export class ProfilePage {
     titleLabel: text(PROFILE_LIMITS.titleLabel),
     showProfessionalNumber: new FormControl(false, { nonNullable: true }),
     availability: new FormControl<Availability>('unknown', { nonNullable: true }),
-    nextSlotAt: new FormControl('', { nonNullable: true }),
+    // pm-date-field : `yyyy-MM-dd`, null quand le champ est vide (ramené à '' par snapshot()).
+    nextSlotAt: new FormControl<string | null>(''),
     bio: text(PROFILE_LIMITS.bio),
     specialties: new FormControl<string[]>([], { nonNullable: true }),
     audiences: new FormControl<string[]>([], { nonNullable: true }),
@@ -248,12 +251,17 @@ export class ProfilePage {
         return $localize`:Enregistrement automatique en cours@@profile.save.saving:Enregistrement…`;
       case 'saved':
         return $localize`:Enregistrement automatique réussi@@profile.save.saved:Enregistré`;
-      case 'error':
-        return $localize`:Enregistrement automatique en échec@@profile.save.error:Erreur d'enregistrement`;
+      case 'error': // rendu par le gabarit (saveFailed) : « Erreur, réessayer »
+        return '';
       case 'idle':
         return $localize`:Enregistrement automatique, au repos@@profile.save.idle:Enregistré automatiquement`;
     }
   });
+
+  /** Dernier envoi en échec (hors 422, qui demande de corriger les champs) : « Erreur, réessayer ». */
+  protected readonly saveFailed = computed(
+    () => !this.formInvalid() && this.store.autosave().status === 'error',
+  );
 
   /** « il y a 12 s » (après un PUT) ou « dernière modification il y a 3 min » (au chargement). */
   protected readonly savedAgo = computed(() => {
@@ -293,7 +301,7 @@ export class ProfilePage {
 
     this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => this.onChange());
 
-    const tick = setInterval(() => this.now.set(Date.now()), TICK_MS);
+    const tick = setInterval(() => this.now.set(Date.now()), RELATIVE_TICK_MS);
     destroyRef.onDestroy(() => {
       clearInterval(tick);
       const url = this.photoUrl();
@@ -398,15 +406,21 @@ export class ProfilePage {
 
   private fill(profile: Profile): void {
     this.form.reset(fieldsOf(profile), { emitEvent: false });
-    this.values.set(this.form.getRawValue());
+    this.values.set(this.snapshot());
   }
 
   private onChange(): void {
     this.serverMessages.set([]);
-    const values = this.form.getRawValue();
+    const values = this.snapshot();
     this.values.set(values);
     this.formInvalid.set(this.form.invalid);
     if (this.form.valid) this.store.edit(values);
+  }
+
+  /** Valeur du formulaire au format du profil (date vide : ''). */
+  private snapshot(): ProfileFields {
+    const raw = this.form.getRawValue();
+    return { ...raw, nextSlotAt: raw.nextSlotAt ?? '' };
   }
 
   private replacePhotoUrl(url: string | null): void {
@@ -416,17 +430,7 @@ export class ProfilePage {
   }
 
   private relative(at: number): string {
-    const seconds = Math.max(0, Math.round((this.now() - at) / 1000));
-    if (seconds < 5) {
-      return $localize`:Enregistré il y a moins de 5 secondes@@profile.save.justNow:à l'instant`;
-    }
-    const format = new Intl.RelativeTimeFormat(this.localeId, { style: 'short', numeric: 'auto' });
-    if (seconds < 60) return format.format(-seconds, 'second');
-    const minutes = Math.round(seconds / 60);
-    if (minutes < 60) return format.format(-minutes, 'minute');
-    const hours = Math.round(minutes / 60);
-    if (hours < 24) return format.format(-hours, 'hour');
-    return format.format(-Math.round(hours / 24), 'day');
+    return relativeAgo(at, this.now(), this.localeId);
   }
 }
 

@@ -59,6 +59,29 @@ describe('DocumentUploadComponent', () => {
     expect(el.querySelectorAll('select option:not([disabled])')).toHaveLength(6);
   });
 
+  it('UX-C2 : champ fichier masqué (sr-only) mais focalisable, libellé « Choisir un fichier »', async () => {
+    const { el } = await render();
+    const input = el.querySelector<HTMLInputElement>('input[type=file]')!;
+    expect(input.classList.contains('sr-only')).toBe(true);
+    expect(input.hidden).toBe(false);
+    expect(input.tabIndex).toBe(0);
+    const label = el.querySelector(`label[for="${input.id}"]`)!;
+    expect(label.textContent).toContain('Choisir un fichier');
+    expect(label.textContent).toContain('ou glissez-le ici');
+    expect(el.querySelector('.file-name')?.textContent).toContain('Aucun fichier choisi.');
+  });
+
+  it('UX-C2 : le fichier choisi s’affiche en mono, relié au champ', async () => {
+    const { fixture, el } = await render();
+    setFile(el, pdf(1024));
+    await fixture.whenStable();
+    const name = el.querySelector('#field-document-file-name')!;
+    expect(name.querySelector('.mono')?.textContent).toBe('diplome.pdf');
+    expect(el.querySelector('input[type=file]')?.getAttribute('aria-describedby')).toContain(
+      'field-document-file-name',
+    );
+  });
+
   it('PDF de 11 Mo : message sous le champ, rien n’est émis', async () => {
     const { fixture, el, emitted } = await render();
     fill(el, 'field-document-type', 'diploma');

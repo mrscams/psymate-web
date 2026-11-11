@@ -77,7 +77,13 @@ h2 {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 12px 20px;
-  align-items: end;
+  // Libellés alignés en haut : l'aide du sélecteur (UX-C6) s'ajoute sous son champ.
+  align-items: start;
+}
+
+.file {
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
 }
 
 .format {

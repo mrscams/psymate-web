@@ -16,7 +16,7 @@ async function render(inputs: Record<string, unknown> = {}) {
   for (const [name, value] of Object.entries(inputs)) fixture.componentRef.setInput(name, value);
   await fixture.whenStable();
   const el = fixture.nativeElement as HTMLElement;
-  const toggle = el.querySelector<HTMLInputElement>('input[role="switch"]')!;
+  const toggle = el.querySelector<HTMLButtonElement>('button[role="switch"]')!;
   return { fixture, el, toggle };
 }
 
@@ -36,7 +36,7 @@ describe('PublishCardComponent', () => {
     fixture.componentInstance.publish.subscribe(publish);
     toggle.click();
     expect(publish).toHaveBeenCalledTimes(1);
-    expect(toggle.checked).toBe(false);
+    expect(toggle.getAttribute('aria-checked')).toBe('false');
   });
 
   it('dépublier : confirmation inline, puis unpublish', async () => {
@@ -110,9 +110,24 @@ describe('PublishCardComponent', () => {
     );
     expect(items[0]).toContain('Fait : Nom affiché, profession, ville');
     expect(items[1]).toContain('À noter : Photo absente');
-    expect(el.querySelector('.url')?.textContent).toBe(
-      'http://localhost/fr/praticiens/claire-martin',
-    );
     expect(el.textContent).not.toContain('Ouvrir la fiche publique');
+  });
+
+  it('adresse publique sur sa ligne, en mono, sans schéma, coupée après les « / » (UX-C1)', async () => {
+    const { el } = await render({ canPublish: true });
+    const line = el.querySelector('.url-line')!;
+    expect(line.textContent?.replace(/​/g, '').replace(/\s+/g, ' ').trim()).toBe(
+      'Adresse publique : localhost/fr/praticiens/claire-martin',
+    );
+    const url = line.querySelector('.url')!;
+    expect(url.getAttribute('title')).toBe('http://localhost/fr/praticiens/claire-martin');
+    // Coupures possibles après chaque « / » seulement (espace sans chasse), jamais dans un mot.
+    expect(url.textContent).toBe('localhost/​fr/​praticiens/​claire-martin');
+  });
+
+  it('interrupteur Material (role="switch") : publié → coché, libellé « Publié »', async () => {
+    const { toggle } = await render({ canPublish: true, published: true });
+    expect(toggle.getAttribute('aria-checked')).toBe('true');
+    expect(toggle.closest('mat-slide-toggle')?.textContent).toContain('Publié');
   });
 });

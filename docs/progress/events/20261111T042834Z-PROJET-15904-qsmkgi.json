@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T04:28:34.833Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-C1 à UX-C6 : Mon compte fidèle aux maquettes 10, 13, 14, 17, 18, 19 (grilles du profil, input file masqué, tuiles sécurité des préférences, cartes de famille, sessions bornées et /2fa direct corrigé, fichier d'export attendu)",
+  "notes": "Filtrage des sessions expirées laissé à l'API (contrat : sessions non expirées). Libellé anglais d'émotion non ajouté (absent du contrat).",
+  "pr": "https://github.com/mrscams/psymate-web/pull/62",
+  "branch": "claude/ux-c-account",
+  "checkout": "agent-a85f699ea1b140aae"
+}

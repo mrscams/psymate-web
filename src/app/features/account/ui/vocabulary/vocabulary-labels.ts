@@ -80,12 +80,25 @@ export function closestEmotion(label: string, emotions: readonly Emotion[]): Emo
     let score = trigramSimilarity(wanted, other);
     if (other === wanted) score = 2;
     else if (containsWord(wanted, other) || containsWord(other, wanted)) score = Math.max(score, 1);
+    else if (startsWord(other, wanted)) score = Math.max(score, prefixScore(wanted, other));
     if (score > bestScore) {
       bestScore = score;
       best = emotion;
     }
   }
   return bestScore >= PROXIMITY_THRESHOLD ? best : null;
+}
+
+/**
+ * Début de mot (UX-C4 : l'avertissement apparaît dès 3 lettres, « Anx » → « Anxiété »). Le score
+ * passe le seuil et croît avec la part du libellé déjà tapée : à préfixe égal, le plus court gagne.
+ */
+function startsWord(label: string, prefix: string): boolean {
+  return ` ${label}`.includes(` ${prefix}`);
+}
+
+function prefixScore(prefix: string, label: string): number {
+  return PROXIMITY_THRESHOLD + 0.3 * (prefix.length / label.length);
 }
 
 function containsWord(haystack: string, needle: string): boolean {

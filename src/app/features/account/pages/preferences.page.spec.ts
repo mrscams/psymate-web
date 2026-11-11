@@ -6,7 +6,9 @@ import { SessionApi } from '../../../core/auth/data/session.api';
 import { PreferencesApi } from '../../../core/preferences/data/preferences.api';
 import { LocaleNavigator } from '../../../core/preferences/locale-navigator';
 import { defaultPreferences, Preferences } from '../../../core/preferences/preferences.model';
-import { ToastService } from '../../../shared/ui';
+import { ConfirmDialogService, ToastService } from '../../../shared/ui';
+import { SecurityApi } from '../data/security.api';
+import { manySessions, OVERVIEW } from '../data/security.fixtures';
 import { PreferencesPage } from './preferences.page';
 
 const claire: SessionUser = {
@@ -36,7 +38,20 @@ function serverFor(initial: Preferences): Api {
   };
 }
 
-async function render(api: Api, user: SessionUser = claire) {
+function securityApi(overrides: Partial<Record<keyof SecurityApi, unknown>> = {}) {
+  return {
+    loadSecurity: vi.fn().mockResolvedValue(OVERVIEW),
+    revokeOtherSessions: vi.fn().mockResolvedValue(1),
+    ...overrides,
+  };
+}
+
+async function render(
+  api: Api,
+  user: SessionUser = claire,
+  security = securityApi(),
+  confirm = vi.fn().mockResolvedValue(true),
+) {
   TestBed.configureTestingModule({
     imports: [PreferencesPage],
     providers: [
@@ -44,6 +59,8 @@ async function render(api: Api, user: SessionUser = claire) {
       { provide: PreferencesApi, useValue: api },
       { provide: SessionApi, useValue: {} },
       { provide: LocaleNavigator, useValue: { current: 'fr', goTo: vi.fn() } },
+      { provide: SecurityApi, useValue: security },
+      { provide: ConfirmDialogService, useValue: { confirm } },
     ],
   });
   TestBed.inject(SessionStore).signIn(user);
@@ -131,7 +148,7 @@ describe('PreferencesPage', () => {
     expect(el.querySelector<HTMLInputElement>('input[type=radio][value=soft]')?.checked).toBe(true);
     expect(el.querySelector<HTMLInputElement>('input.number')?.value).toBe('45');
     expect(el.querySelector('.summary')?.textContent).toContain('claire@example.test');
-    expect(el.querySelector('.summary dd.success')?.textContent).toBe('Activée');
+    expect(el.querySelector('.summary dd.success')?.textContent?.trim()).toBe('Activée');
     expect(el.querySelector('a[href="/mon-compte/emotions"]')).not.toBeNull();
     expect(el.querySelector('a[href="/mon-compte/securite"]')).not.toBeNull();
   });
@@ -144,7 +161,79 @@ describe('PreferencesPage', () => {
     expect(pressed(el, 'overview-view')).toEqual(['Complète']);
     await settle(fixture);
     expect(api.patch).toHaveBeenCalledWith({ 'overview.view': 'complete' }, expect.anything());
-    expect(el.querySelector('.saved')?.textContent).toMatch(/^Enregistré à \d{1,2}:\d{2}$/);
+    expect(el.querySelector('.saved')?.textContent?.replace(/\s+/g, ' ').trim()).toBe(
+      "Enregistré · à l'instant",
+    );
+  });
+
+  it('UX-C3 : indicateur sous le titre, « Enregistré automatiquement » avant tout changement', async () => {
+    const { el } = await render(serverFor(defaultPreferences('psychologist')));
+    const saved = el.querySelector('header .saved');
+    expect(saved?.textContent?.trim()).toBe('Enregistré automatiquement');
+    expect(saved?.querySelector('[role="status"]')).not.toBeNull();
+  });
+
+  it('UX-C3 : résumé sécurité en trois tuiles, appareils distincts et connexion précédente', async () => {
+    const { el } = await render(
+      serverFor(defaultPreferences('psychologist')),
+      claire,
+      securityApi({
+        loadSecurity: vi.fn().mockResolvedValue(manySessions(10)),
+      }),
+    );
+    const tiles = el.querySelectorAll('.summary .tile');
+    expect(tiles).toHaveLength(3);
+    expect(tiles[1].querySelector('a')?.getAttribute('href')).toBe('/mon-compte/securite/2fa');
+    expect(tiles[2].textContent?.replace(/\s+/g, ' ')).toContain('Sessions actives');
+    expect(tiles[2].querySelector('dd.value')?.textContent?.replace(/\s+/g, ' ').trim()).toBe(
+      '4 appareils',
+    );
+    expect(el.querySelector('.last-login')?.textContent?.replace(/\s+/g, ' ')).toContain(
+      'Connexion précédente :',
+    );
+    expect(el.querySelector('.last-login')?.textContent).toContain('Chrome · Windows');
+  });
+
+  it('UX-C3 : « Déconnecter les autres » confirme, appelle le serveur et annonce le nombre', async () => {
+    const security = securityApi();
+    const confirm = vi.fn().mockResolvedValue(true);
+    const { fixture, el } = await render(
+      serverFor(defaultPreferences('psychologist')),
+      claire,
+      security,
+      confirm,
+    );
+    el.querySelector<HTMLButtonElement>('.summary .tile button.link')!.click();
+    await settle(fixture);
+    expect(confirm).toHaveBeenCalledTimes(1);
+    expect(security.revokeOtherSessions).toHaveBeenCalledTimes(1);
+    // La liste est relue après l'écriture, jamais recalculée localement.
+    expect(security.loadSecurity).toHaveBeenCalledTimes(2);
+    expect(el.querySelector('[aria-live="polite"]')?.textContent).toContain(
+      '1 appareil déconnecté.',
+    );
+  });
+
+  it('UX-C3 : sessions indisponibles → tuile en erreur avec Réessayer, le reste reste lisible', async () => {
+    const loadSecurity = vi
+      .fn()
+      .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
+      .mockResolvedValue(OVERVIEW);
+    const { fixture, el } = await render(
+      serverFor(defaultPreferences('psychologist')),
+      claire,
+      securityApi({ loadSecurity }),
+    );
+    const tile = el.querySelectorAll('.summary .tile')[2];
+    expect(tile.querySelector('pm-state [role="alert"]')?.textContent).toContain(
+      'Impossible de charger vos sessions',
+    );
+    expect(el.querySelector('.summary')?.textContent).toContain('claire@example.test');
+    tile.querySelector<HTMLButtonElement>('pm-state button')!.click();
+    await settle(fixture);
+    expect(tile.querySelector('dd.value')?.textContent?.replace(/\s+/g, ' ').trim()).toBe(
+      '2 appareils',
+    );
   });
 
   it('thème : data-theme change sans rechargement', async () => {

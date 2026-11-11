@@ -147,6 +147,35 @@ describe('DataExportPage', () => {
     expect(URL.createObjectURL).toHaveBeenCalledWith(file.blob);
   });
 
+  it('UX-C6 : aide sous le sélecteur, note du bouton inactif, puis nom du fichier attendu en mono', async () => {
+    const { fixture, el } = await render({
+      searchPatients: vi.fn().mockResolvedValue(PATIENT_OPTIONS),
+    });
+    const input = el.querySelector<HTMLInputElement>('[role=combobox]')!;
+    const hint = el.querySelector(`#${input.getAttribute('aria-describedby')}`);
+    expect(hint?.textContent).toBe('Tapez un nom ; les dossiers archivés sont en gris.');
+
+    const exporter = button(el, 'Exporter')!;
+    expect(exporter.disabled).toBe(true);
+    expect(exporter.getAttribute('aria-describedby')).toBe('export-choose');
+    expect(el.querySelector('#export-choose')?.textContent).toBe(
+      'Choisissez un patient pour exporter.',
+    );
+
+    key(input, 'ArrowDown');
+    fixture.detectChanges();
+    key(input, 'Enter');
+    fixture.detectChanges();
+    expect(exporter.getAttribute('aria-describedby')).toBe('export-file');
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    expect(el.querySelector('#export-file .mono')?.textContent).toBe(`export-marie-d-${today}.pdf`);
+    // Nom indicatif : le fichier téléchargé garde le nom envoyé par le serveur.
+    expect(el.querySelector('#export-file')?.textContent).toContain('Fichier attendu :');
+    button(el, 'Markdown')?.click();
+    fixture.detectChanges();
+    expect(el.querySelector('#export-file .mono')?.textContent).toBe(`export-marie-d-${today}.md`);
+  });
+
   it('export patient refusé (403) : message sous le bouton, rien n’est téléchargé', async () => {
     const { fixture, el } = await render({
       searchPatients: vi.fn().mockResolvedValue(PATIENT_OPTIONS),

@@ -10,7 +10,7 @@
       <label [for]="fieldId('professionalNumber')">
         <span i18n="Champ numéro professionnel@@account.verification.info.professionalNumber"
           >N° ADELI / RPPS</span
-        >
+        >&ngsp;
         @if (numberRecommended()) {
           <span
             class="muted"
@@ -146,9 +146,10 @@
     <pm-field-errors [control]="form.controls.address" [id]="fieldId('address') + '-error'" />
   </div>
 
+  <!-- Bouton primaire aligné à droite (UX-C2) ; l'état d'enregistrement se lit à sa gauche. -->
   <div class="actions">
     <button
-      mat-stroked-button
+      mat-flat-button
       type="submit"
       [disabled]="busy()"
       i18n="Bouton enregistrer les informations@@account.verification.info.save"

@@ -1,19 +1,37 @@
-import { ChangeDetectionStrategy, Component, computed, inject, LOCALE_ID } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  LOCALE_ID,
+  signal,
+} from '@angular/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RouterLink } from '@angular/router';
 
 import { Profession, SessionStore } from '../../../core/auth';
 import { ApiProblem } from '../../../core/http';
-import { AppLocale, SubjectLabelPipe } from '../../../core/i18n';
+import { AppLocale, formatDateTime, SubjectLabelPipe } from '../../../core/i18n';
 import { PreferenceKey, Preferences, PreferencesStore } from '../../../core/preferences';
 import { ThemePreference } from '../../../core/theme';
 import {
   ACCOUNT_PATHS,
   AccountNavComponent,
+  ConfirmDialogService,
   StateComponent,
   ToastService,
 } from '../../../shared/ui';
-import { StateKind } from '../../../shared/util';
+import { StateKind, stateKind } from '../../../shared/util';
+import { SecurityStore } from '../data/security.store';
+import { RELATIVE_TICK_MS, relativeAgo } from '../ui/relative-time';
+import {
+  deviceLabel,
+  revokedOthersMessage,
+  revokeOthersConfirmation,
+  UNAVAILABLE_MESSAGE,
+} from '../ui/security-messages';
+import { TWO_FACTOR_SEGMENT } from './two-factor-segment';
 import {
   SegmentedControlComponent,
   SegmentOption,
@@ -40,6 +58,7 @@ import { ThemePickerComponent } from '../ui/preferences/theme-picker.component';
     SettingRowComponent,
     ThemePickerComponent,
   ],
+  providers: [SecurityStore],
   templateUrl: './preferences.page.html',
   styleUrl: './preferences.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -69,16 +88,60 @@ export class PreferencesPage {
     professionLabel(this.session.me()?.profession ?? null),
   );
 
-  /** « Enregistrement… » pendant un PATCH, puis « Enregistré à 09:12 ». */
+  /**
+   * Indicateur sous le titre (UX-C3) : « Enregistrement… » pendant un PATCH, « Enregistré » ensuite
+   * (suivi de « il y a n s », savedAgo), « Enregistré automatiquement » avant tout changement.
+   */
   protected readonly savedText = computed(() => {
     if (this.prefs.saving()) {
       return $localize`:Statut pendant l'enregistrement d'un réglage@@preferences.saving:Enregistrement…`;
     }
-    const at = this.prefs.savedAt();
-    if (at === null) return '';
-    const time = new Intl.DateTimeFormat(this.locale, { timeStyle: 'short' }).format(new Date(at));
-    return $localize`:Statut après l'enregistrement d'un réglage@@preferences.saved:Enregistré à ${time}:time:`;
+    return this.prefs.savedAt() === null
+      ? $localize`:Statut avant tout changement de réglage@@preferences.savedAuto:Enregistré automatiquement`
+      : $localize`:Statut après l'enregistrement d'un réglage@@preferences.savedNow:Enregistré`;
   });
+
+  /** « à l'instant », « il y a 12 s » après le dernier PATCH réussi. */
+  protected readonly savedAgo = computed(() => {
+    const at = this.prefs.savedAt();
+    return this.prefs.saving() || at === null ? '' : relativeAgo(at, this.now(), this.locale);
+  });
+
+  // Résumé Compte et sécurité (UX-C3) : sessions et connexion précédente de GET /api/me/security.
+  protected readonly security = inject(SecurityStore);
+  private readonly confirm = inject(ConfirmDialogService);
+  protected readonly stateOf = stateKind;
+  protected readonly deviceLabel = deviceLabel;
+  protected readonly unavailable = UNAVAILABLE_MESSAGE;
+  protected readonly twoFactorPath = `${ACCOUNT_PATHS.security}/${TWO_FACTOR_SEGMENT}`;
+  protected readonly sessionsErrorTitle = $localize`:Titre de l'état erreur des sessions@@account.security.sessions.errorTitle:Impossible de charger vos sessions`;
+  protected readonly retrySecurity = {
+    label: $localize`:Réessayer le chargement des sessions@@account.security.sessions.retry:Réessayer`,
+    handler: (): void => void this.security.load(),
+  };
+  protected readonly revokedText = computed(() =>
+    revokedOthersMessage(this.security.revokedOthers()),
+  );
+  protected readonly revokeError = computed(() => this.security.revokeOthersStatus() === 'error');
+
+  private readonly now = signal(Date.now());
+
+  constructor() {
+    void this.security.load();
+    const tick = setInterval(() => this.now.set(Date.now()), RELATIVE_TICK_MS);
+    inject(DestroyRef).onDestroy(() => clearInterval(tick));
+  }
+
+  protected formatDate(value: string): string {
+    return formatDateTime(value, this.locale);
+  }
+
+  /** « Déconnecter les autres » : même confirmation que Compte et sécurité, puis le nombre annoncé. */
+  protected async revokeOthers(): Promise<void> {
+    if (await this.confirm.confirm(revokeOthersConfirmation())) {
+      await this.security.revokeOthers();
+    }
+  }
 
   protected readonly twoFactorText = computed(() =>
     this.session.twoFactorEnabled()

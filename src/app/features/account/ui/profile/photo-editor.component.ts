@@ -173,6 +173,36 @@ import {
       height: 100%;
       object-fit: cover;
     }
+    /* Carte Identité étroite (conteneur pm-profile-card de la page) : photo et boutons en ligne,
+       au-dessus de la grille des champs, pour que celle-ci garde ses deux colonnes. */
+    @container pm-profile-card (max-width: 639px) {
+      /* Avatar à gauche, boutons empilés à droite dans une colonne qui rétrécit (min 0) : la case
+         garde la hauteur de l'avatar quelle que soit la police, rien ne passe à la ligne dessous. */
+      .photo {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-auto-rows: min-content;
+        align-items: center;
+        justify-items: start;
+        column-gap: 12px;
+        row-gap: 4px;
+      }
+      .avatar {
+        grid-row: 1 / span 3;
+        width: 56px;
+        height: 56px;
+        font-size: 20px;
+      }
+      .photo > :not(.avatar) {
+        grid-column: 2;
+        max-width: 100%;
+      }
+      .button {
+        min-height: 32px;
+        white-space: normal;
+        text-align: left;
+      }
+    }
     .note,
     .help {
       margin: 0;
