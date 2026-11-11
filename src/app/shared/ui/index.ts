@@ -1,6 +1,6 @@
 // Composants partagés (fiche 00) : barres, layouts, en-tête patient, panneau latéral, états,
-// toasts, confirmation, icônes de type d'entrée, résumé des erreurs de formulaire (pm-form-errors).
-// Ne se modifient que par une tâche dédiée.
+// toasts, confirmation, icônes et titre de repli des entrées, résumé des erreurs de formulaire
+// (pm-form-errors). Ne se modifient que par une tâche dédiée.
 // Champs date et mois (pm-date-field, pm-month-field) : importés depuis 'shared/ui/date-field', hors
 // de ce barrel, pour que le datepicker Material reste dans les chunks paresseux des features.
 export type { AppBarUser } from './app-bar/app-bar.component';
@@ -11,6 +11,8 @@ export * from './confirm-dialog';
 export { FormErrorsComponent } from './form-errors/form-errors.component';
 export type { EntryType } from './entry-icon/entry-icon.component';
 export { ENTRY_TYPES, EntryIconComponent, entryTypeLabel } from './entry-icon/entry-icon.component';
+export type { EntryTitleOptions, EntryTitleSource } from './entry-icon/entry-title';
+export { ENTRY_TITLE_EXCERPT, entryTitle } from './entry-icon/entry-title';
 export type {
   PatientFlag,
   PatientHeaderInfo,

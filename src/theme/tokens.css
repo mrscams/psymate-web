@@ -73,6 +73,12 @@
   --admin-bar-text: #e6eaf2;
   --admin-bar-text-muted: #a3adc0;
   --admin-bar-border: #334052;
+  /*
+   * Ajout UX-A2 (audit UX du 9 nov. 2026) : anneau de focus sur la barre d'administration, cobalt
+   * éclairci (le cobalt #3A63C2 y faisait 2,71:1). Identique dans les trois thèmes comme la barre.
+   * À reporter dans la fiche 00 §5 (psymate-api).
+   */
+  --admin-focus: #8db7ff;
 
   /* Typographie (étude §2, fiche 01) : Inter pour l'interface, JetBrains Mono pour dates et identifiants. */
   --font-ui: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
