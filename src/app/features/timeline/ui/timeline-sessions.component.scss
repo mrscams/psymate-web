@@ -197,14 +197,14 @@
 }
 
 // En-tête (maquette 03, état B) : horaires · durée · modalité, puis « non clôturée ».
+// Horaires · durée · modalité : jamais coupés par des points de suspension ; à 320 px ou au zoom
+// 200 %, ils passent à la ligne (l'en-tête lui-même se replie, .toggle en flex-wrap).
 .header-facts {
   flex: 0 1 auto;
   min-width: 0;
-  overflow: hidden;
   color: var(--text-secondary);
   font: var(--mat-sys-body-medium);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .header-open {
