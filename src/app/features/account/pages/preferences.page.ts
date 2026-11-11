@@ -58,6 +58,7 @@ export class PreferencesPage {
     return this.prefs.status() === 'error' ? 'error' : 'loading';
   });
 
+  protected readonly errorTitle = $localize`:Titre de l'état erreur des préférences@@preferences.errorTitle:Impossible de charger vos préférences`;
   protected readonly retry = {
     label: $localize`:Bouton Réessayer du bloc Préférences@@preferences.retry:Réessayer`,
     handler: (): void => void this.prefs.load(),

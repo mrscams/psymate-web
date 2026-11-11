@@ -11,7 +11,6 @@ import {
   toControlPath,
 } from './apply-problem';
 import { FieldErrorsComponent, firstMessage } from './field-errors.component';
-import { ProblemSummaryComponent } from './problem-summary.component';
 import { PmValidators } from './validators';
 
 const problem422: ApiProblem = {
@@ -158,31 +157,4 @@ describe('FieldErrorsComponent', () => {
     TestBed.configureTestingModule({ imports: [FieldHost] });
     return TestBed.inject(NonNullableFormBuilder);
   }
-});
-
-describe('ProblemSummaryComponent', () => {
-  it('résumé role=alert avec un lien par champ, le reste en texte, et le focus', async () => {
-    TestBed.configureTestingModule({ imports: [ProblemSummaryComponent] });
-    const fixture = TestBed.createComponent(ProblemSummaryComponent);
-    fixture.componentRef.setInput('errors', problem422.errors);
-    fixture.componentRef.setInput('labels', { displayName: 'Nom affiché' });
-    fixture.componentRef.setInput('unmatched', ['authorType']);
-    await fixture.whenStable();
-    const el = fixture.nativeElement as HTMLElement;
-    const alert = el.querySelector('[role="alert"]');
-    expect(alert?.textContent).toContain('5 champs à corriger.');
-    const links = [...el.querySelectorAll('a')].map((a) => [a.getAttribute('href'), a.textContent]);
-    expect(links).toEqual([
-      ['#field-displayName', 'Nom affiché'],
-      ['#field-occurred-from', 'occurred.from'],
-      ['#field-tags-1', 'tags[1]'],
-    ]);
-    expect(el.textContent).toContain('Champ refusé.');
-    expect(el.textContent).toContain('Période sans fin.');
-    expect(document.activeElement).toBe(alert);
-
-    fixture.componentRef.setInput('errors', []);
-    await fixture.whenStable();
-    expect(el.querySelector('[role="alert"]')).toBeNull();
-  });
 });

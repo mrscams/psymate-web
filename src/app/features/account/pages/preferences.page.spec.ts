@@ -102,7 +102,9 @@ describe('PreferencesPage', () => {
       patch: vi.fn(),
     };
     const { fixture, el } = await render(api);
-    expect(el.querySelector('pm-state .error[role="alert"]')).not.toBeNull();
+    expect(el.querySelector('pm-state .error[role="alert"]')?.textContent).toContain(
+      'Impossible de charger vos préférences',
+    );
     expect(el.querySelector('section.card')).toBeNull();
 
     const retry = el.querySelector<HTMLButtonElement>('pm-state button.retry');

@@ -17,7 +17,13 @@
       <p class="saved" role="status" aria-live="polite">{{ savedText() }}</p>
     </header>
 
-    <pm-state [kind]="stateKind()" skeleton="block" [lines]="4" [action]="retry" />
+    <pm-state
+      [kind]="stateKind()"
+      skeleton="block"
+      [lines]="4"
+      [title]="errorTitle"
+      [action]="retry"
+    />
 
     @if (stateKind() === null) {
       <section class="card" aria-labelledby="h-display">

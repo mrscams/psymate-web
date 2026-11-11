@@ -66,7 +66,7 @@ describe('RegisterPage', () => {
     const { fixture, el } = await render(register);
     await submit(fixture, el);
     expect(register).not.toHaveBeenCalled();
-    const summary = el.querySelector('pm-problem-summary [role=alert]');
+    const summary = el.querySelector('pm-form-errors [role=alert]');
     expect(summary?.textContent).toContain('champs à corriger');
     expect(summary?.textContent).toContain('Prénom');
   });
@@ -135,7 +135,7 @@ describe('RegisterPage', () => {
       'Mot de passe trop courant.',
     );
     expect(el.querySelector<HTMLInputElement>('#field-email')?.value).toBe('alix@example.test');
-    expect(el.querySelector('pm-problem-summary [role=alert]')?.textContent).toContain(
+    expect(el.querySelector('pm-form-errors [role=alert]')?.textContent).toContain(
       '1 champ à corriger',
     );
   });
@@ -157,7 +157,7 @@ describe('RegisterPage', () => {
     const { fixture, el } = await render(register);
     await fillValid(fixture, el);
     await submit(fixture, el);
-    expect(el.querySelector('pm-problem-summary [role=alert]')?.textContent).toContain(
+    expect(el.querySelector('pm-form-errors [role=alert]')?.textContent).toContain(
       'Inscription impossible pour le moment',
     );
   });

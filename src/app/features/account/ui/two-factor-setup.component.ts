@@ -74,6 +74,8 @@ export class TwoFactorSetupComponent {
   protected readonly busy = computed(() => this.store.verification().status === 'busy');
 
   protected readonly qrLabel = $localize`:Étiquette du QR code 2FA@@account.security.qr.label:QR code à scanner avec votre application d'authentification ; le secret affiché à côté en est l'équivalent.`;
+  protected readonly enrollErrorTitle = $localize`:Titre de l'état erreur de la génération du secret 2FA@@account.security.enroll.errorTitle:Impossible de préparer la double authentification`;
+  protected readonly codesErrorTitle = $localize`:Titre de l'état erreur des codes de secours@@account.security.codes.errorTitle:Impossible d'afficher vos codes de secours`;
   protected readonly retry = {
     label: $localize`:Réessayer la génération du secret@@account.security.enroll.retry:Réessayer`,
     handler: (): void => void this.store.start(),

@@ -61,7 +61,9 @@ export class EmotionsPage {
     return this.store.customs().length === 0 ? 'empty' : null;
   });
 
-  /** Textes de l'état vide (l'état erreur garde ceux de pm-state). */
+  /** Titre de l'état erreur (la phrase reste celle de pm-state). */
+  protected readonly errorTitle = $localize`:Titre de l'état erreur des émotions personnalisées@@vocabulary.mine.errorTitle:Impossible de charger vos émotions personnalisées`;
+  /** Textes de l'état vide. */
   protected readonly empty = {
     title: $localize`:Titre de l'état vide des émotions@@vocabulary.mine.emptyTitle:Aucune émotion personnalisée`,
     message: $localize`:Message de l'état vide des émotions@@vocabulary.mine.emptyMessage:Ajoutez-en une avec le formulaire ci-dessus quand le vocabulaire global ne suffit pas.`,

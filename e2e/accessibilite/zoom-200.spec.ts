@@ -201,7 +201,7 @@ test('pages publiques à 200 % : annuaire (filtres repliés), connexion, inscrip
   await expect(submit).toBeInViewport();
   await page.keyboard.press('Enter');
   // Le résumé des erreurs prend le focus, visible à 200 % ; son premier lien mène au champ.
-  const summary = page.locator('pm-problem-summary .summary[role="alert"]');
+  const summary = page.locator('pm-form-errors .summary[role="alert"]');
   await expect(summary).toBeFocused();
   await expect(summary).toBeInViewport();
   await page.keyboard.press('Tab');

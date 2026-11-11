@@ -102,7 +102,7 @@ test('mot de passe compromis refusé (422 sous le champ), jauge de force en text
   await page.getByRole('button', { name: 'Créer mon compte' }).click();
 
   // Le serveur juge (liste locale de mots de passe compromis) : erreur reliée au champ, saisie conservée.
-  const summary = page.locator('pm-problem-summary [role=alert]');
+  const summary = page.locator('pm-form-errors [role=alert]');
   await expect(summary).toBeVisible();
   await expect(page.locator('#field-password-error')).not.toBeEmpty();
   await expect(page.locator('#field-password')).toHaveAttribute('aria-invalid', 'true');

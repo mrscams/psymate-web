@@ -24,6 +24,7 @@ import { RecoveryCodesComponent } from '../ui/recovery-codes.component';
             [kind]="kind"
             skeleton="row"
             [lines]="5"
+            [title]="errorTitle"
             [details]="store.recoveryCodes().problem?.code"
             [message]="errorMessage(store.recoveryCodes().problem?.code)"
             [action]="retry"
@@ -77,6 +78,7 @@ export class RecoveryCodesPanel {
   protected readonly stateKind = stateKind;
   protected readonly title = $localize`:Titre du panneau des nouveaux codes@@account.security.regenerate.title:Nouveaux codes de secours`;
   protected readonly saved = signal(false);
+  protected readonly errorTitle = $localize`:Titre de l'état erreur de la régénération des codes@@account.security.regenerate.errorTitle:Impossible de générer de nouveaux codes de secours`;
   protected readonly retry = {
     label: $localize`:Réessayer la régénération@@account.security.regenerate.retry:Réessayer`,
     handler: (): void => void this.store.regenerate(),

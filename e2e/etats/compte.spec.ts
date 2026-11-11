@@ -28,6 +28,8 @@ interface Screen {
   url: string;
   read: string;
   empty?: string;
+  /** Titre de l'état erreur, qui nomme l'objet (UX-A7) plutôt que « ce bloc ». */
+  error: string;
   /** Contenu de l'écran une fois lu (après « Réessayer »). */
   content: RegExp | string;
 }
@@ -37,12 +39,14 @@ const SCREENS: Screen[] = [
     fiche: '10-profil-public',
     url: '/fr/mon-compte/profil-public',
     read: '/api/me/profile',
+    error: 'Impossible de charger votre profil public',
     content: 'Identité',
   },
   {
     fiche: '13-dossier-professionnel',
     url: '/fr/mon-compte/dossier-professionnel',
     read: '/api/me/verification',
+    error: 'Impossible de charger votre dossier professionnel',
     empty: 'Aucun justificatif déposé',
     content: 'Aucun justificatif déposé',
   },
@@ -50,12 +54,14 @@ const SCREENS: Screen[] = [
     fiche: '14-preferences',
     url: '/fr/mon-compte/preferences',
     read: '/api/me/preferences',
+    error: 'Impossible de charger vos préférences',
     content: 'Affichage',
   },
   {
     fiche: '14-tags',
     url: '/fr/mon-compte/tags',
     read: '/api/tags',
+    error: 'Impossible de charger vos tags',
     empty: 'Aucun tag',
     content: 'Aucun tag',
   },
@@ -63,6 +69,7 @@ const SCREENS: Screen[] = [
     fiche: '17-emotions',
     url: '/fr/mon-compte/emotions',
     read: '/api/vocabulary/emotions',
+    error: 'Impossible de charger vos émotions personnalisées',
     empty: 'Aucune émotion personnalisée',
     content: 'Aucune émotion personnalisée',
   },
@@ -70,12 +77,14 @@ const SCREENS: Screen[] = [
     fiche: '18-securite',
     url: '/fr/mon-compte/securite',
     read: '/api/me/security',
+    error: 'Impossible de charger vos sessions',
     content: 'Cet appareil · session courante',
   },
   {
     fiche: '19-donnees',
     url: '/fr/mon-compte/donnees',
     read: '/api/patients',
+    error: 'Impossible de charger vos dossiers',
     empty: 'Aucun dossier à exporter',
     content: 'Aucun dossier à exporter',
   },
@@ -102,7 +111,8 @@ for (const screen of SCREENS) {
     test('erreur avec Réessayer', async ({ page }) => {
       await fail(page, getOf(screen.read));
       await page.goto(screen.url);
-      const error = await expectState(page, 'error', screen.fiche);
+      const error = await expectState(page, 'error', screen.fiche, { text: screen.error });
+      await expect(page.getByText('Impossible de charger ce bloc')).toHaveCount(0);
       await expect(error.getByRole('button', { name: 'Réessayer' })).toBeVisible();
       // Réessayer relit la vraie API (la coupure ne vaut qu'une fois) : l'écran s'affiche.
       await error.getByRole('button', { name: 'Réessayer' }).click();

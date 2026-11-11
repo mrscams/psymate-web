@@ -219,6 +219,7 @@
           [kind]="kind"
           skeleton="row"
           [lines]="2"
+          [title]="sessionsErrorTitle"
           [details]="store.overview().problem?.code"
           [action]="retry"
         />
@@ -300,6 +301,7 @@
           [kind]="kind"
           skeleton="row"
           [lines]="1"
+          [title]="lastLoginErrorTitle"
           [details]="store.overview().problem?.code"
         />
       } @else if (store.lastLogin(); as last) {

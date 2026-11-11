@@ -22556,6 +22556,96 @@
         </context-group>
         <note priority="1" from="description">Format affiché dans un champ mois vide</note>
       </trans-unit>
+      <trans-unit id="preferences.errorTitle" datatype="html">
+        <source>Impossible de charger vos préférences</source>
+        <target state="translated">Your preferences could not be loaded</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état erreur des préférences</note>
+      </trans-unit>
+      <trans-unit id="profile.errorTitle" datatype="html">
+        <source>Impossible de charger votre profil public</source>
+        <target state="translated">Your public profile could not be loaded</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
+          <context context-type="linenumber">142</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état erreur du profil public</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.tags.errorTitle" datatype="html">
+        <source>Impossible de charger vos tags</source>
+        <target state="translated">Your tags could not be loaded</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/tags.page.ts</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état erreur des tags</note>
+      </trans-unit>
+      <trans-unit id="vocabulary.mine.errorTitle" datatype="html">
+        <source>Impossible de charger vos émotions personnalisées</source>
+        <target state="translated">Your custom emotions could not be loaded</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état erreur des émotions personnalisées</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.errorTitle" datatype="html">
+        <source>Impossible de charger vos sessions</source>
+        <target state="translated">Your sessions could not be loaded</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état erreur des sessions</note>
+      </trans-unit>
+      <trans-unit id="account.security.lastLogin.errorTitle" datatype="html">
+        <source>Impossible de charger votre connexion précédente</source>
+        <target state="translated">Your previous sign-in could not be loaded</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état erreur de la connexion précédente</note>
+      </trans-unit>
+      <trans-unit id="account.verification.errorTitle" datatype="html">
+        <source>Impossible de charger votre dossier professionnel</source>
+        <target state="translated">Your professional file could not be loaded</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état erreur du dossier professionnel</note>
+      </trans-unit>
+      <trans-unit id="account.security.enroll.errorTitle" datatype="html">
+        <source>Impossible de préparer la double authentification</source>
+        <target state="translated">Two-factor authentication could not be set up</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état erreur de la génération du secret 2FA</note>
+      </trans-unit>
+      <trans-unit id="account.security.codes.errorTitle" datatype="html">
+        <source>Impossible d&apos;afficher vos codes de secours</source>
+        <target state="translated">Your recovery codes could not be shown</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état erreur des codes de secours</note>
+      </trans-unit>
+      <trans-unit id="account.security.regenerate.errorTitle" datatype="html">
+        <source>Impossible de générer de nouveaux codes de secours</source>
+        <target state="translated">New recovery codes could not be generated</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/panels/recovery-codes.panel.ts</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état erreur de la régénération des codes</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

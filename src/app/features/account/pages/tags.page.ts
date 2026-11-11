@@ -41,7 +41,9 @@ export class TagsPage {
 
   protected readonly listState = computed(() => stateKind(this.store.tags()));
 
-  /** Textes de l'état vide (l'état erreur garde ceux de pm-state). */
+  /** Titre de l'état erreur (la phrase reste celle de pm-state). */
+  protected readonly errorTitle = $localize`:Titre de l'état erreur des tags@@vocabulary.tags.errorTitle:Impossible de charger vos tags`;
+  /** Textes de l'état vide. */
   protected readonly empty = {
     title: $localize`:Titre de l'état vide des tags@@vocabulary.tags.emptyTitle:Aucun tag`,
     message: $localize`:Message de l'état vide des tags@@vocabulary.tags.emptyMessage:Créez-en un ci-dessus, ou depuis la fiche d'un patient.`,

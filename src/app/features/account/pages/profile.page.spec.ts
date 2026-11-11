@@ -81,7 +81,9 @@ describe('ProfilePage', () => {
       .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
       .mockResolvedValue(PROFILE);
     const { fixture, el } = await render(fakeApi({ load }));
-    expect(el.querySelector('pm-state [role="alert"]')).not.toBeNull();
+    expect(el.querySelector('pm-state [role="alert"]')?.textContent).toContain(
+      'Impossible de charger votre profil public',
+    );
     expect(el.querySelector('form')).toBeNull();
     const retry = Array.from(el.querySelectorAll<HTMLButtonElement>('pm-state button')).find((b) =>
       b.textContent?.includes('Réessayer'),
