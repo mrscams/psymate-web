@@ -294,40 +294,21 @@ export function parseMarked(fragment: string | null | undefined): MarkedSegment[
   return segments.length > 0 ? segments : null;
 }
 
-/** Fin de phrase ou de citation : l'extrait n'a pas l'air coupé après. */
-const CLOSED_END = /[.!?…»"”’)\]]$/u;
-/** Début en minuscule : l'extrait commence au milieu d'une phrase. */
-const OPEN_START = /^\p{Ll}/u;
 /** Séparateur de fragments de ts_headline côté serveur (FragmentDelimiter par défaut). */
 const FRAGMENT_DELIMITER = / \.\.\. /g;
 
 /**
- * Points de suspension d'un extrait surligné par le plein texte (audit UX 07 : « Moment de
- * concentration agréable, sans » s'arrêtait net). Le contrat ne dit pas si l'extrait est tronqué
- * (seul l'extrait sans texte de recherche porte déjà son « … ») : on le déduit de la forme.
- * - « … » à la fin si le texte ne se termine pas par une ponctuation de fin ;
- * - « … » au début s'il commence par une minuscule (milieu de phrase) ;
- * - le séparateur « ... » entre deux fragments devient « … ».
- * Faux positif possible : un corps court sans ponctuation finale reçoit un « … » (sans perte).
+ * Points de suspension d'un extrait surligné par le plein texte : seul le séparateur « ... »
+ * entre deux fragments devient « … » (là, la coupe est certaine). Rien n'est ajouté en tête ni en
+ * fin : l'item de recherche ne donne ni le corps ni sa longueur, et une note courte (« RAS »,
+ * « rdv annulé ») ne doit jamais paraître tronquée. Le « … » de bord d'extrait dépend de l'API.
  */
 export function elideSnippet(segments: MarkedSegment[] | null): MarkedSegment[] | null {
   if (!segments || segments.length === 0) return segments;
-  const out = segments.map((segment) => ({
+  return segments.map((segment) => ({
     ...segment,
     text: segment.text.replace(FRAGMENT_DELIMITER, ' … '),
   }));
-  const first = out[0];
-  if (OPEN_START.test(first.text)) {
-    if (first.mark) out.unshift({ text: '… ', mark: false });
-    else first.text = `… ${first.text}`;
-  }
-  const last = out[out.length - 1];
-  const trimmed = last.text.trimEnd();
-  if (trimmed && !CLOSED_END.test(trimmed)) {
-    if (last.mark) out.push({ text: ' …', mark: false });
-    else last.text = `${trimmed} …`;
-  }
-  return out;
 }
 
 /** Texte brut d'un fragment découpé (aperçu, noms accessibles). */

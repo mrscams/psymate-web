@@ -124,8 +124,8 @@ export function toHit(dto: EntrySearchItemDto): SearchHit {
 }
 
 export function toPage(dto: EntrySearchResultDto): SearchPage {
-  // Avec un texte, les extraits exacts viennent de ts_headline, coupé sans « … » ; les approchés
-  // et ceux d'une recherche sans texte portent déjà leurs points de suspension (contrat).
+  // Avec un texte, les extraits exacts viennent de ts_headline, dont les fragments sont séparés
+  // par « ... » ; les approchés et ceux d'une recherche sans texte n'en ont pas (contrat).
   const headline = !!dto.query?.text?.trim();
   const hits = (dto.items ?? [])
     .filter((item) => !!item.entryId)
