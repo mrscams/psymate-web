@@ -14807,14 +14807,6 @@
         </context-group>
         <note priority="1" from="description">Fil d&apos;Ariane, création</note>
       </trans-unit>
-      <trans-unit id="patients.form.historyLink" datatype="html">
-        <source> historique </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">32,39</context>
-        </context-group>
-        <note priority="1" from="description">Lien vers l&apos;historique</note>
-      </trans-unit>
       <trans-unit id="patients.form.archivedBanner" datatype="html">
         <source>Ce dossier est archivé : il n&apos;apparaît plus dans la liste et ne peut pas être modifié.</source>
         <context-group purpose="location">
@@ -14852,10 +14844,10 @@
         <note priority="1" from="description">Champ de la fiche patient</note>
       </trans-unit>
       <trans-unit id="patients.form.displayName.hint" datatype="html">
-        <source> Obligatoire. Un prénom et une initiale suffisent. </source>
+        <source> Vous pouvez n&apos;utiliser qu&apos;un prénom et une initiale : les nom et prénom complets ci-dessous restent facultatifs. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">106,109</context>
+          <context context-type="linenumber">112,115</context>
         </context-group>
         <note priority="1" from="description">Aide du nom affiché</note>
       </trans-unit>
@@ -14946,14 +14938,6 @@
           <context context-type="linenumber">116</context>
         </context-group>
         <note priority="1" from="description">Champ de la fiche patient</note>
-      </trans-unit>
-      <trans-unit id="patients.form.email.hint" datatype="html">
-        <source> Pour les rappels, plus tard. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">222,224</context>
-        </context-group>
-        <note priority="1" from="description">Aide de l&apos;e-mail</note>
       </trans-unit>
       <trans-unit id="patients.form.context" datatype="html">
         <source>Contexte</source>
@@ -15128,10 +15112,10 @@
         <note priority="1" from="description">Section de la fiche</note>
       </trans-unit>
       <trans-unit id="patients.form.stamp" datatype="html">
-        <source> Chaque modification est horodatée. </source>
+        <source> Chaque modification de la fiche est horodatée ; l&apos;historique est consultable. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">392,395</context>
+          <context context-type="linenumber">481,486</context>
         </context-group>
         <note priority="1" from="description">Mention sous le formulaire</note>
       </trans-unit>
@@ -15190,22 +15174,6 @@
           <context context-type="linenumber">445,447</context>
         </context-group>
         <note priority="1" from="description">Encart d&apos;export du dossier</note>
-      </trans-unit>
-      <trans-unit id="patients.form.onCreate.title" datatype="html">
-        <source> À la création </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">453,455</context>
-        </context-group>
-        <note priority="1" from="description">Encart de création</note>
-      </trans-unit>
-      <trans-unit id="patients.form.onCreate.text" datatype="html">
-        <source> Une séance d&apos;accueil est créée à la date du jour, puis la vue d&apos;ensemble s&apos;ouvre. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
-          <context context-type="linenumber">456,460</context>
-        </context-group>
-        <note priority="1" from="description">Encart de création</note>
       </trans-unit>
       <trans-unit id="patients.form.privacy.title" datatype="html">
         <source> Confidentialité </source>
@@ -15288,10 +15256,10 @@
         <note priority="1" from="description">Bouton de confirmation d&apos;archivage</note>
       </trans-unit>
       <trans-unit id="patients.form.meta.created" datatype="html">
-        <source>créée le <x id="date" equiv-text="created"/></source>
+        <source>Créée le <x id="date" equiv-text="created"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">374</context>
+          <context context-type="linenumber">400</context>
         </context-group>
         <note priority="1" from="description">Méta de la fiche</note>
       </trans-unit>
@@ -15312,10 +15280,10 @@
         <note priority="1" from="description">Méta de la fiche, une version</note>
       </trans-unit>
       <trans-unit id="patients.form.meta.updated" datatype="html">
-        <source>dernière modification le <x id="date" equiv-text="updated"/></source>
+        <source>dernière modification de la fiche le <x id="date" equiv-text="updated"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">385</context>
+          <context context-type="linenumber">406</context>
         </context-group>
         <note priority="1" from="description">Méta de la fiche</note>
       </trans-unit>
@@ -16606,14 +16574,6 @@
           <context context-type="linenumber">34,37</context>
         </context-group>
         <note priority="1" from="description">Champ d&apos;ajout de tag</note>
-      </trans-unit>
-      <trans-unit id="patients.tags.addButton" datatype="html">
-        <source> Ajouter </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/ui/tag-editor.component.ts</context>
-          <context context-type="linenumber">55,58</context>
-        </context-group>
-        <note priority="1" from="description">Bouton d&apos;ajout de tag</note>
       </trans-unit>
       <trans-unit id="patients.tags.hint" datatype="html">
         <source> Communs à tous vos dossiers. Une émotion ne peut pas servir de tag. </source>
@@ -20994,6 +20954,182 @@
           <context context-type="linenumber">70</context>
         </context-group>
         <note priority="1" from="description">Toast de retour du réseau, plusieurs envois</note>
+      </trans-unit>
+      <trans-unit id="patients.form.meta.new" datatype="html">
+        <source> Seul le nom affiché est obligatoire : le reste se complète au fil du suivi. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">27,33</context>
+        </context-group>
+        <note priority="1" from="description">Méta de la fiche en création</note>
+      </trans-unit>
+      <trans-unit id="patients.form.displayName.aside" datatype="html">
+        <source>· tel qu&apos;il apparaît partout dans l&apos;application</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">88,92</context>
+        </context-group>
+        <note priority="1" from="description">Précision du nom affiché</note>
+      </trans-unit>
+      <trans-unit id="patients.form.birthDate.aside" datatype="html">
+        <source>· sert à l&apos;âge et aux phases de vie</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">176,180</context>
+        </context-group>
+        <note priority="1" from="description">Précision de la date de naissance</note>
+      </trans-unit>
+      <trans-unit id="patients.form.phone.placeholder" datatype="html">
+        <source>06 …</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">228</context>
+        </context-group>
+        <note priority="1" from="description">Exemple du champ téléphone</note>
+      </trans-unit>
+      <trans-unit id="patients.form.email.placeholder" datatype="html">
+        <source>pour les rappels, plus tard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">246,247</context>
+        </context-group>
+        <note priority="1" from="description">Aide de l&apos;e-mail</note>
+      </trans-unit>
+      <trans-unit id="patients.form.history.aside" datatype="html">
+        <source>· texte libre, visible dans la vue d&apos;ensemble</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">307,311</context>
+        </context-group>
+        <note priority="1" from="description">Précision de l&apos;histoire</note>
+      </trans-unit>
+      <trans-unit id="patients.form.history.hint" datatype="html">
+        <source> Les faits datés (décès, épisodes) gagnent à être saisis comme événements ou situations dans la timeline, avec leur précision (année, phase de vie) : ils entrent alors dans le graphe. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">321,325</context>
+        </context-group>
+        <note priority="1" from="description">Aide de l&apos;histoire</note>
+      </trans-unit>
+      <trans-unit id="patients.form.durationLabel" datatype="html">
+        <source>Durée de séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">382,385</context>
+        </context-group>
+        <note priority="1" from="description">Champ durée de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.form.durationUnit" datatype="html">
+        <source>min</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">400,403</context>
+        </context-group>
+        <note priority="1" from="description">Unité de la durée de séance</note>
+      </trans-unit>
+      <trans-unit id="patients.form.flags.lead" datatype="html">
+        <source> Un drapeau est un repère manuel, visible dans l&apos;en-tête du dossier et dans la liste. Il n&apos;est jamais déduit automatiquement. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">441,444</context>
+        </context-group>
+        <note priority="1" from="description">Explication des drapeaux</note>
+      </trans-unit>
+      <trans-unit id="patients.form.onCreate.session" datatype="html">
+        <source> Une <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>séance d&apos;accueil<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> est créée automatiquement : toute entrée a une séance. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">523,525</context>
+        </context-group>
+        <note priority="1" from="description">Encart de création</note>
+      </trans-unit>
+      <trans-unit id="patients.form.onCreate.overview" datatype="html">
+        <source> Vous arrivez sur la <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>vue d&apos;ensemble<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> vide, barre de saisie prête. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">527,529</context>
+        </context-group>
+        <note priority="1" from="description">Encart de création</note>
+      </trans-unit>
+      <trans-unit id="patients.form.privacy.history" datatype="html">
+        <source>Historique des modifications de la fiche :</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
+          <context context-type="linenumber">542,544</context>
+        </context-group>
+        <note priority="1" from="description">Encart confidentialité, historique</note>
+      </trans-unit>
+      <trans-unit id="patients.form.onCreate.heading" datatype="html">
+        <source>À la création d&apos;un <x id="subject" equiv-text="subject"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+        <note priority="1" from="description">Encart de création</note>
+      </trans-unit>
+      <trans-unit id="patients.form.optional" datatype="html">
+        <source>(facultatif)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">192</context>
+        </context-group>
+        <note priority="1" from="description">Précision d&apos;un champ facultatif</note>
+      </trans-unit>
+      <trans-unit id="patients.form.meta.noSession" datatype="html">
+        <source>aucune séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">414</context>
+        </context-group>
+        <note priority="1" from="description">Méta de la fiche, aucune séance</note>
+      </trans-unit>
+      <trans-unit id="patients.form.meta.sessions" datatype="html">
+        <source><x id="count" equiv-text="count"/> séances</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">417</context>
+        </context-group>
+        <note priority="1" from="description">Méta de la fiche, plusieurs séances</note>
+      </trans-unit>
+      <trans-unit id="patients.form.meta.session" datatype="html">
+        <source>1 séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
+          <context context-type="linenumber">418</context>
+        </context-group>
+        <note priority="1" from="description">Méta de la fiche, une séance</note>
+      </trans-unit>
+      <trans-unit id="patients.form.flag.reasonLabel" datatype="html">
+        <source>Raison du drapeau « à surveiller »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/flag-fields.component.ts</context>
+          <context context-type="linenumber">84,88</context>
+        </context-group>
+        <note priority="1" from="description">Champ raison de la fiche patient</note>
+      </trans-unit>
+      <trans-unit id="patients.form.flag.setAt" datatype="html">
+        <source>Posé le <x id="date" equiv-text="date"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/flag-fields.component.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <note priority="1" from="description">Date de pose d&apos;un drapeau</note>
+      </trans-unit>
+      <trans-unit id="patients.preview.note" datatype="html">
+        <source> L&apos;âge est calculé depuis la date de naissance ; « suivi·e depuis » depuis la date de début du suivi. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/header-preview.component.ts</context>
+          <context context-type="linenumber">41,47</context>
+        </context-group>
+        <note priority="1" from="description">Explication de l&apos;aperçu de l&apos;en-tête</note>
+      </trans-unit>
+      <trans-unit id="patients.tags.placeholder" datatype="html">
+        <source>Ajouter un tag…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/tag-editor.component.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <note priority="1" from="description">Texte indicatif du champ tag</note>
       </trans-unit>
     </body>
   </file>

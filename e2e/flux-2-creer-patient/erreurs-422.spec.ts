@@ -26,8 +26,9 @@ test('422 sur la fiche patient : résumé en tête avec focus, lien vers le cham
   await expect(summary).toHaveCount(0);
 
   // Plus de 120 ans : la forme est valide côté client, le serveur répond 422 sur birthDate.
+  // Champ date localisé (UX-B8) : saisie jj/mm/aaaa en français.
   const birthDate = page.getByLabel('Date de naissance');
-  await birthDate.fill('1890-01-01');
+  await birthDate.fill('01/01/1890');
   const rejected = page.waitForResponse(
     (r) => r.url().endsWith(`/api/patients/${id}`) && r.request().method() === 'PATCH',
   );
@@ -55,12 +56,17 @@ test('422 sur la fiche patient : résumé en tête avec focus, lien vers le cham
   await expect(birthDate).toBeFocused();
   await expectNoAxeViolations(page);
 
-  // Correction et enregistrement : le résumé disparaît.
-  await birthDate.fill('1990-05-12');
+  // Correction et enregistrement : le résumé disparaît ; la date part en AAAA-MM-JJ, sans
+  // décalage de fuseau, et revient affichée jj/mm/aaaa.
+  await birthDate.fill('12/05/1990');
   const saved = page.waitForResponse(
     (r) => r.url().endsWith(`/api/patients/${id}`) && r.request().method() === 'PATCH',
   );
   await page.getByRole('button', { name: /Enregistrer/ }).click();
-  expect((await saved).status()).toBe(200);
+  const response = await saved;
+  expect(response.status()).toBe(200);
+  expect(response.request().postDataJSON()).toEqual({ birthDate: '1990-05-12' });
   await expect(summary).toHaveCount(0);
+  await page.reload();
+  await expect(birthDate).toHaveValue('12/05/1990');
 });

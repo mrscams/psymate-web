@@ -28,6 +28,8 @@
 }
 
 .page-header {
+  max-width: 880px;
+
   h1 {
     margin: 0;
     font: var(--mat-sys-headline-small);
@@ -35,16 +37,9 @@
   }
 
   .meta {
-    margin: 4px 0 0;
-    font: var(--mat-sys-body-small);
+    margin: 6px 0 0;
+    font: var(--mat-sys-body-medium);
     color: var(--text-secondary);
-
-    .link {
-      all: unset;
-      color: var(--primary);
-      text-decoration: underline;
-      cursor: pointer;
-    }
   }
 }
 
@@ -74,14 +69,23 @@ form,
   gap: 14px;
   min-width: 0;
   margin: 0;
-  padding: 16px 20px 20px;
+  padding: 20px 24px 24px;
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
   background: var(--surface-raised);
+
+  @media (max-width: 600px) {
+    padding: 16px;
+  }
 }
 
+// Légende en petites capitales, dans la carte (maquette 16) : float sort la légende de la bordure
+// du fieldset, elle devient le premier élément de la carte (qui reste en flex).
 legend {
-  padding: 0 4px;
+  float: left;
+  width: 100%;
+  margin: 0 0 4px;
+  padding: 0;
   font: var(--mat-sys-label-large);
   color: var(--text-secondary);
   text-transform: uppercase;
@@ -90,20 +94,53 @@ legend {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 14px 16px;
+}
+
+.grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 760px) {
+  .grid--3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .grid--2,
+  .grid--3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   min-width: 0;
 
   label {
     font: var(--mat-sys-label-large);
     color: var(--text-primary);
   }
+}
+
+// Libellé et sa précision sur une ligne : « Prénom (facultatif) », « Date de naissance · sert à… ».
+.label-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 6px;
+  align-items: baseline;
+}
+
+.aside {
+  font: var(--mat-sys-body-small);
+  color: var(--text-secondary);
 }
 
 .required {
@@ -114,8 +151,6 @@ legend {
 input[type='text'],
 input[type='email'],
 input[type='tel'],
-input[type='date'],
-input[type='month'],
 select,
 textarea {
   width: 100%;
@@ -126,6 +161,10 @@ textarea {
   background: var(--surface-raised);
   color: var(--text-primary);
   font: var(--mat-sys-body-large);
+
+  &::placeholder {
+    color: var(--text-secondary);
+  }
 
   &[aria-invalid='true'] {
     border-color: var(--danger);
@@ -146,24 +185,51 @@ textarea {
   font-family: var(--font-mono) !important;
 }
 
+// Durée de séance : champ court suivi de l'unité (maquette 16).
+.with-unit {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  .duration {
+    width: 96px;
+    flex: none;
+  }
+
+  .unit {
+    font: var(--mat-sys-body-medium);
+    color: var(--text-secondary);
+  }
+}
+
 .hint {
   margin: 0;
   font: var(--mat-sys-body-small);
   color: var(--text-secondary);
 }
 
+.lead {
+  margin-top: -6px;
+  font: var(--mat-sys-body-medium);
+}
+
+// Pied (maquette 16) : Enregistrer puis Annuler à gauche, mention à droite.
 .form-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   align-items: center;
-  justify-content: flex-end;
 
   .stamp {
-    flex: 1;
+    flex: 1 1 240px;
     margin: 0;
     font: var(--mat-sys-body-small);
     color: var(--text-secondary);
+    text-align: right;
+
+    @media (max-width: 600px) {
+      text-align: left;
+    }
   }
 
   kbd {
@@ -193,10 +259,21 @@ textarea {
   color: var(--info);
 }
 
+// Zone d'archivage : texte à gauche, bouton à droite (maquette 16), empilés sur mobile.
 .danger-zone {
-  padding: 16px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
   border: 1.5px dashed var(--border-strong);
   border-radius: 12px;
+
+  .danger-text {
+    flex: 1 1 320px;
+    min-width: 0;
+  }
 
   h2 {
     margin: 0 0 4px;
@@ -204,7 +281,7 @@ textarea {
   }
 
   p {
-    margin: 0 0 12px;
+    margin: 0;
     font: var(--mat-sys-body-small);
     color: var(--text-secondary);
   }
@@ -222,13 +299,13 @@ textarea {
 }
 
 .aside-card {
-  padding: 16px;
+  padding: 16px 20px 20px;
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
   background: var(--surface-raised);
 
   h2 {
-    margin: 0 0 8px;
+    margin: 0 0 10px;
     font: var(--mat-sys-label-large);
     color: var(--text-secondary);
     text-transform: uppercase;
@@ -240,13 +317,59 @@ textarea {
     font: var(--mat-sys-body-small);
     color: var(--text-secondary);
   }
+
+  p + p {
+    margin-top: 8px;
+  }
 }
 
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
-button:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+// « À la création » : trois repères, comme la légende de la maquette.
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: var(--mat-sys-body-small);
+  color: var(--text-primary);
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+.step {
+  position: relative;
+  padding-left: 22px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--entry-session);
+    border-radius: 2px;
+  }
+}
+
+.step--overview::before {
+  border-color: var(--primary);
+  border-radius: 50%;
+}
+
+.versions .link {
+  margin-left: 4px;
+}
+
+.link {
+  all: unset;
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  color: var(--primary);
+  text-decoration: underline;
+  cursor: pointer;
 }

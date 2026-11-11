@@ -38,15 +38,17 @@ test('créer un patient, le retrouver (marie, marié), modifier le rythme, archi
   await page.keyboard.press('n');
   await expect(page).toHaveURL(/\/fr\/patients\/nouveau$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Nouveau patient' })).toBeVisible();
-  await expect(page.getByLabel('Durée de séance (min)')).toHaveValue('60');
+  await expect(page.getByLabel('Durée de séance')).toHaveValue('60');
   await expectNoAxeViolations(page);
 
   // Erreurs de forme, sans appel réseau : nom manquant, date future ; focus sur le premier champ.
+  // Champ date localisé (UX-A4, UX-B8) : saisie jj/mm/aaaa en français.
   let posts = 0;
   page.on('request', (r) => {
     if (r.method() === 'POST' && r.url().endsWith('/api/patients')) posts += 1;
   });
-  await page.getByLabel('Date de naissance').fill('2999-01-01');
+  await expect(page.getByLabel('Date de naissance')).toHaveAttribute('placeholder', 'jj/mm/aaaa');
+  await page.getByLabel('Date de naissance').fill('01/01/2999');
   await page.getByRole('button', { name: /Enregistrer/ }).click();
   const displayName = page.getByRole('textbox', { name: /Nom affiché/ });
   await expect(displayName).toBeFocused();
@@ -61,7 +63,7 @@ test('créer un patient, le retrouver (marie, marié), modifier le rythme, archi
   // 422 du serveur (plus de 120 ans) : message de l'API sous le champ et dans le résumé en tête,
   // qui prend le focus ; son lien mène au champ (UX-A7).
   await displayName.fill('Marie D.');
-  await page.getByLabel('Date de naissance').fill('1890-01-01');
+  await page.getByLabel('Date de naissance').fill('01/01/1890');
   const rejected = page.waitForResponse(
     (r) => r.url().endsWith('/api/patients') && r.request().method() === 'POST',
   );
@@ -107,13 +109,21 @@ test('créer un patient, le retrouver (marie, marié), modifier le rythme, archi
   await page.getByRole('menuitem', { name: 'Modifier la fiche de Marie D.' }).click();
   await expect(page).toHaveURL(/\/fiche$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Modifier la fiche · Marie D.');
-  await expect(page.locator('.page-header .meta')).toContainText('1 version');
+  // Méta (maquette 16) : création, séance d'accueil créée par l'API ; versions dans l'encart
+  // Confidentialité, lien vers l'historique.
+  await expect(page.locator('.page-header .meta')).toContainText('Créée le');
+  await expect(page.locator('.page-header .meta')).toContainText('1 séance');
+  const privacy = page.getByRole('region', { name: 'Confidentialité' });
+  await expect(privacy.getByRole('button', { name: '1 version', exact: true })).toBeVisible();
   await expect(page.getByLabel('Rythme habituel')).toHaveValue('weekly');
   await page.getByLabel('Rythme habituel').selectOption({ label: 'Mensuel' });
   const patched = page.waitForResponse((r) => r.request().method() === 'PATCH');
   await page.getByRole('button', { name: /Enregistrer/ }).click();
   expect((await patched).request().postDataJSON()).toEqual({ followUp: { rhythm: 'monthly' } });
-  await expect(page.locator('.page-header .meta')).toContainText('2 versions');
+  await expect(privacy.getByRole('button', { name: '2 versions' })).toBeVisible();
+  await expect(page.locator('.page-header .meta')).toContainText(
+    'dernière modification de la fiche le',
+  );
   const history = page.getByRole('region', { name: 'Historique des versions' });
   await expect(history.getByRole('heading', { name: /Version 2/ })).toBeVisible();
   await expect(history).toContainText('Rythme habituel');
@@ -122,7 +132,7 @@ test('créer un patient, le retrouver (marie, marié), modifier le rythme, archi
   // Une seconde modification : la version 3 ne liste que la différence, avant → après.
   await page.getByLabel('Rythme habituel').selectOption({ label: 'Irrégulier' });
   await page.getByRole('button', { name: /Enregistrer/ }).click();
-  await expect(page.locator('.page-header .meta')).toContainText('3 versions');
+  await expect(privacy.getByRole('button', { name: '3 versions' })).toBeVisible();
   const v3 = history.getByRole('listitem').filter({ hasText: 'Version 3' });
   await expect(v3.locator('dt')).toHaveText(['Rythme habituel']);
   await expect(v3.locator('del')).toHaveText('Mensuel');

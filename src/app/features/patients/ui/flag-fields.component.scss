@@ -6,17 +6,22 @@
 
 .flag-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
+
+  @media (max-width: 760px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
+// Maquette 16 : libellé et aide à gauche, case à droite, en haut de la carte.
 .flag-card {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 2px 10px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 12px;
+  align-items: start;
   min-height: 44px;
-  padding: 12px;
+  padding: 12px 14px;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   background: var(--surface-raised);
@@ -24,9 +29,13 @@
   cursor: pointer;
 
   input {
+    grid-row: 1;
+    grid-column: 2;
     width: 18px;
     height: 18px;
+    margin: 1px 0 0;
     accent-color: var(--primary);
+    cursor: pointer;
   }
 
   &:focus-within {
@@ -36,11 +45,13 @@
 }
 
 .flag-name {
+  grid-row: 1;
+  grid-column: 1;
   font: var(--mat-sys-title-small);
 }
 
 .flag-help {
-  grid-column: 2;
+  grid-column: 1 / -1;
   font: var(--mat-sys-body-small);
   color: var(--text-secondary);
 }
@@ -50,6 +61,7 @@
 .checked {
   &.watch,
   &.risk {
+    border-width: 1.5px;
     border-color: var(--flag);
     background: var(--warning-bg);
   }
@@ -79,16 +91,15 @@
   }
 }
 
-textarea {
+input[type='text'] {
   width: 100%;
   min-height: 44px;
-  padding: 10px 12px;
+  padding: 0 12px;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   background: var(--surface-raised);
   color: var(--text-primary);
   font: var(--mat-sys-body-large);
-  resize: vertical;
 
   &[aria-invalid='true'] {
     border-color: var(--danger);
