@@ -7,13 +7,16 @@ import {
   inject,
   input,
   LOCALE_ID,
+  signal,
   untracked,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
 
 import { StateAction, StateComponent } from '../../../shared/ui';
 import { isRefreshing, stateKind } from '../../../shared/util';
+import { JournalItem } from '../data/admin.model';
 import {
   JOURNAL_CATEGORIES,
   JOURNAL_PERIODS,
@@ -22,10 +25,44 @@ import {
   JournalPeriod,
   JournalStore,
 } from '../data/journal.store';
-import { actorLabel, formatTimestamp, journalCategory, journalSummary } from '../ui/admin-labels';
+import {
+  actorLabel,
+  formatMinute,
+  formatTimestamp,
+  journalCategory,
+  journalSummary,
+} from '../ui/admin-labels';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Fenêtre d'une rafale de lignes identiques (UX-E3). */
+export const BURST_MS = 60_000;
+
+interface JournalRow extends JournalItem {
+  time: string;
+  category: ReturnType<typeof journalCategory>;
+  text: string;
+  by: string;
+  context: boolean;
+}
+
+interface JournalGroup<T> {
+  lead: T;
+  rest: T[];
+}
+
+/** Même événement, même praticien, même acteur, à moins d'une minute de la ligne de tête. */
+function sameBurst(lead: JournalRow, row: JournalRow): boolean {
+  return (
+    lead.kind === row.kind &&
+    lead.text === row.text &&
+    lead.practitionerId === row.practitionerId &&
+    lead.actorType === row.actorType &&
+    lead.actorName === row.actorName &&
+    Math.abs(new Date(lead.at).getTime() - new Date(row.at).getTime()) < BURST_MS
+  );
+}
 
 /**
  * /admin/journal (fiche 22) : lecture seule, du plus récent au plus ancien. Segments de type, filtre
@@ -34,7 +71,7 @@ const DAY = /^\d{4}-\d{2}-\d{2}$/;
  */
 @Component({
   selector: 'pm-journal-page',
-  imports: [MatButtonModule, RouterLink, StateComponent],
+  imports: [MatButtonModule, NgTemplateOutlet, RouterLink, StateComponent],
   providers: [JournalStore],
   templateUrl: './journal.page.html',
   styleUrl: './journal.page.scss',
@@ -84,8 +121,36 @@ export class JournalPage {
       category: journalCategory(item.kind),
       text: journalSummary(item.kind, item.summary),
       by: actorLabel(item.actorType, item.actorName),
+      context: item.source === 'verification_decision' && !!item.practitionerId,
     })),
   );
+
+  /**
+   * Lignes identiques consécutives (même type, même phrase, même praticien) du même acteur dans
+   * la même minute, réunies sous la plus récente (UX-E3) ; les autres se déplient sous elle.
+   */
+  protected readonly groups = computed(() => {
+    const groups: JournalGroup<JournalRow>[] = [];
+    for (const row of this.rows()) {
+      const last = groups.at(-1);
+      if (last && sameBurst(last.lead, row)) last.rest.push(row);
+      else groups.push({ lead: row, rest: [] });
+    }
+    return groups.map((group) => {
+      const oldest = group.rest.at(-1) ?? group.lead;
+      return {
+        ...group,
+        count: group.rest.length + 1,
+        range: `${formatMinute(oldest.at, this.locale)} → ${formatMinute(group.lead.at, this.locale)}`,
+      };
+    });
+  });
+
+  /** Groupes dépliés, par identifiant de leur première ligne. */
+  protected readonly expanded = signal<ReadonlySet<string>>(new Set());
+
+  /** Colonne Contexte masquée tant qu'aucune ligne n'a de lien (UX-E3 ; ni IP ni ville : contrat). */
+  protected readonly hasContext = computed(() => this.rows().some((row) => row.context));
 
   /** Nom du praticien filtré, lu sur une ligne affichée (le journal ne renvoie pas de fiche). */
   protected readonly practitionerName = computed(() => {
@@ -174,14 +239,30 @@ export class JournalPage {
     this.navigate({ practitioner: id });
   }
 
-  /** « Afficher plus » : le focus va sur la première nouvelle ligne (fiche 22). */
+  protected toggleGroup(id: string): void {
+    this.expanded.update((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  /**
+   * « Afficher plus » : le focus va sur la première nouvelle ligne (fiche 22), ou sur la ligne de
+   * tête de son groupe si elle rejoint un groupe replié.
+   */
   protected async more(): Promise<void> {
     const before = this.store.items().length;
     const added = await this.store.loadMore();
     if (added === 0) return;
+    const first = this.store.items()[before]?.id;
+    const group = this.groups().find(
+      (g) => g.lead.id === first || g.rest.some((row) => row.id === first),
+    );
+    const target = group && !this.expanded().has(group.lead.id) ? group.lead.id : first;
     requestAnimationFrame(() => {
-      const rows = this.host.nativeElement.querySelectorAll<HTMLElement>('tbody tr');
-      rows[before]?.focus();
+      this.host.nativeElement.querySelector<HTMLElement>(`tbody tr[data-id="${target}"]`)?.focus();
     });
   }
 

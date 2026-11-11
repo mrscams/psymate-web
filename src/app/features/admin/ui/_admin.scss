@@ -1,12 +1,23 @@
 // Styles communs des écrans d'administration (fiches 20, 21, 22, 28) : tokens seulement.
 
+// Largeur des écrans d'administration (maquettes 20, 21, 22, 28 : pleine largeur à 1440 px, 24 px de
+// marge). Le contenu principal de l'application est borné à 1120 px ; dès 1 200 px, la page en sort
+// par des marges négatives symétriques, sans dépasser la fenêtre (100vw compte la barre de
+// défilement : la moitié de sa largeur reste dans la marge de 24 px de main).
+@mixin wide {
+  @media (width >= 1200px) {
+    width: min(1600px, calc(100vw - 48px));
+    margin-inline: calc((100% - min(1600px, calc(100vw - 48px))) / 2);
+  }
+}
+
 @mixin page {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-width: 1200px;
-  margin: 0 auto;
   color: var(--text-primary);
+
+  @include wide;
 }
 
 @mixin page-header {
@@ -80,6 +91,7 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    max-width: 100%;
 
     label {
       font: var(--mat-sys-label-large);
@@ -92,6 +104,7 @@
   input[type='number'],
   select,
   textarea {
+    max-width: 100%;
     min-height: 40px;
     padding: 0 12px;
     border: 1px solid var(--border-strong);

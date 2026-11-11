@@ -194,23 +194,36 @@ export function formatDay(iso: string | null, locale: string): string {
   }).format(new Date(iso));
 }
 
-/** Horodatage du journal, secondes incluses (fiche 22). */
+/**
+ * Horodatage du journal, secondes incluses (fiche 22, UX-E3) : « 9 nov. 2026 · 11:14:46 » en
+ * français, même jour que le reste du produit (jamais 09/11, ambigu entre locales).
+ */
 export function formatTimestamp(iso: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
+  const date = new Date(iso);
+  const day = formatDay(iso, locale);
+  const time = new Intl.DateTimeFormat(locale, {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
+    hourCycle: 'h23',
+  }).format(date);
+  return `${day} · ${time}`;
+}
+
+/** Heure et minute d'un horodatage (« 11:05 »), pour la plage d'un groupe du journal. */
+export function formatMinute(iso: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
   }).format(new Date(iso));
 }
 
-/** Ancienneté courte (« il y a 3 jours ») ; « — » si absente. */
+/** Ancienneté courte en chiffres (« il y a 3 j »), comme la maquette 20 ; « — » si absente. */
 export function formatAge(iso: string | null, locale: string, now: Date = new Date()): string {
   if (!iso) return '—';
   const seconds = Math.round((new Date(iso).getTime() - now.getTime()) / 1000);
-  const format = new Intl.RelativeTimeFormat(locale, { numeric: 'auto', style: 'short' });
+  const format = new Intl.RelativeTimeFormat(locale, { numeric: 'always', style: 'short' });
   const abs = Math.abs(seconds);
   if (abs < 3600) return format.format(Math.round(seconds / 60), 'minute');
   if (abs < 86_400) return format.format(Math.round(seconds / 3600), 'hour');

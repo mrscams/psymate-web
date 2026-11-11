@@ -79,6 +79,63 @@ describe('JournalPage', () => {
     expect(rows[1].textContent).toContain('praticien·ne');
     expect(el.querySelector('caption')?.textContent).toContain('7 derniers jours');
     expect(el.querySelectorAll('tbody button:not(.link)')).toHaveLength(0);
+    // Horodatage Intl « 7 nov. 2026 · hh:mm:ss » en mono (UX-E3), jamais 07/11/2026.
+    expect(rows[0].querySelector('td.mono')?.textContent).toMatch(
+      /^\s*7 nov\. 2026 · \d{2}:\d{2}:42\s*$/,
+    );
+    // Aucune ligne n'a de contexte : colonne masquée.
+    expect([...el.querySelectorAll('th')].map((th) => th.textContent?.trim())).not.toContain(
+      'Contexte',
+    );
+  });
+
+  it('colonne Contexte affichée dès qu’une décision a un dossier', async () => {
+    const { el } = await render({
+      journal: vi.fn().mockResolvedValue({
+        items: [journalItem({ kind: 'admin.approved', source: 'verification_decision' })],
+        nextCursor: null,
+      }),
+    });
+    expect([...el.querySelectorAll('th')].map((th) => th.textContent?.trim())).toContain(
+      'Contexte',
+    );
+    expect(el.querySelector('tbody a')?.textContent).toContain('Voir le dossier');
+  });
+
+  it('lignes identiques consécutives du même acteur dans la minute : regroupées, dépliables', async () => {
+    const { fixture, el } = await render({
+      journal: vi.fn().mockResolvedValue({
+        items: [
+          journalItem({ id: 'a', at: '2026-11-07T10:15:50Z' }),
+          journalItem({ id: 'b', at: '2026-11-07T10:15:20Z' }),
+          journalItem({ id: 'c', at: '2026-11-07T10:14:55Z' }),
+          // Autre acteur : nouvelle ligne.
+          journalItem({ id: 'd', at: '2026-11-07T10:14:50Z', actorName: 'Inès Admin' }),
+          // Même acteur mais plus d'une minute après la tête du groupe suivant : séparée.
+          journalItem({ id: 'e', at: '2026-11-07T10:14:40Z', actorName: 'Inès Admin' }),
+          journalItem({ id: 'f', at: '2026-11-07T10:13:00Z', actorName: 'Inès Admin' }),
+        ],
+        nextCursor: null,
+      }),
+    });
+    let rows = el.querySelectorAll('tbody tr');
+    expect([...rows].map((row) => row.getAttribute('data-id'))).toEqual(['a', 'd', 'f']);
+    expect(rows[0].textContent).toContain('3 ×');
+    const toggle = rows[0].querySelector<HTMLButtonElement>('.group-toggle')!;
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(toggle.textContent).toContain('Afficher 2 lignes identiques');
+    expect(rows[1].textContent).toContain('2 ×');
+    expect(rows[1].querySelector('.group-toggle')?.textContent).toContain(
+      'Afficher 1 ligne identique',
+    );
+    expect(rows[2].querySelector('.group-toggle')).toBeNull();
+    toggle.click();
+    await settle(fixture);
+    rows = el.querySelectorAll('tbody tr');
+    expect([...rows].map((row) => row.getAttribute('data-id'))).toEqual(['a', 'b', 'c', 'd', 'f']);
+    expect(rows[1].classList).toContain('nested');
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(toggle.textContent).toContain('Masquer les 2 lignes identiques');
   });
 
   it('filtres de l’URL transmis au serveur ; segment posé dans l’URL', async () => {
@@ -109,7 +166,10 @@ describe('JournalPage', () => {
     const journal = vi
       .fn()
       .mockResolvedValueOnce({ items: [journalItem()], nextCursor: 'c1' })
-      .mockResolvedValueOnce({ items: [journalItem({ id: 'j-2' })], nextCursor: null });
+      .mockResolvedValueOnce({
+        items: [journalItem({ id: 'j-2', at: '2026-11-07T10:05:00Z' })],
+        nextCursor: null,
+      });
     const { fixture, el } = await render({ journal });
     document.body.appendChild(el);
     [...el.querySelectorAll<HTMLButtonElement>('button')]

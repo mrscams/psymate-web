@@ -45,9 +45,19 @@ export interface DeactivateDialogData {
       </p>
       @if (inUse() !== null) {
         <div class="in-use" role="alert">
-          <p i18n="Encart d'une entrée utilisée@@admin.vocabulary.inUse">
-            Utilisée par {{ inUse() }} profil(s) publié(s) : demandez d'abord aux praticiens de la
-            retirer ou choisissez une spécialité de remplacement.
+          <p>
+            <span i18n="Nombre de profils qui utilisent l'entrée@@admin.vocabulary.inUseCount"
+              >Utilisée par
+              {inUse(), plural,
+                =0 {aucun profil publié}
+                =1 {1 profil publié}
+                other {{{ inUse() }} profils publiés}
+              }</span
+            >
+            <span i18n="Encart d'une entrée utilisée@@admin.vocabulary.inUse"
+              >: demandez d'abord aux praticiens de la retirer ou choisissez une spécialité de
+              remplacement.</span
+            >
           </p>
           <a
             routerLink="/admin/praticiens"

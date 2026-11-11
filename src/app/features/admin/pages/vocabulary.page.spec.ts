@@ -78,9 +78,12 @@ describe('VocabularyPage', () => {
     );
     const rows = el.querySelectorAll('tbody tr');
     expect(rows).toHaveLength(1);
-    expect(rows[0].textContent).toContain('Utilisée par 2 profil(s) publié(s)');
+    expect(rows[0].textContent).toContain('Utilisée par 2 profils publiés');
+    // Désactiver… n'est pas destructif : texte secondaire, jamais la classe danger (UX-E4).
+    expect(rows[0].querySelector('button.quiet')?.textContent).toContain('Désactiver…');
+    expect(rows[0].querySelector('button.danger')).toBeNull();
     expect(rows[0].textContent).toContain('Active');
-    expect(el.querySelector('pm-add-entry-form h3')?.textContent).toContain(
+    expect(el.querySelector('pm-add-entry-form h2')?.textContent).toContain(
       'Ajouter une spécialité',
     );
   });
@@ -139,7 +142,7 @@ describe('VocabularyPage', () => {
     await settle(fixture);
     expect(patchEntry).toHaveBeenCalledWith('specialty', 'anxiety', { active: false });
     expect(dialog.querySelector('[role="alert"]')?.textContent).toContain(
-      'Utilisée par 2 profil(s) publié(s)',
+      'Utilisée par 2 profils publiés',
     );
     expect(dialog.textContent).toContain('Fermer');
     expect(el.querySelector('tbody tr')?.textContent).toContain('Active');

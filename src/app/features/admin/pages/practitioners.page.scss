@@ -53,10 +53,29 @@
   flex: 1 1 280px;
 }
 
+// Lignes compactes (UX-E2, maquette 21) : 56 px, une ligne par cellule, actions en ligne.
+td {
+  height: 56px;
+  padding-block: 8px;
+  vertical-align: middle;
+}
+
+.nowrap,
+.name {
+  white-space: nowrap;
+}
+
 .who {
   display: flex;
   gap: 12px;
   align-items: center;
+}
+
+.email {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .avatar {
@@ -77,39 +96,42 @@
 }
 
 .late {
+  margin-left: 6px;
   color: var(--danger);
 }
 
+// Actions en texte, sans bordure ; « Suspendre… » en danger, « Réactiver… » en succès (cibles de
+// 32 px de haut).
 .actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px 12px;
-  align-items: center;
+  gap: 16px;
+  justify-content: flex-end;
 
-  a {
+  a,
+  button {
+    padding: 0;
+    border: 0;
+    background: none;
     color: var(--primary-hover);
     font: var(--mat-sys-label-large);
-  }
-
-  button {
-    min-height: 32px;
-    padding: 0 10px;
-    border: 1px solid var(--border-strong);
-    border-radius: 8px;
-    background: var(--surface-raised);
-    font: var(--mat-sys-label-large);
+    line-height: 32px;
+    text-decoration: none;
+    white-space: nowrap;
     cursor: pointer;
   }
 
   .suspend {
-    border-color: var(--danger);
     color: var(--danger);
   }
+}
 
-  .reactivate {
-    border-color: var(--success);
-    color: var(--success);
-  }
+.on,
+.actions .reactivate {
+  color: var(--success);
+}
+
+th:last-child {
+  text-align: right;
 }
 
 .footnote {
