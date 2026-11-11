@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-11T15:28:05.785Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-A10c Pages nues : la coquille fournit le main, /premiere-connexion sans main propre, lien d'évitement vers #contenu, plein écran par flex",
+  "pr": "https://github.com/mrscams/psymate-web/pull/76",
+  "branch": "claude/ux-a10c-bare-pages",
+  "checkout": "agent-abcb4267217d1ef05"
+}

@@ -172,13 +172,12 @@ describe('AppComponent', () => {
     const bare = await render('fr', { url: '/_demo' });
     expect(bare.el.querySelector('pm-app-bar')).toBeNull();
     expect(bare.el.querySelector('pm-admin-bar')).toBeNull();
-    expect(bare.el.querySelector('main')).toBeNull();
-    expect(tags(bare.el)).toEqual([
-      'pm-network-banner',
-      'router-outlet',
-      'pm-blank',
-      'pm-toast-outlet',
-    ]);
+    // Habillage nu : le même <main id="main">, sans classe ni marge ; la page n'en pose pas d'autre.
+    expect(tags(bare.el)).toEqual(['pm-network-banner', 'main', 'pm-toast-outlet']);
+    expectBareMain(outletContainer(bare.el));
+    expect(tags(outletContainer(bare.el))).toEqual(['router-outlet', 'pm-blank']);
+    expect(bare.el.classList.contains('bare')).toBe(true);
+    expect(bare.el.querySelectorAll('main, [role="main"], [id="main"]')).toHaveLength(1);
   });
 
   it('UX-A8 : sans data.contentWidth, aucun main large (rendu inchangé)', async () => {
@@ -254,19 +253,18 @@ describe('AppComponent', () => {
         expect(created).toEqual([pathOf(layout)]);
         expect(el.querySelectorAll('pm-counted')).toHaveLength(1);
         expect(el.querySelectorAll('router-outlet')).toHaveLength(1);
-        if (layout === 'bare') expect(el.querySelector('main')).toBeNull();
-        else expect(el.querySelector('main#main pm-counted')).not.toBeNull();
+        if (layout === 'bare') expectBareMain(outletContainer(el));
+        expect(el.querySelectorAll('main, [role="main"], [id="main"]')).toHaveLength(1);
+        expect(el.querySelector('main#main pm-counted')).not.toBeNull();
       });
     }
 
-    // L'habillage nu (/_demo, page de revue hors du produit, sans lien entrant) garde son propre
-    // outlet hors du <main> : il n'est couvert qu'à l'ouverture directe, ci-dessus.
-    const WITH_BARS = LAYOUTS.filter((layout) => layout !== 'bare');
-    for (const from of WITH_BARS) {
-      for (const to of WITH_BARS.filter((layout) => layout !== from)) {
+    // Les 12 transitions, habillage nu compris (connexion en deux panneaux ↔ liste des patients).
+    for (const from of LAYOUTS) {
+      for (const to of LAYOUTS.filter((layout) => layout !== from)) {
         it(`navigation interne ${from} → ${to} : la page de destination est créée une fois`, async () => {
           const { fixture, el } = await render('fr', { url: `/c/${from}`, firstRender: true });
-          const main = el.querySelector('main#main');
+          const container = outletContainer(el);
           created.length = 0;
 
           await TestBed.inject(Router).navigateByUrl(`/c/${to}`);
@@ -275,11 +273,29 @@ describe('AppComponent', () => {
           expect(created).toEqual([pathOf(to)]);
           expect(el.querySelectorAll('pm-counted')).toHaveLength(1);
           expect(el.querySelectorAll('router-outlet')).toHaveLength(1);
-          // Le même <main> : seul l'habillage autour a changé.
-          expect(el.querySelector('main#main')).toBe(main);
+          // Le même <main>, seul de la page : seul l'habillage autour a changé.
+          expect(outletContainer(el)).toBe(container);
+          expect(el.querySelectorAll('main, [role="main"], [id="main"]')).toHaveLength(1);
+          if (to === 'bare') expectBareMain(container);
+          else expect(container.className).not.toBe('');
+          expect(el.classList.contains('bare')).toBe(to === 'bare');
         });
       }
     }
+
+    it('nu → praticien, focus perdu : la tabulation repart du début de la coquille', async () => {
+      const { fixture, el } = await render('fr', { url: '/c/bare', firstRender: true });
+      const focused = vi.fn();
+      el.addEventListener('focus', focused);
+
+      await TestBed.inject(Router).navigateByUrl('/c/practitioner');
+      await fixture.whenStable();
+
+      expect(focused).toHaveBeenCalledTimes(1);
+      expect(document.activeElement).toBe(document.body);
+      expect(el.hasAttribute('tabindex')).toBe(false);
+      expect(el.querySelector('pm-app-bar a.skip-link[href="#main"]')).not.toBeNull();
+    });
 
     it('changement d’habillage, focus perdu : la tabulation repart du début de la coquille', async () => {
       const { fixture, el } = await render('fr', { url: '/c/public', firstRender: true });
@@ -338,13 +354,15 @@ describe('AppComponent', () => {
       await fixture.whenStable();
       const el = fixture.nativeElement as HTMLElement;
       expect(tags(el)).toEqual(['pm-toast-outlet']);
-      expect(el.querySelector('pm-app-bar, pm-shortcuts-help, main, router-outlet')).toBeNull();
+      expect(
+        el.querySelector('pm-app-bar, pm-shortcuts-help, main, [role="main"], router-outlet'),
+      ).toBeNull();
     });
 
     it('ouverture directe : la coquille ne prend pas le focus (aucun changement d’habillage vu)', async () => {
       const focus = vi.spyOn(HTMLElement.prototype, 'focus');
       try {
-        for (const layout of ['public', 'admin', 'practitioner']) {
+        for (const layout of ['public', 'admin', 'practitioner', 'bare']) {
           const { fixture, el } = await render('fr', { url: `/c/${layout}`, firstRender: true });
           await fixture.whenStable();
           expect(focus.mock.contexts).not.toContain(el);
@@ -423,4 +441,18 @@ describe('AppComponent', () => {
 /** Balises des enfants directs, dans l'ordre du DOM. */
 function tags(parent: Element): string[] {
   return [...parent.children].map((child) => child.tagName.toLowerCase());
+}
+
+/** Conteneur stable de l'outlet : le `<main>` enfant de la coquille. */
+function outletContainer(shell: Element): HTMLElement {
+  const container = shell.querySelector<HTMLElement>(':scope > main');
+  expect(container?.querySelector(':scope > router-outlet')).not.toBeNull();
+  return container!;
+}
+
+/** `<main>` de l'habillage nu : `id="main"`, sans classe (ni marge ni largeur). */
+function expectBareMain(container: HTMLElement): void {
+  expect(container.tagName).toBe('MAIN');
+  expect(container.id).toBe('main');
+  expect(container.className).toBe('');
 }

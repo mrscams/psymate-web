@@ -1,9 +1,11 @@
 // Fiche 18 C : barre sombre sans navigation (tokens de la barre d'administration), panneau
 // d'explication à gauche, formulaire à droite. Champs natifs comme la fiche 12.
+// Page nue (UX-A10b) : dans le <main> de la coquille, qu'elle remplit par `flex: 1` plutôt que par
+// 100vh (elle tient sous le bandeau réseau quand il est affiché).
 :host {
   display: flex;
+  flex: 1 0 auto;
   flex-direction: column;
-  min-height: 100vh;
   color: var(--text-primary);
   background: var(--surface-ground);
 }
@@ -74,6 +76,12 @@
   font: var(--mat-sys-label-large);
   text-decoration: underline;
   cursor: pointer;
+}
+
+// Cible du lien d'évitement (tabindex -1) : pas d'anneau autour de toute la zone.
+.layout:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .layout {

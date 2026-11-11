@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, Page, test } from '@playwright/test';
 
 import { adminApi, shareSession } from '../flux-10-admin/helpers';
@@ -44,6 +45,28 @@ async function watchInsertions(page: Page, selector: string): Promise<() => Prom
     );
 }
 
+/**
+ * Règles axe des repères (best-practice, hors du jeu WCAG de `expectNoAxeViolations`), pour ces e2e
+ * seulement : un seul `main`, au premier niveau, `banner` / `contentinfo` au premier niveau.
+ */
+const LANDMARK_RULES = [
+  'landmark-one-main',
+  'landmark-no-duplicate-main',
+  'landmark-main-is-top-level',
+  'landmark-banner-is-top-level',
+  'landmark-contentinfo-is-top-level',
+];
+
+async function expectLandmarks(page: Page, rules = LANDMARK_RULES): Promise<void> {
+  const results = await new AxeBuilder({ page }).withRules(rules).analyze();
+  expect(results.violations.map((violation) => violation.id)).toEqual([]);
+  // Pas d'id en double pour la cible des liens d'évitement.
+  expect(await page.locator('[id="main"]').count()).toBe(1);
+}
+
+/** Conteneur stable de l'outlet : le `<main>` enfant de la coquille. */
+const outletContainer = (page: Page) => page.locator('pm-root > main:has(> router-outlet)');
+
 /** Laisse partir une éventuelle seconde création ou lecture avant de compter. */
 async function settle(page: Page): Promise<void> {
   await page.waitForLoadState('networkidle');
@@ -87,7 +110,7 @@ async function watchStartup(page: Page): Promise<() => Promise<Startup>> {
           if (node.localName === 'pm-public-header') seen.publicHeader++;
         }
       }
-      if (document.querySelector('main#main.app-main')) seen.appMainSeen = true;
+      if (document.querySelector('#main.app-main')) seen.appMainSeen = true;
     }).observe(document, {
       childList: true,
       subtree: true,
@@ -255,6 +278,102 @@ test('changement d’habillage au clavier : la tabulation repart du haut, par le
   // précède son formulaire ; la tabulation repart du haut, sur le premier lien de la carte.
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Créer un compte' })).toBeFocused();
+});
+
+test('habillage nu ↔ praticien : chaque page de destination créée une fois, un seul <main>', async ({
+  page,
+}) => {
+  // Habillage nu : /_demo aujourd'hui, la connexion en deux panneaux ensuite. Session ouverte
+  // d'abord (la liste des patients est gardée).
+  await page.goto('/fr/connexion');
+  await page.getByLabel('Adresse e-mail').fill(SEED.claire.email);
+  await page.getByLabel('Mot de passe', { exact: true }).fill(SEED.claire.password);
+  await page.getByRole('button', { name: 'Se connecter' }).click();
+  await expect(page).toHaveURL(/\/fr\/patients$/);
+
+  const demo = await watchInsertions(page, 'pm-demo-page');
+  const list = await watchInsertions(page, 'pm-patient-list-page');
+  const patients = countGets(page, '/api/patients');
+  await page.goto('/fr/_demo');
+  await expect(page.getByRole('heading', { level: 1, name: /démonstration/ })).toBeVisible();
+  await settle(page);
+  expect(await demo()).toBe(1);
+  await expect(page.getByRole('main')).toHaveCount(1);
+  // Le <main id="main"> de la coquille, sans classe : la démonstration n'en pose pas d'autre.
+  expect(await outletContainer(page).evaluate((main) => [main.id, main.className])).toEqual([
+    'main',
+    '',
+  ]);
+  await expectLandmarks(page, ['landmark-one-main', 'landmark-no-duplicate-main']);
+
+  // Nu → praticien : le logo de la barre montrée par la démonstration mène à la liste (routerLink).
+  await page.locator('pm-app-bar a.brand').first().click();
+  await expect(page).toHaveURL(/\/fr\/patients$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Mes patients' })).toBeVisible();
+  await settle(page);
+  expect(await list()).toBe(1);
+  expect(patients()).toBe(1);
+  await expect(page.getByRole('main')).toHaveCount(1);
+  await expect(page.getByRole('main')).toHaveClass('app-main');
+  await expect(page.getByRole('main')).toHaveId('main');
+  await expectLandmarks(page);
+  await expectNoAxeViolations(page);
+
+  // Praticien → nu, par le retour arrière (navigation du routeur, sans rechargement).
+  await page.goBack();
+  await expect(page.getByRole('heading', { level: 1, name: /démonstration/ })).toBeVisible();
+  await settle(page);
+  expect(await demo()).toBe(2); // ouverture directe, puis retour : une création chacune
+  expect(await list()).toBe(1);
+  await expect(page.getByRole('main')).toHaveCount(1);
+  await expectLandmarks(page, ['landmark-one-main', 'landmark-no-duplicate-main']);
+});
+
+test('page nue /fr/premiere-connexion : un seul main, lien d’évitement qui saute la barre', async ({
+  page,
+}) => {
+  // Sans session, la page s'affiche (firstLoginGuard). Page nue : elle est dans le <main id="main">
+  // de la coquille et ne pose ni <main> ni #main ; sa barre est donc dans le <main> (pas de banner).
+  await page.goto('/fr/premiere-connexion');
+  await expect(
+    page.getByRole('heading', { level: 2, name: 'Choisissez votre mot de passe' }),
+  ).toBeVisible();
+  await settle(page);
+
+  await expect(page.getByRole('main')).toHaveCount(1);
+  expect(await outletContainer(page).evaluate((main) => [main.id, main.className])).toEqual([
+    'main',
+    '',
+  ]);
+  await expect(page.locator('main#main pm-first-login-page header.bar')).toHaveCount(1);
+  await expect(page.getByRole('banner')).toHaveCount(0);
+  await expectLandmarks(page);
+  await expectNoAxeViolations(page);
+
+  // La page remplit la fenêtre (flex: 1 dans le <main> nu).
+  const viewport = page.viewportSize()!;
+  const box = (await page.locator('pm-first-login-page').boundingBox())!;
+  expect(box.height).toBeGreaterThanOrEqual(viewport.height - 1);
+
+  // Lien d'évitement au clavier : premier arrêt ; il saute la barre vers le contenu de la page.
+  await page.keyboard.press('Tab');
+  const skip = page.getByRole('link', { name: 'Aller au contenu' });
+  await expect(skip).toBeFocused();
+  await page.keyboard.press('Enter');
+  // Le focus passe au contenu (la page reste la même : pas de navigation vers /fr/#contenu).
+  await expect(page).toHaveURL(/\/fr\/premiere-connexion$/);
+  await expect(page.locator('#contenu')).toBeFocused();
+  await page.keyboard.press('Tab');
+  const landed = await page.evaluate(() => {
+    const active = document.activeElement;
+    return {
+      inContent: !!active?.closest('#contenu'),
+      inBar: !!active?.closest('header.bar'),
+      what: `${active?.tagName}:${active?.textContent?.trim().slice(0, 30)}`,
+    };
+  });
+  expect(landed, landed.what).toMatchObject({ inContent: true, inBar: false });
+  await expectNoAxeViolations(page);
 });
 
 test.describe('administration', () => {
