@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-11T00:36:50.297Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-A2 : anneau de focus des champs natifs (plancher global shared-ui) et de la barre admin (token --admin-focus) a 3:1 ou plus, clair et sombre",
+  "notes": "select editeur de lien 1,21 vers 4,5:1 et plus ; onglet Praticiens 2,71 vers 7,50:1 ; e2e anneau-focus 8/8 (admin local) ; 1717 tests verts ; aucune dependance ; --task PROJET car progress.mjs refuse les ID UX-xx",
+  "next": "Reporter --admin-focus dans la fiche 00 (psymate-api) et l'etude §8 ; nettoyer les outline primary-tint des features",
+  "pr": "https://github.com/mrscams/psymate-web/pull/49",
+  "branch": "claude/ux-a2-focus-9f2d1e",
+  "checkout": "m1-06-patients-cca7bc"
+}
