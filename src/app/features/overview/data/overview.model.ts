@@ -197,19 +197,69 @@ export interface OverviewView {
 }
 
 /**
- * Moyenne glissante des 7 derniers jours : celle du dernier point de la courbe, qui est toujours
- * aujourd'hui (contrat, TrendDto.points). null si aucun ressenti sur ces 7 jours : on n'en cherche
- * pas une plus ancienne, le libellé de la tuile dit « 7 derniers jours ».
+ * Intensité moyenne de la fenêtre (tuile « Intensité moyenne », UX-B4) : la moyenne des ressentis
+ * que le serveur renvoie pour cette fenêtre (feelings.points, exactement un point par ressenti non
+ * archivé de la fenêtre). Aucune donnée ajoutée ni filtrée : la règle de sélection reste celle du
+ * serveur ; null sans ressenti.
  */
-export function lastWeekAverage(points: readonly TrendPoint[]): number | null {
-  return points.at(-1)?.average ?? null;
+export function windowAverage(points: readonly FeelingPoint[]): number | null {
+  if (!points.length) return null;
+  return points.reduce((sum, point) => sum + point.intensity, 0) / points.length;
+}
+
+/**
+ * Première et dernière moyenne glissante de la courbe du serveur (points sans moyenne ignorés),
+ * pour dire d'où part et où arrive l'intensité sur la fenêtre ; null s'il n'y en a aucune.
+ */
+export function averageRange(
+  points: readonly TrendPoint[],
+): { first: number; last: number } | null {
+  const values = points.map((p) => p.average).filter((v): v is number => v !== null);
+  if (!values.length) return null;
+  return { first: values[0], last: values[values.length - 1] };
+}
+
+/** Écart minimal (sur 10) entre la première et la dernière moyenne pour parler de hausse ou baisse. */
+export const TREND_THRESHOLD = 0.5;
+
+export type TrendDirection = 'up' | 'down' | 'flat';
+
+export function trendDirection(range: { first: number; last: number }): TrendDirection {
+  const delta = range.last - range.first;
+  if (delta >= TREND_THRESHOLD) return 'up';
+  if (delta <= -TREND_THRESHOLD) return 'down';
+  return 'flat';
+}
+
+/**
+ * Début du suivi affiché (UX-B4, UX-B5) : facts.followedSince, sauf s'il manque ou s'il est plus
+ * récent qu'une séance que la synthèse montre (dossier créé après coup, follow_up.since vide : le
+ * serveur retombe sur la date de création du dossier). On prend alors la plus ancienne séance
+ * connue de la synthèse (séances récentes, repères et jours de séance de la fenêtre) : une borne
+ * sûre, jamais une date inventée. `fromSessions` dit que la date vient des séances.
+ */
+export function followedSinceOf(
+  view: OverviewView,
+): { date: string; fromSessions: boolean } | null {
+  const days = [
+    ...view.recentSessions.map((s) => s.occurredFrom),
+    ...view.trend.markers.filter((m) => m.kind === 'session').map((m) => m.date),
+    ...view.feelings.ticks,
+  ]
+    .filter((d): d is string => !!d)
+    .map((d) => d.slice(0, 10))
+    .sort();
+  const firstSession = days[0] ?? null;
+  const since = view.facts.followedSince;
+  if (since && (!firstSession || since.slice(0, 10) <= firstSession)) {
+    return { date: since, fromSessions: false };
+  }
+  return firstSession ? { date: firstSession, fromSessions: true } : null;
 }
 
 // Vides par bloc (B4 : chaque bloc garde son titre et une phrase « apparaîtra ici quand… »).
 export const isTrendEmpty = (view: OverviewView): boolean =>
   view.feelings.points.length === 0 && view.trend.points.every((p) => p.average === null);
-export const isAttentionEmpty = (view: OverviewView): boolean =>
-  view.facts.flags.length === 0 && view.drafts.count === 0 && view.drafts.openSession === null;
 export const isSituationsEmpty = (view: OverviewView): boolean => view.situations.length === 0;
 export const isMedicationsEmpty = (view: OverviewView): boolean =>
   view.facts.medications.length === 0;
@@ -224,9 +274,7 @@ export const isFeelingsEmpty = (view: OverviewView): boolean => view.feelings.po
 export const isSinceEmpty = (view: OverviewView): boolean =>
   view.sinceLastSession.entries.length === 0;
 export const isFrameEmpty = (view: OverviewView): boolean =>
-  view.facts.followedSince === null &&
-  view.facts.sessionCount === 0 &&
-  view.facts.flags.length === 0;
+  followedSinceOf(view) === null && view.facts.sessionCount === 0 && view.facts.flags.length === 0;
 export const isTodoEmpty = (view: OverviewView): boolean =>
   view.drafts.count === 0 && view.drafts.openSession === null;
 
