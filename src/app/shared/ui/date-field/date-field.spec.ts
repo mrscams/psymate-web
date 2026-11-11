@@ -158,6 +158,36 @@ describe('DateFieldComponent', () => {
     expect(input.disabled).toBe(false);
   });
 
+  it('reset() après une saisie valide vide l’input', async () => {
+    const { fixture, host, input, type } = await render(DayHost, 'fr');
+    await type('28/07/2003');
+    host.control.reset();
+    await fixture.whenStable();
+    expect(input.value).toBe('');
+    expect(host.control.value).toBeNull();
+  });
+
+  it('reset() après une saisie illisible vide l’input et efface l’erreur', async () => {
+    const { fixture, host, input, type } = await render(DayHost, 'fr');
+    await type('abc');
+    host.control.reset();
+    await fixture.whenStable();
+    expect(input.value).toBe('');
+    expect(host.control.errors).toBeNull();
+    expect(input.getAttribute('aria-invalid')).toBe('false');
+  });
+
+  it('setValue() après une saisie affiche la nouvelle date, même égale à la valeur initiale', async () => {
+    const { fixture, host, input, type } = await render(DayHost, 'fr');
+    host.control.setValue('2003-07-28');
+    await fixture.whenStable();
+    await type('01/01/2020');
+    expect(host.control.value).toBe('2020-01-01');
+    host.control.setValue('2003-07-28');
+    await fixture.whenStable();
+    expect(input.value).toBe('28/07/2003');
+  });
+
   it('marque le contrôle touché à la sortie du champ', async () => {
     const { host, input } = await render(DayHost, 'fr');
     input.dispatchEvent(new Event('blur'));
@@ -177,5 +207,9 @@ describe('MonthFieldComponent', () => {
     await type('13/2003');
     expect(host.control.value).toBeNull();
     expect(host.control.errors).toEqual({ date: true });
+    host.control.reset();
+    await fixture.whenStable();
+    expect(input.value).toBe('');
+    expect(host.control.errors).toBeNull();
   });
 });

@@ -19,6 +19,7 @@ import {
 import { DateAdapter, MAT_DATE_FORMATS, MatDateFormats } from '@angular/material/core';
 import {
   MatDatepicker,
+  MatDatepickerInput,
   MatDatepickerIntl,
   MatDatepickerModule,
 } from '@angular/material/datepicker';
@@ -47,8 +48,13 @@ abstract class DateFieldBase implements ControlValueAccessor, Validator {
   private readonly adapter = inject<DateAdapter<Date>>(DateAdapter);
   private readonly formats = inject<MatDateFormats>(MAT_DATE_FORMATS);
   protected readonly picker = viewChild.required<MatDatepicker<Date>>('picker');
+  private readonly dateInput = viewChild<MatDatepickerInput<Date>>(MatDatepickerInput);
 
-  /** Valeur poussée vers l'input par le formulaire (writeValue) ; la saisie ne la réécrit pas. */
+  /**
+   * Valeur initiale de l'input (liaison [value], avant la création de la vue). La saisie ne la met
+   * pas à jour, pour ne pas reformater le texte pendant la frappe : writeValue réécrit donc aussi
+   * l'input directement, sinon un reset() ou un setValue() égal à cette valeur resterait sans effet.
+   */
   protected readonly modelDate = signal<Date | null>(null);
   protected readonly disabled = signal(false);
   /** Texte saisi illisible ou date inexistante. */
@@ -67,6 +73,8 @@ abstract class DateFieldBase implements ControlValueAccessor, Validator {
     this.iso = date ? toIsoDate(date, this.granularity) : null;
     this.parseError.set(false);
     this.modelDate.set(date);
+    const field = this.dateInput();
+    if (field) field.value = date;
   }
 
   registerOnChange(fn: (value: string | null) => void): void {
