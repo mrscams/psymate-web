@@ -18,20 +18,13 @@
 
 <header class="page-header">
   <h1>{{ title() }}</h1>
-  @if (meta(); as text) {
-    <p class="meta">
-      {{ text }}
-      @if (store.versions().data?.length) {
-        ·
-        <button
-          type="button"
-          class="link"
-          (click)="showHistory()"
-          i18n="Lien vers l'historique@@patients.form.historyLink"
-        >
-          historique
-        </button>
-      }
+  @if (editing()) {
+    @if (meta(); as text) {
+      <p class="meta">{{ text }}</p>
+    }
+  } @else {
+    <p class="meta" i18n="Méta de la fiche en création@@patients.form.meta.new">
+      Seul le nom affiché est obligatoire : le reste se complète au fil du suivi.
     </p>
   }
 </header>
@@ -83,10 +76,20 @@
         <fieldset class="card" [disabled]="readOnly()">
           <legend i18n="Section de la fiche@@patients.form.identity">Identité</legend>
           <div class="field">
-            <label [for]="fid('displayName')">
-              <span i18n="Champ de la fiche patient@@patients.field.displayName">Nom affiché</span>
-              <span class="required" aria-hidden="true">*</span>
-            </label>
+            <div class="label-row">
+              <label [for]="fid('displayName')">
+                <span i18n="Champ de la fiche patient@@patients.field.displayName"
+                  >Nom affiché</span
+                >
+                <span class="required" aria-hidden="true">*</span>
+              </label>
+              <span
+                class="aside"
+                [id]="fid('displayName') + '-aside'"
+                i18n="Précision du nom affiché@@patients.form.displayName.aside"
+                >· tel qu'il apparaît partout dans l'application</span
+              >
+            </div>
             <input
               [id]="fid('displayName')"
               type="text"
@@ -95,7 +98,12 @@
               required
               [attr.aria-invalid]="invalid(form.controls.displayName)"
               [attr.aria-describedby]="
-                fid('displayName') + '-hint ' + fid('displayName') + '-error'
+                fid('displayName') +
+                '-aside ' +
+                fid('displayName') +
+                '-hint ' +
+                fid('displayName') +
+                '-error'
               "
             />
             <p
@@ -103,27 +111,31 @@
               [id]="fid('displayName') + '-hint'"
               i18n="Aide du nom affiché@@patients.form.displayName.hint"
             >
-              Obligatoire. Un prénom et une initiale suffisent.
+              Vous pouvez n'utiliser qu'un prénom et une initiale : les nom et prénom complets
+              ci-dessous restent facultatifs.
             </p>
             <pm-field-errors
               [control]="form.controls.displayName"
               [id]="fid('displayName') + '-error'"
             />
           </div>
-          <div class="grid">
+          <div class="grid grid--2">
             <div class="field">
-              <label
-                [for]="fid('firstName')"
-                i18n="Champ de la fiche patient@@patients.field.firstName"
-                >Prénom</label
-              >
+              <div class="label-row">
+                <label
+                  [for]="fid('firstName')"
+                  i18n="Champ de la fiche patient@@patients.field.firstName"
+                  >Prénom</label
+                >
+                <span class="aside" [id]="fid('firstName') + '-aside'">{{ optional }}</span>
+              </div>
               <input
                 [id]="fid('firstName')"
                 type="text"
                 formControlName="firstName"
                 autocomplete="off"
                 [attr.aria-invalid]="invalid(form.controls.firstName)"
-                [attr.aria-describedby]="fid('firstName') + '-error'"
+                [attr.aria-describedby]="fid('firstName') + '-aside ' + fid('firstName') + '-error'"
               />
               <pm-field-errors
                 [control]="form.controls.firstName"
@@ -131,18 +143,21 @@
               />
             </div>
             <div class="field">
-              <label
-                [for]="fid('lastName')"
-                i18n="Champ de la fiche patient@@patients.field.lastName"
-                >Nom</label
-              >
+              <div class="label-row">
+                <label
+                  [for]="fid('lastName')"
+                  i18n="Champ de la fiche patient@@patients.field.lastName"
+                  >Nom</label
+                >
+                <span class="aside" [id]="fid('lastName') + '-aside'">{{ optional }}</span>
+              </div>
               <input
                 [id]="fid('lastName')"
                 type="text"
                 formControlName="lastName"
                 autocomplete="off"
                 [attr.aria-invalid]="invalid(form.controls.lastName)"
-                [attr.aria-describedby]="fid('lastName') + '-error'"
+                [attr.aria-describedby]="fid('lastName') + '-aside ' + fid('lastName') + '-error'"
               />
               <pm-field-errors
                 [control]="form.controls.lastName"
@@ -150,18 +165,26 @@
               />
             </div>
             <div class="field">
-              <label
-                [for]="fid('birthDate')"
-                i18n="Champ de la fiche patient@@patients.field.birthDate"
-                >Date de naissance</label
-              >
-              <input
-                [id]="fid('birthDate')"
-                type="date"
-                class="mono"
+              <div class="label-row">
+                <label
+                  [for]="fid('birthDate')"
+                  i18n="Champ de la fiche patient@@patients.field.birthDate"
+                  >Date de naissance</label
+                >
+                <span
+                  class="aside"
+                  [id]="fid('birthDate') + '-aside'"
+                  i18n="Précision de la date de naissance@@patients.form.birthDate.aside"
+                  >· sert à l'âge et aux phases de vie</span
+                >
+              </div>
+              <!-- errorId devient l'aria-describedby de l'input : la précision y figure aussi. -->
+              <pm-date-field
                 formControlName="birthDate"
-                [attr.aria-invalid]="invalid(form.controls.birthDate)"
-                [attr.aria-describedby]="fid('birthDate') + '-error'"
+                [inputId]="fid('birthDate')"
+                [errorId]="fid('birthDate') + '-aside ' + fid('birthDate') + '-error'"
+                [invalid]="invalid(form.controls.birthDate)"
+                [max]="today"
               />
               <pm-field-errors
                 [control]="form.controls.birthDate"
@@ -169,9 +192,13 @@
               />
             </div>
             <div class="field">
-              <label [for]="fid('pronoun')" i18n="Champ de la fiche patient@@patients.field.pronoun"
-                >Pronom / accord</label
-              >
+              <div class="label-row">
+                <label
+                  [for]="fid('pronoun')"
+                  i18n="Champ de la fiche patient@@patients.field.pronoun"
+                  >Pronom / accord</label
+                >
+              </div>
               <select
                 [id]="fid('pronoun')"
                 formControlName="pronoun"
@@ -188,39 +215,42 @@
               <pm-field-errors [control]="form.controls.pronoun" [id]="fid('pronoun') + '-error'" />
             </div>
             <div class="field">
-              <label [for]="fid('phone')" i18n="Champ de la fiche patient@@patients.field.phone"
-                >Téléphone</label
-              >
+              <div class="label-row">
+                <label [for]="fid('phone')" i18n="Champ de la fiche patient@@patients.field.phone"
+                  >Téléphone</label
+                >
+                <span class="aside" [id]="fid('phone') + '-aside'">{{ optional }}</span>
+              </div>
               <input
                 [id]="fid('phone')"
                 type="tel"
                 class="mono"
                 formControlName="phone"
                 autocomplete="off"
+                placeholder="06 …"
+                i18n-placeholder="Exemple du champ téléphone@@patients.form.phone.placeholder"
                 [attr.aria-invalid]="invalid(form.controls.phone)"
-                [attr.aria-describedby]="fid('phone') + '-error'"
+                [attr.aria-describedby]="fid('phone') + '-aside ' + fid('phone') + '-error'"
               />
               <pm-field-errors [control]="form.controls.phone" [id]="fid('phone') + '-error'" />
             </div>
             <div class="field">
-              <label [for]="fid('email')" i18n="Champ de la fiche patient@@patients.field.email"
-                >E-mail</label
-              >
+              <div class="label-row">
+                <label [for]="fid('email')" i18n="Champ de la fiche patient@@patients.field.email"
+                  >E-mail</label
+                >
+                <span class="aside" [id]="fid('email') + '-aside'">{{ optional }}</span>
+              </div>
               <input
                 [id]="fid('email')"
                 type="email"
                 formControlName="email"
                 autocomplete="off"
+                placeholder="pour les rappels, plus tard"
+                i18n-placeholder="Aide de l'e-mail@@patients.form.email.placeholder"
                 [attr.aria-invalid]="invalid(form.controls.email)"
-                [attr.aria-describedby]="fid('email') + '-hint ' + fid('email') + '-error'"
+                [attr.aria-describedby]="fid('email') + '-aside ' + fid('email') + '-error'"
               />
-              <p
-                class="hint"
-                [id]="fid('email') + '-hint'"
-                i18n="Aide de l'e-mail@@patients.form.email.hint"
-              >
-                Pour les rappels, plus tard.
-              </p>
               <pm-field-errors [control]="form.controls.email" [id]="fid('email') + '-error'" />
             </div>
           </div>
@@ -228,7 +258,7 @@
 
         <fieldset class="card" formGroupName="context" [disabled]="readOnly()">
           <legend i18n="Section de la fiche@@patients.form.context">Contexte</legend>
-          <div class="grid">
+          <div class="grid grid--2">
             <div class="field">
               <label
                 [for]="fid('context.situation')"
@@ -267,29 +297,57 @@
             </div>
           </div>
           <div class="field">
-            <label
-              [for]="fid('context.history')"
-              i18n="Champ de la fiche patient@@patients.field.history"
-              >Histoire et éléments à garder en tête</label
+            <div class="label-row">
+              <label
+                [for]="fid('context.history')"
+                i18n="Champ de la fiche patient@@patients.field.history"
+                >Histoire et éléments à garder en tête</label
+              >
+              <span
+                class="aside"
+                [id]="fid('context.history') + '-aside'"
+                i18n="Précision de l'histoire@@patients.form.history.aside"
+                >· texte libre, visible dans la vue d'ensemble</span
+              >
+            </div>
+            <textarea
+              [id]="fid('context.history')"
+              rows="4"
+              formControlName="history"
+              [attr.aria-describedby]="
+                fid('context.history') + '-aside ' + fid('context.history') + '-hint'
+              "
+            ></textarea>
+            <p
+              class="hint"
+              [id]="fid('context.history') + '-hint'"
+              i18n="Aide de l'histoire@@patients.form.history.hint"
             >
-            <textarea [id]="fid('context.history')" rows="4" formControlName="history"></textarea>
+              Les faits datés (décès, épisodes) gagnent à être saisis comme événements ou situations
+              dans la timeline, avec leur précision (année, phase de vie) : ils entrent alors dans
+              le graphe.
+            </p>
           </div>
         </fieldset>
 
         <fieldset class="card" formGroupName="followUp" [disabled]="readOnly()">
           <legend i18n="Section de la fiche@@patients.form.followUp">Suivi</legend>
-          <div class="grid">
+          <div class="grid grid--3">
             <div class="field">
               <label
                 [for]="fid('followUp.since')"
                 i18n="Champ de la fiche patient@@patients.field.since"
                 >Suivi·e depuis</label
               >
-              <input
-                [id]="fid('followUp.since')"
-                type="month"
-                class="mono"
+              <pm-month-field
                 formControlName="since"
+                [inputId]="fid('followUp.since')"
+                [errorId]="fid('followUp.since') + '-error'"
+                [invalid]="invalid(form.controls.followUp.controls.since)"
+              />
+              <pm-field-errors
+                [control]="form.controls.followUp.controls.since"
+                [id]="fid('followUp.since') + '-error'"
               />
             </div>
             <div class="field">
@@ -325,29 +383,42 @@
             <div class="field">
               <label
                 [for]="fid('followUp.durationMin')"
-                i18n="Champ de la fiche patient@@patients.field.durationMin"
-                >Durée de séance (min)</label
+                i18n="Champ durée de la fiche patient@@patients.form.durationLabel"
+                >Durée de séance</label
               >
-              <input
-                [id]="fid('followUp.durationMin')"
-                type="text"
-                inputmode="numeric"
-                class="mono"
-                formControlName="durationMin"
-                [attr.aria-invalid]="invalid(form.controls.followUp.controls.durationMin)"
-                [attr.aria-describedby]="fid('followUp.durationMin') + '-error'"
-              />
+              <div class="with-unit">
+                <input
+                  [id]="fid('followUp.durationMin')"
+                  type="text"
+                  inputmode="numeric"
+                  class="mono duration"
+                  formControlName="durationMin"
+                  [attr.aria-invalid]="invalid(form.controls.followUp.controls.durationMin)"
+                  [attr.aria-describedby]="
+                    fid('followUp.durationMin') + '-unit ' + fid('followUp.durationMin') + '-error'
+                  "
+                />
+                <span
+                  class="unit"
+                  [id]="fid('followUp.durationMin') + '-unit'"
+                  i18n="Unité de la durée de séance@@patients.form.durationUnit"
+                  >min</span
+                >
+              </div>
               <pm-field-errors
                 [control]="form.controls.followUp.controls.durationMin"
                 [id]="fid('followUp.durationMin') + '-error'"
               />
             </div>
             <div class="field">
-              <label
-                [for]="fid('followUp.fee')"
-                i18n="Champ de la fiche patient@@patients.field.fee"
-                >Tarif</label
-              >
+              <div class="label-row">
+                <label
+                  [for]="fid('followUp.fee')"
+                  i18n="Champ de la fiche patient@@patients.field.fee"
+                  >Tarif</label
+                >
+                <span class="aside" [id]="fid('followUp.fee') + '-aside'">{{ optional }}</span>
+              </div>
               <input
                 [id]="fid('followUp.fee')"
                 type="text"
@@ -355,6 +426,7 @@
                 formControlName="fee"
                 placeholder="[TARIF]"
                 i18n-placeholder="Exemple du champ tarif@@patients.form.fee.placeholder"
+                [attr.aria-describedby]="fid('followUp.fee') + '-aside'"
               />
             </div>
             <div class="field">
@@ -370,7 +442,15 @@
 
         <fieldset class="card" [disabled]="readOnly()">
           <legend i18n="Section de la fiche@@patients.form.flags">Drapeaux</legend>
-          <pm-flag-fields [group]="form.controls.flags" [flags]="value().flags" />
+          <p class="hint lead" i18n="Explication des drapeaux@@patients.form.flags.lead">
+            Un drapeau est un repère manuel, visible dans l'en-tête du dossier et dans la liste. Il
+            n'est jamais déduit automatiquement.
+          </p>
+          <pm-flag-fields
+            [group]="form.controls.flags"
+            [flags]="value().flags"
+            [setAt]="flagSetAt()"
+          />
         </fieldset>
 
         <fieldset class="card" [disabled]="readOnly()">
@@ -388,9 +468,12 @@
         </fieldset>
 
         <div class="form-actions">
-          <p class="stamp" i18n="Mention sous le formulaire@@patients.form.stamp">
-            Chaque modification est horodatée.
-          </p>
+          <button mat-flat-button type="submit" [disabled]="store.busy() || readOnly()">
+            <span i18n="Bouton enregistrer@@patients.form.save">Enregistrer</span>
+            <kbd class="combo" i18n="Raccourci d'enregistrement@@patients.form.saveShortcut"
+              >Ctrl+Entrée</kbd
+            >
+          </button>
           <button
             mat-button
             type="button"
@@ -399,25 +482,24 @@
           >
             Annuler
           </button>
-          <button mat-flat-button type="submit" [disabled]="store.busy() || readOnly()">
-            <span i18n="Bouton enregistrer@@patients.form.save">Enregistrer</span>
-            <kbd class="combo" i18n="Raccourci d'enregistrement@@patients.form.saveShortcut"
-              >Ctrl+Entrée</kbd
-            >
-          </button>
+          <p class="stamp" i18n="Mention sous le formulaire@@patients.form.stamp">
+            Chaque modification de la fiche est horodatée ; l'historique est consultable.
+          </p>
         </div>
       </form>
 
       @if (patient(); as p) {
         @if (!readOnly()) {
           <section class="danger-zone" aria-labelledby="archive-title">
-            <h2 id="archive-title" i18n="Titre de la zone d'archivage@@patients.archive.title">
-              Archiver ce dossier
-            </h2>
-            <p i18n="Explication de la zone d'archivage@@patients.archive.text">
-              Le dossier disparaît de la liste. Rien n'est supprimé : entrées, liens et séances sont
-              conservés, et la restauration est possible à tout moment.
-            </p>
+            <div class="danger-text">
+              <h2 id="archive-title" i18n="Titre de la zone d'archivage@@patients.archive.title">
+                Archiver ce dossier
+              </h2>
+              <p i18n="Explication de la zone d'archivage@@patients.archive.text">
+                Le dossier disparaît de la liste. Rien n'est supprimé : entrées, liens et séances
+                sont conservés, et la restauration est possible à tout moment.
+              </p>
+            </div>
             <button
               type="button"
               class="archive"
@@ -439,24 +521,21 @@
         [since]="value().followUp?.since ?? ''"
         [flags]="previewFlags()"
       />
-      @if (patient(); as p) {
-        <section class="aside-card" aria-labelledby="export-title">
-          <h2 id="export-title" i18n="Encart d'export du dossier@@patients.export.title">
-            Export du dossier
-          </h2>
-          <pm-patient-export-menu [patientId]="p.id" />
-        </section>
-      }
-      @if (!editing()) {
-        <section class="aside-card" aria-labelledby="on-create-title">
-          <h2 id="on-create-title" i18n="Encart de création@@patients.form.onCreate.title">
-            À la création
-          </h2>
-          <p i18n="Encart de création@@patients.form.onCreate.text">
-            Une séance d'accueil est créée à la date du jour, puis la vue d'ensemble s'ouvre.
-          </p>
-        </section>
-      }
+      <section class="aside-card" aria-labelledby="on-create-title">
+        <h2 id="on-create-title">{{ onCreateTitle() }}</h2>
+        <ul class="steps">
+          <li class="step step--session" i18n="Encart de création@@patients.form.onCreate.session">
+            Une <strong>séance d'accueil</strong> est créée automatiquement : toute entrée a une
+            séance.
+          </li>
+          <li
+            class="step step--overview"
+            i18n="Encart de création@@patients.form.onCreate.overview"
+          >
+            Vous arrivez sur la <strong>vue d'ensemble</strong> vide, barre de saisie prête.
+          </li>
+        </ul>
+      </section>
       <section class="aside-card" aria-labelledby="privacy-title">
         <h2 id="privacy-title" i18n="Encart confidentialité@@patients.form.privacy.title">
           Confidentialité
@@ -465,7 +544,25 @@
           Les coordonnées ne sont jamais synchronisées avec un agenda externe ni publiées dans
           l'annuaire.
         </p>
+        @if (patient()) {
+          <p class="versions">
+            <span i18n="Encart confidentialité, historique@@patients.form.privacy.history"
+              >Historique des modifications de la fiche :</span
+            >
+            <button type="button" class="link" (click)="showHistory()">
+              {{ versionsText() }}
+            </button>
+          </p>
+        }
       </section>
+      @if (patient(); as p) {
+        <section class="aside-card" aria-labelledby="export-title">
+          <h2 id="export-title" i18n="Encart d'export du dossier@@patients.export.title">
+            Export du dossier
+          </h2>
+          <pm-patient-export-menu [patientId]="p.id" />
+        </section>
+      }
       @if (editing()) {
         <section class="aside-card history" aria-labelledby="versions-title">
           <h2

@@ -43,6 +43,28 @@ describe('PatientStore', () => {
     expect(versions).not.toHaveBeenCalled();
   });
 
+  it('load : nombre de séances lu dans la projection ; illisible → null, sans erreur de la fiche', async () => {
+    const sessionCount = vi.fn().mockResolvedValue(31);
+    const ok = setup({
+      get: vi.fn().mockResolvedValue(patient()),
+      versions: vi.fn().mockResolvedValue([]),
+      sessionCount,
+    });
+    await ok.load('p-marie');
+    expect(sessionCount).toHaveBeenCalledWith('p-marie');
+    expect(ok.sessionCount()).toBe(31);
+
+    TestBed.resetTestingModule();
+    const ko = setup({
+      get: vi.fn().mockResolvedValue(patient()),
+      versions: vi.fn().mockResolvedValue([]),
+      sessionCount: vi.fn().mockRejectedValue({ status: 503 }),
+    });
+    await ko.load('p-marie');
+    expect(ko.sessionCount()).toBeNull();
+    expect(ko.patient().status).toBe('loaded');
+  });
+
   it.each([
     ['201 → la fiche créée', vi.fn().mockResolvedValue(patient()), 'idle', 'Marie D.'],
     ['422 → problème gardé pour les champs', vi.fn().mockRejectedValue(problem422), 'error', null],

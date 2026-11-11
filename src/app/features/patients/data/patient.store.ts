@@ -17,6 +17,11 @@ export type ActionStatus = 'idle' | 'busy' | 'error';
 interface PatientState {
   patient: Loadable<PatientView>;
   versions: Loadable<PatientVersion[]>;
+  /**
+   * Nombre de séances (méta de la fiche) ; null tant qu'il n'est pas lu ou s'il est illisible :
+   * la méta s'en passe alors, sans bloc d'erreur.
+   */
+  sessionCount: number | null;
   /** Enregistrement (création ou modification) : statut et problème (422 → champs). */
   saveStatus: ActionStatus;
   saveProblem: ApiProblem | null;
@@ -28,6 +33,7 @@ interface PatientState {
 const initialState: PatientState = {
   patient: idle(),
   versions: idle(),
+  sessionCount: null,
   saveStatus: 'idle',
   saveProblem: null,
   archiveStatus: 'idle',
@@ -57,12 +63,22 @@ export const PatientStore = signalStore(
       }
     }
 
+    /** Méta « n séances » : une erreur la laisse simplement absente (aucune donnée inventée). */
+    async function loadSessionCount(id: string): Promise<void> {
+      try {
+        const count = await api.sessionCount(id);
+        if (store.patient().data?.id === id) patchState(store, { sessionCount: count });
+      } catch {
+        patchState(store, { sessionCount: null });
+      }
+    }
+
     return {
-      /** GET /api/patients/{id} puis l'historique des versions. */
+      /** GET /api/patients/{id} puis l'historique des versions et le nombre de séances. */
       async load(id: string): Promise<void> {
         // Un autre dossier (même page, autre :id) : rien du précédent ne reste affiché.
         if (store.patient().data?.id !== id)
-          patchState(store, { patient: idle(), versions: idle() });
+          patchState(store, { patient: idle(), versions: idle(), sessionCount: null });
         patchState(store, { patient: loading(store.patient()) });
         try {
           patchState(store, { patient: loaded(await api.get(id)) });
@@ -70,7 +86,7 @@ export const PatientStore = signalStore(
           patchState(store, { patient: failed(asProblem(error), store.patient()) });
           return;
         }
-        await loadVersions(id);
+        await Promise.all([loadVersions(id), loadSessionCount(id)]);
       },
 
       loadVersions,

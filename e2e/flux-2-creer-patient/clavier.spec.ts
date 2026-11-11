@@ -27,9 +27,11 @@ test('flux 2 au clavier : N, nom, pronom, motif, rythme, Ctrl+Entrée → vue d�
   await tabTo(page, displayName);
   await page.keyboard.type('Marie D.');
 
-  // Pronom (liste native : flèche bas) et motif initial (contexte libre), atteints par Tab. La date
-  // de naissance (champ date natif) est laissée vide : l'ordre de ses segments dépend de la langue
-  // du navigateur, pas de l'application.
+  // Date de naissance au clavier (pm-date-field, jj/mm/aaaa), pronom (liste native : flèche bas)
+  // et motif initial (contexte libre), atteints par Tab.
+  const birthDate = page.getByLabel('Date de naissance');
+  await tabTo(page, birthDate);
+  await page.keyboard.type('28/07/2003');
   const pronoun = page.getByLabel('Pronom / accord');
   await tabTo(page, pronoun);
   await page.keyboard.press('ArrowDown');
@@ -57,6 +59,7 @@ test('flux 2 au clavier : N, nom, pronom, motif, rythme, Ctrl+Entrée → vue d�
   expect(response.status()).toBe(201);
   expect(response.request().postDataJSON()).toMatchObject({
     displayName: 'Marie D.',
+    birthDate: '2003-07-28',
     context: { initialReason: 'Anxiété au travail' },
     followUp: { rhythm: 'weekly' },
   });
@@ -74,14 +77,16 @@ test('flux 2 au clavier : N, nom, pronom, motif, rythme, Ctrl+Entrée → vue d�
   await tabTo(page, sheet, { backwards: true });
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/fiche$`));
-  await expect(page.locator('.page-header .meta')).toContainText('1 version');
+  await expect(birthDate).toHaveValue('28/07/2003');
+  const privacy = page.getByRole('region', { name: 'Confidentialité' });
+  await expect(privacy.getByRole('button', { name: '1 version', exact: true })).toBeVisible();
   await tabTo(page, rhythm);
   await page.keyboard.press('ArrowDown');
   await expect(rhythm).not.toHaveValue('weekly');
   const patched = page.waitForResponse((r) => r.request().method() === 'PATCH');
   await page.keyboard.press('Control+Enter');
   expect((await patched).status()).toBe(200);
-  await expect(page.locator('.page-header .meta')).toContainText('2 versions');
+  await expect(privacy.getByRole('button', { name: '2 versions' })).toBeVisible();
 
   // Archiver : Tab jusqu'à « Archiver… », Entrée, nom retapé, Tab, Entrée.
   await tabTo(page, page.getByRole('button', { name: 'Archiver…' }), { max: 100 });

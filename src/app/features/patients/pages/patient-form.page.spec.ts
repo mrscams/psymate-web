@@ -1,3 +1,4 @@
+import { LOCALE_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 
@@ -17,6 +18,8 @@ interface Options {
   id?: string;
   label?: 'patient' | 'client';
   confirm?: ReturnType<typeof vi.fn>;
+  /** LOCALE_ID du test (en-US par défaut, comme le banc Angular). */
+  locale?: string;
 }
 
 async function render(api: Partial<PatientApi>, options: Options = {}) {
@@ -25,8 +28,16 @@ async function render(api: Partial<PatientApi>, options: Options = {}) {
     imports: [PatientFormPage],
     providers: [
       provideRouter([]),
+      ...(options.locale ? [{ provide: LOCALE_ID, useValue: options.locale }] : []),
       { provide: SessionApi, useValue: {} },
-      { provide: PatientApi, useValue: { listTags: vi.fn().mockResolvedValue(TAGS), ...api } },
+      {
+        provide: PatientApi,
+        useValue: {
+          listTags: vi.fn().mockResolvedValue(TAGS),
+          sessionCount: vi.fn().mockResolvedValue(31),
+          ...api,
+        },
+      },
       { provide: PreferencesStore, useValue: { defaultDurationMin: () => 60 } },
       { provide: ConfirmDialogService, useValue: { confirm } },
       { provide: PatientExportApi, useValue: { exportPatient: vi.fn() } },
@@ -99,6 +110,37 @@ describe('PatientFormPage', () => {
       expect(el.querySelector('.danger-zone')).toBeNull();
       expect(el.querySelector('pm-patient-export-menu')).toBeNull();
       expect(el.querySelectorAll('fieldset legend')).toHaveLength(5);
+      expect(el.querySelector('.page-header .meta')?.textContent).toContain(
+        'Seul le nom affiché est obligatoire',
+      );
+    });
+
+    it('dates en français (UX-B8) : saisie jj/mm/aaaa et mm/aaaa, envoi AAAA-MM-JJ sans décalage', async () => {
+      const create = vi.fn().mockResolvedValue(patient({ id: 'p-new' }));
+      const { fixture, el } = await render({ create }, { locale: 'fr' });
+      expect(field(el, 'birthDate').getAttribute('placeholder')).toBe('jj/mm/aaaa');
+      type(el, 'displayName', 'Quentin S.');
+      type(el, 'birthDate', '28/07/2003');
+      type(el, 'followUp-since', '03/2025');
+      submit(el);
+      await settle(fixture);
+      expect(create).toHaveBeenCalledWith({
+        displayName: 'Quentin S.',
+        birthDate: '2003-07-28',
+        followUp: { since: '2025-03-01', durationMin: 60 },
+      });
+    });
+
+    it('date illisible : erreur sous le champ, aucun appel', async () => {
+      const create = vi.fn();
+      const { fixture, el } = await render({ create }, { locale: 'fr' });
+      type(el, 'displayName', 'Quentin S.');
+      type(el, 'birthDate', '31/02/2003');
+      submit(el);
+      await settle(fixture);
+      expect(create).not.toHaveBeenCalled();
+      expect(field(el, 'birthDate').getAttribute('aria-invalid')).toBe('true');
+      expect(el.querySelector('#field-birthDate-error')?.textContent).toContain('Date invalide');
     });
 
     it('coach : « Nouveau client »', async () => {
@@ -204,12 +246,67 @@ describe('PatientFormPage', () => {
         ],
       });
       const { fixture, el } = await render({ createTag });
+      // Saisie dans la zone de puces, Entrée ajoute (plus de bouton « Ajouter » séparé).
       type(el, 'tags', 'anxiété');
       await settle(fixture);
-      el.querySelector<HTMLButtonElement>('button.add')!.click();
+      expect(el.querySelector('pm-tag-editor button.add')).toBeNull();
+      field(el, 'tags').dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }),
+      );
       await settle(fixture);
+      expect(createTag).toHaveBeenCalledWith('anxiété');
       expect(el.querySelector('#field-tags-error')?.textContent).toContain('est une émotion');
       expect(el.querySelectorAll('pm-tag-editor .chip')).toHaveLength(0);
+    });
+  });
+
+  describe('tag tapé sans Entrée (brouillon) à l’enregistrement', () => {
+    it('création : le brouillon part comme tag dans le POST', async () => {
+      const create = vi.fn().mockResolvedValue(patient({ id: 'p-new' }));
+      const { fixture, el } = await render({ create });
+      type(el, 'displayName', 'Marie D.');
+      type(el, 'tags', ' #santé ');
+      submit(el);
+      await settle(fixture);
+      expect(create).toHaveBeenCalledWith(expect.objectContaining({ tags: ['santé'] }));
+    });
+
+    it('modification : le brouillon s’ajoute aux tags envoyés, puis le toast', async () => {
+      const replaceTags = vi
+        .fn()
+        .mockResolvedValue(patient({ tags: [{ id: 't-travail', label: 'travail' }] }));
+      const { fixture, el, toasts } = await render(
+        {
+          get: vi.fn().mockResolvedValue(patient()),
+          versions: vi.fn().mockResolvedValue([]),
+          replaceTags,
+        },
+        { id: 'p-marie' },
+      );
+      type(el, 'tags', 'santé');
+      submit(el);
+      await settle(fixture);
+      expect(replaceTags).toHaveBeenCalledWith('p-marie', ['travail', 'santé']);
+      expect(toasts.toasts().map((t) => t.message)).toEqual(['Fiche enregistrée']);
+    });
+
+    it('brouillon refusé (émotion) : aucun envoi, message sous le champ, focus dessus', async () => {
+      const create = vi.fn();
+      const createTag = vi.fn().mockRejectedValue({
+        status: 422,
+        code: 'TAG_IS_EMOTION',
+        errors: [
+          { field: 'label', code: 'TAG_IS_EMOTION', message: '« anxiété » est une émotion.' },
+        ],
+      });
+      const { fixture, el } = await render({ create, createTag });
+      type(el, 'displayName', 'Marie D.');
+      type(el, 'tags', 'anxiété');
+      submit(el);
+      await settle(fixture);
+      expect(create).not.toHaveBeenCalled();
+      expect(el.querySelector('#field-tags-error')?.textContent).toContain('est une émotion');
+      expect(document.activeElement).toBe(field(el, 'tags'));
     });
   });
 
@@ -253,12 +350,21 @@ describe('PatientFormPage', () => {
       expect(el.querySelector('form')).not.toBeNull();
     });
 
-    it('données : fiche remplie, méta « 3 versions », historique champ par champ, aperçu', async () => {
-      const { el } = await render(loaded(), { id: 'p-marie' });
+    it('données : fiche remplie, méta complète, « 3 versions », historique champ par champ, aperçu', async () => {
+      const { el } = await render(loaded(), { id: 'p-marie', locale: 'fr' });
       expect(el.querySelector('h1')?.textContent).toContain('Modifier la fiche · Marie D.');
-      expect(el.querySelector('.meta')?.textContent).toContain('3 versions');
+      // Méta de la maquette 16 : création, séances (projection vue d'ensemble), dernière modification.
+      const meta = el.querySelector('.page-header .meta')?.textContent ?? '';
+      expect(meta).toContain('Créée le 1 novembre 2026');
+      expect(meta).toContain('31 séances');
+      expect(meta).toContain('dernière modification de la fiche le 1 nov. 2026');
+      expect(el.querySelector('.aside-card .versions button')?.textContent?.trim()).toBe(
+        '3 versions',
+      );
       expect(field(el, 'displayName').value).toBe('Marie D.');
-      expect(field(el, 'followUp-since').value).toBe('2025-03');
+      // Champs date localisés (UX-A4, UX-B8) : « 12/04/1990 », « 03/2025 ».
+      expect(field(el, 'birthDate').value).toBe('12/04/1990');
+      expect(field(el, 'followUp-since').value).toBe('03/2025');
       expect(el.querySelectorAll('pm-tag-editor .chip')).toHaveLength(1);
       const versions = el.querySelectorAll('pm-version-history .version');
       expect(versions).toHaveLength(2);
@@ -269,6 +375,42 @@ describe('PatientFormPage', () => {
       expect(el.querySelector('pm-header-preview')?.textContent).toContain(
         'suivi·e depuis mars 2025',
       );
+    });
+
+    it('méta sans le nombre de séances quand la projection est illisible', async () => {
+      const { el } = await render(
+        { ...loaded(), sessionCount: vi.fn().mockRejectedValue({ status: 503 }) },
+        { id: 'p-marie' },
+      );
+      const meta = el.querySelector('.page-header .meta')?.textContent ?? '';
+      expect(meta).toContain('Créée le');
+      expect(meta).not.toContain('séance');
+      expect(el.querySelector('pm-state')).toBeNull();
+    });
+
+    it('drapeau déjà posé : carte cochée avec sa date, case à droite du libellé', async () => {
+      const { el } = await render(
+        {
+          get: vi.fn().mockResolvedValue(
+            patient({
+              flags: [{ kind: 'watch', reason: 'Sommeil', setAt: '2026-10-03T10:00:00Z' }],
+            }),
+          ),
+          versions: vi.fn().mockResolvedValue([]),
+        },
+        { id: 'p-marie', locale: 'fr' },
+      );
+      const card = el.querySelector('.flag-card.watch')!;
+      expect(card.classList).toContain('checked');
+      expect(card.textContent).toContain('Posé le 3 oct. 2026');
+      const input = card.querySelector('input')!;
+      expect(input.checked).toBe(true);
+      // Nom accessible : le libellé seul ; l'aide (ou la date) en description.
+      expect(el.querySelector(`#${input.getAttribute('aria-labelledby')}`)?.textContent).toBe(
+        'À surveiller',
+      );
+      expect(input.previousElementSibling?.classList).toContain('flag-name');
+      expect(field(el, 'flags-watchReason').value).toBe('Sommeil');
     });
 
     it('historique vide : état vide', async () => {
@@ -292,7 +434,7 @@ describe('PatientFormPage', () => {
       await settle(fixture);
       expect(api.patch).toHaveBeenCalledWith('p-marie', { followUp: { rhythm: 'monthly' } });
       expect(api.versions).toHaveBeenCalledTimes(2);
-      expect(el.querySelector('.meta')?.textContent).toContain('4 versions');
+      expect(el.querySelector('.aside-card .versions button')?.textContent).toContain('4 versions');
       expect(toasts.toasts().map((t) => t.message)).toEqual(['Fiche enregistrée']);
     });
 

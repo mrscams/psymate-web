@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-11T04:33:30.553Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-B8 fiche patient : méta complète (création, séances, dernière modification), pm-date-field et pm-month-field (28/07/2003, envoi AAAA-MM-JJ inchangé), Suivi en 3 colonnes, cases de drapeau à droite avec date de pose, tags saisis dans la zone de puces, colonne latérale de la maquette 16",
+  "next": "Revue et fusion de la PR UX-B8 fiche patient",
+  "branch": "claude/ux-b8-patient-form",
+  "checkout": "agent-a6e16418a0345b27b"
+}

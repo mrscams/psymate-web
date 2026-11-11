@@ -8,13 +8,13 @@ import {
 } from '@angular/core';
 
 import { ageInYears, formatMonthYear } from '../../../core/i18n';
-import { initials } from '../../../shared/util';
 import { monthToDate, PatientFlagView } from '../data/patient.model';
 import { PatientFlagsComponent } from './patient-flags.component';
 
 /**
- * Aperçu de l'en-tête patient (fiche 16, colonne latérale) : nom, âge, « suivi·e depuis »,
- * drapeaux, tels que l'en-tête permanent les affichera. Mis à jour en direct depuis la saisie.
+ * Aperçu de l'en-tête patient (fiche 16, colonne latérale, maquette 16) : nom, âge, « suivi·e
+ * depuis », drapeaux, tels que l'en-tête permanent les affichera, dans un encart qui explique d'où
+ * viennent l'âge et la durée du suivi. Mis à jour en direct depuis la saisie.
  */
 @Component({
   selector: 'pm-header-preview',
@@ -24,55 +24,51 @@ import { PatientFlagsComponent } from './patient-flags.component';
       <h2 id="header-preview-title" i18n="Titre de l'aperçu de l'en-tête@@patients.preview.title">
         Aperçu de l'en-tête
       </h2>
-      <div class="card">
-        <span class="avatar" aria-hidden="true">{{ initialsText() }}</span>
-        <div class="who">
-          @if (name()) {
-            <p class="name">{{ name() }}</p>
-          } @else {
-            <p class="name placeholder" i18n="Aperçu sans nom@@patients.preview.noName">
-              Nom affiché
-            </p>
-          }
+      <div class="box">
+        @if (name()) {
+          <p class="name">{{ name() }}</p>
+        } @else {
+          <p class="name placeholder" i18n="Aperçu sans nom@@patients.preview.noName">
+            Nom affiché
+          </p>
+        }
+        @if (meta()) {
           <p class="meta">{{ meta() }}</p>
-          <pm-patient-flags [flags]="flags()" />
-        </div>
+        }
+        <pm-patient-flags [flags]="flags()" />
       </div>
+      <p class="note" i18n="Explication de l'aperçu de l'en-tête@@patients.preview.note">
+        L'âge est calculé depuis la date de naissance ; « suivi·e depuis » depuis la date de début
+        du suivi.
+      </p>
     </section>
   `,
   styles: `
-    .preview h2 {
-      margin: 0 0 8px;
+    .preview {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px 20px 20px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      background: var(--surface-raised);
+    }
+    h2 {
+      margin: 0;
       font: var(--mat-sys-label-large);
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
-    .card {
-      display: flex;
-      gap: 12px;
-      padding: 16px;
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      background: var(--surface-raised);
-    }
-    .avatar {
-      display: inline-flex;
-      flex: none;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--primary-tint);
-      color: var(--primary-hover);
-      font: var(--mat-sys-title-small);
-    }
-    .who {
+    .box {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
       min-width: 0;
+      padding: 14px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      background: var(--surface-ground);
     }
     .name {
       margin: 0;
@@ -83,7 +79,8 @@ import { PatientFlagsComponent } from './patient-flags.component';
     .placeholder {
       color: var(--text-secondary);
     }
-    .meta {
+    .meta,
+    .note {
       margin: 0;
       font: var(--mat-sys-body-small);
       color: var(--text-secondary);
@@ -101,7 +98,6 @@ export class HeaderPreviewComponent {
   private readonly locale = inject(LOCALE_ID);
 
   protected readonly name = computed(() => this.displayName().trim());
-  protected readonly initialsText = computed(() => initials(this.name()));
 
   protected readonly meta = computed(() => {
     const parts: string[] = [];

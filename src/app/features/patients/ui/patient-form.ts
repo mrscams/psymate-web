@@ -69,6 +69,22 @@ export function buildPatientForm(fb: NonNullableFormBuilder, initial: PatientFor
 export type PatientForm = ReturnType<typeof buildPatientForm>;
 
 /**
+ * Valeur saisie, telle que patient.model l'attend : pm-date-field et pm-month-field rendent la
+ * date ISO (`yyyy-MM-dd`, `yyyy-MM`) ou null quand le champ est vide ; null redevient '' (non
+ * renseigné). Le format envoyé à l'API ne change donc pas (date civile, sans fuseau).
+ */
+export function readPatientForm(form: PatientForm): PatientFormValue {
+  const value = form.getRawValue();
+  const birthDate = value.birthDate as string | null;
+  const since = value.followUp.since as string | null;
+  return {
+    ...value,
+    birthDate: birthDate ?? '',
+    followUp: { ...value.followUp, since: since ?? '' },
+  };
+}
+
+/**
  * Champs d'un 422 du contrat → chemins du formulaire : flags[i].reason et flag.reason vont sur la
  * raison de « à surveiller » (seul drapeau à raison obligatoire) ; context et followUp restent
  * sur leur groupe. Les autres (tags[i]) restent tels quels et finissent dans le résumé.

@@ -33,12 +33,14 @@ import {
   StateComponent,
   ToastService,
 } from '../../../shared/ui';
+import { DateFieldComponent, MonthFieldComponent, toIsoDate } from '../../../shared/ui/date-field';
 import { stateKind } from '../../../shared/util';
 import { CAPTURE_FOCUS_STATE } from '../../patient-shell';
 import { PatientListStore } from '../data/patient-list.store';
 import {
   diffPatient,
   emptyForm,
+  FlagKind,
   formFlags,
   MODALITIES,
   PatientFormValue,
@@ -53,7 +55,7 @@ import { TagStore } from '../data/tag.store';
 import { PatientExportMenuComponent } from '../ui/export-menu.component';
 import { FlagFieldsComponent } from '../ui/flag-fields.component';
 import { HeaderPreviewComponent } from '../ui/header-preview.component';
-import { buildPatientForm, toFormProblem } from '../ui/patient-form';
+import { buildPatientForm, readPatientForm, toFormProblem } from '../ui/patient-form';
 import {
   archivedMessage,
   fieldLabel,
@@ -82,6 +84,8 @@ import { VersionHistoryComponent } from '../ui/version-history.component';
     RouterLink,
     FieldErrorsComponent,
     FormErrorsComponent,
+    DateFieldComponent,
+    MonthFieldComponent,
     StateComponent,
     FlagFieldsComponent,
     HeaderPreviewComponent,
@@ -176,7 +180,24 @@ export class PatientFormPage {
     return $localize`:Titre de la fiche en création@@patients.form.newTitle:Nouveau ${subject}:subject:`;
   });
   protected readonly subjects = computed(() => subjectLabel(this.vocabulary.label(), 'Many'));
-  protected readonly meta = computed(() => metaText(this.patient(), this.locale));
+  protected readonly meta = computed(() =>
+    metaText(this.patient(), this.store.sessionCount(), this.locale),
+  );
+  protected readonly versionsText = computed(() => versionsLabel(this.patient()?.currentVersion));
+  protected readonly onCreateTitle = computed(() => {
+    const subject = subjectLabel(this.vocabulary.label(), 'one');
+    return $localize`:Encart de création@@patients.form.onCreate.heading:À la création d'un ${subject}:subject:`;
+  });
+  /** Précision « (facultatif) » à côté des libellés (maquette 16). */
+  protected readonly optional = $localize`:Précision d'un champ facultatif@@patients.form.optional:(facultatif)`;
+  /** Borne du calendrier de la date de naissance (la règle reste au validateur). */
+  protected readonly today = toIsoDate(new Date(), 'day');
+  /** Date de pose des drapeaux actifs de la fiche lue (« Posé le 3 oct. »). */
+  protected readonly flagSetAt = computed(() => {
+    const setAt: Partial<Record<FlagKind, string | null>> = {};
+    for (const flag of this.patient()?.flags ?? []) setAt[flag.kind] = flag.setAt;
+    return setAt;
+  });
   protected readonly previewFlags = computed(() =>
     formFlags(this.value().flags as PatientFormValue['flags']).map((flag) => ({
       kind: flag.kind,
@@ -233,7 +254,8 @@ export class PatientFormPage {
       this.focusFirstInvalid();
       return;
     }
-    const value = this.form.getRawValue();
+    if (!(await this.commitTagDraft())) return;
+    const value = readPatientForm(this.form);
     const patient = this.patient();
     if (!patient) {
       const created = await this.store.create(toCreateInput(value, this.tags()));
@@ -262,11 +284,31 @@ export class PatientFormPage {
     void this.router.navigate(patient ? ['/patients', patient.id, 'overview'] : ['/patients']);
   }
 
-  protected async addTag(label: string): Promise<void> {
+  protected async addTag(label: string): Promise<boolean> {
     const tag = await this.tagStore.resolve(label);
-    if (!tag) return;
+    if (!tag) return false;
     if (!this.tags().includes(tag.label)) this.tags.update((tags) => [...tags, tag.label]);
     this.tagDraft.set('');
+    return true;
+  }
+
+  /**
+   * Libellé tapé dans « Ajouter un tag… » sans Entrée : ajouté comme tag avant l'envoi (même
+   * résolution que la touche Entrée). Refusé (émotion, erreur) → envoi bloqué, message sous le
+   * champ des tags, focus dessus. Un brouillon vide après normalisation (« # ») est ignoré.
+   */
+  private async commitTagDraft(): Promise<boolean> {
+    const draft = this.tagDraft().trim();
+    if (!draft) return true;
+    if (await this.addTag(draft)) return true;
+    if (!this.tagStore.problem()) {
+      this.tagDraft.set('');
+      return true;
+    }
+    afterNextRender(() => this.document.getElementById('field-tags')?.focus(), {
+      injector: this.injector,
+    });
+    return false;
   }
 
   protected removeTag(label: string): void {
@@ -317,7 +359,7 @@ export class PatientFormPage {
     if (restored) this.toasts.success(restoredMessage(restored.displayName, restored.pronoun));
   }
 
-  /** Lien « historique » de la méta : défile jusqu'à l'historique et y met le focus. */
+  /** Lien « n versions » de l'encart Confidentialité : défile jusqu'à l'historique et y met le focus. */
   protected showHistory(): void {
     const title = this.document.getElementById('versions-title');
     title?.scrollIntoView({ block: 'start' });
@@ -366,24 +408,40 @@ function problemText(problem: ApiProblem | null): string {
   return problem?.errors?.[0]?.message || problem?.detail || writeProblemMessage(problem?.code);
 }
 
-function metaText(patient: PatientView | null, locale: string): string {
+/**
+ * Méta sous le titre (maquette 16) : « Créée le 3 mars 2025 · 31 séances · dernière modification
+ * de la fiche le 3 oct. 2026 ». Le nombre de séances vient de la projection vue d'ensemble ; tant
+ * qu'il n'est pas lu (ou s'il est illisible), la méta s'en passe.
+ */
+function metaText(patient: PatientView | null, sessions: number | null, locale: string): string {
   if (!patient) return '';
   const parts: string[] = [];
   if (patient.createdAt) {
-    const created = formatDate(patient.createdAt, locale, 'medium');
-    parts.push($localize`:Méta de la fiche@@patients.form.meta.created:créée le ${created}:date:`);
+    const created = formatDate(patient.createdAt, locale, 'long');
+    parts.push($localize`:Méta de la fiche@@patients.form.meta.created:Créée le ${created}:date:`);
   }
-  const count = patient.currentVersion;
-  parts.push(
-    count > 1
-      ? $localize`:Méta de la fiche, plusieurs versions@@patients.form.meta.versions:${count}:count: versions`
-      : $localize`:Méta de la fiche, une version@@patients.form.meta.version:1 version`,
-  );
+  if (sessions !== null) parts.push(sessionsLabel(sessions));
   if (patient.updatedAt && patient.currentVersion > 1) {
     const updated = formatDate(patient.updatedAt, locale, 'medium');
     parts.push(
-      $localize`:Méta de la fiche@@patients.form.meta.updated:dernière modification le ${updated}:date:`,
+      $localize`:Méta de la fiche@@patients.form.meta.updated:dernière modification de la fiche le ${updated}:date:`,
     );
   }
   return parts.join(' · ');
+}
+
+function sessionsLabel(count: number): string {
+  if (count === 0) {
+    return $localize`:Méta de la fiche, aucune séance@@patients.form.meta.noSession:aucune séance`;
+  }
+  return count > 1
+    ? $localize`:Méta de la fiche, plusieurs séances@@patients.form.meta.sessions:${count}:count: séances`
+    : $localize`:Méta de la fiche, une séance@@patients.form.meta.session:1 séance`;
+}
+
+/** « 3 versions » : lien de l'encart Confidentialité vers l'historique. */
+function versionsLabel(count: number | undefined): string {
+  return (count ?? 1) > 1
+    ? $localize`:Méta de la fiche, plusieurs versions@@patients.form.meta.versions:${count}:count: versions`
+    : $localize`:Méta de la fiche, une version@@patients.form.meta.version:1 version`;
 }

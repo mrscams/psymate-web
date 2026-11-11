@@ -72,6 +72,16 @@ export class PatientApi {
     );
   }
 
+  /**
+   * Nombre de séances non archivées du dossier, pour la méta de la fiche (« 31 séances ») : lu
+   * dans les faits de la projection vue d'ensemble (facts.sessionCount), la fiche du contrat ne le
+   * porte pas. null si la projection ne le donne pas.
+   */
+  async sessionCount(id: string): Promise<number | null> {
+    const overview = await firstValueFrom(this.overviews.getPatientOverview(id, '30d'));
+    return overview.facts?.sessionCount ?? null;
+  }
+
   /** GET /api/patients/{id} (fonctionne aussi pour un patient archivé). */
   async get(id: string): Promise<PatientView> {
     return toView(await firstValueFrom(this.patients.getPatient(id)));
