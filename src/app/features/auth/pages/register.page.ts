@@ -30,8 +30,8 @@ import {
   firstMessage,
   PmValidators,
 } from '../../../shared/forms';
-import { FormErrorsComponent } from '../../../shared/ui';
-import { passwordStrength, PasswordStrengthLevel } from '../data/password-strength';
+import { FormErrorsComponent, PUBLIC_PATHS } from '../../../shared/ui';
+import { passwordStrength, strengthText } from '../data/password-strength';
 import { RegisterStore } from '../data/register.store';
 
 /** Une carte de profession (fiche 12, section 2) : libellé et ce que le choix change. */
@@ -71,6 +71,9 @@ export class RegisterPage {
   private readonly document = inject(DOCUMENT);
 
   protected readonly loginPath = AUTH_PATHS.login;
+  /** Pages du pied public (UX-A6) : pas de page CGU dédiée, les mentions légales en tiennent lieu. */
+  protected readonly legalPath = PUBLIC_PATHS.legal;
+  protected readonly privacyPath = PUBLIC_PATHS.privacy;
   protected readonly fieldId = fieldId;
   protected readonly mismatchMessage = clientMessage('passwordConfirm', { mismatch: true });
   protected readonly termsMessage = clientMessage('terms', { required: true });
@@ -187,6 +190,12 @@ export class RegisterPage {
     }
   }
 
+  /** Identifiants d'une carte de profession : radio, libellé (nom), description (aria-describedby). */
+  protected cardId(card: ProfessionCard, part?: 'label' | 'desc'): string {
+    const base = `${fieldId('profession')}-${card.value}`;
+    return part ? `${base}-${part}` : base;
+  }
+
   protected isInvalid(control: AbstractControl): boolean {
     return control.invalid && (control.touched || control.dirty);
   }
@@ -288,20 +297,4 @@ export function clientMessage(field: string, errors: ValidationErrors): string {
     return $localize`:Consentement obligatoire@@auth.register.error.terms:Vous devez accepter les conditions d'utilisation et la politique de confidentialité.`;
   }
   return firstMessage(errors);
-}
-
-/** Texte de la jauge (fiche 12 : jamais la couleur seule). */
-export function strengthText(level: PasswordStrengthLevel, length: number): string {
-  switch (level) {
-    case 0:
-      return $localize`:Jauge de force, vide@@auth.register.strength.empty:12 caractères minimum.`;
-    case 1:
-      return $localize`:Jauge de force, trop court@@auth.register.strength.short:Trop court · ${length}:length: caractères sur 12.`;
-    case 2:
-      return $localize`:Jauge de force, faible@@auth.register.strength.weak:Faible · ${length}:length: caractères. Mélangez majuscules, chiffres et signes.`;
-    case 3:
-      return $localize`:Jauge de force, bon@@auth.register.strength.good:Bon · ${length}:length: caractères.`;
-    case 4:
-      return $localize`:Jauge de force, fort@@auth.register.strength.strong:Fort · ${length}:length: caractères.`;
-  }
 }

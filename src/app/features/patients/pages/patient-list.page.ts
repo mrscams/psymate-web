@@ -21,11 +21,11 @@ import {
 } from '../../../shared/ui';
 import { isRefreshing, stateKind } from '../../../shared/util';
 import { ShortcutsHelp } from '../../patient-shell';
-import { isDemoPatient, PatientView } from '../data/patient.model';
+import { ACTIVITY_LIMIT, PatientView } from '../data/patient.model';
 import { PatientListStore } from '../data/patient-list.store';
 import { TagStore } from '../data/tag.store';
 import { OnboardingComponent } from '../ui/onboarding.component';
-import { RESTORE_LABEL } from '../ui/patient-labels';
+import { quickFilterLabel, RESTORE_LABEL } from '../ui/patient-labels';
 import { PatientFiltersComponent } from '../ui/patient-filters.component';
 import { PatientTableComponent } from '../ui/patient-table.component';
 
@@ -33,13 +33,17 @@ import { PatientTableComponent } from '../ui/patient-table.component';
 export const FILTER_DEBOUNCE_MS = 250;
 
 /**
- * /patients (fiche 01, B4 écran 1) : filtre, tri, puces de tags, archivés, tableau, « Afficher
- * plus » par curseur. Raccourcis : N ouvre la création, / focalise le filtre. Trois états par
- * pm-state ; une erreur de rechargement laisse la liste précédente affichée avec un bandeau.
+ * /patients (fiche 01, maquette 01, B4 écran 1, UX-B1) : titre et compteur (« 3 suivis actifs ·
+ * 1 séance aujourd'hui »), « Afficher les archivés », filtre, tri, filtres rapides et menu des tags,
+ * tableau avec résumé d'activité, pied « n patients affichés sur N · ↑↓ choisir · Entrée ouvrir ·
+ * N nouveau », « Afficher plus » par curseur, légende des pastilles. Raccourcis : N ouvre la
+ * création, / focalise le filtre, ↓ descend du filtre au tableau. Trois états par pm-state ; une
+ * erreur de rechargement laisse la liste précédente affichée avec un bandeau ; un résumé en échec
+ * laisse sa ligne et propose « Réessayer ».
  * Première connexion (B3 flux 1, planche 29, M7-03) : tant que la liste sans filtre ne compte que
- * des patients de démonstration (ou aucun), l'accueil en trois étapes s'affiche avec « Voir les
- * raccourcis » ; le patient « DEMO · … » se supprime en un clic et une confirmation simple, sans
- * retaper son nom, puis se restaure depuis le toast ou la liste des archivés.
+ * des patients de démonstration (ou aucun), « Créez votre premier patient » et l'accueil en trois
+ * étapes s'affichent ; le patient « DEMO · … » se supprime en un clic et une confirmation simple,
+ * sans retaper son nom, puis se restaure depuis le toast ou la liste des archivés.
  */
 @Component({
   selector: 'pm-patient-list-page',
@@ -64,6 +68,7 @@ export class PatientListPage {
   private readonly toasts = inject(ToastService);
   private readonly help = inject(ShortcutsHelp);
   private readonly filters = viewChild.required(PatientFiltersComponent);
+  private readonly table = viewChild(PatientTableComponent);
 
   /** Texte du filtre affiché tout de suite ; envoyé au store après la pause de frappe. */
   protected readonly query = signal(this.store.query());
@@ -119,8 +124,90 @@ export class PatientListPage {
     }
   });
   protected readonly warningLabel = $localize`:Mot du niveau avertissement@@patients.warning.level:Avertissement`;
-  /** La liste affichée contient le patient de démonstration (accueil : « explorez-le »). */
-  protected readonly hasDemo = computed(() => this.store.items().some(isDemoPatient));
+
+  /**
+   * Compteur sous le titre (maquette 01) : patients actifs de la liste sans filtre, « plus de » si
+   * une page suivante existe, et séances du jour quand le résumé couvre toute la liste. Absent sur
+   * une liste filtrée (le pied dit combien de lignes sont affichées).
+   */
+  protected readonly counter = computed(() => {
+    const data = this.store.page().data;
+    if (!data || this.store.filtered()) return null;
+    const total = data.items.length;
+    const more = data.nextCursor !== null;
+    const active = more
+      ? $localize`:Compteur de la liste, liste incomplète@@patients.counter.more:plus de ${total}:count: suivis actifs`
+      : total === 0
+        ? $localize`:Compteur de la liste, aucun patient@@patients.counter.none:0 suivi`
+        : total === 1
+          ? $localize`:Compteur de la liste, un patient@@patients.counter.one:1 suivi actif`
+          : $localize`:Compteur de la liste, plusieurs patients@@patients.counter.many:${total}:count: suivis actifs`;
+    const today = more ? null : this.store.quickCounts().today;
+    if (today === null || total === 0) return active;
+    const sessions =
+      today === 0
+        ? $localize`:Compteur de la liste, aucune séance du jour@@patients.counter.todayNone:aucune séance aujourd'hui`
+        : today === 1
+          ? $localize`:Compteur de la liste, une séance du jour@@patients.counter.todayOne:1 séance aujourd'hui`
+          : $localize`:Compteur de la liste, séances du jour@@patients.counter.todayMany:${today}:count: séances aujourd'hui`;
+    return `${active} · ${sessions}`;
+  });
+
+  /** Pied du tableau : « 3 patients affichés sur 3 · filtrés par « Tous » ». */
+  protected readonly footer = computed(() => {
+    const shown = this.store.rows().length;
+    const total = this.store.items().length;
+    const of = this.store.hasMore() ? `${total}+` : `${total}`;
+    const subjects = subjectLabel(this.vocabulary.label(), shown > 1 ? 'many' : 'one');
+    const tag = this.store.tag();
+    const quick = quickFilterLabel(this.store.effectiveQuick());
+    const filter = tag === null ? quick : `${quick} · #${tag}`;
+    return shown > 1
+      ? $localize`:Pied de la liste, plusieurs lignes@@patients.footer.shownMany:${shown}:shown: ${subjects}:subjects: affichés sur ${of}:total: · filtrés par « ${filter}:filter: »`
+      : $localize`:Pied de la liste, une ligne ou aucune@@patients.footer.shownOne:${shown}:shown: ${subjects}:subjects: affiché sur ${of}:total: · filtré par « ${filter}:filter: »`;
+  });
+
+  /** Au-delà de 20 lignes (ou avec une page suivante), le résumé n'est lu que pour les premières. */
+  protected readonly partialNote = computed(() =>
+    this.store.activityCovered()
+      ? null
+      : $localize`:Pied de la liste, résumé partiel@@patients.footer.partialNote:Résumé d'activité affiché pour les ${ACTIVITY_LIMIT}:limit: premiers patients`,
+  );
+
+  /** Résumés en échec : avertissement sous le tableau, avec « Réessayer ». */
+  protected readonly activityProblem = computed(() => {
+    const failures = this.store.activityFailures();
+    if (failures === 0) return null;
+    return failures === 1
+      ? $localize`:Avertissement, un résumé non chargé@@patients.activity.failedOne:Le résumé d'une ligne n'a pas pu être chargé.`
+      : $localize`:Avertissement, résumés non chargés@@patients.activity.failedMany:Le résumé de ${failures}:count: lignes n'a pas pu être chargé.`;
+  });
+
+  /** Filtre rapide sans résultat dans la page lue. */
+  protected readonly quickEmptyTitle = computed(() => {
+    const subject = subjectLabel(this.vocabulary.label(), 'one');
+    return $localize`:État vide de la liste filtrée@@patients.empty.filtered:Aucun ${subject}:subject: ne correspond`;
+  });
+  protected readonly quickEmptyMessage = computed(() => {
+    const filter = quickFilterLabel(this.store.effectiveQuick());
+    if (this.store.hasMore()) {
+      const loaded = this.store.items().length;
+      return $localize`:Phrase du filtre rapide sans résultat, liste incomplète@@patients.quick.emptyPartial:Aucune ligne pour le filtre « ${filter}:filter: » parmi les ${loaded}:loaded: patients chargés : seuls ceux-là sont filtrés.`;
+    }
+    return $localize`:Phrase du filtre rapide sans résultat@@patients.quick.emptyMessage:Aucune ligne pour le filtre « ${filter}:filter: ».`;
+  });
+  private readonly showAll: StateAction = {
+    label: $localize`:Action du filtre rapide sans résultat@@patients.quick.showAll:Afficher tous`,
+    handler: () => this.store.setQuick('all'),
+  };
+  private readonly loadMoreAction: StateAction = {
+    label: $localize`:Action du filtre rapide sans résultat, liste incomplète@@patients.quick.loadMore:Charger la suite`,
+    handler: () => void this.store.loadMore(),
+  };
+  /** Liste incomplète : charger la suite ; sinon revenir à « Tous ». */
+  protected readonly quickEmptyAction = computed<StateAction>(() =>
+    this.store.hasMore() ? this.loadMoreAction : this.showAll,
+  );
   protected readonly emptyAction = computed<StateAction>(() =>
     this.store.filtered()
       ? {
@@ -169,12 +256,17 @@ export class PatientListPage {
     this.timer = setTimeout(() => void this.store.setQuery(text), FILTER_DEBOUNCE_MS);
   }
 
-  /** Entrée dans le filtre : le premier résultat, une fois le filtre envoyé. */
+  /** Entrée dans le filtre : le premier résultat affiché, une fois le filtre envoyé. */
   protected async openFirst(): Promise<void> {
     clearTimeout(this.timer);
     await this.store.setQuery(this.query());
-    const first = this.store.items()[0];
+    const first = this.store.rows()[0]?.patient;
     if (first) await this.router.navigate(['/patients', first.id, 'overview']);
+  }
+
+  /** ↓ dans le filtre : première ligne du tableau (↑ ↓ ensuite, Entrée ouvre). */
+  protected focusFirstRow(): void {
+    this.table()?.focusFirst();
   }
 
   protected clearFilters(): void {

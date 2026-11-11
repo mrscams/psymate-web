@@ -231,6 +231,47 @@ describe('GraphStore', () => {
     expect(store.currentViewport()).toBeNull();
   });
 
+  it('racine par défaut : la situation en cours la plus liée ; null si la synthèse échoue', async () => {
+    const { store, graphApi } = setup({
+      defaultRoot: vi.fn().mockResolvedValueOnce('e-situation').mockRejectedValue(serverError),
+    });
+    await store.load('p-1', rooted);
+    expect(await store.resolveDefaultRoot('p-2')).toBe('e-situation');
+    expect(graphApi.defaultRoot).toHaveBeenCalledWith('p-2');
+    // Un autre dossier : l'état repart de zéro, le bloc graphe attend sa lecture.
+    expect(store.patientId()).toBe('p-2');
+    expect(store.graph().status).toBe('idle');
+    expect(await store.resolveDefaultRoot('p-2')).toBeNull();
+    await store.load('p-2', DEFAULT_QUERY);
+    expect(graphApi.neighbourhood).toHaveBeenLastCalledWith(
+      'p-2',
+      expect.objectContaining({ root: null }),
+    );
+  });
+
+  it('« Centré sur » : recherche dans tout le dossier, trois états, rien sans texte', async () => {
+    const found = [{ ...source({ id: 'e-far' }) }];
+    const targets = vi
+      .fn()
+      .mockResolvedValueOnce(found)
+      .mockRejectedValueOnce(serverError)
+      .mockReturnValueOnce(new Promise(() => undefined));
+    const { store } = setup({}, { targets });
+    await store.load('p-1', rooted);
+    await store.searchRoots('  ');
+    expect(targets).not.toHaveBeenCalled();
+    expect(store.rootSearch().status).toBe('idle');
+    await store.searchRoots('loin');
+    expect(targets).toHaveBeenCalledWith('p-1', { q: 'loin', type: null });
+    expect(store.rootSearch().data?.map((entry) => entry.id)).toEqual(['e-far']);
+    await store.searchRoots('autre');
+    expect(store.rootSearch().status).toBe('error');
+    void store.searchRoots('encore');
+    expect(store.rootSearch().status).toBe('loading');
+    await store.searchRoots('');
+    expect(store.rootSearch().status).toBe('idle');
+  });
+
   it('un autre dossier repart de zéro', async () => {
     const { store } = setup();
     await store.load('p-1', rooted);

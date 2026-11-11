@@ -1,104 +1,148 @@
 :host {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: block;
 }
 
+// Maquette 01 : filtre (flex 320 px), « Trier par » et son select, puces rapides, sur une rangée qui
+// passe à la ligne sous 1100 px.
 .toolbar {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-  align-items: flex-start;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-
-  label {
-    font: var(--mat-sys-label-large);
-    color: var(--text-primary);
-  }
+  gap: 12px;
+  align-items: center;
 }
 
 .filter {
+  display: flex;
   flex: 1 1 320px;
-}
-
-input[type='search'],
-select {
-  min-height: 44px;
-  padding: 0 12px;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+  height: 44px;
+  padding: 0 14px;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   background: var(--surface-raised);
-  color: var(--text-primary);
-  font: var(--mat-sys-body-large);
+
+  // Le conteneur dessine l'anneau du champ sans bordure (convention [data-focus-ring='container']).
+  &:focus-within {
+    border-color: var(--primary);
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px var(--primary-tint);
+  }
+
+  input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text-primary);
+    font: 400 14px/1.4 var(--font-ui);
+
+    &::placeholder {
+      color: var(--text-secondary);
+      opacity: 1;
+    }
+  }
 }
 
-.hint {
+.icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.sort {
   display: flex;
   gap: 8px;
   align-items: center;
-  margin: 0;
-  font: var(--mat-sys-body-small);
-  color: var(--text-secondary);
-}
 
-.chips-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
+  label {
+    color: var(--text-secondary);
+    font: var(--mat-sys-body-medium);
+    white-space: nowrap;
+  }
+
+  select {
+    min-height: 44px;
+    max-width: 100%;
+    padding: 0 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--surface-raised);
+    color: var(--text-primary);
+    font: 400 13px/1.4 var(--font-ui);
+  }
 }
 
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  gap: 6px;
+  align-items: center;
 }
 
+// Puces de la maquette : 32 px dessinées ; la cible est portée à 44 px par un ::before invisible
+// (fiche 01 : cibles ≥ 44 px).
 .chip {
-  min-height: 44px;
-  padding: 0 14px;
+  position: relative;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  height: 32px;
+  margin: 6px 0;
+  padding: 0 10px;
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   background: var(--surface-raised);
   color: var(--text-primary);
-  font: var(--mat-sys-label-large);
+  font: 500 12px/1 var(--font-ui);
+  white-space: nowrap;
   cursor: pointer;
 
-  &[aria-pressed='true'] {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -7px 0;
+  }
+
+  &:disabled {
+    border-color: var(--border-subtle);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+  }
+
+  &[aria-pressed='true'],
+  &.active {
     border-color: var(--primary);
     background: var(--primary-tint);
     color: var(--primary-hover);
   }
 }
 
-.archived-toggle {
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  min-height: 44px;
-  font: var(--mat-sys-body-medium);
-  color: var(--text-primary);
-  cursor: pointer;
-
-  input {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--primary);
-  }
+// Pastille ambre des drapeaux (décorative : le libellé « Flags » porte l'information).
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--flag);
 }
 
-input:focus-visible,
-select:focus-visible,
-.chip:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+.check {
+  display: inline-block;
+  width: 16px;
+  color: var(--primary);
+}
+
+.coverage-hint {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font: 400 12px/1.5 var(--font-ui);
 }

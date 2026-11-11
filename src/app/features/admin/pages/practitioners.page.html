@@ -76,25 +76,25 @@
         </option>
       </select>
     </div>
-  </div>
-  <div
-    class="segments"
-    role="group"
-    aria-label="Statut"
-    i18n-aria-label="Étiquette des segments de statut@@admin.practitioners.statusGroup"
-  >
-    <button type="button" [attr.aria-pressed]="!store.filters().status" (click)="setStatus(null)">
-      {{ segmentLabel(null) }}
-    </button>
-    @for (option of statuses; track option) {
-      <button
-        type="button"
-        [attr.aria-pressed]="store.filters().status === option"
-        (click)="setStatus(option)"
-      >
-        {{ segmentLabel(option) }}
+    <div
+      class="segments"
+      role="group"
+      aria-label="Statut"
+      i18n-aria-label="Étiquette des segments de statut@@admin.practitioners.statusGroup"
+    >
+      <button type="button" [attr.aria-pressed]="!store.filters().status" (click)="setStatus(null)">
+        {{ segmentLabel(null) }}
       </button>
-    }
+      @for (option of statuses; track option) {
+        <button
+          type="button"
+          [attr.aria-pressed]="store.filters().status === option"
+          (click)="setStatus(option)"
+        >
+          {{ segmentLabel(option) }}
+        </button>
+      }
+    </div>
   </div>
 
   @if (staleError()) {
@@ -155,40 +155,39 @@
                   <span class="avatar" aria-hidden="true">{{ row.initials }}</span>
                   <div>
                     <div class="name">{{ row.displayName }}</div>
-                    <div class="secondary">{{ row.email }}</div>
+                    <div class="secondary email" [title]="row.email">{{ row.email }}</div>
                   </div>
                 </div>
               </td>
-              <td>{{ row.where }}</td>
-              <td>
-                <span class="badge" [class]="row.tone">{{ row.statusText }}</span>
-                <div class="secondary">
-                  {{ row.since }}
-                  @if (row.overdue) {
-                    ·
-                    <strong class="late" i18n="Mention d'un dossier hors délai@@admin.queue.overdue"
-                      >hors délai</strong
-                    >
-                  }
-                </div>
-              </td>
-              <td>
-                @if (row.twoFactorEnabled) {
-                  <span i18n="2FA activée@@admin.practitioners.twoFactorOn">Activée</span>
-                } @else {
-                  <span i18n="2FA non activée@@admin.practitioners.twoFactorOff">Non</span>
+              <td class="nowrap">{{ row.where }}</td>
+              <td class="nowrap">
+                <span class="badge" [class]="row.tone">{{ row.statusText }} · {{ row.since }}</span>
+                @if (row.overdue) {
+                  <strong class="late" i18n="Mention d'un dossier hors délai@@admin.queue.overdue"
+                    >hors délai</strong
+                  >
                 }
               </td>
               <td>
-                <div>{{ row.created }}</div>
-                <div class="secondary">{{ row.lastLogin ?? '—' }}</div>
-                @if (row.purge) {
-                  <div
-                    class="secondary"
-                    i18n="Date de purge d'un compte refusé@@admin.practitioners.purge"
+                @if (row.twoFactorEnabled) {
+                  <span class="on" i18n="2FA activée@@admin.practitioners.twoFactorOn"
+                    >Activée</span
                   >
-                    Purge des données le {{ row.purge }}
-                  </div>
+                } @else {
+                  <span class="secondary" i18n="2FA non activée@@admin.practitioners.twoFactorOff"
+                    >Non</span
+                  >
+                }
+              </td>
+              <td class="mono nowrap">
+                {{ row.created }} · {{ row.lastLogin ?? '—' }}
+                @if (row.purge) {
+                  <span
+                    >·
+                    <span i18n="Date de purge d'un compte refusé@@admin.practitioners.purge"
+                      >Purge des données le {{ row.purge }}</span
+                    ></span
+                  >
                 }
               </td>
               <td>
@@ -281,10 +280,24 @@
     }
   } @else {
     <pm-appeal-list
-      [appeals]="appeals.items()"
+      [appeals]="visibleAppeals()"
       (decide)="decideAppeal($event.appeal, $event.outcome)"
     />
-    @if (appeals.hasMore()) {
+    @if (hiddenAppeals() > 0) {
+      <div class="more">
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="showAllAppeals.set(true)"
+          i18n="Bouton d'affichage des recours masqués@@admin.appeals.showAll"
+        >
+          {hiddenAppeals(), plural,
+            =1 {Afficher l'autre recours}
+            other {Afficher les {{ hiddenAppeals() }} autres recours}
+          }
+        </button>
+      </div>
+    } @else if (appeals.hasMore()) {
       <div class="more">
         <button
           mat-stroked-button

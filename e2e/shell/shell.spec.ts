@@ -72,11 +72,12 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
 
   // L'onglet 1 (vue d'ensemble, M4-05) range ses séances dépliées (rememberTab) : on replie la
   // séance d'accueil, puis on part sur le Graphe (M2-06) par clic : patient sans lien, état vide.
+  // Sans situation en cours reliée, le graphe s'ouvre sur tout le dossier (?root=all, UX-B3).
   await expect(intakeToggle(page)).toHaveAttribute('aria-expanded', 'true');
   await intakeToggle(page).click();
   await expect(intakeToggle(page)).toHaveAttribute('aria-expanded', 'false');
   await h.tabs.getByRole('link', { name: /Graphe/ }).click();
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph$`));
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph\\?root=all$`));
   await expect(page.getByRole('heading', { level: 2, name: 'Graphe des liens' })).toBeAttached();
   await expect(page.getByText('Les liens que vous créez apparaîtront ici')).toBeVisible();
   await expect(intakeToggle(page)).toHaveCount(0);
@@ -89,7 +90,7 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
   await expect(intakeToggle(page)).toHaveAttribute('aria-expanded', 'false');
   await page.keyboard.press('3');
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph$`));
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph\\?root=all$`));
   await expect(page.getByText('Les liens que vous créez apparaîtront ici')).toBeVisible();
   await expectNoAxeViolations(page);
 
@@ -97,7 +98,7 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await h.capture.click();
   await page.keyboard.type('312');
   await expect(h.capture).toHaveValue('312');
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph$`));
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph\\?root=all$`));
 
   // L'ancienne destination de M1-06 (après création) mène à l'onglet 1.
   await page.goto(`/fr/patients/${id}/overview`);

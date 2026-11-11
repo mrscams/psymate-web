@@ -79,7 +79,7 @@ export class ConfirmEmailPage {
   });
 
   protected readonly labels = {
-    email: $localize`:Champ e-mail du compte à confirmer@@auth.confirm.field.email:E-mail du compte`,
+    email: $localize`:Champ e-mail du compte à confirmer@@auth.confirm.field.email:Adresse du compte`,
     password: $localize`:Champ mot de passe de la correction d'adresse@@auth.confirm.field.password:Mot de passe`,
     newEmail: $localize`:Champ nouvelle adresse@@auth.confirm.field.newEmail:Nouvelle adresse e-mail`,
   };

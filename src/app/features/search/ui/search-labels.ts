@@ -1,7 +1,7 @@
 // Textes et formats de l'écran de recherche (fiche 07) : tous en $localize, dates par Intl.
 
 import { ApiProblem } from '../../../core/http';
-import { EntryType, entryTypeLabel } from '../../../shared/ui';
+import { EntryType, entryTitle } from '../../../shared/ui';
 import { formatOccurred, OccurredPrecision } from '../../../shared/util';
 import { PeriodPreset, plainText, SearchHit, SessionOption } from '../data/search.model';
 
@@ -73,14 +73,27 @@ export function sessionLabel(session: SessionOption, locale: string): string {
   return $localize`:Séance désignée par sa date@@search.session.label:Séance du ${day}:day:`;
 }
 
-/** Titre d'un résultat en texte brut ; sans titre, le type, ou « Séance du … » pour une séance. */
+/**
+ * Titre d'une entrée en texte brut, par entryTitle() (UX-A5) : son titre, sinon « Type · date
+ * courte » (« Note · 24 oct. »). Le texte n'est pas passé : l'extrait est affiché juste dessous
+ * (et, avec une recherche, il commence au milieu du corps) ; l'aperçu montre le corps entier sous
+ * le titre. Hors précision exacte, la date se lit en UTC (jours entiers, comme formatOccurred).
+ */
+export function titleOf(
+  entry: { type: EntryType; title: string | null; occurredFrom: string | null },
+  precision: OccurredPrecision,
+  locale: string,
+): string {
+  return entryTitle(
+    { type: entry.type, title: entry.title, occurred: entry.occurredFrom },
+    locale,
+    precision === 'exact' ? {} : { timeZone: 'UTC' },
+  );
+}
+
+/** Titre d'un résultat (titre surligné recollé, sinon repli entryTitle). */
 export function hitTitle(hit: SearchHit, locale: string): string {
-  const title = plainText(hit.title);
-  if (title) return title;
-  if (hit.type === 'session' && hit.occurredFrom) {
-    return sessionLabel({ id: hit.entryId, startedAt: hit.occurredFrom }, locale);
-  }
-  return entryTypeLabel(hit.type);
+  return titleOf({ ...hit, title: plainText(hit.title) }, hit.precision, locale);
 }
 
 export function hitWhen(hit: SearchHit, locale: string): string {

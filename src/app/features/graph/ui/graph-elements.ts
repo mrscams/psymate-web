@@ -1,9 +1,9 @@
 // Éléments Cytoscape du graphe (fonction pure) : un nœud par entrée, un nœud par super-nœud relié
-// à son voisin, une arête par lien. Classes lues par graph-style.ts : type-<type>, root, group,
-// line-<style>, directed, proposed, group-edge.
-import { GraphSuperNode, GraphView } from '../data/graph.model';
+// à son voisin, une arête par lien. Classes lues par graph-style.ts : type-<type>, strong, root,
+// group, line-<style>, directed, proposed, group-edge.
+import { GraphSuperNode, GraphView, LABELS_MAX_NODES } from '../data/graph.model';
 import { LinkLineStyle, LinkTypeCode } from '../data/link.model';
-import { DEFAULT_LINE_STYLES, feelingDiameter } from './graph-style';
+import { DEFAULT_LINE_STYLES, feelingDiameter, STRONG_FEELING_DIAMETER } from './graph-style';
 
 export interface GraphElementLabels {
   /** Étiquette d'un nœud : « titre · date ». */
@@ -16,7 +16,12 @@ export interface GraphElementLabels {
 
 export interface GraphNodeData {
   id: string;
+  /** Étiquette affichée : vide à partir de LABELS_MAX_NODES nœuds, sauf pour la racine. */
   label: string;
+  /** Étiquette complète, reprise quand le nœud est sélectionné. */
+  name: string;
+  /** Intensité d'un ressenti (chiffre dans le cercle) ; null sinon. */
+  intensity: number | null;
   /** entry : une entrée ; group : un super-nœud. */
   kind: 'entry' | 'group';
   type: string;
@@ -45,6 +50,11 @@ export function groupEdgeId(group: Pick<GraphSuperNode, 'id'>): string {
   return `${group.id}:edge`;
 }
 
+/** Les étiquettes « titre · date » se lisent-elles encore (moins de LABELS_MAX_NODES nœuds) ? */
+export function labelsShown(view: GraphView): boolean {
+  return view.nodes.length + view.superNodes.length < LABELS_MAX_NODES;
+}
+
 export function graphElements(
   view: GraphView,
   root: string | null,
@@ -52,23 +62,44 @@ export function graphElements(
   labels: GraphElementLabels,
 ): GraphElement[] {
   const ids = new Set(view.nodes.map((node) => node.id));
-  const elements: GraphElement[] = view.nodes.map((node) => ({
-    group: 'nodes',
-    data: {
-      id: node.id,
-      label: labels.node(node),
-      kind: 'entry',
-      type: node.type,
-      size: node.type === 'feeling' ? feelingDiameter(node.intensity) : 0,
-    },
-    classes: [`type-${node.type}`, node.id === root ? 'root' : ''].filter(Boolean).join(' '),
-    selectable: true,
-  }));
+  // Étiquettes sous LABELS_MAX_NODES nœuds (UX-B3) ; au-delà, seule la racine garde la sienne.
+  const labelled = labelsShown(view);
+  const elements: GraphElement[] = view.nodes.map((node) => {
+    const name = labels.node(node);
+    const feeling = node.type === 'feeling';
+    const size = feeling ? feelingDiameter(node.intensity) : 0;
+    const strong = feeling && node.intensity !== null && size >= STRONG_FEELING_DIAMETER;
+    return {
+      group: 'nodes',
+      data: {
+        id: node.id,
+        label: labelled || node.id === root ? name : '',
+        name,
+        intensity: feeling ? node.intensity : null,
+        kind: 'entry',
+        type: node.type,
+        size,
+      },
+      classes: [`type-${node.type}`, strong ? 'strong' : '', node.id === root ? 'root' : '']
+        .filter(Boolean)
+        .join(' '),
+      selectable: true,
+    };
+  });
   for (const group of view.superNodes) {
     if (!ids.has(group.neighborId)) continue;
+    const text = labels.group(group);
     elements.push({
       group: 'nodes',
-      data: { id: group.id, label: labels.group(group), kind: 'group', type: group.type, size: 0 },
+      data: {
+        id: group.id,
+        label: text,
+        name: text,
+        intensity: null,
+        kind: 'group',
+        type: group.type,
+        size: 0,
+      },
       classes: 'group',
       selectable: true,
     });

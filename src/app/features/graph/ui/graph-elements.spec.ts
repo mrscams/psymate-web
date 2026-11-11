@@ -1,5 +1,7 @@
 import { graphView, superNode } from '../data/graph.fixtures';
-import { graphElements, GraphElementLabels, groupEdgeId } from './graph-elements';
+import { node } from '../data/graph.fixtures';
+import { LABELS_MAX_NODES } from '../data/graph.model';
+import { graphElements, GraphElementLabels, groupEdgeId, labelsShown } from './graph-elements';
 
 const labels: GraphElementLabels = {
   node: (node) => `${node.title ?? 'sans titre'}`,
@@ -14,11 +16,17 @@ describe('graphElements', () => {
     const edges = elements.filter((element) => element.group === 'edges');
     expect(nodes.map((n) => [n.data.id, n.classes])).toEqual([
       ['e-situation', 'type-situation root'],
-      ['e-feeling', 'type-feeling'],
+      ['e-feeling', 'type-feeling strong'],
       ['e-event', 'type-event'],
       ['e-med', 'type-medication'],
     ]);
-    expect(nodes[1].data).toMatchObject({ size: 63, label: 'sans titre' });
+    expect(nodes[1].data).toMatchObject({
+      size: 63,
+      label: 'sans titre',
+      name: 'sans titre',
+      intensity: 8,
+    });
+    expect(labelsShown(graphView())).toBe(true);
     expect(nodes.every((n) => n.selectable)).toBe(true);
     expect(edges.map((e) => [e.data.id, e.classes])).toEqual([
       ['l-1', 'line-long_dash directed'],
@@ -66,5 +74,16 @@ describe('graphElements', () => {
         (e) => e.data.id === orphan.id,
       ),
     ).toBe(false);
+  });
+
+  it('à partir de 60 nœuds, étiquettes masquées sauf la racine (le nom reste pour la sélection)', () => {
+    const nodes = Array.from({ length: LABELS_MAX_NODES }, (_, i) =>
+      node({ id: `e-${i}`, type: 'note', title: `Note ${i}` }),
+    );
+    const view = graphView({ nodes, edges: [] });
+    expect(labelsShown(view)).toBe(false);
+    const drawn = graphElements(view, 'e-0', {}, labels).filter((e) => e.group === 'nodes');
+    expect(drawn[0].data).toMatchObject({ label: 'Note 0', name: 'Note 0' });
+    expect(drawn[1].data).toMatchObject({ label: '', name: 'Note 1' });
   });
 });
