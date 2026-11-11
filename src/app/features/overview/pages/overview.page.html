@@ -1,21 +1,8 @@
 <section class="overview" aria-labelledby="overview-heading">
-  <div class="toolbar">
-    <h2 id="overview-heading" i18n="Titre de l'onglet 1 du dossier@@overview.heading">
-      Vue d'ensemble
-    </h2>
-    <div
-      class="windows"
-      role="group"
-      aria-label="Période de la vue d'ensemble"
-      i18n-aria-label="Groupe du sélecteur de fenêtre@@overview.window.group"
-    >
-      @for (option of windows; track option) {
-        <button type="button" [attr.aria-pressed]="window() === option" (click)="setWindow(option)">
-          {{ windowLabel(option) }}
-        </button>
-      }
-    </div>
-  </div>
+  <!-- Titre de l'onglet pour les lecteurs d'écran : les maquettes 02 et 02b n'en dessinent pas. -->
+  <h2 id="overview-heading" class="sr-only" i18n="Titre de l'onglet 1 du dossier@@overview.heading">
+    Vue d'ensemble
+  </h2>
 
   @if (reloadFailed()) {
     <!-- Relecture en échec : la synthèse précédente reste affichée, le bandeau le dit. -->
@@ -41,22 +28,26 @@
       [overview]="store.overview()"
       [patientId]="patientId()"
       [refreshing]="store.refreshing()"
+      [window]="window()"
+      (windowChange)="setWindow($event)"
       (retry)="refresh()"
       (entrySelected)="openEntry($event)"
     />
   } @else {
+    <!-- Grille de la maquette 02 : faits clés · tendance ; situations · séances · émotions et à
+         compléter ; activité récente. -->
     <div class="grid">
-      <!-- Résumé chiffré : quatre tuiles. -->
+      <!-- Faits clés : quatre tuiles sur la fenêtre, puis traitement, début du suivi, drapeaux. -->
       <pm-overview-block
-        class="span-12"
-        heading="Résumé"
-        i18n-heading="Titre du bloc résumé@@overview.summary.heading"
-        [state]="state('summary')"
+        class="span-4"
+        heading="Faits clés"
+        i18n-heading="Titre du bloc faits clés@@overview.facts.heading"
+        [state]="state('facts')"
         emptyTitle=""
-        errorTitle="Résumé indisponible"
-        i18n-errorTitle="Erreur du bloc résumé@@overview.summary.error"
+        errorTitle="Faits clés indisponibles"
+        i18n-errorTitle="Erreur du bloc faits clés@@overview.facts.error"
         [refreshing]="store.refreshing()"
-        [lines]="1"
+        [lines]="4"
         (retry)="refresh()"
       >
         @if (view(); as v) {
@@ -64,15 +55,11 @@
             <section class="tile" aria-labelledby="tile-sessions">
               <h4 id="tile-sessions" i18n="Tuile du résumé@@overview.tile.sessions">Séances</h4>
               <p class="figure">{{ v.facts.sessionCount }}</p>
-              <p class="context">
-                <span i18n="Contexte de la tuile séances@@overview.tile.sessions.context"
-                  >dont {{ windowSessions() }} sur {{ windowLabel(v.window) }}</span
-                >
-                @if (v.facts.followedSince) {
-                  <span i18n="Début du suivi dans la tuile séances@@overview.tile.sessions.since">
-                    · suivi depuis le {{ day(v.facts.followedSince) }}</span
-                  >
-                }
+              <p
+                class="context"
+                i18n="Contexte de la tuile séances@@overview.tile.sessions.context"
+              >
+                dont {{ windowSessions() }} sur {{ windowLabel(v.window) }}
               </p>
             </section>
             <section class="tile" aria-labelledby="tile-feelings">
@@ -95,18 +82,13 @@
                 Intensité moyenne
               </h4>
               <p class="figure">
-                @if (latest(); as value) {
+                @if (average(); as value) {
                   {{ value }}<span class="unit">/10</span>
                 } @else {
                   —
                 }
               </p>
-              <p
-                class="context"
-                i18n="Contexte de la tuile intensité@@overview.tile.intensity.context"
-              >
-                moyenne des 7 derniers jours
-              </p>
+              <p class="context">{{ intensityContext() }}</p>
             </section>
             <section class="tile" aria-labelledby="tile-situations">
               <h4 id="tile-situations" i18n="Tuile du résumé@@overview.tile.situations">
@@ -121,14 +103,105 @@
               </p>
             </section>
           </div>
+
+          <ul
+            class="facts"
+            aria-label="Traitement, suivi et drapeaux"
+            i18n-aria-label="Liste des faits clés@@overview.facts.list"
+          >
+            @for (medication of v.facts.medications; track medication.entryId) {
+              <li class="fact">
+                <span class="key capsule" aria-hidden="true"></span>
+                <span class="fact-text">
+                  <strong>{{ medication.molecule }}</strong>
+                  @if (medication.dosage) {
+                    {{ medication.dosage }}
+                  }
+                  @if (medication.frequency) {
+                    · {{ medication.frequency }}
+                  }
+                  @if (medication.prescriber) {
+                    <span
+                      class="muted"
+                      i18n="Prescripteur d'un médicament@@overview.medications.prescriber"
+                    >
+                      · prescrit par {{ medication.prescriber }}</span
+                    >
+                  }
+                </span>
+                @if (medication.periodFrom ?? medication.since; as from) {
+                  &ngsp;
+                  <span class="fact-end" i18n="Début d'un médicament, court@@overview.facts.since"
+                    >depuis le {{ day(from) }}</span
+                  >
+                }
+              </li>
+            } @empty {
+              <li class="fact">
+                <span class="key capsule empty" aria-hidden="true"></span>
+                <span
+                  class="fact-text muted"
+                  i18n="Faits clés sans traitement@@overview.facts.noMedication"
+                  >Aucun traitement en cours</span
+                >
+              </li>
+            }
+            @if (followedSince(); as since) {
+              <li class="fact">
+                <span class="key session" aria-hidden="true"></span>
+                <span class="fact-text">
+                  @if (since.fromSessions) {
+                    <span
+                      i18n="
+                        Début du suivi déduit de la première séance@@overview.facts.firstSession"
+                      >Suivi depuis le {{ day(since.date) }} (première séance connue)</span
+                    >
+                  } @else {
+                    <span i18n="Début du suivi@@overview.facts.followedSince"
+                      >Suivi depuis le {{ day(since.date) }}</span
+                    >
+                  }
+                </span>
+              </li>
+            }
+            @for (flag of v.facts.flags; track $index) {
+              <li class="fact">
+                <span class="key flag" aria-hidden="true"></span>
+                <span class="fact-text">
+                  <span i18n="Drapeau dans les faits clés@@overview.facts.flag"
+                    >Drapeau « {{ flagLabel(flag.kind) }} »</span
+                  >
+                  @if (flag.setAt) {
+                    &ngsp;
+                    <span i18n="Date de pose d'un drapeau@@overview.attention.flagSince"
+                      >posé le {{ day(flag.setAt) }}</span
+                    >
+                  }
+                  @if (flag.reason) {
+                    <span class="muted"> · {{ flag.reason }}</span>
+                  }
+                </span>
+                &ngsp;
+                <a
+                  class="fact-end"
+                  [routerLink]="['/patients', patientId(), 'fiche']"
+                  i18n="Lien vers la fiche depuis un drapeau@@overview.facts.flagEdit"
+                  >Modifier<span class="sr-only">
+                    le drapeau « {{ flagLabel(flag.kind) }} » dans la fiche</span
+                  ></a
+                >
+              </li>
+            }
+          </ul>
         }
       </pm-overview-block>
 
-      <!-- Tendance : courbe ECharts (en @defer), légende, données. -->
+      <!-- Tendance : courbe ECharts (en @defer), légende, données ; la fenêtre dans la carte. -->
       <pm-overview-block
         class="span-8"
         [heading]="trendHeading()"
         [state]="state('trend')"
+        [inlineMeta]="true"
         emptyTitle="Pas encore de ressentis sur cette période"
         i18n-emptyTitle="Bloc tendance vide@@overview.trend.empty.title"
         emptyMessage="La courbe apparaîtra ici quand des ressentis seront notés dans le dossier."
@@ -140,106 +213,26 @@
         (retry)="refresh()"
       >
         <span blockMeta class="meta" i18n="Sous-titre du bloc tendance@@overview.trend.meta"
-          >moyenne glissante 7 j · un point par ressenti</span
+          >moyenne glissante 7 j</span
         >
+        <pm-overview-window
+          blockMeta
+          class="push"
+          [value]="window()"
+          (selected)="setWindow($event)"
+        />
         @if (view(); as v) {
           <pm-overview-trend [view]="v" (pointSelected)="openEntry($event)" />
         }
       </pm-overview-block>
 
-      <!-- Points d'attention et à compléter : drapeaux, brouillons, séance ouverte → timeline filtrée. -->
+      <!-- Situations actives : chaque carte mène au graphe centré sur elle (graph?root=<id>). -->
       <pm-overview-block
         class="span-4"
-        heading="À surveiller · à compléter"
-        i18n-heading="Titre du bloc points d'attention@@overview.attention.heading"
-        [state]="state('attention')"
-        emptyTitle="Rien à signaler"
-        i18n-emptyTitle="Bloc points d'attention vide@@overview.attention.empty.title"
-        emptyMessage="Les drapeaux, brouillons et séances non clôturées apparaîtront ici."
-        i18n-emptyMessage="Bloc points d'attention vide@@overview.attention.empty.message"
-        errorTitle="Points d'attention indisponibles"
-        i18n-errorTitle="Erreur du bloc points d'attention@@overview.attention.error"
-        [refreshing]="store.refreshing()"
-        (retry)="refresh()"
-      >
-        <a
-          blockMeta
-          class="meta-link"
-          [routerLink]="['/patients', patientId(), 'fiche']"
-          i18n="Lien vers la fiche depuis la vue d'ensemble@@overview.attention.sheetLink"
-          >Modifier la fiche</a
-        >
-        @if (view(); as v) {
-          <ul class="alerts">
-            @for (flag of v.facts.flags; track $index) {
-              <li class="alert" [class.risk]="flag.kind === 'risk'">
-                <svg class="alert-icon" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
-                  <path d="M2 1v10M2 1h7l-1.5 2.5L9 6H2" />
-                </svg>
-                <span class="alert-text">
-                  <strong
-                    i18n="Niveau d'un drapeau dans les points d'attention@@overview.attention.flag"
-                    >Drapeau : {{ flagLabel(flag.kind) }}</strong
-                  >
-                  @if (flag.reason) {
-                    <span> · {{ flag.reason }}</span>
-                  }
-                  @if (flag.setAt) {
-                    &ngsp;
-                    <span
-                      class="when"
-                      i18n="Date de pose d'un drapeau@@overview.attention.flagSince"
-                      >posé le {{ day(flag.setAt) }}</span
-                    >
-                  }
-                </span>
-              </li>
-            }
-            @if (v.drafts.count) {
-              <li class="alert">
-                <svg class="alert-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-                  <path d="M3 13l1-4 7-7 3 3-7 7z" />
-                </svg>
-                <a
-                  class="alert-text"
-                  [routerLink]="['/patients', patientId(), 'timeline']"
-                  [queryParams]="draftParams"
-                  i18n="
-                    Brouillons à compléter, lien vers la timeline filtrée@@overview.attention.drafts"
-                  >{v.drafts.count, plural,
-                    =1 {1 brouillon à compléter}
-                    other {{{v.drafts.count}} brouillons à compléter}
-                  }</a
-                >
-              </li>
-            }
-            @if (v.drafts.openSession; as open) {
-              <li class="alert">
-                <svg class="alert-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-                  <circle cx="8" cy="8" r="6" />
-                  <path d="M8 4.5V8l2.5 1.5" />
-                </svg>
-                <a
-                  class="alert-text"
-                  [routerLink]="['/patients', patientId(), 'timeline']"
-                  [queryParams]="sessionParams(open.entryId)"
-                  i18n="
-                    Séance non clôturée, lien vers la timeline par
-                    séance@@overview.attention.openSession"
-                  >Séance du {{ day(open.startedAt) }} non clôturée</a
-                >
-              </li>
-            }
-          </ul>
-        }
-      </pm-overview-block>
-
-      <!-- Situations actives : métriques et « Voir dans le graphe » (graph?root=<id>). -->
-      <pm-overview-block
-        class="span-6"
         heading="Situations actives"
         i18n-heading="Titre du bloc situations@@overview.situations.heading"
         [state]="state('situations')"
+        [inlineMeta]="true"
         emptyTitle="Aucune situation en cours"
         i18n-emptyTitle="Bloc situations vide@@overview.situations.empty.title"
         emptyMessage="Les situations sans fin connue apparaîtront ici, avec leurs ressentis liés."
@@ -249,107 +242,56 @@
         [refreshing]="store.refreshing()"
         (retry)="refresh()"
       >
+        @if (view()?.situations?.length; as count) {
+          <span blockMeta class="meta">· {{ count }}</span>
+        }
         @if (view(); as v) {
           <ul class="cards">
             @for (situation of v.situations; track situation.entryId) {
-              <li class="card">
-                <div class="card-head">
-                  <pm-entry-icon type="situation" [size]="14" />
-                  <strong class="card-title">{{ situation.title ?? untitledSituation }}</strong>
-                  @if (situation.since) {
-                    <span
-                      class="when"
-                      i18n="Début d'une situation active@@overview.situations.since"
-                      >depuis le {{ day(situation.since) }}</span
-                    >
-                  }
-                </div>
-                <p class="card-meta">
-                  <span
-                    i18n="Ressentis liés à une situation@@overview.situations.feelings"
-                    >{situation.linkedFeelingCount, plural,
-                      =0 {aucun ressenti lié}
-                      =1 {1 ressenti lié}
-                      other {{{situation.linkedFeelingCount}} ressentis liés}
-                    }</span
-                  >
-                  @if (situation.averageIntensity !== null) {
-                    <span i18n="Intensité moyenne d'une situation@@overview.situations.average">
-                      · intensité moy. {{ intensity(situation.averageIntensity) }}/10</span
-                    >
-                  }
-                  <span i18n="Liens d'une situation@@overview.situations.links">
-                    ·
-                    {situation.linkCount, plural,
-                      =0 {aucun lien}
-                      =1 {1 lien}
-                      other {{{situation.linkCount}} liens}
-                    }</span
-                  >
-                </p>
-                @if (situation.averageIntensity !== null) {
-                  <span class="bar" aria-hidden="true"
-                    ><span [style.width.%]="situation.averageIntensity * 10"></span
-                  ></span>
-                }
+              <li>
                 <a
-                  class="card-link"
+                  class="card"
                   [routerLink]="['/patients', patientId(), 'graph']"
                   [queryParams]="graphParams(situation.entryId)"
-                  i18n="
-                    Lien d'une situation vers le graphe centré sur elle@@overview.situations.graph"
-                  >Voir dans le graphe<span class="sr-only">
-                    : {{ situation.title ?? untitledSituation }}</span
-                  ></a
                 >
-              </li>
-            }
-          </ul>
-        }
-      </pm-overview-block>
-
-      <!-- Traitement en cours : capsules médicament. -->
-      <pm-overview-block
-        class="span-6"
-        heading="Traitement en cours"
-        i18n-heading="Titre du bloc traitement@@overview.medications.heading"
-        [state]="state('medications')"
-        emptyTitle="Aucun traitement en cours"
-        i18n-emptyTitle="Bloc traitement vide@@overview.medications.empty.title"
-        emptyMessage="Les médicaments notés dans le dossier, sans date de fin passée, apparaîtront ici."
-        i18n-emptyMessage="Bloc traitement vide@@overview.medications.empty.message"
-        errorTitle="Traitement indisponible"
-        i18n-errorTitle="Erreur du bloc traitement@@overview.medications.error"
-        [refreshing]="store.refreshing()"
-        (retry)="refresh()"
-      >
-        @if (view(); as v) {
-          <ul class="medications">
-            @for (medication of v.facts.medications; track medication.entryId) {
-              <li class="medication">
-                <pm-entry-icon type="medication" [size]="14" />
-                <span class="medication-name">
-                  <strong>{{ medication.molecule }}</strong>
-                  @if (medication.dosage) {
-                    {{ medication.dosage }}
-                  }
-                  @if (medication.frequency) {
-                    · {{ medication.frequency }}
-                  }
-                </span>
-                <span class="when">
-                  <span i18n="Médicament en cours@@overview.medications.current">en cours</span>
-                  @if (medication.periodFrom ?? medication.since; as from) {
-                    <span i18n="Début d'un médicament@@overview.medications.since">
-                      · depuis le {{ day(from) }}</span
+                  <span class="card-head">
+                    <span class="key situation" aria-hidden="true"></span>
+                    <strong class="card-title">{{ situation.title ?? untitledSituation }}</strong>
+                    @if (situation.since) {
+                      <span class="when" aria-hidden="true">{{ elapsed(situation.since) }}</span>
+                      &ngsp;
+                      <span
+                        class="sr-only"
+                        i18n="Début d'une situation active@@overview.situations.since"
+                        >depuis le {{ day(situation.since) }}</span
+                      >
+                    }
+                  </span>
+                  &ngsp;
+                  <span class="card-meta">
+                    <span
+                      i18n="Ressentis liés à une situation@@overview.situations.feelings"
+                      >{situation.linkedFeelingCount, plural,
+                        =0 {aucun ressenti lié}
+                        =1 {1 ressenti lié}
+                        other {{{situation.linkedFeelingCount}} ressentis liés}
+                      }</span
                     >
-                  }
-                  @if (medication.prescriber) {
-                    <span i18n="Prescripteur d'un médicament@@overview.medications.prescriber">
-                      · prescrit par {{ medication.prescriber }}</span
+                    @if (situation.averageIntensity !== null) {
+                      <span i18n="Intensité moyenne d'une situation@@overview.situations.average">
+                        · intensité moy. {{ intensity(situation.averageIntensity) }}/10</span
+                      >
+                    }
+                    ·
+                    <span
+                      class="card-link"
+                      i18n="
+                        Fin de la carte d'une situation, qui mène au
+                        graphe@@overview.situations.graphInline"
+                      >voir dans le graphe</span
                     >
-                  }
-                </span>
+                  </span>
+                </a>
               </li>
             }
           </ul>
@@ -358,7 +300,7 @@
 
       <!-- Dernières séances : dépliables, vers la timeline par séance. -->
       <pm-overview-block
-        class="span-7"
+        class="span-5"
         heading="Dernières séances"
         i18n-heading="Titre du bloc dernières séances@@overview.sessions.heading"
         [state]="state('sessions')"
@@ -377,7 +319,7 @@
           [routerLink]="['/patients', patientId(), 'timeline']"
           [queryParams]="sessionsParams"
           i18n="Lien vers la timeline par séance@@overview.sessions.all"
-          >Toutes les séances</a
+          >Toutes dans la timeline</a
         >
         @if (view(); as v) {
           <pm-overview-sessions
@@ -389,46 +331,128 @@
         }
       </pm-overview-block>
 
-      <!-- Émotions dominantes : variation vs fenêtre précédente, vers la timeline filtrée. -->
-      <pm-overview-block
-        class="span-5"
-        [heading]="emotionsHeading()"
-        [state]="state('emotions')"
-        emptyTitle="Pas d'émotion dominante"
-        i18n-emptyTitle="Bloc émotions vide@@overview.emotions.empty.title"
-        emptyMessage="Les émotions les plus notées sur la période apparaîtront ici."
-        i18n-emptyMessage="Bloc émotions vide@@overview.emotions.empty.message"
-        errorTitle="Émotions indisponibles"
-        i18n-errorTitle="Erreur du bloc émotions@@overview.emotions.error"
-        [refreshing]="store.refreshing()"
-        (retry)="refresh()"
-      >
-        @if (view(); as v) {
-          <ul class="emotions">
-            @for (emotion of v.emotions; track emotion.code) {
-              <li class="emotion">
-                <span
-                  class="dot"
-                  [style.background]="familyColor(emotion.code)"
-                  aria-hidden="true"
-                ></span>
-                <a
-                  class="emotion-name"
-                  [routerLink]="['/patients', patientId(), 'timeline']"
-                  [queryParams]="emotionParams(emotion.code)"
-                  >{{ emotion.label }}</a
-                >
-                <strong class="emotion-count">{{ emotion.count }}</strong>
-                <span class="delta" aria-hidden="true">{{ delta(emotion.delta) }}</span>
-                <span class="sr-only">{{ deltaText(emotion.delta) }}</span>
-              </li>
-            }
-          </ul>
-          <p class="note" i18n="Pied du bloc émotions@@overview.emotions.note">
-            Variation par rapport à la période précédente de même durée
-          </p>
-        }
-      </pm-overview-block>
+      <!-- Colonne droite : émotions dominantes, puis ce qui reste à compléter. -->
+      <div class="span-3 stack">
+        <pm-overview-block
+          [heading]="emotionsHeading()"
+          [state]="state('emotions')"
+          emptyTitle="Pas d'émotion dominante"
+          i18n-emptyTitle="Bloc émotions vide@@overview.emotions.empty.title"
+          emptyMessage="Les émotions les plus notées sur la période apparaîtront ici."
+          i18n-emptyMessage="Bloc émotions vide@@overview.emotions.empty.message"
+          errorTitle="Émotions indisponibles"
+          i18n-errorTitle="Erreur du bloc émotions@@overview.emotions.error"
+          [refreshing]="store.refreshing()"
+          (retry)="refresh()"
+        >
+          @if (view(); as v) {
+            <ul class="emotions">
+              @for (emotion of v.emotions; track emotion.code) {
+                <li class="emotion">
+                  <span class="emotion-row">
+                    <span
+                      class="dot"
+                      [style.background]="familyColor(emotion.code)"
+                      aria-hidden="true"
+                    ></span>
+                    <a
+                      class="emotion-name"
+                      [routerLink]="['/patients', patientId(), 'timeline']"
+                      [queryParams]="emotionParams(emotion.code)"
+                      >{{ emotion.label }}</a
+                    >
+                    <strong class="emotion-count">{{ emotion.count }}</strong>
+                    <span class="delta" aria-hidden="true">{{ delta(emotion.delta) }}</span>
+                    <span class="sr-only">{{ deltaText(emotion.delta) }}</span>
+                  </span>
+                  <span class="bar" aria-hidden="true"
+                    ><span
+                      [style.width.%]="share(emotion.count)"
+                      [style.background]="familyColor(emotion.code)"
+                    ></span
+                  ></span>
+                </li>
+              }
+            </ul>
+            <p class="note">{{ emotionsNote() }}</p>
+          }
+        </pm-overview-block>
+
+        <pm-overview-block
+          heading="À compléter"
+          i18n-heading="Titre du bloc à compléter@@overview.simple.todo.heading"
+          [state]="state('todo')"
+          emptyTitle="Rien à compléter"
+          i18n-emptyTitle="Bloc à compléter vide@@overview.simple.todo.empty.title"
+          emptyMessage="Les brouillons et les séances non clôturées apparaîtront ici."
+          i18n-emptyMessage="Bloc à compléter vide@@overview.simple.todo.empty.message"
+          errorTitle="À compléter indisponible"
+          i18n-errorTitle="Erreur du bloc à compléter@@overview.simple.todo.error"
+          [refreshing]="store.refreshing()"
+          (retry)="refresh()"
+        >
+          @if (view(); as v) {
+            <ul class="todo">
+              @if (v.drafts.count) {
+                <li>
+                  <a
+                    class="todo-item"
+                    [routerLink]="['/patients', patientId(), 'timeline']"
+                    [queryParams]="draftParams"
+                  >
+                    <svg class="todo-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                      <path d="M3 13l1-4 7-7 3 3-7 7z" />
+                    </svg>
+                    <span
+                      class="todo-text"
+                      i18n="
+                        Brouillons à compléter, lien vers la timeline
+                        filtrée@@overview.attention.drafts"
+                      >{v.drafts.count, plural,
+                        =1 {1 brouillon}
+                        other {{{v.drafts.count}} brouillons}
+                      }</span
+                    >
+                    &ngsp;
+                    <span
+                      class="todo-action"
+                      i18n="Action d'une ligne brouillons@@overview.todo.open"
+                      >ouvrir</span
+                    >
+                  </a>
+                </li>
+              }
+              @if (v.drafts.openSession; as open) {
+                <li>
+                  <a
+                    class="todo-item"
+                    [routerLink]="['/patients', patientId(), 'timeline']"
+                    [queryParams]="sessionParams(open.entryId)"
+                  >
+                    <svg class="todo-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                      <circle cx="8" cy="8" r="6" />
+                      <path d="M8 4.5V8l2.5 1.5" />
+                    </svg>
+                    <span
+                      class="todo-text"
+                      i18n="
+                        Séance non clôturée, lien vers la timeline par
+                        séance@@overview.attention.openSession"
+                      >Séance du {{ day(open.startedAt) }} non clôturée</span
+                    >
+                    &ngsp;
+                    <span
+                      class="todo-action"
+                      i18n="Action d'une ligne séance ouverte@@overview.todo.close"
+                      >clôturer</span
+                    >
+                  </a>
+                </li>
+              }
+            </ul>
+          }
+        </pm-overview-block>
+      </div>
 
       <!-- Activité récente : lue en direct par le serveur ; chaque entrée s'ouvre dans l'éditeur. -->
       <pm-overview-block
@@ -445,32 +469,14 @@
         [refreshing]="store.refreshing()"
         (retry)="refresh()"
       >
+        <span
+          blockMeta
+          class="meta"
+          i18n="Sous-titre du bloc activité récente@@overview.activity.meta"
+          >toutes versions confondues · en direct</span
+        >
         @if (view(); as v) {
-          <ul class="activity">
-            @for (item of v.recentActivity; track item.entryId) {
-              <li class="activity-item">
-                <pm-entry-icon [type]="item.type" [size]="14" [labelled]="true" />
-                <a
-                  class="activity-title"
-                  [routerLink]="[]"
-                  [queryParams]="entryParams(item.entryId)"
-                  queryParamsHandling="merge"
-                  >{{ item.title ?? typeLabel(item.type) }}</a
-                >
-                @if (item.status === 'draft') {
-                  <span class="badge draft" i18n="Entrée en brouillon@@overview.activity.draft"
-                    >brouillon</span
-                  >
-                }
-                @if (item.version > 1) {
-                  <span class="badge" i18n="Version d'une entrée@@overview.activity.version"
-                    >v{{ item.version }}</span
-                  >
-                }
-                <span class="when">{{ day(item.recordedAt) }}</span>
-              </li>
-            }
-          </ul>
+          <pm-overview-activity [view]="v" />
         }
       </pm-overview-block>
     </div>

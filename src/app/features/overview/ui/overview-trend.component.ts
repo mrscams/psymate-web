@@ -11,8 +11,8 @@ import { RouterLink } from '@angular/router';
 
 import { StateComponent } from '../../../shared/ui';
 import { ENTRY_QUERY_PARAM } from '../../entries';
-import { EmotionFamily, OverviewView } from '../data/overview.model';
-import { familyLabel, formatDay, formatIntensity, localDay, trendSummary } from './overview-labels';
+import { OverviewView } from '../data/overview.model';
+import { formatDay, formatIntensity, localDay, trendSummary } from './overview-labels';
 import { TrendChartComponent } from './trend-chart.component';
 import { TrendChartData, TrendChartLabels } from './trend-chart.options';
 
@@ -40,34 +40,34 @@ import { TrendChartData, TrendChartLabels } from './trend-chart.options';
         <pm-state kind="error" compact [title]="failedTitle" />
       }
     </div>
-    <ul
-      class="legend"
-      aria-label="Légende"
-      i18n-aria-label="Légende de la courbe@@overview.trend.legend"
-    >
-      <li>
-        <span class="key line" aria-hidden="true"></span>
-        <span i18n="Légende de la courbe@@overview.trend.legend.average"
-          >Intensité moyenne (7 jours)</span
-        >
-      </li>
-      @for (family of families(); track family) {
+    <!-- Légende de la maquette 02 : trois éléments ; les points gris sont expliqués à droite. -->
+    <div class="legend-row">
+      <ul
+        class="legend"
+        aria-label="Légende"
+        i18n-aria-label="Légende de la courbe@@overview.trend.legend"
+      >
         <li>
-          <span class="key dot" [style.background]="familyColor(family)" aria-hidden="true"></span>
-          {{ familyName(family) }}
+          <span class="key line" aria-hidden="true"></span>
+          <span i18n="Légende de la courbe@@overview.trend.legend.average"
+            >Intensité des ressentis</span
+          >
         </li>
-      }
-      <li>
-        <span class="key session" aria-hidden="true"></span>
-        <span i18n="Légende de la courbe@@overview.trend.legend.session">Séance</span>
-      </li>
-      <li>
-        <span class="key medication" aria-hidden="true"></span>
-        <span i18n="Légende de la courbe@@overview.trend.legend.medication"
-          >Changement de médicament</span
-        >
-      </li>
-    </ul>
+        <li>
+          <span class="key session" aria-hidden="true"></span>
+          <span i18n="Légende de la courbe@@overview.trend.legend.session">Séance</span>
+        </li>
+        <li>
+          <span class="key medication" aria-hidden="true"></span>
+          <span i18n="Légende de la courbe@@overview.trend.legend.medication"
+            >Changement de médicament</span
+          >
+        </li>
+      </ul>
+      <p class="hint" i18n="Aide sous la courbe@@overview.trend.hint">
+        Points gris : les ressentis notés · cliquer un point ouvre le ressenti
+      </p>
+    </div>
     @if (view().feelings.points.length) {
       <details class="data">
         <summary i18n="Bouton qui déplie les données de la courbe@@overview.trend.data">
@@ -121,7 +121,16 @@ import { TrendChartData, TrendChartLabels } from './trend-chart.options';
     }
     .figure,
     .chart-placeholder {
-      min-height: 200px;
+      min-height: 190px;
+    }
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 16px;
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--text-secondary);
     }
     .legend {
       display: flex;
@@ -130,8 +139,9 @@ import { TrendChartData, TrendChartLabels } from './trend-chart.options';
       margin: 0;
       padding: 0;
       list-style: none;
-      font: var(--mat-sys-body-small);
-      color: var(--text-secondary);
+    }
+    .hint {
+      margin: 0 0 0 auto;
     }
     .legend li {
       display: inline-flex;
@@ -147,22 +157,22 @@ import { TrendChartData, TrendChartLabels } from './trend-chart.options';
       border-radius: 2px;
       background: var(--feeling);
     }
-    .dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-    }
     .session {
-      width: 0;
-      height: 10px;
-      border-left: 2px dashed var(--primary);
+      width: 2px;
+      height: 8px;
+      border-radius: 1px;
+      background: var(--primary);
     }
     .medication {
-      width: 2px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
+      margin: 0 1px;
+      transform: rotate(45deg);
       background: var(--entry-medication);
     }
     .data summary {
+      align-self: flex-start;
+      padding: 4px 0;
       cursor: pointer;
       color: var(--primary);
       font: var(--mat-sys-label-large);
@@ -171,7 +181,8 @@ import { TrendChartData, TrendChartLabels } from './trend-chart.options';
       width: 100%;
       margin-top: 8px;
       border-collapse: collapse;
-      font: var(--mat-sys-body-small);
+      font-size: 13px;
+      line-height: 1.4;
       color: var(--text-primary);
     }
     caption {
@@ -181,7 +192,7 @@ import { TrendChartData, TrendChartLabels } from './trend-chart.options';
     }
     th,
     td {
-      padding: 4px 8px 4px 0;
+      padding: 6px 8px 6px 0;
       text-align: left;
       border-bottom: 1px solid var(--surface-sunken);
     }
@@ -210,13 +221,6 @@ export class OverviewTrendComponent {
     feelings: this.view().feelings,
   }));
 
-  /** Familles présentes dans la fenêtre (une série de points chacune), sans doublon. */
-  protected readonly families = computed(() => {
-    const seen = new Set<EmotionFamily | null>();
-    for (const point of this.view().feelings.points) seen.add(point.family);
-    return [...seen];
-  });
-
   private readonly emotionLabels = computed(() => {
     const labels = new Map<string, string>();
     for (const series of this.view().feelings.series) labels.set(series.emotionCode, series.label);
@@ -225,10 +229,11 @@ export class OverviewTrendComponent {
 
   protected readonly chartLabels: TrendChartLabels = {
     average: $localize`:Nom de la courbe des moyennes@@overview.trend.average:Intensité moyenne (7 jours)`,
+    feelings: $localize`:Nom des points de ressentis de la courbe@@overview.trend.feelings:Ressentis notés`,
     session: $localize`:Repère de séance sur la courbe@@overview.trend.session:Séance`,
+    medication: $localize`:Nom des repères de médicament de la courbe@@overview.trend.medication:Changement de médicament`,
     medicationStart: $localize`:Repère de début de médicament@@overview.trend.medicationStart:Début de traitement`,
     medicationEnd: $localize`:Repère de fin de médicament@@overview.trend.medicationEnd:Fin de traitement`,
-    family: (family) => familyLabel(family),
     emotion: (code) => this.emotion(code),
     day: (value) => formatDay(typeof value === 'number' ? localDay(value) : value, this.locale),
     intensity: (value) => formatIntensity(value, this.locale),
@@ -240,14 +245,6 @@ export class OverviewTrendComponent {
 
   protected day(date: string): string {
     return formatDay(date, this.locale);
-  }
-
-  protected familyName(family: EmotionFamily | null): string {
-    return familyLabel(family);
-  }
-
-  protected familyColor(family: EmotionFamily | null): string {
-    return family ? `var(--emotion-${family})` : 'var(--feeling)';
   }
 
   protected entryParams(entryId: string): Record<string, string> {
