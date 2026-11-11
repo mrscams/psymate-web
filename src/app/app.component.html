@@ -3,6 +3,7 @@
     <pm-public-layout
       [authenticated]="session.authenticated()"
       [narrow]="narrow()"
+      [wide]="contentWidth() === 'wide'"
       [switchHref]="switchHref()"
       [switchLang]="other"
     >
@@ -13,7 +14,7 @@
   @case ('admin') {
     <pm-admin-bar [user]="user()" (logout)="logout()" />
     <pm-network-banner />
-    <main id="main" class="app-main admin">
+    <main id="main" class="app-main admin" [class.wide]="contentWidth() === 'wide'">
       <router-outlet />
     </main>
   }
@@ -36,7 +37,7 @@
       <pm-verification-banner [status]="session.verificationStatus()" />
     }
     <pm-network-banner />
-    <main id="main" class="app-main">
+    <main id="main" class="app-main" [class.wide]="contentWidth() === 'wide'">
       <router-outlet />
     </main>
     <pm-shortcuts-help />

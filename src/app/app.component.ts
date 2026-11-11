@@ -29,6 +29,17 @@ import {
 export type AppLayout = 'practitioner' | 'public' | 'admin' | 'bare';
 
 /**
+ * Largeur du contenu, portée par `data.contentWidth` (UX-A8, hérité des parents, la route la plus
+ * profonde l'emporte) :
+ * - default : 1 120 px (`<main class="app-main">`, layout public large), 480 px pour les formulaires
+ *   publics ;
+ * - wide : layout public jusqu'à 1 280 px (annuaire, maquette 08) ; `<main>` des habillages praticien
+ *   et admin jusqu'à 1 600 px de contenu (écrans d'administration, maquettes 20, 21, 22, 28 : pleine
+ *   largeur à 1 440 px avec 24 px de marge), sans marges négatives dans la page.
+ */
+export type ContentWidth = 'default' | 'wide';
+
+/**
  * Coquille de l'application (fiche 00) : choisit l'habillage selon la route, passe la session à la
  * barre d'application et au bandeau d'état, pose les toasts et le bandeau réseau une seule fois.
  * Habillage praticien : la touche ? ouvre l'aide des raccourcis (features/patient-shell, M7-03).
@@ -66,6 +77,7 @@ export class AppComponent {
         url: this.router.url,
         layout: layoutOf(this.router.routerState.snapshot.root),
         wide: isWide(this.router.routerState.snapshot.root),
+        contentWidth: contentWidthOf(this.router.routerState.snapshot.root),
       })),
     ),
     {
@@ -73,12 +85,17 @@ export class AppComponent {
         url: this.router.url,
         layout: layoutOf(this.router.routerState.snapshot.root),
         wide: isWide(this.router.routerState.snapshot.root),
+        contentWidth: contentWidthOf(this.router.routerState.snapshot.root),
       },
     },
   );
 
   protected readonly layout = computed(() => this.navigation().layout);
-  protected readonly narrow = computed(() => !this.navigation().wide);
+  protected readonly contentWidth = computed(() => this.navigation().contentWidth);
+  /** Formulaires publics à 480 px, sauf route `data.wide` ou `data.contentWidth: 'wide'`. */
+  protected readonly narrow = computed(
+    () => !this.navigation().wide && this.navigation().contentWidth !== 'wide',
+  );
   protected readonly switchHref = computed(() =>
     localeSwitchHref(this.baseHref, this.navigation().url, this.other),
   );
@@ -115,4 +132,14 @@ export function isWide(root: ActivatedRouteSnapshot): boolean {
     if (route.data['wide'] === true) return true;
   }
   return false;
+}
+
+/** `data.contentWidth` de la route la plus profonde qui en déclare un ; default sinon. */
+export function contentWidthOf(root: ActivatedRouteSnapshot): ContentWidth {
+  let width: ContentWidth = 'default';
+  for (let route: ActivatedRouteSnapshot | null = root; route; route = route.firstChild) {
+    const declared = route.data['contentWidth'];
+    if (declared === 'wide' || declared === 'default') width = declared;
+  }
+  return width;
 }

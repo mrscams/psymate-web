@@ -1,10 +1,12 @@
 import { expect, Page, test } from '@playwright/test';
 
+import { adminApi, shareSession } from '../flux-10-admin/helpers';
 import { setPreferences } from '../flux-6-vue-ensemble/overview-data';
 import { createAccount, signIn } from '../preferences/accounts';
+import { ADMIN_AVAILABLE, ADMIN_MISSING } from '../support/admin';
 import { expectNoAxeViolations } from '../support/axe';
 import { themeFolder } from '../theme/theme-support';
-import { shoot } from './a11y-support';
+import { axeScreen, expectTheme, shoot, THEMES } from './a11y-support';
 
 // Écrans connectés à 375 px sans défilement horizontal (UX-A1, fiche 00 ; WCAG 1.4.10).
 //
@@ -127,5 +129,87 @@ test.describe('à 1440 × 900', () => {
     await expectPageWidth(page, 1440);
     await shoot(page, 'ux-a1-1440-04-preferences');
     await expectNoAxeViolations(page);
+  });
+});
+
+// UX-A8 : barre d'administration à 375 px (environ 570 px de large avant, onglets hors de la barre
+// sombre et contraste axe en échec). La page ne déborde plus : onglets sur leur propre ligne,
+// défilants dans leur cadre ; axe sur toute la page, barre comprise, en clair et en sombre.
+const ADMIN_SCREENS = [
+  ['20-admin-validation', '/fr/admin/validation'],
+  ['21-admin-praticiens', '/fr/admin/praticiens'],
+  ['22-admin-journal', '/fr/admin/journal'],
+  ['28-admin-vocabulaire', '/fr/admin/vocabulaire'],
+] as const;
+
+test.describe("barre d'administration (UX-A8)", () => {
+  test.describe.configure({ mode: 'serial' });
+  test.skip(!ADMIN_AVAILABLE, ADMIN_MISSING);
+
+  for (const theme of THEMES) {
+    test(`375 × 812 : quatre écrans sans débordement, barre comprise, axe à 0 (${theme})`, async ({
+      page,
+      context,
+    }) => {
+      test.setTimeout(120_000);
+      await page.setViewportSize({ width: 375, height: 812 });
+      await page.emulateMedia({ colorScheme: theme });
+      const admin = await adminApi();
+      try {
+        await shareSession(admin, context);
+        for (const [name, url] of ADMIN_SCREENS) {
+          await page.goto(url);
+          await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
+          await expectTheme(page, theme);
+          const bar = page.locator('pm-admin-bar header');
+          const tabs = bar.getByRole('navigation', { name: 'Administration' });
+          await expect(tabs.getByRole('link', { name: 'Vocabulaire' })).toBeAttached();
+          // La barre tient dans la fenêtre ; seuls les onglets défilent, dans leur propre cadre.
+          const barBox = (await bar.boundingBox())!;
+          expect(barBox.x + barBox.width).toBeLessThanOrEqual(375);
+          expect(await tabs.evaluate((nav) => getComputedStyle(nav).overflowX)).toBe('auto');
+          const navBox = (await tabs.boundingBox())!;
+          expect(navBox.x).toBeGreaterThanOrEqual(0);
+          expect(navBox.x + navBox.width).toBeLessThanOrEqual(375);
+          // Rappel sous les onglets, sur la barre sombre.
+          const reminder = bar.locator('.reminder');
+          expect((await reminder.boundingBox())!.y).toBeGreaterThanOrEqual(
+            navBox.y + navBox.height - 1,
+          );
+          await expectPageWidth(page, 375);
+          await shoot(page, `ux-a8-375-${name}-${theme}`);
+          await axeScreen(page, theme, `${name} à 375 px`);
+        }
+      } finally {
+        await admin.dispose();
+      }
+    });
+  }
+
+  test('1440 × 900 : une seule ligne de 48 px, rappel à droite avant l’avatar (maquette 20)', async ({
+    page,
+    context,
+  }) => {
+    test.setTimeout(90_000);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const admin = await adminApi();
+    try {
+      await shareSession(admin, context);
+      await page.goto('/fr/admin/validation');
+      await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
+      const bar = page.locator('pm-admin-bar header');
+      expect(Math.round((await bar.boundingBox())!.height)).toBe(49);
+      const tabs = (await bar.getByRole('navigation', { name: 'Administration' }).boundingBox())!;
+      const reminder = (await bar.locator('.reminder').boundingBox())!;
+      const avatar = (await bar.getByRole('button', { name: /menu du compte/ }).boundingBox())!;
+      expect(reminder.x).toBeGreaterThan(tabs.x + tabs.width);
+      expect(reminder.x + reminder.width).toBeLessThanOrEqual(avatar.x);
+      expect(reminder.y).toBeGreaterThanOrEqual(tabs.y);
+      expect(reminder.y + reminder.height).toBeLessThanOrEqual(tabs.y + tabs.height);
+      await expectPageWidth(page, 1440);
+      await expectNoAxeViolations(page);
+    } finally {
+      await admin.dispose();
+    }
   });
 });

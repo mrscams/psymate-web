@@ -24,6 +24,22 @@
   color: var(--text-primary);
 }
 
+// Titre et sous-titre (UX-A8) : la colonne prend la place du titre seul ; la ligne du titre garde
+// sa hauteur et la croix reste en face d'elle.
+.heading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.subtitle {
+  margin: 0;
+  font: var(--mat-sys-body-small);
+  color: var(--text-secondary);
+}
+
 .close {
   position: absolute;
   top: 12px;

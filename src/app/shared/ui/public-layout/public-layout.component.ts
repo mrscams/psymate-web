@@ -20,7 +20,8 @@ export const PUBLIC_PATHS = {
  * liens Annuaire et Comment ça marche, bouton secondaire Espace praticien (→ /connexion, ou
  * /patients si déjà connecté), `<main id="main">` avec le contenu, pied mentions légales ·
  * confidentialité · accessibilité, sans numéro d'urgence (G Q20). `narrow` : conteneur centré 480 px
- * des formulaires publics. Sans garde ni SessionStore : la coquille passe `authenticated`.
+ * des formulaires publics ; `wide` (UX-A8) : contenu jusqu'à 1 280 px (annuaire, maquette 08) ;
+ * sinon 1 120 px. Sans garde ni SessionStore : la coquille passe `authenticated`.
  */
 @Component({
   selector: 'pm-public-layout',
@@ -33,6 +34,8 @@ export class PublicLayoutComponent {
   readonly authenticated = input(false);
   /** Conteneur 480 px (connexion, inscription, mot de passe oublié, contact). */
   readonly narrow = input(false);
+  /** Contenu jusqu'à 1 280 px (annuaire, maquette 08) ; `narrow` l'emporte s'il est aussi posé. */
+  readonly wide = input(false);
   readonly switchHref = input.required<string>();
   readonly switchLang = input.required<AppLocale>();
 

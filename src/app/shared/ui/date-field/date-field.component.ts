@@ -39,6 +39,11 @@ abstract class DateFieldBase implements ControlValueAccessor, Validator {
   readonly inputId = input.required<string>();
   /** id du message d'erreur (pm-field-errors), relié par aria-describedby. */
   readonly errorId = input<string>();
+  /**
+   * id(s) d'une note d'aide (« jj/mm/aaaa », « laisser vide si inconnue »), séparés par des espaces
+   * (UX-A8) : ajoutés à aria-describedby avant errorId, sans passer par lui.
+   */
+  readonly describedBy = input<string | null>(null);
   /** Erreur signalée par le formulaire (validateur, 422) : bordure danger et aria-invalid. */
   readonly invalid = input(false);
   /** Bornes du calendrier, en ISO (`yyyy-MM-dd` ou `yyyy-MM`) ; la règle reste au validateur du formulaire. */
@@ -60,6 +65,13 @@ abstract class DateFieldBase implements ControlValueAccessor, Validator {
   /** Texte saisi illisible ou date inexistante. */
   protected readonly parseError = signal(false);
   protected readonly ariaInvalid = computed(() => this.invalid() || this.parseError());
+  /** Note d'aide puis message d'erreur, chaque id une seule fois ; null sans l'un ni l'autre. */
+  protected readonly ariaDescribedBy = computed(() => {
+    const ids = [this.describedBy(), this.errorId()].flatMap((value) =>
+      (value ?? '').split(/\s+/).filter(Boolean),
+    );
+    return [...new Set(ids)].join(' ') || null;
+  });
   protected readonly minDate = computed(() => fromIsoDate(this.min(), this.granularity));
   protected readonly maxDate = computed(() => fromIsoDate(this.max(), this.granularity));
 

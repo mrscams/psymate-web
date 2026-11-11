@@ -8,6 +8,14 @@
   max-width: 1120px;
   margin: 0 auto;
   padding: 24px;
+
+  /*
+   * Route `data.contentWidth: 'wide'` (UX-A8) : 1 600 px de contenu plus les marges de 24 px. Remplace
+   * les marges négatives que les écrans d'administration posaient pour sortir des 1 120 px.
+   */
+  &.wide {
+    max-width: 1648px;
+  }
 }
 
 /* Sous 600 px (UX-A1) : marges latérales réduites pour que le contenu tienne en 375 px. */

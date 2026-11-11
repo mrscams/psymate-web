@@ -2,66 +2,63 @@
   Aller au contenu
 </a>
 <header class="admin-bar">
-  <div class="row">
-    <a class="brand" [routerLink]="paths.validation">
-      <span class="brand-name" i18n="Nom du produit@@app.brand">PsyMate</span>
-      <span class="tag" i18n="Étiquette de la barre d'administration@@adminBar.tag">ADMIN</span>
+  <a class="brand" [routerLink]="paths.validation">
+    <span class="brand-name" i18n="Nom du produit@@app.brand">PsyMate</span>
+    <span class="tag" i18n="Étiquette de la barre d'administration@@adminBar.tag">ADMIN</span>
+  </a>
+  <nav
+    class="tabs"
+    aria-label="Administration"
+    i18n-aria-label="Étiquette de la navigation d'administration@@adminBar.nav.label"
+  >
+    <a [routerLink]="paths.validation" routerLinkActive="active" ariaCurrentWhenActive="page">
+      <span i18n="Onglet d'administration@@adminBar.tab.validation">Validation</span>
+      @if (pendingCount() !== null) {
+        <span class="count">{{ pendingCount() }}</span>
+      }
     </a>
-    <nav
-      class="tabs"
-      aria-label="Administration"
-      i18n-aria-label="Étiquette de la navigation d'administration@@adminBar.nav.label"
+    <a
+      [routerLink]="paths.practitioners"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
+      i18n="Onglet d'administration@@adminBar.tab.practitioners"
+      >Praticiens</a
     >
-      <a [routerLink]="paths.validation" routerLinkActive="active" ariaCurrentWhenActive="page">
-        <span i18n="Onglet d'administration@@adminBar.tab.validation">Validation</span>
-        @if (pendingCount() !== null) {
-          <span class="count">{{ pendingCount() }}</span>
-        }
-      </a>
-      <a
-        [routerLink]="paths.practitioners"
-        routerLinkActive="active"
-        ariaCurrentWhenActive="page"
-        i18n="Onglet d'administration@@adminBar.tab.practitioners"
-        >Praticiens</a
-      >
-      <a
-        [routerLink]="paths.journal"
-        routerLinkActive="active"
-        ariaCurrentWhenActive="page"
-        i18n="Onglet d'administration@@adminBar.tab.journal"
-        >Journal</a
-      >
-      <a
-        [routerLink]="paths.vocabulary"
-        routerLinkActive="active"
-        ariaCurrentWhenActive="page"
-        i18n="Onglet d'administration@@adminBar.tab.vocabulary"
-        >Vocabulaire</a
-      >
-    </nav>
-    <div class="spacer"></div>
-    @if (user(); as me) {
-      <button type="button" class="avatar" [matMenuTriggerFor]="adminMenu" aria-haspopup="menu">
-        <span>{{ initials() }}</span>
-        <span class="sr-only" i18n="Suite du nom accessible de l'avatar@@appBar.avatar.menu"
-          >· {{ me.displayName }}, menu du compte</span
-        >
-      </button>
-      <mat-menu #adminMenu="matMenu" xPosition="before">
-        <button
-          mat-menu-item
-          type="button"
-          class="logout"
-          (click)="logout.emit()"
-          i18n="Entrée de menu de l'avatar@@appBar.menu.logout"
-        >
-          Déconnexion
-        </button>
-      </mat-menu>
-    }
-  </div>
+    <a
+      [routerLink]="paths.journal"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
+      i18n="Onglet d'administration@@adminBar.tab.journal"
+      >Journal</a
+    >
+    <a
+      [routerLink]="paths.vocabulary"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
+      i18n="Onglet d'administration@@adminBar.tab.vocabulary"
+      >Vocabulaire</a
+    >
+  </nav>
   <p class="reminder" i18n="Rappel sous la barre d'administration@@adminBar.reminder">
     Aucune donnée patient n'est accessible depuis l'administration.
   </p>
+  @if (user(); as me) {
+    <button type="button" class="avatar" [matMenuTriggerFor]="adminMenu" aria-haspopup="menu">
+      <span>{{ initials() }}</span>
+      <span class="sr-only" i18n="Suite du nom accessible de l'avatar@@appBar.avatar.menu"
+        >· {{ me.displayName }}, menu du compte</span
+      >
+    </button>
+    <mat-menu #adminMenu="matMenu" xPosition="before">
+      <button
+        mat-menu-item
+        type="button"
+        class="logout"
+        (click)="logout.emit()"
+        i18n="Entrée de menu de l'avatar@@appBar.menu.logout"
+      >
+        Déconnexion
+      </button>
+    </mat-menu>
+  }
 </header>

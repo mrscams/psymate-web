@@ -6,8 +6,12 @@ import { firstValueFrom, Observable } from 'rxjs';
 
 import { ShortcutService } from '../../../core/shortcuts';
 
-/** 480 px par défaut ; 420 px pour l'éditeur de lien (fiche 00 §6). */
-export type SidePanelWidth = 480 | 420;
+/**
+ * 480 px par défaut ; 420 px pour les panneaux secondaires empilés (historique, aide des raccourcis,
+ * éditeur de lien selon la fiche 00 §6) ; 520 px pour l'éditeur de lien de la maquette 06 (UX-A8).
+ * Sous 600 px, tout panneau prend la largeur de l'écran.
+ */
+export type SidePanelWidth = 480 | 420 | 520;
 
 export interface SidePanelOptions<D = unknown> {
   data?: D;
