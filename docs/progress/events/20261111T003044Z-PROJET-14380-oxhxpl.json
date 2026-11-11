@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-11T00:30:44.179Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-A5 : entryTitle() partagée dans shared/ui (titre, sinon extrait de 60 caractères coupé au mot, sinon type et date courte) ; 49 tests fr/en",
+  "notes": "ID UX-A5 refusé par progress.mjs (motif Mxx-yy ou PROJET) : enregistré sous PROJET. Aucune feature modifiée ; 2 messages i18n ajoutés à la main aux xlf, absents de l extraction tant qu aucune feature n importe la fonction",
+  "next": "Branchement par les tâches du lot B : overview, graph, timeline, entries, search (liste dans la PR)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/47",
+  "branch": "claude/ux-a5-entry-title-c415c2",
+  "checkout": "ux-a5-entry-title-c415c2"
+}
