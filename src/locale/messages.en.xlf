@@ -10861,11 +10861,11 @@
         <note priority="1" from="description">2FA non activée</note>
       </trans-unit>
       <trans-unit id="admin.practitioners.purge" datatype="html">
-        <source> Purge des données le <x id="INTERPOLATION" equiv-text="{{ row.purge }}"/> </source>
+        <source>Purge des données le <x id="INTERPOLATION" equiv-text="{{ row.purge }}"/></source>
         <target state="translated">Data purged on <x id="INTERPOLATION" equiv-text="{{ row.purge }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
-          <context context-type="linenumber">190,191</context>
+          <context context-type="linenumber">188,189</context>
         </context-group>
         <note priority="1" from="description">Date de purge d&apos;un compte refusé</note>
       </trans-unit>
@@ -11459,11 +11459,15 @@
         <note priority="1" from="description">Colonne du vocabulaire</note>
       </trans-unit>
       <trans-unit id="admin.vocabulary.usage" datatype="html">
-        <source> Utilisée par <x id="INTERPOLATION" equiv-text="{{ entry.usedByPublishedProfiles }}"/> profil(s) publié(s) </source>
-        <target state="translated">Used by <x id="INTERPOLATION" equiv-text="{{ entry.usedByPublishedProfiles }}"/> published profile(s)</target>
+        <source>Utilisée par <x id="ICU" equiv-text="{entry.usedByPublishedProfiles, plural,
+                      =0 {aucun profil publié}
+                      =1 {1 profil publié}
+                      other {{{ entry.usedByPublishedProfiles }} profils publiés}
+                    }" xid="1354918041868012746"/></source>
+        <target state="translated">Used by <x id="ICU"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
-          <context context-type="linenumber">107,108</context>
+          <context context-type="linenumber">113,120</context>
         </context-group>
         <note priority="1" from="description">Utilisation d&apos;une entrée</note>
       </trans-unit>
@@ -12175,11 +12179,11 @@
         <note priority="1" from="description">Effets de la désactivation</note>
       </trans-unit>
       <trans-unit id="admin.vocabulary.inUse" datatype="html">
-        <source> Utilisée par <x id="INTERPOLATION" equiv-text="{{ inUse() }}"/> profil(s) publié(s) : demandez d&apos;abord aux praticiens de la retirer ou choisissez une spécialité de remplacement. </source>
-        <target state="translated">Used by <x id="INTERPOLATION" equiv-text="{{ inUse() }}"/> published profile(s): first ask the practitioners to remove it, or choose a replacement specialty.</target>
+        <source>: demandez d&apos;abord aux praticiens de la retirer ou choisissez une spécialité de remplacement.</source>
+        <target state="translated">: first ask the practitioners to remove it, or choose a replacement specialty.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
-          <context context-type="linenumber">49,51</context>
+          <context context-type="linenumber">53,57</context>
         </context-group>
         <note priority="1" from="description">Encart d&apos;une entrée utilisée</note>
       </trans-unit>
@@ -12247,20 +12251,20 @@
         <note priority="1" from="description">Titre du bloc décision</note>
       </trans-unit>
       <trans-unit id="admin.decision.noteLabel" datatype="html">
-        <source>Note interne (jamais envoyée au praticien)</source>
-        <target state="translated">Internal note (never sent to the practitioner)</target>
+        <source>Note interne <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;aside&quot;&gt;"/>(jamais envoyée au praticien)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">Internal note <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;aside&quot;&gt;"/>(never sent to the practitioner)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
-          <context context-type="linenumber">29,32</context>
+          <context context-type="linenumber">34,36</context>
         </context-group>
         <note priority="1" from="description">Champ note interne</note>
       </trans-unit>
       <trans-unit id="admin.decision.messageLabel" datatype="html">
-        <source>Message au praticien (obligatoire pour un complément ou un refus)</source>
-        <target state="translated">Message to the practitioner (required to request more information or reject)</target>
+        <source>Message au praticien <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;aside&quot;&gt;"/>(obligatoire pour un complément ou un refus)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">Message to the practitioner <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;aside&quot;&gt;"/>(required to request more information or reject)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
-          <context context-type="linenumber">47,50</context>
+          <context context-type="linenumber">53,56</context>
         </context-group>
         <note priority="1" from="description">Champ message au praticien</note>
       </trans-unit>
@@ -12373,29 +12377,29 @@
         <note priority="1" from="description">Point de la liste de contrôle</note>
       </trans-unit>
       <trans-unit id="admin.decision.unchecked" datatype="html">
-        <source><x id="count" equiv-text="points"/> point(s) de contrôle non coché(s)</source>
-        <target state="translated"><x id="count" equiv-text="points"/> checklist item(s) not ticked</target>
+        <source>{VAR_PLURAL, plural, =1 {1 point de contrôle non coché} other {<x id="INTERPOLATION"/> points de contrôle non cochés}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 checklist item not ticked} other {<x id="INTERPOLATION"/> checklist items not ticked}}</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">89,92</context>
         </context-group>
         <note priority="1" from="description">Points de contrôle non cochés</note>
       </trans-unit>
       <trans-unit id="admin.decision.nonConform" datatype="html">
-        <source><x id="count" equiv-text="documents"/> justificatif(s) non marqué(s) conforme(s)</source>
-        <target state="translated"><x id="count" equiv-text="documents"/> document(s) not marked compliant</target>
+        <source>{VAR_PLURAL, plural, =1 {1 justificatif non marqué conforme} other {<x id="INTERPOLATION"/> justificatifs non marqués conformes}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 document not marked compliant} other {<x id="INTERPOLATION"/> documents not marked compliant}}</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">97,100</context>
         </context-group>
         <note priority="1" from="description">Justificatifs non conformes</note>
       </trans-unit>
       <trans-unit id="admin.decision.confirm" datatype="html">
-        <source><x id="summary" equiv-text="summary"/> — approuver quand même ?</source>
-        <target state="translated"><x id="summary" equiv-text="summary"/> — approve anyway?</target>
+        <source>— approuver quand même ?</source>
+        <target state="translated">— approve anyway?</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
+          <context context-type="linenumber">101,105</context>
         </context-group>
         <note priority="1" from="description">Confirmation d&apos;une approbation forcée</note>
       </trans-unit>
@@ -22645,6 +22649,105 @@
           <context context-type="linenumber">81</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;état erreur de la régénération des codes</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.inUseCount" datatype="html">
+        <source>Utilisée par <x id="ICU" equiv-text="{inUse(), plural,
+                =0 {aucun profil publié}
+                =1 {1 profil publié}
+                other {{{ inUse() }} profils publiés}
+              }" xid="1354918041868012746"/></source>
+        <target state="translated">Used by <x id="ICU"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
+          <context context-type="linenumber">50,57</context>
+        </context-group>
+        <note priority="1" from="description">Nombre de profils qui utilisent l&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="6033647478858359280" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {aucun profil publié} =1 {1 profil publié} other {<x id="INTERPOLATION"/> profils publiés}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =0 {no published profile} =1 {1 published profile} other {<x id="INTERPOLATION"/> published profiles}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
+          <context context-type="linenumber">50,51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="admin.journal.groupHide" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {Masquer la ligne identique} other {Masquer les <x id="INTERPOLATION"/> lignes identiques}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {Hide the identical line} other {Hide the <x id="INTERPOLATION"/> identical lines}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">225,228</context>
+        </context-group>
+        <note priority="1" from="description">Repli d&apos;un groupe de lignes du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.journal.groupShow" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {Afficher 1 ligne identique} other {Afficher <x id="INTERPOLATION"/> lignes identiques}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {Show 1 identical line} other {Show <x id="INTERPOLATION"/> identical lines}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
+          <context context-type="linenumber">229,232</context>
+        </context-group>
+        <note priority="1" from="description">Dépliage d&apos;un groupe de lignes du journal</note>
+      </trans-unit>
+      <trans-unit id="admin.appeals.showAll" datatype="html">
+        <source> <x id="ICU" equiv-text="{hiddenAppeals(), plural,
+            =1 {Afficher l&apos;autre recours}
+            other {Afficher les {{ hiddenAppeals() }} autres recours}
+          }" xid="5070405837718736083"/> </source>
+        <target state="translated"><x id="ICU"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">294,299</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;affichage des recours masqués</note>
+      </trans-unit>
+      <trans-unit id="8073728300954759592" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {Afficher l&apos;autre recours} other {Afficher les <x id="INTERPOLATION"/> autres recours}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {Show the other appeal} other {Show the <x id="INTERPOLATION"/> other appeals}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
+          <context context-type="linenumber">294</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="admin.validation.legend" datatype="html">
+        <source> En rouge : au-delà du délai de 2 jours ouvrés. </source>
+        <target state="translated">In red: past the 2-business-day deadline.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">88,94</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la file</note>
+      </trans-unit>
+      <trans-unit id="admin.validation.sideLabel" datatype="html">
+        <source>Vérification et décision</source>
+        <target state="translated">Verification and decision</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
+          <context context-type="linenumber">171,172</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la colonne de décision</note>
+      </trans-unit>
+      <trans-unit id="admin.viewer.noPreview" datatype="html">
+        <source> Aperçu indisponible dans ce navigateur. </source>
+        <target state="translated">Preview unavailable in this browser.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">92,95</context>
+        </context-group>
+        <note priority="1" from="description">Aperçu indisponible dans la visionneuse</note>
+      </trans-unit>
+      <trans-unit id="admin.viewer.openDocument" datatype="html">
+        <source>Ouvrir le document</source>
+        <target state="translated">Open the document</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
+          <context context-type="linenumber">101,102</context>
+        </context-group>
+        <note priority="1" from="description">Lien d&apos;ouverture du justificatif</note>
       </trans-unit>
     </body>
   </file>

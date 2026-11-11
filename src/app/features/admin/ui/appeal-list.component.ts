@@ -21,11 +21,13 @@ import { decisionLabel, formatDay } from './admin-labels';
     <ul>
       @for (appeal of rows(); track appeal.id) {
         <li>
-          <div class="head">
-            <span class="name">{{ appeal.practitionerDisplayName }}</span>
-            <span class="context">{{ appeal.context }}</span>
+          <div class="body">
+            <div class="head">
+              <span class="name">{{ appeal.practitionerDisplayName }}</span>
+              <span class="context">{{ appeal.context }}</span>
+            </div>
+            <blockquote>{{ appeal.message }}</blockquote>
           </div>
-          <blockquote>{{ appeal.message }}</blockquote>
           <div class="actions">
             <button
               type="button"
@@ -52,19 +54,27 @@ import { decisionLabel, formatDay } from './admin-labels';
     ul {
       display: flex;
       flex-direction: column;
-      gap: 12px;
       margin: 0;
       padding: 0;
       list-style: none;
     }
 
+    /* Une ligne par recours (UX-E2) : nom, contexte et message à gauche, actions à droite. */
     li {
       display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .body {
+      display: flex;
+      flex: 1 1 320px;
       flex-direction: column;
-      gap: 8px;
-      padding: 12px;
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
+      gap: 4px;
+      min-width: 0;
     }
 
     .head {
@@ -112,8 +122,7 @@ import { decisionLabel, formatDay } from './admin-labels';
     }
 
     .dismiss {
-      border-color: var(--danger);
-      color: var(--danger);
+      color: var(--text-secondary);
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

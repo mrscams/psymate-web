@@ -39,6 +39,9 @@ export const SEARCH_DEBOUNCE_MS = 300;
 /** Longueur minimale d'un motif de suspension ou de réactivation (contrat : 20 à 4000). */
 export const REASON_MIN_LENGTH = 20;
 
+/** Recours visibles avant « Afficher les n autres recours ». */
+export const APPEALS_SHOWN = 3;
+
 const PROFESSIONS: readonly Profession[] = ['psychologist', 'psychiatrist', 'coach'];
 
 /**
@@ -95,6 +98,14 @@ export class PractitionersPage {
     () => this.store.page().status === 'error' && this.kind() === null,
   );
   protected readonly appealsKind = computed(() => stateKind(this.appeals.page()));
+  /** Recours affichés d'emblée (UX-E2) : la liste des comptes reste en tête de page. */
+  protected readonly showAllAppeals = signal(false);
+  protected readonly visibleAppeals = computed(() =>
+    this.showAllAppeals() ? this.appeals.items() : this.appeals.items().slice(0, APPEALS_SHOWN),
+  );
+  protected readonly hiddenAppeals = computed(
+    () => this.appeals.items().length - this.visibleAppeals().length,
+  );
 
   protected readonly rows = computed(() =>
     this.store.items().map((account) => ({

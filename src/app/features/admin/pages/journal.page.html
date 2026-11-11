@@ -14,23 +14,23 @@
   >
     Événements
   </h2>
-  <div
-    class="segments"
-    role="group"
-    aria-label="Type d'événement"
-    i18n-aria-label="Étiquette des segments du journal@@admin.journal.segments"
-  >
-    @for (category of categories; track category) {
-      <button
-        type="button"
-        [attr.aria-pressed]="filters().category === category"
-        (click)="setCategory(category)"
-      >
-        {{ categoryLabel(category) }}
-      </button>
-    }
-  </div>
   <div class="filters">
+    <div
+      class="segments"
+      role="group"
+      aria-label="Type d'événement"
+      i18n-aria-label="Étiquette des segments du journal@@admin.journal.segments"
+    >
+      @for (category of categories; track category) {
+        <button
+          type="button"
+          [attr.aria-pressed]="filters().category === category"
+          (click)="setCategory(category)"
+        >
+          {{ categoryLabel(category) }}
+        </button>
+      }
+    </div>
     <div class="field">
       <label for="journal-actor" i18n="Filtre administrateur@@admin.journal.actor">Par</label>
       <select id="journal-actor" (change)="onActor($event)">
@@ -140,45 +140,22 @@
             <th scope="col" i18n="Colonne du journal@@admin.journal.col.type">Type</th>
             <th scope="col" i18n="Colonne du journal@@admin.journal.col.event">Événement</th>
             <th scope="col" i18n="Colonne du journal@@admin.journal.col.by">Par</th>
-            <th scope="col" i18n="Colonne du journal@@admin.journal.col.context">Contexte</th>
+            @if (hasContext()) {
+              <th scope="col" i18n="Colonne du journal@@admin.journal.col.context">Contexte</th>
+            }
           </tr>
         </thead>
         <tbody>
-          @for (row of rows(); track row.id) {
-            <tr tabindex="-1">
-              <td class="mono nowrap">{{ row.time }}</td>
-              <td>
-                <span class="badge" [class]="row.category.tone">{{ row.category.label }}</span>
-                <div class="mono kind">{{ row.kind }}</div>
-              </td>
-              <td>
-                <div>{{ row.text }}</div>
-                @if (row.practitionerDisplayName && row.practitionerId) {
-                  <button
-                    type="button"
-                    class="link"
-                    (click)="filterPractitioner(row.practitionerId)"
-                  >
-                    {{ row.practitionerDisplayName }}
-                    <span class="sr-only" i18n="Action d'un nom du journal@@admin.journal.filterBy"
-                      >: voir seulement ses événements</span
-                    >
-                  </button>
-                }
-              </td>
-              <td>{{ row.by }}</td>
-              <td>
-                @if (row.source === 'verification_decision' && row.practitionerId) {
-                  <a
-                    [routerLink]="['/admin/validation', row.practitionerId]"
-                    i18n="Lien vers le dossier@@admin.journal.openDossier"
-                    >Voir le dossier</a
-                  >
-                } @else {
-                  <span class="secondary">—</span>
-                }
-              </td>
-            </tr>
+          @for (group of groups(); track group.lead.id) {
+            @let open = expanded().has(group.lead.id);
+            <ng-container
+              *ngTemplateOutlet="line; context: { $implicit: group.lead, group: group, open: open }"
+            />
+            @if (open) {
+              @for (row of group.rest; track row.id) {
+                <ng-container *ngTemplateOutlet="line; context: { $implicit: row, nested: true }" />
+              }
+            }
           }
         </tbody>
       </table>
@@ -212,3 +189,71 @@
   Journal en ajout seul : aucune ligne ne se modifie ni ne se supprime. Les adresses IP ne sont
   jamais affichées.
 </p>
+
+<ng-template #line let-row let-group="group" let-open="open" let-nested="nested">
+  <tr tabindex="-1" [attr.data-id]="row.id" [class.nested]="nested">
+    <td class="mono nowrap">{{ row.time }}</td>
+    <td class="nowrap">
+      <span class="badge" [class]="row.category.tone">{{ row.category.label }}</span>
+      <span class="mono kind">{{ row.kind }}</span>
+    </td>
+    <td>
+      <div class="event">
+        @if (group && group.count > 1) {
+          <span class="times mono">{{ group.count }} ×</span>
+        }
+        <span>{{ row.text }}</span>
+        @if (row.practitionerDisplayName && row.practitionerId) {
+          <span aria-hidden="true">·</span>
+          <button type="button" class="link" (click)="filterPractitioner(row.practitionerId)">
+            {{ row.practitionerDisplayName }}
+            <span class="sr-only" i18n="Action d'un nom du journal@@admin.journal.filterBy"
+              >: voir seulement ses événements</span
+            >
+          </button>
+        }
+      </div>
+      @if (group && group.count > 1) {
+        <button
+          type="button"
+          class="group-toggle"
+          [attr.aria-expanded]="open"
+          (click)="toggleGroup(row.id)"
+        >
+          @if (open) {
+            <span
+              i18n="Repli d'un groupe de lignes du journal@@admin.journal.groupHide"
+              >{group.count - 1, plural,
+                =1 {Masquer la ligne identique}
+                other {Masquer les {{ group.count - 1 }} lignes identiques}
+              }</span
+            >
+          } @else {
+            <span
+              i18n="Dépliage d'un groupe de lignes du journal@@admin.journal.groupShow"
+              >{group.count - 1, plural,
+                =1 {Afficher 1 ligne identique}
+                other {Afficher {{ group.count - 1 }} lignes identiques}
+              }</span
+            >
+          }
+          <span class="mono range">{{ group.range }}</span>
+        </button>
+      }
+    </td>
+    <td>{{ row.by }}</td>
+    @if (hasContext()) {
+      <td>
+        @if (row.context) {
+          <a
+            [routerLink]="['/admin/validation', row.practitionerId]"
+            i18n="Lien vers le dossier@@admin.journal.openDossier"
+            >Voir le dossier</a
+          >
+        } @else {
+          <span class="secondary">—</span>
+        }
+      </td>
+    }
+  </tr>
+</ng-template>

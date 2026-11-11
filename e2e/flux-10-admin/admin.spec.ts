@@ -20,6 +20,19 @@ import {
 
 const BANNER_UNDER_REVIEW = 'Votre dossier professionnel est en cours de vérification';
 
+/**
+ * Visionneuse (UX-E1) : aperçu natif dans une iframe (URL blob) si le navigateur lit les PDF,
+ * sinon « Ouvrir le document » (Chromium sans lecteur PDF, comme en e2e headless).
+ */
+async function expectViewerRendered(page: Page): Promise<void> {
+  const viewer = page.locator('pm-document-viewer');
+  await expect(
+    viewer
+      .locator('iframe[src^="blob:"]')
+      .or(viewer.getByRole('link', { name: /Ouvrir le document/ })),
+  ).toBeVisible();
+}
+
 /** Connexion d'un praticien par l'écran (fiche 11), puis attente de /patients. */
 async function signIn(page: Page, account: TestAccount): Promise<void> {
   await page.goto('/fr/connexion');
@@ -86,29 +99,34 @@ test.describe('administration', () => {
     await expect(documents).toHaveCount(2);
     // Visionneuse : URL signée, puis fichier lu (consigné par le serveur), rendu dans une iframe native.
     expect((await fileServed).status()).toBe(200);
-    await expect(page.locator('pm-document-viewer iframe')).toHaveAttribute('src', /^blob:/);
+    await expectViewerRendered(page);
     await expectNoAxeViolations(page);
 
-    // Sans message : complément et refus inactifs. Forcé quand même : le serveur répond 422.
-    const askMore = page.getByRole('button', { name: 'Demander un complément' });
-    await expect(askMore).toBeDisabled();
-    await expect(page.getByRole('button', { name: 'Refuser et suspendre' })).toBeDisabled();
-    const refused = page.waitForResponse((res) =>
-      res.url().endsWith(`/api/admin/verifications/${practitioner.id}/decision`),
-    );
-    await askMore.evaluate((button: HTMLButtonElement) => {
-      button.disabled = false;
-      button.click();
+    // Complément et refus actifs (UX-E1) : sans message, l'erreur s'affiche sous « Message au
+    // praticien », qui prend le focus, et rien ne part au serveur.
+    const decisionUrl = `/api/admin/verifications/${practitioner.id}/decision`;
+    const posted: string[] = [];
+    page.on('request', (req) => {
+      if (req.method() === 'POST' && req.url().endsWith(decisionUrl)) posted.push(req.url());
     });
-    const response = await refused;
-    expect(response.status()).toBe(422);
-    expect(((await response.json()) as { errors: { code: string }[] }).errors[0].code).toBe(
-      'MESSAGE_REQUIRED',
+    await page.getByRole('button', { name: 'Demander un complément' }).click();
+    const message = page.locator('#field-messageToPractitioner');
+    await expect(page.locator('#field-messageToPractitioner-error')).toHaveText(
+      'Ce champ est obligatoire.',
     );
-    await expect(page.locator('#field-messageToPractitioner-error')).not.toBeEmpty();
-    await expect(page.locator('#field-messageToPractitioner')).toHaveAttribute(
-      'aria-invalid',
-      'true',
+    await expect(message).toHaveAttribute('aria-invalid', 'true');
+    await expect(message).toBeFocused();
+    await page.getByRole('button', { name: 'Refuser et suspendre' }).click();
+    await expect(message).toBeFocused();
+    expect(posted).toHaveLength(0);
+    await expectNoAxeViolations(page);
+    // Le serveur reste juge : la même décision forcée par l'API est refusée (422 MESSAGE_REQUIRED).
+    const refused = await admin.post(`${API}${decisionUrl}`, {
+      data: { kind: 'needs_more', messageToPractitioner: '', checklist: {} },
+    });
+    expect(refused.status()).toBe(422);
+    expect(((await refused.json()) as { errors: { code: string }[] }).errors[0].code).toBe(
+      'MESSAGE_REQUIRED',
     );
 
     // Justificatifs conformes (PATCH immédiat), liste de contrôle cochée, approbation.
@@ -242,7 +260,7 @@ test.describe('administration', () => {
         'true',
       );
       const row = page.getByRole('row').filter({ hasText: code });
-      await expect(row).toContainText('Utilisée par 1 profil(s) publié(s)');
+      await expect(row).toContainText('Utilisée par 1 profil publié');
       await expectNoAxeViolations(page);
 
       await row.getByRole('button', { name: /Désactiver…/ }).click();
@@ -250,7 +268,7 @@ test.describe('administration', () => {
       const refused = page.waitForResponse((res) => res.url().endsWith(`/specialty/${code}`));
       await dialog.getByRole('button', { name: 'Désactiver', exact: true }).click();
       expect((await refused).status()).toBe(409);
-      await expect(dialog.getByRole('alert')).toContainText('Utilisée par 1 profil(s) publié(s)');
+      await expect(dialog.getByRole('alert')).toContainText('Utilisée par 1 profil publié');
       await expect(dialog.getByRole('button', { name: 'Fermer' })).toBeFocused();
       await expectNoAxeViolations(page);
       await dialog.getByRole('button', { name: 'Fermer' }).click();
@@ -335,16 +353,34 @@ test.describe('administration', () => {
     await page.goto('/fr/admin/journal?period=all');
     await expect(page.getByRole('heading', { level: 1, name: 'Journal' })).toBeVisible();
     const rows = page.locator('tbody tr');
-    await expect(rows).toHaveCount(50);
+    // 50 événements par page ; les rafales identiques sont regroupées (UX-E3) : 50 lignes au plus.
+    await expect(rows.first()).toBeVisible();
+    const before = await rows.count();
+    expect(before).toBeLessThanOrEqual(50);
+    // Horodatage Intl « 9 nov. 2026 · 11:14:46 » (UX-E3).
+    await expect(rows.first().locator('td').first()).toHaveText(
+      /^\d{1,2} [a-zéû]+\.? \d{4} · \d{2}:\d{2}:\d{2}$/,
+    );
     await expectNoAxeViolations(page);
     await page.getByRole('button', { name: 'Afficher plus' }).click();
-    await expect.poll(() => rows.count()).toBeGreaterThan(50);
-    await expect(rows.nth(50)).toBeFocused();
+    await expect.poll(() => rows.count()).toBeGreaterThan(before);
+    await expect(page.locator('tbody tr:focus')).toHaveCount(1);
 
     // Segment « Accès aux documents » : filtre dans l'URL, lignes de ce type seulement.
     await page.getByRole('button', { name: 'Accès aux documents' }).click();
     await expect(page).toHaveURL(/type=documents/);
     await expect(rows.first()).toContainText('admin.document_read');
+    // Groupe de lignes identiques : se déplie et se replie (aria-expanded).
+    const toggle = page.locator('.group-toggle').first();
+    if ((await toggle.count()) > 0) {
+      const collapsed = await rows.count();
+      await toggle.click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      await expect.poll(() => rows.count()).toBeGreaterThan(collapsed);
+      await expectNoAxeViolations(page);
+      await toggle.click();
+      await expect(rows).toHaveCount(collapsed);
+    }
     // Aucune adresse IP complète dans la page.
     expect(await page.locator('main').innerText()).not.toMatch(/\b\d{1,3}(\.\d{1,3}){3}\b/);
   });

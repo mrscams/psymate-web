@@ -3,9 +3,11 @@ import {
   Component,
   computed,
   effect,
+  ElementRef,
   input,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -42,8 +44,8 @@ const PUBLIC_REGISTRY = 'https://annuaire.sante.fr/';
 
 /**
  * Liste de contrôle et décision (fiche 20, B3 flux 10) : note interne (jamais envoyée), message au
- * praticien (obligatoire pour un complément ou un refus : boutons inactifs sans lui, le serveur
- * reste juge avec un 422), Approuver / Demander un complément / Refuser et suspendre. Approuver
+ * praticien (obligatoire pour un complément ou un refus : vérifié au clic, erreur sous le champ ; le
+ * serveur reste juge avec un 422), Approuver / Demander un complément / Refuser et suspendre. Approuver
  * avec des points non cochés ou des justificatifs non conformes demande une confirmation en ligne,
  * qui exige la note interne (approbation forcée).
  */
@@ -90,25 +92,10 @@ export class DecisionFormComponent {
     () => Object.values(this.checked()).filter((value) => !value).length,
   );
 
-  /** Confirmation en ligne de l'approbation forcée. */
+  /** Confirmation en ligne de l'approbation forcée (texte au pluriel ICU dans le gabarit). */
   protected readonly confirming = signal(false);
-  protected readonly confirmText = computed(() => {
-    const parts: string[] = [];
-    const points = this.unchecked();
-    const documents = this.nonConform();
-    if (points > 0) {
-      parts.push(
-        $localize`:Points de contrôle non cochés@@admin.decision.unchecked:${points}:count: point(s) de contrôle non coché(s)`,
-      );
-    }
-    if (documents > 0) {
-      parts.push(
-        $localize`:Justificatifs non conformes@@admin.decision.nonConform:${documents}:count: justificatif(s) non marqué(s) conforme(s)`,
-      );
-    }
-    const summary = parts.join(' · ');
-    return $localize`:Confirmation d'une approbation forcée@@admin.decision.confirm:${summary}:summary: — approuver quand même ?`;
-  });
+
+  private readonly messageField = viewChild<ElementRef<HTMLTextAreaElement>>('message');
 
   /** Message de l'API qui ne vise aucun champ (409 d'état, erreur réseau). */
   protected readonly generalError = signal<string | null>(null);
@@ -156,9 +143,19 @@ export class DecisionFormComponent {
     this.confirming.set(false);
   }
 
-  /** Complément ou refus : le bouton est inactif sans message ; s'il est forcé, le serveur répond 422. */
+  /**
+   * Complément ou refus : boutons toujours actifs (UX-E1) ; sans message, l'erreur s'affiche sous
+   * « Message au praticien », qui prend le focus, et rien ne part. Le serveur reste juge (422).
+   */
   protected send(kind: VerificationDecision): void {
     this.confirming.set(false);
+    if (!this.hasMessage()) {
+      const control = this.form.controls.messageToPractitioner;
+      control.setErrors({ ...(control.errors ?? {}), required: true });
+      control.markAsTouched();
+      this.messageField()?.nativeElement.focus();
+      return;
+    }
     this.emit(kind, false);
   }
 

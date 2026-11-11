@@ -13,8 +13,7 @@
 .page-header {
   @include admin.page-header;
 
-  flex-direction: column;
-  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .card {
@@ -52,9 +51,42 @@
   white-space: nowrap;
 }
 
+// Badge et code technique sur une ligne (maquette 22 : lignes d'une ligne).
 .kind {
-  margin-top: 4px;
+  margin-left: 6px;
   font-size: 12px;
+  white-space: nowrap;
+}
+
+.event {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 6px;
+  align-items: baseline;
+}
+
+.times {
+  font-weight: 600;
+}
+
+// Dépliage d'un groupe de lignes identiques (UX-E3) : 24 px de haut au moins (WCAG 2.5.8).
+.group-toggle {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 24px;
+  margin-top: 4px;
+  padding: 0 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  background: var(--surface-ground);
+  color: var(--primary-hover);
+  font: var(--mat-sys-label-medium);
+  cursor: pointer;
+}
+
+.nested td {
+  background: var(--surface-ground);
 }
 
 .link {
@@ -80,4 +112,8 @@ tr:focus-visible {
   margin: 0;
   color: var(--text-secondary);
   font: var(--mat-sys-body-small);
+}
+
+#journal-actor {
+  width: 320px;
 }
