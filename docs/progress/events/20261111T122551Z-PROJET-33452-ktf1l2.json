@@ -1,0 +1,9 @@
+{
+  "at": "2026-11-11T12:25:51.306Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-F1 : docs/design et étude des couleurs resynchronisées depuis psymate-api c3ee607 (fiches et maquettes corrigées après l'audit UX)",
+  "branch": "claude/ux-f1-sync-design-docs",
+  "checkout": "psymate-ux-audit-design-b1ba83"
+}
