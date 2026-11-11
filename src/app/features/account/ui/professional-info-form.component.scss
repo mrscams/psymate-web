@@ -86,6 +86,9 @@ input[type='tel'] {
 
 .actions {
   display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   align-items: center;
   gap: 12px;
 }

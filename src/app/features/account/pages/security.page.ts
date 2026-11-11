@@ -1,7 +1,9 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   inject,
   LOCALE_ID,
@@ -40,11 +42,17 @@ import {
 } from '../panels/password-change.panel';
 import { RecoveryCodesPanel } from '../panels/recovery-codes.panel';
 import { TwoFactorPanel, TwoFactorPanelResult } from '../panels/two-factor.panel';
-import { UNAVAILABLE_MESSAGE } from '../ui/security-messages';
+import { RELATIVE_TICK_MS, relativeAgo } from '../ui/relative-time';
+import {
+  deviceLabel,
+  revokedOthersMessage,
+  revokeOthersConfirmation,
+  UNAVAILABLE_MESSAGE,
+} from '../ui/security-messages';
 import { professionLabel } from './preferences.page';
+import { TWO_FACTOR_SEGMENT } from './two-factor-segment';
 
-/** Segment enfant de /mon-compte/securite qui ouvre le panneau d'activation (fiche 18 B). */
-export const TWO_FACTOR_SEGMENT = '2fa';
+export { TWO_FACTOR_SEGMENT };
 
 /**
  * /mon-compte/securite (fiche 18 A) : cartes E-mail de connexion, Mot de passe, Double
@@ -54,7 +62,7 @@ export const TWO_FACTOR_SEGMENT = '2fa';
  */
 @Component({
   selector: 'pm-security-page',
-  imports: [MatButtonModule, AccountNavComponent, StateComponent],
+  imports: [NgTemplateOutlet, MatButtonModule, AccountNavComponent, StateComponent],
   providers: [SecurityStore],
   templateUrl: './security.page.html',
   styleUrl: './security.page.scss',
@@ -95,21 +103,17 @@ export class SecurityPage {
   };
 
   /** « 2 appareils déconnectés », « Aucun autre appareil n'était connecté » (0 compris). */
-  protected readonly revokedText = computed(() => {
-    const count = this.store.revokedOthers();
-    if (count === null) return '';
-    if (count === 0) {
-      return $localize`:Aucune autre session révoquée@@account.security.sessions.revokedNone:Aucun autre appareil n'était connecté.`;
-    }
-    return count === 1
-      ? $localize`:Une session révoquée@@account.security.sessions.revokedOne:1 appareil déconnecté.`
-      : $localize`:Plusieurs sessions révoquées@@account.security.sessions.revokedMany:${count}:count: appareils déconnectés.`;
-  });
+  protected readonly revokedText = computed(() => revokedOthersMessage(this.store.revokedOthers()));
 
   protected readonly revokeMessage = computed(() => {
     const problem = this.store.revokeProblem() ?? this.store.revokeOthersProblem();
     return problem ? revokeErrorMessage(problem) : null;
   });
+
+  /** État d'écran (UX-C5) : sessions plus anciennes dépliées, appareils dont le détail est ouvert. */
+  protected readonly showOlder = signal(false);
+  protected readonly openGroups = signal<ReadonlySet<string>>(new Set());
+  private readonly now = signal(Date.now());
 
   private twoFactorPanel: SidePanelRef<TwoFactorPanelResult> | null = null;
 
@@ -124,6 +128,8 @@ export class SecurityPage {
 
   constructor() {
     void this.store.load();
+    const tick = setInterval(() => this.now.set(Date.now()), RELATIVE_TICK_MS);
+    inject(DestroyRef).onDestroy(() => clearInterval(tick));
     effect(() => {
       if (this.twoFactorRoute()) untracked(() => void this.openTwoFactorPanel());
     });
@@ -133,12 +139,21 @@ export class SecurityPage {
     return formatDateTime(value, this.locale);
   }
 
-  protected deviceLabel(device: string | null): string {
-    return (
-      device ??
-      $localize`:Appareil inconnu d'une session@@account.security.sessions.unknownDevice:Appareil non identifié`
-    );
+  /** « à l'instant », « il y a 3 min » : dernière activité d'une session ou d'un appareil. */
+  protected ago(value: string): string {
+    const at = Date.parse(value);
+    return Number.isNaN(at) ? '' : relativeAgo(at, this.now(), this.locale);
   }
+
+  protected toggleGroup(key: string): void {
+    this.openGroups.update((open) => {
+      const next = new Set(open);
+      if (!next.delete(key)) next.add(key);
+      return next;
+    });
+  }
+
+  protected readonly deviceLabel = deviceLabel;
 
   /** « Activer » : la route /2fa ouvre le panneau (lien partageable, retour arrière cohérent). */
   protected activateTwoFactor(): void {
@@ -202,16 +217,17 @@ export class SecurityPage {
   }
 
   protected async revokeOthers(): Promise<void> {
-    const ok = await this.confirm.confirm({
-      title: $localize`:Confirmation avant déconnexion des autres appareils@@account.security.sessions.confirmTitle:Déconnecter les autres appareils ?`,
-      description: $localize`:Explication de la confirmation@@account.security.sessions.confirmBody:Cet appareil reste connecté. Les autres devront se reconnecter ; l'opération est consignée côté serveur.`,
-      confirmLabel: $localize`:Bouton de la confirmation@@account.security.sessions.confirmButton:Déconnecter`,
-    });
+    const ok = await this.confirm.confirm(revokeOthersConfirmation());
     if (ok) await this.store.revokeOthers();
   }
 
+  /**
+   * Lu sur l'instantané du parent : à l'ouverture directe de /mon-compte/securite/2fa, la page est
+   * construite avant que la route enfant soit activée (`firstChild.snapshot` n'existe pas encore,
+   * l'ancienne lecture levait une TypeError et la navigation échouait vers /, audit UX-C5).
+   */
   private isTwoFactorRoute(): boolean {
-    return this.route.firstChild?.snapshot.url[0]?.path === TWO_FACTOR_SEGMENT;
+    return this.route.snapshot.firstChild?.url[0]?.path === TWO_FACTOR_SEGMENT;
   }
 
   private async openTwoFactorPanel(): Promise<void> {

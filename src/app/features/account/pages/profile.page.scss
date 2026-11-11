@@ -45,6 +45,10 @@ h1 {
   margin-top: 8px;
   min-height: 1.4em;
   font: var(--mat-sys-body-small);
+
+  &.error {
+    color: var(--danger);
+  }
 }
 
 .help {
@@ -52,7 +56,6 @@ h1 {
 }
 
 .link {
-  margin-left: 6px;
   padding: 0;
   border: 0;
   background: none;
@@ -74,7 +77,7 @@ h1 {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 
 .side {
@@ -86,10 +89,12 @@ h1 {
 }
 
 .card {
+  // Les grilles suivent la largeur de la carte, pas celle de la fenêtre (colonne droite à côté).
+  container: pm-profile-card / inline-size;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 22px 26px;
+  gap: 12px;
+  padding: 16px 22px;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
@@ -104,25 +109,51 @@ h2 {
   color: var(--text-secondary);
 }
 
+// Identité (fiche 10) : carte large, photo en colonne à gauche de la grille (maquette) ; carte
+// moyenne (colonne droite à côté, 1 440 px), la photo devient la première case de la grille
+// 2 colonnes (photo | nom, profession | titre, n° pro | créneau, disponibilité) ; étroite, tout
+// s'empile.
 .identity {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px 18px;
+  align-items: start;
 }
 
-pm-photo-editor {
-  flex: 0 0 160px;
+@container pm-profile-card (min-width: 400px) and (max-width: 639px) {
+  .identity {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .identity > .grid {
+    display: contents;
+  }
 }
 
-.identity .grid {
-  flex: 1 1 300px;
-}
-
+// Grilles du formulaire : 2 colonnes (nom / profession, titre / n° pro, code postal / ville…).
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px 18px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px 18px;
+  align-items: start;
+}
+
+@container pm-profile-card (min-width: 400px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  // Modalités | Langues, puis Tarif sur toute la largeur : son aide tient sur une ligne et
+  // aucune colonne ne reste vide sous la plus courte (polices larges comprises).
+  .practice .fees {
+    grid-column: 1 / -1;
+  }
+}
+
+@container pm-profile-card (min-width: 640px) {
+  .identity {
+    grid-template-columns: 128px minmax(0, 1fr);
+    gap: 16px 20px;
+  }
 }
 
 .field {
@@ -186,17 +217,29 @@ pm-photo-editor {
   }
 }
 
+.inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+
+  .input {
+    flex: 1 1 240px;
+    min-width: 0;
+  }
+}
+
 .textarea {
-  min-height: 120px;
+  min-height: 80px;
   padding: 10px 12px;
   resize: vertical;
 }
 
-.check,
-.switch {
+.check {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  min-height: 28px;
   color: var(--text-primary);
   font: var(--mat-sys-body-medium);
   cursor: pointer;
@@ -209,21 +252,58 @@ pm-photo-editor {
   }
 }
 
+.muted {
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+// Interrupteurs « Afficher » (mat-slide-toggle, role="switch") : libellé au corps du formulaire.
+.toggle {
+  --mat-slide-toggle-label-text-color: var(--text-primary);
+}
+
 .contacts {
   display: grid;
-  grid-template-columns: 140px minmax(0, 1fr) auto;
-  gap: 12px 16px;
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  gap: 8px 16px;
   align-items: start;
 
-  > label:not(.switch) {
+  > label {
     padding-top: 10px;
     color: var(--text-primary);
     font: var(--mat-sys-label-large);
   }
 
-  > .switch {
-    padding-top: 10px;
+  > .toggle {
+    padding-top: 2px;
   }
+
+  // Site web et délai : pas d'interrupteur, le champ garde la colonne des saisies et son aide
+  // s'étend sous la colonne des interrupteurs (une ligne de moins).
+  > .span-end {
+    grid-column: 2 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    row-gap: 6px;
+
+    > * {
+      grid-column: 1 / -1;
+    }
+
+    > .input {
+      grid-column: 1;
+    }
+  }
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
 }
 
 @media (min-width: 1100px) {
@@ -242,9 +322,15 @@ pm-photo-editor {
     grid-template-columns: minmax(0, 1fr);
     gap: 6px;
 
-    > label:not(.switch),
-    > .switch {
+    > label,
+    > .toggle {
       padding-top: 0;
+    }
+
+    > .span-end {
+      grid-column: auto;
+      display: flex;
+      flex-direction: column;
     }
 
     > span:empty {

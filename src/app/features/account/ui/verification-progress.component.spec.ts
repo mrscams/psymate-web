@@ -19,9 +19,22 @@ describe('VerificationProgressComponent', () => {
     const items = el.querySelectorAll('ol[aria-label] li');
     expect(items).toHaveLength(4);
     expect(items[2].getAttribute('aria-current')).toBe('step');
-    expect(items[2].textContent).toContain('1 déposés · 1 manquant(s)');
+    expect(items[2].textContent).toContain('1 déposé · 1 manquant');
+    expect(items[2].textContent).not.toContain('(s)');
     expect(items[3].classList.contains('todo')).toBe(true);
   });
+
+  it.each([
+    [0, 2, 'Aucun déposé · 2 manquants'],
+    [2, 1, '2 déposés · 1 manquant'],
+    [3, 0, '3 déposés · prêt à soumettre'],
+  ])(
+    'pluriels ICU (UX-C2) : %i déposé(s), %i manquant(s) → « %s »',
+    async (docs, missing, text) => {
+      const el = await render('docs_pending', docs, missing);
+      expect(el.querySelectorAll('li')[2].textContent?.replace(/\s+/g, ' ')).toContain(text);
+    },
+  );
 
   it('under_review : justificatifs faits, validation courante', async () => {
     const el = await render('under_review', 2, 0);

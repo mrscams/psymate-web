@@ -81,14 +81,36 @@ input[type='text'],
   margin-top: 8px;
 }
 
+// Carte de famille (UX-C4) : le <label> englobe le radio, toute la carte est la cible (44 px) ;
+// radio natif 18 px ; le focus clavier du radio se voit sur la carte.
 .family {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 10px;
+  min-height: 44px;
+  padding: 6px 12px;
   border: 1px solid var(--border-subtle);
   border-radius: 10px;
   cursor: pointer;
+  user-select: none;
+
+  input[type='radio'] {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--feeling);
+    cursor: pointer;
+  }
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+
+  &:has(input:focus-visible) {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
 
   &.checked {
     border-color: var(--feeling);

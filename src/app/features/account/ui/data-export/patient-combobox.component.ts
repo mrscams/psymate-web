@@ -36,6 +36,7 @@ export const PATIENT_SEARCH_DEBOUNCE_MS = 200;
         [attr.aria-expanded]="expanded()"
         [attr.aria-controls]="listId"
         [attr.aria-activedescendant]="activeId()"
+        [attr.aria-describedby]="hint() ? hintId : null"
         [placeholder]="placeholder"
         [value]="query()"
         (input)="onInput($event)"
@@ -67,6 +68,9 @@ export const PATIENT_SEARCH_DEBOUNCE_MS = 200;
         }
       </ul>
     </div>
+    @if (hint(); as text) {
+      <p class="hint" [id]="hintId">{{ text }}</p>
+    }
     @if (open() && !loading() && query().trim() !== '' && options().length === 0) {
       <p
         class="none"
@@ -146,6 +150,7 @@ export const PATIENT_SEARCH_DEBOUNCE_MS = 200;
     .detail {
       font: var(--mat-sys-body-small);
     }
+    .hint,
     .none {
       margin: 0;
       color: var(--text-secondary);
@@ -159,6 +164,8 @@ export class PatientComboboxComponent {
   /** Patients proposés pour le texte saisi (le serveur filtre). */
   readonly options = input<PatientOption[]>([]);
   readonly loading = input(false);
+  /** Aide sous le champ (UX-C6), reliée par aria-describedby. */
+  readonly hint = input<string>('');
 
   /** Texte saisi, après le délai de frappe : la page relance la recherche. */
   readonly queryChange = output<string>();
@@ -167,6 +174,7 @@ export class PatientComboboxComponent {
 
   protected readonly inputId = uniqueId('patient-combobox');
   protected readonly listId = `${this.inputId}-list`;
+  protected readonly hintId = `${this.inputId}-hint`;
   protected readonly placeholder = $localize`:Indication du sélecteur de patient@@account.data.patient.placeholder:Nom affiché…`;
   protected readonly listLabel = $localize`:Étiquette de la liste des patients@@account.data.patient.list:Dossiers correspondants`;
 

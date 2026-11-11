@@ -69,29 +69,79 @@ select {
   gap: 6px;
 }
 
-.file-label {
+.file-row {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px;
-  color: var(--text-secondary);
-  font: var(--mat-sys-body-small);
+  align-items: center;
+  gap: 10px 12px;
 }
 
+.file-label {
+  flex: 1 1 260px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+  cursor: pointer;
+}
+
+// « Choisir un fichier » : allure de bouton secondaire (maquette 13), c'est le libellé du champ.
 .choose {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
   font: var(--mat-sys-label-large);
+}
+
+.file-label:hover .choose {
+  border-color: var(--primary);
   color: var(--primary);
 }
 
-input[type='file'] {
-  color: var(--text-primary);
-  font: var(--mat-sys-body-medium);
+// Le champ masqué a le focus : l'anneau se dessine sur son libellé visible.
+.file-input:focus-visible + .file-label .choose {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.file-input:disabled + .file-label {
+  cursor: default;
+
+  .choose {
+    background: var(--surface-sunken);
+    color: var(--text-disabled);
+  }
+}
+
+.glyph {
+  font-weight: 700;
+}
+
+.submit {
+  margin-left: auto;
 }
 
 .file-name {
   margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
   font: var(--mat-sys-body-small);
   color: var(--text-secondary);
+
+  .mono {
+    color: var(--text-primary);
+    overflow-wrap: anywhere;
+  }
 }
 
 .field-error {
@@ -114,13 +164,6 @@ input[type='file'] {
     min-width: 4ch;
     font: var(--mat-sys-body-small);
   }
-}
-
-.actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
 }
 
 .retention {

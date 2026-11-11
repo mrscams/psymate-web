@@ -200,7 +200,7 @@
             >Sessions actives</span
           >
           @if (store.sessions().length > 0) {
-            <span class="count" aria-hidden="true">· {{ store.sessions().length }}</span>
+            <span class="count" aria-hidden="true">&ngsp;· {{ store.sessions().length }}</span>
           }
         </h2>
         <button
@@ -224,62 +224,168 @@
           [action]="retry"
         />
       } @else {
+        <!-- Liste bornée (UX-C5) : cet appareil, puis les 4 autres sessions les plus récentes. Les
+             sessions listées sont celles que l'API dit actives : aucun filtre local. -->
         <ul
           class="sessions"
           aria-label="Sessions actives"
           i18n-aria-label="Étiquette de la liste des sessions@@account.security.sessions.list"
         >
-          @for (s of store.sessions(); track s.id) {
-            <li class="session" [class.current]="s.current">
-              <div class="session-main">
-                <span class="device">{{ deviceLabel(s.device) }}</span>
-                @if (s.current) {
-                  <span
-                    class="badge badge--info"
-                    i18n="Session courante@@account.security.sessions.current"
-                    >Cet appareil · session courante</span
-                  >
-                }
-                @if (s.city) {
-                  <span class="help">{{ s.city }}</span>
-                }
-              </div>
-              <dl class="session-dates">
-                <div>
-                  <dt i18n="Ouverture de la session@@account.security.sessions.openedAt">
-                    Ouverte le
-                  </dt>
-                  <dd>{{ formatDate(s.createdAt) }}</dd>
-                </div>
-                <div>
-                  <dt i18n="Dernier appel de la session@@account.security.sessions.lastAccessAt">
-                    Dernière activité
-                  </dt>
-                  <dd>{{ formatDate(s.lastAccessAt) }}</dd>
-                </div>
-                <div>
-                  <dt i18n="Expiration de la session@@account.security.sessions.expiresAt">
-                    Expire le
-                  </dt>
-                  <dd>{{ formatDate(s.expiresAt) }}</dd>
-                </div>
-              </dl>
-              @if (!s.current) {
-                <button
-                  mat-stroked-button
-                  type="button"
-                  class="revoke"
-                  [disabled]="store.revoking() !== null"
-                  (click)="revokeSession(s.id)"
-                  [attr.aria-label]="revokeLabel + ' · ' + deviceLabel(s.device)"
-                >
-                  {{ revokeLabel }}
-                </button>
-              }
-            </li>
+          @if (store.currentSession(); as s) {
+            <ng-container
+              [ngTemplateOutlet]="sessionRow"
+              [ngTemplateOutletContext]="{ $implicit: s }"
+            />
+          }
+          @for (s of store.recentSessions(); track s.id) {
+            <ng-container
+              [ngTemplateOutlet]="sessionRow"
+              [ngTemplateOutletContext]="{ $implicit: s }"
+            />
           }
         </ul>
+
+        @if (store.olderSessions().length > 0) {
+          <button
+            type="button"
+            class="disclosure"
+            aria-controls="older-sessions"
+            [attr.aria-expanded]="showOlder()"
+            (click)="showOlder.set(!showOlder())"
+          >
+            <span class="chevron" aria-hidden="true">{{ showOlder() ? '▾' : '▸' }}</span>
+            @if (showOlder()) {
+              <span i18n="Replier les sessions plus anciennes@@account.security.sessions.hideOlder"
+                >Masquer
+                {store.olderSessions().length, plural,
+                  =1 {l'autre session}
+                  other {les {{ store.olderSessions().length }} autres sessions}
+                }</span
+              >
+            } @else {
+              <span i18n="Déplier les sessions plus anciennes@@account.security.sessions.showOlder"
+                >Afficher
+                {store.olderSessions().length, plural,
+                  =1 {l'autre session}
+                  other {les {{ store.olderSessions().length }} autres sessions}
+                }</span
+              >
+            }
+          </button>
+          @if (showOlder()) {
+            <ul
+              id="older-sessions"
+              class="groups"
+              aria-label="Autres sessions, par appareil"
+              i18n-aria-label="
+                Étiquette des sessions plus anciennes@@account.security.sessions.olderList"
+            >
+              @for (group of store.olderGroups(); track group.key) {
+                <li class="group">
+                  <div class="group-head">
+                    <span class="device">{{ deviceLabel(group.device) }}</span>
+                    <span class="help" i18n="Résumé d'un appareil@@account.security.sessions.group"
+                      >{group.sessions.length, plural,
+                        =1 {1 session}
+                        other {{{ group.sessions.length }} sessions}
+                      }
+                      · dernière activité {{ ago(group.lastAccessAt) }}</span
+                    >
+                    <button
+                      type="button"
+                      class="link"
+                      [attr.aria-expanded]="openGroups().has(group.key)"
+                      [attr.aria-controls]="'group-' + $index"
+                      (click)="toggleGroup(group.key)"
+                    >
+                      @if (openGroups().has(group.key)) {
+                        <span
+                          i18n="
+                            Masquer le détail d'un appareil@@account.security.sessions.groupHide"
+                          >Masquer le détail</span
+                        >
+                      } @else {
+                        <span
+                          i18n="Voir le détail d'un appareil@@account.security.sessions.groupShow"
+                          >Voir le détail</span
+                        >
+                      }
+                      <span class="sr-only">&#32;· {{ deviceLabel(group.device) }}</span>
+                    </button>
+                  </div>
+                  @if (openGroups().has(group.key)) {
+                    <ul
+                      class="sessions"
+                      [id]="'group-' + $index"
+                      [attr.aria-label]="deviceLabel(group.device)"
+                    >
+                      @for (s of group.sessions; track s.id) {
+                        <ng-container
+                          [ngTemplateOutlet]="sessionRow"
+                          [ngTemplateOutletContext]="{ $implicit: s }"
+                        />
+                      }
+                    </ul>
+                  }
+                </li>
+              }
+            </ul>
+          }
+        }
       }
+
+      <ng-template #sessionRow let-s>
+        <li class="session" [class.current]="s.current">
+          <div class="session-main">
+            @if (s.current) {
+              <span
+                class="device"
+                i18n="Titre de la session courante@@account.security.sessions.thisDevice"
+                >Cet appareil</span
+              >
+              <span
+                class="badge badge--info"
+                i18n="Session courante@@account.security.sessions.currentBadge"
+                >session courante</span
+              >
+            } @else {
+              <span class="device">{{ deviceLabel(s.device) }}</span>
+            }
+          </div>
+          <p class="session-meta">
+            @if (s.current) {
+              <span>{{ deviceLabel(s.device) }}</span>
+            } @else {
+              <span i18n="Ouverture de la session@@account.security.sessions.openedOn"
+                >Ouverte le {{ formatDate(s.createdAt) }}</span
+              >
+            }
+            @if (s.city) {
+              <span>· {{ s.city }}</span>
+            }
+          </p>
+          <p class="session-times">
+            <span i18n="Dernier appel de la session@@account.security.sessions.lastActivity"
+              >Dernière activité {{ ago(s.lastAccessAt) }}</span
+            >
+            <span class="mono" i18n="Expiration de la session@@account.security.sessions.expiresOn"
+              >expire le {{ formatDate(s.expiresAt) }}</span
+            >
+          </p>
+          @if (!s.current) {
+            <button
+              mat-stroked-button
+              type="button"
+              class="revoke"
+              [disabled]="store.revoking() !== null"
+              (click)="revokeSession(s.id)"
+              [attr.aria-label]="revokeLabel + ' · ' + deviceLabel(s.device)"
+            >
+              {{ revokeLabel }}
+            </button>
+          }
+        </li>
+      </ng-template>
 
       <p class="note" role="status" aria-live="polite">{{ revokedText() }}</p>
       @if (revokeMessage(); as text) {
@@ -305,8 +411,8 @@
           [details]="store.overview().problem?.code"
         />
       } @else if (store.lastLogin(); as last) {
-        <p class="value">
-          <span>{{ formatDate(last.at) }}</span>
+        <p class="value last-login">
+          <span class="mono">{{ formatDate(last.at) }}</span>
           <span class="help">· {{ deviceLabel(last.device) }}</span>
           @if (last.city) {
             <span class="help">· {{ last.city }}</span>

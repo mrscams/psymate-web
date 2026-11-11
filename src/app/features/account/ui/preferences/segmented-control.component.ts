@@ -35,19 +35,27 @@ export interface SegmentOption<T extends string> {
     </div>
   `,
   styles: `
+    /* Jamais plus large que sa colonne (375 px, UX-C1) : les libellés longs passent à la ligne
+       dans leur segment plutôt que de faire défiler la page. */
     :host {
       display: inline-block;
+      max-width: 100%;
     }
     .segments {
       display: inline-flex;
+      max-width: 100%;
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
       overflow: hidden;
       background: var(--surface-raised);
     }
     button {
+      /* Jamais plus étroit que son mot le plus long (aucun libellé rogné) ; au-delà, les segments
+         passent sur une seconde rangée. */
+      flex: 1 1 auto;
+      min-width: min-content;
       min-height: 36px;
-      padding: 0 16px;
+      padding: 4px 14px;
       border: 0;
       border-left: 1px solid var(--border-subtle);
       background: transparent;
@@ -66,6 +74,12 @@ export interface SegmentOption<T extends string> {
     button:focus-visible {
       outline-offset: -3px;
       box-shadow: none;
+    }
+    /* Écran étroit : si les segments ne tiennent plus côte à côte, ils passent à la ligne. */
+    @media (max-width: 600px) {
+      .segments {
+        flex-wrap: wrap;
+      }
     }
     button[disabled] {
       cursor: default;

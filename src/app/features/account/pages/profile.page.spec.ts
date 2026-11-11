@@ -98,7 +98,10 @@ describe('ProfilePage', () => {
     const { el } = await render(fakeApi());
     expect(input(el, 'displayName').value).toBe('Claire Martin');
     expect(el.querySelector('[data-testid="preview"] .name')?.textContent).toBe('Claire Martin');
-    expect(el.querySelector('.url')?.textContent).toContain('/praticiens/claire-martin');
+    // Adresse sans schéma, coupures invisibles (U+200B) après les « / ».
+    expect(el.querySelector('.url')?.textContent?.replace(/​/g, '')).toContain(
+      '/praticiens/claire-martin',
+    );
     expect(el.querySelector('[data-testid="save-status"]')?.textContent).toContain(
       'Enregistré automatiquement',
     );
@@ -152,7 +155,7 @@ describe('ProfilePage', () => {
 
   it('dossier non approuvé : interrupteur « Publié » inactif avec le motif', async () => {
     const { el } = await render(fakeApi(), 'under_review');
-    const toggle = el.querySelector<HTMLInputElement>('pm-publish-card input[role="switch"]')!;
+    const toggle = el.querySelector<HTMLButtonElement>('pm-publish-card button[role="switch"]')!;
     expect(toggle.disabled).toBe(true);
     expect(el.querySelector('#publish-locked')?.textContent).toContain(
       'Dossier en cours de vérification',
@@ -168,7 +171,7 @@ describe('ProfilePage', () => {
       }),
     });
     const { fixture, el } = await render(api);
-    el.querySelector<HTMLInputElement>('pm-publish-card input[role="switch"]')!.click();
+    el.querySelector<HTMLButtonElement>('pm-publish-card button[role="switch"]')!.click();
     await settle(fixture);
     const refused = el.querySelector('[data-testid="publish-refused"]');
     expect(refused?.textContent).toContain('Affichez au moins un moyen de contact');
@@ -181,7 +184,7 @@ describe('ProfilePage', () => {
     const { fixture, el } = await render(api);
     typeInto(input(el, 'displayName'), '');
     await settle(fixture);
-    el.querySelector<HTMLInputElement>('pm-publish-card input[role="switch"]')!.click();
+    el.querySelector<HTMLButtonElement>('pm-publish-card button[role="switch"]')!.click();
     await settle(fixture);
     expect(api.publish).not.toHaveBeenCalled();
     expect(document.activeElement?.id).toBe('field-displayName');
@@ -214,12 +217,63 @@ describe('ProfilePage', () => {
       .mockResolvedValueOnce(PROFILE)
       .mockResolvedValue({ ...PROFILE, published: true });
     const { fixture, el } = await render(fakeApi({ load }));
-    el.querySelector<HTMLInputElement>('pm-publish-card input[role="switch"]')!.click();
+    el.querySelector<HTMLButtonElement>('pm-publish-card button[role="switch"]')!.click();
     await settle(fixture);
     expect(
-      el.querySelector<HTMLInputElement>('pm-publish-card input[role="switch"]')!.checked,
-    ).toBe(true);
+      el
+        .querySelector<HTMLButtonElement>('pm-publish-card button[role="switch"]')!
+        .getAttribute('aria-checked'),
+    ).toBe('true');
     expect(el.querySelector('pm-account-nav .badge.success')?.textContent).toContain('publié');
+  });
+
+  it('UX-C1 : interrupteurs « Afficher » en mat-slide-toggle (role="switch") liés au formulaire', async () => {
+    const api = fakeApi();
+    const { fixture, el } = await render(api);
+    const switches = Array.from(
+      el.querySelectorAll<HTMLButtonElement>('form mat-slide-toggle button[role="switch"]'),
+    );
+    // Numéro professionnel, téléphone, e-mail, adresse.
+    expect(switches).toHaveLength(4);
+    const email = switches.find((s) =>
+      s.closest('mat-slide-toggle')?.textContent?.includes("l'e-mail"),
+    )!;
+    expect(email.getAttribute('aria-checked')).toBe('false');
+    email.click();
+    await settle(fixture, AUTOSAVE_DELAY_MS + 50);
+    expect(api.save).toHaveBeenCalledTimes(1);
+    expect(api.save.mock.calls[0][0]).toMatchObject({ showEmail: true });
+  });
+
+  it('UX-C1 : prochain créneau en champ date localisé (jj/mm/aaaa), envoyé en ISO', async () => {
+    const api = fakeApi();
+    const { fixture, el } = await render(api);
+    const field = input(el, 'nextSlotAt');
+    expect(field.closest('pm-date-field')).not.toBeNull();
+    expect(field.type).toBe('text');
+    expect(field.placeholder).toBe('jj/mm/aaaa');
+    typeInto(field, '20/11/2026');
+    await settle(fixture, AUTOSAVE_DELAY_MS + 50);
+    expect(api.save.mock.calls[0][0]).toMatchObject({ nextSlotAt: '2026-11-20' });
+  });
+
+  it('UX-C1 : échec d’enregistrement → « Erreur, réessayer », le bouton relance l’envoi', async () => {
+    const save = vi
+      .fn()
+      .mockRejectedValueOnce({ status: 503, code: 'UNAVAILABLE' })
+      .mockImplementation(async (body: ProfileFields) => ({ ...PROFILE, ...body }));
+    const { fixture, el } = await render(fakeApi({ save }));
+    typeInto(input(el, 'city'), 'Lyon');
+    await settle(fixture, AUTOSAVE_DELAY_MS + 50);
+    const status = el.querySelector('[data-testid="save-status"]')!;
+    // « d'enregistrement » est lu par les lecteurs d'écran seulement (sr-only).
+    expect(status.textContent?.replace(/\s+/g, ' ')).toContain(
+      "Erreur d'enregistrement, réessayer",
+    );
+    status.querySelector<HTMLButtonElement>('button')!.click();
+    await settle(fixture);
+    expect(save).toHaveBeenCalledTimes(2);
+    expect(status.textContent).toContain('Enregistré');
   });
 
   it('liste fermée indisponible : erreur dans la section, le reste du formulaire reste utilisable', async () => {

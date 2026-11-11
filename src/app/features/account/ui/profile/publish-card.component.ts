@@ -11,12 +11,16 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { RouterLink } from '@angular/router';
 
 import { ApiProblem } from '../../../../core/http';
 import { ACCOUNT_PATHS } from '../../../../shared/ui';
 import { MissingItem } from '../../data/profile.store';
 import { missingLabel } from './profile-labels';
+
+/** Point de coupure invisible (U+200B) de l'adresse publique. */
+const ZERO_WIDTH_SPACE = '​';
 
 /** Une ligne de la liste de contrôle : réglée, à faire (bloquante) ou à signaler (non bloquante). */
 export interface ChecklistItem {
@@ -33,29 +37,26 @@ export interface ChecklistItem {
  */
 @Component({
   selector: 'pm-publish-card',
-  imports: [RouterLink],
+  imports: [RouterLink, MatSlideToggle],
   template: `
     <section class="card" aria-labelledby="publish-title">
       <div class="head">
         <h2 id="publish-title" i18n="Titre de la carte de publication@@profile.publish.title">
           Apparaître dans l'annuaire
         </h2>
-        <label class="switch" [class.on]="published()">
-          <!-- Une fiche publiée se retire toujours, même si le dossier n'est plus approuvé. Pendant
-               l'appel ou la confirmation : aria-disabled, pour que le focus clavier reste ici. -->
-          <input
-            #toggleInput
-            type="checkbox"
-            role="switch"
-            [checked]="published()"
-            [disabled]="locked()"
-            [attr.aria-disabled]="busy() || confirming() ? 'true' : null"
-            [attr.aria-describedby]="locked() ? 'publish-locked' : 'publish-state'"
-            [attr.aria-busy]="busy()"
-            (change)="toggle($event)"
-          />
-          <span i18n="Interrupteur de publication@@profile.publish.toggle">Publié</span>
-        </label>
+        <!-- Une fiche publiée se retire toujours, même si le dossier n'est plus approuvé. Pendant
+             l'appel ou la confirmation : aria-disabled (disabledInteractive), le focus reste ici. -->
+        <mat-slide-toggle
+          class="publish-toggle"
+          [class.on]="published()"
+          [checked]="published()"
+          [disabled]="locked() || busy() || confirming()"
+          [disabledInteractive]="!locked()"
+          [aria-describedby]="locked() ? 'publish-locked' : 'publish-state'"
+          (change)="toggle($event)"
+          i18n="Interrupteur de publication@@profile.publish.toggle"
+          >Publié</mat-slide-toggle
+        >
       </div>
 
       @if (locked()) {
@@ -75,19 +76,26 @@ export interface ChecklistItem {
         </p>
       }
 
-      <p class="text" id="publish-state">
+      <div class="text" id="publish-state">
         @if (published()) {
-          <span i18n="Fiche publiée@@profile.publish.on">Votre fiche est visible à l'adresse</span>
+          <p i18n="Fiche publiée@@profile.publish.visible">
+            Votre fiche est visible dans l'annuaire.
+          </p>
         } @else {
-          <span i18n="Fiche non publiée@@profile.publish.off"
-            >Une fois publiée, votre fiche sera visible à l'adresse</span
-          >
+          <p i18n="Fiche non publiée@@profile.publish.hidden">
+            Une fois publiée, votre fiche sera visible dans l'annuaire.
+          </p>
         }
-        &#32;<span class="url">{{ publicUrl() }}</span
-        >.&#32;<span i18n="Effet de la dépublication@@profile.publish.unpublishNote"
-          >Désactiver retire la fiche immédiatement de l'annuaire.</span
-        >
-      </p>
+        <!-- Adresse sur sa propre ligne, en mono, coupée seulement après les « / ». -->
+        <p class="url-line">
+          <span i18n="Libellé de l'adresse publique@@profile.publish.urlLabel"
+            >Adresse publique :</span
+          >&ngsp;<span class="url" [attr.title]="publicUrl()">{{ displayUrl() }}</span>
+        </p>
+        <p i18n="Effet de la dépublication@@profile.publish.unpublishNote">
+          Désactiver retire la fiche immédiatement de l'annuaire.
+        </p>
+      </div>
 
       @if (confirming()) {
         <div class="confirm" role="group" aria-labelledby="unpublish-question">
@@ -206,22 +214,31 @@ export interface ChecklistItem {
       font: var(--mat-sys-title-small);
       font-weight: 600;
     }
-    .switch {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text-secondary);
-      font: var(--mat-sys-label-large);
-      cursor: pointer;
+    /* « Publié » en vert (fiche 10, Tokens) : piste et libellé une fois la fiche publiée. */
+    .publish-toggle {
+      flex: none;
+      --mat-slide-toggle-label-text-color: var(--text-secondary);
+      --mat-slide-toggle-selected-track-color: var(--success);
+      --mat-slide-toggle-selected-hover-track-color: var(--success);
+      --mat-slide-toggle-selected-focus-track-color: var(--success);
+      --mat-slide-toggle-selected-pressed-track-color: var(--success);
+      --mat-slide-toggle-selected-hover-state-layer-color: var(--success);
+      --mat-slide-toggle-selected-focus-state-layer-color: var(--success);
+      --mat-slide-toggle-selected-pressed-state-layer-color: var(--success);
     }
-    .switch.on {
-      color: var(--success);
+    .publish-toggle.on {
+      --mat-slide-toggle-label-text-color: var(--success);
     }
-    .switch input {
-      width: 18px;
-      height: 18px;
+    .text {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .text p {
       margin: 0;
-      accent-color: var(--success);
+    }
+    .url-line {
+      color: var(--text-primary);
     }
     .text,
     .locked {
@@ -243,9 +260,12 @@ export interface ChecklistItem {
       color: var(--primary);
     }
     .url {
+      display: block;
       color: var(--primary);
       font-family: var(--font-mono);
-      overflow-wrap: anywhere;
+      font-size: 12px;
+      /* Un segment plus long que la colonne se coupe quand même, en dernier recours. */
+      overflow-wrap: break-word;
     }
     .confirm,
     .refused {
@@ -361,7 +381,7 @@ export class PublishCardComponent {
   protected readonly paths = ACCOUNT_PATHS;
   protected readonly confirming = signal(false);
   private readonly injector = inject(Injector);
-  private readonly toggleInput = viewChild<ElementRef<HTMLInputElement>>('toggleInput');
+  private readonly toggleInput = viewChild(MatSlideToggle);
   private readonly confirmButton = viewChild<ElementRef<HTMLButtonElement>>('confirmButton');
 
   /** Publier exige un dossier approuvé ; retirer une fiche publiée reste toujours possible. */
@@ -375,11 +395,20 @@ export class PublishCardComponent {
       : $localize`:Échec de la publication ou dépublication@@profile.publish.failed:L'opération n'a pas abouti. Réessayez dans un instant.`;
   });
 
-  protected toggle(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const wanted = input.checked;
+  /**
+   * Adresse sans le schéma (« psymate.com/praticiens/claire-martin ») ; une espace sans chasse après
+   * chaque « / » : la ligne ne se coupe qu'entre deux segments, jamais au milieu d'un mot.
+   */
+  protected readonly displayUrl = computed(() =>
+    this.publicUrl()
+      .replace(/^https?:\/\//, '')
+      .replace(/\/(?=.)/g, `/${ZERO_WIDTH_SPACE}`),
+  );
+
+  protected toggle(event: MatSlideToggleChange): void {
+    const wanted = event.checked;
     // L'interrupteur suit le serveur, pas le clic : il bascule quand le profil relu le dit.
-    input.checked = this.published();
+    event.source.checked = this.published();
     if (this.busy() || this.confirming()) return;
     if (wanted) {
       this.publish.emit();
@@ -404,7 +433,7 @@ export class PublishCardComponent {
   }
 
   private focusToggle(): void {
-    afterNextRender(() => this.toggleInput()?.nativeElement.focus(), { injector: this.injector });
+    afterNextRender(() => this.toggleInput()?.focus(), { injector: this.injector });
   }
 
   protected label(item: MissingItem): string {

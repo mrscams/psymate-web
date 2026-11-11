@@ -266,7 +266,7 @@
         <source>Format</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">61,63</context>
+          <context context-type="linenumber">62,64</context>
         </context-group>
         <note priority="1" from="description">Libellé du format</note>
       </trans-unit>
@@ -274,7 +274,7 @@
         <source> La recherche n&apos;a pas abouti : modifiez le texte pour réessayer. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">82,86</context>
+          <context context-type="linenumber">83,87</context>
         </context-group>
         <note priority="1" from="description">Recherche de patient en erreur</note>
       </trans-unit>
@@ -282,15 +282,24 @@
         <source> Exporter </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">94,96</context>
+          <context context-type="linenumber">96,98</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;export d&apos;un patient</note>
       </trans-unit>
-      <trans-unit id="account.data.patient.fileNote" datatype="html">
-        <source>Séances et entrées en ordre chronologique, texte de la version courante.</source>
+      <trans-unit id="account.data.patient.expectedFile" datatype="html">
+        <source>Fichier attendu :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">97,100</context>
+          <context context-type="linenumber">105,107</context>
+        </context-group>
+        <note priority="1" from="description">Nom indicatif du fichier exporté (le serveur fixe le nom
+                  réel)</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.fileNoteShort" datatype="html">
+        <source>· séances et entrées en ordre chronologique, texte de la version courante</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
+          <context context-type="linenumber">108,112</context>
         </context-group>
         <note priority="1" from="description">Contenu du fichier exporté</note>
       </trans-unit>
@@ -298,7 +307,7 @@
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Les entrées privées ne sont jamais exportées<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, ni les entrées archivées ; un lien vers une entrée non exportée est omis · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>thème clair<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> pour le PDF quel que soit votre réglage · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>ordre chronologique<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> · langue du document : celle de l&apos;interface. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">106,111</context>
+          <context context-type="linenumber">121,126</context>
         </context-group>
         <note priority="1" from="description">Rappel des règles d&apos;export</note>
       </trans-unit>
@@ -306,7 +315,7 @@
         <source> Exporter tout mon compte </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">117,119</context>
+          <context context-type="linenumber">132,134</context>
         </context-group>
         <note priority="1" from="description">Carte export du compte</note>
       </trans-unit>
@@ -314,7 +323,7 @@
         <source> Une archive complète, préparée en arrière-plan. Vous pouvez quitter la page : l&apos;état de l&apos;export est repris à votre retour. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">120,125</context>
+          <context context-type="linenumber">135,140</context>
         </context-group>
         <note priority="1" from="description">Aide de la carte export du compte</note>
       </trans-unit>
@@ -322,7 +331,7 @@
         <source>Archive zip</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">126,127</context>
+          <context context-type="linenumber">141,142</context>
         </context-group>
         <note priority="1" from="description">Tuile contenu, titre</note>
       </trans-unit>
@@ -330,7 +339,7 @@
         <source>Pour chaque dossier, le PDF et le Markdown (comme l&apos;export individuel), plus <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>patients.md<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, la liste de vos dossiers.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">128,130</context>
+          <context context-type="linenumber">143,145</context>
         </context-group>
         <note priority="1" from="description">Tuile contenu, détail</note>
       </trans-unit>
@@ -338,7 +347,7 @@
         <source>Lien valable 7 jours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">134,136</context>
+          <context context-type="linenumber">149,151</context>
         </context-group>
         <note priority="1" from="description">Tuile lien, titre</note>
       </trans-unit>
@@ -346,7 +355,7 @@
         <source>Après l&apos;échéance, le fichier est purgé et le lien répond « expiré ». Il suffit de relancer un export.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">137,142</context>
+          <context context-type="linenumber">152,157</context>
         </context-group>
         <note priority="1" from="description">Tuile lien, détail</note>
       </trans-unit>
@@ -354,7 +363,7 @@
         <source>Rien n&apos;est effacé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">143,145</context>
+          <context context-type="linenumber">158,160</context>
         </context-group>
         <note priority="1" from="description">Tuile rien effacé, titre</note>
       </trans-unit>
@@ -362,7 +371,7 @@
         <source>Exporter ne modifie ni ne supprime aucune donnée. Les entrées privées ne font pas partie de l&apos;archive.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">146,151</context>
+          <context context-type="linenumber">161,166</context>
         </context-group>
         <note priority="1" from="description">Tuile rien effacé, détail</note>
       </trans-unit>
@@ -370,7 +379,7 @@
         <source> Préparer l&apos;export </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">161,164</context>
+          <context context-type="linenumber">176,179</context>
         </context-group>
         <note priority="1" from="description">Bouton qui prépare l&apos;export du compte</note>
       </trans-unit>
@@ -378,7 +387,7 @@
         <source>Un seul export à la fois : un export est en préparation. Le bouton se réactive dès qu&apos;il est terminé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">168,173</context>
+          <context context-type="linenumber">183,188</context>
         </context-group>
         <note priority="1" from="description">Pourquoi le bouton attend</note>
       </trans-unit>
@@ -386,7 +395,7 @@
         <source> Dernier export </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">185,187</context>
+          <context context-type="linenumber">200,202</context>
         </context-group>
         <note priority="1" from="description">Carte du dernier export</note>
       </trans-unit>
@@ -394,7 +403,7 @@
         <source> Les exports d&apos;un seul dossier sont téléchargés immédiatement : ils ne sont pas conservés et n&apos;apparaissent pas ici. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">220,226</context>
+          <context context-type="linenumber">235,241</context>
         </context-group>
         <note priority="1" from="description">Exports patient non conservés</note>
       </trans-unit>
@@ -402,7 +411,7 @@
         <source>Vos données</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">227,230</context>
+          <context context-type="linenumber">242,245</context>
         </context-group>
         <note priority="1" from="description">Carte Vos données</note>
       </trans-unit>
@@ -410,7 +419,7 @@
         <source>Hébergement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">230,231</context>
+          <context context-type="linenumber">245,246</context>
         </context-group>
         <note priority="1" from="description">Fait hébergement, titre</note>
       </trans-unit>
@@ -418,7 +427,7 @@
         <source> Données hébergées en France, chiffrées au repos. Les archives d&apos;export le sont aussi, jusqu&apos;à leur purge. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">232,237</context>
+          <context context-type="linenumber">247,252</context>
         </context-group>
         <note priority="1" from="description">Fait hébergement, détail</note>
       </trans-unit>
@@ -426,7 +435,7 @@
         <source>Journal des accès</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">237,238</context>
+          <context context-type="linenumber">252,253</context>
         </context-group>
         <note priority="1" from="description">Fait journal, titre</note>
       </trans-unit>
@@ -434,7 +443,7 @@
         <source> Chaque export et chaque téléchargement sont consignés avec la date et l&apos;appareil. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">239,243</context>
+          <context context-type="linenumber">254,258</context>
         </context-group>
         <note priority="1" from="description">Fait journal, détail</note>
       </trans-unit>
@@ -442,7 +451,7 @@
         <source> Rien n&apos;est effacé </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">244,247</context>
+          <context context-type="linenumber">259,262</context>
         </context-group>
         <note priority="1" from="description">Fait rien effacé, titre</note>
       </trans-unit>
@@ -450,7 +459,7 @@
         <source>Exporter ne supprime rien ; aucune donnée clinique n&apos;est jamais supprimée physiquement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">248,252</context>
+          <context context-type="linenumber">263,267</context>
         </context-group>
         <note priority="1" from="description">Fait rien effacé, détail</note>
       </trans-unit>
@@ -458,7 +467,7 @@
         <source>Comment ça marche</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">254,259</context>
+          <context context-type="linenumber">269,274</context>
         </context-group>
         <note priority="1" from="description">Lien Comment ça marche</note>
       </trans-unit>
@@ -466,7 +475,7 @@
         <source>PDF</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <note priority="1" from="description">Format d&apos;export PDF</note>
       </trans-unit>
@@ -474,19 +483,35 @@
         <source>Markdown</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <note priority="1" from="description">Format d&apos;export Markdown</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.hint" datatype="html">
+        <source>Tapez un nom ; les dossiers archivés sont en gris.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Aide du sélecteur de patient</note>
+      </trans-unit>
+      <trans-unit id="account.data.patient.chooseFirst" datatype="html">
+        <source>Choisissez un <x id="subject" equiv-text="subject"/> pour exporter.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+        <note priority="1" from="description">Exporter inactif sans patient choisi</note>
       </trans-unit>
       <trans-unit id="state.error.retry" datatype="html">
         <source>Réessayer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">116</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
@@ -626,7 +651,7 @@
         <source>Aucun dossier à exporter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <note priority="1" from="description">Aucun patient à exporter</note>
       </trans-unit>
@@ -634,7 +659,7 @@
         <source>Les dossiers que vous créez apparaîtront ici.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">Explication de l&apos;état vide</note>
       </trans-unit>
@@ -642,7 +667,7 @@
         <source>Impossible de charger vos dossiers</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">Liste des patients indisponible</note>
       </trans-unit>
@@ -650,7 +675,7 @@
         <source>Le lien de téléchargement n&apos;était plus valide : il vient d&apos;être relu. Réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">139</context>
         </context-group>
         <note priority="1" from="description">Lien signé refusé</note>
       </trans-unit>
@@ -658,7 +683,7 @@
         <source>Téléchargement impossible pour le moment. Le lien reste valable : réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">140</context>
         </context-group>
         <note priority="1" from="description">Téléchargement du zip impossible</note>
       </trans-unit>
@@ -666,7 +691,7 @@
         <source>Un export est en préparation ailleurs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">152</context>
         </context-group>
         <note priority="1" from="description">Export lancé ailleurs</note>
       </trans-unit>
@@ -674,7 +699,7 @@
         <source>Aucun export de compte en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">153</context>
         </context-group>
         <note priority="1" from="description">Aucun export de compte connu</note>
       </trans-unit>
@@ -682,7 +707,7 @@
         <source>Il a été lancé depuis un autre appareil ou une autre session : son état et son lien s&apos;affichent là où il a été lancé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <note priority="1" from="description">Explication de l&apos;export lancé ailleurs</note>
       </trans-unit>
@@ -690,7 +715,7 @@
         <source>Le dernier export lancé depuis ce navigateur s&apos;affichera ici, avec son lien de téléchargement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">158</context>
         </context-group>
         <note priority="1" from="description">Explication de l&apos;état vide</note>
       </trans-unit>
@@ -698,7 +723,7 @@
         <source>Impossible de lire l&apos;état de l&apos;export</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <note priority="1" from="description">Lecture de l&apos;état impossible</note>
       </trans-unit>
@@ -706,7 +731,7 @@
         <source>Préparer l&apos;export du compte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">208</context>
+          <context context-type="linenumber">222</context>
         </context-group>
         <note priority="1" from="description">Titre du dialogue de l&apos;export du compte</note>
       </trans-unit>
@@ -714,7 +739,7 @@
         <source>L&apos;archive zip contient patients.md, la liste de vos dossiers, puis le PDF et le Markdown de chaque dossier ; les entrées privées et archivées n&apos;en font pas partie. Elle est préparée en arrière-plan et son lien de téléchargement est valable 7 jours. Rien n&apos;est modifié ni supprimé dans vos dossiers.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">209</context>
+          <context context-type="linenumber">223</context>
         </context-group>
         <note priority="1" from="description">Contenu du dialogue de l&apos;export du compte</note>
       </trans-unit>
@@ -722,7 +747,7 @@
         <source>Lancer l&apos;export</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">210</context>
+          <context context-type="linenumber">224</context>
         </context-group>
         <note priority="1" from="description">Bouton du dialogue de l&apos;export du compte</note>
       </trans-unit>
@@ -730,7 +755,7 @@
         <source>Annuler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">211</context>
+          <context context-type="linenumber">225</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;annulation du dialogue</note>
       </trans-unit>
@@ -738,7 +763,7 @@
         <source>Connexion perdue : réessayez une fois le réseau revenu.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">243</context>
+          <context context-type="linenumber">257</context>
         </context-group>
         <note priority="1" from="description">Export patient hors ligne</note>
       </trans-unit>
@@ -746,7 +771,7 @@
         <source>Ce dossier n&apos;est pas accessible depuis votre compte.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">245</context>
+          <context context-type="linenumber">259</context>
         </context-group>
         <note priority="1" from="description">Export patient refusé</note>
       </trans-unit>
@@ -754,7 +779,7 @@
         <source>Ce dossier n&apos;existe pas ou plus.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">247</context>
+          <context context-type="linenumber">261</context>
         </context-group>
         <note priority="1" from="description">Export patient introuvable</note>
       </trans-unit>
@@ -762,7 +787,7 @@
         <source>Trop de demandes rapprochées : réessayez dans quelques instants.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">249</context>
+          <context context-type="linenumber">263</context>
         </context-group>
         <note priority="1" from="description">Export patient limité</note>
       </trans-unit>
@@ -770,7 +795,7 @@
         <source>La génération du fichier a échoué. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">251</context>
+          <context context-type="linenumber">265</context>
         </context-group>
         <note priority="1" from="description">Export patient en échec</note>
       </trans-unit>
@@ -778,7 +803,7 @@
         <source>Un export est déjà en cours : il est affiché ci-dessous. Le bouton se réactive dès qu&apos;il est terminé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">260</context>
+          <context context-type="linenumber">274</context>
         </context-group>
         <note priority="1" from="description">Export déjà en cours, job affiché</note>
       </trans-unit>
@@ -786,7 +811,7 @@
         <source>Un export de votre compte est déjà en préparation, lancé depuis un autre appareil ou une autre session. Vous pourrez relancer un export ici dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">261</context>
+          <context context-type="linenumber">275</context>
         </context-group>
         <note priority="1" from="description">Export déjà en cours, lancé ailleurs</note>
       </trans-unit>
@@ -794,7 +819,7 @@
         <source>Export impossible pour le moment. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
-          <context context-type="linenumber">263</context>
+          <context context-type="linenumber">277</context>
         </context-group>
         <note priority="1" from="description">Export du compte impossible</note>
       </trans-unit>
@@ -938,7 +963,7 @@
         <source>Préférences</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">11,12</context>
+          <context context-type="linenumber">10,11</context>
         </context-group>
         <note priority="1" from="description">Titre de la page Préférences</note>
       </trans-unit>
@@ -946,7 +971,7 @@
         <source> Mémorisées sur votre compte : vous les retrouvez sur tous vos appareils. Chaque changement est enregistré immédiatement. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">13,17</context>
+          <context context-type="linenumber">12,15</context>
         </context-group>
         <note priority="1" from="description">Introduction de la page Préférences</note>
       </trans-unit>
@@ -954,7 +979,7 @@
         <source>Affichage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">30,33</context>
+          <context context-type="linenumber">36,39</context>
         </context-group>
         <note priority="1" from="description">Section Affichage</note>
       </trans-unit>
@@ -962,7 +987,7 @@
         <source>Vue d&apos;ensemble par défaut</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">34,35</context>
+          <context context-type="linenumber">40,41</context>
         </context-group>
         <note priority="1" from="description">Réglage de la vue d&apos;ensemble</note>
       </trans-unit>
@@ -970,7 +995,7 @@
         <source>Aussi modifiable depuis la page du patient.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">36,37</context>
+          <context context-type="linenumber">42,43</context>
         </context-group>
         <note priority="1" from="description">Aide du réglage de la vue d&apos;ensemble</note>
       </trans-unit>
@@ -978,7 +1003,7 @@
         <source>Fenêtre d&apos;analyse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">50,51</context>
+          <context context-type="linenumber">56,57</context>
         </context-group>
         <note priority="1" from="description">Réglage de la fenêtre d&apos;analyse</note>
       </trans-unit>
@@ -986,7 +1011,7 @@
         <source>Pour la tendance des ressentis et les situations actives.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">52,53</context>
+          <context context-type="linenumber">58,59</context>
         </context-group>
         <note priority="1" from="description">Aide du réglage de la fenêtre</note>
       </trans-unit>
@@ -994,7 +1019,7 @@
         <source>Timeline</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">66,67</context>
+          <context context-type="linenumber">72,73</context>
         </context-group>
         <note priority="1" from="description">Réglage du regroupement de la timeline</note>
       </trans-unit>
@@ -1002,7 +1027,7 @@
         <source>Regroupement par défaut.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">68,69</context>
+          <context context-type="linenumber">74,75</context>
         </context-group>
         <note priority="1" from="description">Aide du regroupement de la timeline</note>
       </trans-unit>
@@ -1010,7 +1035,7 @@
         <source>Thème</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <note priority="1" from="description">Réglage du thème</note>
       </trans-unit>
@@ -1018,7 +1043,7 @@
         <source>« Doux » réduit les contrastes pour les longues sessions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">84,85</context>
+          <context context-type="linenumber">90,91</context>
         </context-group>
         <note priority="1" from="description">Aide du réglage du thème</note>
       </trans-unit>
@@ -1026,7 +1051,7 @@
         <source>Langue</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">104</context>
         </context-group>
         <note priority="1" from="description">Réglage de la langue</note>
       </trans-unit>
@@ -1034,7 +1059,7 @@
         <source>Interface et vocabulaire. Vos entrées ne sont pas traduites.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">99,100</context>
+          <context context-type="linenumber">105,106</context>
         </context-group>
         <note priority="1" from="description">Aide du réglage de la langue</note>
       </trans-unit>
@@ -1042,7 +1067,7 @@
         <source>Français</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">109,110</context>
+          <context context-type="linenumber">115,116</context>
         </context-group>
         <note priority="1" from="description">Option Français</note>
       </trans-unit>
@@ -1050,7 +1075,7 @@
         <source> English · traduction partielle </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">111,114</context>
+          <context context-type="linenumber">117,120</context>
         </context-group>
         <note priority="1" from="description">Option English, traduction partielle</note>
       </trans-unit>
@@ -1058,7 +1083,7 @@
         <source> Vocabulaire et saisie </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">120,123</context>
+          <context context-type="linenumber">126,129</context>
         </context-group>
         <note priority="1" from="description">Section Vocabulaire et saisie</note>
       </trans-unit>
@@ -1066,7 +1091,7 @@
         <source>Désignation des personnes suivies</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">125,126</context>
+          <context context-type="linenumber">131,132</context>
         </context-group>
         <note priority="1" from="description">Réglage de la désignation</note>
       </trans-unit>
@@ -1076,7 +1101,7 @@
             }}"/> ».</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">127,130</context>
+          <context context-type="linenumber">133,136</context>
         </context-group>
         <note priority="1" from="description">Aide du réglage de la désignation</note>
       </trans-unit>
@@ -1084,7 +1109,7 @@
         <source>Type « médicament »</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">143,144</context>
+          <context context-type="linenumber">149,150</context>
         </context-group>
         <note priority="1" from="description">Réglage du type médicament</note>
       </trans-unit>
@@ -1092,7 +1117,7 @@
         <source>Masqué par défaut pour les psychologues et les coachs.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">145,146</context>
+          <context context-type="linenumber">151,152</context>
         </context-group>
         <note priority="1" from="description">Aide du réglage du type médicament</note>
       </trans-unit>
@@ -1100,7 +1125,7 @@
         <source> Afficher le type médicament dans la saisie et la timeline </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">154,158</context>
+          <context context-type="linenumber">160,164</context>
         </context-group>
         <note priority="1" from="description">Interrupteur du type médicament</note>
       </trans-unit>
@@ -1108,7 +1133,7 @@
         <source>Visibilité par défaut des nouvelles entrées</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">160,161</context>
+          <context context-type="linenumber">166,167</context>
         </context-group>
         <note priority="1" from="description">Réglage de la visibilité par défaut</note>
       </trans-unit>
@@ -1116,7 +1141,7 @@
         <source>« Privée » exclut l&apos;entrée des exports et des partages futurs.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">162,163</context>
+          <context context-type="linenumber">168,169</context>
         </context-group>
         <note priority="1" from="description">Aide du réglage de la visibilité</note>
       </trans-unit>
@@ -1124,7 +1149,7 @@
         <source>Durée de séance par défaut</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">176,177</context>
+          <context context-type="linenumber">182,183</context>
         </context-group>
         <note priority="1" from="description">Réglage de la durée de séance</note>
       </trans-unit>
@@ -1132,7 +1157,7 @@
         <source>Pré-remplie à l&apos;ouverture d&apos;une séance, entre 15 et 180 minutes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">178,179</context>
+          <context context-type="linenumber">184,185</context>
         </context-group>
         <note priority="1" from="description">Aide du réglage de la durée de séance</note>
       </trans-unit>
@@ -1140,7 +1165,7 @@
         <source>min</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">193,196</context>
+          <context context-type="linenumber">199,202</context>
         </context-group>
         <note priority="1" from="description">Unité minutes</note>
       </trans-unit>
@@ -1148,7 +1173,7 @@
         <source>Délai de correction sans version</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">198,199</context>
+          <context context-type="linenumber">204,205</context>
         </context-group>
         <note priority="1" from="description">Délai de correction sans version</note>
       </trans-unit>
@@ -1156,7 +1181,7 @@
         <source>Pendant ce délai, corriger une entrée ne crée pas de nouvelle version.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">200,201</context>
+          <context context-type="linenumber">206,207</context>
         </context-group>
         <note priority="1" from="description">Aide du délai de correction</note>
       </trans-unit>
@@ -1164,7 +1189,7 @@
         <source>1 h 15</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">204,206</context>
+          <context context-type="linenumber">210,212</context>
         </context-group>
         <note priority="1" from="description">Valeur du délai de correction (G Q31)</note>
       </trans-unit>
@@ -1172,7 +1197,7 @@
         <source>· fixé par l&apos;application en V1</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">207,211</context>
+          <context context-type="linenumber">213,217</context>
         </context-group>
         <note priority="1" from="description">Mention du délai fixé en V1</note>
       </trans-unit>
@@ -1180,7 +1205,7 @@
         <source> Émotions personnalisées </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">216,219</context>
+          <context context-type="linenumber">222,225</context>
         </context-group>
         <note priority="1" from="description">Section Émotions personnalisées</note>
       </trans-unit>
@@ -1188,7 +1213,7 @@
         <source>Gérer la liste complète</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">221,226</context>
+          <context context-type="linenumber">227,232</context>
         </context-group>
         <note priority="1" from="description">Lien vers la page des émotions</note>
       </trans-unit>
@@ -1196,7 +1221,7 @@
         <source> Vos émotions ajoutées au vocabulaire. Chacune est rattachée à une famille, ce qui permet de la placer dans les courbes et le graphe. La liste, ses usages et sa gestion sont sur la page dédiée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">228,234</context>
+          <context context-type="linenumber">234,240</context>
         </context-group>
         <note priority="1" from="description">Texte de la section Émotions personnalisées</note>
       </trans-unit>
@@ -1204,7 +1229,7 @@
         <source> Compte et sécurité </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">237,240</context>
+          <context context-type="linenumber">243,246</context>
         </context-group>
         <note priority="1" from="description">Section Compte et sécurité</note>
       </trans-unit>
@@ -1212,7 +1237,7 @@
         <source>Tout voir</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">242,246</context>
+          <context context-type="linenumber">248,251</context>
         </context-group>
         <note priority="1" from="description">Lien vers Compte et sécurité</note>
       </trans-unit>
@@ -1220,23 +1245,89 @@
         <source>E-mail de connexion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">247,249</context>
+          <context context-type="linenumber">255,256</context>
         </context-group>
         <note priority="1" from="description">E-mail de connexion</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.email.edit" datatype="html">
+        <source>Modifier<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> l&apos;e-mail de connexion<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">261,262</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la modification de l&apos;e-mail</note>
       </trans-unit>
       <trans-unit id="preferences.security.twoFactor" datatype="html">
         <source> Double authentification </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
-          <context context-type="linenumber">252,254</context>
+          <context context-type="linenumber">267,269</context>
         </context-group>
         <note priority="1" from="description">Double authentification</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.recoveryCodes" datatype="html">
+        <source>Codes de secours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">277,281</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers les codes de secours</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.twoFactor.enable" datatype="html">
+        <source>Activer<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> la double authentification<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">283,284</context>
+        </context-group>
+        <note priority="1" from="description">Lien d&apos;activation de la 2FA</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.sessions" datatype="html">
+        <source>Sessions actives</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">289,290</context>
+        </context-group>
+        <note priority="1" from="description">Sessions actives</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.devices" datatype="html">
+        <source> <x id="ICU" equiv-text="{security.deviceCount(), plural,
+                  =1 {1 appareil}
+                  other {{{ security.deviceCount() }} appareils}
+                }" xid="5498395555114795449"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">303,308</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;appareils connectés</note>
+      </trans-unit>
+      <trans-unit id="1236922393516943706" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 appareil} other {<x id="INTERPOLATION"/> appareils}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">303,305</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="preferences.security.revokeOthers" datatype="html">
+        <source> Déconnecter les autres </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">319,323</context>
+        </context-group>
+        <note priority="1" from="description">Déconnecter les autres appareils</note>
+      </trans-unit>
+      <trans-unit id="preferences.security.lastLogin" datatype="html">
+        <source>Connexion précédente :</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">332,334</context>
+        </context-group>
+        <note priority="1" from="description">Connexion précédente, résumé</note>
       </trans-unit>
       <trans-unit id="preferences.errorTitle" datatype="html">
         <source>Impossible de charger vos préférences</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;état erreur des préférences</note>
       </trans-unit>
@@ -1244,7 +1335,7 @@
         <source>Réessayer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="description">Bouton Réessayer du bloc Préférences</note>
       </trans-unit>
@@ -1252,23 +1343,55 @@
         <source>Enregistrement…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <note priority="1" from="description">Statut pendant l&apos;enregistrement d&apos;un réglage</note>
       </trans-unit>
-      <trans-unit id="preferences.saved" datatype="html">
-        <source>Enregistré à <x id="time" equiv-text="time"/></source>
+      <trans-unit id="preferences.savedAuto" datatype="html">
+        <source>Enregistré automatiquement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <note priority="1" from="description">Statut avant tout changement de réglage</note>
+      </trans-unit>
+      <trans-unit id="preferences.savedNow" datatype="html">
+        <source>Enregistré</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">101</context>
         </context-group>
         <note priority="1" from="description">Statut après l&apos;enregistrement d&apos;un réglage</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.errorTitle" datatype="html">
+        <source>Impossible de charger vos sessions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état erreur des sessions</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.retry" datatype="html">
+        <source>Réessayer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Réessayer le chargement des sessions</note>
       </trans-unit>
       <trans-unit id="preferences.security.twoFactor.on" datatype="html">
         <source>Activée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <note priority="1" from="description">Double authentification active</note>
       </trans-unit>
@@ -1276,7 +1399,7 @@
         <source>Non activée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">149</context>
         </context-group>
         <note priority="1" from="description">Double authentification inactive</note>
       </trans-unit>
@@ -1284,7 +1407,7 @@
         <source>Simple</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">153</context>
         </context-group>
         <note priority="1" from="description">Vue d&apos;ensemble simple</note>
       </trans-unit>
@@ -1292,7 +1415,7 @@
         <source>Complète</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <note priority="1" from="description">Vue d&apos;ensemble complète</note>
       </trans-unit>
@@ -1300,7 +1423,7 @@
         <source>30 j</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <note priority="1" from="description">Fenêtre de 30 jours</note>
       </trans-unit>
@@ -1308,7 +1431,7 @@
         <source>90 j</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">161</context>
         </context-group>
         <note priority="1" from="description">Fenêtre de 90 jours</note>
       </trans-unit>
@@ -1316,7 +1439,7 @@
         <source>1 an</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <note priority="1" from="description">Fenêtre de 12 mois</note>
       </trans-unit>
@@ -1324,7 +1447,7 @@
         <source>Par séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">167</context>
         </context-group>
         <note priority="1" from="description">Timeline par séance</note>
       </trans-unit>
@@ -1332,7 +1455,7 @@
         <source>Par mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">169</context>
         </context-group>
         <note priority="1" from="description">Timeline par mois</note>
       </trans-unit>
@@ -1340,7 +1463,7 @@
         <source>Chronologique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">172</context>
         </context-group>
         <note priority="1" from="description">Timeline chronologique</note>
       </trans-unit>
@@ -1348,7 +1471,7 @@
         <source>Patient·e</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">178</context>
         </context-group>
         <note priority="1" from="description">Désignation patient</note>
       </trans-unit>
@@ -1356,7 +1479,7 @@
         <source>Client·e</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">117</context>
+          <context context-type="linenumber">180</context>
         </context-group>
         <note priority="1" from="description">Désignation client</note>
       </trans-unit>
@@ -1364,7 +1487,7 @@
         <source>Clinique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">186</context>
         </context-group>
         <note priority="1" from="description">Visibilité clinique</note>
       </trans-unit>
@@ -1372,7 +1495,7 @@
         <source>Privée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <note priority="1" from="description">Visibilité privée</note>
       </trans-unit>
@@ -1380,7 +1503,7 @@
         <source>Saisissez un nombre entier de minutes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">164</context>
+          <context context-type="linenumber">227</context>
         </context-group>
         <note priority="1" from="description">Durée de séance non entière</note>
       </trans-unit>
@@ -1388,7 +1511,7 @@
         <source>Réglage non enregistré : <x id="reason" equiv-text="fieldMessage"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">188</context>
+          <context context-type="linenumber">251</context>
         </context-group>
         <note priority="1" from="description">Toast quand le serveur refuse un réglage (422)</note>
       </trans-unit>
@@ -1396,7 +1519,7 @@
         <source>Impossible d&apos;enregistrer ce réglage. La valeur précédente est rétablie.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">252</context>
         </context-group>
         <note priority="1" from="description">Toast quand l&apos;enregistrement d&apos;un réglage échoue</note>
       </trans-unit>
@@ -1404,7 +1527,7 @@
         <source>Psychologue</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">259</context>
         </context-group>
         <note priority="1" from="description">Profession</note>
       </trans-unit>
@@ -1412,7 +1535,7 @@
         <source>Psychiatre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">198</context>
+          <context context-type="linenumber">261</context>
         </context-group>
         <note priority="1" from="description">Profession</note>
       </trans-unit>
@@ -1420,7 +1543,7 @@
         <source>Coach</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">263</context>
         </context-group>
         <note priority="1" from="description">Profession</note>
       </trans-unit>
@@ -1440,11 +1563,19 @@
         </context-group>
         <note priority="1" from="description">Introduction de la page Profil public</note>
       </trans-unit>
-      <trans-unit id="profile.save.retry" datatype="html">
-        <source> Réessayer </source>
+      <trans-unit id="profile.save.error" datatype="html">
+        <source>Erreur<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> d&apos;enregistrement<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>,</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">34,39</context>
+          <context context-type="linenumber">20,21</context>
+        </context-group>
+        <note priority="1" from="description">Enregistrement automatique en échec</note>
+      </trans-unit>
+      <trans-unit id="profile.save.retry" datatype="html">
+        <source> réessayer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
+          <context context-type="linenumber">27,29</context>
         </context-group>
         <note priority="1" from="description">Bouton pour relancer l&apos;enregistrement</note>
       </trans-unit>
@@ -1452,7 +1583,7 @@
         <source>Identité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">54,56</context>
+          <context context-type="linenumber">58,60</context>
         </context-group>
         <note priority="1" from="description">Section Identité</note>
       </trans-unit>
@@ -1460,7 +1591,7 @@
         <source>Nom affiché</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">68,70</context>
+          <context context-type="linenumber">72,74</context>
         </context-group>
         <note priority="1" from="description">Champ nom affiché</note>
       </trans-unit>
@@ -1468,7 +1599,7 @@
         <source>Profession</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">86,87</context>
+          <context context-type="linenumber">90,91</context>
         </context-group>
         <note priority="1" from="description">Champ profession</note>
       </trans-unit>
@@ -1476,7 +1607,7 @@
         <source> Celle de votre dossier professionnel. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">89,91</context>
+          <context context-type="linenumber">93,95</context>
         </context-group>
         <note priority="1" from="description">Aide de la profession</note>
       </trans-unit>
@@ -1484,7 +1615,7 @@
         <source>Titre affiché</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">94,96</context>
+          <context context-type="linenumber">98,100</context>
         </context-group>
         <note priority="1" from="description">Champ titre affiché</note>
       </trans-unit>
@@ -1492,39 +1623,48 @@
         <source>N° professionnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">111,113</context>
+          <context context-type="linenumber">116,119</context>
         </context-group>
         <note priority="1" from="description">Champ numéro professionnel</note>
       </trans-unit>
-      <trans-unit id="profile.showProfessionalNumber" datatype="html">
-        <source>Afficher le numéro de mon dossier professionnel</source>
+      <trans-unit id="profile.professionalNumber.hint" datatype="html">
+        <source>(affiché si rempli)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">116,119</context>
+          <context context-type="linenumber">121,124</context>
+        </context-group>
+        <note priority="1" from="description">Numéro affiché si rempli</note>
+      </trans-unit>
+      <trans-unit id="profile.showProfessionalNumberShort" datatype="html">
+        <source>Afficher mon numéro<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> professionnel<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span
+                    &gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
+          <context context-type="linenumber">128,130</context>
         </context-group>
         <note priority="1" from="description">Interrupteur numéro professionnel</note>
+      </trans-unit>
+      <trans-unit id="profile.nextSlotAtShort" datatype="html">
+        <source>Prochain créneau (facultatif)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
+          <context context-type="linenumber">137,139</context>
+        </context-group>
+        <note priority="1" from="description">Champ prochain créneau</note>
       </trans-unit>
       <trans-unit id="profile.availability" datatype="html">
         <source>Disponibilité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">125,127</context>
+          <context context-type="linenumber">155,157</context>
         </context-group>
         <note priority="1" from="description">Champ disponibilité</note>
-      </trans-unit>
-      <trans-unit id="profile.nextSlotAt" datatype="html">
-        <source>Prochain créneau disponible (facultatif)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">142,145</context>
-        </context-group>
-        <note priority="1" from="description">Champ prochain créneau</note>
       </trans-unit>
       <trans-unit id="profile.section.practice" datatype="html">
         <source> Présentation et pratique </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">163,166</context>
+          <context context-type="linenumber">177,180</context>
         </context-group>
         <note priority="1" from="description">Section Présentation et pratique</note>
       </trans-unit>
@@ -1532,7 +1672,7 @@
         <source>Présentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">167,168</context>
+          <context context-type="linenumber">181,182</context>
         </context-group>
         <note priority="1" from="description">Champ présentation</note>
       </trans-unit>
@@ -1540,7 +1680,7 @@
         <source>Listes de l&apos;annuaire indisponibles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">189,190</context>
+          <context context-type="linenumber">204,205</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;erreur de la liste fermée</note>
       </trans-unit>
@@ -1548,7 +1688,7 @@
         <source>Spécialités</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">197,198</context>
+          <context context-type="linenumber">214,215</context>
         </context-group>
         <note priority="1" from="description">Champ spécialités</note>
       </trans-unit>
@@ -1556,7 +1696,7 @@
         <source>Liste commune à l&apos;annuaire.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">199,200</context>
+          <context context-type="linenumber">216,217</context>
         </context-group>
         <note priority="1" from="description">Aide des spécialités</note>
       </trans-unit>
@@ -1564,7 +1704,7 @@
         <source>Publics</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">232</context>
         </context-group>
         <note priority="1" from="description">Champ publics</note>
       </trans-unit>
@@ -1572,7 +1712,7 @@
         <source>Publics que vous accueillez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">216,217</context>
+          <context context-type="linenumber">233,234</context>
         </context-group>
         <note priority="1" from="description">Aide des publics</note>
       </trans-unit>
@@ -1580,7 +1720,7 @@
         <source>Modalités</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">228,229</context>
+          <context context-type="linenumber">248,249</context>
         </context-group>
         <note priority="1" from="description">Champ modalités</note>
       </trans-unit>
@@ -1588,7 +1728,7 @@
         <source>Langues</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">248</context>
+          <context context-type="linenumber">270</context>
         </context-group>
         <note priority="1" from="description">Champ langues</note>
       </trans-unit>
@@ -1596,7 +1736,7 @@
         <source>Langues de consultation.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">249,250</context>
+          <context context-type="linenumber">271,272</context>
         </context-group>
         <note priority="1" from="description">Aide des langues</note>
       </trans-unit>
@@ -1604,7 +1744,7 @@
         <source>Tarif (facultatif)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">264,266</context>
+          <context context-type="linenumber">285,287</context>
         </context-group>
         <note priority="1" from="description">Champ tarif</note>
       </trans-unit>
@@ -1612,7 +1752,7 @@
         <source> Texte libre, par exemple « 60 € la séance de 50 min ». Vide : rien n&apos;est affiché. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">274,276</context>
+          <context context-type="linenumber">296,298</context>
         </context-group>
         <note priority="1" from="description">Aide du tarif</note>
       </trans-unit>
@@ -1620,7 +1760,7 @@
         <source> Moyens de contact </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">283,285</context>
+          <context context-type="linenumber">306,308</context>
         </context-group>
         <note priority="1" from="description">Section Moyens de contact</note>
       </trans-unit>
@@ -1628,7 +1768,7 @@
         <source> Chaque moyen a son interrupteur « Afficher ». Le formulaire de contact de la fiche est toujours disponible et vous transmet les messages par e-mail. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">286,289</context>
+          <context context-type="linenumber">309,312</context>
         </context-group>
         <note priority="1" from="description">Aide des moyens de contact</note>
       </trans-unit>
@@ -1636,7 +1776,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">291,293</context>
+          <context context-type="linenumber">314,316</context>
         </context-group>
         <note priority="1" from="description">Champ téléphone</note>
       </trans-unit>
@@ -1644,7 +1784,7 @@
         <source>Afficher<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> le téléphone<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">311,312</context>
+          <context context-type="linenumber">335</context>
         </context-group>
         <note priority="1" from="description">Interrupteur afficher le téléphone</note>
       </trans-unit>
@@ -1652,7 +1792,7 @@
         <source>E-mail public</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">316,318</context>
+          <context context-type="linenumber">339,341</context>
         </context-group>
         <note priority="1" from="description">Champ e-mail public</note>
       </trans-unit>
@@ -1660,7 +1800,7 @@
         <source>Afficher<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> l&apos;e-mail<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">337,338</context>
+          <context context-type="linenumber">361</context>
         </context-group>
         <note priority="1" from="description">Interrupteur afficher l&apos;e-mail</note>
       </trans-unit>
@@ -1668,7 +1808,7 @@
         <source>Site web</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">342,344</context>
+          <context context-type="linenumber">365,367</context>
         </context-group>
         <note priority="1" from="description">Champ site web</note>
       </trans-unit>
@@ -1676,7 +1816,7 @@
         <source> Adresse complète, commençant par https://. Affichée dès qu&apos;elle est remplie. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">362,364</context>
+          <context context-type="linenumber">385,387</context>
         </context-group>
         <note priority="1" from="description">Aide du site web</note>
       </trans-unit>
@@ -1684,7 +1824,7 @@
         <source>Délai de réponse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">374,377</context>
+          <context context-type="linenumber">396,398</context>
         </context-group>
         <note priority="1" from="description">Champ délai de réponse</note>
       </trans-unit>
@@ -1692,7 +1832,7 @@
         <source> Ne pas afficher </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">379,381</context>
+          <context context-type="linenumber">401,403</context>
         </context-group>
         <note priority="1" from="description">Délai de réponse non affiché</note>
       </trans-unit>
@@ -1700,7 +1840,7 @@
         <source>Cabinet</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">392,394</context>
+          <context context-type="linenumber">413,415</context>
         </context-group>
         <note priority="1" from="description">Section Cabinet</note>
       </trans-unit>
@@ -1708,15 +1848,23 @@
         <source>Adresse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">394,396</context>
+          <context context-type="linenumber">416,417</context>
         </context-group>
         <note priority="1" from="description">Champ adresse</note>
+      </trans-unit>
+      <trans-unit id="profile.showAddressShort" datatype="html">
+        <source>Afficher<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> l&apos;adresse sur la fiche<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
+          <context context-type="linenumber">432</context>
+        </context-group>
+        <note priority="1" from="description">Interrupteur afficher l&apos;adresse</note>
       </trans-unit>
       <trans-unit id="profile.postalCode" datatype="html">
         <source>Code postal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">409,412</context>
+          <context context-type="linenumber">442,445</context>
         </context-group>
         <note priority="1" from="description">Champ code postal</note>
       </trans-unit>
@@ -1724,7 +1872,7 @@
         <source>Ville</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">426,428</context>
+          <context context-type="linenumber">459,461</context>
         </context-group>
         <note priority="1" from="description">Champ ville</note>
       </trans-unit>
@@ -1732,23 +1880,15 @@
         <source> Requise pour publier. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">441,443</context>
+          <context context-type="linenumber">474,476</context>
         </context-group>
         <note priority="1" from="description">Aide de la ville</note>
-      </trans-unit>
-      <trans-unit id="profile.showAddress" datatype="html">
-        <source>Afficher l&apos;adresse sur la fiche</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
-          <context context-type="linenumber">449,453</context>
-        </context-group>
-        <note priority="1" from="description">Interrupteur afficher l&apos;adresse</note>
       </trans-unit>
       <trans-unit id="profile.errorTitle" datatype="html">
         <source>Impossible de charger votre profil public</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;état erreur du profil public</note>
       </trans-unit>
@@ -1756,7 +1896,7 @@
         <source>Réessayer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">147</context>
         </context-group>
         <note priority="1" from="description">Bouton Réessayer du profil public</note>
       </trans-unit>
@@ -1764,7 +1904,7 @@
         <source>Réessayer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <note priority="1" from="description">Bouton Réessayer de la liste fermée</note>
       </trans-unit>
@@ -1772,7 +1912,7 @@
         <source>Dossier professionnel approuvé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">217</context>
+          <context context-type="linenumber">220</context>
         </context-group>
         <note priority="1" from="description">Contrôle, dossier approuvé</note>
       </trans-unit>
@@ -1780,7 +1920,7 @@
         <source>Dossier professionnel pas encore approuvé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">218</context>
+          <context context-type="linenumber">221</context>
         </context-group>
         <note priority="1" from="description">Contrôle, dossier non approuvé</note>
       </trans-unit>
@@ -1788,7 +1928,7 @@
         <source>Nom affiché, profession, ville</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">226</context>
         </context-group>
         <note priority="1" from="description">Contrôle, identité</note>
       </trans-unit>
@@ -1796,7 +1936,7 @@
         <source>Au moins un moyen de contact affiché</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">231</context>
         </context-group>
         <note priority="1" from="description">Contrôle, contact</note>
       </trans-unit>
@@ -1804,7 +1944,7 @@
         <source>Photo ajoutée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">234</context>
+          <context context-type="linenumber">237</context>
         </context-group>
         <note priority="1" from="description">Contrôle, photo présente</note>
       </trans-unit>
@@ -1812,7 +1952,7 @@
         <source>Photo absente : les initiales sont affichées</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">235</context>
+          <context context-type="linenumber">238</context>
         </context-group>
         <note priority="1" from="description">Contrôle, photo absente</note>
       </trans-unit>
@@ -1820,7 +1960,7 @@
         <source>Non enregistré : corrigez les champs signalés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">243</context>
+          <context context-type="linenumber">246</context>
         </context-group>
         <note priority="1" from="description">Formulaire à corriger, rien n&apos;est enregistré</note>
       </trans-unit>
@@ -1828,7 +1968,7 @@
         <source>Enregistrement…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">248</context>
+          <context context-type="linenumber">251</context>
         </context-group>
         <note priority="1" from="description">Enregistrement automatique en cours</note>
       </trans-unit>
@@ -1836,23 +1976,15 @@
         <source>Enregistré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">250</context>
+          <context context-type="linenumber">253</context>
         </context-group>
         <note priority="1" from="description">Enregistrement automatique réussi</note>
-      </trans-unit>
-      <trans-unit id="profile.save.error" datatype="html">
-        <source>Erreur d&apos;enregistrement</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">252</context>
-        </context-group>
-        <note priority="1" from="description">Enregistrement automatique en échec</note>
       </trans-unit>
       <trans-unit id="profile.save.idle" datatype="html">
         <source>Enregistré automatiquement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">254</context>
+          <context context-type="linenumber">257</context>
         </context-group>
         <note priority="1" from="description">Enregistrement automatique, au repos</note>
       </trans-unit>
@@ -1860,7 +1992,7 @@
         <source>dernière modification <x id="ago" equiv-text="ago"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">269</context>
+          <context context-type="linenumber">277</context>
         </context-group>
         <note priority="1" from="description">Date de dernière modification du profil</note>
       </trans-unit>
@@ -1868,7 +2000,7 @@
         <source>Vos dernières modifications ne sont pas enregistrées.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">275</context>
+          <context context-type="linenumber">283</context>
         </context-group>
         <note priority="1" from="description">Explication de l&apos;erreur d&apos;enregistrement</note>
       </trans-unit>
@@ -1876,11 +2008,11 @@
         <source>Corrigez les champs signalés avant de publier.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">329</context>
+          <context context-type="linenumber">337</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">374</context>
+          <context context-type="linenumber">394</context>
         </context-group>
         <note priority="1" from="description">Publication impossible, formulaire à corriger</note>
       </trans-unit>
@@ -1888,7 +2020,7 @@
         <source>Votre fiche est publiée dans l&apos;annuaire.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">335</context>
+          <context context-type="linenumber">343</context>
         </context-group>
         <note priority="1" from="description">Toast après publication</note>
       </trans-unit>
@@ -1896,7 +2028,7 @@
         <source>Votre fiche est retirée de l&apos;annuaire.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">343</context>
+          <context context-type="linenumber">351</context>
         </context-group>
         <note priority="1" from="description">Toast après dépublication</note>
       </trans-unit>
@@ -1904,7 +2036,7 @@
         <source>Lien copié.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">351</context>
+          <context context-type="linenumber">359</context>
         </context-group>
         <note priority="1" from="description">Toast lien copié</note>
       </trans-unit>
@@ -1912,7 +2044,7 @@
         <source>Copie impossible : sélectionnez l&apos;adresse affichée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">354</context>
+          <context context-type="linenumber">362</context>
         </context-group>
         <note priority="1" from="description">Copie du lien impossible</note>
       </trans-unit>
@@ -1920,17 +2052,9 @@
         <source>Photo enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">362</context>
+          <context context-type="linenumber">370</context>
         </context-group>
         <note priority="1" from="description">Toast photo enregistrée</note>
-      </trans-unit>
-      <trans-unit id="profile.save.justNow" datatype="html">
-        <source>à l&apos;instant</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
-          <context context-type="linenumber">421</context>
-        </context-group>
-        <note priority="1" from="description">Enregistré il y a moins de 5 secondes</note>
       </trans-unit>
       <trans-unit id="account.security.title" datatype="html">
         <source>Compte et sécurité</source>
@@ -2168,39 +2292,122 @@
         <source>Sessions actives</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
-          <context context-type="linenumber">229,230</context>
+          <context context-type="linenumber">231,232</context>
         </context-group>
         <note priority="1" from="description">Étiquette de la liste des sessions</note>
       </trans-unit>
-      <trans-unit id="account.security.sessions.current" datatype="html">
-        <source>Cet appareil · session courante</source>
+      <trans-unit id="account.security.sessions.hideOlder" datatype="html">
+        <source>Masquer <x id="ICU" equiv-text="{store.olderSessions().length, plural,
+                  =1 {l&apos;autre session}
+                  other {les {{ store.olderSessions().length }} autres sessions}
+                }" xid="6250628017317285049"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
-          <context context-type="linenumber">240,243</context>
+          <context context-type="linenumber">260,265</context>
+        </context-group>
+        <note priority="1" from="description">Replier les sessions plus anciennes</note>
+      </trans-unit>
+      <trans-unit id="8336249631710697339" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {l&apos;autre session} other {les <x id="INTERPOLATION"/> autres sessions}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">260,262</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">268,270</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.showOlder" datatype="html">
+        <source>Afficher <x id="ICU" equiv-text="{store.olderSessions().length, plural,
+                  =1 {l&apos;autre session}
+                  other {les {{ store.olderSessions().length }} autres sessions}
+                }" xid="6250628017317285049"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">268,273</context>
+        </context-group>
+        <note priority="1" from="description">Déplier les sessions plus anciennes</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.olderList" datatype="html">
+        <source>Autres sessions, par appareil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">279,281</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette des sessions plus anciennes</note>
+      </trans-unit>
+      <trans-unit id="8686457947694665380" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 session} other {<x id="INTERPOLATION"/> sessions}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">288,290</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.group" datatype="html">
+        <source><x id="ICU" equiv-text="{group.sessions.length, plural,
+                        =1 {1 session}
+                        other {{{ group.sessions.length }} sessions}
+                      }" xid="7755167482662868766"/> · dernière activité <x id="INTERPOLATION_1" equiv-text="{{ ago(group.lastAccessAt) }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">288,293</context>
+        </context-group>
+        <note priority="1" from="description">Résumé d&apos;un appareil</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.groupHide" datatype="html">
+        <source>Masquer le détail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">305,308</context>
+        </context-group>
+        <note priority="1" from="description">Masquer le détail d&apos;un appareil</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.groupShow" datatype="html">
+        <source>Voir le détail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">310,313</context>
+        </context-group>
+        <note priority="1" from="description">Voir le détail d&apos;un appareil</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.thisDevice" datatype="html">
+        <source>Cet appareil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">344,347</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la session courante</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.currentBadge" datatype="html">
+        <source>session courante</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
+          <context context-type="linenumber">349,352</context>
         </context-group>
         <note priority="1" from="description">Session courante</note>
       </trans-unit>
-      <trans-unit id="account.security.sessions.openedAt" datatype="html">
-        <source> Ouverte le </source>
+      <trans-unit id="account.security.sessions.openedOn" datatype="html">
+        <source>Ouverte le <x id="INTERPOLATION" equiv-text="{{ formatDate(s.createdAt) }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
-          <context context-type="linenumber">250,252</context>
+          <context context-type="linenumber">360,361</context>
         </context-group>
         <note priority="1" from="description">Ouverture de la session</note>
       </trans-unit>
-      <trans-unit id="account.security.sessions.lastAccessAt" datatype="html">
-        <source> Dernière activité </source>
+      <trans-unit id="account.security.sessions.lastActivity" datatype="html">
+        <source>Dernière activité <x id="INTERPOLATION" equiv-text="{{ ago(s.lastAccessAt) }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
-          <context context-type="linenumber">256,258</context>
+          <context context-type="linenumber">369,370</context>
         </context-group>
         <note priority="1" from="description">Dernier appel de la session</note>
       </trans-unit>
-      <trans-unit id="account.security.sessions.expiresAt" datatype="html">
-        <source> Expire le </source>
+      <trans-unit id="account.security.sessions.expiresOn" datatype="html">
+        <source>expire le <x id="INTERPOLATION" equiv-text="{{ formatDate(s.expiresAt) }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
-          <context context-type="linenumber">262,264</context>
+          <context context-type="linenumber">372,373</context>
         </context-group>
         <note priority="1" from="description">Expiration de la session</note>
       </trans-unit>
@@ -2208,7 +2415,7 @@
         <source> Une session dure 12 h d&apos;inactivité, ou 30 jours avec « rester connecté ». « Déconnecter les autres appareils » conserve cet appareil et consigne l&apos;opération. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
-          <context context-type="linenumber">289,294</context>
+          <context context-type="linenumber">395,400</context>
         </context-group>
         <note priority="1" from="description">Durées de session (G Q6)</note>
       </trans-unit>
@@ -2216,7 +2423,7 @@
         <source> Connexion précédente </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
-          <context context-type="linenumber">297,300</context>
+          <context context-type="linenumber">403,406</context>
         </context-group>
         <note priority="1" from="description">Carte Connexion précédente</note>
       </trans-unit>
@@ -2224,7 +2431,7 @@
         <source> Aucune connexion antérieure à celle-ci n&apos;est enregistrée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
-          <context context-type="linenumber">317,323</context>
+          <context context-type="linenumber">423,429</context>
         </context-group>
         <note priority="1" from="description">Aucune connexion précédente</note>
       </trans-unit>
@@ -2232,71 +2439,23 @@
         <source>Déconnecter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">96</context>
         </context-group>
         <note priority="1" from="description">Révoquer une session</note>
-      </trans-unit>
-      <trans-unit id="account.security.sessions.errorTitle" datatype="html">
-        <source>Impossible de charger vos sessions</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">90</context>
-        </context-group>
-        <note priority="1" from="description">Titre de l&apos;état erreur des sessions</note>
       </trans-unit>
       <trans-unit id="account.security.lastLogin.errorTitle" datatype="html">
         <source>Impossible de charger votre connexion précédente</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">99</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;état erreur de la connexion précédente</note>
-      </trans-unit>
-      <trans-unit id="account.security.sessions.retry" datatype="html">
-        <source>Réessayer</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">93</context>
-        </context-group>
-        <note priority="1" from="description">Réessayer le chargement des sessions</note>
-      </trans-unit>
-      <trans-unit id="account.security.sessions.revokedNone" datatype="html">
-        <source>Aucun autre appareil n&apos;était connecté.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">102</context>
-        </context-group>
-        <note priority="1" from="description">Aucune autre session révoquée</note>
-      </trans-unit>
-      <trans-unit id="account.security.sessions.revokedOne" datatype="html">
-        <source>1 appareil déconnecté.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">105</context>
-        </context-group>
-        <note priority="1" from="description">Une session révoquée</note>
-      </trans-unit>
-      <trans-unit id="account.security.sessions.revokedMany" datatype="html">
-        <source><x id="count" equiv-text="count"/> appareils déconnectés.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">106</context>
-        </context-group>
-        <note priority="1" from="description">Plusieurs sessions révoquées</note>
-      </trans-unit>
-      <trans-unit id="account.security.sessions.unknownDevice" datatype="html">
-        <source>Appareil non identifié</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">139</context>
-        </context-group>
-        <note priority="1" from="description">Appareil inconnu d&apos;une session</note>
       </trans-unit>
       <trans-unit id="account.security.regenerate.confirmTitle" datatype="html">
         <source>Régénérer les codes de secours ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <note priority="1" from="description">Confirmation avant régénération</note>
       </trans-unit>
@@ -2304,7 +2463,7 @@
         <source>Les 10 anciens codes cesseront de fonctionner. Les 10 nouveaux ne seront affichés qu&apos;une seule fois.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">151</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <note priority="1" from="description">Explication de la confirmation</note>
       </trans-unit>
@@ -2312,7 +2471,7 @@
         <source>Régénérer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">167</context>
         </context-group>
         <note priority="1" from="description">Bouton de la confirmation</note>
       </trans-unit>
@@ -2320,7 +2479,7 @@
         <source>Nouveaux codes de secours enregistrés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">173</context>
         </context-group>
         <note priority="1" from="description">Toast après régénération</note>
       </trans-unit>
@@ -2328,7 +2487,7 @@
         <source>Double authentification désactivée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <note priority="1" from="description">Toast après désactivation</note>
       </trans-unit>
@@ -2336,7 +2495,7 @@
         <source>Mot de passe changé. Reconnectez-vous avec le nouveau mot de passe.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">196</context>
         </context-group>
         <note priority="1" from="description">Toast après changement de mot de passe</note>
       </trans-unit>
@@ -2344,39 +2503,15 @@
         <source>Un lien de confirmation a été envoyé à <x id="email" equiv-text="sentTo"/>. L&apos;adresse actuelle reste valable jusqu&apos;à ce qu&apos;il soit ouvert (24 h).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">210</context>
         </context-group>
         <note priority="1" from="description">Après un 202 du changement d&apos;e-mail</note>
-      </trans-unit>
-      <trans-unit id="account.security.sessions.confirmTitle" datatype="html">
-        <source>Déconnecter les autres appareils ?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">206</context>
-        </context-group>
-        <note priority="1" from="description">Confirmation avant déconnexion des autres appareils</note>
-      </trans-unit>
-      <trans-unit id="account.security.sessions.confirmBody" datatype="html">
-        <source>Cet appareil reste connecté. Les autres devront se reconnecter ; l&apos;opération est consignée côté serveur.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">207</context>
-        </context-group>
-        <note priority="1" from="description">Explication de la confirmation</note>
-      </trans-unit>
-      <trans-unit id="account.security.sessions.confirmButton" datatype="html">
-        <source>Déconnecter</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">208</context>
-        </context-group>
-        <note priority="1" from="description">Bouton de la confirmation</note>
       </trans-unit>
       <trans-unit id="account.security.enabled.toast" datatype="html">
         <source>Double authentification activée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">230</context>
+          <context context-type="linenumber">246</context>
         </context-group>
         <note priority="1" from="description">Toast après activation de la 2FA</note>
       </trans-unit>
@@ -2384,7 +2519,7 @@
         <source>Double authentification activée, mais vos codes de secours n&apos;ont pas été confirmés : régénérez-les pour en obtenir de nouveaux.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">234</context>
+          <context context-type="linenumber">250</context>
         </context-group>
         <note priority="1" from="description">Panneau fermé avant la confirmation des codes</note>
       </trans-unit>
@@ -2392,7 +2527,7 @@
         <source>Cette session n&apos;existe plus : elle a expiré ou a déjà été fermée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">249</context>
+          <context context-type="linenumber">265</context>
         </context-group>
         <note priority="1" from="description">Session déjà fermée</note>
       </trans-unit>
@@ -2400,7 +2535,7 @@
         <source>C&apos;est votre session actuelle : utilisez la déconnexion.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
-          <context context-type="linenumber">251</context>
+          <context context-type="linenumber">267</context>
         </context-group>
         <note priority="1" from="description">Révocation de la session courante refusée</note>
       </trans-unit>
@@ -3350,7 +3485,7 @@
         <source> Aucun dossier ne correspond à cette recherche. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
-          <context context-type="linenumber">76,83</context>
+          <context context-type="linenumber">80,87</context>
         </context-group>
         <note priority="1" from="description">Aucun patient ne correspond à la recherche</note>
       </trans-unit>
@@ -3358,7 +3493,7 @@
         <source>Nom affiché…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">178</context>
         </context-group>
         <note priority="1" from="description">Indication du sélecteur de patient</note>
       </trans-unit>
@@ -3366,7 +3501,7 @@
         <source>Dossiers correspondants</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">179</context>
         </context-group>
         <note priority="1" from="description">Étiquette de la liste des patients</note>
       </trans-unit>
@@ -3374,7 +3509,7 @@
         <source>archivé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">202</context>
         </context-group>
         <note priority="1" from="description">Patient archivé dans le sélecteur</note>
       </trans-unit>
@@ -3382,7 +3517,7 @@
         <source><x id="age" equiv-text="age"/> ans</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">207</context>
         </context-group>
         <note priority="1" from="description">Âge dans le sélecteur</note>
       </trans-unit>
@@ -3638,7 +3773,7 @@
         <source>Choisir un fichier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
-          <context context-type="linenumber">89,91</context>
+          <context context-type="linenumber">107,110</context>
         </context-group>
         <note priority="1" from="description">Bouton choisir un fichier</note>
       </trans-unit>
@@ -3646,7 +3781,7 @@
         <source>ou glissez-le ici · PDF, JPG ou PNG, 10 Mo maximum</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
-          <context context-type="linenumber">92,97</context>
+          <context context-type="linenumber">111,115</context>
         </context-group>
         <note priority="1" from="description">Zone de dépôt</note>
       </trans-unit>
@@ -3654,15 +3789,31 @@
         <source> Ajouter au dossier </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
-          <context context-type="linenumber">126,128</context>
+          <context context-type="linenumber">121,124</context>
         </context-group>
         <note priority="1" from="description">Bouton ajouter au dossier</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.chosen" datatype="html">
+        <source>Fichier choisi :</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">126,128</context>
+        </context-group>
+        <note priority="1" from="description">Fichier choisi</note>
+      </trans-unit>
+      <trans-unit id="account.verification.upload.none" datatype="html">
+        <source>Aucun fichier choisi.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
+          <context context-type="linenumber">130,134</context>
+        </context-group>
+        <note priority="1" from="description">Aucun fichier choisi</note>
       </trans-unit>
       <trans-unit id="account.verification.upload.retention" datatype="html">
         <source> Les fichiers sont chiffrés et supprimés 90 jours après la décision de l&apos;administrateur ; seule la mention « vérifié le … » est conservée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
-          <context context-type="linenumber">129,134</context>
+          <context context-type="linenumber">146,150</context>
         </context-group>
         <note priority="1" from="description">Mention de rétention</note>
       </trans-unit>
@@ -3887,7 +4038,7 @@
         <source> Enregistrer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
-          <context context-type="linenumber">156,161</context>
+          <context context-type="linenumber">157,162</context>
         </context-group>
         <note priority="1" from="description">Bouton enregistrer les informations</note>
       </trans-unit>
@@ -3895,7 +4046,7 @@
         <source>Enregistré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
-          <context context-type="linenumber">163,167</context>
+          <context context-type="linenumber">164,168</context>
         </context-group>
         <note priority="1" from="description">Confirmation d&apos;enregistrement</note>
       </trans-unit>
@@ -4039,7 +4190,7 @@
         <source>Choisissez une image JPEG ou PNG.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">302</context>
+          <context context-type="linenumber">332</context>
         </context-group>
         <note priority="1" from="description">Photo d&apos;un autre format</note>
       </trans-unit>
@@ -4047,7 +4198,7 @@
         <source>Cette image n&apos;a pas pu être lue. Essayez une autre photo.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">313</context>
+          <context context-type="linenumber">343</context>
         </context-group>
         <note priority="1" from="description">Photo illisible</note>
       </trans-unit>
@@ -4055,7 +4206,7 @@
         <source>Le recadrage a échoué. Essayez une autre photo.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">332</context>
+          <context context-type="linenumber">362</context>
         </context-group>
         <note priority="1" from="description">Recadrage impossible</note>
       </trans-unit>
@@ -4063,7 +4214,7 @@
         <source>La photo dépasse 5 Mo.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">346</context>
+          <context context-type="linenumber">376</context>
         </context-group>
         <note priority="1" from="description">Photo refusée, plus de 5 Mo</note>
       </trans-unit>
@@ -4071,7 +4222,7 @@
         <source>Le serveur n&apos;accepte que les images JPEG ou PNG.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">348</context>
+          <context context-type="linenumber">378</context>
         </context-group>
         <note priority="1" from="description">Photo refusée, format</note>
       </trans-unit>
@@ -4079,7 +4230,7 @@
         <source>Cette image est trop grande (plus de 25 millions de pixels).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">350</context>
+          <context context-type="linenumber">380</context>
         </context-group>
         <note priority="1" from="description">Photo refusée, trop de pixels</note>
       </trans-unit>
@@ -4087,7 +4238,7 @@
         <source>Le serveur n&apos;a pas pu lire cette image.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">352</context>
+          <context context-type="linenumber">382</context>
         </context-group>
         <note priority="1" from="description">Photo refusée, illisible</note>
       </trans-unit>
@@ -4095,7 +4246,7 @@
         <source>La photo n&apos;a pas pu être enregistrée. Réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
-          <context context-type="linenumber">354</context>
+          <context context-type="linenumber">384</context>
         </context-group>
         <note priority="1" from="description">Photo non enregistrée</note>
       </trans-unit>
@@ -4271,7 +4422,7 @@
         <source> Apparaître dans l&apos;annuaire </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">41,43</context>
+          <context context-type="linenumber">45,47</context>
         </context-group>
         <note priority="1" from="description">Titre de la carte de publication</note>
       </trans-unit>
@@ -4279,7 +4430,7 @@
         <source>Publié</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">57,62</context>
+          <context context-type="linenumber">58,62</context>
         </context-group>
         <note priority="1" from="description">Interrupteur de publication</note>
       </trans-unit>
@@ -4287,7 +4438,7 @@
         <source>Dossier en cours de vérification.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">64,66</context>
+          <context context-type="linenumber">65,67</context>
         </context-group>
         <note priority="1" from="description">Publication impossible, dossier non approuvé</note>
       </trans-unit>
@@ -4295,7 +4446,7 @@
         <source> Votre dossier professionnel doit être approuvé avant de publier votre fiche. Vous pouvez déjà la remplir : rien n&apos;est visible tant qu&apos;elle n&apos;est pas publiée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">67,71</context>
+          <context context-type="linenumber">68,72</context>
         </context-group>
         <note priority="1" from="description">Explication de la publication verrouillée</note>
       </trans-unit>
@@ -4303,31 +4454,39 @@
         <source>Voir mon dossier professionnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">73,78</context>
+          <context context-type="linenumber">74,79</context>
         </context-group>
         <note priority="1" from="description">Lien vers le dossier professionnel</note>
       </trans-unit>
-      <trans-unit id="profile.publish.on" datatype="html">
-        <source>Votre fiche est visible à l&apos;adresse</source>
+      <trans-unit id="profile.publish.visible" datatype="html">
+        <source> Votre fiche est visible dans l&apos;annuaire. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">80,82</context>
+          <context context-type="linenumber">82,85</context>
         </context-group>
         <note priority="1" from="description">Fiche publiée</note>
       </trans-unit>
-      <trans-unit id="profile.publish.off" datatype="html">
-        <source>Une fois publiée, votre fiche sera visible à l&apos;adresse</source>
+      <trans-unit id="profile.publish.hidden" datatype="html">
+        <source> Une fois publiée, votre fiche sera visible dans l&apos;annuaire. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">83,86</context>
+          <context context-type="linenumber">86,89</context>
         </context-group>
         <note priority="1" from="description">Fiche non publiée</note>
       </trans-unit>
-      <trans-unit id="profile.publish.unpublishNote" datatype="html">
-        <source>Désactiver retire la fiche immédiatement de l&apos;annuaire.</source>
+      <trans-unit id="profile.publish.urlLabel" datatype="html">
+        <source>Adresse publique :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">88,93</context>
+          <context context-type="linenumber">92,93</context>
+        </context-group>
+        <note priority="1" from="description">Libellé de l&apos;adresse publique</note>
+      </trans-unit>
+      <trans-unit id="profile.publish.unpublishNote" datatype="html">
+        <source> Désactiver retire la fiche immédiatement de l&apos;annuaire. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
+          <context context-type="linenumber">96,101</context>
         </context-group>
         <note priority="1" from="description">Effet de la dépublication</note>
       </trans-unit>
@@ -4335,7 +4494,7 @@
         <source> Retirer la fiche de l&apos;annuaire ? Elle disparaît immédiatement ; vos informations restent enregistrées pour une prochaine publication. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">95,98</context>
+          <context context-type="linenumber">103,106</context>
         </context-group>
         <note priority="1" from="description">Confirmation de dépublication</note>
       </trans-unit>
@@ -4343,7 +4502,7 @@
         <source> Retirer la fiche </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">107,110</context>
+          <context context-type="linenumber">115,118</context>
         </context-group>
         <note priority="1" from="description">Bouton de confirmation de dépublication</note>
       </trans-unit>
@@ -4351,7 +4510,7 @@
         <source> Garder la fiche publiée </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">116,121</context>
+          <context context-type="linenumber">124,129</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;annulation de dépublication</note>
       </trans-unit>
@@ -4359,7 +4518,7 @@
         <source> Publication refusée. À corriger : </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">125,128</context>
+          <context context-type="linenumber">133,136</context>
         </context-group>
         <note priority="1" from="description">Publication refusée, titre</note>
       </trans-unit>
@@ -4367,7 +4526,7 @@
         <source>Voir mon dossier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">135,138</context>
+          <context context-type="linenumber">143,146</context>
         </context-group>
         <note priority="1" from="description">Lien vers le dossier depuis le refus</note>
       </trans-unit>
@@ -4375,7 +4534,7 @@
         <source>Liste de contrôle</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">152,153</context>
+          <context context-type="linenumber">160,161</context>
         </context-group>
         <note priority="1" from="description">Liste de contrôle de la publication</note>
       </trans-unit>
@@ -4383,7 +4542,7 @@
         <source>Ouvrir la fiche publique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">173,177</context>
+          <context context-type="linenumber">181,185</context>
         </context-group>
         <note priority="1" from="description">Lien vers la fiche publique</note>
       </trans-unit>
@@ -4391,7 +4550,7 @@
         <source> Copier le lien </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">182,188</context>
+          <context context-type="linenumber">190,196</context>
         </context-group>
         <note priority="1" from="description">Bouton pour copier le lien de la fiche</note>
       </trans-unit>
@@ -4399,7 +4558,7 @@
         <source>L&apos;opération n&apos;a pas abouti. Réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">375</context>
+          <context context-type="linenumber">395</context>
         </context-group>
         <note priority="1" from="description">Échec de la publication ou dépublication</note>
       </trans-unit>
@@ -4407,7 +4566,7 @@
         <source>Fait :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">421</context>
+          <context context-type="linenumber">450</context>
         </context-group>
         <note priority="1" from="description">État d&apos;une ligne de contrôle réglée</note>
       </trans-unit>
@@ -4415,7 +4574,7 @@
         <source>À noter :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">423</context>
+          <context context-type="linenumber">452</context>
         </context-group>
         <note priority="1" from="description">État d&apos;une ligne de contrôle à signaler</note>
       </trans-unit>
@@ -4423,7 +4582,7 @@
         <source>À faire :</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
-          <context context-type="linenumber">425</context>
+          <context context-type="linenumber">454</context>
         </context-group>
         <note priority="1" from="description">État d&apos;une ligne de contrôle à faire</note>
       </trans-unit>
@@ -4491,6 +4650,14 @@
         </context-group>
         <note priority="1" from="description">Copie refusée par le navigateur</note>
       </trans-unit>
+      <trans-unit id="profile.save.justNow" datatype="html">
+        <source>à l&apos;instant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/relative-time.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Enregistré il y a moins de 5 secondes</note>
+      </trans-unit>
       <trans-unit id="account.security.code.invalid" datatype="html">
         <source>Ce code n&apos;est pas valide ou a déjà été utilisé.</source>
         <context-group purpose="location">
@@ -4507,11 +4674,67 @@
         </context-group>
         <note priority="1" from="description">Action de sécurité impossible, serveur ou réseau</note>
       </trans-unit>
+      <trans-unit id="account.security.sessions.unknownDevice" datatype="html">
+        <source>Appareil non identifié</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">Appareil inconnu d&apos;une session</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.revokedNone" datatype="html">
+        <source>Aucun autre appareil n&apos;était connecté.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <note priority="1" from="description">Aucune autre session révoquée</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.revokedOne" datatype="html">
+        <source>1 appareil déconnecté.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <note priority="1" from="description">Une session révoquée</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.revokedMany" datatype="html">
+        <source><x id="count" equiv-text="count"/> appareils déconnectés.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <note priority="1" from="description">Plusieurs sessions révoquées</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.confirmTitle" datatype="html">
+        <source>Déconnecter les autres appareils ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation avant déconnexion des autres appareils</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.confirmBody" datatype="html">
+        <source>Cet appareil reste connecté. Les autres devront se reconnecter ; l&apos;opération est consignée côté serveur.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">Explication de la confirmation</note>
+      </trans-unit>
+      <trans-unit id="account.security.sessions.confirmButton" datatype="html">
+        <source>Déconnecter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de la confirmation</note>
+      </trans-unit>
       <trans-unit id="account.security.verify.alreadyEnabled" datatype="html">
         <source>La double authentification est déjà active sur ce compte.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <note priority="1" from="description">2FA déjà active au moment de vérifier</note>
       </trans-unit>
@@ -4519,7 +4742,7 @@
         <source>Le secret en attente a expiré. Recommencez l&apos;activation depuis le début.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <note priority="1" from="description">Aucun secret en attente</note>
       </trans-unit>
@@ -4715,43 +4938,82 @@
         </context-group>
         <note priority="1" from="description">Copie du secret refusée</note>
       </trans-unit>
+      <trans-unit id="53252064574172960" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {Aucun déposé} =1 {1 déposé} other {<x id="INTERPOLATION"/> déposés}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">33,35</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">62,64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.docs.submittedIcu" datatype="html">
+        <source><x id="ICU" equiv-text="{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }" xid="4858505258601418427"/> · dossier soumis</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">33,39</context>
+        </context-group>
+        <note priority="1" from="description">Jalon justificatifs, dossier
+                    soumis</note>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.docs.missingIcu" datatype="html">
+        <source><x id="ICU" equiv-text="{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }" xid="4858505258601418427"/> · <x id="ICU_1" equiv-text="{missingCount(), plural,
+                    =1 {1 manquant}
+                    other {{{missingCount()}} manquants}
+                  }" xid="5940867077365447752"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">46,57</context>
+        </context-group>
+        <note priority="1" from="description">Jalon justificatifs, pièces
+                    manquantes</note>
+      </trans-unit>
+      <trans-unit id="3269664571840477809" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 manquant} other {<x id="INTERPOLATION"/> manquants}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">52,54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="account.verification.progress.docs.completeIcu" datatype="html">
+        <source><x id="ICU" equiv-text="{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }" xid="4858505258601418427"/> · prêt à soumettre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
+          <context context-type="linenumber">62,68</context>
+        </context-group>
+        <note priority="1" from="description">Jalon justificatifs, complet</note>
+      </trans-unit>
       <trans-unit id="account.verification.progress.label" datatype="html">
         <source>Progression du dossier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <note priority="1" from="description">Étiquette de la progression du dossier</note>
-      </trans-unit>
-      <trans-unit id="account.verification.progress.docs.submitted" datatype="html">
-        <source><x id="count" equiv-text="count"/> déposés · dossier soumis</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">100</context>
-        </context-group>
-        <note priority="1" from="description">Jalon justificatifs, dossier soumis</note>
-      </trans-unit>
-      <trans-unit id="account.verification.progress.docs.missing" datatype="html">
-        <source><x id="count" equiv-text="count"/> déposés · <x id="missing" equiv-text="missing"/> manquant(s)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">102</context>
-        </context-group>
-        <note priority="1" from="description">Jalon justificatifs, pièces manquantes</note>
-      </trans-unit>
-      <trans-unit id="account.verification.progress.docs.complete" datatype="html">
-        <source><x id="count" equiv-text="count"/> déposés · prêt à soumettre</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">103</context>
-        </context-group>
-        <note priority="1" from="description">Jalon justificatifs, complet</note>
       </trans-unit>
       <trans-unit id="account.verification.progress.created" datatype="html">
         <source>Compte créé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <note priority="1" from="description">Jalon 1</note>
       </trans-unit>
@@ -4759,7 +5021,7 @@
         <source>Fait</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">152</context>
         </context-group>
         <note priority="1" from="description">Détail du jalon 1</note>
       </trans-unit>
@@ -4767,7 +5029,7 @@
         <source>E-mail confirmé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <note priority="1" from="description">Jalon 2</note>
       </trans-unit>
@@ -4775,7 +5037,7 @@
         <source>Fait</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <note priority="1" from="description">Détail du jalon 2</note>
       </trans-unit>
@@ -4783,7 +5045,7 @@
         <source>Justificatifs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">161</context>
         </context-group>
         <note priority="1" from="description">Jalon 3</note>
       </trans-unit>
@@ -4791,7 +5053,7 @@
         <source>Validation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">167</context>
         </context-group>
         <note priority="1" from="description">Jalon 4</note>
       </trans-unit>
@@ -4799,7 +5061,7 @@
         <source>Dossier approuvé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">124</context>
+          <context context-type="linenumber">170</context>
         </context-group>
         <note priority="1" from="description">Détail du jalon 4, approuvé</note>
       </trans-unit>
@@ -4807,7 +5069,7 @@
         <source>En cours, sous 2 jours ouvrés</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">172</context>
         </context-group>
         <note priority="1" from="description">Détail du jalon 4, en cours</note>
       </trans-unit>
@@ -4815,7 +5077,7 @@
         <source>Sous 2 jours ouvrés après soumission</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">173</context>
         </context-group>
         <note priority="1" from="description">Détail du jalon 4, à venir</note>
       </trans-unit>
