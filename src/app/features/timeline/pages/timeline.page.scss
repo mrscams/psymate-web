@@ -5,13 +5,13 @@
 .timeline {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 
   // Mode chronologique : la colonne occupe la hauteur restante de la fenêtre (--timeline-top,
   // mesuré par la page), la liste prend ce que laissent la barre d'outils (deux rangées) et la
   // ligne d'état. Par séance, la page défile normalement.
   &.fill {
-    height: calc(100dvh - var(--timeline-top, 300px) - 12px);
+    height: calc(100dvh - var(--timeline-top, 300px) - 8px);
   }
 }
 
@@ -20,8 +20,8 @@
 .toolbar {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 10px 14px;
+  gap: 6px;
+  padding: 8px 14px;
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
   background: var(--surface-raised);
@@ -191,8 +191,11 @@ kbd {
 .viewport {
   --lane-width: 18px;
 
+  // La liste prend la hauteur restante sans jamais dépasser le bas de la fenêtre : une carte
+  // amenée à l'écran par le navigateur (focus, menu) doit rester visible. Plancher pour les très
+  // petites fenêtres seulement.
   flex: 1 1 0;
-  min-height: 480px;
+  min-height: 240px;
 }
 
 .list {

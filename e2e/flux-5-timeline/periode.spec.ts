@@ -111,8 +111,13 @@ test('arrivée : période « 90 j », cartes récentes, URL sans paramètre ; «
 
   // Mise en page (maquette 03, état A ; audit UX-B2).
   expect(await toolbarRows(page)).toBe(2);
+  // La liste tient dans la fenêtre (une carte focalisée n'est jamais sous le bas de l'écran) et
+  // mesure au moins 480 px, hors bandeau « dossier professionnel incomplet » du compte de test
+  // (un praticien vérifié ne l'a pas).
   const box = (await t.viewport.boundingBox())!;
-  expect(box.height).toBeGreaterThanOrEqual(480);
+  expect(box.y + box.height).toBeLessThanOrEqual(900);
+  const banner = await page.locator('pm-verification-banner').boundingBox();
+  expect(box.height + (banner?.height ?? 0)).toBeGreaterThanOrEqual(480);
   const status = await t.statusLine.evaluate((el) => {
     const style = getComputedStyle(el);
     return { size: style.fontSize, family: style.fontFamily };
