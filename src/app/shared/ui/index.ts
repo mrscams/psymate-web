@@ -1,5 +1,7 @@
 // Composants partagés (fiche 00) : barres, layouts, en-tête patient, panneau latéral, états,
 // toasts, confirmation, icônes de type d'entrée. Ne se modifient que par une tâche dédiée.
+// Champs date et mois (pm-date-field, pm-month-field) : importés depuis 'shared/ui/date-field', hors
+// de ce barrel, pour que le datepicker Material reste dans les chunks paresseux des features.
 export type { AppBarUser } from './app-bar/app-bar.component';
 export { ACCOUNT_PATHS, AppBarComponent } from './app-bar/app-bar.component';
 export { ADMIN_PATHS, AdminBarComponent } from './admin-bar/admin-bar.component';

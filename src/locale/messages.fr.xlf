@@ -19455,6 +19455,110 @@
         </context-group>
         <note priority="1" from="description">Étiquette du champ où retaper le nom</note>
       </trans-unit>
+      <trans-unit id="shared.dateField.calendar" datatype="html">
+        <source>Calendrier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier du champ date</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.open" datatype="html">
+        <source>Ouvrir le calendrier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du champ date</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.close" datatype="html">
+        <source>Fermer le calendrier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.prevMonth" datatype="html">
+        <source>Mois précédent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.nextMonth" datatype="html">
+        <source>Mois suivant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.prevYear" datatype="html">
+        <source>Année précédente</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.nextYear" datatype="html">
+        <source>Année suivante</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.prevYears" datatype="html">
+        <source>24 années précédentes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.nextYears" datatype="html">
+        <source>24 années suivantes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.toMonthView" datatype="html">
+        <source>Choisir la date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.toYearView" datatype="html">
+        <source>Choisir le mois et l&apos;année</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Calendrier</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.placeholder.day" datatype="html">
+        <source>jj/mm/aaaa</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-field.component.ts</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
+        <note priority="1" from="description">Format affiché dans un champ date vide</note>
+      </trans-unit>
+      <trans-unit id="shared.dateField.placeholder.month" datatype="html">
+        <source>mm/aaaa</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/date-field/date-field.component.ts</context>
+          <context context-type="linenumber">170</context>
+        </context-group>
+        <note priority="1" from="description">Format affiché dans un champ mois vide</note>
+      </trans-unit>
       <trans-unit id="entry.type.note" datatype="html">
         <source>Note</source>
         <context-group purpose="location">
