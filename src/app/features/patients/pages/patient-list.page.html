@@ -1,25 +1,49 @@
 <header class="page-header">
-  <h1>{{ title() }}</h1>
-  <a mat-flat-button routerLink="/patients/nouveau" class="new">
-    {{ newLabel() }}
-    <kbd>N</kbd>
-  </a>
+  <div class="heading">
+    <h1>{{ title() }}</h1>
+    @if (counter(); as text) {
+      <p class="counter">{{ text }}</p>
+    }
+  </div>
+  <div class="header-actions">
+    <button
+      mat-stroked-button
+      type="button"
+      class="archived-toggle"
+      [attr.aria-pressed]="store.archived()"
+      (click)="store.setArchived(!store.archived())"
+    >
+      <svg class="toggle-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M2 4h12M4 8h8M6 12h4" />
+      </svg>
+      <span i18n="Bascule de la liste des patients@@patients.archived.toggle"
+        >Afficher les archivés</span
+      >
+    </button>
+    <a mat-flat-button routerLink="/patients/nouveau" class="new">
+      {{ newLabel() }}
+      <kbd>N</kbd>
+    </a>
+  </div>
 </header>
 
-<section class="card" aria-labelledby="patients-list-title">
+<pm-patient-filters
+  [query]="query()"
+  (queryChange)="onQuery($event)"
+  [sort]="store.sort()"
+  (sortChange)="store.setSort($event)"
+  [quick]="store.quick()"
+  [counts]="store.items().length > 0 ? store.quickCounts() : null"
+  (quickChange)="store.setQuick($event)"
+  [tags]="tags.tags().data ?? []"
+  [activeTag]="store.tag()"
+  (tagChange)="store.setTag($event)"
+  (openFirst)="openFirst()"
+  (arrowDown)="focusFirstRow()"
+/>
+
+<section class="list" aria-labelledby="patients-list-title">
   <h2 id="patients-list-title" class="sr-only">{{ title() }}</h2>
-  <pm-patient-filters
-    [query]="query()"
-    (queryChange)="onQuery($event)"
-    [sort]="store.sort()"
-    (sortChange)="store.setSort($event)"
-    [tags]="tags.tags().data ?? []"
-    [activeTag]="store.tag()"
-    (tagChange)="store.setTag($event)"
-    [archived]="store.archived()"
-    (archivedChange)="store.setArchived($event)"
-    (openFirst)="openFirst()"
-  />
 
   @if (staleError()) {
     <div class="banner" role="alert">
@@ -42,37 +66,87 @@
   }
 
   @if (kind(); as state) {
-    @switch (state) {
-      @case ('loading') {
-        <pm-state kind="loading" skeleton="row" [lines]="6" />
+    <div class="card">
+      @switch (state) {
+        @case ('loading') {
+          <pm-state kind="loading" skeleton="row" [lines]="6" />
+        }
+        @case ('error') {
+          <pm-state kind="error" [title]="errorTitle()" [action]="retry" />
+        }
+        @case ('empty') {
+          <pm-state
+            kind="empty"
+            [title]="emptyTitle()"
+            [message]="emptyMessage()"
+            [action]="emptyAction()"
+          />
+        }
       }
-      @case ('error') {
-        <pm-state kind="error" [title]="errorTitle()" [action]="retry" />
-      }
-      @case ('empty') {
+    </div>
+    @if (state === 'empty' && store.welcome()) {
+      <pm-onboarding (showShortcuts)="showShortcuts()" />
+    }
+  } @else {
+    @if (store.welcome()) {
+      <!-- Première connexion avec le patient de démonstration (planche 29 §2) : bloc central,
+           puis « ou explorez un patient de démonstration » au-dessus de sa ligne. -->
+      <div class="card welcome-empty">
         <pm-state
           kind="empty"
           [title]="emptyTitle()"
           [message]="emptyMessage()"
           [action]="emptyAction()"
         />
-        @if (store.welcome()) {
-          <pm-onboarding (showShortcuts)="showShortcuts()" />
-        }
+      </div>
+      <p class="explore" i18n="Invitation à explorer la démo@@patients.welcome.explore">
+        ou explorez un patient de démonstration
+      </p>
+    }
+    <div class="card">
+      @if (store.rows().length > 0) {
+        <pm-patient-table
+          [rows]="store.rows()"
+          [query]="store.effectiveQuery()"
+          [sort]="store.sort()"
+          [refreshing]="refreshing()"
+          (removeDemo)="removeDemo($event)"
+          (restoreDemo)="restoreDemo($event)"
+        />
+      } @else {
+        <pm-state
+          kind="empty"
+          [title]="quickEmptyTitle()"
+          [message]="quickEmptyMessage()"
+          [action]="showAll"
+        />
       }
-    }
-  } @else {
-    @if (store.welcome()) {
-      <pm-onboarding [hasDemo]="hasDemo()" (showShortcuts)="showShortcuts()" />
-    }
-    <pm-patient-table
-      [patients]="store.items()"
-      [query]="store.effectiveQuery()"
-      [sort]="store.sort()"
-      [refreshing]="refreshing()"
-      (removeDemo)="removeDemo($event)"
-      (restoreDemo)="restoreDemo($event)"
-    />
+      @if (activityProblem(); as problem) {
+        <p class="activity-warning" role="alert">
+          <svg class="warning-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 3 2 21h20L12 3z" />
+            <path d="M12 10v5" />
+            <circle cx="12" cy="18" r="0.6" />
+          </svg>
+          <strong>{{ warningLabel }}</strong>
+          <span>{{ problem }}</span>
+          <button mat-button type="button" (click)="store.retryActivity()">
+            {{ retry.label }}
+          </button>
+        </p>
+      }
+      <div class="table-footer">
+        <span class="shown">{{ footer() }}</span>
+        @if (partialNote(); as note) {
+          <span class="partial">{{ note }}</span>
+        }
+        <span class="spacer"></span>
+        <span class="keys" i18n="Pied de la liste : raccourcis@@patients.footer.keys"
+          ><kbd>↑</kbd>&ngsp;<kbd>↓</kbd> choisir · <kbd>Entrée</kbd> ouvrir ·
+          <kbd>N</kbd> nouveau</span
+        >
+      </div>
+    </div>
     @if (store.hasMore()) {
       <div class="more">
         <button
@@ -94,6 +168,14 @@
           </p>
         }
       </div>
+    }
+    <p class="legend" i18n="Légende sous la liste des patients@@patients.list.legend">
+      Les pastilles d'émotions résument les 30 derniers jours ; la flèche indique l'évolution par
+      rapport aux 30 jours précédents. Aucune couleur d'alerte n'est appliquée automatiquement : les
+      flags sont posés par vous.
+    </p>
+    @if (store.welcome()) {
+      <pm-onboarding (showShortcuts)="showShortcuts()" />
     }
   }
 </section>

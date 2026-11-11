@@ -1,24 +1,31 @@
 <div class="toolbar" role="search">
-  <div class="field filter">
-    <label for="patients-filter">{{ filterLabel() }}</label>
+  <div class="filter" data-focus-ring="container">
+    <svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <circle cx="7" cy="7" r="4.5" />
+      <path d="M10.5 10.5 14 14" />
+    </svg>
+    <label for="patients-filter" class="sr-only">{{ filterLabel() }}</label>
     <input
       #filter
       id="patients-filter"
       type="search"
       autocomplete="off"
+      [placeholder]="placeholder"
       [value]="query()"
       (input)="onInput($event)"
       (keydown)="onKeydown($event)"
       aria-describedby="patients-filter-hint"
     />
-    <p id="patients-filter-hint" class="hint">
-      <span i18n="Aide du filtre de la liste@@patients.filter.hint"
-        >Accents et majuscules ignorés, à partir de 2 caractères.</span
-      >
-      <kbd>/</kbd>
-    </p>
+    <kbd aria-hidden="true">/</kbd>
+    <span
+      id="patients-filter-hint"
+      class="sr-only"
+      i18n="Aide du filtre de la liste@@patients.filter.hint"
+      >Accents et majuscules ignorés, à partir de 2 caractères.</span
+    >
   </div>
-  <div class="field sort">
+
+  <div class="sort">
     <label for="patients-sort" i18n="Étiquette du tri de la liste@@patients.sort.label"
       >Trier par</label
     >
@@ -30,45 +37,65 @@
       }
     </select>
   </div>
-</div>
-<div class="chips-row">
-  <ul
+
+  <div
     class="chips"
-    aria-label="Filtrer par tag"
-    i18n-aria-label="Étiquette des puces rapides@@patients.chips.label"
+    role="group"
+    aria-label="Filtres rapides"
+    i18n-aria-label="Étiquette des filtres rapides de la liste@@patients.quick.label"
   >
-    <li>
+    @for (chip of chips(); track chip.value) {
       <button
         type="button"
         class="chip"
-        [attr.aria-pressed]="activeTag() === null"
-        (click)="tagChange.emit(null)"
-        i18n="Puce rapide sans filtre de tag@@patients.chips.all"
+        [class.flag]="chip.value === 'flags'"
+        [attr.aria-pressed]="chip.pressed"
+        (click)="quickChange.emit(chip.value)"
       >
-        Tous
+        @if (chip.value === 'flags') {
+          <span class="dot" aria-hidden="true"></span>
+        }
+        {{ chip.text }}
       </button>
-    </li>
-    @for (tag of tags(); track tag.id) {
-      <li>
-        <button
-          type="button"
-          class="chip"
-          [attr.aria-pressed]="activeTag() === tag.label"
-          (click)="tagChange.emit(activeTag() === tag.label ? null : tag.label)"
-        >
-          #{{ tag.label }}
-        </button>
-      </li>
     }
-  </ul>
-  <label class="archived-toggle">
-    <input
-      type="checkbox"
-      [checked]="archived()"
-      (change)="archivedChange.emit($any($event.target).checked)"
-    />
-    <span i18n="Bascule de la liste des patients@@patients.archived.toggle"
-      >Afficher les archivés</span
-    >
-  </label>
+    @if (tags().length > 0) {
+      <button
+        type="button"
+        class="chip tags"
+        [class.active]="activeTag() !== null"
+        [matMenuTriggerFor]="tagMenu"
+      >
+        {{ tagsButton() }}
+        <span aria-hidden="true">▾</span>
+      </button>
+      <mat-menu
+        #tagMenu="matMenu"
+        aria-label="Filtrer par tag"
+        i18n-aria-label="Étiquette du menu des tags@@patients.chips.label"
+      >
+        <button
+          mat-menu-item
+          type="button"
+          role="menuitemradio"
+          [attr.aria-checked]="activeTag() === null"
+          (click)="tagChange.emit(null)"
+        >
+          <span class="check" aria-hidden="true">{{ activeTag() === null ? '✓' : '' }}</span>
+          <span i18n="Entrée du menu des tags sans filtre@@patients.tags.all">Tous les tags</span>
+        </button>
+        @for (tag of tags(); track tag.id) {
+          <button
+            mat-menu-item
+            type="button"
+            role="menuitemradio"
+            [attr.aria-checked]="activeTag() === tag.label"
+            (click)="tagChange.emit(tag.label)"
+          >
+            <span class="check" aria-hidden="true">{{ activeTag() === tag.label ? '✓' : '' }}</span>
+            #{{ tag.label }}
+          </button>
+        }
+      </mat-menu>
+    }
+  </div>
 </div>

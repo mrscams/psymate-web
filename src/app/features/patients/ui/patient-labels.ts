@@ -1,4 +1,12 @@
-import { FlagKind, Modality, PatientSort, Pronoun, Rhythm } from '../data/patient.model';
+import {
+  FlagKind,
+  Modality,
+  PatientSort,
+  Pronoun,
+  QuickFilter,
+  Rhythm,
+  SessionModality,
+} from '../data/patient.model';
 
 // Libellés de features/patients ($localize, français d'abord). Les codes viennent du contrat ou de
 // la fiche 16 ; seuls ces libellés changent avec la langue.
@@ -53,12 +61,44 @@ export function modalityLabel(modality: Modality): string {
 
 export function sortLabel(sort: PatientSort): string {
   switch (sort) {
+    case 'lastSession':
+      return $localize`:Tri de la liste des patients@@patients.sort.lastSession:Dernière séance`;
+    case 'flags':
+      return $localize`:Tri de la liste des patients@@patients.sort.flags:Flags d'abord`;
     case 'name':
       return $localize`:Tri de la liste des patients@@patients.sort.name:Nom A → Z`;
     case 'updated':
       return $localize`:Tri de la liste des patients@@patients.sort.updated:Dernière modification`;
     case 'created':
       return $localize`:Tri de la liste des patients@@patients.sort.created:Date de création`;
+  }
+}
+
+/** Modalité d'une séance dans la colonne « Dernière séance » (en minuscules, après la date). */
+export function sessionModalityLabel(modality: SessionModality): string {
+  switch (modality) {
+    case 'in_person':
+      return $localize`:Modalité d'une séance dans la liste@@patients.session.inPerson:cabinet`;
+    case 'video':
+      return $localize`:Modalité d'une séance dans la liste@@patients.session.video:visio`;
+    case 'phone':
+      return $localize`:Modalité d'une séance dans la liste@@patients.session.phone:téléphone`;
+    case 'email':
+      return $localize`:Modalité d'une séance dans la liste@@patients.session.email:e-mail`;
+  }
+}
+
+/** Libellé d'un filtre rapide de la liste (maquette 01). */
+export function quickFilterLabel(filter: QuickFilter): string {
+  switch (filter) {
+    case 'all':
+      return $localize`:Filtre rapide de la liste@@patients.quick.all:Tous`;
+    case 'today':
+      return $localize`:Filtre rapide de la liste@@patients.quick.today:Aujourd'hui`;
+    case 'flags':
+      return $localize`:Filtre rapide de la liste@@patients.quick.flags:Flags`;
+    case 'drafts':
+      return $localize`:Filtre rapide de la liste@@patients.quick.drafts:Brouillons`;
   }
 }
 
