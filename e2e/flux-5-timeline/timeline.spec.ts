@@ -16,6 +16,8 @@ import { StoryPatient, storyPatient, volumePatient } from './timeline-data';
 // Timeline, mode chronologique (M3-02, fiche 03, B4 écran 3) contre l'API locale (jamais de mock) :
 // un compte jetable porte un patient « récit » (situations en bande, pastille « dit en séance du … »,
 // zone « Avant le suivi ») et un patient « volume » de 2 000 notes (défilement, fenêtres, zoom).
+// La période par défaut est « 90 j » (UX-B2, periode.spec.ts) : les cas qui portent sur tout le
+// dossier ouvrent `?period=all` (« Tout »).
 
 const VOLUME = 2000;
 // Total affiché : 2 000 notes, la séance passée et la séance d'accueil, soit « 2 002 » (Intl, fr).
@@ -69,7 +71,7 @@ test('situations en bande, pastille « dit en séance du … », zone « Avant l
   page,
 }) => {
   await signIn(page, account);
-  await page.goto(`/fr/patients/${story.id}/timeline`);
+  await page.goto(`/fr/patients/${story.id}/timeline?period=all`);
   const t = timeline(page);
   await expect(t.card('Entretien annuel')).toBeVisible();
   await expect(t.count).toHaveText('10 entrées · 1 fenêtre en mémoire');
@@ -168,18 +170,18 @@ test(`${VOLUME} entrées : défilement fluide, trois fenêtres au plus, zoom san
   page.on('request', (request) => {
     if (request.url().includes(`/api/patients/${volume}/timeline`)) requests.push(request.url());
   });
-  await page.goto(`/fr/patients/${volume}/timeline`);
+  await page.goto(`/fr/patients/${volume}/timeline?period=all`);
   const t = timeline(page);
   // Fenêtre courante puis la suivante en arrière-plan.
   await expect(t.count).toHaveText(/^2\s002 entrées · 2 fenêtres en mémoire$/);
-  await expect(t.granularity).toHaveText('Semaine');
+  // Zoom par défaut « Jour » (une date par carte sur l'axe, maquette 03).
+  await expect(t.granularity).toHaveText('Jour');
   await page.waitForLoadState('networkidle');
   const settled = requests.length;
 
-  // Zoom : +, −, Ctrl+molette ; la granularité change, aucune requête (les fenêtres couvrent).
-  await page.keyboard.press('+');
-  await expect(t.granularity).toHaveText('Jour');
+  // Zoom : −, −, Ctrl+molette, + ; la granularité change, aucune requête (les fenêtres couvrent).
   await page.keyboard.press('-');
+  await expect(t.granularity).toHaveText('Semaine');
   await page.keyboard.press('-');
   await expect(t.granularity).toHaveText('Mois');
   const box = (await t.viewport.boundingBox())!;
@@ -187,6 +189,11 @@ test(`${VOLUME} entrées : défilement fluide, trois fenêtres au plus, zoom san
   await page.keyboard.down('Control');
   await page.mouse.wheel(0, -120);
   await page.keyboard.up('Control');
+  await expect(t.granularity).toHaveText('Semaine');
+  // Raccourci + : vers le jour ; − ramène à la semaine pour la mesure du défilement.
+  await page.keyboard.press('+');
+  await expect(t.granularity).toHaveText('Jour');
+  await page.keyboard.press('-');
   await expect(t.granularity).toHaveText('Semaine');
   await page.waitForTimeout(500);
   expect(requests.length, requests.slice(settled).join('\n')).toBe(settled);
@@ -254,7 +261,7 @@ test('« Corriger » puis retour, « Voir dans le graphe » puis retour : positi
   page,
 }) => {
   await signIn(page, account);
-  await page.goto(`/fr/patients/${volume}/timeline`);
+  await page.goto(`/fr/patients/${volume}/timeline?period=all`);
   const t = timeline(page);
   await expect(t.count).toHaveText(/^2\s002 entrées · /);
 
@@ -291,7 +298,8 @@ test('« Corriger » puis retour, « Voir dans le graphe » puis retour : positi
   await t.menu.getByRole('menuitem', { name: /^Voir dans le graphe/ }).click();
   await expect(page).toHaveURL(new RegExp(`/patients/${volume}/graph\\?root=`));
   await page.keyboard.press('2');
-  await expect(page).toHaveURL(new RegExp(`/patients/${volume}/timeline$`));
+  // La période « Tout » revient avec la mémoire de l'onglet, dans l'URL.
+  await expect(page).toHaveURL(new RegExp(`/patients/${volume}/timeline\\?period=all$`));
   await expect(t.card(anchor)).toBeInViewport();
   await expect.poll(() => t.viewport.evaluate((el) => el.scrollTop)).toBe(leftAt);
   await expect(t.card(anchor)).toHaveClass(/\bselected\b/);
@@ -310,7 +318,11 @@ test('?focus=<id> (recherche → timeline) : l’entrée est amenée à l’écr
   await expect(card).toBeFocused();
   await expect(card).toHaveClass(/\bselected\b/);
   // Le paramètre est retiré (?entry= reste réservé à la correction) ; la position reste dans l'onglet.
+  // L'entrée (2014) est hors de la période par défaut (90 j) : la visite passe à « Tout », sans URL.
   await expect(page).toHaveURL(new RegExp(`/patients/${story.id}/timeline$`));
+  await expect(
+    page.getByRole('group', { name: 'Période' }).getByRole('button', { name: 'Tout' }),
+  ).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('[role="dialog"]:has(pm-entry-editor-panel)')).toHaveCount(0);
   await expectNoAxeViolations(page);
 });

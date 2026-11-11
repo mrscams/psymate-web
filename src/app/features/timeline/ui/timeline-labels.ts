@@ -100,7 +100,7 @@ export function groupLabel(
   }
   return {
     main: dtf(locale, { day: 'numeric', month: 'short', timeZone }).format(date),
-    sub: dtf(locale, { weekday: 'short', timeZone }).format(date),
+    sub: dtf(locale, { weekday: 'long', timeZone }).format(date),
   };
 }
 
@@ -169,6 +169,22 @@ export function modalityLabel(modality: SessionModality | null): string {
   }
 }
 
+/** Modalité d'une séance, forme courte des en-têtes et des cartes (« 50 min · cabinet »). */
+export function modalityShortLabel(modality: SessionModality | null): string {
+  switch (modality) {
+    case 'in_person':
+      return $localize`:Modalité courte d'une séance (en-tête, carte)@@timeline.modalityShort.inPerson:cabinet`;
+    case 'video':
+      return $localize`:Modalité courte d'une séance (en-tête, carte)@@timeline.modalityShort.video:visio`;
+    case 'phone':
+      return $localize`:Modalité courte d'une séance (en-tête, carte)@@timeline.modalityShort.phone:téléphone`;
+    case 'email':
+      return $localize`:Modalité courte d'une séance (en-tête, carte)@@timeline.modalityShort.email:e-mail`;
+    default:
+      return '';
+  }
+}
+
 /** Genre d'une séance (accueil, ordinaire, contact). */
 export function sessionKindLabel(kind: SessionKind | null): string {
   switch (kind) {
@@ -205,6 +221,17 @@ export function sessionHours(from: string | null, to: string | null, locale: str
   const end = to ? new Date(to) : null;
   return end && !Number.isNaN(end.getTime())
     ? `${format.format(start)} – ${format.format(end)}`
+    : format.format(start);
+}
+
+/** Horaires d'un en-tête de séance (maquette 03 : « 18:00 → 18:50 », ou le seul début). */
+export function sessionRange(from: string | null, to: string | null, locale: string): string {
+  const format = dtf(locale, { hour: '2-digit', minute: '2-digit' });
+  const start = from ? new Date(from) : null;
+  if (!start || Number.isNaN(start.getTime())) return '';
+  const end = to ? new Date(to) : null;
+  return end && !Number.isNaN(end.getTime())
+    ? `${format.format(start)} → ${format.format(end)}`
     : format.format(start);
 }
 

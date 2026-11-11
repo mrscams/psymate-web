@@ -18,70 +18,91 @@
   (keydown.contextmenu)="openMenu($event)"
 >
   <div class="head">
-    <pm-entry-icon [type]="item().type" [size]="14" />
-    <span class="title">{{ title() }}</span>
-    @if (item().status === 'draft') {
-      <span class="chip draft">{{ draftLabel }}</span>
-    }
+    <div class="lead">
+      @if (isFeeling()) {
+        <!-- Ressenti : pastille de famille à l'opacité de l'intensité (fiche 03), pas la forme du type. -->
+        <span
+          class="dot"
+          [class]="familyClass()"
+          [style.opacity]="dotOpacity()"
+          aria-hidden="true"
+        ></span>
+      } @else {
+        <pm-entry-icon [type]="item().type" [size]="12" />
+      }
+      <span class="title">{{ title() }}</span>
+      @if (isFeeling() && item().intensity !== null) {
+        <span class="intensity"
+          >{{ item().intensity }}/10<span class="gauge" aria-hidden="true"
+            ><span class="gauge-fill" [style.width.%]="(item().intensity ?? 0) * 10"></span></span
+        ></span>
+      }
+      @if (session(); as s) {
+        @if (s.entries !== null) {
+          <span class="session-count">{{ entriesText(s.entries) }}</span>
+        }
+        @if (s.closed === false) {
+          <span class="chip warn">{{ notClosedLabel }}</span>
+        }
+      }
+      @if (item().type === 'situation' && item().ongoing) {
+        <span class="chip ongoing">{{ ongoingLabel }}</span>
+      }
+      @if (item().status === 'draft') {
+        <span class="chip draft">{{ draftLabel }}</span>
+      }
+      @if (said(); as date) {
+        <span class="said"
+          ><span class="said-icon" aria-hidden="true"></span>{{ saidText(date) }}</span
+        >
+      }
+    </div>
+    <div class="when-group">
+      <time class="when" [attr.datetime]="item().occurred.from">{{ when() }}</time>
+      @if (precision(); as label) {
+        <span
+          class="precision"
+          [class.loose]="loosePrecision()"
+          i18n="Mention de la précision d'une date@@timeline.card.precision"
+          >précision : {{ label }}</span
+        >
+      }
+    </div>
     <!-- Provenance (A11) : place réservée, jamais dessinée en V1 (authorType = practitioner). -->
     <span class="author-slot" hidden [attr.data-author-type]="item().authorType"></span>
+    <button
+      type="button"
+      class="more"
+      [attr.aria-label]="menuLabel()"
+      aria-keyshortcuts="Shift+F10"
+      [matMenuTriggerFor]="menu()"
+      [matMenuTriggerData]="{ item: item() }"
+      [matMenuTriggerRestoreFocus]="false"
+      (menuOpened)="menuOpened()"
+      (click)="$event.stopPropagation()"
+      (keydown.enter)="$event.stopPropagation()"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="5" cy="12" r="1.8" />
+        <circle cx="12" cy="12" r="1.8" />
+        <circle cx="19" cy="12" r="1.8" />
+      </svg>
+    </button>
   </div>
-  <div class="meta">
-    <time class="when" [attr.datetime]="item().occurred.from">{{ when() }}</time>
-    @if (zoom() !== 'month') {
-      <span class="precision" i18n="Mention de la précision d'une date@@timeline.card.precision"
-        >précision : {{ precision() }}</span
-      >
-    }
-    @if (said(); as date) {
-      <span class="said">{{ saidText(date) }}</span>
-    }
-  </div>
-  @if (zoom() !== 'month' && !before()) {
+  @if (showDetails()) {
     <div class="details">
-      @if (item().type === 'feeling' && item().intensity !== null) {
-        <span class="feeling">
-          <span
-            class="dot"
-            [class]="familyClass()"
-            [style.opacity]="dotOpacity()"
-            aria-hidden="true"
-          ></span>
-          @if (emotionLabel() && item().title) {
-            <span class="emotion">{{ emotionLabel() }}</span>
-          }
-          <span class="intensity">{{ item().intensity }}/10</span>
-        </span>
+      @if (emotionLabel() && item().title && isFeeling()) {
+        <span class="emotion">{{ emotionLabel() }}</span>
       }
-      @if (zoom() === 'day') {
-        @for (tag of tags(); track tag) {
-          <span class="tag">#{{ tag }}</span>
-        }
-        @if (moreTags() > 0) {
-          <span class="tag more-tags">{{ moreTagsText(moreTags()) }}</span>
-        }
+      @for (tag of tags(); track tag) {
+        <span class="tag">#{{ tag }}</span>
+      }
+      @if (moreTags() > 0) {
+        <span class="tag more-tags">{{ moreTagsText(moreTags()) }}</span>
       }
       @if (item().linkCount > 0) {
         <span class="links">{{ linksText(item().linkCount) }}</span>
       }
     </div>
   }
-  <button
-    type="button"
-    class="more"
-    [attr.aria-label]="menuLabel()"
-    aria-keyshortcuts="Shift+F10"
-    [matMenuTriggerFor]="menu()"
-    [matMenuTriggerData]="{ item: item() }"
-    [matMenuTriggerRestoreFocus]="false"
-    (menuOpened)="menuOpened()"
-    (click)="$event.stopPropagation()"
-    (keydown.enter)="$event.stopPropagation()"
-  >
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <circle cx="5" cy="12" r="1.8" />
-      <circle cx="12" cy="12" r="1.8" />
-      <circle cx="19" cy="12" r="1.8" />
-    </svg>
-  </button>
 </article>

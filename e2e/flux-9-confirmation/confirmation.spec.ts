@@ -107,7 +107,7 @@ test('compte non confirmé : 403 EMAIL_NOT_CONFIRMED → écran 25 avec l’adre
   ).toBeVisible();
   await expect(page.locator('.lead .mono')).toHaveText(account.email);
   await expect(page.getByRole('list').getByRole('listitem')).toHaveCount(3);
-  await expect(page.getByRole('button', { name: "Renvoyer l'e-mail" })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Renvoyer le lien' })).toBeVisible();
   await expectNoAxeViolations(page);
 
   // Le lien de l'e-mail (Mailpit) consomme le jeton : 204, session ouverte, statut docs_pending,
@@ -151,11 +151,11 @@ test('renvoi : 202, message, bouton désactivé une minute avec compte à rebour
   await tabTo(page, 'field-email');
   await page.keyboard.type(account.email);
   await page.keyboard.press('Tab');
-  await expect(page.getByRole('button', { name: "Renvoyer l'e-mail" })).toBeFocused();
+  await expect(page.getByRole('button', { name: 'Renvoyer le lien' })).toBeFocused();
   await page.keyboard.press('Enter');
 
   await expect(page.getByRole('status').filter({ hasText: 'Demande envoyée' })).toBeVisible();
-  const resend = page.getByRole('button', { name: "Renvoyer l'e-mail" });
+  const resend = page.getByRole('button', { name: 'Renvoyer le lien' });
   await expect(resend).toHaveAttribute('aria-disabled', 'true');
   await expect(resend).toHaveJSProperty('disabled', false); // reste focusable : aria-disabled, pas disabled
   await expect(resend).toHaveAttribute('aria-describedby', 'resend-cooldown');

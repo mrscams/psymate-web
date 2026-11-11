@@ -5,7 +5,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { timelineItem } from '../data/timeline.fixtures';
 import { SessionDetailState, SessionGroup } from '../data/timeline-sessions.model';
 import { TimelineItem } from '../data/timeline.model';
-import { TimelineSessionsComponent } from './timeline-sessions.component';
+import { SESSIONS_PAGE, TimelineSessionsComponent } from './timeline-sessions.component';
 
 const at = (iso: string) => ({ from: iso, to: null, precision: 'exact' as const, label: null });
 
@@ -134,6 +134,11 @@ describe('TimelineSessionsComponent', () => {
     expect(facts).toContain('Présentiel');
     expect(facts).toMatch(/\d{2}:\d{2} – \d{2}:\d{2}/);
     expect(el.querySelector('.open-state')).toBeNull();
+    // En-tête (maquette 03, état B) : horaires · durée · modalité, sans « non clôturée ».
+    expect(text(el.querySelector('.header-facts'))).toMatch(
+      /^\d{2}:\d{2} → \d{2}:\d{2} · 50 min · cabinet$/,
+    );
+    expect(el.querySelector('.header-open')).toBeNull();
     expect(text(el.querySelector('.report-text'))).toBe('Dort mieux depuis deux semaines.');
     el.querySelector<HTMLButtonElement>('.open-session')!.click();
     expect(host.sessions).toEqual(['s-2']);
@@ -159,6 +164,8 @@ describe('TimelineSessionsComponent', () => {
     });
     await fixture.whenStable();
     expect(text(el.querySelector('.open-state'))).toBe('Non clôturée');
+    expect(text(el.querySelector('.header-open'))).toBe('non clôturée');
+    expect(text(el.querySelector('.header-facts'))).toMatch(/^\d{2}:\d{2} · visio$/);
     expect(text(el.querySelector('.report-empty'))).toBe('Aucun compte rendu.');
     expect(text(el.querySelector('button.toggle'))).toContain("Séance d'accueil du");
   });
@@ -179,5 +186,41 @@ describe('TimelineSessionsComponent', () => {
     await fixture.whenStable();
     expect(text(el.querySelector('.outside-note'))).toContain('séance privée');
     expect(host.expanded).toEqual(['s-2', 's-1']);
+  });
+
+  it('beaucoup de séances : les plus récentes d’abord, « Afficher les n séances plus anciennes »', async () => {
+    const many: SessionGroup[] = Array.from({ length: SESSIONS_PAGE + 5 }, (_, i) => ({
+      id: `s-${i}`,
+      session: timelineItem({
+        id: `s-${i}`,
+        type: 'session',
+        sessionId: null,
+        occurred: {
+          from: new Date(Date.UTC(2026, 9, 30 - i, 15)).toISOString(),
+          to: new Date(Date.UTC(2026, 9, 30 - i, 15, 45)).toISOString(),
+          precision: 'exact',
+          label: null,
+        },
+      }),
+      from: new Date(Date.UTC(2026, 9, 30 - i, 15)).toISOString(),
+      entries: [],
+    }));
+    TestBed.configureTestingModule({ providers: [{ provide: LOCALE_ID, useValue: 'fr' }] });
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.componentInstance.groups.set(many);
+    await fixture.whenStable();
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelectorAll('button.toggle')).toHaveLength(SESSIONS_PAGE);
+    // Horaires et durée d'après les bornes de la séance, avant tout détail.
+    const second = el.querySelectorAll('button.toggle')[1];
+    expect(text(second.querySelector('.header-facts'))).toMatch(
+      /^\d{2}:\d{2} → \d{2}:\d{2} · 45 min$/,
+    );
+    const more = el.querySelector<HTMLButtonElement>('button.show-more')!;
+    expect(text(more)).toBe('Afficher les 5 séances plus anciennes');
+    more.click();
+    await fixture.whenStable();
+    expect(el.querySelectorAll('button.toggle')).toHaveLength(SESSIONS_PAGE + 5);
+    expect(el.querySelector('button.show-more')).toBeNull();
   });
 });

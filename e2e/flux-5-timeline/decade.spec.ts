@@ -16,7 +16,8 @@ import { setGroupBy } from './filters-data';
 // bascule automatique au-delà d'une plage de 3 ans, temps du résumé et du rendu mesurés, double-clic
 // sur un mois → détail du mois au zoom « semaine », Échap revient, équivalent clavier (tableau des
 // mois), retour automatique au détail sous 3 ans, préférence `timeline.groupBy = month` et zoom
-// maximal sur un dossier récent, axe-core sans violation.
+// maximal sur un dossier récent, axe-core sans violation. Depuis UX-B2, l'arrivée est sur la période
+// « 90 j » (cartes) : l'agrégat ne vient qu'avec « Tout » (`?period=all`) au-delà de 3 ans.
 
 let account: TestAccount;
 let decade: DecadePatient;
@@ -72,13 +73,23 @@ test('plus de 3 ans : bascule automatique sur l’agrégat par mois ; résumé e
   await setGroupBy(api, 'chronological');
   await signIn(page, account);
   await watchDecadeRender(page);
+  const t = timeline(page);
+  // Arrivée sans paramètre : période « 90 j », les cartes récentes, jamais l'agrégat (UX-B2).
+  await page.goto(`/fr/patients/${decade.id}/timeline`);
+  await expect(t.viewport).toBeVisible();
+  await expect(t.decade).toHaveCount(0);
+  await expect(t.period.getByRole('button', { name: '90 j', exact: true })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+
+  // « Tout » : plus de 3 ans, l'agrégat par mois.
   const summary = page.waitForResponse(
     (r) => r.url().includes(`/api/patients/${decade.id}/timeline/summary?`) && r.ok(),
   );
-  await page.goto(`/fr/patients/${decade.id}/timeline`);
+  await page.goto(`/fr/patients/${decade.id}/timeline?period=all`);
   const response = await summary;
   expect(response.url()).toContain('granularity=month');
-  const t = timeline(page);
 
   await expect(t.decade.locator('.badge')).toHaveText('Agrégé par mois · double-clic pour zoomer');
   await expect(t.chart).toBeVisible();
@@ -108,8 +119,8 @@ test('plus de 3 ans : bascule automatique sur l’agrégat par mois ; résumé e
   const timing = response.request().timing();
   const measures = await page.evaluate(() => {
     const entries = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
-    const summaryEntry = entries.find((e) => e.name.includes('/timeline/summary'))!;
-    const firstPage = entries.find((e) => /\/timeline\?/.test(e.name))!;
+    const summaryEntry = entries.findLast((e) => e.name.includes('/timeline/summary'))!;
+    const firstPage = entries.findLast((e) => /\/timeline\?/.test(e.name))!;
     const shown = (window as unknown as { decadeShownAt?: number }).decadeShownAt ?? NaN;
     return {
       summaryServer: summaryEntry.responseStart - summaryEntry.requestStart,
@@ -142,7 +153,7 @@ test('double-clic sur un mois : détail de ce mois au zoom « semaine » ; Écha
 }) => {
   await setGroupBy(api, 'chronological');
   await signIn(page, account);
-  await page.goto(`/fr/patients/${decade.id}/timeline`);
+  await page.goto(`/fr/patients/${decade.id}/timeline?period=all`);
   const t = timeline(page);
   await expect(t.chart).toBeVisible();
 
@@ -161,13 +172,13 @@ test('double-clic sur un mois : détail de ce mois au zoom « semaine » ; Écha
 
   await page.keyboard.press('Escape');
   await expect(t.chart).toBeVisible();
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${decade.id}/timeline$`));
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${decade.id}/timeline\\?period=all$`));
 });
 
 test('clavier : tableau des mois, Entrée sur un mois ouvre son détail', async ({ page }) => {
   await setGroupBy(api, 'chronological');
   await signIn(page, account);
-  await page.goto(`/fr/patients/${decade.id}/timeline`);
+  await page.goto(`/fr/patients/${decade.id}/timeline?period=all`);
   const t = timeline(page);
   await expect(t.chart).toBeVisible();
   const summary = t.decade.locator('details.months summary');
@@ -206,7 +217,7 @@ test('retour automatique au détail sous 3 ans (période « 1 an »), agrégat d
 }) => {
   await setGroupBy(api, 'chronological');
   await signIn(page, account);
-  await page.goto(`/fr/patients/${decade.id}/timeline`);
+  await page.goto(`/fr/patients/${decade.id}/timeline?period=all`);
   const t = timeline(page);
   await expect(t.chart).toBeVisible();
 

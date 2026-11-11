@@ -1,39 +1,61 @@
+// Largeur de la maquette 08 (1 360 px, marges de 40 px, soit 1 280 px de contenu) : le layout
+// public partagé plafonne son contenu à 1 072 px (1 120 px moins 2 × 24 px) ; l'annuaire, seul écran
+// à trois colonnes (filtres, fiche, actions), déborde de part et d'autre dès que la fenêtre le permet,
+// en gardant 40 px de marge. Sous 1 152 px de fenêtre la marge vaut 0 : rien ne change.
+$layout-content: 1072px;
+$mockup-max: 1360px;
+$mockup-gutter: 40px;
+
 :host {
   display: block;
+  margin-inline: min(
+    0px,
+    calc((min(100vw, #{$mockup-max}) - 2 * #{$mockup-gutter} - #{$layout-content}) / -2)
+  );
 }
 
 .intro {
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 
   h1 {
     margin: 0;
-    font: var(--mat-sys-headline-small);
+    font: 700 26px/1.25 var(--font-ui);
+    letter-spacing: -0.02em;
   }
 }
 
 .note {
-  margin: 6px 0 0;
+  margin: 4px 0 0;
   color: var(--text-secondary);
   font: var(--mat-sys-body-medium);
 }
 
+// Bandeau de recherche (maquette 08) : libellés au-dessus des champs, bouton aligné en bas.
 .search {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr) auto;
   gap: 12px;
-  align-items: center;
-  padding: 16px;
+  align-items: end;
+  padding: 16px 18px;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
 }
 
-.submit {
-  min-height: 48px;
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
 }
 
-.count {
-  font-family: var(--font-mono);
+.field-label {
+  color: var(--text-secondary);
+  font: 500 12px/1.4 var(--font-ui);
+}
+
+.submit {
+  min-height: 56px;
 }
 
 .rate-limited,
@@ -50,12 +72,64 @@
   display: grid;
   grid-template-columns: 272px minmax(0, 1fr);
   gap: 24px;
-  margin-top: 24px;
+  margin-top: 20px;
   align-items: start;
 }
 
 .filters-toggle {
   display: none;
+}
+
+// Colonne de filtres : une carte (maquette 08, état A).
+.filters-panel {
+  padding: 18px 20px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.panel-close {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: -8px -10px -8px 0;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-sunken);
+    color: var(--text-primary);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+}
+
+.panel-foot {
+  position: sticky;
+  bottom: 0;
+  margin: 18px -20px -18px;
+  padding: 12px 20px;
+  background: var(--surface-raised);
+  border-top: 1px solid var(--border-subtle);
+
+  button {
+    width: 100%;
+  }
 }
 
 .results-head {
@@ -64,15 +138,41 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 
   .count {
     margin: 0;
-    font: var(--mat-sys-title-medium);
+    font: 14px/1.5 var(--font-ui);
+
+    strong {
+      font-weight: 600;
+    }
   }
 
-  .sort {
-    width: 180px;
+  .where {
+    color: var(--text-secondary);
+  }
+}
+
+// Tri (maquette : « Tri : » et liste compacte de 36 px).
+.sort {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  label {
+    color: var(--text-secondary);
+    font: 13px/1.4 var(--font-ui);
+  }
+
+  select {
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+    background: var(--surface-raised);
+    color: var(--text-primary);
+    font: 500 14px/1 var(--font-ui);
   }
 }
 
@@ -80,7 +180,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin: 0 0 24px;
+  margin: 0 0 20px;
   padding: 0;
   list-style: none;
   transition: opacity 150ms;
@@ -150,14 +250,26 @@
   }
 }
 
-// 390 px (fiche 08) : filtres repliés sous « Filtres (n) », une colonne, boutons pleine largeur.
+// 390 px (fiche 08) : filtres repliés sous « Filtres (n) », ouverts en panneau plein écran ; une
+// colonne de résultats.
 @media (max-width: 760px) {
+  .intro h1 {
+    font-size: 22px;
+  }
+
   .search {
-    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .submit {
+    min-height: 48px;
   }
 
   .layout {
     grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 12px;
   }
 
   .filters-toggle {
@@ -171,6 +283,21 @@
     &.open {
       display: block;
     }
+  }
+
+  .filters-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    overflow-y: auto;
+    // Arrivé en bas du panneau, le défilement ne passe pas à la page (verrouillée par la page).
+    overscroll-behavior: contain;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .results-head {
+    gap: 8px;
   }
 
   .suggestions button {

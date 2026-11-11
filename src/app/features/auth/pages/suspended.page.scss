@@ -4,31 +4,49 @@
 
 .suspended {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 24px;
-  max-width: 1080px;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 640px;
   margin: 0 auto;
 }
 
+// Route large (UX-D5) : carte principale 640 px à gauche, colonne d'actions 400 px à droite dès
+// 1 024 px (maquette 27), dans l'ordre d'usage : identité, export, recours.
+@media (min-width: 1024px) {
+  .suspended {
+    display: grid;
+    grid-template-columns: minmax(0, 640px) minmax(0, 400px);
+    align-items: start;
+    justify-content: center;
+    gap: 24px;
+    max-width: none;
+  }
+}
+
 .card {
-  padding: 28px 32px;
+  padding: 24px 28px;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
 }
 
 .main {
-  flex: 1 1 560px;
-  max-width: 640px;
   min-width: 0;
+  padding-top: 0;
+  overflow: hidden;
 }
 
 .side {
-  flex: 1 1 320px;
-  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   min-width: 0;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .who {
@@ -40,14 +58,18 @@
   color: var(--text-secondary);
 }
 
+.who {
+  margin-top: 16px;
+}
+
+// Bande d'état pleine largeur en tête de carte (maquette 27).
 .band {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 16px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--danger);
+  margin: 0 -28px 24px;
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--danger);
   background: var(--danger-bg);
   color: var(--danger);
   font: var(--mat-sys-label-large);
@@ -63,8 +85,9 @@
 }
 
 h1 {
-  margin: 0 0 8px;
-  font: var(--mat-sys-headline-small);
+  margin: 0 0 10px;
+  font: 600 26px / 1.25 var(--font-ui);
+  letter-spacing: -0.01em;
   color: var(--text-primary);
 }
 
@@ -74,9 +97,7 @@ h2 {
   color: var(--text-primary);
 }
 
-section + section,
-section + form,
-.identity {
+.main > section + section {
   margin-top: 22px;
 }
 
@@ -97,6 +118,7 @@ section + form,
 }
 
 .reason {
+  margin-top: 20px;
   padding: 14px 16px;
   border-radius: 10px;
   background: var(--surface-ground);
@@ -108,18 +130,21 @@ section + form,
 }
 
 .can {
-  margin: 0;
+  margin: 8px 0 0;
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 10px;
+  gap: 12px;
 
   li {
     display: grid;
-    gap: 2px;
-    padding-left: 14px;
-    border-left: 3px solid var(--info-bg);
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 2px 12px;
     color: var(--text-secondary);
+
+    > :not(.can-icon) {
+      grid-column: 2;
+    }
   }
 
   strong {
@@ -127,18 +152,41 @@ section + form,
   }
 }
 
+.can-icon {
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--primary-tint);
+  color: var(--primary);
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentcolor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
 fieldset {
   margin: 0;
-  padding: 16px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
+  padding: 0;
+  border: 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;
 }
 
 legend {
-  padding: 0 6px;
+  margin-bottom: 6px;
+  padding: 0;
   font: var(--mat-sys-title-medium);
   color: var(--text-primary);
 }
@@ -251,7 +299,6 @@ button[aria-disabled='true'] {
 }
 
 .help {
-  margin-top: 22px;
   padding-top: 16px;
   border-top: 1px solid var(--border-subtle);
 }
@@ -304,5 +351,10 @@ a,
 @media (max-width: 720px) {
   .card {
     padding: 20px;
+  }
+
+  .band {
+    margin: 0 -20px 20px;
+    padding: 12px 20px;
   }
 }

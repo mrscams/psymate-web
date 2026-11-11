@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-11T03:51:20.745Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-E1 à UX-E4 Administration fidèle aux maquettes 20, 21, 22, 28 : décision collante en colonne de 320 px visible sans défilement à 1440 × 900, complément et refus actifs avec erreur au clic, visionneuse 320 px ; praticiens en lignes de 56 px (3 552 px pour 50 comptes) ; journal horodaté Intl, Contexte masqué, lignes identiques regroupées ; vocabulaire en ligne, h2, ICU, case 18 px",
+  "notes": "Restent hors feature : rappel et repli à 375 px de pm-admin-bar (shared/ui), largeur de main (app.component). e2e etats vocabulaire erreur et flux-10 clavier rouges sans lien (voir PR).",
+  "branch": "claude/ux-e-admin",
+  "checkout": "agent-ad0cad2786b1f0b8d"
+}

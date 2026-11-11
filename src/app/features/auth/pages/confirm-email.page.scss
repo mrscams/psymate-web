@@ -47,8 +47,9 @@
 }
 
 h1 {
-  margin: 0 0 8px;
-  font: var(--mat-sys-headline-small);
+  margin: 0 0 12px;
+  font: 600 26px / 1.25 var(--font-ui);
+  letter-spacing: -0.01em;
   color: var(--text-primary);
 }
 
@@ -130,6 +131,11 @@ h2 {
   gap: 8px 16px;
 }
 
+.resend {
+  height: 44px;
+  font-weight: 600;
+}
+
 .resend[aria-disabled='true'] {
   opacity: 0.6;
   cursor: not-allowed;
@@ -138,6 +144,23 @@ h2 {
 .cooldown {
   margin: 8px 0 0;
   font-size: 13px;
+
+  .mono {
+    color: var(--text-secondary);
+  }
+}
+
+// Compte à rebours à droite du bouton (maquette 25).
+.resend-row .cooldown {
+  margin: 0;
+}
+
+// « Mauvaise adresse ? Corriger l'e-mail » sous un filet (maquette 25).
+.change-row {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+  align-items: center;
 }
 
 .note {

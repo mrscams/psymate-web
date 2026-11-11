@@ -1,39 +1,143 @@
+// Colonne de filtres (maquette 08, état A) : une seule carte, légendes en petites capitales,
+// lignes de 28 px (libellé à gauche, compteur mono à droite).
 :host {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  h2 {
+    flex: 1;
+    margin: 0;
+    font: 600 14px/1.4 var(--font-ui);
+    color: var(--text-primary);
+  }
+}
+
+// Bouton texte discret (maquette : lien gris « Tout effacer » en tête de colonne).
+.clear,
+.more-toggle {
+  border: 0;
+  padding: 0;
+  background: none;
+  font: 500 12px/1.4 var(--font-ui);
+  cursor: pointer;
+}
+
+.clear {
+  color: var(--text-secondary);
+
+  &:hover:not(:disabled) {
+    color: var(--primary);
+  }
+
+  &:disabled {
+    color: var(--text-disabled);
+    cursor: default;
+  }
 }
 
 .facet {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   margin: 0;
-  padding: 12px 8px 8px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  background: var(--surface-raised);
+  padding: 0;
+  border: 0;
 
   legend {
-    padding: 0 6px;
-    font: var(--mat-sys-title-small);
-    color: var(--text-primary);
+    margin-bottom: 6px;
+    padding: 0;
+    font: 600 12px/1.4 var(--font-ui);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
   }
 }
 
+.more {
+  display: flex;
+  flex-direction: column;
+}
+
 .option {
-  min-height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  font: 13px/1.4 var(--font-ui);
+  color: var(--text-primary);
+  cursor: pointer;
+
+  input {
+    flex: none;
+    margin: 0;
+    accent-color: var(--primary);
+    cursor: inherit;
+  }
+
+  &.off {
+    color: var(--text-disabled);
+    cursor: default;
+  }
 }
 
 .option-label {
-  margin-right: 8px;
+  flex: 1;
+  min-width: 0;
 }
 
 // Compteurs en JetBrains Mono (fiche 08).
 .count {
+  flex: none;
   font: 12px/1 var(--font-mono);
   color: var(--text-secondary);
+
+  .off & {
+    color: var(--text-disabled);
+  }
 }
 
-.clear {
+.more-toggle {
   align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  color: var(--primary);
+
+  &:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 150ms;
+
+    &.open {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+// Case « Accepte de nouveaux patients » séparée par un filet (maquette).
+.availability {
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+
+  .option {
+    font-weight: 500;
+  }
 }

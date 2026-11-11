@@ -23,6 +23,7 @@
         [counts]="store.results().data?.counts ?? []"
         [allCount]="allCount()"
         [selected]="filters().type"
+        [dimZero]="resultsState() === 'empty'"
         (selectType)="setType($event)"
       />
       <div class="selects">

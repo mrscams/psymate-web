@@ -12,10 +12,33 @@ import {
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { take } from 'rxjs';
 
-import { EntryIconComponent, entryTypeLabel } from '../../../shared/ui';
+import { EntryIconComponent, entryTitle, entryTypeLabel } from '../../../shared/ui';
 import { formatOccurred } from '../../../shared/util';
+import { SessionKind, SessionModality } from '../data/timeline-sessions.model';
 import { TimelineItem, TimelineZoom } from '../data/timeline.model';
-import { intensityOpacity, precisionLabel, sessionDate } from './timeline-labels';
+import {
+  durationLabel,
+  intensityOpacity,
+  modalityShortLabel,
+  precisionLabel,
+  sessionDate,
+  sessionKindLabel,
+} from './timeline-labels';
+
+/**
+ * Ce que la carte d'une séance montre en plus (UX-B2, maquette 03 : « Séance · 50 min · cabinet ·
+ * 4 entrées · non clôturée ») : lu dans le détail de la séance quand il est là, sinon déduit de
+ * l'élément (durée d'après ses bornes). Null : inconnu, rien n'est écrit.
+ */
+export interface SessionCardInfo {
+  kind: SessionKind | null;
+  durationMin: number | null;
+  modality: SessionModality | null;
+  /** Clôturée ; null tant que le détail n'est pas lu. */
+  closed: boolean | null;
+  /** Entrées rattachées, quand toute la plage est en mémoire et sans filtre ; null sinon. */
+  entries: number | null;
+}
 
 /** Tags montrés sur une carte ; au-delà, « +n ». */
 const MAX_TAGS = 3;
@@ -44,6 +67,8 @@ export class TimelineCardComponent {
   /** Début de la séance quand la pastille « dit en séance du … » s'affiche. */
   readonly saidIn = input<string | null>(null);
   readonly emotionLabel = input<string | null>(null);
+  /** Séance : durée, modalité, statut, nombre d'entrées (null pour les autres types). */
+  readonly session = input<SessionCardInfo | null>(null);
   /** Le menu contextuel partagé par toutes les cartes (Ouvrir, Corriger, Lier, Voir dans le graphe). */
   readonly menu = input.required<MatMenu>();
 
@@ -56,16 +81,60 @@ export class TimelineCardComponent {
   private readonly trigger = viewChild.required(MatMenuTrigger);
 
   protected readonly typeLabel = computed(() => entryTypeLabel(this.item().type));
+  protected readonly isFeeling = computed(() => this.item().type === 'feeling');
 
+  /**
+   * Titre de la carte. Un ressenti sans titre porte le nom de son émotion (l'intensité est dans la
+   * puce « n/10 », la date à droite) ; une séance sans titre « Séance · 50 min · cabinet » ; les
+   * autres entrées sans titre le titre de repli partagé (UX-A5, shared/ui entryTitle).
+   */
   protected readonly title = computed(() => {
     const item = this.item();
     if (item.title) return item.title;
     if (item.type === 'feeling' && item.emotion) return this.emotionLabel() ?? item.emotion.code;
-    return this.typeLabel();
+    if (item.type === 'session') return this.sessionTitle();
+    const exact = (item.occurred.precision ?? 'exact') === 'exact';
+    return entryTitle(
+      { type: item.type, title: item.title, occurred: item.occurred.from },
+      this.locale,
+      exact ? {} : { timeZone: 'UTC' },
+    );
+  });
+
+  private readonly sessionTitle = computed(() => {
+    const info = this.session();
+    const occurred = this.item().occurred;
+    const minutes = info?.durationMin ?? minutesBetween(occurred.from, occurred.to);
+    const parts = [
+      sessionKindLabel(info?.kind ?? null),
+      minutes !== null ? durationLabel(minutes, this.locale) : '',
+      modalityShortLabel(info?.modality ?? null),
+    ];
+    return parts.filter((part) => !!part).join(' · ');
   });
 
   protected readonly when = computed(() => formatOccurred(this.item().occurred, this.locale));
-  protected readonly precision = computed(() => precisionLabel(this.item().occurred.precision));
+  /** « précision : … » seulement si la date n'est pas exacte (UX-B2). */
+  protected readonly precision = computed(() => {
+    const precision = this.item().occurred.precision ?? 'exact';
+    return precision === 'exact' ? null : precisionLabel(precision);
+  });
+  /** Mois, année, période, phase de vie : pastille tiretée (maquette 03). */
+  protected readonly loosePrecision = computed(
+    () =>
+      (this.item().occurred.precision ?? 'exact') !== 'exact' &&
+      this.item().occurred.precision !== 'day',
+  );
+  /** Tags et liens : sous le titre, sauf au zoom « mois » et dans la zone « Avant le suivi ». */
+  protected readonly showDetails = computed(() => {
+    if (this.zoom() === 'month' || this.before()) return false;
+    const item = this.item();
+    return (
+      item.tags.length > 0 ||
+      item.linkCount > 0 ||
+      (!!this.emotionLabel() && !!item.title && item.type === 'feeling')
+    );
+  });
   protected readonly said = computed(() => {
     const iso = this.saidIn();
     return iso ? sessionDate(iso, this.locale) : null;
@@ -83,12 +152,16 @@ export class TimelineCardComponent {
   protected readonly ariaLabel = computed(() => {
     const item = this.item();
     const parts = [this.typeLabel(), this.title(), this.when()];
+    if (item.type === 'feeling' && item.intensity !== null) parts.push(`${item.intensity}/10`);
+    if (this.session()?.closed === false) parts.push(this.notClosedLabel);
     if (item.status === 'draft') parts.push(this.draftLabel);
     if (this.said()) parts.push(this.saidText(this.said() ?? ''));
     return parts.filter((part) => !!part).join(', ');
   });
 
   protected readonly draftLabel = $localize`:Statut brouillon d'une carte de la timeline@@timeline.card.draft:Brouillon`;
+  protected readonly notClosedLabel = $localize`:Statut d'une séance non clôturée, sur sa carte@@timeline.card.notClosed:non clôturée`;
+  protected readonly ongoingLabel = $localize`:Statut d'une situation en cours, sur sa carte@@timeline.card.ongoing:en cours`;
 
   protected readonly menuLabel = computed(
     () =>
@@ -103,6 +176,15 @@ export class TimelineCardComponent {
     return count === 1
       ? $localize`:Nombre de liens d'une carte@@timeline.card.link:1 lien`
       : $localize`:Nombre de liens d'une carte@@timeline.card.links:${count}:count: liens`;
+  }
+
+  protected entriesText(count: number): string {
+    const value = new Intl.NumberFormat(this.locale).format(count);
+    return count === 1
+      ? $localize`:Nombre d'entrées d'une séance, sur sa carte@@timeline.card.entry:1 entrée`
+      : count === 0
+        ? $localize`:Séance sans entrée, sur sa carte@@timeline.card.noEntry:aucune entrée`
+        : $localize`:Nombre d'entrées d'une séance, sur sa carte@@timeline.card.entries:${value}:count: entrées`;
   }
 
   protected moreTagsText(count: number): string {
@@ -148,4 +230,14 @@ export class TimelineCardComponent {
   focus(): void {
     this.host.nativeElement.querySelector<HTMLElement>('article')?.focus();
   }
+}
+
+/** Minutes entre deux instants ISO, ou null (fin inconnue, bornes illisibles). */
+function minutesBetween(
+  from: string | null | undefined,
+  to: string | null | undefined,
+): number | null {
+  if (!from || !to) return null;
+  const ms = Date.parse(to) - Date.parse(from);
+  return Number.isFinite(ms) && ms > 0 ? Math.round(ms / 60_000) : null;
 }

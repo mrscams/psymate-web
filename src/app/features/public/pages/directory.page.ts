@@ -1,17 +1,24 @@
-import { isPlatformBrowser } from '@angular/common';
+import { CdkTrapFocus } from '@angular/cdk/a11y';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
   effect,
+  ElementRef,
   inject,
+  Injector,
   LOCALE_ID,
   PLATFORM_ID,
   signal,
   untracked,
+  viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -50,6 +57,9 @@ import { PublicMeta } from './page-meta';
 /** Délai d'inactivité avant qu'un changement de filtre parte (fiche 08). */
 export const FILTER_DEBOUNCE_MS = 300;
 
+/** Sous cette largeur, les filtres se replient sous « Filtres (n) » (fiche 08, 390 px). */
+export const FILTERS_PANEL_QUERY = '(max-width: 760px)';
+
 /** Un filtre actif, retirable en un clic (état C, fiche 08). */
 interface ActiveChip {
   filter: ListFilter | 'accepting' | 'city' | 'q';
@@ -66,6 +76,7 @@ interface ActiveChip {
 @Component({
   selector: 'pm-directory-page',
   imports: [
+    CdkTrapFocus,
     FormsModule,
     RouterLink,
     MatButtonModule,
@@ -101,6 +112,8 @@ export class DirectoryPage {
     initialValue: this.route.snapshot.queryParamMap,
   });
   private readonly urlQuery = computed(() => queryFromParams(this.params()));
+  private readonly urlQ = computed(() => this.urlQuery().q);
+  private readonly urlCity = computed(() => this.urlQuery().city);
 
   /** Filtres modifiés qui n'ont pas encore atteint l'URL (300 ms d'inactivité). */
   private readonly draft = signal<DirectoryQuery | null>(null);
@@ -112,12 +125,25 @@ export class DirectoryPage {
   protected readonly cityText = signal('');
   /** Filtres repliés sous « Filtres (n) » sur petit écran. */
   protected readonly filtersOpen = signal(false);
+  /** Petit écran : la colonne de filtres devient un panneau plein écran. */
+  protected readonly compact = toSignal(
+    inject(BreakpointObserver)
+      .observe(FILTERS_PANEL_QUERY)
+      .pipe(map((state) => state.matches)),
+    { initialValue: false },
+  );
+  /** Panneau ouvert : dialogue modal, focus piégé, Échap ferme. */
+  protected readonly panelMode = computed(() => this.compact() && this.filtersOpen());
+  private readonly filtersToggle = viewChild('filtersToggle', { read: ElementRef<HTMLElement> });
+  private readonly filtersPanel = viewChild('filtersPanel', { read: ElementRef<HTMLElement> });
+  private readonly injector = inject(Injector);
 
   protected readonly vocabulary = this.vocabularyStore.lists;
   protected readonly result = this.store.result;
   protected readonly page = this.store.page;
   protected readonly refreshing = computed(() => isRefreshing(this.result()));
   protected readonly filterCount = computed(() => activeFilterCount(this.query()));
+  protected readonly resultTotal = computed(() => this.page()?.total ?? 0);
 
   /** Options du sélecteur Spécialité : liste fermée, compteur de la facette (0 si absent). */
   protected readonly specialtyOptions = computed(() => {
@@ -195,14 +221,29 @@ export class DirectoryPage {
     );
     destroyRef.onDestroy(() => this.cancelDebounce());
 
-    // La saisie libre suit l'URL (lien partagé, retour arrière, « Tout effacer »).
+    // Panneau de filtres ouvert (sous 760 px) : la page derrière ne défile plus ; rétablie à la
+    // fermeture, au passage en grand écran et à la sortie de la page.
+    const root = inject(DOCUMENT).documentElement;
+    effect((onCleanup) => {
+      if (!this.panelMode()) return;
+      const previous = root.style.overflow;
+      root.style.overflow = 'hidden';
+      onCleanup(() => (root.style.overflow = previous));
+    });
+
+    // La saisie libre suit le mot-clé et la ville de l'URL (lien partagé, retour arrière), mais
+    // seulement quand ils changent : un filtre appliqué pendant la saisie ne l'efface pas.
     effect(() => {
-      const { q, city } = this.urlQuery();
+      const q = this.urlQ();
+      const city = this.urlCity();
       untracked(() => {
         this.qText.set(q);
         this.cityText.set(city);
-        this.draft.set(null);
       });
+    });
+    effect(() => {
+      this.urlQuery();
+      untracked(() => this.draft.set(null));
     });
 
     if (!this.browser) return; // prérendu : aucune donnée de l'API dans le HTML
@@ -335,8 +376,20 @@ export class DirectoryPage {
     this.apply({ city: '', modalities });
   }
 
-  protected toggleFiltersPanel(): void {
-    this.filtersOpen.update((open) => !open);
+  /** « Filtres (n) » : le panneau s'ouvre et reçoit le focus (il est nommé par son titre). */
+  protected openFilters(): void {
+    this.filtersOpen.set(true);
+    afterNextRender(() => this.filtersPanel()?.nativeElement.focus(), {
+      injector: this.injector,
+    });
+  }
+
+  /** Croix, Échap ou « Voir les n praticiens » : le focus revient au bouton « Filtres (n) ». */
+  protected closeFilters(): void {
+    if (!this.filtersOpen()) return;
+    this.filtersOpen.set(false);
+    // Le bouton reste affiché derrière le panneau : le focus y revient tout de suite.
+    this.filtersToggle()?.nativeElement.focus();
   }
 
   /** Changement de filtre : visible tout de suite, envoyé après 300 ms d'inactivité, page 1. */

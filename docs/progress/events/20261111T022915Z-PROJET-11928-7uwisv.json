@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-11T02:29:15.672Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-B2 Timeline : période par défaut 90 j (overview.window, ?period=all pour Tout), barre d'outils en 2 rangées avec menu Filtres (n), ligne d'état mono, cartes séance/ressenti, mode par séance borné, vue décennie une bande par ligne",
+  "pr": "https://github.com/mrscams/psymate-web/pull/54",
+  "branch": "claude/ux-b2-timeline",
+  "checkout": "agent-af4195ce41d02a9b6"
+}

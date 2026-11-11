@@ -6,22 +6,56 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-width: 740px;
+  margin: 0 auto;
   color: var(--text-primary);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+// Route large (UX-D2) : formulaire 740 px et colonne latérale 300 px dès 1 024 px (maquette 12).
+@media (min-width: 1024px) {
+  .register {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 24px;
+    max-width: none;
+  }
+
+  .main {
+    flex: 0 1 740px;
+  }
+
+  .side {
+    position: sticky;
+    top: 24px;
+    flex: 0 0 300px;
+  }
 }
 
 .head {
   h1 {
     margin: 0 0 4px;
-    font: var(--mat-sys-headline-small);
+    font: 600 26px / 1.25 var(--font-ui);
+    letter-spacing: -0.01em;
   }
   .lead {
-    margin: 0 0 8px;
+    margin: 0 0 4px;
     color: var(--text-secondary);
   }
   .already {
     display: flex;
-    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 8px;
     margin: 0;
+    font-size: 13px;
     color: var(--text-secondary);
   }
 }
@@ -125,7 +159,7 @@ input[type='password'] {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
-  margin: 12px 0 4px;
+  margin: 12px 0 16px;
   padding: 0;
   border: 0;
 
@@ -137,24 +171,15 @@ input[type='password'] {
 }
 
 .card {
-  position: relative;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 12px 12px 12px 36px;
-  border: 1px solid var(--border-subtle);
+  padding: 12px 14px;
+  border: 1px solid var(--border-strong);
   border-radius: 10px;
   background: var(--surface-raised);
   cursor: pointer;
 
-  input {
-    position: absolute;
-    top: 14px;
-    left: 12px;
-    width: 16px;
-    height: 16px;
-    margin: 0;
-  }
   &:has(input:focus-visible) {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
@@ -163,7 +188,21 @@ input[type='password'] {
     border: 2px solid var(--primary);
     background: var(--primary-tint);
     color: var(--primary-hover);
-    padding: 11px 11px 11px 35px;
+    padding: 11px 13px;
+  }
+}
+
+// Libellé à gauche, bouton radio à droite (maquette 12).
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  input {
+    flex: 0 0 auto;
+    margin: 0;
+    accent-color: var(--primary);
   }
 }
 
@@ -240,35 +279,80 @@ input[type='password'] {
   margin: 0;
 }
 
-.actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.consents {
+  padding: 4px 4px 0;
+  background: none;
+  border: 0;
 
-  button {
-    height: 46px;
+  a {
+    color: var(--primary);
   }
 }
 
-.next {
-  padding: 20px;
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+
+  button {
+    height: 46px;
+    padding: 0 24px;
+    font-weight: 600;
+  }
+
+  .hint {
+    flex: 1 1 240px;
+    margin: 0;
+  }
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// Cartes « Ensuite » et « Vos données » (maquette 12) : titre en petites capitales, étapes
+// numérotées 01 à 04 en JetBrains Mono.
+.side-card {
+  padding: 16px 18px;
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
   background: var(--surface-raised);
+  font-size: 13px;
 
   h2 {
-    margin: 0 0 8px;
-    font: var(--mat-sys-title-medium);
-  }
-  h2 + p,
-  ol {
-    margin: 0 0 16px;
+    margin: 0 0 10px;
+    font: 600 12px / 1.4 var(--font-ui);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--text-secondary);
   }
+  p {
+    margin: 0 0 10px;
+    color: var(--text-primary);
+  }
   ol {
-    padding-left: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+
+    li {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      gap: 4px;
+      counter-increment: step;
+
+      &::before {
+        content: counter(step, decimal-leading-zero);
+        font: 400 12px / 1.6 var(--font-mono);
+        color: var(--text-secondary);
+      }
+    }
     li + li {
-      margin-top: 6px;
+      margin-top: 8px;
     }
   }
   .beta {
@@ -278,9 +362,19 @@ input[type='password'] {
   }
 }
 
-@media (max-width: 480px) {
-  .grid-2,
+// Cartes de profession empilées pleine largeur sous 760 px (fiche 12, 390 px).
+@media (max-width: 760px) {
   .professions {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .block {
+    padding: 16px;
   }
 }

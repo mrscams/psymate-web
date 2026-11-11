@@ -7,6 +7,8 @@ import {
   output,
   signal,
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { ApiProblem } from '../../../core/http';
@@ -23,7 +25,7 @@ import { DossierDocument } from '../data/admin.model';
  */
 @Component({
   selector: 'pm-document-viewer',
-  imports: [StateComponent],
+  imports: [MatButtonModule, StateComponent],
   template: `
     <div class="toolbar">
       <span class="file">{{ document()?.title ?? '—' }}</span>
@@ -82,8 +84,24 @@ import { DossierDocument } from '../data/admin.model';
           <div class="image-wrap">
             <img [src]="safeUrl()" [attr.alt]="altText()" [style.transform]="transform()" />
           </div>
-        } @else {
+        } @else if (canPreview()) {
           <iframe [src]="safeUrl()" [title]="altText()"></iframe>
+        } @else {
+          <div class="fallback">
+            <p i18n="Aperçu indisponible dans la visionneuse@@admin.viewer.noPreview">
+              Aperçu indisponible dans ce navigateur.
+            </p>
+            <a
+              mat-stroked-button
+              [href]="f.signedUrl"
+              target="_blank"
+              rel="noopener"
+              (click)="onOpen($event)"
+              ><span i18n="Lien d'ouverture du justificatif@@admin.viewer.openDocument"
+                >Ouvrir le document</span
+              ><span class="sr-only"> · {{ document()?.title }}</span></a
+            >
+          </div>
         }
       }
     </div>
@@ -100,11 +118,19 @@ export class DocumentViewerComponent {
   readonly reload = output<void>();
 
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly pdfViewer = inject(DOCUMENT).defaultView?.navigator.pdfViewerEnabled ?? false;
 
   protected readonly zoom = signal(1);
   protected readonly rotation = signal(0);
 
   protected readonly isImage = computed(() => this.document()?.mime.startsWith('image/') ?? false);
+  /**
+   * Aperçu natif d'un PDF seulement si le navigateur sait l'afficher (navigator.pdfViewerEnabled :
+   * faux dans un navigateur sans lecteur PDF) ; sinon, « Ouvrir le document » (UX-E1).
+   */
+  protected readonly canPreview = computed(
+    () => this.document()?.mime === 'application/pdf' && this.pdfViewer,
+  );
   protected readonly zoomText = computed(() => `${Math.round(this.zoom() * 100)} %`);
   protected readonly transform = computed(
     () => `scale(${this.zoom()}) rotate(${this.rotation()}deg)`,

@@ -36,7 +36,10 @@ function setup(
       { provide: TimelineApi, useValue: api },
       // Le début du suivi vient du TimelineStore (une seule source).
       { provide: TimelineStore, useValue: { followStart: signal(followStart) } },
-      { provide: PreferencesStore, useValue: { timelineGroupBy, set: vi.fn() } },
+      {
+        provide: PreferencesStore,
+        useValue: { timelineGroupBy, overviewWindow: signal('90d'), set: vi.fn() },
+      },
     ],
   });
   return {

@@ -22,15 +22,21 @@
   }
 </fieldset>
 
-<form class="decision" [formGroup]="form" (submit)="$event.preventDefault()">
-  <h3 i18n="Titre du bloc décision@@admin.decision.title">Décision</h3>
+<form
+  class="decision"
+  [formGroup]="form"
+  aria-labelledby="decision-title"
+  (submit)="$event.preventDefault()"
+>
+  <h2 id="decision-title" i18n="Titre du bloc décision@@admin.decision.title">Décision</h2>
   <div class="field">
     <label [for]="fieldId('internalNote')" i18n="Champ note interne@@admin.decision.noteLabel"
-      >Note interne (jamais envoyée au praticien)</label
+      >Note interne <span class="aside">(jamais envoyée au praticien)</span></label
     >
     <textarea
       [id]="fieldId('internalNote')"
       formControlName="internalNote"
+      rows="2"
       maxlength="4000"
       [attr.aria-invalid]="form.controls.internalNote.invalid || null"
       [attr.aria-describedby]="fieldId('internalNote') + '-error'"
@@ -44,17 +50,24 @@
     <label
       [for]="fieldId('messageToPractitioner')"
       i18n="Champ message au praticien@@admin.decision.messageLabel"
-      >Message au praticien (obligatoire pour un complément ou un refus)</label
+      >Message au praticien
+      <span class="aside">(obligatoire pour un complément ou un refus)</span></label
     >
     <textarea
+      #message
       [id]="fieldId('messageToPractitioner')"
       formControlName="messageToPractitioner"
+      rows="3"
       maxlength="4000"
       [attr.aria-invalid]="form.controls.messageToPractitioner.invalid || null"
       [attr.aria-describedby]="
         fieldId('messageToPractitioner') + '-error ' + fieldId('messageToPractitioner') + '-hint'
       "
     ></textarea>
+    <pm-field-errors
+      [control]="form.controls.messageToPractitioner"
+      [id]="fieldId('messageToPractitioner') + '-error'"
+    />
     <p
       class="hint"
       [id]="fieldId('messageToPractitioner') + '-hint'"
@@ -62,10 +75,6 @@
     >
       Envoyé par e-mail avec la décision.
     </p>
-    <pm-field-errors
-      [control]="form.controls.messageToPractitioner"
-      [id]="fieldId('messageToPractitioner') + '-error'"
-    />
   </div>
 
   @if (generalError(); as text) {
@@ -74,13 +83,32 @@
 
   @if (confirming()) {
     <div class="confirm" role="alert">
-      <p>{{ confirmText() }}</p>
+      <p>
+        @if (unchecked() > 0) {
+          <span i18n="Points de contrôle non cochés@@admin.decision.unchecked">{unchecked(), plural,
+            =1 {1 point de contrôle non coché}
+            other {{{ unchecked() }} points de contrôle non cochés}
+          }</span>
+        }
+        @if (unchecked() > 0 && nonConform() > 0) {
+          ·
+        }
+        @if (nonConform() > 0) {
+          <span i18n="Justificatifs non conformes@@admin.decision.nonConform">{nonConform(), plural,
+            =1 {1 justificatif non marqué conforme}
+            other {{{ nonConform() }} justificatifs non marqués conformes}
+          }</span>
+        }
+        <span i18n="Confirmation d'une approbation forcée@@admin.decision.confirm"
+          >— approuver quand même ?</span
+        >
+      </p>
       @if (!hasNote()) {
         <p class="hint" i18n="Note interne exigée@@admin.decision.noteRequired">
           Écrivez d'abord une note interne : elle justifie l'approbation.
         </p>
       }
-      <div class="actions">
+      <div class="confirm-actions">
         <button
           mat-flat-button
           type="button"
@@ -118,7 +146,7 @@
       mat-stroked-button
       type="button"
       class="more"
-      [disabled]="!hasMessage() || submitting()"
+      [disabled]="submitting()"
       (click)="send('needs_more')"
       i18n="Bouton de décision@@admin.decision.askMore"
     >
@@ -128,7 +156,7 @@
       mat-stroked-button
       type="button"
       class="reject"
-      [disabled]="!hasMessage() || submitting()"
+      [disabled]="submitting()"
       (click)="send('rejected')"
       i18n="Bouton de décision@@admin.decision.reject"
     >

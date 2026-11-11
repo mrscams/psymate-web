@@ -4,16 +4,19 @@
   min-width: 0;
 }
 
+// Carte (maquette 03, état A) : fond blanc, bordure 1 px, bordure gauche 3 px à la couleur du type
+// (jamais d'aplat), rayon 10 px ; une rangée de tête (forme, titre, puces, date à droite, ⋯) puis
+// tags et liens.
 .card {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  justify-content: center;
+  gap: 6px;
   box-sizing: border-box;
   height: 100%;
-  padding: 10px 12px 10px 14px;
+  padding: 6px 8px 6px 14px;
   border: 1px solid var(--border-subtle);
-  // Bordure gauche 3 px à la couleur du type (fiche 03 : jamais d'aplat).
   border-left: 3px solid var(--card-type, var(--entry-note));
   border-radius: 10px;
   background: var(--surface-raised);
@@ -33,38 +36,21 @@
 
   &.selected {
     border: 1.5px solid var(--primary);
-    border-left: 3px solid var(--card-type, var(--entry-note));
+    border-left: 3px solid var(--primary);
   }
 
   &.compact {
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-
-    .head {
-      flex: 1;
-      padding-right: 0;
-    }
-    .meta {
-      flex: none;
-    }
-    .more {
-      position: static;
-      margin: 0;
-    }
+    padding-top: 4px;
+    padding-bottom: 4px;
   }
 
-  // Zone « Avant le suivi » : cartes réduites sur le fond enfoncé.
+  // Zone « Avant le suivi » : cartes réduites, titre en poids moyen.
   &.before {
-    padding-top: 6px;
-    padding-bottom: 6px;
-    background: var(--surface-sunken);
-    border-color: var(--border-subtle);
+    padding-top: 4px;
+    padding-bottom: 4px;
 
     .title {
-      font: var(--mat-sys-body-medium);
+      font-weight: 500;
     }
   }
 }
@@ -90,19 +76,55 @@
 
 .head {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  min-width: 0;
+}
+
+.lead {
+  display: flex;
+  flex: 1 1 260px;
   align-items: center;
   gap: 8px;
   min-width: 0;
-  padding-right: 32px;
 }
 
 .title {
-  flex: 1;
   min-width: 0;
   overflow: hidden;
   font: var(--mat-sys-title-small);
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.when-group {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.when {
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.precision {
+  color: var(--text-secondary);
+  font: var(--mat-sys-label-small);
+  white-space: nowrap;
+
+  // Précision lâche (mois, année, période, phase de vie) : pastille tiretée (maquette 03).
+  &.loose {
+    padding: 0 6px;
+    border: 1px dashed var(--border-strong);
+    border-radius: 999px;
+  }
 }
 
 .chip {
@@ -110,33 +132,66 @@
   padding: 1px 8px;
   border-radius: 999px;
   font: var(--mat-sys-label-small);
+  white-space: nowrap;
 }
 
-.draft {
+// Brouillon et séance non clôturée : avertissement (fiche 03 : #FBF1DC / #7A5A12).
+.draft,
+.warn {
   background: var(--warning-bg);
   color: var(--warning);
 }
 
+.ongoing {
+  background: var(--primary-tint);
+  color: var(--primary-hover);
+}
+
+.session-count {
+  flex: none;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-small);
+  white-space: nowrap;
+}
+
+.said {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font: var(--mat-sys-label-small);
+  white-space: nowrap;
+}
+
+// Forme de la séance (carré arrondi, contour) dans la pastille « dit en séance du … ».
+.said-icon {
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--entry-session);
+  border-radius: 2px;
+}
+
 .more {
-  position: absolute;
-  top: 6px;
-  right: 6px;
   display: inline-flex;
   flex: none;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   padding: 0;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
 
   svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     fill: currentColor;
   }
 
@@ -151,48 +206,20 @@
   }
 }
 
-.meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 10px;
-  min-width: 0;
-  color: var(--text-secondary);
-  font: var(--mat-sys-body-small);
-}
-
-.when {
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.said {
-  padding: 1px 8px;
-  border: 1px dashed var(--border-strong);
-  border-radius: 999px;
-  color: var(--text-secondary);
-}
-
 .details {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px 8px;
   min-width: 0;
+  max-height: 22px;
   overflow: hidden;
-  max-height: 24px;
   color: var(--text-secondary);
   font: var(--mat-sys-body-small);
 }
 
-.feeling {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
 .dot {
+  flex: none;
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -224,23 +251,69 @@
   background: var(--emotion-anticipation);
 }
 
+// Puce « n/10 » sur feeling-tint, jauge de l'intensité (le chiffre porte l'information).
 .intensity {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
   padding: 1px 8px;
   border-radius: 999px;
   background: var(--feeling-tint);
   color: var(--feeling-text);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font: var(--mat-sys-label-medium);
+  font-weight: 600;
+}
+
+.gauge {
+  display: inline-block;
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--surface-raised);
+}
+
+.gauge-fill {
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--feeling);
 }
 
 .tag {
   padding: 1px 8px;
   border-radius: 999px;
   background: var(--surface-sunken);
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 .links {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  white-space: nowrap;
+}
+
+// Petit écran : titre et date d'abord ; les compléments se lisent dans le nom de la carte et
+// à l'ouverture.
+@media (max-width: 599px) {
+  // Rangée 1 : forme, titre, ⋯ ; rangée 2 : la date.
+  .lead {
+    flex-basis: calc(100% - 40px);
+  }
+
+  .more {
+    order: 1;
+  }
+
+  .when-group {
+    order: 2;
+  }
+
+  .session-count,
+  .said,
+  .precision {
+    display: none;
+  }
+
+  .when-group {
+    margin-left: 0;
+  }
 }

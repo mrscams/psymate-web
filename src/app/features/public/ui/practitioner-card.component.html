@@ -1,5 +1,5 @@
 <article class="card">
-  <pm-practitioner-avatar [name]="card().displayName" />
+  <pm-practitioner-avatar class="avatar" [name]="card().displayName" />
   <div class="body">
     <div class="identity">
       <h3 class="name">
@@ -9,13 +9,10 @@
       @if (card().verified) {
         <pm-verified-badge />
       }
-      <pm-availability [availability]="card().availability" />
+      <pm-availability class="availability-slot" [availability]="card().availability" />
     </div>
-    @if (card().titleLabel) {
-      <p class="title">{{ card().titleLabel }}</p>
-    }
-    @if (excerpt()) {
-      <p class="excerpt">{{ excerpt() }}</p>
+    @if (summary()) {
+      <p class="excerpt">{{ summary() }}</p>
     }
     @if (specialties().length) {
       <ul
@@ -28,28 +25,44 @@
         }
       </ul>
     }
-    <dl class="facts">
-      @if (audiences().length) {
+    <!-- Une ligne de méta (maquette 08) : ville, modalités, publics, langues, séparés par « · ». -->
+    <dl class="meta">
+      @if (card().city) {
         <div>
-          <dt i18n="Publics accueillis, fiche résumée@@public.card.audiences">Publics</dt>
-          <dd>{{ audiences().join(', ') }}</dd>
+          <dt class="sr-only" i18n="Ville, fiche résumée@@public.card.city">Ville</dt>
+          <dd>
+            <svg class="pin" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            {{ card().city }}
+          </dd>
         </div>
       }
       @if (modalities()) {
         <div>
-          <dt i18n="Modalités de consultation, fiche résumée@@public.card.modalities">Modalités</dt>
-          <dd>{{ modalities() }}</dd>
+          <dt
+            class="sr-only"
+            i18n="Modalités de consultation, fiche résumée@@public.card.modalities"
+          >
+            Modalités
+          </dt>
+          <dd><span class="square" aria-hidden="true"></span>{{ modalities() }}</dd>
         </div>
       }
-      @if (card().city) {
+      @if (audiences()) {
         <div>
-          <dt i18n="Ville, fiche résumée@@public.card.city">Ville</dt>
-          <dd>{{ card().city }}</dd>
+          <dt class="sr-only" i18n="Publics accueillis, fiche résumée@@public.card.audiences">
+            Publics
+          </dt>
+          <dd>{{ audiences() }}</dd>
         </div>
       }
       @if (languages()) {
         <div>
-          <dt i18n="Langues de consultation, fiche résumée@@public.card.languages">Langues</dt>
+          <dt class="sr-only" i18n="Langues de consultation, fiche résumée@@public.card.languages">
+            Langues
+          </dt>
           <dd>{{ languages() }}</dd>
         </div>
       }

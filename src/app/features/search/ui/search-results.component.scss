@@ -53,6 +53,8 @@
 }
 
 .title {
+  /* Cible de 24 px au moins (audit UX 07 : titres de 20 px). */
+  min-height: 24px;
   padding: 0;
   border: 0;
   background: none;

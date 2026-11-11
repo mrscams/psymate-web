@@ -24,6 +24,7 @@ import { ShortcutService } from '../../../core/shortcuts';
 import {
   ENTRY_TYPES,
   EntryIconComponent,
+  entryTitle,
   EntryType,
   StateAction,
   StateComponent,
@@ -42,6 +43,7 @@ import {
   sameParam,
   TimelineFilters,
   TimelineMode,
+  withPeriod,
 } from '../data/timeline-filters.model';
 import { TimelineFiltersStore } from '../data/timeline-filters.store';
 import { TimelineSessionStore } from '../data/timeline-session.store';
@@ -49,19 +51,23 @@ import { groupBySession } from '../data/timeline-sessions.model';
 import {
   MAX_WINDOWS,
   ROW_HEIGHT,
+  sessionEntryCounts,
   TimelineItem,
   TimelineRow,
   TimelineSnapshot,
   WINDOW_SIZE,
+  ZOOM_POSITION,
 } from '../data/timeline.model';
 import { TimelineStore } from '../data/timeline.store';
 import { TIMELINE_FOCUS_PARAM } from '../timeline.params';
+import { RestoreHold } from './restore-hold';
 import { RovingToolbarDirective } from '../ui/roving-toolbar.directive';
-import { TimelineCardComponent } from '../ui/timeline-card.component';
+import { SessionCardInfo, TimelineCardComponent } from '../ui/timeline-card.component';
 import { TimelineDecadeComponent } from '../ui/timeline-decade.component';
 import { TimelineFiltersComponent } from '../ui/timeline-filters.component';
 import { decadeZoomLabel, groupLabel, zoomLabel } from '../ui/timeline-labels';
 import { TimelineModeComponent } from '../ui/timeline-mode.component';
+import { TimelinePeriodComponent } from '../ui/timeline-period.component';
 import { TimelineSessionsComponent } from '../ui/timeline-sessions.component';
 
 /** Délai minimal entre deux crans de zoom à la molette (un geste = un cran). */
@@ -91,6 +97,7 @@ const WHEEL_STEP_MS = 180;
     TimelineDecadeComponent,
     TimelineFiltersComponent,
     TimelineModeComponent,
+    TimelinePeriodComponent,
     TimelineSessionsComponent,
   ],
   providers: [TimelineStore, TimelineFiltersStore, TimelineSessionStore, TimelineDecadeStore],
@@ -133,6 +140,10 @@ export class TimelinePage {
   protected readonly zoomText = computed(() =>
     this.decade() ? decadeZoomLabel() : zoomLabel(this.store.zoom()),
   );
+  /** Position du curseur de zoom (jour → semaine → mois → décennie), en pourcentage de la piste. */
+  protected readonly zoomPosition = computed(() =>
+    this.decade() ? 100 : ZOOM_POSITION[this.store.zoom()],
+  );
   /** − : d'un cran vers le mois, puis de « Mois » à l'agrégat ; plus de cran en vue décennie. */
   protected readonly canZoomOut = computed(() => !this.decade());
   /** + : de l'agrégat au détail « Mois », puis vers le jour. */
@@ -164,6 +175,9 @@ export class TimelinePage {
       case 'error':
         return 'error';
       case 'loaded': {
+        // Rien sur la période par défaut : elle s'élargit à « Tout » (effet ci-dessous), pas d'état vide.
+        if (this.store.total() === 0 && this.filters.atDefaults() && this.filters.active())
+          return 'loading';
         if (this.store.total() === 0) return 'empty';
         // Chronologique : la vue (détail ou agrégat) attend le résumé, pour ne pas basculer à vue.
         if (this.mode() !== 'session') return this.decadeStore.settled() ? null : 'loading';
@@ -177,6 +191,12 @@ export class TimelinePage {
   protected readonly clearFilters: StateAction = {
     label: $localize`:Bouton de l'état vide filtré de la timeline@@timeline.empty.clear:Effacer les filtres`,
     handler: () => this.changeFilters(NO_FILTERS),
+  };
+
+  /** État vide sur la période choisie (90 j par défaut) : « Tout » montre les plus anciennes. */
+  protected readonly showAll: StateAction = {
+    label: $localize`:Bouton de l'état vide de la timeline sur une période@@timeline.empty.showAll:Afficher tout`,
+    handler: () => this.changeFilters(withPeriod(this.filters.filters(), 'all', new Date())),
   };
 
   protected readonly retry: StateAction = {
@@ -194,7 +214,35 @@ export class TimelinePage {
     if (!bounds) return '';
     const newest = formatOccurred(bounds.newest, this.locale);
     const oldest = formatOccurred(bounds.oldest, this.locale);
-    return $localize`:Bornes de la fenêtre courante de la timeline@@timeline.status.bounds:Fenêtre : ${oldest}:oldest: → ${newest}:newest:`;
+    return $localize`:Bornes de la fenêtre courante de la timeline, de la plus récente à la plus ancienne@@timeline.status.current:fenêtre courante ${newest}:newest: → ${oldest}:oldest:`;
+  });
+
+  /**
+   * Ce que les cartes de séance montrent en plus (UX-B2) : genre, durée, modalité et clôture lus
+   * dans le détail de la séance (TimelineSessionStore, lu pour les séances à l'écran), nombre
+   * d'entrées quand toute la plage est en mémoire et sans autre filtre que la période.
+   */
+  protected readonly sessionInfos = computed<Record<string, SessionCardInfo>>(() => {
+    const details = this.sessionDetails.details();
+    const windows = this.store.windows();
+    const complete = !this.filters.narrowed() && this.store.inMemory() >= this.store.count();
+    const counts = complete ? sessionEntryCounts(windows) : null;
+    const infos: Record<string, SessionCardInfo> = {};
+    for (const win of windows) {
+      for (const item of win.items) {
+        if (item.type !== 'session') continue;
+        const state = details[item.id];
+        const detail = state?.status === 'loaded' ? state.detail : null;
+        infos[item.id] = {
+          kind: detail?.kind ?? null,
+          durationMin: detail?.durationMin ?? null,
+          modality: detail?.modality ?? null,
+          closed: detail ? detail.closedAt !== null : null,
+          entries: counts ? (counts[item.id] ?? 0) : null,
+        };
+      }
+    }
+    return infos;
   });
 
   protected readonly followStartText = computed(() => {
@@ -207,7 +255,11 @@ export class TimelinePage {
   });
 
   protected readonly bandItems = computed(() =>
-    this.store.bands().map((band) => ({ band, label: this.bandLabel(band.item) })),
+    this.store.bands().map((band) => ({
+      band,
+      label: this.bandLabel(band.item),
+      name: this.situationName(band.item),
+    })),
   );
 
   protected readonly listLabel = $localize`:Nom de la liste des cartes de la timeline@@timeline.list:Entrées du patient, de la plus récente à la plus ancienne`;
@@ -233,6 +285,8 @@ export class TimelinePage {
   /** Position rangée au départ précédent (px), null sans reprise. */
   private restoreOffset: number | null = null;
   private lastOffset = 0;
+  /** Position rangée tenue au retour sur l'onglet, jusqu'au premier geste ou à l'échéance. */
+  private readonly restoreHold = new RestoreHold();
 
   constructor() {
     // Le patient du dossier (en-tête) : la chronologie se charge, ou reprend l'état rangé.
@@ -295,6 +349,30 @@ export class TimelinePage {
       );
     });
 
+    // Arrivée sur la période par défaut (90 j) sans rien à montrer : la visite passe à « Tout »
+    // (UX-B2), sans l'écrire dans l'URL. Un dossier sans entrée récente montre son histoire.
+    effect(() => {
+      if (this.store.status() !== 'loaded' || this.store.total() > 0) return;
+      if (!this.filters.atDefaults()) return;
+      untracked(() => {
+        if (this.filters.widenDefaults()) this.reapplyFilters();
+      });
+    });
+
+    // Cartes de séance à l'écran : leur détail (durée, modalité, clôture) est lu une fois.
+    effect(() => {
+      if (this.mode() !== 'chronological' || this.decade()) return;
+      const rows = this.store.rows();
+      const start = Math.max(0, this.store.anchor() - 4);
+      const ids = rows
+        .slice(start, start + 24)
+        .filter((row) => row?.item?.type === 'session')
+        .map((row) => row.item?.id ?? '');
+      untracked(() => {
+        for (const id of ids) if (id) void this.sessionDetails.load(id);
+      });
+    });
+
     // Un seul sens de synchronisation : le TimelineFiltersStore réécrit l'URL (replaceUrl).
     effect(() => {
       const params = this.filters.params();
@@ -312,18 +390,41 @@ export class TimelinePage {
       this.restored = true;
       const anchor = untracked(() => this.store.anchor());
       const offset = this.restoreOffset;
-      if (anchor > 0 || offset)
-        afterNextRender(() => this.scrollTo(viewport, anchor, offset), { injector: this.injector });
+      if (anchor > 0 || offset) {
+        const target = offset ?? anchor * untracked(() => this.rowHeight());
+        // La position est tenue jusqu'au premier geste du praticien (ou 3 s) : une relecture des
+        // fenêtres, un redimensionnement ou un viewport recréé pendant le retour ne la déplacent pas.
+        this.restoreHold.hold(target);
+        afterNextRender(() => this.holdRestore(viewport), { injector: this.injector });
+      }
     });
 
     // Position exacte, suivie au défilement, pour la reprendre au pixel près au retour sur l'onglet.
     effect((onCleanup) => {
       const viewport = this.viewport();
       if (!viewport) return;
-      const subscription = viewport
-        .elementScrolled()
-        .subscribe(() => (this.lastOffset = viewport.measureScrollOffset('top')));
-      onCleanup(() => subscription.unsubscribe());
+      // Un viewport recréé pendant le retour (état de chargement intermédiaire) reprend la position.
+      if (this.restoreHold.offset !== null)
+        untracked(() =>
+          afterNextRender(() => this.holdRestore(viewport), { injector: this.injector }),
+        );
+      const element = viewport.elementRef.nativeElement;
+      // Geste sur la liste, focus qui y entre, touche du clavier n'importe où : la main au praticien.
+      const unlisten = this.restoreHold.listen(element, element.ownerDocument);
+      const subscription = viewport.elementScrolled().subscribe(() => {
+        const top = viewport.measureScrollOffset('top');
+        const back = this.restoreHold.correction(top);
+        if (back !== null) {
+          // Déplacement qui ne vient pas du praticien : la position rangée est remise.
+          viewport.scrollToOffset(back);
+          return;
+        }
+        this.lastOffset = top;
+      });
+      onCleanup(() => {
+        subscription.unsubscribe();
+        unlisten();
+      });
     });
 
     // ?focus=<id> : la timeline lit ses fenêtres jusqu'à l'entrée, la met en haut de l'écran,
@@ -398,10 +499,21 @@ export class TimelinePage {
   private focusing: string | null = null;
 
   private async focusEntry(id: string, viewport: CdkVirtualScrollViewport): Promise<void> {
+    this.restoreHold.release();
     if (this.focusing === id) return;
     this.focusing = id;
     this.restored = true;
     const slot = await this.store.locate(id);
+    if (slot === null && this.filters.atDefaults() && this.filters.widenDefaults()) {
+      // Période par défaut (90 j) : elle passe à « Tout » pour cette visite, puis la recherche de
+      // l'entrée reprend une fois la liste recréée (?focus= est toujours là).
+      this.focusing = null;
+      this.toasts.info(
+        $localize`:Information quand la période par défaut excluait l'entrée demandée@@timeline.focus.periodWidened:Période élargie à « Tout » pour afficher l'entrée demandée.`,
+      );
+      this.reapplyFilters();
+      return;
+    }
     if (slot === null && this.filters.active()) {
       // Les filtres excluent l'entrée : ils sont retirés (on prévient), la plage est relue et la
       // recherche de l'entrée reprend une fois la liste recréée (?focus= est toujours là).
@@ -443,6 +555,13 @@ export class TimelinePage {
       (g) => g.id === id || g.entries.some((item) => item.id === id),
     );
     if (!group) {
+      // Séance ou entrée plus ancienne que la période par défaut : la visite passe d'abord à
+      // « Tout » (les séances sont relues et la recherche reprend, ?focus= est toujours là) ; le
+      // repli sur le chronologique ne vient qu'ensuite.
+      if (this.filters.atDefaults() && this.filters.widenDefaults()) {
+        this.reapplyFilters();
+        return;
+      }
       this.filters.overrideForVisit('chronological');
       return;
     }
@@ -506,6 +625,7 @@ export class TimelinePage {
     next: TimelineFilters,
     origin: 'user' | 'drill' | 'back' = 'user',
   ): boolean {
+    this.restoreHold.release();
     const current = this.filters.filters();
     if (sameFilters(next, current)) return false;
     const periodChanged = next.from !== current.from || next.to !== current.to;
@@ -518,6 +638,15 @@ export class TimelinePage {
     void this.store.applyFilters();
     void this.decadeStore.syncRange();
     return true;
+  }
+
+  /** Filtres élargis par le store (période de la visite) : la plage est relue comme après un geste. */
+  private reapplyFilters(): void {
+    this.restored = true;
+    this.focusAfterDrill = false;
+    this.decadeStore.forgetDrill();
+    void this.store.applyFilters();
+    void this.decadeStore.syncRange();
   }
 
   /**
@@ -580,6 +709,24 @@ export class TimelinePage {
    * Amène le créneau `slot` en haut de l'écran. La hauteur totale du défilement n'est connue du CDK
    * qu'une trame après le rendu : on réessaie quelques trames tant que la position n'est pas atteinte.
    */
+  /**
+   * Remet la position rangée tant qu'elle est tenue : quelques trames au plus, jusqu'à ce que le
+   * CDK connaisse la hauteur totale et que la position soit stable sur trois trames.
+   */
+  private holdRestore(viewport: CdkVirtualScrollViewport, attempts = 40, stable = 0): void {
+    const offset = this.restoreHold.offset;
+    if (offset === null) return;
+    viewport.checkViewportSize();
+    if (Math.abs(viewport.measureScrollOffset('top') - offset) > 1) {
+      viewport.scrollToOffset(offset);
+      stable = 0;
+    } else {
+      stable++;
+    }
+    if (stable < 3 && attempts > 0)
+      requestAnimationFrame(() => this.holdRestore(viewport, attempts - 1, stable));
+  }
+
   private scrollTo(
     viewport: CdkVirtualScrollViewport,
     slot: number,
@@ -604,6 +751,7 @@ export class TimelinePage {
 
   /** `+` / `-` / boutons / Ctrl+molette : la granularité change, le haut de l'écran reste en place. */
   protected zoom(direction: 'in' | 'out'): void {
+    this.restoreHold.release();
     if (this.mode() !== 'chronological') return;
     if (this.decade()) {
       // + depuis l'agrégat : le détail au zoom « Mois » ; − n'a plus de cran.
@@ -740,8 +888,29 @@ export class TimelinePage {
     });
   }
 
+  /**
+   * Libellé vertical d'une bande (maquette 03) : « Surcharge au travail · depuis le 3 sept. 2026 ·
+   * en cours », coupé par la longueur de la bande (le nom complet est dans la liste des situations).
+   */
+  protected laneText(item: TimelineItem): string {
+    const title = this.situationName(item);
+    const when = formatOccurred(item.occurred, this.locale);
+    return item.ongoing
+      ? $localize`:Libellé vertical d'une bande de situation en cours@@timeline.lane.ongoing:${title}:title: · ${when}:when: · en cours`
+      : $localize`:Libellé vertical d'une bande de situation terminée@@timeline.lane.closed:${title}:title: · ${when}:when:`;
+  }
+
+  /** Nom d'une situation en bande : son titre, sinon le titre de repli partagé (UX-A5). */
+  private situationName(item: TimelineItem): string {
+    return entryTitle(
+      { type: item.type, title: item.title, occurred: item.occurred.from },
+      this.locale,
+      { timeZone: 'UTC' },
+    );
+  }
+
   private bandLabel(item: TimelineItem): string {
-    const title = item.title ?? '';
+    const title = this.situationName(item);
     const when = formatOccurred(item.occurred, this.locale);
     return item.ongoing
       ? $localize`:Nom accessible d'une bande de situation en cours@@timeline.band.ongoing:Situation ${title}:title:, ${when}:when:, en cours`

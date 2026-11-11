@@ -3,14 +3,18 @@ import { TestBed } from '@angular/core/testing';
 import { convertToParamMap } from '@angular/router';
 
 import { PreferencesStore } from '../../../core/preferences';
-import { NO_FILTERS } from './timeline-filters.model';
+import { NO_FILTERS, withPeriod } from './timeline-filters.model';
 import { TimelineFiltersStore } from './timeline-filters.store';
 
 /** PreferencesStore simulé : `set` optimiste, comme le vrai (la valeur change tout de suite). */
-function prefsMock(initial: 'session' | 'month' | 'chronological' = 'session') {
+function prefsMock(
+  initial: 'session' | 'month' | 'chronological' = 'session',
+  window: '30d' | '90d' | '12m' = '90d',
+) {
   const groupBy = signal(initial);
   return {
     timelineGroupBy: groupBy,
+    overviewWindow: signal(window),
     set: vi.fn(async (_key: string, value: 'session' | 'month' | 'chronological') => {
       groupBy.set(value);
       return null;
@@ -26,13 +30,64 @@ function setup(prefs = prefsMock()) {
 }
 
 describe('TimelineFiltersStore', () => {
-  it('sans filtre ni ?mode= : mode de la préférence, URL vide, requête sans filtre', () => {
+  it('sans filtre ni ?mode= : mode de la préférence, période par défaut 90 j hors de l’URL', () => {
     const { store } = setup(prefsMock('chronological'));
-    expect(store.init(convertToParamMap({}), null)).toBe('none');
+    const today = new Date(2026, 10, 8, 14);
+    expect(store.init(convertToParamMap({}), null, today)).toBe('none');
     expect(store.mode()).toBe('chronological');
-    expect(store.active()).toBe(false);
+    expect(store.filters()).toEqual({ ...NO_FILTERS, from: '2026-08-10' });
+    expect(store.atDefaults()).toBe(true);
+    expect(store.active()).toBe(true);
+    expect(store.narrowed()).toBe(false);
     expect(Object.values(store.params()).every((value) => value === null)).toBe(true);
-    expect(store.query()).toEqual({ ...NO_FILTERS, from: null, to: null });
+    expect(store.query()).toEqual({
+      ...NO_FILTERS,
+      from: new Date(2026, 7, 10).toISOString(),
+      to: null,
+    });
+  });
+
+  it('période par défaut : overview.window (30 j, 12 mois), « Tout » sous groupBy = month', () => {
+    const today = new Date(2026, 10, 8, 14);
+    let { store } = setup(prefsMock('chronological', '30d'));
+    store.init(convertToParamMap({}), null, today);
+    expect(store.filters().from).toBe('2026-10-09');
+    TestBed.resetTestingModule();
+    ({ store } = setup(prefsMock('chronological', '12m')));
+    store.init(convertToParamMap({}), null, today);
+    expect(store.filters().from).toBe('2025-11-08');
+    TestBed.resetTestingModule();
+    ({ store } = setup(prefsMock('month')));
+    store.init(convertToParamMap({}), null, today);
+    expect(store.filters()).toEqual(NO_FILTERS);
+    expect(store.active()).toBe(false);
+  });
+
+  it('« Tout » : ?period=all dans l’URL ; relu tel quel ; une autre période s’écrit en dates', () => {
+    const today = new Date(2026, 10, 8, 14);
+    const { store } = setup(prefsMock('chronological'));
+    store.init(convertToParamMap({}), null, today);
+    store.set(NO_FILTERS);
+    expect(store.params()).toMatchObject({ period: 'all', from: null, to: null });
+    expect(store.init(convertToParamMap({ period: 'all' }), null, today)).toBe('url');
+    expect(store.filters()).toEqual(NO_FILTERS);
+    store.set(withPeriod(NO_FILTERS, '30d', today));
+    expect(store.params()).toMatchObject({ period: null, from: '2026-10-09' });
+  });
+
+  it('widenDefaults : la période par défaut passe à « Tout » pour la visite, sans URL', () => {
+    const today = new Date(2026, 10, 8, 14);
+    const { store } = setup(prefsMock('chronological'));
+    store.init(convertToParamMap({}), null, today);
+    expect(store.widenDefaults()).toBe(true);
+    expect(store.filters()).toEqual(NO_FILTERS);
+    expect(store.atDefaults()).toBe(true);
+    expect(Object.values(store.params()).every((value) => value === null)).toBe(true);
+    // Plus rien à élargir ; des filtres posés à la main ne sont jamais élargis.
+    expect(store.widenDefaults()).toBe(false);
+    store.init(convertToParamMap({ emotion: 'anxiety' }), null, today);
+    expect(store.widenDefaults()).toBe(false);
+    expect(store.filters().emotions).toEqual(['anxiety']);
   });
 
   it('init : l’URL l’emporte sur la mémoire de l’onglet ; ?mode= l’emporte sur la préférence', () => {
@@ -42,7 +97,9 @@ describe('TimelineFiltersStore', () => {
       modeOverride: null,
     });
     expect(source).toBe('url');
+    // Lien avec filtre sans from ni to : « Tout » (seule l'URL nue prend la période par défaut).
     expect(store.filters()).toEqual({ ...NO_FILTERS, emotions: ['anxiety'] });
+    expect(store.defaults().from).not.toBeNull();
     expect(store.mode()).toBe('chronological');
     expect(store.params()).toMatchObject({ emotion: ['anxiety'], mode: 'chronological' });
     // La préférence n'est pas écrite par ?mode=.
@@ -62,6 +119,7 @@ describe('TimelineFiltersStore', () => {
     expect(store.snapshot()).toEqual({
       filters: { ...NO_FILTERS, draftsOnly: true },
       modeOverride: 'chronological',
+      defaults: expect.objectContaining({ from: expect.any(String) }),
     });
   });
 

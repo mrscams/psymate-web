@@ -301,7 +301,10 @@ for (const theme of THEMES) {
             async () => {
               await page.getByLabel('Adresse e-mail').focus();
               await page.keyboard.type(otpAccount.email);
+              // UX-D1 : « Mot de passe oublié ? » (à droite du libellé) précède le champ.
               await page.keyboard.press('Tab');
+              await page.keyboard.press('Tab');
+              await expect(page.getByLabel('Mot de passe', { exact: true })).toBeFocused();
               await page.keyboard.type(otpAccount.password);
               await page.keyboard.press('Enter');
               await expect(page.getByLabel('Code de vérification')).toBeVisible();
