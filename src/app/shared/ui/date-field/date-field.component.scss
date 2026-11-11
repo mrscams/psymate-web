@@ -1,0 +1,46 @@
+// Même rendu que les champs texte des formulaires (fiche patient, profil) : 44 px, rayon 10 px,
+// bordure forte, halo de focus global (:focus-visible, styles.scss) ; chiffres en JetBrains Mono.
+:host {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+.date-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 52px 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: var(--mat-sys-body-large);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+
+  &::placeholder {
+    color: var(--text-secondary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--danger);
+  }
+
+  &:disabled {
+    background: var(--surface-sunken);
+    color: var(--text-secondary);
+  }
+}
+
+.toggle {
+  position: absolute;
+  top: 50%;
+  right: 2px;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
