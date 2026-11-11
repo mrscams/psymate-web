@@ -1,8 +1,4 @@
-<pm-side-panel [title]="title">
-  @if (data.patientName) {
-    <span pmPanelHeader class="patient">{{ data.patientName }}</span>
-  }
-
+<pm-side-panel [title]="title" [subtitle]="subtitle">
   @if (alert(); as message) {
     <div class="alert" role="alert" tabindex="-1">
       <p>{{ message }}</p>

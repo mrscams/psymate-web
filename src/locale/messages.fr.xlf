@@ -12524,6 +12524,22 @@
         </context-group>
         <note priority="1" from="description">Titre de l&apos;éditeur de lien</note>
       </trans-unit>
+      <trans-unit id="links.editor.subtitle" datatype="html">
+        <source><x id="patient" equiv-text="this.data.patientName"/> · le lien est visible dans le graphe et la timeline</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre de l&apos;éditeur de lien, avec le patient</note>
+      </trans-unit>
+      <trans-unit id="links.editor.subtitleScope" datatype="html">
+        <source>Le lien est visible dans le graphe et la timeline</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre de l&apos;éditeur de lien, sans patient</note>
+      </trans-unit>
       <trans-unit id="links.editor.relation" datatype="html">
         <source>Relation</source>
         <context-group purpose="location">

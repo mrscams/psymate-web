@@ -141,6 +141,13 @@ describe('PatientFormPage', () => {
       expect(create).not.toHaveBeenCalled();
       expect(field(el, 'birthDate').getAttribute('aria-invalid')).toBe('true');
       expect(el.querySelector('#field-birthDate-error')?.textContent).toContain('Date invalide');
+      // La précision puis l'erreur décrivent le champ (describedBy de pm-date-field, UX-A8).
+      expect(field(el, 'birthDate').getAttribute('aria-describedby')).toBe(
+        'field-birthDate-aside field-birthDate-error',
+      );
+      expect(el.querySelector('#field-birthDate-aside')?.textContent).toContain(
+        "sert à l'âge et aux phases de vie",
+      );
     });
 
     it('coach : « Nouveau client »', async () => {

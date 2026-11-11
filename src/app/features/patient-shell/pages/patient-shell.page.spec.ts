@@ -209,17 +209,39 @@ describe('PatientShellPage', () => {
   );
 
   it('Démarrer : l’en-tête passe « en cours » sans recharger le dossier', async () => {
-    const { el, harness, api } = await render();
-    el.querySelector<HTMLButtonElement>('button.start-session')?.click();
-    await settle(harness);
-    expect(api.start).toHaveBeenCalledWith('p-marie', 'in_person');
-    expect(api.patient).toHaveBeenCalledTimes(1);
-    expect(el.querySelector('.session-text')?.classList.contains('current')).toBe(true);
-    expect(text(el.querySelector('.session-text'))).toContain('en cours depuis');
-    expect(el.querySelector('button.close-session')).not.toBeNull();
-    await vi.waitFor(() =>
-      expect(document.activeElement).toBe(el.querySelector('pm-command-bar input')),
-    );
+    // Horloge figée 12 min après le début de la séance renvoyée (24 oct. 2026, 14:00 Z) : au-delà
+    // de 3 h, l'en-tête dirait « non clôturée ». Seule la date est simulée, pas les minuteries.
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-24T14:12:00Z'));
+    try {
+      const { el, harness, api } = await render();
+      el.querySelector<HTMLButtonElement>('button.start-session')?.click();
+      await settle(harness);
+      expect(api.start).toHaveBeenCalledWith('p-marie', 'in_person');
+      expect(api.patient).toHaveBeenCalledTimes(1);
+      expect(el.querySelector('.session-text')?.classList.contains('current')).toBe(true);
+      expect(text(el.querySelector('.session-text'))).toMatch(/en cours depuis 12 min$/);
+      expect(el.querySelector('button.close-session')).not.toBeNull();
+      await vi.waitFor(() =>
+        expect(document.activeElement).toBe(el.querySelector('pm-command-bar input')),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('séance ouverte depuis plus de 3 h : « non clôturée », Clôturer reste proposé', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-24T17:01:00Z'));
+    try {
+      const { el } = await render({ current: vi.fn().mockResolvedValue(openSession()) });
+      const line = text(el.querySelector('.session-text'));
+      expect(line).toMatch(/non clôturée$/);
+      expect(line).not.toContain('en cours depuis');
+      expect(el.querySelector('button.close-session')).not.toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('Clôturer : dialogue avec la durée des préférences, POST close, « Dernière séance »', async () => {
