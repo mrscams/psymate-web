@@ -1,0 +1,26 @@
+<input
+  #field
+  class="date-input"
+  type="text"
+  inputmode="numeric"
+  autocomplete="off"
+  [id]="inputId()"
+  [placeholder]="placeholder"
+  [disabled]="disabled()"
+  [matDatepicker]="picker"
+  [value]="modelDate()"
+  [min]="minDate()"
+  [max]="maxDate()"
+  [attr.aria-invalid]="ariaInvalid()"
+  [attr.aria-describedby]="errorId() ?? null"
+  (input)="sync(field.value)"
+  (dateInput)="sync(field.value)"
+  (blur)="touched()"
+/>
+<mat-datepicker-toggle class="toggle" [for]="picker" [disabled]="disabled()" />
+<mat-datepicker
+  #picker
+  [startView]="granularity === 'month' ? 'multi-year' : 'month'"
+  (monthSelected)="monthSelected($event)"
+  (closed)="touched()"
+/>
