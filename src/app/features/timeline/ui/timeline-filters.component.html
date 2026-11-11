@@ -1,17 +1,22 @@
+<span class="row-label" aria-hidden="true"
+  ><span i18n="Libellé visible des puces de type de la timeline@@timeline.filters.typesLabel"
+    >Types</span
+  >
+  <kbd>F</kbd></span
+>
 <div
   class="group"
   role="group"
   aria-label="Types"
   i18n-aria-label="Nom du groupe de puces de type de la timeline@@timeline.filters.types"
 >
-  <button
-    type="button"
-    class="chip"
-    [attr.aria-pressed]="allTypes()"
-    (click)="selectAllTypes()"
-    i18n="Puce de tous les types de la timeline@@timeline.filters.allTypes"
-  >
-    Tous
+  <button type="button" class="chip" [attr.aria-pressed]="allTypes()" (click)="selectAllTypes()">
+    <span class="label" i18n="Puce de tous les types de la timeline@@timeline.filters.allTypes"
+      >Tous</span
+    >
+    @if (counted()) {
+      <span class="count"> {{ allCount() }}</span>
+    }
   </button>
   @for (chip of typeChips(); track chip.type) {
     <button
@@ -21,7 +26,7 @@
       [attr.data-type]="chip.type"
       (click)="toggleType(chip.type)"
     >
-      <pm-entry-icon [type]="chip.type" [size]="12" />
+      <pm-entry-icon [type]="chip.type" [size]="10" />
       <span class="label">{{ chip.label }}</span>
       @if (counted()) {
         <span class="count"> {{ chip.count }}</span>
@@ -30,18 +35,21 @@
   }
 </div>
 
-@if (emotionChips().length) {
+<span class="separator" aria-hidden="true"></span>
+
+@if (activeEmotions().length || activeTags().length) {
   <div
     class="group"
     role="group"
-    aria-label="Émotions"
-    i18n-aria-label="Nom du groupe de puces d'émotion de la timeline@@timeline.filters.emotions"
+    aria-label="Filtres actifs"
+    i18n-aria-label="Nom du groupe des puces d'émotion et de tag actives@@timeline.filters.active"
   >
-    @for (chip of emotionChips(); track chip.value) {
+    @for (chip of activeEmotions(); track chip.value) {
       <button
         type="button"
-        class="chip"
-        [attr.aria-pressed]="chip.selected"
+        class="chip removable"
+        aria-pressed="true"
+        [attr.aria-label]="removeLabel(chip)"
         [attr.data-emotion]="chip.value"
         (click)="toggleEmotion(chip.value)"
       >
@@ -50,23 +58,15 @@
         @if (counted()) {
           <span class="count"> {{ chip.count }}</span>
         }
+        <span class="remove" aria-hidden="true"></span>
       </button>
     }
-  </div>
-}
-
-@if (tagChips().length) {
-  <div
-    class="group"
-    role="group"
-    aria-label="Tags"
-    i18n-aria-label="Nom du groupe de puces de tag de la timeline@@timeline.filters.tags"
-  >
-    @for (chip of tagChips(); track chip.value) {
+    @for (chip of activeTags(); track chip.value) {
       <button
         type="button"
-        class="chip"
-        [attr.aria-pressed]="chip.selected"
+        class="chip removable"
+        aria-pressed="true"
+        [attr.aria-label]="removeLabel(chip)"
         [attr.data-tag]="chip.value"
         (click)="toggleTag(chip.value)"
       >
@@ -74,41 +74,107 @@
         @if (counted()) {
           <span class="count"> {{ chip.count }}</span>
         }
+        <span class="remove" aria-hidden="true"></span>
       </button>
     }
   </div>
 }
 
-<div class="group">
+@if (hasMenu()) {
   <button
     type="button"
-    class="chip drafts"
-    [attr.aria-pressed]="filters().draftsOnly"
-    (click)="toggleDrafts()"
-    i18n="Puce brouillons seulement de la timeline@@timeline.filters.drafts"
+    class="chip menu-button"
+    [class.has-active]="activeCount() > 0"
+    [matMenuTriggerFor]="valuesMenu"
   >
-    Brouillons seulement
+    <svg class="funnel" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <path d="M2.5 3h11l-4.2 5v4.5l-2.6-1.4V8z" />
+    </svg>
+    {{ filtersButtonText() }}
   </button>
-</div>
+}
 
-<div
-  class="group"
-  role="group"
-  aria-label="Période"
-  i18n-aria-label="Nom du groupe de période de la timeline@@timeline.filters.period"
+<button
+  type="button"
+  class="chip drafts"
+  [attr.aria-pressed]="filters().draftsOnly"
+  (click)="toggleDrafts()"
 >
-  @for (option of presets; track option) {
-    <button
-      type="button"
-      class="chip"
-      [attr.aria-pressed]="option === preset()"
-      [attr.title]="periodName(option)"
-      (click)="choosePeriod(option)"
+  <svg class="pen" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+    <path d="M3 13l1-4 7-7 3 3-7 7z" />
+  </svg>
+  <span i18n="Puce brouillons seulement de la timeline@@timeline.filters.drafts"
+    >Brouillons seulement</span
+  >
+</button>
+
+<mat-menu #valuesMenu="matMenu" class="timeline-values-menu">
+  @if (emotionChips().length) {
+    <div
+      role="group"
+      aria-label="Émotions"
+      i18n-aria-label="Nom du groupe de puces d'émotion de la timeline@@timeline.filters.emotions"
     >
-      {{ periodText(option) }}
-    </button>
+      <div
+        class="menu-heading"
+        aria-hidden="true"
+        i18n="
+          Titre visible du groupe d'émotions du menu des filtres@@timeline.filters.emotionsHeading"
+      >
+        Émotions
+      </div>
+      @for (chip of emotionChips(); track chip.value) {
+        <button
+          mat-menu-item
+          type="button"
+          role="menuitemcheckbox"
+          [attr.aria-checked]="chip.selected"
+          [attr.data-emotion]="chip.value"
+          (click)="toggleEmotion(chip.value)"
+        >
+          <span class="menu-row">
+            <span class="check" [class.on]="chip.selected" aria-hidden="true"></span>
+            <span [class]="familyClass(chip.value)" aria-hidden="true"></span>
+            <span class="menu-label">{{ chip.label }}</span>
+            @if (counted()) {
+              <span class="menu-count"> {{ chip.count }}</span>
+            }
+          </span>
+        </button>
+      }
+    </div>
   }
-  @if (customPeriod(); as period) {
-    <span class="custom">{{ period }}</span>
+  @if (tagChips().length) {
+    <div
+      role="group"
+      aria-label="Tags"
+      i18n-aria-label="Nom du groupe de puces de tag de la timeline@@timeline.filters.tags"
+    >
+      <div
+        class="menu-heading"
+        aria-hidden="true"
+        i18n="Titre visible du groupe de tags du menu des filtres@@timeline.filters.tagsHeading"
+      >
+        Tags
+      </div>
+      @for (chip of tagChips(); track chip.value) {
+        <button
+          mat-menu-item
+          type="button"
+          role="menuitemcheckbox"
+          [attr.aria-checked]="chip.selected"
+          [attr.data-tag]="chip.value"
+          (click)="toggleTag(chip.value)"
+        >
+          <span class="menu-row">
+            <span class="check" [class.on]="chip.selected" aria-hidden="true"></span>
+            <span class="menu-label">{{ chip.label }}</span>
+            @if (counted()) {
+              <span class="menu-count"> {{ chip.count }}</span>
+            }
+          </span>
+        </button>
+      }
+    </div>
   }
-</div>
+</mat-menu>

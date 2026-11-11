@@ -31,8 +31,10 @@
 
 .toggle {
   display: flex;
+  // Petit écran ou police large : l'en-tête passe à la ligne au lieu de déborder.
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 4px 10px;
   width: 100%;
   min-height: 48px;
   padding: 8px 14px;
@@ -68,7 +70,7 @@
 }
 
 .title {
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -76,6 +78,8 @@
 }
 
 .count {
+  flex: none;
+  margin-left: auto;
   color: var(--text-secondary);
   font-family: var(--font-mono);
   font-size: 12px;
@@ -190,4 +194,46 @@
 
 .outside-note {
   grid-area: summary;
+}
+
+// En-tête (maquette 03, état B) : horaires · durée · modalité, puis « non clôturée ».
+// Horaires · durée · modalité : jamais coupés par des points de suspension ; à 320 px ou au zoom
+// 200 %, ils passent à la ligne (l'en-tête lui-même se replie, .toggle en flex-wrap).
+.header-facts {
+  flex: 0 1 auto;
+  min-width: 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-medium);
+  overflow-wrap: anywhere;
+}
+
+.header-open {
+  flex: none;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--warning-bg);
+  color: var(--warning);
+  font: var(--mat-sys-label-small);
+}
+
+.more-sessions {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 0;
+}
+
+.show-more {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: var(--mat-sys-label-large);
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
 }

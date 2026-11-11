@@ -61,7 +61,7 @@
   width: 100%;
   height: auto;
   font-family: var(--font-ui);
-  font-size: 10px;
+  font-size: 11px;
 
   text,
   .seg,
@@ -152,6 +152,11 @@
 
 .band-label {
   fill: var(--entry-situation);
+}
+
+// Libellé tronqué : son infobulle (<title>) donne le nom complet au survol.
+.chart .band-label {
+  pointer-events: auto;
 }
 
 .hit {

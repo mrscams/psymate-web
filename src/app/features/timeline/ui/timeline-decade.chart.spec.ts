@@ -149,6 +149,28 @@ describe('decadeChart', () => {
     expect(career.y).toBeGreaterThan(conflict.y);
     expect(chart.height).toBeGreaterThan(career.y + 14);
   });
+
+  it('bandes : une par ligne, même sans chevauchement (deux libellés ne se recouvrent jamais)', () => {
+    const chart = decadeChart({
+      plage: { start: m('2024-01'), end: m('2026-10') },
+      periods: monthlySummary(34, '2026-10'),
+      types: ['note'],
+      intensity: false,
+      followStart: null,
+      situations: [
+        situation('b', '2025-06-01T00:00:00Z', '2025-09-01T00:00:00Z'),
+        situation('a', '2024-02-01T00:00:00Z', '2024-05-01T00:00:00Z'),
+        situation('c', '2026-01-01T00:00:00Z', null, true),
+      ],
+    });
+    // De la plus ancienne à la plus récente, une ligne chacune.
+    expect(chart.bands.map((band) => [band.item.id, band.lane])).toEqual([
+      ['a', 0],
+      ['b', 1],
+      ['c', 2],
+    ]);
+    expect(new Set(chart.bands.map((band) => band.y)).size).toBe(3);
+  });
 });
 
 describe('intensityTrend', () => {

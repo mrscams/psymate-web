@@ -5,6 +5,7 @@ import {
   groupKey,
   layoutBands,
   saidInSession,
+  sessionEntryCounts,
   TimelineWindow,
   windowCount,
   windowOffset,
@@ -34,6 +35,24 @@ describe('timeline.model', () => {
       expect(windowCount(1001, [])).toBe(6);
       expect(windowCount(0, [])).toBe(0);
       expect(windowSize(4, [], 950)).toBe(150);
+    });
+  });
+
+  describe('cartes de séance', () => {
+    it('sessionEntryCounts : entrées rattachées par séance, fenêtres chargées seulement', () => {
+      const loaded: TimelineWindow = {
+        index: 0,
+        status: 'loaded',
+        items: [
+          timelineItem({ id: 'a', sessionId: 's-1' }),
+          timelineItem({ id: 'b', sessionId: 's-1' }),
+          timelineItem({ id: 'c', sessionId: 's-2' }),
+          timelineItem({ id: 's-1', type: 'session', sessionId: null }),
+        ],
+        problem: null,
+      };
+      const loading: TimelineWindow = { ...loaded, index: 1, status: 'loading' };
+      expect(sessionEntryCounts([loaded, loading])).toEqual({ 's-1': 2, 's-2': 1 });
     });
   });
 
@@ -144,6 +163,8 @@ describe('timeline.model', () => {
       expect(rows.map((row) => row.bands[0])).toEqual([true, true, false, false]);
       expect(rows[0].bandHeads[0]?.item.id).toBe('reorg');
       expect(rows[1].bandHeads[0]).toBeNull();
+      // Le libellé vertical a la place des deux lignes que la bande couvre depuis sa tête.
+      expect(rows.map((row) => row.bandRuns[0])).toEqual([2, 0, 0, 0]);
     });
 
     it('« Début du suivi » une seule fois, même quand la fenêtre précédente n’est pas en mémoire', () => {

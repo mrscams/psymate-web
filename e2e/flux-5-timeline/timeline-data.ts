@@ -103,6 +103,8 @@ export interface StoryPatient {
   /** Titre → identifiant des entrées nommées. */
   ids: Record<string, string>;
   sessionRecent: string;
+  /** Première séance, il y a 400 jours (hors de la période par défaut de 90 j). */
+  sessionFirst: string;
 }
 
 /**
@@ -169,7 +171,7 @@ export async function storyPatient(api: APIRequestContext): Promise<StoryPatient
     },
     sessionId: first,
   });
-  return { id, ids, sessionRecent: recent };
+  return { id, ids, sessionRecent: recent, sessionFirst: first };
 }
 
 /**

@@ -19625,19 +19625,43 @@
         </context-group>
         <note priority="1" from="description">Nom de la barre d&apos;outils de la timeline</note>
       </trans-unit>
+      <trans-unit id="timeline.periodLabel" datatype="html">
+        <source>Période</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+        <note priority="1" from="description">Libellé visible du groupe de période de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.modeLabel" datatype="html">
+        <source>Mode</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">45,49</context>
+        </context-group>
+        <note priority="1" from="description">Libellé visible de la bascule de mode de la timeline</note>
+      </trans-unit>
       <trans-unit id="timeline.zoomGroup" datatype="html">
         <source>Zoom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <note priority="1" from="description">Nom du groupe de zoom de la timeline</note>
       </trans-unit>
-      <trans-unit id="timeline.zoomHint" datatype="html">
-        <source>Ctrl + molette</source>
+      <trans-unit id="timeline.zoomLabel" datatype="html">
+        <source>Zoom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">68,73</context>
+          <context context-type="linenumber">65,69</context>
+        </context-group>
+        <note priority="1" from="description">Libellé visible du zoom de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.zoomWheel" datatype="html">
+        <source>+ molette</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">94,98</context>
         </context-group>
         <note priority="1" from="description">Aide du zoom à la molette</note>
       </trans-unit>
@@ -19645,7 +19669,7 @@
         <source>Impossible de charger la timeline</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">85,86</context>
+          <context context-type="linenumber">111,112</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;erreur de la timeline</note>
       </trans-unit>
@@ -19653,7 +19677,7 @@
         <source>Aucune entrée pour ces filtres</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">94,95</context>
+          <context context-type="linenumber">120,121</context>
         </context-group>
         <note priority="1" from="description">Titre de la timeline vide avec des filtres</note>
       </trans-unit>
@@ -19661,15 +19685,31 @@
         <source>Retirez un filtre ou élargissez la période.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">96,98</context>
+          <context context-type="linenumber">122,124</context>
         </context-group>
         <note priority="1" from="description">Texte de la timeline vide avec des filtres</note>
+      </trans-unit>
+      <trans-unit id="timeline.empty.period.title" datatype="html">
+        <source>Aucune entrée sur cette période</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">130,132</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la timeline vide sur la période choisie</note>
+      </trans-unit>
+      <trans-unit id="timeline.empty.period.message" datatype="html">
+        <source>Les entrées plus anciennes restent visibles avec la période « Tout ».</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
+          <context context-type="linenumber">133,135</context>
+        </context-group>
+        <note priority="1" from="description">Texte de la timeline vide sur la période choisie</note>
       </trans-unit>
       <trans-unit id="timeline.empty.title" datatype="html">
         <source>Aucune entrée pour l&apos;instant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">103,104</context>
+          <context context-type="linenumber">140,141</context>
         </context-group>
         <note priority="1" from="description">Titre de la timeline vide</note>
       </trans-unit>
@@ -19677,7 +19717,7 @@
         <source>Notez la première dans la barre de capture, en haut du dossier (N).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">105,106</context>
+          <context context-type="linenumber">142,143</context>
         </context-group>
         <note priority="1" from="description">Texte de la timeline vide</note>
       </trans-unit>
@@ -19685,11 +19725,11 @@
         <source>{VAR_PLURAL, plural, =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">116,120</context>
+          <context context-type="linenumber">153,157</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">178,182</context>
+          <context context-type="linenumber">216,220</context>
         </context-group>
         <note priority="1" from="description">Nombre d&apos;entrées de la ligne d&apos;état de la timeline</note>
       </trans-unit>
@@ -19697,7 +19737,7 @@
         <source>{VAR_PLURAL, plural, =0 {aucune séance} =1 {1 séance} other {<x id="INTERPOLATION"/> séances}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">121,128</context>
+          <context context-type="linenumber">158,165</context>
         </context-group>
         <note priority="1" from="description">Nombre de séances de la ligne d&apos;état de la timeline</note>
       </trans-unit>
@@ -19705,7 +19745,7 @@
         <source>Regroupement des <x id="INTERPOLATION" equiv-text="{{ headSize }}"/> entrées les plus récentes : réduisez la période pour les plus anciennes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">132,134</context>
+          <context context-type="linenumber">169,171</context>
         </context-group>
         <note priority="1" from="description">Regroupement limité aux entrées les plus récentes</note>
       </trans-unit>
@@ -19713,11 +19753,11 @@
         <source>Cette partie de la timeline n&apos;a pas pu être chargée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">142,143</context>
+          <context context-type="linenumber">179,180</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">289,290</context>
+          <context context-type="linenumber">337,338</context>
         </context-group>
         <note priority="1" from="description">Message d&apos;une fenêtre de la timeline en échec</note>
       </trans-unit>
@@ -19725,7 +19765,7 @@
         <source>{VAR_PLURAL, plural, =1 {1 fenêtre en mémoire} other {<x id="INTERPOLATION"/> fenêtres en mémoire}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">183,189</context>
+          <context context-type="linenumber">221,227</context>
         </context-group>
         <note priority="1" from="description">Fenêtres en mémoire de la ligne d&apos;état de la timeline</note>
       </trans-unit>
@@ -19733,7 +19773,7 @@
         <source>Situations sur la période</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">197,198</context>
+          <context context-type="linenumber">235,236</context>
         </context-group>
         <note priority="1" from="description">Nom de la liste des situations en bande</note>
       </trans-unit>
@@ -19741,7 +19781,7 @@
         <source>en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">209,214</context>
+          <context context-type="linenumber">251,256</context>
         </context-group>
         <note priority="1" from="description">Mention d&apos;une situation en cours</note>
       </trans-unit>
@@ -19749,7 +19789,7 @@
         <source>Avant le suivi</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">266,270</context>
+          <context context-type="linenumber">313,317</context>
         </context-group>
         <note priority="1" from="description">Titre de la zone avant le suivi</note>
       </trans-unit>
@@ -19757,7 +19797,7 @@
         <source>Ouvrir</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">309,311</context>
+          <context context-type="linenumber">357,359</context>
         </context-group>
         <note priority="1" from="description">Action Ouvrir du menu d&apos;une carte</note>
       </trans-unit>
@@ -19765,7 +19805,7 @@
         <source>Entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">312,316</context>
+          <context context-type="linenumber">360,364</context>
         </context-group>
         <note priority="1" from="description">Raccourci de l&apos;action Ouvrir</note>
       </trans-unit>
@@ -19773,7 +19813,7 @@
         <source>Corriger</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">319,321</context>
+          <context context-type="linenumber">367,369</context>
         </context-group>
         <note priority="1" from="description">Action Corriger du menu d&apos;une carte</note>
       </trans-unit>
@@ -19781,7 +19821,7 @@
         <source>crée une version</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">322,326</context>
+          <context context-type="linenumber">370,374</context>
         </context-group>
         <note priority="1" from="description">Aide de l&apos;action Corriger</note>
       </trans-unit>
@@ -19789,7 +19829,7 @@
         <source>Lier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">330,332</context>
+          <context context-type="linenumber">378,380</context>
         </context-group>
         <note priority="1" from="description">Action Lier du menu d&apos;une carte</note>
       </trans-unit>
@@ -19797,7 +19837,7 @@
         <source>L</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">333,335</context>
+          <context context-type="linenumber">381,383</context>
         </context-group>
         <note priority="1" from="description">Raccourci de l&apos;action Lier</note>
       </trans-unit>
@@ -19805,7 +19845,7 @@
         <source>Voir dans le graphe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">340,342</context>
+          <context context-type="linenumber">388,390</context>
         </context-group>
         <note priority="1" from="description">Action Voir dans le graphe du menu d&apos;une carte</note>
       </trans-unit>
@@ -19813,7 +19853,7 @@
         <source>onglet 3</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
-          <context context-type="linenumber">343,349</context>
+          <context context-type="linenumber">391,397</context>
         </context-group>
         <note priority="1" from="description">Aide de l&apos;action Voir dans le graphe</note>
       </trans-unit>
@@ -19821,39 +19861,47 @@
         <source>Effacer les filtres</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">192</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;état vide filtré de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.empty.showAll" datatype="html">
+        <source>Afficher tout</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">198</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;état vide de la timeline sur une période</note>
       </trans-unit>
       <trans-unit id="timeline.retry" datatype="html">
         <source>Réessayer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">203</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.ts</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">180</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;état erreur de la timeline</note>
       </trans-unit>
-      <trans-unit id="timeline.status.bounds" datatype="html">
-        <source>Fenêtre : <x id="oldest" equiv-text="oldest"/> → <x id="newest" equiv-text="newest"/></source>
+      <trans-unit id="timeline.status.current" datatype="html">
+        <source>fenêtre courante <x id="newest" equiv-text="newest"/> → <x id="oldest" equiv-text="oldest"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="linenumber">217</context>
         </context-group>
-        <note priority="1" from="description">Bornes de la fenêtre courante de la timeline</note>
+        <note priority="1" from="description">Bornes de la fenêtre courante de la timeline, de la plus récente à la plus ancienne</note>
       </trans-unit>
       <trans-unit id="timeline.followStart" datatype="html">
         <source>Début du suivi · <x id="date" equiv-text="date"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">206</context>
+          <context context-type="linenumber">254</context>
         </context-group>
         <note priority="1" from="description">Marqueur de début du suivi dans la timeline</note>
       </trans-unit>
@@ -19861,7 +19909,7 @@
         <source>Entrées du patient, de la plus récente à la plus ancienne</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">213</context>
+          <context context-type="linenumber">265</context>
         </context-group>
         <note priority="1" from="description">Nom de la liste des cartes de la timeline</note>
       </trans-unit>
@@ -19869,7 +19917,7 @@
         <source>Zoom avant (+)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">214</context>
+          <context context-type="linenumber">266</context>
         </context-group>
         <note priority="1" from="description">Bouton de zoom avant de la timeline</note>
       </trans-unit>
@@ -19877,7 +19925,7 @@
         <source>Zoom arrière (−)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">267</context>
         </context-group>
         <note priority="1" from="description">Bouton de zoom arrière de la timeline</note>
       </trans-unit>
@@ -19885,7 +19933,7 @@
         <source>Chronologique ou par séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">216</context>
+          <context context-type="linenumber">268</context>
         </context-group>
         <note priority="1" from="description">Aide du raccourci de la bascule de mode de la timeline</note>
       </trans-unit>
@@ -19893,7 +19941,7 @@
         <source>Aller aux filtres de la timeline</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">217</context>
+          <context context-type="linenumber">269</context>
         </context-group>
         <note priority="1" from="description">Aide du raccourci des filtres de la timeline</note>
       </trans-unit>
@@ -19901,7 +19949,7 @@
         <source>Vue décennie : revenez au détail (zoom avant, +) pour regrouper par séance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">218</context>
+          <context context-type="linenumber">270</context>
         </context-group>
         <note priority="1" from="description">Information quand Par séance est demandé en vue décennie</note>
       </trans-unit>
@@ -19909,15 +19957,23 @@
         <source>Revenir à l&apos;agrégat par mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">219</context>
+          <context context-type="linenumber">271</context>
         </context-group>
         <note priority="1" from="description">Aide du raccourci Échap après un double-clic sur un mois</note>
+      </trans-unit>
+      <trans-unit id="timeline.focus.periodWidened" datatype="html">
+        <source>Période élargie à « Tout » pour afficher l&apos;entrée demandée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">512</context>
+        </context-group>
+        <note priority="1" from="description">Information quand la période par défaut excluait l&apos;entrée demandée</note>
       </trans-unit>
       <trans-unit id="timeline.focus.filtersCleared" datatype="html">
         <source>Filtres retirés pour afficher l&apos;entrée demandée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">410</context>
+          <context context-type="linenumber">522</context>
         </context-group>
         <note priority="1" from="description">Information quand les filtres excluaient l&apos;entrée demandée</note>
       </trans-unit>
@@ -19925,15 +19981,31 @@
         <source>Mode appliqué à cet écran seulement : la préférence n&apos;a pas pu être enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">570</context>
+          <context context-type="linenumber">699</context>
         </context-group>
         <note priority="1" from="description">Avertissement quand la préférence de mode n&apos;a pas pu être enregistrée</note>
+      </trans-unit>
+      <trans-unit id="timeline.lane.ongoing" datatype="html">
+        <source><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/> · en cours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">899</context>
+        </context-group>
+        <note priority="1" from="description">Libellé vertical d&apos;une bande de situation en cours</note>
+      </trans-unit>
+      <trans-unit id="timeline.lane.closed" datatype="html">
+        <source><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
+          <context context-type="linenumber">900</context>
+        </context-group>
+        <note priority="1" from="description">Libellé vertical d&apos;une bande de situation terminée</note>
       </trans-unit>
       <trans-unit id="timeline.band.ongoing" datatype="html">
         <source>Situation <x id="title" equiv-text="title"/>, <x id="when" equiv-text="when"/>, en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">747</context>
+          <context context-type="linenumber">916</context>
         </context-group>
         <note priority="1" from="description">Nom accessible d&apos;une bande de situation en cours</note>
       </trans-unit>
@@ -19941,15 +20013,15 @@
         <source>Situation <x id="title" equiv-text="title"/>, <x id="when" equiv-text="when"/>, terminée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
-          <context context-type="linenumber">748</context>
+          <context context-type="linenumber">917</context>
         </context-group>
         <note priority="1" from="description">Nom accessible d&apos;une bande de situation terminée</note>
       </trans-unit>
       <trans-unit id="timeline.card.precision" datatype="html">
-        <source>précision : <x id="INTERPOLATION" equiv-text="{{ precision() }}"/></source>
+        <source>précision : <x id="INTERPOLATION" equiv-text="{{ label }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.html</context>
-          <context context-type="linenumber">33,35</context>
+          <context context-type="linenumber">67,69</context>
         </context-group>
         <note priority="1" from="description">Mention de la précision d&apos;une date</note>
       </trans-unit>
@@ -19957,15 +20029,31 @@
         <source>Brouillon</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <note priority="1" from="description">Statut brouillon d&apos;une carte de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.notClosed" datatype="html">
+        <source>non clôturée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+        <note priority="1" from="description">Statut d&apos;une séance non clôturée, sur sa carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.ongoing" datatype="html">
+        <source>en cours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">164</context>
+        </context-group>
+        <note priority="1" from="description">Statut d&apos;une situation en cours, sur sa carte</note>
       </trans-unit>
       <trans-unit id="timeline.card.menu" datatype="html">
         <source>Actions sur « <x id="title" equiv-text="this.title()"/> » (Maj+F10)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">168</context>
         </context-group>
         <note priority="1" from="description">Bouton du menu d&apos;une carte de la timeline</note>
       </trans-unit>
@@ -19973,7 +20061,7 @@
         <source>dit en séance du <x id="date" equiv-text="date"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">172</context>
         </context-group>
         <note priority="1" from="description">Pastille d&apos;une entrée dite en séance un autre jour</note>
       </trans-unit>
@@ -19981,7 +20069,7 @@
         <source>1 lien</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">177</context>
         </context-group>
         <note priority="1" from="description">Nombre de liens d&apos;une carte</note>
       </trans-unit>
@@ -19989,15 +20077,39 @@
         <source><x id="count" equiv-text="count"/> liens</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">178</context>
         </context-group>
         <note priority="1" from="description">Nombre de liens d&apos;une carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.entry" datatype="html">
+        <source>1 entrée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">184</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;entrées d&apos;une séance, sur sa carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.noEntry" datatype="html">
+        <source>aucune entrée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">186</context>
+        </context-group>
+        <note priority="1" from="description">Séance sans entrée, sur sa carte</note>
+      </trans-unit>
+      <trans-unit id="timeline.card.entries" datatype="html">
+        <source><x id="count" equiv-text="value"/> entrées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
+          <context context-type="linenumber">187</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;entrées d&apos;une séance, sur sa carte</note>
       </trans-unit>
       <trans-unit id="timeline.card.moreTags" datatype="html">
         <source>+<x id="count" equiv-text="count"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">191</context>
         </context-group>
         <note priority="1" from="description">Tags non affichés d&apos;une carte</note>
       </trans-unit>
@@ -20085,7 +20197,7 @@
         <source>Légende</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="linenumber">198</context>
         </context-group>
         <note priority="1" from="description">Nom de la légende de la vue décennie</note>
       </trans-unit>
@@ -20093,7 +20205,7 @@
         <source>Intensité moyenne des ressentis (axe droit, 0–10)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">206,210</context>
+          <context context-type="linenumber">207,211</context>
         </context-group>
         <note priority="1" from="description">Légende de la courbe d&apos;intensité</note>
       </trans-unit>
@@ -20101,7 +20213,7 @@
         <source>Situations longues</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">214,219</context>
+          <context context-type="linenumber">215,220</context>
         </context-group>
         <note priority="1" from="description">Légende des bandes de situations</note>
       </trans-unit>
@@ -20109,7 +20221,7 @@
         <source> Survoler un mois : détail des comptes · double-clic : timeline au zoom « semaine » sur ce mois · Échap : retour </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">220,225</context>
+          <context context-type="linenumber">221,226</context>
         </context-group>
         <note priority="1" from="description">Aide des gestes de la vue décennie</note>
       </trans-unit>
@@ -20117,7 +20229,7 @@
         <source> Tableau des mois non vides (<x id="INTERPOLATION" equiv-text="{{ filled().length }}"/>) · Entrée ouvre le détail d&apos;un mois </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">226,227</context>
+          <context context-type="linenumber">227,228</context>
         </context-group>
         <note priority="1" from="description">Ouverture du tableau des mois de la vue décennie</note>
       </trans-unit>
@@ -20125,7 +20237,7 @@
         <source> Nombre d&apos;entrées par type et intensité moyenne des ressentis, mois par mois </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">234,238</context>
+          <context context-type="linenumber">235,239</context>
         </context-group>
         <note priority="1" from="description">Légende du tableau des mois de la vue décennie</note>
       </trans-unit>
@@ -20133,7 +20245,7 @@
         <source> Mois </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">239,241</context>
+          <context context-type="linenumber">240,242</context>
         </context-group>
         <note priority="1" from="description">Colonne des mois de la vue décennie</note>
       </trans-unit>
@@ -20141,7 +20253,7 @@
         <source> Intensité moyenne </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">249,252</context>
+          <context context-type="linenumber">250,253</context>
         </context-group>
         <note priority="1" from="description">Colonne de l&apos;intensité moyenne, vue décennie</note>
       </trans-unit>
@@ -20149,7 +20261,7 @@
         <source>aucun ressenti</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
-          <context context-type="linenumber">279,282</context>
+          <context context-type="linenumber">280,283</context>
         </context-group>
         <note priority="1" from="description">Mois sans ressenti, vue décennie</note>
       </trans-unit>
@@ -20157,7 +20269,7 @@
         <source>début du suivi · <x id="month" equiv-text="month"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">169</context>
         </context-group>
         <note priority="1" from="description">Marqueur de début du suivi sur l&apos;agrégat par mois</note>
       </trans-unit>
@@ -20165,7 +20277,7 @@
         <source>Agrégats par mois de <x id="start" equiv-text="start"/> à <x id="end" equiv-text="end"/> : <x id="entries" equiv-text="entries"/> entrées sur <x id="months" equiv-text="months"/> mois non vides, barres empilées par type.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">179</context>
         </context-group>
         <note priority="1" from="description">Résumé du graphique de la vue décennie</note>
       </trans-unit>
@@ -20173,7 +20285,7 @@
         <source>Intensité moyenne des ressentis de <x id="min" equiv-text="min"/> à <x id="max" equiv-text="max"/><x id="trend" equiv-text="trend"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">189</context>
         </context-group>
         <note priority="1" from="description">Résumé de la courbe d&apos;intensité de la vue décennie</note>
       </trans-unit>
@@ -20181,7 +20293,7 @@
         <source>Situations longues : <x id="count" equiv-text="count"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">196</context>
         </context-group>
         <note priority="1" from="description">Nombre de bandes de situations longues de la vue décennie</note>
       </trans-unit>
@@ -20189,7 +20301,7 @@
         <source>, en hausse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">193</context>
+          <context context-type="linenumber">205</context>
         </context-group>
         <note priority="1" from="description">Tendance de l&apos;intensité moyenne, vue décennie</note>
       </trans-unit>
@@ -20197,7 +20309,7 @@
         <source>, en baisse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">207</context>
         </context-group>
         <note priority="1" from="description">Tendance de l&apos;intensité moyenne, vue décennie</note>
       </trans-unit>
@@ -20205,7 +20317,7 @@
         <source>, stable</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="linenumber">209</context>
         </context-group>
         <note priority="1" from="description">Tendance de l&apos;intensité moyenne, vue décennie</note>
       </trans-unit>
@@ -20213,7 +20325,7 @@
         <source><x id="month" equiv-text="label"/>, voir le détail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">224</context>
         </context-group>
         <note priority="1" from="description">Nom du bouton qui ouvre un mois en détail, vue décennie</note>
       </trans-unit>
@@ -20221,7 +20333,7 @@
         <source><x id="month" equiv-text="label"/> : aucune entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">235</context>
         </context-group>
         <note priority="1" from="description">Info-bulle d&apos;un mois vide, vue décennie</note>
       </trans-unit>
@@ -20229,7 +20341,7 @@
         <source><x id="type" equiv-text="type"/> <x id="count" equiv-text="count"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">229</context>
+          <context context-type="linenumber">241</context>
         </context-group>
         <note priority="1" from="description">Compte d&apos;un type dans l&apos;info-bulle d&apos;un mois, vue décennie</note>
       </trans-unit>
@@ -20237,7 +20349,7 @@
         <source><x id="month" equiv-text="label"/> : <x id="counts" equiv-text="counts"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">234</context>
+          <context context-type="linenumber">246</context>
         </context-group>
         <note priority="1" from="description">Info-bulle d&apos;un mois, vue décennie</note>
       </trans-unit>
@@ -20245,7 +20357,7 @@
         <source><x id="month" equiv-text="label"/> : <x id="counts" equiv-text="counts"/> · intensité moyenne <x id="value" equiv-text="value"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">237</context>
+          <context context-type="linenumber">249</context>
         </context-group>
         <note priority="1" from="description">Info-bulle d&apos;un mois avec intensité, vue décennie</note>
       </trans-unit>
@@ -20253,7 +20365,7 @@
         <source><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">252</context>
+          <context context-type="linenumber">268</context>
         </context-group>
         <note priority="1" from="description">Libellé d&apos;une bande de situation (titre et bornes), vue décennie</note>
       </trans-unit>
@@ -20261,65 +20373,105 @@
         <source><x id="name" equiv-text="name"/> · en cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
-          <context context-type="linenumber">255</context>
+          <context context-type="linenumber">271</context>
         </context-group>
         <note priority="1" from="description">Libellé d&apos;une bande de situation en cours, vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.typesLabel" datatype="html">
+        <source>Types</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
+          <context context-type="linenumber">3,10</context>
+        </context-group>
+        <note priority="1" from="description">Libellé visible des puces de type de la timeline</note>
       </trans-unit>
       <trans-unit id="timeline.filters.types" datatype="html">
         <source>Types</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <note priority="1" from="description">Nom du groupe de puces de type de la timeline</note>
       </trans-unit>
       <trans-unit id="timeline.filters.allTypes" datatype="html">
-        <source> Tous </source>
+        <source>Tous</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
-          <context context-type="linenumber">14,18</context>
+          <context context-type="linenumber">15,18</context>
         </context-group>
         <note priority="1" from="description">Puce de tous les types de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.active" datatype="html">
+        <source>Filtres actifs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
+          <context context-type="linenumber">44,45</context>
+        </context-group>
+        <note priority="1" from="description">Nom du groupe des puces d&apos;émotion et de tag actives</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.drafts" datatype="html">
+        <source>Brouillons seulement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
+          <context context-type="linenumber">107,111</context>
+        </context-group>
+        <note priority="1" from="description">Puce brouillons seulement de la timeline</note>
       </trans-unit>
       <trans-unit id="timeline.filters.emotions" datatype="html">
         <source>Émotions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
-          <context context-type="linenumber">37,38</context>
+          <context context-type="linenumber">115,116</context>
         </context-group>
         <note priority="1" from="description">Nom du groupe de puces d&apos;émotion de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.emotionsHeading" datatype="html">
+        <source> Émotions </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
+          <context context-type="linenumber">124,128</context>
+        </context-group>
+        <note priority="1" from="description">Titre visible du groupe d&apos;émotions du menu des filtres</note>
       </trans-unit>
       <trans-unit id="timeline.filters.tags" datatype="html">
         <source>Tags</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <note priority="1" from="description">Nom du groupe de puces de tag de la timeline</note>
       </trans-unit>
-      <trans-unit id="timeline.filters.drafts" datatype="html">
-        <source> Brouillons seulement </source>
+      <trans-unit id="timeline.filters.tagsHeading" datatype="html">
+        <source> Tags </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
-          <context context-type="linenumber">90,97</context>
+          <context context-type="linenumber">158,162</context>
         </context-group>
-        <note priority="1" from="description">Puce brouillons seulement de la timeline</note>
+        <note priority="1" from="description">Titre visible du groupe de tags du menu des filtres</note>
       </trans-unit>
-      <trans-unit id="timeline.filters.period" datatype="html">
-        <source>Période</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
-          <context context-type="linenumber">98</context>
-        </context-group>
-        <note priority="1" from="description">Nom du groupe de période de la timeline</note>
-      </trans-unit>
-      <trans-unit id="timeline.period.custom" datatype="html">
-        <source>Du <x id="start" equiv-text="start"/> au <x id="end" equiv-text="end"/></source>
+      <trans-unit id="timeline.filters.menuCount" datatype="html">
+        <source>Filtres (<x id="count" equiv-text="count"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.ts</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">111</context>
         </context-group>
-        <note priority="1" from="description">Période libre des filtres de la timeline</note>
+        <note priority="1" from="description">Bouton du menu des filtres d&apos;émotion et de tag, avec le nombre de filtres actifs</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.menu" datatype="html">
+        <source>Filtres</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du menu des filtres d&apos;émotion et de tag</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.remove" datatype="html">
+        <source><x id="text" equiv-text="text"/>, retirer le filtre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;une puce de filtre active de la timeline</note>
       </trans-unit>
       <trans-unit id="timeline.precision.exact" datatype="html">
         <source>exacte</source>
@@ -20513,11 +20665,43 @@
         </context-group>
         <note priority="1" from="description">Modalité d&apos;une séance</note>
       </trans-unit>
+      <trans-unit id="timeline.modalityShort.inPerson" datatype="html">
+        <source>cabinet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+        <note priority="1" from="description">Modalité courte d&apos;une séance (en-tête, carte)</note>
+      </trans-unit>
+      <trans-unit id="timeline.modalityShort.video" datatype="html">
+        <source>visio</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <note priority="1" from="description">Modalité courte d&apos;une séance (en-tête, carte)</note>
+      </trans-unit>
+      <trans-unit id="timeline.modalityShort.phone" datatype="html">
+        <source>téléphone</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+        <note priority="1" from="description">Modalité courte d&apos;une séance (en-tête, carte)</note>
+      </trans-unit>
+      <trans-unit id="timeline.modalityShort.email" datatype="html">
+        <source>e-mail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+        <note priority="1" from="description">Modalité courte d&apos;une séance (en-tête, carte)</note>
+      </trans-unit>
       <trans-unit id="timeline.sessionKind.intake" datatype="html">
         <source>Séance d&apos;accueil</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">192</context>
         </context-group>
         <note priority="1" from="description">Genre d&apos;une séance</note>
       </trans-unit>
@@ -20525,7 +20709,7 @@
         <source>Contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">194</context>
         </context-group>
         <note priority="1" from="description">Genre d&apos;une séance</note>
       </trans-unit>
@@ -20533,7 +20717,7 @@
         <source>Séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">196</context>
         </context-group>
         <note priority="1" from="description">Genre d&apos;une séance</note>
       </trans-unit>
@@ -20541,7 +20725,7 @@
         <source><x id="value" equiv-text="value"/> min</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
-          <context context-type="linenumber">187</context>
+          <context context-type="linenumber">203</context>
         </context-group>
         <note priority="1" from="description">Durée d&apos;une séance en minutes</note>
       </trans-unit>
@@ -20549,7 +20733,7 @@
         <source>Décennie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">250</context>
         </context-group>
         <note priority="1" from="description">Granularité du zoom de la timeline en vue décennie</note>
       </trans-unit>
@@ -20557,7 +20741,7 @@
         <source>Notes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
-          <context context-type="linenumber">230</context>
+          <context context-type="linenumber">257</context>
         </context-group>
         <note priority="1" from="description">Type d&apos;entrée au pluriel, vue décennie</note>
       </trans-unit>
@@ -20565,7 +20749,7 @@
         <source>Événements</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
-          <context context-type="linenumber">232</context>
+          <context context-type="linenumber">259</context>
         </context-group>
         <note priority="1" from="description">Type d&apos;entrée au pluriel, vue décennie</note>
       </trans-unit>
@@ -20573,7 +20757,7 @@
         <source>Situations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
-          <context context-type="linenumber">234</context>
+          <context context-type="linenumber">261</context>
         </context-group>
         <note priority="1" from="description">Type d&apos;entrée au pluriel, vue décennie</note>
       </trans-unit>
@@ -20581,7 +20765,7 @@
         <source>Ressentis</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
-          <context context-type="linenumber">236</context>
+          <context context-type="linenumber">263</context>
         </context-group>
         <note priority="1" from="description">Type d&apos;entrée au pluriel, vue décennie</note>
       </trans-unit>
@@ -20589,7 +20773,7 @@
         <source>Séances</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
-          <context context-type="linenumber">238</context>
+          <context context-type="linenumber">265</context>
         </context-group>
         <note priority="1" from="description">Type d&apos;entrée au pluriel, vue décennie</note>
       </trans-unit>
@@ -20597,7 +20781,7 @@
         <source>Médicaments</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">267</context>
         </context-group>
         <note priority="1" from="description">Type d&apos;entrée au pluriel, vue décennie</note>
       </trans-unit>
@@ -20613,15 +20797,40 @@
         <source>Revenez au détail (zoom avant, +) pour regrouper par séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-mode.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">98</context>
         </context-group>
         <note priority="1" from="description">Aide du bouton Par séance désactivé en vue décennie</note>
+      </trans-unit>
+      <trans-unit id="timeline.filters.period" datatype="html">
+        <source>Période</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-period.component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">Nom du groupe de période de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.period.custom" datatype="html">
+        <source>Du <x id="start" equiv-text="start"/> au <x id="end" equiv-text="end"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-period.component.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+        <note priority="1" from="description">Période libre des filtres de la timeline</note>
+      </trans-unit>
+      <trans-unit id="timeline.session.notClosedShort" datatype="html">
+        <source>non clôturée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
+          <context context-type="linenumber">29,35</context>
+        </context-group>
+        <note priority="1" from="description">Statut d&apos;une séance non clôturée, dans son
+                    en-tête</note>
       </trans-unit>
       <trans-unit id="timeline.session.outside" datatype="html">
         <source>Hors séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
-          <context context-type="linenumber">23,28</context>
+          <context context-type="linenumber">37,42</context>
         </context-group>
         <note priority="1" from="description">Titre du groupe des entrées hors séance</note>
       </trans-unit>
@@ -20629,7 +20838,7 @@
         <source>{VAR_PLURAL, plural, =0 {aucune entrée} =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
-          <context context-type="linenumber">29,33</context>
+          <context context-type="linenumber">43,47</context>
         </context-group>
         <note priority="1" from="description">Nombre d&apos;entrées d&apos;une séance, dans son en-tête</note>
       </trans-unit>
@@ -20637,7 +20846,7 @@
         <source>Le détail de la séance n&apos;a pas pu être chargé.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
-          <context context-type="linenumber">53,54</context>
+          <context context-type="linenumber">67,68</context>
         </context-group>
         <note priority="1" from="description">Erreur du détail d&apos;une séance</note>
       </trans-unit>
@@ -20645,7 +20854,7 @@
         <source>Non clôturée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
-          <context context-type="linenumber">66,70</context>
+          <context context-type="linenumber">80,84</context>
         </context-group>
         <note priority="1" from="description">Statut d&apos;une séance non clôturée</note>
       </trans-unit>
@@ -20653,7 +20862,7 @@
         <source> Compte rendu </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
-          <context context-type="linenumber">75,77</context>
+          <context context-type="linenumber">89,91</context>
         </context-group>
         <note priority="1" from="description">Titre du compte rendu d&apos;une séance</note>
       </trans-unit>
@@ -20661,7 +20870,7 @@
         <source> Aucun compte rendu. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
-          <context context-type="linenumber">84,86</context>
+          <context context-type="linenumber">98,100</context>
         </context-group>
         <note priority="1" from="description">Séance sans compte rendu</note>
       </trans-unit>
@@ -20669,7 +20878,7 @@
         <source> Ouvrir </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
-          <context context-type="linenumber">93,95</context>
+          <context context-type="linenumber">107,109</context>
         </context-group>
         <note priority="1" from="description">Bouton Ouvrir une séance</note>
       </trans-unit>
@@ -20677,7 +20886,7 @@
         <source> Entrées dont la séance n&apos;est pas affichée (séance privée, ou en dehors des séances lues). </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
-          <context context-type="linenumber">105,109</context>
+          <context context-type="linenumber">119,123</context>
         </context-group>
         <note priority="1" from="description">Explication du groupe hors séance</note>
       </trans-unit>
@@ -20685,15 +20894,23 @@
         <source> Aucune entrée rattachée pour ces filtres. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
-          <context context-type="linenumber">127,132</context>
+          <context context-type="linenumber">141,146</context>
         </context-group>
         <note priority="1" from="description">Séance sans entrée rattachée</note>
+      </trans-unit>
+      <trans-unit id="timeline.sessions.more" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {Afficher la séance plus ancienne} other {Afficher les <x id="INTERPOLATION"/> séances plus anciennes}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
+          <context context-type="linenumber">155,163</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui affiche les séances plus anciennes du mode par séance</note>
       </trans-unit>
       <trans-unit id="timeline.session.title" datatype="html">
         <source><x id="kind" equiv-text="kind"/> du <x id="date" equiv-text="date"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.ts</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">150</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;une séance du mode par séance</note>
       </trans-unit>
@@ -20701,7 +20918,7 @@
         <source>Séances, de la plus récente à la plus ancienne</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.ts</context>
-          <context context-type="linenumber">154</context>
+          <context context-type="linenumber">192</context>
         </context-group>
         <note priority="1" from="description">Nom de la liste des séances de la timeline</note>
       </trans-unit>
@@ -20709,7 +20926,7 @@
         <source>Entrées de la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">193</context>
         </context-group>
         <note priority="1" from="description">Nom de la liste des entrées d&apos;une séance</note>
       </trans-unit>

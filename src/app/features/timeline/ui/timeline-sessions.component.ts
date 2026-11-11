@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   input,
@@ -18,13 +19,18 @@ import { TimelineCardComponent } from './timeline-card.component';
 import {
   durationLabel,
   modalityLabel,
+  modalityShortLabel,
   sessionHours,
   sessionKindLabel,
+  sessionRange,
   sessionLongDate,
 } from './timeline-labels';
 
 /** Clé de dépliage du groupe hors séance (sans identifiant). */
 const OUTSIDE = 'outside';
+
+/** Séances montrées d'abord (UX-B2 : pas 83 lignes) ; « Afficher les n plus anciennes » en ajoute. */
+export const SESSIONS_PAGE = 8;
 
 /**
  * Mode par séance (fiche 03, état B ; M3-03) : une carte dépliable par séance (forme du type
@@ -62,6 +68,11 @@ export class TimelineSessionsComponent {
   private readonly number = new Intl.NumberFormat(this.locale);
   private readonly open = signal<ReadonlySet<string>>(new Set());
   private initialized = false;
+  /** Nombre de séances montrées (les plus récentes). */
+  private readonly limit = signal(SESSIONS_PAGE);
+
+  protected readonly shown = computed(() => this.groups().slice(0, this.limit()));
+  protected readonly hidden = computed(() => Math.max(0, this.groups().length - this.limit()));
 
   constructor() {
     // À l'ouverture, la séance la plus récente est dépliée (fiche 03, B2).
@@ -76,8 +87,35 @@ export class TimelineSessionsComponent {
   /** Déplie une séance (null : le groupe hors séance) et en demande le détail. */
   reveal(id: string | null): void {
     const key = id ?? OUTSIDE;
+    // Une séance demandée au-delà des premières (?focus=) : la liste s'allonge jusqu'à elle.
+    const index = this.groups().findIndex((group) => this.key(group) === key);
+    if (index >= this.limit()) this.limit.set(index + 1);
     if (!this.open().has(key)) this.open.update((open) => new Set(open).add(key));
     if (id) this.expanded.emit(id);
+  }
+
+  /** « Afficher les n séances plus anciennes » : les suivantes, par paquets. */
+  protected showMore(): void {
+    this.limit.update((limit) => limit + SESSIONS_PAGE * 2);
+  }
+
+  /**
+   * En-tête (maquette 03, état B) : horaires, durée, modalité. Horaires et durée d'après les bornes
+   * de la séance, la modalité et la durée déclarée une fois son détail lu.
+   */
+  protected headerFacts(group: SessionGroup): string {
+    if (!group.id) return '';
+    const detail = this.loaded(group);
+    const from = detail?.from ?? group.session?.occurred.from ?? group.from;
+    const to = detail ? (detail.closedAt ? detail.to : null) : (group.session?.occurred.to ?? null);
+    const minutes = detail?.durationMin ?? minutesBetween(from, to);
+    return [
+      sessionRange(from ?? null, to, this.locale),
+      minutes !== null ? durationLabel(minutes, this.locale) : '',
+      modalityShortLabel(detail?.modality ?? null),
+    ]
+      .filter((fact) => !!fact)
+      .join(' · ');
   }
 
   protected key(group: SessionGroup): string {
@@ -153,4 +191,13 @@ export class TimelineSessionsComponent {
 
   protected readonly listLabel = $localize`:Nom de la liste des séances de la timeline@@timeline.sessions.list:Séances, de la plus récente à la plus ancienne`;
   protected readonly entriesLabel = $localize`:Nom de la liste des entrées d'une séance@@timeline.session.entriesList:Entrées de la séance`;
+}
+
+function minutesBetween(
+  from: string | null | undefined,
+  to: string | null | undefined,
+): number | null {
+  if (!from || !to) return null;
+  const ms = Date.parse(to) - Date.parse(from);
+  return Number.isFinite(ms) && ms > 0 ? Math.round(ms / 60_000) : null;
 }
