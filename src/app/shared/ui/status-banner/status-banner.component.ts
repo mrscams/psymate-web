@@ -32,7 +32,7 @@ export type BannerLevel = 'warning' | 'success' | 'info';
       <span class="message">{{ message() }}</span>
       @if (actionLabel(); as label) {
         @if (actionLink(); as link) {
-          <a class="action" [routerLink]="link">{{ label }}</a>
+          <a class="action pm-link-target" [routerLink]="link">{{ label }}</a>
         } @else {
           <button mat-button type="button" class="action" (click)="action.emit()">
             {{ label }}

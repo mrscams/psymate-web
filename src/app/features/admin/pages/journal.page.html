@@ -156,7 +156,7 @@
                 @if (row.practitionerDisplayName && row.practitionerId) {
                   <button
                     type="button"
-                    class="link"
+                    class="link pm-link-target"
                     (click)="filterPractitioner(row.practitionerId)"
                   >
                     {{ row.practitionerDisplayName }}
@@ -170,6 +170,7 @@
               <td>
                 @if (row.source === 'verification_decision' && row.practitionerId) {
                   <a
+                    class="pm-link-target"
                     [routerLink]="['/admin/validation', row.practitionerId]"
                     i18n="Lien vers le dossier@@admin.journal.openDossier"
                     >Voir le dossier</a
