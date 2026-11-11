@@ -370,6 +370,8 @@ test.describe('administration', () => {
     await page.getByRole('button', { name: 'Accès aux documents' }).click();
     await expect(page).toHaveURL(/type=documents/);
     await expect(rows.first()).toContainText('admin.document_read');
+    await expect(page.locator('table.refreshing')).toHaveCount(0);
+    await expect(rows.filter({ hasNotText: 'admin.document_read' })).toHaveCount(0);
     // Groupe de lignes identiques : se déplie et se replie (aria-expanded).
     const toggle = page.locator('.group-toggle').first();
     if ((await toggle.count()) > 0) {
