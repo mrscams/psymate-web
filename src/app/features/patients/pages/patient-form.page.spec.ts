@@ -123,7 +123,7 @@ describe('PatientFormPage', () => {
       expect(document.activeElement).toBe(field(el, 'displayName'));
     });
 
-    it('422 du serveur : messages de l’API sous les champs (applyProblem), focus sur le premier', async () => {
+    it('422 du serveur : messages sous les champs, résumé en tête avec focus, liens vers les champs', async () => {
       const create = vi.fn().mockRejectedValue(problem422);
       const { fixture, el, router } = await render({ create });
       type(el, 'displayName', 'Marie D.');
@@ -136,7 +136,30 @@ describe('PatientFormPage', () => {
         '120 caractères au plus',
       );
       expect(el.querySelector('#field-birthDate-error')?.textContent).toContain('moins de 120 ans');
-      expect(document.activeElement).toBe(field(el, 'displayName'));
+      const summary = el.querySelector<HTMLElement>('pm-form-errors [role="alert"]');
+      expect(summary?.textContent).toContain('2 champs à corriger.');
+      expect(document.activeElement).toBe(summary);
+      const links = [...el.querySelectorAll<HTMLAnchorElement>('pm-form-errors a')];
+      expect(links.map((a) => [a.getAttribute('href'), a.textContent])).toEqual([
+        ['#field-displayName', 'Nom affiché'],
+        ['#field-birthDate', 'Date de naissance'],
+      ]);
+      // Le résumé est en tête du formulaire, avant le premier champ.
+      const form = el.querySelector('form')!;
+      expect(form.querySelector('pm-form-errors')).not.toBeNull();
+      expect(
+        summary!.compareDocumentPosition(field(el, 'displayName')) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+      field(el, 'birthDate').scrollIntoView = vi.fn();
+      links[1].click();
+      expect(document.activeElement).toBe(field(el, 'birthDate'));
+
+      // Une nouvelle tentative efface le résumé (l'erreur de forme reprend la main).
+      type(el, 'displayName', '');
+      submit(el);
+      await settle(fixture);
+      expect(el.querySelector('pm-form-errors [role="alert"]')).toBeNull();
     });
 
     it('« à surveiller » sans raison : erreur sur la raison, aucun appel', async () => {

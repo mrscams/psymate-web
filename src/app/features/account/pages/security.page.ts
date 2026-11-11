@@ -87,6 +87,8 @@ export class SecurityPage {
 
   protected readonly revokeLabel = $localize`:Révoquer une session@@account.security.sessions.revoke:Déconnecter`;
 
+  protected readonly sessionsErrorTitle = $localize`:Titre de l'état erreur des sessions@@account.security.sessions.errorTitle:Impossible de charger vos sessions`;
+  protected readonly lastLoginErrorTitle = $localize`:Titre de l'état erreur de la connexion précédente@@account.security.lastLogin.errorTitle:Impossible de charger votre connexion précédente`;
   protected readonly retry = {
     label: $localize`:Réessayer le chargement des sessions@@account.security.sessions.retry:Réessayer`,
     handler: (): void => void this.store.load(),

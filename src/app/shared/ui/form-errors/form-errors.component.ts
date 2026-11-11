@@ -10,16 +10,17 @@ import {
   viewChild,
 } from '@angular/core';
 
-import { FieldProblem } from '../../core/http';
-import { fieldId } from './apply-problem';
+import { FieldProblem } from '../../../core/http';
+import { fieldId } from '../../forms';
 
 /**
- * Résumé d'un 422 en tête de formulaire (planche 29) : `role="alert"`, « N champs à corriger »,
- * un lien par champ vers son contrôle (id = fieldId(field)), puis les erreurs sans champ. Reçoit
- * le focus quand il apparaît ; le formulaire donne ensuite le focus au premier champ fautif.
+ * Résumé des erreurs d'un formulaire en tête (planche 29, fiche 00) : `role="alert"`, « N champs à
+ * corriger », un lien par champ vers son contrôle (id = fieldId(field)), puis les erreurs sans
+ * champ. Reçoit le focus quand il apparaît ou que ses erreurs changent ; un lien met le focus sur
+ * le champ fautif. Extrait de l'inscription (UX-A7), partagé par les formulaires.
  */
 @Component({
-  selector: 'pm-problem-summary',
+  selector: 'pm-form-errors',
   template: `
     @if (errors().length > 0) {
       <div class="summary" role="alert" tabindex="-1" #box>
@@ -68,8 +69,8 @@ import { fieldId } from './apply-problem';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProblemSummaryComponent {
-  /** errors[] du problème (reliées ou non) ; vide ou null : rien n'est rendu. */
+export class FormErrorsComponent {
+  /** errors[] du problème (reliées ou non) ; vide : rien n'est rendu. */
   readonly errors = input<FieldProblem[]>([]);
   /** Libellés des champs (`displayName` → « Nom affiché ») ; sinon le nom du champ. */
   readonly labels = input<Record<string, string>>({});
@@ -105,7 +106,7 @@ export class ProblemSummaryComponent {
     return this.labels()[field] ?? field;
   }
 
-  /** Le lien mène au champ et lui donne le focus (le navigateur ne fait que défiler). */
+  /** Le lien mène au champ et lui donne le focus (le navigateur ne ferait que défiler). */
   protected focusField(event: Event, field: string): void {
     const target = this.document.getElementById(fieldId(field));
     if (!target) return;

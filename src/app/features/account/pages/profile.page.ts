@@ -139,6 +139,7 @@ export class ProfilePage {
   protected readonly profileState = computed(() => stateKind(this.store.profile()));
   protected readonly vocabularyState = computed(() => stateKind(this.store.vocabulary()));
 
+  protected readonly errorTitle = $localize`:Titre de l'état erreur du profil public@@profile.errorTitle:Impossible de charger votre profil public`;
   protected readonly retry = {
     label: $localize`:Bouton Réessayer du profil public@@profile.retry:Réessayer`,
     handler: (): void => void this.store.load(),

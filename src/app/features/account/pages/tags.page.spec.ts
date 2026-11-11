@@ -69,7 +69,9 @@ describe('TagsPage', () => {
       .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
       .mockResolvedValue([]);
     const { fixture, el } = await render({ list });
-    expect(el.querySelector('pm-state .error[role="alert"]')).not.toBeNull();
+    expect(el.querySelector('pm-state .error[role="alert"]')?.textContent).toContain(
+      'Impossible de charger vos tags',
+    );
     el.querySelector<HTMLButtonElement>('pm-state button.retry')?.click();
     await settle(fixture);
     expect(el.querySelector('pm-state [role="status"]')?.textContent).toContain('Aucun tag');

@@ -30,6 +30,7 @@
           [kind]="kind"
           skeleton="block"
           [lines]="3"
+          [title]="enrollErrorTitle"
           [details]="store.enrollment().problem?.code"
           [action]="retry"
         />
@@ -155,6 +156,7 @@
           [kind]="kind"
           skeleton="row"
           [lines]="5"
+          [title]="codesErrorTitle"
           [details]="store.recoveryCodes().problem?.code"
         />
       } @else {

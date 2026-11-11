@@ -214,7 +214,7 @@
 
   <section class="block" aria-labelledby="h-forms">
     <h2 id="h-forms">10 · Formulaires : 422 relié aux champs</h2>
-    <pm-problem-summary [errors]="problem()?.errors ?? []" [labels]="formLabels" />
+    <pm-form-errors [errors]="problem()?.errors ?? []" [labels]="formLabels" />
     <form [formGroup]="form" class="form" (submit)="$event.preventDefault()">
       <div class="field">
         <label [for]="fieldId('displayName')">Nom affiché</label>

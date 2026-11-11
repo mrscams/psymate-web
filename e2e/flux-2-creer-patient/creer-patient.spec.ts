@@ -58,7 +58,8 @@ test('créer un patient, le retrouver (marie, marié), modifier le rythme, archi
   expect(posts).toBe(0);
   await expectNoAxeViolations(page);
 
-  // 422 du serveur (plus de 120 ans) : message de l'API sous le champ, focus dessus.
+  // 422 du serveur (plus de 120 ans) : message de l'API sous le champ et dans le résumé en tête,
+  // qui prend le focus ; son lien mène au champ (UX-A7).
   await displayName.fill('Marie D.');
   await page.getByLabel('Date de naissance').fill('1890-01-01');
   const rejected = page.waitForResponse(
@@ -67,6 +68,9 @@ test('créer un patient, le retrouver (marie, marié), modifier le rythme, archi
   await page.getByRole('button', { name: /Enregistrer/ }).click();
   expect((await rejected).status()).toBe(422);
   await expect(page.locator('#field-birthDate-error')).toContainText('moins de 120 ans');
+  const summary = page.locator('pm-form-errors [role="alert"]');
+  await expect(summary).toBeFocused();
+  await summary.getByRole('link', { name: 'Date de naissance' }).click();
   await expect(page.getByLabel('Date de naissance')).toBeFocused();
 
   // Création : seul le nom (et le rythme) ; Ctrl+Entrée enregistre → vue d'ensemble.

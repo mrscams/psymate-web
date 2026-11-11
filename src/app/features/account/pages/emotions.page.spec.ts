@@ -84,7 +84,9 @@ describe('EmotionsPage', () => {
       .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
       .mockResolvedValue(EMOTIONS);
     const { fixture, el } = await render({ list });
-    expect(el.querySelector('pm-state .error[role="alert"]')).not.toBeNull();
+    expect(el.querySelector('pm-state .error[role="alert"]')?.textContent).toContain(
+      'Impossible de charger vos émotions personnalisées',
+    );
     el.querySelector<HTMLButtonElement>('pm-state button.retry')?.click();
     await settle(fixture);
     expect(list).toHaveBeenCalledTimes(2);

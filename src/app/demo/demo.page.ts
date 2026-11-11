@@ -16,19 +16,14 @@ import { ApiProblem, HttpNotices } from '../core/http';
 import { SubjectLabelPipe, SubjectVocabulary, toAppLocale } from '../core/i18n';
 import { ShortcutService } from '../core/shortcuts';
 import { THEME_PREFERENCES, ThemePreference, ThemeService } from '../core/theme';
-import {
-  applyProblem,
-  FieldErrorsComponent,
-  fieldId,
-  PmValidators,
-  ProblemSummaryComponent,
-} from '../shared/forms';
+import { applyProblem, FieldErrorsComponent, fieldId, PmValidators } from '../shared/forms';
 import {
   AccountNavComponent,
   AdminBarComponent,
   AppBarComponent,
   ConfirmDialogService,
   ENTRY_TYPES,
+  FormErrorsComponent,
   EntryIconComponent,
   entryTypeLabel,
   PatientHeaderComponent,
@@ -69,7 +64,7 @@ const PROBLEM_422: ApiProblem = {
     MatInputModule,
     SubjectLabelPipe,
     FieldErrorsComponent,
-    ProblemSummaryComponent,
+    FormErrorsComponent,
     AccountNavComponent,
     AdminBarComponent,
     AppBarComponent,

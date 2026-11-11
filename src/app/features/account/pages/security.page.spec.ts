@@ -76,7 +76,10 @@ describe('SecurityPage', () => {
       .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
       .mockResolvedValueOnce(OVERVIEW);
     const { fixture, el } = await render({ loadSecurity });
-    expect(el.querySelectorAll('pm-state [role=alert]')).toHaveLength(2);
+    const alerts = [...el.querySelectorAll('pm-state [role=alert]')].map((a) => a.textContent);
+    expect(alerts).toHaveLength(2);
+    expect(alerts[0]).toContain('Impossible de charger vos sessions');
+    expect(alerts[1]).toContain('Impossible de charger votre connexion précédente');
     el.querySelector<HTMLButtonElement>('pm-state button')?.click();
     await settle(fixture);
     expect(loadSecurity).toHaveBeenCalledTimes(2);
