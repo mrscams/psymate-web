@@ -70,6 +70,8 @@ test.describe('1440 px', () => {
   test('captures 1440 (clair) et axe-core à 0 en clair et en sombre sur les six écrans', async ({
     page,
   }, testInfo) => {
+    // Douze analyses axe et douze captures pleine page : 30 s ne suffisent pas sous charge.
+    test.setTimeout(120_000);
     for (const screen of SCREENS) {
       await open(page, screen);
       await expectNoAxeViolations(page);
@@ -94,6 +96,8 @@ test.describe('1440 px', () => {
     page,
   }) => {
     await page.goto('/fr/connexion');
+    await expect(page.getByRole('heading', { level: 1, name: 'Connexion' })).toBeVisible();
+    await page.evaluate(() => document.fonts.ready);
     const tagline = page.getByText('Le fil de vos patients, séance après séance.');
     const card = page.locator('.login-card');
     const hosting = page.getByText(/Données hébergées en France/);
