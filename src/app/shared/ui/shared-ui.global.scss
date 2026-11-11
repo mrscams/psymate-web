@@ -62,16 +62,22 @@ $container-focused-fields: "[data-focus-ring='container'] *, pm-app-bar .search 
 }
 
 // Cible de 24 px des liens autonomes (UX-A3, WCAG 2.5.8) : un lien texte seul (pied de page, fil
-// d'Ariane, action de ligne, lien d'en-tête) mesure 16 à 21 px de haut. 4 px de marge intérieure
-// verticale agrandissent la zone cliquable ; la marge extérieure négative de même valeur la rend au
-// flux, si bien que la mise en page ne bouge pas (élément en ligne : ni l'une ni l'autre ne compte
-// dans la ligne ; élément de bloc ou de flex : elles s'annulent). Jamais sur un lien dans une
-// phrase (exempté par 2.5.8, et la zone agrandie couvrirait la ligne voisine). Classe posée
-// volontairement par l'écran : !important l'emporte sur un `padding: 0` encapsulé (bouton-lien
-// du journal admin), plus spécifique qu'une règle globale.
+// d'Ariane, action de ligne, lien d'en-tête) mesure 16 à 22 px de haut selon la police (Segoe UI
+// sous Windows, DejaVu Sans sous Linux) : la boîte d'un élément en ligne suit les métriques de la
+// police, pas la hauteur de ligne. Une marge intérieure fixe dépend donc de la police. Ici, la
+// boîte devient flex en ligne : son contenu mesure exactement une hauteur de ligne (1lh), et la
+// marge intérieure verticale (24 px - 1lh) / 2 la porte à 24 px quelle que soit la police. La
+// marge extérieure négative de même valeur rend la boîte de marge à 1lh, et le texte reste au
+// même endroit (en haut de sa boîte de marge, comme avant, y compris pour un élément de flex
+// étiré) : la mise en page ne bouge pas. Rien à compenser quand 1lh dépasse déjà 24 px.
+// Conséquence : le texte du lien ne se coupe plus sur deux lignes (lien court, autonome).
+// Jamais sur un lien dans une phrase (exempté par 2.5.8, et la zone agrandie couvrirait la ligne
+// voisine). Classe posée volontairement par l'écran : !important l'emporte sur un `padding: 0`
+// encapsulé (bouton-lien du journal admin), plus spécifique qu'une règle globale.
 .pm-link-target {
-  padding-block: 4px !important;
-  margin-block: -4px !important;
+  display: inline-flex !important;
+  padding-block: max(0px, calc((24px - 1lh) / 2)) !important;
+  margin-block: min(0px, calc((1lh - 24px) / 2)) !important;
 }
 
 // Cases et boutons radio natifs à 18 px au moins (UX-A3) : 13 px par défaut dans Chromium. Ils

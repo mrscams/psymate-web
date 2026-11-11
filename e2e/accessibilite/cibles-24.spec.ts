@@ -4,7 +4,12 @@ import { adminApi, shareSession } from '../flux-10-admin/helpers';
 import { createAccount, signIn } from '../preferences/accounts';
 import { ADMIN_AVAILABLE, ADMIN_MISSING } from '../support/admin';
 import { expectNoAxeViolations } from '../support/axe';
-import { smallTargets, withoutLinkTargets } from '../support/cibles';
+import {
+  expectLinkTargetsFontIndependent,
+  smallTargets,
+  withoutLinkTargets,
+  withTightLines,
+} from '../support/cibles';
 
 // UX-A3 (WCAG 2.5.8, cibles de 24 px) : plus aucune cible autonome sous 24 × 24 px sur
 // /connexion, /mon-compte/emotions et /admin/journal (liens dans une phrase exemptés, cases et
@@ -23,11 +28,21 @@ async function settled(page: Page): Promise<void> {
 async function expectSameRendering(page: Page): Promise<void> {
   // Focus hors de tout lien : l'anneau de focus suit la zone agrandie, c'est voulu.
   await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-  const withClass = await page.screenshot({ fullPage: true, animations: 'disabled' });
-  const restore = await withoutLinkTargets(page);
-  const withoutClass = await page.screenshot({ fullPage: true, animations: 'disabled' });
-  await restore();
-  expect(withClass.equals(withoutClass), 'rendu modifié par .pm-link-target').toBe(true);
+  const compare = async (label: string) => {
+    const withClass = await page.screenshot({ fullPage: true, animations: 'disabled' });
+    const restore = await withoutLinkTargets(page);
+    const withoutClass = await page.screenshot({ fullPage: true, animations: 'disabled' });
+    await restore();
+    expect(withClass.equals(withoutClass), `rendu modifié par .pm-link-target (${label})`).toBe(
+      true,
+    );
+  };
+  await compare('police de la page');
+  // Même vérification avec des lignes resserrées (polices de la CI Linux) : la compensation suit
+  // la hauteur de ligne, pas une valeur fixe.
+  const restoreLines = await withTightLines(page);
+  await compare('lignes resserrées');
+  await restoreLines();
 }
 
 test('/connexion : aucune cible autonome sous 24 px, rendu inchangé', async ({ page }) => {
@@ -37,7 +52,7 @@ test('/connexion : aucune cible autonome sous 24 px, rendu inchangé', async ({ 
 
   expect(await smallTargets(page)).toEqual([]);
 
-  // Les liens du pied, de la langue et du formulaire passent de 16 à 21 px à 24 px au moins.
+  // Les liens du pied, de la langue et du formulaire passent de 16 à 22 px à 24 px au moins.
   for (const name of [
     'Mentions légales',
     'Confidentialité',
@@ -50,7 +65,7 @@ test('/connexion : aucune cible autonome sous 24 px, rendu inchangé', async ({ 
     expect(box!.height, `hauteur de « ${name} »`).toBeGreaterThanOrEqual(24);
   }
 
-  // Témoin : sans la classe, la sonde retrouve les six liens de l'audit (16 à 21 px).
+  // Témoin : sans la classe, la sonde retrouve les six liens de l'audit (16 à 22 px selon la police).
   const restore = await withoutLinkTargets(page);
   const before = await smallTargets(page);
   await restore();
@@ -65,6 +80,7 @@ test('/connexion : aucune cible autonome sous 24 px, rendu inchangé', async ({ 
     ].sort(),
   );
 
+  await expectLinkTargetsFontIndependent(page);
   await expectSameRendering(page);
   await expectNoAxeViolations(page);
 });
@@ -95,6 +111,7 @@ test('/mon-compte/emotions : liens et radios des familles à 24 px au moins', as
   await label.locator('span').last().click();
   await expect(radio).toBeChecked();
 
+  await expectLinkTargetsFontIndependent(page);
   await expectSameRendering(page);
   await expectNoAxeViolations(page);
 });
@@ -119,6 +136,7 @@ test('/admin/journal : noms et liens d’action à 24 px au moins, rendu inchang
     expect((await names.first().boundingBox())!.height).toBeLessThan(24);
     await restore();
   }
+  await expectLinkTargetsFontIndependent(page);
   await expectSameRendering(page);
   await expectNoAxeViolations(page);
   await admin.dispose();

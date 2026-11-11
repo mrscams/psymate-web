@@ -88,14 +88,73 @@ export async function smallTargets(page: Page): Promise<SmallTarget[]> {
 }
 
 /**
- * Neutralise `.pm-link-target` (marges remises à 0) : sert à vérifier que la classe agrandit la
- * cible sans déplacer un seul pixel du rendu.
+ * Retire `.pm-link-target` des éléments qui la portent (rendu d'avant UX-A3) et renvoie de quoi la
+ * remettre : sert au témoin « sans la classe » et à vérifier que la classe agrandit la cible sans
+ * déplacer un seul pixel du rendu.
  */
 export async function withoutLinkTargets(page: Page): Promise<() => Promise<void>> {
+  await page.evaluate(() => {
+    for (const el of document.querySelectorAll('.pm-link-target')) {
+      el.classList.remove('pm-link-target');
+      el.setAttribute('data-pm-link-target', '');
+    }
+  });
+  return async () => {
+    await page.evaluate(() => {
+      for (const el of document.querySelectorAll('[data-pm-link-target]')) {
+        el.removeAttribute('data-pm-link-target');
+        el.classList.add('pm-link-target');
+      }
+    });
+  };
+}
+
+/**
+ * Hauteur de ligne et police resserrées sur les liens de la classe (repli plus serré que Segoe UI,
+ * comme les polices de la CI Linux) : la cible doit tenir 24 px quelle que soit la police.
+ */
+export async function withTightLines(page: Page): Promise<() => Promise<void>> {
   const handle = await page.addStyleTag({
-    content: '.pm-link-target { padding-block: 0 !important; margin-block: 0 !important; }',
+    content:
+      '.pm-link-target, [data-pm-link-target] { line-height: 12px !important; ' +
+      'font-size: 11px !important; ' +
+      'font-family: monospace !important; }',
   });
   return async () => {
     await handle.evaluate((node) => node.remove());
   };
+}
+
+/** Hauteurs des éléments `.pm-link-target` visibles, par texte. */
+export async function linkTargetHeights(page: Page): Promise<{ text: string; height: number }[]> {
+  return page.locator('.pm-link-target').evaluateAll((els) =>
+    els
+      .filter((el) => el.getBoundingClientRect().width > 0)
+      .map((el) => ({
+        text: (el.textContent ?? '').replace(/\s+/g, ' ').trim().slice(0, 60),
+        height: Math.round(el.getBoundingClientRect().height * 100) / 100,
+      })),
+  );
+}
+
+/**
+ * Toutes les cibles `.pm-link-target` à 24 px au moins, avec la police de la page puis avec des
+ * lignes resserrées (indépendance à la police).
+ */
+export async function expectLinkTargetsFontIndependent(page: Page): Promise<void> {
+  const heights = await linkTargetHeights(page);
+  if (heights.length === 0) throw new Error('aucun élément .pm-link-target sur la page');
+  for (const target of heights) {
+    if (target.height < 24) throw new Error(`« ${target.text} » : ${target.height} px`);
+  }
+  const restore = await withTightLines(page);
+  try {
+    for (const target of await linkTargetHeights(page)) {
+      if (target.height < 24) {
+        throw new Error(`« ${target.text} » à lignes resserrées : ${target.height} px`);
+      }
+    }
+  } finally {
+    await restore();
+  }
 }
