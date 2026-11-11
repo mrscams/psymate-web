@@ -41,6 +41,11 @@ export class PatientFiltersComponent {
   readonly sort = input<PatientSort>('lastSession');
   readonly quick = input<QuickFilter>('all');
   readonly counts = input<QuickCounts | null>(null);
+  /**
+   * Le résumé couvre toute la liste : tri « Dernière séance » et filtres « Aujourd'hui » /
+   * « Brouillons » proposés ; sinon retirés (tri) ou désactivés avec une explication (filtres).
+   */
+  readonly activityCovered = input(true);
   readonly tags = input<PractitionerTag[]>([]);
   readonly activeTag = input<string | null>(null);
 
@@ -55,7 +60,13 @@ export class PatientFiltersComponent {
   private readonly input = viewChild.required<ElementRef<HTMLInputElement>>('filter');
   private readonly vocabulary = inject(SubjectVocabulary);
 
-  protected readonly sorts = PATIENT_SORTS.map((value) => ({ value, label: sortLabel(value) }));
+  protected readonly sorts = computed(() =>
+    PATIENT_SORTS.filter((value) => value !== 'lastSession' || this.activityCovered()).map(
+      (value) => ({ value, label: sortLabel(value) }),
+    ),
+  );
+  /** Pourquoi « Aujourd'hui » et « Brouillons » sont désactivés. */
+  protected readonly coverageHint = $localize`:Explication des filtres désactivés@@patients.quick.coverageHint:« Aujourd'hui », « Brouillons » et le tri par dernière séance demandent le résumé de chaque patient : disponibles jusqu'à 20 patients.`;
   protected readonly filterLabel = computed(() => {
     const subjects = subjectLabel(this.vocabulary.label(), 'many');
     return $localize`:Étiquette du filtre de la liste@@patients.filter.label:Filtrer les ${subjects}:subjects: par nom`;
@@ -68,12 +79,15 @@ export class PatientFiltersComponent {
     return QUICK_FILTERS.map((value) => {
       const count = counts ? counts[value] : null;
       const label = quickFilterLabel(value);
+      const shown =
+        count === null ? null : value === 'all' && counts?.more ? `${count}+` : `${count}`;
+      const disabled = (value === 'today' || value === 'drafts') && !this.activityCovered();
       return {
         value,
         label,
-        count,
-        text: count === null ? label : `${label} · ${count}`,
-        pressed: this.quick() === value,
+        disabled,
+        text: shown === null ? label : `${label} · ${shown}`,
+        pressed: this.quick() === value && !disabled,
       };
     });
   });

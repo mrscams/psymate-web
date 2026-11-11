@@ -30,7 +30,7 @@
       >Trier par</label
     >
     <select id="patients-sort" [value]="sort()" (change)="onSort($event)">
-      @for (option of sorts; track option.value) {
+      @for (option of sorts(); track option.value) {
         <option [value]="option.value" [selected]="option.value === sort()">
           {{ option.label }}
         </option>
@@ -50,6 +50,9 @@
         class="chip"
         [class.flag]="chip.value === 'flags'"
         [attr.aria-pressed]="chip.pressed"
+        [disabled]="chip.disabled"
+        [attr.aria-describedby]="chip.disabled ? 'patients-quick-hint' : null"
+        [attr.title]="chip.disabled ? coverageHint : null"
         (click)="quickChange.emit(chip.value)"
       >
         @if (chip.value === 'flags') {
@@ -99,3 +102,6 @@
     }
   </div>
 </div>
+@if (!activityCovered()) {
+  <p id="patients-quick-hint" class="coverage-hint">{{ coverageHint }}</p>
+}

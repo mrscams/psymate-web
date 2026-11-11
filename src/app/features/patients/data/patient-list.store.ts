@@ -49,10 +49,15 @@ export interface PatientListRow {
   activity: PatientActivity | null;
 }
 
-/** Comptes des filtres rapides ; null quand le résumé ne couvre pas toute la page lue. */
+/**
+ * Comptes des filtres rapides. `more` : une page suivante existe, « Tous » ne compte que les
+ * patients chargés (affiché « 50+ ») et « Flags » n'a pas de compte ; `today` et `drafts` sont null
+ * tant que chaque patient de la liste n'a pas son résumé.
+ */
 export interface QuickCounts {
   all: number;
-  flags: number;
+  more: boolean;
+  flags: number | null;
   today: number | null;
   drafts: number | null;
 }
@@ -145,14 +150,36 @@ export const PatientListStore = signalStore(
     ),
   })),
   withComputed((store) => ({
-    /** Toutes les lignes lues, avec leur résumé, dans l'ordre du tri choisi. */
+    /**
+     * Chaque patient de la liste peut avoir son résumé : liste entière chargée (pas de page
+     * suivante) et au plus ACTIVITY_LIMIT lignes. Sinon le tri « Dernière séance » et les filtres
+     * « Aujourd'hui » / « Brouillons » ne sont pas proposés : ils ne porteraient que sur une partie.
+     */
+    activityCovered: computed(() => !store.hasMore() && store.items().length <= ACTIVITY_LIMIT),
+  })),
+  withComputed((store) => ({
+    /**
+     * Tri réellement appliqué : « Dernière séance » retombe sur « Dernière modification » (le tri
+     * que le serveur fait, sort=updated) quand le résumé ne couvre pas toute la liste.
+     */
+    effectiveSort: computed<PatientSort>(() =>
+      store.sort() === 'lastSession' && !store.activityCovered() ? 'updated' : store.sort(),
+    ),
+    /** Filtre rapide réellement appliqué : « Aujourd'hui » et « Brouillons » exigent la couverture. */
+    effectiveQuick: computed<QuickFilter>(() => {
+      const quick = store.quick();
+      return (quick === 'today' || quick === 'drafts') && !store.activityCovered() ? 'all' : quick;
+    }),
+  })),
+  withComputed((store) => ({
+    /** Toutes les lignes lues, avec leur résumé, dans l'ordre du tri appliqué. */
     allRows: computed<PatientListRow[]>(() => {
       const activity = store.activity();
       const rows = store.items().map((patient) => {
         const cell = activity[patient.id] ?? null;
         return { patient, cell, activity: cell?.data ?? null };
       });
-      return sortRows(rows, store.sort());
+      return sortRows(rows, store.effectiveSort());
     }),
   })),
   withComputed((store) => ({
@@ -172,10 +199,12 @@ export const PatientListStore = signalStore(
     quickCounts: computed<QuickCounts>(() => {
       const rows = store.allRows();
       const now = new Date();
-      const complete = store.activityComplete();
+      const complete = store.activityCovered() && store.activityComplete();
+      const more = store.hasMore();
       return {
         all: rows.length,
-        flags: rows.filter((row) => hasFlags(row.patient)).length,
+        more,
+        flags: more ? null : rows.filter((row) => hasFlags(row.patient)).length,
         today: complete ? rows.filter((row) => hasSessionToday(row.activity, now)).length : null,
         drafts: complete ? rows.filter((row) => (row.activity?.drafts ?? 0) > 0).length : null,
       };
@@ -184,7 +213,7 @@ export const PatientListStore = signalStore(
     rows: computed<PatientListRow[]>(() => {
       const now = new Date();
       const rows = store.allRows();
-      switch (store.quick()) {
+      switch (store.effectiveQuick()) {
         case 'all':
           return rows;
         case 'flags':

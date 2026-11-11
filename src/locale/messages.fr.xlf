@@ -602,7 +602,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">208</context>
+          <context context-type="linenumber">220</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.ts</context>
@@ -15195,7 +15195,7 @@
         <source> ou explorez un patient de démonstration </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
-          <context context-type="linenumber">103,107</context>
+          <context context-type="linenumber">104,108</context>
         </context-group>
         <note priority="1" from="description">Invitation à explorer la démo</note>
       </trans-unit>
@@ -15203,7 +15203,7 @@
         <source><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>↑<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>↓<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> choisir · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Entrée<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> ouvrir · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>N<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> nouveau</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
-          <context context-type="linenumber">145,148</context>
+          <context context-type="linenumber">146,149</context>
         </context-group>
         <note priority="1" from="description">Pied de la liste : raccourcis</note>
       </trans-unit>
@@ -15211,7 +15211,7 @@
         <source> Afficher plus </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
-          <context context-type="linenumber">159,162</context>
+          <context context-type="linenumber">160,163</context>
         </context-group>
         <note priority="1" from="description">Bouton de pagination de la liste</note>
       </trans-unit>
@@ -15219,7 +15219,7 @@
         <source> La suite de la liste n&apos;a pas pu être chargée. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
-          <context context-type="linenumber">167,172</context>
+          <context context-type="linenumber">168,173</context>
         </context-group>
         <note priority="1" from="description">Erreur de la page suivante</note>
       </trans-unit>
@@ -15227,7 +15227,7 @@
         <source> Les pastilles d&apos;émotions résument les 30 derniers jours ; la flèche indique l&apos;évolution par rapport aux 30 jours précédents. Aucune couleur d&apos;alerte n&apos;est appliquée automatiquement : les flags sont posés par vous. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
-          <context context-type="linenumber">173,178</context>
+          <context context-type="linenumber">174,179</context>
         </context-group>
         <note priority="1" from="description">Légende sous la liste des patients</note>
       </trans-unit>
@@ -15379,11 +15379,11 @@
         </context-group>
         <note priority="1" from="description">Pied de la liste, une ligne ou aucune</note>
       </trans-unit>
-      <trans-unit id="patients.footer.partial" datatype="html">
-        <source>séances, émotions et situations des <x id="limit" equiv-text="ACTIVITY_LIMIT"/> premiers</source>
+      <trans-unit id="patients.footer.partialNote" datatype="html">
+        <source>Résumé d&apos;activité affiché pour les <x id="limit" equiv-text="ACTIVITY_LIMIT"/> premiers patients</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">173</context>
+          <context context-type="linenumber">174</context>
         </context-group>
         <note priority="1" from="description">Pied de la liste, résumé partiel</note>
       </trans-unit>
@@ -15403,11 +15403,19 @@
         </context-group>
         <note priority="1" from="description">Avertissement, résumés non chargés</note>
       </trans-unit>
+      <trans-unit id="patients.quick.emptyPartial" datatype="html">
+        <source>Aucune ligne pour le filtre « <x id="filter" equiv-text="filter"/> » parmi les <x id="loaded" equiv-text="loaded"/> patients chargés : seuls ceux-là sont filtrés.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">195</context>
+        </context-group>
+        <note priority="1" from="description">Phrase du filtre rapide sans résultat, liste incomplète</note>
+      </trans-unit>
       <trans-unit id="patients.quick.emptyMessage" datatype="html">
         <source>Aucune ligne pour le filtre « <x id="filter" equiv-text="filter"/> ».</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">193</context>
+          <context context-type="linenumber">197</context>
         </context-group>
         <note priority="1" from="description">Phrase du filtre rapide sans résultat</note>
       </trans-unit>
@@ -15415,15 +15423,23 @@
         <source>Afficher tous</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">200</context>
         </context-group>
         <note priority="1" from="description">Action du filtre rapide sans résultat</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.loadMore" datatype="html">
+        <source>Charger la suite</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">204</context>
+        </context-group>
+        <note priority="1" from="description">Action du filtre rapide sans résultat, liste incomplète</note>
       </trans-unit>
       <trans-unit id="patients.empty.clear" datatype="html">
         <source>Effacer les filtres</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">214</context>
         </context-group>
         <note priority="1" from="description">Action de l&apos;état vide filtré</note>
       </trans-unit>
@@ -15431,7 +15447,7 @@
         <source>Impossible de charger vos <x id="subjects" equiv-text="subjects"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">213</context>
+          <context context-type="linenumber">225</context>
         </context-group>
         <note priority="1" from="description">État erreur de la liste</note>
       </trans-unit>
@@ -15439,7 +15455,7 @@
         <source>Supprimer le patient de démonstration ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">281</context>
+          <context context-type="linenumber">293</context>
         </context-group>
         <note priority="1" from="description">Titre de la confirmation de retrait de la démo</note>
       </trans-unit>
@@ -15447,7 +15463,7 @@
         <source><x id="name" equiv-text="patient.displayName"/> quitte votre liste. Rien n&apos;est effacé : vous pourrez le restaurer depuis les archivés.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">282</context>
+          <context context-type="linenumber">294</context>
         </context-group>
         <note priority="1" from="description">Explication du retrait de la démo</note>
       </trans-unit>
@@ -15455,7 +15471,7 @@
         <source>Supprimer la démo</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">283</context>
+          <context context-type="linenumber">295</context>
         </context-group>
         <note priority="1" from="description">Bouton de confirmation du retrait de la démo</note>
       </trans-unit>
@@ -15463,7 +15479,7 @@
         <source>Patient de démonstration retiré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">291</context>
+          <context context-type="linenumber">303</context>
         </context-group>
         <note priority="1" from="description">Toast après le retrait de la démo</note>
       </trans-unit>
@@ -15471,7 +15487,7 @@
         <source>Patient de démonstration restauré</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">301</context>
+          <context context-type="linenumber">313</context>
         </context-group>
         <note priority="1" from="description">Toast après la restauration de la démo</note>
       </trans-unit>
@@ -15819,7 +15835,7 @@
         <source>Filtrer par tag</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
-          <context context-type="linenumber">73,74</context>
+          <context context-type="linenumber">76,77</context>
         </context-group>
         <note priority="1" from="description">Étiquette du menu des tags</note>
       </trans-unit>
@@ -15827,15 +15843,23 @@
         <source>Tous les tags</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
-          <context context-type="linenumber">84,86</context>
+          <context context-type="linenumber">87,89</context>
         </context-group>
         <note priority="1" from="description">Entrée du menu des tags sans filtre</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.coverageHint" datatype="html">
+        <source>« Aujourd&apos;hui », « Brouillons » et le tri par dernière séance demandent le résumé de chaque patient : disponibles jusqu&apos;à 20 patients.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Explication des filtres désactivés</note>
       </trans-unit>
       <trans-unit id="patients.filter.label" datatype="html">
         <source>Filtrer les <x id="subjects" equiv-text="subjects"/> par nom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <note priority="1" from="description">Étiquette du filtre de la liste</note>
       </trans-unit>
@@ -15843,7 +15867,7 @@
         <source>Filtrer par nom… (accents ignorés)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <note priority="1" from="description">Texte indicatif du filtre de la liste</note>
       </trans-unit>
@@ -15851,7 +15875,7 @@
         <source>Tags</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">98</context>
         </context-group>
         <note priority="1" from="description">Bouton du menu des tags</note>
       </trans-unit>
@@ -15859,7 +15883,7 @@
         <source>Tag : #<x id="tag" equiv-text="tag"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">99</context>
         </context-group>
         <note priority="1" from="description">Bouton du menu des tags, un tag choisi</note>
       </trans-unit>

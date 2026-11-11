@@ -203,7 +203,7 @@ describe('PatientListStore', () => {
       const store = setup({ list, activity: activityCall });
       await store.load();
       await flush();
-      expect(store.quickCounts()).toEqual({ all: 2, flags: 1, today: 1, drafts: 1 });
+      expect(store.quickCounts()).toEqual({ all: 2, more: false, flags: 1, today: 1, drafts: 1 });
       store.setQuick('flags');
       expect(store.rows().map((row) => row.patient.id)).toEqual(['p-omar']);
       store.setQuick('today');
@@ -213,6 +213,49 @@ describe('PatientListStore', () => {
       expect(list).toHaveBeenCalledTimes(1);
       await store.clearFilters();
       expect(store.quick()).toBe('all');
+    });
+
+    it('21 patients sans page suivante : ni tri par séance ni Aujourd’hui / Brouillons', async () => {
+      const store = setup({ list: vi.fn().mockResolvedValue(page(many(21), null)) });
+      await store.load();
+      for (let i = 0; i < 10; i++) await flush();
+      expect(store.activityCovered()).toBe(false);
+      expect(store.sort()).toBe('lastSession');
+      expect(store.effectiveSort()).toBe('updated');
+      // Ordre du serveur (sort=updated) conservé, pas de réordonnancement partiel.
+      expect(store.rows().map((row) => row.patient.id)).toEqual(many(21).map((p) => p.id));
+      store.setQuick('today');
+      expect(store.effectiveQuick()).toBe('all');
+      expect(store.rows()).toHaveLength(21);
+      expect(store.quickCounts()).toEqual({
+        all: 21,
+        more: false,
+        flags: 0,
+        today: null,
+        drafts: null,
+      });
+    });
+
+    it('page suivante : comptes « Tous » et « Flags » non présentés comme complets', async () => {
+      const list = vi
+        .fn()
+        .mockResolvedValueOnce(page([patient(), OMAR], 'c-2'))
+        .mockResolvedValueOnce(page([patient({ id: 'p-lea' })], null));
+      const store = setup({ list });
+      await store.load();
+      await flush();
+      expect(store.activityCovered()).toBe(false);
+      expect(store.effectiveSort()).toBe('updated');
+      expect(store.quickCounts()).toMatchObject({ all: 2, more: true, flags: null, today: null });
+      store.setQuick('drafts');
+      expect(store.effectiveQuick()).toBe('all');
+      // Liste complète après « Afficher plus » (3 patients ≤ 20) : tout redevient disponible.
+      await store.loadMore();
+      for (let i = 0; i < 5; i++) await flush();
+      expect(store.activityCovered()).toBe(true);
+      expect(store.effectiveSort()).toBe('lastSession');
+      expect(store.effectiveQuick()).toBe('drafts');
+      expect(store.quickCounts()).toMatchObject({ all: 3, more: false, flags: 1, today: 0 });
     });
 
     it('tri dernière séance : la séance la plus récente d’abord', async () => {

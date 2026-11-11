@@ -207,6 +207,60 @@ describe('PatientListPage', () => {
     expect(el.querySelectorAll('tbody tr')).toHaveLength(2);
   });
 
+  it('liste incomplète : « Tous · 2+ », pas de tri par séance, Aujourd’hui / Brouillons désactivés, note', async () => {
+    const list = vi
+      .fn()
+      .mockResolvedValueOnce({ items: [patient(), OMAR], nextCursor: 'c-2' })
+      .mockResolvedValue({ items: [], nextCursor: null });
+    const { fixture, el } = await render({ list });
+    await settle(fixture);
+    const chips = [...el.querySelectorAll<HTMLButtonElement>('pm-patient-filters .chip')];
+    expect(chips.map((c) => text(c))).toEqual([
+      'Tous · 2+',
+      "Aujourd'hui",
+      'Flags',
+      'Brouillons',
+      'Tags ▾',
+    ]);
+    expect(chips[1].disabled).toBe(true);
+    expect(chips[3].disabled).toBe(true);
+    expect(chips[1].getAttribute('aria-describedby')).toBe('patients-quick-hint');
+    expect(text(el.querySelector('#patients-quick-hint'))).toContain('jusqu');
+    const select = el.querySelector<HTMLSelectElement>('#patients-sort')!;
+    expect([...select.options].map((o) => o.value)).not.toContain('lastSession');
+    expect(select.value).toBe('updated');
+    expect(el.querySelector('thead th[aria-sort]')).toBeNull();
+    expect(text(el.querySelector('.table-footer .partial'))).toBe(
+      "Résumé d'activité affiché pour les 20 premiers patients",
+    );
+    expect(text(el.querySelector('.counter'))).toBe('plus de 2 suivis actifs');
+
+    // Filtre « Flags » vide parmi les chargés : le dire, et proposer de charger la suite.
+    chips[2].click();
+    fixture.detectChanges();
+    expect(el.querySelectorAll('tbody tr')).toHaveLength(1);
+  });
+
+  it('liste incomplète, filtre sans résultat : seuls les chargés sont filtrés, Charger la suite', async () => {
+    const list = vi
+      .fn()
+      .mockResolvedValueOnce({ items: [patient()], nextCursor: 'c-2' })
+      .mockResolvedValue({ items: [], nextCursor: null });
+    const { fixture, el } = await render({ list });
+    await settle(fixture);
+    [...el.querySelectorAll<HTMLButtonElement>('pm-patient-filters .chip')]
+      .find((c) => text(c) === 'Flags')!
+      .click();
+    fixture.detectChanges();
+    const empty = el.querySelector('pm-state [role="status"]');
+    expect(text(empty)).toContain('parmi les 1 patients chargés : seuls ceux-là sont filtrés');
+    const action = empty!.querySelector<HTMLButtonElement>('button')!;
+    expect(text(action)).toBe('Charger la suite');
+    action.click();
+    await settle(fixture);
+    expect(list).toHaveBeenLastCalledWith(expect.objectContaining({ cursor: 'c-2' }));
+  });
+
   it('colonne Flags masquée quand aucun patient affiché n’a ni drapeau ni brouillon', async () => {
     const { fixture, el } = await render({
       list: vi.fn().mockResolvedValue({ items: [patient()], nextCursor: null }),

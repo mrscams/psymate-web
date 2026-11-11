@@ -160,18 +160,18 @@ export class PatientListPage {
     const of = this.store.hasMore() ? `${total}+` : `${total}`;
     const subjects = subjectLabel(this.vocabulary.label(), shown > 1 ? 'many' : 'one');
     const tag = this.store.tag();
-    const quick = quickFilterLabel(this.store.quick());
+    const quick = quickFilterLabel(this.store.effectiveQuick());
     const filter = tag === null ? quick : `${quick} · #${tag}`;
     return shown > 1
       ? $localize`:Pied de la liste, plusieurs lignes@@patients.footer.shownMany:${shown}:shown: ${subjects}:subjects: affichés sur ${of}:total: · filtrés par « ${filter}:filter: »`
       : $localize`:Pied de la liste, une ligne ou aucune@@patients.footer.shownOne:${shown}:shown: ${subjects}:subjects: affiché sur ${of}:total: · filtré par « ${filter}:filter: »`;
   });
 
-  /** Au-delà de 20 lignes, le résumé n'est lu que pour les premières (un appel par ligne). */
+  /** Au-delà de 20 lignes (ou avec une page suivante), le résumé n'est lu que pour les premières. */
   protected readonly partialNote = computed(() =>
-    this.store.items().length > ACTIVITY_LIMIT
-      ? $localize`:Pied de la liste, résumé partiel@@patients.footer.partial:séances, émotions et situations des ${ACTIVITY_LIMIT}:limit: premiers`
-      : null,
+    this.store.activityCovered()
+      ? null
+      : $localize`:Pied de la liste, résumé partiel@@patients.footer.partialNote:Résumé d'activité affiché pour les ${ACTIVITY_LIMIT}:limit: premiers patients`,
   );
 
   /** Résumés en échec : avertissement sous le tableau, avec « Réessayer ». */
@@ -189,13 +189,25 @@ export class PatientListPage {
     return $localize`:État vide de la liste filtrée@@patients.empty.filtered:Aucun ${subject}:subject: ne correspond`;
   });
   protected readonly quickEmptyMessage = computed(() => {
-    const filter = quickFilterLabel(this.store.quick());
+    const filter = quickFilterLabel(this.store.effectiveQuick());
+    if (this.store.hasMore()) {
+      const loaded = this.store.items().length;
+      return $localize`:Phrase du filtre rapide sans résultat, liste incomplète@@patients.quick.emptyPartial:Aucune ligne pour le filtre « ${filter}:filter: » parmi les ${loaded}:loaded: patients chargés : seuls ceux-là sont filtrés.`;
+    }
     return $localize`:Phrase du filtre rapide sans résultat@@patients.quick.emptyMessage:Aucune ligne pour le filtre « ${filter}:filter: ».`;
   });
-  protected readonly showAll: StateAction = {
+  private readonly showAll: StateAction = {
     label: $localize`:Action du filtre rapide sans résultat@@patients.quick.showAll:Afficher tous`,
     handler: () => this.store.setQuick('all'),
   };
+  private readonly loadMoreAction: StateAction = {
+    label: $localize`:Action du filtre rapide sans résultat, liste incomplète@@patients.quick.loadMore:Charger la suite`,
+    handler: () => void this.store.loadMore(),
+  };
+  /** Liste incomplète : charger la suite ; sinon revenir à « Tous ». */
+  protected readonly quickEmptyAction = computed<StateAction>(() =>
+    this.store.hasMore() ? this.loadMoreAction : this.showAll,
+  );
   protected readonly emptyAction = computed<StateAction>(() =>
     this.store.filtered()
       ? {

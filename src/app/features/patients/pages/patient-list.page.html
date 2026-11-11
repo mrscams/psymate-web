@@ -30,9 +30,10 @@
 <pm-patient-filters
   [query]="query()"
   (queryChange)="onQuery($event)"
-  [sort]="store.sort()"
+  [sort]="store.effectiveSort()"
   (sortChange)="store.setSort($event)"
-  [quick]="store.quick()"
+  [quick]="store.effectiveQuick()"
+  [activityCovered]="store.activityCovered()"
   [counts]="store.items().length > 0 ? store.quickCounts() : null"
   (quickChange)="store.setQuick($event)"
   [tags]="tags.tags().data ?? []"
@@ -108,7 +109,7 @@
         <pm-patient-table
           [rows]="store.rows()"
           [query]="store.effectiveQuery()"
-          [sort]="store.sort()"
+          [sort]="store.effectiveSort()"
           [refreshing]="refreshing()"
           (removeDemo)="removeDemo($event)"
           (restoreDemo)="restoreDemo($event)"
@@ -118,7 +119,7 @@
           kind="empty"
           [title]="quickEmptyTitle()"
           [message]="quickEmptyMessage()"
-          [action]="showAll"
+          [action]="quickEmptyAction()"
         />
       }
       @if (activityProblem(); as problem) {

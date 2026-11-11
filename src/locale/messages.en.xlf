@@ -22742,15 +22742,6 @@
         </context-group>
         <note priority="1" from="description">Pied de la liste : raccourcis</note>
       </trans-unit>
-      <trans-unit id="patients.footer.partial" datatype="html">
-        <source>séances, émotions et situations des <x id="limit" equiv-text="ACTIVITY_LIMIT"/> premiers</source>
-        <target state="translated">sessions, emotions and situations of the first <x id="limit" equiv-text="ACTIVITY_LIMIT"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">173</context>
-        </context-group>
-        <note priority="1" from="description">Pied de la liste, résumé partiel</note>
-      </trans-unit>
       <trans-unit id="patients.footer.shownMany" datatype="html">
         <source><x id="shown" equiv-text="shown"/> <x id="subjects" equiv-text="subjects"/> affichés sur <x id="total" equiv-text="of"/> · filtrés par « <x id="filter" equiv-text="filter"/> »</source>
         <target state="translated"><x id="shown" equiv-text="shown"/> <x id="subjects" equiv-text="subjects"/> shown of <x id="total" equiv-text="of"/> · filtered by “<x id="filter" equiv-text="filter"/>”</target>
@@ -23101,6 +23092,42 @@
           <context context-type="linenumber">103,107</context>
         </context-group>
         <note priority="1" from="description">Invitation à explorer la démo</note>
+      </trans-unit>
+      <trans-unit id="patients.footer.partialNote" datatype="html">
+        <source>Résumé d&apos;activité affiché pour les <x id="limit" equiv-text="ACTIVITY_LIMIT"/> premiers patients</source>
+        <target state="translated">Activity summary shown for the first <x id="limit" equiv-text="ACTIVITY_LIMIT"/> patients</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">174</context>
+        </context-group>
+        <note priority="1" from="description">Pied de la liste, résumé partiel</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.coverageHint" datatype="html">
+        <source>« Aujourd&apos;hui », « Brouillons » et le tri par dernière séance demandent le résumé de chaque patient : disponibles jusqu&apos;à 20 patients.</source>
+        <target state="translated">“Today”, “Drafts” and sorting by last session need each patient's summary: available up to 20 patients.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Explication des filtres désactivés</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.emptyPartial" datatype="html">
+        <source>Aucune ligne pour le filtre « <x id="filter" equiv-text="filter"/> » parmi les <x id="loaded" equiv-text="loaded"/> patients chargés : seuls ceux-là sont filtrés.</source>
+        <target state="translated">No row for the “<x id="filter" equiv-text="filter"/>” filter among the <x id="loaded" equiv-text="loaded"/> loaded patients: only those are filtered.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">195</context>
+        </context-group>
+        <note priority="1" from="description">Phrase du filtre rapide sans résultat, liste incomplète</note>
+      </trans-unit>
+      <trans-unit id="patients.quick.loadMore" datatype="html">
+        <source>Charger la suite</source>
+        <target state="translated">Load more</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
+          <context context-type="linenumber">204</context>
+        </context-group>
+        <note priority="1" from="description">Action du filtre rapide sans résultat, liste incomplète</note>
       </trans-unit>
     </body>
   </file>

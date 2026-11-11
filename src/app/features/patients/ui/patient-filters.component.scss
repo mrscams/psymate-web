@@ -113,6 +113,12 @@
     inset: -7px 0;
   }
 
+  &:disabled {
+    border-color: var(--border-subtle);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+  }
+
   &[aria-pressed='true'],
   &.active {
     border-color: var(--primary);
@@ -133,4 +139,10 @@
   display: inline-block;
   width: 16px;
   color: var(--primary);
+}
+
+.coverage-hint {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font: 400 12px/1.5 var(--font-ui);
 }
