@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T05:43:23.251Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-A8 Socle : pm-admin-bar sans débordement à 375 px (onglets défilants, rappel à droite dès 1 100 px), .sr-only left: 0, pm-side-panel subtitle et largeur 520, pm-public-layout wide 1 280 px, describedBy des champs date et mois, « non clôturée » (unclosedAfterMin), data.contentWidth",
+  "next": "Branchements features : sous-titre éditeur d'entrée, 520 px + sous-titre éditeur de lien, contentWidth annuaire et admin (retirer le mixin wide), unclosedAfterMin dans patient-shell, describedBy des formulaires",
+  "pr": "https://github.com/mrscams/psymate-web/pull/64",
+  "branch": "claude/ux-a8-shared-finish",
+  "checkout": "agent-a211dbe3cabdf9b4c"
+}
