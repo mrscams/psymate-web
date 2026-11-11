@@ -21,12 +21,21 @@
         >Assemblé à partir des entrées, par règles, sans IA</span
       >
       @if (view(); as v) {
-        @if (v.narrative.sentences.length) {
-          <div class="brief">
-            @for (sentence of v.narrative.sentences; track $index) {
-              <p class="sentence">{{ sentence }}</p>
+        @if (brief().length) {
+          <!-- Les phrases du serveur mot pour mot, en un paragraphe ; leurs faits en gras. -->
+          <p class="brief">
+            @for (sentence of brief(); track $index) {
+              <span class="sentence">
+                @for (part of sentence; track $index) {
+                  @if (part.strong) {
+                    <strong>{{ part.text }}</strong>
+                  } @else {
+                    <span>{{ part.text }}</span>
+                  }
+                }</span
+              >&ngsp;
             }
-          </div>
+          </p>
         }
         @if (v.narrative.attention; as attention) {
           <p class="attention">
@@ -46,7 +55,9 @@
 
     <!-- Les vrais ressentis : graphe à points (ECharts en @defer), légende, données. -->
     <pm-overview-block
-      [heading]="feelingsHeading()"
+      heading="Comment évoluent les ressentis"
+      i18n-heading="
+        Titre du bloc des ressentis de la vue simple@@overview.simple.feelings.headingShort"
       [state]="state('feelings')"
       emptyTitle="Pas encore de ressentis sur cette période"
       i18n-emptyTitle="Bloc des ressentis vide@@overview.simple.feelings.empty.title"
@@ -58,6 +69,8 @@
       [lines]="4"
       (retry)="retry.emit()"
     >
+      <!-- Sélecteur de fenêtre dans la carte, comme la maquette 02b. -->
+      <pm-overview-window blockMeta [value]="window()" (selected)="windowChange.emit($event)" />
       @if (view(); as v) {
         <pm-overview-feelings [view]="v" (pointSelected)="entrySelected.emit($event)" />
       }
@@ -337,10 +350,20 @@
       >
       @if (view(); as v) {
         <ul class="frame">
-          @if (v.facts.followedSince) {
-            <li i18n="Début du suivi@@overview.simple.frame.since">
-              Suivi depuis le {{ day(v.facts.followedSince) }}
-            </li>
+          @if (followedSince(); as since) {
+            @if (since.fromSessions) {
+              <li
+                i18n="
+                  Début du suivi déduit de la première séance, vue
+                  simple@@overview.simple.frame.firstSession"
+              >
+                Suivi depuis le {{ day(since.date) }} (première séance connue)
+              </li>
+            } @else {
+              <li i18n="Début du suivi@@overview.simple.frame.since">
+                Suivi depuis le {{ day(since.date) }}
+              </li>
+            }
           }
           <li i18n="Nombre de séances du dossier@@overview.simple.frame.sessions">
             {v.facts.sessionCount, plural,
@@ -376,6 +399,7 @@
     <pm-overview-block
       heading="À compléter"
       i18n-heading="Titre du bloc à compléter@@overview.simple.todo.heading"
+      tone="warning"
       [state]="state('todo')"
       emptyTitle="Rien à compléter"
       i18n-emptyTitle="Bloc à compléter vide@@overview.simple.todo.empty.title"

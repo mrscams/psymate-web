@@ -16,6 +16,8 @@ import { StateKind, uniqueId } from '../../../shared/util';
   template: `
     <section
       class="block"
+      [class.warning]="tone() === 'warning' && !state()"
+      [class.inline-meta]="inlineMeta()"
       [attr.aria-labelledby]="headingId"
       [attr.aria-busy]="refreshing() || null"
     >
@@ -82,6 +84,18 @@ import { StateKind, uniqueId } from '../../../shared/util';
       text-transform: uppercase;
       color: var(--text-secondary);
     }
+    /* Méta collée au titre (« moyenne glissante 7 j »), le reste poussé à droite (maquette 02). */
+    .inline-meta h3 {
+      flex: 0 1 auto;
+    }
+    /* « À compléter » de la vue simple sur fond ambre (maquette 02b) ; jamais pour un état. */
+    .warning {
+      background: var(--warning-bg);
+      border-color: var(--warning-bg);
+    }
+    .warning h3 {
+      color: var(--warning);
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -96,6 +110,10 @@ export class OverviewBlockComponent {
   /** Relecture en cours, le contenu précédent reste affiché (grisé). */
   readonly refreshing = input(false);
   readonly lines = input(3);
+  /** Fond du bloc quand il a un contenu : ambre pour « À compléter » (maquette 02b). */
+  readonly tone = input<'default' | 'warning'>('default');
+  /** Le titre ne prend pas toute la ligne : la méta le suit (maquette 02, carte de la tendance). */
+  readonly inlineMeta = input(false);
   readonly retry = output<void>();
 
   protected readonly headingId = uniqueId('overview-block');

@@ -66,9 +66,10 @@ test.describe('vue d’ensemble', () => {
       'aria-pressed',
       'true',
     );
-    const summary = block(page, 'Résumé');
-    // Tuile « Ressentis » : les trois ressentis de la fenêtre.
-    await expect(summary.locator('.figure').nth(1)).toHaveText('3');
+    const facts = block(page, 'Faits clés');
+    // Tuile « Ressentis » : les trois ressentis de la fenêtre ; intensité moyenne de la fenêtre.
+    await expect(facts.locator('.figure').nth(1)).toHaveText('3');
+    await expect(facts.locator('.figure').nth(2)).toHaveText('6,0/10');
     const trend = block(page, "Tendance d'intensité · 90 jours");
     await expect(trend.getByRole('img')).toHaveAttribute(
       'aria-label',
@@ -76,7 +77,10 @@ test.describe('vue d’ensemble', () => {
     );
     // ECharts (chargé à la demande) dessine la courbe.
     await expect(trend.locator('pm-overview-trend-chart svg').first()).toBeVisible();
-    await expect(block(page, 'Traitement en cours')).toContainText('Sertraline 50 mg');
+    // Traitement dans les faits clés ; suivi depuis la première séance connue (dossier créé
+    // aujourd'hui, séance passée il y a 10 jours).
+    await expect(facts).toContainText('Sertraline 50 mg');
+    await expect(facts).toContainText('(première séance connue)');
     await expect(block(page, /Émotions dominantes/)).toContainText('Anxiété');
     const situations = block(page, 'Situations actives');
     await expect(situations).toContainText('Surcharge au travail');
@@ -92,7 +96,7 @@ test.describe('vue d’ensemble', () => {
     ).toHaveAttribute('href', new RegExp(`/timeline\\?mode=session&focus=`));
 
     // Clic sur la situation → graphe centré sur elle.
-    await situations.getByRole('link', { name: /Voir dans le graphe/ }).click();
+    await situations.getByRole('link', { name: /voir dans le graphe/i }).click();
     await expect(page).toHaveURL(
       new RegExp(`/fr/patients/${folder.patientId}/graph\\?root=${folder.situation}$`),
     );
@@ -133,7 +137,7 @@ test.describe('vue d’ensemble', () => {
     );
     await viewToggle(page).getByRole('button', { name: 'Complète' }).click();
     expect((await viewSaved).request().postDataJSON()).toEqual({ 'overview.view': 'complete' });
-    await expect(block(page, 'Résumé')).toBeVisible();
+    await expect(block(page, 'Faits clés')).toBeVisible();
 
     // 1 an : écrit overview.window, la synthèse est relue par l'API avec ?window=12m.
     const saved = page.waitForResponse(
@@ -177,7 +181,7 @@ test.describe('vue d’ensemble', () => {
     await page.goto(`/fr/patients/${folder.patientId}`);
     // Tuile « Ressentis » et résumé de la courbe : des valeurs de la projection (recentActivity,
     // lu en direct, ne prouverait rien).
-    const feelings = block(page, 'Résumé').locator('.figure').nth(1);
+    const feelings = block(page, 'Faits clés').locator('.figure').nth(1);
     await expect(feelings).toHaveText('3');
     const trend = block(page, "Tendance d'intensité · 90 jours");
 
@@ -257,7 +261,7 @@ test.describe('vue d’ensemble', () => {
     const folder = await overviewFolder(request);
     await signIn(page, account);
     await page.goto(`/fr/patients/${folder.patientId}`);
-    await expect(block(page, 'Résumé').locator('.figure').nth(1)).toHaveText('3');
+    await expect(block(page, 'Faits clés').locator('.figure').nth(1)).toHaveText('3');
 
     // Sélecteur de fenêtre : Tab d'un bouton à l'autre, Entrée et Espace le pressent.
     const windows = windowSelector(page);
@@ -307,7 +311,7 @@ test.describe('vue d’ensemble', () => {
 
     // « Voir dans le graphe » : Entrée → graphe centré sur la situation.
     await block(page, 'Situations actives')
-      .getByRole('link', { name: /Voir dans le graphe/ })
+      .getByRole('link', { name: /voir dans le graphe/i })
       .focus();
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(
@@ -359,19 +363,20 @@ test.describe('vue d’ensemble', () => {
 
     const empties: [string | RegExp, string][] = [
       [/Tendance d'intensité/, 'Pas encore de ressentis sur cette période'],
-      ['À surveiller · à compléter', 'Rien à signaler'],
       ['Situations actives', 'Aucune situation en cours'],
-      ['Traitement en cours', 'Aucun traitement en cours'],
       ['Dernières séances', 'Aucune séance'],
       [/Émotions dominantes/, "Pas d'émotion dominante"],
+      ['À compléter', 'Rien à compléter'],
       ['Activité récente', 'Aucune entrée pour le moment'],
     ];
     for (const [heading, title] of empties) {
       const section = block(page, heading);
       await expect(section.getByRole('status')).toContainText(title);
     }
-    // Le résumé n'est jamais « vide » : ses zéros sont une information.
-    await expect(block(page, 'Résumé').locator('.figure')).toHaveText(['0', '0', '—', '0']);
+    // Les faits clés ne sont jamais « vides » : leurs zéros sont une information.
+    const facts = block(page, 'Faits clés');
+    await expect(facts.locator('.figure')).toHaveText(['0', '0', '—', '0']);
+    await expect(facts).toContainText('Aucun traitement en cours');
     await expectNoAxeViolations(page);
   });
 
