@@ -1,19 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { AppLocale } from '../../../core/i18n';
+import { PublicFooterComponent } from './public-footer.component';
+import { PublicHeaderComponent } from './public-header.component';
 
-/** Routes publiques (fiches 08, 24 ; pied de page, fiche 00 §4). */
-export const PUBLIC_PATHS = {
-  directory: '/annuaire',
-  howItWorks: '/comment-ca-marche',
-  login: '/connexion',
-  home: '/patients',
-  legal: '/mentions-legales',
-  privacy: '/confidentialite',
-  accessibility: '/accessibilite',
-} as const;
+export { PUBLIC_PATHS } from './public-paths';
 
 /**
  * Layout des pages publiques (fiche 00 §4) : bandeau logo PsyMate + « Annuaire des praticiens »,
@@ -22,10 +13,14 @@ export const PUBLIC_PATHS = {
  * confidentialité · accessibilité, sans numéro d'urgence (G Q20). `narrow` : conteneur centré 480 px
  * des formulaires publics ; `wide` (UX-A8) : contenu jusqu'à 1 280 px (annuaire, maquette 08) ;
  * sinon 1 120 px. Sans garde ni SessionStore : la coquille passe `authenticated`.
+ *
+ * UX-A10 : le bandeau (`pm-public-header`), le pied (`pm-public-footer`) et les styles du `<main>`
+ * (`_public-main.scss`) sont des pièces séparées ; la coquille les pose elle-même autour de son
+ * unique `<router-outlet>`, que ce layout ne reçoit plus par projection.
  */
 @Component({
   selector: 'pm-public-layout',
-  imports: [MatButtonModule, RouterLink],
+  imports: [PublicFooterComponent, PublicHeaderComponent],
   templateUrl: './public-layout.component.html',
   styleUrl: './public-layout.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,9 +33,4 @@ export class PublicLayoutComponent {
   readonly wide = input(false);
   readonly switchHref = input.required<string>();
   readonly switchLang = input.required<AppLocale>();
-
-  protected readonly paths = PUBLIC_PATHS;
-  protected readonly practitionerPath = computed(() =>
-    this.authenticated() ? PUBLIC_PATHS.home : PUBLIC_PATHS.login,
-  );
 }

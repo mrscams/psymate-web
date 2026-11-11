@@ -1,86 +1,11 @@
-<a class="skip-link" href="#main" i18n="Lien d'évitement vers le contenu@@appBar.skip">
-  Aller au contenu
-</a>
-<header class="public-header">
-  <a class="brand" [routerLink]="paths.directory">
-    <svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <circle cx="12" cy="12" r="10" />
-      <path d="M8 16V8h4.5a3 3 0 0 1 0 6H8" />
-    </svg>
-    <span class="brand-name" i18n="Nom du produit@@app.brand">PsyMate</span>
-    <span class="tagline" i18n="Sous-titre du bandeau public@@public.tagline"
-      >Annuaire des praticiens</span
-    >
-  </a>
-  <nav
-    class="links"
-    aria-label="Site"
-    i18n-aria-label="Étiquette de la navigation publique@@public.nav.label"
-  >
-    <a
-      [routerLink]="paths.directory"
-      routerLinkActive="active"
-      ariaCurrentWhenActive="page"
-      i18n="Lien du bandeau public@@public.nav.directory"
-      >Annuaire</a
-    >
-    <a
-      [routerLink]="paths.howItWorks"
-      routerLinkActive="active"
-      ariaCurrentWhenActive="page"
-      i18n="Lien du bandeau public@@public.nav.howItWorks"
-      >Comment ça marche</a
-    >
-  </nav>
-  <nav
-    class="locale"
-    aria-label="Langue"
-    i18n-aria-label="Étiquette de la navigation de langue@@app.localeNav.label"
-  >
-    <a
-      class="locale-switch pm-link-target"
-      [href]="switchHref()"
-      [attr.hreflang]="switchLang()"
-      [attr.lang]="switchLang()"
-      i18n="Lien vers l'autre langue, écrit dans cette autre langue@@app.localeSwitch"
-      >English</a
-    >
-  </nav>
-  <a
-    mat-stroked-button
-    class="practitioner"
-    [routerLink]="practitionerPath()"
-    i18n="Bouton du bandeau public vers l'espace praticien@@public.nav.practitioner"
-    >Espace praticien</a
-  >
-</header>
+<pm-public-header
+  [authenticated]="authenticated()"
+  [switchHref]="switchHref()"
+  [switchLang]="switchLang()"
+/>
 
 <main id="main" class="public-main" [class.narrow]="narrow()" [class.wide]="wide() && !narrow()">
   <ng-content />
 </main>
 
-<footer class="public-footer">
-  <nav
-    aria-label="Informations légales"
-    i18n-aria-label="Étiquette de la navigation du pied@@public.footer.label"
-  >
-    <a
-      class="pm-link-target"
-      [routerLink]="paths.legal"
-      i18n="Lien du pied public@@public.footer.legal"
-      >Mentions légales</a
-    >
-    <a
-      class="pm-link-target"
-      [routerLink]="paths.privacy"
-      i18n="Lien du pied public@@public.footer.privacy"
-      >Confidentialité</a
-    >
-    <a
-      class="pm-link-target"
-      [routerLink]="paths.accessibility"
-      i18n="Lien du pied public@@public.footer.accessibility"
-      >Accessibilité</a
-    >
-  </nav>
-</footer>
+<pm-public-footer />

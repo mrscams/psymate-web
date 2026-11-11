@@ -1,0 +1,22 @@
+// `<main>` du layout public (fiche 00 §4), une seule source : `PublicLayoutComponent` et la coquille
+// (`AppComponent`, qui garde un seul `<main>` autour d'un seul `<router-outlet>`, UX-A10).
+@mixin public-main {
+  // Marge intérieure latérale, partagée par le padding et la largeur du mode large.
+  --public-main-inline: 24px;
+
+  flex: 1;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px var(--public-main-inline);
+
+  &.narrow {
+    max-width: 480px;
+  }
+
+  // Annuaire (maquette 08, UX-A8, UX-A9c) : filtres, liste et carte côte à côte sur 1 280 px de
+  // contenu ; la boîte est en border-box, ses marges intérieures s'ajoutent donc au plafond.
+  &.wide {
+    max-width: calc(1280px + 2 * var(--public-main-inline));
+  }
+}

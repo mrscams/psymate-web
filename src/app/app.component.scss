@@ -1,6 +1,21 @@
+@use './shared/ui/public-layout/public-main';
+
 :host {
   display: block;
   min-height: 100%;
+  background: var(--surface-ground);
+}
+
+/*
+ * `<main>` de l'habillage public : mêmes règles que celui de pm-public-layout (fiche 00 §4), plus la
+ * couleur de texte et le fond que posait l'hôte de ce layout (UX-A10). Le fond, de la même couleur que
+ * celui de la coquille, garde le lissage du texte des liens `.pm-link-target` identique à celui d'un
+ * lien en ligne (Chromium sous Linux : voir pm-public-footer).
+ */
+.public-main {
+  @include public-main.public-main;
+
+  color: var(--text-primary);
   background: var(--surface-ground);
 }
 
