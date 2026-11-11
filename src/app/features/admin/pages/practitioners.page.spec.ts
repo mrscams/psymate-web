@@ -69,6 +69,14 @@ describe('PractitionersPage', () => {
     );
   });
 
+  it('UX-A9a : recours lus au premier rendu, jamais par une page remplacée avant d’être rendue', async () => {
+    const openAppeals = vi.fn().mockResolvedValue({ items: [], nextCursor: null });
+    await render({ accounts: vi.fn().mockResolvedValue(accountPage([])), openAppeals });
+    expect(openAppeals).toHaveBeenCalledTimes(1);
+    TestBed.createComponent(PractitionersPage).destroy();
+    expect(openAppeals).toHaveBeenCalledTimes(1);
+  });
+
   it('tableau : statut écrit, actions selon le statut, jamais « Suspendre » sur soi-même', async () => {
     const { el } = await render({
       accounts: vi

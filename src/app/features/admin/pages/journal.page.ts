@@ -184,7 +184,9 @@ export class JournalPage {
       const filters = this.filters();
       untracked(() => void this.store.setFilters(filters));
     });
-    void this.store.loadAdmins();
+    // Au premier rendu (voir VocabularyPage : une instance créée puis aussitôt remplacée par
+    // l'habillage admin ne doit rien lire).
+    effect(() => untracked(() => void this.store.loadAdmins()));
   }
 
   protected categoryLabel(category: JournalCategory): string {
