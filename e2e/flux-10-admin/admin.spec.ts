@@ -362,9 +362,37 @@ test.describe('administration', () => {
       /^\d{1,2} [a-zéû]+\.? \d{4} · \d{2}:\d{2}:\d{2}$/,
     );
     await expectNoAxeViolations(page);
+    // Focus sur la première nouvelle ligne (fiche 22) : celle du premier événement de la page 2,
+    // ou la tête de son groupe s'il rejoint un groupe replié (JournalPage.more()).
+    const nextPage = page.waitForResponse(
+      (res) =>
+        new URL(res.url()).pathname === '/api/admin/journal' &&
+        new URL(res.url()).searchParams.has('cursor'),
+    );
     await page.getByRole('button', { name: 'Afficher plus' }).click();
+    const firstNew = ((await (await nextPage).json()) as { items: { id: string }[] }).items[0].id;
     await expect.poll(() => rows.count()).toBeGreaterThan(before);
-    await expect(page.locator('tbody tr:focus')).toHaveCount(1);
+    const focused = page.locator('tbody tr:focus');
+    await expect(focused).toHaveCount(1);
+    const focusedId = await focused.getAttribute('data-id');
+    if (focusedId !== firstNew) {
+      // Groupe replié : la ligne n'est pas rendue, la tête focalisée la contient une fois dépliée.
+      await expect(page.locator(`tbody tr[data-id="${firstNew}"]`)).toHaveCount(0);
+      const toggle = focused.locator('.group-toggle');
+      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      await toggle.click();
+      const member = page.locator(`tbody tr[data-id="${firstNew}"]`);
+      await expect(member).toHaveClass(/nested/);
+      // Entre la tête et la ligne : seulement des lignes du même groupe (dépliées).
+      expect(
+        await member.evaluate((tr, leadId) => {
+          let row = tr.previousElementSibling;
+          while (row?.classList.contains('nested')) row = row.previousElementSibling;
+          return row?.getAttribute('data-id') === leadId;
+        }, focusedId),
+      ).toBe(true);
+      await toggle.click();
+    }
 
     // Segment « Accès aux documents » : filtre dans l'URL, lignes de ce type seulement.
     await page.getByRole('button', { name: 'Accès aux documents' }).click();
