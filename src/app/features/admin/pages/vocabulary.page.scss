@@ -10,8 +10,7 @@
 .page-header {
   @include admin.page-header;
 
-  flex-direction: column;
-  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .card {
@@ -22,6 +21,12 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+pm-add-entry-form {
+  display: block;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .tabs-row {
@@ -50,6 +55,24 @@
   align-items: center;
   min-height: 44px;
   font: var(--mat-sys-body-medium);
+
+  // Case de 18 px (UX-E4, cible de 24 px avec son libellé).
+  input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--primary);
+  }
+}
+
+// Lignes de 48 px, actions en ligne (UX-E4, maquette 28).
+td {
+  padding-block: 8px;
+  vertical-align: middle;
+}
+
+th:last-child {
+  text-align: right;
 }
 
 .code {
@@ -84,8 +107,9 @@ tr.disabled .label {
 
 .actions {
   display: flex;
-  flex-wrap: wrap;
   gap: 6px;
+  justify-content: flex-end;
+  white-space: nowrap;
 
   button {
     min-height: 32px;
@@ -97,9 +121,11 @@ tr.disabled .label {
     font: var(--mat-sys-label-large);
     cursor: pointer;
 
-    &.danger {
-      border-color: var(--danger);
-      color: var(--danger);
+    // Désactiver n'est pas destructif (on ne supprime jamais) : texte secondaire ; le rouge est
+    // réservé au refus 409 de la boîte de dialogue.
+    &.quiet {
+      border-color: var(--border-subtle);
+      color: var(--text-secondary);
     }
 
     &.success {

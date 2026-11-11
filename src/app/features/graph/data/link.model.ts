@@ -1,7 +1,7 @@
 // Modèles de vue de l'éditeur de lien (fiche 06, handbook §2, couche 4 → 3) : préparés depuis les DTO
 // par data/link.api.ts ; la matrice des types (E5.3, G Q12) vient de GET /api/vocabulary/link-types.
 
-import { EntryType } from '../../../shared/ui';
+import { EntryType, entryTitle } from '../../../shared/ui';
 import { OccurredPrecision } from '../../../shared/util';
 
 /** Les huit codes du contrat (LinkTypeView.code) : toujours le sens source → cible, jamais un passif. */
@@ -93,9 +93,6 @@ export interface TypeRefusal {
 /** Longueur maximale de la justification (CreateLinkRequest.rationale). */
 export const RATIONALE_MAX = 500;
 
-/** Longueur de l'extrait qui désigne une entrée sans titre, comme la phrase du serveur. */
-export const NAME_EXCERPT = 60;
-
 /** Le type est-il permis de `from` vers `to` ? Un côté inconnu (null) ne restreint rien. */
 export function isAllowed(
   type: LinkTypeOption,
@@ -137,15 +134,14 @@ export function orient<T>(source: T, target: T, reversed: boolean): { from: T; t
 }
 
 /**
- * Nom d'une entrée dans la phrase, comme le serveur la compose (LinkDto.sentence) : son titre, sinon
- * un extrait de 60 caractères de son texte, sinon `fallback` (« une entrée »).
+ * Nom d'une entrée dans l'éditeur (UX-A5, titre de repli partagé) : son titre, sinon un extrait de
+ * 60 caractères de son texte, sinon « Note · 24 oct. ».
  */
-export function entryName(entry: Pick<LinkEntry, 'title' | 'excerpt'>, fallback: string): string {
-  const title = entry.title?.trim();
-  if (title) return title;
-  const text = entry.excerpt?.replace(/\s+/g, ' ').trim();
-  if (!text) return fallback;
-  return text.length > NAME_EXCERPT ? `${text.slice(0, NAME_EXCERPT).trimEnd()}…` : text;
+export function linkEntryName(entry: LinkEntry, locale: string): string {
+  return entryTitle(
+    { type: entry.type, title: entry.title, text: entry.excerpt, occurred: entry.occurredFrom },
+    locale,
+  );
 }
 
 /** L'autre extrémité d'un lien de l'entrée ouverte. */

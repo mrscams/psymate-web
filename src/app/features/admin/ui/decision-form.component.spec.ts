@@ -30,14 +30,23 @@ async function render(inputs: Record<string, unknown> = {}) {
 }
 
 describe('DecisionFormComponent', () => {
-  it('sans message : complément et refus inactifs ; avec message : actifs et envoyés', async () => {
-    const { button, type, decided } = await render();
-    expect(button('Demander un complément').disabled).toBe(true);
-    expect(button('Refuser et suspendre').disabled).toBe(true);
-    await type('#field-messageToPractitioner', '   ');
-    expect(button('Demander un complément').disabled).toBe(true);
-    await type('#field-messageToPractitioner', 'Merci de joindre votre diplôme.');
+  it('sans message : complément et refus actifs, erreur sous le champ et focus au clic ; rien ne part', async () => {
+    const { fixture, el, button, type, decided } = await render();
+    document.body.appendChild(el);
     expect(button('Demander un complément').disabled).toBe(false);
+    expect(button('Refuser et suspendre').disabled).toBe(false);
+    await type('#field-messageToPractitioner', '   ');
+    button('Refuser et suspendre').click();
+    await fixture.whenStable();
+    expect(decided).toHaveLength(0);
+    const field = el.querySelector<HTMLTextAreaElement>('#field-messageToPractitioner')!;
+    expect(el.querySelector('#field-messageToPractitioner-error')?.textContent).toContain(
+      'Ce champ est obligatoire.',
+    );
+    expect(field.getAttribute('aria-invalid')).toBe('true');
+    expect(document.activeElement).toBe(field);
+    await type('#field-messageToPractitioner', 'Merci de joindre votre diplôme.');
+    expect(el.querySelector('#field-messageToPractitioner-error')).toBeNull();
     button('Demander un complément').click();
     expect(decided).toEqual([
       expect.objectContaining({
@@ -46,16 +55,11 @@ describe('DecisionFormComponent', () => {
         force: false,
       }),
     ]);
+    el.remove();
   });
 
-  it('bouton forcé sans message : la décision part et le 422 s’affiche sous le champ', async () => {
-    const { fixture, el, button, decided } = await render();
-    const reject = button('Refuser et suspendre');
-    reject.disabled = false;
-    reject.click();
-    expect(decided[0]).toEqual(
-      expect.objectContaining({ kind: 'rejected', messageToPractitioner: '' }),
-    );
+  it('422 du serveur : le message de l’API s’affiche sous le champ', async () => {
+    const { fixture, el } = await render();
     fixture.componentRef.setInput('problem', {
       status: 422,
       code: 'VALIDATION_FAILED',
@@ -102,8 +106,9 @@ describe('DecisionFormComponent', () => {
     await fixture.whenStable();
     expect(decided).toHaveLength(0);
     const confirm = el.querySelector('.confirm[role="alert"]');
-    expect(confirm?.textContent).toContain('4 point(s) de contrôle non coché(s)');
-    expect(confirm?.textContent).toContain('1 justificatif(s) non marqué(s) conforme(s)');
+    expect(confirm?.textContent).toContain('4 points de contrôle non cochés');
+    expect(confirm?.textContent).toContain('1 justificatif non marqué conforme');
+    expect(confirm?.textContent).toContain('approuver quand même ?');
     expect(button('Approuver quand même').disabled).toBe(true);
     await type('#field-internalNote', 'Diplôme vérifié auprès de l’université.');
     button('Approuver quand même').click();

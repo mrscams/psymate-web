@@ -1,17 +1,19 @@
 :host {
   display: block;
   overflow-x: auto;
-  // Bloc conteneur des éléments en position absolue du tableau (libellé .sr-only « Actions ») :
-  // sans lui, ils échappent au défilement horizontal de l'hôte et élargissent la page quand le
-  // tableau déborde (zoom 200 %, polices plus larges sous Linux : +11 px, M7-04).
+  // Bloc conteneur des éléments en position absolue du tableau (libellés .sr-only) : sans lui, ils
+  // échappent au défilement horizontal de l'hôte et élargissent la page quand le tableau déborde
+  // (zoom 200 %, polices plus larges sous Linux : +11 px, M7-04).
   position: relative;
 }
 
+// Maquette 01 : tableau 13 px, en-têtes 11 px capitales sur surface-ground, lignes 12 × 16 px.
 .patients {
   width: 100%;
   border-collapse: collapse;
   background: var(--surface-raised);
   color: var(--text-primary);
+  font-size: 13px;
   transition: background-color 150ms;
 
   // Lecture en attente (rechargement, hors ligne : planche 29) : la liste reste affichée et se
@@ -24,23 +26,92 @@
 }
 
 th {
-  padding: 10px 12px;
+  padding: 10px 16px;
   border-bottom: 1px solid var(--border-subtle);
-  text-align: left;
-  font: var(--mat-sys-label-medium);
+  background: var(--surface-ground);
   color: var(--text-secondary);
-  white-space: nowrap;
+  font: 600 11px/1.3 var(--font-ui);
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-transform: uppercase;
 }
 
 td {
-  padding: 10px 12px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--border-subtle);
   vertical-align: middle;
-  font: var(--mat-sys-body-medium);
+  font: 400 13px/1.4 var(--font-ui);
 }
 
-tr:hover td {
-  background: var(--surface-ground);
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+// Ligne entièrement cliquable : le lien du nom s'étend à toute la ligne par son ::after ; les
+// boutons de la ligne passent au-dessus.
+tbody tr {
+  position: relative;
+}
+
+tbody tr:hover td,
+tbody tr:focus-within td {
+  background: var(--primary-tint);
+}
+
+tbody tr:focus-within td:first-child,
+tbody tr:hover td:first-child {
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+.row-link {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0 8px;
+  align-items: center;
+  color: var(--text-primary);
+  text-decoration: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  // L'anneau de focus entoure toute la ligne (le ::after), pas seulement le nom.
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+
+  &:focus-visible::after {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
+
+  &:hover .name {
+    text-decoration: underline;
+  }
+}
+
+.name {
+  order: 1;
+  font: 600 14px/1.35 var(--font-ui);
+}
+
+// Badge DEMO (maquette 01) : surface-sunken, texte secondaire ; avant le nom dans le DOM, après à
+// l'écran.
+.demo-badge {
+  display: inline-flex;
+  order: 2;
+  align-items: center;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  font: 600 10px/1 var(--font-ui);
+  letter-spacing: 0.04em;
 }
 
 tr.archived .name {
@@ -48,38 +119,45 @@ tr.archived .name {
 }
 
 .who {
+  min-width: 240px;
+}
+
+.who-inner {
   display: flex;
-  align-items: center;
   gap: 12px;
-  min-height: 44px;
+  align-items: center;
 }
 
 .avatar {
-  display: inline-flex;
   flex: none;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  border: 1px solid transparent;
   border-radius: 50%;
-  background: var(--primary-tint);
+  background: var(--surface-sunken);
   color: var(--primary-hover);
-  font: var(--mat-sys-label-medium);
+  font: 600 13px/1 var(--font-ui);
+
+  // Patient de démonstration : avatar en pointillés (maquette 01).
+  &.dashed {
+    border: 1px dashed var(--border-strong);
+    background: var(--surface-raised);
+    color: var(--text-secondary);
+  }
 }
 
 .identity {
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
-.name {
-  color: var(--text-primary);
-  font: var(--mat-sys-title-small);
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
+.detail {
+  color: var(--text-secondary);
+  font: 400 12px/1.35 var(--font-ui);
 }
 
 mark {
@@ -88,73 +166,118 @@ mark {
   border-radius: 2px;
 }
 
-.age {
+.muted {
   color: var(--text-secondary);
-  font: var(--mat-sys-body-small);
 }
 
-.tags {
-  display: flex;
+.last {
+  min-width: 130px;
+}
+
+// Attente d'un résumé : barre grise, comme les squelettes de la planche 29.
+.pending {
+  display: inline-block;
+  width: 72px;
+  height: 10px;
+  border-radius: 4px;
+  background: var(--surface-sunken);
+  vertical-align: middle;
+}
+
+.emotion-line {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.emotions .muted {
+  margin-left: 4px;
+  font-size: 12px;
+}
+
+.dots {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.situations {
+  max-width: 220px;
+}
+
+.situations .first {
+  overflow-wrap: anywhere;
+}
+
+.flag-cell {
+  display: inline-flex;
   flex-wrap: wrap;
   gap: 4px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
 }
 
-.tag {
+// Brouillons en attente : puce ambre comme les drapeaux (fiche 00 : jamais de rouge sur un patient).
+.drafts {
   padding: 2px 8px;
   border-radius: 999px;
-  background: var(--surface-sunken);
-  color: var(--text-primary);
+  background: var(--flag-bg);
+  color: var(--warning);
   font: var(--mat-sys-label-medium);
-}
-
-.changed {
-  color: var(--text-secondary);
   white-space: nowrap;
-}
-
-.mono {
-  font-family: var(--font-mono);
 }
 
 .actions {
   text-align: right;
+  white-space: nowrap;
 }
 
-.edit {
+.row-actions {
   display: inline-flex;
+  gap: 8px;
   align-items: center;
-  min-height: 44px;
-  padding: 0 8px;
-  color: var(--primary);
-  font: var(--mat-sys-label-large);
+  justify-content: flex-end;
 }
 
-// Puce du patient de démonstration (planche 29 §2) : information, jamais rouge sur un patient.
-.demo-chip {
-  align-self: flex-start;
-  padding: 0 6px;
-  border-radius: 4px;
-  background: var(--info-bg);
-  color: var(--info);
-  font: 500 11px/18px var(--font-mono);
+.open {
+  color: var(--text-secondary);
+  font: 500 12px/1 var(--font-ui);
+  white-space: nowrap;
 }
 
-.demo-action {
+tbody tr:hover .open,
+tbody tr:focus-within .open {
+  color: var(--primary-hover);
+}
+
+// Boutons de la ligne : au-dessus du lien étendu, cible de 44 px.
+.text-action,
+.more {
+  position: relative;
+  z-index: 1;
+  min-width: 44px;
   min-height: 44px;
   padding: 0 8px;
   border: 0;
+  border-radius: 6px;
   background: none;
-  color: var(--primary);
-  font: var(--mat-sys-label-large);
-  text-decoration: underline;
   cursor: pointer;
 }
 
-a:focus-visible,
-.demo-action:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+.text-action {
+  color: var(--primary);
+  font: var(--mat-sys-label-large);
+}
+
+.more {
+  color: var(--text-secondary);
+  font: 600 16px/1 var(--font-ui);
+
+  &:hover {
+    background: var(--surface-sunken);
+  }
 }

@@ -67,7 +67,7 @@ export class GraphDetailComponent {
     const group = this.group();
     if (group) return groupLabel(group, this.emotionLabels());
     const node = this.node();
-    return node ? nodeName(node, this.emotionLabels()) : '';
+    return node ? nodeName(node, this.emotionLabels(), this.locale) : '';
   });
 
   protected readonly type = computed(() => this.group()?.type ?? this.node()?.type ?? 'note');

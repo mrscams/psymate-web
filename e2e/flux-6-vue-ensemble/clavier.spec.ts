@@ -58,7 +58,13 @@ test('flux 6 au clavier : / nom Entrée, séance dépliée, situation → graphe
   await expect(page).toHaveURL(
     new RegExp(`/fr/patients/${folder.patientId}/graph\\?root=${folder.situation}$`),
   );
-  await expect(page.getByRole('combobox', { name: 'Centré sur' })).toHaveValue(folder.situation);
+  // « Centré sur » (UX-B3) : bouton de la liste filtrable, qui montre le titre de la racine.
+  const rootPicker = page.getByRole('button', {
+    name: 'Centré sur Surcharge au travail',
+    exact: true,
+  });
+  await expect(rootPicker).toHaveAttribute('aria-haspopup', 'listbox');
+  await expect(rootPicker.locator('.value')).toHaveText('Surcharge au travail');
   await page.keyboard.press('1');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${folder.patientId}$`));
 

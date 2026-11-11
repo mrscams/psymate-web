@@ -294,6 +294,23 @@ export function parseMarked(fragment: string | null | undefined): MarkedSegment[
   return segments.length > 0 ? segments : null;
 }
 
+/** Séparateur de fragments de ts_headline côté serveur (FragmentDelimiter par défaut). */
+const FRAGMENT_DELIMITER = / \.\.\. /g;
+
+/**
+ * Points de suspension d'un extrait surligné par le plein texte : seul le séparateur « ... »
+ * entre deux fragments devient « … » (là, la coupe est certaine). Rien n'est ajouté en tête ni en
+ * fin : l'item de recherche ne donne ni le corps ni sa longueur, et une note courte (« RAS »,
+ * « rdv annulé ») ne doit jamais paraître tronquée. Le « … » de bord d'extrait dépend de l'API.
+ */
+export function elideSnippet(segments: MarkedSegment[] | null): MarkedSegment[] | null {
+  if (!segments || segments.length === 0) return segments;
+  return segments.map((segment) => ({
+    ...segment,
+    text: segment.text.replace(FRAGMENT_DELIMITER, ' … '),
+  }));
+}
+
 /** Texte brut d'un fragment découpé (aperçu, noms accessibles). */
 export function plainText(segments: MarkedSegment[] | null): string {
   return segments?.map((segment) => segment.text).join('') ?? '';

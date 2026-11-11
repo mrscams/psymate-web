@@ -104,6 +104,13 @@ test.describe('recherche dans le dossier', () => {
     await signIn(page, dossier.account);
     await page.goto(`/fr/patients/${dossier.patientId}/graph`);
     await expect(page.getByRole('heading', { level: 1, name: 'Marie D.' })).toBeVisible();
+    // Sans ?root=, le graphe écrit sa racine par défaut dans l'URL (UX-B3) : on l'attend avant la
+    // recherche, qui mémorise l'URL de l'onglet d'origine.
+    const graphUrl = new RegExp(
+      `/fr/patients/${dossier.patientId}/graph\\?root=(all|[0-9a-f-]{36})$`,
+    );
+    await expect(page).toHaveURL(graphUrl);
+    const origin = page.url();
     await page.locator('body').press('/');
     await expect(bar(page)).toBeFocused();
     await page.keyboard.type('entretien manager');
@@ -146,7 +153,8 @@ test.describe('recherche dans le dossier', () => {
 
     // Échap : retour à l'onglet d'où l'on vient.
     await page.keyboard.press('Escape');
-    await expect(page).toHaveURL(new RegExp(`/fr/patients/${dossier.patientId}/graph$`));
+    await expect(page).toHaveURL(graphUrl);
+    expect(page.url()).toBe(origin);
     await expect(bar(page)).toHaveValue('');
   });
 

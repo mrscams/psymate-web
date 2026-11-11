@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  linkedSignal,
+  output,
+} from '@angular/core';
 
 import { uniqueId } from '../../../shared/util';
 import { LinkTypeCode, TypeAvailability } from '../data/link.model';
@@ -7,8 +14,10 @@ import { refusalText } from './link-labels';
 /**
  * Les types de lien en puces (fiche 06, Relation) : `role="group"` nommé, un `<button aria-pressed>`
  * par type, dans l'ordre du catalogue. Les types que la matrice refuse pour le couple courant restent
- * visibles mais désactivés (`aria-disabled`, toujours atteignables au clavier) ; leur aide, sous les
- * puces, leur est reliée par `aria-describedby`.
+ * visibles mais grisés (`text-disabled`, bordure `border-subtle`, UX-B7), `aria-disabled` (toujours
+ * atteignables au clavier) ; leur raison est dans `title` et, pour les lecteurs d'écran, dans une
+ * description reliée par `aria-describedby`. Une seule ligne d'aide visible sous les puces : celle de
+ * la dernière puce refusée touchée (clic ou focus), comme la maquette 06.
  */
 @Component({
   selector: 'pm-link-type-chips',
@@ -27,18 +36,19 @@ import { refusalText } from './link-labels';
           [attr.aria-pressed]="value() === item.code"
           [attr.aria-disabled]="item.allowed && !disabled() ? null : 'true'"
           [attr.aria-describedby]="item.helpId"
+          [attr.title]="item.help || null"
           (click)="choose(item.code, item.allowed)"
+          (focus)="explain(item.code, item.allowed)"
         >
           {{ item.label }}
         </button>
       }
     </div>
-    @if (refusals().length > 0) {
-      <ul class="refusals">
-        @for (item of refusals(); track item.code) {
-          <li [id]="item.helpId">{{ item.help }}</li>
-        }
-      </ul>
+    @for (item of refusals(); track item.code) {
+      <span class="sr-only" [id]="item.helpId">{{ item.help }}</span>
+    }
+    @if (shownHelp(); as help) {
+      <p class="hint">{{ help }}</p>
     }
   `,
   styles: `
@@ -48,42 +58,41 @@ import { refusalText } from './link-labels';
     .chips {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
     }
     .chip {
-      min-height: 36px;
+      min-height: 32px;
       padding: 0 12px;
-      border: 1px solid var(--border-strong);
-      border-radius: 18px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 999px;
       background: var(--surface-raised);
       color: var(--text-primary);
-      font: var(--mat-sys-label-large);
+      font: var(--mat-sys-body-medium);
       cursor: pointer;
+    }
+    .chip:hover {
+      border-color: var(--border-strong);
     }
     .chip[aria-pressed='true'] {
       border-color: var(--primary);
       background: var(--primary-tint);
       color: var(--primary-hover);
+      font-weight: 600;
     }
     .chip[aria-disabled='true'] {
-      border-style: dashed;
       border-color: var(--border-subtle);
-      color: var(--text-secondary);
+      background: var(--surface-raised);
+      color: var(--text-disabled);
       cursor: not-allowed;
     }
     .chip:focus-visible {
       outline: 2px solid var(--primary);
       outline-offset: 2px;
     }
-    .refusals {
+    .hint {
       margin: 8px 0 0;
-      padding: 0;
-      list-style: none;
       font: var(--mat-sys-body-small);
       color: var(--text-secondary);
-    }
-    .refusals li + li {
-      margin-top: 2px;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -112,8 +121,27 @@ export class LinkTypeChipsComponent {
 
   protected readonly refusals = computed(() => this.items().filter((item) => !item.allowed));
 
+  /** Puce refusée dont l'aide est montrée ; oubliée quand les types permis changent. */
+  private readonly explained = linkedSignal<readonly TypeAvailability[], LinkTypeCode | null>({
+    source: this.availability,
+    computation: () => null,
+  });
+
+  protected readonly shownHelp = computed(() => {
+    const code = this.explained();
+    return code ? (this.refusals().find((item) => item.code === code)?.help ?? null) : null;
+  });
+
   protected choose(code: LinkTypeCode, allowed: boolean): void {
-    if (!allowed || this.disabled()) return;
+    if (!allowed) {
+      this.explained.set(code);
+      return;
+    }
+    if (this.disabled()) return;
     this.chosen.emit(code);
+  }
+
+  protected explain(code: LinkTypeCode, allowed: boolean): void {
+    this.explained.set(allowed ? null : code);
   }
 }
