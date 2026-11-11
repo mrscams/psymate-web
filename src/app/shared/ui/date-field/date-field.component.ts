@@ -65,14 +65,13 @@ abstract class DateFieldBase implements ControlValueAccessor, Validator {
   /** Texte saisi illisible ou date inexistante. */
   protected readonly parseError = signal(false);
   protected readonly ariaInvalid = computed(() => this.invalid() || this.parseError());
-  /** Note d'aide puis message d'erreur ; null sans l'un ni l'autre. */
-  protected readonly ariaDescribedBy = computed(
-    () =>
-      [this.describedBy(), this.errorId()]
-        .map((id) => id?.trim())
-        .filter(Boolean)
-        .join(' ') || null,
-  );
+  /** Note d'aide puis message d'erreur, chaque id une seule fois ; null sans l'un ni l'autre. */
+  protected readonly ariaDescribedBy = computed(() => {
+    const ids = [this.describedBy(), this.errorId()].flatMap((value) =>
+      (value ?? '').split(/\s+/).filter(Boolean),
+    );
+    return [...new Set(ids)].join(' ') || null;
+  });
   protected readonly minDate = computed(() => fromIsoDate(this.min(), this.granularity));
   protected readonly maxDate = computed(() => fromIsoDate(this.max(), this.granularity));
 

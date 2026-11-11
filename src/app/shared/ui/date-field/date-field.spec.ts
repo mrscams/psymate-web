@@ -93,12 +93,14 @@ class HintedDayHost {
   template: `<pm-month-field
     [formControl]="control"
     inputId="since"
-    errorId="since-error"
-    describedBy="since-hint"
+    [errorId]="errorId()"
+    [describedBy]="hint()"
   />`,
 })
 class HintedMonthHost {
   readonly control = new FormControl<string | null>(null);
+  readonly errorId = signal<string | undefined>('since-error');
+  readonly hint = signal<string | null>('since-hint');
 }
 
 async function render<T>(host: Type<T>, locale = 'fr') {
@@ -260,6 +262,27 @@ describe('describedBy (UX-A8)', () => {
   it('pm-month-field : note d’aide avant le message d’erreur', async () => {
     const { input } = await render(HintedMonthHost, 'fr');
     expect(input.getAttribute('aria-describedby')).toBe('since-hint since-error');
+  });
+
+  it('pm-date-field : un id passé à describedBy et errorId n’apparaît qu’une fois', async () => {
+    const { fixture, host, input } = await render(HintedDayHost, 'fr');
+    host.errorId.set('birth-error');
+    host.hint.set('birth-error');
+    await fixture.whenStable();
+    expect(input.getAttribute('aria-describedby')).toBe('birth-error');
+    host.hint.set('birth-hint  birth-error');
+    await fixture.whenStable();
+    expect(input.getAttribute('aria-describedby')).toBe('birth-hint birth-error');
+  });
+
+  it('pm-month-field : un id passé à describedBy et errorId n’apparaît qu’une fois', async () => {
+    const { fixture, host, input } = await render(HintedMonthHost, 'fr');
+    host.hint.set('since-error since-hint');
+    await fixture.whenStable();
+    expect(input.getAttribute('aria-describedby')).toBe('since-error since-hint');
+    host.hint.set('since-error');
+    await fixture.whenStable();
+    expect(input.getAttribute('aria-describedby')).toBe('since-error');
   });
 
   it('sans describedBy : aria-describedby inchangé (errorId seul, ou absent)', async () => {
