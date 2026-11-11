@@ -231,7 +231,7 @@
               <div>
                 <dt i18n="Téléphone du praticien@@public.practitioner.phone">Téléphone</dt>
                 <dd>
-                  <a class="mono" [href]="'tel:' + p.phone">{{ p.phone }}</a>
+                  <a class="mono pm-link-target" [href]="'tel:' + p.phone">{{ p.phone }}</a>
                 </dd>
               </div>
             }
@@ -239,7 +239,7 @@
               <div>
                 <dt i18n="E-mail du praticien@@public.practitioner.email">E-mail</dt>
                 <dd>
-                  <a [href]="'mailto:' + p.email">{{ p.email }}</a>
+                  <a class="pm-link-target" [href]="'mailto:' + p.email">{{ p.email }}</a>
                 </dd>
               </div>
             }
@@ -247,9 +247,13 @@
               <div>
                 <dt i18n="Site web du praticien@@public.practitioner.website">Site web</dt>
                 <dd>
-                  <a [href]="p.websiteUrl" rel="noopener nofollow" target="_blank">{{
-                    p.websiteUrl
-                  }}</a>
+                  <a
+                    class="pm-link-target"
+                    [href]="p.websiteUrl"
+                    rel="noopener nofollow"
+                    target="_blank"
+                    >{{ p.websiteUrl }}</a
+                  >
                 </dd>
               </div>
             }
@@ -275,7 +279,7 @@
             }
           </address>
           @if (mapHref(); as href) {
-            <a class="map" [href]="href" rel="noopener nofollow" target="_blank">
+            <a class="map pm-link-target" [href]="href" rel="noopener nofollow" target="_blank">
               <ng-container i18n="Lien vers un plan@@public.practitioner.map"
                 >Ouvrir dans un plan</ng-container
               >

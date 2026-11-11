@@ -212,13 +212,14 @@
   font: var(--mat-sys-body-small);
 }
 
+// L'écart de 12 px avant « Ouvrir dans un plan » vit sur l'adresse : le lien porte .pm-link-target
+// (UX-G2a, cible de 24 px), dont les marges verticales sont imposées.
 address {
+  margin-bottom: 12px;
   font-style: normal;
 }
 
 .map {
-  display: inline-block;
-  margin-top: 12px;
   color: var(--primary);
 }
 

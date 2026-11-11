@@ -185,4 +185,44 @@ test.describe('UX-G2a cibles des facettes', () => {
     await setExpanded(dialog, false);
     await expectTargets(page, dialog, 'panneau, repliées, sombre');
   });
+
+  // Base sans fiche publiée (CI, seed small) : l'état « aucun résultat » de l'annuaire porte puces,
+  // suggestions et lien « Comment fonctionne l'annuaire ? » (16 px de haut avant UX-G2a). Une
+  // ville qui n'existe pas donne cet état contre l'API réelle, avec ou sans fiches publiées.
+  test('aucun résultat, fiche publique, comment ça marche : aucune cible autonome sous 24 px', async ({
+    page,
+  }) => {
+    test.setTimeout(90_000);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(`${CHECKED}&ville=Aucune-ville-UX-G2a&modalite=video`);
+    await expect(page.locator('.no-results')).toBeVisible();
+    await page.evaluate(() => document.fonts.ready);
+    const noResults = page.locator('.no-results');
+    await expect(
+      noResults.getByRole('link', { name: "Comment fonctionne l'annuaire ?" }),
+    ).toBeVisible();
+    await expect(noResults.getByRole('button').first()).toBeVisible();
+    expect(await smallTargetsBeyondRounding(page)).toEqual([]);
+    const filters = page.getByRole('complementary', { name: 'Filtres' });
+    await expectTargets(page, filters, 'aucun résultat, repliées');
+    await setExpanded(filters, true);
+    await expectTargets(page, filters, 'aucun résultat, dépliées');
+    expect(await smallTargetsBeyondRounding(page)).toEqual([]);
+
+    await page.goto('/fr/comment-ca-marche');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await page.evaluate(() => document.fonts.ready);
+    expect(await smallTargetsBeyondRounding(page)).toEqual([]);
+
+    // Fiche publique : téléphone, e-mail, site et « Ouvrir dans un plan » (16 à 20 px avant).
+    await page.goto('/fr/annuaire');
+    await resultsShown(page);
+    const card = page.locator('pm-practitioner-card').first();
+    if (await card.count()) {
+      await card.getByRole('link', { name: /^Voir la fiche/ }).click();
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+      await page.evaluate(() => document.fonts.ready);
+      expect(await smallTargetsBeyondRounding(page)).toEqual([]);
+    }
+  });
 });
