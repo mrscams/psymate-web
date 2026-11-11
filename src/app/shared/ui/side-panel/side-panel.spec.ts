@@ -1,5 +1,5 @@
 import { DIALOG_DATA } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { SidePanelComponent } from './side-panel.component';
@@ -19,6 +19,20 @@ import { SidePanelService } from './side-panel.service';
 })
 class TestPanel {
   readonly data = inject<{ title: string }>(DIALOG_DATA);
+}
+
+@Component({
+  selector: 'pm-test-subtitled-panel',
+  imports: [SidePanelComponent],
+  template: `
+    <pm-side-panel [title]="data.title" [subtitle]="data.subtitle()">
+      <label>Texte <input type="text" /></label>
+    </pm-side-panel>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class SubtitledPanel {
+  readonly data = inject<{ title: string; subtitle: WritableSignal<string | null> }>(DIALOG_DATA);
 }
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
@@ -134,5 +148,48 @@ describe('SidePanelService', () => {
     await vi.waitFor(() => expect(dialogs()).toHaveLength(1));
     expect(dialogs()[0].textContent).toContain('Autre entrée');
     expect(service.depth()).toBe(1);
+  });
+
+  it('sans sous-titre : le titre seul dans l’en-tête, comme avant, sans aria-describedby', async () => {
+    service.open(TestPanel, { data: { title: 'Nouvelle entrée' } });
+    await tick();
+    await tick();
+    const [dialog] = dialogs();
+    const header = dialog.querySelector('header.panel-header')!;
+    expect(header.firstElementChild?.matches('h2.title')).toBe(true);
+    expect(header.querySelector('.heading, .subtitle')).toBeNull();
+    expect(dialog.hasAttribute('aria-describedby')).toBe(false);
+  });
+
+  it('UX-A8 : sous-titre sous le titre, relié au dialogue par aria-describedby, retiré avec lui', async () => {
+    const subtitle = signal<string | null>(
+      'Marie D. · le lien est visible dans le graphe et la timeline',
+    );
+    service.open(SubtitledPanel, { data: { title: 'Lier deux entrées', subtitle }, width: 520 });
+    await tick();
+    await tick();
+    const [dialog] = dialogs();
+    const heading = dialog.querySelector('header.panel-header > .heading')!;
+    expect(heading.querySelector('h2.title')?.textContent).toBe('Lier deux entrées');
+    const text = heading.querySelector<HTMLElement>('p.subtitle')!;
+    expect(text.textContent).toBe('Marie D. · le lien est visible dans le graphe et la timeline');
+    expect(heading.firstElementChild?.matches('h2.title')).toBe(true);
+    expect(dialog.getAttribute('aria-describedby')).toBe(text.id);
+    expect(document.getElementById(dialog.getAttribute('aria-labelledby')!)?.textContent).toBe(
+      'Lier deux entrées',
+    );
+
+    subtitle.set(null);
+    await vi.waitFor(() => expect(dialog.querySelector('.subtitle')).toBeNull());
+    await tick();
+    expect(dialog.hasAttribute('aria-describedby')).toBe(false);
+  });
+
+  it('UX-A8 : largeur 520 px (éditeur de lien, maquette 06), classe de largeur posée', async () => {
+    service.open(TestPanel, { data: { title: 'Lier deux entrées' }, width: 520 });
+    await tick();
+    const pane = dialogs()[0].closest<HTMLElement>('.pm-side-panel-pane');
+    expect(pane?.style.width).toBe('520px');
+    expect(pane?.classList.contains('pm-side-panel-pane--520')).toBe(true);
   });
 });

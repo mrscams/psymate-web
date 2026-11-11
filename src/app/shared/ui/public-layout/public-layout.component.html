@@ -55,7 +55,7 @@
   >
 </header>
 
-<main id="main" class="public-main" [class.narrow]="narrow()">
+<main id="main" class="public-main" [class.narrow]="narrow()" [class.wide]="wide() && !narrow()">
   <ng-content />
 </main>
 

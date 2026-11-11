@@ -11,6 +11,7 @@ import { PublicLayoutComponent } from './public-layout.component';
     <pm-public-layout
       [authenticated]="authenticated()"
       [narrow]="narrow()"
+      [wide]="wide()"
       switchHref="/en/annuaire"
       switchLang="en"
     >
@@ -22,6 +23,7 @@ import { PublicLayoutComponent } from './public-layout.component';
 class Host {
   readonly authenticated = input(false);
   readonly narrow = input(false);
+  readonly wide = input(false);
 }
 
 async function render(inputs: Record<string, unknown> = {}) {
@@ -72,5 +74,23 @@ describe('PublicLayoutComponent', () => {
     const { el } = await render({ authenticated: true, narrow: true });
     expect(el.querySelector('a.practitioner')?.getAttribute('href')).toBe('/patients');
     expect(el.querySelector('main')?.classList.contains('narrow')).toBe(true);
+  });
+
+  it('UX-A8 : par défaut ni narrow ni wide (1 120 px) ; wide : contenu jusqu’à 1 280 px', async () => {
+    const plain = await render();
+    const main = plain.el.querySelector('main')!;
+    expect(main.classList.contains('wide')).toBe(false);
+    expect(main.classList.contains('narrow')).toBe(false);
+    TestBed.resetTestingModule();
+
+    const wide = await render({ wide: true });
+    expect(wide.el.querySelector('main')?.classList.contains('wide')).toBe(true);
+    TestBed.resetTestingModule();
+
+    // narrow l'emporte : un formulaire reste à 480 px même sous une route large.
+    const both = await render({ wide: true, narrow: true });
+    const bothMain = both.el.querySelector('main')!;
+    expect(bothMain.classList.contains('narrow')).toBe(true);
+    expect(bothMain.classList.contains('wide')).toBe(false);
   });
 });

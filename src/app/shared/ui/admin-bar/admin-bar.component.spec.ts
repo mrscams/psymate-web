@@ -38,6 +38,19 @@ describe('AdminBarComponent', () => {
     expect(el.querySelector('button.avatar')).toBeNull();
   });
 
+  it('UX-A8 : marque, onglets, rappel puis avatar dans la barre (rappel à droite, maquette 20)', async () => {
+    const { el } = await render({ user: { displayName: 'Hugo Admin' } });
+    const header = el.querySelector('header.admin-bar')!;
+    const order = [...header.children]
+      .filter((child) => child.tagName !== 'MAT-MENU')
+      .map((child) =>
+        ['brand', 'tabs', 'reminder', 'avatar'].find((c) => child.classList.contains(c)),
+      );
+    expect(order).toEqual(['brand', 'tabs', 'reminder', 'avatar']);
+    // Les onglets restent des liens nommés dans la navigation, dans l'ordre de tabulation.
+    expect(header.querySelector('nav.tabs')?.getAttribute('aria-label')).toBe('Administration');
+  });
+
   it('compteur de validation et menu de déconnexion', async () => {
     const { fixture, el } = await render({ pendingCount: 6, user: { displayName: 'Hugo Admin' } });
     expect(el.querySelector('.count')?.textContent).toBe('6');

@@ -12,7 +12,7 @@
   [min]="minDate()"
   [max]="maxDate()"
   [attr.aria-invalid]="ariaInvalid()"
-  [attr.aria-describedby]="errorId() ?? null"
+  [attr.aria-describedby]="ariaDescribedBy()"
   (input)="sync(field.value)"
   (dateInput)="sync(field.value)"
   (blur)="touched()"

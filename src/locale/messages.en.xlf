@@ -2684,6 +2684,15 @@
         </context-group>
         <note priority="1" from="description">Séance en cours dans l&apos;en-tête patient</note>
       </trans-unit>
+      <trans-unit id="patientHeader.session.unclosed" datatype="html">
+        <source>Séance du <x id="day" equiv-text="day"/> · non clôturée</source>
+        <target state="translated">Session of <x id="day" equiv-text="day"/> · not closed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <note priority="1" from="description">Séance ouverte depuis plus de 3 h dans l&apos;en-tête patient</note>
+      </trans-unit>
       <trans-unit id="patientHeader.session.last" datatype="html">
         <source>Dernière séance : <x id="last" equiv-text="last"/></source>
         <target state="translated">Last session: <x id="last" equiv-text="last"/></target>

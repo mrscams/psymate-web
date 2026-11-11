@@ -7,6 +7,7 @@ import {
   PatientHeaderComponent,
   PatientHeaderInfo,
   PatientSessionInfo,
+  UNCLOSED_SESSION_AFTER_MIN,
 } from './patient-header.component';
 
 @Component({
@@ -19,6 +20,7 @@ import {
       [state]="state()"
       [busy]="busy()"
       [showViewToggle]="showViewToggle()"
+      [unclosedAfterMin]="unclosedAfterMin()"
     >
       <div pmCapture class="capture-slot">Noter quelque chose…</div>
       <div pmViewToggle class="toggle-slot">Vue</div>
@@ -32,6 +34,7 @@ class Host {
   readonly state = input<StateKind | null>(null);
   readonly busy = input(false);
   readonly showViewToggle = input(false);
+  readonly unclosedAfterMin = input<number | null>(null);
 }
 
 const marie: PatientHeaderInfo = {
@@ -41,6 +44,9 @@ const marie: PatientHeaderInfo = {
   followedSince: '2025-03-04T00:00:00Z',
   flags: [{ code: 'watch', label: 'à surveiller' }],
 };
+
+const plainText = (node: Element | null | undefined) =>
+  node?.textContent?.replace(/[  ]/g, ' ').trim();
 
 async function render(inputs: Record<string, unknown>) {
   TestBed.configureTestingModule({
@@ -118,6 +124,39 @@ describe('PatientHeaderComponent', () => {
     fixture.componentRef.setInput('busy', true);
     await fixture.whenStable();
     expect(close?.disabled).toBe(true);
+  });
+
+  it('UX-A8 : seuil de 3 h posé : « en cours depuis » jusqu’à 3 h, « non clôturée » au-delà', async () => {
+    const session = { kind: 'current', startedAt: '2026-10-24T14:00:00Z' };
+    const unclosedAfterMin = UNCLOSED_SESSION_AFTER_MIN;
+    expect(unclosedAfterMin).toBe(180);
+
+    vi.setSystemTime(new Date('2026-10-24T17:00:00Z'));
+    const atThree = await render({ patient: marie, session, unclosedAfterMin });
+    expect(plainText(atThree.el.querySelector('.session-text'))).toContain(
+      'Séance du 24 oct. 2026 · en cours depuis 3',
+    );
+    TestBed.resetTestingModule();
+
+    // 12 h 37 après le début : la séance reste ouverte (aucune règle recalculée), seul le libellé change.
+    vi.setSystemTime(new Date('2026-10-25T02:37:00Z'));
+    const { el } = await render({ patient: marie, session, unclosedAfterMin });
+    expect(plainText(el.querySelector('.session-text'))).toBe(
+      'Séance du 24 oct. 2026 · non clôturée',
+    );
+    expect(el.querySelector('.session-text')?.classList.contains('current')).toBe(true);
+    expect(el.querySelector('button.close-session')).not.toBeNull();
+  });
+
+  it('UX-A8 : sans seuil (défaut), « en cours depuis 12 h 37 » comme avant', async () => {
+    vi.setSystemTime(new Date('2026-10-25T02:37:00Z'));
+    const { el } = await render({
+      patient: marie,
+      session: { kind: 'current', startedAt: '2026-10-24T14:00:00Z' },
+    });
+    const shown = plainText(el.querySelector('.session-text'));
+    expect(shown).toContain('en cours depuis 12');
+    expect(shown).not.toContain('non clôturée');
   });
 
   it('les touches 1 2 3 naviguent entre les onglets ; aria-current suit la route', async () => {

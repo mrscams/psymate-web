@@ -73,6 +73,34 @@ class MonthHost {
   readonly control = new FormControl<string | null>(null);
 }
 
+@Component({
+  imports: [ReactiveFormsModule, DateFieldComponent],
+  template: `<pm-date-field
+    [formControl]="control"
+    inputId="birth"
+    [errorId]="errorId()"
+    [describedBy]="hint()"
+  />`,
+})
+class HintedDayHost {
+  readonly control = new FormControl<string | null>(null);
+  readonly errorId = signal<string | undefined>(undefined);
+  readonly hint = signal<string | null>('birth-hint');
+}
+
+@Component({
+  imports: [ReactiveFormsModule, MonthFieldComponent],
+  template: `<pm-month-field
+    [formControl]="control"
+    inputId="since"
+    errorId="since-error"
+    describedBy="since-hint"
+  />`,
+})
+class HintedMonthHost {
+  readonly control = new FormControl<string | null>(null);
+}
+
 async function render<T>(host: Type<T>, locale = 'fr') {
   TestBed.configureTestingModule({
     imports: [host],
@@ -211,5 +239,34 @@ describe('MonthFieldComponent', () => {
     await fixture.whenStable();
     expect(input.value).toBe('');
     expect(host.control.errors).toBeNull();
+  });
+});
+
+describe('describedBy (UX-A8)', () => {
+  it('pm-date-field : note d’aide seule, puis aide et erreur, sans rien : pas d’attribut', async () => {
+    const { fixture, host, input } = await render(HintedDayHost, 'fr');
+    expect(input.getAttribute('aria-describedby')).toBe('birth-hint');
+    host.errorId.set('birth-error');
+    await fixture.whenStable();
+    expect(input.getAttribute('aria-describedby')).toBe('birth-hint birth-error');
+    host.hint.set(null);
+    await fixture.whenStable();
+    expect(input.getAttribute('aria-describedby')).toBe('birth-error');
+    host.errorId.set(undefined);
+    await fixture.whenStable();
+    expect(input.hasAttribute('aria-describedby')).toBe(false);
+  });
+
+  it('pm-month-field : note d’aide avant le message d’erreur', async () => {
+    const { input } = await render(HintedMonthHost, 'fr');
+    expect(input.getAttribute('aria-describedby')).toBe('since-hint since-error');
+  });
+
+  it('sans describedBy : aria-describedby inchangé (errorId seul, ou absent)', async () => {
+    const day = await render(DayHost, 'fr');
+    expect(day.input.getAttribute('aria-describedby')).toBe('birth-error');
+    TestBed.resetTestingModule();
+    const month = await render(MonthHost, 'fr');
+    expect(month.input.hasAttribute('aria-describedby')).toBe(false);
   });
 });

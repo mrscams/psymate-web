@@ -92,6 +92,11 @@
   &.narrow {
     max-width: 480px;
   }
+
+  // Annuaire (maquette 08, UX-A8) : filtres, liste et carte côte à côte jusqu'à 1 280 px.
+  &.wide {
+    max-width: 1280px;
+  }
 }
 
 .public-footer {

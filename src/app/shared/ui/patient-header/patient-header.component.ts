@@ -44,6 +44,14 @@ export interface PatientFlag {
 export type PatientSessionInfo =
   { kind: 'current'; startedAt: string } | { kind: 'last'; date: string } | { kind: 'none' };
 
+/**
+ * Seuil recommandé (3 h, audit UX du 9 nov. 2026, section 02) au-delà duquel une séance encore
+ * ouverte s'affiche « non clôturée » plutôt que « en cours depuis 12 h 37 ». Libellé d'affichage
+ * seulement : la séance reste ouverte côté serveur, Clôturer reste proposé. La feature le passe à
+ * l'entrée `unclosedAfterMin` de pm-patient-header.
+ */
+export const UNCLOSED_SESSION_AFTER_MIN = 180;
+
 /** Les trois onglets du dossier et leurs routes (fiches 02, 03, 04). */
 export const PATIENT_TABS = [
   {
@@ -86,6 +94,11 @@ export class PatientHeaderComponent {
   readonly busy = input(false);
   /** Onglet 1 seulement : la bascule Vue (slot [pmViewToggle]) n'a de sens que là. */
   readonly showViewToggle = input(false);
+  /**
+   * Au-delà de cette durée en minutes, une séance ouverte s'affiche « non clôturée » (UX-A8 ;
+   * UNCLOSED_SESSION_AFTER_MIN = 180). null (défaut) : toujours « en cours depuis … », comme avant.
+   */
+  readonly unclosedAfterMin = input<number | null>(null);
 
   readonly startSession = output<void>();
   readonly closeSession = output<void>();
@@ -112,10 +125,12 @@ export class PatientHeaderComponent {
     if (!session || session.kind === 'none') return '';
     if (session.kind === 'current') {
       const day = formatDate(session.startedAt, this.locale, 'medium');
-      const since = formatMinutes(
-        minutesBetween(session.startedAt, new Date(this.now())),
-        this.locale,
-      );
+      const minutes = minutesBetween(session.startedAt, new Date(this.now()));
+      const threshold = this.unclosedAfterMin();
+      if (threshold !== null && minutes > threshold) {
+        return $localize`:Séance ouverte depuis plus de 3 h dans l'en-tête patient@@patientHeader.session.unclosed:Séance du ${day}:day: · non clôturée`;
+      }
+      const since = formatMinutes(minutes, this.locale);
       return $localize`:Séance en cours dans l'en-tête patient@@patientHeader.session.current:Séance du ${day}:day: · en cours depuis ${since}:since:`;
     }
     const last = formatDate(session.date, this.locale, 'medium');

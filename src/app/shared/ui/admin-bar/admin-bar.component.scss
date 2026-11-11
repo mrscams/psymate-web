@@ -17,27 +17,37 @@
   }
 }
 
+// Grille de la barre (UX-A8) : la page ne déborde jamais, quelle que soit la largeur.
+// - dès 1 100 px (maquette 20) : marque · onglets · rappel à droite · avatar, une ligne de 48 px ;
+// - de 720 à 1 100 px : marque · onglets · avatar, rappel sur la ligne du dessous ;
+// - sous 720 px : marque · avatar, puis les onglets sur leur propre ligne, défilants dans leur cadre
+//   (ils mesurent environ 420 px), puis le rappel.
+// Tout le texte reste sur le fond sombre de la barre (un onglet qui en sortait se posait sur le fond
+// clair de la page : contraste axe en échec à 375 px).
 .admin-bar {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'brand tabs . avatar'
+    'reminder reminder reminder reminder';
+  align-items: center;
+  column-gap: 24px;
+  padding: 0 16px;
   background: var(--admin-bar-bg);
   color: var(--admin-bar-text);
   border-bottom: 1px solid var(--admin-bar-border);
 }
 
-.row {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  height: 48px;
-  padding: 0 16px;
-}
-
 .brand {
+  grid-area: brand;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  height: 48px;
   color: var(--admin-bar-text);
   text-decoration: none;
   font: var(--mat-sys-title-medium);
+  white-space: nowrap;
 }
 
 .tag {
@@ -50,18 +60,22 @@
 }
 
 .tabs {
+  grid-area: tabs;
   display: flex;
   gap: 4px;
-  height: 100%;
+  height: 48px;
+  min-width: 0;
 
   a {
     display: inline-flex;
+    flex-shrink: 0;
     align-items: center;
     gap: 6px;
     padding: 0 12px;
     color: var(--admin-bar-text-muted);
     text-decoration: none;
     font: var(--mat-sys-label-large);
+    white-space: nowrap;
     border-bottom: 2px solid transparent;
 
     &.active {
@@ -81,11 +95,8 @@
   font: 11px/20px var(--font-mono);
 }
 
-.spacer {
-  flex: 1;
-}
-
 .avatar {
+  grid-area: avatar;
   width: 32px;
   height: 32px;
   padding: 0;
@@ -111,8 +122,48 @@
 }
 
 .reminder {
+  grid-area: reminder;
+  min-width: 0;
   margin: 0;
-  padding: 4px 16px 6px;
+  padding: 4px 0 6px;
   color: var(--admin-bar-text-muted);
   font: var(--mat-sys-body-small);
+}
+
+// Maquette 20 : le rappel à droite, sur la ligne de la barre, juste avant l'avatar.
+@media (min-width: 1100px) {
+  .admin-bar {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-areas: 'brand tabs reminder avatar';
+  }
+
+  .reminder {
+    padding: 0;
+    text-align: end;
+  }
+}
+
+// Petits écrans (375 px, zoom 200 %) : les onglets passent sous la marque et défilent dans leur
+// propre cadre. L'anneau de focus se dessine à l'intérieur de l'onglet (décalage négatif) : le cadre
+// défilant couperait un anneau posé à l'extérieur.
+@media (max-width: 719.98px) {
+  .admin-bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'brand avatar'
+      'tabs tabs'
+      'reminder reminder';
+  }
+
+  .tabs {
+    height: 44px;
+    margin-inline: -16px;
+    padding-inline: 4px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+
+    a:focus-visible {
+      outline-offset: -2px;
+    }
+  }
 }

@@ -21,6 +21,16 @@ async function render(locale: string, options: { signedIn?: boolean; url?: strin
         { path: 'connexion', component: Blank, data: { layout: 'public' } },
         { path: 'annuaire', component: Blank, data: { layout: 'public', wide: true } },
         { path: 'admin', component: Blank, data: { layout: 'admin' } },
+        {
+          path: 'admin-large',
+          data: { layout: 'admin', contentWidth: 'wide' },
+          children: [{ path: '', component: Blank }],
+        },
+        {
+          path: 'annuaire-large',
+          component: Blank,
+          data: { layout: 'public', contentWidth: 'wide' },
+        },
         { path: '_demo', component: Blank, data: { layout: 'bare' } },
         { path: '**', component: Blank },
       ]),
@@ -108,6 +118,31 @@ describe('AppComponent', () => {
     expect(bare.el.querySelector('pm-app-bar')).toBeNull();
     expect(bare.el.querySelector('pm-admin-bar')).toBeNull();
     expect(bare.el.querySelector('router-outlet')).not.toBeNull();
+  });
+
+  it('UX-A8 : sans data.contentWidth, aucun main large (rendu inchangé)', async () => {
+    const practitioner = await render('fr');
+    expect(practitioner.el.querySelector('main#main.app-main.wide')).toBeNull();
+    TestBed.resetTestingModule();
+
+    const admin = await render('fr', { url: '/admin' });
+    expect(admin.el.querySelector('main#main.app-main.admin')).not.toBeNull();
+    expect(admin.el.querySelector('main#main.wide')).toBeNull();
+    TestBed.resetTestingModule();
+
+    const directory = await render('fr', { url: '/annuaire' });
+    expect(directory.el.querySelector('pm-public-layout main#main.wide')).toBeNull();
+  });
+
+  it('UX-A8 : data.contentWidth wide, hérité du parent : main admin large, annuaire à 1 280 px', async () => {
+    const admin = await render('fr', { url: '/admin-large' });
+    expect(admin.el.querySelector('main#main.app-main.admin.wide')).not.toBeNull();
+    TestBed.resetTestingModule();
+
+    const directory = await render('fr', { url: '/annuaire-large' });
+    const main = directory.el.querySelector('pm-public-layout main#main')!;
+    expect(main.classList.contains('wide')).toBe(true);
+    expect(main.classList.contains('narrow')).toBe(false);
   });
 
   it('le bandeau réseau apparaît quel que soit l’habillage', async () => {

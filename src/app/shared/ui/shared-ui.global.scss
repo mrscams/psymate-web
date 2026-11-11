@@ -4,8 +4,14 @@
 // Importé une fois par src/styles.scss.
 
 // Texte lu par les lecteurs d'écran, invisible à l'écran.
+// left: 0 (UX-A8, comme .cdk-visually-hidden du CDK) : sans ancêtre positionné, un texte masqué posé
+// dans un tableau qui défile dans son cadre (.table-wrap des écrans d'administration) gardait sa
+// position statique, loin à droite, hors du cadre : la page débordait à 375 px (jusqu'à 1 255 px).
+// Ramené au bord gauche de son bloc conteneur, il ne crée plus de débordement ; rien ne change à
+// l'écran ni pour les lecteurs d'écran.
 .sr-only {
   position: absolute !important;
+  left: 0;
   width: 1px;
   height: 1px;
   margin: -1px;

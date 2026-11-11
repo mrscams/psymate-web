@@ -1,6 +1,7 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import {
   afterNextRender,
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -16,13 +17,22 @@ import { uniqueId } from '../../util';
  * pied fixe pour l'action principale et les raccourcis (`<kbd>`). Posé par le composant que
  * SidePanelService ouvre ; il relie `aria-labelledby` du dialogue à son titre et ferme le dialogue
  * sur la croix. Emplacements : contenu par défaut = corps ; `[pmPanelHeader]` à droite du titre ;
- * `[pmPanelFooter]` dans le pied.
+ * `[pmPanelFooter]` dans le pied. `subtitle` (UX-A8, maquettes 05 et 06 : « Marie D. · le lien est
+ * visible dans le graphe et la timeline ») : une ligne secondaire sous le titre, reliée au dialogue
+ * par `aria-describedby` ; sans elle, l'en-tête est rendu comme avant.
  */
 @Component({
   selector: 'pm-side-panel',
   template: `
     <header class="panel-header">
-      <h2 class="title" [id]="titleId">{{ title() }}</h2>
+      @if (subtitle(); as text) {
+        <div class="heading">
+          <h2 class="title" [id]="titleId">{{ title() }}</h2>
+          <p class="subtitle" [id]="subtitleId">{{ text }}</p>
+        </div>
+      } @else {
+        <h2 class="title" [id]="titleId">{{ title() }}</h2>
+      }
       <ng-content select="[pmPanelHeader]" />
     </header>
     <div class="panel-body">
@@ -43,6 +53,8 @@ import { uniqueId } from '../../util';
 })
 export class SidePanelComponent {
   readonly title = input.required<string>();
+  /** Ligne secondaire sous le titre (patient, portée de l'action) ; null ou vide : aucune. */
+  readonly subtitle = input<string | null>(null);
   /** Émis à la croix ; le dialogue est fermé dans tous les cas (le store garde le brouillon). */
   readonly closeRequested = output<void>();
 
@@ -50,6 +62,7 @@ export class SidePanelComponent {
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
 
   protected readonly titleId = uniqueId('pm-side-panel-title');
+  protected readonly subtitleId = uniqueId('pm-side-panel-subtitle');
   protected readonly closeLabel = $localize`:Croix de fermeture d'un panneau@@sidePanel.close:Fermer le panneau`;
 
   constructor() {
@@ -58,6 +71,15 @@ export class SidePanelComponent {
       if (dialog && !dialog.hasAttribute('aria-label')) {
         dialog.setAttribute('aria-labelledby', this.titleId);
       }
+    });
+    // Le sous-titre décrit le dialogue ; une description posée par le contenu est laissée telle quelle.
+    afterRenderEffect(() => {
+      const described = Boolean(this.subtitle());
+      const dialog = this.element.nativeElement.closest('[role="dialog"]');
+      if (!dialog) return;
+      const current = dialog.getAttribute('aria-describedby');
+      if (described && !current) dialog.setAttribute('aria-describedby', this.subtitleId);
+      if (!described && current === this.subtitleId) dialog.removeAttribute('aria-describedby');
     });
   }
 
