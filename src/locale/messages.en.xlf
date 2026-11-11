@@ -14800,15 +14800,6 @@
         </context-group>
         <note priority="1" from="description">Titre de l&apos;éditeur de lien</note>
       </trans-unit>
-      <trans-unit id="links.editor.unnamed" datatype="html">
-        <source>une entrée</source>
-        <target state="translated">an entry</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
-          <context context-type="linenumber">113</context>
-        </context-group>
-        <note priority="1" from="description">Nom d&apos;une entrée sans titre ni texte</note>
-      </trans-unit>
       <trans-unit id="links.from.label" datatype="html">
         <source> Depuis </source>
         <target state="translated"> From </target>
@@ -14992,15 +14983,6 @@
           <context context-type="linenumber">70</context>
         </context-group>
         <note priority="1" from="description">Lien non enregistré</note>
-      </trans-unit>
-      <trans-unit id="links.rationale.label" datatype="html">
-        <source>Pourquoi (facultatif)</source>
-        <target state="translated">Why (optional)</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
-          <context context-type="linenumber">212,216</context>
-        </context-group>
-        <note priority="1" from="description">Champ de justification du lien</note>
       </trans-unit>
       <trans-unit id="links.refusal.both" datatype="html">
         <source>« <x id="label" equiv-text="label"/> » : seulement de <x id="sources" equiv-text="sources"/> vers <x id="targets" equiv-text="targets"/>.</source>
@@ -17081,20 +17063,20 @@
         <note priority="1" from="description">Sélecteur de la racine du graphe</note>
       </trans-unit>
       <trans-unit id="graph.root.all" datatype="html">
-        <source> Tout le dossier </source>
-        <target state="translated"> Whole record </target>
+        <source>Tout le dossier</source>
+        <target state="translated">Whole record</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">17,19</context>
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">199</context>
         </context-group>
-        <note priority="1" from="description">Racine : tout le dossier</note>
+        <note priority="1" from="description">Racine du graphe, tout le dossier</note>
       </trans-unit>
       <trans-unit id="graph.root.pending" datatype="html">
-        <source> Entrée choisie </source>
-        <target state="translated"> Chosen entry </target>
+        <source>Entrée choisie</source>
+        <target state="translated">Chosen entry</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">25,28</context>
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
+          <context context-type="linenumber">364</context>
         </context-group>
         <note priority="1" from="description">Racine pas encore lue</note>
       </trans-unit>
@@ -17124,15 +17106,6 @@
           <context context-type="linenumber">98,100</context>
         </context-group>
         <note priority="1" from="description">Filtre : tous les types de liens</note>
-      </trans-unit>
-      <trans-unit id="graph.period.label" datatype="html">
-        <source>Période</source>
-        <target state="translated">Period</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
-          <context context-type="linenumber">117,118</context>
-        </context-group>
-        <note priority="1" from="description">Période du graphe</note>
       </trans-unit>
       <trans-unit id="graph.relayout" datatype="html">
         <source> Recentrer </source>
@@ -17539,15 +17512,6 @@
         </context-group>
         <note priority="1" from="description">Entrée du graphe sans lien</note>
       </trans-unit>
-      <trans-unit id="graph.unnamed" datatype="html">
-        <source>une entrée</source>
-        <target state="translated">an entry</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-        <note priority="1" from="description">Nom d&apos;une entrée sans titre dans le graphe</note>
-      </trans-unit>
       <trans-unit id="graph.plural.note" datatype="html">
         <source>notes</source>
         <target state="translated">notes</target>
@@ -17765,13 +17729,13 @@
         <note priority="1" from="description">Que faire quand les filtres sont refusés</note>
       </trans-unit>
       <trans-unit id="graph.legend.toggle" datatype="html">
-        <source> Légende </source>
-        <target state="translated"> Legend </target>
+        <source>Légende</source>
+        <target state="translated">Legend</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">29,32</context>
+          <context context-type="linenumber">29,34</context>
         </context-group>
-        <note priority="1" from="description">Bouton qui déplie la légende du graphe</note>
+        <note priority="1" from="description">Bouton qui replie ou déplie la légende du graphe</note>
       </trans-unit>
       <trans-unit id="graph.legend.group" datatype="html">
         <source>Groupe d&apos;entrées (à déplier)</source>
@@ -17781,15 +17745,6 @@
           <context context-type="linenumber">43,47</context>
         </context-group>
         <note priority="1" from="description">Légende du super-nœud</note>
-      </trans-unit>
-      <trans-unit id="graph.legend.feeling" datatype="html">
-        <source> Ressenti : la taille suit l&apos;intensité. Racine : bordure bleue. </source>
-        <target state="translated"> Feeling: size follows intensity. Root: blue border. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">67,73</context>
-        </context-group>
-        <note priority="1" from="description">Légende de la taille des ressentis</note>
       </trans-unit>
       <trans-unit id="graph.legend.shapes" datatype="html">
         <source>Formes des entrées</source>
@@ -17808,60 +17763,6 @@
           <context context-type="linenumber">139</context>
         </context-group>
         <note priority="1" from="description">Nom de la liste des traits de la légende</note>
-      </trans-unit>
-      <trans-unit id="graph.legend.solid" datatype="html">
-        <source>trait plein : déclenche, est causé par</source>
-        <target state="translated">solid line: triggers, caused by</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">146</context>
-        </context-group>
-        <note priority="1" from="description">Légende d&apos;un trait de lien</note>
-      </trans-unit>
-      <trans-unit id="graph.legend.longDash" datatype="html">
-        <source>tirets longs : aggrave</source>
-        <target state="translated">long dashes: worsens</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">152</context>
-        </context-group>
-        <note priority="1" from="description">Légende d&apos;un trait de lien</note>
-      </trans-unit>
-      <trans-unit id="graph.legend.shortDash" datatype="html">
-        <source>tirets courts : soulage</source>
-        <target state="translated">short dashes: relieves</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">158</context>
-        </context-group>
-        <note priority="1" from="description">Légende d&apos;un trait de lien</note>
-      </trans-unit>
-      <trans-unit id="graph.legend.dotted" datatype="html">
-        <source>pointillé sans flèche : co-occurrence</source>
-        <target state="translated">dotted, no arrow: co-occurs</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">164</context>
-        </context-group>
-        <note priority="1" from="description">Légende d&apos;un trait de lien</note>
-      </trans-unit>
-      <trans-unit id="graph.legend.thin" datatype="html">
-        <source>trait fin : suit, fait partie de</source>
-        <target state="translated">thin line: follows, part of</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">170</context>
-        </context-group>
-        <note priority="1" from="description">Légende d&apos;un trait de lien</note>
-      </trans-unit>
-      <trans-unit id="graph.legend.double" datatype="html">
-        <source>trait double : traite</source>
-        <target state="translated">double line: treats</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
-          <context context-type="linenumber">176</context>
-        </context-group>
-        <note priority="1" from="description">Légende d&apos;un trait de lien</note>
       </trans-unit>
       <trans-unit id="graph.table.source" datatype="html">
         <source> Source </source>
@@ -22645,6 +22546,348 @@
           <context context-type="linenumber">81</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;état erreur de la régénération des codes</note>
+      </trans-unit>
+      <trans-unit id="graph.toolbar.link" datatype="html">
+        <source>Lier</source>
+        <target state="translated">Link</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
+          <context context-type="linenumber">170,173</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Lier de la barre du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.root.allWarning" datatype="html">
+        <source>jusqu&apos;à 150 nœuds, étiquettes masquées</source>
+        <target state="translated">up to 150 nodes, labels hidden</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Avertissement de l&apos;option Tout le dossier</note>
+      </trans-unit>
+      <trans-unit id="graph.toolbar.linkDisabled" datatype="html">
+        <source>Choisissez d&apos;abord une entrée dans le graphe.</source>
+        <target state="translated">First choose an entry in the graph.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+        <note priority="1" from="description">Pourquoi Lier est inactif dans la barre du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.filter.period" datatype="html">
+        <source>Période : <x id="period" equiv-text="label"/></source>
+        <target state="translated">Period: <x id="period" equiv-text="label"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+        <note priority="1" from="description">Filtre de période du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.wholeFolder.note" datatype="html">
+        <source>Tout le dossier : <x id="count" equiv-text="count"/> nœuds, étiquettes masquées. Choisissez une entrée dans « Centré sur » pour lire le graphe.</source>
+        <target state="translated">Whole record: <x id="count" equiv-text="count"/> nodes, labels hidden. Choose an entry in “Centred on” to read the graph.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
+          <context context-type="linenumber">217</context>
+        </context-group>
+        <note priority="1" from="description">Avertissement du graphe de tout le dossier</note>
+      </trans-unit>
+      <trans-unit id="links.from.change" datatype="html">
+        <source> Changer </source>
+        <target state="translated"> Change </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">59,62</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui change l&apos;entrée source du lien</note>
+      </trans-unit>
+      <trans-unit id="links.from.searchLabel" datatype="html">
+        <source>Rechercher la nouvelle source</source>
+        <target state="translated">Search for the new source</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">68,71</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche de la nouvelle source</note>
+      </trans-unit>
+      <trans-unit id="links.from.searchPlaceholder" datatype="html">
+        <source>Rechercher la nouvelle source…</source>
+        <target state="translated">Search for the new source…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">77,80</context>
+        </context-group>
+        <note priority="1" from="description">Indication du champ de recherche de source</note>
+      </trans-unit>
+      <trans-unit id="links.rationale.title" datatype="html">
+        <source>Pourquoi</source>
+        <target state="translated">Why</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">273,276</context>
+        </context-group>
+        <note priority="1" from="description">Champ de justification du lien</note>
+      </trans-unit>
+      <trans-unit id="links.rationale.optional" datatype="html">
+        <source>(facultatif)</source>
+        <target state="translated">(optional)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
+          <context context-type="linenumber">277,281</context>
+        </context-group>
+        <note priority="1" from="description">Mention facultatif du champ Pourquoi</note>
+      </trans-unit>
+      <trans-unit id="links.from.listLabel" datatype="html">
+        <source>Entrées du dossier</source>
+        <target state="translated">Record entries</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la liste des sources possibles</note>
+      </trans-unit>
+      <trans-unit id="links.targets.found" datatype="html">
+        <source>Résultats de la recherche</source>
+        <target state="translated">Search results</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">234</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la liste des cibles trouvées</note>
+      </trans-unit>
+      <trans-unit id="links.targets.recent" datatype="html">
+        <source>Entrées récentes du dossier</source>
+        <target state="translated">Recent record entries</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
+          <context context-type="linenumber">235</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la liste des cibles récentes</note>
+      </trans-unit>
+      <trans-unit id="graph.table.previous" datatype="html">
+        <source> Précédents </source>
+        <target state="translated"> Previous </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">83,85</context>
+        </context-group>
+        <note priority="1" from="description">Page précédente de la liste des liens</note>
+      </trans-unit>
+      <trans-unit id="graph.table.next" datatype="html">
+        <source> Suivants </source>
+        <target state="translated"> Next </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">93,97</context>
+        </context-group>
+        <note priority="1" from="description">Page suivante de la liste des liens</note>
+      </trans-unit>
+      <trans-unit id="graph.table.pager" datatype="html">
+        <source>Pages de la liste des liens</source>
+        <target state="translated">Link list pages</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">252</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la pagination de la liste des liens</note>
+      </trans-unit>
+      <trans-unit id="graph.table.range" datatype="html">
+        <source>Liens <x id="first" equiv-text="first"/> à <x id="last" equiv-text="last"/> sur <x id="total" equiv-text="total"/></source>
+        <target state="translated">Links <x id="first" equiv-text="first"/> to <x id="last" equiv-text="last"/> of <x id="total" equiv-text="total"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
+          <context context-type="linenumber">273</context>
+        </context-group>
+        <note priority="1" from="description">Liens montrés dans la liste paginée</note>
+      </trans-unit>
+      <trans-unit id="graph.root.none" datatype="html">
+        <source> Aucune entrée ne correspond. </source>
+        <target state="translated"> No entry matches. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">158,161</context>
+        </context-group>
+        <note priority="1" from="description">Aucune entrée trouvée par Centré sur</note>
+      </trans-unit>
+      <trans-unit id="graph.root.searchLabel" datatype="html">
+        <source>Chercher l&apos;entrée au centre du graphe</source>
+        <target state="translated">Search for the entry at the centre of the graph</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">200</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche de la racine du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.root.searchPlaceholder" datatype="html">
+        <source>Titre, type ou date…</source>
+        <target state="translated">Title, type or date…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+        <note priority="1" from="description">Indication du champ de recherche de la racine</note>
+      </trans-unit>
+      <trans-unit id="graph.root.listLabel" datatype="html">
+        <source>Entrées du dossier</source>
+        <target state="translated">Record entries</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">202</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la liste des racines possibles</note>
+      </trans-unit>
+      <trans-unit id="graph.root.searching" datatype="html">
+        <source>Recherche dans tout le dossier…</source>
+        <target state="translated">Searching the whole record…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">254</context>
+        </context-group>
+        <note priority="1" from="description">Recherche de la racine dans le dossier en cours</note>
+      </trans-unit>
+      <trans-unit id="graph.root.searchFailed" datatype="html">
+        <source>La recherche dans le dossier a échoué ; seules les entrées du graphe sont proposées.</source>
+        <target state="translated">The record search failed; only the graph entries are offered.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">257</context>
+        </context-group>
+        <note priority="1" from="description">Recherche de la racine en échec</note>
+      </trans-unit>
+      <trans-unit id="graph.root.count" datatype="html">
+        <source><x id="count" equiv-text="count"/> entrées proposées</source>
+        <target state="translated"><x id="count" equiv-text="count"/> entries offered</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
+          <context context-type="linenumber">260</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;entrées proposées par Centré sur</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.root" datatype="html">
+        <source>Racine</source>
+        <target state="translated">Root</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">56,59</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la racine du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.feelingSize" datatype="html">
+        <source>Ressenti · taille et chiffre = intensité</source>
+        <target state="translated">Feeling · size and number = intensity</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+        <note priority="1" from="description">Légende des ressentis du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.solidName" datatype="html">
+        <source>trait plein</source>
+        <target state="translated">solid line</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;un trait de lien de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.solidTypes" datatype="html">
+        <source>déclenche, est causé par</source>
+        <target state="translated">triggers, is caused by</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">202</context>
+        </context-group>
+        <note priority="1" from="description">Types de lien d&apos;un trait de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.longDashName" datatype="html">
+        <source>tirets longs</source>
+        <target state="translated">long dashes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">208</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;un trait de lien de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.longDashTypes" datatype="html">
+        <source>aggrave</source>
+        <target state="translated">worsens</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">209</context>
+        </context-group>
+        <note priority="1" from="description">Types de lien d&apos;un trait de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.shortDashName" datatype="html">
+        <source>tirets courts</source>
+        <target state="translated">short dashes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">215</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;un trait de lien de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.shortDashTypes" datatype="html">
+        <source>soulage</source>
+        <target state="translated">relieves</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">216</context>
+        </context-group>
+        <note priority="1" from="description">Types de lien d&apos;un trait de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.dottedName" datatype="html">
+        <source>pointillé sans flèche</source>
+        <target state="translated">dotted, no arrow</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">222</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;un trait de lien de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.dottedTypes" datatype="html">
+        <source>co-occurrence</source>
+        <target state="translated">co-occurrence</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">223</context>
+        </context-group>
+        <note priority="1" from="description">Types de lien d&apos;un trait de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.thinName" datatype="html">
+        <source>trait fin</source>
+        <target state="translated">thin line</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;un trait de lien de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.thinTypes" datatype="html">
+        <source>suit, fait partie de</source>
+        <target state="translated">follows, is part of</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+        <note priority="1" from="description">Types de lien d&apos;un trait de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.doubleName" datatype="html">
+        <source>trait double</source>
+        <target state="translated">double line</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">236</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;un trait de lien de la légende</note>
+      </trans-unit>
+      <trans-unit id="graph.legend.doubleTypes" datatype="html">
+        <source>traite</source>
+        <target state="translated">treats</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
+          <context context-type="linenumber">237</context>
+        </context-group>
+        <note priority="1" from="description">Types de lien d&apos;un trait de la légende</note>
       </trans-unit>
     </body>
   </file>

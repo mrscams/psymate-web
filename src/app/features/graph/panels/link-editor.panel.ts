@@ -38,8 +38,8 @@ import { formatOccurred, stateKind } from '../../../shared/util';
 import { LinkEditorStore } from '../data/link-editor.store';
 import {
   EntryLink,
-  entryName,
   LinkEntry,
+  linkEntryName,
   LinkTypeCode,
   orient,
   otherEnd,
@@ -112,7 +112,7 @@ export class LinkEditorPanel {
   protected readonly entryTypes = ENTRY_TYPES;
   protected readonly title = $localize`:Titre de l'éditeur de lien@@links.editor.title:Lier deux entrées`;
   protected readonly relationLabel = $localize`:Nom du groupe des types de lien@@links.editor.relation:Relation`;
-  private readonly unnamed = $localize`:Nom d'une entrée sans titre ni texte@@links.editor.unnamed:une entrée`;
+  protected readonly sourceListLabel = $localize`:Nom de la liste des sources possibles@@links.from.listLabel:Entrées du dossier`;
 
   protected readonly form: LinkForm = new FormGroup({
     targetId: new FormControl('', { nonNullable: true }),
@@ -123,6 +123,8 @@ export class LinkEditorPanel {
     }),
   });
   protected readonly search = new FormControl(this.store.query().q, { nonNullable: true });
+  /** « Changer » la source : texte cherché (UX-B7). */
+  protected readonly sourceSearch = new FormControl('', { nonNullable: true });
   protected readonly typeFilter = new FormControl<EntryType | ''>(this.store.query().type ?? '', {
     nonNullable: true,
   });
@@ -130,6 +132,10 @@ export class LinkEditorPanel {
   private readonly value = toSignal(this.form.valueChanges, {
     initialValue: this.form.getRawValue(),
   });
+  /** L'entrée source du lien : celle ouverte, ou celle choisie par « Changer ». */
+  protected readonly sourceId = signal(this.data.entryId);
+  /** La liste « Changer » la source est ouverte. */
+  protected readonly changingSource = signal(false);
   /** Sens inversé : la cible devient la source (direction incoming). */
   protected readonly reversed = signal(false);
   /** Cible choisie, gardée même si une nouvelle recherche ne la montre plus. */
@@ -200,6 +206,29 @@ export class LinkEditorPanel {
     return $localize`:Titre de la liste des liens posés@@links.placed.title:Liens déjà posés sur cette entrée · ${count}:count:`;
   });
 
+  /** Nouvelles sources possibles (« Changer »), trois états. */
+  protected readonly sourcesState = computed(() => stateKind(this.store.sources()));
+  protected readonly sourcesRetry: StateAction = {
+    label: $localize`:Bouton de l'état erreur@@state.error.retry:Réessayer`,
+    handler: () => void this.store.searchSources(this.sourceSearch.value),
+  };
+  protected readonly sourceCandidates = computed(() =>
+    (this.store.sources().data ?? []).map((entry) => ({
+      id: entry.id,
+      entry,
+      name: linkEntryName(entry, this.locale),
+      typeLabel: entryTypeLabel(entry.type),
+      when: this.when(entry),
+    })),
+  );
+
+  /** Légende de la liste des cibles : récentes sans texte, résultats sinon. */
+  protected readonly targetsCaption = computed(() =>
+    this.store.query().q.trim()
+      ? $localize`:Légende de la liste des cibles trouvées@@links.targets.found:Résultats de la recherche`
+      : $localize`:Légende de la liste des cibles récentes@@links.targets.recent:Entrées récentes du dossier`,
+  );
+
   /** Cibles proposées : la cible choisie reste en tête si la recherche ne la rend plus. */
   protected readonly candidates = computed(() => {
     const found = this.store.targets().data ?? [];
@@ -211,7 +240,7 @@ export class LinkEditorPanel {
       const labels = linked.get(entry.id) ?? [];
       return {
         entry,
-        name: entryName(entry, this.unnamed),
+        name: linkEntryName(entry, this.locale),
         typeLabel: entryTypeLabel(entry.type),
         when: this.when(entry),
         linked: labels.length > 0,
@@ -227,7 +256,7 @@ export class LinkEditorPanel {
     if (!source) return null;
     return {
       ...source,
-      name: entryName(source, this.unnamed),
+      name: linkEntryName(source, this.locale),
       typeLabel: entryTypeLabel(source.type),
       when: this.when(source),
     };
@@ -259,9 +288,9 @@ export class LinkEditorPanel {
     if (!ends) return null;
     const pending = '…';
     return {
-      from: ends.from ? entryName(ends.from, this.unnamed) : pending,
+      from: ends.from ? linkEntryName(ends.from, this.locale) : pending,
       verb: this.selectedType()?.label ?? pending,
-      to: ends.to ? entryName(ends.to, this.unnamed) : pending,
+      to: ends.to ? linkEntryName(ends.to, this.locale) : pending,
     };
   });
 
@@ -302,6 +331,14 @@ export class LinkEditorPanel {
       distinctUntilChanged((a, b) => a.q === b.q && a.type === b.type),
     );
     const subscription = query$.subscribe((query) => void this.store.searchTargets(query));
+    // « Changer » la source : même moteur, même délai.
+    subscription.add(
+      this.sourceSearch.valueChanges
+        .pipe(debounceTime(SEARCH_DEBOUNCE_MS), distinctUntilChanged())
+        .subscribe((q) => {
+          if (this.changingSource()) void this.store.searchSources(q);
+        }),
+    );
 
     // Un type devenu interdit (autre cible, sens inversé) est retiré.
     effect(() => {
@@ -324,7 +361,7 @@ export class LinkEditorPanel {
     inject(DestroyRef).onDestroy(() => {
       subscription.unsubscribe();
       backdrop.unsubscribe();
-      this.store.closed(this.data.entryId);
+      this.store.closed(this.sourceId());
     });
   }
 
@@ -332,6 +369,66 @@ export class LinkEditorPanel {
   private async prefill(targetId: string): Promise<void> {
     const entry = await this.store.entryById(targetId);
     if (entry && !this.target() && !this.form.controls.targetId.value) this.chooseTarget(entry);
+  }
+
+  /** « Changer » : ouvre (ou referme) la liste des sources possibles, focus sur sa recherche. */
+  protected toggleSourcePicker(): void {
+    if (this.changingSource()) {
+      this.changingSource.set(false);
+      this.store.clearSources();
+      return;
+    }
+    this.changingSource.set(true);
+    this.sourceSearch.setValue('', { emitEvent: false });
+    void this.store.searchSources('');
+    afterNextRender(
+      () =>
+        this.host.nativeElement.querySelector<HTMLInputElement>('#pm-link-source-search')?.focus(),
+      { injector: this.injector },
+    );
+  }
+
+  /** Échap dans la recherche de source : la liste se referme, le panneau reste ouvert. */
+  protected closeSourcePicker(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.changingSource.set(false);
+    this.store.clearSources();
+    afterNextRender(
+      () =>
+        this.host.nativeElement
+          .querySelector<HTMLButtonElement>('[aria-controls="pm-link-source-picker"]')
+          ?.focus(),
+      { injector: this.injector },
+    );
+  }
+
+  /**
+   * Nouvelle source : l'éditeur se rouvre sur elle (liens posés, cibles), la cible, le type et le
+   * sens sont effacés ; le focus revient à la recherche de cible.
+   */
+  protected changeSource(entry: LinkEntry): void {
+    this.changingSource.set(false);
+    this.store.clearSources();
+    if (entry.id === this.sourceId()) return;
+    this.store.closed(this.sourceId());
+    this.sourceId.set(entry.id);
+    this.form.reset({
+      targetId: '',
+      linkType: null,
+      rationale: this.form.controls.rationale.value,
+    });
+    this.target.set(null);
+    this.reversed.set(false);
+    this.cancelEdit();
+    this.resetProblem();
+    this.search.setValue('', { emitEvent: false });
+    this.typeFilter.setValue('', { emitEvent: false });
+    void this.store.open(entry.id);
+    afterNextRender(
+      () => this.host.nativeElement.querySelector<HTMLInputElement>('#pm-link-search')?.focus(),
+      { injector: this.injector },
+    );
   }
 
   protected chooseTarget(entry: LinkEntry): void {
@@ -391,6 +488,8 @@ export class LinkEditorPanel {
     if (!ctrl && target) {
       const tag = target.tagName;
       if (tag === 'TEXTAREA' || tag === 'BUTTON' || tag === 'A' || tag === 'SELECT') return;
+      // La recherche d'une nouvelle source n'enregistre pas le lien.
+      if (target.id === 'pm-link-source-search') return;
     }
     event.preventDefault();
     void this.submit(false);

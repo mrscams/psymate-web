@@ -53,6 +53,23 @@ describe('LinkEditorStore', () => {
     expect(store.entryTypes()['e-situation']).toBe('situation');
   });
 
+  it('« Changer » la source : entrées du dossier sans la source actuelle, erreur, effacement', async () => {
+    const { store, api } = setup();
+    await store.open('e-feeling');
+    await store.searchSources('entretien');
+    expect(api.targets).toHaveBeenLastCalledWith('p-marie', { q: 'entretien', type: null });
+    expect(store.sources().data?.map((entry) => entry.id)).toEqual(['e-event', 'e-situation']);
+    api.targets!.mockRejectedValueOnce(network);
+    await store.searchSources('x');
+    expect(store.sources().status).toBe('error');
+    store.clearSources();
+    expect(store.sources().status).toBe('idle');
+    // Rouvert sur une autre entrée : la liste des sources repart de zéro.
+    await store.searchSources('');
+    await store.open('e-event');
+    expect(store.sources().status).toBe('idle');
+  });
+
   it('catalogue lu une fois par compte ; un autre compte repart de zéro', async () => {
     const me = signal<{ id: string } | null>({ id: 'u-claire' });
     const { store, api } = setup({}, me);

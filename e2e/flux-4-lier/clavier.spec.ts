@@ -119,10 +119,11 @@ test('flux 4 au clavier : timeline, entrée ouverte, L, recherche, cible, type, 
   await tabTo(page, invert, { max: 30 });
   await page.keyboard.press('Enter');
   await expect(invert).toHaveAttribute('aria-pressed', 'true');
-  await tabTo(page, triggers, { max: 30, backwards: true });
+  // Relation avant Vers (maquette 06, UX-B7) : les puces suivent « Inverser le sens ».
+  await tabTo(page, triggers, { max: 10 });
   await page.keyboard.press('Enter');
   await expect(triggers).toHaveAttribute('aria-pressed', 'true');
-  await expect(dialog.locator('form.editor .sentence')).toHaveText(
+  await expect(dialog.locator('.reading .sentence')).toHaveText(
     "Entretien d'évaluation déclenche Anxiété 8/10",
   );
   const rationale = dialog.getByLabel('Pourquoi (facultatif)');

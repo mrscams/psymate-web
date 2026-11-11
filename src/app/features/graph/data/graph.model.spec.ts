@@ -6,7 +6,9 @@ import {
   isEmptyGraph,
   layoutKey,
   mergeExpansion,
+  needsDefaultRoot,
   parseQuery,
+  ROOT_ALL,
   periodFrom,
   sameQuery,
   sameServerQuery,
@@ -35,9 +37,17 @@ describe('graph.model', () => {
     expect(parseQuery(params('depth=7&period=2y')).period).toBe('all');
   });
 
-  it('toQueryParams : valeurs par défaut retirées (null), aller-retour avec parseQuery', () => {
+  it('racine : ?root=all = tout le dossier ; sans root, la racine par défaut est à choisir', () => {
+    expect(parseQuery(params(`root=${ROOT_ALL}`)).root).toBeNull();
+    expect(needsDefaultRoot(params(''))).toBe(true);
+    expect(needsDefaultRoot(params('period=90d&root='))).toBe(true);
+    expect(needsDefaultRoot(params(`root=${ROOT_ALL}`))).toBe(false);
+    expect(needsDefaultRoot(params('root=e-1'))).toBe(false);
+  });
+
+  it('toQueryParams : valeurs par défaut retirées (null), racine toujours écrite, aller-retour', () => {
     expect(toQueryParams(DEFAULT_QUERY)).toEqual({
-      root: null,
+      root: ROOT_ALL,
       depth: null,
       linkTypes: null,
       types: null,

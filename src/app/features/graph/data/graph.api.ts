@@ -2,12 +2,14 @@ import { inject, Injectable, LOCALE_ID } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import {
+  ActiveSituationDto,
   GraphDto,
   GraphEdgeDto,
   GrapheService,
   GraphNodeDto,
   GraphSuperNodeDto,
   VocabulaireService,
+  VueDensembleService,
 } from '../../../api';
 import { ENTRY_TYPES, EntryType } from '../../../shared/ui';
 import { GraphDepth, GraphEdge, GraphNode, GraphSuperNode, GraphView } from './graph.model';
@@ -31,6 +33,7 @@ export interface GraphRequest {
 export class GraphApi {
   private readonly graph = inject(GrapheService);
   private readonly vocabulary = inject(VocabulaireService);
+  private readonly overview = inject(VueDensembleService);
   private readonly english = inject(LOCALE_ID).startsWith('en');
 
   /**
@@ -52,6 +55,17 @@ export class GraphApi {
     return toView(dto);
   }
 
+  /**
+   * Racine par défaut du graphe (UX-B3) : la situation en cours la plus liée, lue dans
+   * GET /api/patients/{id}/overview (activeSituations, triées par nombre de liens décroissant ; la
+   * fenêtre la plus courte, 30d, ne change rien à cette liste). null : aucune situation en cours
+   * reliée, le graphe montre tout le dossier.
+   */
+  async defaultRoot(patientId: string): Promise<string | null> {
+    const dto = await firstValueFrom(this.overview.getPatientOverview(patientId, '30d'));
+    return mostLinkedSituation(dto.activeSituations);
+  }
+
   /** POST /api/patients/{id}/graph/expand { superNodeId } : les membres et leurs liens (404 SUPER_NODE_NOT_FOUND). */
   async expand(patientId: string, superNodeId: string): Promise<GraphView> {
     return toView(await firstValueFrom(this.graph.expandGraphGroup(patientId, { superNodeId })));
@@ -68,6 +82,17 @@ export class GraphApi {
     }
     return labels;
   }
+}
+
+/**
+ * La première situation en cours reliée au moins une fois (OverviewDto.activeSituations, triées par
+ * nombre de liens décroissant) ; null s'il n'y en a pas.
+ */
+export function mostLinkedSituation(
+  situations: readonly Pick<ActiveSituationDto, 'entryId' | 'linkCount'>[] | undefined,
+): string | null {
+  const found = (situations ?? []).find((item) => !!item.entryId && (item.linkCount ?? 0) > 0);
+  return found?.entryId ?? null;
 }
 
 function entryType(value: string | undefined): EntryType {

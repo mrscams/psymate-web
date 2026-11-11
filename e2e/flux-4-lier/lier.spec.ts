@@ -70,7 +70,8 @@ function editor(page: Page) {
     target: (name: string) => dialog.getByRole('radio', { name: new RegExp(name) }),
     chip: (name: string) => relation.getByRole('button', { name, exact: true }),
     invert: dialog.getByRole('button', { name: 'Inverser le sens' }),
-    sentence: dialog.locator('form.editor .sentence'),
+    // Phrase lisible épinglée au-dessus du pied (UX-B7).
+    sentence: dialog.locator('.reading .sentence'),
     rationale: dialog.getByLabel('Pourquoi (facultatif)'),
     search: dialog.getByRole('searchbox', { name: 'Rechercher une entrée du dossier' }),
     alert: dialog.locator('.alert[role="alert"]'),
@@ -111,7 +112,12 @@ test.describe('lier deux entrées', () => {
     // Ressenti → événement : « déclenche » est refusé par la matrice, possible dans l'autre sens.
     await expect(e.chip('déclenche')).toHaveAttribute('aria-disabled', 'true');
     await expect(e.chip('est causé par')).not.toHaveAttribute('aria-disabled', 'true');
-    await expect(e.dialog.locator('.refusals')).toContainText(
+    // Raison en infobulle et en description (UX-B7 : plus de liste d'aides sous les puces).
+    await expect(e.chip('déclenche')).toHaveAttribute(
+      'title',
+      '« déclenche » : seulement depuis événement, situation, séance. Possible en inversant le sens.',
+    );
+    await expect(e.chip('déclenche')).toHaveAccessibleDescription(
       '« déclenche » : seulement depuis événement, situation, séance. Possible en inversant le sens.',
     );
     await expect(e.sentence).toHaveText("Anxiété 8/10 … Entretien d'évaluation");
