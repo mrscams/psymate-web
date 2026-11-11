@@ -43,19 +43,17 @@ import {
  * - public : layout public (fiche 00 §4), sans barre d'application ; conteneur étroit (480 px) des
  *   formulaires, sauf si une route déclare `data.wide` (annuaire, fiche praticien, comment ça marche) ;
  * - admin : barre d'administration (fiche 00 §5) ;
- * - bare : la route seule, sans barre ni pied, dans le `<main id="main">` de la coquille, sans
- *   classe ni marge (page de démonstration ; page de connexion en deux panneaux). La page nue ne pose
- *   jamais son propre `<main>` : un seul repère `main` par page.
+ * - bare : la page seule, qui possède toute sa structure (voir « Pages nues » plus bas).
  */
 export type AppLayout = 'practitioner' | 'public' | 'admin' | 'bare';
 
 /**
  * Largeur du contenu, portée par `data.contentWidth` (UX-A8, hérité des parents, la route la plus
  * profonde l'emporte) :
- * - default : 1 120 px (`<main class="app-main">`, layout public large), 480 px pour les formulaires
+ * - default : 1 120 px (`conteneur `.app-main``, layout public large), 480 px pour les formulaires
  *   publics ;
- * - wide : layout public jusqu'à 1 280 px (annuaire, maquette 08) ; `<main>` des habillages praticien
- *   et admin jusqu'à 1 600 px de contenu (écrans d'administration, maquettes 20, 21, 22, 28 : pleine
+ * - wide : layout public jusqu'à 1 280 px (annuaire, maquette 08) ; conteneur des habillages
+ *   praticien et admin jusqu'à 1 600 px de contenu (écrans d'administration, maquettes 20, 21, 22, 28 : pleine
  *   largeur à 1 440 px avec 24 px de marge), sans marges négatives dans la page.
  */
 export type ContentWidth = 'default' | 'wide';
@@ -65,16 +63,31 @@ export type ContentWidth = 'default' | 'wide';
  * barre d'application et au bandeau d'état, pose les toasts et le bandeau réseau une seule fois.
  * Habillage praticien : la touche ? ouvre l'aide des raccourcis (features/patient-shell, M7-03).
  *
- * UX-A10 : un seul `<main id="main">` et un seul `<router-outlet>` servent les quatre habillages ;
- * autour, seuls la barre, les bandeaux, le pied et les classes du `<main>` suivent l'habillage. La
- * page n'est donc jamais détruite ni recréée quand l'habillage change (fin de la première
- * navigation, connexion, déconnexion, 401, passage à /admin) : avant, chaque branche d'un `@switch`
- * portait son outlet et la page était créée deux fois, ses lectures parties deux fois.
+ * UX-A10 : un seul `<main id="main">` et un seul `<router-outlet>`, stables, servent les quatre
+ * habillages ; autour, seuls la barre, les bandeaux, le pied et les classes du `<main>` suivent
+ * l'habillage. La page n'est donc jamais détruite ni recréée quand l'habillage change (fin de la
+ * première navigation, connexion, déconnexion, 401, passage à /admin) : avant, chaque branche d'un
+ * `@switch` portait son outlet et la page était créée deux fois, ses lectures parties deux fois.
+ * Le conteneur reste un `<main>` (changer de balise recréerait l'outlet ; un `div role="main"` ferait
+ * des `<header>` des pages autant de repères `banner`).
+ *
+ * Pages nues (habillage `bare`) : `/_demo`, `/premiere-connexion`, `/connexion` (deux panneaux).
+ * - La coquille fournit le `<main id="main">`, sans classe ni marge ni largeur, précédé du seul
+ *   bandeau réseau ; la page en est l'enfant et ne pose jamais de `<main>`, de `role="main"` ni
+ *   d'`id="main"` (un seul repère `main`, un seul `#main` par page).
+ * - Ses blocs répétés (barre, pied) sont donc dans le `<main>` : ce ne sont pas des repères `banner`
+ *   / `contentinfo`. Si la page a une barre à sauter, son lien d'évitement vise l'`id` de son
+ *   contenu (par exemple `#contenu`), jamais `#main`.
+ * - Hauteur : la coquille passe en colonne flex et le `<main>` nu, lui-même en colonne flex, remplit
+ *   la fenêtre sous le bandeau réseau (`flex: 1`) ; une page plein écran pose `flex: 1` sur son hôte,
+ *   sans `100vh` / `100dvh`, et remplit exactement la fenêtre même avec le bandeau affiché.
+ * - Défilement : le document défile, pas les panneaux de la page.
+ *
  * Rien n'est rendu avant la fin de la première navigation (`navigated`) : l'habillage n'est pas
  * supposé (ni barre praticien ni classe `app-main` sur une page publique), la route déjà activée
- * s'attache une fois à l'outlet, dans l'habillage de sa route.
- * Pages prérendues : le HTML du serveur reste en place, inerte, jusqu'à cette fin de navigation,
- * puis l'hydratation reprend les mêmes blocs (même habillage, même page) sans les reconstruire.
+ * s'attache une fois à l'outlet, dans l'habillage de sa route. Pages prérendues : le HTML du
+ * serveur reste en place, inerte, jusqu'à cette fin de navigation, puis l'hydratation reprend les
+ * mêmes blocs (même habillage, même page) sans les reconstruire.
  */
 @Component({
   selector: 'pm-root',
@@ -92,6 +105,7 @@ export type ContentWidth = 'default' | 'wide';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { '[class.bare]': "navigated() && layout() === 'bare'" },
 })
 export class AppComponent {
   private readonly router = inject(Router);

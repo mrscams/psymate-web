@@ -1,4 +1,9 @@
-<a class="skip-link" href="#main" i18n="Lien d'évitement vers le contenu@@appBar.skip">
+<a
+  class="skip-link"
+  href="#contenu"
+  (click)="skipToContent($event, content)"
+  i18n="Lien d'évitement vers le contenu@@appBar.skip"
+>
   Aller au contenu
 </a>
 <header class="bar">
@@ -33,7 +38,7 @@
   </span>
 </header>
 
-<main id="main" class="layout">
+<div #content id="contenu" class="layout" tabindex="-1">
   <aside class="explain" aria-labelledby="fl-explain-title">
     <h1 id="fl-explain-title" i18n="Titre du panneau d'explication@@auth.firstLogin.explain.title">
       Avant d'ouvrir l'administration.
@@ -301,4 +306,4 @@
       }
     }
   </section>
-</main>
+</div>
