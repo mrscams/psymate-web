@@ -183,3 +183,51 @@ test.describe("anneau de focus de la barre d'administration", () => {
     });
   }
 });
+
+for (const theme of THEMES) {
+  test(`recherche de la barre d'application au Tab : un seul anneau, celui du conteneur (${theme})`, async ({
+    page,
+    request,
+  }) => {
+    test.setTimeout(60_000);
+    const account = await createAccount(request, `ux-a2.barre.${theme}`, 'psychologist');
+    await setPreferences(request, { theme });
+    await signIn(page, account);
+    await expectTheme(page, theme);
+    await settled(page);
+    const search = page.locator('pm-app-bar').getByRole('searchbox', { name: 'Rechercher' });
+    await tabTo(page, search, { max: 10 });
+    expect(await search.evaluate((el) => el.matches(':focus-visible'))).toBe(true);
+
+    // Le champ, sans bordure, ne dessine rien : ni outline, ni halo.
+    const field = await search.evaluate((el) => {
+      const css = getComputedStyle(el);
+      return {
+        outline: css.outlineStyle,
+        width: parseFloat(css.outlineWidth),
+        shadow: css.boxShadow,
+      };
+    });
+    expect(
+      field.outline === 'none' || field.width === 0,
+      `outline du champ : ${field.outline}`,
+    ).toBe(true);
+    expect(field.shadow, 'halo du champ').toBe('none');
+
+    // Le conteneur porte le focus (:focus-within) : bordure cobalt à 3:1 au moins sur la barre.
+    const box = await search.evaluate((el) => {
+      const css = getComputedStyle(el.parentElement as Element);
+      return { border: css.borderTopColor, shadow: css.boxShadow };
+    });
+    const ground = await page
+      .locator('pm-app-bar header')
+      .first()
+      .evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(
+      contrast(box.border, ground),
+      `bordure ${box.border} sur la barre ${ground}`,
+    ).toBeGreaterThanOrEqual(3);
+    expect(box.shadow, 'halo du conteneur').not.toBe('none');
+    await expectNoAxeViolations(page);
+  });
+}
