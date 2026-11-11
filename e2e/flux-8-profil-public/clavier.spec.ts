@@ -125,9 +125,15 @@ test.describe('flux 8 au clavier, dossier approuvé', () => {
       200,
     );
 
-    // Retirer à tout moment : Espace de nouveau ; la fiche disparaît, les données restent.
+    // Retirer à tout moment : Espace de nouveau, puis la confirmation en ligne (UX-C1 : le focus
+    // passe sur « Retirer la fiche », Entrée) ; la fiche disparaît, les données restent.
     await page.keyboard.press('Space');
+    const confirm = page.getByRole('button', { name: 'Retirer la fiche', exact: true });
+    await expect(confirm).toBeFocused();
+    await expect(published).toBeChecked();
+    await page.keyboard.press('Enter');
     await expect(published).not.toBeChecked();
+    await expect(published).toBeFocused();
     await expect
       .poll(async () =>
         (await request.get(`${API}/api/public/directory/practitioners/${slug}`)).status(),
