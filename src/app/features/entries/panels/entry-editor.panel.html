@@ -1,4 +1,4 @@
-<pm-side-panel [title]="title()">
+<pm-side-panel [title]="title()" [subtitle]="subtitle()">
   @if (store.entry().data?.status === 'draft') {
     <span
       pmPanelHeader
@@ -6,11 +6,6 @@
       i18n="Pastille d'une entrée en brouillon@@entries.editor.draftBadge"
       >brouillon</span
     >
-  }
-
-  <!-- Sous-titre : patient et provenance (pm-side-panel n'a pas d'emplacement sous le titre). -->
-  @if (subtitle(); as line) {
-    <p class="subtitle">{{ line }}</p>
   }
 
   @if (grace(); as info) {

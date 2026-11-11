@@ -178,11 +178,12 @@
                   >· sert à l'âge et aux phases de vie</span
                 >
               </div>
-              <!-- errorId devient l'aria-describedby de l'input : la précision y figure aussi. -->
+              <!-- La précision décrit le champ (describedBy), avant l'éventuelle erreur (errorId). -->
               <pm-date-field
                 formControlName="birthDate"
                 [inputId]="fid('birthDate')"
-                [errorId]="fid('birthDate') + '-aside ' + fid('birthDate') + '-error'"
+                [describedBy]="fid('birthDate') + '-aside'"
+                [errorId]="fid('birthDate') + '-error'"
                 [invalid]="invalid(form.controls.birthDate)"
                 [max]="today"
               />

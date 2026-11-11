@@ -130,7 +130,8 @@ export class EntryEditorPanel {
 
   /**
    * Sous-titre : le patient et la provenance de la saisie (« Marie D. · préremplie depuis la barre
-   * de capture »). Le nom arrive de GET /api/patients/{id} ; tant qu'il manque, la provenance seule.
+   * de capture »), passé à `subtitle` de pm-side-panel. Le nom arrive de GET /api/patients/{id} ;
+   * tant qu'il manque, la provenance seule.
    */
   protected readonly subtitle = computed(() => {
     const name = this.store.patientName();
@@ -372,7 +373,11 @@ export class EntryEditorPanel {
   protected openLinks(): void {
     const entryId = this.target.entryId;
     if (!entryId) return;
-    const ref = openLinkEditor(entryId, { injector: this.injector });
+    // Le patient, pour le sous-titre de l'éditeur de lien (maquette 06) ; vide tant qu'il n'est pas lu.
+    const ref = openLinkEditor(entryId, {
+      injector: this.injector,
+      patientName: this.store.patientName() || null,
+    });
     void ref?.closed.then(() => this.store.refreshLinks());
   }
 

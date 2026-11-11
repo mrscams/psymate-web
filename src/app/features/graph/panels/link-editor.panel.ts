@@ -111,6 +111,13 @@ export class LinkEditorPanel {
   protected readonly rationaleMax = RATIONALE_MAX;
   protected readonly entryTypes = ENTRY_TYPES;
   protected readonly title = $localize`:Titre de l'éditeur de lien@@links.editor.title:Lier deux entrées`;
+  /**
+   * Sous-titre de la maquette 06 sous le titre : le patient et la portée du lien (« Marie D. · le
+   * lien est visible dans le graphe et la timeline ») ; sans nom connu, la portée seule.
+   */
+  protected readonly subtitle = this.data.patientName
+    ? $localize`:Sous-titre de l'éditeur de lien, avec le patient@@links.editor.subtitle:${this.data.patientName}:patient: · le lien est visible dans le graphe et la timeline`
+    : $localize`:Sous-titre de l'éditeur de lien, sans patient@@links.editor.subtitleScope:Le lien est visible dans le graphe et la timeline`;
   protected readonly relationLabel = $localize`:Nom du groupe des types de lien@@links.editor.relation:Relation`;
   protected readonly sourceListLabel = $localize`:Nom de la liste des sources possibles@@links.from.listLabel:Entrées du dossier`;
 

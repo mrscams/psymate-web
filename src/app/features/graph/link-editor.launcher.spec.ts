@@ -73,13 +73,13 @@ describe('openLinkEditor, connectLinkEditor', () => {
     patient.set(null);
   });
 
-  it('ouvre le panneau 420 px, porte ?link=<id> tant qu’il est ouvert ; seconde demande sans effet', async () => {
+  it('ouvre le panneau 520 px, porte ?link=<id> tant qu’il est ouvert ; seconde demande sans effet', async () => {
     const { router, panels, go } = await setup();
     await go('/patients/p-marie');
     const ref = TestBed.runInInjectionContext(() => openLinkEditor('e-feeling'));
     await settle();
     expect(ref).not.toBeNull();
-    expect(document.querySelector('.pm-side-panel-pane--420')).not.toBeNull();
+    expect(document.querySelector('.pm-side-panel-pane--520')).not.toBeNull();
     expect(router.parseUrl(router.url).queryParams[LINK_QUERY_PARAM]).toBe('e-feeling');
     expect(TestBed.runInInjectionContext(() => openLinkEditor('e-feeling'))).toBeNull();
     // Ouvert sur une entrée : une demande pour une autre ne remplace pas le panneau.
@@ -108,7 +108,7 @@ describe('openLinkEditor, connectLinkEditor', () => {
     patient.set({ id: 'p-marie', displayName: 'Marie D.' });
     await settle();
     expect(panelCount()).toBe(1);
-    expect(document.querySelector('pm-link-editor-panel .patient')?.textContent).toContain(
+    expect(document.querySelector('pm-link-editor-panel .subtitle')?.textContent).toContain(
       'Marie D.',
     );
   });

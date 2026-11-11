@@ -24,6 +24,8 @@ import {
   StateComponent,
   ToastService,
 } from '../../../shared/ui';
+// Seuil de « non clôturée » (UX-A8) : la constante n'est pas réexportée par l'index de shared/ui.
+import { UNCLOSED_SESSION_AFTER_MIN } from '../../../shared/ui/patient-header/patient-header.component';
 import { CapturedEntry, CommandBarComponent } from '../../capture';
 import { ENTRY_QUERY_PARAM, EntryPrefill, openEntryEditor } from '../../entries';
 import { connectLinkEditor, LINK_QUERY_PARAM } from '../../graph';
@@ -62,6 +64,8 @@ export class PatientShellPage {
   readonly id = input.required<string>();
 
   protected readonly store = inject(PatientShellStore);
+  /** Au-delà de 3 h : « non clôturée » au lieu de « en cours depuis … » (maquettes 02 et 03). */
+  protected readonly unclosedAfterMin = UNCLOSED_SESSION_AFTER_MIN;
   private readonly dialog = inject(MatDialog);
   private readonly toast = inject(ToastService);
   private readonly shortcuts = inject(ShortcutService);

@@ -28,8 +28,9 @@ export interface OpenLinkEditorOptions {
 export type LinkEditorResult = EntryLink;
 
 /**
- * Ouvre l'éditeur de lien (fiche 06) sur une entrée, source proposée du lien : panneau 420 px,
- * empilé sur le panneau ouvert (l'éditeur d'entrée) s'il y en a un, seul sinon. L'URL porte
+ * Ouvre l'éditeur de lien (fiche 06) sur une entrée, source proposée du lien : panneau 520 px
+ * (maquette 06), empilé sur le panneau ouvert (l'éditeur d'entrée) s'il y en a un, seul sinon ;
+ * empilé, il couvre l'éditeur d'entrée (480 px), qu'Échap ou Annuler rend. L'URL porte
  * `?link=<entryId>` tant qu'il est ouvert (rechargement, lien partagé). Tant qu'un éditeur de lien
  * est ouvert, une nouvelle demande ne fait rien ; renvoie null aussi si la pile est pleine.
  */
@@ -51,7 +52,7 @@ export function openLinkEditor(
   };
   const ref = panels.open<LinkEditorPanel, LinkEditorData, LinkEditorResult>(LinkEditorPanel, {
     data,
-    width: 420,
+    width: 520,
     stack: panels.isOpen(),
   });
   if (!ref) return null;

@@ -1,12 +1,6 @@
 // Éditeur d'entrée (fiche 05, maquette état A) : sections à titre en capitales 12 px, libellés de
 // champ 13 px, champs de 40 px, pied « Enregistrer · Brouillon … Annuler » et rappel des touches.
 
-.subtitle {
-  margin: -8px 0 14px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
 .editor {
   display: flex;
   flex-direction: column;
