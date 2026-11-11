@@ -88,6 +88,38 @@ describe.each([
     expect(title).toBe(`${'😀'.repeat(60)}…`);
   });
 
+  describe.each([
+    { segmenter: 'Intl.Segmenter', stub: false },
+    { segmenter: 'repli sans Intl.Segmenter', stub: true },
+  ])('graphèmes à cheval sur la 60e position ($segmenter)', ({ stub }) => {
+    const intl = Intl as { Segmenter?: unknown };
+    const saved = intl.Segmenter;
+    beforeEach(() => {
+      if (stub) intl.Segmenter = undefined;
+    });
+    afterEach(() => {
+      intl.Segmenter = saved;
+    });
+
+    it.each([
+      { name: 'emoji famille (joint U+200D)', lead: 'a', unit: '👨‍👩‍👧' },
+      { name: 'drapeau (paire d’indicateurs régionaux)', lead: 'a', unit: '🇫🇷' },
+      { name: 'teinte de peau', lead: '', unit: '👍🏽' },
+      { name: 'accent décomposé (e + U+0301)', lead: 'x', unit: 'é' },
+    ])('$name : 60 graphèmes entiers puis « … »', ({ lead, unit }) => {
+      const text = lead + unit.repeat(70);
+      const kept = 60 - (lead ? 1 : 0);
+      const title = entryTitle({ type: 'note', text }, locale);
+      expect(title).toBe(`${lead}${unit.repeat(kept)}…`);
+      expect(title).not.toMatch(/‍…$/u);
+    });
+
+    it('accent décomposé sous la limite : texte entier, accents gardés', () => {
+      const text = `x${'é'.repeat(40)}`;
+      expect(entryTitle({ type: 'note', text }, locale)).toBe(text);
+    });
+  });
+
   it('ni titre ni texte : type et date courte de l’année en cours', () => {
     expect(
       entryTitle({ type: 'note', title: null, text: '  ', occurred: OCT_24 }, locale, opts),

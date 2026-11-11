@@ -48,7 +48,7 @@ export function entryTitle(
   if (title) return title;
 
   const text = collapse(entry.text);
-  if (text) return excerpt(text, ENTRY_TITLE_EXCERPT);
+  if (text) return excerpt(text, ENTRY_TITLE_EXCERPT, locale);
 
   const label = typeName(entry);
   const date = shortDate(entry.occurred, locale, options);
@@ -71,17 +71,35 @@ function collapse(value: string | null | undefined): string {
 }
 
 /**
- * Les `max` premiers caractères, coupés au dernier mot entier, sans ponctuation pendante, suivis de
- * « … ». Un mot unique plus long que `max` est coupé net.
+ * Les `max` premiers caractères affichés (graphèmes), coupés au dernier mot entier, sans ponctuation
+ * pendante, suivis de « … ». Un mot unique plus long que `max` est coupé net, mais jamais au milieu
+ * d'un graphème (emoji composé, drapeau, teinte de peau, accent décomposé).
  */
-function excerpt(text: string, max: number): string {
-  const chars = Array.from(text);
+function excerpt(text: string, max: number, locale: string): string {
+  const chars = graphemes(text, locale);
   if (chars.length <= max) return text;
-  // Un caractère de plus : si c'est une espace, la coupe à `max` tombe déjà entre deux mots.
+  // Un graphème de plus : si c'est une espace, la coupe à `max` tombe déjà entre deux mots.
   const head = chars.slice(0, max + 1).join('');
   const space = head.lastIndexOf(' ');
   const cut = space > 0 ? head.slice(0, space) : chars.slice(0, max).join('');
-  return `${cut.replace(/[\s,;:.!?…\-–—]+$/u, '')}…`;
+  return `${cut.replace(/[\s‍,;:.!?…\-–—]+$/u, '')}…`;
+}
+
+/**
+ * Repli sans Intl.Segmenter : une paire d'indicateurs régionaux (drapeau), ou un caractère suivi de
+ * ses marques combinantes, sélecteurs de variante, teintes de peau, étiquettes, et des suites jointes
+ * par U+200D (emoji composés). Approximation prudente : elle regroupe plus qu'elle ne coupe.
+ */
+const GRAPHEME_FALLBACK =
+  /\p{RI}\p{RI}|[^\p{M}‍][\p{M}\u{1F3FB}-\u{1F3FF}\u{E0020}-\u{E007F}]*(?:‍(?:\p{RI}\p{RI}|[^\p{M}‍])?[\p{M}\u{1F3FB}-\u{1F3FF}\u{E0020}-\u{E007F}]*)*|[\s\S]/gu;
+
+/** Caractères affichés du texte : Intl.Segmenter par graphèmes, sinon le repli ci-dessus. */
+function graphemes(text: string, locale: string): string[] {
+  if (typeof Intl.Segmenter === 'function') {
+    const segmenter = new Intl.Segmenter(locale, { granularity: 'grapheme' });
+    return Array.from(segmenter.segment(text), (part) => part.segment);
+  }
+  return text.match(GRAPHEME_FALLBACK) ?? [];
 }
 
 /** « 24 oct. » (fr), « Oct 24 » (en) ; avec l'année hors de l'année en cours. */
