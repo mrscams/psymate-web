@@ -54,11 +54,14 @@ async function render(overview: Loadable<OverviewView>, refreshing = false) {
   fixture.componentRef.setInput('overview', overview);
   fixture.componentRef.setInput('patientId', 'p-marie');
   fixture.componentRef.setInput('refreshing', refreshing);
+  fixture.componentRef.setInput('window', '90d');
   const retried: number[] = [];
   fixture.componentInstance.retry.subscribe(() => retried.push(1));
+  const windows: string[] = [];
+  fixture.componentInstance.windowChange.subscribe((w) => windows.push(w));
   await settle(fixture);
   const el = fixture.nativeElement as HTMLElement;
-  return { fixture, el, retried, settle: () => settle(fixture) };
+  return { fixture, el, retried, windows, settle: () => settle(fixture) };
 }
 
 async function settle(fixture: { whenStable(): Promise<unknown> }): Promise<void> {
@@ -143,7 +146,7 @@ describe('OverviewSimpleComponent', () => {
     const { el } = await render(loaded(noEntryPatient()));
     expect(snapshot(el)).toEqual([
       'En bref | contenu | Assemblé à partir des entrées, par règles, sans IA Suivi depuis le 8 novembre 2026 : aucune séance. Pas assez de ressentis pour dégager une tendance.',
-      'Comment évoluent les ressentis · 90 jours | vide | Pas encore de ressentis sur cette période Chaque ressenti noté apparaîtra ici, avec son intensité sur 10.',
+      'Comment évoluent les ressentis | vide | 30 j 90 j 1 an Pas encore de ressentis sur cette période Chaque ressenti noté apparaîtra ici, avec son intensité sur 10.',
       "Dernière séance | vide | Toutes les séances dans la timeline Aucune séance La dernière séance et son compte rendu apparaîtront ici dès la première, démarrée depuis l'en-tête.",
       'Situations en cours | vide | Aucune situation en cours Les situations sans fin connue apparaîtront ici, avec leurs ressentis liés.',
       'Dernières entrées | vide | Rien de noté depuis Les entrées notées après la dernière séance clôturée apparaîtront ici.',
@@ -160,41 +163,107 @@ describe('OverviewSimpleComponent', () => {
     expect(text(block(el, 'Cadre du suivi'))).toContain('Cadre non renseigné');
   });
 
-  it('En bref : chaque phrase du serveur telle quelle, dans son ordre, et le point d’attention', async () => {
+  it('En bref : chaque phrase du serveur telle quelle, dans son ordre, et le point d’attention ambre', async () => {
     const view = overviewView();
     const { el } = await render(loaded(view));
     const brief = block(el, 'En bref');
     const sentences = [...brief.querySelectorAll('.sentence')].map((p) => p.textContent);
     expect(sentences).toEqual(view.narrative.sentences);
+    // Un seul paragraphe, comme la maquette 02b.
+    expect(brief.querySelectorAll('p.brief')).toHaveLength(1);
     expect(text(brief.querySelector('.attention'))).toBe(
       "Point d'attention : À surveiller depuis le 3 octobre 2026 (motif : Sommeil).",
     );
   });
 
-  it('ressentis réels : titre avec la fenêtre, description accessible, légende, données', async () => {
+  it('En bref : faits en gras (dates, chiffres, citations), texte inchangé', async () => {
     const { el } = await render(loaded(overviewView()));
-    const feelings = block(el, 'Comment évoluent les ressentis · 90 jours');
+    const facts = [...block(el, 'En bref').querySelectorAll('.sentence strong')].map(
+      (s) => s.textContent,
+    );
+    expect(facts).toEqual(['12 mars 2025', '31', '30', '7', '4,5', '30', '« Anxiété »']);
+  });
+
+  it('ressentis réels : phrase-titre, sélecteur de fenêtre dans la carte, description, légende, données', async () => {
+    const { el, windows } = await render(loaded(overviewView()));
+    const feelings = block(el, 'Comment évoluent les ressentis');
+    expect(text(feelings.querySelector('h3'))).toBe('Comment évoluent les ressentis');
+    expect(text(feelings.querySelector('.headline'))).toBe('Anxiété domine : 8/10. Joie : 4/10.');
     expect(feelings.querySelector('[role="img"]')?.getAttribute('aria-label')).toBe(
       'Ressentis notés sur 90 jours, une valeur par point : Anxiété (ressentis : 1) à 8 sur 10 ; ' +
         'Joie (ressentis : 1) à 4 sur 10. Jours de séance : 2 ; repères de médicament : 1.',
     );
     const legend = [...feelings.querySelectorAll('.legend li')].map((li) => text(li));
-    expect(legend).toEqual([
-      'Anxiété (1 ressenti)',
-      'Joie (1 ressenti)',
-      'Séance',
+    expect(legend).toEqual(['Anxiété (1 ressenti)', 'Joie (1 ressenti)']);
+    // Repères de médicament en clair sous la légende, séances expliquées dans l'aide.
+    expect(text(feelings.querySelector('.markers'))).toBe(
       'Début de traitement · Sertraline 75 mg · 12 sept. 2026',
-    ]);
+    );
+    expect(text(feelings.querySelector('.hint'))).toContain(
+      "Les traits sous l'axe marquent les séances.",
+    );
     const rows = [...feelings.querySelectorAll('tbody tr')].map((r) => text(r));
     expect(rows).toEqual(['20 oct. 2026 Anxiété 8/10', '7 nov. 2026 Joie 4/10']);
     expect(link(feelings, 'Anxiété').getAttribute('href')).toBe('/?entry=f-1');
+
+    const group = feelings.querySelector<HTMLElement>(
+      '[aria-label="Période de la vue d\'ensemble"]',
+    )!;
+    const pressed = [...group.querySelectorAll('button')].map((b) => [
+      text(b),
+      b.getAttribute('aria-pressed'),
+    ]);
+    expect(pressed).toEqual([
+      ['30 j', 'false'],
+      ['90 j', 'true'],
+      ['1 an', 'false'],
+    ]);
+    [...group.querySelectorAll('button')][2].click();
+    expect(windows).toEqual(['12m']);
+  });
+
+  it('ressentis : trois émotions dominantes et « Autres », légende de quatre éléments au plus', async () => {
+    const view = overviewView();
+    const codes = ['anxiety', 'sadness', 'anger', 'joy', 'trust'];
+    const labels = ['Anxiété', 'Tristesse', 'Colère', 'Joie', 'Confiance'];
+    const points = codes.flatMap((code, i) =>
+      [4, 6, 8].slice(0, 3 - Math.min(i, 2)).map((intensity, j) => ({
+        entryId: `${code}-${j}`,
+        date: `2026-10-${String(10 + j).padStart(2, '0')}`,
+        emotionCode: code,
+        family: 'fear' as const,
+        intensity,
+        sessionId: null,
+      })),
+    );
+    const series = codes.map((code, i) => ({
+      emotionCode: code,
+      family: 'fear' as const,
+      label: labels[i],
+      count: points.filter((p) => p.emotionCode === code).length,
+    }));
+    const { el } = await render(
+      loaded({ ...view, feelings: { ...view.feelings, points, series } }),
+    );
+    const feelings = block(el, 'Comment évoluent les ressentis');
+    const legend = [...feelings.querySelectorAll('.legend li')].map((li) => text(li));
+    expect(legend).toEqual([
+      'Anxiété (3 ressentis)',
+      'Tristesse (2 ressentis)',
+      'Colère (1 ressenti)',
+      'Autres (2 émotions, 2 ressentis)',
+    ]);
+    expect(text(feelings.querySelector('.headline'))).toBe(
+      'Anxiété domine : 4/10 → 8/10. Tristesse : 4–6/10.',
+    );
   });
 
   it('dernière séance : compte rendu entier, entrées, timeline ; séances précédentes en une ligne', async () => {
     const { el } = await render(loaded(overviewView()));
     const session = block(el, 'Dernière séance');
-    expect(text(session.querySelector('.session-head'))).toBe(
-      'samedi 17 octobre 2026 · 50 min · Présentiel',
+    // L'année n'est écrite que hors de l'année en cours (maquette 02b).
+    expect(text(session.querySelector('.session-head'))).toMatch(
+      /^samedi 17 octobre( 2026)? · 50 min · Présentiel$/,
     );
     expect(session.querySelector('.summary')?.textContent).toBe(
       'Reprise du thème du travail.\nObjectif : préparer l’entretien.',
@@ -272,12 +341,29 @@ describe('OverviewSimpleComponent', () => {
     ]);
     expect(link(frame, 'Modifier la fiche').getAttribute('href')).toBe('/patients/p-marie/fiche');
     const todo = block(el, 'À compléter');
+    // Fond ambre (warning-bg) quand il y a quelque chose à compléter (maquette 02b).
+    expect(todo.classList).toContain('warning');
     expect(link(todo, '2 brouillons à relire').getAttribute('href')).toBe(
       '/patients/p-marie/timeline?drafts=1',
     );
     expect(link(todo, 'Séance du 8 nov. 2026 à clôturer').getAttribute('href')).toBe(
       '/patients/p-marie/timeline?mode=session&focus=s-open',
     );
+  });
+
+  it('cadre du suivi : début du suivi plus récent que les séances → la première séance connue', async () => {
+    const view = overviewView();
+    view.facts = { ...view.facts, followedSince: '2026-11-07' };
+    const { el } = await render(loaded(view));
+    const frame = block(el, 'Cadre du suivi');
+    expect(text(frame.querySelector('li'))).toBe(
+      'Suivi depuis le 10 oct. 2026 (première séance connue)',
+    );
+  });
+
+  it('rien à compléter : l’état vide n’est pas en ambre', async () => {
+    const { el } = await render(loaded(emptyOverview()));
+    expect(block(el, 'À compléter').classList).not.toContain('warning');
   });
 
   it('« Reçu du patient » (B9) : place réservée, rien de dessiné', async () => {

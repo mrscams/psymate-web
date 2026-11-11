@@ -4,7 +4,10 @@
     <span i18n="Sous-titre de l'écran de connexion@@auth.login.intro"
       >Espace réservé aux praticiens.</span
     >
-    <a [routerLink]="paths.register" i18n="Lien vers l'inscription@@auth.login.registerLink"
+    <a
+      class="pm-link-target"
+      [routerLink]="paths.register"
+      i18n="Lien vers l'inscription@@auth.login.registerLink"
       >Créer un compte</a
     >
   </p>
@@ -70,7 +73,10 @@
       }
     </mat-form-field>
     <p class="aside-link">
-      <a [routerLink]="paths.passwordReset" i18n="Lien mot de passe oublié@@auth.login.forgot"
+      <a
+        class="pm-link-target"
+        [routerLink]="paths.passwordReset"
+        i18n="Lien mot de passe oublié@@auth.login.forgot"
         >Mot de passe oublié ?</a
       >
     </p>

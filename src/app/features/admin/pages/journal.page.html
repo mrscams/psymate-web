@@ -205,7 +205,11 @@
         <span>{{ row.text }}</span>
         @if (row.practitionerDisplayName && row.practitionerId) {
           <span aria-hidden="true">·</span>
-          <button type="button" class="link" (click)="filterPractitioner(row.practitionerId)">
+          <button
+            type="button"
+            class="link pm-link-target"
+            (click)="filterPractitioner(row.practitionerId)"
+          >
             {{ row.practitionerDisplayName }}
             <span class="sr-only" i18n="Action d'un nom du journal@@admin.journal.filterBy"
               >: voir seulement ses événements</span
@@ -246,6 +250,7 @@
       <td>
         @if (row.context) {
           <a
+            class="pm-link-target"
             [routerLink]="['/admin/validation', row.practitionerId]"
             i18n="Lien vers le dossier@@admin.journal.openDossier"
             >Voir le dossier</a

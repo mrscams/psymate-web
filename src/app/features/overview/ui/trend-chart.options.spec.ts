@@ -1,5 +1,4 @@
 import type { LineSeriesOption, ScatterSeriesOption } from 'echarts/charts';
-import type { MarkLineComponentOption } from 'echarts/components';
 
 import { overviewView } from '../data/overview.fixtures';
 import {
@@ -9,6 +8,7 @@ import {
   TREND_TOKEN_NAMES,
   TrendChartLabels,
   trendChartOptions,
+  TrendMarkerDatum,
   TrendPointDatum,
 } from './trend-chart.options';
 
@@ -18,10 +18,11 @@ const tokens = readTrendTokens(read);
 
 const labels: TrendChartLabels = {
   average: 'Intensité moyenne (7 jours)',
+  feelings: 'Ressentis notés',
   session: 'Séance',
+  medication: 'Changement de médicament',
   medicationStart: 'Début de traitement',
   medicationEnd: 'Fin de traitement',
-  family: (family) => family ?? 'Autre',
   emotion: (code) => (code === 'anxiety' ? 'Anxiété <b>' : code),
   day: (value) => String(value),
   intensity: (value) => value.toFixed(1).replace('.', ','),
@@ -32,9 +33,18 @@ function options() {
   return trendChartOptions({ trend: view.trend, feelings: view.feelings }, tokens, labels);
 }
 
-describe('trendChartOptions (tokens → options ECharts)', () => {
+function series(id: string) {
+  const found = (options().series as (LineSeriesOption | ScatterSeriesOption)[]).find(
+    (s) => s.id === id,
+  );
+  if (!found) throw new Error(`série introuvable : ${id}`);
+  return found;
+}
+
+describe('trendChartOptions (tokens → options ECharts, maquette 02, UX-B4)', () => {
   it('readTrendTokens : lit chaque token par son nom de variable CSS, sans espaces', () => {
     expect(tokens.line).toBe('tok(--feeling)');
+    expect(tokens.point).toBe('tok(--border-strong)');
     expect(tokens.session).toBe('tok(--primary)');
     expect(tokens.medication).toBe('tok(--entry-medication)');
     expect(tokens.emotions.fear).toBe('tok(--emotion-fear)');
@@ -50,63 +60,84 @@ describe('trendChartOptions (tokens → options ECharts)', () => {
     expect(o['animation']).toBe(false);
   });
 
-  it('courbe des moyennes du serveur en --feeling, trous gardés (connectNulls false)', () => {
-    const series = o_series();
-    const line = series[0] as LineSeriesOption;
-    expect(line.type).toBe('line');
+  it('quatre séries : moyenne, ressentis, séances, médicaments ; une seule ligne tracée', () => {
+    const all = options().series as (LineSeriesOption | ScatterSeriesOption)[];
+    expect(all.map((s) => s.id)).toEqual(['average', 'feelings', 'sessions', 'medications']);
+    expect(all.filter((s) => s.type === 'line')).toHaveLength(1);
+  });
+
+  it('moyenne glissante du serveur en --feeling, trous gardés, dernier point en rond creux', () => {
+    const line = series('average') as LineSeriesOption;
     expect(line.lineStyle?.color).toBe('tok(--feeling)');
     expect(line.connectNulls).toBe(false);
+    expect(line.showSymbol).toBe(false);
+    expect(line).not.toHaveProperty('areaStyle');
     expect(line.data).toEqual([
       ['2026-10-20', 5.5],
       ['2026-10-21', null],
-      ['2026-11-08', 7],
-    ]);
-    expect(line).not.toHaveProperty('areaStyle');
-  });
-
-  it('une série de points par famille présente, couleur --emotion-<famille>', () => {
-    const scatter = o_series().slice(1) as ScatterSeriesOption[];
-    expect(scatter.map((s) => s.id)).toEqual(['family-joy', 'family-fear']);
-    expect(scatter.map((s) => s.itemStyle?.color)).toEqual([
-      'tok(--emotion-joy)',
-      'tok(--emotion-fear)',
-    ]);
-    const datum = (scatter[1].data as TrendPointDatum[])[0];
-    expect(datum).toEqual({ value: ['2026-10-20', 8], entryId: 'f-1', emotion: 'Anxiété <b>' });
-  });
-
-  it('famille inconnue : couleur de la courbe', () => {
-    const view = overviewView();
-    view.feelings.points[0].family = null;
-    const o = trendChartOptions({ trend: view.trend, feelings: view.feelings }, tokens, labels);
-    const ids = (o.series as ScatterSeriesOption[]).map((s) => s.id);
-    expect(ids).toContain('family-unknown');
-    const unknown = (o.series as ScatterSeriesOption[]).find((s) => s.id === 'family-unknown');
-    expect(unknown?.itemStyle?.color).toBe('tok(--feeling)');
-  });
-
-  it('repères : séances en --primary (tirets), médicaments en --entry-medication', () => {
-    const markLine = (o_series()[0] as LineSeriesOption).markLine as MarkLineComponentOption;
-    const data = markLine.data as { xAxis: string; name: string; lineStyle: object }[];
-    expect(data).toEqual([
       {
-        xAxis: '2026-10-17',
-        name: 'Séance',
-        lineStyle: { color: 'tok(--primary)', type: 'dashed', width: 1 },
-      },
-      {
-        xAxis: '2026-09-12',
-        name: 'Début de traitement · Sertraline 75 mg',
-        lineStyle: { color: 'tok(--entry-medication)', type: 'solid', width: 2 },
+        value: ['2026-11-08', 7],
+        symbol: 'circle',
+        symbolSize: 9,
+        itemStyle: {
+          color: 'tok(--surface-raised)',
+          borderColor: 'tok(--feeling)',
+          borderWidth: 2.5,
+        },
       },
     ]);
   });
 
-  it('infobulle d’un point : date, émotion, intensité, texte du serveur échappé', () => {
-    const scatter = o_series()[2] as ScatterSeriesOption;
-    const formatter = (scatter.tooltip as { formatter: (p: unknown) => string }).formatter;
-    const datum = (scatter.data as TrendPointDatum[])[0];
+  it('ressentis : petits points gris clair, en --feeling au survol, cliquables (entrée)', () => {
+    const points = series('feelings') as ScatterSeriesOption;
+    expect(points.itemStyle?.color).toBe('tok(--border-strong)');
+    expect(points.emphasis).toMatchObject({ itemStyle: { color: 'tok(--feeling)' } });
+    expect(points.symbolSize).toBe(6);
+    expect((points.data as TrendPointDatum[])[0]).toEqual({
+      value: ['2026-10-20', 8],
+      entryId: 'f-1',
+      emotion: 'Anxiété <b>',
+    });
+  });
+
+  it('aucune ligne verticale : ni markLine, séances en traits sous l’axe, médicaments en losanges', () => {
+    const all = options().series as (LineSeriesOption | ScatterSeriesOption)[];
+    expect(all.some((s) => 'markLine' in s)).toBe(false);
+
+    const sessions = series('sessions') as ScatterSeriesOption;
+    expect(sessions).toMatchObject({
+      type: 'scatter',
+      symbol: 'rect',
+      symbolSize: [2, 6],
+      symbolOffset: [0, 7],
+      clip: false,
+      itemStyle: { color: 'tok(--primary)' },
+    });
+    expect(sessions.data as TrendMarkerDatum[]).toEqual([
+      { value: ['2026-10-17', 0], name: 'Séance' },
+    ]);
+
+    const medications = series('medications') as ScatterSeriesOption;
+    expect(medications).toMatchObject({
+      symbol: 'diamond',
+      itemStyle: { color: 'tok(--entry-medication)' },
+    });
+    expect(medications.data as TrendMarkerDatum[]).toEqual([
+      { value: ['2026-09-12', 0], name: 'Début de traitement · Sertraline 75 mg' },
+    ]);
+  });
+
+  it('infobulles : date, émotion, intensité ; repère nommé ; texte du serveur échappé', () => {
+    const points = series('feelings') as ScatterSeriesOption;
+    const formatter = (points.tooltip as { formatter: (p: unknown) => string }).formatter;
+    const datum = (points.data as TrendPointDatum[])[0];
     expect(formatter({ data: datum })).toBe('2026-10-20<br>Anxiété &lt;b&gt; · 8/10');
+
+    const medications = series('medications') as ScatterSeriesOption;
+    const marker = (medications.tooltip as { formatter: (p: unknown) => string }).formatter;
+    expect(marker({ data: { value: ['2026-09-12', 0], name: '<i>x</i>' } })).toBe(
+      '2026-09-12<br>&lt;i&gt;x&lt;/i&gt;',
+    );
   });
 
   it('escapeHtml', () => {
@@ -124,7 +155,3 @@ describe('trendChartOptions (tokens → options ECharts)', () => {
     );
   });
 });
-
-function o_series() {
-  return options().series as (LineSeriesOption | ScatterSeriesOption)[];
-}

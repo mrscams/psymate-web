@@ -37,6 +37,11 @@ export const GRACE_PERIOD_MS = 75 * 60_000;
 /** Intensité d'un ressenti (contrat : 0 à 10). */
 export const INTENSITY_MIN = 0;
 export const INTENSITY_MAX = 10;
+/** Curseur de l'éditeur (fiche 05 §4) : gradué de 1 à 10, réglé sur 5 à l'ouverture d'un ressenti. */
+export const SLIDER_MIN = 1;
+export const INTENSITY_DEFAULT = 5;
+/** Longueur de saisie à partir de laquelle la liste propose de créer une émotion personnalisée. */
+export const EMOTION_CREATE_MIN = 3;
 
 /** Une émotion du vocabulaire (GET /api/vocabulary/emotions) : globale ou personnalisée. */
 export interface Emotion {
@@ -44,6 +49,8 @@ export interface Emotion {
   label: string;
   family: EmotionFamily | null;
   custom: boolean;
+  /** Niveau lexical de Plutchik : 1 faible, 2 moyen, 3 fort ; null pour les ajouts cliniques et personnalisées. */
+  intensityLevel?: number | null;
 }
 
 /** Une séance du patient, pour le bloc Séance. */

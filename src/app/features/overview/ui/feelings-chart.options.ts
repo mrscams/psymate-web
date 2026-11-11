@@ -28,6 +28,8 @@ export const FEELINGS_TOKEN_NAMES = {
   axis: '--border-subtle',
   /** Émotion dont la famille n'est plus au catalogue. */
   unknown: '--feeling',
+  /** Points des émotions regroupées en « Autres ». */
+  others: '--text-disabled',
   session: '--entry-session',
   medication: '--entry-medication',
   font: '--font-ui',
@@ -62,12 +64,17 @@ export function seriesSymbol(index: number): SeriesSymbol {
   return SERIES_SYMBOLS[index % SERIES_SYMBOLS.length];
 }
 
-/** Au-delà, les valeurs écrites au-dessus des points se chevaucheraient : seule l'infobulle reste. */
-export const MAX_VALUE_LABELS = 40;
+/**
+ * Émotions tracées chacune en série (UX-B5, maquette 02b) : les plus notées ; les suivantes sont
+ * regroupées en une seule série grise « Autres ». La légende garde ainsi quatre éléments au plus.
+ */
+export const DOMINANT_EMOTIONS = 3;
 
 /** Textes du graphe, déjà traduits par l'appelant ($localize). */
 export interface FeelingsChartLabels {
   session: string;
+  /** Nom de la série grise des autres émotions (« Autres émotions »). */
+  others: string;
   medicationStart: string;
   medicationEnd: string;
   /** Jour AAAA-MM-JJ ou horodatage de l'axe → texte court dans la locale. */
@@ -86,6 +93,9 @@ export interface FeelingDatum {
   value: [string, number];
   entryId: string;
   emotion: string;
+  /** Dernier point d'une série : sa valeur est écrite, le point un peu plus grand. */
+  label?: { show: boolean };
+  symbolSize?: number;
 }
 
 /** Une série par émotion : celles du serveur dans son ordre, puis un code absent des séries. */
@@ -115,6 +125,33 @@ export function groupByEmotion(
   return ordered;
 }
 
+/** Groupes d'émotions du graphe : les dominantes, chacune sa série, puis toutes les autres. */
+export interface DominantGroups {
+  dominant: { series: FeelingSeries; points: FeelingPoint[] }[];
+  /** Ressentis des autres émotions (plus anciens d'abord), et le nombre de ces émotions. */
+  others: { points: FeelingPoint[]; emotions: number; labels: Map<string, string> };
+}
+
+/**
+ * Les `max` émotions les plus notées (ordre du serveur : nombre de ressentis décroissant), puis les
+ * autres regroupées. Aucun ressenti n'est retiré : chaque point reste sur le graphe.
+ */
+export function dominantGroups(
+  feelings: OverviewFeelings,
+  max: number = DOMINANT_EMOTIONS,
+): DominantGroups {
+  const groups = groupByEmotion(feelings);
+  const rest = groups.slice(max);
+  return {
+    dominant: groups.slice(0, max),
+    others: {
+      points: rest.flatMap((g) => g.points).sort((a, b) => a.date.localeCompare(b.date)),
+      emotions: rest.length,
+      labels: new Map(rest.map((g) => [g.series.emotionCode, g.series.label])),
+    },
+  };
+}
+
 export function emotionColor(family: EmotionFamily | null, tokens: FeelingsTokens): string {
   return family ? tokens.emotions[family] : tokens.unknown;
 }
@@ -125,10 +162,12 @@ function medicationName(marker: TrendMarker, labels: FeelingsChartLabels): strin
 }
 
 /**
- * Graphe à points réels (B8 : « vrais ressentis ») :
- * - une série par émotion (feelings.series), chaque point est un ressenti noté avec son intensité,
- *   reliés dans l'ordre du temps ; couleur `--emotion-<famille>`, forme par série ;
- * - les jours de séance (feelings.ticks), traits courts sur l'axe du temps en `--entry-session` ;
+ * Graphe à points réels (B8 : « vrais ressentis » ; UX-B5, maquette 02b) :
+ * - les trois émotions les plus notées, une série chacune : chaque point est un ressenti noté avec
+ *   son intensité, reliés dans l'ordre du temps ; couleur `--emotion-<famille>`, forme par série ;
+ *   la valeur n'est écrite que sur le dernier point de chaque série ;
+ * - les autres émotions, une seule série de points gris (`--text-disabled`), sans ligne ;
+ * - les jours de séance (feelings.ticks), traits courts sous l'axe du temps en `--entry-session` ;
  * - les repères de médicament (feelings.markers), lignes verticales en `--entry-medication`.
  * Axe y : intensité 0 à 10 ; axe x : la fenêtre du serveur. Aucune moyenne, aucun calcul.
  */
@@ -138,10 +177,11 @@ export function feelingsChartOptions(
   labels: FeelingsChartLabels,
 ): FeelingsChartOption {
   const { feelings } = data;
-  const showValues = feelings.points.length <= MAX_VALUE_LABELS;
+  const { dominant, others } = dominantGroups(feelings);
 
-  const emotions: LineSeriesOption[] = groupByEmotion(feelings).map(({ series, points }, index) => {
+  const emotions: LineSeriesOption[] = dominant.map(({ series, points }, index) => {
     const color = emotionColor(series.family, tokens);
+    const lastIndex = points.length - 1;
     return {
       id: `emotion-${series.emotionCode}`,
       type: 'line',
@@ -156,21 +196,24 @@ export function feelingsChartOptions(
       lineStyle: { color, width: 1.5, opacity: 0.6 },
       itemStyle: { color, borderColor: tokens.surface, borderWidth: 1 },
       emphasis: { disabled: true },
+      // Valeur écrite sur le dernier point seulement (« … → 8/10 ») ; les autres dans l'infobulle.
       label: {
-        show: showValues,
+        show: false,
         position: 'top',
         distance: 4,
         color: tokens.text,
         fontSize: 11,
+        fontWeight: 600,
         formatter: (params: unknown) => {
           const datum = (params as { data?: FeelingDatum }).data;
           return datum ? String(datum.value[1]) : '';
         },
       },
-      data: points.map((point): FeelingDatum => ({
+      data: points.map((point, i): FeelingDatum => ({
         value: [point.date, point.intensity],
         entryId: point.entryId,
         emotion: series.label,
+        ...(i === lastIndex ? { label: { show: true }, symbolSize: 11 } : {}),
       })),
       tooltip: {
         formatter: (params: unknown) => {
@@ -211,13 +254,46 @@ export function feelingsChartOptions(
     },
   };
 
-  // Séances : un trait court posé sur l'axe du temps ; porte aussi les repères de médicament.
+  // Autres émotions : points gris, sans ligne ni valeur ; l'infobulle nomme l'émotion.
+  const rest: ScatterSeriesOption[] = others.points.length
+    ? [
+        {
+          id: 'others',
+          type: 'scatter',
+          name: labels.others,
+          symbol: 'circle',
+          symbolSize: 7,
+          z: 2,
+          cursor: 'pointer',
+          itemStyle: { color: tokens.others, borderColor: tokens.surface, borderWidth: 1 },
+          emphasis: { disabled: true },
+          data: others.points.map((point): FeelingDatum => ({
+            value: [point.date, point.intensity],
+            entryId: point.entryId,
+            emotion: others.labels.get(point.emotionCode) ?? point.emotionCode,
+          })),
+          tooltip: {
+            formatter: (params: unknown) => {
+              const datum = (params as { data?: FeelingDatum }).data;
+              if (!datum) return '';
+              const [day, intensity] = datum.value;
+              return `${escapeHtml(labels.day(day))}<br>${escapeHtml(datum.emotion)} · ${intensity}/10`;
+            },
+          },
+        },
+      ]
+    : [];
+
+  // Séances : un trait court sous l'axe du temps (jamais à travers le graphe) ; porte aussi les
+  // repères de médicament.
   const sessions: ScatterSeriesOption = {
     id: 'sessions',
     type: 'scatter',
     name: labels.session,
     symbol: 'rect',
-    symbolSize: [3, 10],
+    symbolSize: [3, 8],
+    symbolOffset: [0, 8],
+    clip: false,
     z: 2,
     itemStyle: { color: tokens.session },
     emphasis: { disabled: true },
@@ -236,7 +312,7 @@ export function feelingsChartOptions(
     animation: false,
     backgroundColor: 'transparent',
     textStyle: { fontFamily: tokens.font, color: tokens.textSecondary },
-    grid: { left: 36, right: 24, top: 30, bottom: 28 },
+    grid: { left: 36, right: 24, top: 30, bottom: 36 },
     tooltip: {
       trigger: 'item',
       backgroundColor: tokens.surface,
@@ -247,11 +323,13 @@ export function feelingsChartOptions(
       type: 'time',
       min: data.from ?? feelings.points[0]?.date,
       max: data.to ?? feelings.points.at(-1)?.date,
-      axisLine: { lineStyle: { color: tokens.axis } },
+      axisLine: { onZero: false, lineStyle: { color: tokens.axis } },
       axisTick: { show: false },
       splitLine: { show: false },
       axisLabel: {
         color: tokens.textSecondary,
+        fontSize: 11,
+        margin: 18,
         hideOverlap: true,
         formatter: (value: number) => labels.day(value),
       },
@@ -264,6 +342,6 @@ export function feelingsChartOptions(
       axisLabel: { color: tokens.textSecondary },
       splitLine: { lineStyle: { color: tokens.grid, type: 'dashed' } },
     },
-    series: [sessions, ...emotions],
+    series: [sessions, ...emotions, ...rest],
   };
 }

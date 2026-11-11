@@ -11,34 +11,30 @@ import {
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { PreferencesStore } from '../../../core/preferences';
-import {
-  EntryIconComponent,
-  entryTypeLabel,
-  StateAction,
-  StateComponent,
-  ToastService,
-} from '../../../shared/ui';
+import { StateAction, StateComponent, ToastService } from '../../../shared/ui';
 import { StateKind } from '../../../shared/util';
 import { ENTRY_QUERY_PARAM } from '../../entries';
 import { PatientShellStore } from '../../patient-shell';
 import {
+  averageRange,
   blockState,
   EmotionFamily,
+  followedSinceOf,
   GRAPH_ROOT_PARAM,
   isActivityEmpty,
-  isAttentionEmpty,
   isEmotionsEmpty,
-  isMedicationsEmpty,
   isSessionsEmpty,
   isSituationsEmpty,
+  isTodoEmpty,
   isTrendEmpty,
-  lastWeekAverage,
-  OVERVIEW_WINDOWS,
   OverviewView,
   OverviewWindow,
   TIMELINE_PARAMS,
+  trendDirection,
+  windowAverage,
 } from '../data/overview.model';
 import { OverviewStore } from '../data/overview.store';
+import { OverviewActivityComponent } from '../ui/overview-activity.component';
 import { OverviewBlockComponent } from '../ui/overview-block.component';
 import {
   deltaText,
@@ -46,6 +42,7 @@ import {
   formatDateTime,
   formatDay,
   formatDelta,
+  formatElapsed,
   formatIntensity,
   saveFailedMessage,
   windowLabel,
@@ -54,6 +51,7 @@ import {
 import { OverviewSessionsComponent } from '../ui/overview-sessions.component';
 import { OverviewSimpleComponent } from '../ui/overview-simple.component';
 import { OverviewTrendComponent } from '../ui/overview-trend.component';
+import { OverviewWindowComponent } from '../ui/overview-window.component';
 
 /** Ce que l'onglet range dans la mémoire du dossier (B2) : les séances dépliées. */
 export interface OverviewTabState {
@@ -61,46 +59,40 @@ export interface OverviewTabState {
 }
 
 /** Les blocs de la vue complète, chacun avec ses trois états. */
-type Block =
-  | 'summary'
-  | 'trend'
-  | 'attention'
-  | 'situations'
-  | 'medications'
-  | 'sessions'
-  | 'emotions'
-  | 'activity';
+type Block = 'facts' | 'trend' | 'situations' | 'sessions' | 'emotions' | 'todo' | 'activity';
 
 const EMPTY: Record<Block, (view: OverviewView) => boolean> = {
-  // Le résumé n'est jamais « vide » : un zéro est une information (aucun ressenti, aucune séance).
-  summary: () => false,
+  // Les faits clés ne sont jamais « vides » : un zéro est une information (aucun ressenti, aucune
+  // séance), l'absence de traitement aussi.
+  facts: () => false,
   trend: isTrendEmpty,
-  attention: isAttentionEmpty,
   situations: isSituationsEmpty,
-  medications: isMedicationsEmpty,
   sessions: isSessionsEmpty,
   emotions: isEmotionsEmpty,
+  todo: isTodoEmpty,
   activity: isActivityEmpty,
 };
 
 /**
- * Onglet 1 du dossier, /patients/:id (fiche 02, B4 écran 2, B3 flux 6, B8). Vue complète : résumé
- * chiffré, tendance (ECharts en @defer), points d'attention vers la timeline filtrée, situations
- * actives (« Voir dans le graphe » → graph?root=), traitement en cours, dernières séances (timeline
- * par séance dépliée), émotions dominantes, activité récente, heure de la dernière mise à jour
- * (computedAt ; le serveur recalcule une projection en retard, la réponse n'est jamais obsolète).
- * Vue simple « Récit » (préférence overview.view = simple, le défaut) : pm-overview-simple (M4-07),
- * sur la même synthèse ; la bascule entre les deux vues ne relit rien.
+ * Onglet 1 du dossier, /patients/:id (fiche 02, maquette 02, B4 écran 2, B3 flux 6, B8, UX-B4).
+ * Vue complète, dans la grille de la maquette : faits clés (quatre tuiles sur la fenêtre, traitement,
+ * début du suivi, drapeaux) et tendance (ECharts en @defer, sélecteur de fenêtre dans la carte) ;
+ * situations actives (→ graph?root=), dernières séances (timeline par séance dépliée), émotions
+ * dominantes et « À compléter » ; activité récente ; heure de la dernière mise à jour (computedAt ;
+ * le serveur recalcule une projection en retard, la réponse n'est jamais obsolète).
+ * Vue simple « Récit » (préférence overview.view = simple, le défaut) : pm-overview-simple (M4-07,
+ * UX-B5), sur la même synthèse ; la bascule entre les deux vues ne relit rien.
  * La fenêtre (30 j / 90 j / 1 an) est la préférence overview.window, relue par l'API (?window=).
  */
 @Component({
   selector: 'pm-overview-page',
   imports: [
-    EntryIconComponent,
+    OverviewActivityComponent,
     OverviewBlockComponent,
     OverviewSessionsComponent,
     OverviewSimpleComponent,
     OverviewTrendComponent,
+    OverviewWindowComponent,
     RouterLink,
     StateComponent,
   ],
@@ -118,7 +110,6 @@ export class OverviewPage {
   private readonly route = inject(ActivatedRoute);
   private readonly locale = inject(LOCALE_ID);
 
-  protected readonly windows = OVERVIEW_WINDOWS;
   protected readonly view = this.store.view;
   protected readonly mode = this.prefs.overviewView;
   protected readonly window = this.prefs.overviewWindow;
@@ -172,13 +163,50 @@ export class OverviewPage {
     () =>
       $localize`:Titre du bloc émotions dominantes@@overview.emotions.heading:Émotions dominantes · ${windowLongLabel(this.shownWindow())}:period:`,
   );
-  protected readonly latest = computed(() => {
+  /** Intensité moyenne des ressentis de la fenêtre affichée (« 6,2 »), null sans ressenti. */
+  protected readonly average = computed(() => {
     const view = this.view();
-    const value = view ? lastWeekAverage(view.trend.points) : null;
+    const value = view ? windowAverage(view.feelings.points) : null;
     return value === null ? null : formatIntensity(value, this.locale);
+  });
+  /**
+   * Ligne de contexte de la tuile « Intensité moyenne » : la fenêtre, puis le sens de la moyenne
+   * glissante du serveur (première et dernière valeur de la courbe), en mots et en flèche.
+   */
+  protected readonly intensityContext = computed(() => {
+    const view = this.view();
+    if (!view) return '';
+    const period = windowLabel(view.window);
+    const range = averageRange(view.trend.points);
+    if (!range || view.feelings.points.length === 0) {
+      return $localize`:Contexte de la tuile intensité, sans courbe@@overview.tile.intensity.context:moyenne des ressentis sur ${period}:period:`;
+    }
+    const from = formatIntensity(range.first, this.locale);
+    const to = formatIntensity(range.last, this.locale);
+    switch (trendDirection(range)) {
+      case 'up':
+        return $localize`:Contexte de la tuile intensité, en hausse@@overview.tile.intensity.up:↑ en hausse, de ${from}:from: à ${to}:to:`;
+      case 'down':
+        return $localize`:Contexte de la tuile intensité, en baisse@@overview.tile.intensity.down:↓ en baisse, de ${from}:from: à ${to}:to:`;
+      default:
+        return $localize`:Contexte de la tuile intensité, stable@@overview.tile.intensity.flat:stable, autour de ${to}:to:`;
+    }
   });
   protected readonly windowSessions = computed(
     () => this.view()?.trend.markers.filter((m) => m.kind === 'session').length ?? 0,
+  );
+  /** Début du suivi affiché : la fiche, sinon la première séance connue (UX-B4). */
+  protected readonly followedSince = computed(() => {
+    const view = this.view();
+    return view ? followedSinceOf(view) : null;
+  });
+  /** Plus grand nombre parmi les émotions dominantes : longueur des barres. */
+  private readonly topCount = computed(() =>
+    Math.max(1, ...(this.view()?.emotions.map((e) => e.count) ?? [])),
+  );
+  protected readonly emotionsNote = computed(
+    () =>
+      $localize`:Pied du bloc émotions@@overview.emotions.note:Variation par rapport aux ${windowLongLabel(this.shownWindow())}:period: précédents`,
   );
   /** Code d'émotion → famille (séries du serveur) : couleur des émotions dominantes. */
   private readonly families = computed(() => {
@@ -221,11 +249,18 @@ export class OverviewPage {
 
   protected readonly flagLabel = flagLabel;
   protected readonly untitledSituation = $localize`:Situation sans titre@@overview.situations.untitled:Situation sans titre`;
-  /** Entrée sans titre : le nom de son type (« Séance », « Note »). */
-  protected readonly typeLabel = entryTypeLabel;
 
   protected day(value: string | null): string {
     return value ? formatDay(value, this.locale) : '—';
+  }
+
+  protected elapsed(since: string): string {
+    return formatElapsed(since, this.locale);
+  }
+
+  /** Part d'une émotion dominante par rapport à la plus notée (barre sous la ligne). */
+  protected share(count: number): number {
+    return Math.round((count / this.topCount()) * 100);
   }
 
   protected intensity(value: number): string {
@@ -247,10 +282,6 @@ export class OverviewPage {
 
   protected graphParams(entryId: string): Record<string, string> {
     return { [GRAPH_ROOT_PARAM]: entryId };
-  }
-
-  protected entryParams(entryId: string): Record<string, string> {
-    return { [ENTRY_QUERY_PARAM]: entryId };
   }
 
   protected readonly draftParams = { [TIMELINE_PARAMS.drafts]: '1' };
