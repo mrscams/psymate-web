@@ -29,6 +29,7 @@ const SAME_IN_ALL = {
   'admin-bar-text': 'barre d’administration, fiche 00 §5',
   'admin-bar-text-muted': 'barre d’administration, fiche 00 §5',
   'admin-bar-border': 'barre d’administration, fiche 00 §5',
+  'admin-focus': 'anneau de focus de la barre d’administration (UX-A2), suit admin-bar-bg',
   'font-ui': 'police, pas une couleur',
   'font-mono': 'police, pas une couleur',
 };
@@ -125,6 +126,14 @@ const PAIRS = [
   ['admin-bar-text-muted', 'admin-bar-bg', 'text'],
   ['flag', 'admin-bar-bg', 'icon'],
   ['admin-bar-bg', 'flag', 'text'],
+  // Anneau de focus de la barre (UX-A2, WCAG 1.4.11) : contre le fond de la barre
+  ['admin-focus', 'admin-bar-bg', 'icon'],
+
+  // Anneau de focus (étude §7, UX-A2, WCAG 1.4.11) : cobalt 2 px sur les surfaces, et contre son
+  // halo primary-tint, qui le borde à l'intérieur (décalage de 2 px sous un halo de 4 px)
+  ['primary', 'surface-raised', 'icon'],
+  ['primary', 'surface-ground', 'icon'],
+  ['primary', 'primary-tint', 'icon'],
 
   // Types d'entrées : pastille, icône, bordure 3 px, nœud du graphe (jamais du texte)…
   ['entry-note', 'surface-raised', 'icon'],

@@ -30,6 +30,23 @@ kbd {
   border-radius: 4px;
 }
 
+// Anneau de focus des champs natifs (UX-A2, WCAG 1.4.11) : même anneau que :focus-visible dans
+// styles.scss (étude §7 : cobalt 2 px, décalé de 2 px, halo primary-tint 4 px), imposé aux select,
+// textarea et input texte quel que soit le style de l'écran. Plusieurs feuilles d'écran remplaçaient
+// l'anneau par un outline primary-tint seul (1,21:1 sur surface-raised) ; leurs sélecteurs
+// encapsulés (attribut _ngcontent) l'emportant sur une règle globale, ce plancher passe par
+// !important. Exclus : les champs Material (mat-form-field dessine son propre focus, pas de double
+// anneau), cases, boutons radio et curseurs (anneau de :focus-visible ou de leur conteneur).
+:is(
+    select,
+    textarea,
+    input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'])
+  ):not(.mat-mdc-input-element, .mat-mdc-form-field *):focus-visible {
+  outline: 2px solid var(--primary) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px var(--primary-tint) !important;
+}
+
 // Panneau latéral (shared/ui/side-panel) : pane de l'overlay ancrée à droite, voile sur la page.
 .pm-side-panel-veil {
   background: var(--scrim);
