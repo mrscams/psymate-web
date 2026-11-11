@@ -98,7 +98,11 @@
           <!-- UX-C6 : pourquoi le bouton attend, puis le nom du fichier attendu, en mono. -->
           @if (expectedFile(); as file) {
             <span class="note" id="export-file">
-              <span i18n="Nom du fichier exporté@@account.data.patient.fileName">Fichier</span
+              <span
+                i18n="
+                  Nom indicatif du fichier exporté (le serveur fixe le nom
+                  réel)@@account.data.patient.expectedFile"
+                >Fichier attendu :</span
               >&ngsp;<span class="mono file">{{ file }}</span
               >&ngsp;<span i18n="Contenu du fichier exporté@@account.data.patient.fileNoteShort"
                 >· séances et entrées en ordre chronologique, texte de la version courante</span

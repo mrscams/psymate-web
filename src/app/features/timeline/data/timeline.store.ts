@@ -81,7 +81,7 @@ const initialState: TimelineState = {
   lastIndex: null,
   windows: [],
   current: 0,
-  zoom: 'week',
+  zoom: 'day',
   anchor: 0,
   sessions: {},
   sessionsReady: false,

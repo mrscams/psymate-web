@@ -4,7 +4,10 @@ import {
   feelingDiameter,
   GRAPH_TOKEN_NAMES,
   graphStylesheet,
+  intensityFontSize,
+  intensityImage,
   readGraphTokens,
+  STRONG_FEELING_DIAMETER,
 } from './graph-style';
 
 interface Block {
@@ -78,7 +81,27 @@ describe('graph-style : tokens → feuille de style Cytoscape', () => {
     const lavender = sheet().filter((block) =>
       Object.values(block.style).some((value) => String(value).includes('--feeling')),
     );
-    expect(lavender.map((block) => block.selector)).toEqual(['node.type-feeling']);
+    expect(lavender.map((block) => block.selector)).toEqual([
+      'node.type-feeling',
+      'node.type-feeling.strong',
+    ]);
+    // Grand cercle : aplat lavande (chiffre clair), sinon teinte légère (chiffre feeling-text).
+    expect(styleOf('node.type-feeling.strong')).toMatchObject({
+      'background-color': tok('--feeling'),
+    });
+  });
+
+  it('chiffre d’intensité : image SVG aux couleurs des tokens, claire sur un grand cercle', () => {
+    const tokens = readGraphTokens(tokenNames);
+    expect(intensityImage(null, 40, tokens)).toBe('none');
+    const big = decodeURIComponent(intensityImage(8, feelingDiameter(8), tokens));
+    expect(big).toContain('>8</text>');
+    expect(big).toContain(`fill="${tok('--surface-raised')}"`);
+    expect(big).toContain(`font-size="${intensityFontSize(feelingDiameter(8))}"`);
+    const small = decodeURIComponent(intensityImage(2, feelingDiameter(2), tokens));
+    expect(feelingDiameter(2)).toBeLessThan(STRONG_FEELING_DIAMETER);
+    expect(small).toContain(`fill="${tok('--feeling-text')}"`);
+    expect(intensityFontSize(feelingDiameter(5))).toBeGreaterThanOrEqual(19);
   });
 
   it('racine, super-nœud, sélection', () => {

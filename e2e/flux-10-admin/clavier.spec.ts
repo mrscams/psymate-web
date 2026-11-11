@@ -64,7 +64,12 @@ test.describe('flux 10 au clavier', () => {
       await page.keyboard.press('Enter');
       await expect(page).toHaveURL(new RegExp(`/fr/admin/validation/${practitioner.id}$`));
       await expect(page.locator('#dossier-title')).toHaveText('Alix Essai');
-      await expect(page.locator('pm-document-viewer iframe')).toHaveAttribute('src', /^blob:/);
+      const viewer = page.locator('pm-document-viewer');
+      await expect(
+        viewer
+          .locator('iframe[src^="blob:"]')
+          .or(viewer.getByRole('link', { name: /Ouvrir le document/ })),
+      ).toBeVisible();
       await expectNoAxeViolations(page);
 
       // Justificatifs « Conforme » (Espace, PATCH immédiat), puis la liste de contrôle.
@@ -82,16 +87,20 @@ test.describe('flux 10 au clavier', () => {
         await expect(box).toBeChecked();
       }
 
-      // « Demander un complément » attend un message : inactif tant que le champ est vide.
+      // « Demander un complément » sans message (UX-E1) : Entrée, l'erreur s'affiche et le focus
+      // passe au champ « Message au praticien » ; rien ne part.
       const askMore = page.getByRole('button', { name: 'Demander un complément' });
-      await expect(askMore).toBeDisabled();
+      await tabTo(page, askMore, { max: 30 });
+      await page.keyboard.press('Enter');
       const message = page.locator('#field-messageToPractitioner');
-      await tabTo(page, message, { max: 30 });
+      await expect(message).toBeFocused();
+      await expect(page.locator('#field-messageToPractitioner-error')).toHaveText(
+        'Ce champ est obligatoire.',
+      );
       await page.keyboard.type('Merci.');
-      await expect(askMore).toBeEnabled();
+      await expect(page.locator('#field-messageToPractitioner-error')).toHaveCount(0);
       await page.keyboard.press('Control+a');
       await page.keyboard.press('Backspace');
-      await expect(askMore).toBeDisabled();
       await expectNoAxeViolations(page);
 
       // Approuver : Tab, Entrée ; le dossier sort de la file, le praticien est approuvé.

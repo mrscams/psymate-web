@@ -17,7 +17,7 @@ import { applyVocabularyProblem, CODE_PATTERN, LABEL_MAX } from './vocabulary-fo
   imports: [ReactiveFormsModule, MatButtonModule, FieldErrorsComponent],
   template: `
     <form [formGroup]="form" (ngSubmit)="submit()">
-      <h3>{{ title() }}</h3>
+      <h2>{{ title() }}</h2>
       <div class="row">
         <div class="field">
           <label [for]="id('code')" i18n="Champ code du vocabulaire@@admin.vocabulary.code"

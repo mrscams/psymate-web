@@ -8,34 +8,39 @@
   gap: 12px;
 }
 
+// Barre d'outils de la maquette 04 : contrôles de 32 px, bordure fine, filtres en pilules.
 .toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px 14px;
+  gap: 10px;
 }
 
 .field {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  margin-left: 6px;
 }
 
 .field-label {
   color: var(--text-secondary);
-  font: var(--mat-sys-label-large);
+  font: var(--mat-sys-body-small);
 }
 
-.select,
 .filter,
 .tool,
 .segment {
-  min-height: 36px;
-  border: 1px solid var(--border-strong);
+  min-height: 32px;
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
   background: var(--surface-raised);
   color: var(--text-primary);
-  font: var(--mat-sys-label-large);
+  font: var(--mat-sys-body-small);
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
 
   &:focus-visible {
     outline: 2px solid var(--primary);
@@ -43,15 +48,52 @@
   }
 }
 
-.select {
-  max-width: 260px;
-  padding: 0 8px;
-}
-
 .filter,
 .tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 0 12px;
   cursor: pointer;
+}
+
+.filter {
+  padding: 0 10px;
+  border-radius: 999px;
+}
+
+.chevron {
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+// « Lier L » : bouton secondaire cobalt (maquette 04).
+.tool.link {
+  border-color: var(--primary);
+  color: var(--primary-hover);
+  font-weight: 500;
+
+  svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+  }
+
+  kbd {
+    color: var(--text-secondary);
+    font: var(--mat-sys-label-small);
+    font-family: var(--font-mono);
+  }
+
+  &[aria-disabled='true'] {
+    border-color: var(--border-subtle);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
 }
 
 .segmented {
@@ -59,7 +101,7 @@
 }
 
 .segment {
-  width: 36px;
+  width: 32px;
   padding: 0;
   border-radius: 0;
   cursor: pointer;
@@ -87,13 +129,18 @@
   }
 }
 
-.spacer {
-  flex: 1;
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-left: auto;
 }
 
 .count {
   color: var(--text-secondary);
-  font: var(--mat-sys-body-medium);
+  font: var(--mat-sys-body-small);
 
   &.refreshing {
     opacity: 0.6;
@@ -118,6 +165,14 @@
   margin: 0;
   color: var(--text-secondary);
   font: var(--mat-sys-body-small);
+}
+
+// « Tout le dossier » au-delà de 60 nœuds : étiquettes masquées (UX-B3).
+.warning-note {
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--warning-bg);
+  color: var(--warning);
 }
 
 .alert {

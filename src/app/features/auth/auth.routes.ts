@@ -4,6 +4,7 @@ import { guestGuard } from '../../core/auth';
 import { firstLoginGuard } from './first-login.guard';
 import { ConfirmEmailPage } from './pages/confirm-email.page';
 import { LoginPage } from './pages/login.page';
+import { NewPasswordPage } from './pages/new-password.page';
 import { PasswordResetPage } from './pages/password-reset.page';
 import { RegisterPage } from './pages/register.page';
 import { SuspendedPage } from './pages/suspended.page';
@@ -20,6 +21,8 @@ export const AUTH_ROUTES: Routes = [
     path: 'inscription',
     canActivate: [guestGuard],
     component: RegisterPage,
+    // UX-D2 : formulaire 740 px + colonne « Ensuite / Vos données » dès 1 024 px (fiche 00 §4).
+    data: { wide: true },
     title: $localize`:Titre d'onglet de l'inscription@@auth.register.pageTitle:Créer un compte · PsyMate`,
   },
   {
@@ -27,6 +30,20 @@ export const AUTH_ROUTES: Routes = [
     canActivate: [guestGuard],
     component: PasswordResetPage,
     title: $localize`:Titre d'onglet du mot de passe oublié@@auth.reset.pageTitle:Mot de passe oublié · PsyMate`,
+  },
+  // Fiche 26, étape 2 (UX-D4) : route de la fiche, et chemin du lien envoyé par psymate-api
+  // (`/reset-password?token=…`, AuthMailer) ; le jeton est lié à l'entrée `token` de la page.
+  {
+    path: 'reinitialiser/:token',
+    canActivate: [guestGuard],
+    component: NewPasswordPage,
+    title: $localize`:Titre d'onglet de l'étape 2 du mot de passe oublié@@auth.newPassword.pageTitle:Nouveau mot de passe · PsyMate`,
+  },
+  {
+    path: 'reset-password',
+    canActivate: [guestGuard],
+    component: NewPasswordPage,
+    title: $localize`:Titre d'onglet de l'étape 2 du mot de passe oublié@@auth.newPassword.pageTitle:Nouveau mot de passe · PsyMate`,
   },
   // Fiche 25 (M1-18) : en attente, lien expiré (avant :token, sinon « expire » serait pris pour un jeton), traitement du lien.
   {
@@ -51,6 +68,8 @@ export const AUTH_ROUTES: Routes = [
   {
     path: 'compte-suspendu',
     component: SuspendedPage,
+    // UX-D5 : carte principale et colonne d'actions côte à côte dès 1 024 px.
+    data: { wide: true },
     title: $localize`:Titre d'onglet, compte suspendu@@auth.state.suspended.pageTitle:Compte suspendu · PsyMate`,
   },
   // Fiche 18 C (M1-17) : écran bloquant avec sa propre barre sombre (layout bare), chargé à part

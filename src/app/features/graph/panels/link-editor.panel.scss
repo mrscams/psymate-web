@@ -7,7 +7,7 @@
 .block {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   min-width: 0;
   margin: 0;
   padding: 0;
@@ -15,18 +15,30 @@
 }
 
 .placed {
-  margin-top: 20px;
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
 }
 
+// Titres de bloc de la maquette 06 : 12 px, capitales espacées, texte secondaire.
 .block-label {
   margin: 0;
   padding: 0;
-  font: var(--mat-sys-label-large);
-  color: var(--text-primary);
+  font: var(--mat-sys-label-medium);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.optional {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .patient {
-  font: var(--mat-sys-body-medium);
+  font: var(--mat-sys-body-small);
   color: var(--text-secondary);
 }
 
@@ -40,15 +52,19 @@
   align-self: flex-end;
 }
 
+.mono {
+  font-family: var(--font-mono);
+}
+
 // Carte de l'entrée source : bordure gauche à la couleur du type (fiche 06, tokens).
 .card {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 10px 12px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
   border: 1px solid var(--border-subtle);
   border-left: 3px solid var(--entry-note);
-  border-radius: 8px;
+  border-radius: 10px;
   background: var(--surface-raised);
 
   &[data-type='event'] {
@@ -69,12 +85,14 @@
 }
 
 .card-text {
+  flex: 1 1 auto;
   min-width: 0;
 }
 
 .card-name {
   margin: 0;
   font: var(--mat-sys-body-large);
+  font-weight: 600;
   color: var(--text-primary);
   overflow-wrap: anywhere;
 }
@@ -83,6 +101,94 @@
   margin: 2px 0 0;
   font: var(--mat-sys-body-small);
   color: var(--text-secondary);
+}
+
+// Petits boutons de bloc : « Changer », « Inverser le sens » (maquette 06).
+.small {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: var(--mat-sys-body-small);
+  cursor: pointer;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  &:hover {
+    border-color: var(--border-strong);
+  }
+  &[aria-pressed='true'],
+  &[aria-expanded='true'] {
+    border-color: var(--primary);
+    background: var(--primary-tint);
+    color: var(--primary-hover);
+  }
+  &:disabled {
+    cursor: default;
+    color: var(--text-secondary);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.source-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--surface-sunken);
+}
+
+.source-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 224px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.source-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 52px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-raised);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
 }
 
 .search-row {
@@ -94,20 +200,20 @@ input[type='search'],
 select,
 textarea {
   box-sizing: border-box;
-  min-height: 44px;
+  min-height: 40px;
   padding: 0 12px;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   background: var(--surface-raised);
   color: var(--text-primary);
-  font: var(--mat-sys-body-large);
+  font: var(--mat-sys-body-medium);
 
   &[aria-invalid='true'] {
     border-color: var(--danger);
   }
   &:focus-visible {
     border-color: var(--primary);
-    outline: 2px solid var(--primary-tint);
+    outline: 2px solid var(--primary);
     outline-offset: 0;
   }
 }
@@ -128,65 +234,92 @@ textarea {
   resize: vertical;
 }
 
+// Liste « Vers » : zone de 320 px, lignes de 56 px, titre sur une ligne avec ellipse (UX-B7).
 .targets {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  max-height: 260px;
-  margin: 4px 0 0;
-  padding: 0;
+  gap: 6px;
+  // Un fieldset prend par défaut la largeur min-content de son contenu (lignes en nowrap) : il
+  // déborderait du panneau à 375 px.
+  min-width: 0;
+  min-inline-size: 0;
+  max-height: 320px;
+  margin: 0;
+  padding: 2px;
   overflow-y: auto;
   border: 0;
 }
 
 .target {
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  min-height: 44px;
-  padding: 6px 8px;
-  border-radius: 8px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+  height: 56px;
+  padding: 0 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--surface-raised);
   cursor: pointer;
 
   &:hover {
-    background: var(--surface-sunken);
+    border-color: var(--border-strong);
   }
   &:has(input:checked) {
+    border: 2px solid var(--primary);
+    padding: 0 11px;
     background: var(--primary-tint);
+
+    .row-meta {
+      color: var(--primary-hover);
+    }
+  }
+  &:has(input:focus-visible) {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
   }
   input {
-    margin: 4px 0 0;
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    margin: 0;
     accent-color: var(--primary);
   }
   pm-entry-icon {
-    margin-top: 4px;
+    flex: 0 0 auto;
   }
 }
 
-.target-text {
+.row-text {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
+  gap: 1px;
   min-width: 0;
 }
 
-.target-name {
+.row-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font: var(--mat-sys-body-medium);
+  font-weight: 600;
   color: var(--text-primary);
-  overflow-wrap: anywhere;
 }
 
-.target-meta {
+.row-meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font: var(--mat-sys-body-small);
+  font-size: 12px;
   color: var(--text-secondary);
 }
 
-// Entrée déjà liée : grisée (texte secondaire, jamais sous le contraste AA), avec le verbe du lien.
-.target.linked .target-name {
-  color: var(--text-secondary);
-}
-
+// « déjà lié (aggrave) » en ambre, comme la maquette 06.
 .linked-text {
-  font-style: italic;
+  color: var(--warning);
 }
 
 .relation-head {
@@ -194,59 +327,6 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-}
-
-.invert {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 36px;
-  padding: 0 12px;
-  border: 1px solid var(--border-strong);
-  border-radius: 18px;
-  background: var(--surface-raised);
-  color: var(--text-primary);
-  font: var(--mat-sys-label-large);
-  cursor: pointer;
-
-  svg {
-    width: 16px;
-    height: 16px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-  &[aria-pressed='true'] {
-    border-color: var(--primary);
-    background: var(--primary-tint);
-    color: var(--primary-hover);
-  }
-  &:disabled {
-    cursor: default;
-    color: var(--text-secondary);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-  }
-}
-
-// Phrase lisible : fond calme, verbe en gras (fiche 06).
-.sentence {
-  margin: 0;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: var(--surface-sunken);
-  font: var(--mat-sys-body-large);
-  color: var(--text-primary);
-  overflow-wrap: anywhere;
-}
-
-.verb {
-  font-weight: 600;
-  color: var(--primary-hover);
 }
 
 .alert {
@@ -283,21 +363,55 @@ textarea {
   }
 }
 
+// Pied : la phrase « Le lien se lira » épinglée au-dessus des boutons (UX-B7).
 .footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.reading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--surface-ground);
+}
+
+// Phrase lisible : fond calme, verbe en gras (fiche 06).
+.sentence {
+  margin: 0;
+  font: var(--mat-sys-body-large);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.end {
+  font-weight: 600;
+}
+
+.verb {
+  font-weight: 600;
+  color: var(--primary-hover);
+}
+
+.actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  width: 100%;
 
   button {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    min-height: 40px;
-    padding: 0 14px;
-    border: 1px solid var(--border-strong);
-    border-radius: 20px;
+    min-height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
     background: var(--surface-raised);
     color: var(--text-primary);
     font: var(--mat-sys-label-large);
@@ -316,6 +430,7 @@ textarea {
     margin-left: auto;
     border-color: transparent;
     background: none;
+    color: var(--text-secondary);
   }
   button[aria-disabled='true'] {
     cursor: not-allowed;

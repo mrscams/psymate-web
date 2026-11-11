@@ -61,7 +61,8 @@ describe('GraphDetailComponent', () => {
     const aside = el.querySelector('aside')!;
     expect(aside.getAttribute('role')).toBe('complementary');
     expect(aside.getAttribute('aria-labelledby')).toBe('graph-detail-title');
-    expect(text(el.querySelector('h2'))).toBe('Anxiété 8');
+    // Titre de repli partagé (UX-A5) : émotion, intensité et date courte.
+    expect(text(el.querySelector('h2'))).toMatch(/^Anxiété 8\/10 · 1 mars/);
     expect(text(el.querySelector('.type-chip'))).toBe('Ressenti');
     expect(el.querySelector('pm-state [aria-busy="true"]')).not.toBeNull();
   });

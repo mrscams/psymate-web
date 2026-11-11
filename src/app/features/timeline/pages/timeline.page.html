@@ -20,7 +20,7 @@
     pmRovingToolbar
   >
     <pm-timeline-filters
-      class="filters"
+      class="toolbar-row"
       [filters]="filters.filters()"
       [facets]="store.facets()"
       [counted]="store.status() === 'loaded'"
@@ -29,13 +29,28 @@
       [medicationVisible]="prefs.medicationVisible()"
       (filtersChange)="changeFilters($event)"
     />
-    <div class="toolbar-end">
+    <div class="toolbar-row secondary">
+      <span
+        class="row-label"
+        aria-hidden="true"
+        i18n="Libellé visible du groupe de période de la timeline@@timeline.periodLabel"
+        >Période</span
+      >
+      <pm-timeline-period [filters]="filters.filters()" (filtersChange)="changeFilters($event)" />
+      <span class="separator" aria-hidden="true"></span>
+      <span
+        class="row-label"
+        aria-hidden="true"
+        i18n="Libellé visible de la bascule de mode de la timeline@@timeline.modeLabel"
+        >Mode</span
+      >
       <pm-timeline-mode
         [mode]="mode()"
         [sessionDisabled]="decade()"
         (modeChange)="setMode($event)"
         (blocked)="explainDecadeMode()"
       />
+      <kbd aria-hidden="true">M</kbd>
       @if (mode() === 'chronological') {
         <div
           class="zoom"
@@ -43,6 +58,12 @@
           aria-label="Zoom"
           i18n-aria-label="Nom du groupe de zoom de la timeline@@timeline.zoomGroup"
         >
+          <span
+            class="row-label"
+            aria-hidden="true"
+            i18n="Libellé visible du zoom de la timeline@@timeline.zoomLabel"
+            >Zoom</span
+          >
           <button
             type="button"
             class="zoom-button"
@@ -53,7 +74,10 @@
           >
             <span aria-hidden="true">−</span>
           </button>
-          <span class="granularity" aria-live="polite">{{ zoomText() }}</span>
+          <span class="track" aria-hidden="true"
+            ><span class="track-fill" [style.width.%]="zoomPosition()"></span
+            ><span class="track-thumb" [style.left.%]="zoomPosition()"></span
+          ></span>
           <button
             type="button"
             class="zoom-button"
@@ -64,8 +88,10 @@
           >
             <span aria-hidden="true">+</span>
           </button>
-          <span class="hint" i18n="Aide du zoom à la molette@@timeline.zoomHint"
-            >Ctrl + molette</span
+          <span class="granularity" aria-live="polite">{{ zoomText() }}</span>
+          <span class="hint" aria-hidden="true"
+            >· <kbd>Ctrl</kbd>
+            <span i18n="Aide du zoom à la molette@@timeline.zoomWheel">+ molette</span></span
           >
         </div>
       }
@@ -87,7 +113,7 @@
         />
       }
       @case ('empty') {
-        @if (filters.active()) {
+        @if (filters.narrowed()) {
           <pm-state
             kind="empty"
             [action]="clearFilters"
@@ -96,6 +122,17 @@
             message="Retirez un filtre ou élargissez la période."
             i18n-message="
               Texte de la timeline vide avec des filtres@@timeline.empty.filtered.message"
+          />
+        } @else if (filters.active()) {
+          <pm-state
+            kind="empty"
+            [action]="showAll"
+            title="Aucune entrée sur cette période"
+            i18n-title="
+              Titre de la timeline vide sur la période choisie@@timeline.empty.period.title"
+            message="Les entrées plus anciennes restent visibles avec la période « Tout »."
+            i18n-message="
+              Texte de la timeline vide sur la période choisie@@timeline.empty.period.message"
           />
         } @else {
           <pm-state
@@ -171,48 +208,54 @@
       (wheel)="onWheel($event)"
     />
   } @else {
-    <p class="status-line">
-      <span class="count"
-        ><span
-          i18n="Nombre d'entrées de la ligne d'état de la timeline@@timeline.status.entries"
-          >{store.total(), plural, =1 {1 entrée} other {{{ totalText() }} entrées}}</span
+    <div class="status-row">
+      <p class="status-line">
+        <span class="count"
+          ><span
+            i18n="Nombre d'entrées de la ligne d'état de la timeline@@timeline.status.entries"
+            >{store.total(), plural, =1 {1 entrée} other {{{ totalText() }} entrées}}</span
+          >
+          ·
+          <span
+            i18n="Fenêtres en mémoire de la ligne d'état de la timeline@@timeline.status.windows"
+            >{store.inMemory(), plural,
+              =1 {1 fenêtre en mémoire}
+              other {{{ store.inMemory() }} fenêtres en mémoire}
+            }</span
+          ></span
         >
-        ·
-        <span
-          i18n="Fenêtres en mémoire de la ligne d'état de la timeline@@timeline.status.windows"
-          >{store.inMemory(), plural,
-            =1 {1 fenêtre en mémoire}
-            other {{{ store.inMemory() }} fenêtres en mémoire}
-          }</span
-        ></span
-      >
-      @if (boundsText()) {
-        <span class="bounds">{{ boundsText() }}</span>
-      }
-    </p>
-
-    @if (bandItems().length) {
-      <ul
-        class="bands-legend"
-        aria-label="Situations sur la période"
-        i18n-aria-label="Nom de la liste des situations en bande@@timeline.bands"
-      >
-        @for (entry of bandItems(); track entry.band.item.id) {
-          <li [attr.aria-label]="entry.label" [class.ongoing]="entry.band.item.ongoing">
-            <span class="swatch" aria-hidden="true"></span>
-            <span class="band-title" aria-hidden="true">{{ entry.band.item.title }}</span>
-            @if (entry.band.item.ongoing) {
-              <span
-                class="band-state"
-                aria-hidden="true"
-                i18n="Mention d'une situation en cours@@timeline.band.ongoingShort"
-                >en cours</span
-              >
-            }
-          </li>
+        @if (boundsText()) {
+          <span class="bounds">· {{ boundsText() }}</span>
         }
-      </ul>
-    }
+      </p>
+
+      @if (bandItems().length) {
+        <ul
+          class="bands-legend"
+          aria-label="Situations sur la période"
+          i18n-aria-label="Nom de la liste des situations en bande@@timeline.bands"
+        >
+          @for (entry of bandItems(); track entry.band.item.id) {
+            <li
+              [attr.aria-label]="entry.label"
+              [attr.title]="entry.label"
+              [class.ongoing]="entry.band.item.ongoing"
+            >
+              <span class="swatch" aria-hidden="true"></span>
+              <span class="band-title" aria-hidden="true">{{ entry.name }}</span>
+              @if (entry.band.item.ongoing) {
+                <span
+                  class="band-state"
+                  aria-hidden="true"
+                  i18n="Mention d'une situation en cours@@timeline.band.ongoingShort"
+                  >en cours</span
+                >
+              }
+            </li>
+          }
+        </ul>
+      }
+    </div>
 
     <cdk-virtual-scroll-viewport
       class="viewport"
@@ -241,7 +284,11 @@
                   @if (head.item.ongoing && row.slot === 0) {
                     <span class="arrow"></span>
                   }
-                  <span class="lane-label">{{ head.item.title }}</span>
+                  <span
+                    class="lane-label"
+                    [style.max-height.px]="row.bandRuns[$index] * rowHeight() - 16"
+                    >{{ laneText(head.item) }}</span
+                  >
                 }
               </span>
             }
@@ -275,6 +322,7 @@
                 [selected]="store.selectedId() === item.id"
                 [saidIn]="row.saidIn"
                 [emotionLabel]="emotionLabel(item)"
+                [session]="sessionInfos()[item.id] ?? null"
                 [menu]="cardMenu"
                 (opened)="open($event)"
                 (linked)="link($event)"
