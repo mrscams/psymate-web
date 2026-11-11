@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T02:21:48.934Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-B4 UX-B5 : vue d'ensemble complète et vue simple fidèles aux maquettes 02 et 02b (tendance en une courbe, séances sous l'axe, légendes ≤ 4, faits clés, activité en 2 colonnes, récit en gras, À compléter ambre)",
+  "notes": "Écarts API : extrait des notes dans recentActivity, followedSince = première séance, règle Point d'attention ; en-tête partagé (non clôturée > 3 h) à faire dans le lot A",
+  "pr": "https://github.com/mrscams/psymate-web/pull/53",
+  "branch": "claude/ux-b4-b5-overview",
+  "checkout": "agent-a254b643395597108"
+}

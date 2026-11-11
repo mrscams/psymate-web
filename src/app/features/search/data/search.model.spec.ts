@@ -2,6 +2,7 @@ import { toPage } from './search.api';
 import {
   decodeEntities,
   effectiveQuery,
+  elideSnippet,
   EMPTY_FILTERS,
   filtersFromParams,
   filtersToParams,
@@ -160,5 +161,49 @@ describe('search.model', () => {
     expect(page.counts.find((c) => c.type === 'event')?.count).toBe(1);
     expect(page.counts.find((c) => c.type === 'feeling')?.count).toBe(0);
     expect(page.query.before).toBeNull();
+  });
+
+  describe('elideSnippet (séparateur de fragments seulement)', () => {
+    const elided = (fragment: string) => plainText(elideSnippet(parseMarked(fragment)));
+
+    it('note courte sans ponctuation finale (« RAS ») : intacte, aucun « … »', () => {
+      expect(elided('RAS')).toBe('RAS');
+      expect(elided('Bonne <mark>séance</mark>')).toBe('Bonne séance');
+    });
+
+    it('saisie entièrement en minuscules (« anxiété ») : intacte, aucun « … »', () => {
+      expect(elideSnippet(parseMarked('<mark>anxiété</mark>'))).toEqual([
+        { text: 'anxiété', mark: true },
+      ]);
+      expect(elided('rdv annulé')).toBe('rdv annulé');
+    });
+
+    it('extrait à deux fragments : « ... » → « … », mark conservé', () => {
+      expect(
+        elideSnippet(
+          parseMarked('Annoncé en séance. ... Trois phrases pour l&#39;<mark>entretien</mark>'),
+        ),
+      ).toEqual([
+        { text: "Annoncé en séance. … Trois phrases pour l'", mark: false },
+        { text: 'entretien', mark: true },
+      ]);
+      expect(elideSnippet(null)).toBeNull();
+    });
+  });
+
+  it('toPage : séparateur remplacé sur les extraits exacts avec texte seulement', () => {
+    const items = [
+      { entryId: 'a', type: 'note', snippet: 'un ... <mark>deux</mark>', approximate: false },
+      { entryId: 'b', type: 'note', snippet: 'un ... deux', approximate: true },
+    ];
+    const withText = toPage({ items, query: { text: 'deux' } } as unknown as Parameters<
+      typeof toPage
+    >[0]);
+    expect(plainText(withText.exact[0].snippet)).toBe('un … deux');
+    expect(plainText(withText.approximate[0].snippet)).toBe('un ... deux');
+    const noText = toPage({ items, query: { text: '' } } as unknown as Parameters<
+      typeof toPage
+    >[0]);
+    expect(plainText(noText.exact[0].snippet)).toBe('un ... deux');
   });
 });

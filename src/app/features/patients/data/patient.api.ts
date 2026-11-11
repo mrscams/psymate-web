@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, LOCALE_ID } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import {
@@ -6,21 +6,28 @@ import {
   CreatePatientRequestPronounEnum,
   FlagDto,
   FlagRequestKindEnum,
+  OverviewDto,
   PatientDto,
   PatientsService,
   TagsService,
   TagView,
   VersionDto,
+  VueDensembleService,
 } from '../../../api';
 import { CursorPage } from '../../../shared/util';
 import {
+  EMOTION_FAMILIES,
+  EmotionFamily,
   FlagKind,
+  PatientActivity,
   PatientCreateInput,
   PatientFlagView,
   PatientListQuery,
   PatientVersion,
   PatientView,
   PractitionerTag,
+  SESSION_MODALITIES,
+  SessionModality,
 } from './patient.model';
 
 /** Taille d'une page de la liste (le contrat accepte 1..200, 50 par défaut). */
@@ -35,6 +42,8 @@ export const PATIENT_PAGE_SIZE = 50;
 export class PatientApi {
   private readonly patients = inject(PatientsService);
   private readonly tagsApi = inject(TagsService);
+  private readonly overviews = inject(VueDensembleService);
+  private readonly english = inject(LOCALE_ID).startsWith('en');
 
   /** GET /api/patients : une page, filtrée (q, archived, tag) et triée, par curseur opaque. */
   async list(query: PatientListQuery): Promise<CursorPage<PatientView>> {
@@ -49,6 +58,18 @@ export class PatientApi {
       ),
     );
     return { items: (page.items ?? []).map(toView), nextCursor: page.nextCursor ?? null };
+  }
+
+  /**
+   * Résumé d'activité d'une ligne de la liste : GET /api/patients/{id}/overview?window=30d (séance la
+   * plus récente, émotions dominantes 30 j, situations en cours, brouillons). La liste du contrat ne
+   * porte pas ces champs ; la projection est relue, jamais recalculée dans le client.
+   */
+  async activity(id: string): Promise<PatientActivity> {
+    return toActivity(
+      await firstValueFrom(this.overviews.getPatientOverview(id, '30d')),
+      this.english,
+    );
   }
 
   /** GET /api/patients/{id} (fonctionne aussi pour un patient archivé). */
@@ -165,6 +186,48 @@ export function toView(dto: PatientDto): PatientView {
     archivedAt: text(dto.archivedAt),
     createdAt: text(dto.createdAt),
     updatedAt: text(dto.updatedAt),
+  };
+}
+
+function oneOf<T extends string>(
+  value: string | null | undefined,
+  allowed: readonly T[],
+): T | null {
+  return allowed.includes(value as T) ? (value as T) : null;
+}
+
+/** Projection vue d'ensemble → résumé d'une ligne de la liste (trois émotions au plus). */
+export function toActivity(dto: OverviewDto, english = false): PatientActivity {
+  const series = dto.feelings?.series ?? [];
+  const families = new Map<string, EmotionFamily | null>();
+  const englishLabels = new Map<string, string>();
+  for (const entry of series) {
+    if (!entry.emotionCode) continue;
+    families.set(entry.emotionCode, oneOf(entry.family, EMOTION_FAMILIES));
+    if (entry.labelEn) englishLabels.set(entry.emotionCode, entry.labelEn);
+  }
+  const top = (dto.emotions?.top ?? []).filter((emotion) => !!emotion.code);
+  const last = (dto.recentSessions ?? []).find((session) => !!session.occurredFrom) ?? null;
+  const situations = dto.activeSituations ?? [];
+  return {
+    lastSession: last
+      ? {
+          at: last.occurredFrom!,
+          modality: oneOf<SessionModality>(last.modality, SESSION_MODALITIES),
+        }
+      : null,
+    openSessionAt: text(dto.drafts?.openSession?.startedAt),
+    emotions: top.slice(0, 3).map((emotion) => ({
+      code: emotion.code!,
+      label: (english ? englishLabels.get(emotion.code!) : null) || emotion.label || emotion.code!,
+      family: families.get(emotion.code!) ?? null,
+      count: emotion.count ?? 0,
+      delta: emotion.delta ?? 0,
+    })),
+    feelingCount: top.reduce((sum, emotion) => sum + (emotion.count ?? 0), 0),
+    situations: { count: situations.length, first: text(situations[0]?.title) },
+    drafts: dto.drafts?.count ?? 0,
+    followedSince: text(dto.facts?.followedSince),
   };
 }
 

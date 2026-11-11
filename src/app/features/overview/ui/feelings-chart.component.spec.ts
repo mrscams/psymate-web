@@ -8,6 +8,7 @@ import { FeelingsChartLabels, FeelingsChartOption } from './feelings-chart.optio
 
 const labels: FeelingsChartLabels = {
   session: 'Séance',
+  others: 'Autres émotions',
   medicationStart: 'Début',
   medicationEnd: 'Fin',
   day: (value) => String(value),

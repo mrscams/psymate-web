@@ -1,7 +1,71 @@
+// Éditeur d'entrée (fiche 05, maquette état A) : sections à titre en capitales 12 px, libellés de
+// champ 13 px, champs de 40 px, pied « Enregistrer · Brouillon … Annuler » et rappel des touches.
+
+.subtitle {
+  margin: -8px 0 14px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
 .editor {
   display: flex;
   flex-direction: column;
   gap: 18px;
+}
+
+.section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.main {
+  gap: 12px;
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+
+.section-title {
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+// Légende flottante : sortie du bord du fieldset, elle redevient un bloc du flux (le rappel à droite
+// se place alors sur sa ligne).
+legend.section-title {
+  float: left;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.aside {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+// « récentes et actives · Espace pour cocher », à droite du titre du rail (légende de fieldset).
+.rail-aside {
+  position: absolute;
+  top: 0;
+  right: 0;
+  line-height: 24px;
 }
 
 .block {
@@ -16,8 +80,20 @@
 
 .block-label {
   padding: 0;
-  font: var(--mat-sys-label-large);
+  font-size: 13px;
+  font-weight: 500;
   color: var(--text-primary);
+}
+
+.label-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.optional {
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 
 .row {
@@ -35,26 +111,27 @@ textarea,
 select {
   box-sizing: border-box;
   width: 100%;
-  min-height: 44px;
+  min-height: 40px;
   padding: 0 12px;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   background: var(--surface-raised);
   color: var(--text-primary);
-  font: var(--mat-sys-body-large);
+  font: inherit;
+  font-size: 14px;
 
   &[aria-invalid='true'] {
     border-color: var(--danger);
   }
-  &:focus-visible {
-    border-color: var(--primary);
-    outline: 2px solid var(--primary-tint);
-    outline-offset: 0;
-  }
+}
+
+select {
+  font-size: 13px;
 }
 
 textarea {
   padding: 10px 12px;
+  line-height: 1.5;
   resize: vertical;
 }
 
@@ -68,7 +145,7 @@ textarea {
 
 .hint {
   margin: 0;
-  font: var(--mat-sys-body-small);
+  font-size: 11px;
   color: var(--text-secondary);
 }
 
@@ -77,7 +154,7 @@ kbd {
   border: 1px solid var(--border-subtle);
   border-radius: 4px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .grace {
@@ -86,7 +163,7 @@ kbd {
   border-radius: 8px;
   background: var(--warning-bg);
   color: var(--warning);
-  font: var(--mat-sys-body-medium);
+  font-size: 13px;
 
   &.in {
     background: var(--info-bg);
@@ -101,7 +178,7 @@ kbd {
   border-radius: 8px;
   background: var(--danger-bg);
   color: var(--danger);
-  font: var(--mat-sys-body-medium);
+  font-size: 13px;
 }
 
 .badge {
@@ -112,18 +189,48 @@ kbd {
   font: var(--mat-sys-label-small);
 }
 
+// « Plus » replié : chevron, libellé, résumé estompé ; le contenu décalé sous le chevron.
 .more {
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+
   summary {
-    min-height: 32px;
-    font: var(--mat-sys-label-large);
-    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 28px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
     cursor: pointer;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
   }
-  &[open] summary {
-    margin-bottom: 12px;
+  .chevron {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    transition: transform 120ms ease;
   }
-  .block + .block {
-    margin-top: 12px;
+  &[open] .chevron {
+    transform: rotate(90deg);
+  }
+  .summary-aside {
+    font-weight: 400;
+    color: var(--text-secondary);
+  }
+  .more-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 0 0 18px;
   }
 }
 
@@ -131,8 +238,8 @@ kbd {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 32px;
-  font: var(--mat-sys-body-medium);
+  min-height: 28px;
+  font-size: 13px;
 }
 
 .tags {
@@ -141,13 +248,19 @@ kbd {
   gap: 0 16px;
 }
 
+// Pied : Enregistrer et Brouillon à gauche, Annuler en texte à droite ; rappel des touches dessous.
 .footer {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
   gap: 8px;
   width: 100%;
 
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
   .spacer {
     flex: 1;
   }
@@ -157,38 +270,64 @@ kbd {
     gap: 6px;
     min-height: 40px;
     padding: 0 14px;
-    border: 1px solid var(--border-strong);
-    border-radius: 20px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
     background: var(--surface-raised);
     color: var(--text-primary);
-    font: var(--mat-sys-label-large);
+    font: inherit;
+    font-size: 14px;
     cursor: pointer;
+
+    kbd {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 11px;
+    }
   }
   .primary {
+    padding: 0 16px;
     border-color: var(--primary);
     background: var(--primary);
     color: var(--primary-on);
+    font-weight: 600;
 
     kbd {
-      border-color: currentColor;
+      color: inherit;
+      opacity: 0.85;
     }
   }
+  .cancel {
+    padding: 0 10px;
+    border-color: transparent;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+  .footnote {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+  }
   .link {
+    min-height: 0;
     padding: 0;
     border: 0;
     background: none;
     color: var(--primary-hover);
+    font-size: 12px;
     text-decoration: underline;
+  }
+  .keys {
+    margin: 0;
+    font-size: 11px;
+    color: var(--text-secondary);
   }
   button:disabled {
     cursor: default;
     opacity: 0.6;
-  }
-}
-
-.rail {
-  .hint {
-    margin-top: 2px;
   }
 }
 
@@ -199,13 +338,10 @@ kbd {
   border-radius: 8px;
   background: var(--danger-bg);
   color: var(--danger);
-  font: var(--mat-sys-body-medium);
+  font-size: 13px;
 }
 
 .links {
-  h3 {
-    margin: 0;
-  }
   .placed {
     display: flex;
     flex-direction: column;
@@ -218,7 +354,7 @@ kbd {
       padding: 8px 10px;
       border: 1px solid var(--border-subtle);
       border-radius: 10px;
-      font: var(--mat-sys-body-medium);
+      font-size: 13px;
       color: var(--text-primary);
     }
   }
@@ -230,7 +366,8 @@ kbd {
     border-radius: 18px;
     background: var(--surface-raised);
     color: var(--primary-hover);
-    font: var(--mat-sys-label-large);
+    font: inherit;
+    font-size: 13px;
     cursor: pointer;
   }
 }

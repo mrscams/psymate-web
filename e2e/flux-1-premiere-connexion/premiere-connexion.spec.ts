@@ -199,12 +199,18 @@ test('patient DEMO : étiqueté, supprimé en un clic sans retaper le nom, resta
   const demo = await createPatient(request, demoName());
   try {
     await signIn(page, account);
-    // Seulement la démo : l'accueil reste au-dessus de la liste et invite à l'explorer.
+    // Seulement la démo (planche 29 §2) : « Créez votre premier patient », « ou explorez un patient
+    // de démonstration » au-dessus de sa ligne (badge DEMO), l'accueil en trois étapes ensuite.
     const welcome = page.getByRole('region', { name: 'Bienvenue dans PsyMate' });
-    await expect(welcome).toContainText('explorer le dossier de démonstration');
-    const row = page.getByRole('row').filter({ hasText: demo.displayName });
+    await expect(welcome).toBeVisible();
+    await expect(
+      page.getByRole('status').filter({ hasText: 'Créez votre premier patient' }),
+    ).toBeVisible();
+    await expect(page.getByText('ou explorez un patient de démonstration')).toBeVisible();
+    const row = page.getByRole('row').filter({ hasText: demo.displayName.slice('DEMO · '.length) });
     await expect(row).toBeVisible();
-    await expect(row.locator('.demo-chip')).toHaveText('Démo');
+    await expect(row.locator('.demo-badge')).toHaveText('DEMO');
+    await expect(row.locator('.avatar.dashed')).toBeVisible();
     await expectNoAxeViolations(page);
 
     // Un clic, puis une confirmation simple : aucun champ où retaper le nom.
@@ -244,8 +250,12 @@ test('patient DEMO : étiqueté, supprimé en un clic sans retaper le nom, resta
     await row.getByRole('button', { name: /Supprimer la démo :/ }).click();
     await page.getByRole('dialog').getByRole('button', { name: 'Supprimer la démo' }).click();
     await expect(row).toHaveCount(0);
-    await page.getByRole('checkbox', { name: 'Afficher les archivés' }).check();
-    const archivedRow = page.getByRole('row').filter({ hasText: demo.displayName });
+    const archivedToggle = page.getByRole('button', { name: 'Afficher les archivés' });
+    await archivedToggle.click();
+    await expect(archivedToggle).toHaveAttribute('aria-pressed', 'true');
+    const archivedRow = page
+      .getByRole('row')
+      .filter({ hasText: demo.displayName.slice('DEMO · '.length) });
     await expect(archivedRow).toBeVisible();
     await expect(page.getByRole('region', { name: 'Bienvenue dans PsyMate' })).toHaveCount(0);
     await expectNoAxeViolations(page);
@@ -253,8 +263,9 @@ test('patient DEMO : étiqueté, supprimé en un clic sans retaper le nom, resta
       .getByRole('button', { name: `Restaurer le patient de démonstration ${demo.displayName}` })
       .click();
     await expect(archivedRow).toHaveCount(0);
-    await page.getByRole('checkbox', { name: 'Afficher les archivés' }).uncheck();
-    await expect(page.getByRole('row').filter({ hasText: demo.displayName })).toBeVisible();
+    await archivedToggle.click();
+    await expect(archivedToggle).toHaveAttribute('aria-pressed', 'false');
+    await expect(row).toBeVisible();
   } finally {
     // Compte jetable : son patient de démonstration est archivé quoi qu'il arrive.
     await archive(request, demo.id);

@@ -50,27 +50,29 @@ input[type='checkbox'] {
 
 .name {
   overflow: hidden;
-  font: var(--mat-sys-label-large);
+  font-size: 13px;
+  font-weight: 600;
   color: var(--text-primary);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .meta {
-  font: var(--mat-sys-body-small);
+  font-size: 11px;
   color: var(--text-secondary);
 }
 
 .type {
   flex-shrink: 0;
   max-width: 45%;
-  min-height: 32px;
+  min-height: 26px;
   padding: 0 8px;
   border: 1px dashed var(--link-proposed);
-  border-radius: 16px;
+  border-radius: 999px;
   background: var(--surface-raised);
   color: var(--text-secondary);
-  font: var(--mat-sys-label-medium);
+  font: inherit;
+  font-size: 12px;
   cursor: pointer;
 
   &.confirmed {

@@ -7,10 +7,11 @@ import { TrendChartLabels, TrendChartOption } from './trend-chart.options';
 
 const labels: TrendChartLabels = {
   average: 'Intensité moyenne (7 jours)',
+  feelings: 'Ressentis notés',
   session: 'Séance',
+  medication: 'Changement de médicament',
   medicationStart: 'Début',
   medicationEnd: 'Fin',
-  family: (family) => family ?? 'Autre',
   emotion: (code) => code,
   day: (value) => String(value),
   intensity: (value) => String(value),

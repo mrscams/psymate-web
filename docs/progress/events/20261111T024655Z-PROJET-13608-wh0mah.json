@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T02:46:55.075Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-B6 Éditeur d'entrée fidèle à la maquette 05 (état A) : combobox d'émotion avec famille en suffixe et création dès 3 lettres, curseur 1–10 à 5 par défaut, sous-titre de provenance, pm-date-field/pm-month-field, rail avec entryTitle",
+  "notes": "Sous-titre posé dans le corps : pm-side-panel n'a pas d'emplacement sous le titre (tâche partagée à prévoir). datetime-local gardé pour la précision exact.",
+  "pr": "https://github.com/mrscams/psymate-web/pull/56",
+  "branch": "claude/ux-b6-entry-editor",
+  "checkout": "agent-a2fafa6343a9d610d"
+}

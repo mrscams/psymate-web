@@ -14,6 +14,7 @@ import {
   LinkDto,
   LinkTypeView,
   PatchEntryRequest,
+  PatientsService,
   SeancesService,
   TagsService,
   TimelineItemDto,
@@ -79,6 +80,7 @@ export class EntriesApi {
   private readonly customEmotions = inject(EmotionsPersonnellesService);
   private readonly tags = inject(TagsService);
   private readonly links = inject(LiensService);
+  private readonly patients = inject(PatientsService);
   private readonly english = inject(LOCALE_ID).startsWith('en');
 
   /** POST /api/patients/{id}/entries → 201 (422 VALIDATION_FAILED, SESSION_REQUIRED ; 409 SESSION_ALREADY_OPEN). */
@@ -106,6 +108,12 @@ export class EntriesApi {
   async versions(entryId: string): Promise<EntryVersion[]> {
     const list = await firstValueFrom(this.entries.listEntryVersions(entryId));
     return list.map(toVersion);
+  }
+
+  /** GET /api/patients/{id} : le nom affiché, pour le sous-titre du panneau (« Marie D. · … »). */
+  async patientName(patientId: string): Promise<string> {
+    const dto = await firstValueFrom(this.patients.getPatient(patientId));
+    return dto.displayName?.trim() ?? '';
   }
 
   /** GET /api/vocabulary/emotions : 29 globales + personnalisées actives du praticien. */
@@ -342,5 +350,6 @@ function toEmotion(dto: EmotionView, english = false): Emotion {
     label: (english ? dto.labelEn : null) || dto.labelFr || dto.code || '',
     family,
     custom: dto.scope === 'custom',
+    intensityLevel: dto.intensityLevel ?? null,
   };
 }

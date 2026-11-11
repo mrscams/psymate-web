@@ -121,7 +121,7 @@ test('flux 1 au clavier : patient de démonstration ouvert, supprimé sans retap
     const keys = await keyboardOnly(page);
     await page.reload();
     const row = page.getByRole('row').filter({ hasText: demo.displayName });
-    await expect(row.locator('.demo-chip')).toHaveText('Démo');
+    await expect(row.locator('.demo-badge')).toHaveText('DEMO');
 
     // Explorer la démo : Tab jusqu'au nom, Entrée ouvre le dossier ; retour par le logo.
     await tabTo(page, row.getByRole('link', { name: demo.displayName, exact: true }));
@@ -143,11 +143,11 @@ test('flux 1 au clavier : patient de démonstration ouvert, supprimé sans retap
     await page.keyboard.press('Enter');
     await expect(row).toHaveCount(0);
 
-    // Restaurer depuis les archivés : Tab jusqu'à la case, Espace, Tab jusqu'à « Restaurer », Entrée.
-    const archived = page.getByRole('checkbox', { name: 'Afficher les archivés' });
+    // Restaurer depuis les archivés : Tab jusqu'à la bascule, Espace, Tab jusqu'à « Restaurer », Entrée.
+    const archived = page.getByRole('button', { name: 'Afficher les archivés' });
     await tabTo(page, archived, { max: 80 });
     await page.keyboard.press('Space');
-    await expect(archived).toBeChecked();
+    await expect(archived).toHaveAttribute('aria-pressed', 'true');
     const restore = page
       .getByRole('row')
       .filter({ hasText: demo.displayName })

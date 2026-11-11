@@ -13,7 +13,6 @@ import type { ComposeOption } from 'echarts/core';
 import {
   EMOTION_FAMILIES,
   EmotionFamily,
-  FeelingPoint,
   OverviewFeelings,
   OverviewTrend,
   TrendMarker,
@@ -35,6 +34,8 @@ export const TREND_TOKEN_NAMES = {
   grid: '--surface-sunken',
   axis: '--border-subtle',
   line: '--feeling',
+  /** Ressentis individuels : points gris clair, en --feeling au survol. */
+  point: '--border-strong',
   session: '--primary',
   medication: '--entry-medication',
   font: '--font-ui',
@@ -72,11 +73,13 @@ export function readTrendTokens(read: (name: string) => string): TrendTokens {
 export interface TrendChartLabels {
   /** Nom de la courbe des moyennes (« Intensité moyenne sur 7 jours »). */
   average: string;
+  /** Nom des points de ressentis (« Ressentis notés »). */
+  feelings: string;
   session: string;
+  /** Nom de la série des repères de médicament (« Changement de médicament »). */
+  medication: string;
   medicationStart: string;
   medicationEnd: string;
-  /** Nom d'une famille d'émotions (série de points). */
-  family: (family: EmotionFamily | null) => string;
   /** Libellé d'une émotion par son code (séries du serveur). */
   emotion: (code: string) => string;
   /** Jour AAAA-MM-JJ ou horodatage de l'axe → texte court dans la locale. */
@@ -97,8 +100,6 @@ export interface TrendPointDatum {
   emotion: string;
 }
 
-const UNKNOWN = 'unknown';
-
 /** Échappe un texte venu du serveur avant de le mettre dans l'infobulle HTML d'ECharts. */
 export function escapeHtml(text: string): string {
   return text
@@ -109,31 +110,31 @@ export function escapeHtml(text: string): string {
     .replace(/'/g, '&#39;');
 }
 
-function markerName(marker: TrendMarker, labels: TrendChartLabels): string {
-  if (marker.kind === 'session') return marker.label || labels.session;
+function medicationName(marker: TrendMarker, labels: TrendChartLabels): string {
   const change = marker.change === 'end' ? labels.medicationEnd : labels.medicationStart;
   return marker.label ? `${change} · ${marker.label}` : change;
 }
 
-/** Points groupés par famille, dans l'ordre des familles de l'étude (inconnue en dernier). */
-function byFamily(points: readonly FeelingPoint[]): [EmotionFamily | null, FeelingPoint[]][] {
-  const groups = new Map<string, FeelingPoint[]>();
-  for (const point of points) {
-    const key = point.family ?? UNKNOWN;
-    groups.set(key, [...(groups.get(key) ?? []), point]);
-  }
-  const order = [...EMOTION_FAMILIES, UNKNOWN];
-  return order
-    .filter((key) => groups.has(key))
-    .map((key) => [key === UNKNOWN ? null : (key as EmotionFamily), groups.get(key)!]);
+/** Dernier point qui porte une moyenne : il est marqué d'un rond creux (maquette 02). */
+function lastAverageIndex(points: readonly { average: number | null }[]): number {
+  for (let i = points.length - 1; i >= 0; i--) if (points[i].average !== null) return i;
+  return -1;
+}
+
+/** Repère sous l'axe : jour du repère, à l'ordonnée 0 (le symbole est décalé vers le bas). */
+export interface TrendMarkerDatum {
+  value: [string, number];
+  name: string;
 }
 
 /**
- * Courbe de tendance (fiche 02, B4 écran 2) :
- * - la moyenne glissante sur 7 jours du serveur, une ligne en `--feeling` (étude §4 : en V1, valence
- *   nulle, aucune aire sous la courbe) ;
- * - les ressentis réels, une série de points par famille présente, couleur `--emotion-<famille>` ;
- * - les repères verticaux : séances en `--primary` (tirets), médicaments en `--entry-medication`.
+ * Courbe de tendance (fiche 02, maquette 02, UX-B4) :
+ * - une seule série tracée : la moyenne glissante sur 7 jours du serveur, en `--feeling` (étude §4 :
+ *   valence nulle en V1, aucune aire), le dernier point en rond creux ;
+ * - les ressentis réels en petits points gris clair (`--border-strong`), en `--feeling` au survol ;
+ *   un clic ouvre le ressenti ;
+ * - les séances en traits courts `--primary` sous l'axe du temps, les changements de médicament en
+ *   losanges `--entry-medication` sur l'axe : aucune ligne verticale à travers le graphe.
  * Axe y : intensité 0 à 10 ; axe x : temps, de la première date de la courbe à aujourd'hui.
  */
 export function trendChartOptions(
@@ -144,27 +145,13 @@ export function trendChartOptions(
   const points = data.trend.points;
   const first = points[0]?.date ?? data.feelings.points[0]?.date;
   const last = points[points.length - 1]?.date ?? data.feelings.points.at(-1)?.date;
+  const lastIndex = lastAverageIndex(points);
 
-  const markLine: MarkLineComponentOption = {
-    silent: false,
-    symbol: ['none', 'none'],
-    label: { show: false },
-    emphasis: { disabled: true },
-    data: data.trend.markers.map((marker) => ({
-      xAxis: marker.date,
-      name: markerName(marker, labels),
-      lineStyle: {
-        color: marker.kind === 'session' ? tokens.session : tokens.medication,
-        type: marker.kind === 'session' ? 'dashed' : 'solid',
-        width: marker.kind === 'session' ? 1 : 2,
-      },
-    })),
-    tooltip: {
-      formatter: (params: unknown) => {
-        const p = params as { name?: string; value?: string | number };
-        const day = p.value !== undefined ? labels.day(p.value) : '';
-        return `${escapeHtml(day)}<br>${escapeHtml(p.name ?? '')}`;
-      },
+  const markerTooltip = {
+    formatter: (params: unknown) => {
+      const datum = (params as { data?: TrendMarkerDatum }).data;
+      if (!datum) return '';
+      return `${escapeHtml(labels.day(datum.value[0]))}<br>${escapeHtml(datum.name)}`;
     },
   };
 
@@ -172,7 +159,16 @@ export function trendChartOptions(
     id: 'average',
     type: 'line',
     name: labels.average,
-    data: points.map((p) => [p.date, p.average]),
+    data: points.map((p, index) =>
+      index === lastIndex
+        ? {
+            value: [p.date, p.average],
+            symbol: 'circle',
+            symbolSize: 9,
+            itemStyle: { color: tokens.surface, borderColor: tokens.line, borderWidth: 2.5 },
+          }
+        : [p.date, p.average],
+    ),
     showSymbol: false,
     connectNulls: false,
     smooth: false,
@@ -188,40 +184,72 @@ export function trendChartOptions(
         return `${escapeHtml(labels.day(day))}<br>${escapeHtml(labels.average)} : ${text}`;
       },
     },
-    markLine,
   };
 
-  const scatter: ScatterSeriesOption[] = byFamily(data.feelings.points).map(([family, list]) => {
-    const color = family ? tokens.emotions[family] : tokens.line;
-    return {
-      id: `family-${family ?? UNKNOWN}`,
-      type: 'scatter',
-      name: labels.family(family),
-      symbolSize: 9,
-      z: 3,
-      cursor: 'pointer',
-      itemStyle: { color, borderColor: tokens.surface, borderWidth: 1 },
-      data: list.map((point): TrendPointDatum => ({
-        value: [point.date, point.intensity],
-        entryId: point.entryId,
-        emotion: labels.emotion(point.emotionCode),
-      })),
-      tooltip: {
-        formatter: (params: unknown) => {
-          const datum = (params as { data?: TrendPointDatum }).data;
-          if (!datum) return '';
-          const [day, intensity] = datum.value;
-          return `${escapeHtml(labels.day(day))}<br>${escapeHtml(datum.emotion)} · ${intensity}/10`;
-        },
+  const feelings: ScatterSeriesOption = {
+    id: 'feelings',
+    type: 'scatter',
+    name: labels.feelings,
+    symbolSize: 6,
+    z: 3,
+    cursor: 'pointer',
+    itemStyle: { color: tokens.point },
+    emphasis: { scale: 1.6, itemStyle: { color: tokens.line } },
+    data: data.feelings.points.map((point): TrendPointDatum => ({
+      value: [point.date, point.intensity],
+      entryId: point.entryId,
+      emotion: labels.emotion(point.emotionCode),
+    })),
+    tooltip: {
+      formatter: (params: unknown) => {
+        const datum = (params as { data?: TrendPointDatum }).data;
+        if (!datum) return '';
+        const [day, intensity] = datum.value;
+        return `${escapeHtml(labels.day(day))}<br>${escapeHtml(datum.emotion)} · ${intensity}/10`;
       },
-    };
-  });
+    },
+  };
+
+  // Séances : traits de 6 px sous l'axe (décalés vers le bas, jamais rognés par la grille).
+  const sessions: ScatterSeriesOption = {
+    id: 'sessions',
+    type: 'scatter',
+    name: labels.session,
+    symbol: 'rect',
+    symbolSize: [2, 6],
+    symbolOffset: [0, 7],
+    clip: false,
+    z: 4,
+    itemStyle: { color: tokens.session },
+    emphasis: { disabled: true },
+    data: data.trend.markers
+      .filter((m) => m.kind === 'session')
+      .map((m): TrendMarkerDatum => ({ value: [m.date, 0], name: m.label || labels.session })),
+    tooltip: markerTooltip,
+  };
+
+  // Médicaments : losanges posés sur l'axe.
+  const medications: ScatterSeriesOption = {
+    id: 'medications',
+    type: 'scatter',
+    name: labels.medication,
+    symbol: 'diamond',
+    symbolSize: 10,
+    clip: false,
+    z: 5,
+    itemStyle: { color: tokens.medication, borderColor: tokens.surface, borderWidth: 1 },
+    emphasis: { disabled: true },
+    data: data.trend.markers
+      .filter((m) => m.kind === 'medication')
+      .map((m): TrendMarkerDatum => ({ value: [m.date, 0], name: medicationName(m, labels) })),
+    tooltip: markerTooltip,
+  };
 
   return {
     animation: false,
     backgroundColor: 'transparent',
     textStyle: { fontFamily: tokens.font, color: tokens.textSecondary },
-    grid: { left: 36, right: 16, top: 12, bottom: 28 },
+    grid: { left: 28, right: 16, top: 12, bottom: 34 },
     tooltip: {
       trigger: 'item',
       backgroundColor: tokens.surface,
@@ -232,11 +260,13 @@ export function trendChartOptions(
       type: 'time',
       min: first,
       max: last,
-      axisLine: { lineStyle: { color: tokens.axis } },
+      axisLine: { onZero: false, lineStyle: { color: tokens.axis } },
       axisTick: { show: false },
       splitLine: { show: false },
       axisLabel: {
         color: tokens.textSecondary,
+        fontSize: 11,
+        margin: 16,
         hideOverlap: true,
         formatter: (value: number) => labels.day(value),
       },
@@ -246,9 +276,9 @@ export function trendChartOptions(
       min: 0,
       max: 10,
       interval: 5,
-      axisLabel: { color: tokens.textSecondary },
+      axisLabel: { color: tokens.textSecondary, fontSize: 11 },
       splitLine: { lineStyle: { color: tokens.grid, type: 'dashed' } },
     },
-    series: [average, ...scatter],
+    series: [average, feelings, sessions, medications],
   };
 }

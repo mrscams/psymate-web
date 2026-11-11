@@ -33,6 +33,7 @@ import { typeChipLabel } from './search-labels';
           type="button"
           class="chip"
           [class.zero]="item.count === 0"
+          [disabled]="isDimmed(item)"
           [attr.aria-pressed]="selected() === item.type"
           (click)="choose(item.type)"
         >
@@ -89,6 +90,16 @@ import { typeChipLabel } from './search-labels';
     .chip.zero {
       color: var(--text-secondary);
     }
+    /* État vide (audit UX 07) : une puce à 0 ne mène nulle part, grisée et inactive. */
+    .chip:disabled,
+    .chip:disabled .count {
+      border-color: var(--border-subtle);
+      color: var(--text-disabled);
+      cursor: default;
+    }
+    .chip:disabled pm-entry-icon {
+      opacity: 0.5;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -97,10 +108,21 @@ export class TypeChipsComponent {
   /** null tant qu'aucune lecture n'a réussi : pas de « Tous 0 » en chargement ni en erreur. */
   readonly allCount = input.required<number | null>();
   readonly selected = input<EntryType | null>(null);
+  /**
+   * Aucun résultat, ni exact ni approché (état vide) : les puces à 0 sont grisées et désactivées
+   * (rien à filtrer). Hors état vide, elles restent actives : les compteurs ne portent que sur les
+   * résultats exacts, un filtre de type peut encore retenir des résultats approchés.
+   */
+  readonly dimZero = input(false);
   readonly selectType = output<EntryType | null>();
 
   protected readonly labelId = 'search-types-label';
   protected readonly label = typeChipLabel;
+
+  /** La puce active reste toujours cliquable (on doit pouvoir en sortir). */
+  protected isDimmed(item: TypeCount): boolean {
+    return this.dimZero() && item.count === 0 && this.selected() !== item.type;
+  }
 
   protected choose(type: EntryType | null): void {
     if (type !== this.selected()) this.selectType.emit(type);
