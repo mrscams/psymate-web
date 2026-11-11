@@ -25,7 +25,7 @@ test('première connexion de l’administrateur : mot de passe, puis 2FA obligat
 
   // Login avec le mot de passe à usage unique : 403 PASSWORD_CHANGE_REQUIRED → /premiere-connexion.
   await page.goto('/fr/connexion');
-  await page.getByLabel('Adresse e-mail').fill(admin.email);
+  await page.getByLabel('E-mail professionnel').fill(admin.email);
   await page.getByLabel('Mot de passe', { exact: true }).fill(admin.password);
   await page.getByRole('button', { name: 'Se connecter' }).click();
   await expect(page).toHaveURL(/\/fr\/premiere-connexion$/);

@@ -156,7 +156,7 @@ test('dossier professionnel : 11 Mo refusé, .exe renommé → 415, complétude,
 
   // Connexion par l'écran : un compte docs_pending entre, le bandeau ambre est sur /patients.
   await page.goto('/fr/connexion');
-  await page.getByLabel('Adresse e-mail').fill(account.email);
+  await page.getByLabel('E-mail professionnel').fill(account.email);
   await page.getByLabel('Mot de passe', { exact: true }).fill(account.password);
   await page.getByRole('button', { name: 'Se connecter' }).click();
   await expect(page).toHaveURL(/\/fr\/patients$/);
@@ -288,7 +288,7 @@ test('connexion au clavier : erreur 401, afficher le mot de passe, bloc code (2F
   await page.goto('/fr/connexion');
   await tabToName(page, 'Créer un compte');
   await page.keyboard.press('Tab');
-  await expect(page.getByLabel('Adresse e-mail')).toBeFocused();
+  await expect(page.getByLabel('E-mail professionnel')).toBeFocused();
   await page.keyboard.type(account.email);
   // UX-D1 : « Mot de passe oublié ? » est à droite du libellé, donc avant le champ (maquette 11).
   await page.keyboard.press('Tab');
@@ -351,7 +351,7 @@ test('dossier professionnel au clavier : type, intitulé, fichier, Ajouter, Reti
   const account = await register(request, 'm1-15.dossier-clavier');
   await confirmEmail(request, account.email);
   await page.goto('/fr/connexion');
-  await page.getByLabel('Adresse e-mail').fill(account.email);
+  await page.getByLabel('E-mail professionnel').fill(account.email);
   await page.getByLabel('Mot de passe', { exact: true }).fill(account.password);
   await page.getByRole('button', { name: 'Se connecter' }).click();
   await expect(page).toHaveURL(/\/fr\/patients$/);

@@ -16,7 +16,12 @@ const RESET_TOKEN = /reset-password\?token=([A-Za-z0-9_.~%-]+)/;
 
 /** Les six écrans de la tâche, avec un repère visible une fois la page rendue. */
 const SCREENS = [
-  { name: '11-connexion', path: '/fr/connexion', heading: 'Connexion' },
+  // UX-D1bis : h1 = accroche du panneau gauche, « Connexion » est le h2 de la carte (maquette 11).
+  {
+    name: '11-connexion',
+    path: '/fr/connexion',
+    heading: 'Le fil de vos patients, séance après séance.',
+  },
   { name: '12-inscription', path: '/fr/inscription', heading: 'Créer votre compte praticien' },
   {
     name: '25-confirmation-email',
@@ -92,13 +97,18 @@ test.describe('1440 px', () => {
     }
   });
 
-  test('UX-D1 connexion : accroche au-dessus de la carte, hébergement dessous, libellés au-dessus', async ({
+  test('UX-D1bis connexion : accroche et hébergement dans le panneau gauche, libellés au-dessus', async ({
     page,
   }) => {
     await page.goto('/fr/connexion');
-    await expect(page.getByRole('heading', { level: 1, name: 'Connexion' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'Connexion' })).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
-    const tagline = page.getByText('Le fil de vos patients, séance après séance.');
+    // Deux panneaux (maquette 11) : l'accroche et la mention d'hébergement à gauche de la carte,
+    // l'accroche au-dessus de l'hébergement (structure détaillée : connexion-deux-panneaux.spec).
+    const tagline = page.getByRole('heading', {
+      level: 1,
+      name: 'Le fil de vos patients, séance après séance.',
+    });
     const card = page.locator('.login-card');
     const hosting = page.getByText(/Données hébergées en France/);
     const [t, c, h] = await Promise.all([
@@ -106,8 +116,9 @@ test.describe('1440 px', () => {
       card.boundingBox(),
       hosting.boundingBox(),
     ]);
-    expect(t!.y + t!.height).toBeLessThanOrEqual(c!.y);
-    expect(h!.y).toBeGreaterThanOrEqual(c!.y + c!.height);
+    expect(t!.x + t!.width).toBeLessThanOrEqual(c!.x);
+    expect(h!.x + h!.width).toBeLessThanOrEqual(c!.x);
+    expect(t!.y + t!.height).toBeLessThanOrEqual(h!.y);
     // « Mot de passe oublié ? » sur la ligne du libellé, à sa droite, au-dessus du champ.
     const label = await page.locator('label[for=login-password]').boundingBox();
     const forgot = await page.getByRole('link', { name: 'Mot de passe oublié ?' }).boundingBox();

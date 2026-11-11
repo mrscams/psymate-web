@@ -8581,6 +8581,10 @@
           <context context-type="linenumber">6,8</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">13,16</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
           <context context-type="linenumber">6,7</context>
         </context-group>
@@ -8589,7 +8593,7 @@
           <context context-type="linenumber">10,12</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
+          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-header.component.html</context>
           <context context-type="linenumber">10,11</context>
         </context-group>
         <note priority="1" from="description">Nom du produit</note>
@@ -8899,13 +8903,20 @@
         <note priority="1" from="description">Première connexion impossible, serveur ou réseau</note>
       </trans-unit>
       <trans-unit id="auth.login.tagline" datatype="html">
-        <source> Le fil de vos patients, séance après séance.
-</source>
+        <source> Le fil de vos patients, séance après séance. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">5,9</context>
+          <context context-type="linenumber">18,22</context>
         </context-group>
-        <note priority="1" from="description">Accroche au-dessus de la carte de connexion (maquette 11)</note>
+        <note priority="1" from="description">Accroche du panneau gauche de la connexion (maquette 11)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.pitch" datatype="html">
+        <source> Noter en séance, relier ce qui va ensemble, retrouver en dix secondes où en est quelqu&apos;un. Pour psychologues, psychiatres et coachs. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">24,28</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre de l&apos;accroche de la connexion (maquette 11)</note>
       </trans-unit>
       <trans-unit id="auth.login.title" datatype="html">
         <source>Connexion</source>
@@ -8939,12 +8950,16 @@
         </context-group>
         <note priority="1" from="description">Mot de passe réinitialisé, invitation à se connecter</note>
       </trans-unit>
-      <trans-unit id="auth.login.email" datatype="html">
-        <source>Adresse e-mail</source>
+      <trans-unit id="auth.login.emailPro" datatype="html">
+        <source>E-mail professionnel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">41,45</context>
+          <context context-type="linenumber">93,97</context>
         </context-group>
+        <note priority="1" from="description">Champ e-mail de la connexion (maquette 11)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.email" datatype="html">
+        <source>Adresse e-mail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/password-reset.page.html</context>
           <context context-type="linenumber">22,26</context>
@@ -8999,14 +9014,6 @@
         </context-group>
         <note priority="1" from="description">Mot de passe manquant</note>
       </trans-unit>
-      <trans-unit id="auth.login.otp.title" datatype="html">
-        <source> Double authentification activée </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">130,132</context>
-        </context-group>
-        <note priority="1" from="description">Titre du bloc code 2FA</note>
-      </trans-unit>
       <trans-unit id="auth.login.otp" datatype="html">
         <source>Code de vérification</source>
         <context-group purpose="location">
@@ -9024,12 +9031,12 @@
         <note priority="1" from="description">Aide du champ code de secours</note>
       </trans-unit>
       <trans-unit id="auth.login.otp.hint" datatype="html">
-        <source> Les 6 chiffres de votre application d&apos;authentification. </source>
+        <source> Six chiffres de votre application d&apos;authentification. Demandé car la double authentification est activée sur ce compte. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">145,148</context>
+          <context context-type="linenumber">198,202</context>
         </context-group>
-        <note priority="1" from="description">Aide du champ code 2FA</note>
+        <note priority="1" from="description">Aide du champ code 2FA (maquette 11)</note>
       </trans-unit>
       <trans-unit id="auth.login.otp.useApp" datatype="html">
         <source> Utiliser le code de l&apos;application </source>
@@ -9072,21 +9079,52 @@
         <note priority="1" from="description">Bouton de connexion</note>
       </trans-unit>
       <trans-unit id="auth.login.lockNotice" datatype="html">
-        <source> Après 5 tentatives échouées, le compte est verrouillé 15 minutes. Les connexions sont consignées dans votre journal de sécurité. </source>
+        <source>Après 5 tentatives échouées, le compte est verrouillé 15 minutes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">212,220</context>
+          <context context-type="linenumber">269,271</context>
         </context-group>
-        <note priority="1" from="description">Mention verrouillage et journal sous le bouton</note>
+        <note priority="1" from="description">Mention verrouillage sous le bouton (maquette 11)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.journalNotice" datatype="html">
+        <source>Les connexions sont consignées dans votre journal de sécurité.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">272,278</context>
+        </context-group>
+        <note priority="1" from="description">Mention journal sous le bouton (maquette 11)</note>
       </trans-unit>
       <trans-unit id="auth.login.hosting" datatype="html">
-        <source> Données hébergées en France · chiffrées au repos et en transit · vous restez seul·e propriétaire de vos dossiers.
-</source>
+        <source> Données hébergées en France · chiffrées au repos · vous restez seul·e propriétaire de vos dossiers. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">222,225</context>
+          <context context-type="linenumber">284,290</context>
         </context-group>
-        <note priority="1" from="description">Mention hébergement sous la carte de connexion (maquette 11)</note>
+        <note priority="1" from="description">Mention hébergement du pied du panneau gauche (maquette 11)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.foot.privacy" datatype="html">
+        <source>Confidentialité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">293,298</context>
+        </context-group>
+        <note priority="1" from="description">Lien du pied de la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.foot.legal" datatype="html">
+        <source>Mentions légales</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">301,306</context>
+        </context-group>
+        <note priority="1" from="description">Lien du pied de la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.foot.directory" datatype="html">
+        <source>Annuaire public</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">309,315</context>
+        </context-group>
+        <note priority="1" from="description">Lien du pied de la connexion</note>
       </trans-unit>
       <trans-unit id="auth.login.showPassword" datatype="html">
         <source>Afficher le mot de passe</source>
@@ -9099,6 +9137,14 @@
           <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">Bouton afficher le mot de passe</note>
+      </trans-unit>
+      <trans-unit id="auth.login.otp.placeholder" datatype="html">
+        <source>000 000</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <note priority="1" from="description">Exemple du champ code 2FA</note>
       </trans-unit>
       <trans-unit id="auth.login.error.credentials" datatype="html">
         <source>E-mail, mot de passe ou code incorrect.</source>

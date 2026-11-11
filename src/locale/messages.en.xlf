@@ -1418,15 +1418,6 @@
         </context-group>
         <note priority="1" from="description">Lien mot de passe oublié</note>
       </trans-unit>
-      <trans-unit id="auth.login.otp.title" datatype="html">
-        <source> Double authentification activée </source>
-        <target state="translated"> Two-factor authentication is on </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
-          <context context-type="linenumber">81,83</context>
-        </context-group>
-        <note priority="1" from="description">Titre du bloc code 2FA</note>
-      </trans-unit>
       <trans-unit id="auth.login.otp" datatype="html">
         <source>Code de vérification</source>
         <target state="translated">Verification code</target>
@@ -1446,13 +1437,22 @@
         <note priority="1" from="description">Aide du champ code de secours</note>
       </trans-unit>
       <trans-unit id="auth.login.otp.hint" datatype="html">
-        <source>Les 6 chiffres de votre application d&apos;authentification.</source>
-        <target state="translated">The 6 digits from your authenticator app.</target>
+        <source> Six chiffres de votre application d&apos;authentification. Demandé car la double authentification est activée sur ce compte. </source>
+        <target state="translated">Six digits from your authenticator app. Requested because two-factor authentication is on for this account.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
           <context context-type="linenumber">103,106</context>
         </context-group>
-        <note priority="1" from="description">Aide du champ code 2FA</note>
+        <note priority="1" from="description">Aide du champ code 2FA (maquette 11)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.otp.placeholder" datatype="html">
+        <source>000 000</source>
+        <target state="translated">000 000</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Exemple du champ code 2FA</note>
       </trans-unit>
       <trans-unit id="auth.login.otp.useApp" datatype="html">
         <source> Utiliser le code de l&apos;application </source>
@@ -1500,13 +1500,67 @@
         <note priority="1" from="description">Bouton de connexion</note>
       </trans-unit>
       <trans-unit id="auth.login.lockNotice" datatype="html">
-        <source> Après 5 tentatives échouées, le compte est verrouillé 15 minutes. Les connexions sont consignées dans votre journal de sécurité. </source>
-        <target state="translated">After 5 failed attempts the account is locked for 15 minutes. Sign-ins are recorded in your security log.</target>
+        <source>Après 5 tentatives échouées, le compte est verrouillé 15 minutes.</source>
+        <target state="translated">After 5 failed attempts the account is locked for 15 minutes.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
           <context context-type="linenumber">158,163</context>
         </context-group>
-        <note priority="1" from="description">Mention verrouillage et journal sous le bouton</note>
+        <note priority="1" from="description">Mention verrouillage sous le bouton (maquette 11)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.journalNotice" datatype="html">
+        <source>Les connexions sont consignées dans votre journal de sécurité.</source>
+        <target state="translated">Sign-ins are recorded in your security log.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">164,167</context>
+        </context-group>
+        <note priority="1" from="description">Mention journal sous le bouton (maquette 11)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.emailPro" datatype="html">
+        <source>E-mail professionnel</source>
+        <target state="translated">Work email</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">86,90</context>
+        </context-group>
+        <note priority="1" from="description">Champ e-mail de la connexion (maquette 11)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.pitch" datatype="html">
+        <source> Noter en séance, relier ce qui va ensemble, retrouver en dix secondes où en est quelqu&apos;un. Pour psychologues, psychiatres et coachs. </source>
+        <target state="translated">Take notes in session, link what belongs together, see in ten seconds where someone stands. For psychologists, psychiatrists and coaches.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">20,27</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre de l&apos;accroche de la connexion (maquette 11)</note>
+      </trans-unit>
+      <trans-unit id="auth.login.foot.privacy" datatype="html">
+        <source>Confidentialité</source>
+        <target state="translated">Privacy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">290,295</context>
+        </context-group>
+        <note priority="1" from="description">Lien du pied de la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.foot.legal" datatype="html">
+        <source>Mentions légales</source>
+        <target state="translated">Legal notice</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">298,303</context>
+        </context-group>
+        <note priority="1" from="description">Lien du pied de la connexion</note>
+      </trans-unit>
+      <trans-unit id="auth.login.foot.directory" datatype="html">
+        <source>Annuaire public</source>
+        <target state="translated">Public directory</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
+          <context context-type="linenumber">306,311</context>
+        </context-group>
+        <note priority="1" from="description">Lien du pied de la connexion</note>
       </trans-unit>
       <trans-unit id="auth.login.showPassword" datatype="html">
         <source>Afficher le mot de passe</source>
@@ -23779,9 +23833,8 @@
         <note priority="1" from="description">Aide du champ adresse, page en attente</note>
       </trans-unit>
       <trans-unit id="auth.login.hosting" datatype="html">
-        <source> Données hébergées en France · chiffrées au repos et en transit · vous restez seul·e propriétaire de vos dossiers.
-</source>
-        <target state="translated"> Data hosted in France · encrypted at rest and in transit · you remain the sole owner of your records. </target>
+        <source> Données hébergées en France · chiffrées au repos · vous restez seul·e propriétaire de vos dossiers. </source>
+        <target state="translated">Data hosted in France · encrypted at rest · you remain the sole owner of your records.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
           <context context-type="linenumber">222,225</context>
@@ -23798,9 +23851,8 @@
         <note priority="1" from="description">Mot de passe réinitialisé, invitation à se connecter</note>
       </trans-unit>
       <trans-unit id="auth.login.tagline" datatype="html">
-        <source> Le fil de vos patients, séance après séance.
-</source>
-        <target state="translated"> Your patients’ story, session after session. </target>
+        <source> Le fil de vos patients, séance après séance. </source>
+        <target state="translated">Your patients’ story, session after session.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
           <context context-type="linenumber">5,9</context>

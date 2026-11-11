@@ -73,7 +73,7 @@ async function waitForResendWindow(account: { resendAllowedAt: number }): Promis
 /** Connexion d'un compte email_pending : 403 EMAIL_NOT_CONFIRMED → l'intercepteur mène à l'écran 25. */
 async function loginUnconfirmed(page: Page, account: TestAccount): Promise<void> {
   await page.goto('/fr/connexion');
-  await page.getByLabel('Adresse e-mail').fill(account.email);
+  await page.getByLabel('E-mail professionnel').fill(account.email);
   await page.getByLabel('Mot de passe', { exact: true }).fill(account.password);
   await page.getByRole('button', { name: 'Se connecter' }).click();
   await expect(page).toHaveURL(/\/fr\/confirmer-email$/);

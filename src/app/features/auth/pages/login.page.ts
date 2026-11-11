@@ -18,6 +18,7 @@ import { Router, RouterLink } from '@angular/router';
 
 import { afterLogin } from '../../../core/auth';
 import { ApiProblem } from '../../../core/http';
+import { PUBLIC_PATHS } from '../../../shared/ui';
 import { AUTH_FEATURE_PATHS } from '../auth-feature-paths';
 import { ConfirmEmailStore } from '../data/confirm-email.store';
 import { LoginStore } from '../data/login.store';
@@ -26,13 +27,16 @@ import { LoginStore } from '../data/login.store';
 export const PASSWORD_CHANGED_STATE = 'passwordChanged';
 
 /**
- * /connexion (fiche 11, UX-D1) : accroche au-dessus de la carte et mention d'hébergement dessous
- * (layout public à une carte, fiche 00 §4, au lieu des deux panneaux de la maquette), libellés
- * au-dessus des champs, « Mot de passe oublié ? » à droite du libellé, e-mail, mot de passe avec bouton afficher, « rester connecté » (G Q6),
- * bloc code de vérification après un 202 (code de l'application ou code de secours), message unique
- * 401, verrou 423 avec compte à rebours, liens Créer un compte et Mot de passe oublié. Les 403
- * d'état (e-mail non confirmé, compte suspendu, mot de passe à changer) sont redirigés par
- * core/http avant d'arriver ici.
+ * /connexion (fiche 11, maquette 11, UX-D1bis) : deux panneaux, sans le bandeau ni le pied du layout
+ * public (habillage nu, `data.layout: 'bare'` ; la page pose son propre `<main id="main">`).
+ * Panneau gauche : logo PsyMate, accroche (h1), sous-titre, aperçu décoratif d'une timeline
+ * (aria-hidden), pied hébergement et liens Confidentialité, Mentions légales, Annuaire public.
+ * Panneau droit : carte formulaire de 420 px, libellés au-dessus des champs, « Mot de passe oublié ? »
+ * à droite du libellé, e-mail, mot de passe avec bouton afficher, « rester connecté » (G Q6), bloc
+ * code de vérification après un 202 (code de l'application ou code de secours), message unique 401,
+ * verrou 423 avec compte à rebours. Sous 900 px les panneaux s'empilent, le panneau gauche se réduit
+ * au logo et à l'accroche et son pied passe sous la carte. Les 403 d'état (e-mail non confirmé,
+ * compte suspendu, mot de passe à changer) sont redirigés par core/http avant d'arriver ici.
  */
 @Component({
   selector: 'pm-login-page',
@@ -53,6 +57,7 @@ export class LoginPage {
   private readonly document = inject(DOCUMENT);
 
   protected readonly paths = AUTH_FEATURE_PATHS;
+  protected readonly publicPaths = PUBLIC_PATHS;
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     email: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
@@ -67,6 +72,8 @@ export class LoginPage {
   /** Mot de passe en clair (bouton afficher, aria-pressed). */
   protected readonly showPassword = signal(false);
   protected readonly showPasswordLabel = $localize`:Bouton afficher le mot de passe@@auth.login.showPassword:Afficher le mot de passe`;
+  /** Exemple du champ code (maquette 11) : six chiffres, groupés par trois. */
+  protected readonly otpPlaceholder = $localize`:Exemple du champ code 2FA@@auth.login.otp.placeholder:000 000`;
   /** Le champ code reçoit un code de secours (texte) plutôt que les 6 chiffres de l'application. */
   protected readonly recoveryCode = signal(false);
 
@@ -131,7 +138,12 @@ export class LoginPage {
     const user = await this.store.submit({
       email: email.trim(),
       password,
-      otp: this.store.otpRequired() ? otp.trim() : undefined,
+      // Code de l'application : les espaces de l'exemple « 000 000 » sont retirés ; code de secours tel quel.
+      otp: this.store.otpRequired()
+        ? this.recoveryCode()
+          ? otp.trim()
+          : otp.replace(/\s+/g, '')
+        : undefined,
       rememberMe,
     });
     if (user) {

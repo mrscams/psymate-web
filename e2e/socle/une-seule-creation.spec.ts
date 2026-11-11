@@ -123,9 +123,16 @@ function watchHydrationErrors(page: Page): string[] {
   return errors;
 }
 
-for (const { url, heading, prerendered } of [
-  { url: '/fr/annuaire', heading: /Trouver un psychologue/, prerendered: true },
-  { url: '/fr/connexion', heading: 'Connexion', prerendered: false },
+// UX-D1bis : la connexion (maquette 11, deux panneaux) est rendue dans l'habillage nu, sans le
+// bandeau public ; h1 = accroche du panneau gauche.
+for (const { url, heading, prerendered, publicHeader } of [
+  { url: '/fr/annuaire', heading: /Trouver un psychologue/, prerendered: true, publicHeader: 1 },
+  {
+    url: '/fr/connexion',
+    heading: 'Le fil de vos patients, séance après séance.',
+    prerendered: false,
+    publicHeader: 0,
+  },
 ]) {
   test(`démarrage ralenti sur ${url} : aucun habillage supposé avant la fin de la navigation`, async ({
     page,
@@ -141,11 +148,11 @@ for (const { url, heading, prerendered } of [
 
     // Jamais de barre praticien, d'aide des raccourcis ni de <main class="app-main"> sur une page
     // publique, même un instant ; le bandeau public n'est posé qu'une fois (le HTML prérendu, repris
-    // par l'hydratation, ou le rendu client).
+    // par l'hydratation, ou le rendu client), et jamais sur la connexion (habillage nu).
     expect(measured.appBar).toBe(0);
     expect(measured.shortcuts).toBe(0);
     expect(measured.appMainSeen).toBe(false);
-    expect(measured.publicHeader).toBe(1);
+    expect(measured.publicHeader).toBe(publicHeader);
     // Ni focus ni blur de la coquille à l'ouverture directe.
     expect(measured.shellFocus).toBe(0);
     // Pas de décalage de mise en page dû à la coquille (l'annuaire prérendu ne se redimensionne pas).
@@ -176,18 +183,23 @@ test('ouverture directe de /fr/annuaire : page créée une fois, recherche et vo
   await expectNoAxeViolations(page);
 });
 
-test('ouverture directe de /fr/connexion : page créée une fois, dans l’habillage public', async ({
+test('ouverture directe de /fr/connexion : page créée une fois, dans l’habillage nu', async ({
   page,
 }) => {
   const inserted = await watchInsertions(page, 'pm-login-page');
 
   await page.goto('/fr/connexion');
-  await expect(page.getByRole('heading', { level: 1, name: 'Connexion' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Connexion' })).toBeVisible();
   await settle(page);
 
   expect(await inserted()).toBe(1);
   await expect(page.locator('pm-app-bar')).toHaveCount(0);
-  await expect(page.getByRole('main').locator('pm-login-page')).toHaveCount(1);
+  await expect(page.locator('pm-public-header')).toHaveCount(0);
+  // UX-D1bis : un seul repère main, d'id main, quelle que soit la règle de l'habillage nu (posé par
+  // la coquille autour de la page ou par la page elle-même).
+  await expect(page.getByRole('main')).toHaveCount(1);
+  await expect(page.locator('#main')).toHaveCount(1);
+  await expect(page.getByRole('main')).toHaveAttribute('id', 'main');
 });
 
 test('connexion puis liste des patients : page créée une fois, liste et tags lus une fois', async ({
@@ -195,11 +207,11 @@ test('connexion puis liste des patients : page créée une fois, liste et tags l
 }) => {
   const inserted = await watchInsertions(page, 'pm-patient-list-page');
   await page.goto('/fr/connexion');
-  await expect(page.getByRole('heading', { level: 1, name: 'Connexion' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Connexion' })).toBeVisible();
 
   const patients = countGets(page, '/api/patients');
   const tags = countGets(page, '/api/tags');
-  await page.getByLabel('Adresse e-mail').fill(SEED.claire.email);
+  await page.getByLabel('E-mail professionnel').fill(SEED.claire.email);
   await page.getByLabel('Mot de passe', { exact: true }).fill(SEED.claire.password);
   await page.getByRole('button', { name: 'Se connecter' }).click();
 
@@ -222,7 +234,7 @@ test('changement d’habillage au clavier : la tabulation repart du haut, par le
 }) => {
   const skipLink = page.getByRole('link', { name: 'Aller au contenu' });
   await page.goto('/fr/connexion');
-  await page.getByLabel('Adresse e-mail').fill(SEED.claire.email);
+  await page.getByLabel('E-mail professionnel').fill(SEED.claire.email);
   await page.getByLabel('Mot de passe', { exact: true }).fill(SEED.claire.password);
   await page.getByLabel('Mot de passe', { exact: true }).press('Enter');
   await expect(page.getByRole('heading', { level: 1, name: 'Mes patients' })).toBeVisible();
@@ -238,9 +250,11 @@ test('changement d’habillage au clavier : la tabulation repart du haut, par le
   await page.getByRole('button', { name: /menu du compte/ }).click();
   await page.getByRole('menuitem', { name: 'Déconnexion' }).press('Enter');
   await expect(page).toHaveURL(/\/fr\/connexion$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'Connexion' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Connexion' })).toBeVisible();
+  // UX-D1bis : la connexion (habillage nu, maquette 11) n'a pas de lien d'évitement, rien ne
+  // précède son formulaire ; la tabulation repart du haut, sur le premier lien de la carte.
   await page.keyboard.press('Tab');
-  await expect(skipLink).toBeFocused();
+  await expect(page.getByRole('link', { name: 'Créer un compte' })).toBeFocused();
 });
 
 test.describe('administration', () => {

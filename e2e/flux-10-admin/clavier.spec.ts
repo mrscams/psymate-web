@@ -20,7 +20,7 @@ import { API, submittedAccount } from './helpers';
  */
 async function adminSignInByKeyboard(page: Page): Promise<void> {
   await page.goto('/fr/connexion');
-  await tabTo(page, page.getByLabel('Adresse e-mail'), { max: 40 });
+  await tabTo(page, page.getByLabel('E-mail professionnel'), { max: 40 });
   await page.keyboard.type(ADMIN.email);
   await tabTo(page, page.getByLabel('Mot de passe', { exact: true }), { max: 3 });
   await page.keyboard.type(ADMIN.password);

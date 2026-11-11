@@ -15,6 +15,9 @@ export const AUTH_ROUTES: Routes = [
     path: 'connexion',
     canActivate: [guestGuard],
     component: LoginPage,
+    // UX-D1bis : deux panneaux de la maquette 11, sans le bandeau ni le pied du layout public
+    // (exception au conteneur de 480 px, fiche 00 §4) ; la page pose son propre <main id="main">.
+    data: { layout: 'bare' },
     title: $localize`:Titre d'onglet de la connexion@@auth.login.pageTitle:Connexion · PsyMate`,
   },
   {
