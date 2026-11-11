@@ -88,6 +88,13 @@ export function reviewedLabel(status: ReviewedStatus): string {
 }
 
 export function decisionLabel(kind: DecisionKind): string {
+  return (
+    knownDecisionLabel(kind) ?? $localize`:Décision d'administration@@admin.decision.other:Décision`
+  );
+}
+
+/** Libellé d'une décision du contrat (DecisionKind) ; null pour une valeur inconnue. */
+export function knownDecisionLabel(kind: string): string | null {
   switch (kind) {
     case 'approved':
       return $localize`:Décision d'administration@@admin.decision.approved:Dossier approuvé`;
@@ -103,8 +110,10 @@ export function decisionLabel(kind: DecisionKind): string {
       return $localize`:Décision d'administration@@admin.decision.appealAccepted:Recours accepté`;
     case 'appeal_rejected':
       return $localize`:Décision d'administration@@admin.decision.appealRejected:Recours écarté`;
+    case 'report_resolved':
+      return $localize`:Décision d'administration@@admin.decision.reportResolved:Signalement traité`;
     default:
-      return $localize`:Décision d'administration@@admin.decision.other:Décision`;
+      return null;
   }
 }
 
@@ -160,14 +169,18 @@ export function journalCategory(kind: string): { label: string; tone: Tone } {
   };
 }
 
-/** Phrase lisible pour les types courants ; à défaut, le résumé du serveur. */
-export function journalSummary(kind: string, summary: string): string {
+/**
+ * Libellé d'un type d'événement de sécurité du journal (JOURNAL_SECURITY_KINDS) ; null pour un type
+ * inconnu. Les décisions (admin.<DecisionKind>) passent par knownDecisionLabel.
+ */
+export function securityKindLabel(kind: string): string | null {
   const known: Record<string, string> = {
     login_ok: $localize`:Événement du journal@@admin.journal.kind.loginOk:Connexion réussie`,
     login_failed: $localize`:Événement du journal@@admin.journal.kind.loginFailed:Échec de connexion`,
     locked: $localize`:Événement du journal@@admin.journal.kind.locked:Compte verrouillé après plusieurs échecs`,
     logout: $localize`:Événement du journal@@admin.journal.kind.logout:Déconnexion`,
     email_confirmed: $localize`:Événement du journal@@admin.journal.kind.emailConfirmed:Adresse e-mail confirmée`,
+    email_changed: $localize`:Événement du journal@@admin.journal.kind.emailChanged:Adresse e-mail de connexion changée`,
     consent_given: $localize`:Événement du journal@@admin.journal.kind.consent:Conditions d'utilisation acceptées`,
     password_changed: $localize`:Événement du journal@@admin.journal.kind.passwordChanged:Mot de passe changé`,
     '2fa_enabled': $localize`:Événement du journal@@admin.journal.kind.twoFactorOn:Double authentification activée`,
@@ -177,11 +190,52 @@ export function journalSummary(kind: string, summary: string): string {
     session_revoked: $localize`:Événement du journal@@admin.journal.kind.sessionRevoked:Session révoquée`,
     verification_submitted: $localize`:Événement du journal@@admin.journal.kind.submitted:Dossier soumis pour vérification`,
     admin_bootstrap: $localize`:Événement du journal@@admin.journal.kind.bootstrap:Compte administrateur créé`,
+    'admin.decision': $localize`:Événement du journal@@admin.journal.kind.decision:Décision enregistrée`,
+    'admin.suspend': $localize`:Événement du journal@@admin.journal.kind.suspend:Compte suspendu`,
+    'admin.reactivate': $localize`:Événement du journal@@admin.journal.kind.reactivate:Compte réactivé`,
+    'admin.appeal': $localize`:Événement du journal@@admin.journal.kind.appealDecided:Recours tranché`,
     'admin.document_read': $localize`:Événement du journal@@admin.journal.kind.documentRead:Ouverture d'un justificatif (URL signée 5 min)`,
     'appeal.submitted': $localize`:Événement du journal@@admin.journal.kind.appealSubmitted:Recours déposé`,
   };
-  if (known[kind] && (summary === kind || summary === '')) return known[kind];
-  return summary || kind;
+  return Object.hasOwn(known, kind) ? known[kind] : null;
+}
+
+/**
+ * Phrase de la colonne Événement (fiche 22, UX-G2b) : jamais une clé technique seule.
+ * - Décision (admin.<DecisionKind>) : son libellé, suivi du message au praticien s'il y en a un (à
+ *   défaut, le serveur renvoie le code de la décision, « approved »).
+ * - admin.decision : « Décision enregistrée », avec la décision lue dans details.kind.
+ * - Type connu : le résumé rédigé par le serveur s'il y en a un (motif d'une suspension…), sinon
+ *   son libellé.
+ * - Type inconnu : le résumé rédigé par le serveur, sinon un libellé de repli qui cite le type.
+ */
+export function journalSummary(
+  kind: string,
+  summary: string,
+  detailKind: string | null = null,
+): string {
+  const text = summary.trim();
+  const written = text !== '' && text !== kind;
+  if (kind.startsWith('admin.')) {
+    const code = kind.slice('admin.'.length);
+    const decision = knownDecisionLabel(code);
+    if (decision) {
+      return written && text !== code
+        ? $localize`:Décision du journal suivie du message au praticien@@admin.journal.decisionWithMessage:${decision}:decision: : ${text}:message:`
+        : decision;
+    }
+  }
+  if (kind === 'admin.decision' && !written) {
+    const decision = detailKind ? knownDecisionLabel(detailKind) : null;
+    if (decision) {
+      return $localize`:Décision enregistrée, avec la décision@@admin.journal.kind.decisionOf:Décision enregistrée : ${decision}:decision:`;
+    }
+  }
+  if (written) return text;
+  return (
+    securityKindLabel(kind) ??
+    $localize`:Type d'événement absent de la table des libellés@@admin.journal.kind.unknown:Événement non répertorié (${kind}:kind:)`
+  );
 }
 
 /** « 12 nov. 2026 » dans la locale de l'interface ; « — » si absent. */

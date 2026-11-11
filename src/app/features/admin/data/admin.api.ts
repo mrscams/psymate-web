@@ -13,11 +13,13 @@ import {
   AppealItemDto,
   CreateRequestKindEnum,
   DecisionItemDto,
+  DecisionItemDtoKindEnum,
   DecisionRequestKindEnum,
   DossierDto,
   Item,
   ItemDto,
   JournalItemDto,
+  JournalItemDtoActorTypeEnum,
   QueueItemDto,
   RecoursService,
   ReviewRequestReviewedStatusEnum,
@@ -26,6 +28,7 @@ import { CursorPage } from '../../../shared/util';
 import {
   AccountItem,
   AccountPage,
+  ActorType,
   AccountQuery,
   Appeal,
   AppealOutcome,
@@ -52,6 +55,17 @@ import {
 
 /** Taille d'une page des listes paginées (le contrat accepte 1..200, 50 par défaut). */
 export const ADMIN_PAGE_SIZE = 50;
+
+/**
+ * Valeurs des énumérations du contrat lues par le journal (fiche 22), tirées du client généré :
+ * admin-labels.spec.ts les parcourt toutes et échoue si l'une n'a pas de libellé (UX-G2b). Les
+ * types sont vérifiés à la compilation contre les unions de admin.model.ts.
+ */
+export const CONTRACT_DECISION_KINDS: readonly DecisionKind[] =
+  Object.values(DecisionItemDtoKindEnum);
+export const CONTRACT_JOURNAL_ACTOR_TYPES: readonly ActorType[] = Object.values(
+  JournalItemDtoActorTypeEnum,
+);
 
 /**
  * Service de données de features/admin (handbook §2, couche 4) : le seul fichier de la feature qui
@@ -371,6 +385,7 @@ function toJournalItem(dto: JournalItemDto): JournalItem {
     practitionerId: dto.practitionerId ?? null,
     practitionerDisplayName: dto.practitionerDisplayName ?? null,
     summary: dto.summary ?? dto.kind ?? '',
+    detailKind: typeof dto.details?.['kind'] === 'string' ? dto.details['kind'] : null,
   };
 }
 

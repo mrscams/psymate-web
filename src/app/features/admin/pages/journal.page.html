@@ -33,7 +33,11 @@
     </div>
     <div class="field">
       <label for="journal-actor" i18n="Filtre administrateur@@admin.journal.actor">Par</label>
-      <select id="journal-actor" (change)="onActor($event)">
+      <select
+        id="journal-actor"
+        [attr.aria-describedby]="adminsError() ? 'journal-actor-error' : null"
+        (change)="onActor($event)"
+      >
         <option
           value=""
           [selected]="!filters().actorId"
@@ -47,6 +51,18 @@
           </option>
         }
       </select>
+      @if (adminsError()) {
+        <p class="filter-error" data-testid="journal-actor-error">
+          <span
+            id="journal-actor-error"
+            i18n="Erreur de la liste des administrateurs@@admin.journal.actorError"
+            >Liste des administrateurs indisponible.</span
+          >
+          <button type="button" class="link pm-link-target" (click)="store.loadAdmins()">
+            {{ retry.label }}
+          </button>
+        </p>
+      }
     </div>
     <div class="field">
       <label for="journal-period" i18n="Filtre période@@admin.journal.period">Période</label>

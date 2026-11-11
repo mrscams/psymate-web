@@ -57,10 +57,23 @@ test.describe('flux 10 au clavier', () => {
       await adminSignInByKeyboard(page);
       await expect(page.getByRole('heading', { level: 1, name: /^À vérifier/ })).toBeVisible();
 
-      // La file : le dossier soumis (Tab jusqu'à son lien, Entrée).
+      // La file : le dossier soumis (Tab jusqu'à son lien, Entrée). Elle va du plus ancien au plus
+      // récent par pages de 50 (contrat) : sur une base où d'autres dossiers attendent, celui du
+      // test (le plus récent) n'est pas sur la première page. On charge la suite au clavier
+      // (Tab jusqu'à « Afficher plus », Entrée) tant qu'il n'est pas dans la liste (UX-G2b).
       const queue = page.getByRole('list', { name: 'Dossiers en attente de vérification' });
       const link = queue.locator(`a[href$="${practitioner.id}"]`);
-      await tabTo(page, link, { max: 200 });
+      const items = queue.locator('a');
+      const more = page.getByRole('button', { name: 'Afficher plus', exact: true });
+      await expect(items.first()).toBeVisible();
+      while ((await link.count()) === 0) {
+        await expect(more, 'dossier du test absent de la file entière').toBeVisible();
+        const shown = await items.count();
+        await tabTo(page, more, { max: shown + 80 });
+        await page.keyboard.press('Enter');
+        await expect.poll(() => items.count(), { timeout: 15_000 }).toBeGreaterThan(shown);
+      }
+      await tabTo(page, link, { max: (await items.count()) + 80 });
       await page.keyboard.press('Enter');
       await expect(page).toHaveURL(new RegExp(`/fr/admin/validation/${practitioner.id}$`));
       await expect(page.locator('#dossier-title')).toHaveText('Alix Essai');

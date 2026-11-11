@@ -119,7 +119,7 @@ export class JournalPage {
       ...item,
       time: formatTimestamp(item.at, this.locale),
       category: journalCategory(item.kind),
-      text: journalSummary(item.kind, item.summary),
+      text: journalSummary(item.kind, item.summary, item.detailKind),
       by: actorLabel(item.actorType, item.actorName),
       context: item.source === 'verification_decision' && !!item.practitionerId,
     })),
@@ -178,6 +178,12 @@ export class JournalPage {
     label: $localize`:Bouton de l'état erreur@@state.error.retry:Réessayer`,
     handler: () => void this.store.reload(),
   };
+
+  /**
+   * Liste des administrateurs du filtre « Par » illisible : le filtre reste utilisable avec « Tous »,
+   * une ligne discrète sous lui dit l'échec et propose de relire la liste (UX-G2b).
+   */
+  protected readonly adminsError = computed(() => this.store.admins().status === 'error');
 
   constructor() {
     effect(() => {
