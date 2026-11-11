@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-11T13:30:56.458Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-A10b Coquille : un seul <main> et un seul outlet pour les quatre habillages ; transitions nu ↔ praticien sans recréation de page",
+  "pr": "https://github.com/mrscams/psymate-web/pull/74",
+  "branch": "claude/ux-a10b-bare-transitions",
+  "checkout": "agent-abcb4267217d1ef05"
+}
