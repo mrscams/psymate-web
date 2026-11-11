@@ -18,8 +18,10 @@ import {
 export const CARD_SPECIALTIES_MAX = 4;
 
 /**
- * Fiche résumée d'un praticien dans les résultats (fiche 08, schéma Card, sans tarif ni
- * coordonnées). Toute la carte mène à la fiche (lien du nom étendu) ; « Contacter » mène à son
+ * Fiche résumée d'un praticien dans les résultats (fiche 08, schéma Card, sans tarif, distance ni
+ * coordonnées), en trois lignes sous l'identité (UX-D6) : titre et extrait, spécialités, puis une
+ * ligne de méta (ville, modalités, publics, langues). Une seule puce de disponibilité, à droite de
+ * l'identité. Toute la carte mène à la fiche (lien du nom étendu) ; « Contacter » mène à son
  * formulaire (#contact).
  */
 @Component({
@@ -42,14 +44,23 @@ export class PractitionerCardComponent {
   readonly locale = input<AppLocale>('fr');
 
   protected readonly link = computed(() => practitionerPath(this.card().slug));
-  protected readonly excerpt = computed(() => plainText(this.card().bioExcerpt));
+  /** Titre et extrait sur une ligne (maquette 08 : « Psychologue clinicienne · TCC et… »). */
+  protected readonly summary = computed(() => {
+    const title = this.card().titleLabel?.trim() ?? '';
+    const excerpt = plainText(this.card().bioExcerpt);
+    // Un extrait qui commence déjà par le titre ne le répète pas.
+    if (!title || excerpt.toLocaleLowerCase().startsWith(title.toLocaleLowerCase())) return excerpt;
+    return excerpt ? `${title} · ${excerpt}` : title;
+  });
 
   protected readonly specialties = computed(() =>
     this.labels('specialties', this.card().specialties.slice(0, CARD_SPECIALTIES_MAX)),
   );
-  protected readonly audiences = computed(() => this.labels('audiences', this.card().audiences));
+  protected readonly audiences = computed(() =>
+    this.labels('audiences', this.card().audiences).join(', '),
+  );
   protected readonly modalities = computed(() =>
-    this.labels('modalities', this.card().modalities).join(' · '),
+    this.labels('modalities', this.card().modalities).join(', '),
   );
   protected readonly languages = computed(() =>
     this.labels('languages', this.card().languages).join(', '),

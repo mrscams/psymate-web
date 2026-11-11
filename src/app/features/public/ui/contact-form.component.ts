@@ -17,11 +17,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { RouterLink } from '@angular/router';
 
 import { ApiProblem } from '../../../core/http';
 import { applyProblem, firstMessage } from '../../../shared/forms';
 import { ContactMessage } from '../data/directory.models';
 import { ContactStatus } from '../data/practitioner.store';
+import { PUBLIC_FEATURE_PATHS } from '../public-paths';
 
 /** Limites du contrat (SubmitContactRequest). */
 export const CONTACT_LIMITS = { name: 200, email: 320, subject: 200, message: 4000 } as const;
@@ -30,12 +32,15 @@ export const CONTACT_LIMITS = { name: 200, email: 320, subject: 200, message: 40
  * Formulaire de contact d'une fiche (fiche 09, #contact) : nom, e-mail, objet, message,
  * consentement ; piège à robots `website` caché ; instant d'affichage envoyé avec le message
  * (le serveur ignore un envoi en moins de 3 s). Le client vérifie la forme, le serveur juge (422
- * posés sur les champs). Composant de présentation : la page envoie par le store.
+ * posés sur les champs). Composant de présentation : la page envoie par le store. Libellés
+ * au-dessus des champs, compteur du message à droite de l'aide, lien vers la page Confidentialité
+ * dans la case de consentement (maquette 09, UX-D7).
  */
 @Component({
   selector: 'pm-contact-form',
   imports: [
     ReactiveFormsModule,
+    RouterLink,
     MatButtonModule,
     MatCheckboxModule,
     MatFormFieldModule,
@@ -58,6 +63,8 @@ export class ContactFormComponent {
 
   protected readonly limits = CONTACT_LIMITS;
   protected readonly message = firstMessage;
+  /** Page Confidentialité (pied public), ouverte dans un nouvel onglet : la saisie reste. */
+  protected readonly privacyPath = PUBLIC_FEATURE_PATHS.privacy;
 
   protected readonly subjects = [
     $localize`:Objet du message de contact@@public.contact.subject.firstAppointment:Demande de premier rendez-vous`,

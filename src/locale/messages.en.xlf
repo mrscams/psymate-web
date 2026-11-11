@@ -6159,19 +6159,21 @@
         </context-group>
       </trans-unit>
       <trans-unit id="public.results.countInCity" datatype="html">
-        <source><x id="ICU" equiv-text="{data.total, plural,
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="ICU" equiv-text="{data.total, plural,
                   =0 {Aucun praticien}
                   =1 {1 praticien}
                   other {{{ data.total }} praticiens}
-                }" xid="1036290849905700919"/> à <x id="INTERPOLATION_1" equiv-text="{{ searchedCity() }}"/></source>
-        <target state="translated"><x id="ICU" equiv-text="{data.total, plural,
+                }" xid="1036290849905700919"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong
+                &gt;"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;where&quot;&gt;"/>à <x id="INTERPOLATION_1" equiv-text="{{ searchedCity() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="ICU" equiv-text="{data.total, plural,
                   =0 {Aucun praticien}
                   =1 {1 praticien}
                   other {{{ data.total }} praticiens}
-                }" xid="1036290849905700919"/> in <x id="INTERPOLATION_1" equiv-text="{{ searchedCity() }}"/></target>
+                }" xid="1036290849905700919"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong
+                &gt;"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;where&quot;&gt;"/>in <x id="INTERPOLATION_1" equiv-text="{{ searchedCity() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
-          <context context-type="linenumber">143,149</context>
+          <context context-type="linenumber">216,222</context>
         </context-group>
         <note priority="1" from="description">Nombre de résultats dans une ville</note>
       </trans-unit>
@@ -7175,11 +7177,17 @@
         <note priority="1" from="description">Avertissement sous le champ message</note>
       </trans-unit>
       <trans-unit id="public.contact.consent" datatype="html">
-        <source>J&apos;accepte que mes coordonnées soient transmises à <x id="INTERPOLATION" equiv-text="{{ practitionerName() }}"/> pour répondre à ma demande.</source>
-        <target state="translated">I agree that my contact details are passed on to <x id="INTERPOLATION" equiv-text="{{ practitionerName() }}"/> to answer my request.</target>
+        <source>J&apos;accepte que mes coordonnées soient transmises à <x id="INTERPOLATION" equiv-text="{{ practitionerName() }}"/> pour répondre à ma demande. <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;privacy&quot; [routerLink]=&quot;privacyPath&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;
+            &gt;"/>En savoir plus sur la protection des données<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> (nouvel onglet)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span
+            &gt;"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
+          &gt;"/>.</source>
+        <target state="translated">I agree that my contact details are passed on to <x id="INTERPOLATION" equiv-text="{{ practitionerName() }}"/> to answer my request. <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;privacy&quot; [routerLink]=&quot;privacyPath&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;
+            &gt;"/>Learn more about data protection<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> (new tab)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span
+            &gt;"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
+          &gt;"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/contact-form.component.html</context>
-          <context context-type="linenumber">114,115</context>
+          <context context-type="linenumber">160,166</context>
         </context-group>
         <note priority="1" from="description">Case de consentement du formulaire de contact</note>
       </trans-unit>
@@ -24008,6 +24016,104 @@
         </context-group>
         <note priority="1" from="description">Étape du parcours mot de passe oublié</note>
       </trans-unit>
+      <trans-unit id="public.filters.title" datatype="html">
+        <source> Filtres </source>
+        <target state="translated">Filters</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.html</context>
+          <context context-type="linenumber">3,8</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la colonne de filtres de l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.filters.close" datatype="html">
+        <source>Fermer les filtres</source>
+        <target state="translated">Close filters</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">176,177</context>
+        </context-group>
+        <note priority="1" from="description">Croix du panneau de filtres sur petit écran</note>
+      </trans-unit>
+      <trans-unit id="public.filters.specialties" datatype="html">
+        <source>Spécialités</source>
+        <target state="translated">Specialties</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <note priority="1" from="description">Légende de la facette spécialités</note>
+      </trans-unit>
+      <trans-unit id="public.filters.specialties.less" datatype="html">
+        <source>Afficher moins</source>
+        <target state="translated">Show less</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.ts</context>
+          <context context-type="linenumber">170</context>
+        </context-group>
+        <note priority="1" from="description">Replie les spécialités secondaires</note>
+      </trans-unit>
+      <trans-unit id="public.filters.specialties.moreOne" datatype="html">
+        <source>Afficher 1 autre</source>
+        <target state="translated">Show 1 more</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.ts</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+        <note priority="1" from="description">Déplie la dernière spécialité</note>
+      </trans-unit>
+      <trans-unit id="public.filters.specialties.more" datatype="html">
+        <source>Afficher les <x id="count" equiv-text="n"/> autres</source>
+        <target state="translated">Show <x id="count" equiv-text="n"/> more</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.ts</context>
+          <context context-type="linenumber">174</context>
+        </context-group>
+        <note priority="1" from="description">Déplie les spécialités secondaires</note>
+      </trans-unit>
+      <trans-unit id="public.filters.audiences.more" datatype="html">
+        <source>Autres publics (<x id="count" equiv-text="n"/>)</source>
+        <target state="translated">Other audiences (<x id="count" equiv-text="n"/>)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.ts</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+        <note priority="1" from="description">Déplie les publics sans fiche</note>
+      </trans-unit>
+      <trans-unit id="public.filters.languages.more" datatype="html">
+        <source>Autres langues (<x id="count" equiv-text="n"/>)</source>
+        <target state="translated">Other languages (<x id="count" equiv-text="n"/>)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/directory-filters.component.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <note priority="1" from="description">Déplie les langues sans fiche</note>
+      </trans-unit>
+      <trans-unit id="public.filters.showResults" datatype="html">
+        <source> <x id="ICU" equiv-text="{resultTotal(), plural,
+                =0 {Aucun résultat}
+                =1 {Voir 1 praticien}
+                other {Voir les {{ resultTotal() }} praticiens}
+              }" xid="7324870690995531274"/> </source>
+        <target state="translated"> <x id="ICU" equiv-text="{resultTotal(), plural,
+                =0 {Aucun résultat}
+                =1 {Voir 1 praticien}
+                other {Voir les {{ resultTotal() }} praticiens}
+              }" xid="7324870690995531274"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">196,202</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui ferme le panneau de filtres et montre les
+                résultats</note>
+      </trans-unit>
+      <trans-unit id="760175134379594419" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {Aucun résultat} =1 {Voir 1 praticien} other {Voir les <x id="INTERPOLATION"/> praticiens}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =0 {No results} =1 {Show 1 practitioner} other {Show <x id="INTERPOLATION"/> practitioners}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
+          <context context-type="linenumber">196,199</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="1236922393516943706" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {1 appareil} other {<x id="INTERPOLATION"/> appareils}}</source>
         <target state="translated">{VAR_PLURAL, plural, =1 {1 device} other {<x id="INTERPOLATION"/> devices}}</target>
@@ -24074,16 +24180,17 @@
         <target state="translated">Expected file:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">101,103</context>
+          <context context-type="linenumber">105,107</context>
         </context-group>
-        <note priority="1" from="description">Nom indicatif du fichier exporté (le serveur fixe le nom réel)</note>
+        <note priority="1" from="description">Nom indicatif du fichier exporté (le serveur fixe le nom
+                  réel)</note>
       </trans-unit>
       <trans-unit id="account.data.patient.fileNoteShort" datatype="html">
         <source>· séances et entrées en ordre chronologique, texte de la version courante</source>
         <target state="translated">· sessions and entries in chronological order, current version text</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
-          <context context-type="linenumber">104,108</context>
+          <context context-type="linenumber">108,112</context>
         </context-group>
         <note priority="1" from="description">Contenu du fichier exporté</note>
       </trans-unit>

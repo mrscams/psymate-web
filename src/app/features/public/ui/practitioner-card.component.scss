@@ -2,12 +2,13 @@
   display: block;
 }
 
+// Fiche résumée (maquette 08) : avatar, corps en quatre lignes, actions à droite.
 .card {
   position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 16px;
-  padding: 20px;
+  padding: 18px 20px;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
@@ -23,6 +24,9 @@
 }
 
 .body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -30,12 +34,17 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 6px 8px;
+}
+
+// Disponibilité poussée à droite de la ligne d'identité (maquette : margin-left auto).
+.availability-slot {
+  margin-left: auto;
 }
 
 .name {
   margin: 0;
-  font: var(--mat-sys-title-medium);
+  font: 600 16px/1.4 var(--font-ui);
 }
 
 // Lien du nom étendu à toute la carte (fiche 08 : clic sur la fiche résumée entière).
@@ -55,54 +64,89 @@
   }
 }
 
-.title {
-  margin: 4px 0 0;
-  color: var(--text-secondary);
-  font: var(--mat-sys-body-medium);
-}
-
+// Titre et extrait : deux lignes au plus.
 .excerpt {
-  margin: 8px 0 0;
-  font: var(--mat-sys-body-medium);
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  color: var(--text-secondary);
+  font: 13px/1.5 var(--font-ui);
 }
 
 .tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 12px 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 
   li {
-    padding: 2px 8px;
-    border-radius: 6px;
+    padding: 3px 10px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
     background: var(--surface-sunken);
-    font: var(--mat-sys-label-medium);
+    color: var(--text-primary);
+    font: 12px/1.4 var(--font-ui);
   }
 }
 
-.facts {
+// Ligne de méta : éléments séparés par un point médian (non lu : texte alternatif vide). Chaque
+// élément porte son point à gauche ; la liste est décalée de sa largeur et rognée d'autant, si bien
+// que le point du premier élément de chaque ligne (y compris après un retour à la ligne) est caché.
+$meta-separator: 18px;
+
+.meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 16px;
-  margin: 12px 0 0;
+  align-items: center;
+  gap: 4px 0;
+  margin: 0 0 0 (-$meta-separator);
+  clip-path: inset(0 0 0 $meta-separator);
   color: var(--text-secondary);
-  font: var(--mat-sys-body-small);
+  font: 13px/1.5 var(--font-ui);
 
   div {
-    display: flex;
-    gap: 4px;
-  }
+    display: inline-flex;
+    align-items: center;
 
-  dt::after {
-    content: ' :';
+    &::before {
+      content: '·' / '';
+      flex: none;
+      width: $meta-separator;
+      text-align: center;
+      color: var(--text-secondary);
+    }
   }
 
   dd {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     margin: 0;
-    color: var(--text-primary);
   }
+}
+
+.pin {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+// Carré des modalités : vert sauge, comme une modalité proposée sur la fiche 09.
+.square {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--entry-session);
 }
 
 // Boutons au-dessus du lien étendu.
@@ -111,19 +155,62 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 8px;
 }
 
+// Petit écran (fiche 08, 390 px) : avatar de 44 px à côté de l'identité, puis extrait (2 lignes,
+// texte complet dans le DOM), spécialités, méta et boutons côte à côte en pleine largeur. Le corps
+// passe en `display: contents` pour que ses lignes occupent toute la largeur de la carte.
 @media (max-width: 720px) {
   .card {
+    --pm-avatar-size: 44px;
+
     grid-template-columns: auto minmax(0, 1fr);
+    gap: 6px 12px;
+    padding: 12px;
+  }
+
+  .avatar {
+    grid-row: 1;
+    align-self: start;
+  }
+
+  .body {
+    display: contents;
+  }
+
+  .identity {
+    grid-column: 2;
+    align-self: center;
+    row-gap: 4px;
+  }
+
+  .excerpt,
+  .tags,
+  .meta,
+  .actions {
+    grid-column: 1 / -1;
+  }
+
+  .availability-slot {
+    margin-left: 0;
+  }
+
+  .tags li {
+    padding: 2px 8px;
+  }
+
+  .meta {
+    font-size: 12px;
   }
 
   .actions {
-    grid-column: 1 / -1;
+    flex-direction: row;
 
     a {
-      width: 100%;
+      flex: 1;
+      height: 36px;
     }
   }
 }
