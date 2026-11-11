@@ -2,10 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   ElementRef,
   inject,
   input,
   signal,
+  untracked,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -102,7 +104,13 @@ export class VocabularyPage {
     });
 
   constructor() {
-    void this.store.load();
+    // Lecture au premier rendu, pas dans le constructeur : à l'ouverture directe de l'URL, la page
+    // est d'abord créée dans la sortie de l'habillage par défaut, puis recréée dans celle de
+    // l'habillage admin dès NavigationEnd (app.component). Lancée dans le constructeur, la première
+    // instance, aussitôt détruite, envoyait déjà un GET : deux lectures, et un échec de la première
+    // restait invisible (UX-A9a). Un effet sans dépendance ne s'exécute qu'au premier rendu, donc
+    // une seule fois, par l'instance affichée.
+    effect(() => untracked(() => void this.store.load()));
   }
 
   protected tabLabel(tab: VocabularyTab): string {

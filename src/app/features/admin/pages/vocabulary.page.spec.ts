@@ -67,6 +67,33 @@ describe('VocabularyPage', () => {
     );
   });
 
+  it('UX-A9a : une page remplacée avant son premier rendu ne lit rien ; la page affichée lit une fois, et son échec donne l’état erreur', async () => {
+    const vocabulary = vi.fn().mockRejectedValue({ status: 0, code: 'NETWORK_ERROR' });
+    const fixedVocabulary = vi.fn().mockResolvedValue(FIXED);
+    TestBed.configureTestingModule({
+      imports: [VocabularyPage],
+      providers: [
+        provideRouter([]),
+        { provide: AdminApi, useValue: { vocabulary, fixedVocabulary } },
+      ],
+    });
+    // Ouverture directe de l'URL : instance créée dans la sortie de l'habillage par défaut, puis
+    // détruite avant tout rendu quand l'habillage admin la remplace (app.component).
+    TestBed.createComponent(VocabularyPage).destroy();
+    expect(vocabulary).not.toHaveBeenCalled();
+    expect(fixedVocabulary).not.toHaveBeenCalled();
+
+    const fixture = TestBed.createComponent(VocabularyPage);
+    await settle(fixture);
+    expect(vocabulary).toHaveBeenCalledTimes(1);
+    expect(fixedVocabulary).toHaveBeenCalledTimes(1);
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('pm-state [role="alert"]')?.textContent).toContain(
+      'Impossible de charger le vocabulaire',
+    );
+    expect(el.querySelector('table')).toBeNull();
+  });
+
   it('onglets : comptes, listes fixes marquées ; désactivées masquées par défaut', async () => {
     const { el } = await render({ vocabulary: vi.fn().mockResolvedValue(ENTRIES) });
     const tabs = [...el.querySelectorAll('[role="tab"]')].map((t) =>

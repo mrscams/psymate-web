@@ -54,6 +54,14 @@ describe('JournalPage', () => {
     );
   });
 
+  it('UX-A9a : administrateurs lus au premier rendu, jamais par une page remplacée avant d’être rendue', async () => {
+    const accounts = vi.fn().mockResolvedValue(accountPage([]));
+    await render({ journal: vi.fn().mockResolvedValue({ items: [], nextCursor: null }), accounts });
+    expect(accounts).toHaveBeenCalledTimes(1);
+    TestBed.createComponent(JournalPage).destroy();
+    expect(accounts).toHaveBeenCalledTimes(1);
+  });
+
   it('lignes : horodatage, badge de type écrit, phrase, auteur ; lecture seule', async () => {
     const { el } = await render({
       journal: vi.fn().mockResolvedValue({

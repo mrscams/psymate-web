@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-11T07:05:15.039Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-A9a Administration : data.contentWidth wide sur la route admin (mixin à marges négatives retiré, 1 392 px à 1 440 inchangé), page entière mesurée à 375 px sans exclusion de la barre, état erreur du vocabulaire rétabli (lecture au premier rendu : la page était créée deux fois à l'ouverture directe et l'échec tombait dans l'instance détruite)",
+  "next": "pendingCount de la barre admin et double instanciation des pages à l'ouverture directe : tâche du socle (app.component) ; clavier.spec flux 10 dépend de la taille de la file locale (258 dossiers)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/65",
+  "branch": "claude/ux-a9a-admin-wiring",
+  "checkout": "agent-a13ad6388ba339dfa"
+}

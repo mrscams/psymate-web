@@ -41,7 +41,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     canActivate: [authGuard, statusGuard, roleGuard('admin')],
-    data: { layout: 'admin' },
+    data: { layout: 'admin', contentWidth: 'wide' },
     loadChildren: () => import('./features/admin').then((m) => m.ADMIN_ROUTES),
   },
   // Démonstration des composants partagés (M0-09) : revue visuelle et axe-core, hors du produit.
