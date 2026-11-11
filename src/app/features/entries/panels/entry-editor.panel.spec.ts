@@ -14,6 +14,7 @@ import {
   CURRENT_SESSION,
   EMOTIONS,
   entry,
+  feelingEntry,
   LINK_TYPES,
   PLACED_LINKS,
   SESSIONS,
@@ -311,6 +312,33 @@ describe('EntryEditorPanel', () => {
       expect(text(panel().querySelector('pm-state [role="alert"]'))).toContain(
         'Impossible de charger cette entrée',
       );
+    });
+
+    it('ressenti brouillon sans intensité : curseur « Non renseignée », aucune intensité inventée dans le PATCH', async () => {
+      const draftFeeling = feelingEntry({
+        status: 'draft',
+        feeling: { emotionCode: 'anxiety', intensity: null },
+      });
+      const { api } = setup({
+        get: vi.fn().mockResolvedValue(draftFeeling),
+        versions: vi.fn().mockResolvedValue([VERSIONS[1]]),
+        patch: vi.fn().mockResolvedValue({ ...draftFeeling, status: 'final' }),
+      });
+      TestBed.runInInjectionContext(() => openEntryEditor('p-marie', { entryId: 'e-feel' }));
+      await settle();
+      const slider = panel().querySelector('[role="slider"]')!;
+      expect(slider.getAttribute('aria-valuetext')).toBe('Non renseignée');
+      expect(text(panel().querySelector('pm-intensity-slider .value'))).toBe('Non renseignée');
+      expect(panel().querySelector('pm-intensity-slider .thumb')).toBeNull();
+
+      panel().querySelector<HTMLButtonElement>('.footer .primary')!.click();
+      await settle();
+      // Le brouillon devient définitif : un PATCH part, avec le statut seul.
+      expect(api.patch).toHaveBeenCalledWith('e-feel', { status: 'final' });
+      for (const [, body] of api.patch!.mock.calls) {
+        expect(body).not.toHaveProperty('feeling');
+        expect(JSON.stringify(body)).not.toContain('intensity');
+      }
     });
 
     it('hors grâce : bandeau, type verrouillé, motif, « Enregistrer la version 3 », historique', async () => {

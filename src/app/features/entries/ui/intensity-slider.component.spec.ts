@@ -42,6 +42,9 @@ describe('IntensitySliderComponent', () => {
     // aria-valuenow est requis pour un slider : le minimum tant que non réglé, la valeur lue dit « Non renseignée ».
     expect(slider.getAttribute('aria-valuenow')).toBe('1');
     expect(slider.getAttribute('aria-valuetext')).toBe('Non renseignée');
+    // État « non renseigné » visible : pas de pouce, « Non renseignée » à la place de la valeur.
+    expect(el.querySelector('.value.unset')?.textContent?.trim()).toBe('Non renseignée');
+    expect(el.querySelector('.thumb')).toBeNull();
     expect(slider.getAttribute('aria-labelledby')).toBe('lbl');
     // Dix repères, de 1 à 10, masqués des lecteurs d'écran (la valeur est lue sur le slider).
     const ticks = [...el.querySelectorAll('.ticks .tick')].map((tick) => tick.textContent?.trim());

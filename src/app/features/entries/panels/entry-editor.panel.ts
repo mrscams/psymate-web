@@ -298,10 +298,12 @@ export class EntryEditorPanel {
       if (!control.value && control.pristine) control.setValue(current.id);
     });
 
-    // Ressenti : le curseur part de 5 (fiche 05 §4), tant qu'aucune intensité n'est saisie.
+    // Ressenti créé ici : le curseur part de 5 (fiche 05 §4), tant qu'aucune intensité n'est saisie.
+    // Jamais en correction : un brouillon sans intensité reste « non renseigné » (pas de valeur
+    // inventée dans le PATCH, pas de version créée sans geste du praticien).
     effect(() => {
       const form = this.form();
-      if (!form || this.type() !== 'feeling') return;
+      if (!form || this.editing || this.type() !== 'feeling') return;
       untracked(() => {
         const control = form.controls.feeling.controls.intensity;
         if (control.value === null) control.setValue(INTENSITY_DEFAULT);

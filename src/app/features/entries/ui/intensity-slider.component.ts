@@ -34,9 +34,13 @@ const TEN_DELAY_MS = 900;
   template: `
     <div class="head">
       <ng-content />
-      <span class="value" aria-hidden="true"
-        >{{ shown() }}<span class="max">/{{ max }}</span></span
-      >
+      @if (value() === null) {
+        <span class="value unset" aria-hidden="true">{{ valueText() }}</span>
+      } @else {
+        <span class="value" aria-hidden="true"
+          >{{ value() }}<span class="max">/{{ max }}</span></span
+        >
+      }
     </div>
     <div
       class="slider"
@@ -87,6 +91,13 @@ const TEN_DELAY_MS = 900;
       font-size: 15px;
       font-weight: 500;
       color: var(--feeling-text);
+    }
+    .value.unset {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text-secondary);
     }
     .max {
       font-size: 11px;
@@ -184,7 +195,6 @@ export class IntensitySliderComponent implements ControlValueAccessor {
     const min = this.min();
     return value === null ? 0 : ((value - min) / (this.max - min)) * 100;
   });
-  protected readonly shown = computed(() => this.value() ?? '–');
   protected readonly valueText = computed(() => {
     const value = this.value();
     const max = this.max;
