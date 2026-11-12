@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -38,6 +38,13 @@ async function render(inputs: Record<string, unknown>) {
   return { fixture, el: fixture.nativeElement as HTMLElement };
 }
 
+/** L'heure de début telle que le composant l'écrit (fuseau de la machine, locale des tests). */
+function startedAt(iso: string): string {
+  return new Intl.DateTimeFormat(TestBed.inject(LOCALE_ID), { timeStyle: 'short' }).format(
+    new Date(iso),
+  );
+}
+
 const open: PatientSessionInfo = {
   kind: 'current',
   startedAt: '2026-10-24T07:08:00Z',
@@ -72,7 +79,9 @@ describe('SessionBarComponent', () => {
     expect(bar.querySelector('.pulse')?.getAttribute('aria-hidden')).toBe('true');
     const text = bar.querySelector('.session-text');
     expect(text?.classList.contains('current')).toBe(true);
-    expect(plainText(text)).toBe('Séance en cours · cabinet · démarrée à 09:08');
+    expect(plainText(text)).toBe(
+      `Séance en cours · cabinet · démarrée à ${startedAt(open.startedAt)}`,
+    );
     const timer = bar.querySelector('.timer');
     expect(timer?.getAttribute('role')).toBe('timer');
     expect(timer?.getAttribute('aria-label')).toBe('Temps écoulé');
@@ -109,7 +118,9 @@ describe('SessionBarComponent', () => {
       session: { kind: 'current', startedAt: '2026-10-24T07:08:00Z' },
       plannedMin: null,
     });
-    expect(plainText(el.querySelector('.session-text'))).toBe('Séance en cours · démarrée à 09:08');
+    expect(plainText(el.querySelector('.session-text'))).toBe(
+      `Séance en cours · démarrée à ${startedAt(open.startedAt)}`,
+    );
     expect(el.querySelector('.planned')).toBeNull();
   });
 
@@ -152,7 +163,7 @@ describe('SessionBarComponent', () => {
     const bar = el.querySelector('.session-bar')!;
     expect(bar.classList.contains('unclosed')).toBe(true);
     expect(plainText(bar.querySelector('.session-text'))).toBe(
-      'Séance du 24 oct. 2026 · cabinet · démarrée à 09:08 · non clôturée',
+      `Séance du 24 oct. 2026 · cabinet · démarrée à ${startedAt(open.startedAt)} · non clôturée`,
     );
     expect(bar.querySelector('.timer')).toBeNull();
     expect(bar.querySelector('.planned')).toBeNull();

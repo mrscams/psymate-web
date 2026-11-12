@@ -61,12 +61,18 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
       timeout: 10_000,
     })
     .toBe(200);
+  // Le bloc de saisie n'existe qu'en séance (UX-S1) : on en ouvre une pour la fin du test.
+  const start = await request.post(`${API}/api/patients/${id}/sessions/start`, {
+    data: { modality: 'in_person' },
+  });
+  expect(start.status(), await start.text()).toBe(201);
   await signIn(page, account);
 
   await page.goto(`/fr/patients/${id}`);
   const h = header(page);
   await expect(h.name).toHaveText('Inès M.');
-  await expect(h.tabs.getByRole('link', { name: /Vue d'ensemble/ })).toHaveAttribute(
+  // Séance ouverte (UX-S1) : l'onglet 1 s'appelle « Séance » (UX-S2), même route, même contenu.
+  await expect(h.tabs.getByRole('link', { name: 'Séance', exact: true })).toHaveAttribute(
     'aria-current',
     'page',
   );
@@ -240,8 +246,9 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
     'aria-current',
     'page',
   );
-  // B3 flux 3 et 6 : après Clôturer aussi, le bloc de saisie prend le focus.
-  await expect(h.capture).toBeFocused();
+  // Sans séance, plus de bloc de saisie (UX-S1) : le focus revient sur « Démarrer la séance ».
+  await expect(h.capture).toHaveCount(0);
+  await expect(h.start).toBeFocused();
   await expect(page.getByText('Séance clôturée.')).toBeVisible();
   expect(await page.evaluate(() => (window as unknown as { m107?: number }).m107)).toBe(1);
   await expectNoAxeViolations(page);
@@ -310,13 +317,9 @@ test('UX-S2 : en-tête compact (identité 44, onglets 38), barre de séance de 4
       2,
     );
   }
-  // Le bloc de saisie est sous l'en-tête, plus dedans, et hors séance il est replié.
-  await expect(page.locator('pm-patient-header pm-capture-block')).toHaveCount(0);
-  const block = page.locator('pm-capture-block .block');
-  await expect(block).toHaveClass(/collapsed/);
-  const headerBox = (await page.locator('pm-patient-header').boundingBox())!;
-  expect((await block.boundingBox())!.y).toBeGreaterThanOrEqual(headerBox.y + headerBox.height);
-  await expect(page.locator('.pad-layout aside.ctx')).toHaveCount(0);
+  // Hors séance : ni bloc de saisie (UX-S1) ni colonne de contenu ni barre de séance.
+  await expect(page.locator('pm-capture-block')).toHaveCount(0);
+  await expect(page.locator('.pad-layout')).toHaveCount(0);
   await expect(h.bar).toHaveCount(0);
   await expectNoAxeViolations(page);
 
@@ -332,7 +335,12 @@ test('UX-S2 : en-tête compact (identité 44, onglets 38), barre de séance de 4
     'aria-current',
     'page',
   );
+  // Le bloc de saisie est sous l'en-tête (plus dedans), déplié, dans la colonne principale.
+  const block = page.locator('.pad-layout .pad-main pm-capture-block .block');
   await expect(block).toHaveClass(/expanded/);
+  await expect(page.locator('pm-patient-header pm-capture-block')).toHaveCount(0);
+  const headerBox = (await page.locator('pm-patient-header').boundingBox())!;
+  expect((await block.boundingBox())!.y).toBeGreaterThanOrEqual(headerBox.y + headerBox.height);
   await expect(h.capture).toBeFocused();
   const timer = h.bar.locator('.timer');
   await expect(timer).toHaveText(/^00:00:\d\d$/);

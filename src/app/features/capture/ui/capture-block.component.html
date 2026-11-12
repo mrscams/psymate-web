@@ -1,9 +1,4 @@
-<div
-  class="block"
-  [class.expanded]="expanded()"
-  [class.collapsed]="!expanded()"
-  [class.busy]="store.saving()"
->
+<div class="block" [class.expanded]="expanded()" [class.busy]="store.saving()">
   <div
     class="types"
     role="group"
@@ -38,7 +33,7 @@
     <textarea
       class="field"
       [id]="inputId"
-      [rows]="expanded() ? 2 : 1"
+      rows="2"
       autocomplete="off"
       spellcheck="true"
       placeholder="Qu'est-ce qui s'est passé ?"

@@ -1,9 +1,11 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
   effect,
+  ElementRef,
   inject,
   Injector,
   input,
@@ -46,9 +48,9 @@ import {
 /**
  * Page patient /patients/:id (B2, fiche 00 §2 ; UX-S2, proposition 04b) : la barre de séance
  * (pm-session-bar) tant qu'une séance est ouverte, l'en-tête compact (pm-patient-header, nourri par
- * le PatientShellStore), la colonne de contenu (.pad-layout : le bloc de saisie au-dessus de
- * l'onglet courant, replié hors séance ; en séance, une colonne latérale de 340 px), et l'onglet
- * courant dans le router-outlet (overview, timeline, graph, search). Le store est fourni ici : les onglets
+ * le PatientShellStore), la colonne de contenu en séance seulement (.pad-layout : le bloc de
+ * saisie au-dessus de l'onglet courant et une colonne latérale de 340 px ; aucune saisie sans
+ * séance, UX-S1), et l'onglet courant dans le router-outlet (overview, timeline, graph, search). Le store est fourni ici : les onglets
  * l'injectent et y rangent leur état, qui survit aux changements d'onglet tant que le dossier
  * reste ouvert. 403 PATIENT_FORBIDDEN et 404 : état erreur du shell, sans redirection.
  */
@@ -80,7 +82,9 @@ export class PatientShellPage {
   private readonly shortcuts = inject(ShortcutService);
   private readonly injector = inject(Injector);
   private readonly route = inject(ActivatedRoute);
+  /** Le bloc de saisie, présent seulement pendant une séance ouverte. */
   private readonly captureBar = viewChild(CaptureBlockComponent);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly panels = inject(SidePanelService);
 
   /** `?entry=<id>` : correction d'une entrée, le panneau se rouvre au rechargement (fiche 05). */
@@ -151,16 +155,16 @@ export class PatientShellPage {
       });
     });
 
-    // Arrivée depuis la création du patient (B3 flux 2, étape 3) : une fois le dossier lu, la barre
-    // de capture prend le focus, une seule fois, panneau d'aperçu replié (il recouvrirait l'indice
-    // de première entrée ; la première frappe l'ouvre).
+    // Arrivée depuis la création du patient (B3 flux 2, étape 3) : une fois le dossier lu, le bloc
+    // de saisie prend le focus s'il y a une séance ouverte, champs repliés (ils recouvriraient
+    // l'indice de première entrée ; la première frappe les ouvre) ; sinon le bouton « Démarrer la
+    // séance », puisqu'aucune saisie n'est possible sans séance.
     const state = inject(Router).currentNavigation()?.extras.state;
     if (state?.[CAPTURE_FOCUS_STATE] === true) {
       const arrival = effect(() => {
-        const bar = this.captureBar();
-        if (!bar || !this.store.patient()) return;
+        if (!this.store.patient()) return;
         arrival.destroy();
-        untracked(() => bar.focus({ quiet: true }));
+        untracked(() => this.focusCapture({ quiet: true }));
       });
     }
 
@@ -284,9 +288,18 @@ export class PatientShellPage {
 
   /**
    * Après Démarrer ou Clôturer, le bouton utilisé disparaît (de l'en-tête, de la barre de séance) :
-   * le bloc de saisie prend le focus (B3 flux 3 et 6 : on démarre la séance puis on note au clavier).
+   * le bloc de saisie prend le focus (B3 flux 3 et 6 : on démarre la séance puis on note au clavier) ;
+   * sans séance ouverte (après Clôturer), le bouton « Démarrer la séance », seul point de départ
+   * d'une saisie. Après le prochain rendu : le bloc n'apparaît qu'avec la séance.
    */
-  private focusCapture(): void {
-    this.captureBar()?.focus();
+  private focusCapture(options: { quiet?: boolean } = {}): void {
+    afterNextRender(
+      () => {
+        const bar = this.captureBar();
+        if (bar) bar.focus(options);
+        else this.host.nativeElement.querySelector<HTMLElement>('button.start-session')?.focus();
+      },
+      { injector: this.injector },
+    );
   }
 }

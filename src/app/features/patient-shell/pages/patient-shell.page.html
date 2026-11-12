@@ -39,56 +39,52 @@
     <!-- Bascule « Vue : Simple · Complète » (features/overview, M4-05) : visible sur l'onglet 1. -->
     <pm-overview-view-toggle pmViewToggle />
   </pm-patient-header>
-  @if (store.patient()) {
-    <!-- Colonne de contenu (04b .pad-layout) : le bloc de saisie au-dessus de l'onglet courant, pour
-         tous les onglets ; en séance, une colonne latérale de 340 px (repliée sous 900 px). -->
-    <div class="pad-layout" [class.in-session]="inSession()">
+  @if (store.patient() && inSession()) {
+    <!-- Colonne de contenu (04b .pad-layout), pendant une séance ouverte seulement (UX-S1 : aucune
+         saisie sans séance) : le bloc de saisie au-dessus de l'onglet courant, pour tous les onglets,
+         et une colonne latérale de 340 px (repliée sous 900 px). -->
+    <div class="pad-layout">
       <div class="pad-main">
         <!-- Bloc de saisie (M6-02, UX-S1, features/capture) : Entrée crée, Ctrl+Entrée ou « Détailler »
              ouvre l'éditeur prérempli (M1-08, features/entries) ; N ouvre l'éditeur vide. -->
         <pm-capture-block
           [patientId]="id()"
-          [session]="headerSession()"
           [revision]="store.revision()"
           (saved)="captured($event)"
           (openEditor)="newEntry($event)"
         />
       </div>
-      @if (inSession()) {
-        <aside
-          class="ctx"
-          aria-label="Repères de séance"
-          i18n-aria-label="Étiquette de la colonne latérale en séance@@patientShell.ctx.label"
-        >
-          <!-- 04b état 3, dernier bloc : « Raccourcis dans le texte ». Les blocs de contexte (prévu la
-               dernière fois, à garder en tête, séance précédente) relèvent du mode séance (étape 3). -->
-          <section class="block">
-            <h3
-              i18n="Titre du bloc des raccourcis de la grammaire@@patientShell.ctx.shortcuts.title"
-            >
-              Raccourcis dans le texte
-            </h3>
-            <p class="shortcuts">
-              @for (row of textShortcuts; track row.tokens.join('|'); let last = $last) {
-                <span class="shortcut">
-                  @for (token of row.tokens; track token; let lastToken = $last) {
-                    <b>{{ token }}</b>
-                    @if (!lastToken) {
-                      <span>,&ngsp;</span>
-                    }
+      <aside
+        class="ctx"
+        aria-label="Repères de séance"
+        i18n-aria-label="Étiquette de la colonne latérale en séance@@patientShell.ctx.label"
+      >
+        <!-- 04b état 3, dernier bloc : « Raccourcis dans le texte ». Les blocs de contexte (prévu la
+             dernière fois, à garder en tête, séance précédente) relèvent du mode séance (étape 3). -->
+        <section class="block">
+          <h3 i18n="Titre du bloc des raccourcis de la grammaire@@patientShell.ctx.shortcuts.title">
+            Raccourcis dans le texte
+          </h3>
+          <p class="shortcuts">
+            @for (row of textShortcuts; track row.tokens.join('|'); let last = $last) {
+              <span class="shortcut">
+                @for (token of row.tokens; track token; let lastToken = $last) {
+                  <b>{{ token }}</b>
+                  @if (!lastToken) {
+                    <span>,&ngsp;</span>
                   }
-                  @if (row.label) {
-                    <span>&ngsp;{{ row.label }}</span>
-                  }
-                </span>
-                @if (!last) {
-                  <span class="sep" aria-hidden="true">·</span>
                 }
+                @if (row.label) {
+                  <span>&ngsp;{{ row.label }}</span>
+                }
+              </span>
+              @if (!last) {
+                <span class="sep" aria-hidden="true">·</span>
               }
-            </p>
-          </section>
-        </aside>
-      }
+            }
+          </p>
+        </section>
+      </aside>
     </div>
   }
   @if (store.patient() && store.firstEntry() === 'pending') {

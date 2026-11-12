@@ -24,39 +24,6 @@
   }
 }
 
-/* Replié (hors séance, sans focus ni saisie) : puces et placeholder sur une ligne. */
-.block.collapsed {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
-
-  .types {
-    flex: none;
-    flex-wrap: nowrap;
-    margin: 0;
-  }
-
-  .text {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  .field {
-    min-height: 0;
-    font-size: 14px;
-  }
-
-  @media (max-width: 720px) {
-    display: block;
-
-    .types {
-      flex-wrap: wrap;
-      margin-bottom: 6px;
-    }
-  }
-}
-
 .types {
   display: flex;
   flex-wrap: wrap;

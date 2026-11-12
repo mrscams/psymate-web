@@ -11,6 +11,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, Route, Router, Routes, withComponentInputBinding } from '@angular/router';
+import { LOCALE_ID } from '@angular/core';
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { PreferencesStore } from '../../../core/preferences';
@@ -150,7 +151,7 @@ describe('PatientShellPage', () => {
     expect(el.querySelector('pm-fake-overview-tab')).toBeNull();
   });
 
-  it('chargé : nom, drapeau, dernière séance (modalité, durée), bloc de saisie dans la colonne de contenu, onglet 1 avec la bascule Vue', async () => {
+  it('chargé : nom, drapeau, dernière séance (modalité, durée), pas de bloc de saisie sans séance ouverte, onglet 1 avec la bascule Vue', async () => {
     const { el, api } = await render();
     expect(api.patient).toHaveBeenCalledWith('p-marie');
     expect(text(el.querySelector('h1.name'))).toBe('Marie D.');
@@ -159,24 +160,12 @@ describe('PatientShellPage', () => {
       'Dernière séance : 17 oct. 2026 · visio · 60 min',
     );
     expect(el.querySelector('button.start-session')).not.toBeNull();
-    // Hors séance : pas de barre de séance, pas de colonne latérale ; le bloc est sous l'en-tête
-    // (UX-S2), plus dans l'en-tête, et replié.
+    // Hors séance : ni barre de séance ni colonne de contenu (aucune saisie sans séance, UX-S1).
     expect(el.querySelector('pm-session-bar .session-bar')).toBeNull();
-    expect(el.querySelector('pm-patient-header pm-capture-block')).toBeNull();
-    const layout = el.querySelector('.pad-layout')!;
-    expect(layout.classList.contains('in-session')).toBe(false);
-    expect(layout.querySelector('.pad-main pm-capture-block .block.collapsed')).not.toBeNull();
-    expect(layout.querySelector('aside.ctx')).toBeNull();
-    expect(el.querySelector('pm-capture-block textarea')?.getAttribute('placeholder')).toBe(
-      "Qu'est-ce qui s'est passé ?",
-    );
+    expect(el.querySelector('.pad-layout')).toBeNull();
+    expect(el.querySelector('pm-capture-block')).toBeNull();
     expect(text(el.querySelector('pm-fake-overview-tab h2'))).toBe("Vue d'ensemble");
     expect(el.querySelector('.view-toggle pm-overview-view-toggle [role="group"]')).not.toBeNull();
-    // Ordre : en-tête, colonne de contenu, onglet.
-    const order = [...el.querySelectorAll('pm-patient-header, .pad-layout, .tab-content')].map(
-      (node) => node.className || node.tagName.toLowerCase(),
-    );
-    expect(order).toEqual(['pm-patient-header', 'pad-layout', 'tab-content']);
   });
 
   it('« suivi·e depuis » : la fiche quand aucune séance ne la précède (UX-G2c)', async () => {
@@ -256,8 +245,12 @@ describe('PatientShellPage', () => {
       expect(bar.compareDocumentPosition(el.querySelector('pm-patient-header')!)).toBe(
         Node.DOCUMENT_POSITION_FOLLOWING,
       );
+      // L'heure est celle du fuseau de la machine : l'attendu suit le même Intl que le composant.
+      const startedAt = new Intl.DateTimeFormat(TestBed.inject(LOCALE_ID), {
+        timeStyle: 'short',
+      }).format(new Date('2026-10-24T14:00:00Z'));
       expect(text(bar.querySelector('.session-text'))).toBe(
-        'Séance en cours · cabinet · démarrée à 16:00',
+        `Séance en cours · cabinet · démarrée à ${startedAt}`,
       );
       expect(text(bar.querySelector('.timer'))).toBe('00:12:00');
       expect(text(bar.querySelector('.planned'))).toBe('sur 45 min prévues');
@@ -265,10 +258,14 @@ describe('PatientShellPage', () => {
       expect(el.querySelector('pm-patient-header button.start-session')).toBeNull();
       expect(el.querySelector('pm-patient-header .session-text')).toBeNull();
       expect(text(el.querySelector('nav.tabs a[aria-current="page"] span'))).toBe('Séance');
-      // Colonne de contenu en mode séance : bloc déplié, colonne latérale avec les raccourcis.
+      // Colonne de contenu en mode séance (en-tête, colonne, onglet) : bloc déplié, colonne
+      // latérale avec les raccourcis.
+      const order = [...el.querySelectorAll('pm-patient-header, .pad-layout, .tab-content')].map(
+        (node) => node.className || node.tagName.toLowerCase(),
+      );
+      expect(order).toEqual(['pm-patient-header', 'pad-layout', 'tab-content']);
       const layout = el.querySelector('.pad-layout')!;
-      expect(layout.classList.contains('in-session')).toBe(true);
-      expect(layout.querySelector('pm-capture-block .block.expanded')).not.toBeNull();
+      expect(layout.querySelector('.pad-main pm-capture-block .block.expanded')).not.toBeNull();
       const aside = layout.querySelector('aside.ctx')!;
       expect(aside.getAttribute('aria-label')).toBe('Repères de séance');
       expect(text(aside.querySelector('h3'))).toBe('Raccourcis dans le texte');
@@ -329,17 +326,17 @@ describe('PatientShellPage', () => {
       summary: 'Point sur le sommeil',
     });
     await settle(harness);
-    // La séance clôturée (réponse du serveur) devient la dernière séance ; la barre disparaît,
-    // l'onglet 1 redit « Vue d'ensemble », la colonne latérale se replie, le bloc garde le focus.
+    // La séance clôturée (réponse du serveur) devient la dernière séance ; la barre et la colonne
+    // de contenu disparaissent, l'onglet 1 redit « Vue d'ensemble », Démarrer prend le focus.
     expect(el.querySelector('pm-session-bar .session-bar')).toBeNull();
     expect(text(el.querySelector('pm-patient-header .session-text'))).toBe(
       'Dernière séance : 17 oct. 2026 · visio · 60 min',
     );
     expect(el.querySelector('button.start-session')).not.toBeNull();
     expect(text(el.querySelector('nav.tabs a[aria-current="page"] span'))).toBe("Vue d'ensemble");
-    expect(el.querySelector('.pad-layout aside.ctx')).toBeNull();
+    expect(el.querySelector('.pad-layout')).toBeNull();
     await vi.waitFor(() =>
-      expect(document.activeElement).toBe(el.querySelector('pm-capture-block textarea')),
+      expect(document.activeElement).toBe(el.querySelector('button.start-session')),
     );
   });
 
@@ -425,8 +422,11 @@ describe('PatientShellPage', () => {
     TestBed.inject(HttpTestingController).match(() => true);
   });
 
-  it('touches 1 2 3 : changent d’onglet, pas quand la barre de capture a le focus', async () => {
-    const { el, harness } = await render();
+  it('touches 1 2 3 : changent d’onglet, pas quand le bloc de saisie a le focus', async () => {
+    const { el, harness } = await render({ current: vi.fn().mockResolvedValue(openSession()) });
+    expect(el.querySelector('pm-capture-block textarea')?.getAttribute('placeholder')).toBe(
+      "Qu'est-ce qui s'est passé ?",
+    );
     const router = TestBed.inject(Router);
     const press = (target: EventTarget, key: string) =>
       target.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
@@ -447,8 +447,11 @@ describe('PatientShellPage', () => {
     expect(router.url).toBe('/patients/p-marie');
   });
 
-  it('arrivée depuis la création (état CAPTURE_FOCUS_STATE) : la barre de capture prend le focus', async () => {
-    const { el, harness } = await render({}, '/patients');
+  it('arrivée depuis la création (état CAPTURE_FOCUS_STATE) : séance ouverte, le bloc prend le focus', async () => {
+    const { el, harness } = await render(
+      { current: vi.fn().mockResolvedValue(openSession()) },
+      '/patients',
+    );
     await TestBed.inject(Router).navigate(['/patients', 'p-marie', 'overview'], {
       state: { [CAPTURE_FOCUS_STATE]: true },
     });
@@ -459,9 +462,21 @@ describe('PatientShellPage', () => {
     expect(document.activeElement).toBe(capture);
   });
 
+  it('arrivée depuis la création sans séance ouverte : « Démarrer la séance » prend le focus', async () => {
+    const { el, harness } = await render({}, '/patients');
+    await TestBed.inject(Router).navigate(['/patients', 'p-marie', 'overview'], {
+      state: { [CAPTURE_FOCUS_STATE]: true },
+    });
+    await settle(harness);
+    await settle(harness);
+    expect(el.querySelector('pm-capture-block')).toBeNull();
+    expect(document.activeElement).toBe(el.querySelector('button.start-session'));
+  });
+
   it('arrivée ordinaire (lien, historique) : le focus n’est pas déplacé', async () => {
-    const { el } = await render();
+    const { el } = await render({ current: vi.fn().mockResolvedValue(openSession()) });
     expect(document.activeElement).not.toBe(el.querySelector('pm-capture-block textarea'));
+    expect(document.activeElement).not.toBe(el.querySelector('button.start-session'));
   });
 
   it('/patients/:id/overview renvoie sur l’onglet 1, /patients/:id', async () => {
@@ -535,8 +550,8 @@ describe('PatientShellPage', () => {
       expect(el.querySelector('.first-entry')).toBeNull();
     });
 
-    it('Ctrl+Entrée dans la barre de commande : l’éditeur reprend la saisie interprétée', async () => {
-      const { harness, el } = await render();
+    it('Ctrl+Entrée dans le bloc de saisie : l’éditeur reprend la saisie interprétée', async () => {
+      const { harness, el } = await render({ current: vi.fn().mockResolvedValue(openSession()) });
       const input = el.querySelector<HTMLTextAreaElement>('#pm-capture-input')!;
       input.value = "n'a pas dormi";
       input.dispatchEvent(new Event('input'));
@@ -551,16 +566,16 @@ describe('PatientShellPage', () => {
       expect(input.value).toBe('');
     });
 
-    it('Entrée sur une barre vide : l’éditeur vide', async () => {
-      const { harness, el } = await render();
+    it('Entrée sur un bloc vide : l’éditeur vide', async () => {
+      const { harness, el } = await render({ current: vi.fn().mockResolvedValue(openSession()) });
       const input = el.querySelector<HTMLTextAreaElement>('#pm-capture-input')!;
       input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
       await settle(harness);
       expect(editor()?.querySelector('h2')?.textContent).toContain('Nouvelle entrée');
     });
 
-    it('entrée créée par la barre de commande : les projections se relisent', async () => {
-      const { harness } = await render();
+    it('entrée créée par le bloc de saisie : les projections se relisent', async () => {
+      const { harness } = await render({ current: vi.fn().mockResolvedValue(openSession()) });
       const store = shellStore(harness);
       const before = store.revision();
       const bar = harness.fixture.debugElement.query(By.directive(CaptureBlockComponent))

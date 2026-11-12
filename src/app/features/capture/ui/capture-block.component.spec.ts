@@ -20,10 +20,7 @@ const STRESS = {
   custom: true,
 };
 
-type Session = { kind: 'current'; startedAt: string } | { kind: 'none' };
-const CURRENT: Session = { kind: 'current', startedAt: '2026-11-11T09:00:00Z' };
-
-async function render(api: Api = {}, session: Session = CURRENT) {
+async function render(api: Api = {}) {
   const mock: Api = {
     emotions: vi.fn().mockResolvedValue(EMOTIONS),
     linkTypes: vi.fn().mockResolvedValue(LINK_TYPES),
@@ -48,7 +45,6 @@ async function render(api: Api = {}, session: Session = CURRENT) {
   });
   const fixture = TestBed.createComponent(CaptureBlockComponent);
   fixture.componentRef.setInput('patientId', 'p-marie');
-  fixture.componentRef.setInput('session', session);
   const saved: CapturedEntry[] = [];
   const opened: (EntryPrefill | null)[] = [];
   fixture.componentInstance.saved.subscribe((entry) => saved.push(entry));
@@ -122,7 +118,7 @@ function placedLink(el: HTMLElement) {
 }
 
 describe('CaptureBlockComponent', () => {
-  it('en séance : déplié d’emblée, cinq puces (jamais Séance), Note pressée, champs de la note, vocabulaire et rail lus', async () => {
+  it('déplié d’emblée (le bloc n’existe qu’en séance), cinq puces (jamais Séance), Note pressée, champs de la note, vocabulaire et rail lus', async () => {
     const { el, input, api } = await render();
     expect(input.placeholder).toBe("Qu'est-ce qui s'est passé ?");
     expect(el.querySelector('label[for="pm-capture-input"]')?.textContent?.trim()).toBe(
@@ -138,22 +134,6 @@ describe('CaptureBlockComponent', () => {
     expect(el.querySelector<HTMLButtonElement>('button.save')?.disabled).toBe(true);
     expect(api.emotions).toHaveBeenCalledOnce();
     expect(api.railCandidates).toHaveBeenCalledWith('p-marie');
-  });
-
-  it('hors séance : replié sur une ligne (puces + placeholder), déplié au focus, replié à nouveau sans saisie', async () => {
-    const { el, input, fixture } = await render({}, { kind: 'none' });
-    expect(el.querySelector('.block.collapsed')).not.toBeNull();
-    expect(el.querySelector('.types')).not.toBeNull();
-    expect(el.querySelector('.fields')).toBeNull();
-    input.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
-    await settle(fixture);
-    expect(el.querySelector('.block.expanded')).not.toBeNull();
-    expect(el.querySelector('.fields')).not.toBeNull();
-    input.dispatchEvent(
-      new FocusEvent('focusout', { bubbles: true, relatedTarget: document.body }),
-    );
-    await settle(fixture);
-    expect(el.querySelector('.block.collapsed')).not.toBeNull();
   });
 
   it('la puce suit la grammaire : « anx 8 … > entretien » presse Ressenti, remplit émotion, intensité, lien et « détecté depuis »', async () => {
@@ -502,33 +482,27 @@ describe('CaptureBlockComponent', () => {
   });
 
   it('trois états : vocabulaire en erreur → Réessayer ; rail vide ; rail illisible bloque la cible du `>`', async () => {
-    const { el, fixture, api, input } = await render(
-      {
-        emotions: vi
-          .fn()
-          .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
-          .mockResolvedValue(EMOTIONS),
-        railCandidates: vi
-          .fn()
-          .mockResolvedValueOnce([])
-          .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
-          .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
-          .mockResolvedValue(CANDIDATES),
-      },
-      { kind: 'none' },
-    );
-    await type(fixture, 'anx 8');
+    const { el, fixture, api, input } = await render({
+      emotions: vi
+        .fn()
+        .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
+        .mockResolvedValue(EMOTIONS),
+      railCandidates: vi
+        .fn()
+        .mockResolvedValueOnce([])
+        .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
+        .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
+        .mockResolvedValue(CANDIDATES),
+    });
+    // Lus dès le rendu (le bloc est déplié d'emblée) : rail vide, vocabulaire en erreur sous le texte.
     expect(text(el.querySelector('pm-capture-links [role="status"] .title'))).toBe(
       'Aucune entrée récente à lier',
     );
-    // Vocabulaire en erreur : « anx 8 » est un ressenti à l'émotion inconnue, l'état erreur le dit
-    // sous le texte, Réessayer relit.
-    expect(pressedType(el)).toBe('feeling');
-    expect(el.querySelector<HTMLInputElement>('#pm-capture-emotion')?.value).toBe('anx');
     const error = el.querySelector('pm-state.vocabulary [role="alert"]')!;
     expect(text(error.querySelector('.title'))).toBe('Impossible de charger les émotions');
     await click(fixture, error.querySelector('button.retry'));
     expect(api.emotions).toHaveBeenCalledTimes(2);
+    await type(fixture, 'anx 8');
     expect(el.querySelector('pm-state.vocabulary')).toBeNull();
     expect(pressedType(el)).toBe('feeling');
     expect(el.querySelector<HTMLInputElement>('#pm-capture-emotion')?.value).toBe('Anxiété');
@@ -536,16 +510,15 @@ describe('CaptureBlockComponent', () => {
   });
 
   it('rail illisible : la cible du `>` est indisponible, Entrée ne crée rien ; Réessayer relit et pose le lien', async () => {
-    const { el, fixture, api, input } = await render(
-      {
-        railCandidates: vi
-          .fn()
-          .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
-          .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
-          .mockResolvedValue(CANDIDATES),
-      },
-      { kind: 'none' },
-    );
+    const { el, fixture, api, input } = await render({
+      railCandidates: vi
+        .fn()
+        // Au rendu, à la frappe, puis à l'enregistrement : illisible ; Réessayer le relit.
+        .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
+        .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
+        .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
+        .mockResolvedValue(CANDIDATES),
+    });
     await type(fixture, 'anx 8 > entretien');
     expect(text(el.querySelector('pm-capture-links [role="alert"] .title'))).toBe(
       'Impossible de charger les entrées à lier',
@@ -566,7 +539,7 @@ describe('CaptureBlockComponent', () => {
   });
 
   it('focus discret (arrivée sur un dossier créé) : champ focalisé, champs repliés jusqu’à la frappe ; focus ordinaire', async () => {
-    const { el, input, fixture } = await render({}, { kind: 'none' });
+    const { el, input, fixture } = await render();
     fixture.componentInstance.focus({ quiet: true });
     await settle(fixture);
     expect(document.activeElement).toBe(input);
@@ -582,7 +555,7 @@ describe('CaptureBlockComponent', () => {
   });
 
   it('écriture ailleurs dans le dossier (revision) : rail relu au focus suivant ; sa propre création non', async () => {
-    const { input, fixture, api } = await render({}, { kind: 'none' });
+    const { input, fixture, api } = await render();
     await type(fixture, 'anx 8');
     expect(api.railCandidates).toHaveBeenCalledOnce();
     fixture.componentRef.setInput('revision', 1);

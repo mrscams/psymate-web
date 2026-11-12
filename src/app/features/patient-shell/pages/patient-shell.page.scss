@@ -25,20 +25,16 @@
 }
 
 /*
- * Colonne de contenu (proposition 04b .pad-layout) : colonne principale et colonne latérale de
- * 340 px, 20 px d'écart, sous l'en-tête (padding 20 de la maquette). Hors séance, une seule
- * colonne : le bloc replié garde sa largeur. Sous 900 px, la colonne latérale passe dessous.
+ * Colonne de contenu (proposition 04b .pad-layout), en séance seulement : colonne principale et
+ * colonne latérale de 340 px, 20 px d'écart, sous l'en-tête (padding 20 de la maquette). Sous
+ * 900 px, la colonne latérale passe dessous.
  */
 .pad-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 340px;
   gap: 20px;
   align-items: start;
   padding-top: 20px;
-
-  &.in-session {
-    grid-template-columns: minmax(0, 1fr) 340px;
-  }
 }
 
 .pad-main {
@@ -46,7 +42,7 @@
 }
 
 @media (max-width: 900px) {
-  .pad-layout.in-session {
+  .pad-layout {
     grid-template-columns: minmax(0, 1fr);
   }
 }
