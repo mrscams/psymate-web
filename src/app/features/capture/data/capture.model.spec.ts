@@ -373,6 +373,16 @@ describe('capture.model (bloc de saisie)', () => {
     expect(
       compose('anx 8 dort mal', { ...EMPTY_DRAFT, pickedLink: picked('e-old') }).link,
     ).toBeNull();
+    // Cible du `>` introuvable ou incompatible, puis une autre puce cliquée : elle la remplace, plus
+    // rien ne bloque (un seul lien, le clic remplace).
+    expect(compose('anx 8 > dispute').blocking).toBe(true);
+    const picked2 = compose('anx 8 > dispute', {
+      ...EMPTY_DRAFT,
+      pickedLink: picked('e-situation'),
+    });
+    expect(picked2.targetIssue).toBeNull();
+    expect(picked2.link?.candidate.id).toBe('e-situation');
+    expect(picked2.blocking).toBe(false);
   });
 
   it('composeEntry : situation en cours ou finie (fin incluse → borne exclusive) ; dates utilitaires', () => {
@@ -398,6 +408,9 @@ describe('capture.model (bloc de saisie)', () => {
     // Jour civil dans le fuseau du praticien : le 10 novembre à 23 h 30 à Paris est encore le 10.
     expect(civilDay(new Date('2026-11-10T22:30:00Z'), 'Europe/Paris')).toBe('2026-11-10');
     expect(civilDay(new Date('2026-11-10T22:30:00Z'), 'Europe/Paris', 1)).toBe('2026-11-09');
+    // Nuit du passage à l'heure d'été (29 mars 2026, 2 h → 3 h) : « hier » recule d'un jour civil.
+    expect(civilDay(new Date('2026-03-29T22:30:00Z'), 'Europe/Paris', 1)).toBe('2026-03-29');
+    expect(civilDay(new Date('2026-03-01T00:30:00Z'), 'Europe/Paris', 1)).toBe('2026-02-28');
     expect(civilDay(new Date('2026-11-10T22:30:00Z'), 'Nowhere/Invalid')).toBe('2026-11-10');
   });
 

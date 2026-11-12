@@ -74,7 +74,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">193</context>
+          <context context-type="linenumber">197</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis</note>
       </trans-unit>
@@ -555,7 +555,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
-          <context context-type="linenumber">248</context>
+          <context context-type="linenumber">243</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-links.component.ts</context>
@@ -10462,7 +10462,7 @@
         <source>Type d&apos;entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">10,11</context>
+          <context context-type="linenumber">5,6</context>
         </context-group>
         <note priority="1" from="description">Groupe des puces de type du bloc de saisie</note>
       </trans-unit>
@@ -10470,7 +10470,7 @@
         <source>Type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">13,16</context>
+          <context context-type="linenumber">8,11</context>
         </context-group>
         <note priority="1" from="description">Étiquette des puces de type</note>
       </trans-unit>
@@ -10478,7 +10478,7 @@
         <source>Noter quelque chose</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">36,40</context>
+          <context context-type="linenumber">31,35</context>
         </context-group>
         <note priority="1" from="description">Étiquette du champ du bloc de saisie</note>
       </trans-unit>
@@ -10486,7 +10486,7 @@
         <source>Qu&apos;est-ce qui s&apos;est passé ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">44,45</context>
+          <context context-type="linenumber">39,40</context>
         </context-group>
         <note priority="1" from="description">Texte indicatif du bloc de saisie</note>
       </trans-unit>
@@ -10494,7 +10494,7 @@
         <source>Émotion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">82,84</context>
+          <context context-type="linenumber">77,79</context>
         </context-group>
         <note priority="1" from="description">Champ émotion du bloc</note>
       </trans-unit>
@@ -10502,7 +10502,7 @@
         <source>Intensité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">116,119</context>
+          <context context-type="linenumber">111,114</context>
         </context-group>
         <note priority="1" from="description">Champ intensité du bloc</note>
       </trans-unit>
@@ -10510,15 +10510,15 @@
         <source>Quand</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">138,140</context>
+          <context context-type="linenumber">133,135</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">186,188</context>
+          <context context-type="linenumber">181,183</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">376,378</context>
+          <context context-type="linenumber">371,373</context>
         </context-group>
         <note priority="1" from="description">Champ moment du bloc</note>
       </trans-unit>
@@ -10526,11 +10526,11 @@
         <source>Titre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">163,166</context>
+          <context context-type="linenumber">158,161</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">212,215</context>
+          <context context-type="linenumber">207,210</context>
         </context-group>
         <note priority="1" from="description">Champ titre du bloc</note>
       </trans-unit>
@@ -10538,11 +10538,11 @@
         <source>Depuis</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">238,241</context>
+          <context context-type="linenumber">233,236</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">351,354</context>
+          <context context-type="linenumber">346,349</context>
         </context-group>
         <note priority="1" from="description">Début d&apos;une situation dans le bloc</note>
       </trans-unit>
@@ -10550,7 +10550,7 @@
         <source>En cours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">266,269</context>
+          <context context-type="linenumber">261,264</context>
         </context-group>
         <note priority="1" from="description">Situation sans fin dans le bloc</note>
       </trans-unit>
@@ -10558,7 +10558,7 @@
         <source>Jusqu&apos;à</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">273,276</context>
+          <context context-type="linenumber">268,271</context>
         </context-group>
         <note priority="1" from="description">Fin d&apos;une situation dans le bloc</note>
       </trans-unit>
@@ -10566,7 +10566,7 @@
         <source>Molécule</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">299,302</context>
+          <context context-type="linenumber">294,297</context>
         </context-group>
         <note priority="1" from="description">Champ molécule du bloc</note>
       </trans-unit>
@@ -10574,7 +10574,7 @@
         <source>Posologie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">325,328</context>
+          <context context-type="linenumber">320,323</context>
         </context-group>
         <note priority="1" from="description">Champ posologie du bloc</note>
       </trans-unit>
@@ -10582,7 +10582,7 @@
         <source>Visibilité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">402,405</context>
+          <context context-type="linenumber">397,400</context>
         </context-group>
         <note priority="1" from="description">Champ visibilité du bloc</note>
       </trans-unit>
@@ -10590,7 +10590,7 @@
         <source> clinique </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">415,417</context>
+          <context context-type="linenumber">410,412</context>
         </context-group>
         <note priority="1" from="description">Visibilité clinique</note>
       </trans-unit>
@@ -10598,7 +10598,7 @@
         <source> privée </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">422,424</context>
+          <context context-type="linenumber">417,419</context>
         </context-group>
         <note priority="1" from="description">Visibilité privée</note>
       </trans-unit>
@@ -10606,7 +10606,7 @@
         <source><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> détaille · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+S<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> brouillon</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">469,471</context>
+          <context context-type="linenumber">464,466</context>
         </context-group>
         <note priority="1" from="description">Raccourcis du bloc de saisie</note>
       </trans-unit>
@@ -10614,7 +10614,7 @@
         <source> Détailler </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">477,479</context>
+          <context context-type="linenumber">472,474</context>
         </context-group>
         <note priority="1" from="description">Lien vers l&apos;éditeur complet depuis le bloc</note>
       </trans-unit>
@@ -10622,7 +10622,7 @@
         <source>Enregistrer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
-          <context context-type="linenumber">480,483</context>
+          <context context-type="linenumber">475,478</context>
         </context-group>
         <note priority="1" from="description">Bouton d&apos;enregistrement du bloc</note>
       </trans-unit>
@@ -10630,7 +10630,7 @@
         <source>Impossible de charger les émotions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
-          <context context-type="linenumber">246</context>
+          <context context-type="linenumber">241</context>
         </context-group>
         <note priority="1" from="description">Vocabulaire illisible dans le bloc de saisie</note>
       </trans-unit>
@@ -10638,7 +10638,7 @@
         <source>Émotion « <x id="label" equiv-text="label"/> » créée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
-          <context context-type="linenumber">572</context>
+          <context context-type="linenumber">565</context>
         </context-group>
         <note priority="1" from="description">Toast après la création d&apos;une émotion depuis le bloc</note>
       </trans-unit>
@@ -10646,7 +10646,7 @@
         <source>Les émotions n&apos;ont pas pu être chargées : réessayez, ou ouvrez l&apos;éditeur (Ctrl+Entrée).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
-          <context context-type="linenumber">593</context>
+          <context context-type="linenumber">586</context>
         </context-group>
         <note priority="1" from="description">Erreur du bloc de saisie</note>
       </trans-unit>
@@ -10654,7 +10654,7 @@
         <source>Rien n&apos;est enregistré. <x id="reason" equiv-text="reason"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
-          <context context-type="linenumber">610</context>
+          <context context-type="linenumber">603</context>
         </context-group>
         <note priority="1" from="description">Entrée bloquée par un avertissement du bloc de saisie</note>
       </trans-unit>
@@ -10662,7 +10662,7 @@
         <source>Brouillon enregistré.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
-          <context context-type="linenumber">627</context>
+          <context context-type="linenumber">620</context>
         </context-group>
         <note priority="1" from="description">Toast après un brouillon depuis le bloc</note>
       </trans-unit>
@@ -10670,9 +10670,33 @@
         <source>Entrée enregistrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
-          <context context-type="linenumber">628</context>
+          <context context-type="linenumber">621</context>
         </context-group>
         <note priority="1" from="description">Toast après une création depuis le bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.detail.visibilityLost" datatype="html">
+        <source>la visibilité « privée » (à régler dans « Plus »)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
+          <context context-type="linenumber">647</context>
+        </context-group>
+        <note priority="1" from="description">Toast de Détailler, visibilité non reprise</note>
+      </trans-unit>
+      <trans-unit id="capture.detail.linkLost" datatype="html">
+        <source>le lien vers « <x id="name" equiv-text="name"/> » (à rechercher dans « Lié à… »)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
+          <context context-type="linenumber">654</context>
+        </context-group>
+        <note priority="1" from="description">Toast de Détailler, lien hors rail non repris</note>
+      </trans-unit>
+      <trans-unit id="capture.detail.lost" datatype="html">
+        <source>L&apos;éditeur ne reprend pas <x id="items" equiv-text="items"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
+          <context context-type="linenumber">660</context>
+        </context-group>
+        <note priority="1" from="description">Toast de Détailler, choix à refaire dans l&apos;éditeur</note>
       </trans-unit>
       <trans-unit id="capture.emotion.placeholder" datatype="html">
         <source>Anxiété, colère…</source>
@@ -11326,7 +11350,7 @@
         <source>(<x id="precision" equiv-text="label"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-when-field.component.ts</context>
-          <context context-type="linenumber">249</context>
+          <context context-type="linenumber">258</context>
         </context-group>
         <note priority="1" from="description">Précision d&apos;une date lue, à côté du moment</note>
       </trans-unit>
@@ -15817,7 +15841,7 @@
         <source>Nouvelle entrée (N)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
-          <context context-type="linenumber">59,60</context>
+          <context context-type="linenumber">61,62</context>
         </context-group>
         <note priority="1" from="description">Bouton plus de l&apos;en-tête patient</note>
       </trans-unit>
@@ -15825,7 +15849,7 @@
         <source>Dernière étape : notez la première entrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
-          <context context-type="linenumber">77,79</context>
+          <context context-type="linenumber">79,81</context>
         </context-group>
         <note priority="1" from="description">Indice de première entrée, titre</note>
       </trans-unit>
@@ -15833,7 +15857,7 @@
         <source>Elle se rattache à la séance d&apos;accueil du dossier, ou à la séance que vous démarrez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
-          <context context-type="linenumber">80,86</context>
+          <context context-type="linenumber">82,88</context>
         </context-group>
         <note priority="1" from="description">Indice de première entrée, explication</note>
       </trans-unit>
@@ -15841,7 +15865,7 @@
         <source>Nouvelle entrée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
-          <context context-type="linenumber">92,96</context>
+          <context context-type="linenumber">94,98</context>
         </context-group>
         <note priority="1" from="description">Bouton de l&apos;indice de première entrée</note>
       </trans-unit>
@@ -15849,7 +15873,7 @@
         <source>Séance démarrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">280</context>
+          <context context-type="linenumber">284</context>
         </context-group>
         <note priority="1" from="description">Annonce après le démarrage d&apos;une séance</note>
       </trans-unit>
@@ -15857,7 +15881,7 @@
         <source>Modifier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">306</context>
+          <context context-type="linenumber">310</context>
         </context-group>
         <note priority="1" from="description">Action du toast de clôture</note>
       </trans-unit>
@@ -16523,7 +16547,7 @@
         <source>Clôturer maintenant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/session-bar.component.ts</context>
-          <context context-type="linenumber">106,109</context>
+          <context context-type="linenumber">111,114</context>
         </context-group>
         <note priority="1" from="description">Bouton de la barre grise</note>
       </trans-unit>
@@ -16531,7 +16555,7 @@
         <source>Reprendre</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/session-bar.component.ts</context>
-          <context context-type="linenumber">111,114</context>
+          <context context-type="linenumber">116,119</context>
         </context-group>
         <note priority="1" from="description">Bouton de la barre grise</note>
       </trans-unit>
@@ -16539,7 +16563,7 @@
         <source>Clôturer la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/session-bar.component.ts</context>
-          <context context-type="linenumber">124,128</context>
+          <context context-type="linenumber">129,133</context>
         </context-group>
         <note priority="1" from="description">Bouton de la barre de séance</note>
       </trans-unit>

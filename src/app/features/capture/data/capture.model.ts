@@ -579,7 +579,11 @@ export function composeEntry(
   const fromTarget = targetLink(preview);
   const link = effectiveLink(draft, fromTarget);
   let composedLink: ComposedLink | null = null;
-  let targetIssue = preview.targetIssue;
+  // Un lien posé d'un clic vers une autre cible remplace celui du `>` (un seul lien) : le problème
+  // que le `>` soulevait (introuvable, incompatible) ne bloque plus.
+  const replaced =
+    !!draft.pickedLink && draft.pickedLink.targetId !== (preview.target?.candidate.id ?? null);
+  let targetIssue = replaced ? null : preview.targetIssue;
   if (link) {
     const pool = draft.extraCandidate
       ? [...context.candidates, draft.extraCandidate]
@@ -716,7 +720,6 @@ export function dayAfter(day: string): string | null {
 
 /** Le jour civil d'aujourd'hui (ou d'il y a `daysAgo` jours) dans le fuseau donné, « AAAA-MM-JJ ». */
 export function civilDay(now: Date, timeZone: string, daysAgo = 0): string {
-  const date = new Date(now.getTime() - daysAgo * 86_400_000);
   let parts: Intl.DateTimeFormatPart[];
   try {
     parts = new Intl.DateTimeFormat('en-CA', {
@@ -724,13 +727,20 @@ export function civilDay(now: Date, timeZone: string, daysAgo = 0): string {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
-    }).formatToParts(date);
+    }).formatToParts(now);
   } catch {
-    return date.toISOString().slice(0, 10);
+    parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'UTC',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(now);
   }
-  const get = (type: Intl.DateTimeFormatPartTypes): string =>
-    parts.find((part) => part.type === type)?.value ?? '';
-  return `${get('year')}-${get('month')}-${get('day')}`;
+  const get = (type: Intl.DateTimeFormatPartTypes): number =>
+    Number(parts.find((part) => part.type === type)?.value ?? '0');
+  // Recul en jours civils (calendrier UTC sur la date civile) : un jour de 23 h ne décale rien.
+  const day = new Date(Date.UTC(get('year'), get('month') - 1, get('day') - daysAgo));
+  return day.toISOString().slice(0, 10);
 }
 
 /** Un jour « AAAA-MM-JJ » → moment du contrat à la précision jour (bornes en jours entiers UTC). */
