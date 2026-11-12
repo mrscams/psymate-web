@@ -14,7 +14,7 @@ import { provideRouter, Route, Router, Routes, withComponentInputBinding } from 
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { PreferencesStore } from '../../../core/preferences';
-import { CommandBarComponent } from '../../capture';
+import { CaptureBlockComponent } from '../../capture';
 import { PatientShellApi } from '../data/patient-shell.api';
 import {
   closedSession,
@@ -157,8 +157,8 @@ describe('PatientShellPage', () => {
     expect(text(el.querySelector('.flag'))).toBe('À surveiller');
     expect(text(el.querySelector('.session-text'))).toBe('Dernière séance : 17 oct. 2026');
     expect(el.querySelector('button.start-session')).not.toBeNull();
-    expect(el.querySelector('pm-command-bar input')?.getAttribute('placeholder')).toBe(
-      'Noter quelque chose…',
+    expect(el.querySelector('pm-capture-block textarea')?.getAttribute('placeholder')).toBe(
+      "Qu'est-ce qui s'est passé ?",
     );
     expect(text(el.querySelector('pm-fake-overview-tab h2'))).toBe("Vue d'ensemble");
     expect(el.querySelector('.view-toggle pm-overview-view-toggle [role="group"]')).not.toBeNull();
@@ -239,7 +239,7 @@ describe('PatientShellPage', () => {
       expect(text(el.querySelector('.session-text'))).toMatch(/en cours depuis 12 min$/);
       expect(el.querySelector('button.close-session')).not.toBeNull();
       await vi.waitFor(() =>
-        expect(document.activeElement).toBe(el.querySelector('pm-command-bar input')),
+        expect(document.activeElement).toBe(el.querySelector('pm-capture-block textarea')),
       );
     } finally {
       vi.useRealTimers();
@@ -378,7 +378,7 @@ describe('PatientShellPage', () => {
     await settle(harness);
     expect(router.url).toBe('/patients/p-marie/graph');
 
-    const capture = el.querySelector<HTMLInputElement>('pm-command-bar input')!;
+    const capture = el.querySelector<HTMLTextAreaElement>('pm-capture-block textarea')!;
     capture.focus();
     press(capture, '2');
     await settle(harness);
@@ -397,14 +397,14 @@ describe('PatientShellPage', () => {
     });
     await settle(harness);
     await settle(harness);
-    const capture = el.querySelector<HTMLInputElement>('pm-command-bar input');
+    const capture = el.querySelector<HTMLTextAreaElement>('pm-capture-block textarea');
     expect(capture).not.toBeNull();
     expect(document.activeElement).toBe(capture);
   });
 
   it('arrivée ordinaire (lien, historique) : le focus n’est pas déplacé', async () => {
     const { el } = await render();
-    expect(document.activeElement).not.toBe(el.querySelector('pm-command-bar input'));
+    expect(document.activeElement).not.toBe(el.querySelector('pm-capture-block textarea'));
   });
 
   it('/patients/:id/overview renvoie sur l’onglet 1, /patients/:id', async () => {
@@ -486,7 +486,7 @@ describe('PatientShellPage', () => {
 
     it('Ctrl+Entrée dans la barre de commande : l’éditeur reprend la saisie interprétée', async () => {
       const { harness, el } = await render();
-      const input = el.querySelector<HTMLInputElement>('#pm-capture-input')!;
+      const input = el.querySelector<HTMLTextAreaElement>('#pm-capture-input')!;
       input.value = "n'a pas dormi";
       input.dispatchEvent(new Event('input'));
       input.dispatchEvent(
@@ -502,7 +502,7 @@ describe('PatientShellPage', () => {
 
     it('Entrée sur une barre vide : l’éditeur vide', async () => {
       const { harness, el } = await render();
-      const input = el.querySelector<HTMLInputElement>('#pm-capture-input')!;
+      const input = el.querySelector<HTMLTextAreaElement>('#pm-capture-input')!;
       input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
       await settle(harness);
       expect(editor()?.querySelector('h2')?.textContent).toContain('Nouvelle entrée');
@@ -512,8 +512,8 @@ describe('PatientShellPage', () => {
       const { harness } = await render();
       const store = shellStore(harness);
       const before = store.revision();
-      const bar = harness.fixture.debugElement.query(By.directive(CommandBarComponent))
-        .componentInstance as CommandBarComponent;
+      const bar = harness.fixture.debugElement.query(By.directive(CaptureBlockComponent))
+        .componentInstance as CaptureBlockComponent;
       bar.saved.emit({ id: 'e-new', type: 'feeling', status: 'final', sessionId: 's-1' });
       expect(store.revision()).toBe(before + 1);
     });

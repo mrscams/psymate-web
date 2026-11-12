@@ -5,12 +5,12 @@ import { setPreferences } from '../flux-6-vue-ensemble/overview-data';
 import { expectNoAxeViolations } from '../support/axe';
 import { keyboardOnly, tabTo } from '../support/clavier';
 
-// B3 flux 3 au clavier seul (M7-04, B5, B7) : « Démarrer la séance » au clavier, la barre de
-// capture prend le focus, « /res anxiété 8 n'a pas dormi », Tab jusqu'au rail « Lié à… », Espace
-// coche l'événement (type proposé par la matrice), Entrée enregistre en final ; l'entrée apparaît
-// dans l'activité récente, la barre est vide et garde le focus ; Ctrl+S enregistre un brouillon ;
-// Clôturer la séance au clavier. Aucun geste de pointeur (keyboardOnly). Contre l'API locale (seed
-// small, Mailpit), jamais de mock du backend.
+// B3 flux 3 au clavier seul (M7-04, B5, B7 ; bloc de saisie UX-S1) : « Démarrer la séance » au
+// clavier, le bloc de saisie prend le focus, « /res anxiété 8 n'a pas dormi », Tab jusqu'à la rangée
+// « Lié à », Espace presse la puce de l'événement (verbe proposé par la matrice), Entrée enregistre en
+// final ; l'entrée apparaît dans l'activité récente, le bloc est vide et garde le focus ; Ctrl+S
+// enregistre un brouillon ; Clôturer la séance au clavier. Aucun geste de pointeur (keyboardOnly).
+// Contre l'API locale (seed small, Mailpit), jamais de mock du backend.
 
 const API = 'http://localhost:8080';
 
@@ -52,7 +52,7 @@ test('flux 3 au clavier : démarrer, /res anxiété 8, Tab + Espace dans le rail
   await page.goto(`/fr/patients/${patientId}`);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Chloé R.');
   const input = page.getByRole('textbox', { name: 'Noter quelque chose' });
-  const panel = page.locator('pm-command-bar .panel');
+  const root = page.locator('pm-capture-block');
 
   // 1. « Démarrer la séance » : Tab, Entrée ; l'en-tête dit « en cours », la barre a le focus.
   const start = page.getByRole('button', { name: 'Démarrer la séance' });
@@ -61,25 +61,33 @@ test('flux 3 au clavier : démarrer, /res anxiété 8, Tab + Espace dans le rail
   await expect(page.locator('pm-patient-header .session-text')).toContainText('en cours');
   await expect(input).toBeFocused();
 
-  // 2-3. La saisie interprétée : type, émotion, intensité, texte, séance courante.
+  // 2-3. La saisie interprétée : la puce Ressenti pressée, émotion, intensité dans les champs.
   await page.keyboard.type("/res anxiété 8 n'a pas dormi", { delay: 30 });
-  const line = panel.locator('pm-capture-preview .line');
-  await expect(line).toContainText('Ressenti · Anxiété 8/10');
-  await expect(line).toContainText("n'a pas dormi");
-  await expect(line).toContainText('séance en cours');
+  await expect(root.getByRole('button', { name: 'Ressenti', exact: true })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await expect(root.getByRole('combobox', { name: 'Émotion' })).toHaveValue('Anxiété');
+  await expect(root.getByRole('slider', { name: 'Intensité' })).toHaveAttribute(
+    'aria-valuenow',
+    '8',
+  );
 
-  // 4. « Lié à… » : Tab jusqu'à la case de l'événement, Espace la coche (type par défaut proposé).
-  const rail = panel.locator('fieldset.rail');
-  const target = rail.getByRole('checkbox', { name: /Entretien annuel/ });
-  await tabTo(page, target, { max: 10 });
-  await expect(target).not.toBeChecked();
+  // 4. « Lié à » : Tab jusqu'à la puce de l'événement, Espace la presse (verbe proposé par la matrice).
+  const target = root.getByRole('button', { name: /Entretien annuel/ });
+  await tabTo(page, target, { max: 12 });
+  await expect(target).toHaveAttribute('aria-pressed', 'false');
   await page.keyboard.press('Space');
-  await expect(target).toBeChecked();
-  await expect(panel.locator('[aria-busy="true"]')).toHaveCount(0);
+  const placed = root.locator('pm-capture-links .tchip.pressed');
+  await expect(placed).toContainText('Entretien annuel');
+  await expect(
+    root.getByRole('combobox', { name: /^Verbe du lien avec/ }).locator('option:checked'),
+  ).toHaveText('déclenché par');
+  await expect(root.locator('[aria-busy="true"]')).toHaveCount(0);
   await expectNoAxeViolations(page);
 
-  // 5. Entrée enregistre en final (depuis le rail : retour à la barre par Maj+Tab).
-  await tabTo(page, input, { backwards: true, max: 10 });
+  // 5. Entrée enregistre en final (depuis la rangée : retour au texte par Maj+Tab).
+  await tabTo(page, input, { backwards: true, max: 12 });
   const created = page.waitForResponse(
     (r) =>
       r.request().method() === 'POST' &&
@@ -96,7 +104,7 @@ test('flux 3 au clavier : démarrer, /res anxiété 8, Tab + Espace dans le rail
     links: [{ targetId: eventId, linkType: 'triggers', direction: 'incoming' }],
   });
 
-  // 6. L'entrée apparaît dans « Activité récente » ; la barre est vide et garde le focus.
+  // 6. L'entrée apparaît dans « Activité récente » ; le bloc est vide et garde le focus.
   await expect(input).toHaveValue('');
   await expect(input).toBeFocused();
   const recent = page

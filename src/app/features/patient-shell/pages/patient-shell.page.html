@@ -27,10 +27,10 @@
     (closeSession)="openClose()"
     (retry)="reload()"
   >
-    <!-- Barre de commande (M6-02, features/capture) : Entrée crée, Ctrl+Entrée ouvre l'éditeur
-         prérempli (M1-08, features/entries) ; le bouton + ouvre l'éditeur vide. -->
+    <!-- Bloc de saisie (M6-02, UX-S1, features/capture) : Entrée crée, Ctrl+Entrée ou « Détailler »
+         ouvre l'éditeur prérempli (M1-08, features/entries) ; le bouton + ouvre l'éditeur vide. -->
     <div pmCapture class="capture-row">
-      <pm-command-bar
+      <pm-capture-block
         class="capture-bar"
         [patientId]="id()"
         [session]="headerSession()"

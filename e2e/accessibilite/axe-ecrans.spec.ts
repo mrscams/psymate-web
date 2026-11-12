@@ -108,16 +108,19 @@ for (const theme of THEMES) {
           },
         ],
         [
-          '05-barre-de-commande',
+          '05-bloc-de-saisie',
           async () => {
             const input = page.getByRole('textbox', { name: 'Noter quelque chose' });
             await input.focus();
-            // Vocabulaire des émotions lu à l'ouverture de l'aperçu : on l'attend avant de taper.
-            await expect(page.locator('pm-command-bar .panel')).toBeVisible();
-            await expect(page.locator('pm-command-bar .panel [aria-busy="true"]')).toHaveCount(0);
+            // Vocabulaire des émotions lu au déploiement du bloc : on l'attend avant de taper.
+            const block = page.locator('pm-capture-block');
+            await expect(block.locator('.block')).toHaveClass(/expanded/);
+            await expect(block.locator('[aria-busy="true"]')).toHaveCount(0);
             await page.keyboard.type("anx 8 n'a pas dormi > réunion");
-            await expect(page.locator('pm-command-bar pm-capture-preview .line')).toContainText(
-              'Anxiété 8/10',
+            await expect(block.getByRole('combobox', { name: 'Émotion' })).toHaveValue('Anxiété');
+            await expect(block.getByRole('slider', { name: 'Intensité' })).toHaveAttribute(
+              'aria-valuenow',
+              '8',
             );
           },
         ],

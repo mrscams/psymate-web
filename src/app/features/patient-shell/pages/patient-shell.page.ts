@@ -26,7 +26,7 @@ import {
 } from '../../../shared/ui';
 // Seuil de « non clôturée » (UX-A8) : la constante n'est pas réexportée par l'index de shared/ui.
 import { UNCLOSED_SESSION_AFTER_MIN } from '../../../shared/ui/patient-header/patient-header.component';
-import { CapturedEntry, CommandBarComponent } from '../../capture';
+import { CaptureBlockComponent, CapturedEntry } from '../../capture';
 import { ENTRY_QUERY_PARAM, EntryPrefill, openEntryEditor } from '../../entries';
 import { connectLinkEditor, LINK_QUERY_PARAM } from '../../graph';
 import { OverviewViewToggleComponent } from '../../overview';
@@ -47,7 +47,7 @@ import { finalLoadError, sessionProblemText, toHeaderInfo } from '../ui/shell-la
 @Component({
   selector: 'pm-patient-shell-page',
   imports: [
-    CommandBarComponent,
+    CaptureBlockComponent,
     OverviewViewToggleComponent,
     PatientHeaderComponent,
     RouterLink,
@@ -71,7 +71,7 @@ export class PatientShellPage {
   private readonly shortcuts = inject(ShortcutService);
   private readonly injector = inject(Injector);
   private readonly route = inject(ActivatedRoute);
-  private readonly captureBar = viewChild(CommandBarComponent);
+  private readonly captureBar = viewChild(CaptureBlockComponent);
   private readonly panels = inject(SidePanelService);
 
   /** `?entry=<id>` : correction d'une entrée, le panneau se rouvre au rechargement (fiche 05). */

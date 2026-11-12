@@ -10366,7 +10366,7 @@
         <source>Préfixe « <x id="prefix" equiv-text="prefix"/> » inconnu, la saisie reste une note : utilisez <x id="known" equiv-text="known"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10374,7 +10374,7 @@
         <source>« <x id="word" equiv-text="word"/> » désigne plusieurs émotions : choisissez-en une.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10382,7 +10382,7 @@
         <source>Aucune émotion ne s&apos;appelle « <x id="word" equiv-text="word"/> ».</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10390,7 +10390,7 @@
         <source>Un ressenti (<x id="names" equiv-text="names"/>) ? Ajoutez une intensité de 0 à 10 après « <x id="word" equiv-text="word"/> ».</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">49</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10398,7 +10398,7 @@
         <source>Intensité <x id="value" equiv-text="value"/> hors de l&apos;échelle : tapez un nombre de <x id="min" equiv-text="min"/> à <x id="max" equiv-text="max"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10406,7 +10406,7 @@
         <source>Rien après « &gt; » : tapez le début du titre de l&apos;entrée à lier.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10414,7 +10414,7 @@
         <source>Guillemet <x id="quote" equiv-text="quote"/> non fermé : fermez-le.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10422,7 +10422,7 @@
         <source>Plusieurs dates : « <x id="used" equiv-text="used"/> » est retenue, <x id="ignored" equiv-text="ignored"/> reste dans le texte.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10430,7 +10430,7 @@
         <source>« <x id="expression" equiv-text="expression"/> » n&apos;est pas une date possible : elle reste dans le texte.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10438,7 +10438,7 @@
         <source>« <x id="expression" equiv-text="expression"/> » est dans le futur : vérifiez la date.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10446,7 +10446,7 @@
         <source>Fuseau « <x id="zone" equiv-text="zone"/> » inconnu : les dates sont lues en UTC.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10454,7 +10454,7 @@
         <source>Ajoutez un titre après le préfixe.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10462,7 +10462,7 @@
         <source>Ajoutez la molécule après /med.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10470,7 +10470,7 @@
         <source>Ajoutez le texte de la note.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="description">Avertissement de la barre de commande</note>
       </trans-unit>
@@ -10478,7 +10478,7 @@
         <source>Les entrées à lier n&apos;ont pas pu être chargées : réessayez, ou retirez « &gt; ».</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">98</context>
         </context-group>
         <note priority="1" from="description">Problème de cible dans la barre de commande</note>
       </trans-unit>
@@ -10486,7 +10486,7 @@
         <source>Aucune entrée récente ne commence par « <x id="query" equiv-text="query"/> » : choisissez la cible dans « Lié à… » ou retirez « &gt; ».</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <note priority="1" from="description">Problème de cible dans la barre de commande</note>
       </trans-unit>
@@ -10494,7 +10494,7 @@
         <source>Aucun type de lien ne relie « <x id="name" equiv-text="name"/> » (<x id="target" equiv-text="target"/>) à cette entrée (<x id="type" equiv-text="type"/>) : choisissez une autre cible ou retirez « &gt; ».</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">107</context>
         </context-group>
         <note priority="1" from="description">Problème de cible dans la barre de commande</note>
       </trans-unit>
@@ -10502,7 +10502,7 @@
         <source>précision exacte</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">113</context>
         </context-group>
         <note priority="1" from="description">Précision d&apos;une date dans l&apos;aperçu</note>
       </trans-unit>
@@ -10510,7 +10510,7 @@
         <source>au jour</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">115</context>
         </context-group>
         <note priority="1" from="description">Précision d&apos;une date dans l&apos;aperçu</note>
       </trans-unit>
@@ -10518,7 +10518,7 @@
         <source>au mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <note priority="1" from="description">Précision d&apos;une date dans l&apos;aperçu</note>
       </trans-unit>
@@ -10526,7 +10526,7 @@
         <source>à l&apos;année</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <note priority="1" from="description">Précision d&apos;une date dans l&apos;aperçu</note>
       </trans-unit>
@@ -10534,7 +10534,7 @@
         <source>période</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">Précision d&apos;une date dans l&apos;aperçu</note>
       </trans-unit>
@@ -10542,7 +10542,7 @@
         <source>phase de vie</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">123</context>
         </context-group>
         <note priority="1" from="description">Précision d&apos;une date dans l&apos;aperçu</note>
       </trans-unit>
@@ -10550,7 +10550,7 @@
         <source>Toute entrée appartient à une séance : démarrez la séance, ou ouvrez l&apos;éditeur (Ctrl+Entrée) pour en choisir une.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <note priority="1" from="description">Erreur de la barre de commande</note>
       </trans-unit>
@@ -10558,7 +10558,7 @@
         <source>Le serveur n&apos;a pas répondu. Votre saisie est conservée : réessayez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <note priority="1" from="description">Erreur de la barre de commande</note>
       </trans-unit>
@@ -10566,7 +10566,7 @@
         <source>L&apos;entrée n&apos;a pas été créée : <x id="details" equiv-text="details"/> Complétez-la dans l&apos;éditeur (Ctrl+Entrée).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">138</context>
         </context-group>
         <note priority="1" from="description">Erreur de la barre de commande</note>
       </trans-unit>
@@ -10574,7 +10574,7 @@
         <source>L&apos;entrée n&apos;a pas été créée. Complétez-la dans l&apos;éditeur (Ctrl+Entrée).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">139</context>
         </context-group>
         <note priority="1" from="description">Erreur de la barre de commande</note>
       </trans-unit>
@@ -10582,7 +10582,7 @@
         <source>Un champ obligatoire manque.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
       </trans-unit>
@@ -10590,7 +10590,7 @@
         <source>Une valeur est hors des bornes permises.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
       </trans-unit>
@@ -10598,7 +10598,7 @@
         <source>Le moment n&apos;est pas valable.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">150</context>
         </context-group>
         <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
       </trans-unit>
@@ -10606,7 +10606,7 @@
         <source>L&apos;émotion n&apos;existe pas ou plus.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">152</context>
         </context-group>
         <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
       </trans-unit>
@@ -10614,7 +10614,7 @@
         <source>Un tag n&apos;existe pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">154</context>
         </context-group>
         <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
       </trans-unit>
@@ -10622,7 +10622,7 @@
         <source>Ce lien existe déjà.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
       </trans-unit>
@@ -10630,7 +10630,7 @@
         <source>Ce type de lien n&apos;est pas permis entre ces deux types d&apos;entrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">151</context>
+          <context context-type="linenumber">158</context>
         </context-group>
         <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
       </trans-unit>
@@ -10638,7 +10638,7 @@
         <source>Ce type de lien n&apos;existe pas.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
       </trans-unit>
@@ -10646,7 +10646,7 @@
         <source>L&apos;entrée liée est archivée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
       </trans-unit>
@@ -10654,7 +10654,7 @@
         <source>L&apos;entrée liée n&apos;existe plus.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
       </trans-unit>
@@ -10662,7 +10662,7 @@
         <source>Une entrée ne peut pas être liée à elle-même.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">159</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
       </trans-unit>
@@ -10670,7 +10670,7 @@
         <source>L&apos;entrée liée appartient à un autre dossier.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">168</context>
         </context-group>
         <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
       </trans-unit>
@@ -10678,7 +10678,7 @@
         <source>La séance n&apos;appartient pas à ce dossier.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">170</context>
         </context-group>
         <note priority="1" from="description">Raison d&apos;un refus de la barre de commande (422)</note>
       </trans-unit>
@@ -10686,7 +10686,7 @@
         <source>Une émotion porte déjà ce libellé : tapez son nom ou son début.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">172</context>
+          <context context-type="linenumber">179</context>
         </context-group>
         <note priority="1" from="description">Erreur de création d&apos;émotion depuis la barre</note>
       </trans-unit>
@@ -10694,7 +10694,7 @@
         <source>Le libellé de l&apos;émotion est obligatoire.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">183</context>
         </context-group>
         <note priority="1" from="description">Erreur de création d&apos;émotion depuis la barre</note>
       </trans-unit>
@@ -10702,7 +10702,7 @@
         <source>Choisissez une famille parmi les huit proposées.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">186</context>
         </context-group>
         <note priority="1" from="description">Erreur de création d&apos;émotion depuis la barre</note>
       </trans-unit>
@@ -10710,232 +10710,95 @@
         <source>L&apos;émotion n&apos;a pas pu être créée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <note priority="1" from="description">Erreur de création d&apos;émotion depuis la barre</note>
       </trans-unit>
-      <trans-unit id="capture.preview.quoted" datatype="html">
-        <source>« <x id="text" equiv-text="text"/> »</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">189</context>
-        </context-group>
-        <note priority="1" from="description">Texte cité dans l&apos;aperçu de la barre de commande</note>
-      </trans-unit>
-      <trans-unit id="capture.preview.intensity" datatype="html">
-        <source><x id="value" equiv-text="value"/>/10</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">194</context>
-        </context-group>
-        <note priority="1" from="description">Intensité dans l&apos;aperçu de la barre de commande</note>
-      </trans-unit>
       <trans-unit id="capture.summary.emotion" datatype="html">
-        <source><x id="emotion" equiv-text="label"/> <x id="intensity" equiv-text="preview.intensity"/> sur 10</source>
+        <source><x id="emotion" equiv-text="label"/> <x id="intensity" equiv-text="composed.intensity"/> sur 10</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">207</context>
+          <context context-type="linenumber">322</context>
         </context-group>
         <note priority="1" from="description">Résumé lu de l&apos;aperçu, émotion et intensité</note>
-      </trans-unit>
-      <trans-unit id="capture.summary.target" datatype="html">
-        <source>lié à « <x id="name" equiv-text="name"/> »</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">214</context>
-        </context-group>
-        <note priority="1" from="description">Résumé lu de l&apos;aperçu, cible du lien</note>
       </trans-unit>
       <trans-unit id="capture.summary.blocking" datatype="html">
         <source><x id="count" equiv-text="blocking"/> point(s) à corriger avant d&apos;enregistrer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">339</context>
         </context-group>
         <note priority="1" from="description">Résumé lu de l&apos;aperçu, points bloquants</note>
-      </trans-unit>
-      <trans-unit id="capture.preview.pendingEmotion" datatype="html">
-        <source>« <x id="INTERPOLATION" equiv-text="{{ word }}"/> » ?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-preview.component.html</context>
-          <context context-type="linenumber">37,38</context>
-        </context-group>
-        <note priority="1" from="description">Émotion à préciser dans l&apos;aperçu de la barre de
-              commande</note>
-      </trans-unit>
-      <trans-unit id="capture.preview.linkedTo" datatype="html">
-        <source>lié à</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-preview.component.html</context>
-          <context context-type="linenumber">58,60</context>
-        </context-group>
-        <note priority="1" from="description">Cible du lien dans l&apos;aperçu de la barre de commande</note>
-      </trans-unit>
-      <trans-unit id="capture.preview.blocking" datatype="html">
-        <source>À corriger :</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-preview.component.html</context>
-          <context context-type="linenumber">78,82</context>
-        </context-group>
-        <note priority="1" from="description">Avertissement bloquant de la barre de commande</note>
-      </trans-unit>
-      <trans-unit id="capture.preview.check" datatype="html">
-        <source>À vérifier :</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-preview.component.html</context>
-          <context context-type="linenumber">84,88</context>
-        </context-group>
-        <note priority="1" from="description">Avertissement non bloquant de la barre de commande</note>
-      </trans-unit>
-      <trans-unit id="capture.preview.emptyTitle" datatype="html">
-        <source>Notez au clavier</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-preview.component.ts</context>
-          <context context-type="linenumber">65</context>
-        </context-group>
-        <note priority="1" from="description">Aide de la barre de commande, champ vide</note>
-      </trans-unit>
-      <trans-unit id="capture.preview.emptyMessage" datatype="html">
-        <source>« anx 8 n&apos;a pas dormi » crée un ressenti ; /evt, /sit, /med, /note choisissent le type ; « &gt; entretien » lie l&apos;entrée. Entrée enregistre, Ctrl+Entrée ouvre l&apos;éditeur, Ctrl+S garde un brouillon.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-preview.component.ts</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-        <note priority="1" from="description">Aide de la barre de commande, champ vide</note>
       </trans-unit>
       <trans-unit id="capture.preview.errorTitle" datatype="html">
         <source>Impossible de charger les émotions</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-preview.component.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
+          <context context-type="linenumber">246</context>
         </context-group>
         <note priority="1" from="description">Vocabulaire illisible dans la barre de commande</note>
-      </trans-unit>
-      <trans-unit id="capture.preview.now" datatype="html">
-        <source>maintenant</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-preview.component.ts</context>
-          <context context-type="linenumber">89</context>
-        </context-group>
-        <note priority="1" from="description">Moment par défaut dans l&apos;aperçu de la barre de commande</note>
-      </trans-unit>
-      <trans-unit id="capture.preview.when" datatype="html">
-        <source><x id="date" equiv-text="date"/> (<x id="precision" equiv-text="precision"/>)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-preview.component.ts</context>
-          <context context-type="linenumber">93</context>
-        </context-group>
-        <note priority="1" from="description">Moment interprété dans l&apos;aperçu (date, précision)</note>
-      </trans-unit>
-      <trans-unit id="capture.preview.proposedLink" datatype="html">
-        <source>lien « <x id="label" equiv-text="label"/> » proposé</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/capture-preview.component.ts</context>
-          <context context-type="linenumber">129</context>
-        </context-group>
-        <note priority="1" from="description">Type de lien proposé dans l&apos;aperçu de la barre de commande</note>
       </trans-unit>
       <trans-unit id="capture.bar.label" datatype="html">
         <source>Noter quelque chose</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.html</context>
-          <context context-type="linenumber">10,15</context>
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">33,37</context>
         </context-group>
         <note priority="1" from="description">Étiquette de la barre de commande</note>
       </trans-unit>
       <trans-unit id="capture.bar.placeholder" datatype="html">
-        <source>Noter quelque chose…</source>
+        <source>Qu&apos;est-ce qui s&apos;est passé ?</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.html</context>
-          <context context-type="linenumber">17,18</context>
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">41,42</context>
         </context-group>
-        <note priority="1" from="description">Texte indicatif de la barre de commande</note>
+        <note priority="1" from="description">Texte indicatif du bloc de saisie</note>
       </trans-unit>
       <trans-unit id="capture.bar.keys" datatype="html">
-        <source><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> enregistre · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> affine · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+S<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> brouillon</source>
+        <source><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> détaille · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+S<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> brouillon</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.html</context>
-          <context context-type="linenumber">28,30</context>
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">444,446</context>
         </context-group>
-        <note priority="1" from="description">Raccourcis de la barre de commande</note>
-      </trans-unit>
-      <trans-unit id="capture.rail.legend" datatype="html">
-        <source>Lié à…</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.html</context>
-          <context context-type="linenumber">54,57</context>
-        </context-group>
-        <note priority="1" from="description">Rail des liens de la barre de commande</note>
-      </trans-unit>
-      <trans-unit id="capture.preview.sessionCurrent" datatype="html">
-        <source>séance en cours</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">161</context>
-        </context-group>
-        <note priority="1" from="description">Séance de rattachement dans l&apos;aperçu</note>
-      </trans-unit>
-      <trans-unit id="capture.preview.sessionLast" datatype="html">
-        <source>séance du <x id="date" equiv-text="date"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">164</context>
-        </context-group>
-        <note priority="1" from="description">Séance de rattachement dans l&apos;aperçu</note>
-      </trans-unit>
-      <trans-unit id="capture.rail.emptyTitle" datatype="html">
-        <source>Aucune entrée récente à lier</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">186</context>
-        </context-group>
-        <note priority="1" from="description">Rail vide de la barre de commande</note>
-      </trans-unit>
-      <trans-unit id="capture.rail.errorTitle" datatype="html">
-        <source>Impossible de charger les entrées à lier</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">187</context>
-        </context-group>
-        <note priority="1" from="description">Rail illisible dans la barre de commande</note>
+        <note priority="1" from="description">Raccourcis du bloc de saisie</note>
       </trans-unit>
       <trans-unit id="capture.emotion.created" datatype="html">
         <source>Émotion « <x id="label" equiv-text="label"/> » créée.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">348</context>
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
+          <context context-type="linenumber">547</context>
         </context-group>
         <note priority="1" from="description">Toast après la création d&apos;une émotion depuis la barre</note>
       </trans-unit>
       <trans-unit id="capture.error.vocabulary" datatype="html">
         <source>Les émotions n&apos;ont pas pu être chargées : réessayez, ou ouvrez l&apos;éditeur (Ctrl+Entrée).</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">367</context>
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
+          <context context-type="linenumber">568</context>
         </context-group>
         <note priority="1" from="description">Erreur de la barre de commande</note>
       </trans-unit>
       <trans-unit id="capture.blocked" datatype="html">
         <source>Rien n&apos;est enregistré. <x id="reason" equiv-text="reason"/></source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">377</context>
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
+          <context context-type="linenumber">585</context>
         </context-group>
         <note priority="1" from="description">Entrée bloquée par un avertissement de la barre de commande</note>
       </trans-unit>
       <trans-unit id="capture.saved.draft" datatype="html">
         <source>Brouillon enregistré.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">391</context>
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
+          <context context-type="linenumber">602</context>
         </context-group>
         <note priority="1" from="description">Toast après un brouillon depuis la barre</note>
       </trans-unit>
       <trans-unit id="capture.saved.create" datatype="html">
         <source>Entrée enregistrée.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/capture/ui/command-bar.component.ts</context>
-          <context context-type="linenumber">392</context>
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
+          <context context-type="linenumber">603</context>
         </context-group>
         <note priority="1" from="description">Toast après une création depuis la barre</note>
       </trans-unit>
@@ -22430,6 +22293,438 @@
           <context context-type="linenumber">59,61</context>
         </context-group>
         <note priority="1" from="description">Erreur de la liste des administrateurs</note>
+      </trans-unit>
+      <trans-unit id="capture.actions.detail" datatype="html">
+        <source> Détailler </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">452,454</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers l&apos;éditeur complet depuis le bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.actions.save" datatype="html">
+        <source>Enregistrer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">455,457</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;enregistrement du bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.emotion.createOption" datatype="html">
+        <source>Créer l&apos;émotion « <x id="label" equiv-text="name"/> »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-emotion-field.component.ts</context>
+          <context context-type="linenumber">330</context>
+        </context-group>
+        <note priority="1" from="description">Dernière ligne de la liste des émotions du bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.emotion.list" datatype="html">
+        <source>Émotions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-emotion-field.component.ts</context>
+          <context context-type="linenumber">73,74</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la liste des émotions du bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.emotion.placeholder" datatype="html">
+        <source>Anxiété, colère…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-emotion-field.component.ts</context>
+          <context context-type="linenumber">48,49</context>
+        </context-group>
+        <note priority="1" from="description">Texte indicatif du champ émotion du bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.emotion.toggle" datatype="html">
+        <source>Afficher les émotions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-emotion-field.component.ts</context>
+          <context context-type="linenumber">59,60</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui déplie la liste des émotions du bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.error.fields" datatype="html">
+        <source>L&apos;entrée n&apos;a pas été créée : corrigez les champs signalés.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">299</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc de saisie, erreurs placées sous les champs</note>
+      </trans-unit>
+      <trans-unit id="capture.field.dosage" datatype="html">
+        <source>Posologie</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">303,306</context>
+        </context-group>
+        <note priority="1" from="description">Champ posologie du bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.field.emotion" datatype="html">
+        <source>Émotion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">76,78</context>
+        </context-group>
+        <note priority="1" from="description">Champ émotion du bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.field.intensity" datatype="html">
+        <source>Intensité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">110,113</context>
+        </context-group>
+        <note priority="1" from="description">Champ intensité du bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.field.molecule" datatype="html">
+        <source>Molécule</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">280,283</context>
+        </context-group>
+        <note priority="1" from="description">Champ molécule du bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.field.ongoing" datatype="html">
+        <source>En cours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">253,256</context>
+        </context-group>
+        <note priority="1" from="description">Situation sans fin dans le bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.field.since" datatype="html">
+        <source>Depuis</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">229,232</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">326,329</context>
+        </context-group>
+        <note priority="1" from="description">Début d&apos;une situation dans le bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.field.title" datatype="html">
+        <source>Titre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">157,160</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">206,209</context>
+        </context-group>
+        <note priority="1" from="description">Champ titre du bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.field.until" datatype="html">
+        <source>Jusqu&apos;à</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">257,260</context>
+        </context-group>
+        <note priority="1" from="description">Fin d&apos;une situation dans le bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.field.visibility" datatype="html">
+        <source>Visibilité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">377,380</context>
+        </context-group>
+        <note priority="1" from="description">Champ visibilité du bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.field.when" datatype="html">
+        <source>Quand</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">132,134</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">180,182</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">351,353</context>
+        </context-group>
+        <note priority="1" from="description">Champ moment du bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.intensity.unset" datatype="html">
+        <source>Non renseignée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-intensity-scale.component.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <note priority="1" from="description">Valeur lue de l&apos;échelle d&apos;intensité non réglée</note>
+      </trans-unit>
+      <trans-unit id="capture.intensity.valueText" datatype="html">
+        <source><x id="value" equiv-text="value"/> sur <x id="max" equiv-text="max"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-intensity-scale.component.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+        <note priority="1" from="description">Valeur lue de l&apos;échelle d&apos;intensité</note>
+      </trans-unit>
+      <trans-unit id="capture.links.chipLabel" datatype="html">
+        <source><x id="name" equiv-text="name"/> (<x id="type" equiv-text="type"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-links.component.ts</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
+        <note priority="1" from="description">Nom lu d&apos;une puce de cible</note>
+      </trans-unit>
+      <trans-unit id="capture.links.emptyTitle" datatype="html">
+        <source>Aucune entrée récente à lier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-links.component.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <note priority="1" from="description">Rangée Lié à vide</note>
+      </trans-unit>
+      <trans-unit id="capture.links.errorTitle" datatype="html">
+        <source>Impossible de charger les entrées à lier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-links.component.ts</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+        <note priority="1" from="description">Rangée Lié à illisible</note>
+      </trans-unit>
+      <trans-unit id="capture.links.found" datatype="html">
+        <source>trouvé depuis « &gt; <x id="query" equiv-text="query"/> »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">309</context>
+        </context-group>
+        <note priority="1" from="description">Mention de la rangée Lié à du bloc de saisie</note>
+      </trans-unit>
+      <trans-unit id="capture.links.legend" datatype="html">
+        <source>Lié à</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-links.component.html</context>
+          <context context-type="linenumber">3,7</context>
+        </context-group>
+        <note priority="1" from="description">Rangée des liens du bloc de saisie</note>
+      </trans-unit>
+      <trans-unit id="capture.links.other" datatype="html">
+        <source> Autre entrée… </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-links.component.html</context>
+          <context context-type="linenumber">67,71</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la recherche d&apos;une autre cible</note>
+      </trans-unit>
+      <trans-unit id="capture.links.searchDialog" datatype="html">
+        <source>Relier à une autre entrée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-links.component.html</context>
+          <context context-type="linenumber">74,75</context>
+        </context-group>
+        <note priority="1" from="description">Fenêtre de recherche d&apos;une autre cible</note>
+      </trans-unit>
+      <trans-unit id="capture.links.searchEmpty" datatype="html">
+        <source>Aucune entrée ne correspond</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-links.component.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Recherche Autre entrée sans résultat</note>
+      </trans-unit>
+      <trans-unit id="capture.links.searchError" datatype="html">
+        <source>La recherche n&apos;a pas répondu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-links.component.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+        <note priority="1" from="description">Recherche Autre entrée en erreur</note>
+      </trans-unit>
+      <trans-unit id="capture.links.searchHint" datatype="html">
+        <source> Recherche dans tout le dossier. Un seul lien ici ; pour plusieurs, Détailler. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-links.component.html</context>
+          <context context-type="linenumber">116,121</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la recherche d&apos;une autre cible</note>
+      </trans-unit>
+      <trans-unit id="capture.links.searchLabel" datatype="html">
+        <source>Rechercher une entrée du dossier</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-links.component.html</context>
+          <context context-type="linenumber">83,84</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche d&apos;une autre cible</note>
+      </trans-unit>
+      <trans-unit id="capture.links.searchPlaceholder" datatype="html">
+        <source>Titre ou texte d&apos;une entrée…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-links.component.html</context>
+          <context context-type="linenumber">85,86</context>
+        </context-group>
+        <note priority="1" from="description">Texte indicatif de la recherche d&apos;une autre cible</note>
+      </trans-unit>
+      <trans-unit id="capture.links.verbLabel" datatype="html">
+        <source>Verbe du lien avec « <x id="name" equiv-text="name"/> »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-links.component.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+        <note priority="1" from="description">Liste des verbes du lien posé</note>
+      </trans-unit>
+      <trans-unit id="capture.missing.emotion" datatype="html">
+        <source>Choisissez l&apos;émotion du ressenti.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">268</context>
+        </context-group>
+        <note priority="1" from="description">Champ obligatoire du bloc de saisie</note>
+      </trans-unit>
+      <trans-unit id="capture.missing.molecule" datatype="html">
+        <source>Indiquez la molécule.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">272</context>
+        </context-group>
+        <note priority="1" from="description">Champ obligatoire du bloc de saisie</note>
+      </trans-unit>
+      <trans-unit id="capture.missing.text" datatype="html">
+        <source>Écrivez ce qui s&apos;est passé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">276</context>
+        </context-group>
+        <note priority="1" from="description">Champ obligatoire du bloc de saisie</note>
+      </trans-unit>
+      <trans-unit id="capture.missing.title" datatype="html">
+        <source>Donnez un titre (la première ligne du texte).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">270</context>
+        </context-group>
+        <note priority="1" from="description">Champ obligatoire du bloc de saisie</note>
+      </trans-unit>
+      <trans-unit id="capture.missing.until" datatype="html">
+        <source>Indiquez la date de fin, ou cochez « En cours ».</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">274</context>
+        </context-group>
+        <note priority="1" from="description">Champ obligatoire du bloc de saisie</note>
+      </trans-unit>
+      <trans-unit id="capture.summary.link" datatype="html">
+        <source><x id="verb" equiv-text="verb"/> « <x id="name" equiv-text="name"/> »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">330</context>
+        </context-group>
+        <note priority="1" from="description">Résumé lu du bloc, lien posé (verbe et cible)</note>
+      </trans-unit>
+      <trans-unit id="capture.types.detected" datatype="html">
+        <source>détecté depuis « <x id="grammar" equiv-text="grammar"/> »</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-labels.ts</context>
+          <context context-type="linenumber">304</context>
+        </context-group>
+        <note priority="1" from="description">Mention sous les puces de type du bloc de saisie</note>
+      </trans-unit>
+      <trans-unit id="capture.types.label" datatype="html">
+        <source>Type d&apos;entrée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+        <note priority="1" from="description">Groupe des puces de type du bloc de saisie</note>
+      </trans-unit>
+      <trans-unit id="capture.types.legend" datatype="html">
+        <source>Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">13,15</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette des puces de type</note>
+      </trans-unit>
+      <trans-unit id="capture.visibility.clinical" datatype="html">
+        <source> clinique </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">390,392</context>
+        </context-group>
+        <note priority="1" from="description">Visibilité clinique</note>
+      </trans-unit>
+      <trans-unit id="capture.visibility.private" datatype="html">
+        <source> privée </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
+          <context context-type="linenumber">397,399</context>
+        </context-group>
+        <note priority="1" from="description">Visibilité privée</note>
+      </trans-unit>
+      <trans-unit id="capture.when.dayBefore" datatype="html">
+        <source> avant-hier </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-when-field.component.ts</context>
+          <context context-type="linenumber">70,73</context>
+        </context-group>
+        <note priority="1" from="description">Moment : avant-hier</note>
+      </trans-unit>
+      <trans-unit id="capture.when.now" datatype="html">
+        <source> maintenant </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-when-field.component.ts</context>
+          <context context-type="linenumber">49,52</context>
+        </context-group>
+        <note priority="1" from="description">Moment : maintenant</note>
+      </trans-unit>
+      <trans-unit id="capture.when.other" datatype="html">
+        <source> autre date… </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-when-field.component.ts</context>
+          <context context-type="linenumber">77,79</context>
+        </context-group>
+        <note priority="1" from="description">Moment : une autre date</note>
+      </trans-unit>
+      <trans-unit id="capture.when.precision" datatype="html">
+        <source>Précision de la date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-when-field.component.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <note priority="1" from="description">Liste des précisions du moment dans le bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.when.precisionNote" datatype="html">
+        <source>(<x id="precision" equiv-text="label"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-when-field.component.ts</context>
+          <context context-type="linenumber">245</context>
+        </context-group>
+        <note priority="1" from="description">Précision d&apos;une date lue, à côté du moment</note>
+      </trans-unit>
+      <trans-unit id="capture.when.today" datatype="html">
+        <source> aujourd&apos;hui </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-when-field.component.ts</context>
+          <context context-type="linenumber">56,59</context>
+        </context-group>
+        <note priority="1" from="description">Moment : aujourd&apos;hui</note>
+      </trans-unit>
+      <trans-unit id="capture.when.year" datatype="html">
+        <source>Année</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-when-field.component.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <note priority="1" from="description">Champ année du moment dans le bloc</note>
+      </trans-unit>
+      <trans-unit id="capture.when.yearPlaceholder" datatype="html">
+        <source>aaaa</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-when-field.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Format d&apos;une année</note>
+      </trans-unit>
+      <trans-unit id="capture.when.yesterday" datatype="html">
+        <source> hier </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-when-field.component.ts</context>
+          <context context-type="linenumber">63,66</context>
+        </context-group>
+        <note priority="1" from="description">Moment : hier</note>
       </trans-unit>
     </body>
   </file>

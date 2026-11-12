@@ -1,0 +1,133 @@
+<div class="row" role="group" [attr.aria-labelledby]="searchId + '-legend'">
+  <span
+    class="lbl"
+    [id]="searchId + '-legend'"
+    i18n="Rangée des liens du bloc de saisie@@capture.links.legend"
+    >Lié à</span
+  >
+  @if (state(); as kind) {
+    <pm-state
+      [kind]="kind"
+      compact
+      skeleton="row"
+      [lines]="1"
+      [title]="kind === 'error' ? errorTitle : kind === 'empty' ? emptyTitle : undefined"
+      [action]="kind === 'error' ? retryAction : undefined"
+    />
+  } @else {
+    @for (chip of chips(); track chip.candidate.id) {
+      @if (isPressed(chip) && link(); as placed) {
+        <span class="tchip pressed" [attr.data-type]="chip.candidate.type">
+          <pm-entry-icon [type]="chip.candidate.type" [size]="10" />
+          <select
+            class="verb"
+            [attr.aria-label]="verbAria(chip.name)"
+            [attr.aria-describedby]="describedBy()"
+            [attr.aria-invalid]="invalid() ? 'true' : null"
+            (change)="chooseVerb(placed, +$any($event.target).value)"
+          >
+            @for (choice of placed.choices; track choice.linkType + choice.direction) {
+              <option [value]="$index" [selected]="$index === selectedVerb(placed)">
+                {{ choice.label }}
+              </option>
+            }
+          </select>
+          <button
+            type="button"
+            class="name"
+            aria-pressed="true"
+            [attr.aria-label]="chipAria(chip)"
+            [attr.aria-describedby]="describedBy()"
+            (click)="toggle(chip)"
+          >
+            {{ chip.name }}
+          </button>
+        </span>
+      } @else {
+        <button
+          type="button"
+          class="tchip"
+          aria-pressed="false"
+          [attr.data-type]="chip.candidate.type"
+          [attr.aria-label]="chipAria(chip)"
+          [attr.aria-describedby]="describedBy()"
+          (click)="toggle(chip)"
+        >
+          <pm-entry-icon [type]="chip.candidate.type" [size]="10" />
+          <span class="cut">{{ chip.name }}</span>
+        </button>
+      }
+    }
+    <span class="other-anchor">
+      <button
+        type="button"
+        class="other"
+        [attr.aria-expanded]="searchOpen()"
+        [attr.aria-controls]="searchId + '-dialog'"
+        (click)="searchOpen() ? closeSearch() : openSearch()"
+        i18n="Lien vers la recherche d'une autre cible@@capture.links.other"
+      >
+        Autre entrée…
+      </button>
+      @if (searchOpen()) {
+        <div
+          class="search"
+          role="dialog"
+          [id]="searchId + '-dialog'"
+          aria-label="Relier à une autre entrée"
+          i18n-aria-label="Fenêtre de recherche d'une autre cible@@capture.links.searchDialog"
+        >
+          <input
+            class="search-field"
+            type="search"
+            role="searchbox"
+            autocomplete="off"
+            [id]="searchId"
+            aria-label="Rechercher une entrée du dossier"
+            i18n-aria-label="Champ de recherche d'une autre cible@@capture.links.searchLabel"
+            placeholder="Titre ou texte d'une entrée…"
+            i18n-placeholder="
+              Texte indicatif de la recherche d'une autre cible@@capture.links.searchPlaceholder"
+            [value]="query()"
+            (input)="onQuery($any($event.target).value)"
+            (keydown)="onSearchKey($event)"
+          />
+          @if (searchState(); as kind) {
+            <pm-state
+              [kind]="kind"
+              compact
+              skeleton="row"
+              [lines]="2"
+              [title]="
+                kind === 'error'
+                  ? searchErrorTitle
+                  : kind === 'empty'
+                    ? searchEmptyTitle
+                    : undefined
+              "
+              [action]="kind === 'error' ? searchRetry : undefined"
+            />
+          } @else if (results().length > 0) {
+            <ul class="results">
+              @for (result of results(); track result.candidate.id) {
+                <li>
+                  <button type="button" (click)="pick(result)">
+                    <pm-entry-icon [type]="result.candidate.type" [size]="10" />
+                    <span class="result-name">{{ result.name }}</span>
+                    <span class="result-type">{{ typeName(result.candidate) }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          }
+          <p class="hint" i18n="Aide de la recherche d'une autre cible@@capture.links.searchHint">
+            Recherche dans tout le dossier. Un seul lien ici ; pour plusieurs, Détailler.
+          </p>
+        </div>
+      }
+    </span>
+    @if (foundText(); as text) {
+      <span class="note-r">{{ text }}</span>
+    }
+  }
+</div>

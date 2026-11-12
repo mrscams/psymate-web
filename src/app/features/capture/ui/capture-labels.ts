@@ -1,10 +1,17 @@
-// Textes de la barre de commande (M6-02) : avertissements du parseur (M6-01 donne des codes et des
+// Textes du bloc de saisie (M6-02, UX-S1) : avertissements du parseur (M6-01 donne des codes et des
 // paramètres, jamais de texte), problèmes de cible, précisions, problèmes d'enregistrement.
 
 import { ApiProblem, FieldProblem } from '../../../core/http';
 import { EntryType, entryTypeLabel } from '../../../shared/ui';
 import { OccurredPrecision } from '../../../shared/util';
-import { CaptureEmotion, CapturePreview, TargetIssue } from '../data/capture.model';
+import {
+  CaptureEmotion,
+  CapturePreview,
+  CaptureSlot,
+  ComposedEntry,
+  slotOfField,
+  TargetIssue,
+} from '../data/capture.model';
 import { CaptureEntryType, ParseWarning } from '../parser/parse.types';
 
 /** Une liste lisible (« a, b et c ») dans la langue de l'interface. */
@@ -216,6 +223,117 @@ export function previewSummary(preview: CapturePreview): string {
   }
   const blocking =
     preview.warnings.filter((warning) => warning.blocking).length + (preview.targetIssue ? 1 : 0);
+  if (blocking > 0) {
+    parts.push(
+      $localize`:Résumé lu de l'aperçu, points bloquants@@capture.summary.blocking:${blocking}:count: point(s) à corriger avant d'enregistrer`,
+    );
+  }
+  return parts.join(', ');
+}
+
+// Bloc de saisie structuré (UX-S1) ---------------------------------------------------------------
+
+/** Étiquette d'un emplacement du bloc, pour nommer le champ dans un message. */
+export function slotLabel(slot: CaptureSlot): string {
+  switch (slot) {
+    case 'text':
+      return $localize`:Champ du bloc de saisie@@capture.slot.text:le texte`;
+    case 'emotion':
+      return $localize`:Champ du bloc de saisie@@capture.slot.emotion:l'émotion`;
+    case 'intensity':
+      return $localize`:Champ du bloc de saisie@@capture.slot.intensity:l'intensité`;
+    case 'when':
+      return $localize`:Champ du bloc de saisie@@capture.slot.when:le moment`;
+    case 'until':
+      return $localize`:Champ du bloc de saisie@@capture.slot.until:la fin de la situation`;
+    case 'title':
+      return $localize`:Champ du bloc de saisie@@capture.slot.title:le titre`;
+    case 'molecule':
+      return $localize`:Champ du bloc de saisie@@capture.slot.molecule:la molécule`;
+    case 'dosage':
+      return $localize`:Champ du bloc de saisie@@capture.slot.dosage:la posologie`;
+    case 'visibility':
+      return $localize`:Champ du bloc de saisie@@capture.slot.visibility:la visibilité`;
+    case 'link':
+      return $localize`:Champ du bloc de saisie@@capture.slot.link:le lien`;
+    case 'general':
+      return $localize`:Champ du bloc de saisie@@capture.slot.general:l'entrée`;
+  }
+}
+
+/** Champ obligatoire vide (le type l'exige) : la phrase sous le champ, teinte warning. */
+export function missingText(slot: CaptureSlot): string {
+  switch (slot) {
+    case 'emotion':
+      return $localize`:Champ obligatoire du bloc de saisie@@capture.missing.emotion:Choisissez l'émotion du ressenti.`;
+    case 'title':
+      return $localize`:Champ obligatoire du bloc de saisie@@capture.missing.title:Donnez un titre (la première ligne du texte).`;
+    case 'molecule':
+      return $localize`:Champ obligatoire du bloc de saisie@@capture.missing.molecule:Indiquez la molécule.`;
+    case 'until':
+      return $localize`:Champ obligatoire du bloc de saisie@@capture.missing.until:Indiquez la date de fin, ou cochez « En cours ».`;
+    default:
+      return $localize`:Champ obligatoire du bloc de saisie@@capture.missing.text:Écrivez ce qui s'est passé.`;
+  }
+}
+
+/**
+ * Les erreurs de champ d'un 422, rangées par emplacement du bloc (errors[].field) ; les champs que le
+ * bloc ne montre pas vont sous le bloc (« general »).
+ */
+export function fieldErrorsBySlot(problem: ApiProblem | null): Map<CaptureSlot, string> {
+  const map = new Map<CaptureSlot, string>();
+  if (!problem || problem.status !== 422) return map;
+  for (const error of problem.errors ?? []) {
+    const slot = slotOfField(error.field ?? '');
+    const text = fieldProblemText(error);
+    if (!text) continue;
+    const previous = map.get(slot);
+    map.set(slot, previous ? `${previous} ${text}` : text);
+  }
+  return map;
+}
+
+/** Problème d'enregistrement quand chaque erreur a déjà trouvé son champ : la phrase sous le bloc. */
+export function savedNothingText(): string {
+  return $localize`:Erreur du bloc de saisie, erreurs placées sous les champs@@capture.error.fields:L'entrée n'a pas été créée : corrigez les champs signalés.`;
+}
+
+/** « détecté depuis « anx 7 » » : le type vient de la grammaire. */
+export function detectedFromText(grammar: string): string {
+  return $localize`:Mention sous les puces de type du bloc de saisie@@capture.types.detected:détecté depuis « ${grammar}:grammar: »`;
+}
+
+/** « trouvé depuis « > réorg » » : le lien vient de la grammaire. */
+export function foundFromText(query: string): string {
+  return $localize`:Mention de la rangée Lié à du bloc de saisie@@capture.links.found:trouvé depuis « > ${query}:query: »`;
+}
+
+/**
+ * Résumé court de l'entrée composée pour les lecteurs d'écran (région role="status") : type,
+ * émotion et intensité, cible du lien avec son verbe, nombre de points à corriger.
+ */
+export function composedSummary(composed: ComposedEntry): string {
+  const parts = [entryTypeLabel(composed.type)];
+  if (composed.emotion) {
+    const label = composed.emotion.label;
+    parts.push(
+      composed.intensity !== null
+        ? $localize`:Résumé lu de l'aperçu, émotion et intensité@@capture.summary.emotion:${label}:emotion: ${composed.intensity}:intensity: sur 10`
+        : label,
+    );
+  }
+  if (composed.link) {
+    const verb = composed.link.choice.label;
+    const name = composed.link.name;
+    parts.push(
+      $localize`:Résumé lu du bloc, lien posé (verbe et cible)@@capture.summary.link:${verb}:verb: « ${name}:name: »`,
+    );
+  }
+  // Les champs obligatoires vides ne comptent pas : une saisie en cours n'est pas « à corriger ».
+  const blocking =
+    composed.warnings.filter((item) => item.warning.blocking).length +
+    (composed.targetIssue ? 1 : 0);
   if (blocking > 0) {
     parts.push(
       $localize`:Résumé lu de l'aperçu, points bloquants@@capture.summary.blocking:${blocking}:count: point(s) à corriger avant d'enregistrer`,
