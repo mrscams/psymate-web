@@ -614,7 +614,29 @@ export class CaptureBlockComponent {
       return;
     }
     this.now.set(new Date());
-    this.openEditor.emit(this.composed()?.prefill ?? null);
+    // Ce que le préremplissage de l'éditeur ne porte pas est dit, jamais perdu en silence : la
+    // visibilité choisie (EntryPrefill n'en a pas) et un lien vers une cible hors des cinq du rail
+    // (le rail de l'éditeur ne la montre pas, il ne l'enverrait pas).
+    const lost: string[] = [];
+    if (composed.visibility !== this.defaultVisibility()) {
+      lost.push(
+        $localize`:Toast de Détailler, visibilité non reprise@@capture.detail.visibilityLost:la visibilité « privée » (à régler dans « Plus »)`,
+      );
+    }
+    const link = composed.link;
+    if (link && !this.candidates().some((item) => item.id === link.candidate.id)) {
+      const name = link.name;
+      lost.push(
+        $localize`:Toast de Détailler, lien hors rail non repris@@capture.detail.linkLost:le lien vers « ${name}:name: » (à rechercher dans « Lié à… »)`,
+      );
+    }
+    if (lost.length > 0) {
+      const items = new Intl.ListFormat(this.locale, { type: 'conjunction' }).format(lost);
+      this.toast.warning(
+        $localize`:Toast de Détailler, choix à refaire dans l'éditeur@@capture.detail.lost:L'éditeur ne reprend pas ${items}:items:.`,
+      );
+    }
+    this.openEditor.emit(composed.prefill);
   }
 
   /** La cible du `>` trouvée dans le rail, pour la rangée « Lié à ». */

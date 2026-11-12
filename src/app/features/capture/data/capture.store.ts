@@ -195,6 +195,7 @@ export const CaptureStore = signalStore(
         const next = reconcileDraft(store.draft(), snapshot);
         if (next !== store.draft()) patchState(store, { draft: next });
         if (!snapshot && store.searchQuery()) {
+          searchSeq++;
           patchState(store, { search: idle(), searchQuery: '' });
         }
       },
@@ -268,6 +269,7 @@ export const CaptureStore = signalStore(
           dismissedTarget: null,
           extraCandidate: candidate,
         });
+        searchSeq++;
         patchState(store, { search: idle(), searchQuery: '' });
       },
 
@@ -290,6 +292,7 @@ export const CaptureStore = signalStore(
         const q = query.trim();
         patchState(store, { searchQuery: q });
         if (!patientId || q.length < SEARCH_MIN_LENGTH) {
+          searchSeq++;
           patchState(store, { search: idle() });
           return;
         }
