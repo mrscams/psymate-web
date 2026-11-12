@@ -2,6 +2,23 @@
   display: block;
 }
 
+// Barre de séance (proposition 04) : pleine largeur sous la barre d'application, au-dessus de
+// l'en-tête ; les marges de la page sont compensées.
+pm-session-bar {
+  margin: 0 -24px 10px;
+
+  @media (max-width: 720px) {
+    margin: 0 -16px 8px;
+  }
+}
+
+// En séance, le bouton Clôturer est dans la barre : celui de l'en-tête partagé est masqué
+// (maquette 04b, « Patient header in session: no session button »). Style posé de l'extérieur,
+// sans modifier le composant partagé.
+:host ::ng-deep pm-patient-header.in-session .close-session {
+  display: none;
+}
+
 .tab-content {
   min-width: 0;
 }
@@ -58,46 +75,9 @@
   }
 }
 
-/* Colonne latérale (04b .ctx / .block) : blocs séparés par des filets, titres 13/650 secondaires. */
+/* Colonne latérale (04b .ctx) : ses blocs sont ceux de pm-session-context. */
 .ctx {
   min-width: 0;
-  color: var(--text-primary);
-  font: var(--mat-sys-body-medium);
-  font-size: 13.5px;
-
-  .block {
-    padding: 2px 0 14px;
-    border-bottom: 1px solid var(--border-subtle);
-
-    &:last-child {
-      border-bottom: 0;
-    }
-  }
-
-  h3 {
-    margin: 0 0 8px;
-    color: var(--text-secondary);
-    font: var(--mat-sys-label-large);
-    font-size: 13px;
-    font-weight: 650;
-  }
-}
-
-/* « anx 7 ressenti · /evt événement · … » : exemples en gras, 12.5 px secondaires (04b). */
-.shortcuts {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 12.5px;
-  line-height: 1.6;
-
-  b {
-    color: var(--text-primary);
-    font-weight: 600;
-  }
-
-  .sep {
-    margin: 0 4px;
-  }
 }
 
 // Indice de première entrée (M7-03) : information, une seule action, sans couleur d'alerte.

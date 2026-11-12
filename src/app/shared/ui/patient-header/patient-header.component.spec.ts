@@ -128,7 +128,7 @@ describe('PatientHeaderComponent', () => {
     expect(el.querySelector('button.start-session')).not.toBeNull();
   });
 
-  it('séance en cours : onglet 1 « Séance », rien à droite (ni Démarrer ni Clôturer : ils sont dans la barre), bascule Vue au bout des onglets', async () => {
+  it('séance en cours : onglet 1 « Séance » vers l’onglet Séance, « Vue d’ensemble » à droite des onglets, rien à droite de l’identité (ni Démarrer ni Clôturer : ils sont dans la barre), bascule Vue au bout', async () => {
     vi.setSystemTime(new Date('2026-10-24T14:18:00Z'));
     const { el, fixture } = await render({
       patient: marie,
@@ -140,16 +140,28 @@ describe('PatientHeaderComponent', () => {
     expect(el.querySelector('.session-text')).toBeNull();
     expect(el.querySelector('button.start-session')).toBeNull();
     expect(el.querySelector('button.close-session')).toBeNull();
+    // UX-S3 (04b, question 1) : l'onglet 1 mène à /patients/:id/session ; la vue d'ensemble reste
+    // à un clic, à droite des onglets, sans touche.
     expect(tabLabels(el)).toEqual([
-      ['/patients/p1', '1', 'Séance'],
+      ['/patients/p1/session', '1', 'Séance'],
       ['/patients/p1/timeline', '2', 'Timeline'],
       ['/patients/p1/graph', '3', 'Graphe'],
+      ['/patients/p1', undefined, "Vue d'ensemble"],
     ]);
+    expect(el.querySelector('nav.tabs a.overview-link')).not.toBeNull();
     expect(el.querySelector('.tabs-row .view-toggle .toggle-slot')).not.toBeNull();
 
-    // Séance clôturée : l'onglet 1 redevient « Vue d'ensemble », Démarrer revient.
+    // Touche 1 en séance : l'onglet Séance.
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate');
+    document.body.dispatchEvent(
+      new KeyboardEvent('keydown', { key: '1', bubbles: true, cancelable: true }),
+    );
+    expect(navigate).toHaveBeenCalledWith(['/patients', 'p1', 'session']);
+
+    // Séance clôturée : l'onglet 1 redevient « Vue d'ensemble », le lien disparaît, Démarrer revient.
     fixture.componentRef.setInput('session', { kind: 'last', date: '2026-10-24' });
     await fixture.whenStable();
+    expect(tabLabels(el)).toHaveLength(3);
     expect(tabLabels(el)[0]).toEqual(['/patients/p1', '1', "Vue d'ensemble"]);
     expect(el.querySelector('button.start-session')).not.toBeNull();
   });

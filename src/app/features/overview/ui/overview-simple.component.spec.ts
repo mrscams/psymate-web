@@ -283,6 +283,24 @@ describe('OverviewSimpleComponent', () => {
     );
   });
 
+  it('dernière séance : trace « Prochaine fois » et « modifier la séance » (UX-S3)', async () => {
+    const view = overviewView();
+    const [last, ...rest] = view.recentSessions;
+    const summary = `${last.summary}\nProchaine fois :\n– Relire la demande`;
+    const { el, fixture } = await render(
+      loaded({ ...view, recentSessions: [{ ...last, summary }, ...rest] }),
+    );
+    const session = block(el, 'Dernière séance');
+    expect(session.querySelector('.summary')?.textContent).toBe(
+      'Reprise du thème du travail.\nObjectif : préparer l’entretien.',
+    );
+    expect(text(session.querySelector('.goal'))).toBe('Prochaine fois : Relire la demande');
+    const selected: string[] = [];
+    fixture.componentInstance.entrySelected.subscribe((id) => selected.push(id));
+    [...session.querySelectorAll('button')].find((b) => text(b) === 'modifier la séance')!.click();
+    expect(selected).toEqual(['s-1']);
+  });
+
   it('dernière séance ouverte, sans compte rendu : elle le dit', async () => {
     const view = overviewView();
     const open = { ...view.recentSessions[0], closedAt: null, summary: null };

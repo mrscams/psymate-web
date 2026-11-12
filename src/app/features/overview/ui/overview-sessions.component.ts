@@ -9,6 +9,7 @@ import {
 import { RouterLink } from '@angular/router';
 
 import { EntryIconComponent } from '../../../shared/ui';
+import { splitNextTime } from '../../patient-shell';
 import { RecentSession, TIMELINE_PARAMS } from '../data/overview.model';
 import { sessionHeading } from './overview-labels';
 
@@ -56,7 +57,22 @@ import { sessionHeading } from './overview-labels';
                 </p>
               }
               @if (first && session.summary) {
-                <p class="summary">{{ session.summary }}</p>
+                @let split = splitSummary(session.summary);
+                @if (split.body) {
+                  <p class="summary">{{ split.body }}</p>
+                }
+                @if (split.nextTime.length) {
+                  <!-- Trace « Prochaine fois » (UX-S3) : les dernières lignes du compte rendu. -->
+                  <p class="goal">
+                    <strong
+                      i18n="
+                        Marqueur prochaine fois dans la trace d'une
+                        séance@@overview.sessions.nextTime"
+                      >Prochaine fois :</strong
+                    >
+                    {{ split.nextTime.join(' · ') }}
+                  </p>
+                }
               } @else if (session.summaryFirstLine) {
                 <p class="summary">{{ session.summaryFirstLine }}</p>
               } @else {
@@ -70,6 +86,15 @@ import { sessionHeading } from './overview-labels';
                 i18n="Lien d'une séance vers la timeline par séance@@overview.sessions.inTimeline"
                 >Voir la séance dans la timeline</a
               >
+              @if (first && session.kind === 'session' && session.closedAt) {
+                <button type="button" class="link" (click)="editSummary.emit(session.entryId)">
+                  <ng-container
+                    i18n="
+                      Modifier la dernière séance (durée, modalité)@@overview.sessions.editSummary"
+                    >modifier la séance</ng-container
+                  >
+                </button>
+              }
             </div>
           }
         </li>
@@ -155,6 +180,32 @@ import { sessionHeading } from './overview-labels';
     .summary {
       white-space: pre-line;
     }
+    .goal {
+      padding: 8px 12px;
+      border: 1px dashed var(--border-strong);
+      border-radius: 10px;
+      background: var(--surface-raised);
+      color: var(--text-secondary);
+    }
+    .goal strong {
+      color: var(--text-primary);
+    }
+    .link {
+      align-self: flex-start;
+      padding: 4px 0;
+      border: 0;
+      background: none;
+      color: var(--primary);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .link:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
     a {
       align-self: flex-start;
       padding: 4px 0;
@@ -176,11 +227,18 @@ export class OverviewSessionsComponent {
   /** Séances dépliées (identifiants). */
   readonly expanded = input.required<string[]>();
   readonly expandedChange = output<string[]>();
+  /** « modifier la séance » (dernière séance clôturée) : l'éditeur d'entrée (?entry=). */
+  readonly editSummary = output<string>();
 
   private readonly locale = inject(LOCALE_ID);
 
   protected heading(session: RecentSession): string {
     return sessionHeading(session, this.locale);
+  }
+
+  /** Le compte rendu sans ses lignes « Prochaine fois », et ces lignes (convention UX-S3). */
+  protected splitSummary(summary: string) {
+    return splitNextTime(summary);
   }
 
   protected toggle(id: string): void {

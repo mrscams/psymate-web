@@ -103,6 +103,33 @@ a:focus-visible {
   font: var(--mat-sys-body-medium);
   color: var(--text-secondary);
 }
+// « Prochaine fois » : le cadre tireté de la proposition 04 (.goal).
+.goal {
+  max-width: 72ch;
+  padding: 8px 12px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  font: var(--mat-sys-body-medium);
+  color: var(--text-secondary);
+}
+.goal strong {
+  color: var(--text-primary);
+}
+.session-foot .link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--primary);
+  font: inherit;
+  cursor: pointer;
+}
+.session-foot .link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .previous {
   display: flex;
   flex-direction: column;

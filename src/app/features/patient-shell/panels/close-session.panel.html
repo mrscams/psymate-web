@@ -1,0 +1,224 @@
+<pm-side-panel [title]="title" [subtitle]="subtitle">
+  <form class="recap" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    @if (generalError(); as message) {
+      <p class="general-error" role="alert">{{ message }}</p>
+    }
+
+    <!-- Durée : le temps écoulé arrondi à 5 min, la durée habituelle en un clic. -->
+    <div class="row">
+      <label
+        class="k"
+        [for]="fid('durationMin')"
+        i18n="Champ du panneau de clôture@@patientShell.close.duration"
+        >Durée (min)</label
+      >
+      <div class="v duration-row">
+        <input
+          [id]="fid('durationMin')"
+          type="text"
+          inputmode="numeric"
+          autocomplete="off"
+          class="duration"
+          formControlName="durationMin"
+          [attr.aria-invalid]="invalid(form.controls.durationMin)"
+          [attr.aria-describedby]="fid('durationMin') + '-hint ' + fid('durationMin') + '-error'"
+        />
+        <span class="hint" [id]="fid('durationMin') + '-hint'">
+          @if (fromPlanned) {
+            <ng-container
+              i18n="
+                Aide de la durée proposée, séance non clôturée@@patientShell.close.durationPlanned"
+              >durée prévue (séance ouverte depuis plus de 3 h)</ng-container
+            >
+          } @else {
+            <ng-container i18n="Aide de la durée proposée@@patientShell.close.durationElapsed"
+              >écoulé, arrondi à 5 min</ng-container
+            >
+          }
+        </span>
+        @if (usualOffered) {
+          <button type="button" class="ghost" (click)="useUsual()">
+            <ng-container i18n="Bouton de la durée habituelle@@patientShell.close.usual"
+              >{{ planned }} habituels</ng-container
+            >
+          </button>
+        }
+        @if (rangeError()) {
+          <p
+            class="field-error"
+            [id]="fid('durationMin') + '-error'"
+            i18n="Erreur de durée hors bornes@@patientShell.close.durationRange"
+          >
+            Une durée entière entre 1 et 600 minutes.
+          </p>
+        } @else {
+          <pm-field-errors
+            [control]="form.controls.durationMin"
+            [id]="fid('durationMin') + '-error'"
+          />
+        }
+      </div>
+    </div>
+
+    <!-- Noté en séance : sous les yeux pendant que le compte rendu s'écrit. -->
+    <div class="row">
+      <span class="k" id="close-noted-label">
+        <ng-container i18n="Étiquette du bloc noté en séance du panneau@@patientShell.close.noted"
+          >Noté en séance</ng-container
+        >
+        @if (notedCount(); as count) {
+          <span
+            class="faint"
+            i18n="Nombre d'entrées notées, dans le panneau@@patientShell.close.notedCount"
+          >
+            {count, plural, =1 {1 entrée} other {{{count}} entrées}}
+          </span>
+        }
+      </span>
+      <div class="v noted" role="group" aria-labelledby="close-noted-label">
+        @switch (notedState()) {
+          @case ('loading') {
+            <pm-state kind="loading" skeleton="row" [lines]="2" compact />
+          }
+          @case ('error') {
+            <pm-state kind="error" compact [title]="notedErrorTitle" [action]="notedRetry" />
+          }
+          @case ('empty') {
+            <p
+              class="faint none"
+              i18n="Aucune entrée notée, dans le panneau@@patientShell.close.notedNone"
+            >
+              Rien n'a été noté pendant cette séance.
+            </p>
+          }
+          @default {
+            <pm-noted-entries
+              [entries]="noted()"
+              [emotionLabels]="emotionLabels()"
+              [compact]="true"
+            />
+          }
+        }
+      </div>
+    </div>
+
+    <!-- Compte rendu, facultatif ; deux invites qui insèrent un titre. -->
+    <div class="row top">
+      <label class="k" [for]="fid('summary')">
+        <ng-container i18n="Champ du panneau de clôture@@patientShell.close.summary"
+          >Compte rendu</ng-container
+        >
+        <span class="faint" i18n="Mention facultatif du compte rendu@@patientShell.close.optional"
+          >facultatif</span
+        >
+      </label>
+      <div class="v">
+        <textarea
+          [id]="fid('summary')"
+          rows="6"
+          formControlName="summary"
+          [attr.aria-invalid]="invalid(form.controls.summary)"
+          [attr.aria-describedby]="fid('summary') + '-error'"
+        ></textarea>
+        <pm-field-errors [control]="form.controls.summary" [id]="fid('summary') + '-error'" />
+        <div class="prompts">
+          <button
+            type="button"
+            (click)="insert('theme')"
+            i18n="Invite du compte rendu@@patientShell.close.prompt.themeButton"
+          >
+            + Thème
+          </button>
+          <button
+            type="button"
+            (click)="insert('goal')"
+            i18n="Invite du compte rendu@@patientShell.close.prompt.goalButton"
+          >
+            + Objectif
+          </button>
+          <span
+            class="faint"
+            i18n="Aide des invites du compte rendu@@patientShell.close.prompt.hint"
+            >insère un titre, rien de plus</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Prochaine fois : des lignes courtes, dernières lignes du compte rendu (convention). -->
+    <fieldset class="row top next">
+      <legend class="k" i18n="Bloc prochaine fois du panneau@@patientShell.close.nextTime">
+        Prochaine fois
+      </legend>
+      <div class="v">
+        <ul class="lines">
+          @for (line of nextTime(); track $index) {
+            <li>
+              <span class="dash" aria-hidden="true">–</span>
+              <input
+                type="text"
+                [id]="'next-time-' + $index"
+                [value]="line"
+                [attr.aria-label]="lineLabel($index)"
+                (input)="setLine($index, $any($event.target).value)"
+              />
+              <button
+                type="button"
+                class="remove"
+                [attr.aria-label]="removeLabel($index)"
+                (click)="removeLine($index)"
+              >
+                ✕
+              </button>
+            </li>
+          }
+          <li>
+            <span class="dash" aria-hidden="true">–</span>
+            <input
+              type="text"
+              id="next-time-new"
+              [value]="newLine()"
+              placeholder="Ajouter une ligne…"
+              i18n-placeholder="
+                Champ d'ajout d'une ligne prochaine fois@@patientShell.close.nextTime.add"
+              aria-label="Ajouter une ligne à reprendre la prochaine fois"
+              i18n-aria-label="
+                Étiquette du champ d'ajout prochaine fois@@patientShell.close.nextTime.addLabel"
+              (input)="newLine.set($any($event.target).value)"
+              (keydown.enter)="$event.preventDefault(); addLine()"
+            />
+          </li>
+        </ul>
+        <p class="faint hint" i18n="Aide du bloc prochaine fois@@patientShell.close.nextTime.hint">
+          Enregistré comme dernières lignes du compte rendu (« Prochaine fois : … »). Affiché au
+          début de la prochaine séance.
+        </p>
+      </div>
+    </fieldset>
+  </form>
+
+  <div pmPanelFooter class="footer">
+    <button type="button" class="session" [disabled]="store.busy()" (click)="submit()">
+      <ng-container i18n="Bouton du panneau de clôture@@patientShell.close.confirm"
+        >Clôturer la séance</ng-container
+      >
+    </button>
+    <button type="button" class="outline" [disabled]="store.busy()" (click)="submit(true)">
+      <ng-container
+        i18n="Bouton du panneau de clôture, retour à la liste@@patientShell.close.confirmList"
+        >Clôturer et revenir à la liste</ng-container
+      >
+    </button>
+    <button type="button" class="cancel" (click)="cancel()">
+      <ng-container i18n="Bouton du panneau de clôture@@patientShell.close.cancel"
+        >Annuler</ng-container
+      >
+    </button>
+    <span class="hints">
+      <kbd i18n="Touche Échap, pied du panneau de clôture@@patientShell.close.escapeKey">Échap</kbd
+      >&ngsp;<span i18n="Rappel du pied du panneau de clôture@@patientShell.close.escapeHint"
+        >garde le brouillon</span
+      >
+    </span>
+  </div>
+</pm-side-panel>

@@ -123,8 +123,14 @@
 
 .tabs {
   display: flex;
+  flex: 1 1 auto;
   gap: 4px;
   min-width: 0;
+
+  /* En séance (04b) : « Vue d'ensemble » à droite des onglets, même hauteur, sans touche. */
+  .overview-link {
+    margin-left: auto;
+  }
 
   a {
     display: inline-flex;

@@ -1,0 +1,307 @@
+// Panneau de clôture (propositions 04 et 04b, état 5) : 520 px, colonne d'étiquettes de 110 px,
+// pied avec deux boutons et un fantôme. Aucune couleur hors tokens.
+:host {
+  display: block;
+  height: 100%;
+}
+
+.recap {
+  display: grid;
+  gap: 14px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 13.5px;
+
+  &.top {
+    align-items: flex-start;
+  }
+
+  > * {
+    min-width: 0;
+  }
+}
+
+.k {
+  flex: none;
+  width: 110px;
+  color: var(--text-secondary);
+  font: var(--mat-sys-label-large);
+  font-size: 13px;
+
+  .faint {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.top .k {
+  padding-top: 8px;
+}
+
+.v {
+  flex: 1;
+  min-width: 0;
+}
+
+.duration-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+
+  .field-error,
+  pm-field-errors {
+    flex-basis: 100%;
+  }
+}
+
+input,
+textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: var(--mat-sys-body-large);
+
+  &[aria-invalid='true'] {
+    border-color: var(--danger);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+  }
+}
+
+.duration {
+  width: 90px;
+  min-height: 34px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.hint {
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+
+.faint {
+  color: var(--text-secondary);
+}
+
+textarea {
+  min-height: 130px;
+  padding: 10px 12px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.noted {
+  padding: 0 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  max-height: 170px;
+  overflow: auto;
+
+  .none {
+    margin: 0;
+    padding: 10px 0;
+    font-size: 13px;
+  }
+}
+
+.prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 8px;
+
+  button {
+    min-height: 28px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--primary-tint);
+    color: var(--primary);
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+  }
+
+  .faint {
+    font-size: 12px;
+  }
+}
+
+.ghost {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--primary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+// Prochaine fois : une liste de lignes courtes, un tiret devant chacune.
+.lines {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dash {
+    color: var(--text-secondary);
+  }
+
+  input {
+    min-height: 32px;
+    padding: 0 6px;
+    border-color: transparent;
+    background: transparent;
+    font-size: 13.5px;
+
+    &:focus-visible {
+      border-color: var(--border-strong);
+    }
+  }
+
+  .remove {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: var(--text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--surface-sunken);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+  }
+}
+
+.next .hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+}
+
+.field-error,
+.general-error {
+  margin: 4px 0 0;
+  font: var(--mat-sys-body-small);
+  color: var(--danger);
+}
+
+.general-error {
+  margin: 0;
+  font: var(--mat-sys-body-medium);
+}
+
+// Pied : « Clôturer la séance » (teinte séance), « Clôturer et revenir à la liste » (contour),
+// « Annuler » (fantôme), rappel Échap à droite.
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 0 14px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.6;
+    }
+  }
+
+  // Teinte de séance : success (4,5:1 avec le texte) plutôt que entry-session (3,9:1 avec le blanc).
+  .session {
+    border-color: var(--success);
+    background: var(--success);
+    color: var(--primary-on);
+  }
+
+  .outline {
+    border-color: var(--border-strong);
+    background: var(--surface-raised);
+    color: var(--text-primary);
+  }
+
+  .cancel {
+    padding: 0 10px;
+    background: transparent;
+    color: var(--primary);
+  }
+
+  .hints {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-left: auto;
+    color: var(--text-secondary);
+    font-size: 12px;
+  }
+}

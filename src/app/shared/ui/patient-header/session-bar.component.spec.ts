@@ -170,6 +170,55 @@ describe('SessionBarComponent', () => {
     expect(bar.querySelector('button.close-session')).not.toBeNull();
   });
 
+  it('UX-S3, 04b état 4 : passé la durée prévue, teinte ambre, « 8 min au-delà des 50 prévues », Clôturer plein', async () => {
+    vi.setSystemTime(new Date('2026-10-24T08:06:12Z'));
+    const { el } = await render({ session: open, plannedMin: 50, entriesCount: 5 });
+    const bar = el.querySelector('.session-bar')!;
+    expect(bar.classList.contains('overtime')).toBe(true);
+    expect(bar.classList.contains('unclosed')).toBe(false);
+    expect(plainText(bar.querySelector('.timer'))).toBe('00:58:12');
+    expect(plainText(bar.querySelector('.planned'))).toBe('8 min au-delà des 50 prévues');
+    expect(plainText(bar)).not.toContain('sur 50 min prévues');
+    expect(plainText(bar.querySelector('.count'))).toBe('5 entrées notées');
+    const close = bar.querySelector('button.close-session')!;
+    expect(close.classList.contains('filled')).toBe(true);
+    expect(close.getAttribute('aria-label')).toBe('Clôturer la séance');
+    expect(bar.querySelector('.resume')).toBeNull();
+  });
+
+  it('à la minute prévue, pas encore de dépassement ; sans durée prévue, jamais', async () => {
+    vi.setSystemTime(new Date('2026-10-24T07:58:30Z'));
+    const atPlanned = await render({ session: open, plannedMin: 50 });
+    expect(atPlanned.el.querySelector('.session-bar')?.classList.contains('overtime')).toBe(false);
+    TestBed.resetTestingModule();
+    vi.setSystemTime(new Date('2026-10-24T09:00:00Z'));
+    const { el } = await render({ session: open, plannedMin: null });
+    expect(el.querySelector('.session-bar')?.classList.contains('overtime')).toBe(false);
+  });
+
+  it('UX-S3 : barre grise « non clôturée » : « Clôturer maintenant », « n entrées », Reprendre émet resumeSession', async () => {
+    vi.setSystemTime(new Date('2026-10-24T19:45:00Z'));
+    const { el, fixture } = await render({
+      session: open,
+      unclosedAfterMin: UNCLOSED_SESSION_AFTER_MIN,
+      plannedMin: 50,
+      entriesCount: 5,
+    });
+    const bar = el.querySelector('.session-bar')!;
+    expect(bar.classList.contains('unclosed')).toBe(true);
+    expect(bar.classList.contains('overtime')).toBe(false);
+    const close = bar.querySelector('button.close-session')!;
+    expect(close.getAttribute('aria-label')).toBe('Clôturer maintenant');
+    expect(plainText(close.querySelector('.long'))).toBe('Clôturer maintenant');
+    expect(plainText(bar.querySelector('.count'))).toBe('5 entrées');
+    const resumed = vi.fn();
+    const component = fixture.debugElement.query(By.directive(SessionBarComponent))
+      .componentInstance as SessionBarComponent;
+    component.resumeSession.subscribe(resumed);
+    bar.querySelector<HTMLButtonElement>('button.resume')!.click();
+    expect(resumed).toHaveBeenCalledTimes(1);
+  });
+
   it('UX-A8 : sans seuil (défaut), le chronomètre continue au-delà de 3 h', async () => {
     vi.setSystemTime(new Date('2026-10-24T19:45:00Z'));
     const { el } = await render({ session: open });

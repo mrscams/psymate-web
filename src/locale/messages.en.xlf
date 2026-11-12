@@ -9976,15 +9976,6 @@
         </context-group>
         <note priority="1" from="description">Toast après le démarrage d&apos;une séance</note>
       </trans-unit>
-      <trans-unit id="patientShell.session.closed" datatype="html">
-        <source>Séance clôturée.</source>
-        <target state="translated">Session closed.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">137</context>
-        </context-group>
-        <note priority="1" from="description">Toast après la clôture d&apos;une séance</note>
-      </trans-unit>
       <trans-unit id="patientShell.close.title" datatype="html">
         <source> Clôturer la séance
 </source>
@@ -25202,15 +25193,6 @@
         </context-group>
         <note priority="1" from="description">Moment : hier</note>
       </trans-unit>
-      <trans-unit id="patientShell.ctx.label" datatype="html">
-        <source>Repères de séance</source>
-        <target state="translated">Session cues</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
-          <context context-type="linenumber">75,76</context>
-        </context-group>
-        <note priority="1" from="description">Étiquette de la colonne latérale en séance</note>
-      </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.title" datatype="html">
         <source> Raccourcis en séance </source>
         <target state="translated">Shortcuts in session</target>
@@ -25480,6 +25462,594 @@
           <context context-type="linenumber">636</context>
         </context-group>
         <note priority="1" from="description">Toast de Détailler, choix à refaire dans l&apos;éditeur</note>
+      </trans-unit>
+      <trans-unit id="overview.sessions.nextTime" datatype="html">
+        <source>Prochaine fois :</source>
+        <target state="translated">Next time:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
+          <context context-type="linenumber">71,75</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">124,127</context>
+        </context-group>
+        <note priority="1" from="description">Marqueur prochaine fois dans la trace d&apos;une
+                        séance</note>
+      </trans-unit>
+      <trans-unit id="overview.sessions.editSummary" datatype="html">
+        <source>modifier la séance</source>
+        <target state="translated">edit the session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
+          <context context-type="linenumber">94,98</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
+          <context context-type="linenumber">156,161</context>
+        </context-group>
+        <note priority="1" from="description">Modifier la dernière séance (durée, modalité)</note>
+      </trans-unit>
+      <trans-unit id="patientShell.context.label" datatype="html">
+        <source>Contexte de la séance</source>
+        <target state="translated">Session context</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
+          <context context-type="linenumber">103,104</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette de la colonne latérale en séance</note>
+      </trans-unit>
+      <trans-unit id="patientShell.session.closedEdit" datatype="html">
+        <source>Modifier</source>
+        <target state="translated">Edit</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
+          <context context-type="linenumber">327</context>
+        </context-group>
+        <note priority="1" from="description">Action du toast de clôture</note>
+      </trans-unit>
+      <trans-unit id="patientShell.session.heading" datatype="html">
+        <source> Séance </source>
+        <target state="translated"> Session </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
+          <context context-type="linenumber">7,11</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;onglet Séance</note>
+      </trans-unit>
+      <trans-unit id="patientShell.noted.heading" datatype="html">
+        <source> Noté pendant cette séance </source>
+        <target state="translated"> Noted during this session </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
+          <context context-type="linenumber">19,22</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc noté pendant la séance</note>
+      </trans-unit>
+      <trans-unit id="patientShell.planned.heading" datatype="html">
+        <source> Prévu la dernière fois </source>
+        <target state="translated"> Planned last time </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
+          <context context-type="linenumber">42,44</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.html</context>
+          <context context-type="linenumber">22,24</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc prévu la dernière fois</note>
+      </trans-unit>
+      <trans-unit id="patientShell.planned.none" datatype="html">
+        <source> Rien de prévu dans le dernier compte rendu. </source>
+        <target state="translated"> Nothing planned in the last summary. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
+          <context context-type="linenumber">53,57</context>
+        </context-group>
+        <note priority="1" from="description">Aucune ligne prévue la dernière fois</note>
+      </trans-unit>
+      <trans-unit id="patientShell.planned.hint" datatype="html">
+        <source> Les lignes « Prochaine fois : » du dernier compte rendu. Cocher n&apos;enregistre rien ; « Noter » prépare une note. </source>
+        <target state="translated"> The “Next time:” lines of the last summary. Ticking saves nothing; “Note” prepares a note. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
+          <context context-type="linenumber">60,64</context>
+        </context-group>
+        <note priority="1" from="description">Explication du bloc prévu la dernière fois</note>
+      </trans-unit>
+      <trans-unit id="patientShell.since.none" datatype="html">
+        <source> Rien de noté entre les séances. </source>
+        <target state="translated"> Nothing noted between sessions. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
+          <context context-type="linenumber">82,86</context>
+        </context-group>
+        <note priority="1" from="description">Aucune entrée depuis la séance précédente</note>
+      </trans-unit>
+      <trans-unit id="patientShell.noted.hint" datatype="html">
+        <source> Chaque entrée reste modifiable 1 h 15 sans créer de version. <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>N<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> ouvre l&apos;éditeur complet. </source>
+        <target state="translated"> Each entry stays editable for 1 h 15 without creating a version. <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>N<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> opens the full editor. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
+          <context context-type="linenumber">104,106</context>
+        </context-group>
+        <note priority="1" from="description">Note sous la liste des entrées de la séance</note>
+      </trans-unit>
+      <trans-unit id="patientShell.noted.error" datatype="html">
+        <source>Impossible de lire ce qui a été noté</source>
+        <target state="translated">Could not read what was noted</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc noté pendant la séance</note>
+      </trans-unit>
+      <trans-unit id="patientShell.noted.count.none" datatype="html">
+        <source>rien de noté encore</source>
+        <target state="translated">nothing noted yet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <note priority="1" from="description">Compte des entrées de la séance, aucune</note>
+      </trans-unit>
+      <trans-unit id="patientShell.noted.count.one" datatype="html">
+        <source>1 entrée · la plus récente en haut</source>
+        <target state="translated">1 entry · most recent first</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">Compte des entrées de la séance, une</note>
+      </trans-unit>
+      <trans-unit id="patientShell.noted.count.many" datatype="html">
+        <source><x id="count" equiv-text="count"/> entrées · la plus récente en haut</source>
+        <target state="translated"><x id="count" equiv-text="count"/> entries · most recent first</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Compte des entrées de la séance</note>
+      </trans-unit>
+      <trans-unit id="patientShell.since.dated" datatype="html">
+        <source>Depuis la séance du <x id="day" equiv-text="formatShortDay(at, this.locale)"/></source>
+        <target state="translated">Since the session of <x id="day" equiv-text="formatShortDay(at, this.locale)"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc depuis la séance précédente, daté</note>
+      </trans-unit>
+      <trans-unit id="patientShell.since.plain" datatype="html">
+        <source>Depuis la dernière séance</source>
+        <target state="translated">Since the last session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc depuis la séance précédente</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.durationPlanned" datatype="html">
+        <source>durée prévue (séance ouverte depuis plus de 3 h)</source>
+        <target state="translated">planned duration (session open for more than 3 h)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">31,34</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la durée proposée, séance non clôturée</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.durationElapsed" datatype="html">
+        <source>écoulé, arrondi à 5 min</source>
+        <target state="translated">elapsed, rounded to 5 min</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">35,39</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la durée proposée</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.usual" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ planned }}"/> habituels</source>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ planned }}"/> usual</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">42,43</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de la durée habituelle</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.noted" datatype="html">
+        <source>Noté en séance</source>
+        <target state="translated">Noted in session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">67,71</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du bloc noté en séance du panneau</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.notedCount" datatype="html">
+        <source> <x id="ICU" equiv-text="{count, plural, =1 {1 entrée} other {{{count}} entrées}}" xid="7995041518217856986"/> </source>
+        <target state="translated"> <x id="ICU" equiv-text="{count, plural, =1 {1 entrée} other {{{count}} entrées}}" xid="7995041518217856986"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">74,77</context>
+        </context-group>
+        <note priority="1" from="description">Nombre d&apos;entrées notées, dans le panneau</note>
+      </trans-unit>
+      <trans-unit id="5193809995596915518" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
+        <target state="translated">{VAR_PLURAL, plural, =1 {1 entry} other {{INTERPOLATION} entries}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">74,76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="patientShell.close.notedNone" datatype="html">
+        <source> Rien n&apos;a été noté pendant cette séance. </source>
+        <target state="translated">Nothing was noted during this session.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">91,95</context>
+        </context-group>
+        <note priority="1" from="description">Aucune entrée notée, dans le panneau</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.optional" datatype="html">
+        <source>facultatif</source>
+        <target state="translated">optional</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">112,117</context>
+        </context-group>
+        <note priority="1" from="description">Mention facultatif du compte rendu</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.prompt.themeButton" datatype="html">
+        <source> + Thème </source>
+        <target state="translated"> + Theme </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">130,133</context>
+        </context-group>
+        <note priority="1" from="description">Invite du compte rendu</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.prompt.goalButton" datatype="html">
+        <source> + Objectif </source>
+        <target state="translated"> + Goal </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">137,140</context>
+        </context-group>
+        <note priority="1" from="description">Invite du compte rendu</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.prompt.hint" datatype="html">
+        <source>insère un titre, rien de plus</source>
+        <target state="translated">inserts a heading, nothing more</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">142,148</context>
+        </context-group>
+        <note priority="1" from="description">Aide des invites du compte rendu</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.nextTime" datatype="html">
+        <source> Prochaine fois </source>
+        <target state="translated">Next time</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">151,154</context>
+        </context-group>
+        <note priority="1" from="description">Bloc prochaine fois du panneau</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.nextTime.add" datatype="html">
+        <source>Ajouter une ligne…</source>
+        <target state="translated">Add a line…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">181,183</context>
+        </context-group>
+        <note priority="1" from="description">Champ d&apos;ajout d&apos;une ligne prochaine fois</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.nextTime.addLabel" datatype="html">
+        <source>Ajouter une ligne à reprendre la prochaine fois</source>
+        <target state="translated">Add a point to bring up next time</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">184,186</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du champ d&apos;ajout prochaine fois</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.nextTime.hint" datatype="html">
+        <source> Enregistré comme dernières lignes du compte rendu (« Prochaine fois : … »). Affiché au début de la prochaine séance. </source>
+        <target state="translated">Saved as the last lines of the summary (“Next time: …”). Shown at the start of the next session.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">193,200</context>
+        </context-group>
+        <note priority="1" from="description">Aide du bloc prochaine fois</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.confirmList" datatype="html">
+        <source>Clôturer et revenir à la liste</source>
+        <target state="translated">Close and back to the list</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">209,212</context>
+        </context-group>
+        <note priority="1" from="description">Bouton du panneau de clôture, retour à la liste</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.escapeKey" datatype="html">
+        <source>Échap</source>
+        <target state="translated">Esc</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">218,219</context>
+        </context-group>
+        <note priority="1" from="description">Touche Échap, pied du panneau de clôture</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.escapeHint" datatype="html">
+        <source>garde le brouillon</source>
+        <target state="translated">keeps the draft</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">220,225</context>
+        </context-group>
+        <note priority="1" from="description">Rappel du pied du panneau de clôture</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.prompt.theme" datatype="html">
+        <source>Thème :</source>
+        <target state="translated">Theme:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <note priority="1" from="description">Titre inséré dans le compte rendu</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.prompt.goal" datatype="html">
+        <source>Objectif :</source>
+        <target state="translated">Goal:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">Titre inséré dans le compte rendu</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.notedError" datatype="html">
+        <source>Impossible de lire ce qui a été noté</source>
+        <target state="translated">Could not read what was noted</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.ts</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du bloc noté en séance du panneau</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.nextTime.line" datatype="html">
+        <source>Point à reprendre <x id="number" equiv-text="n"/></source>
+        <target state="translated">Point to bring up <x id="number" equiv-text="number"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.ts</context>
+          <context context-type="linenumber">205</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette d&apos;une ligne prochaine fois, numérotée</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.nextTime.remove" datatype="html">
+        <source>Retirer la ligne <x id="number" equiv-text="n"/></source>
+        <target state="translated">Remove line <x id="number" equiv-text="number"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.ts</context>
+          <context context-type="linenumber">210</context>
+        </context-group>
+        <note priority="1" from="description">Retirer une ligne prochaine fois, numérotée</note>
+      </trans-unit>
+      <trans-unit id="patientShell.session.pageTitle" datatype="html">
+        <source>Séance · PsyMate</source>
+        <target state="translated">Session · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientShell.noted.ongoing" datatype="html">
+        <source>en cours</source>
+        <target state="translated">ongoing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/noted-entries.component.ts</context>
+          <context context-type="linenumber">43,46</context>
+        </context-group>
+        <note priority="1" from="description">Situation en cours, dans une ligne</note>
+      </trans-unit>
+      <trans-unit id="patientShell.noted.draft" datatype="html">
+        <source>brouillon</source>
+        <target state="translated">draft</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/noted-entries.component.ts</context>
+          <context context-type="linenumber">48,51</context>
+        </context-group>
+        <note priority="1" from="description">Brouillon, dans une ligne</note>
+      </trans-unit>
+      <trans-unit id="patientShell.noted.edit" datatype="html">
+        <source>modifier</source>
+        <target state="translated">edit</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/noted-entries.component.ts</context>
+          <context context-type="linenumber">63,66</context>
+        </context-group>
+        <note priority="1" from="description">Modifier une entrée notée, pendant la grâce</note>
+      </trans-unit>
+      <trans-unit id="patientShell.noted.correct" datatype="html">
+        <source>corriger</source>
+        <target state="translated">correct</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/noted-entries.component.ts</context>
+          <context context-type="linenumber">68,71</context>
+        </context-group>
+        <note priority="1" from="description">Corriger une entrée notée, après la grâce</note>
+      </trans-unit>
+      <trans-unit id="patientShell.noted.intensity" datatype="html">
+        <source>intensité <x id="value" equiv-text="value"/> sur 10</source>
+        <target state="translated">intensity <x id="value" equiv-text="value"/> out of 10</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/noted-entries.component.ts</context>
+          <context context-type="linenumber">237</context>
+        </context-group>
+        <note priority="1" from="description">Intensité d&apos;un ressenti lue par le lecteur d&apos;écran</note>
+      </trans-unit>
+      <trans-unit id="patientShell.planned.note" datatype="html">
+        <source>Noter</source>
+        <target state="translated">Note</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/planned-checklist.component.ts</context>
+          <context context-type="linenumber">43,45</context>
+        </context-group>
+        <note priority="1" from="description">Bouton noter d&apos;un point prévu</note>
+      </trans-unit>
+      <trans-unit id="patientShell.previous.noSummary" datatype="html">
+        <source> Pas de compte rendu. </source>
+        <target state="translated"> No summary. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.html</context>
+          <context context-type="linenumber">38,43</context>
+        </context-group>
+        <note priority="1" from="description">Séance précédente sans compte rendu</note>
+      </trans-unit>
+      <trans-unit id="patientShell.reminders.heading" datatype="html">
+        <source> À garder en tête </source>
+        <target state="translated">Keep in mind</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.html</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc à garder en tête</note>
+      </trans-unit>
+      <trans-unit id="patientShell.reminders.since" datatype="html">
+        <source> · depuis le <x id="INTERPOLATION" equiv-text="{{ day(medication.since) }}"/></source>
+        <target state="translated"> · since <x id="INTERPOLATION" equiv-text="{{ day(medication.since) }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.html</context>
+          <context context-type="linenumber">69,70</context>
+        </context-group>
+        <note priority="1" from="description">Début d&apos;un médicament dans les rappels</note>
+      </trans-unit>
+      <trans-unit id="patientShell.reminders.untitled" datatype="html">
+        <source>Situation sans titre</source>
+        <target state="translated">Untitled situation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.html</context>
+          <context context-type="linenumber">84,88</context>
+        </context-group>
+        <note priority="1" from="description">Situation sans titre dans les rappels</note>
+      </trans-unit>
+      <trans-unit id="patientShell.reminders.ongoing" datatype="html">
+        <source> · en cours</source>
+        <target state="translated"> · ongoing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.html</context>
+          <context context-type="linenumber">91,95</context>
+        </context-group>
+        <note priority="1" from="description">Situation en cours dans les rappels</note>
+      </trans-unit>
+      <trans-unit id="patientShell.context.error" datatype="html">
+        <source>Impossible de lire le contexte de la séance</source>
+        <target state="translated">Could not read the session context</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">Erreur du contexte de la séance</note>
+      </trans-unit>
+      <trans-unit id="patientShell.session.closedSummary" datatype="html">
+        <source>Séance clôturée · <x id="minutes" equiv-text="duration"/> min · compte rendu enregistré</source>
+        <target state="translated">Session closed · <x id="minutes" equiv-text="duration"/> min · summary saved</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+        <note priority="1" from="description">Toast après la clôture d&apos;une séance, avec compte rendu</note>
+      </trans-unit>
+      <trans-unit id="patientShell.session.closedNoSummary" datatype="html">
+        <source>Séance clôturée · <x id="minutes" equiv-text="duration"/> min · sans compte rendu</source>
+        <target state="translated">Session closed · <x id="minutes" equiv-text="duration"/> min · no summary</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Toast après la clôture d&apos;une séance, sans compte rendu</note>
+      </trans-unit>
+      <trans-unit id="patientShell.session.previousDated" datatype="html">
+        <source>Séance précédente · <x id="day" equiv-text="day"/></source>
+        <target state="translated">Previous session · <x id="day" equiv-text="day"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">133</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc séance précédente, avec sa date</note>
+      </trans-unit>
+      <trans-unit id="patientShell.session.previous" datatype="html">
+        <source>Séance précédente</source>
+        <target state="translated">Previous session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc séance précédente</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.tab.overviewLink" datatype="html">
+        <source>Vue d&apos;ensemble</source>
+        <target state="translated">Overview</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.html</context>
+          <context context-type="linenumber">93,99</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la vue d&apos;ensemble pendant une séance</note>
+      </trans-unit>
+      <trans-unit id="sessionBar.overtime" datatype="html">
+        <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{ overtimeMin() }}"/> min<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> au-delà des <x id="INTERPOLATION_1" equiv-text="{{ plannedMin() }}"/> prévues</source>
+        <target state="translated"><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{ overtimeMin() }}"/> min<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> beyond the planned <x id="INTERPOLATION_1" equiv-text="{{ plannedMin() }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.html</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+        <note priority="1" from="description">Dépassement de la durée prévue dans la barre de séance</note>
+      </trans-unit>
+      <trans-unit id="sessionBar.resume" datatype="html">
+        <source>Reprendre</source>
+        <target state="translated">Resume</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.html</context>
+          <context context-type="linenumber">49,54</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de la barre de séance grise</note>
+      </trans-unit>
+      <trans-unit id="sessionBar.countPlain.none" datatype="html">
+        <source>aucune entrée</source>
+        <target state="translated">no entries</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
+          <context context-type="linenumber">133</context>
+        </context-group>
+        <note priority="1" from="description">Aucune entrée dans la barre de séance grise</note>
+      </trans-unit>
+      <trans-unit id="sessionBar.countPlain.one" datatype="html">
+        <source>1 entrée</source>
+        <target state="translated">1 entry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+        <note priority="1" from="description">Une entrée dans la barre de séance grise</note>
+      </trans-unit>
+      <trans-unit id="sessionBar.countPlain.many" datatype="html">
+        <source><x id="count" equiv-text="count"/> entrées</source>
+        <target state="translated"><x id="count" equiv-text="count"/> entries</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+        <note priority="1" from="description">Entrées dans la barre de séance grise</note>
+      </trans-unit>
+      <trans-unit id="sessionBar.closeNow" datatype="html">
+        <source>Clôturer maintenant</source>
+        <target state="translated">Close now</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de la barre de séance grise</note>
       </trans-unit>
     </body>
   </file>

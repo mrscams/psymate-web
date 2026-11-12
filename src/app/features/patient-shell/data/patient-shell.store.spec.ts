@@ -3,7 +3,15 @@ import { TestBed } from '@angular/core/testing';
 
 import { PreferencesStore } from '../../../core/preferences';
 import { PatientShellApi } from './patient-shell.api';
-import { closedSession, intakeSession, openSession, shellPatient } from './patient-shell.fixtures';
+import {
+  closedSession,
+  intakeSession,
+  notedEntry,
+  openSession,
+  previousSession,
+  reminders,
+  shellPatient,
+} from './patient-shell.fixtures';
 import { ShellSession } from './patient-shell.model';
 import { PatientShellStore } from './patient-shell.store';
 
@@ -18,13 +26,23 @@ const outOfRange = {
 };
 
 function setup(api: Partial<PatientShellApi>, defaultDurationMin = 60) {
+  TestBed.resetTestingModule();
   TestBed.configureTestingModule({
     providers: [
       PatientShellStore,
       // Mois de la première séance (UX-G2c) : aucune séance par défaut.
       {
         provide: PatientShellApi,
-        useValue: { firstSessionMonth: vi.fn().mockResolvedValue(null), ...api },
+        useValue: {
+          firstSessionMonth: vi.fn().mockResolvedValue(null),
+          // Onglet Séance (UX-S3) : rien de noté, aucun lien, pas de séance précédente.
+          sessionEntries: vi.fn().mockResolvedValue([]),
+          linkSentence: vi.fn().mockResolvedValue(null),
+          previousSession: vi.fn().mockResolvedValue(null),
+          reminders: vi.fn().mockResolvedValue(reminders()),
+          emotionLabels: vi.fn().mockResolvedValue({ anxiety: 'Anxiété' }),
+          ...api,
+        },
       },
       { provide: PreferencesStore, useValue: { defaultDurationMin: signal(defaultDurationMin) } },
     ],
@@ -412,6 +430,195 @@ describe('PatientShellStore', () => {
       current.mockReset().mockRejectedValue({ status: 500, code: 'INTERNAL_ERROR' });
       await expect(store.waitForSession(3, 0)).resolves.toBe(false);
       expect(current).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('onglet Séance (UX-S3) : noté pendant la séance, contexte, clôture', () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+    const linked = notedEntry({ id: 'e-2', type: 'feeling', emotionCode: 'anxiety', linkCount: 1 });
+
+    it('séance ouverte au chargement : la chronologie filtrée est lue, les liens des entrées qui en ont', async () => {
+      const sessionEntries = vi.fn().mockResolvedValue([linked, notedEntry()]);
+      const linkSentence = vi
+        .fn()
+        .mockResolvedValue({ sentence: 'Anxiété déclenchée par Réorg', count: 1 });
+      const store = await loaded(openSession(), { sessionEntries, linkSentence });
+      await tick();
+      expect(sessionEntries).toHaveBeenCalledWith('p-marie', 's-open');
+      expect(store.noted().status).toBe('loaded');
+      expect(store.notedCount()).toBe(2);
+      expect(linkSentence).toHaveBeenCalledTimes(1);
+      expect(linkSentence).toHaveBeenCalledWith('e-2');
+      expect(store.links()['e-2']).toEqual({
+        status: 'loaded',
+        sentence: 'Anxiété déclenchée par Réorg',
+        count: 1,
+      });
+    });
+
+    it('séance clôturée ou accueil : rien n’est lu', async () => {
+      const sessionEntries = vi.fn();
+      await loaded(closedSession(), { sessionEntries });
+      await loaded(intakeSession(), { sessionEntries });
+      expect(sessionEntries).not.toHaveBeenCalled();
+    });
+
+    it('lecture en échec : état erreur, refreshNoted relit', async () => {
+      const sessionEntries = vi
+        .fn()
+        .mockRejectedValueOnce({ status: 500, code: 'INTERNAL_ERROR' })
+        .mockResolvedValueOnce([notedEntry()]);
+      const store = await loaded(openSession(), { sessionEntries });
+      await tick();
+      expect(store.noted().status).toBe('error');
+      expect(store.noted().problem?.code).toBe('INTERNAL_ERROR');
+      await store.refreshNoted();
+      expect(store.noted().status).toBe('loaded');
+      expect(store.notedCount()).toBe(1);
+    });
+
+    it('noteWrite(entryId) : la liste est relue, la ligne à surligner retenue, la liste précédente gardée pendant la relecture', async () => {
+      const sessionEntries = vi
+        .fn()
+        .mockResolvedValueOnce([notedEntry()])
+        .mockResolvedValueOnce([notedEntry({ id: 'e-9' }), notedEntry()]);
+      const store = await loaded(openSession(), { sessionEntries });
+      await tick();
+      store.noteWrite('e-9');
+      expect(store.lastWrittenId()).toBe('e-9');
+      expect(store.noted().status).toBe('loading');
+      expect(store.noted().data).toHaveLength(1);
+      await tick();
+      expect(store.noted().data?.map((e) => e.id)).toEqual(['e-9', 'e-1']);
+      store.clearLastWritten();
+      expect(store.lastWrittenId()).toBeNull();
+    });
+
+    it('un lien posé après coup (linkCount changé) : la phrase est relue ; sinon pas de relecture', async () => {
+      const sessionEntries = vi
+        .fn()
+        .mockResolvedValueOnce([linked])
+        .mockResolvedValueOnce([linked])
+        .mockResolvedValueOnce([{ ...linked, linkCount: 2 }]);
+      const linkSentence = vi.fn().mockResolvedValue({ sentence: 'phrase', count: 1 });
+      const store = await loaded(openSession(), { sessionEntries, linkSentence });
+      await tick();
+      store.noteWrite();
+      await tick();
+      expect(linkSentence).toHaveBeenCalledTimes(1);
+      store.noteWrite();
+      await tick();
+      expect(linkSentence).toHaveBeenCalledTimes(2);
+    });
+
+    it('loadContext : séance précédente, rappels et vocabulaire en une fois ; pas deux fois ; force relit', async () => {
+      const previous = vi.fn().mockResolvedValue(previousSession());
+      const store = await loaded(openSession(), { previousSession: previous });
+      await store.loadContext();
+      expect(previous).toHaveBeenCalledWith('p-marie', 's-open');
+      expect(store.context().status).toBe('loaded');
+      expect(store.context().data?.previous?.id).toBe('s-closed');
+      expect(store.context().data?.reminders.medications[0].molecule).toBe('Mélatonine');
+      expect(store.context().data?.emotionLabels['anxiety']).toBe('Anxiété');
+      await store.loadContext();
+      expect(previous).toHaveBeenCalledTimes(1);
+      await store.loadContext(true);
+      expect(previous).toHaveBeenCalledTimes(2);
+    });
+
+    it('loadContext en échec : état erreur ; sans séance ouverte : rien', async () => {
+      const store = await loaded(openSession(), {
+        reminders: vi.fn().mockRejectedValue({ status: 500, code: 'INTERNAL_ERROR' }),
+      });
+      await store.loadContext();
+      expect(store.context().status).toBe('error');
+      const idle = await loaded(closedSession());
+      await idle.loadContext();
+      expect(idle.context().status).toBe('idle');
+    });
+
+    it('une autre séance démarrée : la liste repart de zéro et est lue pour elle', async () => {
+      const sessionEntries = vi.fn().mockResolvedValue([]);
+      const store = await loaded(closedSession(), {
+        sessionEntries,
+        start: vi.fn().mockResolvedValue(openSession({ id: 's-new' })),
+      });
+      await store.startSession();
+      await tick();
+      expect(sessionEntries).toHaveBeenCalledWith('p-marie', 's-new');
+      expect(store.notedSessionId()).toBe('s-new');
+    });
+
+    it('durée prévue : followUp.durationMin du dossier, sinon la préférence', async () => {
+      const fromPrefs = await loaded(openSession(), {}, 45);
+      expect(fromPrefs.plannedDurationMin()).toBe(45);
+      const fromRecord = await loaded(openSession(), {
+        patient: vi.fn().mockResolvedValue(shellPatient({ plannedDurationMin: 50 })),
+      });
+      expect(fromRecord.plannedDurationMin()).toBe(50);
+    });
+
+    it('brouillon de clôture gardé puis effacé par la clôture ; la séance clôturée retenue pour le toast', async () => {
+      const closed = closedSession({ id: 's-open', durationMin: 48 });
+      const store = await loaded(openSession(), { close: vi.fn().mockResolvedValue(closed) });
+      const draft = { sessionId: 's-open', durationMin: '48', summary: 'Thème', nextTime: ['a'] };
+      store.keepCloseDraft(draft);
+      expect(store.closeDraft()).toEqual(draft);
+      await store.closeSession({ durationMin: 48, summary: 'Thème' });
+      expect(store.closeDraft()).toBeNull();
+      expect(store.lastClosed()).toEqual({ session: closed, withSummary: true });
+      store.clearLastClosed();
+      expect(store.lastClosed()).toBeNull();
+    });
+
+    it('clôture sans compte rendu : withSummary false', async () => {
+      const store = await loaded(openSession(), {
+        close: vi.fn().mockResolvedValue(closedSession({ id: 's-open' })),
+      });
+      await store.closeSession({ durationMin: 50, summary: '   ' });
+      expect(store.lastClosed()?.withSummary).toBe(false);
+    });
+
+    it('requestPrefill : chaque demande a un numéro croissant ; consommée, elle s’efface', async () => {
+      const store = await loaded(openSession());
+      store.requestPrefill('Agenda du sommeil : ');
+      expect(store.prefillRequest()).toEqual({ text: 'Agenda du sommeil : ', seq: 1 });
+      store.requestPrefill('Certificat : ');
+      expect(store.prefillRequest()?.seq).toBe(2);
+      store.clearPrefill();
+      expect(store.prefillRequest()).toBeNull();
+    });
+
+    it('une demande non consommée ne survit ni à la clôture ni au démarrage suivant', async () => {
+      const store = await loaded(openSession(), {
+        close: vi.fn().mockResolvedValue(closedSession({ id: 's-open' })),
+        start: vi.fn().mockResolvedValue(openSession({ id: 's-next' })),
+      });
+      store.requestPrefill('Agenda du sommeil : ');
+      await store.closeSession({ durationMin: 50 });
+      expect(store.prefillRequest()).toBeNull();
+      store.requestPrefill('Certificat : ');
+      await store.startSession();
+      expect(store.prefillRequest()).toBeNull();
+    });
+
+    it('noteWrite : séance précédente et rappels relus en silence, le contexte reste affiché', async () => {
+      const previous = vi.fn().mockResolvedValue(previousSession());
+      const remind = vi.fn().mockResolvedValue(reminders());
+      const store = await loaded(openSession(), { previousSession: previous, reminders: remind });
+      await store.loadContext();
+      remind.mockResolvedValue(
+        reminders({
+          medications: [{ entryId: 'm-2', molecule: 'Sertraline', dosage: '50 mg', since: null }],
+        }),
+      );
+      store.noteWrite('e-9');
+      expect(store.context().status).toBe('loaded');
+      await tick();
+      await tick();
+      expect(previous).toHaveBeenCalledTimes(2);
+      expect(store.context().data?.reminders.medications[0].molecule).toBe('Sertraline');
+      expect(store.context().data?.emotionLabels['anxiety']).toBe('Anxiété');
     });
   });
 });

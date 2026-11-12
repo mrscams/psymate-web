@@ -72,8 +72,19 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await page.goto(`/fr/patients/${id}`);
   const h = header(page);
   await expect(h.name).toHaveText('Inès M.');
-  // Séance ouverte (UX-S1) : l'onglet 1 s'appelle « Séance » (UX-S2), même route, même contenu.
+  // Séance ouverte : le dossier s'ouvre sur l'onglet Séance (UX-S3), que l'onglet 1 désigne (UX-S2) ;
+  // « Vue d'ensemble » reste à un clic, à droite des onglets, et n'y renvoie pas une seconde fois.
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
   await expect(h.tabs.getByRole('link', { name: 'Séance', exact: true })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+  await expect(
+    page.getByRole('heading', { level: 2, name: 'Noté pendant cette séance' }),
+  ).toBeVisible();
+  await h.tabs.getByRole('link', { name: /Vue d'ensemble/ }).click();
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
+  await expect(h.tabs.getByRole('link', { name: /Vue d'ensemble/ })).toHaveAttribute(
     'aria-current',
     'page',
   );
@@ -92,11 +103,14 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(page.getByText('Les liens que vous créez apparaîtront ici')).toBeVisible();
   await expect(intakeToggle(page)).toHaveCount(0);
 
-  // Touches : 2 → Timeline (M3-02), 1 → retour à l'onglet 1 avec son état, 3 → Graphe.
+  // Touches : 2 → Timeline (M3-02), 1 → l'onglet Séance (séance ouverte, UX-S3) ; la vue
+  // d'ensemble par son lien, avec son état ; 3 → Graphe.
   await page.keyboard.press('2');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/timeline$`));
   await expect(page.getByRole('heading', { level: 2, name: 'Timeline' })).toBeAttached();
   await page.keyboard.press('1');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
+  await h.tabs.getByRole('link', { name: /Vue d'ensemble/ }).click();
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
   await expect(intakeToggle(page)).toHaveAttribute('aria-expanded', 'false');
   await page.keyboard.press('3');
@@ -110,9 +124,10 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(h.capture).toHaveValue('312');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph\\?root=all$`));
 
-  // L'ancienne destination de M1-06 (après création) mène à l'onglet 1.
+  // L'ancienne destination de M1-06 (après création) mène à l'onglet 1 ; rechargé avec une séance
+  // ouverte, le dossier va sur l'onglet Séance (UX-S3).
   await page.goto(`/fr/patients/${id}/overview`);
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
   await expect(h.name).toHaveText('Inès M.');
 });
 
@@ -201,7 +216,11 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
   await expect(h.session).toContainText('Séance en cours · visio · démarrée à');
   await expect(h.bar.locator('.timer')).toHaveText(/^00:00:\d\d$/);
   await expect(h.bar.locator('.planned')).toHaveText('sur 60 min prévues');
+  await expect(h.bar.locator('.count')).toHaveText('rien de noté encore');
   await expect(h.start).toHaveCount(0);
+  // UX-S3 : l'onglet Séance remplace la vue d'ensemble ; pas de toast (la barre le dit), une
+  // annonce polie.
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
   await expect(h.tabs.getByRole('link', { name: 'Séance', exact: true })).toHaveAttribute(
     'aria-current',
     'page',
@@ -209,29 +228,33 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
   await expect(h.close).toBeVisible();
   // B3 flux 3 et 6 : après Démarrer, la barre de capture prend le focus pour noter au clavier.
   await expect(h.capture).toBeFocused();
-  await expect(page.getByText('Séance démarrée.')).toBeVisible();
+  await expect(page.getByText('Séance démarrée.')).toBeAttached();
+  await expect(page.locator('pm-toast-outlet')).not.toContainText('Séance démarrée');
   expect(await page.evaluate(() => (window as unknown as { m107?: number }).m107)).toBe(1);
   await expectNoAxeViolations(page);
 
-  // Clôturer : dialogue avec la durée par défaut (préférence absente → 60 min).
+  // Clôturer : panneau latéral (UX-S3), durée écoulée arrondie (au moins 1), la préférence à un
+  // clic (préférence absente → « 60 habituels »).
   await h.close.click();
   const dialog = page.getByRole('dialog', { name: 'Clôturer la séance' });
   await expect(dialog).toBeVisible();
   const duration = dialog.getByLabel('Durée (min)');
-  await expect(duration).toHaveValue('60');
+  await expect(duration).toHaveValue(/^[15]$/);
   await expect(duration).toBeFocused();
-  await dialog.getByLabel('Compte rendu (facultatif)').fill('Point sur le sommeil.');
+  await dialog.getByRole('button', { name: '60 habituels' }).click();
+  await expect(duration).toHaveValue('60');
+  await dialog.getByLabel('Compte rendu').fill('Point sur le sommeil.');
   await expectNoAxeViolations(page);
 
-  // Les touches 1 2 3 ne naviguent pas derrière le dialogue.
+  // Les touches 1 2 3 ne naviguent pas derrière le panneau.
   await dialog.getByRole('button', { name: 'Annuler' }).focus();
   await page.keyboard.press('3');
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
 
   const closed = page.waitForResponse(
     (r) => r.url().includes('/api/sessions/') && r.url().endsWith('/close'),
   );
-  await dialog.getByRole('button', { name: 'Clôturer', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Clôturer la séance' }).click();
   const response = await closed;
   expect(response.status()).toBe(200);
   expect(response.request().postDataJSON()).toEqual({
@@ -239,6 +262,8 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
     summary: 'Point sur le sommeil.',
   });
   await expect(dialog).toBeHidden();
+  // Retour de l'onglet Séance à la vue d'ensemble (UX-S3) ; toast de 6 s avec « Modifier ».
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
   await expect(h.bar).toHaveCount(0);
   await expect(h.session).toContainText('Dernière séance :');
   await expect(h.session).toContainText('· visio · 60 min');
@@ -250,12 +275,15 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
   // Sans séance, plus de bloc de saisie (UX-S1) : le focus revient sur « Démarrer la séance ».
   await expect(h.capture).toHaveCount(0);
   await expect(h.start).toBeFocused();
-  await expect(page.getByText('Séance clôturée.')).toBeVisible();
+  await expect(page.getByText('Séance clôturée · 60 min · compte rendu enregistré')).toBeVisible();
+  await expect(
+    page.locator('pm-toast-outlet').getByRole('button', { name: 'Modifier' }),
+  ).toBeVisible();
   expect(await page.evaluate(() => (window as unknown as { m107?: number }).m107)).toBe(1);
   await expectNoAxeViolations(page);
 });
 
-test('Clôturer propose la durée de la préférence (45 min)', async ({ page, request }) => {
+test('Clôturer propose l’écoulé, la préférence (45 min) à un clic', async ({ page, request }) => {
   const account = await createAccount(request, 'm1-07.duree', 'psychologist');
   const prefs = await request.patch(`${API}/api/me/preferences`, {
     data: { 'sessions.defaultDurationMin': 45 },
@@ -272,13 +300,18 @@ test('Clôturer propose la durée de la préférence (45 min)', async ({ page, r
   const h = header(page);
   await expect(h.session).toContainText('Séance en cours · cabinet');
   await expect(h.bar.locator('.planned')).toHaveText('sur 45 min prévues');
+  // Séance en cours : le dossier s'ouvre sur l'onglet Séance (UX-S3).
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
   await h.close.click();
   const dialog = page.getByRole('dialog', { name: 'Clôturer la séance' });
+  // Séance tout juste démarrée : l'écoulé proposé ; la préférence du compte à un clic.
+  await expect(dialog.getByLabel('Durée (min)')).toHaveValue(/^[15]$/);
+  await dialog.getByRole('button', { name: '45 habituels' }).click();
   await expect(dialog.getByLabel('Durée (min)')).toHaveValue('45');
   const closed = page.waitForResponse(
     (r) => r.url().includes('/api/sessions/') && r.url().endsWith('/close'),
   );
-  await dialog.getByRole('button', { name: 'Clôturer', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Clôturer la séance' }).click();
   expect((await closed).request().postDataJSON()).toEqual({ durationMin: 45 });
   await expect(h.session).toContainText('Dernière séance :');
   await expectNoAxeViolations(page);
@@ -357,12 +390,15 @@ test('UX-S2 : en-tête compact (identité 44, onglets 38), barre de séance de 4
   const asideBox = (await aside.boundingBox())!;
   expect(asideBox.x).toBeGreaterThanOrEqual(mainBox.x + mainBox.width);
   expect(Math.abs(asideBox.y - mainBox.y)).toBeLessThan(2);
-  // 04b : la colonne principale porte le bloc ET l'onglet courant ; la latérale les longe.
-  const overview = page.locator('.pad-layout .pad-main pm-overview-page');
-  await expect(overview).toBeVisible();
-  const overviewBox = (await overview.boundingBox())!;
-  expect(overviewBox.y).toBeGreaterThanOrEqual((await block.boundingBox())!.y);
-  expect(overviewBox.x + overviewBox.width).toBeLessThanOrEqual(asideBox.x);
+  // 04b : la colonne principale porte le bloc ET l'onglet courant (l'onglet Séance, UX-S3) ; la
+  // latérale (contexte de la séance) les longe, les raccourcis en dernier bloc.
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
+  const sessionTab = page.locator('.pad-layout .pad-main pm-session-tab-page');
+  await expect(sessionTab).toBeVisible();
+  const tabBox = (await sessionTab.boundingBox())!;
+  expect(tabBox.y).toBeGreaterThanOrEqual((await block.boundingBox())!.y);
+  expect(tabBox.x + tabBox.width).toBeLessThanOrEqual(asideBox.x);
+  await expect(aside).toHaveAccessibleName('Contexte de la séance');
   await expect(aside.getByRole('heading', { name: 'Raccourcis dans le texte' })).toBeVisible();
   await expectNoAxeViolations(page);
 
@@ -373,14 +409,14 @@ test('UX-S2 : en-tête compact (identité 44, onglets 38), barre de séance de 4
   expect(narrowAside.y).toBeGreaterThanOrEqual(narrowMain.y + narrowMain.height);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(800);
 
-  // Les touches 1 2 3 restent celles des onglets (hors champ).
+  // Les touches 1 2 3 restent celles des onglets (hors champ) ; 1 est l'onglet Séance (UX-S3).
   await page.getByRole('heading', { level: 1 }).click();
   await page.keyboard.press('2');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/timeline$`));
   await expect(h.bar).toBeVisible();
   await expect(block).toBeVisible();
   await page.keyboard.press('1');
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
 
   // À 375 px en séance (fiche 00 §2) : barre réduite (« Clôturer », sans modalité ni durée prévue),
   // bloc puis colonne latérale empilés, aucun défilement horizontal.
