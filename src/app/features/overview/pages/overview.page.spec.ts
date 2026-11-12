@@ -303,7 +303,7 @@ describe('OverviewPage', () => {
     expect(shell.rememberTab).toHaveBeenCalledWith('overview', { expanded: ['s-1', 's-0'] });
   });
 
-  it('dernières séances : trace « Prochaine fois » du compte rendu, « modifier le compte rendu » ouvre l’éditeur (UX-S3)', async () => {
+  it('dernières séances : trace « Prochaine fois » du compte rendu, « modifier la séance » ouvre l’éditeur (UX-S3)', async () => {
     const view = overviewView();
     const [last, ...rest] = view.recentSessions;
     const summary = `${last.summary}\n\nProchaine fois :\n– Relire la demande\n– Agenda (s. 3 et 4)`;
@@ -316,7 +316,7 @@ describe('OverviewPage', () => {
     expect(text(sessions.querySelector('.goal'))).toBe(
       'Prochaine fois : Relire la demande · Agenda (s. 3 et 4)',
     );
-    button(sessions, 'modifier le compte rendu').click();
+    button(sessions, 'modifier la séance').click();
     await settle();
     expect(TestBed.inject(Router).url).toBe('/?entry=s-1');
   });

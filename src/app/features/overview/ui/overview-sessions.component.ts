@@ -90,8 +90,8 @@ import { sessionHeading } from './overview-labels';
                 <button type="button" class="link" (click)="editSummary.emit(session.entryId)">
                   <ng-container
                     i18n="
-                      Modifier le compte rendu de la dernière séance@@overview.sessions.editSummary"
-                    >modifier le compte rendu</ng-container
+                      Modifier la dernière séance (durée, modalité)@@overview.sessions.editSummary"
+                    >modifier la séance</ng-container
                   >
                 </button>
               }
@@ -227,7 +227,7 @@ export class OverviewSessionsComponent {
   /** Séances dépliées (identifiants). */
   readonly expanded = input.required<string[]>();
   readonly expandedChange = output<string[]>();
-  /** « modifier le compte rendu » de la dernière séance clôturée : l'éditeur d'entrée (?entry=). */
+  /** « modifier la séance » (dernière séance clôturée) : l'éditeur d'entrée (?entry=). */
   readonly editSummary = output<string>();
 
   private readonly locale = inject(LOCALE_ID);

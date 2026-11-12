@@ -163,8 +163,9 @@ test.describe('mode séance (UX-S3)', () => {
     await expect(u.panel).toBeVisible();
     const duration = u.panel.getByLabel('Durée (min)');
     await expect(duration).toBeFocused();
-    // Séance d'une minute : l'écoulé arrondi (au moins 1) ; « 50 habituels » à un clic.
-    await expect(duration).toHaveValue('1');
+    // Séance d'une ou deux minutes : l'écoulé arrondi à 5 (au moins 1 ; 5 si le test a été lent) ;
+    // « 50 habituels » à un clic.
+    await expect(duration).toHaveValue(/^[15]$/);
     await expect(u.panel).toContainText('écoulé, arrondi à 5 min');
     await expect(u.panel.getByRole('group', { name: /Noté en séance/ })).toContainText('Anxiété');
     await expect(u.panel).toContainText('Échap garde le brouillon');
@@ -199,7 +200,6 @@ test.describe('mode séance (UX-S3)', () => {
     await expect(page).toHaveURL(new RegExp(`/fr/patients/${patientId}$`));
     await expect(u.bar).toHaveCount(0);
     await expect(page.locator('pm-patient-header .session-text')).toContainText('Dernière séance');
-    const toast = page.locator('pm-toast-outlet').getByRole('status').first();
     await expect(page.locator('pm-toast-outlet')).toContainText(
       'Séance clôturée · 45 min · compte rendu enregistré',
     );
@@ -213,9 +213,8 @@ test.describe('mode séance (UX-S3)', () => {
     await expect(last.locator('.goal')).toHaveText(
       'Prochaine fois : Relire la demande écrite avec elle',
     );
-    await expect(last.getByRole('button', { name: 'modifier le compte rendu' })).toBeVisible();
+    await expect(last.getByRole('button', { name: 'modifier la séance' })).toBeVisible();
     await expectNoAxeViolations(page);
-    void toast;
 
     // « Modifier » du toast : l'éditeur d'entrée sur la séance clôturée (type Séance, durée ;
     // le compte rendu lui-même n'est pas un champ de l'éditeur, fiche 05 : écart noté dans la PR).
@@ -250,8 +249,9 @@ test.describe('mode séance (UX-S3)', () => {
     await page.goto(`/fr/patients/${patientId}`);
     await expect(page).toHaveURL(new RegExp(`/fr/patients/${patientId}/session$`));
     await expect(u.bar).toHaveClass(/overtime/);
-    await expect(u.bar).toContainText('8 min au-delà des 50 prévues');
-    await expect(u.bar.locator('.timer')).toHaveText(/^00:58:\d\d$/);
+    // Séance ouverte il y a 58 min par l'API : une minute peut passer d'ici l'affichage.
+    await expect(u.bar).toContainText(/[89] min au-delà des 50 prévues/);
+    await expect(u.bar.locator('.timer')).toHaveText(/^00:5[89]:\d\d$/);
     await expect(u.close).toHaveClass(/filled/);
     await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
     await expectNoAxeViolations(page);
@@ -263,7 +263,6 @@ test.describe('mode séance (UX-S3)', () => {
       .click();
     await expect(page).toHaveURL(new RegExp(`/fr/patients/${patientId}$`));
     await expect(u.bar).toBeVisible();
-    await page.getByRole('button', { name: 'Reprendre' }).or(u.close).first().waitFor();
 
     // Le panneau : 58 min → 60 proposées ; Échap garde le brouillon ; le panneau rouvert le retrouve.
     await u.close.click();

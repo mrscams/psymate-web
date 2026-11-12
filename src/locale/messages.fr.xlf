@@ -74,7 +74,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="linenumber">200</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis</note>
       </trans-unit>
@@ -15223,7 +15223,7 @@
         <note priority="1" from="description">Lien d&apos;une séance vers la timeline par séance</note>
       </trans-unit>
       <trans-unit id="overview.sessions.editSummary" datatype="html">
-        <source>modifier le compte rendu</source>
+        <source>modifier la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
           <context context-type="linenumber">94,98</context>
@@ -15232,7 +15232,7 @@
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
           <context context-type="linenumber">156,161</context>
         </context-group>
-        <note priority="1" from="description">Modifier le compte rendu de la dernière séance</note>
+        <note priority="1" from="description">Modifier la dernière séance (durée, modalité)</note>
       </trans-unit>
       <trans-unit id="overview.simple.brief.heading" datatype="html">
         <source>En bref</source>
@@ -15873,7 +15873,7 @@
         <source>Séance démarrée.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">284</context>
+          <context context-type="linenumber">287</context>
         </context-group>
         <note priority="1" from="description">Annonce après le démarrage d&apos;une séance</note>
       </trans-unit>
@@ -15881,7 +15881,7 @@
         <source>Modifier</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
-          <context context-type="linenumber">310</context>
+          <context context-type="linenumber">313</context>
         </context-group>
         <note priority="1" from="description">Action du toast de clôture</note>
       </trans-unit>
@@ -16192,27 +16192,11 @@
         </context-group>
         <note priority="1" from="description">Bloc prochaine fois du panneau</note>
       </trans-unit>
-      <trans-unit id="patientShell.close.nextTime.line" datatype="html">
-        <source>Point à reprendre</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
-          <context context-type="linenumber">162,164</context>
-        </context-group>
-        <note priority="1" from="description">Étiquette d&apos;une ligne prochaine fois</note>
-      </trans-unit>
-      <trans-unit id="patientShell.close.nextTime.remove" datatype="html">
-        <source>Retirer cette ligne</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
-          <context context-type="linenumber">170,172</context>
-        </context-group>
-        <note priority="1" from="description">Retirer une ligne prochaine fois</note>
-      </trans-unit>
       <trans-unit id="patientShell.close.nextTime.add" datatype="html">
         <source>Ajouter une ligne…</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
-          <context context-type="linenumber">185,187</context>
+          <context context-type="linenumber">181,183</context>
         </context-group>
         <note priority="1" from="description">Champ d&apos;ajout d&apos;une ligne prochaine fois</note>
       </trans-unit>
@@ -16220,7 +16204,7 @@
         <source>Ajouter une ligne à reprendre la prochaine fois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
-          <context context-type="linenumber">188,190</context>
+          <context context-type="linenumber">184,186</context>
         </context-group>
         <note priority="1" from="description">Étiquette du champ d&apos;ajout prochaine fois</note>
       </trans-unit>
@@ -16228,7 +16212,7 @@
         <source> Enregistré comme dernières lignes du compte rendu (« Prochaine fois : … »). Affiché au début de la prochaine séance. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
-          <context context-type="linenumber">197,204</context>
+          <context context-type="linenumber">193,200</context>
         </context-group>
         <note priority="1" from="description">Aide du bloc prochaine fois</note>
       </trans-unit>
@@ -16236,7 +16220,7 @@
         <source>Clôturer la séance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
-          <context context-type="linenumber">207,210</context>
+          <context context-type="linenumber">203,206</context>
         </context-group>
         <note priority="1" from="description">Bouton du panneau de clôture</note>
       </trans-unit>
@@ -16244,7 +16228,7 @@
         <source>Clôturer et revenir à la liste</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
-          <context context-type="linenumber">213,216</context>
+          <context context-type="linenumber">209,212</context>
         </context-group>
         <note priority="1" from="description">Bouton du panneau de clôture, retour à la liste</note>
       </trans-unit>
@@ -16252,15 +16236,23 @@
         <source>Annuler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
-          <context context-type="linenumber">218,222</context>
+          <context context-type="linenumber">214,218</context>
         </context-group>
         <note priority="1" from="description">Bouton du panneau de clôture</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.escapeKey" datatype="html">
+        <source>Échap</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">218,219</context>
+        </context-group>
+        <note priority="1" from="description">Touche Échap, pied du panneau de clôture</note>
       </trans-unit>
       <trans-unit id="patientShell.close.escapeHint" datatype="html">
         <source>garde le brouillon</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
-          <context context-type="linenumber">224,229</context>
+          <context context-type="linenumber">220,225</context>
         </context-group>
         <note priority="1" from="description">Rappel du pied du panneau de clôture</note>
       </trans-unit>
@@ -16295,6 +16287,22 @@
           <context context-type="linenumber">159</context>
         </context-group>
         <note priority="1" from="description">Erreur du bloc noté en séance du panneau</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.nextTime.line" datatype="html">
+        <source>Point à reprendre <x id="number" equiv-text="n"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.ts</context>
+          <context context-type="linenumber">205</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette d&apos;une ligne prochaine fois, numérotée</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.nextTime.remove" datatype="html">
+        <source>Retirer la ligne <x id="number" equiv-text="n"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.ts</context>
+          <context context-type="linenumber">210</context>
+        </context-group>
+        <note priority="1" from="description">Retirer une ligne prochaine fois, numérotée</note>
       </trans-unit>
       <trans-unit id="patientShell.help.caption" datatype="html">
         <source> Raccourcis disponibles et leur effet </source>

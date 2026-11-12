@@ -11,6 +11,9 @@ const MARKER = /^\s*prochaine fois\s*:\s*(.*)$/i;
 /** Puce en tête d'une ligne de la liste (celles que le panneau écrit, ou saisies à la main). */
 const BULLET = /^\s*(?:[-–—•*·]|\d+[.)])\s*/;
 
+/** Séparateur de points sur une même ligne (maquette 04b : « relire la demande ; agenda »). */
+const SEPARATOR = /\s*;\s*/;
+
 export interface SplitSummary {
   /** Le compte rendu sans le bloc « Prochaine fois » (espaces de fin retirés) ; '' s'il n'y a rien. */
   body: string;
@@ -21,7 +24,7 @@ export interface SplitSummary {
 /**
  * Sépare un compte rendu de ses lignes « Prochaine fois ». Le dernier marqueur de tête de ligne
  * ouvre le bloc : le reste de sa ligne (s'il y en a) puis chaque ligne non vide qui suit est un
- * point. Sans marqueur, tout est corps.
+ * point ; un « ; » sépare plusieurs points sur une ligne. Sans marqueur, tout est corps.
  */
 export function splitNextTime(summary: string | null | undefined): SplitSummary {
   const lines = (summary ?? '').split(/\r?\n/);
@@ -35,6 +38,7 @@ export function splitNextTime(summary: string | null | undefined): SplitSummary 
   if (start < 0) return { body: (summary ?? '').trimEnd(), nextTime: [] };
   const first = MARKER.exec(lines[start])?.[1]?.trim() ?? '';
   const items = [first, ...lines.slice(start + 1)]
+    .flatMap((line) => line.split(SEPARATOR))
     .map((line) => line.replace(BULLET, '').trim())
     .filter((line) => line.length > 0);
   return { body: lines.slice(0, start).join('\n').trimEnd(), nextTime: items };

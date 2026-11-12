@@ -267,6 +267,32 @@ export const PatientShellStore = signalStore(
     }
 
     /** Lance une action de séance ; true si elle a abouti, sinon le problème est dans actionProblem. */
+    /**
+     * Après une écriture : la séance précédente (son compte rendu a pu être corrigé) et les rappels
+     * de la vue d'ensemble (un médicament, une situation notés pendant la séance) sont relus en
+     * silence, le contexte affiché restant en place ; le vocabulaire ne change pas. Un échec laisse
+     * l'ancien contexte. Rien tant que le contexte n'a pas été lu (l'onglet le lira entier).
+     */
+    async function refreshContext(): Promise<void> {
+      const patientId = store.patientId();
+      const session = store.currentSession();
+      const current = store.context();
+      if (!patientId || !session || current.status !== 'loaded' || !current.data) return;
+      try {
+        const [previous, reminders] = await Promise.all([
+          api.previousSession(patientId, session.id),
+          api.reminders(patientId),
+        ]);
+        const latest = store.context();
+        if (store.notedSessionId() !== session.id || latest.status !== 'loaded' || !latest.data) {
+          return;
+        }
+        patchState(store, { context: loaded({ ...latest.data, previous, reminders }) });
+      } catch {
+        // Relecture silencieuse : l'ancien contexte reste affiché.
+      }
+    }
+
     async function act(action: () => Promise<void>): Promise<boolean> {
       const id = store.patientId();
       patchState(store, { status: 'saving', actionProblem: null });
@@ -355,7 +381,7 @@ export const PatientShellStore = signalStore(
         return act(async () => {
           const session = await api.start(id, modality ?? patient.sessionModality);
           if (store.patientId() === id) {
-            patchState(store, { currentSession: session, lastClosed: null });
+            patchState(store, { currentSession: session, lastClosed: null, prefillRequest: null });
             void readNoted();
           }
         });
@@ -383,6 +409,7 @@ export const PatientShellStore = signalStore(
               lastSession: closed,
               closeDraft: null,
               lastClosed: { session: closed, withSummary: !!summary },
+              prefillRequest: null,
             });
           }
         });
@@ -408,7 +435,10 @@ export const PatientShellStore = signalStore(
         if (store.firstEntry() === 'pending') void checkFirstEntry();
         // Une séance ou un contact saisi à une date passée peut avancer la première séance.
         void checkFirstSession();
-        if (store.currentSession()) void readNoted();
+        if (store.currentSession()) {
+          void readNoted();
+          void refreshContext();
+        }
       },
 
       /** Relit « Noté pendant cette séance » (Réessayer). */
@@ -418,7 +448,8 @@ export const PatientShellStore = signalStore(
 
       /**
        * Le contexte de l'onglet Séance (séance précédente, rappels de la vue d'ensemble, vocabulaire
-       * des émotions), lu une fois par séance ouverte ; `force` pour Réessayer. Les trois lectures
+       * des émotions), lu une fois par séance ouverte, puis relu en partie après chaque écriture
+       * (noteWrite) ; `force` pour Réessayer. Les trois lectures
        * partent ensemble ; l'échec de l'une met le bloc en erreur (l'onglet le dit, Réessayer relit).
        */
       async loadContext(force = false): Promise<void> {
@@ -464,6 +495,11 @@ export const PatientShellStore = signalStore(
         patchState(store, {
           prefillRequest: { text, seq: (store.prefillRequest()?.seq ?? 0) + 1 },
         });
+      },
+
+      /** Le bloc a reçu le texte : la demande est consommée (sinon la séance suivante la rejouerait). */
+      clearPrefill(): void {
+        patchState(store, { prefillRequest: null });
       },
 
       /** Efface le problème de la dernière action (dialogue fermé, nouvelle saisie). */

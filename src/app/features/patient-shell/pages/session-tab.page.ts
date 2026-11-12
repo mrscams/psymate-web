@@ -122,19 +122,24 @@ export class SessionTabPage {
   constructor() {
     const destroy = inject(DestroyRef);
 
-    // Sans séance ouverte (dossier lu), l'onglet n'a pas lieu d'être : la vue d'ensemble.
-    effect(() => {
-      if (this.shell.patient() && !this.session()) {
-        untracked(
-          () =>
-            void this.router.navigate(['/patients', this.patientId()], {
-              replaceUrl: true,
-            }),
-        );
-      }
+    // Sans séance ouverte à l'arrivée (dossier lu), l'onglet n'a pas lieu d'être : la vue
+    // d'ensemble, requête gardée (?entry=). Ensuite c'est le shell qui route (clôture, 409) : une
+    // seule navigation.
+    const arrival = effect(() => {
+      if (!this.shell.patient()) return;
+      arrival.destroy();
+      if (this.session()) return;
+      untracked(
+        () =>
+          void this.router.navigate(['/patients', this.patientId()], {
+            replaceUrl: true,
+            queryParamsHandling: 'preserve',
+          }),
+      );
     });
 
-    // Contexte lu une fois par séance ouverte ; points cochés repris de la mémoire de l'onglet.
+    // Contexte lu à l'ouverture de la séance (le shell en relit une partie après chaque écriture) ;
+    // points cochés repris de la mémoire de l'onglet.
     effect(() => {
       const session = this.session();
       if (!session) return;

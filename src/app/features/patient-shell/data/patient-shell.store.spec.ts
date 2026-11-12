@@ -579,12 +579,46 @@ describe('PatientShellStore', () => {
       expect(store.lastClosed()?.withSummary).toBe(false);
     });
 
-    it('requestPrefill : chaque demande a un numéro croissant', async () => {
+    it('requestPrefill : chaque demande a un numéro croissant ; consommée, elle s’efface', async () => {
       const store = await loaded(openSession());
       store.requestPrefill('Agenda du sommeil : ');
       expect(store.prefillRequest()).toEqual({ text: 'Agenda du sommeil : ', seq: 1 });
       store.requestPrefill('Certificat : ');
       expect(store.prefillRequest()?.seq).toBe(2);
+      store.clearPrefill();
+      expect(store.prefillRequest()).toBeNull();
+    });
+
+    it('une demande non consommée ne survit ni à la clôture ni au démarrage suivant', async () => {
+      const store = await loaded(openSession(), {
+        close: vi.fn().mockResolvedValue(closedSession({ id: 's-open' })),
+        start: vi.fn().mockResolvedValue(openSession({ id: 's-next' })),
+      });
+      store.requestPrefill('Agenda du sommeil : ');
+      await store.closeSession({ durationMin: 50 });
+      expect(store.prefillRequest()).toBeNull();
+      store.requestPrefill('Certificat : ');
+      await store.startSession();
+      expect(store.prefillRequest()).toBeNull();
+    });
+
+    it('noteWrite : séance précédente et rappels relus en silence, le contexte reste affiché', async () => {
+      const previous = vi.fn().mockResolvedValue(previousSession());
+      const remind = vi.fn().mockResolvedValue(reminders());
+      const store = await loaded(openSession(), { previousSession: previous, reminders: remind });
+      await store.loadContext();
+      remind.mockResolvedValue(
+        reminders({
+          medications: [{ entryId: 'm-2', molecule: 'Sertraline', dosage: '50 mg', since: null }],
+        }),
+      );
+      store.noteWrite('e-9');
+      expect(store.context().status).toBe('loaded');
+      await tick();
+      await tick();
+      expect(previous).toHaveBeenCalledTimes(2);
+      expect(store.context().data?.reminders.medications[0].molecule).toBe('Sertraline');
+      expect(store.context().data?.emotionLabels['anxiety']).toBe('Anxiété');
     });
   });
 });

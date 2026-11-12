@@ -25244,8 +25244,8 @@
                         séance</note>
       </trans-unit>
       <trans-unit id="overview.sessions.editSummary" datatype="html">
-        <source>modifier le compte rendu</source>
-        <target state="translated">edit the summary</target>
+        <source>modifier la séance</source>
+        <target state="translated">edit the session</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
           <context context-type="linenumber">94,98</context>
@@ -25254,7 +25254,7 @@
           <context context-type="sourcefile">src/app/features/overview/ui/overview-simple.component.html</context>
           <context context-type="linenumber">156,161</context>
         </context-group>
-        <note priority="1" from="description">Modifier le compte rendu de la dernière séance</note>
+        <note priority="1" from="description">Modifier la dernière séance (durée, modalité)</note>
       </trans-unit>
       <trans-unit id="patientShell.session.closedEdit" datatype="html">
         <source>Modifier</source>
@@ -25584,22 +25584,31 @@
         <note priority="1" from="description">Bloc prochaine fois du panneau</note>
       </trans-unit>
       <trans-unit id="patientShell.close.nextTime.line" datatype="html">
-        <source>Point à reprendre</source>
-        <target state="translated">Point to bring up</target>
+        <source>Point à reprendre <x id="number" equiv-text="number"/></source>
+        <target state="translated">Point to bring up <x id="number" equiv-text="number"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">162,164</context>
         </context-group>
-        <note priority="1" from="description">Étiquette d&apos;une ligne prochaine fois</note>
+        <note priority="1" from="description">Étiquette d&apos;une ligne prochaine fois, numérotée</note>
       </trans-unit>
       <trans-unit id="patientShell.close.nextTime.remove" datatype="html">
-        <source>Retirer cette ligne</source>
-        <target state="translated">Remove this line</target>
+        <source>Retirer la ligne <x id="number" equiv-text="number"/></source>
+        <target state="translated">Remove line <x id="number" equiv-text="number"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">170,172</context>
         </context-group>
-        <note priority="1" from="description">Retirer une ligne prochaine fois</note>
+        <note priority="1" from="description">Retirer une ligne prochaine fois, numérotée</note>
+      </trans-unit>
+      <trans-unit id="patientShell.close.escapeKey" datatype="html">
+        <source>Échap</source>
+        <target state="translated">Esc</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
+          <context context-type="linenumber">218</context>
+        </context-group>
+        <note priority="1" from="description">Touche Échap, pied du panneau de clôture</note>
       </trans-unit>
       <trans-unit id="patientShell.close.nextTime.add" datatype="html">
         <source>Ajouter une ligne…</source>

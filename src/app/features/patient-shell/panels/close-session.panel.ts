@@ -199,6 +199,17 @@ export class CloseSessionPanel {
     }
   }
 
+  /** Noms accessibles distincts d'une ligne à l'autre : « Point à reprendre 2 », « Retirer la ligne 2 ». */
+  protected lineLabel(index: number): string {
+    const n = index + 1;
+    return $localize`:Étiquette d'une ligne prochaine fois, numérotée@@patientShell.close.nextTime.line:Point à reprendre ${n}:number:`;
+  }
+
+  protected removeLabel(index: number): string {
+    const n = index + 1;
+    return $localize`:Retirer une ligne prochaine fois, numérotée@@patientShell.close.nextTime.remove:Retirer la ligne ${n}:number:`;
+  }
+
   protected setLine(index: number, value: string): void {
     this.nextTime.update((list) => list.map((line, i) => (i === index ? value : line)));
   }

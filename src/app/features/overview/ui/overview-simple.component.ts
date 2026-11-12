@@ -133,7 +133,7 @@ export class OverviewSimpleComponent {
    * convention des dernières lignes, lue par le client ; le serveur n'y voit qu'un texte).
    */
   protected readonly lastSummary = computed(() => splitNextTime(this.lastSession()?.summary));
-  /** « modifier le compte rendu » : une séance ordinaire clôturée (l'éditeur, dans la grâce ou en version). */
+  /** « modifier la séance » : une séance ordinaire clôturée (l'éditeur, dans la grâce ou en version). */
   protected readonly lastEditable = computed(() => {
     const session = this.lastSession();
     return !!session && session.kind === 'session' && session.closedAt !== null;

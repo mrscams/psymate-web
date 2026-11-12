@@ -159,17 +159,13 @@
                 type="text"
                 [id]="'next-time-' + $index"
                 [value]="line"
-                aria-label="Point à reprendre"
-                i18n-aria-label="
-                  Étiquette d'une ligne prochaine fois@@patientShell.close.nextTime.line"
+                [attr.aria-label]="lineLabel($index)"
                 (input)="setLine($index, $any($event.target).value)"
               />
               <button
                 type="button"
                 class="remove"
-                aria-label="Retirer cette ligne"
-                i18n-aria-label="
-                  Retirer une ligne prochaine fois@@patientShell.close.nextTime.remove"
+                [attr.aria-label]="removeLabel($index)"
                 (click)="removeLine($index)"
               >
                 ✕
@@ -219,8 +215,8 @@
       >
     </button>
     <span class="hints">
-      <kbd>Échap</kbd>&ngsp;<span
-        i18n="Rappel du pied du panneau de clôture@@patientShell.close.escapeHint"
+      <kbd i18n="Touche Échap, pied du panneau de clôture@@patientShell.close.escapeKey">Échap</kbd
+      >&ngsp;<span i18n="Rappel du pied du panneau de clôture@@patientShell.close.escapeHint"
         >garde le brouillon</span
       >
     </span>

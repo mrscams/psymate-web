@@ -173,7 +173,10 @@ export class PatientShellPage {
       const request = this.store.prefillRequest();
       const bar = this.captureBar();
       if (!request || !bar) return;
-      untracked(() => bar.prefill(request.text));
+      untracked(() => {
+        bar.prefill(request.text);
+        this.store.clearPrefill();
+      });
     });
 
     // Arrivée depuis la création du patient (B3 flux 2, étape 3) : une fois le dossier lu, le bloc

@@ -30,6 +30,12 @@ describe('splitNextTime', () => {
     expect(splitNextTime('PROCHAINE FOIS :   ')).toEqual({ body: '', nextTime: [] });
   });
 
+  it('plusieurs points sur une ligne, séparés par « ; » (maquette 04b)', () => {
+    expect(
+      splitNextTime('Thème.\nProchaine fois : relire la demande ; agenda du sommeil ;'),
+    ).toEqual({ body: 'Thème.', nextTime: ['relire la demande', 'agenda du sommeil'] });
+  });
+
   it('le dernier marqueur fait foi ; un « Prochaine fois » au milieu d’une phrase n’en est pas un', () => {
     const summary =
       'Elle dit : la prochaine fois : on verra.\nProchaine fois :\n– a\nNote tardive.\nProchaine fois :\n– b';
