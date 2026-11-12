@@ -197,9 +197,11 @@
   }
 }
 
+// Hauteur restante de la fenêtre sous le haut de l'onglet (--graph-top, mesuré par la page, UX-S2),
+// moins la marge basse du contenu ; 480 px au moins (UX-G2c).
 .board {
   position: relative;
-  height: max(480px, calc(100vh - 340px));
+  height: max(480px, calc(100dvh - var(--graph-top, 340px) - 24px));
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
   background: var(--surface-raised);
@@ -218,7 +220,7 @@
 }
 
 .detail {
-  height: max(480px, calc(100vh - 340px));
+  height: max(480px, calc(100dvh - var(--graph-top, 340px) - 24px));
 }
 
 .list {

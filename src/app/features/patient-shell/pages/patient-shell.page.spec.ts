@@ -160,10 +160,14 @@ describe('PatientShellPage', () => {
       'Dernière séance : 17 oct. 2026 · visio · 60 min',
     );
     expect(el.querySelector('button.start-session')).not.toBeNull();
-    // Hors séance : ni barre de séance ni colonne de contenu (aucune saisie sans séance, UX-S1).
+    // Hors séance : ni barre de séance, ni bloc de saisie (aucune saisie sans séance, UX-S1), ni
+    // colonne latérale ; l'onglet occupe la colonne principale seule.
     expect(el.querySelector('pm-session-bar .session-bar')).toBeNull();
-    expect(el.querySelector('.pad-layout')).toBeNull();
-    expect(el.querySelector('pm-capture-block')).toBeNull();
+    const layout = el.querySelector('.pad-layout')!;
+    expect(layout.classList.contains('in-session')).toBe(false);
+    expect(layout.querySelector('pm-capture-block')).toBeNull();
+    expect(layout.querySelector('aside.ctx')).toBeNull();
+    expect(layout.querySelector('.pad-main .tab-content pm-fake-overview-tab')).not.toBeNull();
     expect(text(el.querySelector('pm-fake-overview-tab h2'))).toBe("Vue d'ensemble");
     expect(el.querySelector('.view-toggle pm-overview-view-toggle [role="group"]')).not.toBeNull();
   });
@@ -258,14 +262,16 @@ describe('PatientShellPage', () => {
       expect(el.querySelector('pm-patient-header button.start-session')).toBeNull();
       expect(el.querySelector('pm-patient-header .session-text')).toBeNull();
       expect(text(el.querySelector('nav.tabs a[aria-current="page"] span'))).toBe('Séance');
-      // Colonne de contenu en mode séance (en-tête, colonne, onglet) : bloc déplié, colonne
-      // latérale avec les raccourcis.
-      const order = [...el.querySelectorAll('pm-patient-header, .pad-layout, .tab-content')].map(
+      // Colonne de contenu en mode séance (04b) : la colonne principale porte le bloc déplié puis
+      // l'onglet courant ; la colonne latérale avec les raccourcis la longe.
+      const layout = el.querySelector('.pad-layout')!;
+      expect(layout.classList.contains('in-session')).toBe(true);
+      const main = [...layout.querySelectorAll('.pad-main > *')].map(
         (node) => node.className || node.tagName.toLowerCase(),
       );
-      expect(order).toEqual(['pm-patient-header', 'pad-layout', 'tab-content']);
-      const layout = el.querySelector('.pad-layout')!;
+      expect(main).toEqual(['pm-capture-block', 'tab-content']);
       expect(layout.querySelector('.pad-main pm-capture-block .block.expanded')).not.toBeNull();
+      expect(layout.querySelector('.pad-main .tab-content pm-fake-overview-tab')).not.toBeNull();
       const aside = layout.querySelector('aside.ctx')!;
       expect(aside.getAttribute('aria-label')).toBe('Repères de séance');
       expect(text(aside.querySelector('h3'))).toBe('Raccourcis dans le texte');
@@ -334,7 +340,9 @@ describe('PatientShellPage', () => {
     );
     expect(el.querySelector('button.start-session')).not.toBeNull();
     expect(text(el.querySelector('nav.tabs a[aria-current="page"] span'))).toBe("Vue d'ensemble");
-    expect(el.querySelector('.pad-layout')).toBeNull();
+    expect(el.querySelector('.pad-layout.in-session')).toBeNull();
+    expect(el.querySelector('pm-capture-block')).toBeNull();
+    expect(el.querySelector('aside.ctx')).toBeNull();
     await vi.waitFor(() =>
       expect(document.activeElement).toBe(el.querySelector('button.start-session')),
     );

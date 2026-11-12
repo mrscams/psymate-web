@@ -8,6 +8,7 @@ import {
 
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { themeFolder } from '../theme/theme-support';
 
 // Page patient et en-tête permanent (M1-07, B2, fiche 00 §2 ; UX-S2 : en-tête compact, barre de
 // séance, bloc de saisie dans la colonne de contenu) : contre l'API locale (seed small, Mailpit),
@@ -317,9 +318,11 @@ test('UX-S2 : en-tête compact (identité 44, onglets 38), barre de séance de 4
       2,
     );
   }
-  // Hors séance : ni bloc de saisie (UX-S1) ni colonne de contenu ni barre de séance.
+  // Hors séance : ni bloc de saisie (UX-S1) ni colonne latérale ni barre de séance ; l'onglet
+  // occupe la colonne principale seule.
   await expect(page.locator('pm-capture-block')).toHaveCount(0);
-  await expect(page.locator('.pad-layout')).toHaveCount(0);
+  await expect(page.locator('.pad-layout aside.ctx')).toHaveCount(0);
+  await expect(page.locator('.pad-layout .pad-main pm-overview-page')).toBeVisible();
   await expect(h.bar).toHaveCount(0);
   await expectNoAxeViolations(page);
 
@@ -354,6 +357,12 @@ test('UX-S2 : en-tête compact (identité 44, onglets 38), barre de séance de 4
   const asideBox = (await aside.boundingBox())!;
   expect(asideBox.x).toBeGreaterThanOrEqual(mainBox.x + mainBox.width);
   expect(Math.abs(asideBox.y - mainBox.y)).toBeLessThan(2);
+  // 04b : la colonne principale porte le bloc ET l'onglet courant ; la latérale les longe.
+  const overview = page.locator('.pad-layout .pad-main pm-overview-page');
+  await expect(overview).toBeVisible();
+  const overviewBox = (await overview.boundingBox())!;
+  expect(overviewBox.y).toBeGreaterThanOrEqual((await block.boundingBox())!.y);
+  expect(overviewBox.x + overviewBox.width).toBeLessThanOrEqual(asideBox.x);
   await expect(aside.getByRole('heading', { name: 'Raccourcis dans le texte' })).toBeVisible();
   await expectNoAxeViolations(page);
 
@@ -372,6 +381,82 @@ test('UX-S2 : en-tête compact (identité 44, onglets 38), barre de séance de 4
   await expect(block).toBeVisible();
   await page.keyboard.press('1');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
+
+  // À 375 px en séance (fiche 00 §2) : barre réduite (« Clôturer », sans modalité ni durée prévue),
+  // bloc puis colonne latérale empilés, aucun défilement horizontal.
+  await page.setViewportSize({ width: 375, height: 812 });
+  within((await h.bar.boundingBox())!.height, 44);
+  await expect(h.bar.locator('.close-session .short')).toBeVisible();
+  await expect(h.bar.locator('.close-session .long')).toBeHidden();
+  await expect(h.bar.locator('.detail')).toBeHidden();
+  await expect(h.bar.locator('.planned')).toBeHidden();
+  await expect(h.close).toHaveAccessibleName('Clôturer la séance');
+  const blockBox = (await block.boundingBox())!;
+  const asideMobile = (await aside.boundingBox())!;
+  expect(asideMobile.y).toBeGreaterThanOrEqual(blockBox.y + blockBox.height);
+  expect(blockBox.x + blockBox.width).toBeLessThanOrEqual(375);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(375);
+  await expectNoAxeViolations(page);
+});
+
+test('UX-S2 : en séance à 1440 × 900, la timeline garde 480 px de cartes et le graphe tient dans la fenêtre (UX-G2c)', async ({
+  page,
+  request,
+}) => {
+  test.setTimeout(90_000);
+  const account = await createAccount(request, 'ux-s2.hauteurs', 'psychologist');
+  // Dossier rempli (séance passée, entrées) : la timeline a des cartes, le graphe des liens.
+  const folder = await themeFolder(request);
+  const id = folder.patientId;
+  const start = await request.post(`${API}/api/patients/${id}/sessions/start`, {
+    data: { modality: 'in_person' },
+  });
+  expect(start.status(), await start.text()).toBe(201);
+  await signIn(page, account);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const h = header(page);
+
+  // Timeline : barre de séance et bloc au-dessus, la zone des cartes mesure au moins 480 px.
+  await page.goto(`/fr/patients/${id}/timeline`);
+  await expect(h.name).toHaveText('Nina S.');
+  await expect(h.bar).toBeVisible();
+  await expect(page.locator('.pad-layout .pad-main pm-capture-block')).toBeVisible();
+  // En séance la timeline s'ouvre « par séance » (la page défile) ; le critère des 480 px porte
+  // sur le mode chronologique, dont la liste prend la hauteur restante : M bascule.
+  await page.keyboard.press('m');
+  const viewport = page.locator('cdk-virtual-scroll-viewport');
+  await expect(viewport).toBeVisible();
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
+  const cards = (await viewport.boundingBox())!;
+  expect(cards.height, 'zone des cartes de la timeline en séance').toBeGreaterThanOrEqual(480);
+  // Colonne latérale à côté, pas sous la liste.
+  const aside = (await page.locator('.pad-layout aside.ctx').boundingBox())!;
+  expect(aside.x).toBeGreaterThanOrEqual(cards.x + cards.width);
+  await expectNoAxeViolations(page);
+
+  // Graphe : le plateau mesure le haut de son onglet (--graph-top) : il prend exactement la hauteur
+  // restante de la fenêtre, 480 px au moins (sous la barre et le bloc, la page défile alors du
+  // strict nécessaire, plus de décalage fixe de 340 px).
+  await page.keyboard.press('3');
+  await expect(page).toHaveURL(/\/graph/);
+  const board = page.locator('pm-graph-page .board');
+  await expect(board).toBeVisible();
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
+  const boardBox = (await board.boundingBox())!;
+  const boardTop = boardBox.y + (await page.evaluate(() => window.scrollY));
+  expect(boardBox.height, 'plateau du graphe en séance').toBeGreaterThanOrEqual(480);
+  expect(
+    Math.abs(boardBox.height - Math.max(480, 900 - boardTop - 24)),
+    'hauteur du plateau = max(480, fenêtre − haut mesuré − 24)',
+  ).toBeLessThanOrEqual(2);
+  // Rien d'autre que le plateau ne fait défiler la page.
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollHeight - document.documentElement.clientHeight,
+  );
+  expect(overflow, 'défilement de la page au-delà du plateau').toBeLessThanOrEqual(
+    Math.max(0, boardTop + boardBox.height + 24 - 900) + 2,
+  );
+  await expectNoAxeViolations(page);
 });
 
 test("patient d'un autre praticien : 403 PATIENT_FORBIDDEN, état erreur du shell, pas de redirection", async ({

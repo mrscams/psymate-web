@@ -3,13 +3,7 @@
 }
 
 .tab-content {
-  padding-top: 20px;
-
-  // La timeline occupe la hauteur restante de la fenêtre : 8 px de plus pour la zone des cartes
-  // (480 px au moins à 1440 × 900, UX-G2c).
-  &.dense {
-    padding-top: 12px;
-  }
+  min-width: 0;
 }
 
 .shell-error {
@@ -25,24 +19,41 @@
 }
 
 /*
- * Colonne de contenu (proposition 04b .pad-layout), en séance seulement : colonne principale et
- * colonne latérale de 340 px, 20 px d'écart, sous l'en-tête (padding 20 de la maquette). Sous
- * 900 px, la colonne latérale passe dessous.
+ * Colonne de contenu (proposition 04b .pad-layout) : la colonne principale (bloc de saisie en
+ * séance, indice, onglet courant) et, en séance, la colonne latérale de 340 px qui la longe,
+ * 20 px d'écart, sous l'en-tête (padding 20 de la maquette). Sous 900 px, la latérale passe
+ * dessous. Timeline (dense) : 12 px au lieu de 20 au-dessus et entre le bloc et la liste, pour
+ * garder la zone des cartes à 480 px (UX-G2c).
  */
 .pad-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-columns: minmax(0, 1fr);
   gap: 20px;
   align-items: start;
   padding-top: 20px;
+
+  &.in-session {
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+
+  &.dense {
+    padding-top: 12px;
+
+    .pad-main {
+      gap: 12px;
+    }
+  }
 }
 
 .pad-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   min-width: 0;
 }
 
 @media (max-width: 900px) {
-  .pad-layout {
+  .pad-layout.in-session {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -96,7 +107,6 @@
   gap: 12px;
   align-items: center;
   justify-content: space-between;
-  margin-top: 16px;
   padding: 10px 16px;
   border: 1px solid var(--border-subtle);
   border-radius: 10px;

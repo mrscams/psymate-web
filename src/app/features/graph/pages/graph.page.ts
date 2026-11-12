@@ -5,6 +5,7 @@ import {
   computed,
   DestroyRef,
   effect,
+  ElementRef,
   inject,
   Injector,
   LOCALE_ID,
@@ -99,6 +100,7 @@ const ROOT_SEARCH_DEBOUNCE_MS = 250;
 })
 export class GraphPage {
   protected readonly store = inject(GraphStore);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly shell = inject(PatientShellStore);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -372,6 +374,58 @@ export class GraphPage {
   protected readonly depthLabelId = 'graph-depth-label';
 
   constructor() {
+    // Haut de l'onglet dans le document (en-tête, et en séance la barre de séance et le bloc de
+    // saisie au-dessus, UX-S2) : le plateau et le détail prennent la hauteur restante de la fenêtre
+    // (--graph-top), 480 px au moins. Relu quand la fenêtre change de taille et quand ce qui
+    // précède change de hauteur (bloc déplié, indice, bandeau), comme la timeline (UX-G2c).
+    const heightDestroyRef = inject(DestroyRef);
+    afterNextRender(() => {
+      const host = this.host.nativeElement;
+      const doc = host.ownerDocument;
+      const view = doc.defaultView;
+      if (!view) return;
+      const update = () => {
+        const top = Math.round(host.getBoundingClientRect().top + view.scrollY);
+        const value = `${top}px`;
+        if (host.style.getPropertyValue('--graph-top') !== value) {
+          host.style.setProperty('--graph-top', value);
+        }
+      };
+      update();
+      view.addEventListener('resize', update);
+      const observer =
+        typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => update());
+      const ancestors: Element[] = [];
+      for (let el = host.parentElement; el && el !== doc.body; el = el.parentElement) {
+        ancestors.push(el);
+      }
+      const watch = () => {
+        for (const el of ancestors) {
+          for (let before = el.previousElementSibling; before;) {
+            observer?.observe(before);
+            before = before.previousElementSibling;
+          }
+        }
+      };
+      observer?.observe(doc.body);
+      watch();
+      const inserted =
+        typeof MutationObserver === 'undefined'
+          ? null
+          : new MutationObserver(() => {
+              update();
+              watch();
+            });
+      for (const el of ancestors) {
+        if (el.parentElement) inserted?.observe(el.parentElement, { childList: true });
+      }
+      heightDestroyRef.onDestroy(() => {
+        view.removeEventListener('resize', update);
+        observer?.disconnect();
+        inserted?.disconnect();
+      });
+    });
+
     // Le patient (en-tête) et l'URL : premier chargement, reprise de l'état rangé, ou nouvelle requête.
     effect(() => {
       const patient = this.shell.patient();
