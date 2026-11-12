@@ -1,0 +1,36 @@
+@if (current()) {
+  <div class="session-bar" [class.unclosed]="unclosed()">
+    <span class="pulse" aria-hidden="true"></span>
+    @if (unclosed()) {
+      <span class="session-text current">{{ unclosedText() }}</span>
+    } @else {
+      <span class="session-text current"
+        ><b i18n="Barre de séance@@sessionBar.current">Séance en cours</b>
+        <span class="detail"> · {{ detail() }}</span></span
+      >
+      <span class="timer" role="timer" [attr.aria-label]="timerLabel">{{ elapsed() }}</span>
+      @if (plannedText(); as planned) {
+        <span class="planned">{{ planned }}</span>
+      }
+    }
+    <span class="right">
+      @if (countText(); as count) {
+        <span class="count">{{ count }}</span>
+      }
+      <!-- Nom accessible constant ; sous 600 px, seul « Clôturer » est affiché (maquette 04 mobile). -->
+      <button
+        mat-stroked-button
+        type="button"
+        class="close-session"
+        [disabled]="busy()"
+        [attr.aria-label]="closeLabel"
+        (click)="closeSession.emit()"
+      >
+        <span class="long">{{ closeLabel }}</span>
+        <span class="short" i18n="Bouton Clôturer abrégé, sous 600 px@@sessionBar.close.short"
+          >Clôturer</span
+        >
+      </button>
+    </span>
+  </div>
+}

@@ -22,6 +22,7 @@ import { ShortcutService } from '../../../core/shortcuts';
 import {
   PatientHeaderComponent,
   PatientSessionInfo,
+  SessionBarComponent,
   SidePanelService,
   StateComponent,
   ToastService,
@@ -37,12 +38,19 @@ import { ShellTab } from '../data/patient-shell.model';
 import { CAPTURE_FOCUS_STATE } from '../patient-shell.params';
 import { PatientShellStore } from '../data/patient-shell.store';
 import { CloseSessionDialog, CloseSessionResult } from '../panels/close-session.dialog';
-import { finalLoadError, sessionProblemText, toHeaderInfo } from '../ui/shell-labels';
+import {
+  finalLoadError,
+  sessionProblemText,
+  textShortcutRows,
+  toHeaderInfo,
+} from '../ui/shell-labels';
 
 /**
- * Page patient /patients/:id (B2, fiche 00 §2) : l'en-tête permanent (pm-patient-header, nourri
- * par le PatientShellStore), la barre de capture repliée, et l'onglet courant dans le
- * router-outlet (overview, timeline, graph, search). Le store est fourni ici : les onglets
+ * Page patient /patients/:id (B2, fiche 00 §2 ; UX-S2, proposition 04b) : la barre de séance
+ * (pm-session-bar) tant qu'une séance est ouverte, l'en-tête compact (pm-patient-header, nourri par
+ * le PatientShellStore), la colonne de contenu en séance seulement (.pad-layout : le bloc de
+ * saisie au-dessus de l'onglet courant et une colonne latérale de 340 px ; aucune saisie sans
+ * séance, UX-S1), et l'onglet courant dans le router-outlet (overview, timeline, graph, search). Le store est fourni ici : les onglets
  * l'injectent et y rangent leur état, qui survit aux changements d'onglet tant que le dossier
  * reste ouvert. 403 PATIENT_FORBIDDEN et 404 : état erreur du shell, sans redirection.
  */
@@ -54,6 +62,7 @@ import { finalLoadError, sessionProblemText, toHeaderInfo } from '../ui/shell-la
     PatientHeaderComponent,
     RouterLink,
     RouterOutlet,
+    SessionBarComponent,
     StateComponent,
   ],
   providers: [PatientShellStore],
@@ -105,11 +114,26 @@ export class PatientShellPage {
 
   protected readonly headerSession = computed<PatientSessionInfo>(() => {
     const current = this.store.currentSession();
-    if (current) return { kind: 'current', startedAt: current.startedAt };
+    if (current) {
+      return { kind: 'current', startedAt: current.startedAt, modality: current.modality };
+    }
     const last = this.store.lastSession();
-    if (last) return { kind: 'last', date: last.startedAt };
+    if (last) {
+      return {
+        kind: 'last',
+        date: last.startedAt,
+        modality: last.modality,
+        durationMin: last.durationMin,
+      };
+    }
     return { kind: 'none' };
   });
+
+  /** Mode séance : barre de séance, onglet « Séance », bloc déplié, colonne latérale. */
+  protected readonly inSession = computed(() => this.store.currentSession() !== null);
+
+  /** Colonne latérale en séance (04b « Raccourcis dans le texte ») : la grammaire du bloc. */
+  protected readonly textShortcuts = textShortcutRows();
 
   /** L'en-tête montre le chargement et l'erreur qu'un nouvel essai peut lever (5xx, réseau). */
   protected readonly headerState = computed<StateKind | null>(() => {
@@ -197,8 +221,8 @@ export class PatientShellPage {
   }
 
   /**
-   * N, bouton + ou barre de commande (Ctrl+Entrée : saisie interprétée ; Entrée sur un champ vide) :
-   * nouvelle entrée dans l'éditeur.
+   * N, ou le bloc de saisie (Ctrl+Entrée et « Détailler » : saisie interprétée ; Entrée sur un champ
+   * vide) : nouvelle entrée dans l'éditeur. Le bouton « + » de l'en-tête a disparu avec UX-S2 (04b).
    */
   protected newEntry(prefill: EntryPrefill | null = null): void {
     if (this.panels.isOpen() || !this.store.patient()) return;
@@ -263,10 +287,10 @@ export class PatientShellPage {
   }
 
   /**
-   * Après Démarrer ou Clôturer, le bouton utilisé disparaît de l'en-tête : le bloc de saisie prend
-   * le focus (B3 flux 3 et 6 : on démarre la séance puis on note au clavier) ; sans séance ouverte
-   * (après Clôturer), le bouton « Démarrer la séance », seul point de départ d'une saisie. Après le
-   * prochain rendu : le bloc n'apparaît qu'avec la séance.
+   * Après Démarrer ou Clôturer, le bouton utilisé disparaît (de l'en-tête, de la barre de séance) :
+   * le bloc de saisie prend le focus (B3 flux 3 et 6 : on démarre la séance puis on note au clavier) ;
+   * sans séance ouverte (après Clôturer), le bouton « Démarrer la séance », seul point de départ
+   * d'une saisie. Après le prochain rendu : le bloc n'apparaît qu'avec la séance.
    */
   private focusCapture(options: { quiet?: boolean } = {}): void {
     afterNextRender(

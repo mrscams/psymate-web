@@ -11,6 +11,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, Route, Router, Routes, withComponentInputBinding } from '@angular/router';
+import { LOCALE_ID } from '@angular/core';
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { PreferencesStore } from '../../../core/preferences';
@@ -150,15 +151,23 @@ describe('PatientShellPage', () => {
     expect(el.querySelector('pm-fake-overview-tab')).toBeNull();
   });
 
-  it('chargé : nom, drapeau, dernière séance, pas de bloc de saisie sans séance ouverte, onglet 1 avec la bascule Vue', async () => {
+  it('chargé : nom, drapeau, dernière séance (modalité, durée), pas de bloc de saisie sans séance ouverte, onglet 1 avec la bascule Vue', async () => {
     const { el, api } = await render();
     expect(api.patient).toHaveBeenCalledWith('p-marie');
     expect(text(el.querySelector('h1.name'))).toBe('Marie D.');
     expect(text(el.querySelector('.flag'))).toBe('À surveiller');
-    expect(text(el.querySelector('.session-text'))).toBe('Dernière séance : 17 oct. 2026');
+    expect(text(el.querySelector('.session-text'))).toBe(
+      'Dernière séance : 17 oct. 2026 · visio · 60 min',
+    );
     expect(el.querySelector('button.start-session')).not.toBeNull();
-    // Aucune saisie sans séance : le bloc n'est posé qu'avec une séance ouverte.
-    expect(el.querySelector('pm-capture-block')).toBeNull();
+    // Hors séance : ni barre de séance, ni bloc de saisie (aucune saisie sans séance, UX-S1), ni
+    // colonne latérale ; l'onglet occupe la colonne principale seule.
+    expect(el.querySelector('pm-session-bar .session-bar')).toBeNull();
+    const layout = el.querySelector('.pad-layout')!;
+    expect(layout.classList.contains('in-session')).toBe(false);
+    expect(layout.querySelector('pm-capture-block')).toBeNull();
+    expect(layout.querySelector('aside.ctx')).toBeNull();
+    expect(layout.querySelector('.pad-main .tab-content pm-fake-overview-tab')).not.toBeNull();
     expect(text(el.querySelector('pm-fake-overview-tab h2'))).toBe("Vue d'ensemble");
     expect(el.querySelector('.view-toggle pm-overview-view-toggle [role="group"]')).not.toBeNull();
   });
@@ -223,20 +232,59 @@ describe('PatientShellPage', () => {
     },
   );
 
-  it('Démarrer : l’en-tête passe « en cours » sans recharger le dossier', async () => {
+  it('Démarrer : barre de séance (chronomètre, durée prévue), onglet « Séance », colonne latérale, sans recharger le dossier', async () => {
     // Horloge figée 12 min après le début de la séance renvoyée (24 oct. 2026, 14:00 Z) : au-delà
-    // de 3 h, l'en-tête dirait « non clôturée ». Seule la date est simulée, pas les minuteries.
+    // de 3 h, la barre dirait « non clôturée ». Seule la date est simulée, pas les minuteries.
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date('2026-10-24T14:12:00Z'));
     try {
-      const { el, harness, api } = await render();
+      const { el, harness, api } = await render({}, '/patients/p-marie', 45);
       el.querySelector<HTMLButtonElement>('button.start-session')?.click();
       await settle(harness);
       expect(api.start).toHaveBeenCalledWith('p-marie', 'in_person');
       expect(api.patient).toHaveBeenCalledTimes(1);
-      expect(el.querySelector('.session-text')?.classList.contains('current')).toBe(true);
-      expect(text(el.querySelector('.session-text'))).toMatch(/en cours depuis 12 min$/);
-      expect(el.querySelector('button.close-session')).not.toBeNull();
+      // La barre de séance précède l'en-tête ; l'en-tête n'a plus ni Démarrer ni texte de séance.
+      const bar = el.querySelector('pm-session-bar .session-bar')!;
+      expect(bar).not.toBeNull();
+      expect(bar.compareDocumentPosition(el.querySelector('pm-patient-header')!)).toBe(
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+      // L'heure est celle du fuseau de la machine : l'attendu suit le même Intl que le composant.
+      const startedAt = new Intl.DateTimeFormat(TestBed.inject(LOCALE_ID), {
+        timeStyle: 'short',
+      }).format(new Date('2026-10-24T14:00:00Z'));
+      expect(text(bar.querySelector('.session-text'))).toBe(
+        `Séance en cours · cabinet · démarrée à ${startedAt}`,
+      );
+      expect(text(bar.querySelector('.timer'))).toBe('00:12:00');
+      expect(text(bar.querySelector('.planned'))).toBe('sur 45 min prévues');
+      expect(bar.querySelector('button.close-session')).not.toBeNull();
+      expect(el.querySelector('pm-patient-header button.start-session')).toBeNull();
+      expect(el.querySelector('pm-patient-header .session-text')).toBeNull();
+      expect(text(el.querySelector('nav.tabs a[aria-current="page"] span'))).toBe('Séance');
+      // Colonne de contenu en mode séance (04b) : la colonne principale porte le bloc déplié puis
+      // l'onglet courant ; la colonne latérale avec les raccourcis la longe.
+      const layout = el.querySelector('.pad-layout')!;
+      expect(layout.classList.contains('in-session')).toBe(true);
+      const main = [...layout.querySelectorAll('.pad-main > *')].map(
+        (node) => node.className || node.tagName.toLowerCase(),
+      );
+      expect(main).toEqual(['pm-capture-block', 'tab-content']);
+      expect(layout.querySelector('.pad-main pm-capture-block .block.expanded')).not.toBeNull();
+      expect(layout.querySelector('.pad-main .tab-content pm-fake-overview-tab')).not.toBeNull();
+      const aside = layout.querySelector('aside.ctx')!;
+      expect(aside.getAttribute('aria-label')).toBe('Repères de séance');
+      expect(text(aside.querySelector('h3'))).toBe('Raccourcis dans le texte');
+      expect([...aside.querySelectorAll('.shortcut')].map(text)).toEqual([
+        'anx 7 ressenti',
+        '/evt événement',
+        '/sit situation',
+        '/med médicament',
+        '/note',
+        'hier, 12 mars, il y a 3 j dates',
+        '> cible lien',
+      ]);
+      expect(el.querySelector('button.new-entry')).toBeNull();
       await vi.waitFor(() =>
         expect(document.activeElement).toBe(el.querySelector('pm-capture-block textarea')),
       );
@@ -245,15 +293,18 @@ describe('PatientShellPage', () => {
     }
   });
 
-  it('séance ouverte depuis plus de 3 h : « non clôturée », Clôturer reste proposé', async () => {
+  it('séance ouverte depuis plus de 3 h : barre grise « non clôturée », Clôturer reste proposé', async () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date('2026-10-24T17:01:00Z'));
     try {
       const { el } = await render({ current: vi.fn().mockResolvedValue(openSession()) });
-      const line = text(el.querySelector('.session-text'));
+      const bar = el.querySelector('pm-session-bar .session-bar')!;
+      expect(bar.classList.contains('unclosed')).toBe(true);
+      const line = text(bar.querySelector('.session-text'));
       expect(line).toMatch(/non clôturée$/);
-      expect(line).not.toContain('en cours depuis');
-      expect(el.querySelector('button.close-session')).not.toBeNull();
+      expect(line).not.toContain('Séance en cours');
+      expect(bar.querySelector('.timer')).toBeNull();
+      expect(bar.querySelector('button.close-session')).not.toBeNull();
     } finally {
       vi.useRealTimers();
     }
@@ -281,8 +332,20 @@ describe('PatientShellPage', () => {
       summary: 'Point sur le sommeil',
     });
     await settle(harness);
-    expect(text(el.querySelector('.session-text'))).toBe('Dernière séance : 17 oct. 2026');
+    // La séance clôturée (réponse du serveur) devient la dernière séance ; la barre et la colonne
+    // de contenu disparaissent, l'onglet 1 redit « Vue d'ensemble », Démarrer prend le focus.
+    expect(el.querySelector('pm-session-bar .session-bar')).toBeNull();
+    expect(text(el.querySelector('pm-patient-header .session-text'))).toBe(
+      'Dernière séance : 17 oct. 2026 · visio · 60 min',
+    );
     expect(el.querySelector('button.start-session')).not.toBeNull();
+    expect(text(el.querySelector('nav.tabs a[aria-current="page"] span'))).toBe("Vue d'ensemble");
+    expect(el.querySelector('.pad-layout.in-session')).toBeNull();
+    expect(el.querySelector('pm-capture-block')).toBeNull();
+    expect(el.querySelector('aside.ctx')).toBeNull();
+    await vi.waitFor(() =>
+      expect(document.activeElement).toBe(el.querySelector('button.start-session')),
+    );
   });
 
   it('Clôturer, 422 : message du serveur sous la durée, le dialogue reste ouvert', async () => {
@@ -447,15 +510,9 @@ describe('PatientShellPage', () => {
 
     afterEach(() => TestBed.inject(HttpTestingController).match(() => true));
 
-    it('bouton + et touche N : ouvrent l’éditeur, une seule fois', async () => {
+    it('touche N : ouvre l’éditeur, une seule fois ; plus de bouton + (UX-S2, 04b)', async () => {
       const { harness, el } = await render();
-      el.querySelector<HTMLButtonElement>('button.new-entry')!.click();
-      await settle(harness);
-      expect(editor()?.querySelector('h2')?.textContent).toContain('Nouvelle entrée');
-      document.querySelector<HTMLButtonElement>('pm-side-panel button.close')!.click();
-      await settle(harness);
-      expect(editor()).toBeNull();
-
+      expect(el.querySelector('button.new-entry')).toBeNull();
       document.body.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'n', bubbles: true, cancelable: true }),
       );

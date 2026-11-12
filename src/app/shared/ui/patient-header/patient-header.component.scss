@@ -1,25 +1,39 @@
+// En-tête patient compact (proposition 04b, classes .phead / .phead-row / .who / .tabs de
+// propositions.css) : ligne d'identité de 44 px, onglets de 38 px, padding 14 24 0.
 :host {
   display: block;
 }
 
 .patient-header {
-  padding: 16px 24px 0;
+  padding: 14px 24px 0;
   background: var(--surface-raised);
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-primary);
 }
 
-.identity {
+/* Ligne d'identité : 44 px, tout sur une ligne de base (nom 22/650, méta 13.5, drapeaux). */
+.phead-row {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
+  align-items: center;
+  gap: 14px;
+  min-height: 44px;
+}
+
+.who {
+  display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  min-width: 0;
 }
 
 .name {
   margin: 0;
   font: var(--mat-sys-headline-small);
+  font-size: 22px;
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
   color: var(--text-primary);
 }
 
@@ -31,82 +45,125 @@
 .meta {
   display: flex;
   gap: 6px;
-  margin: 2px 0 0;
+  margin: 0;
   color: var(--text-secondary);
   font: var(--mat-sys-body-medium);
+  font-size: 13.5px;
+  white-space: nowrap;
 }
 
 .flags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 8px 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
+  // Les puces se centrent sur la ligne du nom plutôt que sur sa ligne de base.
+  align-self: center;
 }
 
+/* Puce drapeau (maquette .chip.flag) : 22 px, carré ambre devant le libellé, toujours ambre. */
 .flag {
-  padding: 1px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 8px;
   border-radius: 999px;
   background: var(--flag-bg);
   color: var(--warning);
   font: var(--mat-sys-label-small);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    background: var(--flag);
+  }
 }
 
-.session {
+/* À droite, hors séance : « Dernière séance : … » puis Démarrer. */
+.right {
   display: flex;
+  flex: none;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: auto;
 }
 
 .session-text {
   color: var(--text-secondary);
   font: var(--mat-sys-body-medium);
-
-  &.current {
-    color: var(--primary-hover);
-    padding: 2px 10px;
-    border-radius: 999px;
-    background: var(--primary-tint);
-  }
+  font-size: 13.5px;
 }
 
-.capture {
-  margin-top: 12px;
-
-  &:empty {
-    display: none;
-  }
+/* Démarrer la séance (04b .btn.session) : 36 px, vert séance. La maquette met entry-session sous
+   du blanc (3,9:1) : success sous success-bg (couple vérifié, 6,5:1) garde la même teinte en AA. */
+.start-session {
+  --mat-button-filled-container-height: 36px;
+  --mat-button-filled-container-color: var(--success);
+  --mat-button-filled-label-text-color: var(--success-bg);
+  --mdc-filled-button-container-color: var(--success);
+  --mdc-filled-button-label-text-color: var(--success-bg);
 }
 
+/* Onglets : 38 px, filet de 2 px sous l'onglet courant, touche dans un kbd de 10.5 px. */
 .tabs-row {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 .tabs {
   display: flex;
   gap: 4px;
+  min-width: 0;
 
   a {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    min-height: 40px;
+    height: 38px;
+    box-sizing: border-box;
     padding: 0 12px;
+    border-bottom: 2px solid transparent;
+    border-radius: 6px 6px 0 0;
     color: var(--text-secondary);
     text-decoration: none;
     font: var(--mat-sys-label-large);
-    border-bottom: 2px solid transparent;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--text-primary);
+      background: var(--surface-ground);
+    }
 
     &.active {
       color: var(--primary);
       border-bottom-color: var(--primary);
+      font-weight: 600;
     }
+  }
+
+  kbd {
+    padding: 0 4px;
+    border: 1px solid var(--border-strong);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    background: var(--surface-raised);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    line-height: 16px;
   }
 }
 
@@ -114,24 +171,23 @@
   padding-bottom: 6px;
 }
 
-.tabs {
-  min-width: 0;
-}
-
-/* Sous 760 px (UX-A1) : chip de séance et bouton empilés sous le nom ; onglets sur une ligne,
+/* Sous 760 px (UX-A1) : dernière séance et Démarrer empilés sous le nom ; onglets sur une ligne,
    bascule « Vue » et sa mention sur la suivante. */
 @media (max-width: 760px) {
   .patient-header {
     padding: 12px 16px 0;
   }
-  .identity {
-    flex-direction: column;
-    gap: 12px;
-  }
-  .session {
+  .phead-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 10px;
+  }
+  .right {
+    flex-wrap: wrap;
+    margin-left: 0;
+  }
+  .meta {
+    white-space: normal;
   }
   .tabs-row {
     flex-direction: column;

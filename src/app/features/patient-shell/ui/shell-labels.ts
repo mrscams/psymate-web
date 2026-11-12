@@ -1,5 +1,6 @@
 import { ApiProblem } from '../../../core/http';
 import { PatientHeaderInfo } from '../../../shared/ui';
+import { CAPTURE_PREFIXES, CaptureEntryType } from '../../capture';
 import { FlagKind, ShellPatient } from '../data/patient-shell.model';
 
 // Libellés de features/patient-shell ($localize, français d'abord). Les codes viennent du contrat ;
@@ -69,4 +70,54 @@ export function sessionProblemText(problem: ApiProblem | null): string {
         $localize`:Toast, action de séance échouée@@patientShell.session.failed:L'action sur la séance n'a pas abouti. Réessayez.`
       );
   }
+}
+
+/** Une rangée de « Raccourcis dans le texte » : les exemples en gras, puis ce qu'ils produisent. */
+export interface TextShortcutRow {
+  tokens: string[];
+  label: string;
+}
+
+/**
+ * « Raccourcis dans le texte » de la colonne latérale en séance (proposition 04b, état 3) : ce que la
+ * grammaire du bloc de saisie reconnaît. Les préfixes viennent du parseur (CAPTURE_PREFIXES).
+ */
+export function textShortcutRows(): TextShortcutRow[] {
+  const prefix = (type: CaptureEntryType): string =>
+    CAPTURE_PREFIXES.find((entry) => entry.type === type)?.prefix ?? '';
+  return [
+    {
+      tokens: [
+        $localize`:Exemple de ressenti dans la grammaire@@patientShell.ctx.shortcuts.feelingExample:anx 7`,
+      ],
+      label: $localize`:Raccourci dans le texte@@patientShell.ctx.shortcuts.feeling:ressenti`,
+    },
+    {
+      tokens: [prefix('event')],
+      label: $localize`:Raccourci dans le texte@@patientShell.ctx.shortcuts.event:événement`,
+    },
+    {
+      tokens: [prefix('situation')],
+      label: $localize`:Raccourci dans le texte@@patientShell.ctx.shortcuts.situation:situation`,
+    },
+    {
+      tokens: [prefix('medication')],
+      label: $localize`:Raccourci dans le texte@@patientShell.ctx.shortcuts.medication:médicament`,
+    },
+    { tokens: [prefix('note')], label: '' },
+    {
+      tokens: [
+        $localize`:Exemple de date dans la grammaire@@patientShell.ctx.shortcuts.dateYesterday:hier`,
+        $localize`:Exemple de date dans la grammaire@@patientShell.ctx.shortcuts.dateDay:12 mars`,
+        $localize`:Exemple de date dans la grammaire@@patientShell.ctx.shortcuts.dateRelative:il y a 3 j`,
+      ],
+      label: $localize`:Raccourci dans le texte@@patientShell.ctx.shortcuts.dates:dates`,
+    },
+    {
+      tokens: [
+        $localize`:Exemple de lien dans la grammaire@@patientShell.ctx.shortcuts.linkExample:> cible`,
+      ],
+      label: $localize`:Raccourci dans le texte@@patientShell.ctx.shortcuts.link:lien`,
+    },
+  ];
 }

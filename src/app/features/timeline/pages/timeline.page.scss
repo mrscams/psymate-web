@@ -254,6 +254,16 @@ kbd {
   min-height: 240px;
 }
 
+// UX-S2 : en séance, la barre de séance et le bloc de saisie précèdent la liste ; sur un grand
+// écran (le critère UX-G2c est mesuré à 1440 × 900), la zone des cartes garde ses 480 px et la page
+// défile plutôt que de la réduire. Pas sur une fenêtre basse (1280 × 720) : la liste y tient dans
+// la fenêtre, pour qu'une carte restaurée ou focalisée reste visible.
+@media (min-width: 1024px) and (min-height: 860px) {
+  .fill .viewport {
+    min-height: 480px;
+  }
+}
+
 .list {
   display: block;
 }

@@ -186,10 +186,15 @@ test('en-tête patient : Démarrer puis Clôturer sans rechargement ; touches 1 
 }) => {
   await openDemo(page);
   const header = page.locator('pm-patient-header').last();
+  const bar = page.locator('pm-session-bar');
   await expect(header).toContainText('Dernière séance');
   await header.getByRole('button', { name: 'Démarrer la séance' }).click();
-  await expect(header).toContainText('en cours depuis');
-  await header.getByRole('button', { name: 'Clôturer la séance' }).click();
+  // UX-S2 : en séance, la barre de séance (au-dessus de l'en-tête) porte le chronomètre et Clôturer.
+  await expect(bar).toContainText('Séance en cours');
+  await expect(bar.locator('.timer')).toHaveText(/^\d\d:\d\d:\d\d$/);
+  await expect(header).not.toContainText('Dernière séance');
+  await bar.getByRole('button', { name: 'Clôturer la séance' }).click();
+  await expect(bar).toHaveCount(0);
   await expect(header).toContainText('Dernière séance');
 
   // La touche 2 navigue vers l'onglet Timeline du dossier ; sans session, la garde renvoie à la
