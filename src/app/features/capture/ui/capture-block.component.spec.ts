@@ -351,6 +351,54 @@ describe('CaptureBlockComponent', () => {
     expect(opened).toEqual([expected, expected]);
   });
 
+  it('« autre date… » : après l’enregistrement, le champ suivant repart à « maintenant » (rien d’affiché qui ne partirait pas)', async () => {
+    const { el, input, fixture, api } = await render();
+    await type(fixture, 'dort mal');
+    const when = el.querySelector<HTMLSelectElement>('#pm-capture-when')!;
+    when.value = 'other';
+    when.dispatchEvent(new Event('change'));
+    await settle(fixture);
+    expect(el.querySelector('#pm-capture-when-day')).not.toBeNull();
+    await press(fixture, input, 'Enter');
+    expect(api.create!.mock.calls[0][1].occurred).toMatchObject({ precision: 'day' });
+    expect(input.value).toBe('');
+    await type(fixture, 'dort mieux');
+    const again = el.querySelector<HTMLSelectElement>('#pm-capture-when')!;
+    expect(again.selectedOptions[0].value).toBe('now');
+    expect(el.querySelector('#pm-capture-when-day')).toBeNull();
+    await press(fixture, input, 'Enter');
+    expect(api.create!.mock.calls[1][1].occurred).toBeUndefined();
+  });
+
+  it('Détailler avec une cible hors rail ou une visibilité privée : l’éditeur s’ouvre et un toast dit ce qu’il ne reprend pas', async () => {
+    const { el, fixture, opened } = await render({
+      searchEntries: vi
+        .fn()
+        .mockResolvedValue([candidate({ id: 'e-old', title: "Entretien d'évaluation" })]),
+    });
+    await type(fixture, 'dort mal');
+    const visibility = el.querySelector<HTMLSelectElement>('#pm-capture-visibility')!;
+    visibility.value = 'private';
+    visibility.dispatchEvent(new Event('change'));
+    await settle(fixture);
+    await click(fixture, el.querySelector('pm-capture-links button.other'));
+    const search = el.querySelector<HTMLInputElement>('pm-capture-links input[type="search"]')!;
+    search.value = 'éval';
+    search.dispatchEvent(new Event('input'));
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    await settle(fixture);
+    await press(fixture, search, 'Enter');
+    expect(placedLink(el)?.name).toBe("Entretien d'évaluation");
+    await click(fixture, el.querySelector('button.detail'));
+    expect(opened).toHaveLength(1);
+    expect(opened[0]?.links).toEqual([
+      { targetId: 'e-old', linkType: 'co_occurs', direction: 'outgoing' },
+    ]);
+    expect(TestBed.inject(ToastService).toasts().at(-1)?.message).toBe(
+      "L'éditeur ne reprend pas la visibilité « privée » (à régler dans « Plus ») et le lien vers « Entretien d'évaluation » (à rechercher dans « Lié à… »).",
+    );
+  });
+
   it('Entrée sur un bloc vide : l’éditeur vide ; Échap replie les champs en gardant le texte', async () => {
     const { el, input, fixture, api, opened } = await render();
     await press(fixture, input, 'Enter');

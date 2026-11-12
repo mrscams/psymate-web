@@ -316,6 +316,26 @@ describe('CaptureStore (bloc de saisie, UX-S1)', () => {
     store.clearSearch();
     expect(store.search().status).toBe('idle');
     expect(store.searchQuery()).toBe('');
+
+    // Une réponse en vol au moment où la saisie repasse sous 2 caractères, ou où une cible est
+    // choisie, ne réapparaît pas.
+    let resolveLate: (value: unknown) => void = () => undefined;
+    api.searchEntries?.mockImplementationOnce(() => new Promise((done) => (resolveLate = done)));
+    const late = store.searchEntries('entr');
+    await store.searchEntries('e');
+    resolveLate(old);
+    await late;
+    expect(store.search().status).toBe('idle');
+    api.searchEntries?.mockImplementationOnce(() => new Promise((done) => (resolveLate = done)));
+    const late2 = store.searchEntries('entr');
+    store.pickOther(old[0], {
+      linkType: 'triggers',
+      direction: 'incoming',
+      label: 'déclenché par',
+    });
+    resolveLate(old);
+    await late2;
+    expect(store.search().status).toBe('idle');
   });
 
   it('save : la visibilité choisie l’emporte sur la préférence ; la cible de « Autre entrée… » part', async () => {
