@@ -58,7 +58,7 @@ test('flux 3 au clavier : démarrer, /res anxiété 8, Tab + Espace dans le rail
   const start = page.getByRole('button', { name: 'Démarrer la séance' });
   await tabTo(page, start);
   await page.keyboard.press('Enter');
-  await expect(page.locator('pm-patient-header .session-text')).toContainText('en cours');
+  await expect(page.locator('.session-text')).toContainText('en cours');
   await expect(input).toBeFocused();
 
   // 2-3. La saisie interprétée : la puce Ressenti pressée, émotion, intensité dans les champs.
@@ -141,7 +141,7 @@ test('flux 3 au clavier : démarrer, /res anxiété 8, Tab + Espace dans le rail
   await tabTo(page, dialog.getByRole('button', { name: /Clôturer/ }), { max: 20 });
   await page.keyboard.press('Enter');
   expect((await closed).ok()).toBe(true);
-  await expect(page.locator('pm-patient-header .session-text')).not.toContainText('en cours');
+  await expect(page.locator('.session-text')).not.toContainText('en cours');
   await expect(input).toBeFocused();
   keys.expectNoPointer();
 });

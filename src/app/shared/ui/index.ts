@@ -18,12 +18,15 @@ export type {
   PatientFlag,
   PatientHeaderInfo,
   PatientSessionInfo,
+  SessionModalityCode,
 } from './patient-header/patient-header.component';
 export {
   PATIENT_TABS,
   PatientHeaderComponent,
+  sessionModalityLabel,
   UNCLOSED_SESSION_AFTER_MIN,
 } from './patient-header/patient-header.component';
+export { formatElapsed, SessionBarComponent } from './patient-header/session-bar.component';
 export { PublicFooterComponent } from './public-layout/public-footer.component';
 export { PublicHeaderComponent } from './public-layout/public-header.component';
 export { PUBLIC_PATHS, PublicLayoutComponent } from './public-layout/public-layout.component';

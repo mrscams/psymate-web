@@ -89,7 +89,7 @@ test.describe('bloc de saisie', () => {
     });
     await signIn(page, account);
     await openFolder(page, patientId, 'Marie D.');
-    await expect(page.locator('pm-patient-header .session-text')).toContainText('en cours');
+    await expect(page.locator('.session-text')).toContainText('en cours');
     const b = block(page);
     // En séance : déplié d'emblée, Note pressée, champs de la note, rangée « Lié à ».
     await settled(page);

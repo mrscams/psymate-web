@@ -16,44 +16,81 @@
     >
   </section>
 } @else {
+  <!-- Mode séance (UX-S2, proposition 04b) : la barre de séance au-dessus de l'en-tête tant qu'une
+       séance est ouverte ; chronomètre depuis startedAt, durée prévue des préférences, Clôturer. -->
+  @if (inSession()) {
+    <pm-session-bar
+      [session]="headerSession()"
+      [plannedMin]="store.defaultDurationMin()"
+      [unclosedAfterMin]="unclosedAfterMin"
+      [busy]="store.busy()"
+      (closeSession)="openClose()"
+    />
+  }
   <pm-patient-header
     [patient]="headerPatient()"
     [session]="headerSession()"
-    [unclosedAfterMin]="unclosedAfterMin"
     [state]="headerState()"
     [busy]="store.busy()"
     [showViewToggle]="activeTab() === 'overview'"
     (startSession)="start()"
-    (closeSession)="openClose()"
     (retry)="reload()"
   >
-    <!-- Bloc de saisie (M6-02, UX-S1, features/capture) : Entrée crée, Ctrl+Entrée ou « Détailler »
-         ouvre l'éditeur prérempli (M1-08, features/entries) ; le bouton + ouvre l'éditeur vide. -->
-    <div pmCapture class="capture-row">
-      <pm-capture-block
-        class="capture-bar"
-        [patientId]="id()"
-        [session]="headerSession()"
-        [revision]="store.revision()"
-        (saved)="captured($event)"
-        (openEditor)="newEntry($event)"
-      />
-      <button
-        type="button"
-        class="new-entry"
-        aria-label="Nouvelle entrée (N)"
-        i18n-aria-label="Bouton plus de l'en-tête patient@@patientShell.newEntry"
-        aria-keyshortcuts="N"
-        (click)="newEntry()"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-      </button>
-    </div>
     <!-- Bascule « Vue : Simple · Complète » (features/overview, M4-05) : visible sur l'onglet 1. -->
     <pm-overview-view-toggle pmViewToggle />
   </pm-patient-header>
+  @if (store.patient()) {
+    <!-- Colonne de contenu (04b .pad-layout) : le bloc de saisie au-dessus de l'onglet courant, pour
+         tous les onglets ; en séance, une colonne latérale de 340 px (repliée sous 900 px). -->
+    <div class="pad-layout" [class.in-session]="inSession()">
+      <div class="pad-main">
+        <!-- Bloc de saisie (M6-02, UX-S1, features/capture) : Entrée crée, Ctrl+Entrée ou « Détailler »
+             ouvre l'éditeur prérempli (M1-08, features/entries) ; N ouvre l'éditeur vide. -->
+        <pm-capture-block
+          [patientId]="id()"
+          [session]="headerSession()"
+          [revision]="store.revision()"
+          (saved)="captured($event)"
+          (openEditor)="newEntry($event)"
+        />
+      </div>
+      @if (inSession()) {
+        <aside
+          class="ctx"
+          aria-label="Repères de séance"
+          i18n-aria-label="Étiquette de la colonne latérale en séance@@patientShell.ctx.label"
+        >
+          <!-- 04b état 3, dernier bloc : « Raccourcis dans le texte ». Les blocs de contexte (prévu la
+               dernière fois, à garder en tête, séance précédente) relèvent du mode séance (étape 3). -->
+          <section class="block">
+            <h3
+              i18n="Titre du bloc des raccourcis de la grammaire@@patientShell.ctx.shortcuts.title"
+            >
+              Raccourcis dans le texte
+            </h3>
+            <p class="shortcuts">
+              @for (row of textShortcuts; track row.tokens.join('|'); let last = $last) {
+                <span class="shortcut">
+                  @for (token of row.tokens; track token; let lastToken = $last) {
+                    <b>{{ token }}</b>
+                    @if (!lastToken) {
+                      <span>,&ngsp;</span>
+                    }
+                  }
+                  @if (row.label) {
+                    <span>&ngsp;{{ row.label }}</span>
+                  }
+                </span>
+                @if (!last) {
+                  <span class="sep" aria-hidden="true">·</span>
+                }
+              }
+            </p>
+          </section>
+        </aside>
+      }
+    </div>
+  }
   @if (store.patient() && store.firstEntry() === 'pending') {
     <!-- Parcours guidé (M7-03) : dossier sans entrée saisie, lu sur le résumé de la chronologie. -->
     <div class="first-entry" role="status">

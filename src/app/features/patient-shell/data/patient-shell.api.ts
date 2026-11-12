@@ -142,6 +142,7 @@ function toSession(dto: EntryDto): ShellSession {
     id: dto.id ?? '',
     kind: dto.session?.kind ?? 'session',
     startedAt: dto.occurred?.from ?? dto.recordedAt ?? '',
+    modality: SESSION_MODALITIES.find((modality) => modality === dto.session?.modality) ?? null,
     closedAt: dto.session?.closedAt ?? null,
     durationMin: dto.session?.durationMin ?? null,
     summary: dto.body ?? null,

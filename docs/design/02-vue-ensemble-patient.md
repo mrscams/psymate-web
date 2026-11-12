@@ -3,6 +3,8 @@
 > Spécification pour agents. Maquette : `02-vue-ensemble-patient.html` / `.png`. Palette : Nordique. Document B, écran 2 (page d'accueil d'un patient) ; Document A, module `overview` (A4.8, UC-9).
 >
 > Mis à jour le 11 novembre 2026 (UX-F1, audit UX du 9 novembre) : tuile « Situations actives » à la place de « liens actifs » ; « Faits clés » limités à ce que porte `OverviewFactsDto` ; « Point d'attention » de la vue simple limité aux drapeaux ; notes sans titre nommées « Note · date ». Maquettes 02 et 02b corrigées en conséquence.
+>
+> Mis à jour le 12 novembre 2026 (UX-S2, proposition `propositions-2026-11/04b-seance-detail.html`) : l'en-tête patient devient compact (ligne d'identité de 44 px, onglets de 38 px, fiche 00 §2) ; tant qu'une séance est ouverte, une **barre de séance** (chronomètre, durée prévue, Clôturer) la précède et l'onglet 1 s'appelle **« Séance »** (même route, même vue d'ensemble dessous) ; le **bloc de saisie** quitte l'en-tête pour la colonne de contenu, au-dessus de la grille, replié hors séance, avec une colonne latérale de 340 px en séance (repliée sous 900 px). La maquette HTML de l'écran 2 n'est pas modifiée : elle illustre l'ancien en-tête ; la proposition 04b fait foi. Point 2 de la structure ci-dessous à lire ainsi.
 
 ## Objectif
 En moins de 10 secondes, avant ou pendant une séance, le praticien voit **où en est le patient** : tendance des ressentis, situations actives, dernière séance, traitement en cours, alertes. C'est une **lecture** (projection calculée), jamais une saisie.
