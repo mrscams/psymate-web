@@ -25454,6 +25454,33 @@
         </context-group>
         <note priority="1" from="description">Bouton Clôturer abrégé, sous 600 px</note>
       </trans-unit>
+      <trans-unit id="capture.detail.visibilityLost" datatype="html">
+        <source>la visibilité « privée » (à régler dans « Plus »)</source>
+        <target state="translated">the “private” visibility (to set under “More”)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
+          <context context-type="linenumber">623</context>
+        </context-group>
+        <note priority="1" from="description">Toast de Détailler, visibilité non reprise</note>
+      </trans-unit>
+      <trans-unit id="capture.detail.linkLost" datatype="html">
+        <source>le lien vers « <x id="name" equiv-text="name"/> » (à rechercher dans « Lié à… »)</source>
+        <target state="translated">the link to “<x id="name" equiv-text="name"/>” (to search for under “Linked to…”)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
+          <context context-type="linenumber">630</context>
+        </context-group>
+        <note priority="1" from="description">Toast de Détailler, lien hors rail non repris</note>
+      </trans-unit>
+      <trans-unit id="capture.detail.lost" datatype="html">
+        <source>L&apos;éditeur ne reprend pas <x id="items" equiv-text="items"/>.</source>
+        <target state="translated">The editor does not carry over <x id="items" equiv-text="items"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.ts</context>
+          <context context-type="linenumber">636</context>
+        </context-group>
+        <note priority="1" from="description">Toast de Détailler, choix à refaire dans l&apos;éditeur</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>
