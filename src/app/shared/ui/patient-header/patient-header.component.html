@@ -61,7 +61,8 @@
         </div>
       }
     </div>
-    <!-- Onglets (38 px) : 1 Vue d'ensemble (ou Séance) · 2 Timeline · 3 Graphe, bascule Vue au bout. -->
+    <!-- Onglets (38 px) : 1 Vue d'ensemble (ou Séance, vers l'onglet Séance) · 2 Timeline · 3 Graphe ;
+         en séance, « Vue d'ensemble » à droite des onglets (04b) ; bascule Vue au bout. -->
     <div class="tabs-row">
       <nav
         class="tabs"
@@ -70,13 +71,27 @@
       >
         @for (tab of tabs; track tab.key) {
           <a
-            [routerLink]="link(p.id, tab.segment)"
+            [routerLink]="tabLink(p.id, tab)"
             routerLinkActive="active"
             ariaCurrentWhenActive="page"
             [routerLinkActiveOptions]="{ exact: tab.segment === '' }"
           >
             <kbd aria-hidden="true">{{ tab.key }}</kbd>
             <span>{{ tabLabel(tab) }}</span>
+          </a>
+        }
+        @if (inSession()) {
+          <a
+            class="overview-link"
+            [routerLink]="link(p.id, '')"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <span
+              i18n="Lien vers la vue d'ensemble pendant une séance@@patientHeader.tab.overviewLink"
+              >Vue d'ensemble</span
+            >
           </a>
         }
       </nav>

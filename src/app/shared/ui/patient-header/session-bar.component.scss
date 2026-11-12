@@ -79,6 +79,52 @@
   }
 }
 
+/* Dépassement de la durée prévue (04b, état 4) : ambre (la couleur des drapeaux, jamais rouge),
+   le fait en mots, Clôturer plein. warning plutôt que flag pour le bouton : 4,5:1 avec son texte. */
+.session-bar.overtime {
+  background: var(--warning-bg);
+  border-bottom-color: color-mix(in srgb, var(--flag) 40%, transparent);
+  color: var(--warning);
+
+  .pulse {
+    background: var(--flag);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--flag) 20%, transparent);
+  }
+
+  .overtime-text b {
+    font-weight: 700;
+  }
+
+  .close-session.filled {
+    --mat-button-outlined-outline-color: var(--warning);
+    --mat-button-outlined-label-text-color: var(--primary-on);
+    --mdc-outlined-button-outline-color: var(--warning);
+    --mdc-outlined-button-label-text-color: var(--primary-on);
+
+    background: var(--warning);
+  }
+}
+
+/* « Reprendre » (barre grise) : bouton texte, 30 px, même police que Clôturer. */
+.resume {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  color: var(--primary);
+  font: var(--mat-sys-label-large);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
 /* Au-delà du seuil (UX-A8) : grise, sans pastille vivante ni chronomètre, « non clôturée ». */
 .session-bar.unclosed {
   background: var(--surface-sunken);

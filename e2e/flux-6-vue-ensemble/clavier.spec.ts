@@ -68,13 +68,16 @@ test('flux 6 au clavier : / nom Entrée, séance dépliée, situation → graphe
   await page.keyboard.press('1');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${folder.patientId}$`));
 
-  // 5. « Démarrer la séance » : la synthèse est relue, les séances se replient, la barre de
-  //    capture prend le focus (étape 4).
+  // 5. « Démarrer la séance » (étape 4, UX-S3) : l'onglet Séance s'ouvre, le bloc de saisie prend
+  //    le focus ; « Vue d'ensemble » reste à un clic, sa synthèse relue compte la séance en cours.
   await tabTo(page, page.getByRole('button', { name: 'Démarrer la séance' }), { max: 80 });
   await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${folder.patientId}/session$`));
   await expect(page.getByRole('textbox', { name: 'Noter quelque chose' })).toBeFocused();
-  await expect(toggles).toHaveCount(3);
-  await expect(sessions.locator('button[aria-expanded="true"]')).toHaveCount(0);
   await expectNoAxeViolations(page);
+  await tabTo(page, page.getByRole('link', { name: /Vue d'ensemble/ }), { max: 80 });
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${folder.patientId}$`));
+  await expect(toggles).toHaveCount(3);
   keys.expectNoPointer();
 });

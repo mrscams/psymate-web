@@ -1,5 +1,9 @@
 @if (current()) {
-  <div class="session-bar" [class.unclosed]="unclosed()">
+  <div
+    class="session-bar"
+    [class.overtime]="mode() === 'overtime'"
+    [class.unclosed]="mode() === 'unclosed'"
+  >
     <span class="pulse" aria-hidden="true"></span>
     @if (unclosed()) {
       <span class="session-text current">{{ unclosedText() }}</span>
@@ -9,7 +13,14 @@
         <span class="detail"> · {{ detail() }}</span></span
       >
       <span class="timer" role="timer" [attr.aria-label]="timerLabel">{{ elapsed() }}</span>
-      @if (plannedText(); as planned) {
+      @if (mode() === 'overtime') {
+        <!-- 04b, état 4 : le fait en mots (« 8 min au-delà »), pas un jugement. -->
+        <span
+          class="planned overtime-text"
+          i18n="Dépassement de la durée prévue dans la barre de séance@@sessionBar.overtime"
+          ><b>{{ overtimeMin() }} min</b> au-delà des {{ plannedMin() }} prévues</span
+        >
+      } @else if (plannedText(); as planned) {
         <span class="planned">{{ planned }}</span>
       }
     }
@@ -17,20 +28,28 @@
       @if (countText(); as count) {
         <span class="count">{{ count }}</span>
       }
-      <!-- Nom accessible constant ; sous 600 px, seul « Clôturer » est affiché (maquette 04 mobile). -->
+      <!-- Nom accessible constant par état ; sous 600 px, seul « Clôturer » est affiché (maquette 04 mobile). -->
       <button
         mat-stroked-button
         type="button"
         class="close-session"
+        [class.filled]="mode() === 'overtime'"
         [disabled]="busy()"
-        [attr.aria-label]="closeLabel"
+        [attr.aria-label]="closeLabel()"
         (click)="closeSession.emit()"
       >
-        <span class="long">{{ closeLabel }}</span>
+        <span class="long">{{ closeLabel() }}</span>
         <span class="short" i18n="Bouton Clôturer abrégé, sous 600 px@@sessionBar.close.short"
           >Clôturer</span
         >
       </button>
+      @if (unclosed()) {
+        <button type="button" class="resume" (click)="resumeSession.emit()">
+          <ng-container i18n="Bouton de la barre de séance grise@@sessionBar.resume"
+            >Reprendre</ng-container
+          >
+        </button>
+      }
     </span>
   </div>
 }

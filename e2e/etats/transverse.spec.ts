@@ -85,15 +85,16 @@ test('raccourcis 1 2 3 et M : branchés hors champ, inactifs dans la barre de sa
 
   await page.keyboard.press('3');
   await expect(page).toHaveURL(new RegExp(`/patients/${patientId}/graph`));
+  // Séance ouverte : l'onglet 1 est l'onglet Séance (UX-S3).
   await page.keyboard.press('1');
-  await expect(page).toHaveURL(new RegExp(`/patients/${patientId}$`));
+  await expect(page).toHaveURL(new RegExp(`/patients/${patientId}/session$`));
 
-  // Dans la barre de saisie (champ), les chiffres et les lettres s'écrivent.
+  // Dans le bloc de saisie (champ), les chiffres et les lettres s'écrivent.
   const capture = page.getByRole('textbox', { name: 'Noter quelque chose' });
   await capture.click();
   await page.keyboard.type('2 3 m n l');
   await expect(capture).toHaveValue('2 3 m n l');
-  await expect(page).toHaveURL(new RegExp(`/patients/${patientId}$`));
+  await expect(page).toHaveURL(new RegExp(`/patients/${patientId}/session$`));
   await expect(page.locator('pm-entry-editor-panel')).toHaveCount(0);
   await expectNoAxeViolations(page);
 });

@@ -1,0 +1,111 @@
+<section class="session-tab" aria-labelledby="session-tab-heading">
+  <h2
+    id="session-tab-heading"
+    class="sr-only"
+    i18n="Titre de l'onglet Séance@@patientShell.session.heading"
+  >
+    Séance
+  </h2>
+
+  @if (session()) {
+    <!-- Noté pendant cette séance : la chronologie filtrée sur la séance, trois états. La colonne
+         latérale (contexte de la séance) est posée par la page du shell, à côté de cet onglet. -->
+    <section class="noted" aria-labelledby="noted-heading">
+      <div class="sect-head">
+        <h2
+          id="noted-heading"
+          i18n="Titre du bloc noté pendant la séance@@patientShell.noted.heading"
+        >
+          Noté pendant cette séance
+        </h2>
+        @if (countText(); as count) {
+          <span class="meta">{{ count }}</span>
+        }
+      </div>
+      @switch (notedState()) {
+        @case ('loading') {
+          <pm-state kind="loading" skeleton="row" [lines]="3" />
+        }
+        @case ('error') {
+          <pm-state
+            kind="error"
+            [title]="notedErrorTitle"
+            [action]="notedRetry"
+            [details]="shell.noted().problem?.detail"
+          />
+        }
+        @case ('empty') {
+          <!-- Carnet vide (04b, état 2) : ce qui ouvre une séance, à la place d'une liste vide. -->
+          <div class="empty-pad">
+            <div>
+              <h3 i18n="Titre du bloc prévu la dernière fois@@patientShell.planned.heading">
+                Prévu la dernière fois
+              </h3>
+              @if (contextState() === 'loading') {
+                <pm-state kind="loading" skeleton="row" [lines]="2" compact />
+              } @else if (plannedLines().length) {
+                <pm-planned-checklist [lines]="plannedLines()" />
+              } @else {
+                <p
+                  class="faint"
+                  i18n="Aucune ligne prévue la dernière fois@@patientShell.planned.none"
+                >
+                  Rien de prévu dans le dernier compte rendu.
+                </p>
+              }
+              <p
+                class="faint hint"
+                i18n="Explication du bloc prévu la dernière fois@@patientShell.planned.hint"
+              >
+                Les lignes « Prochaine fois : » du dernier compte rendu. Cocher n'enregistre rien ;
+                « Noter » prépare une note.
+              </p>
+            </div>
+            <div>
+              <h3>{{ sinceTitle() }}</h3>
+              @if (contextState() === 'loading') {
+                <pm-state kind="loading" skeleton="row" [lines]="2" compact />
+              } @else if (sinceEntries().length) {
+                <ul class="items">
+                  @for (entry of sinceEntries(); track entry.entryId) {
+                    <li>
+                      <pm-entry-icon [type]="entry.type" [size]="12" />
+                      <span>{{ sinceName(entry) }}</span>
+                    </li>
+                  }
+                </ul>
+              } @else {
+                <p
+                  class="faint"
+                  i18n="Aucune entrée depuis la séance précédente@@patientShell.since.none"
+                >
+                  Rien de noté entre les séances.
+                </p>
+              }
+            </div>
+          </div>
+        }
+        @default {
+          <div class="panel">
+            <pm-noted-entries
+              [entries]="noted()"
+              [links]="shell.links()"
+              [emotionLabels]="emotionLabels()"
+              [highlightedId]="highlighted()"
+              [editable]="true"
+              [now]="now()"
+              (edit)="edit($event)"
+            />
+          </div>
+          <p
+            class="faint hint"
+            i18n="Note sous la liste des entrées de la séance@@patientShell.noted.hint"
+          >
+            Chaque entrée reste modifiable 1 h 15 sans créer de version. <kbd>N</kbd> ouvre
+            l'éditeur complet.
+          </p>
+        }
+      }
+    </section>
+  }
+</section>

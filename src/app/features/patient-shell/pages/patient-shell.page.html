@@ -16,15 +16,18 @@
     >
   </section>
 } @else {
-  <!-- Mode séance (UX-S2, proposition 04b) : la barre de séance au-dessus de l'en-tête tant qu'une
-       séance est ouverte ; chronomètre depuis startedAt, durée prévue des préférences, Clôturer. -->
+  <!-- Mode séance (UX-S2 et UX-S3, propositions 04 et 04b) : la barre de séance au-dessus de l'en-tête
+       tant qu'une séance est ouverte ; chronomètre depuis startedAt, durée prévue du suivi (sinon la
+       préférence), dépassement en ambre, entrées notées, Clôturer ; passé 3 h, Reprendre. -->
   @if (inSession()) {
     <pm-session-bar
       [session]="headerSession()"
-      [plannedMin]="store.defaultDurationMin()"
+      [plannedMin]="store.plannedDurationMin()"
+      [entriesCount]="store.notedCount()"
       [unclosedAfterMin]="unclosedAfterMin"
       [busy]="store.busy()"
       (closeSession)="openClose()"
+      (resumeSession)="resume()"
     />
   }
   <pm-patient-header
@@ -39,6 +42,8 @@
     <!-- Bascule « Vue : Simple · Complète » (features/overview, M4-05) : visible sur l'onglet 1. -->
     <pm-overview-view-toggle pmViewToggle />
   </pm-patient-header>
+  <!-- Annonce polie (séance démarrée) : pas de toast, la couleur et le chronomètre le disent (04b). -->
+  <p class="sr-only" role="status" aria-live="polite">{{ announcement() }}</p>
   @if (store.patient()) {
     <!-- Colonne de contenu (04b .pad-layout) : la colonne principale porte le bloc de saisie (en
          séance seulement, UX-S1 : aucune saisie sans séance), l'indice de première entrée et l'onglet
@@ -91,38 +96,14 @@
         </div>
       </div>
       @if (inSession()) {
+        <!-- Contexte de la séance (04b, états 2 et 3) : prévu la dernière fois ou séance précédente,
+             à garder en tête, raccourcis dans le texte ; sur tous les onglets tant que la séance est ouverte. -->
         <aside
           class="ctx"
-          aria-label="Repères de séance"
-          i18n-aria-label="Étiquette de la colonne latérale en séance@@patientShell.ctx.label"
+          aria-label="Contexte de la séance"
+          i18n-aria-label="Étiquette de la colonne latérale en séance@@patientShell.context.label"
         >
-          <!-- 04b état 3, dernier bloc : « Raccourcis dans le texte ». Les blocs de contexte (prévu la
-               dernière fois, à garder en tête, séance précédente) relèvent du mode séance (étape 3). -->
-          <section class="block">
-            <h3
-              i18n="Titre du bloc des raccourcis de la grammaire@@patientShell.ctx.shortcuts.title"
-            >
-              Raccourcis dans le texte
-            </h3>
-            <p class="shortcuts">
-              @for (row of textShortcuts; track row.tokens.join('|'); let last = $last) {
-                <span class="shortcut">
-                  @for (token of row.tokens; track token; let lastToken = $last) {
-                    <b>{{ token }}</b>
-                    @if (!lastToken) {
-                      <span>,&ngsp;</span>
-                    }
-                  }
-                  @if (row.label) {
-                    <span>&ngsp;{{ row.label }}</span>
-                  }
-                </span>
-                @if (!last) {
-                  <span class="sep" aria-hidden="true">·</span>
-                }
-              }
-            </p>
-          </section>
+          <pm-session-context [padEmpty]="padEmpty()" />
         </aside>
       }
     </div>

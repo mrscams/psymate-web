@@ -22,16 +22,21 @@ export function formatElapsed(startedAt: string, now: Date): string {
   return `${two(Math.floor(seconds / 3600))}:${two(Math.floor((seconds % 3600) / 60))}:${two(seconds % 60)}`;
 }
 
+/** Les trois états de la barre (proposition 04b, état 4 : seuils). */
+export type SessionBarMode = 'running' | 'overtime' | 'unclosed';
+
 /**
  * Barre de séance (proposition 04b « Session bar » : 44 px, fond session-tint, texte success,
  * chronomètre JetBrains Mono 18/600 tabulaire), posée au-dessus de l'en-tête patient tant qu'une
  * séance est ouverte : « Séance en cours · cabinet · démarrée à 09:08 », le temps écoulé
  * « 00:21:07 », « sur 50 min prévues », « n entrées notées » quand le nombre est connu, et le
- * bouton Clôturer la séance (en `output()`). Au-delà de `unclosedAfterMin` (UX-A8, 180 min), la
- * barre devient grise, sans chronomètre : « Séance du 12 nov. · démarrée à 09:08 · non clôturée »,
- * Clôturer toujours proposé. Le chronomètre est calculé sur le client depuis `startedAt`, la durée
- * prévue vient de la préférence `sessions.defaultDurationMin` (le dossier les fournit). Composant
- * bête, aucune lecture.
+ * bouton Clôturer la séance (en `output()`). Passé la durée prévue (04b, état 4) : teinte ambre,
+ * « 8 min au-delà des 50 prévues », Clôturer devient le bouton plein (jamais rouge). Au-delà de
+ * `unclosedAfterMin` (UX-A8, 180 min), la barre devient grise, sans chronomètre : « Séance du
+ * 12 nov. · démarrée à 09:08 · non clôturée », « Clôturer maintenant » et « Reprendre » (en
+ * `output()`, vers l'onglet Séance). Rien ne se ferme seul, rien ne sonne. Le chronomètre est
+ * calculé sur le client depuis `startedAt`, la durée prévue vient du dossier (suivi, sinon la
+ * préférence `sessions.defaultDurationMin`). Composant bête, aucune lecture.
  */
 @Component({
   selector: 'pm-session-bar',
@@ -43,7 +48,7 @@ export function formatElapsed(startedAt: string, now: Date): string {
 export class SessionBarComponent {
   /** La séance ouverte ; la barre n'affiche rien pour une autre valeur. */
   readonly session = input<PatientSessionInfo | null>(null);
-  /** Durée prévue en minutes (« sur 50 min prévues ») ; null : la mention est omise. */
+  /** Durée prévue en minutes (« sur 50 min prévues ») ; null : la mention est omise, pas de dépassement. */
   readonly plannedMin = input<number | null>(null);
   /** Entrées notées pendant la séance ; null tant que le nombre n'est pas connu (mention omise). */
   readonly entriesCount = input<number | null>(null);
@@ -53,6 +58,8 @@ export class SessionBarComponent {
   readonly unclosedAfterMin = input<number | null>(null);
 
   readonly closeSession = output<void>();
+  /** « Reprendre » de la barre grise : la feature rouvre l'onglet Séance. */
+  readonly resumeSession = output<void>();
 
   private readonly locale = inject(LOCALE_ID);
   private readonly now = signal(new Date());
@@ -62,11 +69,28 @@ export class SessionBarComponent {
     return session?.kind === 'current' ? session : null;
   });
 
-  protected readonly unclosed = computed(() => {
+  /** Minutes écoulées depuis le début (entières, jamais négatives). */
+  protected readonly elapsedMin = computed(() => {
     const session = this.current();
+    return session ? minutesBetween(session.startedAt, this.now()) : 0;
+  });
+
+  protected readonly unclosed = computed(() => {
     const threshold = this.unclosedAfterMin();
-    if (!session || threshold === null) return false;
-    return minutesBetween(session.startedAt, this.now()) > threshold;
+    if (!this.current() || threshold === null) return false;
+    return this.elapsedMin() > threshold;
+  });
+
+  /** Minutes au-delà de la durée prévue ; 0 sans durée prévue ou tant qu'elle n'est pas passée. */
+  protected readonly overtimeMin = computed(() => {
+    const planned = this.plannedMin();
+    if (!planned) return 0;
+    return Math.max(0, this.elapsedMin() - planned);
+  });
+
+  protected readonly mode = computed<SessionBarMode>(() => {
+    if (this.unclosed()) return 'unclosed';
+    return this.overtimeMin() > 0 ? 'overtime' : 'running';
   });
 
   protected readonly elapsed = computed(() => {
@@ -100,9 +124,19 @@ export class SessionBarComponent {
     return $localize`:Durée prévue dans la barre de séance@@sessionBar.planned:sur ${planned}:minutes: min prévues`;
   });
 
+  /** « 3 entrées notées » ; dans la barre grise, « 3 entrées » (04b). */
   protected readonly countText = computed(() => {
     const count = this.entriesCount();
     if (count === null) return '';
+    if (this.unclosed()) {
+      if (count === 0) {
+        return $localize`:Aucune entrée dans la barre de séance grise@@sessionBar.countPlain.none:aucune entrée`;
+      }
+      if (count === 1) {
+        return $localize`:Une entrée dans la barre de séance grise@@sessionBar.countPlain.one:1 entrée`;
+      }
+      return $localize`:Entrées dans la barre de séance grise@@sessionBar.countPlain.many:${count}:count: entrées`;
+    }
     if (count === 0) {
       return $localize`:Aucune entrée notée dans la barre de séance@@sessionBar.count.none:rien de noté encore`;
     }
@@ -113,11 +147,16 @@ export class SessionBarComponent {
   });
 
   protected readonly timerLabel = $localize`:Étiquette du chronomètre de la barre de séance@@sessionBar.timer.label:Temps écoulé`;
-  protected readonly closeLabel = $localize`:Bouton de la barre de séance@@patientHeader.session.close:Clôturer la séance`;
+  /** « Clôturer la séance » ; dans la barre grise, « Clôturer maintenant » (04b). */
+  protected readonly closeLabel = computed(() =>
+    this.unclosed()
+      ? $localize`:Bouton de la barre de séance grise@@sessionBar.closeNow:Clôturer maintenant`
+      : $localize`:Bouton de la barre de séance@@patientHeader.session.close:Clôturer la séance`,
+  );
 
   constructor() {
-    // Seconde par seconde tant qu'une séance est ouverte : le chronomètre, puis le passage à
-    // « non clôturée » au-delà du seuil, sans rechargement.
+    // Seconde par seconde tant qu'une séance est ouverte : le chronomètre, puis le passage au
+    // dépassement et à « non clôturée » au-delà des seuils, sans rechargement.
     effect((onCleanup) => {
       if (!this.current()) return;
       this.now.set(new Date());

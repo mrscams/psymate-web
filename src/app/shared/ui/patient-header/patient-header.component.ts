@@ -101,8 +101,10 @@ export function sessionModalityLabel(modality: SessionModalityCode | null | unde
  * drapeaux ambre sur une même ligne de base ; à droite, hors séance, « Dernière séance : … » et
  * Démarrer la séance (en `output()`). En séance, rien à droite : le chronomètre et Clôturer sont
  * dans pm-session-bar, posée au-dessus par la feature. Onglets 1 · 2 · 3 (touches 1 2 3,
- * `aria-current`) : l'onglet 1 s'appelle « Séance » tant qu'une séance est ouverte, « Vue
- * d'ensemble » sinon ; emplacement [pmViewToggle] au bout de la ligne des onglets. Composant bête :
+ * `aria-current`) : l'onglet 1 s'appelle « Séance » et mène à /patients/:id/session tant qu'une
+ * séance est ouverte (UX-S3), « Vue d'ensemble » (/patients/:id) sinon ; en séance, « Vue
+ * d'ensemble » reste à un clic, à droite des onglets (04b, question 1) ; emplacement [pmViewToggle]
+ * au bout de la ligne. Composant bête :
  * le PatientShellStore (M1-07) le nourrit. Place réservée, jamais dessinée, pour le marqueur
  * « rapporté par le patient » (A11, B9). Le bloc de saisie n'est plus dans l'en-tête (UX-S2) : la
  * page le pose dans la colonne de contenu.
@@ -188,7 +190,7 @@ export class PatientHeaderComponent {
       const releases = this.tabs.map((tab) =>
         this.shortcuts.register(
           tab.key,
-          () => void this.router.navigate(this.link(patient.id, tab.segment)),
+          () => void this.router.navigate(this.tabLink(patient.id, tab)),
         ),
       );
       onCleanup(() => releases.forEach((release) => release()));
@@ -201,6 +203,12 @@ export class PatientHeaderComponent {
       return $localize`:Onglet 1 du dossier pendant une séance@@patientHeader.tab.session:Séance`;
     }
     return tab.label();
+  }
+
+  /** Route de l'onglet : l'onglet 1 mène à l'onglet Séance tant qu'une séance est ouverte (UX-S3). */
+  protected tabLink(id: string, tab: (typeof PATIENT_TABS)[number]): string[] {
+    if (tab.key === '1' && this.inSession()) return ['/patients', id, 'session'];
+    return this.link(id, tab.segment);
   }
 
   protected link(id: string, segment: string): string[] {

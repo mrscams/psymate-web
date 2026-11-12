@@ -61,10 +61,11 @@ function isCreate(response: Response, patientId: string): boolean {
   );
 }
 
-function isOverview(response: Response, patientId: string): boolean {
+/** Relecture de « Noté pendant cette séance » (onglet Séance, UX-S3) : la chronologie du dossier. */
+function isTimeline(response: Response, patientId: string): boolean {
   return (
     response.request().method() === 'GET' &&
-    new URL(response.url()).pathname === `/api/patients/${patientId}/overview`
+    new URL(response.url()).pathname === `/api/patients/${patientId}/timeline`
   );
 }
 
@@ -107,7 +108,7 @@ test.describe('bloc de saisie', () => {
       return true;
     });
     const reread = page.waitForResponse(
-      (r) => isOverview(r, patientId) && r.request().timing().startTime >= postedAt,
+      (r) => isTimeline(r, patientId) && r.request().timing().startTime >= postedAt,
     );
     const started = Date.now();
     await b.input.focus();
@@ -142,10 +143,14 @@ test.describe('bloc de saisie', () => {
     expect(JSON.stringify(body)).not.toMatch(/authorType|submissionId/);
     const feelingId = ((await response.json()) as { id: string }).id;
     await expect(page.getByText('Entrée enregistrée.').last()).toBeVisible();
-    // B3 flux 3, étape 6 : le bloc est vide et garde le focus ; la vue d'ensemble se relit.
+    // B3 flux 3, étape 6 : le bloc est vide et garde le focus ; « Noté pendant cette séance » se
+    // relit et montre la ligne (UX-S3).
     await expect(b.input).toBeFocused();
     await expect(b.type('Note')).toHaveAttribute('aria-pressed', 'true');
     expect((await reread).status()).toBe(200);
+    await expect(page.locator('pm-noted-entries .entry').first().locator('.name')).toHaveText(
+      'Anxiété',
+    );
 
     // Côté API : le lien est posé dans la même transaction (l'entretien déclenche le ressenti).
     const links = await ok<LinkDto[]>(request.get(`${API}/api/entries/${feelingId}/links`));
