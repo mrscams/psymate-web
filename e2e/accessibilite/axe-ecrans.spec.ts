@@ -17,6 +17,8 @@ import { ADMIN_AVAILABLE, ADMIN_MISSING } from '../support/admin';
 import { themeFolder } from '../theme/theme-support';
 import { axeScreen, expectTheme, settled, shoot, Theme, THEMES } from './a11y-support';
 
+const API = 'http://localhost:8080';
+
 // axe-core sur chaque écran V1, dans les deux thèmes (M7-04, C5 « aucune violation sérieuse sur
 // les 13 écrans », B7 ; liste des écrans : docs/couverture-ecrans.md). Contre l'API locale (seed
 // small, Mailpit), jamais de mock du backend : chaque test crée son compte et son dossier. Aucune
@@ -110,6 +112,14 @@ for (const theme of THEMES) {
         [
           '05-bloc-de-saisie',
           async () => {
+            // Le bloc de saisie n'existe qu'en séance (UX-S1) : on en ouvre une, puis on recharge.
+            const start = await request.post(
+              `${API}/api/patients/${folder.patientId}/sessions/start`,
+              { data: { modality: 'in_person' } },
+            );
+            expect(start.status(), await start.text()).toBe(201);
+            await page.goto(patient);
+            await expect(h1).toHaveText('Nina S.');
             const input = page.getByRole('textbox', { name: 'Noter quelque chose' });
             await input.focus();
             // Vocabulaire des émotions lu au déploiement du bloc : on l'attend avant de taper.
