@@ -18,8 +18,9 @@ import { NotedEntry, PreviousSession, SessionReminders } from '../data/patient-s
 import { PatientShellStore } from '../data/patient-shell.store';
 import { HIGHLIGHT_MS, SessionTabPage } from './session-tab.page';
 
-// Onglet Séance (UX-S3, propositions 04 et 04b états 2 et 3) : carnet vide, liste notée, colonne
-// latérale ; trois états par bloc ; ligne surlignée 2 s ; « Noter » prépare le bloc de saisie.
+// Onglet Séance (UX-S3, propositions 04 et 04b états 2 et 3) : carnet vide, liste notée ; trois
+// états par bloc ; ligne surlignée 2 s ; « Noter » prépare le bloc de saisie. La colonne latérale
+// (contexte) est posée par la page du shell : pm-session-context, testé à part.
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
 
@@ -105,7 +106,7 @@ function button(root: ParentNode, name: string): HTMLButtonElement {
 }
 
 describe('SessionTabPage', () => {
-  it('carnet vide (état 2) : « Prévu la dernière fois » coché localement, « Depuis la séance du … », séance précédente en colonne', async () => {
+  it('carnet vide (état 2) : « Prévu la dernière fois » coché localement, « Depuis la séance du … »', async () => {
     const { el, store, settle } = await render();
     expect(el.querySelector('.empty-pad')).not.toBeNull();
     const planned = [...el.querySelectorAll('.empty-pad .checklist li')].map((li) =>
@@ -114,18 +115,8 @@ describe('SessionTabPage', () => {
     expect(planned).toEqual(['Relire l’agenda du sommeil', 'Demander si le certificat a été fait']);
     expect(text(el.querySelector('.empty-pad'))).toContain('Depuis la séance du 17 oct.');
     expect(text(el.querySelector('.empty-pad .items'))).toBe('Ressenti · 20 oct.');
-    // Le compte rendu précédent sans ses lignes « Prochaine fois », en tête de la colonne.
-    const aside = el.querySelector('aside')!;
-    expect(text(aside.querySelector('.block h3'))).toBe('Séance précédente · 17 oct.');
-    expect(text(aside.querySelector('.summary'))).toBe(
-      'Reprise du thème du sommeil ; refus du passage de jour.',
-    );
-    expect(text(aside)).not.toContain('Relire l’agenda');
-    expect(text(aside)).toContain('À garder en tête');
-    expect(text(aside)).toContain('À surveiller sommeil très dégradé');
-    expect(text(aside)).toContain('Mélatonine 2 mg le soir');
-    expect(text(aside)).toContain('Réorganisation du service de nuit · en cours');
-    expect(text(aside)).toContain('Raccourcis dans le texte');
+    // Pas de colonne ici : elle est à la page du shell (pm-session-context).
+    expect(el.querySelector('aside')).toBeNull();
 
     // Cocher n'enregistre rien : rangé dans la mémoire de l'onglet.
     const box = el.querySelector<HTMLInputElement>('.checklist input')!;
@@ -190,10 +181,6 @@ describe('SessionTabPage', () => {
       expect(text(rows[2].querySelector('.chip'))).toBe('en cours');
       // 90 min après l'enregistrement : « corriger ».
       expect(text(rows[2].querySelector('.edit'))).toContain('corriger');
-      // La colonne garde « Prévu la dernière fois » (checklist) et perd la séance précédente.
-      const aside = el.querySelector('aside')!;
-      expect(text(aside.querySelector('.block h3'))).toBe('Prévu la dernière fois');
-      expect(aside.querySelector('.summary')).toBeNull();
     } finally {
       vi.useRealTimers();
     }
@@ -241,19 +228,18 @@ describe('SessionTabPage', () => {
     expect(el.querySelectorAll('pm-noted-entries .entry')).toHaveLength(1);
   });
 
-  it('contexte en échec : la colonne en erreur avec « Réessayer » ; le carnet vide sans ses listes', async () => {
-    const { el, api, settle } = await render({ reminders: new Error('500') });
+  it('contexte en échec : le carnet vide sans ses listes (ni case ni point), pas en erreur lui-même', async () => {
+    const { el, settle } = await render({ reminders: new Error('500') });
     await settle();
-    const aside = el.querySelector('aside')!;
-    expect(text(aside)).toContain('Impossible de lire le contexte de la séance');
-    api.reminders.mockResolvedValue(reminders());
-    button(aside, 'Réessayer').click();
-    await settle();
-    await settle();
-    expect(text(aside)).toContain('À garder en tête');
+    expect(el.querySelector('.empty-pad')).not.toBeNull();
+    expect(el.querySelector('.empty-pad .checklist')).toBeNull();
+    expect(text(el.querySelector('.empty-pad'))).toContain(
+      'Rien de prévu dans le dernier compte rendu.',
+    );
+    expect(text(el.querySelector('.empty-pad'))).toContain('Rien de noté entre les séances.');
   });
 
-  it('sans séance précédente ni rappels : le carnet vide le dit, la colonne n’a que les raccourcis', async () => {
+  it('sans séance précédente ni rappels : le carnet vide le dit', async () => {
     const { el } = await render({
       previous: null,
       reminders: reminders({
@@ -267,8 +253,6 @@ describe('SessionTabPage', () => {
       'Rien de prévu dans le dernier compte rendu.',
     );
     expect(text(el.querySelector('.empty-pad'))).toContain('Rien de noté entre les séances.');
-    const headings = [...el.querySelectorAll('aside h3')].map((h) => text(h));
-    expect(headings).toEqual(['Raccourcis dans le texte']);
   });
 
   it('sans séance ouverte : retour à la vue d’ensemble', async () => {

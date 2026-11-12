@@ -70,20 +70,25 @@
     >
       {{ sessionCurrent() ? 'Clôturer (démo)' : 'Démarrer (démo)' }}
     </button>
+    <!-- UX-S2 : en séance, la barre de séance (chronomètre, Clôturer) au-dessus de l'en-tête compact. -->
+    @if (sessionCurrent()) {
+      <pm-session-bar
+        [session]="{ kind: 'current', startedAt: startedAt, modality: 'in_person' }"
+        [plannedMin]="50"
+        [entriesCount]="3"
+        (closeSession)="sessionCurrent.set(false)"
+      />
+    }
     <pm-patient-header
       [patient]="marie"
       [session]="
         sessionCurrent()
-          ? { kind: 'current', startedAt: startedAt }
-          : { kind: 'last', date: '2026-10-17' }
+          ? { kind: 'current', startedAt: startedAt, modality: 'in_person' }
+          : { kind: 'last', date: '2026-10-17', modality: 'in_person', durationMin: 50 }
       "
       [showViewToggle]="true"
       (startSession)="sessionCurrent.set(true)"
-      (closeSession)="sessionCurrent.set(false)"
     >
-      <div pmCapture class="capture-placeholder">
-        Noter quelque chose… (barre de capture, M6-02)
-      </div>
       <span pmViewToggle class="view-placeholder">Vue : Simple · Complète (M4-05)</span>
     </pm-patient-header>
   </section>

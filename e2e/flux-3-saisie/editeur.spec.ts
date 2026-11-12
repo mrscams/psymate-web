@@ -82,7 +82,7 @@ test.describe('éditeur d’entrée', () => {
     await signIn(page, account);
     await page.goto(`/fr/patients/${patientId}`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Nora B.');
-    await expect(page.locator('pm-patient-header .session-text')).toContainText('en cours');
+    await expect(page.locator('.session-text')).toContainText('en cours');
 
     const created = page.waitForResponse((r) => isCreate(r.url(), r.request().method(), patientId));
     const e = editor(page);
@@ -146,7 +146,8 @@ test.describe('éditeur d’entrée', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Hugo T.');
 
     const e = editor(page);
-    await page.getByRole('button', { name: 'Nouvelle entrée (N)' }).click();
+    // UX-S2 : plus de bouton « + » (04b) ; N ouvre l'éditeur vide.
+    await page.keyboard.press('n');
     await settled(e.dialog);
     await expectNoAxeViolations(page);
     await e.type('Ressenti').click();

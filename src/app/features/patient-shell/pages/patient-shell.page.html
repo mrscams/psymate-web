@@ -16,93 +16,96 @@
     >
   </section>
 } @else {
-  <!-- Barre de séance (UX-S3, proposition 04) : au-dessus de l'en-tête tant qu'une séance est
-       ouverte ; le bouton Clôturer de l'en-tête est alors masqué (il est dans la barre). -->
-  @if (store.currentSession(); as current) {
+  <!-- Mode séance (UX-S2 et UX-S3, propositions 04 et 04b) : la barre de séance au-dessus de l'en-tête
+       tant qu'une séance est ouverte ; chronomètre depuis startedAt, durée prévue du suivi (sinon la
+       préférence), dépassement en ambre, entrées notées, Clôturer ; passé 3 h, Reprendre. -->
+  @if (inSession()) {
     <pm-session-bar
-      [session]="current"
-      [planned]="store.plannedDurationMin()"
+      [session]="headerSession()"
+      [plannedMin]="store.plannedDurationMin()"
+      [entriesCount]="store.notedCount()"
       [unclosedAfterMin]="unclosedAfterMin"
-      [notedCount]="store.notedCount()"
       [busy]="store.busy()"
-      [now]="now()"
-      (closeRequested)="openClose()"
-      (resumeRequested)="resume()"
+      (closeSession)="openClose()"
+      (resumeSession)="resume()"
     />
   }
   <pm-patient-header
-    [class.in-session]="!!store.currentSession()"
     [patient]="headerPatient()"
     [session]="headerSession()"
-    [unclosedAfterMin]="unclosedAfterMin"
     [state]="headerState()"
     [busy]="store.busy()"
     [showViewToggle]="activeTab() === 'overview'"
     (startSession)="start()"
-    (closeSession)="openClose()"
     (retry)="reload()"
   >
-    <!-- Bloc de saisie (M6-02, UX-S1, features/capture), seulement pendant une séance ouverte (aucune
-         saisie sans séance) : Entrée crée, Ctrl+Entrée ou « Détailler » ouvre l'éditeur prérempli
-         (M1-08, features/entries) ; le bouton + ouvre l'éditeur vide. -->
-    <div pmCapture class="capture-row">
-      @if (headerSession().kind === 'current') {
-        <pm-capture-block
-          class="capture-bar"
-          [patientId]="id()"
-          [revision]="store.revision()"
-          (saved)="captured($event)"
-          (openEditor)="newEntry($event)"
-        />
-      }
-      <button
-        type="button"
-        class="new-entry"
-        aria-label="Nouvelle entrée (N)"
-        i18n-aria-label="Bouton plus de l'en-tête patient@@patientShell.newEntry"
-        aria-keyshortcuts="N"
-        (click)="newEntry()"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-      </button>
-    </div>
     <!-- Bascule « Vue : Simple · Complète » (features/overview, M4-05) : visible sur l'onglet 1. -->
     <pm-overview-view-toggle pmViewToggle />
   </pm-patient-header>
-  @if (store.patient() && store.firstEntry() === 'pending') {
-    <!-- Parcours guidé (M7-03) : dossier sans entrée saisie, lu sur le résumé de la chronologie. -->
-    <div class="first-entry" role="status">
-      <p>
-        <strong i18n="Indice de première entrée, titre@@patientShell.firstEntry.title"
-          >Dernière étape : notez la première entrée.</strong
-        >
-        <span i18n="Indice de première entrée, explication@@patientShell.firstEntry.text"
-          >Elle se rattache à la séance d'accueil du dossier, ou à la séance que vous
-          démarrez.</span
-        >
-      </p>
-      <button
-        type="button"
-        class="first-entry-action"
-        aria-keyshortcuts="N"
-        [attr.aria-busy]="preparingFirstEntry()"
-        (click)="firstEntry()"
-      >
-        <span i18n="Bouton de l'indice de première entrée@@patientShell.firstEntry.action"
-          >Nouvelle entrée</span
-        >
-        <kbd aria-hidden="true">N</kbd>
-      </button>
-    </div>
-  }
-  <!-- Annonce polie (séance démarrée) : pas de toast, la couleur et la minuterie le disent (04b). -->
+  <!-- Annonce polie (séance démarrée) : pas de toast, la couleur et le chronomètre le disent (04b). -->
   <p class="sr-only" role="status" aria-live="polite">{{ announcement() }}</p>
   @if (store.patient()) {
-    <!-- Timeline (UX-G2c) : surface de travail pleine hauteur, marge haute resserrée. -->
-    <div class="tab-content" [class.dense]="activeTab() === 'timeline'">
-      <router-outlet />
+    <!-- Colonne de contenu (04b .pad-layout) : la colonne principale porte le bloc de saisie (en
+         séance seulement, UX-S1 : aucune saisie sans séance), l'indice de première entrée et l'onglet
+         courant ; en séance, une colonne latérale de 340 px la longe (repliée dessous sous 900 px). -->
+    <div
+      class="pad-layout"
+      [class.in-session]="inSession()"
+      [class.dense]="activeTab() === 'timeline'"
+    >
+      <div class="pad-main">
+        @if (inSession()) {
+          <!-- Bloc de saisie (M6-02, UX-S1, features/capture) : Entrée crée, Ctrl+Entrée ou
+               « Détailler » ouvre l'éditeur prérempli (M1-08, features/entries) ; N ouvre l'éditeur vide. -->
+          <pm-capture-block
+            [patientId]="id()"
+            [revision]="store.revision()"
+            (saved)="captured($event)"
+            (openEditor)="newEntry($event)"
+          />
+        }
+        @if (store.firstEntry() === 'pending') {
+          <!-- Parcours guidé (M7-03) : dossier sans entrée saisie, lu sur le résumé de la chronologie. -->
+          <div class="first-entry" role="status">
+            <p>
+              <strong i18n="Indice de première entrée, titre@@patientShell.firstEntry.title"
+                >Dernière étape : notez la première entrée.</strong
+              >
+              <span i18n="Indice de première entrée, explication@@patientShell.firstEntry.text"
+                >Elle se rattache à la séance d'accueil du dossier, ou à la séance que vous
+                démarrez.</span
+              >
+            </p>
+            <button
+              type="button"
+              class="first-entry-action"
+              aria-keyshortcuts="N"
+              [attr.aria-busy]="preparingFirstEntry()"
+              (click)="firstEntry()"
+            >
+              <span i18n="Bouton de l'indice de première entrée@@patientShell.firstEntry.action"
+                >Nouvelle entrée</span
+              >
+              <kbd aria-hidden="true">N</kbd>
+            </button>
+          </div>
+        }
+        <!-- Timeline (UX-G2c) : surface de travail pleine hauteur, marge haute resserrée (dense). -->
+        <div class="tab-content">
+          <router-outlet />
+        </div>
+      </div>
+      @if (inSession()) {
+        <!-- Contexte de la séance (04b, états 2 et 3) : prévu la dernière fois ou séance précédente,
+             à garder en tête, raccourcis dans le texte ; sur tous les onglets tant que la séance est ouverte. -->
+        <aside
+          class="ctx"
+          aria-label="Contexte de la séance"
+          i18n-aria-label="Étiquette de la colonne latérale en séance@@patientShell.context.label"
+        >
+          <pm-session-context [padEmpty]="padEmpty()" />
+        </aside>
+      }
     </div>
   }
 }

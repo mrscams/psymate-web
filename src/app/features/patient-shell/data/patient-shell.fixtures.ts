@@ -28,10 +28,10 @@ export function openSession(overrides: Partial<ShellSession> = {}): ShellSession
     id: 's-open',
     kind: 'session',
     startedAt: '2026-10-24T14:00:00Z',
+    modality: 'in_person',
     closedAt: null,
     durationMin: null,
     summary: null,
-    modality: 'in_person',
     ...overrides,
   };
 }
@@ -41,10 +41,10 @@ export function closedSession(overrides: Partial<ShellSession> = {}): ShellSessi
     id: 's-closed',
     kind: 'session',
     startedAt: '2026-10-17T09:00:00Z',
+    modality: 'video',
     closedAt: '2026-10-17T10:00:00Z',
     durationMin: 60,
     summary: null,
-    modality: 'in_person',
     ...overrides,
   };
 }
@@ -54,10 +54,10 @@ export function intakeSession(): ShellSession {
     id: 's-intake',
     kind: 'intake',
     startedAt: '2026-10-01T08:00:00Z',
+    modality: 'in_person',
     closedAt: null,
     durationMin: null,
     summary: null,
-    modality: null,
   };
 }
 

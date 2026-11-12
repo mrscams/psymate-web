@@ -1,22 +1,8 @@
-// Onglet Séance (propositions 04 et 04b) : colonne de contenu + colonne latérale de 340 px, blocs
-// séparés par des filets, titres 13/650 secondaires ; lignes de 44 px ; teintes de séance (success-bg)
-// et de dépassement (warning-bg). Aucune couleur hors tokens.
+// Onglet Séance (propositions 04 et 04b) : colonne de contenu de la page du shell (la colonne
+// latérale est la sienne) ; lignes de 44 px ; carnet vide dans un cadre tireté. Aucune couleur
+// hors tokens.
 :host {
   display: block;
-}
-
-.pad-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 20px;
-  align-items: start;
-
-  @media (max-width: 960px) {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-.pad-main {
   min-width: 0;
 }
 
@@ -55,14 +41,6 @@
 
 .faint {
   color: var(--text-secondary);
-}
-
-.muted {
-  color: var(--text-secondary);
-}
-
-.small {
-  font-size: 12.5px;
 }
 
 // Carnet vide (04b, état 2) : deux colonnes dans un cadre tireté.
@@ -106,129 +84,6 @@
       &:last-child {
         border-bottom: 0;
       }
-    }
-  }
-}
-
-// Liste « Prévu la dernière fois » : case, texte barré une fois coché, « Noter » à droite.
-.checklist {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-
-  li {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 40px;
-    font-size: 13.5px;
-  }
-
-  label {
-    flex: 1;
-    min-width: 0;
-    color: var(--text-primary);
-  }
-
-  .done label {
-    color: var(--text-secondary);
-    text-decoration: line-through;
-  }
-
-  .cb {
-    width: 16px;
-    height: 16px;
-    margin: 0;
-    accent-color: var(--entry-session);
-  }
-
-  .ghost {
-    min-height: 32px;
-    padding: 0 8px;
-    border: 0;
-    border-radius: 8px;
-    background: none;
-    color: var(--primary);
-    font: inherit;
-    font-weight: 600;
-    cursor: pointer;
-
-    &:focus-visible {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-    }
-  }
-}
-
-// Colonne latérale : blocs séparés par des filets, titres 13/650 secondaires.
-.ctx {
-  min-width: 0;
-
-  .block {
-    padding: 14px 0;
-    border-top: 1px solid var(--border-subtle);
-
-    &:first-child {
-      padding-top: 0;
-      border-top: 0;
-    }
-  }
-
-  h3 {
-    margin: 0 0 8px;
-    font-size: 13px;
-    font-weight: 650;
-    color: var(--text-secondary);
-  }
-
-  p {
-    margin: 0;
-    font-size: 13.5px;
-    line-height: 1.5;
-  }
-
-  .summary {
-    white-space: pre-line;
-  }
-
-  .line {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    padding: 3px 0;
-
-    pm-entry-icon {
-      align-self: center;
-      flex: none;
-    }
-  }
-
-  b {
-    font-weight: 600;
-  }
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 22px;
-  padding: 0 8px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-
-  &.flag {
-    background: var(--flag-bg);
-    color: var(--warning);
-
-    &::before {
-      content: '';
-      width: 7px;
-      height: 7px;
-      border-radius: 2px;
-      background: var(--flag);
     }
   }
 }

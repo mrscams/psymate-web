@@ -11,6 +11,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, Route, Router, Routes, withComponentInputBinding } from '@angular/router';
+import { LOCALE_ID } from '@angular/core';
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { PreferencesStore } from '../../../core/preferences';
@@ -22,6 +23,7 @@ import {
   intakeSession,
   notedEntry,
   openSession,
+  previousSession,
   reminders,
   shellPatient,
 } from '../data/patient-shell.fixtures';
@@ -96,10 +98,10 @@ async function render(api: Partial<Api> = {}, url = '/patients/p-marie', duratio
     contact: api.contact ?? vi.fn(),
     hasEntries: api.hasEntries ?? vi.fn().mockResolvedValue(true),
     firstSessionMonth: api.firstSessionMonth ?? vi.fn().mockResolvedValue('2025-03'),
-    // Onglet Séance (UX-S3).
+    // Onglet Séance et colonne de contexte (UX-S3).
     sessionEntries: api.sessionEntries ?? vi.fn().mockResolvedValue([notedEntry()]),
     linkSentence: api.linkSentence ?? vi.fn().mockResolvedValue(null),
-    previousSession: api.previousSession ?? vi.fn().mockResolvedValue(null),
+    previousSession: api.previousSession ?? vi.fn().mockResolvedValue(previousSession()),
     reminders: api.reminders ?? vi.fn().mockResolvedValue(reminders()),
     emotionLabels: api.emotionLabels ?? vi.fn().mockResolvedValue({}),
   };
@@ -160,11 +162,18 @@ function dialog(): HTMLElement {
   return box;
 }
 
-/** Le bouton Clôturer de la barre de séance (UX-S3 : celui de l'en-tête est masqué en séance). */
+/** Le bouton Clôturer de la barre de séance. */
 function closeButton(el: HTMLElement): HTMLButtonElement {
-  const button = el.querySelector<HTMLButtonElement>('pm-session-bar button');
+  const button = el.querySelector<HTMLButtonElement>('pm-session-bar button.close-session');
   if (!button) throw new Error('aucun bouton Clôturer dans la barre de séance');
   return button;
+}
+
+/** Le bouton du panneau de clôture portant ce texte. */
+function panelButton(name: string): HTMLButtonElement {
+  const found = [...dialog().querySelectorAll('button')].find((b) => text(b) === name);
+  if (!found) throw new Error(`bouton du panneau introuvable : ${name}`);
+  return found;
 }
 
 describe('PatientShellPage', () => {
@@ -177,15 +186,23 @@ describe('PatientShellPage', () => {
     expect(el.querySelector('pm-fake-overview-tab')).toBeNull();
   });
 
-  it('chargé : nom, drapeau, dernière séance, pas de bloc de saisie sans séance ouverte, onglet 1 avec la bascule Vue', async () => {
+  it('chargé : nom, drapeau, dernière séance (modalité, durée), pas de bloc de saisie sans séance ouverte, onglet 1 avec la bascule Vue', async () => {
     const { el, api } = await render();
     expect(api.patient).toHaveBeenCalledWith('p-marie');
     expect(text(el.querySelector('h1.name'))).toBe('Marie D.');
     expect(text(el.querySelector('.flag'))).toBe('À surveiller');
-    expect(text(el.querySelector('.session-text'))).toBe('Dernière séance : 17 oct. 2026');
+    expect(text(el.querySelector('.session-text'))).toBe(
+      'Dernière séance : 17 oct. 2026 · visio · 60 min',
+    );
     expect(el.querySelector('button.start-session')).not.toBeNull();
-    // Aucune saisie sans séance : le bloc n'est posé qu'avec une séance ouverte.
-    expect(el.querySelector('pm-capture-block')).toBeNull();
+    // Hors séance : ni barre de séance, ni bloc de saisie (aucune saisie sans séance, UX-S1), ni
+    // colonne latérale ; l'onglet occupe la colonne principale seule.
+    expect(el.querySelector('pm-session-bar .session-bar')).toBeNull();
+    const layout = el.querySelector('.pad-layout')!;
+    expect(layout.classList.contains('in-session')).toBe(false);
+    expect(layout.querySelector('pm-capture-block')).toBeNull();
+    expect(layout.querySelector('aside.ctx')).toBeNull();
+    expect(layout.querySelector('.pad-main .tab-content pm-fake-overview-tab')).not.toBeNull();
     expect(text(el.querySelector('pm-fake-overview-tab h2'))).toBe("Vue d'ensemble");
     expect(el.querySelector('.view-toggle pm-overview-view-toggle [role="group"]')).not.toBeNull();
   });
@@ -250,29 +267,98 @@ describe('PatientShellPage', () => {
     },
   );
 
-  it('Démarrer : l’en-tête passe « en cours » sans recharger le dossier', async () => {
+  it('Démarrer : barre de séance (chronomètre, durée prévue, compte), onglet Séance ouvert, colonne de contexte, sans recharger le dossier', async () => {
     // Horloge figée 12 min après le début de la séance renvoyée (24 oct. 2026, 14:00 Z) : au-delà
-    // de 3 h, l'en-tête dirait « non clôturée ». Seule la date est simulée, pas les minuteries.
+    // de 3 h, la barre dirait « non clôturée ». Seule la date est simulée, pas les minuteries.
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date('2026-10-24T14:12:00Z'));
     try {
-      const { el, harness, api } = await render();
+      const { el, harness, api } = await render({}, '/patients/p-marie', 45);
       el.querySelector<HTMLButtonElement>('button.start-session')?.click();
       await settle(harness);
       expect(api.start).toHaveBeenCalledWith('p-marie', 'in_person');
       expect(api.patient).toHaveBeenCalledTimes(1);
-      expect(el.querySelector('.session-text')?.classList.contains('current')).toBe(true);
-      expect(text(el.querySelector('.session-text'))).toMatch(/en cours depuis 12 min$/);
-      // UX-S3 : la barre de séance porte Clôturer ; l'onglet Séance remplace la vue d'ensemble.
-      expect(text(closeButton(el))).toBe('Clôturer la séance');
-      expect(el.querySelector('pm-patient-header')?.classList.contains('in-session')).toBe(true);
+      // La barre de séance précède l'en-tête ; l'en-tête n'a plus ni Démarrer ni texte de séance.
+      const bar = el.querySelector('pm-session-bar .session-bar')!;
+      expect(bar).not.toBeNull();
+      expect(bar.compareDocumentPosition(el.querySelector('pm-patient-header')!)).toBe(
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+      // L'heure est celle du fuseau de la machine : l'attendu suit le même Intl que le composant.
+      const startedAt = new Intl.DateTimeFormat(TestBed.inject(LOCALE_ID), {
+        timeStyle: 'short',
+      }).format(new Date('2026-10-24T14:00:00Z'));
+      expect(text(bar.querySelector('.session-text'))).toBe(
+        `Séance en cours · cabinet · démarrée à ${startedAt}`,
+      );
+      expect(text(bar.querySelector('.timer'))).toBe('00:12:00');
+      expect(text(bar.querySelector('.planned'))).toBe('sur 45 min prévues');
+      expect(text(bar.querySelector('.count'))).toBe('1 entrée notée');
+      expect(text(closeButton(el))).toContain('Clôturer la séance');
+      expect(el.querySelector('pm-patient-header button.start-session')).toBeNull();
+      expect(el.querySelector('pm-patient-header .session-text')).toBeNull();
+      // UX-S3 : l'onglet Séance remplace la vue d'ensemble ; « Vue d'ensemble » reste à un clic.
       expect(TestBed.inject(Router).url).toBe('/patients/p-marie/session');
-      await settle(harness);
-      expect(el.querySelector('pm-session-tab-page')).not.toBeNull();
+      expect(text(el.querySelector('nav.tabs a[aria-current="page"] span'))).toBe('Séance');
+      expect(text(el.querySelector('nav.tabs a.overview-link'))).toBe("Vue d'ensemble");
+      // Colonne de contenu en mode séance (04b) : la colonne principale porte le bloc déplié puis
+      // l'onglet Séance ; la colonne latérale de contexte la longe, les raccourcis en dernier.
+      const layout = el.querySelector('.pad-layout')!;
+      expect(layout.classList.contains('in-session')).toBe(true);
+      const main = [...layout.querySelectorAll('.pad-main > *')].map(
+        (node) => node.className || node.tagName.toLowerCase(),
+      );
+      expect(main).toEqual(['pm-capture-block', 'tab-content']);
+      expect(layout.querySelector('.pad-main pm-capture-block .block.expanded')).not.toBeNull();
+      expect(layout.querySelector('.pad-main .tab-content pm-session-tab-page')).not.toBeNull();
       expect(counter(el)).toBeNull();
+      const aside = layout.querySelector('aside.ctx')!;
+      expect(aside.getAttribute('aria-label')).toBe('Contexte de la séance');
+      expect(aside.querySelector('pm-session-context')).not.toBeNull();
+      expect([...aside.querySelectorAll('h3')].map(text)).toEqual([
+        'Prévu la dernière fois',
+        'À garder en tête',
+        'Raccourcis dans le texte',
+      ]);
+      expect([...aside.querySelectorAll('.shortcut')].map(text)).toEqual([
+        'anx 7 ressenti',
+        '/evt événement',
+        '/sit situation',
+        '/med médicament',
+        '/note',
+        'hier, 12 mars, il y a 3 j dates',
+        '> cible lien',
+      ]);
+      expect(el.querySelector('button.new-entry')).toBeNull();
       await vi.waitFor(() =>
         expect(document.activeElement).toBe(el.querySelector('pm-capture-block textarea')),
       );
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('séance ouverte depuis plus de 3 h : barre grise « non clôturée », « Clôturer maintenant », « Reprendre » rouvre l’onglet Séance', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-24T17:01:00Z'));
+    try {
+      const { el, harness } = await render({ current: vi.fn().mockResolvedValue(openSession()) });
+      const bar = el.querySelector('pm-session-bar .session-bar')!;
+      expect(bar.classList.contains('unclosed')).toBe(true);
+      const line = text(bar.querySelector('.session-text'));
+      expect(line).toMatch(/non clôturée$/);
+      expect(line).not.toContain('Séance en cours');
+      expect(bar.querySelector('.timer')).toBeNull();
+      expect(text(closeButton(el))).toContain('Clôturer maintenant');
+      // Dossier ouvert avec une séance en cours : l'onglet Séance, une fois ; retour sur la vue
+      // d'ensemble par son lien, puis « Reprendre ».
+      expect(TestBed.inject(Router).url).toBe('/patients/p-marie/session');
+      await harness.navigateByUrl('/patients/p-marie');
+      await settle(harness);
+      expect(TestBed.inject(Router).url).toBe('/patients/p-marie');
+      el.querySelector<HTMLButtonElement>('pm-session-bar button.resume')!.click();
+      await settle(harness);
+      expect(TestBed.inject(Router).url).toBe('/patients/p-marie/session');
     } finally {
       vi.useRealTimers();
     }
@@ -284,22 +370,6 @@ describe('PatientShellPage', () => {
       '/patients/p-marie?entry=e-1',
     );
     expect(TestBed.inject(Router).url).toBe('/patients/p-marie/session?entry=e-1');
-  });
-
-  it('séance ouverte depuis plus de 3 h : « non clôturée », Clôturer reste proposé', async () => {
-    vi.useFakeTimers({ toFake: ['Date'] });
-    vi.setSystemTime(new Date('2026-10-24T17:01:00Z'));
-    try {
-      const { el } = await render({ current: vi.fn().mockResolvedValue(openSession()) });
-      const line = text(el.querySelector('.session-text'));
-      expect(line).toMatch(/non clôturée$/);
-      expect(line).not.toContain('en cours depuis');
-      // La barre grise (UX-S3) : Clôturer maintenant et Reprendre.
-      expect(el.querySelector('pm-session-bar .unclosed')).not.toBeNull();
-      expect(text(closeButton(el))).toBe('Clôturer maintenant');
-    } finally {
-      vi.useRealTimers();
-    }
   });
 
   it('Clôturer : panneau de 520 px, durée écoulée arrondie à 5 min, POST close, toast « Modifier », retour à la vue d’ensemble', async () => {
@@ -327,10 +397,7 @@ describe('PatientShellPage', () => {
       const summary = box.querySelector<HTMLTextAreaElement>('#field-summary');
       summary!.value = 'Point sur le sommeil';
       summary!.dispatchEvent(new Event('input'));
-      const confirm = [...box.querySelectorAll('button')].find(
-        (b) => text(b) === 'Clôturer la séance',
-      );
-      confirm!.click();
+      panelButton('Clôturer la séance').click();
       await settle(harness);
       await vi.waitFor(() => expect(document.querySelector('pm-close-session-panel')).toBeNull());
       expect(api.close).toHaveBeenCalledWith('s-open', {
@@ -338,14 +405,26 @@ describe('PatientShellPage', () => {
         summary: 'Point sur le sommeil',
       });
       await settle(harness);
-      expect(text(el.querySelector('.session-text'))).toBe('Dernière séance : 17 oct. 2026');
+      // La séance clôturée (réponse du serveur) devient la dernière séance ; la barre et la colonne
+      // de contexte disparaissent, l'onglet 1 redit « Vue d'ensemble » (retour de l'onglet Séance,
+      // 04b état 6), toast de 6 s avec « Modifier », Démarrer prend le focus.
+      expect(el.querySelector('pm-session-bar .session-bar')).toBeNull();
+      expect(text(el.querySelector('pm-patient-header .session-text'))).toBe(
+        'Dernière séance : 17 oct. 2026 · visio · 50 min',
+      );
       expect(el.querySelector('button.start-session')).not.toBeNull();
-      expect(el.querySelector('pm-session-bar')).toBeNull();
-      // Retour de l'onglet Séance à la vue d'ensemble (04b, état 6).
       expect(TestBed.inject(Router).url).toBe('/patients/p-marie');
+      expect(text(el.querySelector('nav.tabs a[aria-current="page"] span'))).toBe("Vue d'ensemble");
+      expect(el.querySelector('nav.tabs a.overview-link')).toBeNull();
+      expect(el.querySelector('.pad-layout.in-session')).toBeNull();
+      expect(el.querySelector('pm-capture-block')).toBeNull();
+      expect(el.querySelector('aside.ctx')).toBeNull();
       const toasts = TestBed.inject(ToastService).toasts();
       expect(toasts.at(-1)?.message).toBe('Séance clôturée · 50 min · compte rendu enregistré');
       expect(toasts.at(-1)?.action?.label).toBe('Modifier');
+      await vi.waitFor(() =>
+        expect(document.activeElement).toBe(el.querySelector('button.start-session')),
+      );
     } finally {
       vi.useRealTimers();
     }
@@ -357,10 +436,7 @@ describe('PatientShellPage', () => {
     });
     closeButton(el).click();
     await settle(harness);
-    const box = dialog();
-    [...box.querySelectorAll('button')]
-      .find((b) => text(b) === 'Clôturer et revenir à la liste')!
-      .click();
+    panelButton('Clôturer et revenir à la liste').click();
     await settle(harness);
     await vi.waitFor(() => expect(document.querySelector('pm-close-session-panel')).toBeNull());
     expect(api.close).toHaveBeenCalledTimes(1);
@@ -379,7 +455,7 @@ describe('PatientShellPage', () => {
     });
     closeButton(el).click();
     await settle(harness);
-    [...dialog().querySelectorAll('button')].find((b) => text(b) === 'Clôturer la séance')!.click();
+    panelButton('Clôturer la séance').click();
     await settle(harness);
     await vi.waitFor(() => expect(document.querySelector('pm-close-session-panel')).toBeNull());
     await settle(harness);
@@ -389,7 +465,7 @@ describe('PatientShellPage', () => {
     expect(TestBed.inject(Router).url).toBe('/patients/p-marie');
   });
 
-  it('Clôturer, 422 : message du serveur sous la durée, le dialogue reste ouvert', async () => {
+  it('Clôturer, 422 : message du serveur sous la durée, le panneau reste ouvert', async () => {
     const close = vi.fn().mockRejectedValue({
       status: 422,
       code: 'VALIDATION_FAILED',
@@ -401,7 +477,7 @@ describe('PatientShellPage', () => {
     });
     closeButton(el).click();
     await settle(harness);
-    [...dialog().querySelectorAll('button')].find((b) => text(b) === 'Clôturer la séance')!.click();
+    panelButton('Clôturer la séance').click();
     await settle(harness);
     await vi.waitFor(() =>
       expect(text(dialog().querySelector('#field-durationMin-error'))).toBe('Durée refusée.'),
@@ -418,7 +494,7 @@ describe('PatientShellPage', () => {
     const duration = dialog().querySelector<HTMLInputElement>('#field-durationMin')!;
     duration.value = '0';
     duration.dispatchEvent(new Event('input'));
-    [...dialog().querySelectorAll('button')].find((b) => text(b) === 'Clôturer la séance')!.click();
+    panelButton('Clôturer la séance').click();
     await settle(harness);
     expect(text(dialog().querySelector('#field-durationMin-error'))).toBe(
       'Une durée entière entre 1 et 600 minutes.',
@@ -491,9 +567,10 @@ describe('PatientShellPage', () => {
     expect(router.url).toBe('/patients/p-marie/graph');
 
     capture.blur();
+    // Séance ouverte : l'onglet 1 est l'onglet Séance (UX-S3).
     press(document.body, '1');
     await settle(harness);
-    expect(router.url).toBe('/patients/p-marie');
+    expect(router.url).toBe('/patients/p-marie/session');
   });
 
   it('arrivée depuis la création (état CAPTURE_FOCUS_STATE) : séance ouverte, le bloc prend le focus', async () => {
@@ -551,15 +628,9 @@ describe('PatientShellPage', () => {
 
     afterEach(() => TestBed.inject(HttpTestingController).match(() => true));
 
-    it('bouton + et touche N : ouvrent l’éditeur, une seule fois', async () => {
+    it('touche N : ouvre l’éditeur, une seule fois ; plus de bouton + (UX-S2, 04b)', async () => {
       const { harness, el } = await render();
-      el.querySelector<HTMLButtonElement>('button.new-entry')!.click();
-      await settle(harness);
-      expect(editor()?.querySelector('h2')?.textContent).toContain('Nouvelle entrée');
-      document.querySelector<HTMLButtonElement>('pm-side-panel button.close')!.click();
-      await settle(harness);
-      expect(editor()).toBeNull();
-
+      expect(el.querySelector('button.new-entry')).toBeNull();
       document.body.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'n', bubbles: true, cancelable: true }),
       );

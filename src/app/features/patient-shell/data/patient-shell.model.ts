@@ -48,11 +48,11 @@ export interface ShellSession {
   kind: 'intake' | 'session' | 'contact';
   /** Début (occurred.from), UTC ISO 8601. */
   startedAt: string;
+  /** Modalité (cabinet, visio, téléphone, e-mail) ; null si le contrat ne la donne pas. */
+  modality: SessionModality | null;
   closedAt: string | null;
   durationMin: number | null;
   summary: string | null;
-  /** Modalité (session.modality) ; null si le contrat ne la donne pas. */
-  modality: SessionModality | null;
 }
 
 /** Ce que la clôture envoie (POST /api/sessions/{id}/close). */

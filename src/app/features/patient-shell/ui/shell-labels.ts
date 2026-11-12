@@ -1,6 +1,7 @@
 import { ApiProblem } from '../../../core/http';
 import { formatDate } from '../../../core/i18n';
-import { PatientHeaderInfo } from '../../../shared/ui';
+import { PatientHeaderInfo, sessionModalityLabel } from '../../../shared/ui';
+import { CAPTURE_PREFIXES, CaptureEntryType } from '../../capture';
 import { FlagKind, SessionModality, ShellPatient } from '../data/patient-shell.model';
 
 // Libellés de features/patient-shell ($localize, français d'abord). Les codes viennent du contrat ;
@@ -14,22 +15,6 @@ export function flagLabel(kind: FlagKind): string {
       return $localize`:Drapeau dans l'en-tête patient@@patientShell.flag.risk:Risque`;
     case 'shared_care':
       return $localize`:Drapeau dans l'en-tête patient@@patientShell.flag.sharedCare:Suivi conjoint`;
-  }
-}
-
-/** Modalité d'une séance, en minuscule, pour une ligne « Séance en cours · cabinet ». */
-export function modalityLabel(modality: SessionModality | null): string | null {
-  switch (modality) {
-    case 'in_person':
-      return $localize`:Modalité d'une séance, en minuscule@@patientShell.modality.inPerson:cabinet`;
-    case 'video':
-      return $localize`:Modalité d'une séance, en minuscule@@patientShell.modality.video:visio`;
-    case 'phone':
-      return $localize`:Modalité d'une séance, en minuscule@@patientShell.modality.phone:téléphone`;
-    case 'email':
-      return $localize`:Modalité d'une séance, en minuscule@@patientShell.modality.email:e-mail`;
-    default:
-      return null;
   }
 }
 
@@ -58,14 +43,6 @@ export function formatShortDay(value: string, locale: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '';
   return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(date);
-}
-
-/** « 00:12:34 » : minuterie de la séance depuis son début. */
-export function formatTimer(startedAt: string, now: Date): string {
-  const start = Date.parse(startedAt);
-  const seconds = Number.isNaN(start) ? 0 : Math.max(0, Math.floor((now.getTime() - start) / 1000));
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${pad(Math.floor(seconds / 3600))}:${pad(Math.floor((seconds % 3600) / 60))}:${pad(seconds % 60)}`;
 }
 
 /** Le patient du store et le début de suivi retenu (store.followedSince) → pm-patient-header. */
@@ -143,7 +120,7 @@ export function closePanelSubtitle(
   now: Date,
 ): string {
   const parts = [patientName, formatLongDay(startedAt, locale, now)];
-  const where = modalityLabel(modality);
+  const where = sessionModalityLabel(modality);
   if (where) parts.push(where);
   parts.push(`${formatClock(startedAt, locale)} → ${formatClock(now.toISOString(), locale)}`);
   return parts.filter((part) => !!part).join(' · ');
@@ -160,4 +137,54 @@ export function previousHeading(startedAt: string | null, locale: string): strin
 /** Date complète (« 17 oct. 2026 ») pour les lignes datées des rappels. */
 export function dayLabel(value: string, locale: string): string {
   return formatDate(value, locale, 'medium');
+}
+
+/** Une rangée de « Raccourcis dans le texte » : les exemples en gras, puis ce qu'ils produisent. */
+export interface TextShortcutRow {
+  tokens: string[];
+  label: string;
+}
+
+/**
+ * « Raccourcis dans le texte » de la colonne latérale en séance (proposition 04b, état 3) : ce que la
+ * grammaire du bloc de saisie reconnaît. Les préfixes viennent du parseur (CAPTURE_PREFIXES).
+ */
+export function textShortcutRows(): TextShortcutRow[] {
+  const prefix = (type: CaptureEntryType): string =>
+    CAPTURE_PREFIXES.find((entry) => entry.type === type)?.prefix ?? '';
+  return [
+    {
+      tokens: [
+        $localize`:Exemple de ressenti dans la grammaire@@patientShell.ctx.shortcuts.feelingExample:anx 7`,
+      ],
+      label: $localize`:Raccourci dans le texte@@patientShell.ctx.shortcuts.feeling:ressenti`,
+    },
+    {
+      tokens: [prefix('event')],
+      label: $localize`:Raccourci dans le texte@@patientShell.ctx.shortcuts.event:événement`,
+    },
+    {
+      tokens: [prefix('situation')],
+      label: $localize`:Raccourci dans le texte@@patientShell.ctx.shortcuts.situation:situation`,
+    },
+    {
+      tokens: [prefix('medication')],
+      label: $localize`:Raccourci dans le texte@@patientShell.ctx.shortcuts.medication:médicament`,
+    },
+    { tokens: [prefix('note')], label: '' },
+    {
+      tokens: [
+        $localize`:Exemple de date dans la grammaire@@patientShell.ctx.shortcuts.dateYesterday:hier`,
+        $localize`:Exemple de date dans la grammaire@@patientShell.ctx.shortcuts.dateDay:12 mars`,
+        $localize`:Exemple de date dans la grammaire@@patientShell.ctx.shortcuts.dateRelative:il y a 3 j`,
+      ],
+      label: $localize`:Raccourci dans le texte@@patientShell.ctx.shortcuts.dates:dates`,
+    },
+    {
+      tokens: [
+        $localize`:Exemple de lien dans la grammaire@@patientShell.ctx.shortcuts.linkExample:> cible`,
+      ],
+      label: $localize`:Raccourci dans le texte@@patientShell.ctx.shortcuts.link:lien`,
+    },
+  ];
 }

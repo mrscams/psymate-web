@@ -1,0 +1,95 @@
+// Colonne latérale en séance (04b .ctx / .block) : blocs séparés par des filets, titres 13/650
+// secondaires, lignes de rappel avec icône, puce de drapeau ambre. Aucune couleur hors tokens.
+:host {
+  display: block;
+  min-width: 0;
+  color: var(--text-primary);
+  font: var(--mat-sys-body-medium);
+  font-size: 13.5px;
+}
+
+.block {
+  padding: 2px 0 14px;
+  border-bottom: 1px solid var(--border-subtle);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+h3 {
+  margin: 0 0 8px;
+  color: var(--text-secondary);
+  font: var(--mat-sys-label-large);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.summary {
+  white-space: pre-line;
+}
+
+.faint,
+.muted {
+  color: var(--text-secondary);
+}
+
+.line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 3px 0;
+
+  pm-entry-icon {
+    align-self: center;
+    flex: none;
+  }
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &.flag {
+    background: var(--flag-bg);
+    color: var(--warning);
+
+    &::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 2px;
+      background: var(--flag);
+    }
+  }
+}
+
+/* « anx 7 ressenti · /evt événement · … » : exemples en gras, 12.5 px secondaires (04b). */
+.shortcuts {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  line-height: 1.6;
+
+  b {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .sep {
+    margin: 0 4px;
+  }
+}

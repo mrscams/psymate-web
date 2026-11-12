@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 
 import { StateKind } from '../../util';
@@ -20,9 +21,7 @@ import {
       [state]="state()"
       [busy]="busy()"
       [showViewToggle]="showViewToggle()"
-      [unclosedAfterMin]="unclosedAfterMin()"
     >
-      <div pmCapture class="capture-slot">Noter quelque chose…</div>
       <div pmViewToggle class="toggle-slot">Vue</div>
     </pm-patient-header>
   `,
@@ -34,7 +33,6 @@ class Host {
   readonly state = input<StateKind | null>(null);
   readonly busy = input(false);
   readonly showViewToggle = input(false);
-  readonly unclosedAfterMin = input<number | null>(null);
 }
 
 const marie: PatientHeaderInfo = {
@@ -46,7 +44,7 @@ const marie: PatientHeaderInfo = {
 };
 
 const plainText = (node: Element | null | undefined) =>
-  node?.textContent?.replace(/[  ]/g, ' ').trim();
+  node?.textContent?.replace(/[  ]/g, ' ').replace(/\s+/g, ' ').trim();
 
 async function render(inputs: Record<string, unknown>) {
   TestBed.configureTestingModule({
@@ -57,6 +55,14 @@ async function render(inputs: Record<string, unknown>) {
   for (const [key, value] of Object.entries(inputs)) fixture.componentRef.setInput(key, value);
   await fixture.whenStable();
   return { fixture, el: fixture.nativeElement as HTMLElement };
+}
+
+function tabLabels(el: HTMLElement): (string | undefined)[][] {
+  return [...el.querySelectorAll<HTMLAnchorElement>('nav.tabs a')].map((a) => [
+    a.getAttribute('href') ?? undefined,
+    a.querySelector('kbd')?.textContent ?? undefined,
+    a.querySelector('span')?.textContent ?? undefined,
+  ]);
 }
 
 describe('PatientHeaderComponent', () => {
@@ -76,87 +82,107 @@ describe('PatientHeaderComponent', () => {
     expect(el.querySelector('button.retry')).not.toBeNull();
   });
 
-  it('nom, âge, suivi depuis, drapeaux ambre, dernière séance, Démarrer, onglets 1 2 3', async () => {
+  it('hors séance : nom, âge, suivi (mois abrégé), drapeau ambre, dernière séance avec modalité et durée, Démarrer, onglets 1 2 3', async () => {
     vi.setSystemTime(new Date('2026-10-24T14:18:00Z'));
-    const { el } = await render({ patient: marie, session: { kind: 'last', date: '2026-10-17' } });
+    const { el } = await render({
+      patient: marie,
+      session: { kind: 'last', date: '2026-10-17', modality: 'video', durationMin: 50 },
+    });
     expect(el.querySelector('h1.name')?.textContent).toContain('Marie D.');
     expect(el.querySelector('h1 .reported-slot')).not.toBeNull();
-    expect(el.querySelector('.meta')?.textContent).toContain('34 ans');
-    expect(el.querySelector('.meta')?.textContent).toContain('suivi·e depuis mars 2025');
+    // Ligne d'identité unique (04b .phead-row) : qui, puis la séance à droite.
+    const row = el.querySelector('.phead-row');
+    expect(row?.querySelector('.who h1.name')).not.toBeNull();
+    expect(plainText(row?.querySelector('.meta'))).toBe('34 ans·suivi·e depuis mars 2025');
     expect(el.querySelector('.flags')?.getAttribute('aria-label')).toBe('Drapeaux');
     expect(el.querySelector('.flag')?.textContent).toBe('à surveiller');
-    expect(el.querySelector('.session-text')?.textContent).toBe('Dernière séance : 17 oct. 2026');
-    expect(el.querySelector('button.start-session')).not.toBeNull();
+    expect(plainText(row?.querySelector('.right .session-text'))).toBe(
+      'Dernière séance : 17 oct. 2026 · visio · 50 min',
+    );
+    expect(row?.querySelector('button.start-session')).not.toBeNull();
     expect(el.querySelector('button.close-session')).toBeNull();
+    expect(el.querySelector('.patient-header')?.classList.contains('in-session')).toBe(false);
 
-    const tabs = [...el.querySelectorAll<HTMLAnchorElement>('nav.tabs a')].map((a) => [
-      a.getAttribute('href'),
-      a.querySelector('kbd')?.textContent,
-      a.querySelector('span')?.textContent,
-    ]);
-    expect(tabs).toEqual([
+    expect(tabLabels(el)).toEqual([
       ['/patients/p1', '1', "Vue d'ensemble"],
       ['/patients/p1/timeline', '2', 'Timeline'],
       ['/patients/p1/graph', '3', 'Graphe'],
     ]);
-    expect(el.querySelector('.capture-slot')).not.toBeNull();
     expect(el.querySelector('.toggle-slot')).toBeNull();
   });
 
-  it('séance en cours : « en cours depuis », Clôturer, boutons inactifs pendant une action', async () => {
+  it('« suivi·e depuis » abrège le mois (sept. 2026) ; sans modalité ni durée, la dernière séance se limite à la date', async () => {
+    vi.setSystemTime(new Date('2026-10-24T14:18:00Z'));
+    const { el } = await render({
+      patient: { ...marie, followedSince: '2026-09-02', birthDate: null, flags: [] },
+      session: { kind: 'last', date: '2026-10-17' },
+    });
+    expect(plainText(el.querySelector('.meta'))).toBe('suivi·e depuis sept. 2026');
+    expect(el.querySelector('.flags')).toBeNull();
+    expect(plainText(el.querySelector('.session-text'))).toBe('Dernière séance : 17 oct. 2026');
+  });
+
+  it('sans aucune séance : Démarrer seul à droite, pas de texte de séance', async () => {
+    const { el } = await render({ patient: marie, session: { kind: 'none' } });
+    expect(el.querySelector('.session-text')).toBeNull();
+    expect(el.querySelector('button.start-session')).not.toBeNull();
+  });
+
+  it('séance en cours : onglet 1 « Séance » vers l’onglet Séance, « Vue d’ensemble » à droite des onglets, rien à droite de l’identité (ni Démarrer ni Clôturer : ils sont dans la barre), bascule Vue au bout', async () => {
     vi.setSystemTime(new Date('2026-10-24T14:18:00Z'));
     const { el, fixture } = await render({
       patient: marie,
-      session: { kind: 'current', startedAt: '2026-10-24T14:00:00Z' },
+      session: { kind: 'current', startedAt: '2026-10-24T14:00:00Z', modality: 'in_person' },
       showViewToggle: true,
     });
-    const text = el.querySelector('.session-text');
-    expect(text?.classList.contains('current')).toBe(true);
-    expect(text?.textContent?.replace(/[  ]/g, ' ')).toBe(
-      'Séance du 24 oct. 2026 · en cours depuis 18 min',
-    );
-    const close = el.querySelector<HTMLButtonElement>('button.close-session');
-    expect(close).not.toBeNull();
-    expect(el.querySelector('.toggle-slot')).not.toBeNull();
+    expect(el.querySelector('.patient-header')?.classList.contains('in-session')).toBe(true);
+    expect(el.querySelector('.right')).toBeNull();
+    expect(el.querySelector('.session-text')).toBeNull();
+    expect(el.querySelector('button.start-session')).toBeNull();
+    expect(el.querySelector('button.close-session')).toBeNull();
+    // UX-S3 (04b, question 1) : l'onglet 1 mène à /patients/:id/session ; la vue d'ensemble reste
+    // à un clic, à droite des onglets, sans touche.
+    expect(tabLabels(el)).toEqual([
+      ['/patients/p1/session', '1', 'Séance'],
+      ['/patients/p1/timeline', '2', 'Timeline'],
+      ['/patients/p1/graph', '3', 'Graphe'],
+      ['/patients/p1', undefined, "Vue d'ensemble"],
+    ]);
+    expect(el.querySelector('nav.tabs a.overview-link')).not.toBeNull();
+    expect(el.querySelector('.tabs-row .view-toggle .toggle-slot')).not.toBeNull();
 
-    const closed = vi.fn();
-    el.querySelector('pm-patient-header')?.addEventListener('closeSession', closed);
+    // Touche 1 en séance : l'onglet Séance.
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate');
+    document.body.dispatchEvent(
+      new KeyboardEvent('keydown', { key: '1', bubbles: true, cancelable: true }),
+    );
+    expect(navigate).toHaveBeenCalledWith(['/patients', 'p1', 'session']);
+
+    // Séance clôturée : l'onglet 1 redevient « Vue d'ensemble », le lien disparaît, Démarrer revient.
+    fixture.componentRef.setInput('session', { kind: 'last', date: '2026-10-24' });
+    await fixture.whenStable();
+    expect(tabLabels(el)).toHaveLength(3);
+    expect(tabLabels(el)[0]).toEqual(['/patients/p1', '1', "Vue d'ensemble"]);
+    expect(el.querySelector('button.start-session')).not.toBeNull();
+  });
+
+  it('Démarrer : émet startSession, inactif pendant une action', async () => {
+    const { el, fixture } = await render({ patient: marie, session: { kind: 'none' } });
+    const started = vi.fn();
+    const header = fixture.debugElement.query(By.directive(PatientHeaderComponent))
+      .componentInstance as PatientHeaderComponent;
+    header.startSession.subscribe(started);
+    const start = el.querySelector<HTMLButtonElement>('button.start-session')!;
+    start.click();
+    expect(started).toHaveBeenCalledTimes(1);
+
     fixture.componentRef.setInput('busy', true);
     await fixture.whenStable();
-    expect(close?.disabled).toBe(true);
+    expect(start.disabled).toBe(true);
   });
 
-  it('UX-A8 : seuil de 3 h posé : « en cours depuis » jusqu’à 3 h, « non clôturée » au-delà', async () => {
-    const session = { kind: 'current', startedAt: '2026-10-24T14:00:00Z' };
-    const unclosedAfterMin = UNCLOSED_SESSION_AFTER_MIN;
-    expect(unclosedAfterMin).toBe(180);
-
-    vi.setSystemTime(new Date('2026-10-24T17:00:00Z'));
-    const atThree = await render({ patient: marie, session, unclosedAfterMin });
-    expect(plainText(atThree.el.querySelector('.session-text'))).toContain(
-      'Séance du 24 oct. 2026 · en cours depuis 3',
-    );
-    TestBed.resetTestingModule();
-
-    // 12 h 37 après le début : la séance reste ouverte (aucune règle recalculée), seul le libellé change.
-    vi.setSystemTime(new Date('2026-10-25T02:37:00Z'));
-    const { el } = await render({ patient: marie, session, unclosedAfterMin });
-    expect(plainText(el.querySelector('.session-text'))).toBe(
-      'Séance du 24 oct. 2026 · non clôturée',
-    );
-    expect(el.querySelector('.session-text')?.classList.contains('current')).toBe(true);
-    expect(el.querySelector('button.close-session')).not.toBeNull();
-  });
-
-  it('UX-A8 : sans seuil (défaut), « en cours depuis 12 h 37 » comme avant', async () => {
-    vi.setSystemTime(new Date('2026-10-25T02:37:00Z'));
-    const { el } = await render({
-      patient: marie,
-      session: { kind: 'current', startedAt: '2026-10-24T14:00:00Z' },
-    });
-    const shown = plainText(el.querySelector('.session-text'));
-    expect(shown).toContain('en cours depuis 12');
-    expect(shown).not.toContain('non clôturée');
+  it('UNCLOSED_SESSION_AFTER_MIN vaut 180 (seuil passé à pm-session-bar)', () => {
+    expect(UNCLOSED_SESSION_AFTER_MIN).toBe(180);
   });
 
   it('les touches 1 2 3 naviguent entre les onglets ; aria-current suit la route', async () => {

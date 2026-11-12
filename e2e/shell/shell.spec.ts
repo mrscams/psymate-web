@@ -8,10 +8,12 @@ import {
 
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { themeFolder } from '../theme/theme-support';
 
-// Page patient et en-tête permanent (M1-07, B2, fiche 00 §2) : contre l'API locale (seed small,
-// Mailpit), jamais de mock du backend. Chaque test crée ses comptes jetables : les séances démarrées
-// ou clôturées ici ne touchent aucun patient du seed.
+// Page patient et en-tête permanent (M1-07, B2, fiche 00 §2 ; UX-S2 : en-tête compact, barre de
+// séance, bloc de saisie dans la colonne de contenu) : contre l'API locale (seed small, Mailpit),
+// jamais de mock du backend. Chaque test crée ses comptes jetables : les séances démarrées ou
+// clôturées ici ne touchent aucun patient du seed.
 
 const API = 'http://localhost:8080';
 
@@ -28,7 +30,9 @@ async function createPatient(
 function header(page: Page) {
   return {
     name: page.getByRole('heading', { level: 1 }),
-    session: page.locator('pm-patient-header .session-text'),
+    /** « Dernière séance : … » dans l'en-tête, « Séance en cours · … » dans la barre de séance. */
+    session: page.locator('.session-text'),
+    bar: page.locator('pm-session-bar .session-bar'),
     start: page.getByRole('button', { name: 'Démarrer la séance' }),
     close: page.getByRole('button', { name: 'Clôturer la séance' }),
     tabs: page.getByRole('navigation', { name: 'Dossier' }),
@@ -68,9 +72,16 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await page.goto(`/fr/patients/${id}`);
   const h = header(page);
   await expect(h.name).toHaveText('Inès M.');
-  // Séance ouverte : le dossier s'ouvre sur l'onglet Séance (UX-S3) ; « Vue d'ensemble » reste à un
-  // clic dans les onglets, et n'y renvoie pas une seconde fois.
+  // Séance ouverte : le dossier s'ouvre sur l'onglet Séance (UX-S3), que l'onglet 1 désigne (UX-S2) ;
+  // « Vue d'ensemble » reste à un clic, à droite des onglets, et n'y renvoie pas une seconde fois.
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
+  await expect(h.tabs.getByRole('link', { name: 'Séance', exact: true })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+  await expect(
+    page.getByRole('heading', { level: 2, name: 'Noté pendant cette séance' }),
+  ).toBeVisible();
   await h.tabs.getByRole('link', { name: /Vue d'ensemble/ }).click();
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
   await expect(h.tabs.getByRole('link', { name: /Vue d'ensemble/ })).toHaveAttribute(
@@ -92,11 +103,14 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(page.getByText('Les liens que vous créez apparaîtront ici')).toBeVisible();
   await expect(intakeToggle(page)).toHaveCount(0);
 
-  // Touches : 2 → Timeline (M3-02), 1 → retour à l'onglet 1 avec son état, 3 → Graphe.
+  // Touches : 2 → Timeline (M3-02), 1 → l'onglet Séance (séance ouverte, UX-S3) ; la vue
+  // d'ensemble par son lien, avec son état ; 3 → Graphe.
   await page.keyboard.press('2');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/timeline$`));
   await expect(page.getByRole('heading', { level: 2, name: 'Timeline' })).toBeAttached();
   await page.keyboard.press('1');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
+  await h.tabs.getByRole('link', { name: /Vue d'ensemble/ }).click();
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
   await expect(intakeToggle(page)).toHaveAttribute('aria-expanded', 'false');
   await page.keyboard.press('3');
@@ -146,7 +160,8 @@ test('« suivi·e depuis » : même début de suivi dans l’en-tête et les fai
 
   await page.goto(`/fr/patients/${fresh}`);
   await expect(header(page).name).toHaveText('Agathe N.');
-  const month = new Intl.DateTimeFormat('fr-FR', { ...paris, month: 'long', year: 'numeric' });
+  // UX-S2 : mois abrégé dans l'en-tête compact (« suivi·e depuis sept. 2026 »).
+  const month = new Intl.DateTimeFormat('fr-FR', { ...paris, month: 'short', year: 'numeric' });
   const day = new Intl.DateTimeFormat('fr-FR', { ...paris, dateStyle: 'medium' });
   await expect(meta).toContainText(`suivi·e depuis ${month.format(today)}`);
   await expect(facts).toContainText(`Suivi depuis le ${day.format(today)}`);
@@ -165,7 +180,8 @@ test('« suivi·e depuis » : même début de suivi dans l’en-tête et les fai
   expect((await summary).status()).toBe(200);
   await expect(header(page).name).toHaveText('Basile P.');
   await expect(facts).toContainText(`Suivi depuis le ${day.format(past)} (première séance connue)`);
-  await expect(meta).not.toContainText('suivi·e depuis');
+  // Sans âge ni suivi, la ligne « meta » n'est pas rendue : on lit toute l'identité.
+  await expect(page.locator('pm-patient-header .who')).not.toContainText('suivi·e depuis');
   await expectNoAxeViolations(page);
 });
 
@@ -193,12 +209,23 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
   await h.start.click();
   expect((await started).status()).toBe(201);
   expect((await started).request().postDataJSON()).toEqual({ modality: 'video' });
-  await expect(h.session).toContainText('en cours depuis');
-  // UX-S3 : l'onglet Séance remplace la vue d'ensemble ; Clôturer est dans la barre de séance,
-  // celui de l'en-tête est masqué ; pas de toast (la barre le dit), une annonce polie.
+  // UX-S2 : la barre de séance (au-dessus de l'en-tête) dit la modalité et l'heure de début, le
+  // chronomètre tourne, la durée prévue est celle des préférences (60 par défaut) ; Démarrer a
+  // disparu de l'en-tête ; l'onglet 1 s'appelle « Séance ».
+  await expect(h.bar).toBeVisible();
+  await expect(h.session).toContainText('Séance en cours · visio · démarrée à');
+  await expect(h.bar.locator('.timer')).toHaveText(/^00:00:\d\d$/);
+  await expect(h.bar.locator('.planned')).toHaveText('sur 60 min prévues');
+  await expect(h.bar.locator('.count')).toHaveText('rien de noté encore');
+  await expect(h.start).toHaveCount(0);
+  // UX-S3 : l'onglet Séance remplace la vue d'ensemble ; pas de toast (la barre le dit), une
+  // annonce polie.
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
-  await expect(h.close).toHaveCount(1);
-  await expect(page.locator('pm-session-bar')).toContainText('Séance en cours · visio');
+  await expect(h.tabs.getByRole('link', { name: 'Séance', exact: true })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+  await expect(h.close).toBeVisible();
   // B3 flux 3 et 6 : après Démarrer, la barre de capture prend le focus pour noter au clavier.
   await expect(h.capture).toBeFocused();
   await expect(page.getByText('Séance démarrée.')).toBeAttached();
@@ -206,13 +233,13 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
   expect(await page.evaluate(() => (window as unknown as { m107?: number }).m107)).toBe(1);
   await expectNoAxeViolations(page);
 
-  // Clôturer : panneau latéral, durée écoulée arrondie (au moins 1), la préférence à un clic
-  // (préférence absente → « 60 habituels »).
+  // Clôturer : panneau latéral (UX-S3), durée écoulée arrondie (au moins 1), la préférence à un
+  // clic (préférence absente → « 60 habituels »).
   await h.close.click();
   const dialog = page.getByRole('dialog', { name: 'Clôturer la séance' });
   await expect(dialog).toBeVisible();
   const duration = dialog.getByLabel('Durée (min)');
-  await expect(duration).toHaveValue('1');
+  await expect(duration).toHaveValue(/^[15]$/);
   await expect(duration).toBeFocused();
   await dialog.getByRole('button', { name: '60 habituels' }).click();
   await expect(duration).toHaveValue('60');
@@ -235,11 +262,17 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
     summary: 'Point sur le sommeil.',
   });
   await expect(dialog).toBeHidden();
-  // Retour de l'onglet Séance à la vue d'ensemble ; toast de 6 s avec « Modifier ».
+  // Retour de l'onglet Séance à la vue d'ensemble (UX-S3) ; toast de 6 s avec « Modifier ».
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
+  await expect(h.bar).toHaveCount(0);
   await expect(h.session).toContainText('Dernière séance :');
+  await expect(h.session).toContainText('· visio · 60 min');
   await expect(h.start).toBeVisible();
-  // Sans séance, plus de bloc de saisie : le focus revient sur « Démarrer la séance ».
+  await expect(h.tabs.getByRole('link', { name: /Vue d'ensemble/ })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+  // Sans séance, plus de bloc de saisie (UX-S1) : le focus revient sur « Démarrer la séance ».
   await expect(h.capture).toHaveCount(0);
   await expect(h.start).toBeFocused();
   await expect(page.getByText('Séance clôturée · 60 min · compte rendu enregistré')).toBeVisible();
@@ -265,13 +298,14 @@ test('Clôturer propose l’écoulé, la préférence (45 min) à un clic', asyn
 
   await page.goto(`/fr/patients/${id}`);
   const h = header(page);
-  await expect(h.session).toContainText('en cours depuis');
+  await expect(h.session).toContainText('Séance en cours · cabinet');
+  await expect(h.bar.locator('.planned')).toHaveText('sur 45 min prévues');
   // Séance en cours : le dossier s'ouvre sur l'onglet Séance (UX-S3).
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
   await h.close.click();
   const dialog = page.getByRole('dialog', { name: 'Clôturer la séance' });
-  // Séance tout juste démarrée : 1 min proposée ; la préférence du compte à un clic.
-  await expect(dialog.getByLabel('Durée (min)')).toHaveValue('1');
+  // Séance tout juste démarrée : l'écoulé proposé ; la préférence du compte à un clic.
+  await expect(dialog.getByLabel('Durée (min)')).toHaveValue(/^[15]$/);
   await dialog.getByRole('button', { name: '45 habituels' }).click();
   await expect(dialog.getByLabel('Durée (min)')).toHaveValue('45');
   const closed = page.waitForResponse(
@@ -280,6 +314,184 @@ test('Clôturer propose l’écoulé, la préférence (45 min) à un clic', asyn
   await dialog.getByRole('button', { name: 'Clôturer la séance' }).click();
   expect((await closed).request().postDataJSON()).toEqual({ durationMin: 45 });
   await expect(h.session).toContainText('Dernière séance :');
+  await expectNoAxeViolations(page);
+});
+
+test('UX-S2 : en-tête compact (identité 44, onglets 38), barre de séance de 44, bloc de saisie dans la colonne de contenu, colonne latérale de 340 px repliée sous 900 px', async ({
+  page,
+  request,
+}) => {
+  test.setTimeout(90_000);
+  const account = await createAccount(request, 'ux-s2.mesures', 'psychologist');
+  const id = await createPatient(request, 'Nour K.', { since: '2026-09-01' });
+  await signIn(page, account);
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto(`/fr/patients/${id}`);
+  const h = header(page);
+  await expect(h.name).toHaveText('Nour K.');
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
+
+  // Mesures de la maquette 04b « Anatomy and measures », avec une marge pour les polices Linux.
+  const within = (value: number, expected: number, slack = 4) => {
+    expect(value, `${expected} px attendus (marge ${slack})`).toBeGreaterThanOrEqual(expected);
+    expect(value).toBeLessThanOrEqual(expected + slack);
+  };
+  const identity = page.locator('pm-patient-header .phead-row');
+  within((await identity.boundingBox())!.height, 44);
+  // Nom, âge et suivi sur une même ligne ; « Dernière séance » ou Démarrer à droite.
+  const nameBox = (await h.name.boundingBox())!;
+  const metaBox = (await page.locator('pm-patient-header .meta').boundingBox())!;
+  expect(Math.abs(metaBox.y + metaBox.height - (nameBox.y + nameBox.height))).toBeLessThan(8);
+  const startBox = (await h.start.boundingBox())!;
+  expect(startBox.y).toBeLessThan(nameBox.y + nameBox.height);
+  for (const tab of ["Vue d'ensemble", 'Timeline', 'Graphe']) {
+    within(
+      (await h.tabs.getByRole('link', { name: new RegExp(tab) }).boundingBox())!.height,
+      38,
+      2,
+    );
+  }
+  // Hors séance : ni bloc de saisie (UX-S1) ni colonne latérale ni barre de séance ; l'onglet
+  // occupe la colonne principale seule.
+  await expect(page.locator('pm-capture-block')).toHaveCount(0);
+  await expect(page.locator('.pad-layout aside.ctx')).toHaveCount(0);
+  await expect(page.locator('.pad-layout .pad-main pm-overview-page')).toBeVisible();
+  await expect(h.bar).toHaveCount(0);
+  await expectNoAxeViolations(page);
+
+  // En séance : barre de 44 px au-dessus de l'en-tête, identité toujours 44, colonne latérale.
+  await h.start.click();
+  await expect(h.bar).toBeVisible();
+  within((await h.bar.boundingBox())!.height, 44);
+  expect((await h.bar.boundingBox())!.y).toBeLessThan(
+    (await page.locator('pm-patient-header').boundingBox())!.y,
+  );
+  within((await identity.boundingBox())!.height, 44);
+  await expect(h.tabs.getByRole('link', { name: 'Séance', exact: true })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+  // Le bloc de saisie est sous l'en-tête (plus dedans), déplié, dans la colonne principale.
+  const block = page.locator('.pad-layout .pad-main pm-capture-block .block');
+  await expect(block).toHaveClass(/expanded/);
+  await expect(page.locator('pm-patient-header pm-capture-block')).toHaveCount(0);
+  const headerBox = (await page.locator('pm-patient-header').boundingBox())!;
+  expect((await block.boundingBox())!.y).toBeGreaterThanOrEqual(headerBox.y + headerBox.height);
+  await expect(h.capture).toBeFocused();
+  const timer = h.bar.locator('.timer');
+  await expect(timer).toHaveText(/^00:00:\d\d$/);
+  expect(await timer.evaluate((el) => getComputedStyle(el).fontVariantNumeric)).toBe(
+    'tabular-nums',
+  );
+  const aside = page.locator('.pad-layout aside.ctx');
+  await expect(aside).toBeVisible();
+  expect(Math.round((await aside.boundingBox())!.width)).toBe(340);
+  const mainBox = (await page.locator('.pad-layout .pad-main').boundingBox())!;
+  const asideBox = (await aside.boundingBox())!;
+  expect(asideBox.x).toBeGreaterThanOrEqual(mainBox.x + mainBox.width);
+  expect(Math.abs(asideBox.y - mainBox.y)).toBeLessThan(2);
+  // 04b : la colonne principale porte le bloc ET l'onglet courant (l'onglet Séance, UX-S3) ; la
+  // latérale (contexte de la séance) les longe, les raccourcis en dernier bloc.
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
+  const sessionTab = page.locator('.pad-layout .pad-main pm-session-tab-page');
+  await expect(sessionTab).toBeVisible();
+  const tabBox = (await sessionTab.boundingBox())!;
+  expect(tabBox.y).toBeGreaterThanOrEqual((await block.boundingBox())!.y);
+  expect(tabBox.x + tabBox.width).toBeLessThanOrEqual(asideBox.x);
+  await expect(aside).toHaveAccessibleName('Contexte de la séance');
+  await expect(aside.getByRole('heading', { name: 'Raccourcis dans le texte' })).toBeVisible();
+  await expectNoAxeViolations(page);
+
+  // Sous 900 px : la colonne latérale passe sous la colonne principale ; rien ne déborde.
+  await page.setViewportSize({ width: 800, height: 720 });
+  const narrowMain = (await page.locator('.pad-layout .pad-main').boundingBox())!;
+  const narrowAside = (await aside.boundingBox())!;
+  expect(narrowAside.y).toBeGreaterThanOrEqual(narrowMain.y + narrowMain.height);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(800);
+
+  // Les touches 1 2 3 restent celles des onglets (hors champ) ; 1 est l'onglet Séance (UX-S3).
+  await page.getByRole('heading', { level: 1 }).click();
+  await page.keyboard.press('2');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/timeline$`));
+  await expect(h.bar).toBeVisible();
+  await expect(block).toBeVisible();
+  await page.keyboard.press('1');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
+
+  // À 375 px en séance (fiche 00 §2) : barre réduite (« Clôturer », sans modalité ni durée prévue),
+  // bloc puis colonne latérale empilés, aucun défilement horizontal.
+  await page.setViewportSize({ width: 375, height: 812 });
+  within((await h.bar.boundingBox())!.height, 44);
+  await expect(h.bar.locator('.close-session .short')).toBeVisible();
+  await expect(h.bar.locator('.close-session .long')).toBeHidden();
+  await expect(h.bar.locator('.detail')).toBeHidden();
+  await expect(h.bar.locator('.planned')).toBeHidden();
+  await expect(h.close).toHaveAccessibleName('Clôturer la séance');
+  const blockBox = (await block.boundingBox())!;
+  const asideMobile = (await aside.boundingBox())!;
+  expect(asideMobile.y).toBeGreaterThanOrEqual(blockBox.y + blockBox.height);
+  expect(blockBox.x + blockBox.width).toBeLessThanOrEqual(375);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(375);
+  await expectNoAxeViolations(page);
+});
+
+test('UX-S2 : en séance à 1440 × 900, la timeline garde 480 px de cartes et le graphe tient dans la fenêtre (UX-G2c)', async ({
+  page,
+  request,
+}) => {
+  test.setTimeout(90_000);
+  const account = await createAccount(request, 'ux-s2.hauteurs', 'psychologist');
+  // Dossier rempli (séance passée, entrées) : la timeline a des cartes, le graphe des liens.
+  const folder = await themeFolder(request);
+  const id = folder.patientId;
+  const start = await request.post(`${API}/api/patients/${id}/sessions/start`, {
+    data: { modality: 'in_person' },
+  });
+  expect(start.status(), await start.text()).toBe(201);
+  await signIn(page, account);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const h = header(page);
+
+  // Timeline : barre de séance et bloc au-dessus, la zone des cartes mesure au moins 480 px.
+  await page.goto(`/fr/patients/${id}/timeline`);
+  await expect(h.name).toHaveText('Nina S.');
+  await expect(h.bar).toBeVisible();
+  await expect(page.locator('.pad-layout .pad-main pm-capture-block')).toBeVisible();
+  // En séance la timeline s'ouvre « par séance » (la page défile) ; le critère des 480 px porte
+  // sur le mode chronologique, dont la liste prend la hauteur restante : M bascule.
+  await page.keyboard.press('m');
+  const viewport = page.locator('cdk-virtual-scroll-viewport');
+  await expect(viewport).toBeVisible();
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
+  const cards = (await viewport.boundingBox())!;
+  expect(cards.height, 'zone des cartes de la timeline en séance').toBeGreaterThanOrEqual(480);
+  // Colonne latérale à côté, pas sous la liste.
+  const aside = (await page.locator('.pad-layout aside.ctx').boundingBox())!;
+  expect(aside.x).toBeGreaterThanOrEqual(cards.x + cards.width);
+  await expectNoAxeViolations(page);
+
+  // Graphe : le plateau mesure le haut de son onglet (--graph-top) : il prend exactement la hauteur
+  // restante de la fenêtre, 480 px au moins (sous la barre et le bloc, la page défile alors du
+  // strict nécessaire, plus de décalage fixe de 340 px).
+  await page.keyboard.press('3');
+  await expect(page).toHaveURL(/\/graph/);
+  const board = page.locator('pm-graph-page .board');
+  await expect(board).toBeVisible();
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
+  const boardBox = (await board.boundingBox())!;
+  const boardTop = boardBox.y + (await page.evaluate(() => window.scrollY));
+  expect(boardBox.height, 'plateau du graphe en séance').toBeGreaterThanOrEqual(480);
+  expect(
+    Math.abs(boardBox.height - Math.max(480, 900 - boardTop - 24)),
+    'hauteur du plateau = max(480, fenêtre − haut mesuré − 24)',
+  ).toBeLessThanOrEqual(2);
+  // Rien d'autre que le plateau ne fait défiler la page.
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollHeight - document.documentElement.clientHeight,
+  );
+  expect(overflow, 'défilement de la page au-delà du plateau').toBeLessThanOrEqual(
+    Math.max(0, boardTop + boardBox.height + 24 - 900) + 2,
+  );
   await expectNoAxeViolations(page);
 });
 

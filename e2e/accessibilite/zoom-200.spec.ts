@@ -119,9 +119,9 @@ test('praticien à 200 % : liste, création, vue d’ensemble, capture, timeline
 
   // Timeline : les cartes ; Entrée sur une carte ouvre l'éditeur, plein écran à cette largeur,
   // dont le bouton d'enregistrement reste atteignable au clavier.
-  // Le focus est dans le bloc de saisie (où « 2 » s'écrit) : l'onglet, placé après le bloc et ses
-  // champs, est atteint par Tab.
-  await tabTo(page, page.getByRole('link', { name: /Timeline/ }), { max: 40 });
+  // Le focus est dans le bloc de saisie (où « 2 » s'écrit) : depuis UX-S2 le bloc est sous
+  // l'en-tête, dans la colonne de contenu ; l'onglet, placé avant lui, est atteint par Maj+Tab.
+  await tabTo(page, page.getByRole('link', { name: /Timeline/ }), { max: 40, backwards: true });
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/timeline/);
   // La séance passée du dossier : 8 entrées, 9 si la note saisie plus haut s'y rattache.

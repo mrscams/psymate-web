@@ -20,13 +20,7 @@ pm-session-bar {
 }
 
 .tab-content {
-  padding-top: 20px;
-
-  // La timeline occupe la hauteur restante de la fenêtre : 8 px de plus pour la zone des cartes
-  // (480 px au moins à 1440 × 900, UX-G2c).
-  &.dense {
-    padding-top: 12px;
-  }
+  min-width: 0;
 }
 
 .shell-error {
@@ -41,44 +35,49 @@ pm-session-bar {
   color: var(--primary);
 }
 
-.capture-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/*
+ * Colonne de contenu (proposition 04b .pad-layout) : la colonne principale (bloc de saisie en
+ * séance, indice, onglet courant) et, en séance, la colonne latérale de 340 px qui la longe,
+ * 20 px d'écart, sous l'en-tête (padding 20 de la maquette). Sous 900 px, la latérale passe
+ * dessous. Timeline (dense) : 12 px au lieu de 20 au-dessus et entre le bloc et la liste, pour
+ * garder la zone des cartes à 480 px (UX-G2c).
+ */
+.pad-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  padding-top: 20px;
+
+  &.in-session {
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+
+  &.dense {
+    padding-top: 12px;
+
+    .pad-main {
+      gap: 12px;
+    }
+  }
 }
 
-.capture-bar {
-  flex: 1;
+.pad-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   min-width: 0;
 }
 
-.new-entry {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 1px solid var(--primary);
-  border-radius: 10px;
-  background: var(--primary);
-  color: var(--primary-on);
-  cursor: pointer;
-
-  svg {
-    width: 20px;
-    height: 20px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
+@media (max-width: 900px) {
+  .pad-layout.in-session {
+    grid-template-columns: minmax(0, 1fr);
   }
+}
 
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-  }
+/* Colonne latérale (04b .ctx) : ses blocs sont ceux de pm-session-context. */
+.ctx {
+  min-width: 0;
 }
 
 // Indice de première entrée (M7-03) : information, une seule action, sans couleur d'alerte.
@@ -88,7 +87,6 @@ pm-session-bar {
   gap: 12px;
   align-items: center;
   justify-content: space-between;
-  margin-top: 16px;
   padding: 10px 16px;
   border: 1px solid var(--border-subtle);
   border-radius: 10px;

@@ -21,26 +21,26 @@ import { ShortcutService } from '../../../core/shortcuts';
 import {
   PatientHeaderComponent,
   PatientSessionInfo,
+  SessionBarComponent,
   SidePanelService,
   StateComponent,
   ToastService,
+  UNCLOSED_SESSION_AFTER_MIN,
 } from '../../../shared/ui';
-// Seuil de « non clôturée » (UX-A8) : la constante n'est pas réexportée par l'index de shared/ui.
-import { UNCLOSED_SESSION_AFTER_MIN } from '../../../shared/ui/patient-header/patient-header.component';
+import { StateKind, stateKind } from '../../../shared/util';
 import { CaptureBlockComponent, CapturedEntry } from '../../capture';
 import { ENTRY_QUERY_PARAM, EntryPrefill, openEntryEditor } from '../../entries';
 import { connectLinkEditor, LINK_QUERY_PARAM } from '../../graph';
 import { OverviewViewToggleComponent } from '../../overview';
-import { StateKind } from '../../../shared/util';
 import { ShellTab } from '../data/patient-shell.model';
-import { CAPTURE_FOCUS_STATE } from '../patient-shell.params';
 import { PatientShellStore } from '../data/patient-shell.store';
 import {
   CloseSessionPanel,
   CloseSessionPanelData,
   CloseSessionResult,
 } from '../panels/close-session.panel';
-import { SessionBarComponent } from '../ui/session-bar.component';
+import { CAPTURE_FOCUS_STATE } from '../patient-shell.params';
+import { SessionContextComponent } from '../ui/session-context.component';
 import {
   closedToastText,
   finalLoadError,
@@ -49,15 +49,17 @@ import {
 } from '../ui/shell-labels';
 
 /**
- * Page patient /patients/:id (B2, fiche 00 §2) : l'en-tête permanent (pm-patient-header, nourri
- * par le PatientShellStore), le bloc de saisie, et l'onglet courant dans le router-outlet
- * (overview, session, timeline, graph, search). Le store est fourni ici : les onglets l'injectent
- * et y rangent leur état, qui survit aux changements d'onglet tant que le dossier reste ouvert.
- * 403 PATIENT_FORBIDDEN et 404 : état erreur du shell, sans redirection.
- * UX-S3 : une séance démarrée ouvre l'onglet Séance (/patients/:id/session), qui remplace la vue
- * d'ensemble tant qu'elle est ouverte (un dossier ouvert sur l'onglet 1 avec une séance en cours y
- * va aussi, une fois) ; la clôture passe par le panneau latéral de 520 px, puis un toast de 6 s
- * avec « Modifier » et le retour au dossier (ou à la liste).
+ * Page patient /patients/:id (B2, fiche 00 §2 ; UX-S2 et UX-S3, propositions 04 et 04b) : la barre
+ * de séance (pm-session-bar : chronomètre, durée prévue, dépassement, Clôturer, Reprendre) tant
+ * qu'une séance est ouverte, l'en-tête compact (pm-patient-header, nourri par le PatientShellStore ;
+ * son onglet 1 devient « Séance » et mène à /patients/:id/session), la colonne de contenu
+ * (.pad-layout : en séance, le bloc de saisie au-dessus de l'onglet courant et la colonne latérale
+ * de contexte de 340 px ; aucune saisie sans séance, UX-S1), et l'onglet courant dans le
+ * router-outlet (overview, session, timeline, graph, search). Le store est fourni ici : les onglets
+ * l'injectent et y rangent leur état, qui survit aux changements d'onglet tant que le dossier reste
+ * ouvert. 403 PATIENT_FORBIDDEN et 404 : état erreur du shell, sans redirection.
+ * UX-S3 : une séance démarrée ouvre l'onglet Séance ; un dossier ouvert sur l'onglet 1 avec une
+ * séance en cours y va une fois ; la clôture passe par le panneau latéral de 520 px.
  */
 @Component({
   selector: 'pm-patient-shell-page',
@@ -68,6 +70,7 @@ import {
     RouterLink,
     RouterOutlet,
     SessionBarComponent,
+    SessionContextComponent,
     StateComponent,
   ],
   providers: [PatientShellStore],
@@ -80,13 +83,13 @@ export class PatientShellPage {
   readonly id = input.required<string>();
 
   protected readonly store = inject(PatientShellStore);
-  /** Au-delà de 3 h : « non clôturée » au lieu de « en cours depuis … » (maquettes 02 et 03). */
+  /** Au-delà de 3 h : barre grise « non clôturée » (UX-A8), durée proposée = durée prévue. */
   protected readonly unclosedAfterMin = UNCLOSED_SESSION_AFTER_MIN;
+  private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
   private readonly shortcuts = inject(ShortcutService);
   private readonly injector = inject(Injector);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   /** Le bloc de saisie, présent seulement pendant une séance ouverte. */
   private readonly captureBar = viewChild(CaptureBlockComponent);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -119,11 +122,31 @@ export class PatientShellPage {
 
   protected readonly headerSession = computed<PatientSessionInfo>(() => {
     const current = this.store.currentSession();
-    if (current) return { kind: 'current', startedAt: current.startedAt };
+    if (current) {
+      return { kind: 'current', startedAt: current.startedAt, modality: current.modality };
+    }
     const last = this.store.lastSession();
-    if (last) return { kind: 'last', date: last.startedAt };
+    if (last) {
+      return {
+        kind: 'last',
+        date: last.startedAt,
+        modality: last.modality,
+        durationMin: last.durationMin,
+      };
+    }
     return { kind: 'none' };
   });
+
+  /** Mode séance : barre de séance, onglet « Séance », bloc déplié, colonne latérale. */
+  protected readonly inSession = computed(() => this.store.currentSession() !== null);
+
+  /**
+   * L'onglet Séance montre le carnet vide (rien de noté) : la colonne latérale donne alors la séance
+   * précédente plutôt que de répéter « Prévu la dernière fois » (04b, état 2).
+   */
+  protected readonly padEmpty = computed(
+    () => this.activeTab() === 'session' && stateKind(this.store.noted()) === 'empty',
+  );
 
   /** L'en-tête montre le chargement et l'erreur qu'un nouvel essai peut lever (5xx, réseau). */
   protected readonly headerState = computed<StateKind | null>(() => {
@@ -136,17 +159,7 @@ export class PatientShellPage {
     this.store.status() === 'error' ? finalLoadError(this.store.problem()) : null,
   );
 
-  /** Horloge de la barre de séance (minuterie), à la seconde tant qu'une séance est ouverte. */
-  protected readonly now = signal(new Date());
-
   constructor() {
-    effect((onCleanup) => {
-      if (!this.store.currentSession()) return;
-      this.now.set(new Date());
-      const timer = setInterval(() => this.now.set(new Date()), 1_000);
-      onCleanup(() => clearInterval(timer));
-    });
-
     // Un autre :id (lien, historique) recharge le dossier ; le même :id ne refait rien.
     effect(() => {
       const id = this.id();
@@ -156,7 +169,7 @@ export class PatientShellPage {
     });
 
     // Dossier ouvert sur l'onglet 1 avec une séance en cours (rechargement, lien) : l'onglet
-    // Séance, une fois par dossier lu ; « Vue d'ensemble » reste à un clic dans les onglets.
+    // Séance, une fois par dossier lu, requête gardée ; « Vue d'ensemble » reste à un clic.
     let routedFor: string | null = null;
     effect(() => {
       const patient = this.store.patient();
@@ -168,7 +181,8 @@ export class PatientShellPage {
       }
     });
 
-    // « Noter » de l'onglet Séance (04b, état 2) : le bloc reçoit « <point> : », caret à la fin.
+    // « Noter » de la colonne latérale (04b, état 2) : le bloc reçoit « <point> : », caret à la fin ;
+    // la demande est consommée.
     effect(() => {
       const request = this.store.prefillRequest();
       const bar = this.captureBar();
@@ -207,7 +221,7 @@ export class PatientShellPage {
       untracked(() => {
         const ref = openEntryEditor(patient.id, { entryId, injector: this.injector });
         void ref?.closed.then((saved) => {
-          if (saved) this.store.noteWrite(saved.id);
+          if (saved) this.store.noteWrite();
         });
       });
     });
@@ -245,8 +259,8 @@ export class PatientShellPage {
   }
 
   /**
-   * N, bouton + ou bloc de saisie (Ctrl+Entrée : saisie interprétée ; Entrée sur un champ vide) :
-   * nouvelle entrée dans l'éditeur.
+   * N, ou le bloc de saisie (Ctrl+Entrée et « Détailler » : saisie interprétée ; Entrée sur un champ
+   * vide) : nouvelle entrée dans l'éditeur. Le bouton « + » de l'en-tête a disparu avec UX-S2 (04b).
    */
   protected newEntry(prefill: EntryPrefill | null = null): void {
     if (this.panels.isOpen() || !this.store.patient()) return;
@@ -254,19 +268,18 @@ export class PatientShellPage {
       prefill: prefill ?? undefined,
       injector: this.injector,
     });
-    // La saisie est dans le brouillon de l'éditeur : la barre se vide (pas de doublon à la 2e Entrée).
+    // La saisie est dans le brouillon de l'éditeur : le bloc se vide (pas de doublon à la 2e Entrée).
     if (ref && prefill) this.captureBar()?.clear();
     // Une séance créée depuis l'éditeur s'ouvre : l'en-tête relit la séance courante. Toute
-    // entrée enregistrée est une écriture : les projections (vue d'ensemble, onglet Séance) se
-    // relisent, la ligne de l'entrée est surlignée.
+    // entrée enregistrée est une écriture : les projections (vue d'ensemble, onglet Séance) se relisent.
     void ref?.closed.then((saved) => {
       if (!saved) return;
-      this.store.noteWrite(saved.id);
+      this.store.noteWrite();
       if (saved.type === 'session') void this.store.refreshSession();
     });
   }
 
-  /** Entrée créée par le bloc de saisie (Entrée, Ctrl+S) : les projections se relisent, sa ligne est surlignée. */
+  /** Entrée créée par le bloc de saisie (Entrée, Ctrl+S) : les projections se relisent, la ligne est surlignée. */
   protected captured(entry: CapturedEntry): void {
     if (entry.id) this.store.noteWrite(entry.id);
   }
@@ -276,9 +289,9 @@ export class PatientShellPage {
   }
 
   /**
-   * Démarrer : l'en-tête passe « en cours », l'onglet Séance s'ouvre (proposition 04b, état 2 :
-   * pas de toast, la couleur et la minuterie le disent ; une annonce polie pour les lecteurs
-   * d'écran), le bloc de saisie prend le focus.
+   * Démarrer : la barre de séance apparaît, l'onglet Séance s'ouvre (proposition 04b, état 2 : pas
+   * de toast, la couleur et le chronomètre le disent ; une annonce polie pour les lecteurs d'écran),
+   * le bloc de saisie prend le focus.
    */
   protected async start(): Promise<void> {
     if (await this.store.startSession()) {
@@ -296,6 +309,7 @@ export class PatientShellPage {
    * Panneau de clôture (520 px) ; les touches globales sont suspendues tant qu'il est ouvert.
    * Clôturée : toast de 6 s avec « Modifier » (l'éditeur sur la séance, dans la grâce), retour
    * de l'onglet Séance à la vue d'ensemble, ou à la liste ; 409 : avis, l'en-tête a été relu.
+   * Seule navigation après la clôture : l'onglet Séance ne redirige qu'à l'arrivée.
    */
   protected async openClose(): Promise<void> {
     const ref = this.panels.open<CloseSessionPanel, CloseSessionPanelData, CloseSessionResult>(
@@ -327,7 +341,7 @@ export class PatientShellPage {
     this.store.clearActionProblem();
   }
 
-  /** « Modifier » du toast : l'éditeur d'entrée sur la séance clôturée (compte rendu, durée). */
+  /** « Modifier » du toast : l'éditeur d'entrée sur la séance clôturée (modalité, durée). */
   private editClosed(sessionId: string): void {
     const ref = openEntryEditor(this.id(), { entryId: sessionId, injector: this.injector });
     void ref?.closed.then((saved) => {
@@ -360,10 +374,10 @@ export class PatientShellPage {
   }
 
   /**
-   * Après Démarrer ou Clôturer, le bouton utilisé disparaît de l'en-tête : le bloc de saisie prend
-   * le focus (B3 flux 3 et 6 : on démarre la séance puis on note au clavier) ; sans séance ouverte
-   * (après Clôturer), le bouton « Démarrer la séance », seul point de départ d'une saisie. Après le
-   * prochain rendu : le bloc n'apparaît qu'avec la séance.
+   * Après Démarrer ou Clôturer, le bouton utilisé disparaît (de l'en-tête, de la barre de séance) :
+   * le bloc de saisie prend le focus (B3 flux 3 et 6 : on démarre la séance puis on note au clavier) ;
+   * sans séance ouverte (après Clôturer), le bouton « Démarrer la séance », seul point de départ
+   * d'une saisie. Après le prochain rendu : le bloc n'apparaît qu'avec la séance.
    */
   private focusCapture(options: { quiet?: boolean } = {}): void {
     afterNextRender(

@@ -1,0 +1,171 @@
+// Barre de séance (proposition 04b .session-bar) : 44 px, fond session-tint (success-bg dans les
+// tokens), texte success, pastille entry-session, chronomètre mono 18/600 tabulaire.
+:host {
+  display: block;
+}
+
+.session-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 4px 24px;
+  background: var(--success-bg);
+  border-bottom: 1px solid color-mix(in srgb, var(--entry-session) 30%, transparent);
+  color: var(--success);
+  font: var(--mat-sys-body-medium);
+  font-size: 13.5px;
+}
+
+.pulse {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--entry-session);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--entry-session) 20%, transparent);
+}
+
+.session-text {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  b {
+    font-weight: 600;
+  }
+}
+
+.timer {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pas d'opacité (la maquette en met .85) : success sur success-bg doit rester à 4,5:1 (axe). */
+.planned,
+.count {
+  white-space: nowrap;
+}
+
+.right {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* Clôturer : 30 px, contour entry-session, texte success sur fond raised (maquette .btn.outline.sm).
+   Tokens M3 (--mat-button-outlined-*) et leurs anciens noms (--mdc-outlined-button-*). */
+.close-session {
+  --mat-button-outlined-container-height: 30px;
+  --mat-button-outlined-horizontal-padding: 14px;
+  --mat-button-outlined-outline-color: var(--entry-session);
+  --mat-button-outlined-label-text-color: var(--success);
+  --mdc-outlined-button-outline-color: var(--entry-session);
+  --mdc-outlined-button-label-text-color: var(--success);
+  --mdc-outlined-button-container-height: 30px;
+
+  background: var(--surface-raised);
+
+  .short {
+    display: none;
+  }
+}
+
+/* Dépassement de la durée prévue (04b, état 4) : ambre (la couleur des drapeaux, jamais rouge),
+   le fait en mots, Clôturer plein. warning plutôt que flag pour le bouton : 4,5:1 avec son texte. */
+.session-bar.overtime {
+  background: var(--warning-bg);
+  border-bottom-color: color-mix(in srgb, var(--flag) 40%, transparent);
+  color: var(--warning);
+
+  .pulse {
+    background: var(--flag);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--flag) 20%, transparent);
+  }
+
+  .overtime-text b {
+    font-weight: 700;
+  }
+
+  .close-session.filled {
+    --mat-button-outlined-outline-color: var(--warning);
+    --mat-button-outlined-label-text-color: var(--primary-on);
+    --mdc-outlined-button-outline-color: var(--warning);
+    --mdc-outlined-button-label-text-color: var(--primary-on);
+
+    background: var(--warning);
+  }
+}
+
+/* « Reprendre » (barre grise) : bouton texte, 30 px, même police que Clôturer. */
+.resume {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  color: var(--primary);
+  font: var(--mat-sys-label-large);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+/* Au-delà du seuil (UX-A8) : grise, sans pastille vivante ni chronomètre, « non clôturée ». */
+.session-bar.unclosed {
+  background: var(--surface-sunken);
+  border-bottom-color: var(--border-subtle);
+  color: var(--text-secondary);
+
+  .pulse {
+    background: var(--text-disabled);
+    box-shadow: none;
+  }
+
+  .close-session {
+    --mat-button-outlined-outline-color: var(--border-strong);
+    --mat-button-outlined-label-text-color: var(--text-primary);
+    --mdc-outlined-button-outline-color: var(--border-strong);
+    --mdc-outlined-button-label-text-color: var(--text-primary);
+  }
+}
+
+/* Sous 600 px (maquette 04 mobile) : « ● Séance en cours  12:34  Clôturer », le reste masqué. */
+@media (max-width: 600px) {
+  .session-bar {
+    gap: 10px;
+    padding: 4px 16px;
+  }
+  .detail,
+  .planned,
+  .count {
+    display: none;
+  }
+  .timer {
+    font-size: 16px;
+  }
+  .close-session {
+    --mat-button-outlined-horizontal-padding: 10px;
+
+    .long {
+      display: none;
+    }
+    .short {
+      display: inline;
+    }
+  }
+}
