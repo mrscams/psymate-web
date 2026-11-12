@@ -335,7 +335,7 @@ test.describe('vue d’ensemble', () => {
     );
   });
 
-  test('« Démarrer la séance » depuis l’onglet 1 : séance précédente repliée, focus dans la barre de capture', async ({
+  test('« Démarrer la séance » depuis l’onglet 1 : l’onglet Séance s’ouvre, focus dans le bloc de saisie, la vue d’ensemble compte la séance en cours', async ({
     page,
     request,
   }) => {
@@ -356,15 +356,17 @@ test.describe('vue d’ensemble', () => {
       sessions.getByRole('link', { name: 'Voir la séance dans la timeline' }),
     ).toHaveCount(2);
 
-    // Démarrer (B3 flux 6, étape 4) : la synthèse est relue, les séances précédentes se replient,
-    // la barre de capture prend le focus.
+    // Démarrer (B3 flux 6, étape 4 ; UX-S3) : l'onglet Séance s'ouvre, le bloc de saisie prend le
+    // focus ; « Vue d'ensemble » reste à un clic et sa synthèse, relue, compte la séance en cours.
     const reread = page.waitForResponse((r) => isOverview(r, folder.patientId));
     await page.getByRole('button', { name: 'Démarrer la séance' }).click();
+    await expect(page).toHaveURL(new RegExp(`/fr/patients/${folder.patientId}/session$`));
     await expect(page.getByRole('textbox', { name: 'Noter quelque chose' })).toBeFocused();
     expect((await reread).status()).toBe(200);
-    await expect(toggles).toHaveCount(3);
-    await expect(sessions.locator('button[aria-expanded="true"]')).toHaveCount(0);
     await expectNoAxeViolations(page);
+    await page.getByRole('link', { name: /Vue d'ensemble/ }).click();
+    await expect(page).toHaveURL(new RegExp(`/fr/patients/${folder.patientId}$`));
+    await expect(toggles).toHaveCount(3);
   });
 
   test('patient sans données : chaque bloc garde son titre et son état vide', async ({

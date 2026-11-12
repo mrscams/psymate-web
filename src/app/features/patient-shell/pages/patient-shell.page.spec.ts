@@ -278,6 +278,14 @@ describe('PatientShellPage', () => {
     }
   });
 
+  it('séance ouverte et lien profond ?entry= : l’onglet Séance garde la requête', async () => {
+    await render(
+      { current: vi.fn().mockResolvedValue(openSession()) },
+      '/patients/p-marie?entry=e-1',
+    );
+    expect(TestBed.inject(Router).url).toBe('/patients/p-marie/session?entry=e-1');
+  });
+
   it('séance ouverte depuis plus de 3 h : « non clôturée », Clôturer reste proposé', async () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date('2026-10-24T17:01:00Z'));

@@ -340,8 +340,12 @@ export class PatientShellPage {
     void this.goToSession(this.id(), false);
   }
 
+  /** L'onglet Séance ; la requête (?entry=, ?link= : éditeurs ouverts par un lien) est gardée. */
   private goToSession(patientId: string, replaceUrl: boolean): Promise<boolean> {
-    return this.router.navigate(['/patients', patientId, 'session'], { replaceUrl });
+    return this.router.navigate(['/patients', patientId, 'session'], {
+      replaceUrl,
+      queryParamsHandling: 'preserve',
+    });
   }
 
   /** Une annonce polie, sans toast (region aria-live de la page). */

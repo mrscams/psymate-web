@@ -312,7 +312,8 @@ test.describe('éditeur d’entrée', () => {
     await page.keyboard.press('Enter');
     expect((await patched).status()).toBe(200);
     await expect(e.dialog).toBeHidden();
-    await expect(page).toHaveURL(new RegExp(`/fr/patients/${patientId}$`));
+    // Séance ouverte : le dossier est sur l'onglet Séance (UX-S3), ?entry= retiré.
+    await expect(page).toHaveURL(new RegExp(`/fr/patients/${patientId}/session$`));
 
     const versions = await request.get(`${API}/api/entries/${entryId}/versions`);
     const list = (await versions.json()) as { version: number; title: string }[];

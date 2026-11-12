@@ -8,8 +8,6 @@ import { tabTo } from '../support/clavier';
 import { themeFolder } from '../theme/theme-support';
 import { shoot } from './a11y-support';
 
-const API = 'http://localhost:8080';
-
 // Zoom navigateur 200 % sans perte de fonction (M7-04, B7, C5 ; WCAG 1.4.4 et 1.4.10).
 //
 // Équivalent retenu : la fenêtre de référence (Desktop Chrome de playwright.config, 1280 × 720)
@@ -68,12 +66,9 @@ test('praticien à 200 % : liste, création, vue d’ensemble, capture, timeline
   await page.keyboard.press('Control+Enter');
   await expect(h1).toHaveText('Zoé Z.');
 
-  // Vue d'ensemble d'un dossier rempli : en-tête, onglets, blocs ; capture d'une note au clavier
-  // (le bloc de saisie n'existe qu'en séance, UX-S1).
-  const start = await request.post(`${API}/api/patients/${folder.patientId}/sessions/start`, {
-    data: { modality: 'in_person' },
-  });
-  expect(start.status(), await start.text()).toBe(201);
+  // Vue d'ensemble d'un dossier rempli : en-tête, onglets, blocs. Le bloc de saisie n'existe
+  // qu'en séance (UX-S1) et une séance ouverte mène à l'onglet Séance (UX-S3) : la séance est
+  // démarrée plus bas, au clavier, après la lecture de la vue d'ensemble.
   await page.goto(`/fr/patients/${folder.patientId}`);
   await expect(h1).toHaveText('Nina S.');
   await expect(page.getByRole('link', { name: /Timeline/ })).toBeVisible();
@@ -99,8 +94,19 @@ test('praticien à 200 % : liste, création, vue d’ensemble, capture, timeline
   await expect(toggle.getByRole('button', { name: 'Complète' })).toBeInViewport({ ratio: 1 });
   await page.keyboard.press('Enter');
   await expect(page.getByRole('heading', { level: 3, name: 'Dernières séances' })).toBeVisible();
+
+  // « Démarrer la séance » au clavier (le bouton précède la bascule dans l'en-tête) : l'onglet
+  // Séance s'ouvre, le bloc de saisie prend le focus (UX-S3) ; capture d'une note au clavier.
+  await tabTo(page, page.getByRole('button', { name: 'Démarrer la séance' }), {
+    max: 40,
+    backwards: true,
+  });
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${folder.patientId}/session$`));
   const capture = page.getByRole('textbox', { name: 'Noter quelque chose' });
-  await tabTo(page, capture, { max: 60 });
+  await expect(capture).toBeFocused();
+  await screen(page, '05-seance');
+  await expectNoAxeViolations(page);
   await page.keyboard.type('Note prise à 200 %');
   const created = page.waitForResponse(
     (r) =>
