@@ -201,15 +201,15 @@ test.describe('vue d’ensemble', () => {
     await expect(feelings).toHaveText('3');
     const trend = block(page, "Tendance d'intensité · 90 jours");
 
-    // Barre de commande du shell → Ctrl+Entrée : éditeur d'entrée prérempli → Ressenti, anxiété 7
-    // → Enregistrer.
-    const capture = page.getByRole('textbox', { name: 'Noter quelque chose' });
-    await capture.fill('Tendue avant la réunion');
-    await capture.press('Control+Enter');
+    // Sans séance ouverte, pas de bloc de saisie (UX-S1) : N ouvre l'éditeur d'entrée → Ressenti,
+    // anxiété 7, texte → Enregistrer.
+    await expect(page.getByRole('textbox', { name: 'Noter quelque chose' })).toHaveCount(0);
+    await page.keyboard.press('n');
     const dialog = page.getByRole('dialog').filter({ has: page.locator('pm-entry-editor-panel') });
     await expect(dialog).toBeVisible();
     await expect(dialog.locator('pm-state [aria-busy="true"]')).toHaveCount(0);
     await dialog.getByRole('button', { name: 'Ressenti', exact: true }).click();
+    await dialog.getByLabel('Texte', { exact: true }).fill('Tendue avant la réunion');
     const emotion = dialog.getByRole('combobox', { name: 'Émotion' });
     await emotion.fill('anx');
     await emotion.press('ArrowDown');

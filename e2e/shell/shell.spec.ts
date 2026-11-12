@@ -58,6 +58,11 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
       timeout: 10_000,
     })
     .toBe(200);
+  // Le bloc de saisie n'existe qu'en séance (UX-S1) : on en ouvre une pour la fin du test.
+  const start = await request.post(`${API}/api/patients/${id}/sessions/start`, {
+    data: { modality: 'in_person' },
+  });
+  expect(start.status(), await start.text()).toBe(201);
   await signIn(page, account);
 
   await page.goto(`/fr/patients/${id}`);
@@ -218,6 +223,9 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
   await expect(dialog).toBeHidden();
   await expect(h.session).toContainText('Dernière séance :');
   await expect(h.start).toBeVisible();
+  // Sans séance, plus de bloc de saisie : le focus revient sur « Démarrer la séance ».
+  await expect(h.capture).toHaveCount(0);
+  await expect(h.start).toBeFocused();
   await expect(page.getByText('Séance clôturée.')).toBeVisible();
   expect(await page.evaluate(() => (window as unknown as { m107?: number }).m107)).toBe(1);
   await expectNoAxeViolations(page);

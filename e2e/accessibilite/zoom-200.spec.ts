@@ -8,6 +8,8 @@ import { tabTo } from '../support/clavier';
 import { themeFolder } from '../theme/theme-support';
 import { shoot } from './a11y-support';
 
+const API = 'http://localhost:8080';
+
 // Zoom navigateur 200 % sans perte de fonction (M7-04, B7, C5 ; WCAG 1.4.4 et 1.4.10).
 //
 // Équivalent retenu : la fenêtre de référence (Desktop Chrome de playwright.config, 1280 × 720)
@@ -66,7 +68,12 @@ test('praticien à 200 % : liste, création, vue d’ensemble, capture, timeline
   await page.keyboard.press('Control+Enter');
   await expect(h1).toHaveText('Zoé Z.');
 
-  // Vue d'ensemble d'un dossier rempli : en-tête, onglets, blocs ; capture d'une note au clavier.
+  // Vue d'ensemble d'un dossier rempli : en-tête, onglets, blocs ; capture d'une note au clavier
+  // (le bloc de saisie n'existe qu'en séance, UX-S1).
+  const start = await request.post(`${API}/api/patients/${folder.patientId}/sessions/start`, {
+    data: { modality: 'in_person' },
+  });
+  expect(start.status(), await start.text()).toBe(201);
   await page.goto(`/fr/patients/${folder.patientId}`);
   await expect(h1).toHaveText('Nina S.');
   await expect(page.getByRole('link', { name: /Timeline/ })).toBeVisible();
@@ -106,8 +113,9 @@ test('praticien à 200 % : liste, création, vue d’ensemble, capture, timeline
 
   // Timeline : les cartes ; Entrée sur une carte ouvre l'éditeur, plein écran à cette largeur,
   // dont le bouton d'enregistrement reste atteignable au clavier.
-  // Le focus est dans la barre de capture (où « 2 » s'écrit) : l'onglet est atteint par Maj+Tab.
-  await tabTo(page, page.getByRole('link', { name: /Timeline/ }), { max: 40, backwards: true });
+  // Le focus est dans le bloc de saisie (où « 2 » s'écrit) : l'onglet, placé après le bloc et ses
+  // champs, est atteint par Tab.
+  await tabTo(page, page.getByRole('link', { name: /Timeline/ }), { max: 40 });
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/timeline/);
   // La séance passée du dossier : 8 entrées, 9 si la note saisie plus haut s'y rattache.

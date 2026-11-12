@@ -8,7 +8,9 @@ import {
   EmotionsPersonnellesService,
   EmotionView,
   EntreesService,
+  EntrySearchItemDto,
   LinkTypeView,
+  RechercheService,
   TimelineItemDto,
   VocabulaireService,
 } from '../../../api';
@@ -26,6 +28,9 @@ import { CaptureEmotion, CapturedEntry } from './capture.model';
 
 /** Entrées récentes lues pour le rail : de quoi en garder cinq après les situations en cours. */
 const RECENT_LIMIT = 10;
+
+/** Résultats gardés pour « Autre entrée… » (UX-S1) : une liste courte, pas une page de recherche. */
+const SEARCH_LIMIT = 8;
 
 /** Cibles du rail : le contenu clinique récent, pas les séances (comme l'éditeur d'entrée, M2-05). */
 const RAIL_TYPES: readonly EntryType[] = ['note', 'event', 'situation', 'feeling', 'medication'];
@@ -60,6 +65,7 @@ export class CaptureApi {
   private readonly timeline = inject(ChronologieService);
   private readonly vocabulary = inject(VocabulaireService);
   private readonly customEmotions = inject(EmotionsPersonnellesService);
+  private readonly search = inject(RechercheService);
   private readonly english = inject(LOCALE_ID).startsWith('en');
 
   /** GET /api/vocabulary/emotions : 29 globales et personnalisées actives du praticien. */
@@ -114,6 +120,22 @@ export class CaptureApi {
   }
 
   /**
+   * GET /api/patients/{id}/search?q= (fiche 07, la même recherche que la touche `/`) pour « Autre
+   * entrée… » (UX-S1) : les entrées du dossier dont le titre ou le texte répond à la saisie, hors
+   * séances et archivées (défaut du contrat), rendues comme des cibles de lien. Le titre arrive avec
+   * ses `<mark>` de surlignage : ils sont retirés, le texte est décodé.
+   */
+  async searchEntries(patientId: string, query: string): Promise<LinkCandidate[]> {
+    const page = await firstValueFrom(
+      this.search.searchPatientEntries(patientId, query, [...RAIL_TYPES]),
+    );
+    return (page.items ?? [])
+      .filter((item) => !!item.entryId && item.type !== 'session')
+      .slice(0, SEARCH_LIMIT)
+      .map(hitToCandidate);
+  }
+
+  /**
    * POST /api/patients/{id}/entries → 201 (422 VALIDATION_FAILED, SESSION_REQUIRED, liens refusés ;
    * 409). Sans sessionId : la séance courante du patient.
    */
@@ -162,6 +184,47 @@ function toCandidate(item: TimelineItemDto): LinkCandidate {
     },
     ongoing: item.ongoing === true,
   };
+}
+
+/** Un résultat de recherche → cible de lien ; l'intensité n'est pas dans le DTO (titre de repli sans elle). */
+function hitToCandidate(item: EntrySearchItemDto): LinkCandidate {
+  const type = oneOf(ENTRY_TYPES, item.type, 'note');
+  return {
+    id: item.entryId ?? '',
+    type,
+    title: plainText(item.title) || null,
+    emotionCode: item.emotionCode ?? null,
+    intensity: null,
+    occurred: {
+      from: item.occurredFrom ?? null,
+      to: item.occurredTo ?? null,
+      precision: oneOf(PRECISIONS, item.occurredPrecision, 'exact'),
+      label: null,
+    },
+    ongoing: type === 'situation' && !item.occurredTo,
+  };
+}
+
+/** Retire les `<mark>` du surlignage et décode les entités HTML du serveur (texte brut). */
+export function plainText(fragment: string | null | undefined): string {
+  if (!fragment) return '';
+  return fragment
+    .replace(/<\/?mark>/gi, '')
+    .replace(/&(amp|lt|gt|quot|#39|apos);/g, (_, name: string) => {
+      switch (name) {
+        case 'amp':
+          return '&';
+        case 'lt':
+          return '<';
+        case 'gt':
+          return '>';
+        case 'quot':
+          return '"';
+        default:
+          return "'";
+      }
+    })
+    .trim();
 }
 
 function entryTypes(values: string[] | undefined): EntryType[] {

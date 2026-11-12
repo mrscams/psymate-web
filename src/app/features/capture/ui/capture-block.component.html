@@ -1,0 +1,483 @@
+<div class="block" [class.expanded]="expanded()" [class.busy]="store.saving()">
+  <div
+    class="types"
+    role="group"
+    aria-label="Type d'entrée"
+    i18n-aria-label="Groupe des puces de type du bloc de saisie@@capture.types.label"
+  >
+    <span class="lbl" i18n="Étiquette des puces de type@@capture.types.legend">Type</span>
+    @for (type of types; track type) {
+      <button
+        type="button"
+        class="tchip"
+        [attr.data-type]="type"
+        [attr.aria-pressed]="currentType() === type"
+        (click)="chooseType(type)"
+      >
+        <pm-entry-icon [type]="type" [size]="10" />
+        <span>{{ typeLabel(type) }}</span>
+      </button>
+    }
+    @if (expanded() && detectedText(); as text) {
+      <span class="note-r">{{ text }}</span>
+    }
+  </div>
+
+  <div class="text" data-focus-ring="container">
+    <label
+      class="sr-only"
+      [for]="inputId"
+      i18n="Étiquette du champ du bloc de saisie@@capture.bar.label"
+      >Noter quelque chose</label
+    >
+    <textarea
+      class="field"
+      [id]="inputId"
+      rows="2"
+      autocomplete="off"
+      spellcheck="true"
+      placeholder="Qu'est-ce qui s'est passé ?"
+      i18n-placeholder="Texte indicatif du bloc de saisie@@capture.bar.placeholder"
+      aria-keyshortcuts="Enter Control+Enter Control+S"
+      [attr.aria-describedby]="describedBy()"
+      [attr.aria-invalid]="invalid('text') ? 'true' : null"
+      [attr.aria-busy]="store.saving() ? 'true' : null"
+      [value]="text()"
+      (input)="onInput($any($event.target))"
+    ></textarea>
+    @if (notesFor('text').length > 0) {
+      <ul class="notes" [id]="ids.text + '-note'">
+        @for (note of notesFor('text'); track note.text) {
+          <li [class.blocking]="note.blocking">{{ note.text }}</li>
+        }
+      </ul>
+    }
+  </div>
+
+  @if (expanded() && composed(); as c) {
+    @if (emotionState() === 'error') {
+      <pm-state
+        class="vocabulary"
+        kind="error"
+        compact
+        [title]="vocabularyErrorTitle"
+        [action]="vocabularyRetry"
+      />
+    }
+    <!-- Les champs du type, préremplis par la grammaire, modifiables à la souris. -->
+    <div class="row fields">
+      @switch (c.type) {
+        @case ('feeling') {
+          <div class="fld" [class.invalid]="invalid('emotion')">
+            <div class="fld-row">
+              <label
+                class="lbl"
+                [for]="ids.emotion"
+                i18n="Champ émotion du bloc@@capture.field.emotion"
+                >Émotion</label
+              >
+              @if (emotionState() === 'loading') {
+                <pm-state kind="loading" compact skeleton="row" [lines]="1" />
+              }
+              <pm-capture-emotion
+                [hidden]="emotionState() === 'loading'"
+                [emotions]="emotions()"
+                [value]="c.emotion?.code ?? null"
+                [inputId]="ids.emotion"
+                [describedBy]="noteId('emotion')"
+                [invalid]="invalid('emotion')"
+                [pendingWord]="pendingWord()"
+                [unknown]="unknownEmotion()"
+                [busy]="store.creatingEmotion()"
+                [problem]="emotionProblem()"
+                (changed)="setEmotion($event)"
+                (create)="createEmotion($event)"
+              />
+            </div>
+            @if (notesFor('emotion').length > 0) {
+              <ul class="notes" [id]="ids.emotion + '-note'">
+                @for (note of notesFor('emotion'); track note.text) {
+                  <li [class.blocking]="note.blocking">{{ note.text }}</li>
+                }
+              </ul>
+            }
+          </div>
+          <div class="fld" [class.invalid]="invalid('intensity')">
+            <div class="fld-row">
+              <span
+                class="lbl"
+                [id]="ids.intensity + '-label'"
+                i18n="Champ intensité du bloc@@capture.field.intensity"
+                >Intensité</span
+              >
+              <pm-capture-scale
+                [value]="c.intensity"
+                [sliderId]="ids.intensity"
+                [labelledBy]="ids.intensity + '-label'"
+                [describedBy]="noteId('intensity')"
+                [invalid]="invalid('intensity')"
+                (changed)="setIntensity($event)"
+              />
+            </div>
+            @if (notesFor('intensity').length > 0) {
+              <ul class="notes" [id]="ids.intensity + '-note'">
+                @for (note of notesFor('intensity'); track note.text) {
+                  <li [class.blocking]="note.blocking">{{ note.text }}</li>
+                }
+              </ul>
+            }
+          </div>
+          <div class="fld" [class.invalid]="invalid('when')">
+            <div class="fld-row">
+              <label class="lbl" [for]="ids.when" i18n="Champ moment du bloc@@capture.field.when"
+                >Quand</label
+              >
+              <pm-capture-when
+                [value]="c.when"
+                [inputId]="ids.when"
+                [describedBy]="noteId('when')"
+                [invalid]="invalid('when')"
+                [timeZone]="timeZone"
+                [now]="now()"
+                (changed)="setWhen($event)"
+              />
+            </div>
+            @if (notesFor('when').length > 0) {
+              <ul class="notes" [id]="ids.when + '-note'">
+                @for (note of notesFor('when'); track note.text) {
+                  <li [class.blocking]="note.blocking">{{ note.text }}</li>
+                }
+              </ul>
+            }
+          </div>
+        }
+        @case ('event') {
+          <div class="fld" [class.invalid]="invalid('title')">
+            <div class="fld-row">
+              <label class="lbl" [for]="ids.title" i18n="Champ titre du bloc@@capture.field.title"
+                >Titre</label
+              >
+              <input
+                class="sel wide"
+                type="text"
+                [id]="ids.title"
+                [attr.aria-describedby]="noteId('title')"
+                [attr.aria-invalid]="invalid('title') ? 'true' : null"
+                [value]="c.title"
+                (input)="setTitle($any($event.target).value)"
+              />
+            </div>
+            @if (notesFor('title').length > 0) {
+              <ul class="notes" [id]="ids.title + '-note'">
+                @for (note of notesFor('title'); track note.text) {
+                  <li [class.blocking]="note.blocking">{{ note.text }}</li>
+                }
+              </ul>
+            }
+          </div>
+          <div class="fld" [class.invalid]="invalid('when')">
+            <div class="fld-row">
+              <label class="lbl" [for]="ids.when" i18n="Champ moment du bloc@@capture.field.when"
+                >Quand</label
+              >
+              <pm-capture-when
+                [value]="c.when"
+                [inputId]="ids.when"
+                [describedBy]="noteId('when')"
+                [invalid]="invalid('when')"
+                [precisionChoice]="true"
+                [timeZone]="timeZone"
+                [now]="now()"
+                (changed)="setWhen($event)"
+              />
+            </div>
+            @if (notesFor('when').length > 0) {
+              <ul class="notes" [id]="ids.when + '-note'">
+                @for (note of notesFor('when'); track note.text) {
+                  <li [class.blocking]="note.blocking">{{ note.text }}</li>
+                }
+              </ul>
+            }
+          </div>
+        }
+        @case ('situation') {
+          <div class="fld" [class.invalid]="invalid('title')">
+            <div class="fld-row">
+              <label class="lbl" [for]="ids.title" i18n="Champ titre du bloc@@capture.field.title"
+                >Titre</label
+              >
+              <input
+                class="sel wide"
+                type="text"
+                [id]="ids.title"
+                [attr.aria-describedby]="noteId('title')"
+                [attr.aria-invalid]="invalid('title') ? 'true' : null"
+                [value]="c.title"
+                (input)="setTitle($any($event.target).value)"
+              />
+            </div>
+            @if (notesFor('title').length > 0) {
+              <ul class="notes" [id]="ids.title + '-note'">
+                @for (note of notesFor('title'); track note.text) {
+                  <li [class.blocking]="note.blocking">{{ note.text }}</li>
+                }
+              </ul>
+            }
+          </div>
+          <div class="fld" [class.invalid]="invalid('when')">
+            <div class="fld-row">
+              <label
+                class="lbl"
+                [for]="ids.when"
+                i18n="Début d'une situation dans le bloc@@capture.field.since"
+                >Depuis</label
+              >
+              <pm-capture-when
+                [value]="c.when"
+                [inputId]="ids.when"
+                [describedBy]="noteId('when')"
+                [invalid]="invalid('when')"
+                [timeZone]="timeZone"
+                [now]="now()"
+                (changed)="setWhen($event)"
+              />
+            </div>
+            @if (notesFor('when').length > 0) {
+              <ul class="notes" [id]="ids.when + '-note'">
+                @for (note of notesFor('when'); track note.text) {
+                  <li [class.blocking]="note.blocking">{{ note.text }}</li>
+                }
+              </ul>
+            }
+          </div>
+          <div class="fld" [class.invalid]="invalid('until')">
+            <div class="fld-row">
+              <label class="check">
+                <input
+                  type="checkbox"
+                  [checked]="c.ongoing"
+                  (change)="setOngoing($any($event.target).checked)"
+                />
+                <span i18n="Situation sans fin dans le bloc@@capture.field.ongoing">En cours</span>
+              </label>
+              @if (!c.ongoing) {
+                <label
+                  class="lbl"
+                  [for]="ids.until"
+                  i18n="Fin d'une situation dans le bloc@@capture.field.until"
+                  >Jusqu'à</label
+                >
+                <pm-date-field
+                  [formControl]="untilControl"
+                  [inputId]="ids.until"
+                  [describedBy]="noteId('until')"
+                  [invalid]="invalid('until')"
+                />
+              }
+            </div>
+            @if (notesFor('until').length > 0) {
+              <ul class="notes" [id]="ids.until + '-note'">
+                @for (note of notesFor('until'); track note.text) {
+                  <li [class.blocking]="note.blocking">{{ note.text }}</li>
+                }
+              </ul>
+            }
+          </div>
+        }
+        @case ('medication') {
+          <div class="fld" [class.invalid]="invalid('molecule')">
+            <div class="fld-row">
+              <label
+                class="lbl"
+                [for]="ids.molecule"
+                i18n="Champ molécule du bloc@@capture.field.molecule"
+                >Molécule</label
+              >
+              <input
+                class="sel"
+                type="text"
+                [id]="ids.molecule"
+                [attr.aria-describedby]="noteId('molecule')"
+                [attr.aria-invalid]="invalid('molecule') ? 'true' : null"
+                [value]="c.molecule"
+                (input)="setMolecule($any($event.target).value)"
+              />
+            </div>
+            @if (notesFor('molecule').length > 0) {
+              <ul class="notes" [id]="ids.molecule + '-note'">
+                @for (note of notesFor('molecule'); track note.text) {
+                  <li [class.blocking]="note.blocking">{{ note.text }}</li>
+                }
+              </ul>
+            }
+          </div>
+          <div class="fld" [class.invalid]="invalid('dosage')">
+            <div class="fld-row">
+              <label
+                class="lbl"
+                [for]="ids.dosage"
+                i18n="Champ posologie du bloc@@capture.field.dosage"
+                >Posologie</label
+              >
+              <input
+                class="sel"
+                type="text"
+                [id]="ids.dosage"
+                [attr.aria-describedby]="noteId('dosage')"
+                [attr.aria-invalid]="invalid('dosage') ? 'true' : null"
+                [value]="c.dosage"
+                (input)="setDosage($any($event.target).value)"
+              />
+            </div>
+            @if (notesFor('dosage').length > 0) {
+              <ul class="notes" [id]="ids.dosage + '-note'">
+                @for (note of notesFor('dosage'); track note.text) {
+                  <li [class.blocking]="note.blocking">{{ note.text }}</li>
+                }
+              </ul>
+            }
+          </div>
+          <div class="fld" [class.invalid]="invalid('when')">
+            <div class="fld-row">
+              <label
+                class="lbl"
+                [for]="ids.when"
+                i18n="Début d'une situation dans le bloc@@capture.field.since"
+                >Depuis</label
+              >
+              <pm-capture-when
+                [value]="c.when"
+                [inputId]="ids.when"
+                [describedBy]="noteId('when')"
+                [invalid]="invalid('when')"
+                [timeZone]="timeZone"
+                [now]="now()"
+                (changed)="setWhen($event)"
+              />
+            </div>
+            @if (notesFor('when').length > 0) {
+              <ul class="notes" [id]="ids.when + '-note'">
+                @for (note of notesFor('when'); track note.text) {
+                  <li [class.blocking]="note.blocking">{{ note.text }}</li>
+                }
+              </ul>
+            }
+          </div>
+        }
+        @default {
+          <div class="fld" [class.invalid]="invalid('when')">
+            <div class="fld-row">
+              <label class="lbl" [for]="ids.when" i18n="Champ moment du bloc@@capture.field.when"
+                >Quand</label
+              >
+              <pm-capture-when
+                [value]="c.when"
+                [inputId]="ids.when"
+                [describedBy]="noteId('when')"
+                [invalid]="invalid('when')"
+                [timeZone]="timeZone"
+                [now]="now()"
+                (changed)="setWhen($event)"
+              />
+            </div>
+            @if (notesFor('when').length > 0) {
+              <ul class="notes" [id]="ids.when + '-note'">
+                @for (note of notesFor('when'); track note.text) {
+                  <li [class.blocking]="note.blocking">{{ note.text }}</li>
+                }
+              </ul>
+            }
+          </div>
+          <div class="fld" [class.invalid]="invalid('visibility')">
+            <div class="fld-row">
+              <label
+                class="lbl"
+                [for]="ids.visibility"
+                i18n="Champ visibilité du bloc@@capture.field.visibility"
+                >Visibilité</label
+              >
+              <select
+                class="sel"
+                [id]="ids.visibility"
+                [attr.aria-describedby]="noteId('visibility')"
+                (change)="setVisibility($any($event.target).value)"
+              >
+                <option
+                  value="clinical"
+                  [selected]="c.visibility === 'clinical'"
+                  i18n="Visibilité clinique@@capture.visibility.clinical"
+                >
+                  clinique
+                </option>
+                <option
+                  value="private"
+                  [selected]="c.visibility === 'private'"
+                  i18n="Visibilité privée@@capture.visibility.private"
+                >
+                  privée
+                </option>
+              </select>
+            </div>
+            @if (notesFor('visibility').length > 0) {
+              <ul class="notes" [id]="ids.visibility + '-note'">
+                @for (note of notesFor('visibility'); track note.text) {
+                  <li [class.blocking]="note.blocking">{{ note.text }}</li>
+                }
+              </ul>
+            }
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Rangée « Lié à » : un lien, en un clic ou par « > début de nom ». -->
+    <div class="row links" [class.invalid]="invalid('link')">
+      <pm-capture-links
+        [candidates]="candidates()"
+        [extra]="store.draft().extraCandidate"
+        [linkTypes]="linkTypes()"
+        [entryType]="c.type"
+        [emotions]="emotions()"
+        [link]="c.link"
+        [state]="railState()"
+        [foundFrom]="targetQuery()"
+        [search]="store.search()"
+        [describedBy]="noteId('link')"
+        [invalid]="invalid('link')"
+        (toggled)="toggleLink($event)"
+        (verb)="chooseVerb($event)"
+        (searched)="searchOther($event)"
+        (other)="pickOther($event)"
+        (retry)="store.retryRail()"
+      />
+      @if (notesFor('link').length > 0) {
+        <ul class="notes" [id]="ids.link + '-note'">
+          @for (note of notesFor('link'); track note.text) {
+            <li [class.blocking]="note.blocking">{{ note.text }}</li>
+          }
+        </ul>
+      }
+    </div>
+
+    <div class="acts">
+      <span class="keys" i18n="Raccourcis du bloc de saisie@@capture.bar.keys"
+        ><kbd>Ctrl+⏎</kbd> détaille · <kbd>Ctrl+S</kbd> brouillon</span
+      >
+      <button
+        type="button"
+        class="detail"
+        (click)="refine()"
+        i18n="Lien vers l'éditeur complet depuis le bloc@@capture.actions.detail"
+      >
+        Détailler
+      </button>
+      <button type="button" class="save" [disabled]="!canSave()" (click)="submit('final')">
+        <span i18n="Bouton d'enregistrement du bloc@@capture.actions.save">Enregistrer</span>
+        <kbd aria-hidden="true">↵</kbd>
+      </button>
+    </div>
+  }
+</div>
+
+<p class="sr-only" role="status">{{ announcement() }}</p>
+<p class="alert" role="alert" [id]="alertId" [class.shown]="!!alert()">{{ alert() }}</p>

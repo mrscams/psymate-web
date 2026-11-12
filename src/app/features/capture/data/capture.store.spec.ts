@@ -2,9 +2,10 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { PreferencesStore } from '../../../core/preferences';
-import { EntryPrefill } from '../../entries';
+import { EntryPrefill, LinkChoice } from '../../entries';
 import { CaptureApi } from './capture.api';
-import { CANDIDATES, EMOTIONS, LINK_TYPES } from './capture.fixtures';
+import { candidate, CANDIDATES, EMOTIONS, LINK_TYPES } from './capture.fixtures';
+import { EMPTY_DRAFT, ParsedSnapshot } from './capture.model';
 import { CaptureStore } from './capture.store';
 
 type Api = Partial<Record<keyof CaptureApi, ReturnType<typeof vi.fn>>>;
@@ -21,6 +22,7 @@ function setup(api: Api = {}, visibility = 'clinical') {
       sessionId: 's-open',
     })),
     createEmotion: vi.fn(),
+    searchEntries: vi.fn().mockResolvedValue([]),
     ...api,
   };
   TestBed.configureTestingModule({
@@ -183,5 +185,181 @@ describe('CaptureStore', () => {
     expect(store.creatingEmotion()).toBe(false);
     store.clearEmotionProblem();
     expect(store.emotionProblem()).toBeNull();
+  });
+});
+
+describe('CaptureStore (bloc de saisie, UX-S1)', () => {
+  const snapshot = (over: Partial<ParsedSnapshot> = {}): ParsedSnapshot => ({
+    type: 'note',
+    emotionCode: null,
+    intensity: null,
+    dateExpression: null,
+    text: 'dort mal',
+    targetId: null,
+    ...over,
+  });
+  const triggers: LinkChoice = {
+    linkType: 'triggers',
+    direction: 'incoming',
+    label: 'déclenché par',
+  };
+  const coOccurs: LinkChoice = {
+    linkType: 'co_occurs',
+    direction: 'outgoing',
+    label: 'survient avec',
+  };
+
+  it('type choisi : la puce ; la même que la grammaire revient à suivre la grammaire ; une grammaire nouvelle efface', () => {
+    const { store } = setup();
+    store.applyParsed(snapshot());
+    store.chooseType('feeling');
+    expect(store.draft().type).toBe('feeling');
+    store.chooseType('note');
+    expect(store.draft().type).toBeNull();
+    store.chooseType('event');
+    store.applyParsed(snapshot({ type: 'feeling', emotionCode: 'anxiety', intensity: 7 }));
+    expect(store.draft().type).toBeNull();
+  });
+
+  it('champs : posés, effacés, repris par la grammaire quand elle change', () => {
+    const { store } = setup();
+    store.applyParsed(snapshot({ type: 'feeling', emotionCode: 'anxiety', intensity: 7 }));
+    store.setField('emotionCode', 'anger');
+    store.setField('intensity', 3);
+    store.setField('visibility', 'private');
+    expect(store.draft().overrides).toEqual({
+      emotionCode: 'anger',
+      intensity: 3,
+      visibility: 'private',
+    });
+    store.clearField('intensity');
+    expect(store.draft().overrides).toEqual({ emotionCode: 'anger', visibility: 'private' });
+    // « tri 5 » tapé à la place : l'émotion lue change, le choix s'efface ; la visibilité reste.
+    store.applyParsed(snapshot({ type: 'feeling', emotionCode: 'sadness', intensity: 5 }));
+    expect(store.draft().overrides).toEqual({ visibility: 'private' });
+    // Saisie vidée et bloc replié : plus rien.
+    store.applyParsed(null);
+    expect(store.draft()).toBe(EMPTY_DRAFT);
+  });
+
+  it('lien : un clic pose, un second retire, une autre puce remplace ; la cible du `>` se retire d’un clic', () => {
+    const { store } = setup();
+    store.applyParsed(snapshot());
+    store.toggleLink('e-situation', triggers, null);
+    expect(store.draft().pickedLink).toEqual({
+      targetId: 'e-situation',
+      linkType: 'triggers',
+      direction: 'incoming',
+    });
+    store.toggleLink('e-note', coOccurs, null);
+    expect(store.draft().pickedLink?.targetId).toBe('e-note');
+    store.toggleLink('e-note', coOccurs, null);
+    expect(store.draft().pickedLink).toBeNull();
+    // Cible du `>` (e-event) : un clic la retire, un second la repose.
+    store.applyParsed(snapshot({ targetId: 'e-event' }));
+    store.toggleLink('e-event', triggers, 'e-event');
+    expect(store.draft().pickedLink).toBeNull();
+    expect(store.draft().dismissedTarget).toBe('e-event');
+    store.toggleLink('e-event', triggers, 'e-event');
+    expect(store.draft().pickedLink?.targetId).toBe('e-event');
+    expect(store.draft().dismissedTarget).toBeNull();
+    // Un `>` vers une nouvelle cible remplace tout.
+    store.applyParsed(snapshot({ targetId: 'e-situation' }));
+    expect(store.draft().pickedLink).toBeNull();
+    expect(store.draft().dismissedTarget).toBeNull();
+  });
+
+  it('verbe choisi ; « Autre entrée… » remplace le lien et garde la cible hors rail ; removeLink', () => {
+    const { store } = setup();
+    store.applyParsed(snapshot({ targetId: 'e-event' }));
+    store.chooseVerb('e-event', coOccurs);
+    expect(store.draft().pickedLink).toEqual({
+      targetId: 'e-event',
+      linkType: 'co_occurs',
+      direction: 'outgoing',
+    });
+    const old = candidate({ id: 'e-old', title: "Entretien d'évaluation" });
+    store.pickOther(old, triggers);
+    expect(store.draft().pickedLink?.targetId).toBe('e-old');
+    expect(store.draft().extraCandidate).toBe(old);
+    // Une puce du rail cliquée ensuite : la cible hors rail disparaît.
+    store.toggleLink('e-note', coOccurs, 'e-event');
+    expect(store.draft().extraCandidate).toBeNull();
+    store.removeLink('e-event');
+    expect(store.draft().pickedLink).toBeNull();
+    expect(store.draft().dismissedTarget).toBe('e-event');
+  });
+
+  it('searchEntries : à partir de 2 caractères, la dernière réponse compte ; clearSearch', async () => {
+    let resolveFirst: (value: unknown) => void = () => undefined;
+    const old = [candidate({ id: 'e-old', title: "Entretien d'évaluation" })];
+    const { store, api } = setup({
+      searchEntries: vi
+        .fn()
+        .mockImplementationOnce(() => new Promise((done) => (resolveFirst = done)))
+        .mockResolvedValueOnce(old),
+    });
+    await store.prepare('p-marie');
+    await store.searchEntries('e');
+    expect(api.searchEntries).not.toHaveBeenCalled();
+    expect(store.search().status).toBe('idle');
+    const first = store.searchEntries('en');
+    const second = store.searchEntries('entr');
+    expect(store.search().status).toBe('loading');
+    await second;
+    expect(store.search().data).toEqual(old);
+    resolveFirst([]);
+    await first;
+    // La première réponse, arrivée après la seconde, est ignorée.
+    expect(store.search().data).toEqual(old);
+    expect(api.searchEntries).toHaveBeenLastCalledWith('p-marie', 'entr');
+    store.clearSearch();
+    expect(store.search().status).toBe('idle');
+    expect(store.searchQuery()).toBe('');
+  });
+
+  it('save : la visibilité choisie l’emporte sur la préférence ; la cible de « Autre entrée… » part', async () => {
+    const { store, api } = setup({}, 'private');
+    await store.prepare('p-marie');
+    store.pickOther(candidate({ id: 'e-old', title: 'Ancien' }), triggers);
+    await store.save(
+      'p-marie',
+      {
+        type: 'note',
+        body: 'dort mal',
+        links: [{ targetId: 'e-old', linkType: 'co_occurs', direction: 'outgoing' }],
+      },
+      'final',
+      'clinical',
+    );
+    expect(api.create!.mock.calls[0][1]).toEqual({
+      type: 'note',
+      visibility: 'clinical',
+      body: 'dort mal',
+      status: 'final',
+      links: [{ targetId: 'e-old', linkType: 'co_occurs', direction: 'outgoing' }],
+    });
+  });
+
+  it('save en échec 422 par champ : le problème est rangé avec ses errors[] ; setField l’efface', async () => {
+    const problem = {
+      status: 422,
+      code: 'VALIDATION_FAILED',
+      errors: [{ field: 'feeling.intensity', code: 'REQUIRED', message: 'Intensité obligatoire.' }],
+    };
+    const { store } = setup({ create: vi.fn().mockRejectedValue(problem) });
+    await store.prepare('p-marie');
+    expect(await store.save('p-marie', FEELING)).toBeNull();
+    expect(store.problem()?.errors?.[0].field).toBe('feeling.intensity');
+    store.setField('intensity', 6);
+    expect(store.problem()).toBeNull();
+  });
+
+  it('un autre patient vide le brouillon et la recherche', async () => {
+    const { store } = setup();
+    await store.prepare('p-marie');
+    store.chooseType('event');
+    await store.prepare('p-omar');
+    expect(store.draft()).toBe(EMPTY_DRAFT);
   });
 });

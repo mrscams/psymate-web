@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-12T15:47:56.517Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-S1 Bloc de saisie structure a la place de la barre de commande (features/capture) : puces de type, champs du type, un lien en un clic, PR #78 en relecture",
+  "notes": "Meme parseur, store etendu (brouillon, reconciliation, composition, recherche), meme toCreateBody, aucun changement de contrat ; Vitest 2008 (1 rouge sous charge, vert seul), e2e flux 3 et 4 et axe-ecrans verts en local ; ecarts notes dans la PR (tints absents des tokens, periode et phase de vie dans Detailler, intensite jugee par le serveur)",
+  "next": "Relecture reviewer puis fusion ; suite possible : fleche droite vers la correspondance suivante du chevron",
+  "pr": "https://github.com/mrscams/psymate-web/pull/78",
+  "branch": "claude/ux-s1-capture-block",
+  "checkout": "m1-06-patients-cca7bc"
+}

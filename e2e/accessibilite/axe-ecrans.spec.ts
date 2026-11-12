@@ -17,6 +17,8 @@ import { ADMIN_AVAILABLE, ADMIN_MISSING } from '../support/admin';
 import { themeFolder } from '../theme/theme-support';
 import { axeScreen, expectTheme, settled, shoot, Theme, THEMES } from './a11y-support';
 
+const API = 'http://localhost:8080';
+
 // axe-core sur chaque écran V1, dans les deux thèmes (M7-04, C5 « aucune violation sérieuse sur
 // les 13 écrans », B7 ; liste des écrans : docs/couverture-ecrans.md). Contre l'API locale (seed
 // small, Mailpit), jamais de mock du backend : chaque test crée son compte et son dossier. Aucune
@@ -108,16 +110,27 @@ for (const theme of THEMES) {
           },
         ],
         [
-          '05-barre-de-commande',
+          '05-bloc-de-saisie',
           async () => {
+            // Le bloc de saisie n'existe qu'en séance (UX-S1) : on en ouvre une, puis on recharge.
+            const start = await request.post(
+              `${API}/api/patients/${folder.patientId}/sessions/start`,
+              { data: { modality: 'in_person' } },
+            );
+            expect(start.status(), await start.text()).toBe(201);
+            await page.goto(patient);
+            await expect(h1).toHaveText('Nina S.');
             const input = page.getByRole('textbox', { name: 'Noter quelque chose' });
             await input.focus();
-            // Vocabulaire des émotions lu à l'ouverture de l'aperçu : on l'attend avant de taper.
-            await expect(page.locator('pm-command-bar .panel')).toBeVisible();
-            await expect(page.locator('pm-command-bar .panel [aria-busy="true"]')).toHaveCount(0);
+            // Vocabulaire des émotions lu au déploiement du bloc : on l'attend avant de taper.
+            const block = page.locator('pm-capture-block');
+            await expect(block.locator('.block')).toHaveClass(/expanded/);
+            await expect(block.locator('[aria-busy="true"]')).toHaveCount(0);
             await page.keyboard.type("anx 8 n'a pas dormi > réunion");
-            await expect(page.locator('pm-command-bar pm-capture-preview .line')).toContainText(
-              'Anxiété 8/10',
+            await expect(block.getByRole('combobox', { name: 'Émotion' })).toHaveValue('Anxiété');
+            await expect(block.getByRole('slider', { name: 'Intensité' })).toHaveAttribute(
+              'aria-valuenow',
+              '8',
             );
           },
         ],
