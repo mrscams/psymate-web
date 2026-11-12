@@ -207,7 +207,7 @@ test.describe('bloc de saisie', () => {
     await expect(b.type('Note')).toHaveAttribute('aria-pressed', 'true');
   });
 
-  test('avertissement bloquant sous le champ ; Échap replie et garde le texte ; hors séance, replié puis déplié au focus', async ({
+  test('avertissement bloquant sous le champ ; Échap replie et garde le texte ; aucun bloc sans séance ouverte', async ({
     page,
     request,
   }) => {
@@ -218,14 +218,16 @@ test.describe('bloc de saisie', () => {
     await openFolder(page, patientId, 'Léa M.');
     const b = block(page);
 
-    // Hors séance : une ligne (puces + placeholder), ni champs ni actions ; déplié au focus.
-    await expect(b.block).toHaveClass(/collapsed/);
-    await expect(b.type('Note')).toBeVisible();
-    await expect(b.when).toHaveCount(0);
+    // Sans séance ouverte (séance d'accueil clôturée) : aucun bloc de saisie, « Démarrer la séance ».
+    await expect(b.root).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Démarrer la séance' })).toBeVisible();
     await expectNoAxeViolations(page);
-    await b.input.focus();
+    await startSession(request, patientId);
+    await page.reload();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Léa M.');
     await settled(page);
     await expect(b.when).toBeVisible();
+    await b.input.focus();
 
     // Intensité hors de 0 à 10 : avertissement sous Intensité, Enregistrer désactivé, Entrée ne crée rien.
     let posted = false;
@@ -248,7 +250,8 @@ test.describe('bloc de saisie', () => {
 
     // Échap replie les champs, le texte reste ; la frappe suivante les rouvre.
     await page.keyboard.press('Escape');
-    await expect(b.block).toHaveClass(/collapsed/);
+    await expect(b.block).not.toHaveClass(/expanded/);
+    await expect(b.when).toHaveCount(0);
     await expect(b.input).toHaveValue('anx 12 crise');
     await page.keyboard.type(' ');
     await expect(b.block).toHaveClass(/expanded/);
@@ -376,30 +379,5 @@ test.describe('bloc de saisie', () => {
     expect(((await response.json()) as { status: string }).status).toBe('draft');
     await expect(page.getByText('Brouillon enregistré.').last()).toBeVisible();
     await expect(b.input).toHaveValue('');
-  });
-
-  test('422 du serveur sous le champ ou sous le bloc (SESSION_REQUIRED), la saisie conservée', async ({
-    page,
-    request,
-  }) => {
-    const account = await createAccount(request, 'ux-s1.422', 'psychologist');
-    const patientId = await createPatient(request, 'Iris P.');
-    // Seule séance du patient, l'accueil est archivé : sessions/current répond 404 NO_CURRENT_SESSION.
-    const intake = await intakeOf(request, patientId);
-    expect((await request.delete(`${API}/api/entries/${intake}`)).status()).toBe(204);
-    await signIn(page, account);
-    await openFolder(page, patientId, 'Iris P.');
-    const b = block(page);
-
-    await b.input.fill('Premier appel de la mère');
-    await settled(page);
-    const created = page.waitForResponse((r) => isCreate(r, patientId));
-    await b.input.press('Enter');
-    const response = await created;
-    expect(response.status()).toBe(422);
-    expect(((await response.json()) as { code: string }).code).toBe('SESSION_REQUIRED');
-    await expect(b.alert).toContainText('Toute entrée appartient à une séance');
-    await expect(b.input).toHaveValue('Premier appel de la mère');
-    await expectNoAxeViolations(page);
   });
 });

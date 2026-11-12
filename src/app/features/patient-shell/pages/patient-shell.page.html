@@ -27,17 +27,19 @@
     (closeSession)="openClose()"
     (retry)="reload()"
   >
-    <!-- Bloc de saisie (M6-02, UX-S1, features/capture) : Entrée crée, Ctrl+Entrée ou « Détailler »
-         ouvre l'éditeur prérempli (M1-08, features/entries) ; le bouton + ouvre l'éditeur vide. -->
+    <!-- Bloc de saisie (M6-02, UX-S1, features/capture), seulement pendant une séance ouverte (aucune
+         saisie sans séance) : Entrée crée, Ctrl+Entrée ou « Détailler » ouvre l'éditeur prérempli
+         (M1-08, features/entries) ; le bouton + ouvre l'éditeur vide. -->
     <div pmCapture class="capture-row">
-      <pm-capture-block
-        class="capture-bar"
-        [patientId]="id()"
-        [session]="headerSession()"
-        [revision]="store.revision()"
-        (saved)="captured($event)"
-        (openEditor)="newEntry($event)"
-      />
+      @if (headerSession().kind === 'current') {
+        <pm-capture-block
+          class="capture-bar"
+          [patientId]="id()"
+          [revision]="store.revision()"
+          (saved)="captured($event)"
+          (openEditor)="newEntry($event)"
+        />
+      }
       <button
         type="button"
         class="new-entry"

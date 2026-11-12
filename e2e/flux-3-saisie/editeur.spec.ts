@@ -190,12 +190,12 @@ test.describe('éditeur d’entrée', () => {
     await page.goto(`/fr/patients/${patientId}`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Iris P.');
 
-    // Ctrl+Entrée : la barre de commande (M6-02) ouvre l'éditeur prérempli (Entrée créerait).
-    const capture = page.getByRole('textbox', { name: 'Noter quelque chose' });
-    await capture.fill('Premier appel de la mère');
-    await capture.press('Control+Enter');
+    // Sans séance ouverte il n'y a pas de bloc de saisie (UX-S1) : N ouvre l'éditeur vide.
+    await expect(page.getByRole('textbox', { name: 'Noter quelque chose' })).toHaveCount(0);
+    await page.keyboard.press('n');
     const e = editor(page);
     await settled(e.dialog);
+    await e.dialog.getByLabel('Texte', { exact: true }).fill('Premier appel de la mère');
     await expect(e.session).toHaveValue('');
     await expect(e.session.locator('option:checked')).toHaveText('Aucune séance');
 
