@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-12T20:09:57.336Z",
+  "task": "PROJET",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "UX-S1 fusionnee dans main (PR #78, squash 736f52b) ; correctifs de relecture en PR de suivi",
+  "notes": "Relecture reviewer : trois points corriges apres la fusion (autre date remise a zero, clic qui remplace la cible du chevron, Detailler previent de ce qu il ne reprend pas) plus courses de recherche et jour civil ; mineurs restants listes dans la PR de suivi",
+  "next": "UX-S2 (PR #79) puis UX-S3 (PR #80)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/78",
+  "branch": "claude/ux-s1-suivi-relecture",
+  "checkout": "m1-06-patients-cca7bc"
+}

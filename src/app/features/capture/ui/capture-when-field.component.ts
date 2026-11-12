@@ -219,7 +219,16 @@ export class CaptureWhenFieldComponent {
     effect(() => {
       const when = this.value();
       untracked(() => {
-        if (!when || !this.other()) return;
+        // Valeur revenue à « maintenant » (bloc vidé, date retirée du texte) : le champ « autre
+        // date… » ne doit pas montrer une date qui ne partira pas.
+        if (!when) {
+          this.other.set(false);
+          this.dayControl.setValue(null, { emitEvent: false });
+          this.monthControl.setValue(null, { emitEvent: false });
+          this.year.set('');
+          return;
+        }
+        if (!this.other()) return;
         const day = when.from.slice(0, 10);
         if (when.precision === 'day' && this.dayControl.value !== day) {
           this.dayControl.setValue(day, { emitEvent: false });
