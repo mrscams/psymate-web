@@ -1,9 +1,11 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
   effect,
+  ElementRef,
   inject,
   Injector,
   input,
@@ -85,7 +87,9 @@ export class PatientShellPage {
   private readonly injector = inject(Injector);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  /** Le bloc de saisie, présent seulement pendant une séance ouverte. */
   private readonly captureBar = viewChild(CaptureBlockComponent);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly panels = inject(SidePanelService);
 
   /** `?entry=<id>` : correction d'une entrée, le panneau se rouvre au rechargement (fiche 05). */
@@ -172,16 +176,16 @@ export class PatientShellPage {
       untracked(() => bar.prefill(request.text));
     });
 
-    // Arrivée depuis la création du patient (B3 flux 2, étape 3) : une fois le dossier lu, la barre
-    // de capture prend le focus, une seule fois, panneau d'aperçu replié (il recouvrirait l'indice
-    // de première entrée ; la première frappe l'ouvre).
+    // Arrivée depuis la création du patient (B3 flux 2, étape 3) : une fois le dossier lu, le bloc
+    // de saisie prend le focus s'il y a une séance ouverte, champs repliés (ils recouvriraient
+    // l'indice de première entrée ; la première frappe les ouvre) ; sinon le bouton « Démarrer la
+    // séance », puisqu'aucune saisie n'est possible sans séance.
     const state = this.router.currentNavigation()?.extras.state;
     if (state?.[CAPTURE_FOCUS_STATE] === true) {
       const arrival = effect(() => {
-        const bar = this.captureBar();
-        if (!bar || !this.store.patient()) return;
+        if (!this.store.patient()) return;
         arrival.destroy();
-        untracked(() => bar.focus({ quiet: true }));
+        untracked(() => this.focusCapture({ quiet: true }));
       });
     }
 
@@ -349,10 +353,19 @@ export class PatientShellPage {
   }
 
   /**
-   * Après Démarrer ou Clôturer, le bouton utilisé disparaît de l'en-tête : la barre de capture prend
-   * le focus (B3 flux 3 et 6 : on démarre la séance puis on note au clavier).
+   * Après Démarrer ou Clôturer, le bouton utilisé disparaît de l'en-tête : le bloc de saisie prend
+   * le focus (B3 flux 3 et 6 : on démarre la séance puis on note au clavier) ; sans séance ouverte
+   * (après Clôturer), le bouton « Démarrer la séance », seul point de départ d'une saisie. Après le
+   * prochain rendu : le bloc n'apparaît qu'avec la séance.
    */
-  private focusCapture(): void {
-    this.captureBar()?.focus();
+  private focusCapture(options: { quiet?: boolean } = {}): void {
+    afterNextRender(
+      () => {
+        const bar = this.captureBar();
+        if (bar) bar.focus(options);
+        else this.host.nativeElement.querySelector<HTMLElement>('button.start-session')?.focus();
+      },
+      { injector: this.injector },
+    );
   }
 }

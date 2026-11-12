@@ -58,11 +58,21 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
       timeout: 10_000,
     })
     .toBe(200);
+  // Le bloc de saisie n'existe qu'en séance (UX-S1) : on en ouvre une pour la fin du test.
+  const start = await request.post(`${API}/api/patients/${id}/sessions/start`, {
+    data: { modality: 'in_person' },
+  });
+  expect(start.status(), await start.text()).toBe(201);
   await signIn(page, account);
 
   await page.goto(`/fr/patients/${id}`);
   const h = header(page);
   await expect(h.name).toHaveText('Inès M.');
+  // Séance ouverte : le dossier s'ouvre sur l'onglet Séance (UX-S3) ; « Vue d'ensemble » reste à un
+  // clic dans les onglets, et n'y renvoie pas une seconde fois.
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
+  await h.tabs.getByRole('link', { name: /Vue d'ensemble/ }).click();
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
   await expect(h.tabs.getByRole('link', { name: /Vue d'ensemble/ })).toHaveAttribute(
     'aria-current',
     'page',
@@ -100,9 +110,10 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(h.capture).toHaveValue('312');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph\\?root=all$`));
 
-  // L'ancienne destination de M1-06 (après création) mène à l'onglet 1.
+  // L'ancienne destination de M1-06 (après création) mène à l'onglet 1 ; rechargé avec une séance
+  // ouverte, le dossier va sur l'onglet Séance (UX-S3).
   await page.goto(`/fr/patients/${id}/overview`);
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
   await expect(h.name).toHaveText('Inès M.');
 });
 
@@ -228,6 +239,9 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
   await expect(h.session).toContainText('Dernière séance :');
   await expect(h.start).toBeVisible();
+  // Sans séance, plus de bloc de saisie : le focus revient sur « Démarrer la séance ».
+  await expect(h.capture).toHaveCount(0);
+  await expect(h.start).toBeFocused();
   await expect(page.getByText('Séance clôturée · 60 min · compte rendu enregistré')).toBeVisible();
   await expect(
     page.locator('pm-toast-outlet').getByRole('button', { name: 'Modifier' }),

@@ -21,7 +21,6 @@ import { DateFieldComponent } from '../../../shared/ui/date-field';
 import {
   EntryIconComponent,
   entryTypeLabel,
-  PatientSessionInfo,
   StateAction,
   StateComponent,
   ToastService,
@@ -95,8 +94,9 @@ function browserTimeZone(): string {
  * « Enregistrer ↵ » et un lien « Détailler ». Entrée enregistre dans la séance courante, Ctrl+Entrée
  * ouvre l'éditeur prérempli (sortie `openEditor`, lien compris), Ctrl+S enregistre un brouillon,
  * Échap replie les champs en gardant le texte. Les avertissements bloquants et les 422 (`errors[]`)
- * s'affichent sous le champ concerné. Hors séance, le bloc est replié sur une ligne (puces +
- * placeholder) et se déplie au focus ; en séance il est déplié.
+ * s'affichent sous le champ concerné. Le bloc n'existe qu'en séance (décision du 12 novembre 2026,
+ * complément du propriétaire : aucune saisie sans séance ouverte) : le dossier ne le pose dans
+ * l'en-tête que lorsqu'une séance est ouverte, et il est alors déplié d'emblée.
  */
 @Component({
   selector: 'pm-capture-block',
@@ -123,8 +123,6 @@ function browserTimeZone(): string {
 export class CaptureBlockComponent {
   /** Le patient du dossier ouvert. */
   readonly patientId = input.required<string>();
-  /** Séance de l'en-tête : en séance (`current`), le bloc est déplié. */
-  readonly session = input<PatientSessionInfo | null>(null);
   /** Compteur d'écritures du dossier (PatientShellStore.revision) : rail et vocabulaire se relisent. */
   readonly revision = input(0);
 
@@ -162,7 +160,6 @@ export class CaptureBlockComponent {
   protected readonly text = signal('');
   /** Horloge du parseur, avancée à chaque frappe et avant d'enregistrer. */
   protected readonly now = signal(new Date());
-  private readonly focused = signal(false);
   /** Échap a replié les champs ; la frappe suivante les rouvre. */
   private readonly collapsed = signal(false);
   /** Une tentative d'enregistrement a eu lieu : les champs obligatoires vides se disent. */
@@ -174,7 +171,6 @@ export class CaptureBlockComponent {
   protected readonly untilControl = new FormControl<string | null>(null);
 
   protected readonly hasText = computed(() => this.text().trim().length > 0);
-  protected readonly inSession = computed(() => this.session()?.kind === 'current');
   /** Des choix manuels existent : le bloc compose même sans texte (Ressenti cliqué, émotion choisie). */
   private readonly draftActive = computed(() => {
     const draft = this.store.draft();
@@ -183,9 +179,8 @@ export class CaptureBlockComponent {
     );
   });
   protected readonly active = computed(() => this.hasText() || this.draftActive());
-  protected readonly expanded = computed(
-    () => !this.collapsed() && (this.inSession() || this.focused() || this.active()),
-  );
+  /** Les champs sont visibles, sauf repliés par Échap (ou par un focus discret) jusqu'à la frappe. */
+  protected readonly expanded = computed(() => !this.collapsed());
 
   /** La grammaire ne lit que la première ligne ; les suivantes restent du texte. */
   private readonly firstLine = computed(() => this.text().split(/\r?\n/, 1)[0] ?? '');
@@ -202,8 +197,8 @@ export class CaptureBlockComponent {
   );
 
   /**
-   * La première ligne interprétée, confrontée au vocabulaire et au rail ; null quand le bloc est
-   * replié sans saisie ni choix (déplié, une saisie vide compose une note vide : les champs sont là).
+   * La première ligne interprétée, confrontée au vocabulaire et au rail ; null quand les champs sont
+   * repliés sans saisie ni choix (dépliés, une saisie vide compose une note vide : les champs sont là).
    */
   protected readonly preview = computed<CapturePreview | null>(() =>
     this.active() || this.expanded() ? this.interpret(false) : null,
@@ -364,9 +359,8 @@ export class CaptureBlockComponent {
       }
       untracked(() => this.store.markStale());
     });
-    // En séance, le bloc se déplie et lit le vocabulaire et le rail sans attendre la première frappe.
+    // Le bloc est déplié d'emblée : vocabulaire et rail se lisent sans attendre la première frappe.
     effect(() => {
-      if (!this.inSession()) return;
       const patientId = this.patientId();
       untracked(() => void this.store.prepare(patientId));
     });
@@ -437,14 +431,13 @@ export class CaptureBlockComponent {
   }
 
   protected onFocusIn(): void {
-    this.focused.set(true);
     void this.store.prepare(this.patientId());
   }
 
+  /** Le focus quitte le bloc : des champs repliés par Échap reviennent pour la prochaine visite. */
   protected onFocusOut(event: FocusEvent): void {
     const next = event.relatedTarget;
     if (next instanceof Node && this.host.nativeElement.contains(next)) return;
-    this.focused.set(false);
     this.collapsed.set(false);
   }
 
@@ -454,7 +447,7 @@ export class CaptureBlockComponent {
     const target = event.target instanceof HTMLElement ? event.target : null;
     const modifier = event.ctrlKey || event.metaKey;
     if (event.key === 'Escape') {
-      if (this.expanded() && (this.inSession() || this.active())) {
+      if (this.expanded()) {
         event.preventDefault();
         this.collapsed.set(true);
       }

@@ -4,6 +4,8 @@ import { createPatient, intakeOf } from '../flux-5-timeline/timeline-data';
 import { expectNoAxeViolations } from '../support/axe';
 import { practitioner, shareSession, shoot } from './etats-support';
 
+const API = 'http://localhost:8080';
+
 // Planche 29 (M6-03) : état transverse hors ligne et raccourcis de B2 (1 2 3, M, N, L,
 // Échap, /) branchés et inactifs dans un champ, contre l'API réelle sur un compte jetable. Le 429
 // n'est pas provoqué ici (il faudrait saturer le quota de 600 requêtes par minute) : il est couvert
@@ -18,6 +20,11 @@ test.beforeAll(async () => {
   api = await practitioner('m6-03.transverse');
   patientId = await createPatient(api, 'Noé T.');
   await intakeOf(api, patientId);
+  // Le bloc de saisie n'existe qu'en séance (UX-S1).
+  const start = await api.post(`${API}/api/patients/${patientId}/sessions/start`, {
+    data: { modality: 'in_person' },
+  });
+  expect(start.status(), await start.text()).toBe(201);
 });
 
 test.afterAll(async () => {

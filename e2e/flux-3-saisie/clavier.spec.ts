@@ -142,6 +142,8 @@ test('flux 3 au clavier : démarrer, /res anxiété 8, Tab + Espace dans le rail
   await page.keyboard.press('Enter');
   expect((await closed).ok()).toBe(true);
   await expect(page.locator('pm-patient-header .session-text')).not.toContainText('en cours');
-  await expect(input).toBeFocused();
+  // Sans séance, plus de bloc de saisie : le focus revient sur « Démarrer la séance ».
+  await expect(input).toHaveCount(0);
+  await expect(start).toBeFocused();
   keys.expectNoPointer();
 });

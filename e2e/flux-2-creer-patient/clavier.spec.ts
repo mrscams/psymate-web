@@ -65,11 +65,12 @@ test('flux 2 au clavier : N, nom, pronom, motif, rythme, Ctrl+Entrée → vue d�
   });
   const { id } = (await response.json()) as { id: string };
 
-  // Vue d'ensemble vide mais structurée, barre de capture focalisée (B3 flux 2, étape 3).
+  // Vue d'ensemble vide mais structurée ; sans séance ouverte il n'y a pas de bloc de saisie
+  // (UX-S1) : « Démarrer la séance » prend le focus (B3 flux 2, étape 3).
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
   await expect(page.getByRole('heading', { level: 1, name: 'Marie D.' })).toBeVisible();
-  const capture = page.getByRole('textbox', { name: 'Noter quelque chose' });
-  await expect(capture).toBeFocused();
+  await expect(page.getByRole('textbox', { name: 'Noter quelque chose' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Démarrer la séance' })).toBeFocused();
   await expectNoAxeViolations(page);
 
   // Fiche du patient depuis le dossier (Maj+Tab jusqu'au lien de l'en-tête), version 2 au clavier.
