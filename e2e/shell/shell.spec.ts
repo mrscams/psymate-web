@@ -183,32 +183,40 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
   expect((await started).status()).toBe(201);
   expect((await started).request().postDataJSON()).toEqual({ modality: 'video' });
   await expect(h.session).toContainText('en cours depuis');
-  await expect(h.close).toBeVisible();
+  // UX-S3 : l'onglet Séance remplace la vue d'ensemble ; Clôturer est dans la barre de séance,
+  // celui de l'en-tête est masqué ; pas de toast (la barre le dit), une annonce polie.
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
+  await expect(h.close).toHaveCount(1);
+  await expect(page.locator('pm-session-bar')).toContainText('Séance en cours · visio');
   // B3 flux 3 et 6 : après Démarrer, la barre de capture prend le focus pour noter au clavier.
   await expect(h.capture).toBeFocused();
-  await expect(page.getByText('Séance démarrée.')).toBeVisible();
+  await expect(page.getByText('Séance démarrée.')).toBeAttached();
+  await expect(page.locator('pm-toast-outlet')).not.toContainText('Séance démarrée');
   expect(await page.evaluate(() => (window as unknown as { m107?: number }).m107)).toBe(1);
   await expectNoAxeViolations(page);
 
-  // Clôturer : dialogue avec la durée par défaut (préférence absente → 60 min).
+  // Clôturer : panneau latéral, durée écoulée arrondie (au moins 1), la préférence à un clic
+  // (préférence absente → « 60 habituels »).
   await h.close.click();
   const dialog = page.getByRole('dialog', { name: 'Clôturer la séance' });
   await expect(dialog).toBeVisible();
   const duration = dialog.getByLabel('Durée (min)');
-  await expect(duration).toHaveValue('60');
+  await expect(duration).toHaveValue('1');
   await expect(duration).toBeFocused();
-  await dialog.getByLabel('Compte rendu (facultatif)').fill('Point sur le sommeil.');
+  await dialog.getByRole('button', { name: '60 habituels' }).click();
+  await expect(duration).toHaveValue('60');
+  await dialog.getByLabel('Compte rendu').fill('Point sur le sommeil.');
   await expectNoAxeViolations(page);
 
-  // Les touches 1 2 3 ne naviguent pas derrière le dialogue.
+  // Les touches 1 2 3 ne naviguent pas derrière le panneau.
   await dialog.getByRole('button', { name: 'Annuler' }).focus();
   await page.keyboard.press('3');
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
 
   const closed = page.waitForResponse(
     (r) => r.url().includes('/api/sessions/') && r.url().endsWith('/close'),
   );
-  await dialog.getByRole('button', { name: 'Clôturer', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Clôturer la séance' }).click();
   const response = await closed;
   expect(response.status()).toBe(200);
   expect(response.request().postDataJSON()).toEqual({
@@ -216,14 +224,19 @@ test('Démarrer puis Clôturer la séance : en cours sans rechargement, durée p
     summary: 'Point sur le sommeil.',
   });
   await expect(dialog).toBeHidden();
+  // Retour de l'onglet Séance à la vue d'ensemble ; toast de 6 s avec « Modifier ».
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
   await expect(h.session).toContainText('Dernière séance :');
   await expect(h.start).toBeVisible();
-  await expect(page.getByText('Séance clôturée.')).toBeVisible();
+  await expect(page.getByText('Séance clôturée · 60 min · compte rendu enregistré')).toBeVisible();
+  await expect(
+    page.locator('pm-toast-outlet').getByRole('button', { name: 'Modifier' }),
+  ).toBeVisible();
   expect(await page.evaluate(() => (window as unknown as { m107?: number }).m107)).toBe(1);
   await expectNoAxeViolations(page);
 });
 
-test('Clôturer propose la durée de la préférence (45 min)', async ({ page, request }) => {
+test('Clôturer propose l’écoulé, la préférence (45 min) à un clic', async ({ page, request }) => {
   const account = await createAccount(request, 'm1-07.duree', 'psychologist');
   const prefs = await request.patch(`${API}/api/me/preferences`, {
     data: { 'sessions.defaultDurationMin': 45 },
@@ -239,13 +252,18 @@ test('Clôturer propose la durée de la préférence (45 min)', async ({ page, r
   await page.goto(`/fr/patients/${id}`);
   const h = header(page);
   await expect(h.session).toContainText('en cours depuis');
+  // Séance en cours : le dossier s'ouvre sur l'onglet Séance (UX-S3).
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
   await h.close.click();
   const dialog = page.getByRole('dialog', { name: 'Clôturer la séance' });
+  // Séance tout juste démarrée : 1 min proposée ; la préférence du compte à un clic.
+  await expect(dialog.getByLabel('Durée (min)')).toHaveValue('1');
+  await dialog.getByRole('button', { name: '45 habituels' }).click();
   await expect(dialog.getByLabel('Durée (min)')).toHaveValue('45');
   const closed = page.waitForResponse(
     (r) => r.url().includes('/api/sessions/') && r.url().endsWith('/close'),
   );
-  await dialog.getByRole('button', { name: 'Clôturer', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Clôturer la séance' }).click();
   expect((await closed).request().postDataJSON()).toEqual({ durationMin: 45 });
   await expect(h.session).toContainText('Dernière séance :');
   await expectNoAxeViolations(page);

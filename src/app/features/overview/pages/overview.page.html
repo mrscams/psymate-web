@@ -327,6 +327,7 @@
             [patientId]="patientId()"
             [expanded]="expanded()"
             (expandedChange)="setExpanded($event)"
+            (editSummary)="openEntry($event)"
           />
         }
       </pm-overview-block>

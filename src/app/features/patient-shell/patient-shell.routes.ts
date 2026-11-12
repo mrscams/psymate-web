@@ -2,8 +2,9 @@ import { Routes } from '@angular/router';
 
 /**
  * Montées sous /patients/:id par app.routes.ts (authGuard, statusGuard) : la page patient et ses
- * onglets (B2), chacun chargé à la demande avec son data.tab : overview (M4-05), timeline (M3-02),
- * graph (M2-06) et search (M4-08).
+ * onglets (B2), chacun chargé à la demande avec son data.tab : overview (M4-05), session (UX-S3 :
+ * l'onglet « Séance », tant qu'une séance est ouverte), timeline (M3-02), graph (M2-06) et search
+ * (M4-08).
  * /patients/:id/overview (destination de M1-06 après création) renvoie sur l'onglet 1,
  * /patients/:id, celui que l'en-tête désigne.
  * La page est chargée à la demande : app.component importe l'index (aide des raccourcis) sans
@@ -22,6 +23,12 @@ export const PATIENT_SHELL_ROUTES: Routes = [
         title: $localize`:Titre d'onglet du dossier@@patientShell.overview.pageTitle:Vue d'ensemble · PsyMate`,
       },
       { path: 'overview', pathMatch: 'full', redirectTo: '' },
+      {
+        path: 'session',
+        loadComponent: () => import('./pages/session-tab.page').then((m) => m.SessionTabPage),
+        data: { tab: 'session' },
+        title: $localize`:Titre d'onglet du dossier@@patientShell.session.pageTitle:Séance · PsyMate`,
+      },
       {
         path: 'timeline',
         loadComponent: () => import('../timeline').then((m) => m.TimelinePage),

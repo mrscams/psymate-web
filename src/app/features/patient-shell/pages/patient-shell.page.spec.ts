@@ -14,12 +14,15 @@ import { provideRouter, Route, Router, Routes, withComponentInputBinding } from 
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { PreferencesStore } from '../../../core/preferences';
+import { ToastService } from '../../../shared/ui';
 import { CaptureBlockComponent } from '../../capture';
 import { PatientShellApi } from '../data/patient-shell.api';
 import {
   closedSession,
   intakeSession,
+  notedEntry,
   openSession,
+  reminders,
   shellPatient,
 } from '../data/patient-shell.fixtures';
 import { PatientShellStore } from '../data/patient-shell.store';
@@ -64,7 +67,18 @@ function routesWithFakeOverview(): Routes {
 
 type Api = Pick<
   PatientShellApi,
-  'patient' | 'current' | 'start' | 'close' | 'contact' | 'hasEntries' | 'firstSessionMonth'
+  | 'patient'
+  | 'current'
+  | 'start'
+  | 'close'
+  | 'contact'
+  | 'hasEntries'
+  | 'firstSessionMonth'
+  | 'sessionEntries'
+  | 'linkSentence'
+  | 'previousSession'
+  | 'reminders'
+  | 'emotionLabels'
 >;
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
@@ -82,6 +96,12 @@ async function render(api: Partial<Api> = {}, url = '/patients/p-marie', duratio
     contact: api.contact ?? vi.fn(),
     hasEntries: api.hasEntries ?? vi.fn().mockResolvedValue(true),
     firstSessionMonth: api.firstSessionMonth ?? vi.fn().mockResolvedValue('2025-03'),
+    // Onglet Séance (UX-S3).
+    sessionEntries: api.sessionEntries ?? vi.fn().mockResolvedValue([notedEntry()]),
+    linkSentence: api.linkSentence ?? vi.fn().mockResolvedValue(null),
+    previousSession: api.previousSession ?? vi.fn().mockResolvedValue(null),
+    reminders: api.reminders ?? vi.fn().mockResolvedValue(reminders()),
+    emotionLabels: api.emotionLabels ?? vi.fn().mockResolvedValue({}),
   };
   TestBed.configureTestingModule({
     providers: [
@@ -135,9 +155,16 @@ function text(el: Element | null | undefined): string {
 }
 
 function dialog(): HTMLElement {
-  const box = document.querySelector<HTMLElement>('pm-close-session-dialog');
-  if (!box) throw new Error('aucun dialogue de clôture');
+  const box = document.querySelector<HTMLElement>('pm-close-session-panel');
+  if (!box) throw new Error('aucun panneau de clôture');
   return box;
+}
+
+/** Le bouton Clôturer de la barre de séance (UX-S3 : celui de l'en-tête est masqué en séance). */
+function closeButton(el: HTMLElement): HTMLButtonElement {
+  const button = el.querySelector<HTMLButtonElement>('pm-session-bar button');
+  if (!button) throw new Error('aucun bouton Clôturer dans la barre de séance');
+  return button;
 }
 
 describe('PatientShellPage', () => {
@@ -237,7 +264,13 @@ describe('PatientShellPage', () => {
       expect(api.patient).toHaveBeenCalledTimes(1);
       expect(el.querySelector('.session-text')?.classList.contains('current')).toBe(true);
       expect(text(el.querySelector('.session-text'))).toMatch(/en cours depuis 12 min$/);
-      expect(el.querySelector('button.close-session')).not.toBeNull();
+      // UX-S3 : la barre de séance porte Clôturer ; l'onglet Séance remplace la vue d'ensemble.
+      expect(text(closeButton(el))).toBe('Clôturer la séance');
+      expect(el.querySelector('pm-patient-header')?.classList.contains('in-session')).toBe(true);
+      expect(TestBed.inject(Router).url).toBe('/patients/p-marie/session');
+      await settle(harness);
+      expect(el.querySelector('pm-session-tab-page')).not.toBeNull();
+      expect(counter(el)).toBeNull();
       await vi.waitFor(() =>
         expect(document.activeElement).toBe(el.querySelector('pm-capture-block textarea')),
       );
@@ -254,36 +287,99 @@ describe('PatientShellPage', () => {
       const line = text(el.querySelector('.session-text'));
       expect(line).toMatch(/non clôturée$/);
       expect(line).not.toContain('en cours depuis');
-      expect(el.querySelector('button.close-session')).not.toBeNull();
+      // La barre grise (UX-S3) : Clôturer maintenant et Reprendre.
+      expect(el.querySelector('pm-session-bar .unclosed')).not.toBeNull();
+      expect(text(closeButton(el))).toBe('Clôturer maintenant');
     } finally {
       vi.useRealTimers();
     }
   });
 
-  it('Clôturer : dialogue avec la durée des préférences, POST close, « Dernière séance »', async () => {
-    const { el, harness, api } = await render(
-      { current: vi.fn().mockResolvedValue(openSession()) },
-      '/patients/p-marie',
-      45,
-    );
-    el.querySelector<HTMLButtonElement>('button.close-session')?.click();
+  it('Clôturer : panneau de 520 px, durée écoulée arrondie à 5 min, POST close, toast « Modifier », retour à la vue d’ensemble', async () => {
+    // 48 min après le début de la séance renvoyée (24 oct. 2026, 14:00 Z) : la durée proposée est
+    // 50 (écoulé arrondi à 5 min), la préférence (45) à un clic.
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-24T14:48:00Z'));
+    try {
+      const { el, harness, api } = await render(
+        {
+          current: vi.fn().mockResolvedValue(openSession()),
+          close: vi.fn().mockResolvedValue(closedSession({ id: 's-open', durationMin: 50 })),
+        },
+        '/patients/p-marie',
+        45,
+      );
+      expect(TestBed.inject(Router).url).toBe('/patients/p-marie/session');
+      closeButton(el).click();
+      await settle(harness);
+      const box = dialog();
+      expect(box.closest<HTMLElement>('.pm-side-panel-pane')?.style.width).toBe('520px');
+      const duration = box.querySelector<HTMLInputElement>('#field-durationMin');
+      expect(duration?.value).toBe('50');
+      expect(text(box)).toContain('45 habituels');
+      const summary = box.querySelector<HTMLTextAreaElement>('#field-summary');
+      summary!.value = 'Point sur le sommeil';
+      summary!.dispatchEvent(new Event('input'));
+      const confirm = [...box.querySelectorAll('button')].find(
+        (b) => text(b) === 'Clôturer la séance',
+      );
+      confirm!.click();
+      await settle(harness);
+      await vi.waitFor(() => expect(document.querySelector('pm-close-session-panel')).toBeNull());
+      expect(api.close).toHaveBeenCalledWith('s-open', {
+        durationMin: 50,
+        summary: 'Point sur le sommeil',
+      });
+      await settle(harness);
+      expect(text(el.querySelector('.session-text'))).toBe('Dernière séance : 17 oct. 2026');
+      expect(el.querySelector('button.start-session')).not.toBeNull();
+      expect(el.querySelector('pm-session-bar')).toBeNull();
+      // Retour de l'onglet Séance à la vue d'ensemble (04b, état 6).
+      expect(TestBed.inject(Router).url).toBe('/patients/p-marie');
+      const toasts = TestBed.inject(ToastService).toasts();
+      expect(toasts.at(-1)?.message).toBe('Séance clôturée · 50 min · compte rendu enregistré');
+      expect(toasts.at(-1)?.action?.label).toBe('Modifier');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('Clôturer et revenir à la liste : POST close puis /patients', async () => {
+    const { el, harness, api } = await render({
+      current: vi.fn().mockResolvedValue(openSession()),
+    });
+    closeButton(el).click();
     await settle(harness);
     const box = dialog();
-    const duration = box.querySelector<HTMLInputElement>('#field-durationMin');
-    expect(duration?.value).toBe('45');
-    const summary = box.querySelector<HTMLTextAreaElement>('#field-summary');
-    summary!.value = 'Point sur le sommeil';
-    summary!.dispatchEvent(new Event('input'));
-    box.querySelector<HTMLButtonElement>('button.confirm')?.click();
+    [...box.querySelectorAll('button')]
+      .find((b) => text(b) === 'Clôturer et revenir à la liste')!
+      .click();
     await settle(harness);
-    await vi.waitFor(() => expect(document.querySelector('pm-close-session-dialog')).toBeNull());
-    expect(api.close).toHaveBeenCalledWith('s-open', {
-      durationMin: 45,
-      summary: 'Point sur le sommeil',
+    await vi.waitFor(() => expect(document.querySelector('pm-close-session-panel')).toBeNull());
+    expect(api.close).toHaveBeenCalledTimes(1);
+    await settle(harness);
+    expect(TestBed.inject(Router).url).toBe('/patients');
+  });
+
+  it('Clôturer, 409 : le panneau se ferme, avis, l’en-tête relu, retour à la vue d’ensemble', async () => {
+    const current = vi
+      .fn()
+      .mockResolvedValueOnce(openSession())
+      .mockResolvedValue(closedSession({ id: 's-open' }));
+    const { el, harness } = await render({
+      current,
+      close: vi.fn().mockRejectedValue({ status: 409, code: 'SESSION_ALREADY_CLOSED' }),
     });
+    closeButton(el).click();
     await settle(harness);
-    expect(text(el.querySelector('.session-text'))).toBe('Dernière séance : 17 oct. 2026');
-    expect(el.querySelector('button.start-session')).not.toBeNull();
+    [...dialog().querySelectorAll('button')].find((b) => text(b) === 'Clôturer la séance')!.click();
+    await settle(harness);
+    await vi.waitFor(() => expect(document.querySelector('pm-close-session-panel')).toBeNull());
+    await settle(harness);
+    expect(current).toHaveBeenCalledTimes(2);
+    expect(text(el.querySelector('.session-text'))).toContain('Dernière séance');
+    expect(TestBed.inject(ToastService).toasts().at(-1)?.level).toBe('warning');
+    expect(TestBed.inject(Router).url).toBe('/patients/p-marie');
   });
 
   it('Clôturer, 422 : message du serveur sous la durée, le dialogue reste ouvert', async () => {
@@ -296,9 +392,9 @@ describe('PatientShellPage', () => {
       current: vi.fn().mockResolvedValue(openSession()),
       close,
     });
-    el.querySelector<HTMLButtonElement>('button.close-session')?.click();
+    closeButton(el).click();
     await settle(harness);
-    dialog().querySelector<HTMLButtonElement>('button.confirm')?.click();
+    [...dialog().querySelectorAll('button')].find((b) => text(b) === 'Clôturer la séance')!.click();
     await settle(harness);
     await vi.waitFor(() =>
       expect(text(dialog().querySelector('#field-durationMin-error'))).toBe('Durée refusée.'),
@@ -310,12 +406,12 @@ describe('PatientShellPage', () => {
     const { el, harness, api } = await render({
       current: vi.fn().mockResolvedValue(openSession()),
     });
-    el.querySelector<HTMLButtonElement>('button.close-session')?.click();
+    closeButton(el).click();
     await settle(harness);
     const duration = dialog().querySelector<HTMLInputElement>('#field-durationMin')!;
     duration.value = '0';
     duration.dispatchEvent(new Event('input'));
-    dialog().querySelector<HTMLButtonElement>('button.confirm')?.click();
+    [...dialog().querySelectorAll('button')].find((b) => text(b) === 'Clôturer la séance')!.click();
     await settle(harness);
     expect(text(dialog().querySelector('#field-durationMin-error'))).toBe(
       'Une durée entière entre 1 et 600 minutes.',

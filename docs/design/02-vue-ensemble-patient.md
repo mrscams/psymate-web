@@ -2,6 +2,8 @@
 
 > Spécification pour agents. Maquette : `02-vue-ensemble-patient.html` / `.png`. Palette : Nordique. Document B, écran 2 (page d'accueil d'un patient) ; Document A, module `overview` (A4.8, UC-9).
 >
+> Mis à jour le 12 novembre 2026 (UX-S3, propositions 04 et 04b) : tant qu'une séance est ouverte, l'onglet 1 est l'onglet **Séance** (`/patients/:id/session`, feature `patient-shell`), pas la vue d'ensemble : barre de séance teintée (minuterie, durée prévue, dépassement en teinte warning), « Noté pendant cette séance » (chronologie filtrée sur la séance, phrase de lien de `GET /api/entries/{id}/links`), colonne latérale (« Prévu la dernière fois », séance précédente, « À garder en tête » lu sur la projection de la vue d'ensemble). La clôture passe par un panneau latéral de 520 px (durée écoulée arrondie, entrées notées en vue, invites, « Prochaine fois »), puis un toast de 6 s avec « Modifier ». **Convention « Prochaine fois »** : les dernières lignes du compte rendu, introduites par « Prochaine fois : », sont affichées à part dans « Dernières séances » (vues simple et complète) avec un lien « modifier le compte rendu » ; aucun champ ni changement de contrat.
+>
 > Mis à jour le 11 novembre 2026 (UX-F1, audit UX du 9 novembre) : tuile « Situations actives » à la place de « liens actifs » ; « Faits clés » limités à ce que porte `OverviewFactsDto` ; « Point d'attention » de la vue simple limité aux drapeaux ; notes sans titre nommées « Note · date ». Maquettes 02 et 02b corrigées en conséquence.
 
 ## Objectif

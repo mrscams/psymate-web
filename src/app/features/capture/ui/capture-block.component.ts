@@ -387,6 +387,30 @@ export class CaptureBlockComponent {
     );
   }
 
+  /**
+   * Met un texte dans le bloc (UX-S3, « Noter » d'un point « Prévu la dernière fois » : « Agenda du
+   * sommeil : »), puce Note, champs dépliés, focus et caret à la fin. La saisie en cours est
+   * remplacée : « Noter » est un geste volontaire sur un bloc vide ou abandonné.
+   */
+  prefill(text: string): void {
+    this.clear();
+    this.text.set(text);
+    this.now.set(new Date());
+    this.store.chooseType('note');
+    void this.store.prepare(this.patientId());
+    afterNextRender(
+      () => {
+        const field = this.field();
+        if (!field) return;
+        field.value = text;
+        this.grow(field);
+        field.focus();
+        field.setSelectionRange(text.length, text.length);
+      },
+      { injector: this.injector },
+    );
+  }
+
   /** Vide le bloc (son texte est parti dans une entrée ou dans le brouillon de l'éditeur). */
   clear(): void {
     this.text.set('');

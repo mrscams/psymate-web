@@ -1,0 +1,261 @@
+<section class="session-tab" aria-labelledby="session-tab-heading">
+  <h2
+    id="session-tab-heading"
+    class="sr-only"
+    i18n="Titre de l'onglet Séance@@patientShell.session.heading"
+  >
+    Séance
+  </h2>
+
+  @if (session(); as current) {
+    <div class="pad-layout">
+      <div class="pad-main">
+        <!-- Noté pendant cette séance : la chronologie filtrée sur la séance, trois états. -->
+        <section class="noted" aria-labelledby="noted-heading">
+          <div class="sect-head">
+            <h2
+              id="noted-heading"
+              i18n="Titre du bloc noté pendant la séance@@patientShell.noted.heading"
+            >
+              Noté pendant cette séance
+            </h2>
+            @if (countText(); as count) {
+              <span class="meta">{{ count }}</span>
+            }
+          </div>
+          @switch (notedState()) {
+            @case ('loading') {
+              <pm-state kind="loading" skeleton="row" [lines]="3" />
+            }
+            @case ('error') {
+              <pm-state
+                kind="error"
+                [title]="notedErrorTitle"
+                [action]="notedRetry"
+                [details]="shell.noted().problem?.detail"
+              />
+            }
+            @case ('empty') {
+              <!-- Carnet vide (04b, état 2) : ce qui ouvre une séance, à la place d'une liste vide. -->
+              <div class="empty-pad">
+                <div>
+                  <h3 i18n="Titre du bloc prévu la dernière fois@@patientShell.planned.heading">
+                    Prévu la dernière fois
+                  </h3>
+                  @if (contextState() === 'loading') {
+                    <pm-state kind="loading" skeleton="row" [lines]="2" compact />
+                  } @else if (plannedLines().length) {
+                    <ng-container *ngTemplateOutlet="checklist" />
+                  } @else {
+                    <p
+                      class="faint"
+                      i18n="Aucune ligne prévue la dernière fois@@patientShell.planned.none"
+                    >
+                      Rien de prévu dans le dernier compte rendu.
+                    </p>
+                  }
+                  <p
+                    class="faint hint"
+                    i18n="Explication du bloc prévu la dernière fois@@patientShell.planned.hint"
+                  >
+                    Les lignes « Prochaine fois : » du dernier compte rendu. Cocher n'enregistre
+                    rien ; « Noter » prépare une note.
+                  </p>
+                </div>
+                <div>
+                  <h3>{{ sinceTitle() }}</h3>
+                  @if (contextState() === 'loading') {
+                    <pm-state kind="loading" skeleton="row" [lines]="2" compact />
+                  } @else if (sinceEntries().length) {
+                    <ul class="items">
+                      @for (entry of sinceEntries(); track entry.entryId) {
+                        <li>
+                          <pm-entry-icon [type]="entry.type" [size]="12" />
+                          <span>{{ sinceName(entry) }}</span>
+                        </li>
+                      }
+                    </ul>
+                  } @else {
+                    <p
+                      class="faint"
+                      i18n="Aucune entrée depuis la séance précédente@@patientShell.since.none"
+                    >
+                      Rien de noté entre les séances.
+                    </p>
+                  }
+                </div>
+              </div>
+            }
+            @default {
+              <div class="panel">
+                <pm-noted-entries
+                  [entries]="noted()"
+                  [links]="shell.links()"
+                  [emotionLabels]="emotionLabels()"
+                  [highlightedId]="highlighted()"
+                  [editable]="true"
+                  [now]="now()"
+                  (edit)="edit($event)"
+                />
+              </div>
+              <p
+                class="faint hint"
+                i18n="Note sous la liste des entrées de la séance@@patientShell.noted.hint"
+              >
+                Chaque entrée reste modifiable 1 h 15 sans créer de version. <kbd>N</kbd> ouvre
+                l'éditeur complet.
+              </p>
+            }
+          }
+        </section>
+      </div>
+
+      <!-- Colonne latérale : contexte de la séance (04b, état 3), blocs séparés par des filets. -->
+      <aside
+        class="ctx"
+        aria-label="Contexte de la séance"
+        i18n-aria-label="
+          Étiquette de la colonne latérale de l'onglet Séance@@patientShell.context.label"
+      >
+        @switch (contextState()) {
+          @case ('loading') {
+            <div class="block">
+              <pm-state kind="loading" skeleton="block" [lines]="3" compact />
+            </div>
+          }
+          @case ('error') {
+            <div class="block">
+              <pm-state
+                kind="error"
+                compact
+                [title]="contextErrorTitle"
+                [action]="contextRetry"
+                [details]="shell.context().problem?.detail"
+              />
+            </div>
+          }
+          @default {
+            @if (notedState() !== 'empty' && plannedLines().length) {
+              <div class="block">
+                <h3 i18n="Titre du bloc prévu la dernière fois@@patientShell.planned.heading">
+                  Prévu la dernière fois
+                </h3>
+                <ng-container *ngTemplateOutlet="checklist" />
+              </div>
+            }
+            <!-- Carnet vide (04b, état 2) : le compte rendu précédent en tête de la colonne. -->
+            @if (notedState() === 'empty' && context()?.previous; as previous) {
+              <div class="block">
+                <h3>{{ previousTitle() }}</h3>
+                @if (previousBody()) {
+                  <p class="summary">{{ previousBody() }}</p>
+                } @else {
+                  <p
+                    class="faint"
+                    i18n="Séance précédente sans compte rendu@@patientShell.previous.noSummary"
+                  >
+                    Pas de compte rendu.
+                  </p>
+                }
+              </div>
+            }
+            @if (hasReminders()) {
+              <div class="block">
+                <h3 i18n="Titre du bloc à garder en tête@@patientShell.reminders.heading">
+                  À garder en tête
+                </h3>
+                @for (flag of reminders()!.flags; track $index) {
+                  <p class="line">
+                    <span class="chip flag">{{ flagLabel(flag.kind) }}</span>
+                    @if (flag.reason) {
+                      <span class="muted">{{ flag.reason }}</span>
+                    }
+                  </p>
+                }
+                @for (medication of reminders()!.medications; track medication.entryId) {
+                  <p class="line">
+                    <pm-entry-icon type="medication" [size]="12" />
+                    <span>
+                      <strong>{{ medication.molecule }}</strong>
+                      @if (medication.dosage) {
+                        {{ medication.dosage }}
+                      }
+                      @if (medication.since) {
+                        <span
+                          class="muted"
+                          i18n="
+                            Début d'un médicament dans les rappels@@patientShell.reminders.since"
+                        >
+                          · depuis le {{ day(medication.since) }}</span
+                        >
+                      }
+                    </span>
+                  </p>
+                }
+                @for (situation of reminders()!.situations; track situation.entryId) {
+                  <p class="line">
+                    <pm-entry-icon type="situation" [size]="12" />
+                    <span>
+                      @if (situation.title) {
+                        {{ situation.title }}
+                      } @else {
+                        <ng-container
+                          i18n="
+                            Situation sans titre dans les rappels@@patientShell.reminders.untitled"
+                          >Situation sans titre</ng-container
+                        >
+                      }
+                      <span
+                        class="muted"
+                        i18n="Situation en cours dans les rappels@@patientShell.reminders.ongoing"
+                      >
+                        · en cours</span
+                      >
+                    </span>
+                  </p>
+                }
+              </div>
+            }
+            <div class="block">
+              <h3 i18n="Titre du bloc raccourcis dans le texte@@patientShell.shortcuts.heading">
+                Raccourcis dans le texte
+              </h3>
+              <p
+                class="muted small"
+                i18n="Raccourcis de la grammaire du bloc de saisie@@patientShell.shortcuts.text"
+              >
+                <b>anx 7</b> ressenti · <b>/evt</b> événement · <b>/sit</b> situation ·
+                <b>/med</b> médicament · <b>/note</b> · <b>hier</b>, <b>12 mars</b>,
+                <b>il y a 3 j</b> dates · <b>&gt; cible</b> lien
+              </p>
+            </div>
+          }
+        }
+      </aside>
+    </div>
+  }
+</section>
+
+<!-- « Prévu la dernière fois » : la même liste dans le carnet vide et dans la colonne latérale. -->
+<ng-template #checklist>
+  <ul class="checklist">
+    @for (line of plannedLines(); track $index) {
+      <li [class.done]="isTicked(line)">
+        <input
+          type="checkbox"
+          class="cb"
+          [id]="'planned-' + $index"
+          [checked]="isTicked(line)"
+          (change)="toggle(line)"
+        />
+        <label [for]="'planned-' + $index">{{ line }}</label>
+        <button type="button" class="ghost" (click)="note(line)">
+          <ng-container i18n="Bouton noter d'un point prévu@@patientShell.planned.note"
+            >Noter</ng-container
+          >
+          <span class="sr-only"> : {{ line }}</span>
+        </button>
+      </li>
+    }
+  </ul>
+</ng-template>

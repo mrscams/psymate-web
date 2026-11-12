@@ -112,7 +112,20 @@
           </p>
         }
         @if (session.summary) {
-          <p class="summary">{{ session.summary }}</p>
+          @if (lastSummary().body) {
+            <p class="summary">{{ lastSummary().body }}</p>
+          }
+          @if (lastSummary().nextTime.length) {
+            <!-- Trace « Prochaine fois » (UX-S3, proposition 04b état 6) : les dernières lignes du compte rendu. -->
+            <p class="goal">
+              <strong
+                i18n="
+                  Marqueur prochaine fois dans la trace d'une séance@@overview.sessions.nextTime"
+                >Prochaine fois :</strong
+              >
+              {{ lastSummary().nextTime.join(' · ') }}
+            </p>
+          }
         } @else {
           <p class="muted" i18n="Séance sans compte rendu@@overview.simple.lastSession.noSummary">
             Pas de compte rendu.
@@ -135,6 +148,15 @@
             i18n="Dernière séance vers la timeline@@overview.simple.lastSession.inTimeline"
             >Voir la séance dans la timeline</a
           >
+          @if (lastEditable()) {
+            ·
+            <button type="button" class="link" (click)="entrySelected.emit(session.entryId)">
+              <ng-container
+                i18n="Modifier le compte rendu de la dernière séance@@overview.sessions.editSummary"
+                >modifier le compte rendu</ng-container
+              >
+            </button>
+          }
         </p>
         @if (previousSessions().length) {
           <div class="previous">

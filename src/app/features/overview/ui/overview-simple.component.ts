@@ -12,6 +12,7 @@ import { RouterLink } from '@angular/router';
 import { EntryIconComponent, entryTypeLabel } from '../../../shared/ui';
 import { Loadable, StateKind } from '../../../shared/util';
 import { ENTRY_QUERY_PARAM } from '../../entries';
+import { splitNextTime } from '../../patient-shell';
 import {
   blockState,
   followedSinceOf,
@@ -127,6 +128,16 @@ export class OverviewSimpleComponent {
   /** La plus récente des séances : la seule qui porte son compte rendu entier (contrat). */
   protected readonly lastSession = computed(() => this.view()?.recentSessions[0] ?? null);
   protected readonly previousSessions = computed(() => this.view()?.recentSessions.slice(1) ?? []);
+  /**
+   * Le compte rendu de la dernière séance, séparé de ses lignes « Prochaine fois » (UX-S3 :
+   * convention des dernières lignes, lue par le client ; le serveur n'y voit qu'un texte).
+   */
+  protected readonly lastSummary = computed(() => splitNextTime(this.lastSession()?.summary));
+  /** « modifier le compte rendu » : une séance ordinaire clôturée (l'éditeur, dans la grâce ou en version). */
+  protected readonly lastEditable = computed(() => {
+    const session = this.lastSession();
+    return !!session && session.kind === 'session' && session.closedAt !== null;
+  });
 
   protected readonly untitledSituation = $localize`:Situation sans titre@@overview.situations.untitled:Situation sans titre`;
   protected readonly flagLabel = flagLabel;

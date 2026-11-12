@@ -104,14 +104,14 @@ test('flux 3 au clavier : démarrer, /res anxiété 8, Tab + Espace dans le rail
     links: [{ targetId: eventId, linkType: 'triggers', direction: 'incoming' }],
   });
 
-  // 6. L'entrée apparaît dans « Activité récente » ; le bloc est vide et garde le focus.
+  // 6. L'entrée apparaît dans « Noté pendant cette séance » (onglet Séance, UX-S3) ; le bloc est
+  // vide et garde le focus.
   await expect(input).toHaveValue('');
   await expect(input).toBeFocused();
-  const recent = page
-    .locator('pm-overview-block section')
-    .filter({ has: page.getByRole('heading', { level: 3, name: 'Activité récente' }) });
-  // Ressenti sans titre : nommé par son émotion et son intensité (titre de repli, UX-A5, UX-B4).
-  await expect(recent.getByRole('link', { name: /^Anxiété 8\/10/ })).toBeVisible();
+  const noted = page.locator('pm-noted-entries .entry').first();
+  // Ressenti sans titre : son émotion, l'échelle dit l'intensité (proposition 04b).
+  await expect(noted.locator('.name')).toHaveText('Anxiété');
+  await expect(noted.locator('.scale i.on')).toHaveCount(8);
 
   // Ctrl+S : brouillon, à compléter après la séance.
   await page.keyboard.type('note à compléter après la séance');
@@ -138,7 +138,7 @@ test('flux 3 au clavier : démarrer, /res anxiété 8, Tab + Espace dans le rail
   const closed = page.waitForResponse(
     (r) => r.request().method() === 'POST' && /\/sessions\/[^/]+\/close$/.test(r.url()),
   );
-  await tabTo(page, dialog.getByRole('button', { name: /Clôturer/ }), { max: 20 });
+  await tabTo(page, dialog.getByRole('button', { name: 'Clôturer la séance' }), { max: 20 });
   await page.keyboard.press('Enter');
   expect((await closed).ok()).toBe(true);
   await expect(page.locator('pm-patient-header .session-text')).not.toContainText('en cours');

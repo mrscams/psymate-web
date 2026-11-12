@@ -16,7 +16,22 @@
     >
   </section>
 } @else {
+  <!-- Barre de séance (UX-S3, proposition 04) : au-dessus de l'en-tête tant qu'une séance est
+       ouverte ; le bouton Clôturer de l'en-tête est alors masqué (il est dans la barre). -->
+  @if (store.currentSession(); as current) {
+    <pm-session-bar
+      [session]="current"
+      [planned]="store.plannedDurationMin()"
+      [unclosedAfterMin]="unclosedAfterMin"
+      [notedCount]="store.notedCount()"
+      [busy]="store.busy()"
+      [now]="now()"
+      (closeRequested)="openClose()"
+      (resumeRequested)="resume()"
+    />
+  }
   <pm-patient-header
+    [class.in-session]="!!store.currentSession()"
     [patient]="headerPatient()"
     [session]="headerSession()"
     [unclosedAfterMin]="unclosedAfterMin"
@@ -80,6 +95,8 @@
       </button>
     </div>
   }
+  <!-- Annonce polie (séance démarrée) : pas de toast, la couleur et la minuterie le disent (04b). -->
+  <p class="sr-only" role="status" aria-live="polite">{{ announcement() }}</p>
   @if (store.patient()) {
     <!-- Timeline (UX-G2c) : surface de travail pleine hauteur, marge haute resserrée. -->
     <div class="tab-content" [class.dense]="activeTab() === 'timeline'">

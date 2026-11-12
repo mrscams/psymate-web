@@ -3,12 +3,16 @@ import { patchState, signalStore, withComputed, withMethods, withState } from '@
 
 import { ApiProblem, asProblem } from '../../../core/http';
 import { PreferencesStore } from '../../../core/preferences';
+import { failed, idle, Loadable, loaded, loading } from '../../../shared/util';
 import { PatientShellApi } from './patient-shell.api';
 import {
+  CloseDraft,
   CloseSessionInput,
   ContactInput,
   isClosed,
   isOpen,
+  NotedEntry,
+  SessionContext,
   SessionModality,
   ShellPatient,
   ShellSession,
@@ -23,6 +27,19 @@ export type ShellStatus = 'idle' | 'loading' | 'saving' | 'error';
  * pas de lecture), pending si le dossier n'a encore aucune entrée saisie, done sinon.
  */
 export type FirstEntryState = 'unknown' | 'pending' | 'done';
+
+/** Phrase de lien d'une entrée notée (GET /api/entries/{id}/links) : lue, absente, ou en échec. */
+export interface LinkSentenceState {
+  status: 'loading' | 'loaded' | 'error';
+  sentence: string | null;
+  count: number;
+}
+
+/** La dernière séance clôturée depuis ce dossier, pour le toast « Modifier » (UX-S3). */
+export interface ClosedSessionNotice {
+  session: ShellSession;
+  withSummary: boolean;
+}
 
 interface PatientShellState {
   patientId: string | null;
@@ -51,6 +68,23 @@ interface PatientShellState {
    * qu'il n'est pas lu (ou si la lecture a échoué) : borne le « suivi·e depuis » de l'en-tête.
    */
   firstSessionMonth: string | null | undefined;
+  // ---- onglet Séance (UX-S3)
+  /** Séance dont `noted`, `links` et `context` parlent ; null hors séance. */
+  notedSessionId: string | null;
+  /** « Noté pendant cette séance » : la chronologie filtrée sur la séance ouverte. */
+  noted: Loadable<NotedEntry[]>;
+  /** Phrase de lien par entrée notée (seules celles qui ont un lien sont lues). */
+  links: Record<string, LinkSentenceState>;
+  /** Séance précédente, rappels et vocabulaire, lus une fois par séance ouverte. */
+  context: Loadable<SessionContext>;
+  /** Dernière entrée créée depuis le dossier (bloc de saisie) : sa ligne est surlignée 2 s. */
+  lastWrittenId: string | null;
+  /** Brouillon du panneau de clôture (Échap, voile) ; effacé à la clôture. */
+  closeDraft: CloseDraft | null;
+  /** Dernière séance clôturée ici (toast avec « Modifier »). */
+  lastClosed: ClosedSessionNotice | null;
+  /** « Noter » de l'onglet Séance : texte à mettre dans le bloc de saisie (l'en-tête le relaie). */
+  prefillRequest: { text: string; seq: number } | null;
 }
 
 const initialState: PatientShellState = {
@@ -65,6 +99,14 @@ const initialState: PatientShellState = {
   revision: 0,
   firstEntry: 'unknown',
   firstSessionMonth: undefined,
+  notedSessionId: null,
+  noted: idle(),
+  links: {},
+  context: idle(),
+  lastWrittenId: null,
+  closeDraft: null,
+  lastClosed: null,
+  prefillRequest: null,
 };
 
 /** Séance courante de l'API → (en cours, dernière) ; l'accueil ne compte ni pour l'un ni pour l'autre. */
@@ -83,6 +125,9 @@ function split(
  * (/patients/:id) : les onglets l'injectent (index.ts) et y rangent leur état pour le retrouver
  * quand on revient ; il disparaît quand on quitte le dossier. Après une écriture, la séance vient
  * de la réponse du serveur (ou est relue), rien n'est recalculé localement.
+ * UX-S3 : tant qu'une séance est ouverte, le store tient aussi ce que l'onglet Séance et le
+ * panneau de clôture montrent (entrées notées, phrases de lien, séance précédente, rappels), relu
+ * après chaque écriture ; le brouillon de clôture et la dernière séance clôturée.
  */
 export const PatientShellStore = signalStore(
   withState(initialState),
@@ -103,6 +148,15 @@ export const PatientShellStore = signalStore(
     }),
     /** Durée proposée à la clôture : préférence sessions.defaultDurationMin (60 par défaut). */
     defaultDurationMin: computed(() => prefs.defaultDurationMin()),
+    /**
+     * Durée prévue de la séance (proposition 04b) : followUp.durationMin du dossier (fiche 16),
+     * sinon la préférence du compte.
+     */
+    plannedDurationMin: computed(
+      () => store.patient()?.plannedDurationMin ?? prefs.defaultDurationMin(),
+    ),
+    /** Nombre d'entrées notées pendant la séance ouverte ; null tant qu'elles ne sont pas lues. */
+    notedCount: computed(() => store.noted().data?.length ?? null),
   })),
   withMethods((store, api = inject(PatientShellApi)) => {
     /** Relit la séance courante (après un 409, un contact) ; un échec garde l'affichage. */
@@ -145,6 +199,70 @@ export const PatientShellStore = signalStore(
         if (store.patientId() === id) patchState(store, { firstSessionMonth: month });
       } catch {
         // Pas de date de suivi plutôt qu'une date que les séances pourraient démentir.
+      }
+    }
+
+    /** La phrase de lien d'une entrée notée, lue une fois (relue après une écriture si demandé). */
+    async function readLink(entryId: string, sessionId: string): Promise<void> {
+      const previous = store.links()[entryId];
+      patchState(store, {
+        links: {
+          ...store.links(),
+          [entryId]: {
+            status: 'loading',
+            sentence: previous?.sentence ?? null,
+            count: previous?.count ?? 0,
+          },
+        },
+      });
+      let next: LinkSentenceState;
+      try {
+        const link = await api.linkSentence(entryId);
+        next = { status: 'loaded', sentence: link?.sentence ?? null, count: link?.count ?? 0 };
+      } catch {
+        next = {
+          status: 'error',
+          sentence: previous?.sentence ?? null,
+          count: previous?.count ?? 0,
+        };
+      }
+      if (store.notedSessionId() !== sessionId) return;
+      patchState(store, { links: { ...store.links(), [entryId]: next } });
+    }
+
+    /**
+     * « Noté pendant cette séance » : la chronologie filtrée sur la séance ouverte, puis la phrase
+     * de lien des entrées qui en ont un (relue quand le nombre de liens a changé). Une liste déjà
+     * lue reste affichée pendant la relecture ; une réponse pour une autre séance est ignorée.
+     */
+    async function readNoted(): Promise<void> {
+      const patientId = store.patientId();
+      const session = store.currentSession();
+      if (!patientId || !session) return;
+      if (store.notedSessionId() !== session.id) {
+        patchState(store, {
+          notedSessionId: session.id,
+          noted: idle(),
+          links: {},
+          context: idle(),
+          lastWrittenId: null,
+        });
+      }
+      patchState(store, { noted: loading(store.noted()) });
+      try {
+        const entries = await api.sessionEntries(patientId, session.id);
+        if (store.notedSessionId() !== session.id) return;
+        patchState(store, { noted: loaded(entries) });
+        for (const entry of entries) {
+          const known = store.links()[entry.id];
+          if (entry.linkCount > 0 && (!known || known.count !== entry.linkCount)) {
+            void readLink(entry.id, session.id);
+          }
+        }
+      } catch (error) {
+        if (store.notedSessionId() === session.id) {
+          patchState(store, { noted: failed(asProblem(error), store.noted()) });
+        }
       }
     }
 
@@ -192,6 +310,7 @@ export const PatientShellStore = signalStore(
           if (store.patientId() !== id) return;
           patchState(store, { patient, ...split(session), firstSessionMonth, status: 'idle' });
           if (!session || session.kind === 'intake') void checkFirstEntry();
+          if (isOpen(session)) void readNoted();
         } catch (error) {
           if (store.patientId() !== id) return;
           patchState(store, { status: 'error', problem: asProblem(error) });
@@ -226,7 +345,8 @@ export const PatientShellStore = signalStore(
 
       /**
        * POST …/sessions/start : l'en-tête passe « en cours » avec la réponse, sans rechargement.
-       * Modalité : celle du suivi (fiche 16), présentiel à défaut.
+       * Modalité : celle du suivi (fiche 16), présentiel à défaut. Les entrées de la séance (aucune
+       * encore) sont lues pour que l'onglet Séance s'ouvre sur un état connu.
        */
       startSession(modality?: SessionModality): Promise<boolean> {
         const id = store.patientId();
@@ -234,26 +354,36 @@ export const PatientShellStore = signalStore(
         if (!id || !patient || store.currentSession()) return Promise.resolve(false);
         return act(async () => {
           const session = await api.start(id, modality ?? patient.sessionModality);
-          if (store.patientId() === id) patchState(store, { currentSession: session });
+          if (store.patientId() === id) {
+            patchState(store, { currentSession: session, lastClosed: null });
+            void readNoted();
+          }
         });
       },
 
       /**
        * POST /api/sessions/{id}/close, durée par défaut des préférences : la séance en cours
-       * devient la dernière séance (réponse du serveur). 422 → actionProblem pour le formulaire.
+       * devient la dernière séance (réponse du serveur) ; le brouillon de clôture est effacé et la
+       * séance clôturée gardée pour le toast. 422 → actionProblem pour le formulaire.
        */
       closeSession(input: CloseSessionInput = {}): Promise<boolean> {
         const session = store.currentSession();
         if (!session) return Promise.resolve(false);
         const id = store.patientId();
+        const summary = input.summary?.trim() || undefined;
         const body: CloseSessionInput = {
           durationMin: input.durationMin ?? store.defaultDurationMin(),
-          summary: input.summary?.trim() || undefined,
+          summary,
         };
         return act(async () => {
           const closed = await api.close(session.id, body);
           if (store.patientId() === id) {
-            patchState(store, { currentSession: null, lastSession: closed });
+            patchState(store, {
+              currentSession: null,
+              lastSession: closed,
+              closeDraft: null,
+              lastClosed: { session: closed, withSummary: !!summary },
+            });
           }
         });
       },
@@ -268,12 +398,72 @@ export const PatientShellStore = signalStore(
         });
       },
 
-      /** Une écriture a abouti hors du store (éditeur d'entrée) : les projections se relisent. */
-      noteWrite(): void {
-        patchState(store, { revision: store.revision() + 1 });
+      /**
+       * Une écriture a abouti hors du store (éditeur d'entrée, bloc de saisie) : les projections se
+       * relisent, dont « Noté pendant cette séance ». `entryId` : l'entrée créée, dont la ligne sera
+       * surlignée dans l'onglet Séance.
+       */
+      noteWrite(entryId: string | null = null): void {
+        patchState(store, { revision: store.revision() + 1, lastWrittenId: entryId });
         if (store.firstEntry() === 'pending') void checkFirstEntry();
         // Une séance ou un contact saisi à une date passée peut avancer la première séance.
         void checkFirstSession();
+        if (store.currentSession()) void readNoted();
+      },
+
+      /** Relit « Noté pendant cette séance » (Réessayer). */
+      refreshNoted(): Promise<void> {
+        return readNoted();
+      },
+
+      /**
+       * Le contexte de l'onglet Séance (séance précédente, rappels de la vue d'ensemble, vocabulaire
+       * des émotions), lu une fois par séance ouverte ; `force` pour Réessayer. Les trois lectures
+       * partent ensemble ; l'échec de l'une met le bloc en erreur (l'onglet le dit, Réessayer relit).
+       */
+      async loadContext(force = false): Promise<void> {
+        const patientId = store.patientId();
+        const session = store.currentSession();
+        if (!patientId || !session) return;
+        if (store.notedSessionId() !== session.id) void readNoted();
+        const status = store.context().status;
+        if (!force && (status === 'loading' || status === 'loaded')) return;
+        patchState(store, { context: loading(store.context()) });
+        try {
+          const [previous, reminders, emotionLabels] = await Promise.all([
+            api.previousSession(patientId, session.id),
+            api.reminders(patientId),
+            api.emotionLabels(),
+          ]);
+          if (store.notedSessionId() !== session.id) return;
+          patchState(store, { context: loaded({ previous, reminders, emotionLabels }) });
+        } catch (error) {
+          if (store.notedSessionId() === session.id) {
+            patchState(store, { context: failed(asProblem(error), store.context()) });
+          }
+        }
+      },
+
+      /** La ligne surlignée l'a été (2 s) : on l'oublie. */
+      clearLastWritten(): void {
+        patchState(store, { lastWrittenId: null });
+      },
+
+      /** Brouillon du panneau de clôture (Échap ou voile) ; null l'efface. */
+      keepCloseDraft(draft: CloseDraft | null): void {
+        patchState(store, { closeDraft: draft });
+      },
+
+      /** Le toast de clôture est parti : la séance clôturée n'a plus à être rappelée. */
+      clearLastClosed(): void {
+        patchState(store, { lastClosed: null });
+      },
+
+      /** « Noter » d'un point prévu : le bloc de saisie (dans l'en-tête) reçoit ce texte. */
+      requestPrefill(text: string): void {
+        patchState(store, {
+          prefillRequest: { text, seq: (store.prefillRequest()?.seq ?? 0) + 1 },
+        });
       },
 
       /** Efface le problème de la dernière action (dialogue fermé, nouvelle saisie). */

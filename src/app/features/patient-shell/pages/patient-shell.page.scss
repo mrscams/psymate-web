@@ -2,6 +2,23 @@
   display: block;
 }
 
+// Barre de séance (proposition 04) : pleine largeur sous la barre d'application, au-dessus de
+// l'en-tête ; les marges de la page sont compensées.
+pm-session-bar {
+  margin: 0 -24px 10px;
+
+  @media (max-width: 720px) {
+    margin: 0 -16px 8px;
+  }
+}
+
+// En séance, le bouton Clôturer est dans la barre : celui de l'en-tête partagé est masqué
+// (maquette 04b, « Patient header in session: no session button »). Style posé de l'extérieur,
+// sans modifier le composant partagé.
+:host ::ng-deep pm-patient-header.in-session .close-session {
+  display: none;
+}
+
 .tab-content {
   padding-top: 20px;
 
