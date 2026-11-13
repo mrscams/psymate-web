@@ -26,7 +26,9 @@ export const PATIENT_SHELL_ROUTES: Routes = [
       {
         path: 'session',
         loadComponent: () => import('./pages/session-tab.page').then((m) => m.SessionTabPage),
-        data: { tab: 'session' },
+        // UX-S5 : l'onglet Séance occupe toute la largeur (propositions 04 et 04b) ; les autres
+        // onglets gardent les 1 120 px jusqu'à leur propre tâche.
+        data: { tab: 'session', contentWidth: 'full' },
         title: $localize`:Titre d'onglet du dossier@@patientShell.session.pageTitle:Séance · PsyMate`,
       },
       {

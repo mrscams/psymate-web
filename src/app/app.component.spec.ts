@@ -54,6 +54,11 @@ async function render(
             component: Blank,
             data: { layout: 'public', contentWidth: 'wide' },
           },
+          {
+            path: 'seance-pleine',
+            data: {},
+            children: [{ path: '', component: Blank, data: { contentWidth: 'full' } }],
+          },
           { path: '_demo', component: Blank, data: { layout: 'bare' } },
           { path: '**', component: Blank },
         ],
@@ -193,6 +198,20 @@ describe('AppComponent', () => {
     const directory = await render('fr', { url: '/annuaire' });
     expect(directory.el.querySelector('main#main.public-main')).not.toBeNull();
     expect(directory.el.querySelector('main#main.wide')).toBeNull();
+  });
+
+  it('UX-S5 : data.contentWidth full sur la route la plus profonde : main praticien sans borne ni marge', async () => {
+    const full = await render('fr', { url: '/seance-pleine' });
+    const main = full.el.querySelector('main#main.app-main')!;
+    expect(main.classList.contains('full')).toBe(true);
+    expect(main.classList.contains('wide')).toBe(false);
+    expect(getComputedStyle(main).paddingLeft).toBe('0px');
+    expect(getComputedStyle(main).maxWidth).toBe('none');
+    TestBed.resetTestingModule();
+
+    // Les autres routes praticien gardent le conteneur de 1 120 px.
+    const practitioner = await render('fr');
+    expect(practitioner.el.querySelector('main#main.app-main.full')).toBeNull();
   });
 
   it('UX-A8 : data.contentWidth wide, hérité du parent : main admin large, annuaire à 1 280 px', async () => {

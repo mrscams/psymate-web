@@ -38,6 +38,7 @@
     [class.public-main]="layout() === 'public'"
     [class.narrow]="layout() === 'public' && narrow()"
     [class.wide]="layout() !== 'bare' && contentWidth() === 'wide'"
+    [class.full]="layout() === 'practitioner' && contentWidth() === 'full'"
   >
     @if (layout() === 'public') {
       <pm-network-banner />

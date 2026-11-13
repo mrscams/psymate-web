@@ -3,12 +3,42 @@
 }
 
 // Barre de séance (proposition 04) : pleine largeur sous la barre d'application, au-dessus de
-// l'en-tête ; les marges de la page sont compensées.
+// l'en-tête ; hors de l'onglet Séance, les marges du <main> (24 px) sont compensées.
 pm-session-bar {
   margin: 0 -24px 10px;
 
   @media (max-width: 720px) {
     margin: 0 -16px 8px;
+  }
+}
+
+/*
+ * Onglet Séance (UX-S5, propositions 04 et 04b) : le <main> est en largeur `full` (ni borne ni
+ * marge, app.component). La barre de séance et l'en-tête vont d'un bord à l'autre et se touchent ;
+ * la colonne de contenu reprend les marges de la maquette (`.page` : 20 px en haut, 24 px sur les
+ * côtés comme l'en-tête partagé, 40 px en bas), 16 px sur les côtés sous 600 px (UX-A1).
+ */
+:host(.full-bleed) {
+  pm-session-bar {
+    margin: 0;
+  }
+
+  .pad-layout {
+    padding: 20px 24px 40px;
+  }
+
+  .shell-error {
+    padding: 24px;
+  }
+
+  @media (max-width: 600px) {
+    .pad-layout {
+      padding: 16px 16px 32px;
+    }
+
+    .shell-error {
+      padding: 16px;
+    }
   }
 }
 

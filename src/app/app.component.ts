@@ -54,9 +54,12 @@ export type AppLayout = 'practitioner' | 'public' | 'admin' | 'bare';
  *   publics ;
  * - wide : layout public jusqu'à 1 280 px (annuaire, maquette 08) ; conteneur des habillages
  *   praticien et admin jusqu'à 1 600 px de contenu (écrans d'administration, maquettes 20, 21, 22, 28 : pleine
- *   largeur à 1 440 px avec 24 px de marge), sans marges négatives dans la page.
+ *   largeur à 1 440 px avec 24 px de marge), sans marges négatives dans la page ;
+ * - full : aucune borne ni marge sur le conteneur praticien (UX-S5, onglet Séance, propositions 04
+ *   et 04b : barre de séance et en-tête d'un bord à l'autre sous la barre d'application) ; la page
+ *   pose elle-même ses marges intérieures.
  */
-export type ContentWidth = 'default' | 'wide';
+export type ContentWidth = 'default' | 'wide' | 'full';
 
 /**
  * Coquille de l'application (fiche 00) : choisit l'habillage selon la route, passe la session à la
@@ -240,7 +243,7 @@ export function contentWidthOf(root: ActivatedRouteSnapshot): ContentWidth {
   let width: ContentWidth = 'default';
   for (let route: ActivatedRouteSnapshot | null = root; route; route = route.firstChild) {
     const declared = route.data['contentWidth'];
-    if (declared === 'wide' || declared === 'default') width = declared;
+    if (declared === 'wide' || declared === 'default' || declared === 'full') width = declared;
   }
   return width;
 }

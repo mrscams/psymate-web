@@ -77,6 +77,9 @@ import {
   templateUrl: './patient-shell.page.html',
   styleUrl: './patient-shell.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  // UX-S5 : sur l'onglet Séance le <main> n'a ni borne ni marge (data.contentWidth full) ; la page
+  // pose alors ses marges intérieures et la barre de séance perd ses marges négatives.
+  host: { '[class.full-bleed]': "activeTab() === 'session'" },
 })
 export class PatientShellPage {
   /** :id de la route (withComponentInputBinding). */

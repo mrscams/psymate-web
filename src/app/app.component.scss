@@ -47,11 +47,25 @@
   &.wide {
     max-width: 1648px;
   }
+
+  /*
+   * Route `data.contentWidth: 'full'` (UX-S5, onglet Séance) : ni borne ni marge, les bandes de la
+   * page (barre de séance, en-tête patient) vont d'un bord à l'autre comme dans les propositions 04
+   * et 04b ; la page pose ses propres marges intérieures (24 px).
+   */
+  &.full {
+    max-width: none;
+    padding: 0;
+  }
 }
 
 /* Sous 600 px (UX-A1) : marges latérales réduites pour que le contenu tienne en 375 px. */
 @media (max-width: 600px) {
   .app-main {
     padding: 16px;
+
+    &.full {
+      padding: 0;
+    }
   }
 }

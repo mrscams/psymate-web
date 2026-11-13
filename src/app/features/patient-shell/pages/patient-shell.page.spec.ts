@@ -305,6 +305,11 @@ describe('PatientShellPage', () => {
       // l'onglet Séance ; la colonne latérale de contexte la longe, les raccourcis en dernier.
       const layout = el.querySelector('.pad-layout')!;
       expect(layout.classList.contains('in-session')).toBe(true);
+      // UX-S5 : sur l'onglet Séance la page est en pleine largeur (classe hôte lue par ses styles ;
+      // le <main> suit data.contentWidth full de la route).
+      expect(el.querySelector('pm-patient-shell-page')!.classList.contains('full-bleed')).toBe(
+        true,
+      );
       const main = [...layout.querySelectorAll('.pad-main > *')].map(
         (node) => node.className || node.tagName.toLowerCase(),
       );
