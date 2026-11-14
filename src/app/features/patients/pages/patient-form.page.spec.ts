@@ -5,7 +5,7 @@ import { provideRouter, Router } from '@angular/router';
 import { SessionApi } from '../../../core/auth/data/session.api';
 import { SubjectVocabulary } from '../../../core/i18n';
 import { PreferencesStore } from '../../../core/preferences';
-import { ConfirmDialogService, ToastService } from '../../../shared/ui';
+import { ConfirmDialogService, SidePanelService, ToastService } from '../../../shared/ui';
 import { PatientApi } from '../data/patient.api';
 import { PatientExportApi } from '../data/patient-export.api';
 import { patient, TAGS, VERSIONS } from '../data/patient.fixtures';
@@ -76,8 +76,31 @@ function type(el: HTMLElement, id: string, value: string): void {
   input.dispatchEvent(new Event(input.tagName === 'SELECT' ? 'change' : 'input'));
 }
 
+/** Enregistrer, dans le rail (relié au formulaire par l'attribut form). */
 function submit(el: HTMLElement): void {
-  el.querySelector<HTMLButtonElement>('button[type="submit"]')!.click();
+  el.querySelector<HTMLButtonElement>('pm-record-rail button[type="submit"]')!.click();
+}
+
+function railLinks(el: HTMLElement): HTMLAnchorElement[] {
+  return [...el.querySelectorAll<HTMLAnchorElement>('pm-record-rail nav a')];
+}
+
+/** Texte d'un élément, espaces normalisés (nom accessible d'un lien du rail). */
+function text(node: Element): string {
+  return node.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+}
+
+function railNote(el: HTMLElement): string {
+  return el.querySelector('pm-record-rail .note')?.textContent?.trim() ?? '';
+}
+
+function cancelButton(el: HTMLElement): HTMLButtonElement {
+  return el.querySelector<HTMLButtonElement>('pm-record-rail .save button[type="button"]')!;
+}
+
+/** Le panneau d'historique s'ouvre dans l'overlay du CDK, hors de la page. */
+function historyPanel(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('pm-patient-versions-panel');
 }
 
 const problem422 = {
@@ -98,21 +121,110 @@ const problem422 = {
 };
 
 describe('PatientFormPage', () => {
-  afterEach(() => TestBed.inject(ToastService).clear());
+  beforeEach(() => {
+    // « il y a 13 j », âge : la date du jour est fixée (seul Date est simulé).
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-11-14T12:00:00Z'));
+  });
+  afterEach(() => {
+    TestBed.inject(ToastService).clear();
+    TestBed.inject(SidePanelService).closeAll();
+    vi.useRealTimers();
+  });
 
   describe('création', () => {
-    it('formulaire vide, durée de séance par défaut, aperçu, sans historique ni archivage', async () => {
+    it('proposition 16 : rail (aperçu, sections, Créer le dossier), sections dans l’ordre, aucun « facultatif »', async () => {
       const { el } = await render({});
       expect(el.querySelector('h1')?.textContent?.trim()).toBe('Nouveau patient');
       expect(field(el, 'followUp-durationMin').value).toBe('60');
       expect(el.querySelector('pm-state')).toBeNull();
-      expect(el.querySelector('pm-version-history')).toBeNull();
+      // Pas d'historique, d'export ni d'archivage avant la création.
+      expect(el.querySelector('.head-actions')).toBeNull();
       expect(el.querySelector('.danger-zone')).toBeNull();
-      expect(el.querySelector('pm-patient-export-menu')).toBeNull();
-      expect(el.querySelectorAll('fieldset legend')).toHaveLength(5);
-      expect(el.querySelector('.page-header .meta')?.textContent).toContain(
-        'Seul le nom affiché est obligatoire',
+      // Sections continues, dans l'ordre de la maquette, chacune un fieldset à légende.
+      expect(
+        [...el.querySelectorAll('form fieldset > legend h2')].map((h) => h.textContent?.trim()),
+      ).toEqual(['Identité', 'Contexte', 'Suivi', 'Drapeaux', 'Tags du dossier']);
+      // Le rail : aperçu, liens vers les sections (sans « Archivage »), Créer le dossier, Ctrl+↵.
+      const rail = el.querySelector('pm-record-rail')!;
+      expect(rail.querySelector('pm-header-preview')?.textContent).toContain('Nom affiché');
+      expect(railLinks(el).map((a) => a.querySelector('.label')?.textContent)).toEqual([
+        'Identité',
+        'Contexte',
+        'Suivi',
+        'Drapeaux',
+        'Tags',
+      ]);
+      expect(railLinks(el).map((a) => a.getAttribute('href'))).toEqual([
+        '/patients/nouveau#identite',
+        '/patients/nouveau#contexte',
+        '/patients/nouveau#suivi',
+        '/patients/nouveau#drapeaux',
+        '/patients/nouveau#tags',
+      ]);
+      const save = rail.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      expect(save.textContent).toContain('Créer le dossier');
+      expect(save.querySelector('kbd')?.textContent).toBe('Ctrl+↵');
+      expect(save.getAttribute('form')).toBe(el.querySelector('form')?.id);
+      expect(save.getAttribute('aria-keyshortcuts')).toBe('Control+Enter');
+      expect(railNote(el)).toBe('Chaque enregistrement crée une version horodatée.');
+      // « (facultatif) » disparaît : seul le nom affiché est marqué, une mention unique le dit.
+      expect(el.textContent).not.toContain('(facultatif)');
+      expect(el.querySelectorAll('.required')).toHaveLength(1);
+      expect(el.querySelector('.required')?.closest('label')?.htmlFor).toBe('field-displayName');
+      expect(el.textContent?.match(/Le reste est facultatif/g)).toHaveLength(1);
+      // Les anciennes cartes latérales deviennent des notes sous les champs qu'elles concernent.
+      expect(el.querySelector('aside')).toBeNull();
+      expect(field(el, 'phone').getAttribute('aria-describedby')).toContain('contact-note');
+      expect(el.querySelector('#contact-note')?.textContent).toContain('jamais synchronisées');
+      expect(el.querySelector('#section-suivi .inline-note')?.textContent).toContain(
+        "Une séance d'accueil est créée avec le dossier",
       );
+      expect(el.querySelector('#field-followUp-durationMin-hint')?.textContent).toBe(
+        'préférence du compte : 60 min',
+      );
+      // Exemples, pas de crochets.
+      expect(field(el, 'followUp-fee').placeholder).toBe('70 €');
+      expect(field(el, 'phone').placeholder).toBe('06 12 34 56 78');
+    });
+
+    it('le rail suit la saisie : aperçu, décomptes des sections', async () => {
+      const { fixture, el } = await render({});
+      expect(railLinks(el)[0].querySelector('.st')).toBeNull();
+      // La durée par défaut compte déjà dans « Suivi ».
+      expect(text(railLinks(el)[2])).toBe('Suivi 1 champ renseigné');
+      type(el, 'displayName', 'Nour K.');
+      type(el, 'firstName', 'Nour');
+      type(el, 'context-situation', 'En couple');
+      await settle(fixture);
+      expect(text(railLinks(el)[0])).toBe('Identité 2 champs renseignés');
+      expect(railLinks(el)[0].querySelector('.st')?.textContent).toContain('2 champs');
+      expect(text(railLinks(el)[1])).toBe('Contexte 1 champ renseigné');
+      el.querySelector<HTMLInputElement>('.flagcard.watch input')!.click();
+      await settle(fixture);
+      expect(railLinks(el)[3].querySelector('.st')?.textContent?.trim()).toBe('1 posé');
+      expect(el.querySelector('pm-header-preview .nm')?.textContent).toBe('Nour K.');
+      expect(el.querySelector('pm-header-preview .chip')?.textContent).toContain('À surveiller');
+    });
+
+    it('lien du rail : défile jusqu’à la section, la marque courante, focus sur son titre', async () => {
+      const { fixture, el } = await render({});
+      const section = el.querySelector<HTMLElement>('#section-drapeaux')!;
+      section.scrollIntoView = vi.fn();
+      expect(railLinks(el)[0].getAttribute('aria-current')).toBe('true');
+      railLinks(el)[3].dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+      await settle(fixture);
+      expect(section.scrollIntoView).toHaveBeenCalledWith({ block: 'start' });
+      expect(railLinks(el)[3].getAttribute('aria-current')).toBe('true');
+      expect(railLinks(el)[0].getAttribute('aria-current')).toBeNull();
+      expect(document.activeElement).toBe(el.querySelector('#section-drapeaux-title'));
+    });
+
+    it('Annuler (création) : retour à la liste', async () => {
+      const { el, router } = await render({});
+      expect(cancelButton(el).textContent).toContain('Annuler');
+      cancelButton(el).click();
+      expect(router.navigate).toHaveBeenCalledWith(['/patients']);
     });
 
     it('dates en français (UX-B8) : saisie jj/mm/aaaa et mm/aaaa, envoi AAAA-MM-JJ sans décalage', async () => {
@@ -141,12 +253,21 @@ describe('PatientFormPage', () => {
       expect(create).not.toHaveBeenCalled();
       expect(field(el, 'birthDate').getAttribute('aria-invalid')).toBe('true');
       expect(el.querySelector('#field-birthDate-error')?.textContent).toContain('Date invalide');
-      // La précision puis l'erreur décrivent le champ (describedBy de pm-date-field, UX-A8).
+      // L'aide puis l'erreur décrivent le champ (describedBy de pm-date-field, UX-A8).
       expect(field(el, 'birthDate').getAttribute('aria-describedby')).toBe(
-        'field-birthDate-aside field-birthDate-error',
+        'field-birthDate-hint field-birthDate-error',
       );
-      expect(el.querySelector('#field-birthDate-aside')?.textContent).toContain(
-        "sert à l'âge et aux phases de vie",
+      expect(el.querySelector('#field-birthDate-hint')?.textContent).toBe(
+        "L'âge et les phases de vie en découlent",
+      );
+    });
+
+    it('date de naissance lue : l’aide donne l’âge (« 35 ans · … »)', async () => {
+      const { fixture, el } = await render({}, { locale: 'fr' });
+      type(el, 'birthDate', '12/04/1991');
+      await settle(fixture);
+      expect(el.querySelector('#field-birthDate-hint')?.textContent).toBe(
+        "35 ans · l'âge et les phases de vie en découlent",
       );
     });
 
@@ -193,13 +314,16 @@ describe('PatientFormPage', () => {
         ['#field-displayName', 'Nom affiché'],
         ['#field-birthDate', 'Date de naissance'],
       ]);
-      // Le résumé est en tête du formulaire, avant le premier champ.
-      const form = el.querySelector('form')!;
-      expect(form.querySelector('pm-form-errors')).not.toBeNull();
+      // Le résumé est en tête, avant le rail et le premier champ ; le rail reste là (Enregistrer).
       expect(
         summary!.compareDocumentPosition(field(el, 'displayName')) &
           Node.DOCUMENT_POSITION_FOLLOWING,
       ).toBeTruthy();
+      expect(
+        summary!.compareDocumentPosition(el.querySelector('pm-record-rail')!) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+      expect(el.querySelector('pm-record-rail button[type="submit"]')).not.toBeNull();
       field(el, 'birthDate').scrollIntoView = vi.fn();
       links[1].click();
       expect(document.activeElement).toBe(field(el, 'birthDate'));
@@ -215,8 +339,10 @@ describe('PatientFormPage', () => {
       const create = vi.fn();
       const { fixture, el } = await render({ create });
       type(el, 'displayName', 'Marie D.');
-      el.querySelector<HTMLInputElement>('.flag-card.watch input')!.click();
+      el.querySelector<HTMLInputElement>('.flagcard.watch input')!.click();
       await settle(fixture);
+      // La raison vit dans la carte cochée.
+      expect(el.querySelector('.flagcard.watch #field-flags-watchReason')).not.toBeNull();
       submit(el);
       await settle(fixture);
       expect(create).not.toHaveBeenCalled();
@@ -323,14 +449,16 @@ describe('PatientFormPage', () => {
       versions: vi.fn().mockResolvedValue(VERSIONS),
     });
 
-    it('encart « Export du dossier » : menu « Exporter ce dossier » et note privées exclues', async () => {
+    it('en-tête : « Exporter le dossier ▾ » et « Historique des versions »', async () => {
       const { el } = await render(loaded(), { id: 'p-marie' });
-      const aside = el.querySelector('aside');
-      expect(aside?.querySelector('#export-title')?.textContent).toContain('Export du dossier');
-      const trigger = aside?.querySelector('pm-patient-export-menu button');
-      expect(trigger?.textContent).toContain('Exporter ce dossier');
+      const actions = el.querySelector('.page-head .head-actions')!;
+      const trigger = actions.querySelector('pm-patient-export-menu button');
+      expect(trigger?.textContent).toContain('Exporter le dossier');
       expect(trigger?.getAttribute('aria-haspopup')).toBe('menu');
-      expect(aside?.textContent).toContain('Entrées privées exclues');
+      // Variante compacte : les notes de l'export ne sont plus sur la fiche (maquette 16).
+      expect(actions.textContent).not.toContain('Entrées privées exclues');
+      const buttons = [...actions.querySelectorAll(':scope > button')];
+      expect(buttons.map((b) => b.textContent?.trim())).toEqual(['Historique des versions']);
     });
 
     it('chargement : squelette à la place du formulaire', async () => {
@@ -357,31 +485,47 @@ describe('PatientFormPage', () => {
       expect(el.querySelector('form')).not.toBeNull();
     });
 
-    it('données : fiche remplie, méta complète, « 3 versions », historique champ par champ, aperçu', async () => {
-      const { el } = await render(loaded(), { id: 'p-marie', locale: 'fr' });
-      expect(el.querySelector('h1')?.textContent).toContain('Modifier la fiche · Marie D.');
-      // Méta de la maquette 16 : création, séances (projection vue d'ensemble), dernière modification.
-      const meta = el.querySelector('.page-header .meta')?.textContent ?? '';
-      expect(meta).toContain('Créée le 1 novembre 2026');
-      expect(meta).toContain('31 séances');
-      expect(meta).toContain('dernière modification de la fiche le 1 nov. 2026');
-      expect(el.querySelector('.aside-card .versions button')?.textContent?.trim()).toBe(
-        '3 versions',
+    it('données : fiche remplie, méta « (3 versions) », rail, aperçu, historique dans un panneau', async () => {
+      const { fixture, el } = await render(loaded(), { id: 'p-marie', locale: 'fr' });
+      expect(el.querySelector('h1')?.textContent).toBe('Fiche · Marie D.');
+      // Méta de la proposition 16 : création, séances, dernière modification (n versions).
+      expect(text(el.querySelector('.page-head .sub')!)).toBe(
+        'Créée le 1 nov. 2026 · 31 séances · dernière modification il y a 13 j (3 versions)',
       );
       expect(field(el, 'displayName').value).toBe('Marie D.');
+      // Rail : décomptes de la fiche lue, lien « Archivage », Enregistrer.
+      expect(railLinks(el).map((a) => a.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
+        'Identité 5 champs renseignés',
+        'Contexte 1 champ renseigné',
+        'Suivi 4 champs renseignés',
+        'Drapeaux',
+        'Tags 1 tag',
+        'Archivage',
+      ]);
+      expect(railLinks(el)[5].getAttribute('href')).toBe('/patients/p-marie/fiche#archivage');
+      expect(el.querySelector('pm-record-rail button[type="submit"]')?.textContent).toContain(
+        'Enregistrer',
+      );
+      expect(el.querySelector('pm-version-history')).toBeNull();
       // Champs date localisés (UX-A4, UX-B8) : « 12/04/1990 », « 03/2025 ».
       expect(field(el, 'birthDate').value).toBe('12/04/1990');
       expect(field(el, 'followUp-since').value).toBe('03/2025');
       expect(el.querySelectorAll('pm-tag-editor .chip')).toHaveLength(1);
-      const versions = el.querySelectorAll('pm-version-history .version');
+      expect(el.querySelector('pm-header-preview')?.textContent).toContain(
+        'suivi·e depuis mars 2025',
+      );
+      // « (3 versions) » ouvre l'historique dans un panneau latéral.
+      el.querySelector<HTMLButtonElement>('.page-head .sub button')!.click();
+      await settle(fixture);
+      const panel = historyPanel()!;
+      expect(panel.querySelector('h2')?.textContent).toContain('Historique des versions');
+      expect(panel.textContent).toContain('Marie D.');
+      const versions = panel.querySelectorAll('pm-version-history .version');
       expect(versions).toHaveLength(2);
       expect(versions[0].textContent).toContain('Version 3');
       expect(versions[0].textContent).toContain('Rythme habituel');
       expect(versions[0].querySelector('del')?.textContent).toBe('Hebdomadaire');
       expect(versions[0].querySelector('ins')?.textContent).toBe('Mensuel');
-      expect(el.querySelector('pm-header-preview')?.textContent).toContain(
-        'suivi·e depuis mars 2025',
-      );
     });
 
     it('méta sans le nombre de séances quand la projection est illisible', async () => {
@@ -389,7 +533,7 @@ describe('PatientFormPage', () => {
         { ...loaded(), sessionCount: vi.fn().mockRejectedValue({ status: 503 }) },
         { id: 'p-marie' },
       );
-      const meta = el.querySelector('.page-header .meta')?.textContent ?? '';
+      const meta = el.querySelector('.page-head .sub')?.textContent ?? '';
       expect(meta).toContain('Créée le');
       expect(meta).not.toContain('séance');
       expect(el.querySelector('pm-state')).toBeNull();
@@ -407,27 +551,80 @@ describe('PatientFormPage', () => {
         },
         { id: 'p-marie', locale: 'fr' },
       );
-      const card = el.querySelector('.flag-card.watch')!;
-      expect(card.classList).toContain('checked');
+      const card = el.querySelector('.flagcard.watch')!;
+      expect(card.classList).toContain('on');
       expect(card.textContent).toContain('Posé le 3 oct. 2026');
-      const input = card.querySelector('input')!;
+      const input = card.querySelector<HTMLInputElement>('input[type="checkbox"]')!;
       expect(input.checked).toBe(true);
       // Nom accessible : le libellé seul ; l'aide (ou la date) en description.
       expect(el.querySelector(`#${input.getAttribute('aria-labelledby')}`)?.textContent).toBe(
         'À surveiller',
       );
-      expect(input.previousElementSibling?.classList).toContain('flag-name');
-      expect(field(el, 'flags-watchReason').value).toBe('Sommeil');
+      expect(input.previousElementSibling?.classList).toContain('name');
+      // La raison dans la carte, nommée « Raison du drapeau « à surveiller » ».
+      const reason = card.querySelector<HTMLInputElement>('#field-flags-watchReason')!;
+      expect(reason.value).toBe('Sommeil');
+      expect(card.querySelector('.reason label')?.textContent).toBe(
+        'Raison du drapeau « à surveiller »',
+      );
+      expect(railLinks(el)[3].querySelector('.st')?.textContent?.trim()).toBe('1 posé');
     });
 
-    it('historique vide : état vide', async () => {
-      const { el } = await render(
+    it('historique vide : état vide dans le panneau ; pas de « dernière modification »', async () => {
+      const { fixture, el } = await render(
         { get: vi.fn().mockResolvedValue(patient()), versions: vi.fn().mockResolvedValue([]) },
         { id: 'p-marie' },
       );
-      expect(el.querySelector('pm-version-history [role="status"]')?.textContent).toContain(
+      expect(el.querySelector('.page-head .sub')?.textContent).not.toContain('modification');
+      el.querySelector<HTMLButtonElement>('.head-actions > button')!.click();
+      await settle(fixture);
+      expect(historyPanel()?.querySelector('[role="status"]')?.textContent).toContain(
         'Aucune modification depuis la création',
       );
+    });
+
+    it('historique en erreur : bloc erreur, Réessayer relit les versions', async () => {
+      const versions = vi
+        .fn()
+        .mockRejectedValueOnce({ status: 503 })
+        .mockResolvedValueOnce(VERSIONS);
+      const { fixture, el } = await render(
+        { get: vi.fn().mockResolvedValue(patient({ currentVersion: 3 })), versions },
+        { id: 'p-marie' },
+      );
+      el.querySelector<HTMLButtonElement>('.head-actions > button')!.click();
+      await settle(fixture);
+      expect(historyPanel()?.textContent).toContain("Impossible de charger l'historique");
+      historyPanel()!.querySelector<HTMLButtonElement>('pm-version-history button')!.click();
+      await settle(fixture);
+      expect(versions).toHaveBeenCalledTimes(2);
+      expect(historyPanel()?.querySelectorAll('.version')).toHaveLength(2);
+    });
+
+    it('champs modifiés : décompte sous Enregistrer, « Annuler les modifications » remet la fiche', async () => {
+      const api = { ...loaded(), patch: vi.fn() };
+      const { fixture, el } = await render(api, { id: 'p-marie' });
+      expect(railNote(el)).toBe('Chaque enregistrement crée une version horodatée.');
+      expect(cancelButton(el).textContent).toContain('Annuler les modifications');
+      expect(cancelButton(el).disabled).toBe(true);
+      type(el, 'followUp-rhythm', 'monthly');
+      await settle(fixture);
+      expect(railNote(el)).toBe(
+        '1 champ modifié · chaque enregistrement crée une version horodatée.',
+      );
+      type(el, 'phone', '06 12 34 56 78');
+      el.querySelector<HTMLInputElement>('.flagcard.risk input')!.click();
+      await settle(fixture);
+      expect(railNote(el)).toBe(
+        '3 champs modifiés · chaque enregistrement crée une version horodatée.',
+      );
+      expect(cancelButton(el).disabled).toBe(false);
+      cancelButton(el).click();
+      await settle(fixture);
+      expect(field(el, 'followUp-rhythm').value).toBe('weekly');
+      expect(field(el, 'phone').value).toBe('');
+      expect(railNote(el)).toBe('Chaque enregistrement crée une version horodatée.');
+      expect(api.patch).not.toHaveBeenCalled();
     });
 
     it('modifier le rythme : PATCH partiel, fiche relue, toast', async () => {
@@ -441,7 +638,7 @@ describe('PatientFormPage', () => {
       await settle(fixture);
       expect(api.patch).toHaveBeenCalledWith('p-marie', { followUp: { rhythm: 'monthly' } });
       expect(api.versions).toHaveBeenCalledTimes(2);
-      expect(el.querySelector('.aside-card .versions button')?.textContent).toContain('4 versions');
+      expect(el.querySelector('.page-head .sub button')?.textContent).toBe('4 versions');
       expect(toasts.toasts().map((t) => t.message)).toEqual(['Fiche enregistrée']);
     });
 
@@ -467,6 +664,10 @@ describe('PatientFormPage', () => {
     it('archiver : nom à retaper, DELETE, retour à la liste avec « Restaurer »', async () => {
       const api = { ...loaded(), archive: vi.fn().mockResolvedValue(undefined) };
       const { fixture, el, router, confirm, toasts } = await render(api, { id: 'p-marie' });
+      // La zone d'archivage est la dernière section, ciblée par le lien « Archivage » du rail.
+      expect(el.querySelector('#section-archivage .danger-zone h2')?.textContent?.trim()).toBe(
+        'Archiver ce dossier',
+      );
       el.querySelector<HTMLButtonElement>('.danger-zone button')!.click();
       await settle(fixture);
       expect(confirm).toHaveBeenCalledWith(
@@ -503,10 +704,18 @@ describe('PatientFormPage', () => {
       expect(el.querySelector('.banner--info')?.textContent).toContain('Ce dossier est archivé');
       expect(field(el, 'displayName').disabled).toBe(true);
       expect(el.querySelector('.danger-zone')).toBeNull();
+      // Le rail reste, Enregistrer inactif, plus de lien « Archivage ».
+      expect(
+        el.querySelector<HTMLButtonElement>('pm-record-rail button[type="submit"]')!.disabled,
+      ).toBe(true);
+      expect(railLinks(el).map((a) => a.querySelector('.label')?.textContent)).not.toContain(
+        'Archivage',
+      );
       el.querySelector<HTMLButtonElement>('.banner--info button')!.click();
       await settle(fixture);
       expect(restore).toHaveBeenCalledWith('p-marie');
       expect(field(el, 'displayName').disabled).toBe(false);
+      expect(text(railLinks(el).at(-1)!)).toBe('Archivage');
       expect(toasts.toasts()[0].message).toBe('Marie D. restaurée');
     });
   });

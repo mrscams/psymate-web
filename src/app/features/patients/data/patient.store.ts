@@ -107,7 +107,9 @@ export const PatientStore = signalStore(
       /**
        * Enregistre les changements dans l'ordre PATCH → drapeaux levés → drapeaux posés → tags.
        * Chaque réponse remplace la fiche affichée : sur une erreur en cours de route, ce qui est
-       * déjà enregistré reste visible. L'historique est relu si le PATCH a créé une version.
+       * déjà enregistré reste visible. L'historique est relu si le PATCH a créé une version ; en cas
+       * de succès, sans attendre cette relecture (UX-S10) : la page remet le formulaire sur la fiche
+       * enregistrée tout de suite, une saisie faite juste après n'est pas écrasée.
        */
       async update(changes: PatientChanges): Promise<boolean> {
         const id = store.patient().data?.id;
@@ -127,7 +129,7 @@ export const PatientStore = signalStore(
           if (changes.patch) await loadVersions(id);
           return false;
         }
-        if (changes.patch) await loadVersions(id);
+        if (changes.patch) void loadVersions(id);
         return true;
       },
 
