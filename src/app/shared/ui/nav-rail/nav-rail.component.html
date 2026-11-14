@@ -1,0 +1,88 @@
+<nav
+  class="rail"
+  [class.drawer]="drawer"
+  [class.expanded]="expanded()"
+  [attr.aria-label]="navLabel"
+>
+  @if (drawer) {
+    <div class="drawer-head">
+      <span class="brand">
+        <svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M8 16V8h4.5a3 3 0 0 1 0 6H8" />
+        </svg>
+        <span i18n="Nom du produit@@app.brand">PsyMate</span>
+      </span>
+      <button type="button" class="close" [attr.aria-label]="closeLabel" (click)="close()">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6 6 18" />
+        </svg>
+      </button>
+    </div>
+  }
+  <ul class="items">
+    @for (entry of entries; track entry.key) {
+      <li>
+        @if (entry.route; as route) {
+          <a
+            class="item"
+            [routerLink]="route"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            [attr.aria-label]="entry.label"
+            [title]="entry.label"
+            (click)="onNavigate()"
+          >
+            <ng-container
+              [ngTemplateOutlet]="icon"
+              [ngTemplateOutletContext]="{ $implicit: entry.icon }"
+            />
+            <span class="label">{{ entry.label }}</span>
+          </a>
+        } @else {
+          <span
+            class="item later"
+            role="link"
+            aria-disabled="true"
+            [attr.aria-label]="laterName(entry)"
+            [title]="laterName(entry)"
+          >
+            <ng-container
+              [ngTemplateOutlet]="icon"
+              [ngTemplateOutletContext]="{ $implicit: entry.icon }"
+            />
+            <span class="label"
+              >{{ entry.label }} <small>{{ later }}</small></span
+            >
+          </span>
+        }
+      </li>
+    }
+  </ul>
+</nav>
+
+<!-- Icônes de 22 px en trait (proposition 05) : une par carreau, couleur du carreau. -->
+<ng-template #icon let-name>
+  @switch (name) {
+    @case ('patients') {
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="9" cy="8" r="3.2" />
+        <path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5" />
+        <circle cx="17" cy="9" r="2.4" />
+        <path d="M15.5 19c0-2.2 1.6-3.8 3.8-3.8 1 0 1.9.3 2.6.9" />
+      </svg>
+    }
+    @case ('agenda') {
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="3.5" y="5" width="17" height="15" rx="2.5" />
+        <path d="M3.5 9.5h17M8 3v4M16 3v4" />
+      </svg>
+    }
+    @case ('invoice') {
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6 3.5h12v17l-3-2-3 2-3-2-3 2z" />
+        <path d="M9 8.5h6M9 12h6M9 15.5h4" />
+      </svg>
+    }
+  }
+</ng-template>

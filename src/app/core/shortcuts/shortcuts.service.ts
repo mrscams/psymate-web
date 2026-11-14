@@ -2,12 +2,14 @@ import { DOCUMENT } from '@angular/common';
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 
 /** Touches globales de B2 et de la fiche 00 ; une feature peut en enregistrer d'autres (F, +, -). */
-export type GlobalShortcutKey = 'n' | '/' | 'l' | '1' | '2' | '3' | 'm' | 'Escape' | '?';
+export type GlobalShortcutKey = 'n' | '/' | 'l' | '1' | '2' | '3' | 'm' | 'ctrl+b' | 'Escape' | '?';
 
 export interface ShortcutDescriptor {
   key: string;
-  /** Touche telle qu'on l'affiche (« Échap », « ? »). */
+  /** Touche telle qu'on l'affiche (« Échap », « ? », « Ctrl+B »). */
   display: string;
+  /** Combinaison : les touches à presser ensemble, chacune affichée à part (« Ctrl », « B »). */
+  combo?: string[];
   /** Ce que fait la touche, pour l'aide des raccourcis (planche 29 §6). */
   label: string;
 }
@@ -38,6 +40,12 @@ export function globalShortcuts(): ShortcutDescriptor[] {
     { key: '3', display: '3', label: $localize`:Aide des raccourcis@@shortcuts.3:Graphe` },
     { key: 'm', display: 'M', label: $localize`:Aide des raccourcis@@shortcuts.m:Changer de mode` },
     {
+      key: 'ctrl+b',
+      display: 'Ctrl+B',
+      combo: ['Ctrl', 'B'],
+      label: $localize`:Aide des raccourcis (rail de navigation, UX-S8)@@shortcuts.ctrlB:Ouvrir ou fermer la navigation`,
+    },
+    {
       key: 'Escape',
       display: $localize`:Nom de la touche Échap@@shortcuts.escapeKey:Échap`,
       label: $localize`:Aide des raccourcis@@shortcuts.escape:Fermer le panneau, le brouillon est conservé`,
@@ -67,6 +75,10 @@ export function isEditableTarget(target: EventTarget | null): boolean {
  * écran et se désinscrit à la sortie ; la dernière inscription d'une touche l'emporte (un panneau
  * ouvert prend Échap), et la précédente la retrouve à sa désinscription. Inactif quand un champ a
  * le focus (sauf Échap) ou qu'un modificateur est enfoncé.
+ *
+ * Combinaisons avec Ctrl (UX-S8) : une inscription `ctrl+<touche>` répond à Ctrl, ou ⌘ sur Mac, plus
+ * la touche, sans Alt ni Maj, y compris dans un champ (elle n'écrit rien) ; les touches simples
+ * restent muettes dès qu'un modificateur est enfoncé.
  */
 @Injectable({ providedIn: 'root' })
 export class ShortcutService {
@@ -111,9 +123,18 @@ export class ShortcutService {
   /** Traite un keydown : appelle la dernière inscription de la touche et empêche l'action par défaut. */
   handle(event: KeyboardEvent): void {
     if (!this.enabled() || event.defaultPrevented || event.repeat) return;
-    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    if (event.altKey) return;
+    if (event.ctrlKey || event.metaKey) {
+      if (event.shiftKey || event.key.length !== 1) return;
+      this.dispatch(`ctrl+${event.key.toLowerCase()}`, event);
+      return;
+    }
     const key = normalize(event.key);
     if (key !== 'Escape' && isEditableTarget(event.target)) return;
+    this.dispatch(key, event);
+  }
+
+  private dispatch(key: string, event: KeyboardEvent): void {
     const registration = this.stacks.get(key)?.at(-1);
     if (!registration) return;
     event.preventDefault();
@@ -123,5 +144,6 @@ export class ShortcutService {
 
 function normalize(key: string): string {
   if (key === 'Esc') return 'Escape';
+  if (/^ctrl\+.$/i.test(key)) return key.toLowerCase();
   return key.length === 1 ? key.toLowerCase() : key;
 }

@@ -120,6 +120,24 @@ input:is([type='checkbox'], [type='radio']):not([class*='mdc-']) {
   }
 }
 
+// Tiroir de navigation (shared/ui/nav-rail, UX-S8, sous 900 px) : pane de l'overlay ancrée à gauche
+// sur toute la hauteur, voile léger (proposition 05 B : 18 % d'encre, soit le voile à 40 %).
+.pm-nav-drawer-veil {
+  background: color-mix(in srgb, var(--scrim) 40%, transparent);
+}
+
+.pm-nav-drawer-pane {
+  height: 100%;
+  background: var(--surface-raised);
+  box-shadow: 8px 0 32px color-mix(in srgb, var(--scrim) 40%, transparent);
+
+  .cdk-dialog-container {
+    display: block;
+    height: 100%;
+    outline: none;
+  }
+}
+
 // Boîte de confirmation (shared/ui/confirm-dialog).
 .pm-confirm-dialog .mat-mdc-dialog-surface {
   border-radius: 12px;

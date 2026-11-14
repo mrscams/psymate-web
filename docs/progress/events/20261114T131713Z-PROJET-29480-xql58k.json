@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-14T13:17:13.080Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-S8 Rail de navigation du praticien (proposition 05 A) : pm-nav-rail de 56 px sous la barre, déplié à 220 px par-dessus la page au survol ou au focus clavier, Ctrl+B et Échap, tiroir de 280 px derrière le bouton ☰ sous 900 px",
+  "notes": "Coquille : décalage de 56 px pour bandeaux et main (wide et full compris), rail en absolu. core/shortcuts accepte les combinaisons ctrl+<touche> (⌘ sur Mac). Feature touchée : patient-shell/ui/shortcuts-help.model.ts (Ctrl+B en deux touches dans l'aide ?). À réaliser en text-disabled (3:1) au lieu de l'opacité 0,55 de la maquette. Vitest 2110 verts ; e2e shell, accessibilité et mises en page 47 verts, 10 sautés (admin absent en local). Captures sous docs/design/captures-ux-s8. Le script refuse l'ID UX-S8, d'où PROJET.",
+  "next": "Revue du propriétaire avant push et PR",
+  "branch": "claude/ux-s8-rail-navigation-78dee6",
+  "checkout": "ux-s8-rail-navigation-78dee6"
+}

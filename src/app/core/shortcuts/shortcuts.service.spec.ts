@@ -84,7 +84,31 @@ describe('ShortcutService', () => {
     expect(help).toHaveBeenCalledOnce();
   });
 
-  it('liste de référence : les neuf touches de B2 et de la fiche 00', () => {
+  it('Ctrl+B (UX-S8) : Ctrl ou ⌘ plus la touche, y compris dans un champ ; ni Maj ni Alt', () => {
+    const rail = vi.fn();
+    const letter = vi.fn();
+    service.register('Ctrl+B', rail);
+    service.register('b', letter);
+    const input = document.body.appendChild(document.createElement('input'));
+
+    const event = press('b', input, { ctrlKey: true });
+    expect(rail).toHaveBeenCalledOnce();
+    expect(event.defaultPrevented).toBe(true);
+    press('B', document.body, { metaKey: true });
+    expect(rail).toHaveBeenCalledTimes(2);
+    press('b', document.body, { ctrlKey: true, shiftKey: true });
+    press('b', document.body, { ctrlKey: true, altKey: true });
+    expect(rail).toHaveBeenCalledTimes(2);
+    expect(letter).not.toHaveBeenCalled();
+
+    // Une combinaison sans inscription garde son action par défaut (Ctrl+S, Ctrl+Entrée).
+    expect(press('s', document.body, { ctrlKey: true }).defaultPrevented).toBe(false);
+    expect(press('Enter', input, { ctrlKey: true }).defaultPrevented).toBe(false);
+    expect(service.active().map((r) => r.key)).toContain('ctrl+b');
+    input.remove();
+  });
+
+  it('liste de référence : les touches de B2 et de la fiche 00, plus Ctrl+B (UX-S8)', () => {
     expect(globalShortcuts().map((s) => s.key)).toEqual([
       'n',
       '/',
@@ -93,9 +117,11 @@ describe('ShortcutService', () => {
       '2',
       '3',
       'm',
+      'ctrl+b',
       'Escape',
       '?',
     ]);
+    expect(globalShortcuts().find((s) => s.key === 'ctrl+b')?.combo).toEqual(['Ctrl', 'B']);
     expect(isEditableTarget(document.createElement('textarea'))).toBe(true);
     expect(isEditableTarget(document.createElement('button'))).toBe(false);
     expect(isEditableTarget(null)).toBe(false);
