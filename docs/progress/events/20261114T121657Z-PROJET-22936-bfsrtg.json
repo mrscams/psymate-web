@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-14T12:16:57.754Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-S7 Mes patients selon la proposition 01 et les décisions du 14 novembre 2026 : dix par page avec Précédent / Suivant, bande Aujourd'hui, date seule, filtres sans comptes, archivés, projection de toute la page",
+  "notes": "Commit local 19abb05 sur la branche UX-S5 (7fda5cf), ni push ni PR avant la revue. Vitest 2012 verts, e2e flux-2, flux-1, états transverses et axe des écrans verts. Écarts notés dans la fiche 01 : #tag pour le paramètre tag, filtres et tri Dernière séance sur la page affichée, cache des projections par version de fiche (pas de clinical_rev dans la liste), mobile sans Brouillons ni tri comme la maquette. Enregistré sous PROJET : l'outil n'accepte pas les ID UX-*.",
+  "next": "Revue du propriétaire du produit, puis PR après celle d'UX-S5",
+  "branch": "claude/ux-s7-liste-patients-d1b85f",
+  "checkout": "magical-albattani-ebc20f"
+}
