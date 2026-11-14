@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-14T16:04:54.356Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "Tests e2e : analyse mesurée (docs/tests/analyse-e2e-2026-11-14.md) et premiers allègements : 4 workers en CI, e2e/etats réduit à transverse, parcours sombres fusionnés dans axe-ecrans, attente de la confirmation déplacée et réglable (E2E_RESEND_WINDOW_MS)",
+  "notes": "Suite : voies e2e:pr (@critique) / e2e:full, allègement des 516 appels axe, règle du runbook ; tâche API : rendre AuthService.RESEND_MIN_INTERVAL réglable sous le profil local.",
+  "next": "Revue, CI (nouvelle durée de référence), puis les deux voies",
+  "pr": "https://github.com/mrscams/psymate-web/pull/84",
+  "branch": "tests-e2e-allegement",
+  "checkout": "ux-a5-entry-title-c415c2"
+}

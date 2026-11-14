@@ -53,9 +53,12 @@ async function messageCount(api: APIRequestContext, email: string): Promise<numb
 /**
  * L'e-mail d'inscription compte dans la limite « 1 envoi par minute et par compte » de l'API
  * (renvoi et correction d'adresse compris) : un renvoi plus tôt reçoit 202 mais rien ne part. Les
- * tests qui renvoient attendent donc la fin de cette minute après l'inscription.
+ * tests qui renvoient attendent donc la fin de cette minute après l'inscription, le plus tard
+ * possible (le parcours jusqu'au bouton se joue pendant l'attente). La minute est une constante de
+ * l'API (`AuthService.RESEND_MIN_INTERVAL`) : quand elle deviendra réglable sous le profil local,
+ * `E2E_RESEND_WINDOW_MS` raccourcira l'attente (CI et poste).
  */
-const RESEND_WINDOW_MS = 61_000;
+const RESEND_WINDOW_MS = Number(process.env['E2E_RESEND_WINDOW_MS'] ?? 61_000);
 
 async function registerForResend(
   api: APIRequestContext,
@@ -145,13 +148,13 @@ test('renvoi : 202, message, bouton désactivé une minute avec compte à rebour
   const [firstToken] = await confirmationTokens(request, account.email);
 
   // Arrivée directe : l'adresse n'est pas connue, la carte la demande (clavier seulement).
-  await waitForResendWindow(account);
   await page.goto('/fr/confirmer-email');
   await expect(page.locator('#field-email')).toBeVisible();
   await tabTo(page, 'field-email');
   await page.keyboard.type(account.email);
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Renvoyer le lien' })).toBeFocused();
+  await waitForResendWindow(account);
   await page.keyboard.press('Enter');
 
   await expect(page.getByRole('status').filter({ hasText: 'Demande envoyée' })).toBeVisible();
@@ -195,7 +198,6 @@ test('correction de l’adresse : lien à la nouvelle adresse, ancien lien refus
   const [oldToken] = await confirmationTokens(request, account.email);
   const newEmail = uniqueEmail('m1-18.nouvelle');
 
-  await waitForResendWindow(account);
   await loginUnconfirmed(page, account);
   const toggle = page.getByRole('button', { name: "Corriger l'e-mail" });
   await expect(toggle).toHaveAttribute('aria-expanded', 'false');
@@ -208,6 +210,7 @@ test('correction de l’adresse : lien à la nouvelle adresse, ancien lien refus
   await page.keyboard.press('Tab');
   await expect(page.locator('#field-newEmail')).toBeFocused();
   await page.keyboard.type(newEmail);
+  await waitForResendWindow(account);
   await page.keyboard.press('Enter');
 
   // La carte affiche la nouvelle adresse ; 202 quoi qu'il arrive, le message reste prudent.
