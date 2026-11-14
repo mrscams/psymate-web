@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-14T21:14:44.746Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-S9 timeline (proposition 03) et UX-S10 fiche patient (proposition 16) regroupées dans la PR #85 avec les correctifs de la revue : séance d'accueil jamais « ouverte » (timeline, liste, vue d'ensemble), bloc de saisie et contexte sur l'onglet Séance seulement, nom accessible des séances, puce en cours en sombre, hauteur du graphe",
+  "notes": "Branche ux-s9-s10-integration coupée de main 71ba6af. Lint, tokens, Vitest complet, build, e2e flux-2, flux-5, flux-6, shell, socle, accessibilité verts en local. Tâche API toujours ouverte : OverviewProjector.drafts() renvoie la séance d'accueil comme séance ouverte.",
+  "next": "Revue, CI, fusion en squash ; tâche API séance d'accueil",
+  "pr": "https://github.com/mrscams/psymate-web/pull/85",
+  "branch": "ux-s9-s10-integration",
+  "checkout": "ux-a5-entry-title-c415c2"
+}

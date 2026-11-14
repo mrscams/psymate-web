@@ -1,0 +1,167 @@
+// Séparateur de séance (proposition 03, `.session-head`) : fond session-tint (success-bg dans les
+// tokens), rayon 8, 10 × 12, texte success 600/13,5, carré de séance en contour ; à droite, en 500,
+// le nombre d'entrées et « compte rendu ↓ ». Sous lui, la première ligne du compte rendu (13 px,
+// secondaire). Hauteur fixe (40 px + marges, LAYOUT.session) : le défilement virtuel la connaît.
+:host {
+  display: block;
+  padding-top: 6px;
+  --marker-x: -24px;
+}
+
+.session-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: var(--success-bg);
+  color: var(--success);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+article.head {
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  &.selected {
+    box-shadow: 0 0 0 2px var(--primary);
+  }
+}
+
+button.head {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+.chevron {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+
+  &.down {
+    transform: rotate(45deg);
+  }
+}
+
+.marker {
+  position: absolute;
+  top: 50%;
+  left: var(--marker-x);
+  display: inline-flex;
+  width: 10px;
+  height: 10px;
+  transform: translateY(-50%);
+  border-radius: 2px;
+  background: var(--surface-ground);
+  box-shadow: 0 0 0 3px var(--surface-ground);
+
+  :host-context(.no-axis) & {
+    display: none;
+  }
+}
+
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sum {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.close {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.open-button,
+.more {
+  display: inline-grid;
+  place-items: center;
+  height: 28px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-raised);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
+}
+
+.more {
+  display: none;
+  width: 28px;
+  padding: 0;
+
+  article.head:hover &,
+  article.head:focus-within & {
+    display: inline-grid;
+  }
+}
+
+.summary {
+  margin: 0;
+  padding: 2px 12px 0;
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 24px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

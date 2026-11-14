@@ -44,26 +44,30 @@ let nextId = 0;
 
     .mode {
       display: inline-flex;
+      gap: 2px;
+      padding: 2px;
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      overflow: hidden;
+      background: var(--surface-raised);
     }
 
-    // Bouton non sélectionné en text-secondary (UX-B2 : 6,2:1 ; l'ancien text-disabled faisait
-    // 3,06:1). « Par séance » inactif en vue décennie garde ce contraste : l'état est porté par
-    // aria-disabled et le curseur, pas par une couleur illisible.
+    // Groupe segmenté (proposition 03, .seg) : bordure subtle, rayon 8, 2 px de marge intérieure ;
+    // boutons de 28 px, rayon 6, 13 px secondaire ; actif sur primary-tint, texte primary, 600.
     button {
-      min-height: 26px;
-      padding: 0 12px;
+      height: 28px;
+      padding: 0 10px;
       border: 0;
-      background: var(--surface-raised);
+      border-radius: 6px;
+      background: transparent;
       color: var(--text-secondary);
-      font: var(--mat-sys-label-medium);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 500;
       white-space: nowrap;
       cursor: pointer;
 
-      & + button {
-        border-left: 1px solid var(--border-subtle);
+      &:hover {
+        color: var(--text-primary);
       }
 
       &[aria-disabled='true'] {
@@ -73,7 +77,7 @@ let nextId = 0;
 
       &[aria-pressed='true'] {
         background: var(--primary-tint);
-        color: var(--primary-hover);
+        color: var(--primary);
         font-weight: 600;
       }
 

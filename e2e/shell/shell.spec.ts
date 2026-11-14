@@ -123,11 +123,15 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(page.getByText('Les liens que vous créez apparaîtront ici')).toBeVisible();
   await expectNoAxeViolations(page);
 
-  // Un champ a le focus : 1 2 3 s'écrivent, l'onglet ne change pas.
+  // Un champ a le focus : 1 2 3 s'écrivent, l'onglet ne change pas. Le bloc de saisie n'existe que
+  // sur l'onglet Séance (14 novembre 2026) : on y revient d'abord.
+  await expect(page.locator('pm-capture-block')).toHaveCount(0);
+  await page.keyboard.press('1');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
   await h.capture.click();
   await page.keyboard.type('312');
   await expect(h.capture).toHaveValue('312');
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph\\?root=all$`));
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
 
   // L'ancienne destination de M1-06 (après création) mène à l'onglet 1 ; rechargé avec une séance
   // ouverte, le dossier va sur l'onglet Séance (UX-S3).
@@ -420,9 +424,12 @@ test('UX-S2 : en-tête compact (identité 44, onglets 38), barre de séance de 4
   await page.keyboard.press('2');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/timeline$`));
   await expect(h.bar).toBeVisible();
-  await expect(block).toBeVisible();
+  // Hors de l'onglet Séance, la page garde sa forme : ni bloc ni colonne latérale (14 novembre 2026).
+  await expect(page.locator('pm-capture-block')).toHaveCount(0);
+  await expect(aside).toHaveCount(0);
   await page.keyboard.press('1');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
+  await expect(block).toBeVisible();
 
   // À 375 px en séance (fiche 00 §2) : barre réduite (« Clôturer », sans modalité ni durée prévue),
   // bloc puis colonne latérale empilés, aucun défilement horizontal.
@@ -458,11 +465,15 @@ test('UX-S2 : en séance à 1440 × 900, la timeline garde 480 px de cartes et l
   await page.setViewportSize({ width: 1440, height: 900 });
   const h = header(page);
 
-  // Timeline : barre de séance et bloc au-dessus, la zone des cartes mesure au moins 480 px.
+  // Timeline en séance : la barre de séance au-dessus, et la page entière comme hors séance (14
+  // novembre 2026 : ni bloc de saisie ni colonne de contexte hors de l'onglet Séance) ; la zone des
+  // cartes mesure au moins 480 px.
   await page.goto(`/fr/patients/${id}/timeline`);
   await expect(h.name).toHaveText('Nina S.');
   await expect(h.bar).toBeVisible();
-  await expect(page.locator('.pad-layout .pad-main pm-capture-block')).toBeVisible();
+  await expect(page.locator('.pad-layout pm-capture-block')).toHaveCount(0);
+  await expect(page.locator('.pad-layout aside.ctx')).toHaveCount(0);
+  await expect(page.locator('.pad-layout')).not.toHaveClass(/in-session/);
   // En séance la timeline s'ouvre « par séance » (la page défile) ; le critère des 480 px porte
   // sur le mode chronologique, dont la liste prend la hauteur restante : M bascule.
   await page.keyboard.press('m');
@@ -471,13 +482,10 @@ test('UX-S2 : en séance à 1440 × 900, la timeline garde 480 px de cartes et l
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
   const cards = (await viewport.boundingBox())!;
   expect(cards.height, 'zone des cartes de la timeline en séance').toBeGreaterThanOrEqual(480);
-  // Colonne latérale à côté, pas sous la liste.
-  const aside = (await page.locator('.pad-layout aside.ctx').boundingBox())!;
-  expect(aside.x).toBeGreaterThanOrEqual(cards.x + cards.width);
   await expectNoAxeViolations(page);
 
   // Graphe : le plateau mesure le haut de son onglet (--graph-top) : il prend exactement la hauteur
-  // restante de la fenêtre, 480 px au moins (sous la barre et le bloc, la page défile alors du
+  // restante de la fenêtre, 480 px au moins (sous la barre de séance, la page défile alors du
   // strict nécessaire, plus de décalage fixe de 340 px).
   await page.keyboard.press('3');
   await expect(page).toHaveURL(/\/graph/);

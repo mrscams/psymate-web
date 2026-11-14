@@ -77,10 +77,13 @@ import {
   templateUrl: './patient-shell.page.html',
   styleUrl: './patient-shell.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // UX-S5, UX-S6 : sur les onglets Séance et Vue d'ensemble le <main> n'a ni borne ni marge
-  // (data.contentWidth full) ; la page pose alors ses marges intérieures et la barre de séance perd
-  // ses marges négatives.
-  host: { '[class.full-bleed]': "activeTab() === 'session' || activeTab() === 'overview'" },
+  // UX-S5, UX-S6, UX-S9 : sur les onglets Séance, Vue d'ensemble et Timeline le <main> n'a ni borne
+  // ni marge (data.contentWidth full) ; la page pose alors ses marges intérieures et la barre de
+  // séance perd ses marges négatives.
+  host: {
+    '[class.full-bleed]':
+      "activeTab() === 'session' || activeTab() === 'overview' || activeTab() === 'timeline'",
+  },
 })
 export class PatientShellPage {
   /** :id de la route (withComponentInputBinding). */
@@ -96,6 +99,8 @@ export class PatientShellPage {
   private readonly route = inject(ActivatedRoute);
   /** Le bloc de saisie, présent seulement pendant une séance ouverte. */
   private readonly captureBar = viewChild(CaptureBlockComponent);
+  /** Demande de focus en attente : servie dès que le bloc existe (onglet Séance) ou qu'il n'y a pas de séance. */
+  private readonly focusRequest = signal<{ quiet?: boolean } | null>(null);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly panels = inject(SidePanelService);
 
@@ -143,6 +148,13 @@ export class PatientShellPage {
 
   /** Mode séance : barre de séance, onglet « Séance », bloc déplié, colonne latérale. */
   protected readonly inSession = computed(() => this.store.currentSession() !== null);
+  /**
+   * Bloc de saisie et colonne de contexte : sur l'onglet Séance seulement (14 novembre 2026). Les
+   * autres onglets gardent leur page entière pendant une séance, coiffée de la barre de séance.
+   */
+  protected readonly onSessionTab = computed(
+    () => this.inSession() && this.activeTab() === 'session',
+  );
 
   /**
    * L'onglet Séance montre le carnet vide (rien de noté) : la colonne latérale donne alors la séance
@@ -182,6 +194,34 @@ export class PatientShellPage {
       routedFor = patient.id;
       if (session && untracked(this.activeTab) === 'overview') {
         untracked(() => void this.goToSession(patient.id, true));
+      }
+    });
+
+    // Focus demandé (Démarrer, clôture, arrivée depuis la création) : le bloc de saisie n'existe que
+    // sur l'onglet Séance, atteint après une navigation ; on attend donc qu'il soit rendu. Sans
+    // séance ouverte, le bouton « Démarrer la séance » de l'en-tête, seul point de départ d'une saisie.
+    effect(() => {
+      const request = this.focusRequest();
+      if (!request) return;
+      const bar = this.captureBar();
+      const inSession = this.inSession();
+      // Le bloc encore présent juste après une clôture n'est pas une cible : il disparaît au rendu.
+      if (bar && inSession) {
+        untracked(() => {
+          this.focusRequest.set(null);
+          bar.focus(request);
+        });
+        return;
+      }
+      if (!inSession && this.store.patient()) {
+        untracked(() => {
+          this.focusRequest.set(null);
+          afterNextRender(
+            () =>
+              this.host.nativeElement.querySelector<HTMLElement>('button.start-session')?.focus(),
+            { injector: this.injector },
+          );
+        });
       }
     });
 
@@ -384,13 +424,6 @@ export class PatientShellPage {
    * d'une saisie. Après le prochain rendu : le bloc n'apparaît qu'avec la séance.
    */
   private focusCapture(options: { quiet?: boolean } = {}): void {
-    afterNextRender(
-      () => {
-        const bar = this.captureBar();
-        if (bar) bar.focus(options);
-        else this.host.nativeElement.querySelector<HTMLElement>('button.start-session')?.focus();
-      },
-      { injector: this.injector },
-    );
+    this.focusRequest.set({ ...options });
   }
 }

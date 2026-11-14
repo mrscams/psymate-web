@@ -296,9 +296,11 @@ test.describe('vue d’ensemble', () => {
     expect((await reread).status()).toBe(200);
     await page.getByRole('link', { name: /Vue d'ensemble/ }).click();
     await expect(page).toHaveURL(new RegExp(`/fr/patients/${folder.patientId}$`));
-    // En séance, le bloc de saisie est posé par la page du shell au-dessus de l'onglet, une fois.
-    await expect(page.locator('pm-capture-block')).toHaveCount(1);
-    await expect(page.locator('pm-overview-page pm-capture-block')).toHaveCount(0);
+    // En séance, la vue d'ensemble garde sa page entière : le bloc de saisie et la colonne de
+    // contexte n'existent que sur l'onglet Séance (14 novembre 2026) ; seule la barre de séance reste.
+    await expect(page.locator('pm-session-bar')).toBeVisible();
+    await expect(page.locator('pm-capture-block')).toHaveCount(0);
+    await expect(page.locator('aside.ctx')).toHaveCount(0);
     await expect(rows).toHaveCount(before + 1);
     await expect(block(page, 'À compléter')).toContainText('à clôturer');
     await expectNoAxeViolations(page);

@@ -54,6 +54,7 @@ const groups: SessionGroup[] = [
       (opened)="opened.push($event)"
       (openSession)="sessions.push($event)"
       (retryDetail)="retries.push($event)"
+      (closeSession)="closes = closes + 1"
     />
   `,
 })
@@ -64,6 +65,7 @@ class HostComponent {
   readonly opened: TimelineItem[] = [];
   readonly sessions: string[] = [];
   readonly retries: string[] = [];
+  closes = 0;
 }
 
 async function render() {
@@ -71,7 +73,9 @@ async function render() {
   const fixture = TestBed.createComponent(HostComponent);
   await fixture.whenStable();
   const el = fixture.nativeElement as HTMLElement;
-  const toggles = () => [...el.querySelectorAll<HTMLButtonElement>('button.toggle')];
+  const toggles = () => [
+    ...el.querySelectorAll<HTMLButtonElement>('button.head, button.outside-head'),
+  ];
   return { fixture, host: fixture.componentInstance, el, toggles };
 }
 
@@ -79,95 +83,101 @@ function text(el: Element | null | undefined): string {
   return (el?.textContent ?? '').replace(/\s+/g, ' ').trim();
 }
 
+/** Texte des nœuds feuilles, séparés par une espace (les espaces entre éléments ne sont pas rendus). */
+function words(el: Element | null | undefined): string {
+  if (!el) return '';
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const parts: string[] = [];
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const value = (node.textContent ?? '').replace(/\s+/g, ' ').trim();
+    if (value) parts.push(value);
+  }
+  return parts.join(' ');
+}
+
+const loaded = (overrides: Record<string, unknown> = {}): SessionDetailState => ({
+  status: 'loaded',
+  problem: null,
+  detail: {
+    id: 's-2',
+    from: '2026-10-30T15:00:00Z',
+    to: '2026-10-30T15:50:00Z',
+    durationMin: 50,
+    modality: 'in_person',
+    kind: 'session',
+    closedAt: '2026-10-30T15:50:00Z',
+    summary: 'Dort mieux depuis deux semaines.\nReprise du sport.',
+    ...overrides,
+  },
+});
+
 describe('TimelineSessionsComponent', () => {
   afterEach(() => document.querySelectorAll('.cdk-overlay-container').forEach((n) => n.remove()));
 
-  it('la plus récente dépliée à l’ouverture (détail demandé), les autres repliées avec leur compte', async () => {
+  it('même grammaire que le flux : date à gauche, séparateur teinté, la plus récente dépliée', async () => {
     const { el, host, toggles } = await render();
     expect(host.expanded).toEqual(['s-2']);
     const [first, second, outside] = toggles();
     expect(first.getAttribute('aria-expanded')).toBe('true');
-    expect(text(first)).toContain('Séance du vendredi 30 octobre 2026');
-    expect(text(first)).toContain('2 entrées');
+    expect(text(first.closest('.session-head'))).toContain('2 entrées');
     expect(second.getAttribute('aria-expanded')).toBe('false');
-    expect(text(second)).toContain('1 entrée');
+    expect(text(second.closest('.session-head'))).toContain('1 entrée');
     expect(text(outside)).toContain('Hors séance');
-    // Le panneau de la dépliée, nommé par son bouton.
+    // La date de la séance, écrite une fois à gauche de l'axe.
+    expect(text(el.querySelector('.session .date b'))).toBe('Vendredi 30');
+    expect(text(el.querySelector('.session .date span'))).toBe('séance');
+    // Le panneau de la dépliée : ses entrées sur l'axe, date complète.
     const panel = el.querySelector(`#${first.getAttribute('aria-controls')}`);
-    expect(panel?.getAttribute('aria-labelledby')).toBe(first.id);
+    expect(panel?.getAttribute('role')).toBe('region');
     expect(panel?.querySelectorAll('li pm-timeline-card')).toHaveLength(2);
     expect(el.querySelectorAll('[role="region"]')).toHaveLength(1);
+    // Plus de colonne « Compte rendu » par séance (proposition 03).
+    expect(el.querySelector('.report')).toBeNull();
   });
 
-  it('détail : chargement, erreur (Réessayer), chargé (horaires, durée, modalité, compte rendu)', async () => {
+  it('détail : chargement, erreur (Réessayer), chargé (modalité, durée, première ligne du compte rendu)', async () => {
     const { fixture, el, host } = await render();
-    expect(el.querySelector('.summary pm-state [aria-busy="true"]')).not.toBeNull();
+    expect(el.querySelector('.panel pm-state [aria-busy="true"]')).not.toBeNull();
 
     host.details.set({
       's-2': { status: 'error', detail: null, problem: { status: 500, code: 'INTERNAL_ERROR' } },
     });
     await fixture.whenStable();
-    const alert = el.querySelector('.summary [role="alert"]');
+    const alert = el.querySelector('.panel [role="alert"]');
     expect(text(alert)).toContain('Le détail de la séance');
     alert!.querySelector<HTMLButtonElement>('button')!.click();
     expect(host.retries).toEqual(['s-2']);
 
-    host.details.set({
-      's-2': {
-        status: 'loaded',
-        problem: null,
-        detail: {
-          id: 's-2',
-          from: '2026-10-30T15:00:00Z',
-          to: '2026-10-30T15:50:00Z',
-          durationMin: 50,
-          modality: 'in_person',
-          kind: 'session',
-          closedAt: '2026-10-30T15:50:00Z',
-          summary: 'Dort mieux depuis deux semaines.',
-        },
-      },
-    });
+    host.details.set({ 's-2': loaded() });
     await fixture.whenStable();
-    const facts = text(el.querySelector('.facts'));
-    expect(facts).toContain('50 min');
-    expect(facts).toContain('Présentiel');
-    expect(facts).toMatch(/\d{2}:\d{2} – \d{2}:\d{2}/);
-    expect(el.querySelector('.open-state')).toBeNull();
-    // En-tête (maquette 03, état B) : horaires · durée · modalité, sans « non clôturée ».
-    expect(text(el.querySelector('.header-facts'))).toMatch(
-      /^\d{2}:\d{2} → \d{2}:\d{2} · 50 min · cabinet$/,
+    const head = el.querySelector('.session-head')!;
+    expect(text(head.querySelector('.label'))).toBe('Séance · cabinet · 50 min');
+    expect(words(head.querySelector('.sum'))).toContain('2 entrées · compte rendu ↓');
+    expect(text(el.querySelector('pm-timeline-session-divider .summary'))).toBe(
+      'Dort mieux depuis deux semaines.',
     );
-    expect(el.querySelector('.header-open')).toBeNull();
-    expect(text(el.querySelector('.report-text'))).toBe('Dort mieux depuis deux semaines.');
-    el.querySelector<HTMLButtonElement>('.open-session')!.click();
+    head.querySelector<HTMLButtonElement>('button.open-button')!.click();
     expect(host.sessions).toEqual(['s-2']);
   });
 
-  it('séance ouverte : « Non clôturée » en avertissement, sans compte rendu', async () => {
+  it('séance ouverte depuis des jours : « non clôturée », « clôturer » vers l’onglet Séance', async () => {
     const { fixture, el, host } = await render();
     host.details.set({
-      's-2': {
-        status: 'loaded',
-        problem: null,
-        detail: {
-          id: 's-2',
-          from: '2026-10-30T15:00:00Z',
-          to: null,
-          durationMin: null,
-          modality: 'video',
-          kind: 'intake',
-          closedAt: null,
-          summary: null,
-        },
-      },
+      's-2': loaded({
+        to: null,
+        durationMin: null,
+        modality: 'video',
+        kind: 'session',
+        closedAt: null,
+        summary: null,
+      }),
     });
     await fixture.whenStable();
-    expect(text(el.querySelector('.open-state'))).toBe('Non clôturée');
-    expect(text(el.querySelector('.header-open'))).toBe('non clôturée');
-    expect(text(el.querySelector('.header-facts'))).toMatch(/^\d{2}:\d{2} · visio$/);
-    expect(text(el.querySelector('.report-empty'))).toBe('Aucun compte rendu.');
-    expect(text(el.querySelector('button.toggle'))).toContain("Séance d'accueil du");
+    // Ouverte depuis le 30 octobre : au-delà de 3 h, plus de chronomètre (seuil de la barre de séance).
+    // (Une séance d'accueil, elle, n'est jamais « ouverte » : voir le spec du séparateur.)
+    expect(text(el.querySelector('.session-head .label'))).toBe('Séance · visio · non clôturée');
+    el.querySelector<HTMLButtonElement>('.session-head button.close')!.click();
+    expect(host.closes).toBe(1);
   });
 
   it('déplier une autre séance la demande ; replier la ferme ; clic sur une entrée l’ouvre', async () => {
@@ -194,6 +204,7 @@ describe('TimelineSessionsComponent', () => {
       session: timelineItem({
         id: `s-${i}`,
         type: 'session',
+        title: null,
         sessionId: null,
         occurred: {
           from: new Date(Date.UTC(2026, 9, 30 - i, 15)).toISOString(),
@@ -210,17 +221,14 @@ describe('TimelineSessionsComponent', () => {
     fixture.componentInstance.groups.set(many);
     await fixture.whenStable();
     const el = fixture.nativeElement as HTMLElement;
-    expect(el.querySelectorAll('button.toggle')).toHaveLength(SESSIONS_PAGE);
-    // Horaires et durée d'après les bornes de la séance, avant tout détail.
-    const second = el.querySelectorAll('button.toggle')[1];
-    expect(text(second.querySelector('.header-facts'))).toMatch(
-      /^\d{2}:\d{2} → \d{2}:\d{2} · 45 min$/,
-    );
+    expect(el.querySelectorAll('button.head')).toHaveLength(SESSIONS_PAGE);
+    // Durée d'après les bornes de la séance, avant tout détail.
+    expect(text(el.querySelectorAll('.session-head .label')[1])).toBe('Séance · 45 min');
     const more = el.querySelector<HTMLButtonElement>('button.show-more')!;
     expect(text(more)).toBe('Afficher les 5 séances plus anciennes');
     more.click();
     await fixture.whenStable();
-    expect(el.querySelectorAll('button.toggle')).toHaveLength(SESSIONS_PAGE + 5);
+    expect(el.querySelectorAll('button.head')).toHaveLength(SESSIONS_PAGE + 5);
     expect(el.querySelector('button.show-more')).toBeNull();
   });
 });

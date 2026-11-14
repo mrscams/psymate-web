@@ -330,6 +330,8 @@ describe('PatientShellPage', () => {
       const aside = layout.querySelector('aside.ctx')!;
       expect(aside.getAttribute('aria-label')).toBe('Contexte de la séance');
       expect(aside.querySelector('pm-session-context')).not.toBeNull();
+      // La colonne ne se monte qu'avec l'onglet Séance : son contexte arrive au tour suivant.
+      await settle(harness);
       expect([...aside.querySelectorAll('h3')].map(text)).toEqual([
         'Prévu la dernière fois',
         'À garder en tête',
@@ -573,21 +575,30 @@ describe('PatientShellPage', () => {
     const press = (target: EventTarget, key: string) =>
       target.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
 
-    press(document.body, '3');
-    await settle(harness);
-    expect(router.url).toBe('/patients/p-marie/graph');
-
+    // Séance ouverte : le dossier s'ouvre sur l'onglet Séance (UX-S3), où vit le bloc de saisie.
+    expect(router.url).toBe('/patients/p-marie/session');
     const capture = el.querySelector<HTMLTextAreaElement>('pm-capture-block textarea')!;
     capture.focus();
     press(capture, '2');
     await settle(harness);
-    expect(router.url).toBe('/patients/p-marie/graph');
+    expect(router.url).toBe('/patients/p-marie/session');
 
     capture.blur();
-    // Séance ouverte : l'onglet 1 est l'onglet Séance (UX-S3).
+    press(document.body, '3');
+    await settle(harness);
+    expect(router.url).toBe('/patients/p-marie/graph');
+    // Hors de l'onglet Séance, la page garde sa forme : ni bloc de saisie ni colonne de contexte,
+    // seule la barre de séance reste (14 novembre 2026).
+    expect(el.querySelector('pm-session-bar')).not.toBeNull();
+    expect(el.querySelector('pm-capture-block')).toBeNull();
+    expect(el.querySelector('aside.ctx')).toBeNull();
+    expect(el.querySelector('.pad-layout')!.classList.contains('in-session')).toBe(false);
+
+    // Séance ouverte : l'onglet 1 est l'onglet Séance (UX-S3) ; le bloc revient avec lui.
     press(document.body, '1');
     await settle(harness);
     expect(router.url).toBe('/patients/p-marie/session');
+    expect(el.querySelector('pm-capture-block')).not.toBeNull();
   });
 
   it('arrivée depuis la création (état CAPTURE_FOCUS_STATE) : séance ouverte, le bloc prend le focus', async () => {

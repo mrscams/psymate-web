@@ -49,7 +49,8 @@ test('créer un patient, le retrouver (marie, marié), modifier le rythme, archi
   });
   await expect(page.getByLabel('Date de naissance')).toHaveAttribute('placeholder', 'jj/mm/aaaa');
   await page.getByLabel('Date de naissance').fill('01/01/2999');
-  await page.getByRole('button', { name: /Enregistrer/ }).click();
+  // Création : le bouton du rail dit « Créer le dossier » (proposition 16).
+  await page.getByRole('button', { name: /Créer le dossier/ }).click();
   const displayName = page.getByRole('textbox', { name: /Nom affiché/ });
   await expect(displayName).toBeFocused();
   await expect(displayName).toHaveAttribute('aria-invalid', 'true');
@@ -67,7 +68,7 @@ test('créer un patient, le retrouver (marie, marié), modifier le rythme, archi
   const rejected = page.waitForResponse(
     (r) => r.url().endsWith('/api/patients') && r.request().method() === 'POST',
   );
-  await page.getByRole('button', { name: /Enregistrer/ }).click();
+  await page.getByRole('button', { name: /Créer le dossier/ }).click();
   expect((await rejected).status()).toBe(422);
   await expect(page.locator('#field-birthDate-error')).toContainText('moins de 120 ans');
   const summary = page.locator('pm-form-errors [role="alert"]');
@@ -108,42 +109,42 @@ test('créer un patient, le retrouver (marie, marié), modifier le rythme, archi
   await page.getByRole('button', { name: "Plus d'actions pour Marie D." }).click();
   await page.getByRole('menuitem', { name: 'Fiche', exact: true }).click();
   await expect(page).toHaveURL(/\/fiche$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Modifier la fiche · Marie D.');
-  // Méta (maquette 16) : création, séance d'accueil créée par l'API ; versions dans l'encart
-  // Confidentialité, lien vers l'historique.
-  await expect(page.locator('.page-header .meta')).toContainText('Créée le');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Fiche · Marie D.');
+  // Méta (proposition 16) : création, séance d'accueil créée par l'API ; après une modification,
+  // « dernière modification … (n versions) », lien vers l'historique.
+  const meta = page.locator('.page-head .sub');
+  await expect(meta).toContainText('Créée le');
   // La séance d'accueil vient d'un écouteur asynchrone de l'API, puis de la projection : relire.
   await expect(async () => {
     await page.reload();
-    await expect(page.locator('.page-header .meta')).toContainText('1 séance', {
-      timeout: 3_000,
-    });
+    await expect(meta).toContainText('1 séance', { timeout: 3_000 });
   }).toPass({ timeout: 30_000 });
-  const privacy = page.getByRole('region', { name: 'Confidentialité' });
-  await expect(privacy.getByRole('button', { name: '1 version', exact: true })).toBeVisible();
+  await expect(meta).not.toContainText('dernière modification');
   await expect(page.getByLabel('Rythme habituel')).toHaveValue('weekly');
   await page.getByLabel('Rythme habituel').selectOption({ label: 'Mensuel' });
+  // Champs modifiés sous Enregistrer (rail).
+  await expect(page.locator('pm-record-rail .note')).toContainText('1 champ modifié');
   const patched = page.waitForResponse((r) => r.request().method() === 'PATCH');
   await page.getByRole('button', { name: /Enregistrer/ }).click();
   expect((await patched).request().postDataJSON()).toEqual({ followUp: { rhythm: 'monthly' } });
-  await expect(privacy.getByRole('button', { name: '2 versions' })).toBeVisible();
-  await expect(page.locator('.page-header .meta')).toContainText(
-    'dernière modification de la fiche le',
-  );
-  const history = page.getByRole('region', { name: 'Historique des versions' });
-  await expect(history.getByRole('heading', { name: /Version 2/ })).toBeVisible();
-  await expect(history).toContainText('Rythme habituel');
-  await expect(history).toContainText('Mensuel');
+  await expect(meta).toContainText(/dernière modification aujourd.hui \(2 versions\)/);
+  await expect(page.getByText('Fiche enregistrée')).toBeVisible();
 
-  // Une seconde modification : la version 3 ne liste que la différence, avant → après.
+  // Une seconde modification ; « (3 versions) » ouvre l'historique dans un panneau latéral : la
+  // version 3 ne liste que la différence, avant → après.
   await page.getByLabel('Rythme habituel').selectOption({ label: 'Irrégulier' });
+  await expect(page.locator('pm-record-rail .note')).toContainText('1 champ modifié');
   await page.getByRole('button', { name: /Enregistrer/ }).click();
-  await expect(privacy.getByRole('button', { name: '3 versions' })).toBeVisible();
+  await meta.getByRole('button', { name: '3 versions' }).click();
+  const history = page.getByRole('dialog', { name: 'Historique des versions' });
+  await expect(history.getByRole('heading', { name: /Version 2/ })).toBeVisible();
   const v3 = history.getByRole('listitem').filter({ hasText: 'Version 3' });
   await expect(v3.locator('dt')).toHaveText(['Rythme habituel']);
   await expect(v3.locator('del')).toHaveText('Mensuel');
   await expect(v3.locator('ins')).toHaveText('Irrégulier');
   await expectNoAxeViolations(page);
+  await page.keyboard.press('Escape');
+  await expect(history).toBeHidden();
 
   // Archiver avec le nom retapé → liste sans le patient, toast « Restaurer ».
   await page.getByRole('button', { name: 'Archiver…' }).click();

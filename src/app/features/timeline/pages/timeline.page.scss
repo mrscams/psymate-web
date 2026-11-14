@@ -1,3 +1,5 @@
+// Onglet Timeline (proposition 03, UX-S9) : barre d'outils sur une ligne, puis la grille `.tl`
+// (flux | colonne de résumé de 300 px, 20 px d'écart ; la colonne passe dessous sous 900 px).
 :host {
   display: block;
 }
@@ -5,89 +7,75 @@
 .timeline {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 14px;
 
-  // Mode chronologique : la colonne occupe la hauteur restante de la fenêtre (--timeline-top,
-  // mesuré par la page), la liste prend ce que laissent la barre d'outils (deux rangées) et la
-  // ligne d'état. Par séance, la page défile normalement.
+  // Mode chronologique : l'onglet occupe la hauteur restante de la fenêtre (--timeline-top, mesuré
+  // par la page ; 40 px de marge basse de la colonne de contenu) ; le flux et la colonne de résumé
+  // prennent ce que laisse la barre d'outils. Par séance, la page défile normalement.
   &.fill {
-    height: calc(100dvh - var(--timeline-top, 300px) - 8px);
-  }
+    height: calc(100dvh - var(--timeline-top, 300px) - 40px);
+    min-height: 480px;
 
-  // Ce qui précède la liste garde sa hauteur : seule la liste se réduit (sinon, à 375 px, la ligne
-  // d'état repliée sur deux lignes passait sous la liste des situations).
-  > .toolbar,
-  > .status-row,
-  > .bands-legend {
+    .tl {
+      flex: 1 1 0;
+      min-height: 0;
+    }
+  }
+}
+
+// Barre d'outils (maquette `.tl-toolbar`) : une ligne, 10 px entre les groupes ; les puces à gauche,
+// la période, le mode et le zoom à droite. Sous 900 px (et à 200 % de zoom, où la fenêtre fait
+// 640 px), les groupes passent à la ligne plutôt que de déborder.
+.tl-toolbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+
+  > * {
     flex: none;
   }
+
+  .spacer {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  @media (max-width: 900px) {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
 }
 
-// Barre d'outils (maquette 03, état A) : une carte blanche, deux rangées. Rangée 1 : types, filtres
-// actifs, « Filtres (n) », brouillons. Rangée 2 : période, mode (M), zoom à droite. Marges serrées
-// (UX-G2c) : la zone des cartes garde 480 px à 1440 × 900, cibles de 24 px au moins.
-.toolbar {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 4px 12px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  background: var(--surface-raised);
-}
-
-.toolbar-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 12px;
-  min-width: 0;
-}
-
-.row-label {
-  color: var(--text-secondary);
-  font: var(--mat-sys-body-small);
-}
-
-.separator {
-  width: 1px;
-  height: 22px;
-  background: var(--border-subtle);
-}
-
-kbd {
-  padding: 1px 5px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 11px;
-}
-
-.zoom {
+// Zoom compact (maquette `.zoomctl`) : − piste + et la granularité.
+.zoomctl {
   display: inline-flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  margin-left: auto;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 13px;
 }
 
 .zoom-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
   padding: 0;
-  border: 1px solid var(--border-subtle);
+  border: 0;
   border-radius: 8px;
-  background: var(--surface-raised);
-  color: var(--text-primary);
-  font: var(--mat-sys-title-small);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 15px;
   cursor: pointer;
 
-  &:disabled {
+  &:hover:not(:disabled) {
     background: var(--surface-sunken);
+    color: var(--text-primary);
+  }
+
+  &:disabled {
     color: var(--text-disabled);
     cursor: default;
   }
@@ -98,186 +86,234 @@ kbd {
   }
 }
 
-// Piste du zoom (décorative : les boutons, +, − et Ctrl+molette la pilotent).
 .track {
   position: relative;
   display: inline-block;
-  width: 96px;
+  width: 70px;
   height: 4px;
   border-radius: 2px;
   background: var(--surface-sunken);
 }
 
-.track-fill {
-  display: block;
-  height: 4px;
-  border-radius: 2px;
+.track-thumb {
+  position: absolute;
+  top: -4px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
   background: var(--primary);
 }
 
-.track-thumb {
-  position: absolute;
-  top: -5px;
-  width: 14px;
-  height: 14px;
-  margin-left: -7px;
-  border: 2px solid var(--primary);
-  border-radius: 50%;
-  background: var(--surface-raised);
-}
-
 .granularity {
-  color: var(--text-primary);
-  font: var(--mat-sys-label-medium);
+  color: var(--text-secondary);
+  text-transform: lowercase;
 }
 
-.hint {
+// Panneau des filtres sur téléphone : période et mode, au-dessus des émotions.
+.extra {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.tl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 20px;
+  align-items: start;
+
+  .fill & {
+    align-items: stretch;
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// Sous 900 px, la colonne de résumé passe sous le flux : la page défile, le flux garde la hauteur
+// de la fenêtre.
+@media (max-width: 900px) {
+  .timeline.fill {
+    height: auto;
+
+    .tl {
+      flex: none;
+    }
+  }
+}
+
+.stream {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+
+  @media (max-width: 900px) {
+    .fill & {
+      height: calc(100dvh - var(--timeline-top, 300px) - 80px);
+      min-height: 420px;
+    }
+  }
+}
+
+.tl-side {
+  min-width: 0;
+
+  .fill & {
+    overflow: auto;
+  }
+}
+
+.partial {
+  margin: 0 0 8px;
   color: var(--text-secondary);
-  font: var(--mat-sys-body-small);
+  font-size: 12.5px;
+}
+
+// Situations en tête du flux (maquette `.band`) : 12,5 px, entry-situation sur sa teinte, rayon 6.
+.bands-top {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 6px;
+  // Deux lignes au plus : au-delà, la liste défile (la zone des cartes garde sa hauteur).
+  max-height: 68px;
+  margin: 0 0 6px;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.band {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--entry-situation) 12%, var(--surface-raised));
+  color: var(--entry-situation);
+  font-size: 12.5px;
+
+  > i {
+    flex: none;
+    width: 22px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--entry-situation);
+  }
+
+  b {
+    font-weight: 600;
+  }
+}
+
+.band-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-// Ligne d'état (maquette : mono 12 px, sous la barre) et, à droite, le bouton qui déplie la liste
-// des situations en bande (UX-G2c) : une seule ligne avant la liste, quel que soit leur nombre.
-.status-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0 16px;
-  min-height: 24px;
-  padding: 0 4px;
-}
-
-.status-line {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 8px;
-  margin: 0;
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.swatch {
+.band-link {
   flex: none;
-  width: 8px;
-  height: 14px;
-  border-radius: 3px;
-  background: color-mix(in srgb, var(--entry-situation) 25%, transparent);
-  box-shadow: inset 0 0 0 1px var(--entry-situation);
-}
-
-.bands-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 24px;
   margin-left: auto;
-  padding: 0 6px;
-  border: 0;
-  border-radius: 6px;
-  background: none;
-  color: var(--text-primary);
-  font: var(--mat-sys-body-small);
-  cursor: pointer;
+  color: var(--primary);
+  text-decoration: none;
 
   &:hover {
-    background: var(--surface-sunken);
+    text-decoration: underline;
   }
 
   &:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
   }
-
-  // Chevron : vers le bas replié, vers le haut déplié.
-  .chevron {
-    width: 6px;
-    height: 6px;
-    margin: 0 2px 3px;
-    border-right: 1.5px solid currentColor;
-    border-bottom: 1.5px solid currentColor;
-    transform: rotate(45deg);
-  }
-
-  &[aria-expanded='true'] .chevron {
-    margin: 3px 2px 0;
-    transform: rotate(-135deg);
-  }
-}
-
-// Liste des situations : repliée par défaut sur grand écran (le nom de chaque situation est écrit le
-// long de sa bande) ; toujours visible sous 600 px, où les libellés des bandes sont masqués.
-.bands-legend {
-  display: none;
-  flex-wrap: wrap;
-  gap: 4px 14px;
-  min-width: 0;
-  margin: 0;
-  padding: 0 4px;
-  list-style: none;
-
-  &.open {
-    display: flex;
-  }
-
-  li {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-width: 0;
-    max-width: 280px;
-    color: var(--text-primary);
-    font: var(--mat-sys-body-small);
-  }
-
-  .band-title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .band-state {
-    flex: none;
-    color: var(--text-secondary);
-  }
 }
 
 .viewport {
-  --lane-width: 18px;
+  --lane-width: 14px;
 
-  // La liste prend la hauteur restante sans jamais dépasser le bas de la fenêtre : une carte
-  // amenée à l'écran par le navigateur (focus, menu) doit rester visible. Plancher pour les très
-  // petites fenêtres seulement.
   flex: 1 1 0;
   min-height: 240px;
-}
-
-// UX-S2 : en séance, la barre de séance et le bloc de saisie précèdent la liste ; sur un grand
-// écran (le critère UX-G2c est mesuré à 1440 × 900), la zone des cartes garde ses 480 px et la page
-// défile plutôt que de la réduire. Pas sur une fenêtre basse (1280 × 720) : la liste y tient dans
-// la fenêtre, pour qu'une carte restaurée ou focalisée reste visible.
-@media (min-width: 1024px) and (min-height: 860px) {
-  .fill .viewport {
-    min-height: 480px;
-  }
 }
 
 .list {
   display: block;
 }
 
+// Une ligne du flux : les bandes à gauche sur toute sa hauteur, puis la cellule (intertitre,
+// marqueur du suivi, jour : colonne des dates de 110 px, 16 px, colonne des lignes sur l'axe).
 .row {
   display: grid;
-  grid-template-columns: calc(var(--lanes, 0) * var(--lane-width)) 120px minmax(0, 1fr);
-  column-gap: 8px;
-  padding-left: 4px;
+  grid-template-columns: calc(var(--lanes, 0) * var(--lane-width)) minmax(0, 1fr);
   box-sizing: border-box;
+  padding-right: 4px;
 
-  &.before {
+  &.before .cell {
     background: var(--surface-sunken);
   }
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+}
+
+.top {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+// Intertitre de mois (maquette `.month-hd`) : 12/600 secondaire, aligné sur la colonne des lignes.
+.month-hd {
+  margin: 0 0 0 126px;
+  padding: 14px 0 4px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 16px;
+  text-transform: uppercase;
+}
+
+.day-head {
+  padding: 12px 0 4px;
+}
+
+.day {
+  display: grid;
+  flex: 1;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 0 16px;
+  min-height: 0;
+}
+
+// Colonne des lignes sur l'axe (maquette `.day .items`) : filet de 2 px, 18 px avant les cartes.
+.items {
+  position: relative;
+  min-width: 0;
+  padding-left: 18px;
+  border-left: 2px solid var(--border-subtle);
+}
+
+.foot {
+  flex: none;
+  margin: 0 0 0 126px;
+  padding-top: 14px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  line-height: 18px;
 }
 
 // Bandes des situations : une colonne par bande, segment continu d'une ligne à l'autre.
@@ -315,7 +351,7 @@ kbd {
   left: 50%;
   overflow: hidden;
   color: var(--entry-situation);
-  font: var(--mat-sys-label-small);
+  font-size: 11px;
   font-weight: 500;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -323,86 +359,48 @@ kbd {
   writing-mode: vertical-rl;
 }
 
-.axis {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding: 10px 20px 0 0;
-  border-right: 2px solid var(--border-subtle);
-  font: var(--mat-sys-body-small);
-  text-align: right;
-  white-space: nowrap;
-}
-
-// Axe (maquette 03) : la date en gras 13 px, le jour ou l'année dessous en secondaire.
-.axis-main {
-  color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.axis-sub {
-  color: var(--text-secondary);
-}
-
-.marker {
-  position: absolute;
-  top: 14px;
-  right: -7px;
-  display: inline-flex;
-  padding: 1px;
-  border-radius: 50%;
-  background: var(--surface-ground);
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-  padding: 4px 0;
-  box-sizing: border-box;
-
-  pm-timeline-card {
-    flex: 1;
-    min-height: 0;
-  }
-}
-
+// Marqueur « Début du suivi » et titre de la zone « Avant le suivi ».
 .follow-start {
   display: flex;
   flex: none;
   gap: 12px;
   align-items: baseline;
-  padding-bottom: 2px;
+  margin: 12px 0 8px 126px;
+  padding-top: 6px;
   border-top: 2px solid var(--border-strong);
   overflow: hidden;
   color: var(--text-primary);
-  font: var(--mat-sys-label-medium);
+  font-size: 12.5px;
+  font-weight: 600;
   white-space: nowrap;
 }
 
 .follow-start-text {
   font-family: var(--font-mono);
   font-size: 12px;
-}
-
-.follow-start-zone {
-  color: var(--text-primary);
+  font-weight: 400;
 }
 
 .skeleton {
-  flex: 1;
+  height: 44px;
   border-radius: 10px;
   background: var(--surface-sunken);
 }
 
 .window-error {
   display: block;
-  flex: 1;
-  min-height: 0;
   overflow: hidden;
+}
+
+// Téléphone : l'ancre du jour de la première ligne visible reste en haut de la liste.
+.sticky-day {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  left: 0;
+  padding: 6px 0 4px;
+  background: var(--surface-ground);
+  pointer-events: none;
 }
 
 // Menu contextuel : son contenu vient de ce gabarit (matMenuContent), il garde donc nos styles
@@ -421,44 +419,34 @@ kbd {
   font-size: 12px;
 }
 
-// Petit écran (375 px) : la grille bandes | axe | cartes se resserre (pas de déclinaison mobile en
-// V1, fiche 03 ; rien ne déborde), les séparateurs de la barre disparaissent quand elle se replie.
-@media (max-width: 599px) {
-  .toolbar {
-    padding: 10px;
-  }
-
-  .separator {
-    display: none;
-  }
-
-  .zoom {
-    margin-left: 0;
-  }
-
+// Téléphone (maquette mobile `.phone`) : une colonne, pas de colonne des dates ni d'axe, les
+// jours en en-têtes, les outils derrière « Filtres ».
+.narrow {
   .viewport {
-    --lane-width: 8px;
+    --lane-width: 6px;
   }
 
-  .bands-toggle {
-    display: none;
+  .day {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .bands-legend {
-    display: flex;
+  .items {
+    padding-left: 0;
+    border-left: 0;
   }
 
-  .row {
-    grid-template-columns: calc(var(--lanes, 0) * var(--lane-width)) 64px minmax(0, 1fr);
-    column-gap: 6px;
+  .month-hd,
+  .foot,
+  .follow-start {
+    margin-left: 0;
   }
 
   .lane-label {
     display: none;
   }
 
-  .axis {
-    padding-right: 12px;
-    white-space: normal;
+  .band-link,
+  .band-text .since {
+    display: none;
   }
 }

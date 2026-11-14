@@ -4,6 +4,8 @@ import { firstValueFrom } from 'rxjs';
 import {
   CreatePatientRequest,
   CreatePatientRequestPronounEnum,
+  EntreesService,
+  EntryDto,
   FlagDto,
   FlagRequestKindEnum,
   OverviewDto,
@@ -40,6 +42,7 @@ export class PatientApi {
   private readonly patients = inject(PatientsService);
   private readonly tagsApi = inject(TagsService);
   private readonly overviews = inject(VueDensembleService);
+  private readonly entries = inject(EntreesService);
   private readonly english = inject(LOCALE_ID).startsWith('en');
 
   /**
@@ -67,8 +70,11 @@ export class PatientApi {
    * jamais recalculée dans le client.
    */
   async activity(id: string): Promise<PatientActivity> {
+    const dto = await firstValueFrom(this.overviews.getPatientOverview(id, '30d'));
     return toActivity(
-      await firstValueFrom(this.overviews.getPatientOverview(id, '30d')),
+      await withoutIntakeOpenSession(dto, (entryId) =>
+        firstValueFrom(this.entries.getEntry(entryId)),
+      ),
       this.english,
     );
   }
@@ -215,6 +221,33 @@ export const SINCE_ENTRIES_MAX = 20;
  * séance » croise les entrées de sinceLastSession avec feelings.points (même identifiant d'entrée) :
  * seuls les ressentis de la fenêtre de 30 jours portent leur intensité.
  */
+
+/**
+ * Écarte la séance d'accueil de `drafts.openSession`. L'API la crée avec le patient et ne la clôture
+ * jamais, et la projection la renvoie comme séance ouverte alors que le contrat dit qu'elle ne compte
+ * pas (sessions/current, start). Son genre se lit dans `recentSessions` quand elle y figure ; sinon
+ * (patient qui a d'autres séances plus récentes), une lecture de l'entrée tranche. En cas d'échec de
+ * cette lecture, la projection est gardée telle quelle.
+ */
+export async function withoutIntakeOpenSession(
+  dto: OverviewDto,
+  readEntry: (entryId: string) => Promise<EntryDto>,
+): Promise<OverviewDto> {
+  const open = dto.drafts?.openSession;
+  if (!open?.entryId) return dto;
+  const known = (dto.recentSessions ?? []).find((s) => s.entryId === open.entryId);
+  let kind: string | undefined = known?.kind;
+  if (!known) {
+    try {
+      kind = (await readEntry(open.entryId)).session?.kind;
+    } catch {
+      return dto;
+    }
+  }
+  if (kind !== RecentSessionDtoKindEnum.Intake) return dto;
+  return { ...dto, drafts: { ...dto.drafts, openSession: undefined } };
+}
+
 export function toActivity(dto: OverviewDto, english = false): PatientActivity {
   const series = dto.feelings?.series ?? [];
   const labels = new Map<string, string>();

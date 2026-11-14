@@ -2,7 +2,7 @@
 // tous en $localize, jamais en dur dans un template.
 
 import { EntryType } from '../../../shared/ui';
-import { OccurredPrecision } from '../../../shared/util';
+import { formatOccurred, Occurred, OccurredPrecision } from '../../../shared/util';
 import { PeriodPreset, TimelineMode } from '../data/timeline-filters.model';
 import { SessionKind, SessionModality } from '../data/timeline-sessions.model';
 import { TimelineZoom } from '../data/timeline.model';
@@ -35,15 +35,6 @@ export function zoomLabel(zoom: TimelineZoom): string {
     case 'month':
       return $localize`:Granularité du zoom de la timeline@@timeline.zoom.month:Mois`;
   }
-}
-
-/** Opacité de la pastille de famille selon l'intensité (fiche 03 : 35 / 55 / 80 / 100 %). */
-export function intensityOpacity(intensity: number | null): number {
-  if (intensity === null) return 0.35;
-  if (intensity >= 9) return 1;
-  if (intensity >= 7) return 0.8;
-  if (intensity >= 4) return 0.55;
-  return 0.35;
 }
 
 /** Formateurs Intl mis en cache (l'axe en demande un par ligne et par passage). */
@@ -153,22 +144,6 @@ export function periodAccessibleLabel(preset: PeriodPreset): string {
   }
 }
 
-/** Modalité d'une séance. */
-export function modalityLabel(modality: SessionModality | null): string {
-  switch (modality) {
-    case 'in_person':
-      return $localize`:Modalité d'une séance@@timeline.modality.inPerson:Présentiel`;
-    case 'video':
-      return $localize`:Modalité d'une séance@@timeline.modality.video:Visio`;
-    case 'phone':
-      return $localize`:Modalité d'une séance@@timeline.modality.phone:Téléphone`;
-    case 'email':
-      return $localize`:Modalité d'une séance@@timeline.modality.email:E-mail`;
-    default:
-      return '';
-  }
-}
-
 /** Modalité d'une séance, forme courte des en-têtes et des cartes (« 50 min · cabinet »). */
 export function modalityShortLabel(modality: SessionModality | null): string {
   switch (modality) {
@@ -201,38 +176,6 @@ export function sessionKindLabel(kind: SessionKind | null): string {
 export function durationLabel(minutes: number, locale: string): string {
   const value = new Intl.NumberFormat(locale).format(minutes);
   return $localize`:Durée d'une séance en minutes@@timeline.session.duration:${value}:value: min`;
-}
-
-/** Date complète d'une séance (« mardi 8 octobre 2026 »), dans le fuseau du praticien. */
-export function sessionLongDate(iso: string | null, locale: string): string {
-  if (!iso) return '';
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return '';
-  return dtf(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(
-    date,
-  );
-}
-
-/** Horaires d'une séance (« 15:00 – 15:50 », ou le seul début tant qu'elle est ouverte). */
-export function sessionHours(from: string | null, to: string | null, locale: string): string {
-  const format = dtf(locale, { hour: '2-digit', minute: '2-digit' });
-  const start = from ? new Date(from) : null;
-  if (!start || Number.isNaN(start.getTime())) return '';
-  const end = to ? new Date(to) : null;
-  return end && !Number.isNaN(end.getTime())
-    ? `${format.format(start)} – ${format.format(end)}`
-    : format.format(start);
-}
-
-/** Horaires d'un en-tête de séance (maquette 03 : « 18:00 → 18:50 », ou le seul début). */
-export function sessionRange(from: string | null, to: string | null, locale: string): string {
-  const format = dtf(locale, { hour: '2-digit', minute: '2-digit' });
-  const start = from ? new Date(from) : null;
-  if (!start || Number.isNaN(start.getTime())) return '';
-  const end = to ? new Date(to) : null;
-  return end && !Number.isNaN(end.getTime())
-    ? `${format.format(start)} → ${format.format(end)}`
-    : format.format(start);
 }
 
 /** Jour calendaire court (« 8 oct. 2026 ») d'une borne de période AAAA-MM-JJ. */
@@ -282,4 +225,141 @@ export function averageLabel(value: number, locale: string): string {
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
   }).format(value);
+}
+
+// ---------------------------------------------------------------- flux de la proposition 03 (UX-S9)
+
+function capitalize(text: string, locale: string): string {
+  return text ? text.charAt(0).toLocaleUpperCase(locale) + text.slice(1) : text;
+}
+
+/** Jours calendaires entre deux dates (aujourd'hui − jour), comptés sur le calendrier. */
+function daysBetween(today: Date, year: number, month: number, date: number): number {
+  const a = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+  const b = Date.UTC(year, month, date);
+  return Math.round((a - b) / 86_400_000);
+}
+
+/**
+ * Ancre d'un jour du flux (maquette 03, colonne des dates) : « Jeudi 12 » et, dessous,
+ * « aujourd'hui », « hier », « séance » (le jour commence par une séance) ou « il y a 4 j » dans
+ * la semaine écoulée. Semaine : « Sem. du 9 nov. » ; mois : « Novembre » et l'année. Une date moins
+ * précise que le zoom garde sa forme (« Octobre 2026 », « 2014 », le libellé d'une période).
+ */
+export function anchorLabel(
+  occurred: Occurred,
+  zoom: TimelineZoom,
+  locale: string,
+  today: Date,
+  session = false,
+): { main: string; sub: string } {
+  const iso = occurred.from;
+  if (!iso) return { main: '', sub: '' };
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return { main: '', sub: '' };
+  const precision = occurred.precision ?? 'exact';
+  const timeZone = precision === 'exact' ? undefined : 'UTC';
+  if (precision === 'period' || precision === 'life_phase') {
+    const bounds = formatOccurred({ ...occurred, label: null, precision: 'period' }, locale);
+    const label = occurred.label?.trim();
+    return label ? { main: label, sub: bounds } : { main: bounds, sub: '' };
+  }
+  if (precision === 'year')
+    return { main: dtf(locale, { year: 'numeric', timeZone }).format(date), sub: '' };
+  if (precision === 'month')
+    return {
+      main: capitalize(
+        dtf(locale, { month: 'long', year: 'numeric', timeZone }).format(date),
+        locale,
+      ),
+      sub: '',
+    };
+  if (zoom === 'month')
+    return {
+      main: capitalize(dtf(locale, { month: 'long', timeZone }).format(date), locale),
+      sub: dtf(locale, { year: 'numeric', timeZone }).format(date),
+    };
+  if (zoom === 'week') {
+    const week = groupLabel(iso, precision, 'week', locale);
+    return { main: capitalize(week.main, locale), sub: session ? sessionWord() : '' };
+  }
+  const local = timeZone === undefined;
+  const days = daysBetween(
+    today,
+    local ? date.getFullYear() : date.getUTCFullYear(),
+    local ? date.getMonth() : date.getUTCMonth(),
+    local ? date.getDate() : date.getUTCDate(),
+  );
+  const main = capitalize(
+    dtf(locale, { weekday: 'long', day: 'numeric', timeZone }).format(date),
+    locale,
+  );
+  return { main, sub: relativeDay(days, session) };
+}
+
+function sessionWord(): string {
+  return $localize`:Mention sous la date d'un jour de la timeline qui commence par une séance@@timeline.day.session:séance`;
+}
+
+/** Mention sous la date : aujourd'hui, hier, séance, il y a n j (dans la semaine), sinon rien. */
+export function relativeDay(days: number, session: boolean): string {
+  if (days === 0)
+    return $localize`:Mention sous la date du jour courant dans la timeline@@timeline.day.today:aujourd'hui`;
+  if (days === 1)
+    return $localize`:Mention sous la date de la veille dans la timeline@@timeline.day.yesterday:hier`;
+  if (session) return sessionWord();
+  if (days > 1 && days < 7)
+    return $localize`:Mention sous la date d'un jour récent de la timeline, en jours@@timeline.day.ago:il y a ${days}:days: j`;
+  return '';
+}
+
+/** Intertitre de mois du flux (« novembre 2026 », mis en capitales par la feuille de style). */
+export function monthHeading(index: number, locale: string): string {
+  const date = new Date(Date.UTC(Math.floor(index / 12), index % 12, 1));
+  return dtf(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(date);
+}
+
+/**
+ * Heure d'une ligne du flux (maquette 03, `.tm` en mono) : « 09:40 » pour une date-heure exacte,
+ * sinon la précision (« jour », « mois », « année »…), la date étant écrite par l'ancre.
+ */
+export function rowTime(
+  occurred: { from?: string | null; precision?: OccurredPrecision | null },
+  locale: string,
+): string {
+  const precision = occurred.precision ?? 'exact';
+  if (precision !== 'exact') return precisionLabel(precision);
+  if (!occurred.from) return '';
+  const date = new Date(occurred.from);
+  if (Number.isNaN(date.getTime())) return '';
+  return dtf(locale, { hour: '2-digit', minute: '2-digit' }).format(date);
+}
+
+/** « depuis oct. 2026 » d'une situation en cours (bande en tête du flux). */
+export function sinceLabel(iso: string | null | undefined, locale: string, utc: boolean): string {
+  if (!iso) return '';
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  const when = dtf(locale, {
+    month: 'short',
+    year: 'numeric',
+    timeZone: utc ? 'UTC' : undefined,
+  }).format(date);
+  return $localize`:Début d'une situation en cours, bande en tête de la timeline@@timeline.band.since:depuis ${when}:when:`;
+}
+
+/** La période de la timeline en toutes lettres (« 90 jours ») : colonne latérale et pied du flux. */
+export function periodSpanLabel(preset: PeriodPreset | null, custom: string | null): string {
+  switch (preset) {
+    case '30d':
+      return $localize`:Période de 30 jours, résumé de la timeline@@timeline.span.30d:30 jours`;
+    case '90d':
+      return $localize`:Période de 90 jours, résumé de la timeline@@timeline.span.90d:90 jours`;
+    case '1y':
+      return $localize`:Période d'un an, résumé de la timeline@@timeline.span.1y:1 an`;
+    case 'all':
+      return $localize`:Période sans borne, résumé de la timeline@@timeline.span.all:tout le dossier`;
+    default:
+      return custom ?? '';
+  }
 }

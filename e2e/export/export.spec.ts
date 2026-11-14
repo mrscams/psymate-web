@@ -14,7 +14,7 @@ import { createAccount, signIn } from '../preferences/accounts';
 import { SEED, TestAccount } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 
-// M6-06, fiche 19 « Données et export » et fiche 16 (menu « Exporter ce dossier ») : contre l'API
+// M6-06, fiche 19 « Données et export » et fiche 16 (menu « Exporter le dossier ») : contre l'API
 // locale (seed small, Mailpit), jamais de mock du backend. Le PDF vient d'un patient du seed
 // (claire) ; l'export Markdown et l'export du compte utilisent un compte jetable, pour que le job
 // d'export (un seul par compte) ne gêne aucun autre test.
@@ -138,7 +138,7 @@ test.describe('Données et export (fiche 19)', () => {
     await expectNoAxeViolations(page);
   });
 
-  test('fiche patient « Exporter ce dossier ▾ » → Markdown : l’entrée privée créée n’y est pas', async ({
+  test('fiche patient « Exporter le dossier ▾ » → Markdown : l’entrée privée créée n’y est pas', async ({
     page,
     request,
   }) => {
@@ -163,9 +163,8 @@ test.describe('Données et export (fiche 19)', () => {
     await signIn(page, account);
 
     await page.goto(`/fr/patients/${patientId}/fiche`);
-    const exportCard = page.getByRole('region', { name: 'Export du dossier' });
-    await expect(exportCard.getByText('Entrées privées exclues')).toBeVisible();
-    const trigger = exportCard.getByRole('button', { name: /Exporter ce dossier/ });
+    // Proposition 16 (UX-S10) : le menu est une action de l'en-tête de la fiche.
+    const trigger = page.locator('.page-head').getByRole('button', { name: /Exporter le dossier/ });
     await expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
     await expectNoAxeViolations(page);
 

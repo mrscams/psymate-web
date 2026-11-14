@@ -1,0 +1,150 @@
+// Colonne de résumé (proposition 03, `.tl-side`) : panneaux raised, bordure subtle, rayon 12, 16 × 18,
+// libellé 12,5 secondaire, titre 15/650, listes `.mini-list` (7 px, filet subtle, chiffres à droite).
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.panel {
+  padding: 16px 18px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--text-primary) 5%, transparent);
+}
+
+.lbl {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  font-weight: 400;
+}
+
+.headline {
+  margin: 2px 0 8px;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.mini-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 13px;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .r {
+    margin-left: auto;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.emotion {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
+  padding: 0 4px;
+  margin: 0 -4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-sunken);
+  }
+
+  &[aria-pressed='true'] {
+    background: var(--primary-tint);
+    color: var(--primary-hover);
+    font-weight: 600;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+  }
+}
+
+.emo {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--text-disabled);
+
+  &.family-joy {
+    background: var(--emotion-joy);
+  }
+  &.family-trust {
+    background: var(--emotion-trust);
+  }
+  &.family-fear {
+    background: var(--emotion-fear);
+  }
+  &.family-surprise {
+    background: var(--emotion-surprise);
+  }
+  &.family-sadness {
+    background: var(--emotion-sadness);
+  }
+  &.family-disgust {
+    background: var(--emotion-disgust);
+  }
+  &.family-anger {
+    background: var(--emotion-anger);
+  }
+  &.family-anticipation {
+    background: var(--emotion-anticipation);
+  }
+}
+
+.hint {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.keys {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+
+kbd {
+  display: inline-block;
+  min-width: 14px;
+  padding: 0 4px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  background: var(--surface-raised);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+}

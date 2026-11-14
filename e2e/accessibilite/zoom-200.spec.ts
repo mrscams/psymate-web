@@ -124,7 +124,8 @@ test('praticien à 200 % : liste, création, vue d’ensemble, capture, timeline
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/timeline/);
   // La séance passée du dossier : 8 entrées, 9 si la note saisie plus haut s'y rattache.
-  const session = page.getByRole('button', { name: /^Séance du .* [89] entrées$/ });
+  // UX-S9 : « Séance · cabinet · 50 min, <date>, 8 entrées, compte rendu » en nom accessible.
+  const session = page.getByRole('button', { name: /[89] entrées/ }).first();
   await tabTo(page, session, { max: 80 });
   await page.keyboard.press('Enter');
   const card = page.locator(`pm-timeline-card article[data-entry-id="${folder.feeling}"]`);

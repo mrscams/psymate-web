@@ -11,7 +11,7 @@ import { createAccount, signIn } from '../preferences/accounts';
 import { TestAccount } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { setGroupBy } from './filters-data';
-import { StoryPatient, storyPatient, volumePatient } from './timeline-data';
+import { StoryPatient, storyPatient, volumePatient, expectCount } from './timeline-data';
 
 // Timeline, mode chronologique (M3-02, fiche 03, B4 écran 3) contre l'API locale (jamais de mock) :
 // un compte jetable porte un patient « récit » (situations en bande, pastille « dit en séance du … »,
@@ -47,7 +47,6 @@ function timeline(page: Page) {
   const viewport = page.locator('cdk-virtual-scroll-viewport');
   return {
     viewport,
-    count: page.locator('.status-line .count'),
     granularity: page.locator('.granularity'),
     card: (title: string) => page.locator('pm-timeline-card article', { hasText: title }),
     row: (title: string) =>
@@ -61,10 +60,9 @@ async function lanes(row: Locator): Promise<boolean[]> {
   return row.locator('.lane').evaluateAll((nodes) => nodes.map((n) => n.classList.contains('on')));
 }
 
-/** Nombre de fenêtres en mémoire lu dans la ligne d'état (« … · n fenêtres en mémoire »). */
-function windowsOf(text: string | null): number {
-  const match = /(\d+) fenêtres? en mémoire/.exec(text ?? '');
-  return match ? Number(match[1]) : -1;
+/** Nombre de fenêtres en mémoire, lu sur le flux (`data-windows`). */
+async function windowsOf(page: Page): Promise<number> {
+  return Number((await page.locator('.stream').getAttribute('data-windows')) ?? '-1');
 }
 
 test('situations en bande, pastille « dit en séance du … », zone « Avant le suivi »', async ({
@@ -74,15 +72,11 @@ test('situations en bande, pastille « dit en séance du … », zone « Avant l
   await page.goto(`/fr/patients/${story.id}/timeline?period=all`);
   const t = timeline(page);
   await expect(t.card('Entretien annuel')).toBeVisible();
-  await expect(t.count).toHaveText('10 entrées · 1 fenêtre en mémoire');
+  await expectCount(page, 10, 1);
 
   // Bandes : la situation en cours (commencée il y a 200 jours) va jusqu'en haut, avec la flèche ;
   // la situation terminée ne couvre que sa plage ; les deux ne partagent pas de colonne.
-  // La liste des situations se déplie depuis la ligne d'état (UX-G2c).
-  const bandsToggle = page.getByRole('button', { name: '3 situations sur la période' });
-  await expect(bandsToggle).toHaveAttribute('aria-expanded', 'false');
-  await bandsToggle.click();
-  await expect(bandsToggle).toHaveAttribute('aria-expanded', 'true');
+  // Chaque situation est aussi écrite en tête du flux (proposition 03, .band).
   const legend = page.getByRole('list', { name: 'Situations sur la période' });
   await expect(
     legend.getByRole('listitem', { name: /Réorganisation du service.*en cours/ }),
@@ -106,18 +100,17 @@ test('situations en bande, pastille « dit en séance du … », zone « Avant l
   const marker = page.locator('.follow-start');
   await expect(marker).toContainText('Début du suivi');
   await expect(marker).toContainText('Avant le suivi');
+  // La date est écrite par l'ancre, à gauche de l'axe ; la ligne dit la précision à droite.
   for (const [title, when] of [
     ['Déménagement à Lyon', /^2014$/],
-    ['Études à Lille', /Études à Lille \(.*2008.*2012\)/],
-    ['Souvenirs d’école', /^enfance$/],
+    ['Études à Lille', /^Études à Lille.*2008.*2012/],
+    ['Souvenirs d’école', /^enfance/],
   ] as const) {
     await expect(t.row(title)).toHaveClass(/\bbefore\b/);
-    await expect(t.card(title).locator('.when')).toHaveText(when);
+    await expect(t.row(title).locator('.date pm-timeline-day')).toHaveText(when);
   }
-  await expect(t.card('Déménagement à Lyon').locator('.precision')).toHaveText('précision : année');
-  await expect(t.card('Souvenirs d’école').locator('.precision')).toHaveText(
-    'précision : phase de vie',
-  );
+  await expect(t.card('Déménagement à Lyon').locator('.tm')).toHaveText('année');
+  await expect(t.card('Souvenirs d’école').locator('.tm')).toHaveText('phase de vie');
   await expect(t.row('Réorganisation du service')).not.toHaveClass(/\bbefore\b/);
   await expectNoAxeViolations(page);
 });
@@ -178,7 +171,7 @@ test(`${VOLUME} entrées : défilement fluide, trois fenêtres au plus, zoom san
   await page.goto(`/fr/patients/${volume}/timeline?period=all`);
   const t = timeline(page);
   // Fenêtre courante puis la suivante en arrière-plan.
-  await expect(t.count).toHaveText(/^2\s002 entrées · 2 fenêtres en mémoire$/);
+  await expectCount(page, 2002, 2);
   // Zoom par défaut « Jour » (une date par carte sur l'axe, maquette 03).
   await expect(t.granularity).toHaveText('Jour');
   await page.waitForLoadState('networkidle');
@@ -225,9 +218,8 @@ test(`${VOLUME} entrées : défilement fluide, trois fenêtres au plus, zoom san
           if (n > 0 && now - last > 50) longAt.push(n);
           last = now;
           el.scrollTop += 160;
-          const text = document.querySelector('.status-line .count')?.textContent ?? '';
-          const match = /(\d+) fenêtres? en mémoire/.exec(text);
-          if (match) maxWindows = Math.max(maxWindows, Number(match[1]));
+          const windows = document.querySelector('.stream')?.getAttribute('data-windows');
+          if (windows) maxWindows = Math.max(maxWindows, Number(windows));
           if (++n < frames) requestAnimationFrame(step);
           else {
             const sorted = deltas.slice(1).sort((a, b) => a - b);
@@ -258,7 +250,7 @@ test(`${VOLUME} entrées : défilement fluide, trois fenêtres au plus, zoom san
   // En bas de la liste : la plus ancienne note est là, toujours trois fenêtres au plus.
   await t.viewport.evaluate((el) => (el.scrollTop = el.scrollHeight));
   await expect(t.card('Note 0001')).toBeVisible();
-  await expect.poll(async () => windowsOf(await t.count.textContent())).toBeLessThanOrEqual(3);
+  await expect.poll(async () => windowsOf(page)).toBeLessThanOrEqual(3);
   await expectNoAxeViolations(page);
 });
 
@@ -268,7 +260,7 @@ test('« Corriger » puis retour, « Voir dans le graphe » puis retour : positi
   await signIn(page, account);
   await page.goto(`/fr/patients/${volume}/timeline?period=all`);
   const t = timeline(page);
-  await expect(t.count).toHaveText(/^2\s002 entrées · /);
+  await expectCount(page, 2002);
 
   // Au milieu de la deuxième fenêtre.
   await t.viewport.evaluate((el) => (el.scrollTop = 96 * 450));

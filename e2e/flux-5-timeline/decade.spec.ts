@@ -11,6 +11,7 @@ import { TestAccount } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { DecadePatient, decadePatient, lastDayOf, recentPatient } from './decade-data';
 import { setGroupBy } from './filters-data';
+import { expectCount } from './timeline-data';
 
 // Vue décennie de la timeline (M3-04, fiche 03 état C, A6) contre l'API locale (jamais de mock) :
 // bascule automatique au-delà d'une plage de 3 ans, temps du résumé et du rendu mesurés, double-clic
@@ -47,7 +48,6 @@ function timeline(page: Page) {
     month: (key: string) => page.locator(`pm-timeline-decade rect.hit[data-month="${key}"]`),
     viewport: page.locator('cdk-virtual-scroll-viewport'),
     cards: page.locator('pm-timeline-card article'),
-    count: page.locator('.status-line .count'),
     granularity: page.locator('.granularity'),
     period: toolbar.getByRole('group', { name: 'Période' }),
     session: toolbar.locator('button[data-mode="session"]'),
@@ -163,7 +163,7 @@ test('double-clic sur un mois : détail de ce mois au zoom « semaine » ; Écha
   await expect(page).toHaveURL(new RegExp(`[?&]from=${from}&to=${to}$`));
   await expect(t.decade).toHaveCount(0);
   await expect(t.viewport).toBeVisible();
-  await expect(t.count).toHaveText('3 entrées · 1 fenêtre en mémoire');
+  await expectCount(page, 3, 1);
   await expect(t.cards.filter({ hasText: decade.drillNote })).toBeVisible();
   await expect(t.granularity).toHaveText('Semaine');
   // La première carte du mois a le focus (le clavier continue dans le détail).
