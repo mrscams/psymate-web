@@ -302,7 +302,14 @@
 <ul class="cards" [class.refreshing]="refreshing()">
   @for (row of view(); track row.patient.id) {
     <li [class.archived]="row.archived">
-      <a class="row-link card-link" [routerLink]="row.link">
+      <!-- Nom accessible = le nom seul, comme le lien de la ligne ; la seconde ligne et le drapeau
+           décrivent le lien (aria-describedby) au lieu d'allonger son nom. -->
+      <a
+        class="row-link card-link"
+        [routerLink]="row.link"
+        [attr.aria-label]="cardName(row)"
+        [attr.aria-describedby]="cardDescribedBy(row)"
+      >
         <span class="av" [class.dashed]="row.demo" aria-hidden="true">{{ row.initials }}</span>
         <span class="card-body">
           <span class="card-name">
@@ -323,13 +330,15 @@
             }
           </span>
           @if (row.cardLine) {
-            <span class="sub">{{ row.cardLine }}</span>
+            <span class="sub" [id]="'card-' + row.patient.id + '-sub'">{{ row.cardLine }}</span>
           }
         </span>
         @if (row.flags.length > 0) {
           <span class="chip flag" [attr.title]="row.flags.join(', ')"
             ><span aria-hidden="true">!</span
-            ><span class="sr-only">{{ watchLabel }} : {{ row.flags.join(', ') }}</span></span
+            ><span class="sr-only" [id]="'card-' + row.patient.id + '-flag'"
+              >{{ watchLabel }} : {{ row.flags.join(', ') }}</span
+            ></span
           >
         }
       </a>

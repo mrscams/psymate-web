@@ -364,6 +364,9 @@ describe('OverviewPage (vue unifiée, UX-S6)', () => {
     expect(lines[1][0]).toBe('Drapeau');
     expect(lines[1][1]).toMatch(/^À surveiller depuis le 3 oct\. · Sommeil · modifier$/);
     expect(link(frame, 'modifier').getAttribute('href')).toBe('/patients/p-marie/fiche');
+    // La fiche reste à un clic, drapeau ou non : dernière ligne du cadre (intégration UX-S6/S7).
+    expect(lines[lines.length - 1][0]).toBe('Fiche');
+    expect(link(frame, 'Modifier la fiche').getAttribute('href')).toBe('/patients/p-marie/fiche');
 
     // Même début de suivi que l'en-tête quand il en affiche un (followUp.since de la fiche).
     shell.followedSince.set('2026-09-01');

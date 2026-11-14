@@ -58,10 +58,13 @@ test.describe('vue d’ensemble fidèle à la proposition 02', () => {
       await page.goto(`/fr/patients/${folder.patientId}`);
       await drawn(page);
 
-      // Pleine largeur (route contentWidth full) : la colonne de contenu va de 24 px au bord.
+      // Pleine largeur (route contentWidth full) : la colonne de contenu va de 24 px au bord du
+      // <main>, qui commence après le rail de navigation de 56 px (UX-S8).
+      const mainBox = await box(page.locator('main#main'));
       const layout = await box(page.locator('.ov'));
-      expect(layout.x).toBeCloseTo(24, 0);
-      expect(layout.x + layout.width).toBeCloseTo(width - 24, 0);
+      expect(layout.x - mainBox.x).toBeCloseTo(24, 0);
+      expect(mainBox.x + mainBox.width - (layout.x + layout.width)).toBeCloseTo(24, 0);
+      expect(mainBox.x + mainBox.width).toBeCloseTo(width, 0);
       // Latérale de 340 px, 20 px après la colonne de lecture, alignées en haut.
       const main = await box(page.locator('.ov > .main'));
       const side = await box(page.locator('.ov > pm-overview-side'));

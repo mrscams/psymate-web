@@ -25069,6 +25069,22 @@
         </context-group>
         <note priority="1" from="description">Clé de la ligne début du suivi</note>
       </trans-unit>
+      <trans-unit id="overview.side.frame.sheet" datatype="html">
+        <source>Fiche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <note priority="1" from="description">Clé de la ligne fiche du patient</note>
+      </trans-unit>
+      <trans-unit id="overview.side.frame.sheetLink" datatype="html">
+        <source>Modifier la fiche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la fiche du patient depuis le cadre du suivi</note>
+      </trans-unit>
       <trans-unit id="overview.side.frame.flag" datatype="html">
         <source>Drapeau</source>
         <target state="translated">Flag</target>

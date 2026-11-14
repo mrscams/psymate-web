@@ -112,6 +112,19 @@ export class PatientTableComponent {
     return $localize`:Nom accessible de la restauration du patient de démonstration@@patients.demo.restoreLabel:Restaurer le patient de démonstration ${name}:name:`;
   }
 
+  /** Nom accessible d'une carte mobile : « DEMO · » puis le nom, comme le lien de la ligne. */
+  protected cardName(row: RowView): string {
+    return row.demo ? `DEMO · ${row.patient.displayName}` : row.patient.displayName;
+  }
+
+  /** Identifiants des descriptions d'une carte (seconde ligne, drapeau), ou null sans aucune. */
+  protected cardDescribedBy(row: RowView): string | null {
+    const ids: string[] = [];
+    if (row.cardLine) ids.push(`card-${row.patient.id}-sub`);
+    if (row.flags.length > 0) ids.push(`card-${row.patient.id}-flag`);
+    return ids.length > 0 ? ids.join(' ') : null;
+  }
+
   protected moreLabel(name: string): string {
     return $localize`:Bouton du menu d'actions d'une ligne@@patients.table.moreLabel:Plus d'actions pour ${name}:name:`;
   }

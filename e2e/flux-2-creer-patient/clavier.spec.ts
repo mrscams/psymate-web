@@ -73,9 +73,10 @@ test('flux 2 au clavier : N, nom, pronom, motif, rythme, Ctrl+Entrée → vue d�
   await expect(page.getByRole('button', { name: 'Démarrer la séance' })).toBeFocused();
   await expectNoAxeViolations(page);
 
-  // Fiche du patient depuis le dossier (Maj+Tab jusqu'au lien de l'en-tête), version 2 au clavier.
-  const sheet = page.getByRole('link', { name: /Fiche|Modifier la fiche/ }).first();
-  await tabTo(page, sheet, { backwards: true });
+  // Fiche du patient depuis le dossier : le lien « Modifier la fiche » du cadre du suivi (vue
+  // unifiée UX-S6, colonne latérale après le contenu : Tab en avant), version 2 au clavier.
+  const sheet = page.getByRole('link', { name: 'Modifier la fiche', exact: true }).first();
+  await tabTo(page, sheet, { max: 120 });
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/fiche$`));
   await expect(birthDate).toHaveValue('28/07/2003');

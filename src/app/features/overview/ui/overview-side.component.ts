@@ -99,6 +99,19 @@ const EMPTY: Record<SideBlock, (view: OverviewView) => boolean> = {
             </span>
           </div>
         }
+        <!-- La fiche reste à un clic depuis la vue d'ensemble, drapeau ou non (flux 2 de B3). -->
+        <div class="line">
+          <span class="k" i18n="Clé de la ligne fiche du patient@@overview.side.frame.sheet"
+            >Fiche</span
+          >&ngsp;
+          <a
+            class="pm-link-target"
+            [routerLink]="['/patients', patientId(), 'fiche']"
+            i18n="
+              Lien vers la fiche du patient depuis le cadre du suivi@@overview.side.frame.sheetLink"
+            >Modifier la fiche</a
+          >
+        </div>
       }
     </pm-overview-section>
 
