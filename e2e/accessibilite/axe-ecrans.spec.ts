@@ -52,7 +52,7 @@ for (const theme of THEMES) {
     test(`praticien : dossier, panneaux et Mon compte (${theme})`, async ({ page, request }) => {
       const account = await createAccount(request, `m7-04.axe-${theme}`, 'psychologist');
       const folder = await themeFolder(request);
-      await setPreferences(request, { theme, 'overview.view': 'complete' });
+      await setPreferences(request, { theme });
       await enableProbe(page);
       await signIn(page, account);
       const patient = `/fr/patients/${folder.patientId}`;
@@ -89,24 +89,23 @@ for (const theme of THEMES) {
           },
         ],
         [
-          '02-vue-ensemble-complete',
+          // Vue d'ensemble unifiée (UX-S6) : une seule vue, graphe des ressentis dessiné.
+          '02-vue-ensemble',
           async () => {
             await page.goto(patient);
             await expect(h1).toHaveText('Nina S.');
-            await expect(page.locator('pm-overview-trend-chart svg path').first()).toBeAttached({
+            await expect(page.locator('pm-overview-feelings-chart svg path').first()).toBeAttached({
               timeout: 15_000,
             });
           },
         ],
         [
-          '02b-vue-ensemble-simple',
+          '02-vue-ensemble-donnees',
           async () => {
-            const simple = page
-              .getByRole('group', { name: "Niveau de détail de la vue d'ensemble" })
-              .getByRole('button', { name: 'Simple' });
-            await simple.focus();
-            await page.keyboard.press('Enter');
-            await expect(page.getByRole('heading', { level: 3, name: 'En bref' })).toBeVisible();
+            await page.getByRole('button', { name: 'Voir les données' }).click();
+            await expect(
+              page.getByRole('table', { name: 'Ressentis notés sur la période' }),
+            ).toBeVisible();
           },
         ],
         [

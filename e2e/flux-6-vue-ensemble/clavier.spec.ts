@@ -3,21 +3,20 @@ import { expect, test } from '@playwright/test';
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { keyboardOnly, tabTo } from '../support/clavier';
-import { block, overviewFolder, setPreferences } from './overview-data';
+import { block, isOverview, overviewFolder, overviewWindow, windowSelector } from './overview-data';
 
-// B3 flux 6 au clavier seul (M7-04, B7, fiche 02) : ouvrir le patient depuis la liste (/ puis le
-// nom, Entrée), lire la vue d'ensemble, déplier la séance passée, ouvrir le graphe centré sur la
-// situation active, revenir (touche 1), « Démarrer la séance » : les séances se replient et la
-// barre de capture prend le focus. Aucun geste de pointeur (keyboardOnly). Contre l'API locale
-// (seed small, Mailpit), jamais de mock du backend.
+// B3 flux 6 au clavier seul (M7-04, B7, fiche 02 ; vue unifiée UX-S6) : ouvrir le patient depuis
+// la liste (/ puis le nom, Entrée), lire la vue d'ensemble, changer de fenêtre, déplier « Voir les
+// données », ouvrir le graphe centré sur la situation en cours, revenir (touche 1), « Démarrer la
+// séance » : le bloc de saisie prend le focus. Aucun geste de pointeur (keyboardOnly). Contre l'API
+// locale (seed small, Mailpit), jamais de mock du backend.
 
-test('flux 6 au clavier : / nom Entrée, séance dépliée, situation → graphe, 1, Démarrer la séance', async ({
+test('flux 6 au clavier : / nom Entrée, fenêtre, données, situation → graphe, 1, Démarrer la séance', async ({
   page,
   request,
 }) => {
   test.setTimeout(120_000);
   const account = await createAccount(request, 'm7-04.flux6', 'psychologist');
-  await setPreferences(request, { 'overview.view': 'complete' });
   const folder = await overviewFolder(request);
   await signIn(page, account);
   const keys = await keyboardOnly(page);
@@ -31,28 +30,40 @@ test('flux 6 au clavier : / nom Entrée, séance dépliée, situation → graphe
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${folder.patientId}$`));
   await expect(page.getByRole('heading', { level: 1, name: 'Marie D.' })).toBeVisible();
 
-  // 2. Lecture : faits, situations, tendance, dernières séances (la plus récente dépliée).
-  const situations = block(page, 'Situations actives');
+  // 2. Lecture : bande « Depuis », ressentis, séances, situations dans la colonne latérale.
+  const situations = block(page, /^Situations en cours/);
   await expect(situations).toContainText('Surcharge au travail');
-  await expect(block(page, "Tendance d'intensité · 90 jours")).toBeVisible();
-  const sessions = block(page, 'Dernières séances');
-  const toggles = sessions.locator('button[aria-expanded]');
-  await expect(toggles).toHaveCount(2);
-  await expect(toggles.first()).toHaveAttribute('aria-expanded', 'true');
+  const feelings = block(page, 'Comment évoluent les ressentis');
+  await expect(feelings).toBeVisible();
+  const sessions = block(page, 'Dernières séances').locator('.sess');
+  await expect(sessions.first()).toBeVisible();
+  const before = await sessions.count();
   await expectNoAxeViolations(page);
 
-  // 3. Déplier la séance passée : Tab jusqu'à son bouton, Entrée.
-  await tabTo(page, toggles.nth(1), { max: 80 });
+  // 3. Fenêtre « 30 j » (en-tête), puis « Voir les données » : Entrée déplie le tableau.
+  const windows = windowSelector(page);
+  await tabTo(page, windows.getByRole('button', { name: '30 j' }), { max: 80 });
+  let reread = page.waitForResponse((r) => isOverview(r, folder.patientId));
   await page.keyboard.press('Enter');
-  await expect(toggles.nth(1)).toHaveAttribute('aria-expanded', 'true');
-  await expect(sessions.getByRole('link', { name: 'Voir la séance dans la timeline' })).toHaveCount(
-    2,
+  expect(overviewWindow(await reread)).toBe('30d');
+  await expect(block(page, 'Émotions · 30 jours')).toBeVisible();
+  await page.keyboard.press('Tab');
+  await expect(windows.getByRole('button', { name: '90 j' })).toBeFocused();
+  reread = page.waitForResponse((r) => isOverview(r, folder.patientId));
+  await page.keyboard.press('Space');
+  expect(overviewWindow(await reread)).toBe('90d');
+  const data = feelings.getByRole('button', { name: 'Voir les données' });
+  await tabTo(page, data, { max: 80 });
+  await page.keyboard.press('Enter');
+  await expect(feelings.getByRole('button', { name: 'Masquer les données' })).toHaveAttribute(
+    'aria-expanded',
+    'true',
   );
+  await expect(feelings.getByRole('table')).toBeVisible();
 
   // 4. Situation active → graphe centré sur elle ; touche 1 : retour à la vue d'ensemble.
   await tabTo(page, situations.getByRole('link', { name: /voir dans le graphe/i }), {
-    max: 80,
-    backwards: true,
+    max: 120,
   });
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(
@@ -78,6 +89,6 @@ test('flux 6 au clavier : / nom Entrée, séance dépliée, situation → graphe
   await tabTo(page, page.getByRole('link', { name: /Vue d'ensemble/ }), { max: 80 });
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${folder.patientId}$`));
-  await expect(toggles).toHaveCount(3);
+  await expect(sessions).toHaveCount(before + 1);
   keys.expectNoPointer();
 });

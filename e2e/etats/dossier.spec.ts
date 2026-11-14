@@ -1,7 +1,7 @@
 import { APIRequestContext, expect, Page, test } from '@playwright/test';
 
 import { createPatient, intakeOf } from '../flux-5-timeline/timeline-data';
-import { emptyPatient, setPreferences } from '../flux-6-vue-ensemble/overview-data';
+import { emptyPatient } from '../flux-6-vue-ensemble/overview-data';
 import { expectState, fail, getOf, hold, practitioner, shareSession } from './etats-support';
 
 // Planche 29 (M6-03) : vide, chargement, erreur des écrans du dossier patient (fiches 01, 02, 02b,
@@ -65,12 +65,8 @@ test.describe('01 liste des patients', () => {
   });
 });
 
-test.describe('02 vue d’ensemble complète', () => {
-  test.beforeEach(async () => {
-    await setPreferences(api, { 'overview.view': 'complete' });
-  });
-
-  test('chargement : en-tête d’abord, squelette des blocs', async ({ page }) => {
+test.describe('02 vue d’ensemble (vue unifiée, UX-S6)', () => {
+  test('chargement : en-tête d’abord, squelette des sections', async ({ page }) => {
     const held = await hold(page, getOf(`/api/patients/${empty}/overview`));
     await page.goto(`/fr/patients/${empty}`);
     await headerShown(page, 'Iris P.');
@@ -78,46 +74,19 @@ test.describe('02 vue d’ensemble complète', () => {
     await held.release();
   });
 
-  test('vide : chaque bloc garde son titre et son état vide', async ({ page }) => {
+  test('vide : chaque section garde son titre et son état vide', async ({ page }) => {
     await page.goto(`/fr/patients/${empty}`);
     await headerShown(page, 'Iris P.');
-    await expectState(page, 'empty', '02-vue-ensemble', { text: 'Aucune entrée pour le moment' });
-  });
-
-  test('erreur : les blocs disent l’erreur, l’en-tête reste lisible', async ({ page }) => {
-    await fail(page, getOf(`/api/patients/${empty}/overview`));
-    await page.goto(`/fr/patients/${empty}`);
-    await headerShown(page, 'Iris P.');
-    await expectState(page, 'error', '02-vue-ensemble', { text: 'Activité indisponible' });
-  });
-});
-
-test.describe('02b vue d’ensemble simple « Récit »', () => {
-  test.beforeEach(async () => {
-    await setPreferences(api, { 'overview.view': 'simple' });
-  });
-
-  test('chargement', async ({ page }) => {
-    const held = await hold(page, getOf(`/api/patients/${empty}/overview`));
-    await page.goto(`/fr/patients/${empty}`);
-    await headerShown(page, 'Iris P.');
-    await expectState(page, 'loading', '02b-vue-simple');
-    await held.release();
-  });
-
-  test('vide', async ({ page }) => {
-    await page.goto(`/fr/patients/${empty}`);
-    await headerShown(page, 'Iris P.');
-    await expectState(page, 'empty', '02b-vue-simple', {
+    await expectState(page, 'empty', '02-vue-ensemble', {
       text: 'Pas encore de ressentis sur cette période',
     });
   });
 
-  test('erreur', async ({ page }) => {
+  test('erreur : les sections disent l’erreur, l’en-tête reste lisible', async ({ page }) => {
     await fail(page, getOf(`/api/patients/${empty}/overview`));
     await page.goto(`/fr/patients/${empty}`);
     await headerShown(page, 'Iris P.');
-    await expectState(page, 'error', '02b-vue-simple');
+    await expectState(page, 'error', '02-vue-ensemble', { text: 'Ressentis indisponibles' });
   });
 });
 

@@ -1,7 +1,6 @@
 import { APIRequestContext, APIResponse, expect, test } from '@playwright/test';
 
 import { createAccount, signIn } from '../preferences/accounts';
-import { setPreferences } from '../flux-6-vue-ensemble/overview-data';
 import { expectNoAxeViolations } from '../support/axe';
 import { keyboardOnly, tabTo } from '../support/clavier';
 
@@ -45,7 +44,6 @@ test('flux 3 au clavier : démarrer, /res anxiété 8, Tab + Espace dans le rail
 }) => {
   test.setTimeout(120_000);
   const account = await createAccount(request, 'm7-04.flux3', 'psychologist');
-  await setPreferences(request, { 'overview.view': 'complete' });
   const { patientId, eventId } = await folder(request);
   await signIn(page, account);
   const keys = await keyboardOnly(page);

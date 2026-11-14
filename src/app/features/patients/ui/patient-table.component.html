@@ -1,7 +1,7 @@
-<table class="patients" [class.refreshing]="refreshing()" [attr.aria-busy]="refreshing()">
+<table class="table" [class.refreshing]="refreshing()" [attr.aria-busy]="refreshing()">
   <thead>
     <tr>
-      <th scope="col" [attr.aria-sort]="nameSort()">{{ 'One' | subjectLabel }}</th>
+      <th scope="col" class="col-who" [attr.aria-sort]="nameSort()">{{ 'One' | subjectLabel }}</th>
       <th
         scope="col"
         [attr.aria-sort]="lastSort()"
@@ -9,18 +9,19 @@
       >
         Dernière séance
       </th>
-      <th scope="col" i18n="Colonne de la liste des patients@@patients.table.emotions">
-        Émotions dominantes · 30 j
+      <th scope="col" i18n="Colonne de la liste des patients@@patients.table.since">
+        Depuis la séance
+      </th>
+      <th scope="col" i18n="Colonne de la liste des patients@@patients.table.feelings">
+        Ressentis · 30 j
       </th>
       <th scope="col" i18n="Colonne de la liste des patients@@patients.table.situations">
-        Situations actives
+        Situations
       </th>
-      @if (showFlags()) {
-        <th scope="col" i18n="Colonne Flags de la liste des patients@@patients.table.flagsColumn">
-          Flags
-        </th>
-      }
-      <th scope="col" class="actions">
+      <th scope="col" i18n="Colonne de la liste des patients@@patients.table.attention">
+        Attention
+      </th>
+      <th scope="col" class="col-acts">
         <span class="sr-only" i18n="Colonne de la liste des patients@@patients.table.actions"
           >Actions</span
         >
@@ -32,9 +33,7 @@
       <tr [class.archived]="row.archived" [class.demo]="row.demo">
         <td class="who">
           <span class="who-inner">
-            <span class="avatar" [class.dashed]="row.demo" aria-hidden="true">{{
-              row.initials
-            }}</span>
+            <span class="av" [class.dashed]="row.demo" aria-hidden="true">{{ row.initials }}</span>
             <span class="identity">
               <!-- Lien étendu à toute la ligne (::after) ; le badge DEMO précède le nom dans le DOM
                  (nom accessible « DEMO · … », comme le nom affiché) et le suit à l'écran. -->
@@ -42,7 +41,7 @@
                 @if (row.demo) {
                   <span class="demo-badge">DEMO</span><span class="sr-only"> · </span>
                 }
-                <span class="name">
+                <span class="nm">
                   @for (part of row.name; track $index) {
                     @if (part.match) {
                       <mark>{{ part.text }}</mark>
@@ -53,7 +52,7 @@
                 </span>
               </a>
               @if (row.detail) {
-                <span class="detail">{{ row.detail }}</span>
+                <span class="sub">{{ row.detail }}</span>
               }
             </span>
           </span>
@@ -62,11 +61,13 @@
         <td class="last">
           @switch (row.state) {
             @case ('loaded') {
-              @if (row.last; as last) {
-                <span>{{ last.relative }}</span>
-                <span class="muted"> · {{ last.detail }}</span>
+              @if (row.liveMinutes !== null) {
+                <span class="chip live">{{ liveText(row.liveMinutes) }}</span>
+              } @else if (row.lastDate) {
+                {{ row.lastDate }}
               } @else {
-                <span class="muted" i18n="Liste, patient sans séance@@patients.table.noSession"
+                <span class="faint" aria-hidden="true">—</span>
+                <span class="sr-only" i18n="Liste, patient sans séance@@patients.table.noSession"
                   >aucune séance</span
                 >
               }
@@ -75,52 +76,90 @@
               <span class="pending" aria-hidden="true"></span>
               <span class="sr-only">{{ loadingLabel }}</span>
             }
-            @case ('error') {
-              <span class="muted" [attr.title]="unavailable" aria-hidden="true">—</span>
-              <span class="sr-only">{{ unavailable }}</span>
-            }
             @default {
-              <span class="muted" [attr.title]="notLoaded" aria-hidden="true">—</span>
-              <span class="sr-only">{{ notLoaded }}</span>
+              <span class="faint" [attr.title]="unavailable" aria-hidden="true">—</span>
+              <span class="sr-only">{{ unavailable }}</span>
             }
           }
         </td>
 
-        <td class="emotions">
+        <td class="since">
           @if (row.state === 'loaded') {
-            <span class="emotion-line">
-              @if (row.emotions.length > 0) {
-                <span class="dots" aria-hidden="true">
-                  @for (dot of row.emotions; track dot.code) {
-                    <span
-                      class="dot"
-                      [style.background]="dot.color"
-                      [attr.title]="dot.label"
-                    ></span>
-                  }
-                </span>
-              }
-              <span class="muted" aria-hidden="true">{{ row.emotionText }}</span>
-              <span class="sr-only">{{ row.emotionSpoken }}</span>
-            </span>
+            @if (row.sinceCount) {
+              <b>{{ row.sinceCount }}</b
+              >&ngsp;<span class="muted"
+                >{{ row.sinceWord }}
+                @if (row.strongest) {
+                  · {{ row.strongest }}
+                }
+              </span>
+            } @else {
+              <span class="faint" aria-hidden="true">—</span>
+              <span
+                class="sr-only"
+                i18n="Liste, aucune entrée depuis la séance@@patients.table.noSince"
+                >aucune entrée depuis la séance</span
+              >
+            }
           } @else if (row.state === 'loading') {
             <span class="pending" aria-hidden="true"></span>
           } @else {
-            <span class="muted" aria-hidden="true">—</span>
+            <span class="faint" aria-hidden="true">—</span>
+          }
+        </td>
+
+        <td class="feel">
+          @if (row.state === 'loaded') {
+            @if (row.spark; as spark) {
+              <span class="feel-inner">
+                <svg
+                  class="spark"
+                  width="92"
+                  height="22"
+                  viewBox="0 0 92 22"
+                  role="img"
+                  [attr.aria-label]="spark.label"
+                >
+                  <path
+                    [attr.d]="spark.path"
+                    [class.dashed]="spark.dashed"
+                    fill="none"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <circle [attr.cx]="spark.end.x" [attr.cy]="spark.end.y" r="2.5" />
+                </svg>
+                @if (row.dominant; as dominant) {
+                  <span class="sub" aria-hidden="true">{{ dominant.text }}</span>
+                  <span class="sr-only">{{ dominant.spoken }}</span>
+                }
+              </span>
+            } @else {
+              <span
+                class="faint"
+                i18n="Liste, aucun ressenti sur 30 jours@@patients.table.noFeeling"
+                >pas encore de ressenti</span
+              >
+            }
+          } @else if (row.state === 'loading') {
+            <span class="pending" aria-hidden="true"></span>
+          } @else {
+            <span class="faint" aria-hidden="true">—</span>
           }
         </td>
 
         <td class="situations">
           @if (row.situations; as situations) {
             @if (situations.count > 0) {
-              <span class="count">{{ situations.count }}</span>
+              {{ situations.count }}
               @if (situations.first) {
-                <span class="muted first" [attr.title]="situations.first">
+                <span class="sub first" [attr.title]="situations.first">
                   · {{ situations.first }}</span
                 >
               }
             } @else {
-              <span class="muted" aria-hidden="true">—</span>
+              <span class="faint" aria-hidden="true">—</span>
               <span
                 class="sr-only"
                 i18n="Liste, aucune situation active@@patients.table.noSituation"
@@ -130,45 +169,28 @@
           } @else if (row.state === 'loading') {
             <span class="pending" aria-hidden="true"></span>
           } @else {
-            <span class="muted" aria-hidden="true">—</span>
+            <span class="faint" aria-hidden="true">—</span>
           }
         </td>
 
-        @if (showFlags()) {
-          <td class="flags">
-            @if (row.patient.flags.length > 0 || row.drafts > 0) {
-              <span class="flag-cell">
-                <pm-patient-flags [flags]="row.patient.flags" compact />
-                @if (row.drafts > 0) {
-                  <span class="drafts">
-                    @if (row.drafts === 1) {
-                      <ng-container
-                        i18n="Puce d'un brouillon dans la liste@@patients.table.draftOne"
-                        >1 brouillon</ng-container
-                      >
-                    } @else {
-                      <ng-container
-                        i18n="Puce de plusieurs brouillons dans la liste@@patients.table.drafts"
-                        >{{ row.drafts }} brouillons</ng-container
-                      >
-                    }
-                  </span>
-                }
-              </span>
-            } @else {
-              <span class="muted" aria-hidden="true">—</span>
+        <td class="att">
+          @if (row.flags.length > 0 || row.drafts || row.reportMissing) {
+            @for (flag of row.flags; track flag) {
+              <span class="chip flag">{{ flag }}</span>
             }
-          </td>
-        }
+            @if (row.drafts; as drafts) {
+              <span class="chip draft">{{ drafts }}</span>
+            }
+            @if (row.reportMissing) {
+              <span class="chip neutral">{{ reportLabel }}</span>
+            }
+          } @else {
+            <span class="faint" aria-hidden="true">—</span>
+          }
+        </td>
 
-        <td class="actions">
-          <span class="row-actions">
-            <span class="open" aria-hidden="true"
-              ><ng-container i18n="Indication d'ouverture d'une ligne@@patients.table.open"
-                >Ouvrir</ng-container
-              >
-              →</span
-            >
+        <td class="col-acts">
+          <span class="acts">
             @if (row.demo && !row.archived) {
               <button
                 type="button"
@@ -190,9 +212,16 @@
                 Restaurer
               </button>
             } @else {
+              <a
+                class="icon-btn"
+                [routerLink]="['/patients', row.patient.id, 'fiche']"
+                [attr.aria-label]="editLabel(row.patient.displayName)"
+                [attr.title]="ficheTitle"
+                ><span aria-hidden="true">✎</span></a
+              >
               <button
                 type="button"
-                class="more"
+                class="icon-btn"
                 [attr.aria-label]="moreLabel(row.patient.displayName)"
                 [matMenuTriggerFor]="rowMenu"
               >
@@ -201,11 +230,65 @@
               <mat-menu #rowMenu="matMenu">
                 <a
                   mat-menu-item
-                  [routerLink]="['/patients', row.patient.id, 'fiche']"
-                  [attr.aria-label]="editLabel(row.patient.displayName)"
-                  i18n="Entrée du menu d'une ligne : la fiche@@patients.table.editItem"
-                  >Modifier la fiche</a
+                  [routerLink]="row.link"
+                  i18n="Entrée du menu d'une ligne : ouvrir le dossier@@patients.table.openItem"
+                  >Ouvrir</a
                 >
+                <a
+                  mat-menu-item
+                  [routerLink]="['/patients', row.patient.id, 'fiche']"
+                  i18n="Entrée du menu d'une ligne : la fiche@@patients.table.editItem"
+                  >Fiche</a
+                >
+                <button
+                  mat-menu-item
+                  type="button"
+                  [matMenuTriggerFor]="exportMenu"
+                  i18n="Entrée du menu d'une ligne : exporter@@patients.table.exportItem"
+                >
+                  Exporter
+                </button>
+                @if (row.archived) {
+                  <button
+                    mat-menu-item
+                    type="button"
+                    (click)="restore.emit(row.patient)"
+                    i18n="Entrée du menu d'une ligne : restaurer@@patients.table.restoreItem"
+                  >
+                    Restaurer
+                  </button>
+                } @else {
+                  <button
+                    mat-menu-item
+                    type="button"
+                    (click)="archive.emit(row.patient)"
+                    i18n="Entrée du menu d'une ligne : archiver@@patients.table.archiveItem"
+                  >
+                    Archiver
+                  </button>
+                }
+              </mat-menu>
+              <mat-menu
+                #exportMenu="matMenu"
+                aria-label="Format d'export"
+                i18n-aria-label="Étiquette du menu des formats d'export@@patients.export.menu"
+              >
+                <button
+                  mat-menu-item
+                  type="button"
+                  (click)="exportFile.emit({ patient: row.patient, format: 'pdf' })"
+                  i18n="Format PDF du menu d'export@@patients.export.pdf"
+                >
+                  PDF
+                </button>
+                <button
+                  mat-menu-item
+                  type="button"
+                  (click)="exportFile.emit({ patient: row.patient, format: 'md' })"
+                  i18n="Format Markdown du menu d'export@@patients.export.md"
+                >
+                  Markdown
+                </button>
               </mat-menu>
             }
           </span>
@@ -214,3 +297,46 @@
     }
   </tbody>
 </table>
+
+<!-- Sous 600 px (maquette .phone) : une carte par patient, toute la carte est le lien. -->
+<ul class="cards" [class.refreshing]="refreshing()">
+  @for (row of view(); track row.patient.id) {
+    <li [class.archived]="row.archived">
+      <!-- Comme la ligne du tableau : le lien porte le nom seul (nom accessible = texte visible) et
+           s'étend à toute la carte par son ::after ; la seconde ligne et le drapeau restent lisibles. -->
+      <div class="card">
+        <span class="av" [class.dashed]="row.demo" aria-hidden="true">{{ row.initials }}</span>
+        <span class="card-body">
+          <span class="card-name">
+            <a class="row-link" [routerLink]="row.link">
+              @if (row.demo) {
+                <span class="demo-badge">DEMO</span><span class="sr-only"> · </span>
+              }
+              <span class="nm">
+                @for (part of row.name; track $index) {
+                  @if (part.match) {
+                    <mark>{{ part.text }}</mark>
+                  } @else {
+                    <span>{{ part.text }}</span>
+                  }
+                }
+              </span>
+            </a>
+            @if (row.liveMinutes !== null) {
+              <span class="chip live">{{ liveShort(row.liveMinutes) }}</span>
+            }
+          </span>
+          @if (row.cardLine) {
+            <span class="sub">{{ row.cardLine }}</span>
+          }
+        </span>
+        @if (row.flags.length > 0) {
+          <span class="chip flag" [attr.title]="row.flags.join(', ')"
+            ><span aria-hidden="true">!</span
+            ><span class="sr-only">{{ watchLabel }} : {{ row.flags.join(', ') }}</span></span
+          >
+        }
+      </div>
+    </li>
+  }
+</ul>

@@ -45,7 +45,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingRowComponent {
-  /** Préfixe des ids (« overview-view »). */
+  /** Préfixe des ids (« overview-window »). */
   readonly id = input.required<string>();
   readonly label = input.required<string>();
   readonly help = input<string>();

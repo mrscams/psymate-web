@@ -9,6 +9,7 @@ import {
   OverviewDto,
   PatientDto,
   PatientsService,
+  RecentSessionDtoKindEnum,
   TagsService,
   TagView,
   VersionDto,
@@ -16,9 +17,8 @@ import {
 } from '../../../api';
 import { CursorPage } from '../../../shared/util';
 import {
-  EMOTION_FAMILIES,
-  EmotionFamily,
   FlagKind,
+  PATIENT_PAGE_SIZE,
   PatientActivity,
   PatientCreateInput,
   PatientFlagView,
@@ -29,9 +29,6 @@ import {
   SESSION_MODALITIES,
   SessionModality,
 } from './patient.model';
-
-/** Taille d'une page de la liste (le contrat accepte 1..200, 50 par défaut). */
-export const PATIENT_PAGE_SIZE = 50;
 
 /**
  * Service de données de features/patients (handbook §2, couche 4) : le seul fichier de la feature
@@ -45,7 +42,10 @@ export class PatientApi {
   private readonly overviews = inject(VueDensembleService);
   private readonly english = inject(LOCALE_ID).startsWith('en');
 
-  /** GET /api/patients : une page, filtrée (q, archived, tag) et triée, par curseur opaque. */
+  /**
+   * GET /api/patients : une page de PATIENT_PAGE_SIZE patients (décision 1 du 14 novembre 2026),
+   * filtrée (q, archived, tag) et triée, par curseur opaque.
+   */
   async list(query: PatientListQuery): Promise<CursorPage<PatientView>> {
     const page = await firstValueFrom(
       this.patients.listPatients(
@@ -61,9 +61,10 @@ export class PatientApi {
   }
 
   /**
-   * Résumé d'activité d'une ligne de la liste : GET /api/patients/{id}/overview?window=30d (séance la
-   * plus récente, émotions dominantes 30 j, situations en cours, brouillons). La liste du contrat ne
-   * porte pas ces champs ; la projection est relue, jamais recalculée dans le client.
+   * Résumé d'une ligne de la liste : GET /api/patients/{id}/overview?window=30d (séances récentes,
+   * séance ouverte, depuis la dernière séance, courbe et émotion dominante sur 30 j, situations en
+   * cours, brouillons). La liste du contrat ne porte pas ces champs ; la projection est relue,
+   * jamais recalculée dans le client.
    */
   async activity(id: string): Promise<PatientActivity> {
     return toActivity(
@@ -206,35 +207,77 @@ function oneOf<T extends string>(
   return allowed.includes(value as T) ? (value as T) : null;
 }
 
-/** Projection vue d'ensemble → résumé d'une ligne de la liste (trois émotions au plus). */
+/** sinceLastSession.entries en compte au plus 20 (contrat) : « 20+ » au-delà. */
+export const SINCE_ENTRIES_MAX = 20;
+
+/**
+ * Projection vue d'ensemble → résumé d'une ligne de la liste. Le ressenti le plus fort « depuis la
+ * séance » croise les entrées de sinceLastSession avec feelings.points (même identifiant d'entrée) :
+ * seuls les ressentis de la fenêtre de 30 jours portent leur intensité.
+ */
 export function toActivity(dto: OverviewDto, english = false): PatientActivity {
   const series = dto.feelings?.series ?? [];
-  const families = new Map<string, EmotionFamily | null>();
-  const englishLabels = new Map<string, string>();
+  const labels = new Map<string, string>();
   for (const entry of series) {
     if (!entry.emotionCode) continue;
-    families.set(entry.emotionCode, oneOf(entry.family, EMOTION_FAMILIES));
-    if (entry.labelEn) englishLabels.set(entry.emotionCode, entry.labelEn);
+    const label = (english ? entry.labelEn : null) || entry.label || entry.emotionCode;
+    labels.set(entry.emotionCode, label);
   }
-  const top = (dto.emotions?.top ?? []).filter((emotion) => !!emotion.code);
+  const points = dto.feelings?.points ?? [];
+  const intensityOf = new Map<string, { code: string; intensity: number }>();
+  for (const point of points) {
+    if (point.entryId && point.emotionCode && typeof point.intensity === 'number') {
+      intensityOf.set(point.entryId, { code: point.emotionCode, intensity: point.intensity });
+    }
+  }
+  const sinceEntries = dto.sinceLastSession?.entries ?? [];
+  let strongest: { label: string; intensity: number } | null = null;
+  for (const entry of sinceEntries) {
+    const feeling =
+      entry.type === 'feeling' && entry.entryId ? intensityOf.get(entry.entryId) : null;
+    if (feeling && (!strongest || feeling.intensity > strongest.intensity)) {
+      strongest = { label: labels.get(feeling.code) ?? feeling.code, intensity: feeling.intensity };
+    }
+  }
+  const top = (dto.emotions?.top ?? []).find((emotion) => !!emotion.code) ?? null;
   const last = (dto.recentSessions ?? []).find((session) => !!session.occurredFrom) ?? null;
+  const closedAt = text(last?.closedAt);
   const situations = dto.activeSituations ?? [];
+  // La séance d'accueil est créée avec le patient et jamais clôturée ; le contrat dit qu'elle ne
+  // compte pas comme séance ouverte (sessions/current, start). La projection la renvoie pourtant
+  // dans drafts.openSession : on l'écarte par son genre, lu dans recentSessions.
+  const open = dto.drafts?.openSession ?? null;
+  const openIsIntake =
+    !!open?.entryId &&
+    (dto.recentSessions ?? []).some(
+      (s) => s.entryId === open.entryId && s.kind === RecentSessionDtoKindEnum.Intake,
+    );
   return {
     lastSession: last
       ? {
           at: last.occurredFrom!,
+          closedAt,
           modality: oneOf<SessionModality>(last.modality, SESSION_MODALITIES),
+          entryCount: last.entryCount ?? 0,
+          reportMissing: closedAt !== null && !(last.summary ?? '').trim(),
         }
       : null,
-    openSessionAt: text(dto.drafts?.openSession?.startedAt),
-    emotions: top.slice(0, 3).map((emotion) => ({
-      code: emotion.code!,
-      label: (english ? englishLabels.get(emotion.code!) : null) || emotion.label || emotion.code!,
-      family: families.get(emotion.code!) ?? null,
-      count: emotion.count ?? 0,
-      delta: emotion.delta ?? 0,
-    })),
-    feelingCount: top.reduce((sum, emotion) => sum + (emotion.count ?? 0), 0),
+    openSessionAt: openIsIntake ? null : text(open?.startedAt),
+    since: {
+      entries: sinceEntries.length,
+      capped: sinceEntries.length >= SINCE_ENTRIES_MAX,
+      strongest,
+    },
+    intensities: (dto.trend?.points ?? []).map((point) =>
+      typeof point.averageIntensity === 'number' ? point.averageIntensity : null,
+    ),
+    feelingCount: points.length,
+    dominant: top
+      ? {
+          label: (english ? labels.get(top.code!) : null) || top.label || top.code!,
+          delta: top.delta ?? 0,
+        }
+      : null,
     situations: { count: situations.length, first: text(situations[0]?.title) },
     drafts: dto.drafts?.count ?? 0,
     followedSince: text(dto.facts?.followedSince),

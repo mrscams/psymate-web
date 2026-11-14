@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 
 import { ThemeService } from '../../../core/theme';
-import type { TrendChartOption } from './trend-chart.options';
+import type { FeelingsChartOption as TrendChartOption } from './feelings-chart.options';
 
 /** Ce qu'un graphe de la vue d'ensemble utilise d'une instance ECharts (une doublure en test). */
 export interface TrendChart {
@@ -41,7 +41,7 @@ export const TREND_RENDERER = new InjectionToken<() => Promise<TrendRenderer>>('
 });
 
 /**
- * Socle des graphes ECharts de la vue d'ensemble (courbe de tendance M4-05, ressentis réels M4-07) :
+ * Socle du graphe ECharts de la vue d'ensemble (M4-05, M4-07, puis UX-S6 : un seul graphe) :
  * moteur chargé à la demande, options recalculées à chaque changement de données, de libellés ou de
  * thème (tokens CSS relus sur l'hôte), redimensionnement, clic sur un point de ressenti (émet son
  * entrée), libération à la destruction. La classe fille fournit `#container` dans son gabarit et

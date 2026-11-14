@@ -36,22 +36,6 @@
         <h2 id="h-display" i18n="Section Affichage@@preferences.section.display">Affichage</h2>
         <div class="rows">
           <pm-setting-row
-            id="overview-view"
-            label="Vue d'ensemble par défaut"
-            i18n-label="Réglage de la vue d'ensemble@@preferences.view.label"
-            help="Aussi modifiable depuis la page du patient."
-            i18n-help="Aide du réglage de la vue d'ensemble@@preferences.view.help"
-          >
-            <pm-segmented-control
-              [options]="viewOptions"
-              [value]="prefs.overviewView()"
-              labelledBy="overview-view-label"
-              describedBy="overview-view-help"
-              (valueChange)="setView($event)"
-            />
-          </pm-setting-row>
-
-          <pm-setting-row
             id="overview-window"
             label="Fenêtre d'analyse"
             i18n-label="Réglage de la fenêtre d'analyse@@preferences.window.label"

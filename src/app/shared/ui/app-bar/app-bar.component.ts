@@ -39,6 +39,10 @@ export const ACCOUNT_PATHS = {
  * décide ce qu'elle fait de `search`), bouton de langue FR / EN, avatar avec menu (Mon compte,
  * Déconnexion). Lien « Aller au contenu » vers #main. Composant bête : la coquille lui passe la
  * session et reçoit `logout`.
+ *
+ * UX-S8 : avec `navigation`, un bouton ☰ à gauche du logo, visible seulement sous 900 px (le rail
+ * de navigation disparaît) ; il émet `navigationToggle` et la coquille ouvre le tiroir de
+ * navigation (shared/ui/nav-rail) ; `navigationOpen` porte son `aria-expanded`.
  */
 @Component({
   selector: 'pm-app-bar',
@@ -57,6 +61,10 @@ export class AppBarComponent {
   readonly switchHref = input.required<string>();
   readonly switchLang = input.required<AppLocale>();
   readonly showSearch = input(true);
+  /** Bouton ☰ du tiroir de navigation, sous 900 px (UX-S8). */
+  readonly navigation = input(false);
+  /** Le tiroir de navigation est ouvert (aria-expanded du bouton ☰). */
+  readonly navigationOpen = input(false);
   readonly searchPlaceholder = input<string>();
   /** Texte du champ de recherche ; la feature le lit ou l'écrit (fiche 07). */
   readonly query = model('');
@@ -64,6 +72,8 @@ export class AppBarComponent {
   /** Entrée dans le champ de recherche. */
   readonly searchSubmit = output<string>();
   readonly logout = output<void>();
+  /** Bouton ☰ : ouvrir le tiroir de navigation. */
+  readonly navigationToggle = output<void>();
 
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
   private readonly shortcuts = inject(ShortcutService);

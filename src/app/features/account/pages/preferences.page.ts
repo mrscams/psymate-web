@@ -149,13 +149,6 @@ export class PreferencesPage {
       : $localize`:Double authentification inactive@@preferences.security.twoFactor.off:Non activée`,
   );
 
-  protected readonly viewOptions: SegmentOption<Preferences['overview.view']>[] = [
-    { value: 'simple', label: $localize`:Vue d'ensemble simple@@preferences.view.simple:Simple` },
-    {
-      value: 'complete',
-      label: $localize`:Vue d'ensemble complète@@preferences.view.complete:Complète`,
-    },
-  ];
   protected readonly windowOptions: SegmentOption<Preferences['overview.window']>[] = [
     { value: '30d', label: $localize`:Fenêtre de 30 jours@@preferences.window.30d:30 j` },
     { value: '90d', label: $localize`:Fenêtre de 90 jours@@preferences.window.90d:90 j` },
@@ -191,9 +184,6 @@ export class PreferencesPage {
       },
     ];
 
-  protected setView(value: Preferences['overview.view']): void {
-    void this.apply('overview.view', value);
-  }
   protected setWindow(value: Preferences['overview.window']): void {
     void this.apply('overview.window', value);
   }

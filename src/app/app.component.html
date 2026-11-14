@@ -21,10 +21,14 @@
         [switchLang]="other"
         [query]="searchBar.query()"
         [searchPlaceholder]="searchBar.placeholder()"
+        [navigation]="true"
+        [navigationOpen]="navDrawer.isOpen()"
         (queryChange)="searchBar.input($event)"
         (searchSubmit)="searchBar.submit($event)"
         (logout)="logout()"
+        (navigationToggle)="navDrawer.toggle()"
       />
+      <pm-nav-rail class="app-rail" (drawerRequested)="navDrawer.toggle()" />
       @if (session.authenticated()) {
         <pm-verification-banner [status]="session.verificationStatus()" />
       }
@@ -38,6 +42,7 @@
     [class.public-main]="layout() === 'public'"
     [class.narrow]="layout() === 'public' && narrow()"
     [class.wide]="layout() !== 'bare' && contentWidth() === 'wide'"
+    [class.full]="layout() === 'practitioner' && contentWidth() === 'full'"
   >
     @if (layout() === 'public') {
       <pm-network-banner />

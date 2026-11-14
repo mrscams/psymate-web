@@ -1,44 +1,35 @@
-<header class="page-header">
-  <div class="heading">
-    <h1>{{ title() }}</h1>
-    @if (counter(); as text) {
-      <p class="counter">{{ text }}</p>
-    }
-  </div>
-  <div class="header-actions">
-    <button
-      mat-stroked-button
-      type="button"
-      class="archived-toggle"
-      [attr.aria-pressed]="store.archived()"
-      (click)="store.setArchived(!store.archived())"
-    >
-      <svg class="toggle-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-        <path d="M2 4h12M4 8h8M6 12h4" />
-      </svg>
-      <span i18n="Bascule de la liste des patients@@patients.archived.toggle"
-        >Afficher les archivés</span
-      >
+<header class="page-head">
+  <h1>{{ title() }}</h1>
+  <div class="head-actions">
+    <button type="button" class="btn outline" (click)="store.setArchived(!store.archived())">
+      @if (store.archived()) {
+        <ng-container i18n="Bascule de la liste des patients, retour@@patients.archived.back"
+          >Revenir aux actifs</ng-container
+        >
+      } @else {
+        <ng-container i18n="Bascule de la liste des patients@@patients.archived.toggle"
+          >Afficher les archivés</ng-container
+        >
+      }
     </button>
-    <a mat-flat-button routerLink="/patients/nouveau" class="new">
+    <a class="btn primary new" routerLink="/patients/nouveau">
       {{ newLabel() }}
       <kbd>N</kbd>
     </a>
   </div>
 </header>
 
+@if (store.today().length > 0 && !store.archived()) {
+  <pm-patient-today [rows]="store.today()" [now]="now()" />
+}
+
 <pm-patient-filters
   [query]="query()"
   (queryChange)="onQuery($event)"
-  [sort]="store.effectiveSort()"
+  [sort]="store.sort()"
   (sortChange)="store.setSort($event)"
-  [quick]="store.effectiveQuick()"
-  [activityCovered]="store.activityCovered()"
-  [counts]="store.items().length > 0 ? store.quickCounts() : null"
+  [quick]="store.quick()"
   (quickChange)="store.setQuick($event)"
-  [tags]="tags.tags().data ?? []"
-  [activeTag]="store.tag()"
-  (tagChange)="store.setTag($event)"
   (openFirst)="openFirst()"
   (arrowDown)="focusFirstRow()"
 />
@@ -49,7 +40,9 @@
   @if (staleError()) {
     <div class="banner" role="alert">
       <span>{{ errorTitle() }}</span>
-      <button mat-stroked-button type="button" (click)="store.reload()">{{ retry.label }}</button>
+      <button type="button" class="btn outline sm" (click)="store.reload()">
+        {{ retry.label }}
+      </button>
     </div>
   }
 
@@ -67,7 +60,7 @@
   }
 
   @if (kind(); as state) {
-    <div class="card">
+    <div class="panel">
       @switch (state) {
         @case ('loading') {
           <pm-state kind="loading" skeleton="row" [lines]="6" />
@@ -92,7 +85,7 @@
     @if (store.welcome()) {
       <!-- Première connexion avec le patient de démonstration (planche 29 §2) : bloc central,
            puis « ou explorez un patient de démonstration » au-dessus de sa ligne. -->
-      <div class="card welcome-empty">
+      <div class="panel welcome-empty">
         <pm-state
           kind="empty"
           [title]="emptyTitle()"
@@ -104,22 +97,26 @@
         ou explorez un patient de démonstration
       </p>
     }
-    <div class="card">
+    <div class="panel lst">
       @if (store.rows().length > 0) {
         <pm-patient-table
           [rows]="store.rows()"
           [query]="store.effectiveQuery()"
-          [sort]="store.effectiveSort()"
+          [sort]="store.sort()"
+          [now]="now()"
           [refreshing]="refreshing()"
           (removeDemo)="removeDemo($event)"
           (restoreDemo)="restoreDemo($event)"
+          (archive)="archive($event)"
+          (restore)="restore($event)"
+          (exportFile)="exportFile($event)"
         />
       } @else {
         <pm-state
           kind="empty"
-          [title]="quickEmptyTitle()"
+          [title]="emptyTitle()"
           [message]="quickEmptyMessage()"
-          [action]="quickEmptyAction()"
+          [action]="showAll"
         />
       }
       @if (activityProblem(); as problem) {
@@ -131,52 +128,58 @@
           </svg>
           <strong>{{ warningLabel }}</strong>
           <span>{{ problem }}</span>
-          <button mat-button type="button" (click)="store.retryActivity()">
+          <button type="button" class="btn ghost sm" (click)="store.retryActivity()">
             {{ retry.label }}
           </button>
         </p>
       }
-      <div class="table-footer">
-        <span class="shown">{{ footer() }}</span>
-        @if (partialNote(); as note) {
-          <span class="partial">{{ note }}</span>
-        }
-        <span class="spacer"></span>
+      <nav
+        class="foot"
+        aria-label="Pages de la liste"
+        i18n-aria-label="Étiquette de la pagination de la liste@@patients.pager.label"
+      >
+        <span class="shown" role="status">{{ shown() }}</span>
         <span class="keys" i18n="Pied de la liste : raccourcis@@patients.footer.keys"
           ><kbd>↑</kbd>&ngsp;<kbd>↓</kbd> choisir · <kbd>Entrée</kbd> ouvrir ·
-          <kbd>N</kbd> nouveau</span
+          <kbd>?</kbd> aide</span
         >
-      </div>
-    </div>
-    @if (store.hasMore()) {
-      <div class="more">
-        <button
-          mat-stroked-button
-          type="button"
-          [disabled]="store.loadingMore()"
-          (click)="store.loadMore()"
-          i18n="Bouton de pagination de la liste@@patients.list.more"
-        >
-          Afficher plus
-        </button>
-        @if (store.moreProblem()) {
-          <p
-            class="more-error"
-            role="alert"
-            i18n="Erreur de la page suivante@@patients.list.moreError"
-          >
-            La suite de la liste n'a pas pu être chargée.
-          </p>
+        @if (pageNote(); as note) {
+          <span class="note">{{ note }}</span>
         }
-      </div>
-    }
-    <p class="legend" i18n="Légende sous la liste des patients@@patients.list.legend">
-      Les pastilles d'émotions résument les 30 derniers jours ; la flèche indique l'évolution par
-      rapport aux 30 jours précédents. Aucune couleur d'alerte n'est appliquée automatiquement : les
-      flags sont posés par vous.
-    </p>
+        <span class="pager">
+          <button
+            type="button"
+            class="pg prev"
+            [disabled]="!store.hasPrevious() || refreshing()"
+            (click)="store.previousPage()"
+          >
+            <span aria-hidden="true">‹</span>
+            <ng-container i18n="Page précédente de la liste@@patients.pager.previous"
+              >Précédent</ng-container
+            >
+          </button>
+          <span class="sep" aria-hidden="true">·</span>
+          <button
+            type="button"
+            class="pg next"
+            [disabled]="!store.hasNext() || refreshing()"
+            (click)="store.next()"
+          >
+            <ng-container i18n="Page suivante de la liste@@patients.pager.next"
+              >Suivant</ng-container
+            >
+            <span aria-hidden="true">›</span>
+          </button>
+        </span>
+      </nav>
+    </div>
     @if (store.welcome()) {
       <pm-onboarding (showShortcuts)="showShortcuts()" />
     }
   }
 </section>
+
+<!-- Mobile (maquette .phone) : « Nouveau patient » en bas d'écran, sur toute la largeur. -->
+<div class="m-bottom">
+  <a class="btn primary" routerLink="/patients/nouveau">{{ newLabel() }}</a>
+</div>

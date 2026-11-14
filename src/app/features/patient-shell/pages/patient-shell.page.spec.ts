@@ -121,8 +121,8 @@ async function render(api: Partial<Api> = {}, url = '/patients/p-marie', duratio
           defaultDurationMin: signal(durationMin),
           defaultVisibility: signal('clinical'),
           medicationVisible: signal(true),
-          // Bascule « Vue » de la vue d'ensemble (M4-05), posée dans l'en-tête.
-          overviewView: signal('complete'),
+          // Sélecteur « Fenêtre » de la vue d'ensemble (UX-S6), posé dans l'en-tête.
+          overviewWindow: signal('90d'),
           set: vi.fn().mockResolvedValue(null),
         },
       },
@@ -204,7 +204,17 @@ describe('PatientShellPage', () => {
     expect(layout.querySelector('aside.ctx')).toBeNull();
     expect(layout.querySelector('.pad-main .tab-content pm-fake-overview-tab')).not.toBeNull();
     expect(text(el.querySelector('pm-fake-overview-tab h2'))).toBe("Vue d'ensemble");
-    expect(el.querySelector('.view-toggle pm-overview-view-toggle [role="group"]')).not.toBeNull();
+    // UX-S6 : sur l'onglet Vue d'ensemble, le sélecteur de fenêtre à la place de la bascule
+    // Simple / Complète, et la page en pleine largeur (data.contentWidth full de la route).
+    const windows = el.querySelector('.view-toggle pm-overview-window [role="group"]');
+    expect([...(windows?.querySelectorAll('button') ?? [])].map((b) => text(b))).toEqual([
+      '30 j',
+      '90 j',
+      '1 an',
+    ]);
+    expect(windows?.querySelector('[aria-pressed="true"]')?.textContent?.trim()).toBe('90 j');
+    expect(el.querySelector('pm-overview-view-toggle')).toBeNull();
+    expect(el.querySelector('pm-patient-shell-page')!.classList.contains('full-bleed')).toBe(true);
   });
 
   it('« suivi·e depuis » : la fiche quand aucune séance ne la précède (UX-G2c)', async () => {
@@ -305,6 +315,11 @@ describe('PatientShellPage', () => {
       // l'onglet Séance ; la colonne latérale de contexte la longe, les raccourcis en dernier.
       const layout = el.querySelector('.pad-layout')!;
       expect(layout.classList.contains('in-session')).toBe(true);
+      // UX-S5 : sur l'onglet Séance la page est en pleine largeur (classe hôte lue par ses styles ;
+      // le <main> suit data.contentWidth full de la route).
+      expect(el.querySelector('pm-patient-shell-page')!.classList.contains('full-bleed')).toBe(
+        true,
+      );
       const main = [...layout.querySelectorAll('.pad-main > *')].map(
         (node) => node.className || node.tagName.toLowerCase(),
       );
@@ -516,6 +531,8 @@ describe('PatientShellPage', () => {
     expect(el.querySelector('pm-graph-page')).not.toBeNull();
     expect(counter(el)).toBeNull();
     expect(el.querySelector('.view-toggle')).toBeNull();
+    // Graphe : largeur bornée, pas de pleine largeur (sa propre tâche).
+    expect(el.querySelector('pm-patient-shell-page')!.classList.contains('full-bleed')).toBe(false);
 
     await harness.navigateByUrl('/patients/p-marie');
     await settle(harness);
@@ -523,9 +540,9 @@ describe('PatientShellPage', () => {
     expect(api.patient).toHaveBeenCalledTimes(1);
   });
 
-  it('onglet 1 : la route vide charge la vue d’ensemble (features/overview) à la demande, data.tab gardé', async () => {
+  it('onglet 1 : la route vide charge la vue d’ensemble (features/overview) à la demande, data.tab gardé, pleine largeur (UX-S6)', async () => {
     const route = PATIENT_SHELL_ROUTES[0].children!.find((r) => r.path === '' && !r.redirectTo)!;
-    expect(route.data).toEqual({ tab: 'overview' });
+    expect(route.data).toEqual({ tab: 'overview', contentWidth: 'full' });
     expect(route.component).toBeUndefined();
     const component = await (
       route.loadComponent as () => Promise<Parameters<typeof reflectComponentType>[0]>

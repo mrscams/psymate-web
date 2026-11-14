@@ -30,6 +30,8 @@ import { ThemeService } from './core/theme';
 import {
   AdminBarComponent,
   AppBarComponent,
+  NavDrawerService,
+  NavRailComponent,
   NetworkBannerComponent,
   PublicFooterComponent,
   PublicHeaderComponent,
@@ -54,9 +56,12 @@ export type AppLayout = 'practitioner' | 'public' | 'admin' | 'bare';
  *   publics ;
  * - wide : layout public jusqu'à 1 280 px (annuaire, maquette 08) ; conteneur des habillages
  *   praticien et admin jusqu'à 1 600 px de contenu (écrans d'administration, maquettes 20, 21, 22, 28 : pleine
- *   largeur à 1 440 px avec 24 px de marge), sans marges négatives dans la page.
+ *   largeur à 1 440 px avec 24 px de marge), sans marges négatives dans la page ;
+ * - full : aucune borne ni marge sur le conteneur praticien (UX-S5, onglet Séance, propositions 04
+ *   et 04b : barre de séance et en-tête d'un bord à l'autre sous la barre d'application) ; la page
+ *   pose elle-même ses marges intérieures.
  */
-export type ContentWidth = 'default' | 'wide';
+export type ContentWidth = 'default' | 'wide' | 'full';
 
 /**
  * Coquille de l'application (fiche 00) : choisit l'habillage selon la route, passe la session à la
@@ -83,6 +88,14 @@ export type ContentWidth = 'default' | 'wide';
  *   sans `100vh` / `100dvh`, et remplit exactement la fenêtre même avec le bandeau affiché.
  * - Défilement : le document défile, pas les panneaux de la page.
  *
+ * Rail de navigation (UX-S8, proposition 05 A), habillage praticien seulement : `pm-nav-rail`, une
+ * colonne de 56 px sous la barre d'application, positionnée en absolu sur toute la hauteur de la
+ * coquille ; la coquille (classe `with-rail`) décale d'autant tout ce qui suit la barre (bandeaux,
+ * `<main>`, y compris `.wide` et `.full`) : aucune page ne pose ce décalage. Le rail se déplie
+ * par-dessus la page sans la décaler. Sous 900 px, il disparaît et le bouton ☰ de la barre ouvre
+ * le même composant en tiroir (NavDrawerService). Le `<main>` reste un enfant direct et stable de
+ * la coquille (UX-A10) : le rail est un frère, pas un parent.
+ *
  * Rien n'est rendu avant la fin de la première navigation (`navigated`) : l'habillage n'est pas
  * supposé (ni barre praticien ni classe `app-main` sur une page publique), la route déjà activée
  * s'attache une fois à l'outlet, dans l'habillage de sa route. Pages prérendues : le HTML du
@@ -95,6 +108,7 @@ export type ContentWidth = 'default' | 'wide';
     RouterOutlet,
     AdminBarComponent,
     AppBarComponent,
+    NavRailComponent,
     NetworkBannerComponent,
     PublicFooterComponent,
     PublicHeaderComponent,
@@ -105,13 +119,18 @@ export type ContentWidth = 'default' | 'wide';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.bare]': "navigated() && layout() === 'bare'" },
+  host: {
+    '[class.bare]': "navigated() && layout() === 'bare'",
+    '[class.with-rail]': "navigated() && layout() === 'practitioner'",
+  },
 })
 export class AppComponent {
   private readonly router = inject(Router);
   protected readonly session = inject(SessionStore);
   /** Champ de la barre sur un écran patient : recherche dans le dossier (features/search). */
   protected readonly searchBar = inject(DossierSearchBar);
+  /** Tiroir de navigation sous 900 px (bouton ☰, Ctrl+B quand le rail est masqué). */
+  protected readonly navDrawer = inject(NavDrawerService);
   private readonly baseHref = inject(PlatformLocation).getBaseHrefFromDOM();
 
   protected readonly locale = toAppLocale(inject(LOCALE_ID));
@@ -240,7 +259,7 @@ export function contentWidthOf(root: ActivatedRouteSnapshot): ContentWidth {
   let width: ContentWidth = 'default';
   for (let route: ActivatedRouteSnapshot | null = root; route; route = route.firstChild) {
     const declared = route.data['contentWidth'];
-    if (declared === 'wide' || declared === 'default') width = declared;
+    if (declared === 'wide' || declared === 'default' || declared === 'full') width = declared;
   }
   return width;
 }

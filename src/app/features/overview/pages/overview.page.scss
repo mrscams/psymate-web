@@ -1,335 +1,37 @@
 :host {
   display: block;
 }
+
 .overview {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
-a:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-// Grille de la maquette 02 : 12 colonnes, gouttière 16 px ; une colonne sous 1 100 px.
-.grid {
+
+/*
+ * Proposition 02 `.ov` (UX-S6) : colonne de lecture `minmax(0, 1fr)` et colonne latérale de 340 px
+ * (largeur de la latérale de 04b `.pad-layout`), 20 px d'écart. Sous 900 px, une colonne : la bande
+ * « Depuis la séance », le graphe, « Noté depuis », les séances, puis les blocs latéraux.
+ */
+.ov {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 16px;
-  align-items: stretch;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 20px;
+  align-items: start;
 }
-@each $span in (3, 4, 5, 8, 12) {
-  .span-#{$span} {
-    grid-column: span $span;
+
+.main {
+  min-width: 0;
+}
+
+// Proposition 02 `.sect` : 26 px entre deux sections de la colonne de lecture.
+.sect {
+  margin-top: 26px;
+}
+
+@media (max-width: 900px) {
+  .ov {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
   }
-}
-@media (max-width: 1100px) {
-  .grid > * {
-    grid-column: span 12;
-  }
-}
-.stack {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.stack > :last-child {
-  flex: 1 1 auto;
-}
-p,
-ul {
-  margin: 0;
-}
-ul {
-  padding: 0;
-  list-style: none;
-}
-a {
-  color: var(--primary);
-}
-// Typographie des blocs : listes à 13 px, méta à 12 px ; seuls les titres de bloc restent en
-// capitales 12 px (pm-overview-block).
-.meta,
-.when,
-.note,
-.context,
-.muted {
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--text-secondary);
-}
-.meta-link {
-  font-size: 12px;
-  line-height: 16px;
-  text-decoration: none;
-}
-.meta-link:hover {
-  text-decoration: underline;
-}
-.push {
-  margin-left: auto;
-}
-
-// Faits clés : quatre tuiles (2 × 2 dans la colonne de 4), puis les faits du dossier.
-.tiles {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px 16px;
-}
-.tile {
-  min-width: 0;
-}
-.tile h4 {
-  margin: 0;
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-.figure {
-  font-size: 28px;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-}
-.unit {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-.facts {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border-subtle);
-}
-.fact {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  min-width: 0;
-  font-size: 13px;
-  line-height: 1.4;
-  color: var(--text-primary);
-}
-.fact-text {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.fact-text strong {
-  font-weight: 600;
-}
-.fact-end {
-  flex: 0 0 auto;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-a.fact-end {
-  color: var(--primary);
-  text-decoration: none;
-  padding: 4px 0;
-  margin: -4px 0;
-}
-a.fact-end:hover {
-  text-decoration: underline;
-}
-// Formes par type (fiche 00 « Tokens ») : capsule du médicament, carré de la séance, puce de drapeau.
-.key {
-  display: inline-block;
-  flex: 0 0 auto;
-  align-self: center;
-}
-.capsule {
-  width: 14px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--entry-medication);
-}
-.capsule.empty {
-  background: transparent;
-  border: 1.5px dashed var(--border-strong);
-  box-sizing: border-box;
-}
-.session {
-  width: 10px;
-  height: 10px;
-  box-sizing: border-box;
-  border-radius: 3px;
-  border: 2px solid var(--entry-session);
-}
-.flag {
-  width: 10px;
-  height: 10px;
-  box-sizing: border-box;
-  border-radius: 50%;
-  background: var(--flag-bg);
-  border: 1.5px solid var(--flag);
-}
-.situation {
-  width: 14px;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--entry-situation);
-}
-
-// Situations actives : chaque carte est un lien vers le graphe centré sur la situation.
-.cards {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 10px 12px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  color: var(--text-primary);
-  text-decoration: none;
-}
-.card:hover {
-  border-color: var(--border-strong);
-}
-.card:hover .card-link {
-  text-decoration: underline;
-}
-.card-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-}
-.card-title {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-size: 14px;
-  font-weight: 600;
-}
-.card-meta {
-  padding-left: 22px;
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--text-secondary);
-}
-.card-link {
-  color: var(--primary);
-}
-
-// Émotions dominantes : nom, nombre, variation, barre à la couleur de la famille.
-.emotions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.emotion {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.emotion-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  font-size: 13px;
-  line-height: 1.4;
-}
-.emotion-name {
-  flex: 1 1 auto;
-  min-width: 0;
-  padding: 3px 0;
-  color: var(--text-primary);
-  text-decoration: none;
-}
-.emotion-name:hover {
-  text-decoration: underline;
-}
-.dot {
-  width: 10px;
-  height: 10px;
-  flex: 0 0 auto;
-  border-radius: 50%;
-}
-// Variation : signe (+6, −2, =) et texte pour les lecteurs d'écran, teinte neutre (une hausse de
-// joie n'est pas un danger) ; text-primary sur surface-sunken, couple vérifié par check:tokens.
-.delta {
-  min-width: 28px;
-  box-sizing: border-box;
-  padding: 0 6px;
-  border-radius: 999px;
-  text-align: center;
-  font-size: 11px;
-  line-height: 16px;
-  background: var(--surface-sunken);
-  color: var(--text-primary);
-}
-.bar {
-  display: block;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--surface-sunken);
-}
-.bar > span {
-  display: block;
-  height: 4px;
-  border-radius: 2px;
-}
-
-// À compléter : lignes ambre, l'action à droite (maquette 02).
-.todo {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.todo-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 36px;
-  box-sizing: border-box;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: var(--warning-bg);
-  color: var(--warning);
-  font-size: 13px;
-  line-height: 1.4;
-  text-decoration: none;
-}
-.todo-item:hover .todo-text {
-  text-decoration: underline;
-}
-.todo-text {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.todo-action {
-  flex: 0 0 auto;
-  font-size: 12px;
-}
-.todo-icon {
-  width: 14px;
-  height: 14px;
-  flex: 0 0 auto;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-}
-
-.footer {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 32px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-.reload-failed {
-  padding: 4px 12px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
 }

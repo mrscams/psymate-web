@@ -19,14 +19,18 @@ export const PATIENT_SHELL_ROUTES: Routes = [
         path: '',
         pathMatch: 'full',
         loadComponent: () => import('../overview').then((m) => m.loadOverviewPage()),
-        data: { tab: 'overview' },
+        // UX-S6 : la vue d'ensemble occupe toute la largeur (proposition 02, décision 4 du
+        // 14 novembre 2026), comme l'onglet Séance.
+        data: { tab: 'overview', contentWidth: 'full' },
         title: $localize`:Titre d'onglet du dossier@@patientShell.overview.pageTitle:Vue d'ensemble · PsyMate`,
       },
       { path: 'overview', pathMatch: 'full', redirectTo: '' },
       {
         path: 'session',
         loadComponent: () => import('./pages/session-tab.page').then((m) => m.SessionTabPage),
-        data: { tab: 'session' },
+        // UX-S5 : l'onglet Séance occupe toute la largeur (propositions 04 et 04b) ; Timeline,
+        // Graphe et Recherche gardent les 1 120 px jusqu'à leur propre tâche.
+        data: { tab: 'session', contentWidth: 'full' },
         title: $localize`:Titre d'onglet du dossier@@patientShell.session.pageTitle:Séance · PsyMate`,
       },
       {

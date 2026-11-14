@@ -206,14 +206,17 @@ test.describe('mode séance (UX-S3)', () => {
     await expect(
       page.locator('pm-toast-outlet').getByRole('button', { name: 'Modifier' }),
     ).toBeVisible();
+    // Vue unifiée (UX-S6) : « Dernières séances », le compte rendu de la plus récente sur deux
+    // lignes au plus, « Prochaine fois » compris.
     const last = page
-      .locator('pm-overview-block section')
-      .filter({ has: page.getByRole('heading', { level: 3, name: 'Dernière séance' }) });
-    await expect(last.locator('.summary')).toHaveText('Thème : le sommeil et la reprise de jour.');
-    await expect(last.locator('.goal')).toHaveText(
-      'Prochaine fois : Relire la demande écrite avec elle',
+      .locator('pm-overview-section section')
+      .filter({ has: page.getByRole('heading', { level: 3, name: 'Dernières séances' }) })
+      .locator('.sess')
+      .first();
+    await expect(last.locator('.s')).toContainText('Thème : le sommeil et la reprise de jour.');
+    await expect(last.locator('.s')).toContainText(
+      'Prochaine fois : – Relire la demande écrite avec elle',
     );
-    await expect(last.getByRole('button', { name: 'modifier la séance' })).toBeVisible();
     await expectNoAxeViolations(page);
 
     // « Modifier » du toast : l'éditeur d'entrée sur la séance clôturée (type Séance, durée ;

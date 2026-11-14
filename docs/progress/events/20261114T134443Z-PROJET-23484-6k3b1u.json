@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-14T13:44:43.934Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-S5 Onglet Séance en pleine largeur (largeur de contenu full par route, propositions 04 et 04b) ; PR d'intégration #83 regroupant UX-S5, S6, S7 et S8 à la demande du propriétaire, lint, tokens, 2090 tests Vitest, build et e2e des flux touchés verts",
+  "notes": "Branche ux-s5-s7-integration : fusion des quatre branches, deux correctifs d'intégration (nom accessible des cartes mobiles de la liste, lien Modifier la fiche permanent dans le cadre du suivi, e2e tenant compte du rail de 56 px). Enregistré sous PROJET : l'outil n'accepte pas les ID UX-*.",
+  "next": "Revue du propriétaire, CI, fusion en squash",
+  "pr": "https://github.com/mrscams/psymate-web/pull/83",
+  "branch": "ux-s5-s7-integration",
+  "checkout": "ux-a5-entry-title-c415c2"
+}

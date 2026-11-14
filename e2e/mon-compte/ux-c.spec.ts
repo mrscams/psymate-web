@@ -183,9 +183,9 @@ test.describe('à 1440 × 900', () => {
     await expect(page.locator('.last-login')).toContainText('Connexion précédente :');
 
     await page
-      .getByRole('group', { name: "Vue d'ensemble par défaut" })
+      .getByRole('group', { name: "Fenêtre d'analyse" })
       .getByRole('button', {
-        name: 'Complète',
+        name: '1 an',
       })
       .click();
     await expect(page.getByTestId('save-status')).toContainText(

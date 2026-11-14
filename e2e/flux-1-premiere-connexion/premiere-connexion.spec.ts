@@ -210,7 +210,7 @@ test('patient DEMO : étiqueté, supprimé en un clic sans retaper le nom, resta
     const row = page.getByRole('row').filter({ hasText: demo.displayName.slice('DEMO · '.length) });
     await expect(row).toBeVisible();
     await expect(row.locator('.demo-badge')).toHaveText('DEMO');
-    await expect(row.locator('.avatar.dashed')).toBeVisible();
+    await expect(row.locator('.av.dashed')).toBeVisible();
     await expectNoAxeViolations(page);
 
     // Un clic, puis une confirmation simple : aucun champ où retaper le nom.
@@ -250,9 +250,10 @@ test('patient DEMO : étiqueté, supprimé en un clic sans retaper le nom, resta
     await row.getByRole('button', { name: /Supprimer la démo :/ }).click();
     await page.getByRole('dialog').getByRole('button', { name: 'Supprimer la démo' }).click();
     await expect(row).toHaveCount(0);
-    const archivedToggle = page.getByRole('button', { name: 'Afficher les archivés' });
-    await archivedToggle.click();
-    await expect(archivedToggle).toHaveAttribute('aria-pressed', 'true');
+    // UX-S7 : la bascule change de libellé (« Revenir aux actifs ») et le titre devient « Patients
+    // archivés ».
+    await page.getByRole('button', { name: 'Afficher les archivés' }).click();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Patients archivés');
     const archivedRow = page
       .getByRole('row')
       .filter({ hasText: demo.displayName.slice('DEMO · '.length) });
@@ -263,8 +264,8 @@ test('patient DEMO : étiqueté, supprimé en un clic sans retaper le nom, resta
       .getByRole('button', { name: `Restaurer le patient de démonstration ${demo.displayName}` })
       .click();
     await expect(archivedRow).toHaveCount(0);
-    await archivedToggle.click();
-    await expect(archivedToggle).toHaveAttribute('aria-pressed', 'false');
+    await page.getByRole('button', { name: 'Revenir aux actifs' }).click();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Mes patients');
     await expect(row).toBeVisible();
   } finally {
     // Compte jetable : son patient de démonstration est archivé quoi qu'il arrive.

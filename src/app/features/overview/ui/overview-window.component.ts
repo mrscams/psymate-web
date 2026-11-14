@@ -1,55 +1,70 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
+import { PreferencesStore } from '../../../core/preferences';
+import { ToastService } from '../../../shared/ui';
+import { uniqueId } from '../../../shared/util';
 import { OVERVIEW_WINDOWS, OverviewWindow } from '../data/overview.model';
-import { windowLabel } from './overview-labels';
+import { saveFailedMessage, windowLabel } from './overview-labels';
 
 /**
- * Sélecteur de fenêtre 30 j / 90 j / 1 an (préférence overview.window), dans la carte de la courbe
- * comme les maquettes 02 et 02b (UX-B4, UX-B5) : boutons à bascule (`aria-pressed`), Tab de l'un à
- * l'autre, Entrée et Espace les pressent. La page écrit la préférence ; la synthèse est relue.
+ * Sélecteur « Fenêtre : 30 j · 90 j · 1 an » (UX-S6, proposition 02 `.seg`) : posé par le shell
+ * dans l'emplacement `[pmViewToggle]` de l'en-tête patient, à droite des onglets, sur l'onglet Vue
+ * d'ensemble seulement ; il remplace la bascule Simple / Complète. Boutons à bascule
+ * (`aria-pressed`). Écrit tout de suite la préférence overview.window (par praticien, tous patients,
+ * tous appareils) ; la page de l'onglet relit la synthèse pour cette fenêtre. En erreur, le store a
+ * rétabli la valeur serveur et un toast le dit.
  */
 @Component({
   selector: 'pm-overview-window',
   template: `
-    <div
-      class="windows"
-      role="group"
-      aria-label="Période de la vue d'ensemble"
-      i18n-aria-label="Groupe du sélecteur de fenêtre@@overview.window.group"
+    <span class="label" [id]="labelId" i18n="Libellé du sélecteur de fenêtre@@overview.window.label"
+      >Fenêtre</span
     >
+    <span class="seg" role="group" [attr.aria-labelledby]="labelId">
       @for (option of windows; track option) {
         <button
           type="button"
-          [attr.aria-pressed]="value() === option"
-          (click)="selected.emit(option)"
+          [attr.aria-pressed]="prefs.overviewWindow() === option"
+          (click)="choose(option)"
         >
           {{ label(option) }}
         </button>
       }
-    </div>
+    </span>
   `,
   styles: `
     :host {
       display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
-    .windows {
+    .label {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .seg {
       display: inline-flex;
+      flex: none;
+      gap: 2px;
+      padding: 2px;
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      overflow: hidden;
+      background: var(--surface-raised);
     }
     button {
-      min-width: 44px;
-      min-height: 28px;
+      height: 28px;
       padding: 0 10px;
       border: 0;
-      background: var(--surface-raised);
+      border-radius: 6px;
+      background: transparent;
       color: var(--text-secondary);
-      font: var(--mat-sys-label-medium);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 500;
       cursor: pointer;
     }
-    button + button {
-      border-left: 1px solid var(--border-subtle);
+    button:hover {
+      color: var(--text-primary);
     }
     button[aria-pressed='true'] {
       background: var(--primary-tint);
@@ -58,16 +73,22 @@ import { windowLabel } from './overview-labels';
     }
     button:focus-visible {
       outline: 2px solid var(--primary);
-      outline-offset: -2px;
+      outline-offset: 1px;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewWindowComponent {
-  /** Fenêtre choisie (préférence). */
-  readonly value = input.required<OverviewWindow>();
-  readonly selected = output<OverviewWindow>();
+  protected readonly prefs = inject(PreferencesStore);
+  private readonly toasts = inject(ToastService);
 
+  protected readonly labelId = uniqueId('overview-window');
   protected readonly windows = OVERVIEW_WINDOWS;
   protected readonly label = windowLabel;
+
+  protected async choose(window: OverviewWindow): Promise<void> {
+    if (this.prefs.overviewWindow() === window) return;
+    const problem = await this.prefs.set('overview.window', window);
+    if (problem) this.toasts.warning(saveFailedMessage(problem));
+  }
 }

@@ -23,11 +23,21 @@ describe('helpRows (aide des raccourcis alimentée par le registre)', () => {
       'L',
       '1 2 3',
       'M',
+      'Ctrl B',
       'Échap',
       'Ctrl Entrée',
       '?',
     ]);
     expect(row(rows, '1 2 3')?.label).toBe("Vue d'ensemble · Timeline · Graphe");
+    // Ctrl+B (rail de navigation, UX-S8) : deux touches à presser ensemble.
+    expect(row(rows, 'Ctrl B')).toEqual({
+      keys: ['Ctrl', 'B'],
+      combo: true,
+      label: 'Ouvrir ou fermer la navigation',
+      available: false,
+    });
+    const withRail = helpRows(globalShortcuts(), [reg('ctrl+b')]);
+    expect(row(withRail, 'Ctrl B')?.available).toBe(true);
   });
 
   it('sans inscription : grisé (indisponible ici), sauf ? et Échap', () => {

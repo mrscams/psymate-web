@@ -40,6 +40,18 @@ describe('OverviewStore', () => {
     expect(store.window()).toBe('90d');
   });
 
+  it('dossier sans séance passée (UX-S6) : la synthèse est servie telle quelle, sans séance de référence', async () => {
+    const { store } = setup(vi.fn().mockResolvedValue(emptyOverview()));
+    await store.load('p-1', '90d');
+    expect(store.overview().status).toBe('loaded');
+    expect(store.view()?.sinceLastSession).toEqual({
+      lastSessionId: null,
+      lastSessionAt: null,
+      entries: [],
+    });
+    expect(store.refreshing()).toBe(false);
+  });
+
   it('même patient et même fenêtre : aucune nouvelle requête', async () => {
     const { store, overview } = setup();
     await store.load('p-1', '90d');

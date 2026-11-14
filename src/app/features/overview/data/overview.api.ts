@@ -9,6 +9,7 @@ import {
   OverviewDto,
   RecentActivityItemDto,
   RecentSessionDto,
+  RecentSessionDtoKindEnum,
   TopEmotionDto,
   TrendMarkerDto,
   VueDensembleService,
@@ -103,12 +104,20 @@ export function toView(dto: OverviewDto, requested: OverviewWindow, english = fa
       .map((e) => toEmotion(e, english ? englishLabels(dto.feelings?.series) : null)),
     drafts: {
       count: dto.drafts?.count ?? 0,
-      openSession: dto.drafts?.openSession?.entryId
-        ? {
-            entryId: dto.drafts.openSession.entryId,
-            startedAt: dto.drafts.openSession.startedAt ?? null,
-          }
-        : null,
+      // La séance d'accueil (kind intake, jamais clôturée) ne compte pas comme séance ouverte
+      // (règle du contrat) : la projection la renvoie pourtant, on l'écarte par son genre.
+      openSession:
+        dto.drafts?.openSession?.entryId &&
+        !(dto.recentSessions ?? []).some(
+          (s) =>
+            s.entryId === dto.drafts?.openSession?.entryId &&
+            s.kind === RecentSessionDtoKindEnum.Intake,
+        )
+          ? {
+              entryId: dto.drafts.openSession.entryId,
+              startedAt: dto.drafts.openSession.startedAt ?? null,
+            }
+          : null,
     },
     recentSessions: (dto.recentSessions ?? []).filter((s) => !!s.entryId).map(toSession),
     recentActivity: (dto.recentActivity ?? []).filter((a) => !!a.entryId).map(toActivity),

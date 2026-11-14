@@ -9,49 +9,31 @@ import {
   output,
   viewChild,
 } from '@angular/core';
-import { MatMenuModule } from '@angular/material/menu';
 
 import { subjectLabel, SubjectVocabulary } from '../../../core/i18n';
-import {
-  PATIENT_SORTS,
-  PatientSort,
-  PractitionerTag,
-  QUICK_FILTERS,
-  QuickFilter,
-} from '../data/patient.model';
-import { QuickCounts } from '../data/patient-list.store';
+import { PATIENT_SORTS, PatientSort, QUICK_FILTERS, QuickFilter } from '../data/patient.model';
 import { quickFilterLabel, sortLabel } from './patient-labels';
 
 /**
- * Barre d'outils de la liste (fiche 01, maquette 01, UX-B1) : filtre par nom (accents ignorés côté
- * API, `/` affiché dans le champ), tri, filtres rapides Tous · Aujourd'hui · Flags · Brouillons
- * (`aria-pressed`, avec leur compte), et les tags dans un menu « Tags ▾ ». Entrée ouvre le premier
- * résultat, ↓ descend dans le tableau, Échap vide le filtre. Composant bête : la page relaie vers
- * le store.
+ * Rangée `.quick` de la liste (maquette 01, UX-S7) : champ « Filtrer par nom ou tag… » (`/` affiché,
+ * « #tag » filtre par tag), filtres rapides en un seul groupe segmenté Tous · Aujourd'hui · À
+ * surveiller · Brouillons, sans compte (décision 4 du 14 novembre 2026, `aria-pressed`), puis « Trier
+ * par ». Entrée ouvre le premier résultat, ↓ descend dans le tableau, Échap vide le filtre.
+ * Composant bête : la page relaie vers le store.
  */
 @Component({
   selector: 'pm-patient-filters',
-  imports: [MatMenuModule],
   templateUrl: './patient-filters.component.html',
   styleUrl: './patient-filters.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PatientFiltersComponent {
   readonly query = model('');
-  readonly sort = input<PatientSort>('lastSession');
+  readonly sort = input<PatientSort>('name');
   readonly quick = input<QuickFilter>('all');
-  readonly counts = input<QuickCounts | null>(null);
-  /**
-   * Le résumé couvre toute la liste : tri « Dernière séance » et filtres « Aujourd'hui » /
-   * « Brouillons » proposés ; sinon retirés (tri) ou désactivés avec une explication (filtres).
-   */
-  readonly activityCovered = input(true);
-  readonly tags = input<PractitionerTag[]>([]);
-  readonly activeTag = input<string | null>(null);
 
   readonly sortChange = output<PatientSort>();
   readonly quickChange = output<QuickFilter>();
-  readonly tagChange = output<string | null>();
   /** Entrée dans le filtre : ouvrir le premier résultat. */
   readonly openFirst = output<void>();
   /** ↓ dans le filtre : passer à la première ligne du tableau. */
@@ -60,44 +42,20 @@ export class PatientFiltersComponent {
   private readonly input = viewChild.required<ElementRef<HTMLInputElement>>('filter');
   private readonly vocabulary = inject(SubjectVocabulary);
 
-  protected readonly sorts = computed(() =>
-    PATIENT_SORTS.filter((value) => value !== 'lastSession' || this.activityCovered()).map(
-      (value) => ({ value, label: sortLabel(value) }),
-    ),
-  );
-  /** Pourquoi « Aujourd'hui » et « Brouillons » sont désactivés. */
-  protected readonly coverageHint = $localize`:Explication des filtres désactivés@@patients.quick.coverageHint:« Aujourd'hui », « Brouillons » et le tri par dernière séance demandent le résumé de chaque patient : disponibles jusqu'à 20 patients.`;
+  protected readonly sorts = PATIENT_SORTS.map((value) => ({ value, label: sortLabel(value) }));
   protected readonly filterLabel = computed(() => {
     const subjects = subjectLabel(this.vocabulary.label(), 'many');
-    return $localize`:Étiquette du filtre de la liste@@patients.filter.label:Filtrer les ${subjects}:subjects: par nom`;
+    return $localize`:Étiquette du filtre de la liste@@patients.filter.label:Filtrer les ${subjects}:subjects: par nom ou par tag`;
   });
-  protected readonly placeholder = $localize`:Texte indicatif du filtre de la liste@@patients.filter.placeholder:Filtrer par nom… (accents ignorés)`;
+  protected readonly placeholder = $localize`:Texte indicatif du filtre de la liste@@patients.filter.placeholder:Filtrer par nom ou tag…`;
 
-  /** Puces rapides avec leur compte (absent tant que le résumé ne couvre pas toute la liste). */
-  protected readonly chips = computed(() => {
-    const counts = this.counts();
-    return QUICK_FILTERS.map((value) => {
-      const count = counts ? counts[value] : null;
-      const label = quickFilterLabel(value);
-      const shown =
-        count === null ? null : value === 'all' && counts?.more ? `${count}+` : `${count}`;
-      const disabled = (value === 'today' || value === 'drafts') && !this.activityCovered();
-      return {
-        value,
-        label,
-        disabled,
-        text: shown === null ? label : `${label} · ${shown}`,
-        pressed: this.quick() === value && !disabled,
-      };
-    });
-  });
-
-  protected readonly tagsButton = computed(() => {
-    const tag = this.activeTag();
-    return tag === null
-      ? $localize`:Bouton du menu des tags@@patients.tags.button:Tags`
-      : $localize`:Bouton du menu des tags, un tag choisi@@patients.tags.buttonActive:Tag : #${tag}:tag:`;
-  });
+  protected readonly chips = computed(() =>
+    QUICK_FILTERS.map((value) => ({
+      value,
+      label: quickFilterLabel(value),
+      pressed: this.quick() === value,
+    })),
+  );
 
   /** Touche `/` : focus dans le filtre. */
   focus(): void {

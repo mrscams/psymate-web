@@ -39,8 +39,8 @@
     (startSession)="start()"
     (retry)="reload()"
   >
-    <!-- Bascule « Vue : Simple · Complète » (features/overview, M4-05) : visible sur l'onglet 1. -->
-    <pm-overview-view-toggle pmViewToggle />
+    <!-- Sélecteur « Fenêtre : 30 j · 90 j · 1 an » (features/overview, UX-S6) : onglet Vue d'ensemble. -->
+    <pm-overview-window pmViewToggle />
   </pm-patient-header>
   <!-- Annonce polie (séance démarrée) : pas de toast, la couleur et le chronomètre le disent (04b). -->
   <p class="sr-only" role="status" aria-live="polite">{{ announcement() }}</p>

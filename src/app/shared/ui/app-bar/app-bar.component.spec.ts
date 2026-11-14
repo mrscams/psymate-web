@@ -15,6 +15,9 @@ import { AppBarComponent, AppBarUser } from './app-bar.component';
       switchHref="/en/patients"
       switchLang="en"
       [showSearch]="showSearch()"
+      [navigation]="navigation()"
+      [navigationOpen]="navigationOpen()"
+      (navigationToggle)="toggled.emit()"
       (searchSubmit)="searched.emit($event)"
       (logout)="loggedOut.emit()"
     />
@@ -27,6 +30,9 @@ class Host {
   readonly crumb = input<string>();
   readonly user = input<AppBarUser | null>(null);
   readonly showSearch = input(true);
+  readonly navigation = input(false);
+  readonly navigationOpen = input(false);
+  readonly toggled = output<void>();
   readonly searched = output<string>();
   readonly loggedOut = output<void>();
 }
@@ -55,6 +61,31 @@ describe('AppBarComponent', () => {
     expect(locale?.textContent).toBe('English');
     expect(el.querySelector('button.avatar')).toBeNull();
     expect(el.querySelector('header')?.querySelector('[role="search"]')).not.toBeNull();
+  });
+
+  it('sans navigation : pas de bouton ☰ (habillage par défaut)', async () => {
+    const { el } = await render();
+    expect(el.querySelector('header button.menu')).toBeNull();
+  });
+
+  it('UX-S8 : bouton ☰ à gauche du logo, nom accessible, aria-expanded, émet navigationToggle', async () => {
+    const { fixture, el } = await render({ navigation: true });
+    const header = el.querySelector('header')!;
+    const menu = header.querySelector<HTMLButtonElement>('button.menu')!;
+    expect(header.firstElementChild).toBe(menu);
+    expect(menu.nextElementSibling?.classList.contains('brand')).toBe(true);
+    expect(menu.getAttribute('aria-label')).toBe('Ouvrir la navigation');
+    expect(menu.getAttribute('aria-haspopup')).toBe('dialog');
+    expect(menu.getAttribute('aria-expanded')).toBe('false');
+    expect(menu.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true');
+    const toggled = vi.fn();
+    fixture.componentInstance.toggled.subscribe(toggled);
+    menu.click();
+    expect(toggled).toHaveBeenCalledOnce();
+
+    fixture.componentRef.setInput('navigationOpen', true);
+    await fixture.whenStable();
+    expect(menu.getAttribute('aria-expanded')).toBe('true');
   });
 
   it('section et fil d’Ariane', async () => {

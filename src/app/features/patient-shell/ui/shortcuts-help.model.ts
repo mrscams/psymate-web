@@ -20,7 +20,7 @@ const TAB_KEYS = ['1', '2', '3'];
 
 /**
  * Lignes de l'aide, alimentées par le registre (core/shortcuts) :
- * - la liste de référence `globalShortcuts()` (N, /, L, 1 2 3, M, Échap, ?), dans son ordre ; chaque
+ * - la liste de référence `globalShortcuts()` (N, /, L, 1 2 3, M, Ctrl+B, Échap, ?), dans son ordre ; chaque
  *   touche prend la description de son inscription active si elle en a une (« Filtrer mes
  *   patients » sur la liste), sinon le libellé général, et est grisée si aucune inscription ne
  *   l'utilise ici ;
@@ -51,7 +51,10 @@ export function helpRows(
     }
     const registration = byKey.get(descriptor.key);
     rows.push({
-      keys: [descriptor.display],
+      // Combinaison (Ctrl+B, UX-S8) : une touche par <kbd>, reliées par « + ».
+      ...(descriptor.combo
+        ? { keys: descriptor.combo, combo: true }
+        : { keys: [descriptor.display] }),
       label: registration?.description || descriptor.label,
       available: ALWAYS_AVAILABLE.has(descriptor.key) || !!registration,
     });

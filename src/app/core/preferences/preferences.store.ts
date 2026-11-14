@@ -64,7 +64,6 @@ export const PreferencesStore = signalStore(
     /** Vrai dès que les valeurs viennent du serveur. */
     loaded: computed(() => source() === 'server'),
     saving: computed(() => Object.values(pending()).some((count) => (count ?? 0) > 0)),
-    overviewView: computed(() => values()['overview.view']),
     overviewWindow: computed(() => values()['overview.window']),
     timelineGroupBy: computed(() => values()['timeline.groupBy']),
     theme: computed(() => values().theme),

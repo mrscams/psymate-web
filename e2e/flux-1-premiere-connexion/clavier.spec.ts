@@ -147,7 +147,9 @@ test('flux 1 au clavier : patient de démonstration ouvert, supprimé sans retap
     const archived = page.getByRole('button', { name: 'Afficher les archivés' });
     await tabTo(page, archived, { max: 80 });
     await page.keyboard.press('Space');
-    await expect(archived).toHaveAttribute('aria-pressed', 'true');
+    // UX-S7 : la bascule devient « Revenir aux actifs », le focus reste dessus.
+    const back = page.getByRole('button', { name: 'Revenir aux actifs' });
+    await expect(back).toBeFocused();
     const restore = page
       .getByRole('row')
       .filter({ hasText: demo.displayName })
@@ -155,7 +157,7 @@ test('flux 1 au clavier : patient de démonstration ouvert, supprimé sans retap
     await tabTo(page, restore);
     await page.keyboard.press('Enter');
     await expect(restore).toHaveCount(0);
-    await tabTo(page, archived, { backwards: true });
+    await tabTo(page, back, { backwards: true });
     await page.keyboard.press('Space');
     await expect(page.getByRole('row').filter({ hasText: demo.displayName })).toBeVisible();
     await expectNoAxeViolations(page);
