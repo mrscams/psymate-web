@@ -1,6 +1,7 @@
 <section
   class="timeline"
   [class.fill]="mode() === 'chronological' && !decade()"
+  [class.narrow]="narrow()"
   aria-labelledby="timeline-heading"
 >
   <h2
@@ -11,8 +12,10 @@
     Timeline
   </h2>
 
+  <!-- Barre d'outils sur une ligne (proposition 03, .tl-toolbar) : puces de type, « Filtres »,
+       période, mode, zoom compact ; les aides clavier sont dans la colonne et sous « ? ». -->
   <div
-    class="toolbar"
+    class="tl-toolbar"
     role="toolbar"
     aria-label="Affichage de la timeline"
     i18n-aria-label="Nom de la barre d'outils de la timeline@@timeline.toolbar"
@@ -20,7 +23,6 @@
     pmRovingToolbar
   >
     <pm-timeline-filters
-      class="toolbar-row"
       [filters]="filters.filters()"
       [facets]="store.facets()"
       [counted]="store.status() === 'loaded'"
@@ -28,42 +30,39 @@
       [emotionFamilies]="store.emotionFamilies()"
       [medicationVisible]="prefs.medicationVisible()"
       (filtersChange)="changeFilters($event)"
-    />
-    <div class="toolbar-row secondary">
-      <span
-        class="row-label"
-        aria-hidden="true"
-        i18n="Libellé visible du groupe de période de la timeline@@timeline.periodLabel"
-        >Période</span
-      >
+    >
+      @if (narrow()) {
+        <!-- Téléphone (maquette mobile) : période, mode et zoom passent dans le panneau Filtres. -->
+        <div filtersExtra class="extra">
+          <pm-timeline-period
+            [filters]="filters.filters()"
+            (filtersChange)="changeFilters($event)"
+          />
+          <pm-timeline-mode
+            [mode]="mode()"
+            [sessionDisabled]="decade()"
+            (modeChange)="setMode($event)"
+            (blocked)="explainDecadeMode()"
+          />
+        </div>
+      }
+    </pm-timeline-filters>
+    @if (!narrow()) {
+      <span class="spacer" aria-hidden="true"></span>
       <pm-timeline-period [filters]="filters.filters()" (filtersChange)="changeFilters($event)" />
-      <span class="separator" aria-hidden="true"></span>
-      <span
-        class="row-label"
-        aria-hidden="true"
-        i18n="Libellé visible de la bascule de mode de la timeline@@timeline.modeLabel"
-        >Mode</span
-      >
       <pm-timeline-mode
         [mode]="mode()"
         [sessionDisabled]="decade()"
         (modeChange)="setMode($event)"
         (blocked)="explainDecadeMode()"
       />
-      <kbd aria-hidden="true">M</kbd>
       @if (mode() === 'chronological') {
         <div
-          class="zoom"
+          class="zoomctl"
           role="group"
           aria-label="Zoom"
           i18n-aria-label="Nom du groupe de zoom de la timeline@@timeline.zoomGroup"
         >
-          <span
-            class="row-label"
-            aria-hidden="true"
-            i18n="Libellé visible du zoom de la timeline@@timeline.zoomLabel"
-            >Zoom</span
-          >
           <button
             type="button"
             class="zoom-button"
@@ -75,7 +74,6 @@
             <span aria-hidden="true">−</span>
           </button>
           <span class="track" aria-hidden="true"
-            ><span class="track-fill" [style.width.%]="zoomPosition()"></span
             ><span class="track-thumb" [style.left.%]="zoomPosition()"></span
           ></span>
           <button
@@ -89,287 +87,312 @@
             <span aria-hidden="true">+</span>
           </button>
           <span class="granularity" aria-live="polite">{{ zoomText() }}</span>
-          <span class="hint" aria-hidden="true"
-            >· <kbd>Ctrl</kbd>
-            <span i18n="Aide du zoom à la molette@@timeline.zoomWheel">+ molette</span></span
-          >
         </div>
       }
-    </div>
+    }
   </div>
 
-  @if (state(); as kind) {
-    @switch (kind) {
-      @case ('loading') {
-        <pm-state kind="loading" skeleton="card" [lines]="4" />
-      }
-      @case ('error') {
-        <pm-state
-          kind="error"
-          [action]="retry"
-          [details]="store.problem()?.code ?? ''"
-          title="Impossible de charger la timeline"
-          i18n-title="Titre de l'erreur de la timeline@@timeline.error.title"
+  <div class="tl">
+    <!-- data-total, data-windows : le nombre d'éléments de la plage et les fenêtres en mémoire, pour
+         les e2e (la ligne d'état en mono a disparu, maquette 03). -->
+    <div class="stream" [attr.data-total]="store.total()" [attr.data-windows]="store.inMemory()">
+      @if (state(); as kind) {
+        @switch (kind) {
+          @case ('loading') {
+            <pm-state kind="loading" skeleton="card" [lines]="4" />
+          }
+          @case ('error') {
+            <pm-state
+              kind="error"
+              [action]="retry"
+              [details]="store.problem()?.code ?? ''"
+              title="Impossible de charger la timeline"
+              i18n-title="Titre de l'erreur de la timeline@@timeline.error.title"
+            />
+          }
+          @case ('empty') {
+            @if (filters.narrowed()) {
+              <pm-state
+                kind="empty"
+                [action]="clearFilters"
+                title="Aucune entrée pour ces filtres"
+                i18n-title="
+                  Titre de la timeline vide avec des filtres@@timeline.empty.filtered.title"
+                message="Retirez un filtre ou élargissez la période."
+                i18n-message="
+                  Texte de la timeline vide avec des filtres@@timeline.empty.filtered.message"
+              />
+            } @else if (filters.active()) {
+              <pm-state
+                kind="empty"
+                [action]="showAll"
+                title="Aucune entrée sur cette période"
+                i18n-title="
+                  Titre de la timeline vide sur la période choisie@@timeline.empty.period.title"
+                message="Les entrées plus anciennes restent visibles avec la période « Tout »."
+                i18n-message="
+                  Texte de la timeline vide sur la période choisie@@timeline.empty.period.message"
+              />
+            } @else {
+              <pm-state
+                kind="empty"
+                title="Aucune entrée pour l'instant"
+                i18n-title="Titre de la timeline vide@@timeline.empty.title"
+                message="Notez la première dans la barre de capture, en haut du dossier (N)."
+                i18n-message="Texte de la timeline vide@@timeline.empty.message"
+              />
+            }
+          }
+        }
+      } @else if (mode() === 'session') {
+        @if (!store.head().complete) {
+          <p
+            class="partial"
+            i18n="Regroupement limité aux entrées les plus récentes@@timeline.status.partial"
+          >
+            Regroupement des {{ headSize }} entrées les plus récentes : réduisez la période pour les
+            plus anciennes.
+          </p>
+        }
+        @if (store.head().failed; as failed) {
+          <pm-state
+            kind="error"
+            compact
+            [action]="retryWindow(failed.index)"
+            title="Cette partie de la timeline n'a pas pu être chargée."
+            i18n-title="Message d'une fenêtre de la timeline en échec@@timeline.window.error"
+            message=""
+          />
+        }
+        <pm-timeline-sessions
+          [groups]="groups()"
+          [details]="sessionDetails.details()"
+          [emotionLabels]="store.emotionLabels()"
+          [selectedId]="store.selectedId()"
+          [menu]="cardMenu"
+          [narrow]="narrow()"
+          [today]="today"
+          (expanded)="sessionDetails.load($event)"
+          (opened)="open($event)"
+          (edited)="edit($event)"
+          (linked)="link($event)"
+          (openSession)="openSession($event)"
+          (closeSession)="closeSession()"
+          (retryDetail)="sessionDetails.retry($event)"
         />
-      }
-      @case ('empty') {
-        @if (filters.narrowed()) {
-          <pm-state
-            kind="empty"
-            [action]="clearFilters"
-            title="Aucune entrée pour ces filtres"
-            i18n-title="Titre de la timeline vide avec des filtres@@timeline.empty.filtered.title"
-            message="Retirez un filtre ou élargissez la période."
-            i18n-message="
-              Texte de la timeline vide avec des filtres@@timeline.empty.filtered.message"
-          />
-        } @else if (filters.active()) {
-          <pm-state
-            kind="empty"
-            [action]="showAll"
-            title="Aucune entrée sur cette période"
-            i18n-title="
-              Titre de la timeline vide sur la période choisie@@timeline.empty.period.title"
-            message="Les entrées plus anciennes restent visibles avec la période « Tout »."
-            i18n-message="
-              Texte de la timeline vide sur la période choisie@@timeline.empty.period.message"
-          />
-        } @else {
-          <pm-state
-            kind="empty"
-            title="Aucune entrée pour l'instant"
-            i18n-title="Titre de la timeline vide@@timeline.empty.title"
-            message="Notez la première dans la barre de capture, en haut du dossier (N)."
-            i18n-message="Texte de la timeline vide@@timeline.empty.message"
-          />
-        }
-      }
-    }
-  } @else if (mode() === 'session') {
-    <p class="status-line">
-      <span class="count"
-        ><span
-          i18n="Nombre d'entrées de la ligne d'état de la timeline@@timeline.status.entries"
-          >{store.total(), plural, =1 {1 entrée} other {{{ totalText() }} entrées}}</span
-        >
-        ·
-        <span
-          i18n="Nombre de séances de la ligne d'état de la timeline@@timeline.status.sessions"
-          >{sessionCount(), plural,
-            =0 {aucune séance}
-            =1 {1 séance}
-            other {{{ sessionCount() }} séances}
-          }</span
-        ></span
-      >
-      @if (!store.head().complete) {
-        <span
-          class="partial"
-          i18n="Regroupement limité aux entrées les plus récentes@@timeline.status.partial"
-          >Regroupement des {{ headSize }} entrées les plus récentes : réduisez la période pour les
-          plus anciennes.</span
-        >
-      }
-    </p>
-    @if (store.head().failed; as failed) {
-      <pm-state
-        kind="error"
-        compact
-        [action]="retryWindow(failed.index)"
-        title="Cette partie de la timeline n'a pas pu être chargée."
-        i18n-title="Message d'une fenêtre de la timeline en échec@@timeline.window.error"
-        message=""
-      />
-    }
-    <pm-timeline-sessions
-      [groups]="groups()"
-      [details]="sessionDetails.details()"
-      [emotionLabels]="store.emotionLabels()"
-      [selectedId]="store.selectedId()"
-      [menu]="cardMenu"
-      (expanded)="sessionDetails.load($event)"
-      (opened)="open($event)"
-      (linked)="link($event)"
-      (openSession)="openSession($event)"
-      (retryDetail)="sessionDetails.retry($event)"
-    />
-  } @else if (decade()) {
-    <pm-timeline-decade
-      [status]="decadeStore.status()"
-      [problemCode]="decadeStore.problem()?.code ?? ''"
-      [periods]="decadeStore.periods()"
-      [plage]="decadeStore.plage()"
-      [types]="decadeTypes()"
-      [situations]="store.ongoing()"
-      [followStart]="store.followStart()"
-      [partialFilters]="partialFilters()"
-      (drill)="openMonth($event)"
-      (retry)="decadeStore.retrySummary()"
-      (wheel)="onWheel($event)"
-    />
-  } @else {
-    <div class="status-row">
-      <p class="status-line">
-        <span class="count"
-          ><span
-            i18n="Nombre d'entrées de la ligne d'état de la timeline@@timeline.status.entries"
-            >{store.total(), plural, =1 {1 entrée} other {{{ totalText() }} entrées}}</span
+      } @else if (decade()) {
+        <pm-timeline-decade
+          [status]="decadeStore.status()"
+          [problemCode]="decadeStore.problem()?.code ?? ''"
+          [periods]="decadeStore.periods()"
+          [plage]="decadeStore.plage()"
+          [types]="decadeTypes()"
+          [situations]="store.ongoing()"
+          [followStart]="store.followStart()"
+          [partialFilters]="partialFilters()"
+          (drill)="openMonth($event)"
+          (retry)="decadeStore.retrySummary()"
+          (wheel)="onWheel($event)"
+        />
+      } @else {
+        @if (bandItems().length) {
+          <!-- Situations qui chevauchent la période (proposition 03, .band) : une ligne chacune en
+               tête du flux ; les bandes restent le long de l'axe. -->
+          <ul
+            class="bands-top"
+            aria-label="Situations sur la période"
+            i18n-aria-label="Nom de la liste des situations en bande@@timeline.bands"
           >
-          ·
-          <span
-            i18n="Fenêtres en mémoire de la ligne d'état de la timeline@@timeline.status.windows"
-            >{store.inMemory(), plural,
-              =1 {1 fenêtre en mémoire}
-              other {{{ store.inMemory() }} fenêtres en mémoire}
-            }</span
-          ></span
-        >
-        @if (boundsText()) {
-          <span class="bounds">· {{ boundsText() }}</span>
+            @for (entry of bandItems(); track entry.band.item.id) {
+              <li
+                class="band"
+                [attr.aria-label]="entry.label"
+                [class.ongoing]="entry.band.item.ongoing"
+              >
+                <i aria-hidden="true"></i>
+                <span class="band-text" aria-hidden="true"
+                  ><b>{{ entry.name }}</b> · {{ entry.when }}</span
+                >
+                <a
+                  class="band-link"
+                  [routerLink]="graphLink()"
+                  [queryParams]="{ root: entry.band.item.id }"
+                  i18n="Lien d'une situation en bande vers le graphe@@timeline.band.graph"
+                  >voir dans le graphe</a
+                >
+              </li>
+            }
+          </ul>
         }
-      </p>
 
-      @if (bandItems().length) {
-        <!-- Situations en bande (UX-G2c) : le nom de chacune est déjà écrit le long de sa bande ;
-             la liste complète se déplie ici, pour ne pas prendre deux lignes à la zone des cartes. -->
-        <button
-          type="button"
-          class="bands-toggle"
-          aria-controls="timeline-bands"
-          [attr.aria-expanded]="bandsOpen()"
-          (click)="bandsOpen.set(!bandsOpen())"
+        @if (narrow() && stickyRow(); as sticky) {
+          @if (sticky.row.item; as stickyItem) {
+            <div class="sticky-day" aria-hidden="true">
+              <pm-timeline-day
+                [occurred]="stickyItem.occurred"
+                [zoom]="store.zoom()"
+                [session]="sticky.daySession"
+                [today]="today"
+                [narrow]="true"
+              />
+            </div>
+          }
+        }
+
+        <cdk-virtual-scroll-viewport
+          class="viewport"
+          [class.no-axis]="narrow()"
+          [pmRowOffsets]="layout().offsets"
+          [style.--lanes]="lanes()"
+          (scrolledIndexChange)="onScrolled($event)"
+          (wheel)="onWheel($event)"
+          (keydown)="onListKeydown($event)"
         >
-          <span class="swatch" aria-hidden="true"></span>
-          <span
-            i18n="Bouton qui déplie la liste des situations en bande@@timeline.bands.toggle"
-            >{bandItems().length, plural,
-              =1 {1 situation sur la période}
-              other {{{ bandItems().length }} situations sur la période}
-            }</span
-          >
-          <span class="chevron" aria-hidden="true"></span>
-        </button>
+          <div class="list" role="list" [attr.aria-label]="listLabel">
+            <div
+              *cdkVirtualFor="let entry of layout().rows; trackBy: trackSlot; templateCacheSize: 0"
+              class="row"
+              [class.before]="entry.row.before"
+              [style.height.px]="entry.height"
+              [attr.data-index]="entry.index"
+              [attr.role]="announced(entry.row) ? 'listitem' : null"
+              [attr.aria-hidden]="announced(entry.row) ? null : 'true'"
+              [attr.aria-setsize]="announced(entry.row) ? store.total() : null"
+              [attr.aria-posinset]="announced(entry.row) ? entry.index + 1 : null"
+            >
+              <div class="bands" aria-hidden="true">
+                @for (on of entry.row.bands; track $index) {
+                  <span class="lane" [class.on]="on">
+                    @if (entry.bandSpans[$index] && bandHead(entry, $index); as head) {
+                      @if (head.item.ongoing && entry.index === 0) {
+                        <span class="arrow"></span>
+                      }
+                      <span
+                        class="lane-label"
+                        [style.max-height.px]="entry.bandSpans[$index] - 16"
+                        >{{ laneText(head.item) }}</span
+                      >
+                    }
+                  </span>
+                }
+              </div>
+              <div class="cell">
+                @if (entry.top) {
+                  <div class="top" [style.height.px]="entry.top">
+                    @if (entry.row.firstBefore) {
+                      <div class="follow-start">
+                        <span class="follow-start-text">{{ followStartText() }}</span>
+                        <span
+                          class="follow-start-zone"
+                          i18n="Titre de la zone avant le suivi@@timeline.beforeZone"
+                          >Avant le suivi</span
+                        >
+                      </div>
+                    }
+                    @if (entry.month !== null) {
+                      <p class="month-hd">{{ monthText(entry.month) }}</p>
+                    }
+                    @if (narrow() && entry.dayStart && entry.row.item; as dayItem) {
+                      <pm-timeline-day
+                        class="day-head"
+                        [occurred]="dayItem.occurred"
+                        [zoom]="store.zoom()"
+                        [session]="entry.daySession"
+                        [today]="today"
+                        [narrow]="true"
+                      />
+                    }
+                  </div>
+                }
+                <div class="day">
+                  @if (!narrow()) {
+                    <div class="date">
+                      @if (entry.dayStart && entry.row.item; as dayItem) {
+                        <pm-timeline-day
+                          [occurred]="dayItem.occurred"
+                          [zoom]="store.zoom()"
+                          [session]="entry.daySession"
+                          [today]="today"
+                        />
+                      }
+                    </div>
+                  }
+                  <div class="items">
+                    @if (entry.row.item; as item) {
+                      @if (item.type === 'session') {
+                        <pm-timeline-session-divider
+                          [item]="item"
+                          [sessionId]="item.id"
+                          [detail]="sessionDetail(item.id)"
+                          [entries]="sessionEntries()[item.id] ?? null"
+                          [compact]="store.zoom() === 'month'"
+                          [selected]="store.selectedId() === item.id"
+                          [menu]="cardMenu"
+                          (opened)="openSession($event)"
+                          (linked)="link($event)"
+                          (closeRequested)="closeSession()"
+                        />
+                      } @else {
+                        <pm-timeline-card
+                          [item]="item"
+                          [compact]="store.zoom() === 'month'"
+                          [before]="entry.row.before"
+                          [selected]="store.selectedId() === item.id"
+                          [saidIn]="entry.row.saidIn"
+                          [emotionLabel]="emotionLabel(item)"
+                          [menu]="cardMenu"
+                          (opened)="open($event)"
+                          (edited)="edit($event)"
+                          (linked)="link($event)"
+                        />
+                      }
+                    } @else if (entry.row.state === 'error') {
+                      @if (entry.row.firstOfWindow) {
+                        <pm-state
+                          class="window-error"
+                          kind="error"
+                          compact
+                          [action]="retryWindow(entry.row.window)"
+                          title="Cette partie de la timeline n'a pas pu être chargée."
+                          i18n-title="
+                            Message d'une fenêtre de la timeline en échec@@timeline.window.error"
+                          message=""
+                        />
+                      } @else {
+                        <div class="skeleton"></div>
+                      }
+                    } @else {
+                      <div class="skeleton"></div>
+                    }
+                  </div>
+                </div>
+                @if (entry.last) {
+                  <p class="foot">{{ footText() }}</p>
+                }
+              </div>
+            </div>
+          </div>
+        </cdk-virtual-scroll-viewport>
       }
     </div>
-    @if (bandItems().length) {
-      <ul
-        id="timeline-bands"
-        class="bands-legend"
-        [class.open]="bandsOpen()"
-        aria-label="Situations sur la période"
-        i18n-aria-label="Nom de la liste des situations en bande@@timeline.bands"
-      >
-        @for (entry of bandItems(); track entry.band.item.id) {
-          <li
-            [attr.aria-label]="entry.label"
-            [attr.title]="entry.label"
-            [class.ongoing]="entry.band.item.ongoing"
-          >
-            <span class="swatch" aria-hidden="true"></span>
-            <span class="band-title" aria-hidden="true">{{ entry.name }}</span>
-            @if (entry.band.item.ongoing) {
-              <span
-                class="band-state"
-                aria-hidden="true"
-                i18n="Mention d'une situation en cours@@timeline.band.ongoingShort"
-                >en cours</span
-              >
-            }
-          </li>
-        }
-      </ul>
-    }
 
-    <cdk-virtual-scroll-viewport
-      class="viewport"
-      [itemSize]="rowHeight()"
-      [minBufferPx]="rowHeight() * 4"
-      [maxBufferPx]="rowHeight() * 8"
-      [style.--lanes]="lanes()"
-      (scrolledIndexChange)="onScrolled($event)"
-      (wheel)="onWheel($event)"
+    <aside
+      class="tl-side"
+      aria-label="Résumé de la période"
+      i18n-aria-label="Nom de la colonne de résumé de la timeline@@timeline.side"
     >
-      <div class="list" role="list" [attr.aria-label]="listLabel">
-        <div
-          *cdkVirtualFor="let row of store.rows(); trackBy: trackSlot; templateCacheSize: 0"
-          class="row"
-          [class.before]="row.before"
-          [style.height.px]="rowHeight()"
-          [attr.role]="announced(row) ? 'listitem' : null"
-          [attr.aria-hidden]="announced(row) ? null : 'true'"
-          [attr.aria-setsize]="announced(row) ? store.total() : null"
-          [attr.aria-posinset]="announced(row) ? row.slot + 1 : null"
-        >
-          <div class="bands" aria-hidden="true">
-            @for (on of row.bands; track $index) {
-              <span class="lane" [class.on]="on">
-                @if (row.bandHeads[$index]; as head) {
-                  @if (head.item.ongoing && row.slot === 0) {
-                    <span class="arrow"></span>
-                  }
-                  <span
-                    class="lane-label"
-                    [style.max-height.px]="row.bandRuns[$index] * rowHeight() - 16"
-                    >{{ laneText(head.item) }}</span
-                  >
-                }
-              </span>
-            }
-          </div>
-          <div class="axis" aria-hidden="true">
-            @if (row.item && row.groupStart) {
-              @let label = axisLabel(row);
-              <span class="axis-main">{{ label.main }}</span>
-              <span class="axis-sub">{{ label.sub }}</span>
-            }
-            @if (row.item) {
-              <span class="marker"><pm-entry-icon [type]="row.item.type" [size]="10" /></span>
-            }
-          </div>
-          <div class="content">
-            @if (row.firstBefore) {
-              <div class="follow-start">
-                <span class="follow-start-text">{{ followStartText() }}</span>
-                <span
-                  class="follow-start-zone"
-                  i18n="Titre de la zone avant le suivi@@timeline.beforeZone"
-                  >Avant le suivi</span
-                >
-              </div>
-            }
-            @if (row.item; as item) {
-              <pm-timeline-card
-                [item]="item"
-                [zoom]="store.zoom()"
-                [before]="row.before"
-                [selected]="store.selectedId() === item.id"
-                [saidIn]="row.saidIn"
-                [emotionLabel]="emotionLabel(item)"
-                [session]="sessionInfos()[item.id] ?? null"
-                [menu]="cardMenu"
-                (opened)="open($event)"
-                (linked)="link($event)"
-              />
-            } @else if (row.state === 'error') {
-              @if (row.firstOfWindow) {
-                <pm-state
-                  class="window-error"
-                  kind="error"
-                  compact
-                  [action]="retryWindow(row.window)"
-                  title="Cette partie de la timeline n'a pas pu être chargée."
-                  i18n-title="Message d'une fenêtre de la timeline en échec@@timeline.window.error"
-                  message=""
-                />
-              }
-            } @else {
-              <div class="skeleton"></div>
-            }
-          </div>
-        </div>
-      </div>
-    </cdk-virtual-scroll-viewport>
-  }
+      <pm-timeline-side
+        [status]="sideStatus()"
+        [facets]="store.facets()"
+        [span]="spanText()"
+        [emotionLabels]="store.emotionLabels()"
+        [emotionFamilies]="store.emotionFamilies()"
+        [selected]="filters.filters().emotions"
+        [retry]="retry"
+        (emotionToggled)="toggleEmotion($event)"
+      />
+    </aside>
+  </div>
 </section>
 
 <mat-menu #cardMenu="matMenu" class="timeline-card-menu">

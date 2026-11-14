@@ -12,19 +12,12 @@ import {
 } from '@angular/core';
 import { MatMenu } from '@angular/material/menu';
 
-import { EntryIconComponent, StateAction, StateComponent } from '../../../shared/ui';
+import { StateAction, StateComponent } from '../../../shared/ui';
 import { SessionDetail, SessionDetailState, SessionGroup } from '../data/timeline-sessions.model';
 import { TimelineItem } from '../data/timeline.model';
 import { TimelineCardComponent } from './timeline-card.component';
-import {
-  durationLabel,
-  modalityLabel,
-  modalityShortLabel,
-  sessionHours,
-  sessionKindLabel,
-  sessionRange,
-  sessionLongDate,
-} from './timeline-labels';
+import { TimelineDayComponent } from './timeline-day.component';
+import { TimelineSessionDividerComponent } from './timeline-session-divider.component';
 
 /** Clé de dépliage du groupe hors séance (sans identifiant). */
 const OUTSIDE = 'outside';
@@ -33,17 +26,23 @@ const OUTSIDE = 'outside';
 export const SESSIONS_PAGE = 8;
 
 /**
- * Mode par séance (fiche 03, état B ; M3-03) : une carte dépliable par séance (forme du type
- * séance, carré arrondi), de la plus récente à la plus ancienne. La plus récente est dépliée à
- * l'ouverture : horaires, durée, modalité, statut (non clôturée en avertissement), compte rendu et
- * « Ouvrir », puis les entrées rattachées (cartes de la timeline, même menu contextuel). Les autres
- * restent repliées avec leur nombre d'entrées. Les entrées dont la séance n'est pas affichée
- * forment un groupe « Hors séance », en dernier. Le détail d'une séance se lit quand elle se déplie
- * (`expanded`) ; ses trois états passent par shared/ui/state.
+ * Mode par séance (fiche 03, état B ; M3-03 ; proposition 03, UX-S9) : la même grammaire que le
+ * flux chronologique. Une séance par ancre : sa date à gauche de l'axe (« Jeudi 12 », « séance »),
+ * son séparateur teinté (« Séance · cabinet · 50 min », « 6 entrées · compte rendu ↓ », « Ouvrir »)
+ * qui la déplie ou la replie, la première ligne du compte rendu, puis ses entrées (les lignes de la
+ * timeline, même menu contextuel, date complète : une entrée peut dater d'un autre jour). La plus
+ * récente est dépliée à l'ouverture ; plus de colonne de compte rendu par séance. Les entrées dont
+ * la séance n'est pas affichée forment un groupe « Hors séance », en dernier. Le détail d'une séance
+ * se lit quand elle se déplie (`expanded`) ; ses trois états passent par shared/ui/state.
  */
 @Component({
   selector: 'pm-timeline-sessions',
-  imports: [EntryIconComponent, StateComponent, TimelineCardComponent],
+  imports: [
+    StateComponent,
+    TimelineCardComponent,
+    TimelineDayComponent,
+    TimelineSessionDividerComponent,
+  ],
   templateUrl: './timeline-sessions.component.html',
   styleUrl: './timeline-sessions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,14 +54,20 @@ export class TimelineSessionsComponent {
   readonly selectedId = input<string | null>(null);
   /** Le menu contextuel des cartes, fourni par la page (Ouvrir, Corriger, Lier, Voir dans le graphe). */
   readonly menu = input.required<MatMenu>();
+  /** Téléphone : en-têtes de jour au-dessus, sans colonne des dates ni axe. */
+  readonly narrow = input(false);
+  readonly today = input<Date>(new Date());
 
   /** Une séance se déplie : la page lit son détail. */
   readonly expanded = output<string>();
   readonly opened = output<TimelineItem>();
+  readonly edited = output<TimelineItem>();
   readonly linked = output<TimelineItem>();
   /** « Ouvrir » la séance elle-même (éditeur d'entrée sur la séance). */
   readonly openSession = output<string>();
   readonly retryDetail = output<string>();
+  /** « clôturer » d'une séance ouverte. */
+  readonly closeSession = output<void>();
 
   private readonly locale = inject(LOCALE_ID);
   private readonly number = new Intl.NumberFormat(this.locale);
@@ -99,25 +104,6 @@ export class TimelineSessionsComponent {
     this.limit.update((limit) => limit + SESSIONS_PAGE * 2);
   }
 
-  /**
-   * En-tête (maquette 03, état B) : horaires, durée, modalité. Horaires et durée d'après les bornes
-   * de la séance, la modalité et la durée déclarée une fois son détail lu.
-   */
-  protected headerFacts(group: SessionGroup): string {
-    if (!group.id) return '';
-    const detail = this.loaded(group);
-    const from = detail?.from ?? group.session?.occurred.from ?? group.from;
-    const to = detail ? (detail.closedAt ? detail.to : null) : (group.session?.occurred.to ?? null);
-    const minutes = detail?.durationMin ?? minutesBetween(from, to);
-    return [
-      sessionRange(from ?? null, to, this.locale),
-      minutes !== null ? durationLabel(minutes, this.locale) : '',
-      modalityShortLabel(detail?.modality ?? null),
-    ]
-      .filter((fact) => !!fact)
-      .join(' · ');
-  }
-
   protected key(group: SessionGroup): string {
     return group.id ?? OUTSIDE;
   }
@@ -143,14 +129,6 @@ export class TimelineSessionsComponent {
     return group.id ? (this.details()[group.id] ?? null) : null;
   }
 
-  protected title(group: SessionGroup): string {
-    const date = sessionLongDate(group.from, this.locale);
-    const kind = sessionKindLabel(this.detail(group)?.detail?.kind ?? null);
-    return date
-      ? $localize`:Titre d'une séance du mode par séance@@timeline.session.title:${kind}:kind: du ${date}:date:`
-      : kind;
-  }
-
   /** Nombre au format de la langue (« 1 204 »). */
   protected count(value: number): string {
     return this.number.format(value);
@@ -160,15 +138,6 @@ export class TimelineSessionsComponent {
   protected loaded(group: SessionGroup): SessionDetail | null {
     const state = this.detail(group);
     return state?.status === 'loaded' ? state.detail : null;
-  }
-
-  /** Horaires, durée, modalité : les éléments connus. */
-  protected facts(detail: SessionDetail): string[] {
-    return [
-      sessionHours(detail.from, detail.closedAt ? detail.to : null, this.locale),
-      detail.durationMin !== null ? durationLabel(detail.durationMin, this.locale) : '',
-      modalityLabel(detail.modality),
-    ].filter((fact) => !!fact);
   }
 
   private readonly retryActions = new Map<string, StateAction>();
@@ -191,13 +160,4 @@ export class TimelineSessionsComponent {
 
   protected readonly listLabel = $localize`:Nom de la liste des séances de la timeline@@timeline.sessions.list:Séances, de la plus récente à la plus ancienne`;
   protected readonly entriesLabel = $localize`:Nom de la liste des entrées d'une séance@@timeline.session.entriesList:Entrées de la séance`;
-}
-
-function minutesBetween(
-  from: string | null | undefined,
-  to: string | null | undefined,
-): number | null {
-  if (!from || !to) return null;
-  const ms = Date.parse(to) - Date.parse(from);
-  return Number.isFinite(ms) && ms > 0 ? Math.round(ms / 60_000) : null;
 }

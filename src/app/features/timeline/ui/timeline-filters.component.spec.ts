@@ -18,7 +18,9 @@ import { TimelineFiltersComponent } from './timeline-filters.component';
         [emotionFamilies]="{ anxiety: 'fear', joy: 'joy' }"
         [medicationVisible]="medicationVisible()"
         (filtersChange)="changes.push($event); filters.set($event)"
-      />
+      >
+        <p filtersExtra class="extra-probe">période et mode</p>
+      </pm-timeline-filters>
     </div>
   `,
 })
@@ -44,17 +46,29 @@ async function render(setup: (host: HostComponent) => void = () => undefined) {
     root.querySelector(`[role="group"][aria-label="${name}"]`);
   const button = (name: string) =>
     [...el.querySelectorAll<HTMLButtonElement>('button')].find((b) => text(b).startsWith(name))!;
-  /** Ouvre le menu « Filtres (n) » ; ses éléments sont rendus dans l'overlay CDK. */
-  const openMenu = async () => {
+  /** Ouvre le panneau « Filtres » ; il est rendu dans l'overlay CDK. */
+  const openPanel = async () => {
     button('Filtres').click();
     await fixture.whenStable();
-    return document.querySelector<HTMLElement>('.mat-mdc-menu-panel')!;
+    return document.querySelector<HTMLElement>('#timeline-filters-panel')!;
   };
-  return { fixture, host: fixture.componentInstance, el, group, button, openMenu };
+  return { fixture, host: fixture.componentInstance, el, group, button, openPanel };
 }
 
 function text(el: Element | null | undefined): string {
   return (el?.textContent ?? '').replace(/\s+/g, ' ').trim();
+}
+
+/** Texte des nœuds feuilles, séparés par une espace (les espaces entre éléments ne sont pas rendus). */
+function words(el: Element | null | undefined): string {
+  if (!el) return '';
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const parts: string[] = [];
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const value = (node.textContent ?? '').replace(/\s+/g, ' ').trim();
+    if (value) parts.push(value);
+  }
+  return parts.join(' ');
 }
 
 describe('TimelineFiltersComponent', () => {
@@ -62,106 +76,99 @@ describe('TimelineFiltersComponent', () => {
 
   it('sans lecture réussie (chargement, erreur) : puces sans compteur, pas de « 0 »', async () => {
     const { el, group } = await render((host) => host.counted.set(false));
-    expect(el.querySelector('.count')).toBeNull();
+    expect(el.querySelector('.chips .n')).toBeNull();
     const types = [...group('Types')!.querySelectorAll('button')].map(text);
-    expect(types).toContain('Note');
-    expect(types).toContain('Événement');
+    expect(types).toContain('Notes');
+    expect(types).toContain('Événements');
   });
 
-  it('première rangée : « Types F », Tous (total) + un par type, compteurs des facettes, aria-pressed', async () => {
-    const { el, group, button } = await render();
-    const label = el.querySelector('.row-label')!;
-    expect(label.getAttribute('aria-hidden')).toBe('true');
-    expect(text(label.querySelector('span'))).toBe('Types');
-    expect(text(label.querySelector('kbd'))).toBe('F');
-    const types = [...group('Types')!.querySelectorAll('button')].map(text);
-    expect(types).toEqual([
-      'Tous 17',
-      'Note 12',
-      'Événement 0',
-      'Situation 0',
-      'Ressenti 3',
-      'Séance 2',
-      'Médicament 0',
+  it('puces de la maquette : « Tout » (total), puis Ressentis, Notes, Événements, Situations, Médicaments', async () => {
+    const { group } = await render();
+    const chips = [...group('Types')!.querySelectorAll('button')];
+    expect(chips.map(text)).toEqual([
+      'Tout 17',
+      'Ressentis 3',
+      'Notes 12',
+      'Événements 0',
+      'Situations 0',
+      'Médicaments 0',
     ]);
-    expect(button('Tous').getAttribute('aria-pressed')).toBe('true');
-    expect(button('Note').getAttribute('aria-pressed')).toBe('false');
-    // Émotions et tags non actifs : derrière « Filtres », pas en puces.
-    expect(group('Émotions')).toBeNull();
-    expect(group('Filtres actifs')).toBeNull();
-    expect(text(button('Filtres'))).toBe('Filtres');
+    expect(chips[0].getAttribute('aria-pressed')).toBe('true');
+    expect(chips[1].querySelector('pm-entry-icon')).not.toBeNull();
   });
 
-  it('puce de type : bascule, « Tous » réinitialise', async () => {
+  it('puce de type : bascule, « Tout » réinitialise ; Séances seulement quand le filtre la porte', async () => {
+    const { fixture, host, group, button } = await render();
+    button('Notes').click();
+    await fixture.whenStable();
+    expect(host.changes.at(-1)!.types).toEqual(['note']);
+    expect(button('Notes').getAttribute('aria-pressed')).toBe('true');
+    button('Tout').click();
+    expect(host.changes.at(-1)!.types).toEqual([]);
+    host.filters.set({ ...NO_FILTERS, types: ['session'] });
+    await fixture.whenStable();
+    const names = [...group('Types')!.querySelectorAll('button')].map(text);
+    expect(names.at(-1)).toBe('Séances 2');
+  });
+
+  it('un seul bouton « Filtres » : ce qu’il propose, ou combien sont actifs', async () => {
     const { fixture, host, button } = await render();
-    button('Ressenti').click();
+    const filters = button('Filtres');
+    expect(words(filters)).toBe('Filtres · émotion, tag, brouillons');
+    expect(filters.getAttribute('aria-expanded')).toBe('false');
+    expect(filters.getAttribute('aria-haspopup')).toBe('dialog');
+    host.filters.set({ ...NO_FILTERS, emotions: ['anxiety'], draftsOnly: true });
     await fixture.whenStable();
-    expect(host.changes.at(-1)?.types).toEqual(['feeling']);
-    expect(button('Ressenti').getAttribute('aria-pressed')).toBe('true');
-    expect(button('Tous').getAttribute('aria-pressed')).toBe('false');
-    button('Tous').click();
-    await fixture.whenStable();
-    expect(host.changes.at(-1)?.types).toEqual([]);
+    expect(words(filters)).toBe('Filtres · 2');
+    expect(filters.getAttribute('aria-label')).toBe('Filtres · 2 actifs');
+    expect(filters.classList).toContain('has-active');
   });
 
-  it('menu « Filtres » : émotions (les plus fréquentes d’abord, pastille de famille) et tags, cases cochables', async () => {
-    const { fixture, host, group, openMenu } = await render();
-    const panel = await openMenu();
-    const emotions = [...group('Émotions', panel)!.querySelectorAll('[role="menuitemcheckbox"]')];
+  it('panneau : émotions (les plus fréquentes d’abord, pastille de famille), tags, brouillons, contenu projeté', async () => {
+    const { fixture, host, openPanel, button } = await render();
+    const panel = await openPanel();
+    expect(panel.getAttribute('role')).toBe('dialog');
+    expect(button('Filtres').getAttribute('aria-expanded')).toBe('true');
+    const emotions = [...panel.querySelectorAll<HTMLButtonElement>('[data-emotion]')];
     expect(emotions.map(text)).toEqual(['Anxiété 3', 'Joie 1']);
-    expect(emotions[0].getAttribute('aria-checked')).toBe('false');
-    expect(emotions[0].querySelector('.dot')?.classList).toContain('family-fear');
-    const tags = [...group('Tags', panel)!.querySelectorAll('[role="menuitemcheckbox"]')];
-    expect(tags.map(text)).toEqual(['#sommeil 4']);
-    (emotions[0] as HTMLElement).click();
+    expect(emotions[0].querySelector('.dot.family-fear')).not.toBeNull();
+    expect(text(panel.querySelector('.extra-probe'))).toBe('période et mode');
+    emotions[0].click();
     await fixture.whenStable();
-    expect(host.changes.at(-1)?.emotions).toEqual(['anxiety']);
+    expect(host.changes.at(-1)!.emotions).toEqual(['anxiety']);
+    panel.querySelector<HTMLButtonElement>('[data-tag="sommeil"]')!.click();
+    await fixture.whenStable();
+    expect(host.changes.at(-1)!.tags).toEqual(['sommeil']);
+    const drafts = [...panel.querySelectorAll<HTMLButtonElement>('button')].find((b) =>
+      text(b).startsWith('Brouillons seulement'),
+    )!;
+    drafts.click();
+    await fixture.whenStable();
+    expect(host.changes.at(-1)!.draftsOnly).toBe(true);
+    expect(drafts.getAttribute('aria-pressed')).toBe('true');
   });
 
-  it('émotion et tag actifs : puces « Filtres actifs » (un clic retire), « Filtres (2) », choisie gardée à zéro', async () => {
-    const { fixture, host, group, button, openMenu } = await render((h) =>
-      h.filters.set({ ...NO_FILTERS, emotions: ['anxiety', 'anger'], tags: ['sommeil'] }),
+  it('panneau : Échap le ferme et rend le focus au bouton ; facettes vides annoncées', async () => {
+    const { fixture, host, openPanel, button } = await render((h) =>
+      h.facets.set({ types: { note: 1 }, emotions: {}, tags: {} }),
     );
-    host.facets.set({ types: { feeling: 3 }, emotions: { anxiety: 3 }, tags: { sommeil: 2 } });
+    const panel = await openPanel();
+    expect(text(panel)).toContain('Aucune émotion notée sur la période.');
+    expect(text(panel)).toContain('Aucun tag sur la période.');
+    panel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
     await fixture.whenStable();
-    const active = [...group('Filtres actifs')!.querySelectorAll('button')];
-    expect(active.map(text)).toEqual(['Anxiété 3', 'anger 0', '#sommeil 2']);
-    expect(active.every((chip) => chip.getAttribute('aria-pressed') === 'true')).toBe(true);
-    expect(active[0].getAttribute('aria-label')).toBe('Anxiété 3, retirer le filtre');
-    expect(text(button('Filtres'))).toBe('Filtres (3)');
-    const panel = await openMenu();
-    const checked = panel.querySelectorAll('[role="menuitemcheckbox"][aria-checked="true"]');
-    expect([...checked].map(text)).toEqual(['Anxiété 3', 'anger 0', '#sommeil 2']);
-    document.querySelectorAll('.cdk-overlay-container').forEach((n) => n.remove());
-    active[1].click();
-    await fixture.whenStable();
-    expect(host.changes.at(-1)?.emotions).toEqual(['anxiety']);
+    expect(document.querySelector('#timeline-filters-panel')).toBeNull();
+    expect(document.activeElement).toBe(button('Filtres'));
+    expect(host.changes).toEqual([]);
   });
 
-  it('brouillons seulement', async () => {
-    const { fixture, host, button } = await render();
-    button('Brouillons seulement').click();
-    await fixture.whenStable();
-    expect(host.changes.at(-1)?.draftsOnly).toBe(true);
-    expect(button('Brouillons seulement').getAttribute('aria-pressed')).toBe('true');
-  });
-
-  it('sans facette d’émotion ni de tag : pas de bouton « Filtres »', async () => {
-    const { el } = await render((h) =>
-      h.facets.set({ types: { note: 2 }, emotions: {}, tags: {} }),
-    );
-    expect([...el.querySelectorAll('button')].some((b) => text(b).startsWith('Filtres'))).toBe(
-      false,
-    );
-  });
-
-  it('médicament masqué par la préférence, sauf s’il est choisi', async () => {
+  it('médicaments masqués par la préférence, sauf s’ils sont choisis', async () => {
     const { fixture, host, group } = await render((h) => h.medicationVisible.set(false));
     const names = () => [...group('Types')!.querySelectorAll('button')].map(text);
-    expect(names().some((name) => name.startsWith('Médicament'))).toBe(false);
+    expect(names().some((name) => name.startsWith('Médicaments'))).toBe(false);
     host.filters.set({ ...NO_FILTERS, types: ['medication'] });
     await fixture.whenStable();
-    expect(names().some((name) => name.startsWith('Médicament'))).toBe(true);
+    expect(names().some((name) => name.startsWith('Médicaments'))).toBe(true);
   });
 
   it('barre d’outils : un seul arrêt de tabulation, ← → Début Fin', async () => {
@@ -176,7 +183,7 @@ describe('TimelineFiltersComponent', () => {
       );
     buttons[0].focus();
     press('ArrowRight');
-    expect(document.activeElement).toBe(button('Note'));
+    expect(document.activeElement).toBe(button('Ressentis'));
     press('ArrowLeft');
     press('ArrowLeft');
     expect(document.activeElement).toBe(buttons.at(-1));

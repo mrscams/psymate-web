@@ -28,15 +28,16 @@ export const PATIENT_SHELL_ROUTES: Routes = [
       {
         path: 'session',
         loadComponent: () => import('./pages/session-tab.page').then((m) => m.SessionTabPage),
-        // UX-S5 : l'onglet Séance occupe toute la largeur (propositions 04 et 04b) ; Timeline,
-        // Graphe et Recherche gardent les 1 120 px jusqu'à leur propre tâche.
+        // UX-S5 : l'onglet Séance occupe toute la largeur (propositions 04 et 04b) ; Graphe et
+        // Recherche gardent les 1 120 px jusqu'à leur propre tâche.
         data: { tab: 'session', contentWidth: 'full' },
         title: $localize`:Titre d'onglet du dossier@@patientShell.session.pageTitle:Séance · PsyMate`,
       },
       {
         path: 'timeline',
         loadComponent: () => import('../timeline').then((m) => m.TimelinePage),
-        data: { tab: 'timeline' },
+        // UX-S9 : la timeline en pleine largeur, flux et colonne de résumé (proposition 03).
+        data: { tab: 'timeline', contentWidth: 'full' },
         title: $localize`:Titre d'onglet du dossier@@patientShell.timeline.pageTitle:Timeline · PsyMate`,
       },
       {

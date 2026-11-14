@@ -1,0 +1,110 @@
+@if (toggle()) {
+  <div class="session-head" [class.open-session]="open()">
+    <button
+      type="button"
+      class="head"
+      [attr.aria-expanded]="expanded()"
+      [attr.aria-controls]="controls()"
+      [attr.data-session-id]="sessionId()"
+      (click)="activate($event)"
+    >
+      <span class="chevron" [class.down]="expanded()" aria-hidden="true"></span>
+      <pm-entry-icon type="session" [size]="12" />
+      <span class="label">{{ label() }}</span>
+    </button>
+    <span class="sum">
+      @if (entriesText(); as text) {
+        <span>{{ text }}</span>
+      }
+      @if (summary()) {
+        @if (entriesText()) {
+          <span class="sep" aria-hidden="true">·</span>
+        }
+        <span>{{ reportLabel }} <span aria-hidden="true">↓</span></span>
+      }
+      @if (open()) {
+        @if (entriesText()) {
+          <span class="sep" aria-hidden="true">·</span>
+        }
+        <button
+          type="button"
+          class="close"
+          [attr.aria-label]="closeName"
+          (click)="close($event)"
+          (keydown.enter)="$event.stopPropagation()"
+        >
+          {{ closeLabel }}
+        </button>
+      }
+      <button type="button" class="open-button" (click)="openSession($event)">
+        {{ openLabel }}
+      </button>
+    </span>
+  </div>
+} @else {
+  <article
+    class="session-head head"
+    [class.open-session]="open()"
+    [class.selected]="selected()"
+    tabindex="0"
+    aria-keyshortcuts="Enter Shift+F10 L"
+    [attr.aria-label]="ariaLabel()"
+    [attr.aria-current]="selected() ? 'true' : null"
+    [attr.data-entry-id]="sessionId()"
+    [attr.data-session-id]="sessionId()"
+    (click)="activate($event)"
+    (keydown.enter)="activate($event)"
+    (keydown.l)="link($event)"
+    (contextmenu)="openMenu($event)"
+    (keydown.shift.f10)="openMenu($event)"
+    (keydown.contextmenu)="openMenu($event)"
+  >
+    <span class="marker" aria-hidden="true"><pm-entry-icon type="session" [size]="10" /></span>
+    <pm-entry-icon type="session" [size]="12" />
+    <span class="label">{{ label() }}</span>
+    <span class="sum">
+      @if (entriesText(); as text) {
+        <span>{{ text }}</span>
+      }
+      @if (summary()) {
+        @if (entriesText()) {
+          <span class="sep" aria-hidden="true">·</span>
+        }
+        <span>{{ reportLabel }} <span aria-hidden="true">↓</span></span>
+      }
+      @if (open()) {
+        @if (entriesText()) {
+          <span class="sep" aria-hidden="true">·</span>
+        }
+        <button
+          type="button"
+          class="close"
+          [attr.aria-label]="closeName"
+          (click)="close($event)"
+          (keydown.enter)="$event.stopPropagation()"
+        >
+          {{ closeLabel }}
+        </button>
+      }
+    </span>
+    @if (menu(); as rowMenu) {
+      <button
+        type="button"
+        class="more"
+        [attr.aria-label]="menuLabel()"
+        aria-keyshortcuts="Shift+F10"
+        [matMenuTriggerFor]="rowMenu"
+        [matMenuTriggerData]="{ item: item() }"
+        [matMenuTriggerRestoreFocus]="false"
+        (menuOpened)="menuOpened()"
+        (click)="$event.stopPropagation()"
+        (keydown.enter)="$event.stopPropagation()"
+      >
+        <span aria-hidden="true">…</span>
+      </button>
+    }
+  </article>
+}
+@if (summary(); as line) {
+  <p class="summary">{{ line }}</p>
+}

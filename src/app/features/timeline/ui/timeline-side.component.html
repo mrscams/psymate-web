@@ -1,0 +1,91 @@
+@switch (status()) {
+  @case ('loading') {
+    <section class="panel">
+      <pm-state kind="loading" skeleton="row" [lines]="4" compact />
+    </section>
+  }
+  @case ('error') {
+    <section class="panel">
+      <pm-state
+        kind="error"
+        compact
+        [action]="retry()"
+        title="Résumé de la période indisponible."
+        i18n-title="Erreur de la colonne de résumé de la timeline@@timeline.side.error"
+        message=""
+      />
+    </section>
+  }
+  @default {
+    <section class="panel" aria-labelledby="timeline-side-period">
+      <h3 id="timeline-side-period" class="lbl">{{ periodTitle() }}</h3>
+      <p class="headline">{{ headline() }}</p>
+      @if (types().length) {
+        <ul class="mini-list">
+          @for (row of types(); track row.type) {
+            <li [attr.data-type]="row.type">
+              <pm-entry-icon [type]="row.type" [size]="10" />
+              <span class="name">{{ row.label }}</span>
+              <span class="r">{{ row.count }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+    @if (emotions().length) {
+      <section class="panel" aria-labelledby="timeline-side-emotions">
+        <h3
+          id="timeline-side-emotions"
+          class="lbl"
+          i18n="Titre des émotions de la colonne de résumé de la timeline@@timeline.side.emotions"
+        >
+          Émotions notées
+        </h3>
+        <ul class="mini-list">
+          @for (chip of emotions(); track chip.code) {
+            <li>
+              <button
+                type="button"
+                class="emotion"
+                [attr.aria-pressed]="chip.selected"
+                [attr.data-emotion]="chip.code"
+                (click)="emotionToggled.emit(chip.code)"
+              >
+                <span [class]="chip.dot" aria-hidden="true"></span>
+                <span class="name">{{ chip.label }}</span>
+                <span class="r">{{ chip.count }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+        <p
+          class="hint"
+          i18n="
+            Aide des émotions de la colonne de résumé de la timeline@@timeline.side.emotionsHint"
+        >
+          Cliquer une émotion filtre la timeline.
+        </p>
+      </section>
+    }
+  }
+}
+<section class="panel" aria-labelledby="timeline-side-keys">
+  <h3
+    id="timeline-side-keys"
+    class="lbl"
+    i18n="Titre des raccourcis de la colonne de résumé de la timeline@@timeline.side.keys"
+  >
+    Raccourcis
+  </h3>
+  <p class="keys">
+    <kbd>↑</kbd> <kbd>↓</kbd>
+    <span i18n="Raccourci parcourir de la timeline@@timeline.side.keys.browse">parcourir</span> ·
+    <kbd>↵</kbd>
+    <span i18n="Raccourci ouvrir de la timeline@@timeline.side.keys.open">ouvrir</span> ·
+    <kbd>L</kbd> <span i18n="Raccourci lier de la timeline@@timeline.side.keys.link">lier</span> ·
+    <kbd>M</kbd> <span i18n="Raccourci mode de la timeline@@timeline.side.keys.mode">mode</span> ·
+    <kbd>+</kbd> <kbd>−</kbd>
+    <span i18n="Raccourci zoom de la timeline@@timeline.side.keys.zoom">zoom</span> · <kbd>?</kbd>
+    <span i18n="Raccourci aide de la timeline@@timeline.side.keys.all">tout</span>
+  </p>
+</section>

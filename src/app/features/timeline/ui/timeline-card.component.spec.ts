@@ -3,8 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 
 import { timelineItem } from '../data/timeline.fixtures';
-import { TimelineItem, TimelineZoom } from '../data/timeline.model';
-import { SessionCardInfo, TimelineCardComponent } from './timeline-card.component';
+import { TimelineItem } from '../data/timeline.model';
+import { TimelineCardComponent } from './timeline-card.component';
 
 @Component({
   imports: [MatMenuModule, TimelineCardComponent],
@@ -16,25 +16,27 @@ import { SessionCardInfo, TimelineCardComponent } from './timeline-card.componen
     </mat-menu>
     <pm-timeline-card
       [item]="item()"
-      [zoom]="zoom()"
+      [compact]="compact()"
       [before]="before()"
       [saidIn]="saidIn()"
       [emotionLabel]="emotionLabel()"
-      [session]="session()"
+      [fullDate]="fullDate()"
       [menu]="menu"
       (opened)="opened.push($event)"
+      (edited)="edited.push($event)"
       (linked)="linked.push($event)"
     />
   `,
 })
 class HostComponent {
   readonly item = signal<TimelineItem>(timelineItem());
-  readonly zoom = signal<TimelineZoom>('day');
+  readonly compact = signal(false);
   readonly before = signal(false);
   readonly saidIn = signal<string | null>(null);
   readonly emotionLabel = signal<string | null>(null);
-  readonly session = signal<SessionCardInfo | null>(null);
+  readonly fullDate = signal(false);
   readonly opened: TimelineItem[] = [];
+  readonly edited: TimelineItem[] = [];
   readonly linked: TimelineItem[] = [];
 }
 
@@ -54,9 +56,30 @@ function text(el: Element | null | undefined): string {
 describe('TimelineCardComponent', () => {
   afterEach(() => document.querySelectorAll('.cdk-overlay-container').forEach((n) => n.remove()));
 
-  it('titre, date selon la précision, mention « précision : … », type par la bordure et la forme', async () => {
+  it('ligne d’une entrée : titre, heure en mono, marqueur du type sur l’axe, nom accessible complet', async () => {
     const { card } = await render((host) =>
       host.item.set(
+        timelineItem({
+          type: 'note',
+          title: 'Point sur le sommeil',
+          occurred: { from: '2026-10-24T07:40:00Z', to: null, precision: 'exact', label: null },
+        }),
+      ),
+    );
+    expect(card.classList).toContain('type-note');
+    expect(card.querySelector('.marker pm-entry-icon')).not.toBeNull();
+    expect(text(card.querySelector('.title'))).toBe('Point sur le sommeil');
+    // L'heure seule (le jour est écrit par l'ancre de la page), au format de la langue.
+    expect(text(card.querySelector('.tm'))).toMatch(/^\d{2}:\d{2}$/);
+    expect(card.getAttribute('aria-label')).toMatch(/^Note, Point sur le sommeil, 24 oct\. 2026/);
+    // Pas d'extrait : la ligne n'a pas de seconde ligne sans tag, lien ni pastille.
+    expect(card.querySelector('.txt')).toBeNull();
+    expect(card.classList).not.toContain('two-lines');
+  });
+
+  it('précision moins fine que l’heure : la précision à la place de l’heure (« jour », « année »)', async () => {
+    const { card, host, fixture } = await render((h) =>
+      h.item.set(
         timelineItem({
           type: 'event',
           title: 'Entretien annuel',
@@ -64,178 +87,123 @@ describe('TimelineCardComponent', () => {
         }),
       ),
     );
-    expect(card.classList).toContain('type-event');
-    expect(card.querySelector('pm-entry-icon')).not.toBeNull();
-    expect(text(card.querySelector('.title'))).toBe('Entretien annuel');
-    expect(text(card.querySelector('.when'))).toBe('18 oct. 2026');
-    expect(text(card.querySelector('.precision'))).toBe('précision : jour');
-    expect(card.getAttribute('aria-label')).toContain('Entretien annuel');
-  });
-
-  it('période : libellé et bornes ; phase de vie : libellé', async () => {
-    const { card, host, fixture } = await render((h) =>
-      h.item.set(
-        timelineItem({
-          occurred: {
-            from: '2008-09-01T00:00:00Z',
-            to: '2012-07-01T00:00:00Z',
-            precision: 'period',
-            label: 'Études à Lille',
-          },
-        }),
-      ),
+    expect(text(card.querySelector('.tm'))).toBe('jour');
+    expect(card.getAttribute('aria-label')).toContain('18 oct. 2026');
+    host.item.set(
+      timelineItem({
+        occurred: { from: '2014-01-01T00:00:00Z', to: null, precision: 'year', label: null },
+      }),
     );
-    expect(text(card.querySelector('.when'))).toContain('Études à Lille');
-    expect(text(card.querySelector('.when'))).toContain('2008');
-    host.item.set(timelineItem({ occurred: { precision: 'life_phase', label: 'enfance' } }));
     await fixture.whenStable();
-    expect(text(card.querySelector('.when'))).toBe('enfance');
-    expect(text(card.querySelector('.precision'))).toBe('précision : phase de vie');
+    expect(text(card.querySelector('.tm'))).toBe('année');
   });
 
-  it('brouillon, ressenti (pastille de famille, n/10), tags, liens', async () => {
+  it('ressenti : nommé par son émotion, échelle à dix cases et « n/10 », jamais « Ressenti » seul', async () => {
     const { card } = await render((host) => {
       host.item.set(
         timelineItem({
           type: 'feeling',
           title: null,
-          status: 'draft',
           emotion: { code: 'anxiety', family: 'fear' },
-          intensity: 8,
-          tags: ['travail', 'sommeil', 'couple', 'famille'],
-          linkCount: 2,
+          intensity: 7,
         }),
       );
       host.emotionLabel.set('Anxiété');
     });
     expect(text(card.querySelector('.title'))).toBe('Anxiété');
-    expect(text(card.querySelector('.draft'))).toBe('Brouillon');
-    const dot = card.querySelector<HTMLElement>('.dot')!;
-    expect(dot.classList).toContain('family-fear');
-    expect(dot.style.opacity).toBe('0.8');
-    expect(text(card.querySelector('.intensity'))).toBe('8/10');
-    expect([...card.querySelectorAll('.tag')].map((tag) => text(tag))).toEqual([
-      '#travail',
-      '#sommeil',
-      '#couple',
-      '+1',
-    ]);
-    expect(text(card.querySelector('.links'))).toBe('2 liens');
+    const cells = card.querySelectorAll('.scale i');
+    expect(cells).toHaveLength(10);
+    expect(card.querySelectorAll('.scale i.on')).toHaveLength(7);
+    expect(text(card.querySelector('.score'))).toBe('7/10');
+    expect(card.getAttribute('aria-label')).toContain('7/10');
   });
 
-  it('date exacte : pas de mention « précision : exacte » (UX-B2)', async () => {
-    const { card } = await render();
-    expect(text(card.querySelector('.when'))).toContain('24 oct. 2026');
-    expect(card.querySelector('.precision')).toBeNull();
+  it('ressenti titré : l’émotion passe en seconde ligne ; intensité 0 : dix cases vides', async () => {
+    const { card, host, fixture } = await render((h) => {
+      h.item.set(
+        timelineItem({
+          type: 'feeling',
+          title: 'Réveil à 4 h',
+          emotion: { code: 'anxiety', family: 'fear' },
+          intensity: 0,
+        }),
+      );
+      h.emotionLabel.set('Anxiété');
+    });
+    expect(text(card.querySelector('.title'))).toBe('Réveil à 4 h');
+    expect(text(card.querySelector('.txt .emotion'))).toBe('Anxiété');
+    expect(card.querySelectorAll('.scale i.on')).toHaveLength(0);
+    expect(text(card.querySelector('.score'))).toBe('0/10');
+    host.item.set(timelineItem({ title: null }));
+    await fixture.whenStable();
+    expect(card.querySelector('.scale')).toBeNull();
   });
 
-  it('sans titre : titre de repli partagé (UX-A5) ; ressenti : nom de l’émotion, « n/10 » à part', async () => {
+  it('sans titre : titre de repli partagé (UX-A5)', async () => {
+    const { card } = await render((host) =>
+      host.item.set(
+        timelineItem({
+          title: null,
+          occurred: { from: '2026-10-10T12:00:00Z', to: null, precision: 'exact', label: null },
+        }),
+      ),
+    );
+    expect(text(card.querySelector('.title'))).toBe('Note · 10 oct.');
+  });
+
+  it('brouillon, situation en cours, tags (+n), liens en nombre, pastille « dit en séance du … »', async () => {
     const { card, host, fixture } = await render((h) =>
       h.item.set(
         timelineItem({
-          title: null,
-          occurred: { from: '2026-10-24T00:00:00Z', to: null, precision: 'day', label: null },
+          type: 'situation',
+          status: 'draft',
+          ongoing: true,
+          tags: ['sommeil', 'travail', 'famille', 'nuit'],
+          linkCount: 2,
         }),
       ),
     );
-    expect(text(card.querySelector('.title'))).toMatch(/^Note · 24 oct\.( 2026)?$/);
-    host.item.set(
-      timelineItem({
-        type: 'feeling',
-        title: null,
-        emotion: { code: 'anxiety', family: 'fear' },
-        intensity: 6,
-      }),
-    );
-    host.emotionLabel.set('Anxiété');
+    expect(text(card.querySelector('.chip.draft'))).toBe('brouillon');
+    expect(text(card.querySelector('.chip.ongoing'))).toBe('en cours');
+    expect([...card.querySelectorAll('.tag')].map(text)).toEqual([
+      '#sommeil',
+      '#travail',
+      '#famille',
+      '+1',
+    ]);
+    expect(text(card.querySelector('.links'))).toBe('2 liens');
+    expect(card.classList).toContain('two-lines');
+    expect(card.querySelector('.said')).toBeNull();
+    host.saidIn.set('2026-10-22T09:00:00Z');
     await fixture.whenStable();
-    expect(text(card.querySelector('.title'))).toBe('Anxiété');
-    expect(text(card.querySelector('.intensity'))).toBe('6/10');
-    expect(card.querySelector<HTMLElement>('.gauge-fill')!.style.width).toBe('60%');
-    expect(card.getAttribute('aria-label')).toContain('6/10');
+    expect(text(card.querySelector('.said'))).toBe('dit en séance du 22 oct. 2026');
+    expect(card.getAttribute('aria-label')).toContain('brouillon');
   });
 
-  it('séance : « Séance · 50 min · cabinet », nombre d’entrées, « non clôturée » en avertissement', async () => {
+  it('ligne réduite (zoom « Mois », « Avant le suivi ») : sans seconde ligne', async () => {
     const { card, host, fixture } = await render((h) => {
-      h.item.set(
+      h.item.set(timelineItem({ tags: ['sommeil'] }));
+      h.compact.set(true);
+    });
+    expect(card.classList).toContain('compact');
+    expect(card.querySelector('.txt')).toBeNull();
+    host.compact.set(false);
+    host.before.set(true);
+    await fixture.whenStable();
+    expect(card.classList).toContain('before');
+    expect(card.querySelector('.txt')).toBeNull();
+  });
+
+  it('mode par séance : la date complète à la place de l’heure', async () => {
+    const { card } = await render((host) => {
+      host.item.set(
         timelineItem({
-          id: 's-1',
-          type: 'session',
-          title: null,
-          sessionId: null,
-          occurred: {
-            from: '2026-10-17T16:00:00Z',
-            to: '2026-10-17T16:50:00Z',
-            precision: 'exact',
-            label: null,
-          },
+          occurred: { from: '2026-10-18T00:00:00Z', to: null, precision: 'day', label: null },
         }),
       );
+      host.fullDate.set(true);
     });
-    // Sans détail : la durée d'après les bornes, rien d'autre.
-    expect(text(card.querySelector('.title'))).toBe('Séance · 50 min');
-    expect(card.querySelector('.session-count')).toBeNull();
-    expect(card.querySelector('.warn')).toBeNull();
-    host.session.set({
-      kind: 'session',
-      durationMin: 45,
-      modality: 'in_person',
-      closed: false,
-      entries: 4,
-    });
-    await fixture.whenStable();
-    expect(text(card.querySelector('.title'))).toBe('Séance · 45 min · cabinet');
-    expect(text(card.querySelector('.session-count'))).toBe('4 entrées');
-    expect(text(card.querySelector('.warn'))).toBe('non clôturée');
-    expect(card.getAttribute('aria-label')).toContain('non clôturée');
-    host.session.set({
-      kind: 'intake',
-      durationMin: null,
-      modality: 'video',
-      closed: true,
-      entries: 1,
-    });
-    await fixture.whenStable();
-    expect(text(card.querySelector('.title'))).toBe("Séance d'accueil · 50 min · visio");
-    expect(text(card.querySelector('.session-count'))).toBe('1 entrée');
-    expect(card.querySelector('.warn')).toBeNull();
-  });
-
-  it('situation en cours : puce « en cours »', async () => {
-    const { card } = await render((h) =>
-      h.item.set(
-        timelineItem({
-          type: 'situation',
-          title: 'Surcharge au travail',
-          ongoing: true,
-          occurred: { from: '2026-09-03T00:00:00Z', to: null, precision: 'day', label: null },
-        }),
-      ),
-    );
-    expect(text(card.querySelector('.ongoing'))).toBe('en cours');
-    expect(card.querySelector('.precision')?.classList.contains('loose')).toBe(false);
-  });
-
-  it('pastille « dit en séance du … » seulement quand elle est donnée', async () => {
-    const { card, host, fixture } = await render();
-    expect(card.querySelector('.said')).toBeNull();
-    host.saidIn.set('2026-10-17T16:00:00Z');
-    await fixture.whenStable();
-    expect(text(card.querySelector('.said'))).toBe('dit en séance du 17 oct. 2026');
-  });
-
-  it('zone « Avant le suivi » : carte réduite, sans détails ; mois : sans mention de précision', async () => {
-    const { card, host, fixture } = await render((h) => {
-      h.before.set(true);
-      h.item.set(timelineItem({ tags: ['travail'] }));
-    });
-    expect(card.classList).toContain('before');
-    expect(card.querySelector('.details')).toBeNull();
-    host.before.set(false);
-    host.zoom.set('month');
-    await fixture.whenStable();
-    expect(card.classList).toContain('compact');
-    expect(card.querySelector('.precision')).toBeNull();
+    expect(text(card.querySelector('.tm'))).toBe('18 oct. 2026');
   });
 
   it('provenance : place gardée, jamais dessinée', async () => {
@@ -245,12 +213,19 @@ describe('TimelineCardComponent', () => {
     expect(slot.dataset['authorType']).toBe('practitioner');
   });
 
-  it('Entrée ou clic : ouvre ; le bouton ⋯ n’ouvre pas l’entrée', async () => {
+  it('Entrée ou clic : ouvre ; Corriger et Lier au survol émettent leur action sans ouvrir', async () => {
     const { card, host } = await render();
     card.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
     card.click();
     expect(host.opened.map((item) => item.id)).toEqual(['e-1', 'e-1']);
-    card.querySelector<HTMLButtonElement>('button.more')!.click();
+    const [edit, link, more] = [...card.querySelectorAll<HTMLButtonElement>('.acts button')];
+    expect(edit.getAttribute('aria-label')).toBe('Corriger');
+    expect(link.getAttribute('aria-label')).toBe('Lier (L)');
+    edit.click();
+    link.click();
+    more.click();
+    expect(host.edited.map((item) => item.id)).toEqual(['e-1']);
+    expect(host.linked.map((item) => item.id)).toEqual(['e-1']);
     expect(host.opened).toHaveLength(2);
   });
 
@@ -266,7 +241,7 @@ describe('TimelineCardComponent', () => {
     expect(more.getAttribute('aria-expanded')).toBe('true');
   });
 
-  it('L sur la carte : « lier » émis, la touche est consommée (pas le raccourci global)', async () => {
+  it('L sur la ligne : « lier » émis, la touche est consommée (pas le raccourci global)', async () => {
     const { card, host } = await render();
     const press = (target: Element, init: KeyboardEventInit = {}) => {
       const event = new KeyboardEvent('keydown', {
