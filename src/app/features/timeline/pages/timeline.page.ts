@@ -1,3 +1,4 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import {
   afterNextRender,
@@ -16,14 +17,13 @@ import {
 } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 
 import { PreferencesStore } from '../../../core/preferences';
 import { ShortcutService } from '../../../core/shortcuts';
 import {
   ENTRY_TYPES,
-  EntryIconComponent,
   entryTitle,
   EntryType,
   StateAction,
@@ -39,19 +39,28 @@ import { TimelineDecadeStore } from '../data/timeline-decade.store';
 import {
   hasFilterParams,
   NO_FILTERS,
+  presetOf,
   sameFilters,
   sameParam,
   TimelineFilters,
   TimelineMode,
+  toggleEmotion,
   withPeriod,
 } from '../data/timeline-filters.model';
+import {
+  bandHeadAt,
+  indexAtOffset,
+  indexOfSlot,
+  LayoutRow,
+  layoutTimeline,
+} from '../data/timeline-layout.model';
 import { TimelineFiltersStore } from '../data/timeline-filters.store';
 import { TimelineSessionStore } from '../data/timeline-session.store';
-import { groupBySession } from '../data/timeline-sessions.model';
+import { groupBySession, SessionDetail } from '../data/timeline-sessions.model';
 import {
   MAX_WINDOWS,
-  ROW_HEIGHT,
   sessionEntryCounts,
+  SituationBand,
   TimelineItem,
   TimelineRow,
   TimelineSnapshot,
@@ -62,13 +71,24 @@ import { TimelineStore } from '../data/timeline.store';
 import { TIMELINE_FOCUS_PARAM } from '../timeline.params';
 import { RestoreHold } from './restore-hold';
 import { RovingToolbarDirective } from '../ui/roving-toolbar.directive';
-import { SessionCardInfo, TimelineCardComponent } from '../ui/timeline-card.component';
+import { RowOffsetsDirective } from '../ui/row-offsets.directive';
+import { TimelineCardComponent } from '../ui/timeline-card.component';
+import { TimelineDayComponent } from '../ui/timeline-day.component';
 import { TimelineDecadeComponent } from '../ui/timeline-decade.component';
 import { TimelineFiltersComponent } from '../ui/timeline-filters.component';
-import { decadeZoomLabel, groupLabel, zoomLabel } from '../ui/timeline-labels';
+import {
+  dayLabel,
+  decadeZoomLabel,
+  monthHeading,
+  periodSpanLabel,
+  sinceLabel,
+  zoomLabel,
+} from '../ui/timeline-labels';
 import { TimelineModeComponent } from '../ui/timeline-mode.component';
 import { TimelinePeriodComponent } from '../ui/timeline-period.component';
+import { TimelineSessionDividerComponent } from '../ui/timeline-session-divider.component';
 import { TimelineSessionsComponent } from '../ui/timeline-sessions.component';
+import { TimelineSideComponent } from '../ui/timeline-side.component';
 
 /** Délai minimal entre deux crans de zoom à la molette (un geste = un cran). */
 const WHEEL_STEP_MS = 180;
@@ -88,17 +108,21 @@ const WHEEL_STEP_MS = 180;
 @Component({
   selector: 'pm-timeline-page',
   imports: [
-    EntryIconComponent,
     MatMenuModule,
+    RouterLink,
     RovingToolbarDirective,
+    RowOffsetsDirective,
     ScrollingModule,
     StateComponent,
     TimelineCardComponent,
+    TimelineDayComponent,
     TimelineDecadeComponent,
     TimelineFiltersComponent,
     TimelineModeComponent,
     TimelinePeriodComponent,
+    TimelineSessionDividerComponent,
     TimelineSessionsComponent,
+    TimelineSideComponent,
   ],
   providers: [TimelineStore, TimelineFiltersStore, TimelineSessionStore, TimelineDecadeStore],
   templateUrl: './timeline.page.html',
@@ -132,16 +156,55 @@ export class TimelinePage {
   protected readonly groups = computed(() =>
     groupBySession(this.store.head().items, this.store.sessions()),
   );
-  protected readonly sessionCount = computed(() => this.groups().filter((g) => g.id).length);
   /** Les filtres sont appliqués : avant, l'URL n'est pas réécrite (elle n'a pas encore été lue). */
   private readonly ready = signal(false);
-  /**
-   * Liste des situations en bande dépliée (état d'écran, UX-G2c) : repliée à l'arrivée sur grand
-   * écran, le nom de chaque situation étant écrit le long de sa bande ; toujours visible sous 600 px.
-   */
-  protected readonly bandsOpen = signal(false);
+  /** Téléphone (sous 600 px, maquette mobile) : une colonne, jours en en-têtes, outils dans « Filtres ». */
+  protected readonly narrow = toSignal(
+    inject(BreakpointObserver)
+      .observe('(max-width: 599.98px)')
+      .pipe(map((state) => state.matches)),
+    { initialValue: false },
+  );
+  /** Aujourd'hui, pour « aujourd'hui », « hier », « il y a 4 j » sous les dates. */
+  protected readonly today = new Date();
 
-  protected readonly rowHeight = computed(() => ROW_HEIGHT[this.store.zoom()]);
+  /** Séances dont le compte rendu est lu et non vide : leur séparateur porte sa première ligne. */
+  private readonly summaries = computed(() => {
+    const out: Record<string, boolean> = {};
+    for (const [id, state] of Object.entries(this.sessionDetails.details())) {
+      if (state.status === 'loaded' && state.detail?.summary?.trim()) out[id] = true;
+    }
+    return out;
+  });
+
+  /**
+   * Mise en page du flux (UX-S9) : séances en tête de leur jour, ancres de jour, intertitres de
+   * mois, hauteur de chaque ligne et décalages cumulés du défilement virtuel.
+   */
+  protected readonly layout = computed(() =>
+    layoutTimeline({
+      rows: this.store.rows(),
+      zoom: this.store.zoom(),
+      narrow: this.narrow(),
+      summaries: this.summaries(),
+    }),
+  );
+
+  /** Première ligne visible (rang d'affichage), suivie au défilement. */
+  private readonly firstIndex = signal(0);
+  /** Téléphone : l'ancre du jour de la première ligne visible reste collée en haut de la liste. */
+  protected readonly stickyRow = computed<LayoutRow | null>(() => {
+    const rows = this.layout().rows;
+    const first = this.firstIndex();
+    if (first === 0) return null;
+    for (let i = Math.min(first, rows.length - 1); i >= 0; i--) {
+      const row = rows[i];
+      if (!row.row.item) return null;
+      if (row.dayStart) return row;
+    }
+    return null;
+  });
+
   protected readonly zoomText = computed(() =>
     this.decade() ? decadeZoomLabel() : zoomLabel(this.store.zoom()),
   );
@@ -209,46 +272,58 @@ export class TimelinePage {
     handler: () => void this.store.reload(),
   };
 
-  /** Total de la ligne d'état, au format de la langue (« 2 002 »). */
-  protected readonly totalText = computed(() =>
-    new Intl.NumberFormat(this.locale).format(this.store.total()),
-  );
-
-  protected readonly boundsText = computed(() => {
-    const bounds = this.store.currentBounds();
-    if (!bounds) return '';
-    const newest = formatOccurred(bounds.newest, this.locale);
-    const oldest = formatOccurred(bounds.oldest, this.locale);
-    return $localize`:Bornes de la fenêtre courante de la timeline, de la plus récente à la plus ancienne@@timeline.status.current:fenêtre courante ${newest}:newest: → ${oldest}:oldest:`;
-  });
-
   /**
-   * Ce que les cartes de séance montrent en plus (UX-B2) : genre, durée, modalité et clôture lus
-   * dans le détail de la séance (TimelineSessionStore, lu pour les séances à l'écran), nombre
-   * d'entrées quand toute la plage est en mémoire et sans autre filtre que la période.
+   * Nombre d'entrées de chaque séance (« 6 entrées » sur son séparateur), quand toute la plage est
+   * en mémoire et sans autre filtre que la période ; sinon rien n'est écrit.
    */
-  protected readonly sessionInfos = computed<Record<string, SessionCardInfo>>(() => {
-    const details = this.sessionDetails.details();
-    const windows = this.store.windows();
+  protected readonly sessionEntries = computed<Record<string, number>>(() => {
     const complete = !this.filters.narrowed() && this.store.inMemory() >= this.store.count();
-    const counts = complete ? sessionEntryCounts(windows) : null;
-    const infos: Record<string, SessionCardInfo> = {};
-    for (const win of windows) {
-      for (const item of win.items) {
-        if (item.type !== 'session') continue;
-        const state = details[item.id];
-        const detail = state?.status === 'loaded' ? state.detail : null;
-        infos[item.id] = {
-          kind: detail?.kind ?? null,
-          durationMin: detail?.durationMin ?? null,
-          modality: detail?.modality ?? null,
-          closed: detail ? detail.closedAt !== null : null,
-          entries: counts ? (counts[item.id] ?? 0) : null,
-        };
-      }
-    }
-    return infos;
+    if (!complete) return {};
+    const windows = this.store.windows();
+    const counts = sessionEntryCounts(windows);
+    const out: Record<string, number> = {};
+    for (const win of windows)
+      for (const item of win.items)
+        if (item.type === 'session') out[item.id] = counts[item.id] ?? 0;
+    return out;
   });
+
+  /** La période en toutes lettres (« 90 jours ») : colonne de résumé et pied du flux. */
+  protected readonly spanText = computed(() => {
+    const filters = this.filters.filters();
+    const preset = presetOf(filters, this.today);
+    if (preset) return periodSpanLabel(preset, null);
+    const start = filters.from ? dayLabel(filters.from, this.locale) : '…';
+    const end = filters.to ? dayLabel(filters.to, this.locale) : '…';
+    return $localize`:Période libre des filtres de la timeline@@timeline.period.custom:Du ${start}:start: au ${end}:end:`;
+  });
+
+  /** Pied du flux (maquette 03) : « 15 entrées sur 90 jours » (séances à part, facettes). */
+  protected readonly footText = computed(() => {
+    const types = this.store.facets().types;
+    const entries = Object.entries(types).reduce(
+      (sum, [type, n]) => (type === 'session' || !Number.isFinite(n) ? sum : sum + n),
+      0,
+    );
+    const count = new Intl.NumberFormat(this.locale).format(entries);
+    const span = this.spanText();
+    return entries === 1
+      ? $localize`:Pied de la timeline, une entrée sur la période@@timeline.foot.one:1 entrée sur ${span}:span:`
+      : $localize`:Pied de la timeline, entrées sur la période@@timeline.foot.many:${count}:count: entrées sur ${span}:span:`;
+  });
+
+  /** État de la colonne de résumé : celui de la chronologie (facettes de la dernière réponse). */
+  protected readonly sideStatus = computed<'loading' | 'loaded' | 'error'>(() => {
+    const status = this.store.status();
+    return status === 'loaded' ? 'loaded' : status === 'error' ? 'error' : 'loading';
+  });
+
+  /** Onglet Graphe du dossier (« voir dans le graphe » d'une bande). */
+  protected readonly graphLink = computed(() => [
+    '/patients',
+    this.store.patientId() ?? '',
+    'graph',
+  ]);
 
   protected readonly followStartText = computed(() => {
     const start = this.store.followStart();
@@ -264,6 +339,7 @@ export class TimelinePage {
       band,
       label: this.bandLabel(band.item),
       name: this.situationName(band.item),
+      when: this.bandWhen(band.item),
     })),
   );
 
@@ -396,7 +472,7 @@ export class TimelinePage {
       const anchor = untracked(() => this.store.anchor());
       const offset = this.restoreOffset;
       if (anchor > 0 || offset) {
-        const target = offset ?? anchor * untracked(() => this.rowHeight());
+        const target = offset ?? untracked(() => this.offsetOfSlot(anchor));
         // La position est tenue jusqu'au premier geste du praticien (ou 3 s) : une relecture des
         // fenêtres, un redimensionnement ou un viewport recréé pendant le retour ne la déplacent pas.
         this.restoreHold.hold(target);
@@ -563,8 +639,9 @@ export class TimelinePage {
     if (slot !== null) {
       afterNextRender(
         () => {
-          this.scrollTo(viewport, slot);
-          this.onScrolled(slot);
+          const index = indexOfSlot(this.layout(), slot);
+          this.scrollTo(viewport, index);
+          this.onScrolled(index);
           this.focusCard(viewport.elementRef.nativeElement, `article[data-entry-id="${id}"]`);
         },
         { injector: this.injector },
@@ -763,26 +840,36 @@ export class TimelinePage {
       requestAnimationFrame(() => this.holdRestore(viewport, attempts - 1, stable));
   }
 
-  private scrollTo(
-    viewport: CdkVirtualScrollViewport,
-    slot: number,
-    offset: number | null = null,
-    attempts = 10,
-  ): void {
+  /** Amène la ligne `index` (rang d'affichage) en haut de l'écran. */
+  private scrollTo(viewport: CdkVirtualScrollViewport, index: number, attempts = 10): void {
     viewport.checkViewportSize();
-    const target = offset ?? slot * this.rowHeight();
+    const target = this.layout().offsets[Math.max(0, index)] ?? 0;
     viewport.scrollToOffset(target);
     if (Math.abs(viewport.measureScrollOffset('top') - target) > 1 && attempts > 0) {
-      requestAnimationFrame(() => this.scrollTo(viewport, slot, offset, attempts - 1));
+      requestAnimationFrame(() => this.scrollTo(viewport, index, attempts - 1));
     }
   }
 
-  /** Défilement : la zone visible désigne la fenêtre courante (chargement des voisines). */
+  /** Haut du créneau `slot` dans le flux mis en page. */
+  private offsetOfSlot(slot: number): number {
+    const layout = this.layout();
+    return layout.offsets[indexOfSlot(layout, slot)] ?? 0;
+  }
+
+  /**
+   * Défilement : la zone visible désigne la fenêtre courante (chargement des voisines). `first` est
+   * le rang d'affichage de la première ligne visible ; le store reçoit des créneaux.
+   */
   protected onScrolled(first: number): void {
     const viewport = this.viewport();
     if (!viewport) return;
-    const visibleRows = Math.ceil(viewport.getViewportSize() / this.rowHeight());
-    this.store.visible(first, first + visibleRows);
+    this.firstIndex.set(first);
+    const { rows, offsets } = this.layout();
+    const top = offsets[first] ?? 0;
+    const last = indexAtOffset(offsets, top + viewport.getViewportSize());
+    const slots = rows.slice(first, last + 1).map((row) => row.row.slot);
+    if (!slots.length) return;
+    this.store.visible(Math.min(...slots), Math.max(...slots));
   }
 
   /** `+` / `-` / boutons / Ctrl+molette : la granularité change, le haut de l'écran reste en place. */
@@ -809,8 +896,9 @@ export class TimelinePage {
     if (!viewport) return;
     afterNextRender(
       () => {
-        this.scrollTo(viewport, anchor);
-        this.onScrolled(anchor);
+        const index = indexOfSlot(this.layout(), anchor);
+        this.scrollTo(viewport, index);
+        this.onScrolled(index);
       },
       { injector: this.injector },
     );
@@ -842,19 +930,63 @@ export class TimelinePage {
     return action;
   }
 
-  protected trackSlot(_index: number, row: TimelineRow): number {
-    return row.slot;
+  protected trackSlot(_index: number, entry: LayoutRow): number {
+    return entry.row.slot;
   }
 
-  protected axisLabel(row: TimelineRow): { main: string; sub: string } {
-    return row.item
-      ? groupLabel(
-          row.item.occurred.from,
-          row.item.occurred.precision,
-          this.store.zoom(),
-          this.locale,
-        )
-      : { main: '', sub: '' };
+  /** Intertitre de mois (« novembre 2026 », capitales par la feuille de style). */
+  protected monthText(index: number): string {
+    return monthHeading(index, this.locale);
+  }
+
+  /** Bande qui commence sur une ligne, dans une colonne (libellé vertical, flèche « en cours »). */
+  protected bandHead(entry: LayoutRow, lane: number): SituationBand | null {
+    return bandHeadAt(this.store.bands(), entry.row, lane);
+  }
+
+  /** Détail lu d'une séance (modalité, durée, clôture, compte rendu), ou null. */
+  protected sessionDetail(id: string): SessionDetail | null {
+    const state = this.sessionDetails.details()[id];
+    return state?.status === 'loaded' ? state.detail : null;
+  }
+
+  /** Une émotion de la colonne de résumé : le filtre serveur `emotions`. */
+  protected toggleEmotion(code: string): void {
+    this.changeFilters(toggleEmotion(this.filters.filters(), code));
+  }
+
+  /** « clôturer » d'une séance ouverte : l'onglet Séance, où se trouve le panneau de clôture. */
+  protected closeSession(): void {
+    const patientId = this.store.patientId();
+    if (patientId) void this.router.navigate(['/patients', patientId, 'session']);
+  }
+
+  /**
+   * `↑` `↓` sur une ligne (maquette 03, « parcourir ») : le focus passe à la ligne voisine du flux,
+   * amenée à l'écran si le défilement virtuel ne l'a pas encore rendue.
+   */
+  protected onListKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+    const target = event.target as HTMLElement | null;
+    if (!target?.matches('article[data-entry-id]')) return;
+    const rowEl = target.closest<HTMLElement>('.row');
+    const viewport = this.viewport();
+    if (!rowEl || !viewport) return;
+    const rows = this.layout().rows;
+    const step = event.key === 'ArrowDown' ? 1 : -1;
+    let index = Number(rowEl.dataset['index']) + step;
+    while (index >= 0 && index < rows.length && !rows[index].row.item) index += step;
+    const next = rows[index]?.row.item;
+    if (!next) return;
+    event.preventDefault();
+    const { offsets } = this.layout();
+    const top = viewport.measureScrollOffset('top');
+    const size = viewport.getViewportSize();
+    if (offsets[index] < top) viewport.scrollToOffset(offsets[index]);
+    else if (offsets[index + 1] > top + size)
+      viewport.scrollToOffset(Math.max(0, offsets[index + 1] - size));
+    this.focusCard(viewport.elementRef.nativeElement, `article[data-entry-id="${next.id}"]`);
   }
 
   protected emotionLabel(item: TimelineItem): string | null {
@@ -943,6 +1075,14 @@ export class TimelinePage {
       this.locale,
       { timeZone: 'UTC' },
     );
+  }
+
+  /** « depuis oct. 2026 · en cours », ou les bornes d'une situation terminée (bande en tête). */
+  private bandWhen(item: TimelineItem): string {
+    if (!item.ongoing) return formatOccurred(item.occurred, this.locale);
+    const utc = (item.occurred.precision ?? 'exact') !== 'exact';
+    const since = sinceLabel(item.occurred.from, this.locale, utc);
+    return $localize`:Situation en cours, bande en tête de la timeline@@timeline.band.sinceOngoing:${since}:since: · en cours`;
   }
 
   private bandLabel(item: TimelineItem): string {

@@ -19,7 +19,7 @@ export async function setGroupBy(
 }
 
 /** Séance démarrée à `from`, puis clôturée avec durée et compte rendu. */
-async function closedSession(
+export async function closedSession(
   api: APIRequestContext,
   patientId: string,
   from: string,

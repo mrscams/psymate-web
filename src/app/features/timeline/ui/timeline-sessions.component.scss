@@ -1,27 +1,30 @@
+// Mode par séance (proposition 03, même grammaire que le flux) : la date à gauche de l'axe (110 px,
+// 16 px d'écart), le séparateur teinté de la séance, la première ligne du compte rendu, puis les
+// lignes des entrées sur l'axe (filet de 2 px, 18 px avant les cartes, 8 px entre deux lignes).
 :host {
   display: block;
 }
 
 .sessions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-// Une séance : contour à la couleur du type séance (fiche 03 : carré arrondi, contour, jamais d'aplat).
-.session {
-  border: 1px solid var(--border-subtle);
-  border-left: 3px solid var(--entry-session);
-  border-radius: 10px;
-  background: var(--surface-raised);
+.session + .session {
+  margin-top: 12px;
+}
 
-  &.outside {
-    border-left-color: var(--border-strong);
-    border-style: dashed;
-  }
+.day {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 0 16px;
+}
+
+.items {
+  min-width: 0;
+  padding: 0 0 4px 18px;
+  border-left: 2px solid var(--border-subtle);
 }
 
 .heading {
@@ -29,22 +32,30 @@
   font: inherit;
 }
 
-.toggle {
+.outside-head {
   display: flex;
-  // Petit écran ou police large : l'en-tête passe à la ligne au lieu de déborder.
-  flex-wrap: wrap;
   align-items: center;
-  gap: 4px 10px;
+  gap: 10px;
+  box-sizing: border-box;
   width: 100%;
-  min-height: 48px;
-  padding: 8px 14px;
+  height: 40px;
+  margin-top: 6px;
+  padding: 0 12px;
   border: 0;
-  border-radius: 10px;
-  background: transparent;
+  border-radius: 8px;
+  background: var(--surface-sunken);
   color: var(--text-primary);
-  font: var(--mat-sys-title-small);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
   text-align: left;
   cursor: pointer;
+
+  .count {
+    margin-left: auto;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
 
   &:focus-visible {
     outline: 2px solid var(--primary);
@@ -53,125 +64,26 @@
 }
 
 .chevron {
-  width: 8px;
-  height: 8px;
-  border-right: 2px solid var(--text-secondary);
-  border-bottom: 2px solid var(--text-secondary);
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
   transform: rotate(-45deg);
-  transition: transform 120ms ease;
 
-  .open & {
+  &.down {
     transform: rotate(45deg);
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
-}
-
-.title {
-  flex: 0 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.count {
-  flex: none;
-  margin-left: auto;
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 12px;
 }
 
 .panel {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
-  grid-template-areas: 'entries summary';
-  gap: 12px 16px;
-  padding: 0 14px 14px;
-
-  @media (max-width: 900px) {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      'summary'
-      'entries';
-  }
-}
-
-.summary {
-  grid-area: summary;
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-.facts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 12px;
-  margin: 0;
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-// Séance non clôturée : avertissement (fiche 03 : #FBF1DC / #7A5A12).
-.open-state {
-  padding: 0 6px;
-  border-radius: 4px;
-  background: var(--warning-bg);
-  color: var(--warning);
-  font-family: var(--font-ui);
-}
-
-.report {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: var(--surface-sunken);
-}
-
-.report-title {
-  margin: 0;
-  color: var(--text-primary);
-  font: var(--mat-sys-label-large);
-}
-
-.report-text,
-.report-empty {
-  margin: 0;
-  color: var(--text-primary);
-  font: var(--mat-sys-body-medium);
-  white-space: pre-line;
-}
-
-.report-empty {
-  color: var(--text-secondary);
-}
-
-.open-session {
-  min-height: 32px;
-  padding: 0 12px;
-  border: 1px solid var(--border-strong);
-  border-radius: 8px;
-  background: var(--surface-raised);
-  color: var(--text-primary);
-  font: var(--mat-sys-label-large);
-  cursor: pointer;
-
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-  }
+  padding-top: 8px;
 }
 
 .entries {
-  grid-area: entries;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -180,60 +92,49 @@
   list-style: none;
 }
 
-.entry pm-timeline-card {
-  height: auto;
-}
-
-.no-entries,
-.outside-note {
-  grid-area: entries;
+.outside-note,
+.no-entries {
   margin: 0;
   color: var(--text-secondary);
-  font: var(--mat-sys-body-medium);
-}
-
-.outside-note {
-  grid-area: summary;
-}
-
-// En-tête (maquette 03, état B) : horaires · durée · modalité, puis « non clôturée ».
-// Horaires · durée · modalité : jamais coupés par des points de suspension ; à 320 px ou au zoom
-// 200 %, ils passent à la ligne (l'en-tête lui-même se replie, .toggle en flex-wrap).
-.header-facts {
-  flex: 0 1 auto;
-  min-width: 0;
-  color: var(--text-secondary);
-  font: var(--mat-sys-body-medium);
-  overflow-wrap: anywhere;
-}
-
-.header-open {
-  flex: none;
-  padding: 1px 6px;
-  border-radius: 999px;
-  background: var(--warning-bg);
-  color: var(--warning);
-  font: var(--mat-sys-label-small);
+  font-size: 13px;
 }
 
 .more-sessions {
   display: flex;
   justify-content: center;
-  padding: 8px 0 0;
+  margin-top: 16px;
 }
 
 .show-more {
   min-height: 32px;
-  padding: 0 12px;
+  padding: 0 14px;
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
   background: var(--surface-raised);
-  color: var(--text-primary);
-  font: var(--mat-sys-label-large);
+  color: var(--primary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
 
   &:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
+  }
+}
+
+.day-head {
+  padding: 12px 0 4px;
+}
+
+// Téléphone : une colonne, ni dates à gauche ni axe.
+.narrow {
+  .day {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .items {
+    padding-left: 0;
+    border-left: 0;
   }
 }

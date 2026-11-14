@@ -117,6 +117,17 @@ function daysAgoMidnight(days: number): string {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate() - days).toISOString();
 }
 
+/** Ouvre le panneau « Filtres » (overlay CDK) et rend le bouton « Brouillons seulement ». */
+async function draftsButton(el: HTMLElement, fixture: { whenStable(): Promise<unknown> }) {
+  [...el.querySelectorAll<HTMLButtonElement>('pm-timeline-filters button')]
+    .find((b) => text(b).startsWith('Filtres'))!
+    .click();
+  await fixture.whenStable();
+  return [...document.querySelectorAll<HTMLButtonElement>('#timeline-filters-panel button')].find(
+    (b) => text(b).startsWith('Brouillons seulement'),
+  )!;
+}
+
 /** « Toute la période » demandée par l'URL (?period=all) : vue décennie possible au-delà de 3 ans. */
 const ALL = { period: 'all' };
 
@@ -131,7 +142,7 @@ describe('TimelinePage', () => {
     expect(el.querySelector('pm-state [aria-busy="true"]')).not.toBeNull();
     expect(el.querySelector('[role="list"]')).toBeNull();
     // Pas de compteur « 0 » sur les puces avant la première lecture.
-    expect(el.querySelector('pm-timeline-filters .count')).toBeNull();
+    expect(el.querySelector('pm-timeline-filters .chips .n')).toBeNull();
   });
 
   it('erreur : bloc erreur, Réessayer relit la première fenêtre', async () => {
@@ -142,7 +153,7 @@ describe('TimelinePage', () => {
     const { el, fixture } = await render(page);
     const alert = el.querySelector('pm-state [role="alert"]');
     expect(text(alert)).toContain('Impossible de charger la timeline');
-    expect(el.querySelector('pm-timeline-filters .count')).toBeNull();
+    expect(el.querySelector('pm-timeline-filters .chips .n')).toBeNull();
     alert!.querySelector<HTMLButtonElement>('button')!.click();
     await flush();
     await fixture.whenStable();
@@ -241,7 +252,7 @@ describe('TimelinePage', () => {
     expect(el.querySelectorAll('pm-timeline-card')).toHaveLength(2);
   });
 
-  it('carte de séance : durée d’après ses bornes, modalité et clôture du détail, nombre d’entrées', async () => {
+  it('séance : séparateur en tête de son jour, durée d’après ses bornes, nombre d’entrées', async () => {
     const session = timelineItem({
       id: 's-1',
       type: 'session',
@@ -267,16 +278,14 @@ describe('TimelinePage', () => {
       sessionDetail: ReturnType<typeof vi.fn>;
     };
     expect(api.sessionDetail).toHaveBeenCalledWith('s-1');
-    const card = [...el.querySelectorAll('pm-timeline-card article')].find(
-      (c) => c.getAttribute('data-entry-id') === 's-1',
-    )!;
-    expect(text(card.querySelector('.title'))).toBe('Séance · 50 min');
-    expect(text(card.querySelector('.session-count'))).toBe('2 entrées');
-    expect(card.querySelector('.precision')).toBeNull();
+    const divider = el.querySelector('pm-timeline-session-divider article[data-entry-id="s-1"]')!;
+    expect(text(divider.querySelector('.label'))).toBe('Séance · 50 min');
+    expect(text(divider.querySelector('.sum'))).toBe('2 entrées');
+    expect(el.querySelectorAll('pm-timeline-card')).toHaveLength(2);
     void fixture;
   });
 
-  it('chargée : ligne d’état, liste étiquetée, cartes, axe et bandes', async () => {
+  it('chargée : colonne de résumé, liste étiquetée, jours en ancres, bandes, pied du flux', async () => {
     const reorg = timelineItem({
       id: 'reorg',
       type: 'situation',
@@ -294,22 +303,24 @@ describe('TimelinePage', () => {
         }),
       ),
     );
-    expect(text(el.querySelector('.status-line .count'))).toBe('2 entrées · 1 fenêtre en mémoire');
+    // Plus de ligne d'état en mono : le compte est dans la colonne de résumé (maquette 03).
+    expect(el.querySelector('.status-line')).toBeNull();
+    expect(text(el.querySelector('.tl-side .lbl'))).toBe('Sur la période · 90 jours');
+    expect(text(el.querySelector('.tl-side .headline'))).toBe('2 entrées · aucune séance');
     expect(el.querySelector('[role="list"]')?.getAttribute('aria-label')).toContain('plus récente');
     expect(el.querySelectorAll('[role="listitem"] pm-timeline-card')).toHaveLength(2);
-    const band = el.querySelector('.bands-legend li');
+    // Chaque jour est écrit une fois, à gauche de l'axe.
+    expect(el.querySelectorAll('.date pm-timeline-day')).toHaveLength(2);
+    // La situation en cours : une ligne en tête du flux, avec son lien vers le graphe.
+    const band = el.querySelector('.bands-top li');
     expect(band?.getAttribute('aria-label')).toContain('Réorganisation du service');
     expect(band?.getAttribute('aria-label')).toContain('en cours');
-    // Une seule ligne avant la liste (UX-G2c) : la liste des situations se déplie sur demande.
-    const toggle = el.querySelector<HTMLButtonElement>('.status-row button.bands-toggle');
-    expect(text(toggle)).toBe('1 situation sur la période');
-    expect(toggle?.getAttribute('aria-expanded')).toBe('false');
-    expect(toggle?.getAttribute('aria-controls')).toBe('timeline-bands');
-    expect(el.querySelector('#timeline-bands')?.classList.contains('open')).toBe(false);
-    toggle?.click();
-    await fixture.whenStable();
-    expect(toggle?.getAttribute('aria-expanded')).toBe('true');
-    expect(el.querySelector('#timeline-bands')?.classList.contains('open')).toBe(true);
+    expect(text(band)).toContain('Réorganisation du service · depuis avr. 2026 · en cours');
+    expect(band?.querySelector('a.band-link')?.getAttribute('href')).toBe(
+      '/patients/p-1/graph?root=reorg',
+    );
+    expect(text(el.querySelector('.foot'))).toBe('2 entrées sur 90 jours');
+    void fixture;
     expect(el.querySelectorAll('.lane.on')).toHaveLength(2);
     expect(el.querySelector('.arrow')).not.toBeNull();
     expect(el.querySelector('[role="toolbar"]')).not.toBeNull();
@@ -424,7 +435,7 @@ describe('TimelinePage', () => {
 
     // Une puce posée pendant le détail du mois reste après Échap : seule la période revient.
     [...el.querySelectorAll<HTMLButtonElement>('pm-timeline-filters button')]
-      .find((b) => text(b).startsWith('Note'))!
+      .find((b) => text(b).startsWith('Notes'))!
       .click();
     await flush();
     await fixture.whenStable();
@@ -582,14 +593,14 @@ describe('TimelinePage', () => {
     );
     const { el, fixture } = await render(page);
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
-    // Émotions et tags non actifs : dans le menu « Filtres ».
-    expect(el.querySelector('button[data-emotion="anxiety"]')).toBeNull();
+    // Émotions et tags : dans le panneau « Filtres » (et la colonne de résumé), pas dans la barre.
+    expect(el.querySelector('pm-timeline-filters button[data-emotion="anxiety"]')).toBeNull();
     [...el.querySelectorAll<HTMLButtonElement>('pm-timeline-filters button')]
       .find((b) => text(b).startsWith('Filtres'))!
       .click();
     await fixture.whenStable();
     const anxiety = document.querySelector<HTMLButtonElement>(
-      '[role="menuitemcheckbox"][data-emotion="anxiety"]',
+      '#timeline-filters-panel [data-emotion="anxiety"]',
     )!;
     expect(text(anxiety)).toBe('Anxiété 1');
     anxiety.click();
@@ -607,22 +618,20 @@ describe('TimelinePage', () => {
         replaceUrl: true,
       }),
     );
-    expect(el.querySelector('button[data-emotion="anxiety"]')?.getAttribute('aria-pressed')).toBe(
-      'true',
-    );
+    expect(
+      el.querySelector('.tl-side button[data-emotion="anxiety"]')?.getAttribute('aria-pressed'),
+    ).toBe('true');
   });
 
   it('URL ?emotion=&drafts= : filtres repris au chargement (rechargement, lien partagé)', async () => {
     const page = vi.fn().mockResolvedValue(timelinePage({ items: items(1) }));
-    const { el } = await render(page, shellMock(), null, {
+    const { el, fixture } = await render(page, shellMock(), null, {
       params: { emotion: 'anxiety', drafts: '1' },
     });
     expect(page.mock.calls[0][1]).toEqual(
       expect.objectContaining({ emotions: ['anxiety'], draftsOnly: true }),
     );
-    const drafts = [...el.querySelectorAll('button')].find((b) =>
-      text(b).startsWith('Brouillons seulement'),
-    );
+    const drafts = await draftsButton(el, fixture);
     expect(drafts?.getAttribute('aria-pressed')).toBe('true');
   });
 
@@ -646,7 +655,7 @@ describe('TimelinePage', () => {
     expect(el.querySelectorAll('pm-timeline-card')).toHaveLength(2);
   });
 
-  it('préférence « par séance » : séances dépliables, ligne d’état, pas de zoom', async () => {
+  it('préférence « par séance » : séparateurs dépliables, colonne de résumé, pas de zoom', async () => {
     const session = timelineItem({
       id: 's-1',
       type: 'session',
@@ -669,9 +678,9 @@ describe('TimelinePage', () => {
     );
     expect(el.querySelector('pm-timeline-sessions')).not.toBeNull();
     expect(el.querySelector('cdk-virtual-scroll-viewport')).toBeNull();
-    expect(el.querySelector('.zoom')).toBeNull();
-    expect(text(el.querySelector('.status-line .count'))).toBe('2 entrées · 1 séance');
-    const toggle = el.querySelector('button.toggle');
+    expect(el.querySelector('.zoomctl')).toBeNull();
+    expect(text(el.querySelector('.tl-side .headline'))).toBe('1 entrée · 1 séance');
+    const toggle = el.querySelector('pm-timeline-session-divider button.head');
     expect(toggle?.getAttribute('aria-expanded')).toBe('true');
     expect(el.querySelector('button[data-mode="session"]')?.getAttribute('aria-pressed')).toBe(
       'true',
@@ -715,9 +724,7 @@ describe('TimelinePage', () => {
       Promise.resolve(timelinePage({ items: items(3) })),
     );
     vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
-    const button = [...(fixture.nativeElement as HTMLElement).querySelectorAll('button')].find(
-      (b) => text(b).startsWith('Brouillons seulement'),
-    )!;
+    const button = await draftsButton(fixture.nativeElement as HTMLElement, fixture);
     button.click();
     await flush();
     fixture.destroy();
@@ -736,9 +743,7 @@ describe('TimelinePage', () => {
       Promise.resolve(timelinePage({ items: items(3) })),
     );
     vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
-    [...(fixture.nativeElement as HTMLElement).querySelectorAll('button')]
-      .find((b) => text(b).startsWith('Brouillons seulement'))!
-      .click();
+    (await draftsButton(fixture.nativeElement as HTMLElement, fixture)).click();
     await flush();
     fixture.destroy();
     const snapshot = shell.rememberTab.mock.calls[0][1] as TimelineSnapshot;
@@ -818,7 +823,7 @@ describe('TimelinePage', () => {
     expect(page).toHaveBeenLastCalledWith('p-1', expect.objectContaining({ from: null }));
     // Toujours par séance (pas de repli sur le chronologique), la séance demandée dépliée.
     expect(el.querySelector('pm-timeline-sessions')).not.toBeNull();
-    const toggle = el.querySelector('button.toggle[data-session-id="s-old"]');
+    const toggle = el.querySelector('button.head[data-session-id="s-old"]');
     expect(toggle?.getAttribute('aria-expanded')).toBe('true');
     navigate.mockRestore();
   });

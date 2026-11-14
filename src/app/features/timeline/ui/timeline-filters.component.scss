@@ -1,140 +1,123 @@
-// Première rangée de la barre d'outils (maquette 03, état A) : « Types F », puces 26 px en 13 px
-// (maquette), puces actives, « Filtres (n) », « Brouillons seulement », sur une ligne qui ne se
-// replie qu'en dessous de la largeur du dossier, même avec une police de repli plus large (UX-G2c).
+// Puces de la barre d'outils (proposition 03, `.tl-toolbar .tchip`) : 28 px, pilule, bordure subtle,
+// 13 px secondaire, compteur en text-disabled tabulaire ; active : primary-tint, bordure et texte
+// primary, 600. Le bouton « Filtres » ouvre un panneau (émotions, tags, brouillons).
 :host {
+  display: contents;
+}
+
+// Les puces restent sur une ligne : quand la place manque (1280 px, téléphone), elles défilent
+// horizontalement comme sur la maquette mobile, la barre ne passe jamais sur deux lignes.
+.chips {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex: 0 1 auto;
   gap: 6px;
   min-width: 0;
+  padding: 3px;
+  margin: -3px;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  @media (max-width: 599.98px) {
+    flex: 1 1 auto;
+  }
 }
 
-.row-label {
+.tchip {
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: 6px;
-  margin-right: 2px;
-  color: var(--text-secondary);
-  font: var(--mat-sys-body-medium);
-  font-size: 13px;
-}
-
-kbd {
-  padding: 1px 5px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 11px;
-}
-
-.group {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px;
-  min-width: 0;
-}
-
-.separator {
-  width: 1px;
-  height: 22px;
-  margin: 0 2px;
-  background: var(--border-subtle);
-}
-
-// Puces : contour neutre ; actives sur le fond primaire teinté (fiche 03 : #E3EAF8 / #2C4C99).
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  height: 26px;
-  padding: 0 8px;
+  box-sizing: border-box;
+  height: 28px;
+  padding: 0 10px;
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
   background: var(--surface-raised);
-  color: var(--text-primary);
-  font: var(--mat-sys-body-medium);
+  color: var(--text-secondary);
+  font: inherit;
   font-size: 13px;
   white-space: nowrap;
   cursor: pointer;
 
   &:hover {
-    border-color: var(--border-strong);
+    color: var(--text-primary);
   }
 
   &[aria-pressed='true'],
-  &.has-active {
+  &.filters.has-active {
     border-color: var(--primary);
     background: var(--primary-tint);
     color: var(--primary-hover);
-    font-weight: 500;
-
-    .count {
-      color: var(--primary-hover);
-    }
+    font-weight: 600;
   }
 
   &:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
   }
+
+  .n {
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+    font-weight: 400;
+  }
+
+  &[aria-pressed='true'] .n,
+  &.has-active .n {
+    color: inherit;
+  }
 }
 
-.count {
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+  width: min(420px, calc(100vw - 32px));
+  max-height: min(70vh, 560px);
+  overflow: auto;
+  padding: 16px 18px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  box-shadow:
+    0 2px 6px color-mix(in srgb, var(--text-primary) 6%, transparent),
+    0 12px 32px -20px color-mix(in srgb, var(--text-primary) 25%, transparent);
+  color: var(--text-primary);
+  font-size: 13.5px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.heading {
+  margin: 0;
   color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12.5px;
 }
 
-// Croix des puces actives (retirer le filtre), dessinée en CSS.
-.remove {
-  position: relative;
-  width: 10px;
-  height: 10px;
-
-  &::before,
-  &::after {
-    position: absolute;
-    top: 4px;
-    left: 0;
-    width: 10px;
-    height: 1.5px;
-    border-radius: 1px;
-    background: currentColor;
-    content: '';
-  }
-
-  &::before {
-    transform: rotate(45deg);
-  }
-
-  &::after {
-    transform: rotate(-45deg);
-  }
+.values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
-.funnel,
-.pen {
-  width: 12px;
-  height: 12px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linejoin: round;
+.none {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 12.5px;
 }
 
-.drafts .pen {
-  color: var(--warning);
-}
-
-// Pastille de famille d'émotion (jamais en aplat sur la puce).
 .dot {
   flex: none;
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  background: var(--feeling);
+  background: var(--text-disabled);
 }
 
 .family-joy {
@@ -160,69 +143,4 @@ kbd {
 }
 .family-anticipation {
   background: var(--emotion-anticipation);
-}
-
-// Menu « Filtres (n) » : rendu dans l'overlay, mais déclaré dans ce gabarit (styles conservés).
-.menu-heading {
-  padding: 8px 16px 4px;
-  color: var(--text-secondary);
-  font: var(--mat-sys-label-small);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.menu-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 200px;
-}
-
-.menu-label {
-  flex: 1;
-  font-weight: 400;
-}
-
-// Menu dense : 36 px par ligne (les éléments sont déclarés ici, ils gardent ces styles).
-button[mat-menu-item] {
-  min-height: 36px;
-}
-
-.menu-count {
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-// Case du menuitemcheckbox : l'état est aussi porté par aria-checked (rien par la couleur seule).
-.check {
-  position: relative;
-  flex: none;
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid var(--border-strong);
-  border-radius: 3px;
-
-  &.on {
-    border-color: var(--primary);
-    background: var(--primary);
-
-    &::after {
-      position: absolute;
-      top: 1px;
-      left: 4px;
-      width: 3px;
-      height: 7px;
-      border-right: 2px solid var(--primary-on);
-      border-bottom: 2px solid var(--primary-on);
-      transform: rotate(45deg);
-      content: '';
-    }
-  }
-}
-
-@media (max-width: 599px) {
-  .separator {
-    display: none;
-  }
 }

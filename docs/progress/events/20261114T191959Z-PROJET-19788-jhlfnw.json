@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-14T19:19:59.786Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-S9 Timeline selon la proposition 03 : barre d'outils sur une ligne, jours en ancres, séances en séparateurs, colonne de résumé, pleine largeur",
+  "notes": "Défilement virtuel à hauteurs variables (timeline-layout.model + row-offsets.directive), 2 000 entrées p95 16,7 ms, 3 fenêtres au plus. Vitest 2 117 verts, e2e flux-5 31 verts (scénario maquette 03 à 1440, 1280, 390 px, captures docs/design/captures-ux-s9). Écarts contrat : pas d'extrait (TimelineItemDto sans texte), moyennes et fourchettes d'intensité absentes des facettes, première ligne du compte rendu lue dans le détail de chaque séance. Petite retouche patient-shell (classe full-bleed de l'onglet Timeline).",
+  "next": "Revue du propriétaire en local ; ni push ni PR avant son accord",
+  "branch": "claude/ux-s9-timeline-b36a59",
+  "checkout": "ux-s9-timeline-b36a59"
+}

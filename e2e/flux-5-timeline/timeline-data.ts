@@ -1,4 +1,4 @@
-import { APIRequestContext, expect, request as playwrightRequest } from '@playwright/test';
+import { APIRequestContext, expect, Page, request as playwrightRequest } from '@playwright/test';
 
 import { TestAccount } from '../support/accounts';
 import { apiDrained } from '../support/api-drain';
@@ -226,4 +226,15 @@ export async function volumePatient(
   }
   await Promise.all(contexts.map((context) => context.dispose()));
   return id;
+}
+
+/**
+ * Nombre d'éléments de la plage (séances comprises) et, si donné, fenêtres en mémoire : lus sur le
+ * flux (`data-total`, `data-windows`) depuis que la ligne d'état en mono a laissé place à la colonne
+ * de résumé (proposition 03, UX-S9).
+ */
+export async function expectCount(page: Page, total: number, windows?: number): Promise<void> {
+  const stream = page.locator('.stream');
+  await expect(stream).toHaveAttribute('data-total', String(total));
+  if (windows !== undefined) await expect(stream).toHaveAttribute('data-windows', String(windows));
 }
