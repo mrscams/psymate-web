@@ -132,18 +132,59 @@ export function serverMs(response: Response): number {
   return timing.responseStart - timing.requestStart;
 }
 
-/** Le bloc de la vue d'ensemble dont le titre (h3) est `heading`. */
+/**
+ * Une section de la vue d'ensemble (UX-S6) dont le titre (h3) est `heading` : colonne de lecture
+ * (« Comment évoluent les ressentis », « Noté depuis la dernière séance », « Dernières séances »)
+ * ou colonne latérale (« Cadre du suivi », « Situations en cours · 1 »…).
+ */
 export function block(page: Page, heading: string | RegExp): Locator {
   return page
-    .locator('pm-overview-block section')
+    .locator('pm-overview-section section')
     .filter({ has: page.getByRole('heading', { level: 3, name: heading }) });
 }
 
-/** La bascule « Vue : Simple · Complète » de l'en-tête patient. */
-export function viewToggle(page: Page): Locator {
-  return page.getByRole('group', { name: "Niveau de détail de la vue d'ensemble" });
+/** La bande « Depuis la séance du … » / « Depuis l'ouverture du dossier » (UX-S6). */
+export function since(page: Page): Locator {
+  return page.locator('pm-overview-since section');
 }
 
+/** Les trois chiffres de la bande « Depuis » (nombre en gras, dans l'ordre). */
+export function sinceFacts(page: Page): Locator {
+  return since(page).locator('.fact b');
+}
+
+/** Le sélecteur « Fenêtre : 30 j · 90 j · 1 an » de l'en-tête patient (UX-S6). */
 export function windowSelector(page: Page): Locator {
-  return page.getByRole('group', { name: "Période de la vue d'ensemble" });
+  return page.getByRole('group', { name: 'Fenêtre', exact: true });
+}
+
+/**
+ * Entrées notées depuis la dernière séance (UX-S6) : rattachées à la séance d'accueil (lue dans
+ * les séances récentes de la synthèse : « sessions/current » renvoie la séance passée), après la
+ * séance passée du dossier ; un ressenti d'anxiété 7/10 en brouillon il y a 2 jours et une note
+ * titrée il y a 1 jour.
+ */
+export async function notedSince(api: APIRequestContext, patientId: string): Promise<void> {
+  const response = await api.get(`${API}/api/patients/${patientId}/overview?window=90d`);
+  expect(response.status(), await response.text()).toBe(200);
+  const { recentSessions } = (await response.json()) as {
+    recentSessions: { entryId: string; kind: string }[];
+  };
+  const intake = recentSessions.find((session) => session.kind === 'intake')?.entryId;
+  expect(intake, JSON.stringify(recentSessions)).toBeTruthy();
+  await entry(api, patientId, {
+    type: 'feeling',
+    title: 'Réveils vers 3 h',
+    status: 'draft',
+    feeling: { emotionCode: 'anxiety', intensity: 7 },
+    occurred: { from: daysAgo(2, 8), precision: 'day' },
+    sessionId: intake,
+  });
+  await entry(api, patientId, {
+    type: 'note',
+    title: 'Revoir l’hygiène de sommeil',
+    body: 'Proposer un agenda du sommeil.',
+    occurred: { from: daysAgo(1, 9) },
+    sessionId: intake,
+  });
 }

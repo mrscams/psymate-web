@@ -21,7 +21,9 @@ async function openPreferences(page: Page): Promise<void> {
   await page.goto(PREFERENCES);
   await expect(page.getByRole('heading', { level: 1, name: 'Préférences' })).toBeVisible();
   // Le contenu n'apparaît qu'avec la réponse du serveur (état chargement avant).
-  await expect(page.getByRole('group', { name: "Vue d'ensemble par défaut" })).toBeVisible();
+  await expect(page.getByRole('group', { name: "Fenêtre d'analyse" })).toBeVisible();
+  // UX-S6 : plus de réglage « Vue d'ensemble par défaut » (Simple / Complète), une seule vue.
+  await expect(page.getByRole('group', { name: "Vue d'ensemble par défaut" })).toHaveCount(0);
 }
 
 test('thème : appliqué sans rechargement, PATCH envoyé, conservé dans un autre navigateur', async ({
@@ -161,7 +163,8 @@ test('clé inconnue dans le PATCH : ignorée, 200, les 9 clés renvoyées', asyn
   expect(body['overview.window']).toBe('12m');
   expect('cleInconnue' in body).toBe(false);
 
-  // L'écran relit les 9 clés telles quelles : « 1 an » actif, rien d'autre changé.
+  // Le serveur renvoie encore overview.view (contrat) ; le client ne la lit plus (UX-S6). L'écran
+  // relit les clés qu'il affiche telles quelles : « 1 an » actif, rien d'autre changé.
   await signIn(page, account);
   await openPreferences(page);
   const window = page.getByRole('group', { name: "Fenêtre d'analyse" });
@@ -227,18 +230,15 @@ test('parcours clavier et axe-core', async ({ page, request }) => {
   await expect(page.getByRole('switch')).toBeChecked();
   await expectNoAxeViolations(page);
 
-  // Au clavier : focus sur « Simple », Tab vers « Complète », puis Entrée enregistre.
-  const group = page.getByRole('group', { name: "Vue d'ensemble par défaut" });
-  await group.getByRole('button', { name: 'Simple' }).focus();
+  // Au clavier : focus sur « 90 j », Tab vers « 1 an », puis Entrée enregistre.
+  const group = page.getByRole('group', { name: "Fenêtre d'analyse" });
+  await group.getByRole('button', { name: '90 j' }).focus();
   await page.keyboard.press('Tab');
-  await expect(group.getByRole('button', { name: 'Complète' })).toBeFocused();
+  await expect(group.getByRole('button', { name: '1 an' })).toBeFocused();
   const patch = page.waitForResponse(PATCH);
   await page.keyboard.press('Enter');
-  await expect(group.getByRole('button', { name: 'Complète' })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
-  expect((await patch).request().postDataJSON()).toEqual({ 'overview.view': 'complete' });
+  await expect(group.getByRole('button', { name: '1 an' })).toHaveAttribute('aria-pressed', 'true');
+  expect((await patch).request().postDataJSON()).toEqual({ 'overview.window': '12m' });
 
   // Les vignettes de thème sont de vrais boutons radio : flèches entre eux.
   await page.getByRole('radio', { name: 'Clair' }).focus();

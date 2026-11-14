@@ -40,9 +40,9 @@ function header(page: Page) {
   };
 }
 
-/** La séance d'accueil dans « Dernières séances » de la vue d'ensemble (M4-05), dépliable. */
-function intakeToggle(page: Page) {
-  return page.locator('pm-overview-sessions button[aria-expanded]').first();
+/** « Voir les données » du graphe de la vue d'ensemble (UX-S6), rangé dans la mémoire du dossier. */
+function dataToggle(page: Page) {
+  return page.locator('pm-overview-feelings button[aria-expanded]');
 }
 
 test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre de capture', async ({
@@ -50,11 +50,6 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   request,
 }) => {
   const account = await createAccount(request, 'm1-07.onglets', 'psychologist');
-  // Vue complète (M4-05) : l'onglet 1 a des séances dépliables, son état rangé par rememberTab.
-  const prefs = await request.patch(`${API}/api/me/preferences`, {
-    data: { 'overview.view': 'complete' },
-  });
-  expect(prefs.status(), await prefs.text()).toBe(200);
   const id = await createPatient(request, 'Inès M.');
   // La séance d'accueil est créée de façon asynchrone après le patient : on l'attend.
   await expect
@@ -67,6 +62,16 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
     data: { modality: 'in_person' },
   });
   expect(start.status(), await start.text()).toBe(201);
+  // Un ressenti dans la séance : le graphe de la vue d'ensemble a ses données (« Voir les données »).
+  const feeling = await request.post(`${API}/api/patients/${id}/entries`, {
+    data: {
+      type: 'feeling',
+      feeling: { emotionCode: 'anxiety', intensity: 5 },
+      occurred: { from: new Date().toISOString(), precision: 'day' },
+      sessionId: ((await start.json()) as { id: string }).id,
+    },
+  });
+  expect(feeling.status(), await feeling.text()).toBe(201);
   await signIn(page, account);
 
   await page.goto(`/fr/patients/${id}`);
@@ -91,17 +96,17 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(page.getByRole('heading', { level: 2, name: "Vue d'ensemble" })).toBeVisible();
   await expectNoAxeViolations(page);
 
-  // L'onglet 1 (vue d'ensemble, M4-05) range ses séances dépliées (rememberTab) : on replie la
-  // séance d'accueil, puis on part sur le Graphe (M2-06) par clic : patient sans lien, état vide.
+  // L'onglet 1 (vue d'ensemble, UX-S6) range « Voir les données » (rememberTab) : on déplie le
+  // tableau, puis on part sur le Graphe (M2-06) par clic : patient sans lien, état vide.
   // Sans situation en cours reliée, le graphe s'ouvre sur tout le dossier (?root=all, UX-B3).
-  await expect(intakeToggle(page)).toHaveAttribute('aria-expanded', 'true');
-  await intakeToggle(page).click();
-  await expect(intakeToggle(page)).toHaveAttribute('aria-expanded', 'false');
+  await expect(dataToggle(page)).toHaveAttribute('aria-expanded', 'false');
+  await dataToggle(page).click();
+  await expect(dataToggle(page)).toHaveAttribute('aria-expanded', 'true');
   await h.tabs.getByRole('link', { name: /Graphe/ }).click();
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph\\?root=all$`));
   await expect(page.getByRole('heading', { level: 2, name: 'Graphe des liens' })).toBeAttached();
   await expect(page.getByText('Les liens que vous créez apparaîtront ici')).toBeVisible();
-  await expect(intakeToggle(page)).toHaveCount(0);
+  await expect(dataToggle(page)).toHaveCount(0);
 
   // Touches : 2 → Timeline (M3-02), 1 → l'onglet Séance (séance ouverte, UX-S3) ; la vue
   // d'ensemble par son lien, avec son état ; 3 → Graphe.
@@ -112,7 +117,7 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
   await h.tabs.getByRole('link', { name: /Vue d'ensemble/ }).click();
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
-  await expect(intakeToggle(page)).toHaveAttribute('aria-expanded', 'false');
+  await expect(dataToggle(page)).toHaveAttribute('aria-expanded', 'true');
   await page.keyboard.press('3');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph\\?root=all$`));
   await expect(page.getByText('Les liens que vous créez apparaîtront ici')).toBeVisible();
@@ -131,14 +136,14 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(h.name).toHaveText('Inès M.');
 });
 
-test('« suivi·e depuis » : même début de suivi dans l’en-tête et les faits clés (UX-G2c)', async ({
+test('« suivi·e depuis » : même début de suivi dans l’en-tête et le cadre du suivi (UX-G2c, UX-S6)', async ({
   page,
   request,
 }) => {
   test.setTimeout(60_000);
   const account = await createAccount(request, 'ux-g2c.suivi', 'psychologist');
   const prefs = await request.patch(`${API}/api/me/preferences`, {
-    data: { 'overview.view': 'complete', 'overview.window': '12m' },
+    data: { 'overview.window': '12m' },
   });
   expect(prefs.status(), await prefs.text()).toBe(200);
   // Dossier neuf : le suivi commence à la création, que la séance d'accueil confirme.
@@ -154,7 +159,8 @@ test('« suivi·e depuis » : même début de suivi dans l’en-tête et les fai
   await signIn(page, account);
 
   const meta = page.locator('pm-patient-header .meta');
-  const facts = page.getByRole('list', { name: 'Traitement, suivi et drapeaux' });
+  // Cadre du suivi de la vue d'ensemble (UX-S6) : « Suivi · depuis <mois> · cabinet ».
+  const facts = page.locator('pm-overview-side .line').first();
   const paris = { timeZone: 'Europe/Paris' } as const;
   const today = new Date();
 
@@ -162,9 +168,8 @@ test('« suivi·e depuis » : même début de suivi dans l’en-tête et les fai
   await expect(header(page).name).toHaveText('Agathe N.');
   // UX-S2 : mois abrégé dans l'en-tête compact (« suivi·e depuis sept. 2026 »).
   const month = new Intl.DateTimeFormat('fr-FR', { ...paris, month: 'short', year: 'numeric' });
-  const day = new Intl.DateTimeFormat('fr-FR', { ...paris, dateStyle: 'medium' });
   await expect(meta).toContainText(`suivi·e depuis ${month.format(today)}`);
-  await expect(facts).toContainText(`Suivi depuis le ${day.format(today)}`);
+  await expect(facts).toContainText(`depuis ${month.format(today)}`);
   await expectNoAxeViolations(page);
 
   // La création ne vaut plus début de suivi : l'en-tête ne dit pas « depuis <ce mois> » au-dessus
@@ -179,7 +184,8 @@ test('« suivi·e depuis » : même début de suivi dans l’en-tête et les fai
   await page.goto(`/fr/patients/${resumed}`);
   expect((await summary).status()).toBe(200);
   await expect(header(page).name).toHaveText('Basile P.');
-  await expect(facts).toContainText(`Suivi depuis le ${day.format(past)} (première séance connue)`);
+  // La première séance connue (le contact d'il y a deux mois), pas la création du dossier.
+  await expect(facts).toContainText(`depuis ${month.format(past)}`);
   // Sans âge ni suivi, la ligne « meta » n'est pas rendue : on lit toute l'identité.
   await expect(page.locator('pm-patient-header .who')).not.toContainText('suivi·e depuis');
   await expectNoAxeViolations(page);

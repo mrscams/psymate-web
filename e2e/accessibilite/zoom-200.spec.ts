@@ -1,6 +1,5 @@
 import { expect, Page, test } from '@playwright/test';
 
-import { setPreferences } from '../flux-6-vue-ensemble/overview-data';
 import { enableProbe, graphReady } from '../flux-6-graphe/graph-support';
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
@@ -47,7 +46,6 @@ test('praticien à 200 % : liste, création, vue d’ensemble, capture, timeline
   test.setTimeout(240_000);
   const account = await createAccount(request, 'm7-04.zoom', 'psychologist');
   const folder = await themeFolder(request);
-  await setPreferences(request, { 'overview.view': 'complete' });
   await enableProbe(page);
   await signIn(page, account);
   const h1 = page.getByRole('heading', { level: 1 }).first();
@@ -75,27 +73,28 @@ test('praticien à 200 % : liste, création, vue d’ensemble, capture, timeline
   await screen(page, '02-vue-ensemble');
   await expectNoAxeViolations(page);
 
-  // Bascule « Vue : Simple · Complète » : entière (aucun bouton rogné par son groupe) et utilisable.
-  const toggle = page.getByRole('group', { name: "Niveau de détail de la vue d'ensemble" });
-  for (const name of ['Simple', 'Complète']) {
-    const clipped = await toggle.getByRole('button', { name }).evaluate((button) => {
+  // Sélecteur « Fenêtre : 30 j · 90 j · 1 an » (UX-S6) : entier (aucun bouton rogné par son
+  // groupe) et utilisable au clavier.
+  const windows = page.getByRole('group', { name: 'Fenêtre', exact: true });
+  for (const name of ['30 j', '90 j', '1 an']) {
+    const clipped = await windows.getByRole('button', { name }).evaluate((button) => {
       const own = button.getBoundingClientRect();
       const group = button.parentElement!.getBoundingClientRect();
       return own.right > group.right + 0.5 || button.scrollWidth > button.clientWidth;
     });
     expect(clipped, `bouton « ${name} » rogné à 200 %`).toBe(false);
   }
-  await tabTo(page, toggle.getByRole('button', { name: 'Simple' }), { max: 60 });
+  await tabTo(page, windows.getByRole('button', { name: '1 an' }), { max: 60 });
+  await expect(windows.getByRole('button', { name: '1 an' })).toBeInViewport({ ratio: 1 });
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('heading', { level: 3, name: 'En bref' })).toBeVisible();
-  await screen(page, '02b-vue-ensemble-simple');
-  await page.keyboard.press('Tab');
-  await expect(toggle.getByRole('button', { name: 'Complète' })).toBeFocused();
-  await expect(toggle.getByRole('button', { name: 'Complète' })).toBeInViewport({ ratio: 1 });
+  await expect(page.getByRole('heading', { level: 3, name: 'Émotions · 12 mois' })).toBeVisible();
+  await screen(page, '02-vue-ensemble-fenetre');
+  await page.keyboard.press('Shift+Tab');
+  await expect(windows.getByRole('button', { name: '90 j' })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.getByRole('heading', { level: 3, name: 'Dernières séances' })).toBeVisible();
 
-  // « Démarrer la séance » au clavier (le bouton précède la bascule dans l'en-tête) : l'onglet
+  // « Démarrer la séance » au clavier (le bouton précède le sélecteur de fenêtre dans l'en-tête) : l'onglet
   // Séance s'ouvre, le bloc de saisie prend le focus (UX-S3) ; capture d'une note au clavier.
   await tabTo(page, page.getByRole('button', { name: 'Démarrer la séance' }), {
     max: 40,

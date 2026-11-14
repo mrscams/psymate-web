@@ -1,7 +1,6 @@
 import { expect, Page, test } from '@playwright/test';
 
 import { adminApi, shareSession } from '../flux-10-admin/helpers';
-import { setPreferences } from '../flux-6-vue-ensemble/overview-data';
 import { createAccount, signIn } from '../preferences/accounts';
 import { ADMIN_AVAILABLE, ADMIN_MISSING } from '../support/admin';
 import { expectNoAxeViolations } from '../support/axe';
@@ -11,7 +10,7 @@ import { axeScreen, expectTheme, shoot, THEMES } from './a11y-support';
 // Écrans connectés à 375 px sans défilement horizontal (UX-A1, fiche 00 ; WCAG 1.4.10).
 //
 // Barre d'application (recherche sur une deuxième ligne sous 600 px), en-tête patient (séance
-// empilée sous le nom, bascule « Vue » sous les onglets sous 760 px) et navigation Mon compte
+// empilée sous le nom, sélecteur « Fenêtre » sous les onglets sous 760 px) et navigation Mon compte
 // (onglets horizontaux défilants sous 760 px). Seuls les contenus qui défilent dans leur propre zone
 // (tableau des patients, onglets de Mon compte) peuvent dépasser ; la page, jamais. Un second test
 // vérifie qu'à 1440 px la mise en page large est conservée. Captures dans PSYMATE_E2E_CAPTURES
@@ -34,7 +33,6 @@ test.describe('à 375 × 812', () => {
     test.setTimeout(120_000);
     const account = await createAccount(request, 'ux-a1.mobile', 'psychologist');
     const folder = await themeFolder(request);
-    await setPreferences(request, { 'overview.view': 'complete' });
     await signIn(page, account);
     const h1 = page.getByRole('heading', { level: 1 }).first();
 
@@ -50,11 +48,11 @@ test.describe('à 375 × 812', () => {
     await shoot(page, 'ux-a1-375-01-patients');
     await expectNoAxeViolations(page);
 
-    // Dossier : séance sous le nom, onglets puis bascule « Vue » sur la ligne suivante.
+    // Dossier : séance sous le nom, onglets puis sélecteur « Fenêtre » sur la ligne suivante.
     await page.goto(`/fr/patients/${folder.patientId}`);
     await expect(h1).toHaveText('Nina S.');
     const timelineTab = page.getByRole('link', { name: /Timeline/ });
-    const toggle = page.getByRole('group', { name: "Niveau de détail de la vue d'ensemble" });
+    const toggle = page.getByRole('group', { name: 'Fenêtre', exact: true });
     await expect(toggle).toBeVisible();
     expect((await toggle.boundingBox())!.y).toBeGreaterThan((await timelineTab.boundingBox())!.y);
     const start = page.getByRole('button', { name: /séance/ }).first();
@@ -90,7 +88,6 @@ test.describe('à 1440 × 900', () => {
     test.setTimeout(90_000);
     const account = await createAccount(request, 'ux-a1.large', 'psychologist');
     const folder = await themeFolder(request);
-    await setPreferences(request, { 'overview.view': 'complete' });
     await signIn(page, account);
     const h1 = page.getByRole('heading', { level: 1 }).first();
 
@@ -100,11 +97,11 @@ test.describe('à 1440 × 900', () => {
     await expectPageWidth(page, 1440);
     await shoot(page, 'ux-a1-1440-01-patients');
 
-    // En-tête patient : onglets et bascule « Vue » sur la même ligne.
+    // En-tête patient : onglets et sélecteur « Fenêtre » sur la même ligne.
     await page.goto(`/fr/patients/${folder.patientId}`);
     await expect(h1).toHaveText('Nina S.');
     const timelineTab = page.getByRole('link', { name: /Timeline/ });
-    const toggle = page.getByRole('group', { name: "Niveau de détail de la vue d'ensemble" });
+    const toggle = page.getByRole('group', { name: 'Fenêtre', exact: true });
     await expect(toggle).toBeVisible();
     const tabBox = (await timelineTab.boundingBox())!;
     const toggleBox = (await toggle.boundingBox())!;

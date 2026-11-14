@@ -42,14 +42,14 @@ test.describe('thème', () => {
   }) => {
     const account = await createAccount(request, 'm6-04.systeme', 'psychologist');
     const folder = await themeFolder(request);
-    await setPreferences(request, { theme: 'system', 'overview.view': 'complete' });
+    await setPreferences(request, { theme: 'system' });
     await page.emulateMedia({ colorScheme: 'light' });
     await signIn(page, account);
     await expectTheme(page, 'light');
 
-    // Vue d'ensemble complète : la courbe ECharts (SVG) est dessinée avec --feeling du thème clair.
+    // Vue d'ensemble (UX-S6) : la courbe ECharts (SVG) est dessinée avec --feeling du thème clair.
     await page.goto(`/fr/patients/${folder.patientId}`);
-    const chart = page.locator('pm-overview-trend-chart');
+    const chart = page.locator('pm-overview-feelings-chart');
     await expect(chart.locator('svg path').first()).toBeAttached({ timeout: 15_000 });
     const lightFeeling = await token(page, '--feeling');
     await expect.poll(() => chart.innerHTML()).toContain(lightFeeling);
@@ -137,7 +137,7 @@ test.describe('thème', () => {
   }, testInfo) => {
     const account = await createAccount(request, 'm6-04.parcours', 'psychologist');
     const folder = await themeFolder(request);
-    await setPreferences(request, { theme: 'system', 'overview.view': 'complete' });
+    await setPreferences(request, { theme: 'system' });
     await enableProbe(page);
     await page.emulateMedia({ colorScheme: 'dark' });
     await signIn(page, account);
@@ -173,7 +173,7 @@ test.describe('thème', () => {
         `/fr/patients/${folder.patientId}`,
         async () => {
           await expect(page.getByRole('heading', { level: 1 })).toHaveText('Nina S.');
-          await expect(page.locator('pm-overview-trend-chart svg path').first()).toBeAttached({
+          await expect(page.locator('pm-overview-feelings-chart svg path').first()).toBeAttached({
             timeout: 15_000,
           });
         },
