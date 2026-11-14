@@ -150,6 +150,31 @@ describe('TimelineSessionDividerComponent', () => {
     expect(words(el.querySelector('.sum'))).toBe('aucune entrée · clôturer');
   });
 
+  it('séance d’accueil (jamais clôturée par l’API) : ni « non clôturée », ni « clôturer »', async () => {
+    const started = new Date(Date.now() - 5 * 24 * 60 * 60_000).toISOString();
+    const { el } = await render((h) => {
+      h.item.set({
+        ...session,
+        title: null,
+        occurred: { ...session.occurred, from: started, to: null },
+      });
+      h.detail.set(
+        detail({
+          kind: 'intake',
+          closedAt: null,
+          to: null,
+          durationMin: null,
+          summary: null,
+          from: started,
+        }),
+      );
+      h.entries.set(0);
+    });
+    expect(text(el.querySelector('.label'))).not.toContain('non clôturée');
+    expect(text(el.querySelector('.label'))).not.toContain('en cours');
+    expect(el.querySelector('button.close')).toBeNull();
+  });
+
   it('flux : Entrée ou clic ouvre la séance, L lie, Maj+F10 ouvre le menu des lignes', async () => {
     const { el, host, fixture } = await render();
     const head = el.querySelector<HTMLElement>('article.session-head')!;

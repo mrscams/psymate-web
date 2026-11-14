@@ -75,10 +75,16 @@ export class TimelineSessionDividerComponent {
   }
 
   protected readonly start = computed(() => this.item()?.occurred.from ?? this.from());
-  /** Séance ouverte : son détail est lu et elle n'a pas de clôture. */
+  /**
+   * Séance ouverte : son détail est lu et elle n'a pas de clôture. La séance d'accueil (kind
+   * intake) est créée avec le patient et jamais clôturée : le contrat dit qu'elle ne compte pas
+   * comme séance ouverte (sessions/current, start), elle n'est donc ni « en cours », ni « non
+   * clôturée », et n'offre pas « clôturer » (ce lien mène à l'onglet Séance, qui n'existe que
+   * pour une séance ouverte).
+   */
   protected readonly open = computed(() => {
     const detail = this.detail();
-    return !!detail && detail.closedAt === null;
+    return !!detail && detail.closedAt === null && detail.kind !== 'intake';
   });
 
   /** Minutes écoulées depuis le début d'une séance ouverte. */
