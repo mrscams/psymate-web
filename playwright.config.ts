@@ -18,7 +18,8 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: CI,
   retries: CI ? 1 : 0,
-  workers: CI ? 2 : undefined,
+  // 4 workers en CI (ubuntu-latest : 4 vCPU) ; en local, Playwright choisit selon la machine.
+  workers: CI ? 4 : undefined,
   reporter: CI
     ? [['github'], ['html', { open: 'never' }]]
     : [['list'], ['html', { open: 'never' }]],
