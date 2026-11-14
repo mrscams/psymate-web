@@ -2,6 +2,8 @@ import { toView } from './overview.api';
 
 /** La réponse du contrat (le client généré ne s'importe que depuis overview.api.ts). */
 type OverviewDto = Parameters<typeof toView>[0];
+type SessionKind = NonNullable<NonNullable<OverviewDto['recentSessions']>[number]['kind']>;
+const kind = (value: string) => value as unknown as SessionKind;
 
 describe('OverviewApi · toView', () => {
   it('réponse vide : listes vides, compteurs à zéro, fenêtre demandée', () => {
@@ -91,5 +93,25 @@ describe('OverviewApi · toView', () => {
     );
     expect(view.feelings.series[0].label).toBe('Calme');
     expect(view.emotions[0].label).toBe('Calme');
+  });
+
+  it('séance d’accueil renvoyée comme séance ouverte : écartée (elle ne compte pas, règle du contrat)', () => {
+    const intake: OverviewDto = {
+      recentSessions: [
+        { entryId: 'i', kind: kind('intake'), occurredFrom: '2026-11-14T09:00:00Z' },
+      ],
+      drafts: { count: 0, openSession: { entryId: 'i', startedAt: '2026-11-14T09:00:00Z' } },
+    };
+    expect(toView(intake, '90d').drafts.openSession).toBeNull();
+    const ordinary: OverviewDto = {
+      recentSessions: [
+        { entryId: 's', kind: kind('session'), occurredFrom: '2026-11-14T09:00:00Z' },
+      ],
+      drafts: { count: 0, openSession: { entryId: 's', startedAt: '2026-11-14T09:00:00Z' } },
+    };
+    expect(toView(ordinary, '90d').drafts.openSession).toEqual({
+      entryId: 's',
+      startedAt: '2026-11-14T09:00:00Z',
+    });
   });
 });

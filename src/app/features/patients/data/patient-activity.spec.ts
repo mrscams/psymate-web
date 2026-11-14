@@ -1,4 +1,8 @@
 import { toActivity } from './patient.api';
+
+type ActivityDto = Parameters<typeof toActivity>[0];
+type SessionKind = NonNullable<NonNullable<ActivityDto['recentSessions']>[number]['kind']>;
+const kind = (value: string) => value as unknown as SessionKind;
 import { activity, OMAR, patient } from './patient.fixtures';
 import {
   apiSort,
@@ -111,6 +115,26 @@ describe('toActivity (GET /overview?window=30d → ligne de la liste)', () => {
     const intake = toActivity({ recentSessions: [{ occurredFrom: '2026-11-09T08:42:00Z' }] });
     expect(intake.lastSession?.reportMissing).toBe(false);
     expect(intake.lastSession?.closedAt).toBeNull();
+  });
+
+  it('séance d’accueil renvoyée comme séance ouverte par la projection : écartée (elle ne compte pas)', () => {
+    const view = toActivity({
+      recentSessions: [
+        { entryId: 's-intake', kind: kind('intake'), occurredFrom: '2026-11-14T09:00:00Z' },
+      ],
+      drafts: { count: 0, openSession: { entryId: 's-intake', startedAt: '2026-11-14T09:00:00Z' } },
+    });
+    expect(view.openSessionAt).toBeNull();
+    expect(view.lastSession?.at).toBe('2026-11-14T09:00:00Z');
+    // Une vraie séance ouverte reste ouverte.
+    expect(
+      toActivity({
+        recentSessions: [
+          { entryId: 's-2', kind: kind('session'), occurredFrom: '2026-11-14T09:00:00Z' },
+        ],
+        drafts: { count: 0, openSession: { entryId: 's-2', startedAt: '2026-11-14T09:00:00Z' } },
+      }).openSessionAt,
+    ).toBe('2026-11-14T09:00:00Z');
   });
 
   it('20 entrées depuis la séance : plafond du contrat (« 20+ »)', () => {

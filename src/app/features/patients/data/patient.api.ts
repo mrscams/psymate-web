@@ -9,6 +9,7 @@ import {
   OverviewDto,
   PatientDto,
   PatientsService,
+  RecentSessionDtoKindEnum,
   TagsService,
   TagView,
   VersionDto,
@@ -242,6 +243,15 @@ export function toActivity(dto: OverviewDto, english = false): PatientActivity {
   const last = (dto.recentSessions ?? []).find((session) => !!session.occurredFrom) ?? null;
   const closedAt = text(last?.closedAt);
   const situations = dto.activeSituations ?? [];
+  // La séance d'accueil est créée avec le patient et jamais clôturée ; le contrat dit qu'elle ne
+  // compte pas comme séance ouverte (sessions/current, start). La projection la renvoie pourtant
+  // dans drafts.openSession : on l'écarte par son genre, lu dans recentSessions.
+  const open = dto.drafts?.openSession ?? null;
+  const openIsIntake =
+    !!open?.entryId &&
+    (dto.recentSessions ?? []).some(
+      (s) => s.entryId === open.entryId && s.kind === RecentSessionDtoKindEnum.Intake,
+    );
   return {
     lastSession: last
       ? {
@@ -252,7 +262,7 @@ export function toActivity(dto: OverviewDto, english = false): PatientActivity {
           reportMissing: closedAt !== null && !(last.summary ?? '').trim(),
         }
       : null,
-    openSessionAt: text(dto.drafts?.openSession?.startedAt),
+    openSessionAt: openIsIntake ? null : text(open?.startedAt),
     since: {
       entries: sinceEntries.length,
       capped: sinceEntries.length >= SINCE_ENTRIES_MAX,
