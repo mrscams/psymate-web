@@ -31,7 +31,7 @@ import { StateKind, stateKind } from '../../../shared/util';
 import { CaptureBlockComponent, CapturedEntry } from '../../capture';
 import { ENTRY_QUERY_PARAM, EntryPrefill, openEntryEditor } from '../../entries';
 import { connectLinkEditor, LINK_QUERY_PARAM } from '../../graph';
-import { OverviewViewToggleComponent } from '../../overview';
+import { OverviewWindowComponent } from '../../overview';
 import { ShellTab } from '../data/patient-shell.model';
 import { PatientShellStore } from '../data/patient-shell.store';
 import {
@@ -65,7 +65,7 @@ import {
   selector: 'pm-patient-shell-page',
   imports: [
     CaptureBlockComponent,
-    OverviewViewToggleComponent,
+    OverviewWindowComponent,
     PatientHeaderComponent,
     RouterLink,
     RouterOutlet,
@@ -77,9 +77,10 @@ import {
   templateUrl: './patient-shell.page.html',
   styleUrl: './patient-shell.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // UX-S5 : sur l'onglet Séance le <main> n'a ni borne ni marge (data.contentWidth full) ; la page
-  // pose alors ses marges intérieures et la barre de séance perd ses marges négatives.
-  host: { '[class.full-bleed]': "activeTab() === 'session'" },
+  // UX-S5, UX-S6 : sur les onglets Séance et Vue d'ensemble le <main> n'a ni borne ni marge
+  // (data.contentWidth full) ; la page pose alors ses marges intérieures et la barre de séance perd
+  // ses marges négatives.
+  host: { '[class.full-bleed]': "activeTab() === 'session' || activeTab() === 'overview'" },
 })
 export class PatientShellPage {
   /** :id de la route (withComponentInputBinding). */

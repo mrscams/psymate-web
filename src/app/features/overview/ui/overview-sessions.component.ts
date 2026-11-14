@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
   LOCALE_ID,
@@ -8,245 +9,178 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { EntryIconComponent } from '../../../shared/ui';
-import { splitNextTime } from '../../patient-shell';
-import { RecentSession, TIMELINE_PARAMS } from '../data/overview.model';
-import { sessionHeading } from './overview-labels';
+import { sessionModalityLabel } from '../../../shared/ui';
+import { Loadable, StateKind } from '../../../shared/util';
+import {
+  blockState,
+  isSessionsEmpty,
+  OverviewView,
+  RecentSession,
+  TIMELINE_PARAMS,
+  windowSessionCount,
+} from '../data/overview.model';
+import { sessionLine, windowLongLabel } from './overview-labels';
+import { OverviewSectionComponent } from './overview-section.component';
 
 /**
- * Dernières séances (fiche 02, B3 flux 6 : « un clic sur la dernière séance déplie ce qui y a été
- * dit ») : chaque séance se déplie (date, durée, modalité, nombre d'entrées ; compte rendu entier
- * pour la plus récente, première ligne pour les autres) et mène à la timeline par séance, dépliée
- * sur elle (`timeline?mode=session&focus=<id>`).
+ * « Dernières séances » (UX-S6, proposition 02 `.sess`) : compteur « 2 sur 90 jours · 2 au total »
+ * et « Toutes les séances » (timeline groupée par séance) ; une ligne par séance récente du serveur
+ * (cinq au plus) : « Jeudi 5 novembre · cabinet · 50 min » (vers la séance dans la timeline), le
+ * nombre d'entrées en secondaire, le compte rendu sur deux lignes au plus (entier pour la plus
+ * récente, sa première ligne pour les autres : c'est ce que sert le contrat).
  */
 @Component({
   selector: 'pm-overview-sessions',
-  imports: [EntryIconComponent, RouterLink],
+  imports: [OverviewSectionComponent, RouterLink],
   template: `
-    <ul class="sessions">
-      @for (session of sessions(); track session.entryId; let first = $first) {
-        @let open = expanded().includes(session.entryId);
-        <li class="session" [class.open]="open">
-          <button
-            type="button"
-            class="toggle"
-            [attr.aria-expanded]="open"
-            [attr.aria-controls]="'overview-session-' + session.entryId"
-            (click)="toggle(session.entryId)"
-          >
-            <svg class="chevron" viewBox="0 0 10 10" aria-hidden="true" focusable="false">
-              <path d="M3 2l4 3-4 3" />
-            </svg>
-            <pm-entry-icon type="session" [size]="12" />
-            <span class="title">{{ heading(session) }}</span>
+    <pm-overview-section
+      heading="Dernières séances"
+      i18n-heading="Titre de la section des dernières séances@@overview.sessions.heading"
+      [state]="state()"
+      emptyTitle="Aucune séance"
+      i18n-emptyTitle="Bloc dernière séance vide@@overview.simple.lastSession.empty.title"
+      emptyMessage="La dernière séance et son compte rendu apparaîtront ici dès la première, démarrée depuis l'en-tête."
+      i18n-emptyMessage="Bloc dernière séance vide@@overview.simple.lastSession.empty.message"
+      errorTitle="Séances indisponibles"
+      i18n-errorTitle="Erreur de la section des dernières séances@@overview.sessions.error"
+      [refreshing]="refreshing()"
+      (retry)="retry.emit()"
+    >
+      @if (view(); as v) {
+        <span sectCount i18n="Compteur de la section des dernières séances@@overview.sessions.count"
+          >{{ inWindow() }} sur {{ period() }} · {{ v.facts.sessionCount }} au total</span
+        >
+      }
+      @if (view()) {
+        <a
+          sectLink
+          [routerLink]="['/patients', patientId(), 'timeline']"
+          [queryParams]="sessionsParams"
+          i18n="Lien de la section des séances vers la timeline par séance@@overview.sessions.all"
+          >Toutes les séances</a
+        >
+      }
+      @if (view(); as v) {
+        @for (session of v.recentSessions; track session.entryId) {
+          <div class="sess">
+            <a
+              class="t"
+              [routerLink]="['/patients', patientId(), 'timeline']"
+              [queryParams]="sessionParams(session.entryId)"
+            >
+              <i class="dot" aria-hidden="true"></i>{{ line(session) }} </a
+            >&ngsp;
             <span
-              class="count"
-              i18n="Nombre d'entrées d'une séance@@overview.sessions.entryCount"
+              class="n"
+              i18n="Nombre d'entrées d'une séance récente@@overview.sessions.entryCount"
               >{session.entryCount, plural,
                 =0 {aucune entrée}
                 =1 {1 entrée}
                 other {{{session.entryCount}} entrées}
               }</span
             >
-          </button>
-          @if (open) {
-            <div class="details" [id]="'overview-session-' + session.entryId">
-              @if (!session.closedAt) {
-                <p class="status" i18n="Séance non clôturée@@overview.sessions.open">
-                  Séance en cours, non clôturée.
-                </p>
-              }
-              @if (first && session.summary) {
-                @let split = splitSummary(session.summary);
-                @if (split.body) {
-                  <p class="summary">{{ split.body }}</p>
-                }
-                @if (split.nextTime.length) {
-                  <!-- Trace « Prochaine fois » (UX-S3) : les dernières lignes du compte rendu. -->
-                  <p class="goal">
-                    <strong
-                      i18n="
-                        Marqueur prochaine fois dans la trace d'une
-                        séance@@overview.sessions.nextTime"
-                      >Prochaine fois :</strong
-                    >
-                    {{ split.nextTime.join(' · ') }}
-                  </p>
-                }
-              } @else if (session.summaryFirstLine) {
-                <p class="summary">{{ session.summaryFirstLine }}</p>
-              } @else {
-                <p class="none" i18n="Séance sans compte rendu@@overview.sessions.noSummary">
-                  Pas de compte rendu.
-                </p>
-              }
-              <a
-                [routerLink]="['/patients', patientId(), 'timeline']"
-                [queryParams]="timelineParams(session.entryId)"
-                i18n="Lien d'une séance vers la timeline par séance@@overview.sessions.inTimeline"
-                >Voir la séance dans la timeline</a
-              >
-              @if (first && session.kind === 'session' && session.closedAt) {
-                <button type="button" class="link" (click)="editSummary.emit(session.entryId)">
-                  <ng-container
-                    i18n="
-                      Modifier la dernière séance (durée, modalité)@@overview.sessions.editSummary"
-                    >modifier la séance</ng-container
-                  >
-                </button>
-              }
-            </div>
-          }
-        </li>
+            @if (session.summary ?? session.summaryFirstLine; as summary) {
+              <p class="s">{{ summary }}</p>
+            }
+          </div>
+        }
       }
-    </ul>
+    </pm-overview-section>
   `,
   styles: `
-    .sessions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-    .session {
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .toggle {
-      width: 100%;
-      min-height: 40px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      border: 0;
-      background: var(--surface-raised);
-      color: var(--text-primary);
-      font-size: 13px;
-      line-height: 1.4;
-      text-align: left;
-      cursor: pointer;
-    }
-    .open .toggle {
-      background: var(--surface-ground);
-    }
-    .toggle:focus-visible {
-      outline: 2px solid var(--primary);
-      outline-offset: -2px;
-    }
-    .chevron {
-      width: 10px;
-      height: 10px;
-      flex: 0 0 auto;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.6;
-      stroke-linecap: round;
-      transition: transform 150ms;
-    }
-    .open .chevron {
-      transform: rotate(90deg);
-    }
-    .title {
-      flex: 1 1 auto;
-      font-weight: 600;
-    }
-    .count {
-      flex: 0 0 auto;
-      white-space: nowrap;
-    }
-    .count,
-    .none,
-    .status {
-      color: var(--text-secondary);
-      font-size: 12px;
-      line-height: 16px;
-    }
-    .details {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      padding: 8px 12px 12px;
-      font-size: 13px;
-      line-height: 1.5;
-      color: var(--text-primary);
-    }
-    .details p {
-      margin: 0;
-    }
-    .summary {
-      white-space: pre-line;
-    }
-    .goal {
-      padding: 8px 12px;
-      border: 1px dashed var(--border-strong);
-      border-radius: 10px;
-      background: var(--surface-raised);
-      color: var(--text-secondary);
-    }
-    .goal strong {
-      color: var(--text-primary);
-    }
-    .link {
-      align-self: flex-start;
-      padding: 4px 0;
-      border: 0;
-      background: none;
-      color: var(--primary);
-      font: inherit;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-    }
-    .link:focus-visible {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-      border-radius: 4px;
+    :host {
+      display: block;
     }
     a {
-      align-self: flex-start;
-      padding: 4px 0;
       color: var(--primary);
-      font-size: 13px;
-      font-weight: 500;
     }
-    @media (prefers-reduced-motion: reduce) {
-      .chevron {
-        transition: none;
-      }
+    /* Lien de l'en-tête de section (maquette .sect-head .right) : souligné au survol seulement. */
+    a[sectLink] {
+      text-decoration: none;
+    }
+    a[sectLink]:hover {
+      text-decoration: underline;
+    }
+    .sess {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2px 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .sess:last-child {
+      border-bottom: 0;
+    }
+    .t {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .t:hover {
+      text-decoration: underline;
+    }
+    .t:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    .dot {
+      display: inline-block;
+      flex: none;
+      width: 9px;
+      height: 9px;
+      box-sizing: border-box;
+      border: 2px solid var(--entry-session);
+      border-radius: 2px;
+    }
+    .n {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .s {
+      grid-column: 1 / -1;
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewSessionsComponent {
-  readonly sessions = input.required<RecentSession[]>();
+  /** La synthèse du store (gardée pendant une relecture). */
+  readonly overview = input.required<Loadable<OverviewView>>();
   readonly patientId = input.required<string>();
-  /** Séances dépliées (identifiants). */
-  readonly expanded = input.required<string[]>();
-  readonly expandedChange = output<string[]>();
-  /** « modifier la séance » (dernière séance clôturée) : l'éditeur d'entrée (?entry=). */
-  readonly editSummary = output<string>();
+  readonly refreshing = input(false);
+  readonly retry = output<void>();
 
   private readonly locale = inject(LOCALE_ID);
 
-  protected heading(session: RecentSession): string {
-    return sessionHeading(session, this.locale);
+  protected readonly view = computed(() => this.overview().data);
+  protected readonly state = computed<StateKind | null>(() =>
+    blockState(this.overview(), isSessionsEmpty),
+  );
+  protected readonly period = computed(() => windowLongLabel(this.view()?.window ?? '90d'));
+  protected readonly inWindow = computed(() => {
+    const view = this.view();
+    return view ? windowSessionCount(view) : 0;
+  });
+
+  protected readonly sessionsParams = { [TIMELINE_PARAMS.mode]: 'session' };
+
+  protected sessionParams(entryId: string): Record<string, string> {
+    return { [TIMELINE_PARAMS.mode]: 'session', [TIMELINE_PARAMS.focus]: entryId };
   }
 
-  /** Le compte rendu sans ses lignes « Prochaine fois », et ces lignes (convention UX-S3). */
-  protected splitSummary(summary: string) {
-    return splitNextTime(summary);
-  }
-
-  protected toggle(id: string): void {
-    const list = this.expanded();
-    this.expandedChange.emit(list.includes(id) ? list.filter((x) => x !== id) : [...list, id]);
-  }
-
-  protected timelineParams(id: string): Record<string, string> {
-    return { [TIMELINE_PARAMS.mode]: 'session', [TIMELINE_PARAMS.focus]: id };
+  protected line(session: RecentSession): string {
+    return sessionLine(session, this.locale, sessionModalityLabel);
   }
 }

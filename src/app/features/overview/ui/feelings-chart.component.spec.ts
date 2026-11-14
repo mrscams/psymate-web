@@ -7,11 +7,13 @@ import { FeelingsChartComponent } from './feelings-chart.component';
 import { FeelingsChartLabels, FeelingsChartOption } from './feelings-chart.options';
 
 const labels: FeelingsChartLabels = {
+  average: 'Moyenne sur 7 jours',
   session: 'Séance',
-  others: 'Autres émotions',
   medicationStart: 'Début',
   medicationEnd: 'Fin',
+  emotion: (code) => code,
   day: (value) => String(value),
+  intensity: (value) => String(value),
 };
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
@@ -38,10 +40,10 @@ async function render(loader?: () => Promise<(el: HTMLElement) => TrendChart>) {
   // Couleurs nommées (jamais de valeur hexadécimale) posées sur l'hôte : le graphe lit ses tokens.
   host.style.setProperty('--emotion-fear', 'indigo');
   host.style.setProperty('--entry-session', 'teal');
+  host.style.setProperty('--feeling', 'violet');
   fixture.componentRef.setInput('data', {
+    trend: overviewView().trend,
     feelings: overviewView().feelings,
-    from: '2026-08-11',
-    to: '2026-11-08',
   });
   fixture.componentRef.setInput('labels', labels);
   fixture.componentRef.setInput('summary', 'Ressentis notés sur 90 jours');
@@ -57,6 +59,15 @@ function color(option: FeelingsChartOption, index: number): unknown {
   return (option.series as { itemStyle?: { color?: string } }[])[index].itemStyle?.color;
 }
 
+/** Couleur du point d'un ressenti (une couleur par point, celle de sa famille). */
+function pointColor(option: FeelingsChartOption, entryId: string): unknown {
+  const points = (option.series as { id?: string; data?: unknown[] }[]).find(
+    (s) => s.id === 'feelings',
+  );
+  const datum = points?.data?.find((d) => (d as { entryId?: string }).entryId === entryId);
+  return (datum as { itemStyle?: { color?: string } } | undefined)?.itemStyle?.color;
+}
+
 describe('FeelingsChartComponent', () => {
   it('crée le graphe dans son conteneur, options tirées des tokens CSS', async () => {
     const { chart, create, host } = await render();
@@ -66,13 +77,14 @@ describe('FeelingsChartComponent', () => {
     expect(create).toHaveBeenCalledTimes(1);
     const [option, opts] = chart.setOption.mock.lastCall!;
     expect(opts).toEqual({ notMerge: true });
-    expect(color(option, 0)).toBe('teal');
-    expect(color(option, 1)).toBe('indigo');
+    expect(color(option, 0)).toBe('violet');
+    expect(color(option, 1)).toBe('teal');
+    expect(pointColor(option, 'f-1')).toBe('indigo');
   });
 
   it('clic sur un point de ressenti : émet son entrée ; clic sur un jour de séance : rien', async () => {
     const { chart, selected } = await render();
-    chart.click({ seriesType: 'line', data: { value: ['2026-10-20', 8], entryId: 'f-1' } });
+    chart.click({ seriesType: 'scatter', data: { value: ['2026-10-20', 8], entryId: 'f-1' } });
     chart.click({ seriesType: 'scatter', data: ['2026-10-17', 0] });
     expect(selected).toEqual(['f-1']);
   });
@@ -86,7 +98,7 @@ describe('FeelingsChartComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     expect(chart.setOption.mock.calls.length).toBeGreaterThan(calls);
-    expect(color(chart.setOption.mock.lastCall![0], 1)).toBe('plum');
+    expect(pointColor(chart.setOption.mock.lastCall![0], 'f-1')).toBe('plum');
   });
 
   it('ECharts ne se charge pas : « Graphe indisponible », hors de l’image', async () => {

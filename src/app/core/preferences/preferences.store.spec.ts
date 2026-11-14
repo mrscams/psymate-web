@@ -7,7 +7,7 @@ import { ThemeService } from '../theme';
 import { PreferencesApi } from './data/preferences.api';
 import { LocaleNavigator } from './locale-navigator';
 import { PREFERENCES_CACHE_KEY } from './preferences.cache';
-import { defaultPreferences, Preferences } from './preferences.model';
+import { completePreferences, defaultPreferences, Preferences } from './preferences.model';
 import { PreferencesStore } from './preferences.store';
 
 const claire: SessionUser = {
@@ -107,7 +107,8 @@ describe('PreferencesStore', () => {
       expect(defaults['sessions.defaultDurationMin']).toBe(60);
       expect(defaults.locale).toBe('fr');
       expect(defaults.theme).toBe('light');
-      expect(defaults['overview.view']).toBe('simple');
+      // UX-S6 : la vue d'ensemble n'a plus qu'une vue, overview.view n'est plus une préférence du client.
+      expect('overview.view' in defaults).toBe(false);
       expect(defaults['overview.window']).toBe('90d');
       expect(defaults['timeline.groupBy']).toBe('session');
       expect(defaults['entries.defaultVisibility']).toBe('clinical');
@@ -146,6 +147,17 @@ describe('PreferencesStore', () => {
       // Les clés absentes du cache valent le défaut, la clé inconnue n'existe pas.
       expect(store.defaultDurationMin()).toBe(60);
       expect('inconnue' in store.values()).toBe(false);
+    });
+
+    it('overview.view (UX-S6) : une clé que le client ne lit plus, comme une clé inconnue', () => {
+      localStorage.setItem(
+        PREFERENCES_CACHE_KEY,
+        JSON.stringify({ theme: 'dark', 'overview.view': 'complete' }),
+      );
+      const { store } = setup({ sessionLoading: true });
+      expect(store.theme()).toBe('dark');
+      expect('overview.view' in store.values()).toBe(false);
+      expect(completePreferences({ 'overview.view': 'simple' })).toEqual(defaultPreferences(null));
     });
 
     it('valeur hors domaine dans le cache : la clé prend son défaut', () => {
@@ -222,11 +234,11 @@ describe('PreferencesStore', () => {
     it('la valeur s’affiche tout de suite et PATCH ne porte que la clé modifiée', async () => {
       const { store, arrive, api } = setup();
       await arrive();
-      const promise = store.set('overview.view', 'complete');
-      expect(store.overviewView()).toBe('complete');
+      const promise = store.set('overview.window', '90d');
+      expect(store.overviewWindow()).toBe('90d');
       expect(store.saving()).toBe(true);
       expect(await promise).toBeNull();
-      expect(api.patch).toHaveBeenCalledWith({ 'overview.view': 'complete' }, expect.anything());
+      expect(api.patch).toHaveBeenCalledWith({ 'overview.window': '90d' }, expect.anything());
       expect(store.saving()).toBe(false);
       expect(store.savedAt()).not.toBeNull();
     });
@@ -299,19 +311,19 @@ describe('PreferencesStore', () => {
           .mockImplementationOnce(async () => ({
             ...serverPrefs,
             theme: 'soft',
-            'overview.view': 'complete',
+            'overview.window': '90d',
           })),
       };
       const { store, arrive } = setup({ api });
       await arrive();
       const first = store.set('theme', 'soft');
-      const second = store.set('overview.view', 'complete');
+      const second = store.set('overview.window', '90d');
       await second;
-      expect(store.overviewView()).toBe('complete');
+      expect(store.overviewWindow()).toBe('90d');
       expect(store.theme()).toBe('soft');
       resolveFirst({ ...serverPrefs, theme: 'soft' });
       await first;
-      expect(store.overviewView()).toBe('complete');
+      expect(store.overviewWindow()).toBe('90d');
       expect(store.theme()).toBe('soft');
     });
 

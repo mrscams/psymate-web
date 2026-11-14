@@ -10,10 +10,10 @@ import {
 } from './feelings-chart.options';
 
 /**
- * Graphe à points réels de la vue simple (B8, M4-07) : ECharts chargé à la demande (même morceau
- * que la courbe de tendance), options calculées par feelingsChartOptions à partir des tokens CSS,
- * relus au changement de thème. Un clic sur un point émet l'entrée du ressenti. Pour les lecteurs
- * d'écran : `role="img"` et le résumé ; le tableau des ressentis est à côté (pm-overview-feelings).
+ * Graphe « Comment évoluent les ressentis » de la vue d'ensemble (M4-07, UX-S6) : ECharts chargé à
+ * la demande, options calculées par feelingsChartOptions à partir des tokens CSS, relus au
+ * changement de thème. Un clic sur un point émet l'entrée du ressenti. Pour les lecteurs d'écran :
+ * `role="img"` et le résumé ; le tableau des ressentis est à côté (« Voir les données »).
  */
 @Component({
   selector: 'pm-overview-feelings-chart',
@@ -32,7 +32,7 @@ import {
     }
     .chart {
       width: 100%;
-      height: 230px;
+      height: 210px;
     }
     .hidden {
       display: none;

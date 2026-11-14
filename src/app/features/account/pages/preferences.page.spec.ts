@@ -143,8 +143,10 @@ describe('PreferencesPage', () => {
     const { el } = await render(api, { ...claire, twoFactorEnabled: true });
     expect(el.querySelector('h1')?.textContent).toBe('Préférences');
     expect(el.querySelectorAll('section.card')).toHaveLength(4);
-    expect(pressed(el, 'overview-view')).toEqual(['Simple']);
     expect(pressed(el, 'overview-window')).toEqual(['1 an']);
+    // UX-S6 : plus de réglage « Vue d'ensemble par défaut » (Simple / Complète), une seule vue.
+    expect(el.querySelector('#overview-view-label')).toBeNull();
+    expect(el.textContent).not.toContain("Vue d'ensemble par défaut");
     expect(el.querySelector<HTMLInputElement>('input[type=radio][value=soft]')?.checked).toBe(true);
     expect(el.querySelector<HTMLInputElement>('input.number')?.value).toBe('45');
     expect(el.querySelector('.summary')?.textContent).toContain('claire@example.test');
@@ -156,11 +158,11 @@ describe('PreferencesPage', () => {
   it('un réglage change : aria-pressed tout de suite, PATCH de la seule clé, « Enregistré »', async () => {
     const api = serverFor(defaultPreferences('psychologist'));
     const { fixture, el } = await render(api);
-    buttonNamed(el, 'overview-view', 'Complète').click();
+    buttonNamed(el, 'overview-window', '30 j').click();
     await fixture.whenStable();
-    expect(pressed(el, 'overview-view')).toEqual(['Complète']);
+    expect(pressed(el, 'overview-window')).toEqual(['30 j']);
     await settle(fixture);
-    expect(api.patch).toHaveBeenCalledWith({ 'overview.view': 'complete' }, expect.anything());
+    expect(api.patch).toHaveBeenCalledWith({ 'overview.window': '30d' }, expect.anything());
     expect(el.querySelector('.saved')?.textContent?.replace(/\s+/g, ' ').trim()).toBe(
       "Enregistré · à l'instant",
     );
@@ -322,9 +324,9 @@ describe('PreferencesPage', () => {
   it('accessibilité des lignes : libellé et aide reliés au contrôle', async () => {
     const api = serverFor(defaultPreferences('psychologist'));
     const { el } = await render(api);
-    const group = el.querySelector('[role=group][aria-labelledby="overview-view-label"]');
-    expect(group?.getAttribute('aria-describedby')).toBe('overview-view-help');
-    expect(el.querySelector('#overview-view-label')?.textContent).toBe("Vue d'ensemble par défaut");
+    const group = el.querySelector('[role=group][aria-labelledby="overview-window-label"]');
+    expect(group?.getAttribute('aria-describedby')).toBe('overview-window-help');
+    expect(el.querySelector('#overview-window-label')?.textContent).toBe("Fenêtre d'analyse");
     expect(el.querySelector('[role=radiogroup][aria-labelledby="theme-label"]')).not.toBeNull();
     expect(el.querySelectorAll('input[type=radio][name=theme]')).toHaveLength(4);
     expect(el.querySelector('select[aria-labelledby="locale-label"]')).not.toBeNull();

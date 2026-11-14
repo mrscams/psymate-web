@@ -5,8 +5,6 @@ import {
   averageRange,
   blockState,
   followedSinceOf,
-  isActivityEmpty,
-  isBriefEmpty,
   isEmotionsEmpty,
   isFeelingsEmpty,
   isFrameEmpty,
@@ -15,19 +13,15 @@ import {
   isSinceEmpty,
   isSituationsEmpty,
   isTodoEmpty,
-  isTrendEmpty,
+  NOTED_MAX,
+  notedEntries,
+  sinceFacts,
   TIMELINE_PARAMS,
   trendDirection,
-  windowAverage,
+  windowSessionCount,
 } from './overview.model';
 
 describe('overview.model', () => {
-  it('windowAverage : moyenne des ressentis renvoyés pour la fenêtre, null sans ressenti', () => {
-    expect(windowAverage([])).toBeNull();
-    // Fixture : anxiété 8 et joie 4 sur 90 jours.
-    expect(windowAverage(overviewView().feelings.points)).toBe(6);
-  });
-
   it('averageRange / trendDirection : première et dernière moyenne du serveur, seuil d’un demi-point', () => {
     expect(averageRange([{ date: '2026-11-08', average: null }])).toBeNull();
     const range = averageRange(overviewView().trend.points)!;
@@ -53,16 +47,13 @@ describe('overview.model', () => {
   it('vides par bloc : un dossier sans données est vide partout', () => {
     const empty = emptyOverview();
     for (const isEmpty of [
-      isTrendEmpty,
-      isSituationsEmpty,
-      isMedicationsEmpty,
-      isSessionsEmpty,
-      isEmotionsEmpty,
-      isActivityEmpty,
-      isBriefEmpty,
       isFeelingsEmpty,
       isSinceEmpty,
+      isSessionsEmpty,
       isFrameEmpty,
+      isMedicationsEmpty,
+      isSituationsEmpty,
+      isEmotionsEmpty,
       isTodoEmpty,
     ]) {
       expect(isEmpty(empty)).toBe(true);
@@ -78,23 +69,81 @@ describe('overview.model', () => {
     ).toBe(false);
   });
 
-  it('En bref : un point d’attention seul suffit ; cadre : un début de suivi suffit', () => {
-    expect(isBriefEmpty(emptyOverview({ narrative: { sentences: [], attention: 'x' } }))).toBe(
-      false,
-    );
+  it('cadre du suivi : un début de suivi ou un drapeau suffit', () => {
     const facts = { ...emptyOverview().facts, followedSince: '2026-11-08' };
     expect(isFrameEmpty(emptyOverview({ facts }))).toBe(false);
+    const flagged = { ...emptyOverview().facts, flags: overviewView().facts.flags };
+    expect(isFrameEmpty(emptyOverview({ facts: flagged }))).toBe(false);
+  });
+
+  it('sinceFacts : ressentis depuis la séance, dernière moyenne 7 j du serveur et son sens, brouillons', () => {
+    // Fixture : séance du 17 oct. (moyenne alors inconnue, la plus proche avant est absente :
+    // aucune comparaison), dernière moyenne 7 le 8 nov.
+    expect(sinceFacts(overviewView())).toEqual({
+      feelings: 1,
+      intensity: 7,
+      direction: null,
+      drafts: 2,
+    });
+    // Séance du 21 oct. : la moyenne du 20 oct. (5,5) sert de point de comparaison → hausse.
+    const view = overviewView();
+    view.sinceLastSession = { ...view.sinceLastSession, lastSessionAt: '2026-10-21T14:00:00Z' };
+    expect(sinceFacts(view).direction).toBe('up');
+    // Sans séance passée : la première moyenne de la fenêtre.
+    view.sinceLastSession = { ...view.sinceLastSession, lastSessionAt: null, lastSessionId: null };
+    expect(sinceFacts(view).direction).toBe('up');
+    // Sans moyenne : ni valeur ni sens.
+    expect(sinceFacts(emptyOverview())).toEqual({
+      feelings: 0,
+      intensity: null,
+      direction: null,
+      drafts: 0,
+    });
+  });
+
+  it('notedEntries : dix au plus, un ressenti nommé par son émotion et son intensité servies', () => {
+    const [feeling, note] = notedEntries(overviewView());
+    expect(feeling).toEqual({
+      entryId: 'f-2',
+      type: 'feeling',
+      title: 'Joie après la randonnée',
+      draft: true,
+      occurredFrom: '2026-11-07T17:00:00Z',
+      feeling: { label: 'Joie', family: 'joy', intensity: 4 },
+    });
+    expect(note.feeling).toBeNull();
+    expect(note.draft).toBe(false);
+    const many = overviewView();
+    many.sinceLastSession = {
+      ...many.sinceLastSession,
+      entries: Array.from({ length: 14 }, (_, i) => ({
+        entryId: `n-${i}`,
+        type: 'note' as const,
+        title: null,
+        status: 'final' as const,
+        occurredFrom: null,
+      })),
+    };
+    expect(NOTED_MAX).toBe(10);
+    expect(notedEntries(many).map((e) => e.entryId)).toEqual(
+      Array.from({ length: 10 }, (_, i) => `n-${i}`),
+    );
+  });
+
+  it('windowSessionCount : les séances repérées sur la courbe de la fenêtre', () => {
+    expect(windowSessionCount(overviewView())).toBe(1);
+    expect(windowSessionCount(emptyOverview())).toBe(0);
   });
 
   it('blockState : squelette puis erreur sans synthèse ; vide ou contenu avec, même en relecture', () => {
-    expect(blockState(idle(), isBriefEmpty)).toBe('loading');
-    expect(blockState(loading(), isBriefEmpty)).toBe('loading');
-    expect(blockState(failed({ status: 500 } as never), isBriefEmpty)).toBe('error');
-    expect(blockState(loaded(emptyOverview()), isBriefEmpty)).toBe('empty');
-    expect(blockState(loaded(overviewView()), isBriefEmpty)).toBeNull();
-    expect(blockState(loading(loaded(emptyOverview())), isBriefEmpty)).toBe('empty');
+    expect(blockState(idle(), isSinceEmpty)).toBe('loading');
+    expect(blockState(loading(), isSinceEmpty)).toBe('loading');
+    expect(blockState(failed({ status: 500 } as never), isSinceEmpty)).toBe('error');
+    expect(blockState(loaded(emptyOverview()), isSinceEmpty)).toBe('empty');
+    expect(blockState(loaded(overviewView()), isSinceEmpty)).toBeNull();
+    expect(blockState(loading(loaded(emptyOverview())), isSinceEmpty)).toBe('empty');
     expect(
-      blockState(failed({ status: 500 } as never, loaded(overviewView())), isBriefEmpty),
+      blockState(failed({ status: 500 } as never, loaded(overviewView())), isSinceEmpty),
     ).toBeNull();
   });
 

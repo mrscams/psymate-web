@@ -4,11 +4,12 @@ import { provideRouter, Router } from '@angular/router';
 
 import { PreferencesStore } from '../../../core/preferences';
 import { ToastService } from '../../../shared/ui';
-import { PatientShellStore } from '../../patient-shell';
+import { PatientShellStore, ShellPatient } from '../../patient-shell';
 import { OverviewApi } from '../data/overview.api';
 import { emptyOverview, overviewView } from '../data/overview.fixtures';
 import { OverviewView } from '../data/overview.model';
-import { TREND_RENDERER } from '../ui/trend-chart.component';
+import { TREND_RENDERER } from '../ui/chart-host';
+import { OverviewFeelingsComponent } from '../ui/overview-feelings.component';
 import { OverviewPage } from './overview.page';
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
@@ -17,33 +18,36 @@ function never<T>(): Promise<T> {
   return new Promise<T>(() => undefined);
 }
 
-function deferred<T>() {
-  let resolve!: (value: T) => void;
-  let reject!: (reason: unknown) => void;
-  const promise = new Promise<T>((ok, ko) => {
-    resolve = ok;
-    reject = ko;
-  });
-  return { promise, resolve, reject };
-}
-
-/** Les blocs de la vue complète, dans l'ordre de la maquette 02. */
-const BLOCKS = [
-  'Faits clés',
-  "Tendance d'intensité · 90 jours",
-  'Situations actives',
+/** Les sections de la colonne de lecture, dans l'ordre de la proposition 02. */
+const MAIN = [
+  'Comment évoluent les ressentis',
+  'Noté depuis la dernière séance',
   'Dernières séances',
-  'Émotions dominantes · 90 jours',
-  'À compléter',
-  'Activité récente',
 ];
+/** Les blocs de la colonne latérale, dans l'ordre de la proposition 02. */
+const SIDE = [
+  'Cadre du suivi',
+  'Traitement en cours',
+  'Situations en cours',
+  'Émotions · 90 jours',
+  'À compléter',
+];
+
+const marie: ShellPatient = {
+  id: 'p-marie',
+  displayName: 'Marie D.',
+  birthDate: null,
+  followedSince: '2025-03-12',
+  flags: ['watch'],
+  sessionModality: 'in_person',
+  plannedDurationMin: 50,
+};
 
 async function render(
   options: {
     overview?: (patientId: string, window: string) => Promise<OverviewView>;
-    view?: 'simple' | 'complete';
-    remembered?: { expanded: string[] };
     prefsLoaded?: boolean;
+    remembered?: { showData: boolean };
   } = {},
 ) {
   // Par défaut, le serveur répond pour la fenêtre demandée.
@@ -53,15 +57,11 @@ async function render(
         Promise.resolve(overviewView({ window: window as OverviewView['window'] }))),
   );
   const loaded = signal(options.prefsLoaded ?? true);
-  const mode = signal(options.view ?? 'complete');
   const window = signal<'30d' | '90d' | '12m'>('90d');
-  const set = vi.fn(async (key: string, value: never) => {
-    if (key === 'overview.view') mode.set(value);
-    if (key === 'overview.window') window.set(value);
-    return null;
-  });
   const shell = {
     patientId: signal('p-marie'),
+    patient: signal<ShellPatient | null>(marie),
+    followedSince: signal<string | null>(null),
     revision: signal(0),
     currentSession: signal<{ id: string } | null>(null),
     recallTab: vi.fn(() => options.remembered),
@@ -74,13 +74,7 @@ async function render(
       { provide: PatientShellStore, useValue: shell },
       {
         provide: PreferencesStore,
-        useValue: {
-          overviewView: mode,
-          overviewWindow: window,
-          set,
-          loaded,
-          status: signal('idle'),
-        },
+        useValue: { overviewWindow: window, loaded, status: signal('idle') },
       },
       { provide: ToastService, useValue: { warning: vi.fn() } },
       {
@@ -98,7 +92,7 @@ async function render(
   const fixture = TestBed.createComponent(OverviewPage);
   await settle(fixture);
   const el = fixture.nativeElement as HTMLElement;
-  return { fixture, el, overview, set, shell, loaded, settle: () => settle(fixture) };
+  return { fixture, el, overview, shell, window, loaded, settle: () => settle(fixture) };
 }
 
 async function settle(fixture: { whenStable(): Promise<unknown> }): Promise<void> {
@@ -111,13 +105,22 @@ function text(el: Element | null | undefined): string {
   return (el?.textContent ?? '').replace(/\s+/g, ' ').trim();
 }
 
-/** Le bloc dont le titre est `heading`. */
-function block(el: HTMLElement, heading: string): HTMLElement {
-  const section = [...el.querySelectorAll<HTMLElement>('pm-overview-block section')].find(
-    (s) => text(s.querySelector('h3')) === heading,
+/** Titre d'une section, sans son compteur collé (« Situations en cours · 1 »). */
+function title(h: Element): string {
+  return text(h).replace(/ · \d+$/, '');
+}
+
+/** La section dont le titre est `heading`. */
+function section(el: HTMLElement, heading: string): HTMLElement {
+  const found = [...el.querySelectorAll<HTMLElement>('pm-overview-section section')].find(
+    (s) => title(s.querySelector('h3')!) === heading,
   );
-  if (!section) throw new Error(`bloc introuvable : ${heading}`);
-  return section;
+  if (!found) throw new Error(`section introuvable : ${heading}`);
+  return found;
+}
+
+function since(el: HTMLElement): HTMLElement {
+  return el.querySelector<HTMLElement>('pm-overview-since section')!;
 }
 
 function button(root: HTMLElement, name: string): HTMLButtonElement {
@@ -132,45 +135,71 @@ function link(root: HTMLElement, name: string): HTMLAnchorElement {
   return found;
 }
 
-describe('OverviewPage', () => {
-  it('chargement : chaque bloc garde son titre et montre un squelette', async () => {
+describe('OverviewPage (vue unifiée, UX-S6)', () => {
+  it('ordre de lecture : bande « Depuis », ressentis, noté depuis, séances ; latérale dessous', async () => {
+    const { el } = await render();
+    const main = el.querySelector<HTMLElement>('.ov > .main')!;
+    expect([...main.children].map((c) => c.tagName.toLowerCase())).toEqual([
+      'pm-overview-since',
+      'pm-overview-feelings',
+      'pm-overview-noted',
+      'pm-overview-sessions',
+    ]);
+    expect([...main.querySelectorAll('pm-overview-section h3')].map(title)).toEqual(MAIN);
+    const side = el.querySelector<HTMLElement>('.ov > pm-overview-side')!;
+    expect(side.getAttribute('role')).toBe('region');
+    expect([...side.querySelectorAll('pm-overview-section h3')].map(title)).toEqual(SIDE);
+    // Une seule boîte : la carte du graphe.
+    expect(el.querySelectorAll('.panel')).toHaveLength(1);
+    expect(
+      el.querySelector('pm-overview-feelings .panel pm-overview-feelings-chart'),
+    ).not.toBeNull();
+  });
+
+  it('une seule vue : ni bascule Simple / Complète, ni bloc de saisie hors séance, ni activité récente', async () => {
+    const { el } = await render();
+    expect(el.querySelector('pm-overview-view-toggle, pm-overview-simple')).toBeNull();
+    expect([...el.querySelectorAll('button')].map((b) => text(b))).not.toContain('Simple');
+    expect([...el.querySelectorAll('button')].map((b) => text(b))).not.toContain('Complète');
+    expect(el.querySelector('pm-capture-block')).toBeNull();
+    expect(text(el)).not.toContain('Activité récente');
+    expect(text(el)).not.toContain('Faits clés');
+    expect(text(el)).not.toContain('moyenne glissante');
+  });
+
+  it('chargement : chaque section garde son titre et montre un squelette', async () => {
     const { el, overview } = await render({ overview: () => never() });
     expect(overview).toHaveBeenCalledWith('p-marie', '90d');
-    const headings = [...el.querySelectorAll('pm-overview-block h3')].map((h) => text(h));
-    expect(headings).toEqual(BLOCKS);
-    for (const heading of BLOCKS) {
-      expect(block(el, heading).querySelector('[aria-busy="true"]')).not.toBeNull();
+    expect(since(el).querySelector('.state.loading, [aria-busy="true"]')).not.toBeNull();
+    for (const heading of [...MAIN, ...SIDE]) {
+      expect(section(el, heading).querySelector('[aria-busy="true"]')).not.toBeNull();
     }
   });
 
-  it('vide (patient sans données) : chaque bloc a son état vide, les faits clés leurs zéros', async () => {
+  it('vide (dossier sans séance) : « Depuis l’ouverture du dossier », chiffres à zéro, états vides', async () => {
     const { el } = await render({ overview: () => Promise.resolve(emptyOverview()) });
+    expect(text(since(el).querySelector('h3'))).toBe("Depuis l'ouverture du dossier");
+    expect([...since(el).querySelectorAll('.fact b')].map((b) => text(b))).toEqual(['0', '—', '0']);
+    expect(text(el.querySelector('pm-overview-noted h3'))).toBe(
+      "Noté depuis l'ouverture du dossier",
+    );
     const empties: Record<string, string> = {
-      "Tendance d'intensité · 90 jours": 'Pas encore de ressentis sur cette période',
-      'Situations actives': 'Aucune situation en cours',
+      'Comment évoluent les ressentis': 'Pas encore de ressentis sur cette période',
+      "Noté depuis l'ouverture du dossier": 'Rien de noté depuis',
       'Dernières séances': 'Aucune séance',
-      'Émotions dominantes · 90 jours': "Pas d'émotion dominante",
+      'Traitement en cours': 'Aucun traitement en cours',
+      'Situations en cours': 'Aucune situation en cours',
+      'Émotions · 90 jours': 'Aucune émotion sur la période',
       'À compléter': 'Rien à compléter',
-      'Activité récente': 'Aucune entrée pour le moment',
     };
-    for (const [heading, title] of Object.entries(empties)) {
-      const section = block(el, heading);
-      expect(section.querySelector('[role="status"]')).not.toBeNull();
-      expect(text(section)).toContain(title);
+    for (const [heading, empty] of Object.entries(empties)) {
+      const found = section(el, heading);
+      expect(found.querySelector('[role="status"]')).not.toBeNull();
+      expect(text(found)).toContain(empty);
     }
-    const facts = block(el, 'Faits clés');
-    expect(facts.querySelector('pm-state')).toBeNull();
-    expect([...facts.querySelectorAll('.figure')].map((f) => text(f))).toEqual([
-      '0',
-      '0',
-      '—',
-      '0',
-    ]);
-    expect(text(facts)).toContain('moyenne des ressentis sur 90 j');
-    expect(text(facts)).toContain('Aucun traitement en cours');
   });
 
-  it('erreur : chaque bloc en erreur avec « Réessayer », qui relit la synthèse', async () => {
+  it('erreur : chaque section en erreur avec « Réessayer », qui relit la synthèse', async () => {
     let calls = 0;
     const { el, overview, settle } = await render({
       overview: () =>
@@ -178,259 +207,214 @@ describe('OverviewPage', () => {
           ? Promise.reject({ status: 500, code: 'INTERNAL_ERROR' })
           : Promise.resolve(overviewView()),
     });
-    for (const heading of BLOCKS) {
-      expect(block(el, heading).querySelector('[role="alert"]')).not.toBeNull();
+    expect(since(el).querySelector('[role="alert"]')).not.toBeNull();
+    for (const heading of [...MAIN, ...SIDE]) {
+      expect(section(el, heading).querySelector('[role="alert"]')).not.toBeNull();
     }
-    expect(text(block(el, "Tendance d'intensité · 90 jours"))).toContain('Tendance indisponible');
-    button(block(el, 'Situations actives'), 'Réessayer').click();
+    button(section(el, 'Situations en cours'), 'Réessayer').click();
     await settle();
     expect(overview).toHaveBeenCalledTimes(2);
     expect(el.querySelector('[role="alert"]')).toBeNull();
-    expect(text(block(el, 'Situations actives'))).toContain('Surcharge au travail');
+    expect(text(section(el, 'Situations en cours'))).toContain('Surcharge au travail');
   });
 
-  it('chargé : tuiles chiffrées sur la fenêtre, tendance (résumé accessible, données), émotions avec variation', async () => {
-    const { el } = await render();
-    const facts = block(el, 'Faits clés');
-    const figures = [...facts.querySelectorAll('.figure')].map((f) => text(f));
-    // Intensité moyenne : les ressentis de la fenêtre (8 et 4), pas les 7 derniers jours.
-    expect(figures).toEqual(['31', '2', '6,0/10', '1']);
-    const contexts = [...facts.querySelectorAll('.context')].map((c) => text(c));
-    expect(contexts).toEqual([
-      'dont 1 sur 90 j',
-      'sur 90 j · 2 émotions',
-      '↑ en hausse, de 5,5 à 7,0',
-      'en cours, sans fin connue',
-    ]);
-
-    const trend = block(el, "Tendance d'intensité · 90 jours");
-    const figure = trend.querySelector('[role="img"]');
-    expect(figure?.getAttribute('aria-label')).toContain('de 5,5 à 7,0 sur 10');
-    expect(figure?.getAttribute('aria-label')).toContain('Ressentis sur la période : 2');
-    // Légende de la maquette : trois éléments, plus de famille d'émotion.
-    const legend = [...trend.querySelectorAll('.legend li')].map((li) => text(li));
-    expect(legend).toEqual(['Intensité des ressentis', 'Séance', 'Changement de médicament']);
-    expect(text(trend.querySelector('header'))).toContain('moyenne glissante 7 j');
-    const rows = [...trend.querySelectorAll('tbody tr')].map((r) => text(r));
-    expect(rows[0]).toContain('Anxiété');
-    expect(link(trend, 'Anxiété').getAttribute('href')).toBe('/?entry=f-1');
-
-    const emotions = block(el, 'Émotions dominantes · 90 jours');
-    const items = [...emotions.querySelectorAll('li')].map((li) =>
-      [...li.querySelectorAll('a, strong, .delta, .sr-only')].map((n) => text(n)),
-    );
-    expect(items).toEqual([
-      ['Anxiété', '18', '+6', '6 de plus que les 90 jours précédents'],
-      ['Joie', '2', '−2', '2 de moins que les 90 jours précédents'],
-    ]);
-    expect(link(emotions, 'Anxiété').getAttribute('href')).toBe(
-      '/patients/p-marie/timeline?emotion=anxiety',
-    );
-  });
-
-  it('situation active : la carte entière mène au graphe centré (graph?root=<id>), compte dans le titre', async () => {
-    const { el } = await render();
-    const situations = block(el, 'Situations actives');
-    expect(text(situations.querySelector('header'))).toContain('· 1');
-    const card = link(situations, 'Surcharge au travail');
-    expect(card.getAttribute('href')).toBe('/patients/p-marie/graph?root=e-sit');
-    expect(text(card)).toContain('5 ressentis liés · intensité moy. 7,4/10 · voir dans le graphe');
-    expect(text(card)).toContain('depuis le 1 avr. 2026');
-  });
-
-  it('faits clés : traitement, début du suivi, drapeau avec « Modifier » vers la fiche', async () => {
-    const { el } = await render();
-    const facts = [...block(el, 'Faits clés').querySelectorAll('.facts li')].map((li) => text(li));
-    expect(facts[0]).toBe(
-      'Sertraline 75 mg · matin · prescrit par Dr Lemaire depuis le 12 sept. 2026',
-    );
-    expect(facts[1]).toBe('Suivi depuis le 12 mars 2025');
-    // Un espace entre le libellé, la date de pose, le motif et le lien (lu d'un trait).
-    expect(facts[2]).toBe(
-      'Drapeau « À surveiller » posé le 3 oct. 2026 · Sommeil Modifier le drapeau « À surveiller » dans la fiche',
-    );
-    expect(link(block(el, 'Faits clés'), 'Modifier').getAttribute('href')).toBe(
-      '/patients/p-marie/fiche',
-    );
-  });
-
-  it('faits clés : dossier créé après ses séances → suivi depuis la première séance connue', async () => {
+  it('bande « Depuis la séance » : date de la séance, phrases du serveur, point d’attention, trois chiffres', async () => {
     const view = overviewView();
-    view.facts = { ...view.facts, followedSince: '2026-11-07' };
+    // Séance du 21 oct. : moyenne 5,5 alors, 7 aujourd'hui → en hausse.
+    view.sinceLastSession = { ...view.sinceLastSession, lastSessionAt: '2026-10-21T14:00:00Z' };
     const { el } = await render({ overview: () => Promise.resolve(view) });
-    expect(text(block(el, 'Faits clés'))).toContain(
-      'Suivi depuis le 10 oct. 2026 (première séance connue)',
+    const strip = since(el);
+    expect(text(strip.querySelector('h3'))).toMatch(/^Depuis la séance du 21 octobre/);
+    expect(text(strip.querySelector('.brief'))).toContain('Une situation reste ouverte');
+    expect([...strip.querySelectorAll('.brief b')].map((b) => text(b))).toContain('31');
+    expect(text(strip.querySelector('.attention'))).toBe(
+      "Point d'attention : À surveiller depuis le 3 octobre 2026 (motif : Sommeil).",
+    );
+    const facts = [...strip.querySelectorAll('.fact')].map((f) =>
+      [...f.children].map((c) => text(c)),
+    );
+    expect(facts[0]).toEqual(['1', 'ressenti']);
+    expect(facts[1]).toEqual(['7,0 ↑', 'intensité · 7 j', 'en hausse depuis la séance']);
+    expect(facts[2]).toEqual(['2', 'brouillons']);
+    expect(strip.querySelector('.fact b.trend-up')).not.toBeNull();
+  });
+
+  it('ressentis : compteur, légende par émotion, repères ; « Voir les données » déplie le tableau', async () => {
+    const { el, settle } = await render();
+    const feelings = section(el, 'Comment évoluent les ressentis');
+    expect(text(feelings.querySelector('.count'))).toBe(
+      '90 jours · 2 ressentis · chaque point est une entrée',
+    );
+    expect([...feelings.querySelectorAll('.legend li')].map((li) => text(li))).toEqual([
+      'Anxiété 1',
+      'Joie 1',
+      'séance',
+      'traitement',
+    ]);
+    const toggle = button(feelings, 'Voir les données');
+    const data = feelings.querySelector<HTMLElement>('.data')!;
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(data.hidden).toBe(true);
+    toggle.click();
+    await settle();
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(data.hidden).toBe(false);
+    expect(feelings.querySelectorAll('tbody tr')).toHaveLength(2);
+    expect(feelings.querySelector('[role="img"]')?.getAttribute('aria-label')).toContain(
+      'moyenne glissante sur 7 jours',
     );
   });
 
-  it('à compléter : brouillons et séance ouverte en lignes ambre, vers la timeline filtrée', async () => {
-    const { el } = await render({
-      overview: () =>
-        Promise.resolve(
-          overviewView({
-            drafts: {
-              count: 2,
-              openSession: { entryId: 's-open', startedAt: '2026-11-08T09:00:00Z' },
-            },
-          }),
-        ),
-    });
-    const todo = block(el, 'À compléter');
-    expect(link(todo, '2 brouillons').getAttribute('href')).toBe(
-      '/patients/p-marie/timeline?drafts=1',
-    );
-    expect(text(link(todo, '2 brouillons'))).toBe('2 brouillons ouvrir');
-    const open = link(todo, 'Séance du');
-    expect(open.getAttribute('href')).toBe('/patients/p-marie/timeline?mode=session&focus=s-open');
-    expect(text(open)).toBe('Séance du 8 nov. 2026 non clôturée clôturer');
-  });
-
-  it('dernières séances : la plus récente dépliée (compte rendu entier), vers la timeline par séance', async () => {
+  it('« Voir les données » : rangé dans la mémoire du dossier (B2), repris au retour sur l’onglet', async () => {
     const { el, shell, settle } = await render();
-    const sessions = block(el, 'Dernières séances');
-    const toggles = [...sessions.querySelectorAll<HTMLButtonElement>('button[aria-expanded]')];
-    expect(toggles.map((t) => t.getAttribute('aria-expanded'))).toEqual(['true', 'false']);
-    expect(text(sessions)).toContain('Objectif : préparer l’entretien.');
-    expect(link(sessions, 'Voir la séance dans la timeline').getAttribute('href')).toBe(
-      '/patients/p-marie/timeline?mode=session&focus=s-1',
+    button(section(el, 'Comment évoluent les ressentis'), 'Voir les données').click();
+    await settle();
+    expect(shell.rememberTab).toHaveBeenCalledWith('overview', { showData: true });
+    TestBed.resetTestingModule();
+    const back = await render({ remembered: { showData: true } });
+    const feelings = section(back.el, 'Comment évoluent les ressentis');
+    expect(button(feelings, 'Masquer les données').getAttribute('aria-expanded')).toBe('true');
+    expect(feelings.querySelector<HTMLElement>('.data')!.hidden).toBe(false);
+  });
+
+  it('vide : pas de « Voir les données » sans ressenti', async () => {
+    const { el } = await render({ overview: () => Promise.resolve(emptyOverview()) });
+    expect(text(section(el, 'Comment évoluent les ressentis'))).not.toContain('Voir les données');
+  });
+
+  it('un point du graphe ouvre le ressenti (?entry=)', async () => {
+    const { fixture, settle } = await render();
+    const router = TestBed.inject(Router);
+    const feelings = fixture.debugElement.query(
+      (d) => d.componentInstance instanceof OverviewFeelingsComponent,
     );
-    expect(link(sessions, 'Toutes dans la timeline').getAttribute('href')).toBe(
+    (feelings.componentInstance as OverviewFeelingsComponent).pointSelected.emit('f-1');
+    await settle();
+    expect(router.url).toBe('/?entry=f-1');
+  });
+
+  it('noté depuis la séance : émotion et échelle à dix cases (jamais « Ressenti »), brouillon, date mono', async () => {
+    const { el } = await render();
+    const noted = section(el, 'Noté depuis la dernière séance');
+    expect(text(noted.querySelector('.count'))).toBe('2 entrées · 1 brouillon');
+    expect(link(noted, 'Tout dans la timeline').getAttribute('href')).toBe(
+      '/patients/p-marie/timeline',
+    );
+    const [feeling, note] = [...noted.querySelectorAll<HTMLAnchorElement>('a.entry')];
+    expect(text(feeling.querySelector('.name'))).toBe('Joie');
+    expect(feeling.querySelectorAll('.scale i')).toHaveLength(10);
+    expect(feeling.querySelectorAll('.scale i.on')).toHaveLength(4);
+    expect(text(feeling.querySelector('.value'))).toBe('4/10');
+    expect(text(feeling.querySelector('.text'))).toBe('Joie après la randonnée');
+    expect(text(feeling.querySelector('.chip.draft'))).toBe('brouillon');
+    expect(text(feeling.querySelector('.when'))).toMatch(/^7 nov\. \d\d:\d\d$/);
+    expect(feeling.getAttribute('href')).toBe('/?entry=f-2');
+    expect(text(noted)).not.toContain('Ressenti');
+    expect(text(note.querySelector('.name'))).toBe('Note');
+    expect(note.querySelector('.scale, .chip')).toBeNull();
+  });
+
+  it('noté depuis la séance : dix entrées au plus, le compteur dit toutes celles servies', async () => {
+    const view = overviewView();
+    view.sinceLastSession = {
+      ...view.sinceLastSession,
+      entries: Array.from({ length: 14 }, (_, i) => ({
+        entryId: `n-${i}`,
+        type: 'note' as const,
+        title: `Note ${i}`,
+        status: 'final' as const,
+        occurredFrom: '2026-11-01T09:00:00Z',
+      })),
+    };
+    const { el } = await render({ overview: () => Promise.resolve(view) });
+    const noted = section(el, 'Noté depuis la dernière séance');
+    expect(noted.querySelectorAll('a.entry')).toHaveLength(10);
+    expect(text(noted.querySelector('.count'))).toBe('14 entrées · aucun brouillon');
+  });
+
+  it('dernières séances : ligne de la séance, entrées, compte rendu ; vers la timeline par séance', async () => {
+    const { el } = await render();
+    const sessions = section(el, 'Dernières séances');
+    expect(text(sessions.querySelector('.count'))).toBe('1 sur 90 jours · 31 au total');
+    expect(link(sessions, 'Toutes les séances').getAttribute('href')).toBe(
       '/patients/p-marie/timeline?mode=session',
     );
-    toggles[1].click();
-    await settle();
-    expect(text(sessions)).toContain('Point sur le sommeil.');
-    expect(shell.rememberTab).toHaveBeenCalledWith('overview', { expanded: ['s-1', 's-0'] });
-  });
-
-  it('dernières séances : trace « Prochaine fois » du compte rendu, « modifier la séance » ouvre l’éditeur (UX-S3)', async () => {
-    const view = overviewView();
-    const [last, ...rest] = view.recentSessions;
-    const summary = `${last.summary}\n\nProchaine fois :\n– Relire la demande\n– Agenda (s. 3 et 4)`;
-    const traced = { ...view, recentSessions: [{ ...last, summary }, ...rest] };
-    const { el, settle } = await render({ overview: () => Promise.resolve(traced) });
-    const sessions = block(el, 'Dernières séances');
-    expect(text(sessions.querySelector('.summary'))).toBe(
+    const rows = [...sessions.querySelectorAll<HTMLElement>('.sess')];
+    expect(rows.map((r) => text(r.querySelector('.t')))).toEqual([
+      'Samedi 17 octobre · cabinet · 50 min',
+      'Samedi 10 octobre · visio · 50 min',
+    ]);
+    expect(rows.map((r) => text(r.querySelector('.n')))).toEqual(['4 entrées', '2 entrées']);
+    expect(text(rows[0].querySelector('.s'))).toBe(
       'Reprise du thème du travail. Objectif : préparer l’entretien.',
     );
-    expect(text(sessions.querySelector('.goal'))).toBe(
-      'Prochaine fois : Relire la demande · Agenda (s. 3 et 4)',
+    expect(text(rows[1].querySelector('.s'))).toBe('Point sur le sommeil.');
+    expect(rows[0].querySelector('a')?.getAttribute('href')).toBe(
+      '/patients/p-marie/timeline?mode=session&focus=s-1',
     );
-    button(sessions, 'modifier la séance').click();
-    await settle();
-    expect(TestBed.inject(Router).url).toBe('/?entry=s-1');
   });
 
-  it('retour sur l’onglet : les séances dépliées sont reprises de la mémoire du dossier', async () => {
-    const { el } = await render({ remembered: { expanded: ['s-0'] } });
-    const toggles = [
-      ...block(el, 'Dernières séances').querySelectorAll('button[aria-expanded]'),
-    ].map((t) => t.getAttribute('aria-expanded'));
-    expect(toggles).toEqual(['false', 'true']);
-  });
-
-  it('activité récente : chaque entrée ouvre l’éditeur (?entry=)', async () => {
-    const { el } = await render();
-    const activity = block(el, 'Activité récente');
-    expect(text(activity.querySelector('header'))).toContain(
-      'toutes versions confondues · en direct',
+  it('latérale : cadre du suivi, traitement, situations, émotions, à compléter, heure du calcul', async () => {
+    const { el, shell, settle } = await render();
+    const frame = section(el, 'Cadre du suivi');
+    const lines = [...frame.querySelectorAll('.line')].map((l) =>
+      [...l.children].map((c) => text(c)),
     );
-    expect(text(activity)).toContain('brouillon');
-    expect(link(activity, 'Joie après la randonnée').getAttribute('href')).toBe('/?entry=f-2');
-  });
+    expect(lines[0]).toEqual(['Suivi', 'depuis mars 2025 · cabinet, 50 min']);
+    expect(lines[1][0]).toBe('Drapeau');
+    expect(lines[1][1]).toMatch(/^À surveiller depuis le 3 oct\. · Sommeil · modifier$/);
+    expect(link(frame, 'modifier').getAttribute('href')).toBe('/patients/p-marie/fiche');
 
-  it('activité récente : titre de repli, badge « vN » au-delà de la v1 seulement, deux colonnes', async () => {
-    const base = overviewView();
-    const item = base.recentActivity[0];
-    const view = overviewView({
-      recentActivity: [
-        // Ressenti sans titre : émotion et intensité lues dans feelings.points.
-        { ...item, entryId: 'f-1', title: null, status: 'final', version: 1 },
-        // Séance sans titre : première ligne du compte rendu.
-        { ...item, entryId: 's-1', type: 'session', title: null, status: 'final', version: 3 },
-        // Note sans titre ni texte connu : « Note · 22 oct. ».
-        {
-          ...item,
-          entryId: 'e-note',
-          type: 'note',
-          title: null,
-          status: 'final',
-          version: 1,
-          occurredFrom: '2026-10-22T09:00:00Z',
-        },
-      ],
-    });
-    const { el } = await render({ overview: () => Promise.resolve(view) });
-    const rows = [...block(el, 'Activité récente').querySelectorAll('li')];
-    const titles = rows.map((li) => text(li.querySelector('a')));
-    expect(titles[0]).toMatch(/^Anxiété 8\/10 · 7 nov\./);
-    expect(titles[1]).toBe('Reprise du thème du travail.');
-    expect(titles[2]).toMatch(/^Note · 22 oct\./);
-    expect(rows.map((li) => text(li.querySelector('.badge')))).toEqual(['', 'v3', '']);
-    expect(el.querySelector('pm-overview-activity')).not.toBeNull();
-  });
-
-  it('sélecteur de fenêtre : écrit overview.window, la synthèse est relue avec ?window=', async () => {
-    const { el, set, overview, settle } = await render();
-    const group = el.querySelector<HTMLElement>('[aria-label="Période de la vue d\'ensemble"]')!;
-    expect(button(group, '90 j').getAttribute('aria-pressed')).toBe('true');
-    button(group, '30 j').click();
+    // Même début de suivi que l'en-tête quand il en affiche un (followUp.since de la fiche).
+    shell.followedSince.set('2026-09-01');
     await settle();
-    expect(set).toHaveBeenCalledWith('overview.window', '30d');
+    expect([...frame.querySelectorAll('.line')][0].textContent).toContain('depuis sept. 2026');
+
+    const medication = section(el, 'Traitement en cours');
+    expect(text(medication.querySelector('.line'))).toBe(
+      'Sertraline 75 mg matin · depuis le 12 sept. · Dr Lemaire',
+    );
+
+    const situations = section(el, 'Situations en cours');
+    expect(text(situations.querySelector('h3'))).toBe('Situations en cours · 1');
+    expect(text(situations.querySelector('.sit .t'))).toBe('Surcharge au travail');
+    expect(text(situations.querySelector('.sit .r'))).toBe('depuis avr.');
+    expect(link(situations, 'voir dans le graphe').getAttribute('href')).toBe(
+      '/patients/p-marie/graph?root=e-sit',
+    );
+    expect(text(situations.querySelector('.sit .m'))).toContain('5 ressentis liés');
+
+    const emotions = section(el, 'Émotions · 90 jours');
+    const rows = [...emotions.querySelectorAll<HTMLElement>('.emorow')];
+    expect(rows.map((r) => [...r.children].map((c) => text(c)))).toEqual([
+      ['', 'Anxiété', '18', '+66 de plus que les 90 jours précédents', ''],
+      ['', 'Joie', '2', '−22 de moins que les 90 jours précédents', ''],
+    ]);
+    expect(rows.map((r) => text(r.querySelector('.delta [aria-hidden="true"]')))).toEqual([
+      '+6',
+      '−2',
+    ]);
+    expect(rows[0].querySelector<HTMLElement>('.bar i')?.style.width).toBe('100%');
+    expect(rows[1].querySelector<HTMLElement>('.bar i')?.style.width).toBe('11%');
+
+    const todo = section(el, 'À compléter');
+    expect(text(link(todo, '✎'))).toBe('✎ 2 brouillons à relire ouvrir');
+    expect(link(todo, '✎').getAttribute('href')).toBe('/patients/p-marie/timeline?drafts=1');
+
+    const foot = el.querySelector('pm-overview-side .foot')!;
+    expect(foot.getAttribute('role')).toBe('status');
+    expect(text(foot)).toMatch(/^Synthèse calculée par le serveur · mise à jour /);
+  });
+
+  it('fenêtre (préférence choisie dans l’en-tête) : la synthèse est relue avec ?window=', async () => {
+    const { el, overview, window, settle } = await render();
+    window.set('30d');
+    await settle();
     expect(overview).toHaveBeenLastCalledWith('p-marie', '30d');
-    expect(button(group, '30 j').getAttribute('aria-pressed')).toBe('true');
-    expect(text(el)).toContain("Tendance d'intensité · 30 jours");
-  });
-
-  it('vue simple (défaut) : le récit à la place des blocs chiffrés, sur la même synthèse', async () => {
-    const { el, overview } = await render({ view: 'simple' });
-    expect(overview).toHaveBeenCalledTimes(1);
-    expect(el.querySelector('pm-overview-simple')).not.toBeNull();
-    expect(text(el)).not.toContain('Récit : bientôt');
-    const headings = [...el.querySelectorAll('pm-overview-block h3')].map((h) => text(h));
-    expect(headings).toContain('En bref');
-    expect(headings).not.toContain('Résumé');
-    expect(text(el.querySelector('.sentence'))).toBe(
-      'Suivi depuis le 12 mars 2025 : 31 séances, soit environ une séance par semaine.',
+    expect(text(section(el, 'Comment évoluent les ressentis').querySelector('.count'))).toMatch(
+      /^30 jours/,
     );
-    // Le sélecteur de fenêtre et le pied restent communs aux deux vues.
-    expect(el.querySelector('.windows')).not.toBeNull();
-    expect(text(el.querySelector('footer'))).toContain('Dernière mise à jour de la synthèse');
-  });
-
-  it('bascule simple ↔ complète : aucune nouvelle lecture de la synthèse', async () => {
-    const { el, overview, set, settle } = await render({ view: 'simple' });
-    // La bascule vit dans l'en-tête (shell) ; ici, la préférence change comme elle l'écrirait.
-    await set('overview.view', 'complete' as never);
-    await settle();
-    expect(el.querySelector('pm-overview-simple')).toBeNull();
-    expect(text(block(el, 'Situations actives'))).toContain('Surcharge au travail');
-    await set('overview.view', 'simple' as never);
-    await settle();
-    expect(el.querySelector('pm-overview-simple')).not.toBeNull();
-    expect(overview).toHaveBeenCalledTimes(1);
-  });
-
-  it('vue simple : un point du graphe ou une entrée ouvre l’éditeur (?entry=)', async () => {
-    const { fixture, el, settle } = await render({ view: 'simple' });
-    const simple = fixture.debugElement.query((d) => d.name === 'pm-overview-simple');
-    simple.componentInstance.entrySelected.emit('f-1');
-    await settle();
-    const router = TestBed.inject(Router);
-    expect(router.url).toBe('/?entry=f-1');
-    expect(el.querySelector('pm-overview-simple')).not.toBeNull();
-  });
-
-  it('dernière mise à jour : heure du calcul (computedAt), région d’état permanente, sans « Recalculer »', async () => {
-    const { el } = await render({
-      overview: () => Promise.resolve(overviewView({ computedAt: '2020-01-01T10:00:00Z' })),
-    });
-    const footer = el.querySelector('footer')!;
-    expect(footer.getAttribute('role')).toBe('status');
-    expect(text(footer)).toMatch(/^Dernière mise à jour de la synthèse : 1 janv. 2020/);
-    // Le contrat : la réponse n'est jamais obsolète (projection recalculée à la volée).
-    expect(footer.querySelector('button')).toBeNull();
-    expect(text(el)).not.toContain('Recalculer');
+    expect(() => section(el, 'Émotions · 30 jours')).not.toThrow();
   });
 
   it('après une écriture depuis le dossier (événement du shell), la vue se recharge', async () => {
@@ -452,69 +436,32 @@ describe('OverviewPage', () => {
     await settle();
     const banner = el.querySelector<HTMLElement>('.reload-failed [role="alert"]');
     expect(text(banner)).toContain("La synthèse n'a pas pu être relue");
-    // Les blocs gardent leur contenu (pas d'erreur par bloc).
-    expect(text(block(el, 'Situations actives'))).toContain('Surcharge au travail');
-    expect(block(el, 'Situations actives').querySelector('[role="alert"]')).toBeNull();
+    expect(text(section(el, 'Situations en cours'))).toContain('Surcharge au travail');
+    expect(section(el, 'Situations en cours').querySelector('[role="alert"]')).toBeNull();
     button(banner!, 'Réessayer').click();
     await settle();
     expect(overview).toHaveBeenCalledTimes(3);
     expect(el.querySelector('.reload-failed')).toBeNull();
   });
 
-  it('fenêtre en cours de lecture : les titres suivent la synthèse affichée, pas la préférence', async () => {
-    const next = deferred<OverviewView>();
-    let calls = 0;
-    const { el, settle } = await render({
-      overview: () => (++calls === 1 ? Promise.resolve(overviewView()) : next.promise),
-    });
-    const group = el.querySelector<HTMLElement>('.windows')!;
-    button(group, '1 an').click();
-    await settle();
-    expect(button(group, '1 an').getAttribute('aria-pressed')).toBe('true');
-    expect(text(el)).toContain("Tendance d'intensité · 90 jours");
-    expect(text(el)).toContain('Émotions dominantes · 90 jours');
-    expect(block(el, "Tendance d'intensité · 90 jours").getAttribute('aria-busy')).toBe('true');
-    next.resolve(overviewView({ window: '12m' }));
-    await settle();
-    expect(text(el)).toContain("Tendance d'intensité · 12 mois");
-    expect(text(el)).toContain('Émotions dominantes · 12 mois');
-  });
-
-  it('relecture : un bloc vide reste vide, il ne repasse pas au squelette', async () => {
+  it('relecture : une section vide reste vide, elle ne repasse pas au squelette', async () => {
     let calls = 0;
     const { el, shell, settle } = await render({
       overview: () => (++calls === 1 ? Promise.resolve(emptyOverview()) : never()),
     });
     shell.revision.set(1);
     await settle();
-    const situations = block(el, 'Situations actives');
+    const situations = section(el, 'Situations en cours');
     expect(situations.getAttribute('aria-busy')).toBe('true');
     expect(text(situations)).toContain('Aucune situation en cours');
     expect(situations.querySelector('.state.loading')).toBeNull();
   });
 
-  it('préférences pas encore lues : ni requête ni vue simple ; lues → une seule lecture', async () => {
-    const { el, overview, loaded, settle } = await render({ prefsLoaded: false });
+  it('préférences pas encore lues : aucune requête ; lues → une seule lecture', async () => {
+    const { overview, loaded, settle } = await render({ prefsLoaded: false });
     expect(overview).not.toHaveBeenCalled();
-    expect(el.querySelector('pm-overview-simple')).toBeNull();
-    expect(el.querySelector('pm-overview-block')).toBeNull();
-    expect(el.querySelector('[aria-busy="true"]')).not.toBeNull();
     loaded.set(true);
     await settle();
     expect(overview).toHaveBeenCalledTimes(1);
-    expect(el.querySelector('pm-overview-block')).not.toBeNull();
-  });
-
-  it('« Démarrer la séance » (séance ouverte dans l’en-tête) : la séance précédente se replie', async () => {
-    const { el, shell, settle } = await render();
-    const states = () =>
-      [...block(el, 'Dernières séances').querySelectorAll('button[aria-expanded]')].map((b) =>
-        b.getAttribute('aria-expanded'),
-      );
-    expect(states()).toEqual(['true', 'false']);
-    shell.currentSession.set({ id: 's-new' });
-    await settle();
-    expect(states()).toEqual(['false', 'false']);
-    expect(shell.rememberTab).toHaveBeenCalledWith('overview', { expanded: [] });
   });
 });

@@ -57,19 +57,6 @@ export function sessionKindLabel(kind: SessionKind): string {
   }
 }
 
-export function modalityLabel(modality: SessionModality): string {
-  switch (modality) {
-    case 'in_person':
-      return $localize`:Modalité d'une séance@@overview.session.modality.inPerson:Présentiel`;
-    case 'video':
-      return $localize`:Modalité d'une séance@@overview.session.modality.video:Visio`;
-    case 'phone':
-      return $localize`:Modalité d'une séance@@overview.session.modality.phone:Téléphone`;
-    case 'email':
-      return $localize`:Modalité d'une séance@@overview.session.modality.email:E-mail`;
-  }
-}
-
 /** « 4,5 » : une décimale, séparateur de la locale. */
 export function formatIntensity(value: number, locale: string): string {
   return new Intl.NumberFormat(locale, {
@@ -106,27 +93,81 @@ export function formatLongDay(value: string, locale: string, now: Date = new Dat
 }
 
 /**
- * En-tête d'une séance : « samedi 17 octobre 2026 · 50 min · Présentiel » (nature si ce n'est pas
- * une séance ordinaire). Des libellés et des valeurs, aucune phrase.
+ * Ligne d'une séance récente (UX-S6, proposition 02 `.sess`) : « Jeudi 5 novembre · cabinet ·
+ * 50 min » ; la nature si ce n'est pas une séance ordinaire (« Accueil »). La modalité au même
+ * libellé que l'en-tête patient (`sessionModalityLabel`, passée par l'appelant).
  */
-export function sessionHeading(session: RecentSession, locale: string): string {
+export function sessionLine(
+  session: RecentSession,
+  locale: string,
+  modality: (code: SessionModality) => string,
+  now: Date = new Date(),
+): string {
   const parts: string[] = [];
-  parts.push(session.occurredFrom ? formatLongDay(session.occurredFrom, locale) : '—');
+  if (session.occurredFrom) {
+    const day = formatLongDay(session.occurredFrom, locale, now);
+    parts.push(day.charAt(0).toLocaleUpperCase(locale) + day.slice(1));
+  } else {
+    parts.push('—');
+  }
   if (session.kind !== 'session') parts.push(sessionKindLabel(session.kind));
+  if (session.modality) parts.push(modality(session.modality));
   if (session.durationMin !== null) {
     parts.push(
       $localize`:Durée d'une séance@@overview.sessions.duration:${session.durationMin}:minutes: min`,
     );
   }
-  if (session.modality) parts.push(modalityLabel(session.modality));
   return parts.join(' · ');
 }
 
-/** Date-heure ISO → « 8 nov. 2026, 14:32 » dans le fuseau du praticien. */
-export function formatDateTime(value: string, locale: string): string {
+/** Jour → « 15 oct. » (« 15 oct. 2025 » hors de l'année en cours), lu en UTC pour un AAAA-MM-JJ. */
+export function formatShortDay(value: string, locale: string, now: Date = new Date()): string {
+  const dateOnly = value.length === 10;
+  const date = new Date(dateOnly ? `${value}T00:00:00Z` : value);
+  if (Number.isNaN(date.getTime())) return value;
+  const year = dateOnly ? date.getUTCFullYear() : date.getFullYear();
+  return new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    month: 'short',
+    year: year === now.getFullYear() ? undefined : 'numeric',
+    timeZone: dateOnly ? 'UTC' : undefined,
+  }).format(date);
+}
+
+/** Date-heure ISO → « 12 nov. 09:20 » (moment d'une entrée, maquette 02 `.when`). */
+export function formatShortDateTime(value: string, locale: string, now: Date = new Date()): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(date);
+  const time = new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(date);
+  return `${formatShortDay(value, locale, now)} ${time}`;
+}
+
+/** Mois → « sept. 2026 » (suivi depuis), ou « oct. » dans l'année en cours si `short`. */
+export function formatMonth(
+  value: string,
+  locale: string,
+  short = false,
+  now: Date = new Date(),
+): string {
+  const dateOnly = value.length === 10;
+  const date = new Date(dateOnly ? `${value}T00:00:00Z` : value);
+  if (Number.isNaN(date.getTime())) return value;
+  const year = dateOnly ? date.getUTCFullYear() : date.getFullYear();
+  return new Intl.DateTimeFormat(locale, {
+    month: 'short',
+    year: short && year === now.getFullYear() ? undefined : 'numeric',
+    timeZone: dateOnly ? 'UTC' : undefined,
+  }).format(date);
+}
+
+/** Heure de calcul de la synthèse : « 11:03 » le jour même, sinon « 8 nov. 11:03 ». */
+export function formatComputedAt(value: string, locale: string, now: Date = new Date()): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  if (date.toDateString() === now.toDateString()) {
+    return new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(date);
+  }
+  return formatShortDateTime(value, locale, now);
 }
 
 /** Variation d'une émotion dominante : « +6 », « −2 », « = » (jamais la couleur seule). */
@@ -216,61 +257,6 @@ export function feelingsSummary(feelings: OverviewFeelings, window: OverviewWind
   return $localize`:Description du graphe des ressentis@@overview.simple.feelings.summary:Ressentis notés sur ${period}:period:, une valeur par point : ${details}:details:. ${counts}:counts:`;
 }
 
-const MINUTE_MS = 60_000;
-const DAY_MS = 86_400_000;
-
-function startOfLocalDay(date: Date): number {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
-}
-
-/**
- * Moment de saisie d'une entrée récente (Activité récente, maquette 02) : « maintenant »,
- * « il y a 6 min », « il y a 3 h » le jour même, « hier », « il y a 4 j » dans la semaine, puis la
- * date courte « 12 sept. » (l'année seulement si ce n'est pas l'année en cours). Intl, locale de
- * l'interface, fuseau du navigateur.
- */
-export function formatRecorded(value: string, locale: string, now: Date = new Date()): string {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  const relative = new Intl.RelativeTimeFormat(locale, { numeric: 'auto', style: 'short' });
-  const days = Math.round((startOfLocalDay(date) - startOfLocalDay(now)) / DAY_MS);
-  if (days === 0) {
-    const minutes = Math.max(0, Math.floor((now.getTime() - date.getTime()) / MINUTE_MS));
-    if (minutes < 1) return relative.format(0, 'second');
-    if (minutes < 60) return relative.format(-minutes, 'minute');
-    return relative.format(-Math.floor(minutes / 60), 'hour');
-  }
-  if (days < 0 && days >= -6) return relative.format(days, 'day');
-  return new Intl.DateTimeFormat(locale, {
-    day: 'numeric',
-    month: 'short',
-    year: date.getFullYear() === now.getFullYear() ? undefined : 'numeric',
-  }).format(date);
-}
-
-/**
- * Ancienneté d'une situation (« 7 mois », « 6 sem. », « 3 ans », « 5 j ») : unités courtes Intl,
- * comme la maquette 02 ; la date exacte reste dans le libellé accessible.
- */
-export function formatElapsed(since: string, locale: string, now: Date = new Date()): string {
-  const start = new Date(since.length === 10 ? `${since}T00:00:00Z` : since);
-  if (Number.isNaN(start.getTime())) return '';
-  const days = Math.max(0, Math.floor((now.getTime() - start.getTime()) / DAY_MS));
-  // Jours et semaines en abrégé (« 5 j », « 6 sem. ») ; mois et années en toutes lettres, déjà
-  // courts (« 7 mois » : l'abrégé Intl français donne « 7 m. »).
-  const unit = (value: number, name: 'day' | 'week' | 'month' | 'year') =>
-    new Intl.NumberFormat(locale, {
-      style: 'unit',
-      unit: name,
-      unitDisplay: name === 'day' || name === 'week' ? 'short' : 'long',
-    }).format(value);
-  if (days < 14) return unit(days, 'day');
-  if (days < 60) return unit(Math.floor(days / 7), 'week');
-  const months = Math.floor(days / 30.44);
-  if (months < 12) return unit(months, 'month');
-  return unit(Math.floor(months / 12), 'year');
-}
-
 /** Un morceau d'une phrase du serveur : en gras s'il porte un fait (date, chiffre, citation). */
 export interface Emphasis {
   text: string;
@@ -313,25 +299,6 @@ export function emphasize(sentence: string): Emphasis[] {
   }
   if (last < sentence.length) parts.push({ text: sentence.slice(last), strong: false });
   return parts;
-}
-
-/**
- * Valeurs d'une série de ressentis pour la phrase-titre du graphe (UX-B5) : « 4/10 → 8/10 » du
- * premier au dernier ressenti, « 3–5/10 » pour une fourchette, « 6/10 » pour une seule valeur.
- * Des valeurs, aucune interprétation.
- */
-export function intensityPath(values: readonly number[]): string {
-  if (!values.length) return '';
-  const first = values[0];
-  const last = values[values.length - 1];
-  return values.length === 1 || first === last ? `${last}/10` : `${first}/10 → ${last}/10`;
-}
-
-export function intensitySpan(values: readonly number[]): string {
-  if (!values.length) return '';
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  return min === max ? `${min}/10` : `${min}–${max}/10`;
 }
 
 /**

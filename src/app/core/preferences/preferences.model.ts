@@ -2,9 +2,12 @@ import { Profession } from '../auth';
 import { AppLocale, SubjectLabel } from '../i18n';
 import { ThemePreference } from '../theme';
 
-/** Les 9 clés V1 de la fiche 14, aux noms pointés du contrat (schéma Preferences). */
+/**
+ * Les 8 clés lues et écrites par le client (fiche 14), aux noms pointés du contrat (schéma
+ * Preferences). UX-S6 (14 novembre 2026) : `overview.view` (Simple / Complète) n'est plus lue ni
+ * écrite, la vue d'ensemble n'a plus qu'une vue ; le champ reste dans le contrat.
+ */
 export interface Preferences {
-  'overview.view': 'simple' | 'complete';
   'overview.window': '30d' | '90d' | '12m';
   'timeline.groupBy': 'session' | 'month' | 'chronological';
   theme: ThemePreference;
@@ -19,7 +22,6 @@ export interface Preferences {
 export type PreferenceKey = keyof Preferences;
 
 export const PREFERENCE_KEYS: readonly PreferenceKey[] = [
-  'overview.view',
   'overview.window',
   'timeline.groupBy',
   'theme',
@@ -35,7 +37,6 @@ export const SESSION_DURATION_MAX = 180;
 
 /** Valeurs admises par clé énumérée (contrat) ; les deux autres clés sont vérifiées à part. */
 const ENUMS: { [K in PreferenceKey]?: readonly Preferences[K][] } = {
-  'overview.view': ['simple', 'complete'],
   'overview.window': ['30d', '90d', '12m'],
   'timeline.groupBy': ['session', 'month', 'chronological'],
   theme: ['light', 'soft', 'dark', 'system'],
@@ -50,7 +51,6 @@ const ENUMS: { [K in PreferenceKey]?: readonly Preferences[K][] } = {
  */
 export function defaultPreferences(profession: Profession | null): Preferences {
   return {
-    'overview.view': 'simple',
     'overview.window': '90d',
     'timeline.groupBy': 'session',
     theme: 'light',
@@ -85,7 +85,7 @@ export function isValidPreference<K extends PreferenceKey>(
 }
 
 /**
- * Complète un objet quelconque (réponse serveur, cache local) en 9 préférences valides : une clé
+ * Complète un objet quelconque (réponse serveur, cache local) en 8 préférences valides : une clé
  * absente, inconnue ou hors domaine prend le défaut. C'est ce qui rend le cache tolérant à la
  * corruption et le client indifférent à une clé que le serveur ajouterait.
  */

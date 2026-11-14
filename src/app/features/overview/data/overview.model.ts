@@ -10,9 +10,6 @@ export type OverviewWindow = '30d' | '90d' | '12m';
 
 export const OVERVIEW_WINDOWS: readonly OverviewWindow[] = ['30d', '90d', '12m'];
 
-/** Niveau de détail (préférence overview.view) : simple = récit (M4-07), complete = chiffres. */
-export type OverviewMode = 'simple' | 'complete';
-
 /** Les huit familles d'émotions (étude couleurs §4), une couleur chacune (--emotion-*). */
 export type EmotionFamily =
   'joy' | 'trust' | 'fear' | 'surprise' | 'sadness' | 'disgust' | 'anger' | 'anticipation';
@@ -179,7 +176,7 @@ export interface SinceLastSession {
   }[];
 }
 
-/** La synthèse d'un patient pour une fenêtre : un seul payload pour les deux vues (B8). */
+/** La synthèse d'un patient pour une fenêtre : un seul payload, une seule vue (UX-S6). */
 export interface OverviewView {
   window: OverviewWindow;
   computedAt: string | null;
@@ -194,17 +191,6 @@ export interface OverviewView {
   recentActivity: ActivityItem[];
   narrative: OverviewNarrative;
   sinceLastSession: SinceLastSession;
-}
-
-/**
- * Intensité moyenne de la fenêtre (tuile « Intensité moyenne », UX-B4) : la moyenne des ressentis
- * que le serveur renvoie pour cette fenêtre (feelings.points, exactement un point par ressenti non
- * archivé de la fenêtre). Aucune donnée ajoutée ni filtrée : la règle de sélection reste celle du
- * serveur ; null sans ressenti.
- */
-export function windowAverage(points: readonly FeelingPoint[]): number | null {
-  if (!points.length) return null;
-  return points.reduce((sum, point) => sum + point.intensity, 0) / points.length;
 }
 
 /**
@@ -258,25 +244,111 @@ export function followedSinceOf(
 }
 
 // Vides par bloc (B4 : chaque bloc garde son titre et une phrase « apparaîtra ici quand… »).
-export const isTrendEmpty = (view: OverviewView): boolean =>
+/** Le graphe : ni ressenti ni moyenne sur la fenêtre. */
+export const isFeelingsEmpty = (view: OverviewView): boolean =>
   view.feelings.points.length === 0 && view.trend.points.every((p) => p.average === null);
-export const isSituationsEmpty = (view: OverviewView): boolean => view.situations.length === 0;
-export const isMedicationsEmpty = (view: OverviewView): boolean =>
-  view.facts.medications.length === 0;
-export const isSessionsEmpty = (view: OverviewView): boolean => view.recentSessions.length === 0;
-export const isEmotionsEmpty = (view: OverviewView): boolean => view.emotions.length === 0;
-export const isActivityEmpty = (view: OverviewView): boolean => view.recentActivity.length === 0;
-
-// Vides des blocs de la vue simple « Récit » (B8, M4-07).
-export const isBriefEmpty = (view: OverviewView): boolean =>
-  view.narrative.sentences.length === 0 && view.narrative.attention === null;
-export const isFeelingsEmpty = (view: OverviewView): boolean => view.feelings.points.length === 0;
 export const isSinceEmpty = (view: OverviewView): boolean =>
   view.sinceLastSession.entries.length === 0;
+export const isSessionsEmpty = (view: OverviewView): boolean => view.recentSessions.length === 0;
 export const isFrameEmpty = (view: OverviewView): boolean =>
-  followedSinceOf(view) === null && view.facts.sessionCount === 0 && view.facts.flags.length === 0;
+  followedSinceOf(view) === null && view.facts.flags.length === 0;
+export const isMedicationsEmpty = (view: OverviewView): boolean =>
+  view.facts.medications.length === 0;
+export const isSituationsEmpty = (view: OverviewView): boolean => view.situations.length === 0;
+export const isEmotionsEmpty = (view: OverviewView): boolean => view.emotions.length === 0;
 export const isTodoEmpty = (view: OverviewView): boolean =>
   view.drafts.count === 0 && view.drafts.openSession === null;
+
+/** Dernière moyenne du serveur au jour `day` (AAAA-MM-JJ) ou avant ; null s'il n'y en a pas. */
+function averageAt(points: readonly TrendPoint[], day: string): number | null {
+  let value: number | null = null;
+  for (const point of points) {
+    if (point.date > day) break;
+    if (point.average !== null) value = point.average;
+  }
+  return value;
+}
+
+/** Les trois chiffres de la bande « Depuis la séance » (UX-S6, proposition 02 `.facts`). */
+export interface SinceFacts {
+  /** Ressentis parmi les entrées notées depuis la dernière séance (sinceLastSession). */
+  feelings: number;
+  /** Dernière moyenne glissante sur 7 jours de la courbe du serveur ; null sans moyenne. */
+  intensity: number | null;
+  /**
+   * Sens de cette moyenne depuis la dernière séance (sa moyenne au jour de la séance, sinon la
+   * première de la fenêtre), au seuil d'un demi-point ; null sans point de comparaison.
+   */
+  direction: TrendDirection | null;
+  /** Brouillons en attente du dossier (drafts.count). */
+  drafts: number;
+}
+
+/**
+ * Des valeurs servies, seulement comptées ou lues : le nombre de ressentis notés depuis la séance,
+ * la dernière moyenne sur 7 jours du serveur (aucune moyenne calculée ici) et son sens, les
+ * brouillons.
+ */
+export function sinceFacts(view: OverviewView): SinceFacts {
+  const points = view.trend.points;
+  const values = points.map((p) => p.average).filter((v): v is number => v !== null);
+  const intensity = values.at(-1) ?? null;
+  const at = view.sinceLastSession.lastSessionAt;
+  const base = at ? averageAt(points, at.slice(0, 10)) : (values[0] ?? null);
+  return {
+    feelings: view.sinceLastSession.entries.filter((e) => e.type === 'feeling').length,
+    intensity,
+    direction:
+      intensity !== null && base !== null ? trendDirection({ first: base, last: intensity }) : null,
+    drafts: view.drafts.count,
+  };
+}
+
+/** « Noté depuis la dernière séance » : dix entrées au plus (décision 3 du 14 novembre 2026). */
+export const NOTED_MAX = 10;
+
+/** Une entrée de « Noté depuis la dernière séance », son émotion et son intensité si c'est un ressenti. */
+export interface NotedEntry {
+  entryId: string;
+  type: EntryType;
+  title: string | null;
+  draft: boolean;
+  occurredFrom: string | null;
+  /** Le ressenti tel que la fenêtre le sert (feelings.points) ; null hors fenêtre ou autre type. */
+  feeling: { label: string; family: EmotionFamily | null; intensity: number } | null;
+}
+
+/**
+ * Les entrées notées depuis la dernière séance (ordre du serveur, plus récente d'abord), dix au
+ * plus. Un ressenti est nommé par son émotion et son intensité, lues sur le point du même
+ * identifiant dans feelings.points (libellé de la série du serveur) : rien n'est recalculé.
+ */
+export function notedEntries(view: OverviewView, max: number = NOTED_MAX): NotedEntry[] {
+  const points = new Map(view.feelings.points.map((p) => [p.entryId, p]));
+  const labels = new Map(view.feelings.series.map((s) => [s.emotionCode, s.label]));
+  return view.sinceLastSession.entries.slice(0, max).map((entry) => {
+    const point = entry.type === 'feeling' ? points.get(entry.entryId) : undefined;
+    return {
+      entryId: entry.entryId,
+      type: entry.type,
+      title: entry.title,
+      draft: entry.status === 'draft',
+      occurredFrom: entry.occurredFrom,
+      feeling: point
+        ? {
+            label: labels.get(point.emotionCode) ?? point.emotionCode,
+            family: point.family,
+            intensity: point.intensity,
+          }
+        : null,
+    };
+  });
+}
+
+/** Séances de la fenêtre (repères de la courbe) : « 2 sur 90 jours ». */
+export function windowSessionCount(view: OverviewView): number {
+  return view.trend.markers.filter((m) => m.kind === 'session').length;
+}
 
 /**
  * L'un des trois états d'un bloc, ou null pour son contenu. Une synthèse déjà lue reste affichée
