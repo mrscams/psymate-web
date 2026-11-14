@@ -8,6 +8,7 @@ import { ConfirmDialogService, ToastService } from '../../../shared/ui';
 import { ShortcutsHelp } from '../../patient-shell';
 import { PatientApi } from '../data/patient.api';
 import { activity, OMAR, patient, TAGS } from '../data/patient.fixtures';
+import { PatientListQuery } from '../data/patient.model';
 import { PatientListStore, SORT_STORAGE_KEY } from '../data/patient-list.store';
 import { FILTER_DEBOUNCE_MS, PatientListPage } from './patient-list.page';
 
@@ -58,10 +59,16 @@ async function settle(fixture: ComponentFixture<unknown>): Promise<void> {
   fixture.detectChanges();
 }
 
-/** Bascule « Afficher les archivés » de l'en-tête. */
+/** Bascule « Afficher les archivés » / « Revenir aux actifs » de l'en-tête. */
 function archivedToggle(el: HTMLElement): HTMLButtonElement {
-  return el.querySelector<HTMLButtonElement>('button.archived-toggle')!;
+  return el.querySelector<HTMLButtonElement>('.page-head button.outline')!;
 }
+
+/** Dix patients numérotés (une page pleine). */
+const ten = (from: number) =>
+  Array.from({ length: 10 }, (_, i) =>
+    patient({ id: `p-${from + i}`, displayName: `Patient ${from + i}`, flags: [] }),
+  );
 
 function key(key: string, target: EventTarget = document.body): void {
   target.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
@@ -70,9 +77,12 @@ function key(key: string, target: EventTarget = document.body): void {
 describe('PatientListPage', () => {
   beforeEach(() => localStorage.removeItem(SORT_STORAGE_KEY));
 
-  it('chargement : six lignes squelette, titre et bouton présents', async () => {
+  it('chargement : six lignes squelette, titre et boutons présents, sans sous-titre chiffré', async () => {
     const { el } = await render({ list: vi.fn(never) });
-    expect(el.querySelector('h1')?.textContent).toContain('Mes patients');
+    expect(text(el.querySelector('h1'))).toBe('Mes patients');
+    expect(el.querySelector('.page-head p')).toBeNull();
+    expect(text(archivedToggle(el))).toBe('Afficher les archivés');
+    expect(text(el.querySelector('.page-head a.new'))).toBe('Nouveau patient N');
     expect(el.querySelector('pm-state [aria-busy="true"]')).not.toBeNull();
     expect(el.querySelectorAll('pm-state .piece')).toHaveLength(6);
     expect(el.querySelector('table')).toBeNull();
@@ -93,7 +103,7 @@ describe('PatientListPage', () => {
     expect(el.querySelectorAll('tbody tr')).toHaveLength(1);
   });
 
-  it('vide sans filtre : « Créez votre premier patient » avec N ; vide filtré : Effacer les filtres', async () => {
+  it('vide sans filtre : « Créez votre premier patient » avec N ; archivés vides : Effacer les filtres', async () => {
     const list = vi.fn().mockResolvedValue({ items: [], nextCursor: null });
     const { fixture, el, router } = await render({ list });
     expect(el.querySelector('pm-state [role="status"]')?.textContent).toContain(
@@ -104,25 +114,40 @@ describe('PatientListPage', () => {
 
     archivedToggle(el).click();
     await settle(fixture);
-    expect(archivedToggle(el).getAttribute('aria-pressed')).toBe('true');
+    expect(list).toHaveBeenLastCalledWith(expect.objectContaining({ archived: true }));
+    expect(text(el.querySelector('h1'))).toBe('Patients archivés');
+    expect(text(archivedToggle(el))).toBe('Revenir aux actifs');
     expect(el.querySelector('pm-state')?.textContent).toContain('Aucun patient ne correspond');
     el.querySelector<HTMLButtonElement>('pm-state button')?.click();
     await settle(fixture);
     expect(list).toHaveBeenLastCalledWith(expect.objectContaining({ archived: false }));
+    expect(text(el.querySelector('h1'))).toBe('Mes patients');
   });
 
-  it('données : colonnes de la maquette 01, ligne cliquable, compteur, pied, menu des tags', async () => {
-    const today = new Date();
+  it('données : colonnes de la maquette 01, date seule, puce en cours, depuis la séance, attention', async () => {
+    const now = new Date();
+    const started = new Date(now.getTime() - 12 * 60_000).toISOString();
     const api = {
       list: vi.fn().mockResolvedValue({ items: [patient(), OMAR], nextCursor: null }),
       activity: vi.fn((id: string) =>
         Promise.resolve(
           id === 'p-marie'
-            ? activity({ lastSession: { at: today.toISOString(), modality: 'video' }, drafts: 1 })
+            ? activity({
+                lastSession: {
+                  at: `${now.getFullYear()}-11-05T09:00:00Z`,
+                  closedAt: `${now.getFullYear()}-11-05T09:50:00Z`,
+                  modality: 'in_person',
+                  entryCount: 1,
+                  reportMissing: true,
+                },
+                drafts: 1,
+              })
             : activity({
-                lastSession: null,
-                emotions: [],
+                openSessionAt: started,
+                since: { entries: 0, capped: false, strongest: null },
+                intensities: [],
                 feelingCount: 0,
+                dominant: null,
                 situations: { count: 0, first: null },
               }),
         ),
@@ -130,167 +155,228 @@ describe('PatientListPage', () => {
     };
     const { fixture, el } = await render(api);
     await settle(fixture);
-    const headers = [...el.querySelectorAll('thead th')].map((th) => text(th));
-    expect(headers).toEqual([
+    expect([...el.querySelectorAll('thead th')].map((th) => text(th))).toEqual([
       'Patient',
       'Dernière séance',
-      'Émotions dominantes · 30 j',
-      'Situations actives',
-      'Flags',
+      'Depuis la séance',
+      'Ressentis · 30 j',
+      'Situations',
+      'Attention',
       'Actions',
     ]);
-    const rows = el.querySelectorAll('tbody tr');
-    expect(rows).toHaveLength(2);
-    // Tri par défaut « Dernière séance » : Marie (séance du jour) avant Omar (aucune séance).
-    const marie = rows[0];
-    expect(marie.querySelector('a.row-link')?.getAttribute('href')).toBe(
-      '/patients/p-marie/overview',
-    );
+    expect(el.querySelector('thead th')?.getAttribute('aria-sort')).toBe('ascending');
+    const [marie, omar] = [...el.querySelectorAll('tbody tr')];
     expect(text(marie.querySelector('a.row-link'))).toBe('Marie D.');
-    expect(text(marie.querySelector('.detail'))).toMatch(/^\d+ ans · suivie depuis mars 2025$/);
-    expect(text(marie.querySelector('td.last'))).toMatch(/^aujourd’hui · .+ · visio$/);
-    expect(marie.querySelectorAll('td.emotions .dot')).toHaveLength(2);
-    expect(text(marie.querySelector('td.emotions .muted'))).toBe('anxiété ↑');
-    expect(text(marie.querySelector('td.emotions .sr-only'))).toBe(
-      'Anxiété, Tristesse ; anxiété en hausse',
+    expect(marie.querySelector('a.row-link')?.getAttribute('href')).toBe('/patients/p-marie');
+    expect(text(marie.querySelector('td.who .sub'))).toMatch(
+      /^\d+ ans · depuis mars 2025 · #travail$/,
     );
+    // Décision 2 : la date seule, ni modalité ni durée relative.
+    expect(text(marie.querySelector('td.last'))).toBe('5 nov.');
+    expect(text(marie.querySelector('td.since'))).toBe('5 entrées · anxiété 8/10');
+    expect(marie.querySelector('td.feel svg.spark')?.getAttribute('aria-label')).toBe(
+      'Intensité moyenne sur 30 jours : de 6 à 8 sur 10',
+    );
+    expect(text(marie.querySelector('td.feel'))).toContain('anxiété en hausse');
     expect(text(marie.querySelector('td.situations'))).toBe('3 · Surcharge au travail');
-    expect(text(marie.querySelector('td.flags'))).toBe('1 brouillon');
-    expect(text(marie.querySelector('.open'))).toBe('Ouvrir →');
-    expect(marie.querySelector('button.more')?.getAttribute('aria-label')).toBe(
-      "Plus d'actions pour Marie D.",
+    expect([...marie.querySelectorAll('td.att .chip')].map((c) => text(c))).toEqual([
+      '1 brouillon',
+      'compte rendu à écrire',
+    ]);
+    expect(text(omar.querySelector('td.last .chip.live'))).toBe('en cours · 12 min');
+    expect(text(omar.querySelector('td.since'))).toBe('—aucune entrée depuis la séance');
+    expect(text(omar.querySelector('td.feel'))).toBe('pas encore de ressenti');
+    expect([...omar.querySelectorAll('td.att .chip')].map((c) => text(c))).toEqual([
+      'À surveiller',
+    ]);
+    expect(omar.querySelector('button.icon-btn')?.getAttribute('aria-label')).toBe(
+      "Plus d'actions pour Omar B.",
     );
-    const omar = rows[1];
-    expect(text(omar.querySelector('td.last'))).toBe('aucune séance');
-    expect(text(omar.querySelector('td.emotions .muted'))).toBe('aucun ressenti');
-    expect(text(omar.querySelector('td.situations'))).toBe('—aucune situation active');
-    expect(text(omar.querySelector('td.flags pm-patient-flags'))).toBe('À surveiller : Sommeil');
-    expect(el.querySelector('th[aria-sort="descending"]')?.textContent).toContain(
-      'Dernière séance',
-    );
-
-    expect(text(el.querySelector('.counter'))).toBe("2 suivis actifs · 1 séance aujourd'hui");
-    const chips = [...el.querySelectorAll('pm-patient-filters .chips button')].map((c) => text(c));
-    expect(chips).toEqual(['Tous · 2', "Aujourd'hui · 1", 'Flags · 1', 'Brouillons · 1', 'Tags ▾']);
-    expect(text(el.querySelector('.table-footer .shown'))).toBe(
-      '2 patients affichés sur 2 · filtrés par « Tous »',
-    );
-    expect(text(el.querySelector('.table-footer .keys'))).toBe(
-      '↑ ↓ choisir · Entrée ouvrir · N nouveau',
-    );
-    expect(el.querySelector('.legend')?.textContent).toContain('30 derniers jours');
+    expect(omar.querySelector('a.icon-btn')?.getAttribute('href')).toBe('/patients/p-omar/fiche');
   });
 
-  it('filtres rapides : Flags ne garde que les patients à drapeau ; filtre vide → Afficher tous', async () => {
+  it('bande « Aujourd’hui » : présente avec une séance ouverte ou clôturée aujourd’hui, sans compteur', async () => {
+    const now = new Date();
+    const started = new Date(now.getTime() - 5 * 60_000).toISOString();
+    const closed = new Date(now.getTime() - 60_000).toISOString();
+    const lea = patient({ id: 'p-lea', displayName: 'Léa M.' });
     const { fixture, el } = await render({
-      list: vi.fn().mockResolvedValue({ items: [patient(), OMAR], nextCursor: null }),
+      list: vi.fn().mockResolvedValue({ items: [patient(), OMAR, lea], nextCursor: null }),
+      activity: vi.fn((id: string) =>
+        Promise.resolve(
+          id === 'p-omar'
+            ? activity({ openSessionAt: started })
+            : id === 'p-lea'
+              ? activity({
+                  lastSession: {
+                    at: closed,
+                    closedAt: closed,
+                    modality: 'video',
+                    entryCount: 0,
+                    reportMissing: true,
+                  },
+                })
+              : activity(),
+        ),
+      ),
     });
     await settle(fixture);
-    const chip = (label: string) =>
-      [...el.querySelectorAll<HTMLButtonElement>('pm-patient-filters .chip')].find((c) =>
-        text(c).startsWith(label),
-      )!;
-    chip('Flags').click();
-    fixture.detectChanges();
-    expect(chip('Flags').getAttribute('aria-pressed')).toBe('true');
-    expect([...el.querySelectorAll('tbody a.row-link')].map((a) => text(a))).toEqual(['Omar B.']);
-    expect(text(el.querySelector('.table-footer .shown'))).toBe(
-      '1 patient affiché sur 2 · filtré par « Flags »',
+    const band = el.querySelector('pm-patient-today')!;
+    expect(text(band.querySelector('h2'))).toBe("Aujourd'hui");
+    const cards = [...band.querySelectorAll('.tcard')];
+    expect(cards).toHaveLength(2);
+    expect(text(cards[0].querySelector('.chip.live'))).toBe('en séance · 5 min');
+    expect(text(cards[0].querySelector('.sub'))).toBe('cabinet · 2 entrées notées');
+    expect(text(cards[0].querySelector('a'))).toBe('Reprendre');
+    expect(cards[0].querySelector('a')?.getAttribute('href')).toBe('/patients/p-omar/session');
+    expect(text(cards[1].querySelector('.sub'))).toMatch(
+      /^visio · clôturée à \d\d:\d\d · compte rendu à écrire$/,
     );
-    chip('Brouillons').click();
-    fixture.detectChanges();
-    expect(el.querySelector('table')).toBeNull();
-    const empty = el.querySelector('pm-state [role="status"]');
-    expect(text(empty)).toContain('Aucun patient ne correspond');
-    empty!.querySelector<HTMLButtonElement>('button')!.click();
-    fixture.detectChanges();
-    expect(el.querySelectorAll('tbody tr')).toHaveLength(2);
+    expect(text(cards[1].querySelector('a'))).toBe('Compte rendu');
+    expect(cards[1].querySelector('a')?.getAttribute('href')).toBe('/patients/p-lea/session');
   });
 
-  it('liste incomplète : « Tous · 2+ », pas de tri par séance, Aujourd’hui / Brouillons désactivés, note', async () => {
-    const list = vi
-      .fn()
-      .mockResolvedValueOnce({ items: [patient(), OMAR], nextCursor: 'c-2' })
-      .mockResolvedValue({ items: [], nextCursor: null });
-    const { fixture, el } = await render({ list });
-    await settle(fixture);
-    const chips = [...el.querySelectorAll<HTMLButtonElement>('pm-patient-filters .chip')];
-    expect(chips.map((c) => text(c))).toEqual([
-      'Tous · 2+',
-      "Aujourd'hui",
-      'Flags',
-      'Brouillons',
-      'Tags ▾',
-    ]);
-    expect(chips[1].disabled).toBe(true);
-    expect(chips[3].disabled).toBe(true);
-    expect(chips[1].getAttribute('aria-describedby')).toBe('patients-quick-hint');
-    expect(text(el.querySelector('#patients-quick-hint'))).toContain('jusqu');
-    const select = el.querySelector<HTMLSelectElement>('#patients-sort')!;
-    expect([...select.options].map((o) => o.value)).not.toContain('lastSession');
-    expect(select.value).toBe('updated');
-    expect(el.querySelector('thead th[aria-sort]')).toBeNull();
-    expect(text(el.querySelector('.table-footer .partial'))).toBe(
-      "Résumé d'activité affiché pour les 20 premiers patients",
-    );
-    expect(text(el.querySelector('.counter'))).toBe('plus de 2 suivis actifs');
-
-    // Filtre « Flags » vide parmi les chargés : le dire, et proposer de charger la suite.
-    chips[2].click();
-    fixture.detectChanges();
-    expect(el.querySelectorAll('tbody tr')).toHaveLength(1);
-  });
-
-  it('liste incomplète, filtre sans résultat : seuls les chargés sont filtrés, Charger la suite', async () => {
-    const list = vi
-      .fn()
-      .mockResolvedValueOnce({ items: [patient()], nextCursor: 'c-2' })
-      .mockResolvedValue({ items: [], nextCursor: null });
-    const { fixture, el } = await render({ list });
-    await settle(fixture);
-    [...el.querySelectorAll<HTMLButtonElement>('pm-patient-filters .chip')]
-      .find((c) => text(c) === 'Flags')!
-      .click();
-    fixture.detectChanges();
-    const empty = el.querySelector('pm-state [role="status"]');
-    expect(text(empty)).toContain('parmi les 1 patients chargés : seuls ceux-là sont filtrés');
-    const action = empty!.querySelector<HTMLButtonElement>('button')!;
-    expect(text(action)).toBe('Charger la suite');
-    action.click();
-    await settle(fixture);
-    expect(list).toHaveBeenLastCalledWith(expect.objectContaining({ cursor: 'c-2' }));
-  });
-
-  it('colonne Flags masquée quand aucun patient affiché n’a ni drapeau ni brouillon', async () => {
+  it('bande « Aujourd’hui » : absente les jours calmes', async () => {
     const { fixture, el } = await render({
       list: vi.fn().mockResolvedValue({ items: [patient()], nextCursor: null }),
     });
     await settle(fixture);
-    expect([...el.querySelectorAll('thead th')].map((th) => text(th))).not.toContain('Flags');
+    expect(el.querySelector('pm-patient-today')).toBeNull();
+  });
+
+  it('filtres rapides : un seul groupe sans comptes ; À surveiller ; filtre vide → Afficher tous', async () => {
+    const list = vi.fn().mockResolvedValue({ items: [patient()], nextCursor: null });
+    const { fixture, el } = await render({ list });
+    await settle(fixture);
+    const group = el.querySelector('[role="group"]')!;
+    const buttons = [...group.querySelectorAll<HTMLButtonElement>('button')];
+    expect(buttons.map((b) => text(b))).toEqual([
+      'Tous',
+      "Aujourd'hui",
+      'À surveiller',
+      'Brouillons',
+    ]);
+    expect(buttons[0].getAttribute('aria-pressed')).toBe('true');
+    buttons[2].click();
+    await settle(fixture);
+    expect(buttons[2].getAttribute('aria-pressed')).toBe('true');
+    expect(el.querySelector('table')).toBeNull();
+    expect(text(el.querySelector('.lst pm-state'))).toContain(
+      'Aucune ligne pour le filtre « À surveiller ».',
+    );
+    el.querySelector<HTMLButtonElement>('.lst pm-state button')!.click();
+    await settle(fixture);
+    expect(buttons[0].getAttribute('aria-pressed')).toBe('true');
+    expect(el.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(list).toHaveBeenCalledTimes(1);
+  });
+
+  it('tri : Nom, Création, Modification, Dernière séance ; le choix relit la première page', async () => {
+    const list = vi.fn().mockResolvedValue({ items: [patient()], nextCursor: null });
+    const { fixture, el } = await render({ list });
+    const select = el.querySelector<HTMLSelectElement>('#patients-sort')!;
+    expect([...select.options].map((o) => text(o))).toEqual([
+      'Nom',
+      'Création',
+      'Modification',
+      'Dernière séance',
+    ]);
+    select.value = 'created';
+    select.dispatchEvent(new Event('change'));
+    await settle(fixture);
+    expect(list).toHaveBeenLastCalledWith(
+      expect.objectContaining({ sort: 'created', cursor: null }),
+    );
+    expect(localStorage.getItem(SORT_STORAGE_KEY)).toBe('created');
+  });
+
+  it('pied : « 10 patients affichés », Précédent / Suivant grisés en bout, aide si filtre sur plusieurs pages', async () => {
+    const list = vi.fn((query: PatientListQuery) =>
+      Promise.resolve(
+        query.cursor === 'c-2'
+          ? { items: ten(11).slice(0, 2), nextCursor: null }
+          : { items: ten(1), nextCursor: 'c-2' },
+      ),
+    );
+    const { fixture, el } = await render({ list });
+    await settle(fixture);
+    const prev = () => el.querySelector<HTMLButtonElement>('.foot button.prev')!;
+    const next = () => el.querySelector<HTMLButtonElement>('.foot button.next')!;
+    expect(text(el.querySelector('.foot .shown'))).toBe('10 patients affichés');
+    expect(text(prev())).toBe('‹Précédent');
+    expect(text(next())).toBe('Suivant›');
+    expect(prev().disabled).toBe(true);
+    expect(next().disabled).toBe(false);
+    expect(el.querySelector('.foot .note')).toBeNull();
+    expect(el.querySelector('.foot')?.textContent).not.toMatch(/sur \d/);
+
+    next().click();
+    await settle(fixture);
+    expect(list).toHaveBeenLastCalledWith(expect.objectContaining({ cursor: 'c-2' }));
+    expect(text(el.querySelector('.foot .shown'))).toBe('2 patients affichés');
+    expect(prev().disabled).toBe(false);
+    expect(next().disabled).toBe(true);
+
+    prev().click();
+    await settle(fixture);
+    expect(list).toHaveBeenLastCalledWith(expect.objectContaining({ cursor: null }));
+    el.querySelectorAll<HTMLButtonElement>('[role="group"] button')[3].click();
+    await settle(fixture);
+    expect(text(el.querySelector('.foot .note'))).toBe('Filtre et tri appliqués à cette page.');
   });
 
   it('résumé en chargement puis en échec : barres d’attente, avertissement, Réessayer', async () => {
-    let fail: (reason: unknown) => void = () => undefined;
-    const activityCall = vi
+    let fail!: (reason: unknown) => void;
+    const read = vi
       .fn()
       .mockImplementationOnce(() => new Promise((_, reject) => (fail = reject)))
-      .mockResolvedValue(activity());
+      .mockResolvedValueOnce(activity());
     const { fixture, el } = await render({
       list: vi.fn().mockResolvedValue({ items: [patient()], nextCursor: null }),
-      activity: activityCall,
+      activity: read,
     });
-    expect(el.querySelectorAll('tbody .pending')).toHaveLength(3);
-    expect(text(el.querySelector('td.last .sr-only'))).toBe('Chargement…');
-    fail({ status: 503, code: 'SERVICE_UNAVAILABLE' });
+    expect(el.querySelectorAll('tbody .pending').length).toBeGreaterThan(0);
+    fail({ status: 500, code: 'INTERNAL_ERROR' });
     await settle(fixture);
-    const warning = el.querySelector('.activity-warning[role="alert"]');
+    const warning = el.querySelector('.activity-warning');
     expect(text(warning)).toContain("Le résumé d'une ligne n'a pas pu être chargé.");
-    expect(text(el.querySelector('td.last .sr-only'))).toBe('Résumé indisponible');
+    expect(text(el.querySelector('td.last'))).toBe('—Résumé indisponible');
     warning!.querySelector<HTMLButtonElement>('button')!.click();
     await settle(fixture);
-    expect(activityCall).toHaveBeenCalledTimes(2);
+    expect(read).toHaveBeenCalledTimes(2);
     expect(el.querySelector('.activity-warning')).toBeNull();
-    expect(text(el.querySelector('td.last'))).toContain('cabinet');
+  });
+
+  it('menu d’une ligne : Ouvrir, Fiche, Exporter, Archiver ; archiver confirme (nom à retaper), toast Restaurer', async () => {
+    const list = vi
+      .fn()
+      .mockResolvedValueOnce({ items: [patient(), OMAR], nextCursor: null })
+      .mockResolvedValue({ items: [OMAR], nextCursor: null });
+    const archive = vi.fn().mockResolvedValue(undefined);
+    const restore = vi.fn().mockResolvedValue(patient());
+    const { fixture, el, confirm } = await render({ list, archive, restore });
+    await settle(fixture);
+    el.querySelector<HTMLButtonElement>('tbody tr button.icon-btn')!.click();
+    await settle(fixture);
+    const items = [
+      ...document.querySelectorAll<HTMLElement>(
+        '.mat-mdc-menu-panel [mat-menu-item], .mat-mdc-menu-panel .mat-mdc-menu-item',
+      ),
+    ];
+    expect(items.map((item) => text(item))).toEqual(['Ouvrir', 'Fiche', 'Exporter', 'Archiver']);
+    items[3].click();
+    await settle(fixture);
+    const options = confirm.confirm.mock.calls[0][0];
+    expect(options.title).toBe('Archiver Marie D. ?');
+    expect(options.confirmWord).toBe('Marie D.');
+    expect(archive).toHaveBeenCalledWith('p-marie');
+    expect(list).toHaveBeenCalledTimes(2);
+    const toast = TestBed.inject(ToastService).toasts().at(-1)!;
+    expect(toast.message).toBe('Marie D. archivée');
+    toast.action!.handler();
+    await settle(fixture);
+    expect(restore).toHaveBeenCalledWith('p-marie');
+    expect(TestBed.inject(ToastService).toasts().at(-1)?.message).toBe('Marie D. restaurée');
   });
 
   it('clavier : ↓ depuis le filtre va à la première ligne, ↓ ↑ passent d’une ligne à l’autre', async () => {
@@ -308,20 +394,6 @@ describe('PatientListPage', () => {
     expect(document.activeElement).toBe(links[1]);
     key('ArrowUp', links[1]);
     expect(document.activeElement).toBe(links[0]);
-  });
-
-  it('tags : menu « Tags ▾ » ; choisir un tag relit la liste filtrée', async () => {
-    const list = vi.fn().mockResolvedValue({ items: [patient()], nextCursor: null });
-    const { fixture, el } = await render({ list });
-    await settle(fixture);
-    el.querySelector<HTMLButtonElement>('pm-patient-filters .chip.tags')!.click();
-    await settle(fixture);
-    const items = [...document.querySelectorAll<HTMLButtonElement>('[role="menuitemradio"]')];
-    expect(items.map((item) => text(item))).toEqual(['✓Tous les tags', '#travail', '#santé']);
-    items[1].click();
-    await settle(fixture);
-    expect(list).toHaveBeenLastCalledWith(expect.objectContaining({ tag: 'travail' }));
-    expect(text(el.querySelector('pm-patient-filters .chip.tags'))).toBe('Tag : #travail ▾');
   });
 
   it('coach : « Mes clients » et « Nouveau client »', async () => {
@@ -390,13 +462,15 @@ describe('PatientListPage', () => {
       expect(el.querySelector('pm-onboarding')).not.toBeNull();
       const row = el.querySelector('tbody tr')!;
       expect(text(row.querySelector('.demo-badge'))).toBe('DEMO');
-      expect(row.querySelector('.avatar.dashed')?.textContent?.trim()).toBe('CR');
+      expect(row.querySelector('.av.dashed')?.textContent?.trim()).toBe('CR');
       expect(text(row.querySelector('a.row-link'))).toBe('DEMO · Camille R.');
-      expect(text(row.querySelector('.detail'))).toBe('données fictives · supprimable');
+      expect(text(row.querySelector('td.who .sub'))).toBe(
+        'données fictives · supprimable · #travail',
+      );
       const remove = row.querySelector<HTMLButtonElement>('button.text-action');
       expect(text(remove)).toBe('Supprimer');
       expect(remove?.getAttribute('aria-label')).toBe('Supprimer la démo : DEMO · Camille R.');
-      expect(row.querySelector('button.more')).toBeNull();
+      expect(row.querySelector('button.icon-btn')).toBeNull();
     });
 
     it('un vrai patient : pas d’accueil ; puce et bouton seulement sur la démo', async () => {
@@ -410,7 +484,7 @@ describe('PatientListPage', () => {
       const real = rows.find((row) => !row.querySelector('.demo-badge'))!;
       expect(demo.querySelector('button.text-action')).not.toBeNull();
       expect(real.querySelector('button.text-action')).toBeNull();
-      expect(real.querySelector('button.more')).not.toBeNull();
+      expect(real.querySelector('button.icon-btn')).not.toBeNull();
     });
 
     it('Supprimer la démo : confirmation simple sans nom à retaper, archivage, liste relue, toast Restaurer', async () => {
@@ -529,7 +603,7 @@ describe('PatientListPage', () => {
       expect(el.querySelector('tbody a.row-link')?.textContent?.trim()).toBe('Marie D.');
       key('Enter', filter);
       await vi.advanceTimersByTimeAsync(0);
-      expect(router.navigate).toHaveBeenCalledWith(['/patients', 'p-marie', 'overview']);
+      expect(router.navigate).toHaveBeenCalledWith(['/patients', 'p-marie']);
     } finally {
       vi.useRealTimers();
     }

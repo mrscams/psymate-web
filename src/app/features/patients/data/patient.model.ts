@@ -23,56 +23,30 @@ export const MODALITIES: readonly Modality[] = ['in_person', 'video', 'phone'];
 export type ApiPatientSort = 'name' | 'updated' | 'created';
 
 /**
- * Tri de la liste (fiche 01, UX-B1). « Dernière séance » et « Flags d'abord » n'existent pas dans le
- * contrat : la page est demandée triée par `updated` (resp. `name`) puis réordonnée dans le client
- * avec le résumé d'activité (dernière séance) ou les drapeaux de la fiche.
+ * Tri de la liste (fiche 01, UX-S7, décision 4 du 14 novembre 2026). Nom (défaut), création et
+ * modification sont faits par le serveur (paramètre sort) ; « Dernière séance » n'existe pas dans le
+ * contrat : la page est demandée triée par `updated` puis réordonnée dans le client avec la
+ * projection de chaque ligne, sur la page affichée seulement.
  */
-export type PatientSort = 'lastSession' | 'name' | 'flags' | 'updated' | 'created';
-export const PATIENT_SORTS: readonly PatientSort[] = [
-  'lastSession',
-  'name',
-  'flags',
-  'updated',
-  'created',
-];
-/** Tri par défaut (audit UX-B1 : « Dernière séance ↓ »). */
-export const DEFAULT_SORT: PatientSort = 'lastSession';
+export type PatientSort = 'name' | 'created' | 'updated' | 'lastSession';
+export const PATIENT_SORTS: readonly PatientSort[] = ['name', 'created', 'updated', 'lastSession'];
+/** Tri par défaut (UX-S7 : le nom, tri du serveur). */
+export const DEFAULT_SORT: PatientSort = 'name';
 
 /** Paramètre sort envoyé à l'API pour un tri de la liste. */
 export function apiSort(sort: PatientSort): ApiPatientSort {
-  switch (sort) {
-    case 'lastSession':
-      return 'updated';
-    case 'flags':
-      return 'name';
-    default:
-      return sort;
-  }
+  return sort === 'lastSession' ? 'updated' : sort;
 }
 
-/** Filtres rapides de la liste (maquette 01) : appliqués dans le client à la page lue. */
-export type QuickFilter = 'all' | 'today' | 'flags' | 'drafts';
-export const QUICK_FILTERS: readonly QuickFilter[] = ['all', 'today', 'flags', 'drafts'];
-
 /**
- * Nombre maximal de patients dont la liste lit le résumé (GET /api/patients/{id}/overview, un appel
- * par ligne) : au-delà, les colonnes de séance, d'émotions et de situations restent vides.
+ * Filtres rapides de la liste (maquette 01, UX-S7) : Tous · Aujourd'hui · À surveiller · Brouillons,
+ * appliqués dans le client à la page affichée, sans compte (décision 4).
  */
-export const ACTIVITY_LIMIT = 20;
+export type QuickFilter = 'all' | 'today' | 'watch' | 'drafts';
+export const QUICK_FILTERS: readonly QuickFilter[] = ['all', 'today', 'watch', 'drafts'];
 
-/** Les huit familles d'émotions (étude couleurs §4), une couleur chacune (--emotion-*). */
-export type EmotionFamily =
-  'joy' | 'trust' | 'fear' | 'surprise' | 'sadness' | 'disgust' | 'anger' | 'anticipation';
-export const EMOTION_FAMILIES: readonly EmotionFamily[] = [
-  'joy',
-  'trust',
-  'fear',
-  'surprise',
-  'sadness',
-  'disgust',
-  'anger',
-  'anticipation',
-];
+/** Patients par page (décision 1 du 14 novembre 2026 : dix, « Précédent / Suivant »). */
+export const PATIENT_PAGE_SIZE = 10;
 
 /** Modalité d'une séance (RecentSessionDto.modality). */
 export type SessionModality = 'in_person' | 'video' | 'phone' | 'email';
@@ -83,28 +57,42 @@ export const SESSION_MODALITIES: readonly SessionModality[] = [
   'email',
 ];
 
-/** Une émotion dominante sur 30 jours, avec sa variation par rapport aux 30 jours précédents. */
-export interface DominantEmotion {
-  code: string;
-  label: string;
-  family: EmotionFamily | null;
-  count: number;
-  delta: number;
+/** Séance la plus récente d'un patient (recentSessions[0] de la projection). */
+export interface LastSession {
+  /** Début (occurredFrom). */
+  at: string;
+  /** Clôture ; null si la séance n'est pas clôturée. */
+  closedAt: string | null;
+  modality: SessionModality | null;
+  /** Entrées rattachées à la séance. */
+  entryCount: number;
+  /** Clôturée avec un compte rendu vide : « compte rendu à écrire ». */
+  reportMissing: boolean;
 }
 
 /**
- * Résumé d'activité d'un patient pour la liste, lu dans la projection vue d'ensemble (fenêtre 30 j) :
- * la liste du contrat ne porte ni séance, ni émotion, ni situation (écart noté dans la PR UX-B1).
+ * Résumé d'un patient pour une ligne de la liste, lu dans la projection vue d'ensemble (fenêtre 30 j)
+ * et jamais recalculé : la liste du contrat ne porte ni séance, ni ressenti, ni situation.
  */
 export interface PatientActivity {
-  /** Séance la plus récente (ouverte ou non) ; null si aucune. */
-  lastSession: { at: string; modality: SessionModality | null } | null;
-  /** Début de la séance non clôturée la plus récente ; null s'il n'y en a pas. */
+  lastSession: LastSession | null;
+  /** Séance ouverte (drafts.openSession) : son début ; null s'il n'y en a pas. */
   openSessionAt: string | null;
-  /** Trois émotions dominantes au plus, de la plus fréquente à la moins fréquente. */
-  emotions: DominantEmotion[];
-  /** Nombre de ressentis de la fenêtre portés par les émotions dominantes (5 au plus). */
+  /**
+   * Depuis la dernière séance (sinceLastSession) : nombre d'entrées (20 au plus, `capped` à 20) et le
+   * ressenti le plus intense parmi elles (intensité lue dans feelings.points).
+   */
+  since: {
+    entries: number;
+    capped: boolean;
+    strongest: { label: string; intensity: number } | null;
+  };
+  /** Intensité moyenne de chaque jour des 30 derniers (trend.points), null les jours sans ressenti. */
+  intensities: (number | null)[];
+  /** Ressentis de la fenêtre (feelings.points) : sous 3, la courbe est en pointillés. */
   feelingCount: number;
+  /** Émotion dominante (emotions.top[0]) et sa variation par rapport aux 30 jours précédents. */
+  dominant: { label: string; delta: number } | null;
   situations: { count: number; first: string | null };
   drafts: number;
   /** Début du suivi AAAA-MM-JJ (fiche, sinon création du dossier). */
@@ -562,40 +550,38 @@ export function isSameLocalDay(value: string | null | undefined, now: Date): boo
   );
 }
 
-/** Une séance du patient a eu lieu ou a commencé aujourd'hui (filtre « Aujourd'hui »). */
-export function hasSessionToday(activity: PatientActivity | null, now: Date): boolean {
-  if (!activity) return false;
-  return (
-    isSameLocalDay(activity.lastSession?.at, now) || isSameLocalDay(activity.openSessionAt, now)
-  );
+/**
+ * Place d'un patient dans la bande « Aujourd'hui » (maquette 01) : séance ouverte, ou séance la plus
+ * récente clôturée aujourd'hui ; null les jours calmes. Même règle pour le filtre « Aujourd'hui ».
+ */
+export function todayStatus(activity: PatientActivity | null, now: Date): 'open' | 'closed' | null {
+  if (!activity) return null;
+  if (activity.openSessionAt) return 'open';
+  return isSameLocalDay(activity.lastSession?.closedAt, now) ? 'closed' : null;
 }
 
-/** Le patient porte au moins un drapeau posé par le praticien. */
+/** Le patient porte au moins un drapeau actif posé par le praticien (« À surveiller »). */
 export function hasFlags(patient: Pick<PatientView, 'flags'>): boolean {
   return patient.flags.length > 0;
 }
 
 /**
- * Tri client de la page lue (fiche 01) : « Dernière séance » = séance la plus récente d'abord, les
- * patients sans résumé ou sans séance ensuite dans l'ordre de l'API ; « Flags d'abord » = patients
- * avec drapeau d'abord, ordre de l'API (nom) conservé dans chaque groupe. Les autres tris sont ceux
- * du serveur, la page reste dans son ordre.
+ * Tri client de la page affichée (décision 4) : « Dernière séance » = séance la plus récente d'abord,
+ * les patients sans résumé ou sans séance ensuite dans l'ordre de l'API. Les autres tris sont ceux du
+ * serveur, la page reste dans son ordre.
  */
 export function sortRows<T extends { patient: PatientView; activity: PatientActivity | null }>(
   rows: readonly T[],
   sort: PatientSort,
 ): T[] {
-  const indexed = rows.map((row, index) => ({ row, index }));
-  if (sort === 'lastSession') {
-    const time = (row: T): number => {
-      const at = row.activity?.lastSession?.at;
-      const ms = at ? new Date(at).getTime() : NaN;
-      return Number.isNaN(ms) ? -Infinity : ms;
-    };
-    indexed.sort((a, b) => time(b.row) - time(a.row) || a.index - b.index);
-  } else if (sort === 'flags') {
-    const rank = (row: T): number => (hasFlags(row.patient) ? 0 : 1);
-    indexed.sort((a, b) => rank(a.row) - rank(b.row) || a.index - b.index);
-  }
-  return indexed.map((entry) => entry.row);
+  if (sort !== 'lastSession') return [...rows];
+  const time = (row: T): number => {
+    const at = row.activity?.openSessionAt ?? row.activity?.lastSession?.at;
+    const ms = at ? new Date(at).getTime() : NaN;
+    return Number.isNaN(ms) ? -Infinity : ms;
+  };
+  return rows
+    .map((row, index) => ({ row, index }))
+    .sort((a, b) => time(b.row) - time(a.row) || a.index - b.index)
+    .map((entry) => entry.row);
 }

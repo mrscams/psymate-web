@@ -2,25 +2,26 @@
   display: block;
 }
 
-// Maquette 01 : filtre (flex 320 px), « Trier par » et son select, puces rapides, sur une rangée qui
-// passe à la ligne sous 1100 px.
-.toolbar {
+// Maquette 01 `.quick` : champ (300 px au moins), groupe segmenté, espace, « Trier par » et son
+// champ de 34 px ; gap 10 px. Passe à la ligne quand la place manque.
+.quick {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
 }
 
-.filter {
+// `.field.search` : 36 px, bordure forte, rayon 8, 13,5 px.
+.field {
   display: flex;
-  flex: 1 1 320px;
-  gap: 10px;
+  flex: 0 1 300px;
+  gap: 8px;
   align-items: center;
-  min-width: 0;
-  height: 44px;
-  padding: 0 14px;
+  min-width: min(300px, 100%);
+  height: 36px;
+  padding: 0 12px;
   border: 1px solid var(--border-strong);
-  border-radius: 10px;
+  border-radius: 8px;
   background: var(--surface-raised);
 
   // Le conteneur dessine l'anneau du champ sans bordure (convention [data-focus-ring='container']).
@@ -34,13 +35,13 @@
   input {
     flex: 1 1 auto;
     min-width: 0;
-    height: 40px;
+    height: 32px;
     padding: 0;
     border: 0;
     outline: 0;
     background: transparent;
     color: var(--text-primary);
-    font: 400 14px/1.4 var(--font-ui);
+    font: 400 13.5px/1.4 var(--font-ui);
 
     &::placeholder {
       color: var(--text-secondary);
@@ -51,12 +52,48 @@
 
 .icon {
   flex: none;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   fill: none;
-  stroke: var(--primary);
+  stroke: var(--text-secondary);
   stroke-width: 1.8;
   stroke-linecap: round;
+}
+
+// `.seg` : groupe segmenté, bordure subtile, rayon 8, 2 px de marge ; boutons de 28 px.
+.seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-raised);
+
+  button {
+    height: 28px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    color: var(--text-secondary);
+    font: 500 13px/1 var(--font-ui);
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text-primary);
+    }
+
+    &[aria-pressed='true'] {
+      background: var(--primary-tint);
+      color: var(--primary-hover);
+      font-weight: 600;
+    }
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
 }
 
 .sort {
@@ -66,83 +103,50 @@
 
   label {
     color: var(--text-secondary);
-    font: var(--mat-sys-body-medium);
+    font: 400 13px/1.4 var(--font-ui);
     white-space: nowrap;
   }
 
   select {
-    min-height: 44px;
+    height: 34px;
     max-width: 100%;
     padding: 0 10px;
     border: 1px solid var(--border-strong);
     border-radius: 8px;
     background: var(--surface-raised);
     color: var(--text-primary);
-    font: 400 13px/1.4 var(--font-ui);
+    font: 400 13.5px/1.4 var(--font-ui);
   }
 }
 
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-}
-
-// Puces de la maquette : 32 px dessinées ; la cible est portée à 44 px par un ::before invisible
-// (fiche 01 : cibles ≥ 44 px).
-.chip {
-  position: relative;
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-  height: 32px;
-  margin: 6px 0;
-  padding: 0 10px;
-  border: 1px solid var(--border-strong);
-  border-radius: 999px;
-  background: var(--surface-raised);
-  color: var(--text-primary);
-  font: 500 12px/1 var(--font-ui);
-  white-space: nowrap;
-  cursor: pointer;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -7px 0;
+// Variante mobile (maquette `.phone`) : champ pleine largeur, puis Tous · Aujourd'hui · À surveiller
+// sur toute la largeur ; ni « Brouillons » ni tri.
+@media (max-width: 600px) {
+  .quick {
+    gap: 10px;
   }
 
-  &:disabled {
-    border-color: var(--border-subtle);
-    color: var(--text-secondary);
-    cursor: not-allowed;
+  .field {
+    flex: 1 1 100%;
+    min-width: 0;
   }
 
-  &[aria-pressed='true'],
-  &.active {
-    border-color: var(--primary);
-    background: var(--primary-tint);
-    color: var(--primary-hover);
+  .seg {
+    display: flex;
+    width: 100%;
+
+    button {
+      flex: 1 1 0;
+      padding: 0 6px;
+    }
+
+    .q-drafts {
+      display: none;
+    }
   }
-}
 
-// Pastille ambre des drapeaux (décorative : le libellé « Flags » porte l'information).
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--flag);
-}
-
-.check {
-  display: inline-block;
-  width: 16px;
-  color: var(--primary);
-}
-
-.coverage-hint {
-  margin: 8px 0 0;
-  color: var(--text-secondary);
-  font: 400 12px/1.5 var(--font-ui);
+  .spacer,
+  .sort {
+    display: none;
+  }
 }

@@ -1,67 +1,87 @@
-// Maquette 01 : colonne de 1180 px (1132 px de contenu), blocs espacés de 16 px.
+// Proposition 01 `.page`, en pleine largeur (data.contentWidth 'full') : marges intérieures 20 px en
+// haut, 24 px sur les côtés, 40 px en bas ; 16 px sous 600 px.
 :host {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 1132px;
-  margin: 0 auto;
+  display: block;
+  padding: 20px 24px 40px;
   color: var(--text-primary);
 }
 
-.page-header {
+// `.page-head` : titre 24 px / 650 à gauche, boutons à droite, alignés en bas, 16 px dessous.
+.page-head {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   align-items: flex-end;
   justify-content: space-between;
-}
-
-.heading {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  margin-bottom: 16px;
 
   h1 {
     margin: 0;
-    font: 600 24px/1.25 var(--font-ui);
+    font: 650 24px/1.25 var(--font-ui);
     letter-spacing: -0.01em;
   }
 }
 
-.counter {
-  margin: 0;
-  color: var(--text-secondary);
-  font: 400 13px/1.4 var(--font-ui);
-}
-
-.header-actions {
+.head-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
 }
 
-.archived-toggle {
-  &[aria-pressed='true'] {
-    border-color: var(--primary);
-    background: var(--primary-tint);
-    color: var(--primary-hover);
+// `.btn` : 36 px, rayon 8, 13,5 px / 600 ; `.outline` contour fort ; `.primary` plein ; `.sm` 30 px.
+.btn {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  font: 600 13.5px/1 var(--font-ui);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &.outline {
+    border-color: var(--border-strong);
+    background: var(--surface-raised);
+    color: var(--text-primary);
+
+    &:hover {
+      background: var(--surface-sunken);
+    }
+  }
+
+  &.primary {
+    background: var(--primary);
+    color: var(--primary-on);
+
+    &:hover {
+      background: var(--primary-hover);
+    }
+
+    kbd {
+      border-color: color-mix(in srgb, var(--primary-on) 35%, transparent);
+      background: color-mix(in srgb, var(--primary-on) 18%, transparent);
+      color: inherit;
+    }
+  }
+
+  &.ghost {
+    color: var(--primary);
+  }
+
+  &.sm {
+    height: 30px;
+    padding: 0 10px;
+    font-size: 13px;
   }
 }
 
-.toggle-icon {
-  width: 14px;
-  height: 14px;
-  margin-right: 8px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  vertical-align: -2px;
-}
-
-.new kbd {
-  margin-left: 8px;
+pm-patient-filters {
+  margin-bottom: 14px;
 }
 
 .list {
@@ -71,11 +91,13 @@
   min-width: 0;
 }
 
-.card {
+// `.panel` : surface raised, bordure subtile, rayon 12, ombre légère.
+.panel {
   overflow: hidden;
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
   background: var(--surface-raised);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--text-primary) 5%, transparent);
 }
 
 .welcome-empty {
@@ -85,34 +107,55 @@
 .explore {
   margin: 0;
   color: var(--text-secondary);
-  font: var(--mat-sys-body-medium);
+  font: 400 14px/1.5 var(--font-ui);
   text-align: center;
 }
 
-.table-footer {
+// `.foot` : 10 × 14 px, 12,5 px secondaire ; « Précédent · Suivant » à droite.
+.foot {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 12px;
+  gap: 4px 14px;
   align-items: center;
-  padding: 10px 16px;
+  padding: 10px 14px;
   border-top: 1px solid var(--border-subtle);
-  background: var(--surface-ground);
   color: var(--text-secondary);
-  font: 400 12px/1.5 var(--font-ui);
+  font: 400 12.5px/1.5 var(--font-ui);
+}
 
-  kbd {
-    background: var(--surface-raised);
+.keys kbd {
+  background: var(--surface-raised);
+}
+
+.pager {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: auto;
+}
+
+// Liens de pagination (maquette : lien primaire) ; grisés en bout de liste.
+.pg {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--primary);
+  font: 500 13px/1 var(--font-ui);
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    text-decoration: underline;
   }
-}
 
-.spacer {
-  flex: 1 1 auto;
-}
-
-.legend {
-  margin: 0;
-  color: var(--text-secondary);
-  font: 400 12px/1.5 var(--font-ui);
+  &:disabled {
+    color: var(--text-disabled);
+    cursor: default;
+  }
 }
 
 .banner {
@@ -125,7 +168,7 @@
   border-radius: 10px;
   background: var(--danger-bg);
   color: var(--danger);
-  font: var(--mat-sys-body-medium);
+  font: 400 14px/1.4 var(--font-ui);
 }
 
 .warning,
@@ -138,7 +181,7 @@
   padding: 8px 16px;
   background: var(--warning-bg);
   color: var(--warning);
-  font: var(--mat-sys-body-medium);
+  font: 400 14px/1.4 var(--font-ui);
 }
 
 .warning {
@@ -160,15 +203,38 @@
   stroke-linejoin: round;
 }
 
-.more {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
+// `.m-bottom` : barre du bas des écrans mobiles, masquée au-dessus de 600 px.
+.m-bottom {
+  display: none;
 }
 
-.more-error {
-  margin: 0;
-  color: var(--danger);
-  font: var(--mat-sys-body-small);
+@media (max-width: 900px) {
+  .keys {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  :host {
+    padding: 16px 16px 0;
+  }
+
+  .new {
+    display: none;
+  }
+
+  .m-bottom {
+    position: sticky;
+    bottom: 0;
+    display: block;
+    margin: 16px -16px 0;
+    padding: 10px 12px 14px;
+    border-top: 1px solid var(--border-subtle);
+    background: var(--surface-raised);
+
+    .btn {
+      justify-content: center;
+      width: 100%;
+    }
+  }
 }

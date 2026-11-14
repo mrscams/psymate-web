@@ -1,0 +1,136 @@
+:host {
+  display: block;
+}
+
+// Maquette 01 `.sect-head` : titre 15 px / 650, 10 px au-dessus des cartes.
+.sect-head {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 10px;
+
+  h2 {
+    margin: 0;
+    font: 650 15px/1.25 var(--font-ui);
+  }
+}
+
+// `.today` : trois colonnes, 12 px d'écart, 18 px sous la bande.
+.today {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+// `.tcard` : surface raised, bordure subtile, rayon 12, 12 × 14 px ; avatar 36 px sur deux lignes,
+// nom et sous-ligne, bouton à droite.
+.tcard {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 2px 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--text-primary) 5%, transparent);
+}
+
+.av {
+  display: grid;
+  grid-row: 1 / span 2;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  font: 700 12px/1 var(--font-ui);
+}
+
+.nm {
+  grid-row: 1;
+  grid-column: 2;
+  min-width: 0;
+  font: 600 14px/1.4 var(--font-ui);
+}
+
+.sub {
+  grid-row: 2;
+  grid-column: 2;
+  min-width: 0;
+  color: var(--text-secondary);
+  font: 400 12.5px/1.4 var(--font-ui);
+}
+
+// `.chip.live` : teinte séance (success-bg dans les tokens), texte success, pastille entry-session.
+.chip.live {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  height: 22px;
+  margin-left: 6px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--success-bg);
+  color: var(--success);
+  font: 600 12px/1 var(--font-ui);
+  white-space: nowrap;
+  vertical-align: 1px;
+
+  &::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--entry-session);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--entry-session) 18%, transparent);
+  }
+}
+
+// `.btn.sm.outline` : 30 px, contour fort ; `.btn.session` : vert séance (success sous success-bg,
+// le couple vérifié de l'en-tête patient : entry-session sous du blanc ne fait que 3,9:1).
+.btn {
+  display: inline-flex;
+  grid-row: 1 / span 2;
+  grid-column: 3;
+  align-items: center;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: 600 13px/1 var(--font-ui);
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--surface-sunken);
+  }
+
+  &.session {
+    border-color: var(--success);
+    background: var(--success);
+    color: var(--success-bg);
+
+    &:hover {
+      background: color-mix(in srgb, var(--success) 88%, var(--text-primary));
+    }
+  }
+}
+
+@media (max-width: 1100px) {
+  .today {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .today {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

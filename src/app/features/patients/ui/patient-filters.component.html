@@ -1,5 +1,5 @@
-<div class="toolbar" role="search">
-  <div class="filter" data-focus-ring="container">
+<div class="quick" role="search">
+  <div class="field" data-focus-ring="container">
     <svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
       <circle cx="7" cy="7" r="4.5" />
       <path d="M10.5 10.5 14 14" />
@@ -21,25 +21,12 @@
       id="patients-filter-hint"
       class="sr-only"
       i18n="Aide du filtre de la liste@@patients.filter.hint"
-      >Accents et majuscules ignorés, à partir de 2 caractères.</span
+      >Accents et majuscules ignorés, à partir de 2 caractères ; « #tag » filtre par tag.</span
     >
-  </div>
-
-  <div class="sort">
-    <label for="patients-sort" i18n="Étiquette du tri de la liste@@patients.sort.label"
-      >Trier par</label
-    >
-    <select id="patients-sort" [value]="sort()" (change)="onSort($event)">
-      @for (option of sorts(); track option.value) {
-        <option [value]="option.value" [selected]="option.value === sort()">
-          {{ option.label }}
-        </option>
-      }
-    </select>
   </div>
 
   <div
-    class="chips"
+    class="seg"
     role="group"
     aria-label="Filtres rapides"
     i18n-aria-label="Étiquette des filtres rapides de la liste@@patients.quick.label"
@@ -47,61 +34,27 @@
     @for (chip of chips(); track chip.value) {
       <button
         type="button"
-        class="chip"
-        [class.flag]="chip.value === 'flags'"
+        [class]="'q-' + chip.value"
         [attr.aria-pressed]="chip.pressed"
-        [disabled]="chip.disabled"
-        [attr.aria-describedby]="chip.disabled ? 'patients-quick-hint' : null"
-        [attr.title]="chip.disabled ? coverageHint : null"
         (click)="quickChange.emit(chip.value)"
       >
-        @if (chip.value === 'flags') {
-          <span class="dot" aria-hidden="true"></span>
-        }
-        {{ chip.text }}
+        {{ chip.label }}
       </button>
-    }
-    @if (tags().length > 0) {
-      <button
-        type="button"
-        class="chip tags"
-        [class.active]="activeTag() !== null"
-        [matMenuTriggerFor]="tagMenu"
-      >
-        {{ tagsButton() }}
-        <span aria-hidden="true">▾</span>
-      </button>
-      <mat-menu
-        #tagMenu="matMenu"
-        aria-label="Filtrer par tag"
-        i18n-aria-label="Étiquette du menu des tags@@patients.chips.label"
-      >
-        <button
-          mat-menu-item
-          type="button"
-          role="menuitemradio"
-          [attr.aria-checked]="activeTag() === null"
-          (click)="tagChange.emit(null)"
-        >
-          <span class="check" aria-hidden="true">{{ activeTag() === null ? '✓' : '' }}</span>
-          <span i18n="Entrée du menu des tags sans filtre@@patients.tags.all">Tous les tags</span>
-        </button>
-        @for (tag of tags(); track tag.id) {
-          <button
-            mat-menu-item
-            type="button"
-            role="menuitemradio"
-            [attr.aria-checked]="activeTag() === tag.label"
-            (click)="tagChange.emit(tag.label)"
-          >
-            <span class="check" aria-hidden="true">{{ activeTag() === tag.label ? '✓' : '' }}</span>
-            #{{ tag.label }}
-          </button>
-        }
-      </mat-menu>
     }
   </div>
+
+  <span class="spacer"></span>
+
+  <div class="sort">
+    <label for="patients-sort" i18n="Étiquette du tri de la liste@@patients.sort.label"
+      >Trier par</label
+    >
+    <select id="patients-sort" [value]="sort()" (change)="onSort($event)">
+      @for (option of sorts; track option.value) {
+        <option [value]="option.value" [selected]="option.value === sort()">
+          {{ option.label }}
+        </option>
+      }
+    </select>
+  </div>
 </div>
-@if (!activityCovered()) {
-  <p id="patients-quick-hint" class="coverage-hint">{{ coverageHint }}</p>
-}
