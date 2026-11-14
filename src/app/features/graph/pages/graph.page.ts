@@ -385,7 +385,10 @@ export class GraphPage {
       const view = doc.defaultView;
       if (!view) return;
       const update = () => {
-        const top = Math.round(host.getBoundingClientRect().top + view.scrollY);
+        // Le haut mesuré est celui du plateau (ou du détail), pas de l'hôte : la barre d'outils du
+        // graphe est entre les deux et compterait sinon dans la hauteur, faisant défiler la page.
+        const anchor = host.querySelector<HTMLElement>('.board, .detail') ?? host;
+        const top = Math.round(anchor.getBoundingClientRect().top + view.scrollY);
         const value = `${top}px`;
         if (host.style.getPropertyValue('--graph-top') !== value) {
           host.style.setProperty('--graph-top', value);

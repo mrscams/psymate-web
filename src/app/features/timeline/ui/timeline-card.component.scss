@@ -130,9 +130,11 @@
     color: var(--text-secondary);
   }
 
+  // Couple vérifié par check:tokens (info sur info-bg) : entry-situation sur info-bg tombe à 4,1:1
+  // en thème sombre (balayage axe).
   &.ongoing {
     background: var(--info-bg);
-    color: var(--entry-situation);
+    color: var(--info);
   }
 }
 

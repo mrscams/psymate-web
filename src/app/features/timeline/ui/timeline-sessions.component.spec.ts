@@ -167,16 +167,15 @@ describe('TimelineSessionsComponent', () => {
         to: null,
         durationMin: null,
         modality: 'video',
-        kind: 'intake',
+        kind: 'session',
         closedAt: null,
         summary: null,
       }),
     });
     await fixture.whenStable();
     // Ouverte depuis le 30 octobre : au-delà de 3 h, plus de chronomètre (seuil de la barre de séance).
-    expect(text(el.querySelector('.session-head .label'))).toBe(
-      "Séance d'accueil · visio · non clôturée",
-    );
+    // (Une séance d'accueil, elle, n'est jamais « ouverte » : voir le spec du séparateur.)
+    expect(text(el.querySelector('.session-head .label'))).toBe('Séance · visio · non clôturée');
     el.querySelector<HTMLButtonElement>('.session-head button.close')!.click();
     expect(host.closes).toBe(1);
   });

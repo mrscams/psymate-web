@@ -123,11 +123,15 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(page.getByText('Les liens que vous créez apparaîtront ici')).toBeVisible();
   await expectNoAxeViolations(page);
 
-  // Un champ a le focus : 1 2 3 s'écrivent, l'onglet ne change pas.
+  // Un champ a le focus : 1 2 3 s'écrivent, l'onglet ne change pas. Le bloc de saisie n'existe que
+  // sur l'onglet Séance (14 novembre 2026) : on y revient d'abord.
+  await expect(page.locator('pm-capture-block')).toHaveCount(0);
+  await page.keyboard.press('1');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
   await h.capture.click();
   await page.keyboard.type('312');
   await expect(h.capture).toHaveValue('312');
-  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph\\?root=all$`));
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
 
   // L'ancienne destination de M1-06 (après création) mène à l'onglet 1 ; rechargé avec une séance
   // ouverte, le dossier va sur l'onglet Séance (UX-S3).
@@ -420,9 +424,12 @@ test('UX-S2 : en-tête compact (identité 44, onglets 38), barre de séance de 4
   await page.keyboard.press('2');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/timeline$`));
   await expect(h.bar).toBeVisible();
-  await expect(block).toBeVisible();
+  // Hors de l'onglet Séance, la page garde sa forme : ni bloc ni colonne latérale (14 novembre 2026).
+  await expect(page.locator('pm-capture-block')).toHaveCount(0);
+  await expect(aside).toHaveCount(0);
   await page.keyboard.press('1');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
+  await expect(block).toBeVisible();
 
   // À 375 px en séance (fiche 00 §2) : barre réduite (« Clôturer », sans modalité ni durée prévue),
   // bloc puis colonne latérale empilés, aucun défilement horizontal.

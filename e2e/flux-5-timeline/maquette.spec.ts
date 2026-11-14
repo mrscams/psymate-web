@@ -31,7 +31,7 @@ test.beforeAll(async () => {
   account = await createAccount(api, 'ux-s9.maquette', 'psychologist');
   await setGroupBy(api, 'chronological');
   patient = await createPatient(api, 'Nour K.', '1991-03-02', { since: daysAgo(60).slice(0, 10) });
-  const open = await intakeOf(api, patient);
+  await intakeOf(api, patient);
   const past = await closedSession(
     api,
     patient,
@@ -46,6 +46,14 @@ test.beforeAll(async () => {
     45,
     'Première séance : motif d’épuisement, réveils nocturnes depuis la réorganisation du service.',
   );
+  // La séance ouverte du jour est une vraie séance démarrée (après les séances passées : une seule
+  // séance ouverte à la fois) : la séance d'accueil, créée avec le patient et jamais clôturée par
+  // l'API, n'est pas « ouverte » pour la timeline (14 novembre 2026).
+  const started = await api.post(`${API}/api/patients/${patient}/sessions/start`, {
+    data: { modality: 'in_person' },
+  });
+  expect(started.status(), await started.text()).toBe(201);
+  const open = ((await started.json()) as { id: string }).id;
   await entry(api, patient, {
     type: 'situation',
     title: 'Réorganisation du service de nuit',
@@ -136,9 +144,11 @@ for (const [width, height] of [
     // Jours en ancres : « Aujourd'hui » est écrit une fois, à gauche de l'axe.
     const anchors = page.locator('.date pm-timeline-day');
     await expect(anchors.first()).toContainText("aujourd'hui");
-    // La séance ouverte est le premier séparateur, en tête de son jour.
-    const firstRow = page.locator('.row').first();
-    await expect(firstRow.locator('pm-timeline-session-divider')).toContainText('en cours depuis');
+    // La séance ouverte a son séparateur « en cours depuis » dans le jour courant (la séance
+    // d'accueil, créée avec le patient le même jour, n'est jamais « ouverte »).
+    await expect(
+      page.locator('.row pm-timeline-session-divider', { hasText: 'en cours depuis' }).first(),
+    ).toBeVisible();
     // Séance passée : son séparateur porte la première ligne du compte rendu.
     await expect(
       page.locator('pm-timeline-session-divider .summary', {
@@ -160,7 +170,7 @@ for (const [width, height] of [
     const box = await side.boundingBox();
     expect(box!.x).toBeGreaterThan(stream!.x + stream!.width);
     expect(Math.round(box!.width)).toBe(300);
-    await expect(side.locator('.headline')).toHaveText(/entrées · 3 séances/);
+    await expect(side.locator('.headline')).toHaveText(/entrées · 4 séances/);
     await expect(side.getByRole('button', { name: /^Anxiété/ })).toBeVisible();
 
     await expectNoAxeViolations(page);

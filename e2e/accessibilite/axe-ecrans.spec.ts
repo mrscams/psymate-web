@@ -137,7 +137,11 @@ for (const theme of THEMES) {
           '03-timeline',
           async () => {
             await page.goto(`${patient}/timeline`);
-            const session = page.getByRole('button', { name: /^Séance du .* 8 entrées$/ });
+            // UX-S9 : le séparateur de séance (bouton en mode par séance, article en mode chronologique)
+            // porte « Séance · cabinet · 50 min, <date>, 8 entrées, … » en nom accessible.
+            const session = page
+              .locator('pm-timeline-session-divider [aria-label*="8 entrées"]')
+              .first();
             await session.focus();
             await page.keyboard.press('Enter');
             await expect(page.getByText('Joie après la randonnée').first()).toBeVisible();

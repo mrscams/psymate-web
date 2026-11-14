@@ -197,6 +197,9 @@ describe('TimelineSessionDividerComponent', () => {
     const button = el.querySelector<HTMLButtonElement>('button.head')!;
     expect(el.querySelector('article')).toBeNull();
     expect(button.getAttribute('aria-expanded')).toBe('false');
+    // Même nom accessible que le séparateur du flux : genre et modalité, date, entrées, compte rendu.
+    expect(button.getAttribute('aria-label')).toContain('Séance · cabinet · 50 min');
+    expect(button.getAttribute('aria-label')).toMatch(/entrées/);
     button.click();
     expect(host.toggled).toBe(1);
     host.expanded.set(true);

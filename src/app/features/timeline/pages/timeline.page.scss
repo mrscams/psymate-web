@@ -24,7 +24,8 @@
 }
 
 // Barre d'outils (maquette `.tl-toolbar`) : une ligne, 10 px entre les groupes ; les puces à gauche,
-// la période, le mode et le zoom à droite.
+// la période, le mode et le zoom à droite. Sous 900 px (et à 200 % de zoom, où la fenêtre fait
+// 640 px), les groupes passent à la ligne plutôt que de déborder.
 .tl-toolbar {
   display: flex;
   flex: none;
@@ -39,6 +40,11 @@
   .spacer {
     flex: 1 1 0;
     min-width: 0;
+  }
+
+  @media (max-width: 900px) {
+    flex-wrap: wrap;
+    row-gap: 8px;
   }
 }
 
