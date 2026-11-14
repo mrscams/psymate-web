@@ -45,16 +45,17 @@
   <!-- Annonce polie (séance démarrée) : pas de toast, la couleur et le chronomètre le disent (04b). -->
   <p class="sr-only" role="status" aria-live="polite">{{ announcement() }}</p>
   @if (store.patient()) {
-    <!-- Colonne de contenu (04b .pad-layout) : la colonne principale porte le bloc de saisie (en
-         séance seulement, UX-S1 : aucune saisie sans séance), l'indice de première entrée et l'onglet
-         courant ; en séance, une colonne latérale de 340 px la longe (repliée dessous sous 900 px). -->
+    <!-- Colonne de contenu (04b .pad-layout). Le bloc de saisie et la colonne latérale de 340 px
+         n'existent que sur l'onglet Séance (décision du 14 novembre 2026) : Vue d'ensemble, Timeline
+         et Graphe gardent leur page entière, séance ouverte ou non ; seule la barre de séance les
+         coiffe. L'indice de première entrée et l'onglet courant sont toujours là. -->
     <div
       class="pad-layout"
-      [class.in-session]="inSession()"
+      [class.in-session]="onSessionTab()"
       [class.dense]="activeTab() === 'timeline'"
     >
       <div class="pad-main">
-        @if (inSession()) {
+        @if (onSessionTab()) {
           <!-- Bloc de saisie (M6-02, UX-S1, features/capture) : Entrée crée, Ctrl+Entrée ou
                « Détailler » ouvre l'éditeur prérempli (M1-08, features/entries) ; N ouvre l'éditeur vide. -->
           <pm-capture-block
@@ -95,9 +96,9 @@
           <router-outlet />
         </div>
       </div>
-      @if (inSession()) {
+      @if (onSessionTab()) {
         <!-- Contexte de la séance (04b, états 2 et 3) : prévu la dernière fois ou séance précédente,
-             à garder en tête, raccourcis dans le texte ; sur tous les onglets tant que la séance est ouverte. -->
+             à garder en tête, raccourcis dans le texte ; sur l'onglet Séance seulement. -->
         <aside
           class="ctx"
           aria-label="Contexte de la séance"
