@@ -34,6 +34,26 @@ async function startSession(api: APIRequestContext, id: string): Promise<void> {
   expect(started.status(), await started.text()).toBe(201);
 }
 
+/**
+ * Séance d'accueil clôturée dans la projection du patient (l'API la crée et la clôture de façon
+ * asynchrone) : sans cette attente, la liste lit « en cours » et garde ce résumé en cache le temps
+ * de la visite (vu en CI, machine plus lente).
+ */
+async function intakeClosed(api: APIRequestContext, id: string): Promise<void> {
+  await expect(async () => {
+    const response = await api.get(`${API}/api/patients/${id}/overview?window=90d`);
+    expect(response.status()).toBe(200);
+    const overview = (await response.json()) as {
+      drafts: { openSession: unknown };
+      recentSessions: unknown[];
+    };
+    // La séance d'accueil figure dans les dernières séances et plus aucune séance n'est ouverte
+    // (closedAt reste nul pour une séance d'accueil : la liste affiche sa date, sans « en cours »).
+    expect(overview.recentSessions.length).toBeGreaterThan(0);
+    expect(overview.drafts.openSession).toBeFalsy();
+  }).toPass({ timeout: 20_000 });
+}
+
 /** Liste lue et résumés arrivés (plus aucune barre d'attente). */
 async function settled(page: Page): Promise<void> {
   await expect(page.getByRole('table')).toBeVisible();
@@ -55,9 +75,10 @@ test('maquette 01 : en-tête, bande Aujourd’hui, filtres sans comptes, colonne
     followUp: { since: '2025-03-01' },
     flags: [{ kind: 'watch', reason: 'Sommeil' }],
   });
-  await createPatient(request, { displayName: 'Omar B.' });
+  const omar = await createPatient(request, { displayName: 'Omar B.' });
   await createPatient(request, { displayName: `DEMO · Camille R.` });
   await startSession(request, marie);
+  await intakeClosed(request, omar);
   await signIn(page, account);
   await settled(page);
 

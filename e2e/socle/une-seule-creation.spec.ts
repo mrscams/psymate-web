@@ -245,7 +245,9 @@ test('connexion puis liste des patients : page créée une fois, liste et tags l
 
   expect(await inserted()).toBe(1);
   expect(patients()).toBe(1);
-  expect(tags()).toBe(1);
+  // UX-S7 : la liste ne lit plus les tags à l'arrivée (le filtre par tag se saisit « #tag » dans
+  // le champ) ; aucune requête /api/tags.
+  expect(tags()).toBe(0);
   // Habillage praticien autour de la même page : barre d'application, un seul <main>.
   await expect(page.locator('pm-app-bar')).toHaveCount(1);
   await expect(page.getByRole('main')).toHaveCount(1);
@@ -314,7 +316,8 @@ test('habillage nu ↔ praticien : chaque page de destination créée une fois, 
   expect(await list()).toBe(1);
   expect(patients()).toBe(1);
   await expect(page.getByRole('main')).toHaveCount(1);
-  await expect(page.getByRole('main')).toHaveClass('app-main');
+  // UX-S7 : la liste est en largeur `full` (data.contentWidth), toujours dans le conteneur praticien.
+  await expect(page.getByRole('main')).toHaveClass('app-main full');
   await expect(page.getByRole('main')).toHaveId('main');
   await expectLandmarks(page);
   await expectNoAxeViolations(page);
