@@ -3,6 +3,8 @@
 > Spécification pour agents. Maquette : `16-fiche-patient.html` / `.png` (état « modification » ; la création est le même formulaire vide). Palette : Nordique. Document A, module `patients` (`POST /api/patients`, `GET/PATCH /api/patients/{id}`, `POST /api/patients/{id}/archive`).
 >
 > Mis à jour le 11 novembre 2026 (UX-F1, audit UX du 9 novembre) : carte « risque » en ambre et non en rouge (règle « jamais rouge sur un patient ») ; maquette HTML corrigée.
+>
+> **Mis à jour le 14 novembre 2026 (UX-S10, proposition `propositions-2026-11/16-fiche-patient.html`)** : la mise en page de cette fiche est remplacée par celle de la proposition 16 ; les champs, validations, appels et critères ci-dessous restent valables. Voir « Proposition 16 (UX-S10) » en fin de fiche.
 
 ## Objectif
 Un seul formulaire pour créer un patient en trente secondes (seul le **nom affiché** est obligatoire) et pour compléter la fiche au fil du suivi. Rien de ce qui est saisi ici n'est une entrée clinique : la fiche décrit la personne et le cadre du suivi, la timeline décrit ce qui se passe.
@@ -57,6 +59,26 @@ Un seul formulaire pour créer un patient en trente secondes (seul le **nom affi
 ## Écarts avec la maquette
 - **Carte « risque » (UX-F1)** : la maquette et l'ancienne version de cette fiche la teintaient en rouge (`#9A2F22` / `#FBE9E7`) ; un drapeau est ambre, jamais rouge sur un patient (fiche 00, étude des couleurs). **Maquette corrigée** : case de la carte « Risque » en `#B8862E`. Le rouge reste réservé à l'astérisque d'obligation et au bouton « Archiver… » (action destructive), qui ne qualifient pas le patient.
 - **Champs date et mois (UX-F1)** : date de naissance, date du drapeau et dates du suivi passent par `pm-date-field` / `pm-month-field` (fiche 00 §8) : saisie `jj/mm/aaaa` ou `mm/aaaa` en JetBrains Mono, comme la maquette, plus un **bouton calendrier** à droite du champ, non dessiné. Maquette non modifiée.
+
+## Proposition 16 (UX-S10, 14 novembre 2026)
+Ce qui change (mêmes champs, mêmes validations, mêmes appels) :
+- **Pleine largeur** (`data.contentWidth: 'full'` sur `nouveau` et `:id/fiche`), marges 20 / 24 / 40 px, 16 px sous 600 px.
+- **Rail collant à gauche (240 px)** : aperçu de l'en-tête (nom, âge, « suivi·e depuis », drapeaux en puces), liens vers les sections avec le nombre de champs renseignés (Identité, Contexte, Suivi, Drapeaux, Tags, Archivage), section courante marquée au défilement (`aria-current`), **Enregistrer** (`Ctrl+↵`, « Créer le dossier » à la création) toujours visible, « Annuler les modifications » (remet la fiche lue ; à la création « Annuler » revient à la liste), « n champs modifiés · chaque enregistrement crée une version horodatée ». Plus de boutons en bas de page.
+- **Formulaire continu** : une surface, sections séparées par un titre 15 / 650 et un filet (toujours des `fieldset` / `legend`), grille `.fgrid` (2 colonnes, 3 pour le suivi), champs de 38 px. **« (facultatif) » disparaît** : seul le nom affiché porte l'astérisque, l'aide d'Identité le dit une fois (« Le reste est facultatif »).
+- **Explications repliées** : les encarts « À la création d'un patient » et « Confidentialité » deviennent des notes sous les champs (séance d'accueil sous Suivi, coordonnées sous Téléphone / E-mail, reliées par `aria-describedby`) ; aide de la date de naissance « 35 ans · l'âge et les phases de vie en découlent », de la durée « préférence du compte : 60 min ». Exemples à la place des crochets (`06 12 34 56 78`, `70 €`, `prenom@exemple.fr`, `Dr …`).
+- **Drapeaux** : trois cartes compactes ; la raison de « à surveiller » est dans la carte cochée ; le rappel de « risque » est dans l'aide de la carte.
+- **Export et historique** : actions de l'en-tête (« Exporter le dossier ▾ », « Historique des versions ») ; l'historique s'ouvre dans un panneau latéral de 420 px (fiche 00 §6), aussi depuis « (n versions) » de la méta « Créée le … · n séances · dernière modification il y a 3 j (n versions) ».
+- **Archivage** : zone pointillée sous les tags, cible du lien « Archivage » du rail ; confirmation inchangée.
+- **Erreurs** : résumé `pm-form-errors` en tête de page (focus, liens vers les champs), messages sous les champs ; le rail reste visible ; une erreur sans champ (409…) en bandeau.
+- **Mobile (sous 900 px)** : puces des sections collées en haut, barre Enregistrer / Annuler collée en bas, une colonne sous 600 px, sans carte.
+
+Écarts constatés (maquette ↔ contrat, règles du produit) :
+- **Couleur `text-disabled`** (libellé de l'aperçu, décomptes, lien « Archivage », placeholders) : 3,0:1 sur fond blanc, sous le seuil AA ; remplacée par `text-secondary`.
+- **Accords** : la maquette écrit « Adressée par », « Suivie depuis », « suivie depuis » (patiente « Elle ») ; les libellés gardent l'écriture inclusive « Adressé·e par », « Suivi·e depuis » (le libellé d'un champ ne dépend pas d'un autre champ).
+- **Placeholder de l'histoire** : la maquette dit « visible dans la vue d'ensemble et au début de chaque séance » ; aucune page n'affiche ce texte au début d'une séance (ni, à ce jour, dans la vue d'ensemble) : le texte garde « visible dans la vue d'ensemble », à confirmer.
+- **Fil d'Ariane** : la maquette le place dans la barre d'application, qui n'en a pas (composant partagé, hors tâche) ; il reste en tête de page.
+- **Export** : variante compacte de l'en-tête, sans la note « Entrées privées exclues » (rappelée dans Mon compte › Données et export).
+- **Carte « suivi conjoint » cochée** : la feuille de la maquette teinte toutes les cartes cochées en ambre ; le suivi conjoint garde le bleu de cette fiche (aucun état coché dessiné).
 
 ## Hors périmètre V1
 Photo du patient, documents joints, import depuis un autre logiciel, partage avec un confrère.

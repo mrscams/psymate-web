@@ -49,10 +49,10 @@ describe('PatientExportMenuComponent', () => {
   });
   afterEach(() => vi.restoreAllMocks());
 
-  it('bouton « Exporter ce dossier » : aria-haspopup menu, menu PDF / Markdown, note privées exclues', async () => {
+  it('bouton « Exporter le dossier » : aria-haspopup menu, menu PDF / Markdown, note privées exclues', async () => {
     const { fixture, el, overlay } = await render({ exportPatient: vi.fn() });
     const button = trigger(el);
-    expect(button.textContent).toContain('Exporter ce dossier');
+    expect(button.textContent).toContain('Exporter le dossier');
     expect(button.getAttribute('aria-haspopup')).toBe('menu');
     expect(el.textContent).toContain('Entrées privées exclues');
     expect(el.querySelector('a')?.getAttribute('href')).toBe('/mon-compte/donnees');

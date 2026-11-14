@@ -135,7 +135,7 @@ test('nouveau praticien : inscription, confirmation, accueil, premier patient, p
   const createdPatient = page.waitForResponse(
     (r) => r.url().endsWith('/api/patients') && r.request().method() === 'POST',
   );
-  await page.getByRole('button', { name: /Enregistrer/ }).click();
+  await page.getByRole('button', { name: /Créer le dossier/ }).click();
   const patient = (await (await createdPatient).json()) as { id: string };
 
   // Étape 2 : le dossier s'ouvre ; étape 3 annoncée par l'indice (dossier sans entrée).

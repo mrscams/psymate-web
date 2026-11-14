@@ -4,34 +4,12 @@
   gap: 8px;
 }
 
-// Zone de saisie unique (maquette 16) : même bordure, rayon et halo que les champs texte ; les
-// puces et le champ s'y suivent et passent à la ligne.
+// Proposition 16 `.tags` : puces et champ sur une ligne qui passe à la ligne, 6 px d'écart.
 .zone {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   align-items: center;
-  min-height: 44px;
-  padding: 6px 12px;
-  border: 1px solid var(--border-strong);
-  border-radius: 10px;
-  background: var(--surface-raised);
-
-  // Halo du champ seulement, pas quand le focus est sur le bouton d'une puce (il a le sien).
-  &:has(input:focus-visible) {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-    box-shadow: 0 0 0 4px var(--primary-tint);
-  }
-
-  &.invalid {
-    border-color: var(--danger);
-  }
-
-  &.disabled {
-    background: var(--surface-sunken);
-    cursor: default;
-  }
 }
 
 .chips {
@@ -41,18 +19,20 @@
   list-style: none;
 }
 
+// `.tag` : 26 px, rayon 6, fond creusé, 13 px / 500.
 .chip {
   display: inline-flex;
   gap: 2px;
   align-items: center;
-  padding: 2px 2px 2px 10px;
-  border-radius: 999px;
+  height: 26px;
+  padding: 0 1px 0 9px;
+  border-radius: 6px;
   background: var(--surface-sunken);
   color: var(--text-primary);
-  font: var(--mat-sys-label-large);
+  font: 500 13px/1 var(--font-ui);
 }
 
-// Cible de 24 px (WCAG 2.5.8) dans une puce de 28 px.
+// Cible de 24 px (WCAG 2.5.8) dans une puce de 26 px.
 .remove {
   display: inline-flex;
   align-items: center;
@@ -61,14 +41,14 @@
   height: 24px;
   padding: 0;
   border: 0;
-  border-radius: 50%;
+  border-radius: 5px;
   background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
 
   svg {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     fill: none;
     stroke: currentColor;
     stroke-width: 2;
@@ -89,40 +69,45 @@
   }
 }
 
+// « Ajouter un tag… » : 30 px, bordure forte en pointillés, rayon 6, 13 px.
 input {
-  flex: 1 1 160px;
-  min-width: 120px;
-  min-height: 30px;
-  padding: 0 4px;
-  border: 0;
-  background: transparent;
+  width: 160px;
+  max-width: 100%;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 6px;
+  background: var(--surface-raised);
   color: var(--text-primary);
-  font: var(--mat-sys-body-large);
+  font: 400 13px/1 var(--font-ui);
 
   &::placeholder {
     color: var(--text-secondary);
   }
 
-  // Pas de flèche de datalist dans la zone (maquette 16) : les suggestions viennent à la frappe.
-  &::-webkit-calendar-picker-indicator {
-    display: none !important;
+  &[aria-invalid='true'] {
+    border-style: solid;
+    border-color: var(--danger);
   }
 
-  // Le halo est porté par la zone (:focus-within).
-  &:focus-visible {
-    outline: none;
-    box-shadow: none;
+  &:disabled {
+    background: var(--surface-sunken);
+  }
+
+  // Pas de flèche de datalist (maquette 16) : les suggestions viennent à la frappe.
+  &::-webkit-calendar-picker-indicator {
+    display: none !important;
   }
 }
 
 .hint {
   margin: 0;
-  font: var(--mat-sys-body-small);
   color: var(--text-secondary);
+  font: 400 12px/1.5 var(--font-ui);
 }
 
 .field-error {
   margin: 0;
-  font: var(--mat-sys-body-small);
   color: var(--danger);
+  font: 400 12px/1.5 var(--font-ui);
 }

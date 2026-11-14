@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-14T19:16:49.577Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-S10 fiche patient selon la proposition 16 : pleine largeur, rail collant à gauche (aperçu, sections avec décompte et section courante, Enregistrer Ctrl+↵ toujours visible, champs modifiés, Annuler les modifications), formulaire continu sans « (facultatif) », raison du drapeau dans sa carte, export et historique (panneau) dans l'en-tête, archivage sous les tags, barre basse et puces sur mobile",
+  "notes": "Branche locale claude/ux-s10-fiche-patient-f22527, non poussée, en attente de revue du propriétaire. lint, check:tokens, test (2108), build verts ; e2e flux-2, flux-1, export, axe-ecrans, zoom-200 verts (--workers=1). Store : la relecture de l'historique n'attend plus la fin de l'enregistrement (saisie écrasée juste après un enregistrement). pm-patient-flags supprimé (plus utilisé). Écarts maquette listés dans docs/design/16-fiche-patient.md ; captures dans docs/design/captures-ux-s10.",
+  "next": "Revue du propriétaire, puis push et PR",
+  "branch": "claude/ux-s10-fiche-patient-f22527",
+  "checkout": "ux-s10-fiche-patient-f22527"
+}

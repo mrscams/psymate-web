@@ -10,7 +10,7 @@ interface PatientExportState {
 }
 
 /**
- * État du menu « Exporter ce dossier » (fiche 16, état C de la fiche 19), fourni par le composant :
+ * État du menu « Exporter le dossier » (fiche 16, état C de la fiche 19), fourni par le composant :
  * téléchargement direct, sans job ni historique.
  */
 export const PatientExportStore = signalStore(

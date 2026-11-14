@@ -80,15 +80,15 @@ test('flux 2 au clavier : N, nom, pronom, motif, rythme, Ctrl+Entrée → vue d�
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/fiche$`));
   await expect(birthDate).toHaveValue('28/07/2003');
-  const privacy = page.getByRole('region', { name: 'Confidentialité' });
-  await expect(privacy.getByRole('button', { name: '1 version', exact: true })).toBeVisible();
+  const meta = page.locator('.page-head .sub');
+  await expect(meta).not.toContainText('versions');
   await tabTo(page, rhythm);
   await page.keyboard.press('ArrowDown');
   await expect(rhythm).not.toHaveValue('weekly');
   const patched = page.waitForResponse((r) => r.request().method() === 'PATCH');
   await page.keyboard.press('Control+Enter');
   expect((await patched).status()).toBe(200);
-  await expect(privacy.getByRole('button', { name: '2 versions' })).toBeVisible();
+  await expect(meta.getByRole('button', { name: '2 versions' })).toBeVisible();
 
   // Archiver : Tab jusqu'à « Archiver… », Entrée, nom retapé, Tab, Entrée.
   await tabTo(page, page.getByRole('button', { name: 'Archiver…' }), { max: 100 });

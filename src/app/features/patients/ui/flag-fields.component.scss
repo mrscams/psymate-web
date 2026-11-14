@@ -1,121 +1,113 @@
 :host {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  display: block;
 }
 
-.flag-cards {
+// Proposition 16 `.flagcards` : trois colonnes de 12 px d'écart ; une seule sous 600 px.
+.flagcards {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
+  align-items: start;
 
-  @media (max-width: 760px) {
+  @media (max-width: 599.98px) {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
-// Maquette 16 : libellé et aide à gauche, case à droite, en haut de la carte.
-.flag-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 6px 12px;
-  align-items: start;
-  min-height: 44px;
+// `.flagcard` : bordure forte, rayon 10, 12 × 14 px ; libellé 14 px, aide 12,5 px, case à droite.
+.flagcard {
+  min-width: 0;
   padding: 12px 14px;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   background: var(--surface-raised);
   color: var(--text-primary);
+
+  // Anneau sur la carte quand sa case a le focus (pas quand c'est le champ raison).
+  &:has(.head input:focus-visible) {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20px;
+  gap: 4px 10px;
+  align-items: start;
   cursor: pointer;
 
   input {
-    grid-row: 1;
+    grid-row: 1 / span 2;
     grid-column: 2;
     width: 18px;
     height: 18px;
     margin: 1px 0 0;
-    accent-color: var(--primary);
+    accent-color: var(--flag);
     cursor: pointer;
   }
 
-  &:focus-within {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
+  input:focus-visible {
+    outline: none;
   }
 }
 
-.flag-name {
+.name {
   grid-row: 1;
   grid-column: 1;
-  font: var(--mat-sys-title-small);
+  font: 600 14px/1.4 var(--font-ui);
 }
 
-.flag-help {
-  grid-column: 1 / -1;
-  font: var(--mat-sys-body-small);
+.d {
+  grid-column: 1;
   color: var(--text-secondary);
+  font: 400 12.5px/1.45 var(--font-ui);
 }
 
-// Cartes cochées : ambre pour « à surveiller » et « risque » (fiche 00, étude couleurs : jamais de
-// rouge sur un patient, écart assumé avec les tokens de la fiche 16), bleu pour le suivi conjoint.
-.checked {
-  &.watch,
-  &.risk {
-    border-width: 1.5px;
-    border-color: var(--flag);
-    background: var(--warning-bg);
-  }
-  &.shared {
-    border-color: var(--primary);
-    background: var(--primary-tint);
-  }
-  &.watch,
-  &.watch .flag-help,
-  &.risk,
-  &.risk .flag-help {
-    color: var(--warning);
-  }
-  &.shared,
-  &.shared .flag-help {
-    color: var(--primary-hover);
+// Carte cochée : fond et bordure ambre (jamais de rouge sur un patient, fiche 00) ; le suivi
+// conjoint garde le bleu de la fiche 16.
+.on.watch,
+.on.risk {
+  border-color: var(--flag);
+  background: var(--flag-bg);
+}
+
+.on.shared {
+  border-color: var(--primary);
+  background: var(--primary-tint);
+
+  .head input {
+    accent-color: var(--primary);
   }
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+// Raison dans la carte cochée (maquette : libellé 12,5 px, champ 34 px sur fond blanc).
+.reason {
+  display: grid;
+  gap: 5px;
+  margin-top: 8px;
 
   label {
-    font: var(--mat-sys-label-large);
-  }
-}
-
-input[type='text'] {
-  width: 100%;
-  min-height: 44px;
-  padding: 0 12px;
-  border: 1px solid var(--border-strong);
-  border-radius: 10px;
-  background: var(--surface-raised);
-  color: var(--text-primary);
-  font: var(--mat-sys-body-large);
-
-  &[aria-invalid='true'] {
-    border-color: var(--danger);
+    font: 600 12.5px/1.4 var(--font-ui);
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-  }
-}
+  input {
+    width: 100%;
+    height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--surface-raised);
+    color: var(--text-primary);
+    font: 400 14px/1.4 var(--font-ui);
 
-.reminder {
-  margin: 0;
-  padding: 8px 12px;
-  border-radius: 8px;
-  background: var(--info-bg);
-  color: var(--info);
-  font: var(--mat-sys-body-small);
+    &[aria-invalid='true'] {
+      border-color: var(--danger);
+    }
+
+    &:disabled {
+      background: var(--surface-sunken);
+      color: var(--text-secondary);
+    }
+  }
 }

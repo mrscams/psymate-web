@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, input, model, output } fr
 import { normalizeText, PractitionerTag } from '../data/patient.model';
 
 /**
- * Tags du patient (fiche 16, maquette 16) : une zone de saisie unique qui contient les puces (bouton
- * « Retirer le tag #travail ») suivies du champ « Ajouter un tag… », avec autocomplétion sur les
+ * Tags du patient (proposition 16, `.tags`) : les puces (bouton « Retirer le tag #travail ») suivies
+ * d'un petit champ « Ajouter un tag… » en pointillés, sur la même ligne, avec autocomplétion sur les
  * tags du praticien (datalist). Entrée ajoute le libellé saisi ; la page le résout (tag existant,
  * ou création par POST /api/tags, refusée pour une émotion).
  */
@@ -56,7 +56,7 @@ import { normalizeText, PractitionerTag } from '../data/patient.model';
       }
     </datalist>
     <p id="field-tags-hint" class="hint" i18n="Aide du champ tag@@patients.tags.hint">
-      Communs à tous vos dossiers. Une émotion ne peut pas servir de tag.
+      Communs à tous vos dossiers. Une émotion du vocabulaire ne peut pas servir de tag.
     </p>
     @if (problem(); as message) {
       <p id="field-tags-error" class="field-error" role="alert">{{ message }}</p>

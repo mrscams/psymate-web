@@ -8,82 +8,103 @@ import {
 } from '@angular/core';
 
 import { ageInYears, formatMonthYear } from '../../../core/i18n';
-import { monthToDate, PatientFlagView } from '../data/patient.model';
-import { PatientFlagsComponent } from './patient-flags.component';
+import { FlagKind, monthToDate, PatientFlagView } from '../data/patient.model';
+import { flagLabel } from './patient-labels';
 
 /**
- * Aperçu de l'en-tête patient (fiche 16, colonne latérale, maquette 16) : nom, âge, « suivi·e
- * depuis », drapeaux, tels que l'en-tête permanent les affichera, dans un encart qui explique d'où
- * viennent l'âge et la durée du suivi. Mis à jour en direct depuis la saisie.
+ * Aperçu de l'en-tête patient (proposition 16, haut du rail `.preview`) : nom affiché, « 35 ans ·
+ * suivi·e depuis sept. 2026 », drapeaux en puces ambre (libellé seul, la raison pour les lecteurs
+ * d'écran), tels que l'en-tête du dossier les affichera. Mis à jour en direct depuis la saisie ; à
+ * la création, il se remplit à mesure.
  */
+/** Ordre de l'en-tête du dossier (fiche 16 : le risque en premier). */
+const HEADER_ORDER: readonly FlagKind[] = ['risk', 'watch', 'shared_care'];
+
 @Component({
   selector: 'pm-header-preview',
-  imports: [PatientFlagsComponent],
   template: `
     <section class="preview" aria-labelledby="header-preview-title">
       <h2 id="header-preview-title" i18n="Titre de l'aperçu de l'en-tête@@patients.preview.title">
         Aperçu de l'en-tête
       </h2>
-      <div class="box">
-        @if (name()) {
-          <p class="name">{{ name() }}</p>
-        } @else {
-          <p class="name placeholder" i18n="Aperçu sans nom@@patients.preview.noName">
-            Nom affiché
-          </p>
-        }
-        @if (meta()) {
-          <p class="meta">{{ meta() }}</p>
-        }
-        <pm-patient-flags [flags]="flags()" />
-      </div>
-      <p class="note" i18n="Explication de l'aperçu de l'en-tête@@patients.preview.note">
-        L'âge est calculé depuis la date de naissance ; « suivi·e depuis » depuis la date de début
-        du suivi.
-      </p>
+      @if (name()) {
+        <p class="nm">{{ name() }}</p>
+      } @else {
+        <p class="nm placeholder" i18n="Aperçu sans nom@@patients.preview.noName">Nom affiché</p>
+      }
+      @if (meta()) {
+        <p class="m">{{ meta() }}</p>
+      }
+      @if (chips().length > 0) {
+        <ul class="chips" [attr.aria-label]="flagsLabel">
+          @for (chip of chips(); track chip.kind) {
+            <li class="chip">
+              {{ chip.text }}
+              @if (chip.reason) {
+                <span class="sr-only">: {{ chip.reason }}</span>
+              }
+            </li>
+          }
+        </ul>
+      }
     </section>
   `,
   styles: `
     .preview {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      padding: 16px 20px 20px;
+      display: block;
+      padding: 14px;
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
       background: var(--surface-raised);
+      color: var(--text-primary);
     }
     h2 {
-      margin: 0;
-      font: var(--mat-sys-label-large);
+      margin: 0 0 6px;
       color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      font: 400 11.5px/1.4 var(--font-ui);
     }
-    .box {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      min-width: 0;
-      padding: 14px;
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      background: var(--surface-ground);
-    }
-    .name {
+    p {
       margin: 0;
-      font: var(--mat-sys-title-medium);
-      color: var(--text-primary);
+    }
+    .nm {
+      font: 650 17px/1.3 var(--font-ui);
       overflow-wrap: anywhere;
     }
     .placeholder {
       color: var(--text-secondary);
     }
-    .meta,
-    .note {
-      margin: 0;
-      font: var(--mat-sys-body-small);
+    .m {
+      margin: 2px 0 0;
       color: var(--text-secondary);
+      font: 400 12.5px/1.5 var(--font-ui);
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 8px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .chip {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: var(--flag-bg);
+      color: var(--warning);
+      font: 600 12px/1 var(--font-ui);
+      white-space: nowrap;
+
+      &::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: var(--flag);
+      }
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -97,7 +118,16 @@ export class HeaderPreviewComponent {
 
   private readonly locale = inject(LOCALE_ID);
 
+  protected readonly flagsLabel = $localize`:Étiquette de la liste des drapeaux d'un patient@@patients.flags.list:Drapeaux`;
+
   protected readonly name = computed(() => this.displayName().trim());
+
+  protected readonly chips = computed(() =>
+    HEADER_ORDER.flatMap((kind) => {
+      const flag = this.flags().find((item) => item.kind === kind);
+      return flag ? [{ kind, text: flagLabel(kind), reason: flag.reason }] : [];
+    }),
+  );
 
   protected readonly meta = computed(() => {
     const parts: string[] = [];

@@ -33,10 +33,13 @@ export const PATIENTS_ROUTES: Routes = [
     path: 'nouveau',
     component: PatientFormPage,
     title: newTitle,
+    // Proposition 16 (UX-S10) : la fiche en pleine largeur, rail collant ; la page pose ses marges.
+    data: { contentWidth: 'full' },
   },
   {
     path: ':id/fiche',
     component: PatientFormPage,
     title: $localize`:Titre d'onglet de la fiche@@patients.form.pageTitle:Fiche · PsyMate`,
+    data: { contentWidth: 'full' },
   },
 ];

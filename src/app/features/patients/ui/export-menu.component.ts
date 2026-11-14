@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
 
@@ -11,25 +10,19 @@ import { PatientExportStore } from '../data/patient-export.store';
 import { saveFile } from './save-file';
 
 /**
- * « Exporter ce dossier ▾ » (fiche 16, état C de la fiche 19) : menu PDF / Markdown
+ * « Exporter le dossier ▾ » (fiche 16, proposition 16 ; état C de la fiche 19) : menu PDF / Markdown
  * (`aria-haspopup="menu"`, `role="menu"` / `menuitem`, flèches et `Échap` par MatMenu),
  * téléchargement direct du fichier, note « Entrées privées exclues ». Exporté par l'index de
  * features/patients pour l'en-tête patient (point d'entrée secondaire).
  */
 @Component({
   selector: 'pm-patient-export-menu',
-  imports: [MatButtonModule, MatMenuModule, RouterLink],
+  imports: [MatMenuModule, RouterLink],
   providers: [PatientExportStore],
   template: `
-    <button
-      mat-stroked-button
-      type="button"
-      class="trigger"
-      [matMenuTriggerFor]="formats"
-      [disabled]="busy()"
-    >
+    <button type="button" class="trigger" [matMenuTriggerFor]="formats" [disabled]="busy()">
       <span i18n="Bouton du menu d'export du dossier@@patients.export.button"
-        >Exporter ce dossier</span
+        >Exporter le dossier</span
       >
       <span aria-hidden="true">▾</span>
     </button>
@@ -83,6 +76,30 @@ import { saveFile } from './save-file';
       flex-direction: column;
       align-items: flex-start;
       gap: 8px;
+    }
+    /* Proposition 16 (.btn.outline) : 36 px, rayon 8, contour fort, 13,5 px / 600. */
+    .trigger {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      height: 36px;
+      padding: 0 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      background: var(--surface-raised);
+      color: var(--text-primary);
+      font: 600 13.5px/1 var(--font-ui);
+      white-space: nowrap;
+      cursor: pointer;
+
+      &:hover:not(:disabled) {
+        background: var(--surface-sunken);
+      }
+
+      &:disabled {
+        cursor: default;
+        opacity: 0.6;
+      }
     }
     .item {
       display: flex;

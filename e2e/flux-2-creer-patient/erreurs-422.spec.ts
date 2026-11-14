@@ -4,8 +4,9 @@ import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 
 // UX-A7 (planche 29, fiche 16) : un 422 de l'API sur la fiche patient s'affiche dans le résumé
-// pm-form-errors en tête du formulaire, qui prend le focus ; son lien mène au premier champ
-// fautif. Contre l'API locale (seed small), jamais de mock du backend.
+// pm-form-errors en tête de la page, qui prend le focus ; son lien mène au premier champ fautif.
+// Le rail (proposition 16, UX-S10) reste visible pendant l'erreur. Contre l'API locale (seed
+// small), jamais de mock du backend.
 
 const API = 'http://localhost:8080';
 
@@ -20,9 +21,8 @@ test('422 sur la fiche patient : résumé en tête avec focus, lien vers le cham
   await signIn(page, account);
 
   await page.goto(`/fr/patients/${id}/fiche`);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Modifier la fiche · Lina V.');
-  const form = page.locator('form');
-  const summary = form.locator('pm-form-errors [role="alert"]');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Fiche · Lina V.');
+  const summary = page.locator('pm-form-errors [role="alert"]');
   await expect(summary).toHaveCount(0);
 
   // Plus de 120 ans : la forme est valide côté client, le serveur répond 422 sur birthDate.
@@ -43,6 +43,9 @@ test('422 sur la fiche patient : résumé en tête avec focus, lien vers le cham
   const summaryBox = await summary.boundingBox();
   const firstFieldBox = await page.getByRole('textbox', { name: /Nom affiché/ }).boundingBox();
   expect(summaryBox!.y).toBeLessThan(firstFieldBox!.y);
+  // Le rail reste à l'écran, Enregistrer compris.
+  await expect(page.getByRole('navigation', { name: 'Sections de la fiche' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Enregistrer/ })).toBeInViewport();
   // Le message reste aussi sous le champ, relié par aria-describedby.
   await expect(page.locator('#field-birthDate-error')).toContainText('moins de 120 ans');
   await expect(birthDate).toHaveAttribute('aria-invalid', 'true');
