@@ -1,4 +1,4 @@
-import { toView } from './overview.api';
+import { toView, withoutIntakeOpenSession } from './overview.api';
 
 /** La réponse du contrat (le client généré ne s'importe que depuis overview.api.ts). */
 type OverviewDto = Parameters<typeof toView>[0];
@@ -113,5 +113,44 @@ describe('OverviewApi · toView', () => {
       entryId: 's',
       startedAt: '2026-11-14T09:00:00Z',
     });
+  });
+});
+
+describe('withoutIntakeOpenSession (séance d’accueil absente des dernières séances)', () => {
+  const open = { entryId: 'i', startedAt: '2026-11-07T00:57:00Z' };
+  it('lit l’entrée quand la séance ouverte n’est pas dans recentSessions : accueil écarté, séance gardée', async () => {
+    const reads: string[] = [];
+    const readIntake = async (id: string) => {
+      reads.push(id);
+      return { id, session: { kind: kind('intake') } } as unknown as Parameters<
+        typeof withoutIntakeOpenSession
+      >[1] extends (id: string) => Promise<infer T>
+        ? T
+        : never;
+    };
+    const dto = {
+      recentSessions: [{ entryId: 's', kind: kind('session') }],
+      drafts: { count: 0, openSession: open },
+    };
+    const cleaned = await withoutIntakeOpenSession(dto, readIntake);
+    expect(reads).toEqual(['i']);
+    expect(cleaned.drafts?.openSession).toBeUndefined();
+    const ordinary = await withoutIntakeOpenSession(
+      dto,
+      async (id) => ({ id, session: { kind: kind('session') } }) as never,
+    );
+    expect(ordinary.drafts?.openSession).toEqual(open);
+  });
+  it('sans lecture quand recentSessions la connaît ; projection gardée si la lecture échoue', async () => {
+    const known = {
+      recentSessions: [{ entryId: 'i', kind: kind('intake') }],
+      drafts: { count: 0, openSession: open },
+    };
+    const noRead = async () => {
+      throw new Error('ne doit pas lire');
+    };
+    expect((await withoutIntakeOpenSession(known, noRead)).drafts?.openSession).toBeUndefined();
+    const unknown = { recentSessions: [], drafts: { count: 0, openSession: open } };
+    expect((await withoutIntakeOpenSession(unknown, noRead)).drafts?.openSession).toEqual(open);
   });
 });

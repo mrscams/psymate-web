@@ -4,6 +4,8 @@ import { firstValueFrom } from 'rxjs';
 import {
   ActiveMedicationDto,
   ActiveSituationDto,
+  EntreesService,
+  EntryDto,
   FeelingPointDto,
   FeelingSeriesDto,
   OverviewDto,
@@ -42,11 +44,18 @@ import {
 @Injectable({ providedIn: 'root' })
 export class OverviewApi {
   private readonly api = inject(VueDensembleService);
+  private readonly entries = inject(EntreesService);
   private readonly english = inject(LOCALE_ID).startsWith('en');
 
   async overview(patientId: string, window: OverviewWindow): Promise<OverviewView> {
     const dto = await firstValueFrom(this.api.getPatientOverview(patientId, window));
-    return toView(dto, window, this.english);
+    return toView(
+      await withoutIntakeOpenSession(dto, (entryId) =>
+        firstValueFrom(this.entries.getEntry(entryId)),
+      ),
+      window,
+      this.english,
+    );
   }
 }
 
@@ -63,6 +72,32 @@ function oneOf<T extends string>(
 
 function family(value: string | null | undefined): EmotionFamily | null {
   return oneOf(value, EMOTION_FAMILIES);
+}
+
+/**
+ * Écarte la séance d'accueil de `drafts.openSession`. L'API la crée avec le patient et ne la clôture
+ * jamais, et la projection la renvoie comme séance ouverte alors que le contrat dit qu'elle ne compte
+ * pas (sessions/current, start). Son genre se lit dans `recentSessions` quand elle y figure ; sinon
+ * (patient qui a d'autres séances plus récentes), une lecture de l'entrée tranche. En cas d'échec de
+ * cette lecture, la projection est gardée telle quelle.
+ */
+export async function withoutIntakeOpenSession(
+  dto: OverviewDto,
+  readEntry: (entryId: string) => Promise<EntryDto>,
+): Promise<OverviewDto> {
+  const open = dto.drafts?.openSession;
+  if (!open?.entryId) return dto;
+  const known = (dto.recentSessions ?? []).find((s) => s.entryId === open.entryId);
+  let kind: string | undefined = known?.kind;
+  if (!known) {
+    try {
+      kind = (await readEntry(open.entryId)).session?.kind;
+    } catch {
+      return dto;
+    }
+  }
+  if (kind !== RecentSessionDtoKindEnum.Intake) return dto;
+  return { ...dto, drafts: { ...dto.drafts, openSession: undefined } };
 }
 
 export function toView(dto: OverviewDto, requested: OverviewWindow, english = false): OverviewView {
