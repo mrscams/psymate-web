@@ -1,0 +1,171 @@
+// Rail de navigation (UX-S8, proposition 05 A). La coquille positionne l'hôte (colonne de 56 px
+// sous la barre d'application, sur toute la hauteur) ; le rail déplié déborde de l'hôte vers la
+// droite, par-dessus la page, sans jamais la décaler.
+:host {
+  display: block;
+}
+
+:host(.in-drawer) {
+  height: 100%;
+}
+
+.rail {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: flex;
+  flex-direction: column;
+  width: 56px;
+  padding: 8px 6px;
+  background: var(--surface-raised);
+  border-right: 1px solid var(--border-subtle);
+  transition:
+    width 120ms ease-out,
+    padding 120ms ease-out,
+    box-shadow 120ms ease-out;
+
+  &.expanded {
+    width: 220px;
+    padding: 8px 10px;
+    // Ombre portée de la maquette (8 px 0 32 px, 14 % d'encre) : le voile à 30 %.
+    box-shadow: 8px 0 32px color-mix(in srgb, var(--scrim) 30%, transparent);
+    border-right-color: var(--border-strong);
+  }
+}
+
+// Les carreaux restent en vue quand la page défile (le rail, lui, court sur toute la hauteur).
+.items {
+  position: sticky;
+  top: 8px;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  padding: 0 11px;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font: var(--mat-sys-label-large);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+
+  &.active {
+    background: var(--primary-tint);
+    color: var(--primary);
+  }
+
+  // « À réaliser » : sans lien ; texte-désactivé plutôt qu'une opacité, qui tomberait sous 3:1.
+  &.later {
+    color: var(--text-disabled);
+    cursor: default;
+  }
+
+  small {
+    margin-left: 6px;
+    font-size: 11px;
+    font-weight: 400;
+  }
+}
+
+.ico {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+// Replié : les icônes seules (nom accessible et infobulle portés par chaque carreau).
+.label {
+  display: none;
+}
+
+.expanded .label {
+  display: inline;
+}
+
+// Tiroir (sous 900 px, proposition 05 B) : 280 px, libellés d'emblée, logo et croix en tête.
+.rail.drawer {
+  position: static;
+  width: 100%;
+  height: 100%;
+  padding: 0 10px 12px;
+  border-right: 0;
+  overflow-y: auto;
+  transition: none;
+
+  .items {
+    position: static;
+  }
+}
+
+.drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  margin-bottom: 6px;
+  padding: 0 4px 0 6px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+  font: var(--mat-sys-title-medium);
+}
+
+.logo {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.close {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-sunken);
+    color: var(--text-primary);
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rail {
+    transition: none;
+  }
+}

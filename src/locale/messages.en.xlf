@@ -25291,6 +25291,82 @@
         </context-group>
         <note priority="1" from="description">Libellé du sélecteur de fenêtre</note>
       </trans-unit>
+      <trans-unit id="appBar.navigation.open" datatype="html">
+        <source>Ouvrir la navigation</source>
+        <target state="translated">Open navigation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+        <note priority="1" from="description">Bouton ☰ qui ouvre le tiroir de navigation</note>
+      </trans-unit>
+      <trans-unit id="navRail.label" datatype="html">
+        <source>Navigation</source>
+        <target state="translated">Navigation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-drawer.service.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la navigation principale (rail, tiroir)</note>
+      </trans-unit>
+      <trans-unit id="navRail.close" datatype="html">
+        <source>Fermer la navigation</source>
+        <target state="translated">Close navigation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui ferme le tiroir de navigation</note>
+      </trans-unit>
+      <trans-unit id="navRail.later" datatype="html">
+        <source>à réaliser</source>
+        <target state="translated">coming later</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+        <note priority="1" from="description">Fonctionnalité pas encore disponible, à côté de son nom</note>
+      </trans-unit>
+      <trans-unit id="navRail.patients" datatype="html">
+        <source>Patients</source>
+        <target state="translated">Patients</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <note priority="1" from="description">Carreau Patients du rail de navigation</note>
+      </trans-unit>
+      <trans-unit id="navRail.agenda" datatype="html">
+        <source>Agenda</source>
+        <target state="translated">Calendar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <note priority="1" from="description">Carreau Agenda du rail de navigation, à réaliser</note>
+      </trans-unit>
+      <trans-unit id="navRail.invoice" datatype="html">
+        <source>Facture</source>
+        <target state="translated">Invoices</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <note priority="1" from="description">Carreau Facture du rail de navigation, à réaliser</note>
+      </trans-unit>
+      <trans-unit id="shortcuts.ctrlB" datatype="html">
+        <source>Ouvrir ou fermer la navigation</source>
+        <target state="translated">Open or close navigation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis (rail de navigation, UX-S8)</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

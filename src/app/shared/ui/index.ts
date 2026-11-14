@@ -1,7 +1,8 @@
 // Composants partagés (fiche 00) : barres, layouts (le layout public aussi en pièces, bandeau et
 // pied, pour la coquille, UX-A10), en-tête patient, panneau latéral, états,
 // toasts, confirmation, icônes et titre de repli des entrées, résumé des erreurs de formulaire
-// (pm-form-errors). Ne se modifient que par une tâche dédiée.
+// (pm-form-errors), rail de navigation du praticien et son tiroir (pm-nav-rail, UX-S8).
+// Ne se modifient que par une tâche dédiée.
 // Champs date et mois (pm-date-field, pm-month-field) : importés depuis 'shared/ui/date-field', hors
 // de ce barrel, pour que le datepicker Material reste dans les chunks paresseux des features.
 export type { AppBarUser } from './app-bar/app-bar.component';
@@ -10,6 +11,7 @@ export { ADMIN_PATHS, AdminBarComponent } from './admin-bar/admin-bar.component'
 export { AccountNavComponent, verificationBadge } from './account-nav/account-nav.component';
 export * from './confirm-dialog';
 export { FormErrorsComponent } from './form-errors/form-errors.component';
+export * from './nav-rail';
 export type { EntryType } from './entry-icon/entry-icon.component';
 export { ENTRY_TYPES, EntryIconComponent, entryTypeLabel } from './entry-icon/entry-icon.component';
 export type { EntryTitleOptions, EntryTitleSource } from './entry-icon/entry-title';

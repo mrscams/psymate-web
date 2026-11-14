@@ -532,3 +532,217 @@ test("patient d'un autre praticien : 403 PATIENT_FORBIDDEN, état erreur du shel
   await page.getByRole('link', { name: 'Retour à la liste' }).click();
   await expect(page).toHaveURL(/\/fr\/patients$/);
 });
+
+// UX-S8 : rail de navigation (proposition 05 A, décision du 14 novembre 2026) et tiroir sous 900 px.
+
+/** Le rail de la coquille (habillage praticien, 900 px et plus). */
+function rail(page: Page) {
+  const host = page.locator('pm-nav-rail.app-rail');
+  return {
+    host,
+    panel: host.locator('nav.rail'),
+    nav: page.getByRole('navigation', { name: 'Navigation' }),
+    patients: host.getByRole('link', { name: 'Patients', exact: true }),
+    agenda: host.getByRole('link', { name: 'Agenda, à réaliser' }),
+    invoice: host.getByRole('link', { name: 'Facture, à réaliser' }),
+  };
+}
+
+/** Rectangle d'un élément à la frontière du pixel (getBoundingClientRect). */
+async function rect(page: Page, selector: string) {
+  return page.locator(selector).evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    return { x: r.x, y: r.y, width: r.width, height: r.height };
+  });
+}
+
+test('UX-S8 : rail de 56 px sous la barre, déplié à 220 px par-dessus la page sans la décaler, Ctrl+B, Échap, Agenda et Facture inertes', async ({
+  page,
+  request,
+}) => {
+  test.setTimeout(90_000);
+  // Habillage public : pas de rail.
+  await page.goto('/fr/connexion');
+  await expect(page.getByRole('button', { name: 'Se connecter' })).toBeVisible();
+  await expect(page.locator('pm-nav-rail')).toHaveCount(0);
+
+  const account = await createAccount(request, 'ux-s8.rail', 'psychologist');
+  const id = await createPatient(request, 'Nour K.', { since: '2026-09-01' });
+  const start = await request.post(`${API}/api/patients/${id}/sessions/start`, {
+    data: { modality: 'in_person' },
+  });
+  expect(start.status(), await start.text()).toBe(201);
+  await signIn(page, account);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const r = rail(page);
+
+  // Liste des patients : le rail, replié, sous la barre (48 px), sur toute la hauteur ; Patients actif.
+  await expect(r.nav).toBeVisible();
+  const collapsed = (await r.panel.boundingBox())!;
+  expect(collapsed.x).toBe(0);
+  expect(collapsed.y).toBe(48);
+  expect(collapsed.width).toBe(56);
+  expect(collapsed.height).toBeGreaterThanOrEqual(900 - 48);
+  await expect(r.patients).toHaveAttribute('aria-current', 'page');
+  await expect(r.patients).toHaveAttribute('title', 'Patients');
+  await expect(r.host.locator('.label').first()).toBeHidden();
+  // Tout ce qui suit la barre commence à 56 px ; la barre garde toute la largeur.
+  expect((await rect(page, 'pm-app-bar header')).x).toBe(0);
+  expect((await rect(page, 'pm-app-bar header')).width).toBe(1440);
+  expect((await rect(page, 'main#main')).x).toBeGreaterThanOrEqual(56);
+  // Agenda et Facture : désactivés, sans lien ; un clic ne mène nulle part.
+  for (const later of [r.agenda, r.invoice]) {
+    await expect(later).toHaveAttribute('aria-disabled', 'true');
+    await expect(later).not.toHaveAttribute('href');
+    await expect(later).toBeDisabled();
+    // Playwright attend qu'un élément aria-disabled s'active : le clic est forcé, au pointeur.
+    await later.click({ force: true });
+    await expect(page).toHaveURL(/\/fr\/patients$/);
+  }
+  await page.mouse.move(800, 600);
+  await expect(r.panel).not.toHaveClass(/expanded/);
+  await expectNoAxeViolations(page);
+
+  // Onglet Séance en séance (largeur full, UX-S5) : barre de séance et en-tête d'un bord à l'autre
+  // de la zone restante, de 56 px au bord droit.
+  await page.goto(`/fr/patients/${id}`);
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
+  const h = header(page);
+  await expect(h.bar).toBeVisible();
+  await expect(h.capture).toBeVisible();
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
+  const width = await page.evaluate(() => document.documentElement.clientWidth);
+  const main = await rect(page, 'main#main');
+  expect(main.x).toBe(56);
+  expect(main.width).toBe(width - 56);
+  const bar = await rect(page, 'pm-session-bar .session-bar');
+  expect(bar.x).toBe(56);
+  expect(bar.x + bar.width).toBe(width);
+  await expect(r.patients).toHaveAttribute('aria-current', 'page');
+  await expectNoAxeViolations(page);
+
+  // Survol : 220 px par-dessus la page, libellés visibles ; le bloc de saisie ne bouge pas d'un pixel.
+  const block = 'pm-capture-block .block';
+  const before = { block: await rect(page, block), main: await rect(page, 'main#main') };
+  await page.mouse.move(28, 400);
+  await expect(r.panel).toHaveClass(/expanded/);
+  // Transition de 120 ms sur la largeur : on attend la fin.
+  await expect.poll(async () => (await r.panel.boundingBox())!.width).toBe(220);
+  await expect(r.host.getByText('Patients', { exact: true })).toBeVisible();
+  await expect(r.host.getByText('à réaliser')).toHaveCount(2);
+  await expect(r.host.getByText('à réaliser').first()).toBeVisible();
+  expect(await rect(page, block)).toEqual(before.block);
+  expect(await rect(page, 'main#main')).toEqual(before.main);
+  await expectNoAxeViolations(page);
+  // Le pointeur sort : replié.
+  await page.mouse.move(900, 500);
+  await expect(r.panel).not.toHaveClass(/expanded/);
+  // Transition de 120 ms sur la largeur : on attend la fin.
+  await expect.poll(async () => (await r.panel.boundingBox())!.width).toBe(56);
+  expect(await rect(page, block)).toEqual(before.block);
+
+  // Ctrl+B depuis le bloc de saisie : focus sur le carreau actif, rail déplié ; Échap le replie et
+  // rend le focus au champ.
+  await h.capture.click();
+  await expect(h.capture).toBeFocused();
+  await page.keyboard.press('Control+b');
+  await expect(r.patients).toBeFocused();
+  await expect(r.panel).toHaveClass(/expanded/);
+  expect(await rect(page, block)).toEqual(before.block);
+  await expectNoAxeViolations(page);
+  await page.keyboard.press('Escape');
+  await expect(r.panel).not.toHaveClass(/expanded/);
+  await expect(h.capture).toBeFocused();
+  // Échap dans le rail ne ferme rien d'autre : la séance est toujours ouverte, le bloc là.
+  await expect(h.bar).toBeVisible();
+
+  // Tabulation : la barre, puis le rail (déplié au focus clavier), puis le contenu.
+  await page.keyboard.press('Control+b');
+  await expect(r.patients).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(r.panel).not.toHaveClass(/expanded/);
+  await expect(page.locator('pm-nav-rail :focus')).toHaveCount(0);
+
+  // Un clic sur Patients mène à la liste ; le rail se replie quand le pointeur sort.
+  await page.mouse.move(28, 400);
+  await r.patients.click();
+  await expect(page).toHaveURL(/\/fr\/patients$/);
+  await page.mouse.move(900, 500);
+  await expect(r.panel).not.toHaveClass(/expanded/);
+});
+
+test('UX-S8 : à 390 px, pas de rail ; ☰ ouvre le tiroir de 280 px, Échap, ✕ et le voile le ferment, le focus revient à ☰', async ({
+  page,
+  request,
+}) => {
+  test.setTimeout(60_000);
+  const account = await createAccount(request, 'ux-s8.tiroir', 'psychologist');
+  await signIn(page, account);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.locator('pm-nav-rail.app-rail')).toBeHidden();
+  expect((await rect(page, 'main#main')).x).toBe(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+
+  const menu = page.getByRole('button', { name: 'Ouvrir la navigation' });
+  await expect(menu).toBeVisible();
+  await expect(menu).toHaveAttribute('aria-expanded', 'false');
+  expect((await menu.boundingBox())!.x).toBeLessThan(
+    (await page.locator('pm-app-bar .brand').boundingBox())!.x,
+  );
+  await expectNoAxeViolations(page);
+
+  const drawer = page.getByRole('dialog', { name: 'Navigation' });
+  const open = async () => {
+    await menu.click();
+    await expect(drawer).toBeVisible();
+    await expect(drawer.getByRole('link', { name: 'Patients', exact: true })).toBeFocused();
+  };
+
+  await open();
+  await expect(page.locator('pm-app-bar button.menu')).toHaveAttribute('aria-expanded', 'true');
+  const box = (await drawer.boundingBox())!;
+  expect(box.x).toBe(0);
+  expect(box.y).toBe(0);
+  expect(box.width).toBe(280);
+  expect(box.height).toBe(844);
+  // Libellés d'emblée ; Agenda et Facture à réaliser, sans lien.
+  await expect(drawer.getByText('Patients', { exact: true })).toBeVisible();
+  await expect(drawer.getByText('à réaliser')).toHaveCount(2);
+  await expect(drawer.locator('a[href]')).toHaveCount(1);
+  await expect(drawer.getByRole('link', { name: 'Agenda, à réaliser' })).toHaveAttribute(
+    'aria-disabled',
+    'true',
+  );
+  await expect(page.locator('.pm-nav-drawer-veil')).toBeVisible();
+  await expectNoAxeViolations(page);
+  // Piège de focus : la tabulation reste dans le tiroir.
+  for (let i = 0; i < 3; i += 1) {
+    await page.keyboard.press('Tab');
+    expect(await drawer.evaluate((el) => el.contains(document.activeElement))).toBe(true);
+  }
+
+  // Échap ferme et rend le focus à ☰.
+  await page.keyboard.press('Escape');
+  await expect(drawer).toBeHidden();
+  await expect(menu).toBeFocused();
+  await expect(menu).toHaveAttribute('aria-expanded', 'false');
+
+  // ✕ ferme.
+  await open();
+  await drawer.getByRole('button', { name: 'Fermer la navigation' }).click();
+  await expect(drawer).toBeHidden();
+  await expect(menu).toBeFocused();
+
+  // Clic sur le voile, hors du tiroir.
+  await open();
+  await page.mouse.click(340, 500);
+  await expect(drawer).toBeHidden();
+  await expect(menu).toBeFocused();
+
+  // Ctrl+B ouvre aussi le tiroir quand le rail est masqué, et le referme.
+  await page.keyboard.press('Control+b');
+  await expect(drawer).toBeVisible();
+  await page.keyboard.press('Control+b');
+  await expect(drawer).toBeHidden();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+});

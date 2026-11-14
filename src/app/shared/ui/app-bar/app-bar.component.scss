@@ -29,6 +29,42 @@
   color: var(--text-primary);
 }
 
+/* Bouton ☰ (UX-S8) : seulement sous 900 px, quand le rail de navigation disparaît. */
+.menu {
+  display: none;
+  flex-shrink: 0;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-right: 2px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-sunken);
+    color: var(--text-primary);
+  }
+
+  svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+  }
+}
+
+@media (max-width: 899.98px) {
+  .menu {
+    display: inline-grid;
+  }
+}
+
 .brand {
   display: inline-flex;
   align-items: center;

@@ -107,6 +107,7 @@ describe('AppComponent', () => {
     const { el } = await render('fr');
     expect(tags(el)).toEqual([
       'pm-app-bar',
+      'pm-nav-rail',
       'pm-network-banner',
       'main',
       'pm-shortcuts-help',
@@ -152,6 +153,8 @@ describe('AppComponent', () => {
     expect(el.querySelector('pm-app-bar')).toBeNull();
     expect(el.querySelector('pm-verification-banner')).toBeNull();
     expect(el.querySelector('pm-shortcuts-help')).toBeNull();
+    expect(el.querySelector('pm-nav-rail')).toBeNull();
+    expect(el.classList.contains('with-rail')).toBe(false);
   });
 
   it('habillage public large sur une route data.wide (annuaire) : pas de conteneur 480 px', async () => {
@@ -171,6 +174,8 @@ describe('AppComponent', () => {
       'pm-toast-outlet',
     ]);
     expect(admin.el.querySelector('main#main')?.className).toBe('app-main admin');
+    expect(admin.el.querySelector('pm-nav-rail')).toBeNull();
+    expect(admin.el.classList.contains('with-rail')).toBe(false);
     expect(admin.el.querySelector('main#main router-outlet')).not.toBeNull();
     TestBed.resetTestingModule();
 
@@ -182,6 +187,8 @@ describe('AppComponent', () => {
     expectBareMain(outletContainer(bare.el));
     expect(tags(outletContainer(bare.el))).toEqual(['router-outlet', 'pm-blank']);
     expect(bare.el.classList.contains('bare')).toBe(true);
+    expect(bare.el.querySelector('pm-nav-rail')).toBeNull();
+    expect(bare.el.classList.contains('with-rail')).toBe(false);
     expect(bare.el.querySelectorAll('main, [role="main"], [id="main"]')).toHaveLength(1);
   });
 
@@ -225,6 +232,55 @@ describe('AppComponent', () => {
     expect(main.classList.contains('narrow')).toBe(false);
     // Mêmes règles que le <main> de pm-public-layout (_public-main.scss) : 1 280 px de contenu.
     expect(getComputedStyle(main).getPropertyValue('--public-main-inline').trim()).toBe('24px');
+  });
+
+  it('UX-S8 : rail de navigation en praticien, frère du <main> (un seul), barre avec le bouton ☰', async () => {
+    const { el } = await render('fr', { signedIn: true });
+    expect(el.classList.contains('with-rail')).toBe(true);
+    const rail = el.querySelector(':scope > pm-nav-rail.app-rail')!;
+    expect(rail).not.toBeNull();
+    // Le rail suit la barre et précède les bandeaux et le <main>, qu'il ne contient pas.
+    expect(rail.previousElementSibling?.tagName).toBe('PM-APP-BAR');
+    expect(rail.nextElementSibling?.tagName).toBe('PM-VERIFICATION-BANNER');
+    expect(rail.querySelector('main')).toBeNull();
+    expect(rail.querySelector('nav')?.getAttribute('aria-label')).toBe('Navigation');
+    expect(rail.querySelectorAll('.item')).toHaveLength(3);
+    expect(el.querySelectorAll('main, [role="main"], [id="main"]')).toHaveLength(1);
+    expect(el.querySelector(':scope > main#main')).not.toBeNull();
+    // Positionné en absolu sous la barre (48 px) : il ne prend aucune place dans le flux.
+    const style = getComputedStyle(rail);
+    expect(style.position).toBe('absolute');
+    expect(style.top).toBe('48px');
+    expect(style.width).toBe('56px');
+    expect(el.querySelector('pm-app-bar button.menu')?.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('UX-S8 : ☰ ouvre le tiroir de navigation, aria-expanded suit, le focus revient au bouton', async () => {
+    const { fixture, el } = await render('fr');
+    const menu = el.querySelector<HTMLButtonElement>('pm-app-bar button.menu')!;
+    // Sous 900 px (jsdom ignore les media queries) : le bouton est affiché, donc focalisable.
+    menu.style.display = 'inline-grid';
+    menu.focus();
+    expect(document.activeElement).toBe(menu);
+    menu.click();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(document.querySelector('.pm-nav-drawer-pane [role="dialog"]')).not.toBeNull();
+    expect(menu.getAttribute('aria-expanded')).toBe('true');
+    document.querySelector<HTMLButtonElement>('.pm-nav-drawer-pane button.close')!.click();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(menu.getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(menu);
+  });
+
+  it('UX-S8 : largeur full sous le rail, toujours sans borne ni marge', async () => {
+    const { el } = await render('fr', { url: '/seance-pleine' });
+    expect(el.classList.contains('with-rail')).toBe(true);
+    const main = el.querySelector<HTMLElement>(':scope > main#main.app-main.full')!;
+    expect(getComputedStyle(main).paddingLeft).toBe('0px');
+    expect(getComputedStyle(main).maxWidth).toBe('none');
   });
 
   it('le bandeau réseau apparaît quel que soit l’habillage', async () => {

@@ -30,6 +30,8 @@ import { ThemeService } from './core/theme';
 import {
   AdminBarComponent,
   AppBarComponent,
+  NavDrawerService,
+  NavRailComponent,
   NetworkBannerComponent,
   PublicFooterComponent,
   PublicHeaderComponent,
@@ -86,6 +88,14 @@ export type ContentWidth = 'default' | 'wide' | 'full';
  *   sans `100vh` / `100dvh`, et remplit exactement la fenêtre même avec le bandeau affiché.
  * - Défilement : le document défile, pas les panneaux de la page.
  *
+ * Rail de navigation (UX-S8, proposition 05 A), habillage praticien seulement : `pm-nav-rail`, une
+ * colonne de 56 px sous la barre d'application, positionnée en absolu sur toute la hauteur de la
+ * coquille ; la coquille (classe `with-rail`) décale d'autant tout ce qui suit la barre (bandeaux,
+ * `<main>`, y compris `.wide` et `.full`) : aucune page ne pose ce décalage. Le rail se déplie
+ * par-dessus la page sans la décaler. Sous 900 px, il disparaît et le bouton ☰ de la barre ouvre
+ * le même composant en tiroir (NavDrawerService). Le `<main>` reste un enfant direct et stable de
+ * la coquille (UX-A10) : le rail est un frère, pas un parent.
+ *
  * Rien n'est rendu avant la fin de la première navigation (`navigated`) : l'habillage n'est pas
  * supposé (ni barre praticien ni classe `app-main` sur une page publique), la route déjà activée
  * s'attache une fois à l'outlet, dans l'habillage de sa route. Pages prérendues : le HTML du
@@ -98,6 +108,7 @@ export type ContentWidth = 'default' | 'wide' | 'full';
     RouterOutlet,
     AdminBarComponent,
     AppBarComponent,
+    NavRailComponent,
     NetworkBannerComponent,
     PublicFooterComponent,
     PublicHeaderComponent,
@@ -108,13 +119,18 @@ export type ContentWidth = 'default' | 'wide' | 'full';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.bare]': "navigated() && layout() === 'bare'" },
+  host: {
+    '[class.bare]': "navigated() && layout() === 'bare'",
+    '[class.with-rail]': "navigated() && layout() === 'practitioner'",
+  },
 })
 export class AppComponent {
   private readonly router = inject(Router);
   protected readonly session = inject(SessionStore);
   /** Champ de la barre sur un écran patient : recherche dans le dossier (features/search). */
   protected readonly searchBar = inject(DossierSearchBar);
+  /** Tiroir de navigation sous 900 px (bouton ☰, Ctrl+B quand le rail est masqué). */
+  protected readonly navDrawer = inject(NavDrawerService);
   private readonly baseHref = inject(PlatformLocation).getBaseHrefFromDOM();
 
   protected readonly locale = toAppLocale(inject(LOCALE_ID));
