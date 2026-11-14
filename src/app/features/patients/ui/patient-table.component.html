@@ -302,46 +302,41 @@
 <ul class="cards" [class.refreshing]="refreshing()">
   @for (row of view(); track row.patient.id) {
     <li [class.archived]="row.archived">
-      <!-- Nom accessible = le nom seul, comme le lien de la ligne ; la seconde ligne et le drapeau
-           décrivent le lien (aria-describedby) au lieu d'allonger son nom. -->
-      <a
-        class="row-link card-link"
-        [routerLink]="row.link"
-        [attr.aria-label]="cardName(row)"
-        [attr.aria-describedby]="cardDescribedBy(row)"
-      >
+      <!-- Comme la ligne du tableau : le lien porte le nom seul (nom accessible = texte visible) et
+           s'étend à toute la carte par son ::after ; la seconde ligne et le drapeau restent lisibles. -->
+      <div class="card">
         <span class="av" [class.dashed]="row.demo" aria-hidden="true">{{ row.initials }}</span>
         <span class="card-body">
           <span class="card-name">
-            @if (row.demo) {
-              <span class="demo-badge">DEMO</span><span class="sr-only"> · </span>
-            }
-            <span class="nm">
-              @for (part of row.name; track $index) {
-                @if (part.match) {
-                  <mark>{{ part.text }}</mark>
-                } @else {
-                  <span>{{ part.text }}</span>
-                }
+            <a class="row-link" [routerLink]="row.link">
+              @if (row.demo) {
+                <span class="demo-badge">DEMO</span><span class="sr-only"> · </span>
               }
-            </span>
+              <span class="nm">
+                @for (part of row.name; track $index) {
+                  @if (part.match) {
+                    <mark>{{ part.text }}</mark>
+                  } @else {
+                    <span>{{ part.text }}</span>
+                  }
+                }
+              </span>
+            </a>
             @if (row.liveMinutes !== null) {
               <span class="chip live">{{ liveShort(row.liveMinutes) }}</span>
             }
           </span>
           @if (row.cardLine) {
-            <span class="sub" [id]="'card-' + row.patient.id + '-sub'">{{ row.cardLine }}</span>
+            <span class="sub">{{ row.cardLine }}</span>
           }
         </span>
         @if (row.flags.length > 0) {
           <span class="chip flag" [attr.title]="row.flags.join(', ')"
             ><span aria-hidden="true">!</span
-            ><span class="sr-only" [id]="'card-' + row.patient.id + '-flag'"
-              >{{ watchLabel }} : {{ row.flags.join(', ') }}</span
-            ></span
+            ><span class="sr-only">{{ watchLabel }} : {{ row.flags.join(', ') }}</span></span
           >
         }
-      </a>
+      </div>
     </li>
   }
 </ul>
