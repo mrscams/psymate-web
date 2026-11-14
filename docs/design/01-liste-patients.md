@@ -2,6 +2,8 @@
 
 > Spécification pour agents (frontend-feature-dev). Maquette : `01-liste-patients.html` / `.png`. Palette : Nordique (voir `Etude-couleurs-Nordique.md`). Document B, écran 1 ; flow 1 « ouvrir le bon patient en moins de 3 secondes ».
 >
+> Mis à jour le 14 novembre 2026 (UX-S7) : la page suit la proposition `propositions-2026-11/01-liste-patients.html` et ses décisions du 14 novembre 2026 (voir « Note UX-S7 » en fin de fiche) ; dix patients par page avec « Précédent / Suivant » au lieu d'« Afficher plus », colonne « Dernière séance » réduite à la date.
+>
 > Mis à jour le 11 novembre 2026 (UX-F1, audit UX du 9 novembre) : source des colonnes précisée (le contrat de la liste ne porte ni séance, ni ressentis, ni situations : synthèse `overview` par patient) ; colonne « Prochaine séance » retirée (agenda hors V1, G Q25) ; maquette HTML corrigée.
 
 ## Objectif
@@ -27,7 +29,7 @@ Le praticien connecté retrouve un patient par la recherche ou en balayant la li
    | Situations actives | nombre · première situation | `overview.activeSituations` |
    | Tags | 2 premiers tags + `+n` | |
    | Action | icône `→` « Ouvrir » (aria-label) | toute la ligne est cliquable (`<a>` englobant) |
-5. **Pied de table** : « Afficher plus » (curseur) ; jamais de pagination numérotée.
+5. **Pied de table** : « n patients affichés » et « ‹ Précédent · Suivant › » (curseur, dix par page, UX-S7) ; jamais de pagination numérotée ni de total.
 6. **État vide** : illustration simple + « Aucun patient ne correspond » + bouton *Effacer les filtres*.
 
 ## Interactions
@@ -63,6 +65,26 @@ Le praticien connecté retrouve un patient par la recherche ou en balayant la li
 - **Source des colonnes (UX-F1)** : `GET /api/patients` ne renvoie ni dernière séance, ni émotions, ni situations ; ces colonnes viennent de la synthèse `overview` de chaque ligne (contrat). Une liste enrichie côté API reste souhaitable (à proposer en tâche API).
 - **Au-delà des premiers patients (UX-F1, comportement livré par UX-B1, à confirmer)** : le web lit la synthèse pour les 20 premières lignes seulement ; au-delà de 20 patients ou d'une page, le tri retombe sur « Dernière modification », les filtres « Aujourd'hui » et « Brouillons » sont désactivés avec une explication et les comptes partiels (« n séances aujourd'hui ») sont masqués. Non dessiné dans la maquette (qui montre 6 patients sur 24).
 - « 24 suivis actifs · 3 séances aujourd'hui », compteurs des filtres, noms et pastilles : valeurs fictives, **ignorer**.
+
+## Note UX-S7 (14 novembre 2026)
+Décisions du 14 novembre 2026, qui corrigent la proposition 01 et font foi :
+1. **Dix patients par page** (`limit=10`), pied « ‹ Précédent · Suivant › » : « Suivant » suit `nextCursor` et empile le curseur courant, « Précédent » dépile ; les deux se grisent en bout ; ni numéros ni total. Tout changement de recherche, de filtre (filtres rapides compris), de tri ou du mode archivés revient à la première page et vide la pile ; après un archivage ou une restauration, la page affichée est relue (et recule d'une page si elle s'est vidée). Remplace « Afficher plus » (point 5 ci-dessus).
+2. **Dernière séance : la date seule** (« 5 nov. », année si autre que l'année en cours), puce « en cours · n min » si une séance est ouverte, « — » sans séance ; ni modalité ni durée relative.
+3. **Archivés** : « Afficher les archivés » lit `GET /api/patients?archived=true` (titre « Patients archivés », bouton « Revenir aux actifs ») ; archivage `DELETE /api/patients/{id}` depuis le menu de la ligne (nom à retaper, comme la fiche), restauration `POST …/restore`.
+4. **Aucun chiffre que le serveur ne sert pas** : pas de sous-titre « 24 suivis actifs · 3 séances aujourd'hui », filtres rapides sans compte, bande « Aujourd'hui » sans compteur ; le tri « Dernière séance » s'applique à la page affichée (le serveur trie par nom, création, modification).
+
+Ce qui est livré : en pleine largeur (`data.contentWidth: 'full'`, marges 20 / 24 / 40 px, 16 px sous 600 px) ; bande « Aujourd'hui » (séance ouverte : « Reprendre » ; clôturée aujourd'hui : « Compte rendu » si le compte rendu est vide, sinon « Ouvrir ») ; rangée filtre · Tous / Aujourd'hui / À surveiller / Brouillons · « Trier par » Nom (défaut), Création, Modification, Dernière séance (`patients.sort`) ; colonnes Patient · Dernière séance · Depuis la séance · Ressentis · 30 j · Situations · Attention, actions au survol et au focus (✎ Fiche, … Ouvrir, Fiche, Exporter, Archiver / Restaurer) ; sous 600 px une carte par patient. Chaque patient de la page reçoit sa projection (dix `GET /overview` en parallèle, mises en cache par patient et version de fiche le temps de la visite).
+
+Écarts constatés (maquette ↔ contrat) :
+- **Filtre « par nom ou tag »** : `q` ne porte que sur le nom affiché ; « #sommeil » dans le champ part en paramètre `tag`. Le menu « Tags ▾ » disparaît (absent de la maquette).
+- **Filtres rapides et tri « Dernière séance »** : appliqués à la page affichée ; quand la liste a plusieurs pages et que l'un d'eux est actif, le pied le dit (« Filtre et tri appliqués à cette page »).
+- **« Depuis la séance »** : nombre d'entrées de `sinceLastSession.entries` (20 au plus au contrat, « 20+ » au plafond) et ressenti le plus intense parmi elles, intensité lue dans `feelings.points` (fenêtre de 30 jours) ; sans séance clôturée, le contrat renvoie les 20 dernières entrées.
+- **Courbe « Ressentis · 30 j »** : `trend.points.averageIntensity` (moyenne glissante sur 7 jours, un point par jour), jours sans ressenti sautés ; en pointillés sous 3 ressentis ; émotion dominante et flèche ↑ ↓ = d'après `emotions.top[0].delta`.
+- **« compte rendu à écrire »** : séance la plus récente clôturée (`closedAt`) avec un compte rendu vide ; la séance d'accueil (non clôturée) n'en déclenche pas. « sans séance depuis 35 j » de la maquette n'est pas repris (règle non servie par le contrat, maquette : « later contract »).
+- **Séance ouverte** : `drafts.openSession` (la séance d'accueil a `closedAt` nul sans être ouverte).
+- **Cache des projections** : la liste ne porte pas `clinical_rev` ; la clé est le patient et `currentVersion` de sa fiche, et le cache est vidé à chaque arrivée sur la liste et après chaque écriture.
+- **Mobile** : comme la maquette `.phone`, ni « Brouillons » ni tri sous 600 px, « Nouveau patient » en barre basse.
+- **Tirets et textes pâles** : `text-secondary` au lieu de `text-disabled` de la maquette (contraste AA) ; « séance » en `success` sur `success-bg` (teinte `session-tint` absente des tokens, comme UX-S3).
 
 ## Hors périmètre V1
 Tri par score IA, colonnes personnalisables, export CSV.

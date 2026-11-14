@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -8,7 +9,6 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
 
 import { subjectLabel, SubjectVocabulary } from '../../../core/i18n';
@@ -21,48 +21,61 @@ import {
 } from '../../../shared/ui';
 import { isRefreshing, stateKind } from '../../../shared/util';
 import { ShortcutsHelp } from '../../patient-shell';
-import { ACTIVITY_LIMIT, PatientView } from '../data/patient.model';
+import { PatientExportStore } from '../data/patient-export.store';
+import { PatientView } from '../data/patient.model';
 import { PatientListStore } from '../data/patient-list.store';
-import { TagStore } from '../data/tag.store';
+import { exportErrorText } from '../ui/export-menu.component';
 import { OnboardingComponent } from '../ui/onboarding.component';
-import { quickFilterLabel, RESTORE_LABEL } from '../ui/patient-labels';
+import {
+  archivedMessage,
+  quickFilterLabel,
+  RESTORE_LABEL,
+  restoredMessage,
+} from '../ui/patient-labels';
 import { PatientFiltersComponent } from '../ui/patient-filters.component';
-import { PatientTableComponent } from '../ui/patient-table.component';
+import { PatientTableComponent, RowExport } from '../ui/patient-table.component';
+import { PatientTodayComponent } from '../ui/patient-today.component';
+import { saveFile } from '../ui/save-file';
 
 /** Attente avant d'envoyer le filtre (fiche 01 : debounce 250 ms). */
 export const FILTER_DEBOUNCE_MS = 250;
 
+/** Rafraîchissement des minutes « en séance · n min ». */
+export const CLOCK_TICK_MS = 30_000;
+
 /**
- * /patients (fiche 01, maquette 01, B4 écran 1, UX-B1) : titre et compteur (« 3 suivis actifs ·
- * 1 séance aujourd'hui »), « Afficher les archivés », filtre, tri, filtres rapides et menu des tags,
- * tableau avec résumé d'activité, pied « n patients affichés sur N · ↑↓ choisir · Entrée ouvrir ·
- * N nouveau », « Afficher plus » par curseur, légende des pastilles. Raccourcis : N ouvre la
+ * /patients (fiche 01, proposition 01, UX-S7, décisions du 14 novembre 2026), en pleine largeur :
+ * en-tête « Mes patients » sans sous-titre chiffré, « Afficher les archivés » (« Revenir aux
+ * actifs ») et « Nouveau patient » ; bande « Aujourd'hui » quand la page compte une séance ouverte
+ * ou clôturée aujourd'hui ; rangée filtre · filtres rapides sans compte · tri ; tableau de dix
+ * patients et pied « n patients affichés · ‹ Précédent · Suivant › ». Raccourcis : N ouvre la
  * création, / focalise le filtre, ↓ descend du filtre au tableau. Trois états par pm-state ; une
- * erreur de rechargement laisse la liste précédente affichée avec un bandeau ; un résumé en échec
+ * erreur de rechargement laisse la page précédente affichée avec un bandeau ; un résumé en échec
  * laisse sa ligne et propose « Réessayer ».
  * Première connexion (B3 flux 1, planche 29, M7-03) : tant que la liste sans filtre ne compte que
  * des patients de démonstration (ou aucun), « Créez votre premier patient » et l'accueil en trois
- * étapes s'affichent ; le patient « DEMO · … » se supprime en un clic et une confirmation simple,
- * sans retaper son nom, puis se restaure depuis le toast ou la liste des archivés.
+ * étapes s'affichent ; le patient « DEMO · … » se supprime en un clic et une confirmation simple.
  */
 @Component({
   selector: 'pm-patient-list-page',
   imports: [
-    MatButtonModule,
     RouterLink,
     StateComponent,
     OnboardingComponent,
     PatientFiltersComponent,
     PatientTableComponent,
+    PatientTodayComponent,
   ],
+  providers: [PatientExportStore],
   templateUrl: './patient-list.page.html',
   styleUrl: './patient-list.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PatientListPage {
   protected readonly store = inject(PatientListStore);
-  protected readonly tags = inject(TagStore);
+  private readonly exports = inject(PatientExportStore);
   private readonly router = inject(Router);
+  private readonly document = inject(DOCUMENT);
   private readonly vocabulary = inject(SubjectVocabulary);
   private readonly confirm = inject(ConfirmDialogService);
   private readonly toasts = inject(ToastService);
@@ -72,11 +85,18 @@ export class PatientListPage {
 
   /** Texte du filtre affiché tout de suite ; envoyé au store après la pause de frappe. */
   protected readonly query = signal(this.store.query());
+  /** Instant de référence des minutes de séance, avancé toutes les 30 s. */
+  protected readonly now = signal(new Date());
   private timer: ReturnType<typeof setTimeout> | undefined;
   private destroyed = false;
 
   protected readonly title = computed(() => {
-    const subjects = subjectLabel(this.vocabulary.label(), 'many');
+    const label = this.vocabulary.label();
+    if (this.store.archived()) {
+      const subjects = subjectLabel(label, 'Many');
+      return $localize`:Titre de la liste des patients archivés@@patients.list.archivedTitle:${subjects}:subjects: archivés`;
+    }
+    const subjects = subjectLabel(label, 'many');
     return $localize`:Titre de la liste des patients@@patients.list.title:Mes ${subjects}:subjects:`;
   });
   /** Ce que fait `/` ici, pour l'aide des raccourcis (planche 29 §6). */
@@ -91,7 +111,7 @@ export class PatientListPage {
 
   protected readonly kind = computed(() => stateKind(this.store.page()));
   protected readonly refreshing = computed(() => isRefreshing(this.store.page()));
-  /** Erreur de rechargement alors qu'une liste est déjà affichée : bandeau, liste conservée. */
+  /** Erreur de rechargement alors qu'une page est déjà affichée : bandeau, page conservée. */
   protected readonly staleError = computed(
     () => this.store.page().status === 'error' && this.kind() === null,
   );
@@ -110,13 +130,14 @@ export class PatientListPage {
   );
   /**
    * Écriture refusée depuis la liste : avertissement dans la liste (planche 29 : icône et mot du
-   * niveau), la liste reste affichée. La restauration couvre aussi le toast « Restaurer » posé par
-   * la fiche après un archivage : son message ne parle donc pas de la démo.
+   * niveau), la liste reste affichée.
    */
   protected readonly actionProblem = computed(() => {
     switch (this.store.actionProblem()?.action) {
       case 'removeDemo':
         return $localize`:Avertissement, retrait de la démo refusé@@patients.demo.removeFailed:Le patient de démonstration n'a pas pu être retiré. Réessayez.`;
+      case 'archive':
+        return $localize`:Avertissement, archivage refusé depuis la liste@@patients.list.archiveFailed:L'archivage n'a pas abouti. Réessayez.`;
       case 'restore':
         return $localize`:Avertissement, restauration refusée@@patients.demo.restoreFailed:La restauration n'a pas abouti. Réessayez depuis les archivés.`;
       default:
@@ -125,53 +146,23 @@ export class PatientListPage {
   });
   protected readonly warningLabel = $localize`:Mot du niveau avertissement@@patients.warning.level:Avertissement`;
 
+  /** Pied : « 10 patients affichés » (les lignes de la page affichée, filtre rapide compris). */
+  protected readonly shown = computed(() => {
+    const count = this.store.rows().length;
+    const subjects = subjectLabel(this.vocabulary.label(), count > 1 ? 'many' : 'one');
+    return count > 1
+      ? $localize`:Pied de la liste, plusieurs lignes@@patients.footer.shownMany:${count}:count: ${subjects}:subjects: affichés`
+      : $localize`:Pied de la liste, une ligne ou aucune@@patients.footer.shownOne:${count}:count: ${subjects}:subjects: affiché`;
+  });
+
   /**
-   * Compteur sous le titre (maquette 01) : patients actifs de la liste sans filtre, « plus de » si
-   * une page suivante existe, et séances du jour quand le résumé couvre toute la liste. Absent sur
-   * une liste filtrée (le pied dit combien de lignes sont affichées).
+   * Filtres rapides et tri « Dernière séance » portent sur la page affichée : le pied le dit quand la
+   * liste tient sur plusieurs pages et que l'un d'eux est actif.
    */
-  protected readonly counter = computed(() => {
-    const data = this.store.page().data;
-    if (!data || this.store.filtered()) return null;
-    const total = data.items.length;
-    const more = data.nextCursor !== null;
-    const active = more
-      ? $localize`:Compteur de la liste, liste incomplète@@patients.counter.more:plus de ${total}:count: suivis actifs`
-      : total === 0
-        ? $localize`:Compteur de la liste, aucun patient@@patients.counter.none:0 suivi`
-        : total === 1
-          ? $localize`:Compteur de la liste, un patient@@patients.counter.one:1 suivi actif`
-          : $localize`:Compteur de la liste, plusieurs patients@@patients.counter.many:${total}:count: suivis actifs`;
-    const today = more ? null : this.store.quickCounts().today;
-    if (today === null || total === 0) return active;
-    const sessions =
-      today === 0
-        ? $localize`:Compteur de la liste, aucune séance du jour@@patients.counter.todayNone:aucune séance aujourd'hui`
-        : today === 1
-          ? $localize`:Compteur de la liste, une séance du jour@@patients.counter.todayOne:1 séance aujourd'hui`
-          : $localize`:Compteur de la liste, séances du jour@@patients.counter.todayMany:${today}:count: séances aujourd'hui`;
-    return `${active} · ${sessions}`;
-  });
-
-  /** Pied du tableau : « 3 patients affichés sur 3 · filtrés par « Tous » ». */
-  protected readonly footer = computed(() => {
-    const shown = this.store.rows().length;
-    const total = this.store.items().length;
-    const of = this.store.hasMore() ? `${total}+` : `${total}`;
-    const subjects = subjectLabel(this.vocabulary.label(), shown > 1 ? 'many' : 'one');
-    const tag = this.store.tag();
-    const quick = quickFilterLabel(this.store.effectiveQuick());
-    const filter = tag === null ? quick : `${quick} · #${tag}`;
-    return shown > 1
-      ? $localize`:Pied de la liste, plusieurs lignes@@patients.footer.shownMany:${shown}:shown: ${subjects}:subjects: affichés sur ${of}:total: · filtrés par « ${filter}:filter: »`
-      : $localize`:Pied de la liste, une ligne ou aucune@@patients.footer.shownOne:${shown}:shown: ${subjects}:subjects: affiché sur ${of}:total: · filtré par « ${filter}:filter: »`;
-  });
-
-  /** Au-delà de 20 lignes (ou avec une page suivante), le résumé n'est lu que pour les premières. */
-  protected readonly partialNote = computed(() =>
-    this.store.activityCovered()
-      ? null
-      : $localize`:Pied de la liste, résumé partiel@@patients.footer.partialNote:Résumé d'activité affiché pour les ${ACTIVITY_LIMIT}:limit: premiers patients`,
+  protected readonly pageNote = computed(() =>
+    this.store.paged() && (this.store.quick() !== 'all' || this.store.sort() === 'lastSession')
+      ? $localize`:Aide du pied, filtre ou tri sur la page@@patients.footer.pageNote:Filtre et tri appliqués à cette page.`
+      : null,
   );
 
   /** Résumés en échec : avertissement sous le tableau, avec « Réessayer ». */
@@ -183,31 +174,17 @@ export class PatientListPage {
       : $localize`:Avertissement, résumés non chargés@@patients.activity.failedMany:Le résumé de ${failures}:count: lignes n'a pas pu être chargé.`;
   });
 
-  /** Filtre rapide sans résultat dans la page lue. */
-  protected readonly quickEmptyTitle = computed(() => {
-    const subject = subjectLabel(this.vocabulary.label(), 'one');
-    return $localize`:État vide de la liste filtrée@@patients.empty.filtered:Aucun ${subject}:subject: ne correspond`;
-  });
+  /** Filtre rapide sans résultat dans la page affichée. */
   protected readonly quickEmptyMessage = computed(() => {
-    const filter = quickFilterLabel(this.store.effectiveQuick());
-    if (this.store.hasMore()) {
-      const loaded = this.store.items().length;
-      return $localize`:Phrase du filtre rapide sans résultat, liste incomplète@@patients.quick.emptyPartial:Aucune ligne pour le filtre « ${filter}:filter: » parmi les ${loaded}:loaded: patients chargés : seuls ceux-là sont filtrés.`;
-    }
-    return $localize`:Phrase du filtre rapide sans résultat@@patients.quick.emptyMessage:Aucune ligne pour le filtre « ${filter}:filter: ».`;
+    const filter = quickFilterLabel(this.store.quick());
+    return this.store.paged()
+      ? $localize`:Phrase du filtre rapide sans résultat, plusieurs pages@@patients.quick.emptyPaged:Aucune ligne pour le filtre « ${filter}:filter: » sur cette page.`
+      : $localize`:Phrase du filtre rapide sans résultat@@patients.quick.emptyMessage:Aucune ligne pour le filtre « ${filter}:filter: ».`;
   });
-  private readonly showAll: StateAction = {
+  protected readonly showAll: StateAction = {
     label: $localize`:Action du filtre rapide sans résultat@@patients.quick.showAll:Afficher tous`,
-    handler: () => this.store.setQuick('all'),
+    handler: () => void this.store.setQuick('all'),
   };
-  private readonly loadMoreAction: StateAction = {
-    label: $localize`:Action du filtre rapide sans résultat, liste incomplète@@patients.quick.loadMore:Charger la suite`,
-    handler: () => void this.store.loadMore(),
-  };
-  /** Liste incomplète : charger la suite ; sinon revenir à « Tous ». */
-  protected readonly quickEmptyAction = computed<StateAction>(() =>
-    this.store.hasMore() ? this.loadMoreAction : this.showAll,
-  );
   protected readonly emptyAction = computed<StateAction>(() =>
     this.store.filtered()
       ? {
@@ -230,7 +207,6 @@ export class PatientListPage {
     // de son état une fois cette vérification faite.
     void this.store.load();
     this.query.set(this.store.query());
-    void this.tags.load();
     // Après le premier rendu : la barre d'application inscrit sa propre touche / dans un effect
     // (posé en même temps que la page à l'arrivée depuis la connexion) ; la dernière inscription
     // l'emporte, et c'est le filtre de la liste qui doit répondre ici (fiche 01).
@@ -243,10 +219,12 @@ export class PatientListPage {
         shortcuts.register('/', () => this.filters().focus(), this.filterShortcutLabel()),
       );
     });
+    const clock = setInterval(() => this.now.set(new Date()), CLOCK_TICK_MS);
     inject(DestroyRef).onDestroy(() => {
       this.destroyed = true;
       releases.forEach((release) => release());
       clearTimeout(this.timer);
+      clearInterval(clock);
     });
   }
 
@@ -261,7 +239,7 @@ export class PatientListPage {
     clearTimeout(this.timer);
     await this.store.setQuery(this.query());
     const first = this.store.rows()[0]?.patient;
-    if (first) await this.router.navigate(['/patients', first.id, 'overview']);
+    if (first) await this.router.navigate(['/patients', first.id]);
   }
 
   /** ↓ dans le filtre : première ligne du tableau (↑ ↓ ensuite, Entrée ouvre). */
@@ -285,8 +263,48 @@ export class PatientListPage {
   }
 
   /**
+   * « Archiver » (menu d'une ligne) : la confirmation de la fiche (nom à retaper), archivage puis
+   * relecture de la page ; toast « Restaurer » (10 s), sinon restauration depuis les archivés.
+   */
+  protected async archive(patient: PatientView): Promise<void> {
+    const subject = subjectLabel(this.vocabulary.label(), 'one');
+    const confirmed = await this.confirm.confirm({
+      title: $localize`:Titre de la confirmation d'archivage@@patients.archive.confirmTitle:Archiver ${patient.displayName}:name: ?`,
+      description: $localize`:Explication de l'archivage@@patients.archive.confirmText:Le dossier disparaît de la liste ; rien n'est supprimé et vous pourrez le restaurer.`,
+      confirmLabel: $localize`:Bouton de confirmation d'archivage@@patients.archive.confirm:Archiver ce ${subject}:subject:`,
+      destructive: true,
+      confirmWord: patient.displayName,
+    });
+    if (!confirmed || !(await this.store.archive(patient.id))) return;
+    this.toasts.show({
+      level: 'info',
+      message: archivedMessage(patient.displayName, patient.pronoun),
+      durationMs: 10_000,
+      action: { label: RESTORE_LABEL(), handler: () => void this.restore(patient) },
+    });
+  }
+
+  /** « Restaurer » (menu d'une ligne archivée, toast) : POST /restore, puis relecture de la page. */
+  protected async restore(patient: PatientView): Promise<void> {
+    if (await this.store.restore(patient.id)) {
+      this.toasts.success(restoredMessage(patient.displayName, patient.pronoun));
+    }
+  }
+
+  /** « Exporter › PDF / Markdown » (menu d'une ligne) : téléchargement direct, erreur en toast. */
+  protected async exportFile({ patient, format }: RowExport): Promise<void> {
+    const file = await this.exports.exportFile(patient.id, format);
+    if (file) {
+      saveFile(this.document, file);
+      return;
+    }
+    const text = exportErrorText(this.exports.problem());
+    if (text) this.toasts.show({ level: 'warning', message: text });
+  }
+
+  /**
    * « Supprimer la démo » (planche 29) : confirmation simple, sans nom à retaper ; archivage puis
-   * relecture de la liste ; toast « Restaurer » (10 s), sinon restauration depuis les archivés.
+   * relecture de la page ; toast « Restaurer » (10 s), sinon restauration depuis les archivés.
    */
   protected async removeDemo(patient: PatientView): Promise<void> {
     const confirmed = await this.confirm.confirm({
@@ -306,7 +324,7 @@ export class PatientListPage {
     });
   }
 
-  /** « Restaurer » (toast ou ligne archivée) : POST /restore, puis relecture de la liste. */
+  /** « Restaurer » (toast ou ligne archivée de la démo) : POST /restore, puis relecture. */
   protected async restoreDemo(patient: PatientView): Promise<void> {
     if (await this.store.restore(patient.id)) {
       this.toasts.success(

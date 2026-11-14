@@ -26,6 +26,8 @@ export const PATIENTS_ROUTES: Routes = [
     path: '',
     component: PatientListPage,
     title: listTitle,
+    // Proposition 01 (UX-S7) : la liste en pleine largeur, la page pose ses marges (UX-S5).
+    data: { contentWidth: 'full' },
   },
   {
     path: 'nouveau',

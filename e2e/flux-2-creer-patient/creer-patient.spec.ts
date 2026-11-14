@@ -106,7 +106,7 @@ test('créer un patient, le retrouver (marie, marié), modifier le rythme, archi
   // Ouvrir sa fiche, modifier le rythme → « 2 versions », différence dans l'historique.
   // La fiche s'ouvre depuis le menu « … » de la ligne (maquette 01) ; la ligne mène au dossier.
   await page.getByRole('button', { name: "Plus d'actions pour Marie D." }).click();
-  await page.getByRole('menuitem', { name: 'Modifier la fiche de Marie D.' }).click();
+  await page.getByRole('menuitem', { name: 'Fiche', exact: true }).click();
   await expect(page).toHaveURL(/\/fiche$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Modifier la fiche · Marie D.');
   // Méta (maquette 16) : création, séance d'accueil créée par l'API ; versions dans l'encart
@@ -180,9 +180,10 @@ test('afficher les archivés, ouvrir la fiche archivée et la restaurer', async 
     page.getByRole('status').filter({ hasText: 'Créez votre premier patient' }),
   ).toBeVisible();
   await page.getByRole('button', { name: 'Afficher les archivés' }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Patients archivés');
   await expect(patientLink(page, 'Léa M.')).toBeVisible();
   await page.getByRole('button', { name: "Plus d'actions pour Léa M." }).click();
-  await page.getByRole('menuitem', { name: 'Modifier la fiche de Léa M.' }).click();
+  await page.getByRole('menuitem', { name: 'Fiche', exact: true }).click();
   await expect(page.getByText('Ce dossier est archivé')).toBeVisible();
   await expect(page.getByRole('textbox', { name: /Nom affiché/ })).toBeDisabled();
   await expectNoAxeViolations(page);
