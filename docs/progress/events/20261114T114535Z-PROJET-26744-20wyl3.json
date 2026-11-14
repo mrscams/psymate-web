@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-14T11:45:35.590Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "UX-S6 : vue d'ensemble unifiée (proposition 02) en pleine largeur, sélecteur Fenêtre dans l'en-tête, préférence overview.view retirée du client ; lint, tokens, 2052 tests Vitest, build et e2e touchés verts",
+  "notes": "L'outil n'accepte pas l'ID UX-S6 (motif Mxx-yy) : événement sous PROJET. Exception core assumée (core/preferences). Écarts contrat : ni extrait ni émotion dans SinceLastSessionEntryDto ; ni motif, adressée par, rythme dans OverviewFactsDto ; overview.view reste dans le contrat. Commits locaux, ni push ni PR (revue du propriétaire, dépend de UX-S5).",
+  "next": "Revue du propriétaire ; tâche API pour retirer overview.view du contrat",
+  "branch": "claude/ux-s6-vue-ensemble-5a848b",
+  "checkout": "m1-06-patients-cca7bc"
+}
