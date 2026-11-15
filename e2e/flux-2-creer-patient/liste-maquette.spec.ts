@@ -122,7 +122,13 @@ test('maquette 01 : en-tête, bande Aujourd’hui, filtres sans comptes, colonne
   await expect(marieRow.locator('td.last .chip.live')).toHaveText(/^en cours · \d+ min$/);
   await expect(marieRow.locator('td.att .chip.flag')).toHaveText('À surveiller');
   const omarRow = page.getByRole('row').filter({ hasText: 'Omar B.' });
-  const day = new Intl.DateTimeFormat('fr', { day: 'numeric', month: 'short' }).format(new Date());
+  // Le navigateur de test est en Europe/Paris (playwright.config) : même fuseau côté Node,
+  // sinon la comparaison bascule autour de minuit UTC.
+  const day = new Intl.DateTimeFormat('fr', {
+    day: 'numeric',
+    month: 'short',
+    timeZone: 'Europe/Paris',
+  }).format(new Date());
   await expect(omarRow.locator('td.last')).toHaveText(day);
 
   // Patient de démonstration : badge DEMO, avatar pointillé, « Supprimer ».
