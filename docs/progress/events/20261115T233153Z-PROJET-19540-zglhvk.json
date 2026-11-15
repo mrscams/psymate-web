@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-15T23:31:53.709Z",
+  "task": "PROJET",
+  "agent": "claude",
+  "status": "done",
+  "summary": "e2e alignés sur l'API main M11-11 : rendez-vous.md dans le zip d'export, date du jour en Europe/Paris dans la liste",
+  "notes": "CI de la PR 92 (docs seules) rouge : export.spec attendait un seul .md hors patients.md alors que l'API ajoute rendez-vous.md (G Q61) ; liste-maquette formatait la date du jour dans le fuseau de Node (UTC) contre un navigateur en Europe/Paris (bascule à minuit UTC). pied-public instable, passé au second essai, non touché. 8 e2e verts en local contre l'API 0.13.0",
+  "next": "Fusionner puis mettre à jour la branche de la PR 92",
+  "branch": "claude/e2e-api-m11-11",
+  "checkout": "psymate-web"
+}

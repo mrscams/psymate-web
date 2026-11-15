@@ -239,8 +239,11 @@ test.describe('Données et export (fiche 19)', () => {
     const zip = await downloading;
     expect(zip.suggestedFilename()).toMatch(/^export-psymate-\d{8}\.zip$/);
     const names = zipEntries(await content(zip));
+    // patients.md, rendez-vous.md (tous les rendez-vous du praticien, API M11-11, G Q61),
+    // puis .md et .pdf de chaque patient.
     expect(names).toContain('patients.md');
-    const perPatient = names.filter((name) => name !== 'patients.md');
+    expect(names).toContain('rendez-vous.md');
+    const perPatient = names.filter((name) => name !== 'patients.md' && name !== 'rendez-vous.md');
     expect(perPatient.filter((name) => name.endsWith('.md'))).toHaveLength(1);
     expect(perPatient.filter((name) => name.endsWith('.pdf'))).toHaveLength(1);
 
