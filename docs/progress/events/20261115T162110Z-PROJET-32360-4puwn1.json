@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-15T16:21:10.223Z",
+  "task": "PROJET",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "Agenda (fiches 15, 15b) fusionné dans main en squash (PR 86, commit 0a3e627) : rendu sans API sur FullCalendar 6.1.22, correctifs de la revue inclus",
+  "notes": "Grille maison conservée sur la branche locale claude/agenda-rendu-fiche-15, non poussée. L'API (main, M11-02) renvoie déjà des préférences agenda.* : e2e préférences assoupli.",
+  "next": "PR de docs : G Q25, ligne Agenda de CLAUDE.md, README design, fiche 00 §9, couverture-écrans ; puis câblage API quand le contrat l'expose",
+  "pr": "https://github.com/mrscams/psymate-web/pull/86",
+  "branch": "claude/suivi-agenda",
+  "checkout": "psymate-web"
+}
