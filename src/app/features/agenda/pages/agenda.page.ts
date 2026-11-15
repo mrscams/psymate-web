@@ -16,30 +16,39 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 
+import { PreferencesStore } from '../../../core/preferences';
 import { ShortcutService } from '../../../core/shortcuts';
-import { SidePanelService, StateComponent } from '../../../shared/ui';
+import { SidePanelService, StateComponent, ToastService } from '../../../shared/ui';
 import { stateKind } from '../../../shared/util';
-import { AgendaStore } from '../data/agenda.store';
 import {
+  addDays,
   AGENDA_VIEWS,
+  AgendaHours,
   AgendaView,
   Appointment,
-  DEFAULT_VIEW,
+  CreatedAppointments,
   fromIsoDay,
+  inRange,
   isAgendaView,
+  sameDay,
   startOfDay,
   toIsoDay,
 } from '../data/agenda.model';
-import { NewAppointmentData, NewAppointmentPanel } from '../panels/new-appointment.panel';
+import { AgendaStore } from '../data/agenda.store';
+import {
+  NewAppointmentData,
+  NewAppointmentPanel,
+  NewAppointmentResult,
+} from '../panels/new-appointment.panel';
+import { AgendaCalendarComponent, Rescheduled } from '../ui/agenda-calendar.component';
 import { AgendaCalendarsComponent } from '../ui/agenda-calendars.component';
 import {
-  minutesAgoLabel,
+  conflictMessage,
   periodLabel,
   rangeSegments,
   sessionCountLabel,
 } from '../ui/agenda-format';
-import { AgendaCalendarComponent, Rescheduled } from '../ui/agenda-calendar.component';
-import { AppointmentDetailComponent } from '../ui/appointment-detail.component';
+import { AppointmentDetailComponent, problemText } from '../ui/appointment-detail.component';
 import { MiniMonthComponent } from '../ui/mini-month.component';
 
 /** Paramètres de l'URL (fiche 15) : `?view=day|week|month|list&date=yyyy-MM-dd`, `/agenda/rdv/:id`. */
@@ -53,15 +62,18 @@ export const NEW_APPOINTMENT_HOUR = 10;
 /** Rafraîchissement de la ligne de l'heure courante. */
 export const CLOCK_TICK_MS = 60_000;
 
+/** Le toast « n rendez-vous planifiés · Annuler » reste 10 s (fiche 15b). */
+export const UNDO_TOAST_MS = 10_000;
+
 /**
- * /agenda (fiche 15, maquette 15-agenda.html, hors V1 repris le 15 novembre 2026) : barre d'outils
- * (Aujourd'hui, ‹ ›, plage, « semaine 44 · 14 séances », Jour / Semaine / Mois / Liste, état de
- * synchronisation Google, + Rendez-vous), rail gauche (mini-mois, Mes agendas, légende), la vue
- * (grille semaine ou jour, mois, liste) et, à droite, le détail du rendez-vous ouvert. La vue et sa
- * date vivent dans l'URL ; le rendez-vous ouvert dans `/agenda/rdv/:id`. Clavier : Échap ferme le
- * détail, ↑ ↓ passent au rendez-vous précédent / suivant du jour ; double-clic → dossier patient.
- * Sans module `scheduling` (G Q25), les données viennent de agenda.api.ts (démonstration) et les
- * actions du détail (démarrer, déplacer, dupliquer, annuler) attendent l'API : rien n'est écrit.
+ * /agenda (fiche 15, maquette 15-agenda.html, en V1 depuis le 15 novembre 2026) : barre d'outils
+ * (Aujourd'hui, ‹ ›, plage, « semaine 44 · 14 séances », Jour / Semaine / Mois / Liste,
+ * + Rendez-vous), rail gauche (mini-mois, Mes agendas, légende), la vue (grille semaine ou jour,
+ * mois, liste) et, à droite, le détail du rendez-vous ouvert. La vue et sa date vivent dans l'URL
+ * (sans `?view=`, la préférence `agenda.defaultView`) ; le rendez-vous ouvert dans
+ * `/agenda/rdv/:id`. Clavier : Échap ferme le détail, ↑ ↓ passent au rendez-vous précédent /
+ * suivant du jour ; double-clic → dossier patient. Glisser-déposer et étirement → `PATCH` puis
+ * relecture ; la création (panneau 15b) relit la plage et ouvre la première occurrence.
  */
 @Component({
   selector: 'pm-agenda-page',
@@ -85,7 +97,17 @@ export class AgendaPage {
   private readonly shortcuts = inject(ShortcutService);
   private readonly injector = inject(Injector);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly preferences = inject(PreferencesStore);
+  private readonly toasts = inject(ToastService);
   protected readonly locale = inject(LOCALE_ID);
+
+  /** Bornes de la grille et jours travaillés (préférences `agenda.*`, lues seulement). */
+  protected readonly hours = computed<AgendaHours>(() => {
+    const { dayStartHour, dayEndHour, workingDays } = this.preferences.agenda();
+    return { dayStartHour, dayEndHour, workingDays };
+  });
+  /** Vue par défaut seule : l'URL n'est relue que si elle change. */
+  private readonly defaultView = computed(() => this.preferences.agenda().defaultView);
 
   protected readonly views = AGENDA_VIEWS;
   /** Instant courant, avancé chaque minute (ligne de l'heure, « aujourd'hui »). */
@@ -104,8 +126,10 @@ export class AgendaPage {
   constructor() {
     effect(() => {
       const { view, date, id } = this.location();
+      // Sans `?view=`, la vue par défaut du compte (préférence `agenda.defaultView`).
+      const fallback = this.defaultView();
       untracked(() => {
-        void this.store.show(view, date);
+        void this.store.show(view ?? fallback, date);
         this.store.select(id);
       });
     });
@@ -116,7 +140,7 @@ export class AgendaPage {
 
     // Les raccourcis du détail ne valent que détail ouvert : ailleurs, ↑ ↓ font défiler la page.
     effect((onCleanup) => {
-      if (!this.store.selected()) return;
+      if (this.store.detailState() === 'none') return;
       const releases = [
         this.shortcuts.register('Escape', () => void this.closeDetail(), this.escapeHelp),
         this.shortcuts.register('ArrowDown', () => this.selectSibling(1), this.arrowsHelp),
@@ -172,31 +196,6 @@ export class AgendaPage {
         };
     }
   });
-  /** État de synchronisation : texte et niveau, jamais la couleur seule (fiche 15 §2). */
-  protected readonly sync = computed(() => {
-    const sync = this.store.sync();
-    if (!sync) return null;
-    switch (sync.state) {
-      case 'ok': {
-        const ago = minutesAgoLabel(sync.minutesAgo, this.locale);
-        return {
-          level: 'ok' as const,
-          text: $localize`:État de synchronisation Google, à jour@@agenda.sync.ok:Google Agenda synchronisé · ${ago}:ago:`,
-        };
-      }
-      case 'pending':
-        return {
-          level: 'pending' as const,
-          text: $localize`:État de synchronisation Google, en attente@@agenda.sync.pending:Google Agenda · synchronisation en attente`,
-        };
-      default:
-        return {
-          level: 'error' as const,
-          text: $localize`:État de synchronisation Google, erreur@@agenda.sync.error:Google Agenda · erreur, reconnecter`,
-        };
-    }
-  });
-
   protected viewLabel(view: AgendaView): string {
     switch (view) {
       case 'day':
@@ -265,16 +264,32 @@ export class AgendaPage {
   }
 
   /** Ferme le détail et rend le focus au rendez-vous dans la grille. */
-  protected async closeDetail(): Promise<void> {
+  /**
+   * Ferme le détail et rend le focus au rendez-vous dans la grille ; s'il n'y est plus (annulé),
+   * au premier rendez-vous visible du même jour, sinon à la zone de la vue.
+   */
+  protected async closeDetail(from: Appointment | null = this.store.selected()): Promise<void> {
     const id = this.store.selectedId();
     if (!id) return;
+    const day = from ? new Date(from.startsAt) : null;
     await this.router.navigate(['/agenda'], { queryParamsHandling: 'preserve' });
-    afterNextRender(() => this.focusEvent(id), { injector: this.injector });
+    afterNextRender(() => this.restoreFocus(id, day), { injector: this.injector });
   }
 
-  private focusEvent(id: string): void {
+  private restoreFocus(id: string, day: Date | null): void {
+    if (this.focusEvent(id)) return;
+    const sibling = day
+      ? this.store.appointments().find((item) => sameDay(new Date(item.startsAt), day))
+      : undefined;
+    if (sibling && this.focusEvent(sibling.id)) return;
+    this.host.nativeElement.querySelector<HTMLElement>('section.view')?.focus();
+  }
+
+  private focusEvent(id: string): boolean {
     const selector = `a.fc-event[href$="/rdv/${CSS.escape(id)}"], a.fc-event[href*="/rdv/${CSS.escape(id)}?"]`;
-    this.host.nativeElement.querySelector<HTMLElement>(selector)?.focus();
+    const target = this.host.nativeElement.querySelector<HTMLElement>(selector);
+    target?.focus();
+    return target !== null;
   }
 
   /** ↑ ↓ : le rendez-vous précédent / suivant du même jour, dans l'ordre de la grille. */
@@ -289,9 +304,22 @@ export class AgendaPage {
     void this.router.navigate(['/agenda', 'rdv', next.id], { queryParamsHandling: 'preserve' });
   }
 
-  /** Glisser-déposer ou redimensionnement dans la grille : le store garde les nouvelles bornes. */
-  protected onRescheduled(change: Rescheduled): void {
-    this.store.reschedule(change.id, change.startsAt, change.endsAt);
+  /**
+   * Glisser-déposer ou étirement : `PATCH { startsAt, durationMin }` tout de suite, puis relecture.
+   * Un chevauchement est signalé (jamais bloquant) ; en erreur, la relecture remet le rendez-vous
+   * à sa place et le toast dit pourquoi.
+   */
+  protected async onRescheduled(change: Rescheduled): Promise<void> {
+    const durationMin = Math.round(
+      (new Date(change.endsAt).getTime() - new Date(change.startsAt).getTime()) / 60_000,
+    );
+    const result = await this.store.move(change.id, change.startsAt, durationMin);
+    if (!result.ok) {
+      this.toasts.warning(problemText(result.problem));
+      return;
+    }
+    const conflicts = conflictMessage(result.conflicts, this.locale);
+    if (conflicts) this.toasts.info(conflicts);
   }
 
   /** Double-clic sur un rendez-vous : le dossier du patient. */
@@ -301,16 +329,96 @@ export class AgendaPage {
 
   /** Clic sur un créneau vide, ou « + Rendez-vous » : le panneau 15b (520 px, maquette). */
   protected newAppointment(slot?: Date): void {
-    const start = slot ?? this.defaultSlot();
     const selected = this.store.selected();
-    const data: NewAppointmentData = {
-      slot: start,
-      patient: selected?.patient ?? null,
-      lastSessionAt: selected?.preparation.lastSessionAt ?? null,
-      appointments: this.store.appointments(),
-      busy: this.store.busy(),
-    };
-    this.panels.open(NewAppointmentPanel, { data, width: 520 });
+    this.openPanel({
+      slot: slot ?? this.defaultSlot(),
+      patient: !slot && selected ? this.optionOf(selected) : null,
+    });
+  }
+
+  /** « Dupliquer » : le panneau prérempli, même créneau une semaine plus tard. */
+  protected duplicate(appointment: Appointment): void {
+    this.openPanel({
+      slot: addDays(new Date(appointment.startsAt), 7),
+      patient: this.optionOf(appointment),
+      prefill: {
+        modality: appointment.modality,
+        durationMin: appointment.durationMin,
+        planningNote: appointment.planningNote,
+      },
+    });
+  }
+
+  private optionOf(appointment: Appointment) {
+    const { id, displayName, age } = appointment.patient;
+    return { id, displayName, age };
+  }
+
+  /**
+   * Le panneau prévient la page dès que la création réussit (`onCreated`), même s'il a été fermé
+   * pendant l'envoi : la plage est relue et le toast proposé dans tous les cas.
+   */
+  private openPanel(data: Omit<NewAppointmentData, 'onCreated'>): void {
+    this.panels.open<NewAppointmentPanel, NewAppointmentData, NewAppointmentResult>(
+      NewAppointmentPanel,
+      { data: { ...data, onCreated: (created) => void this.afterCreate(created) }, width: 520 },
+    );
+  }
+
+  /**
+   * Après une création : relecture (ou navigation vers la plage de la première occurrence si elle
+   * n'est pas affichée), première occurrence ouverte, toast « n rendez-vous planifiés · Annuler »
+   * (10 s) dont l'action annule la série, ou le rendez-vous seul, puis relit.
+   */
+  private async afterCreate(created: CreatedAppointments): Promise<void> {
+    const first = created.appointments[0];
+    if (!first) return;
+    const start = new Date(first.startsAt);
+    if (inRange(this.store.range(), start)) {
+      await this.store.refresh();
+      await this.router.navigate(['/agenda', 'rdv', first.id], { queryParamsHandling: 'preserve' });
+    } else {
+      await this.router.navigate(['/agenda', 'rdv', first.id], {
+        queryParams: { [VIEW_PARAM]: this.store.view(), [DATE_PARAM]: toIsoDay(start) },
+      });
+    }
+    this.toasts.show({
+      level: 'success',
+      message: this.createdMessage(created),
+      durationMs: UNDO_TOAST_MS,
+      action: {
+        label: $localize`:Action Annuler du toast de création@@agenda.toast.undo:Annuler`,
+        handler: () => void this.undoCreate(created),
+      },
+    });
+  }
+
+  /** « 4 rendez-vous planifiés », « Rendez-vous planifié », « …, 1 chevauchement ». */
+  private createdMessage(created: CreatedAppointments): string {
+    const count = created.appointments.length;
+    const base =
+      count > 1
+        ? $localize`:Toast après une création, plusieurs rendez-vous@@agenda.toast.createdMany:${count}:count: rendez-vous planifiés`
+        : $localize`:Toast après une création, un rendez-vous@@agenda.toast.createdOne:Rendez-vous planifié`;
+    const overlaps = new Set(created.conflicts.map((item) => item.appointmentId)).size;
+    if (overlaps === 0) return base;
+    return overlaps > 1
+      ? $localize`:Toast après une création avec chevauchements@@agenda.toast.createdOverlaps:${base}:base:, ${overlaps}:count: chevauchements`
+      : $localize`:Toast après une création avec un chevauchement@@agenda.toast.createdOverlap:${base}:base:, 1 chevauchement`;
+  }
+
+  private async undoCreate(created: CreatedAppointments): Promise<void> {
+    const first = created.appointments[0];
+    const result = first.seriesId
+      ? await this.store.cancelSeries(first.seriesId)
+      : await this.store.cancel(first.id);
+    if (result.ok) {
+      this.toasts.info(
+        $localize`:Toast après l'annulation d'une création@@agenda.toast.undone:Planification annulée.`,
+      );
+    } else {
+      this.toasts.warning(problemText(result.problem));
+    }
   }
 
   private defaultSlot(): Date {
@@ -319,11 +427,12 @@ export class AgendaPage {
     return slot;
   }
 
-  private readUrl(): { view: AgendaView; date: Date; id: string | null } {
+  /** Vue (null sans `?view=` valide : la préférence décide), date et rendez-vous de l'URL. */
+  private readUrl(): { view: AgendaView | null; date: Date; id: string | null } {
     const query = this.route.snapshot.queryParamMap;
     const view = query.get(VIEW_PARAM);
     const date = fromIsoDay(query.get(DATE_PARAM)) ?? startOfDay(new Date());
     const id = this.route.snapshot.firstChild?.paramMap.get(APPOINTMENT_PARAM) ?? null;
-    return { view: isAgendaView(view) ? view : DEFAULT_VIEW, date, id };
+    return { view: isAgendaView(view) ? view : null, date, id };
   }
 }

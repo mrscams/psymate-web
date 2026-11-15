@@ -3,9 +3,10 @@ import { AppLocale, SubjectLabel } from '../i18n';
 import { ThemePreference } from '../theme';
 
 /**
- * Les 8 clés lues et écrites par le client (fiche 14), aux noms pointés du contrat (schéma
- * Preferences). UX-S6 (14 novembre 2026) : `overview.view` (Simple / Complète) n'est plus lue ni
- * écrite, la vue d'ensemble n'a plus qu'une vue ; le champ reste dans le contrat.
+ * Les 12 clés lues par le client (fiche 14), aux noms pointés du contrat (schéma Preferences).
+ * UX-S6 (14 novembre 2026) : `overview.view` (Simple / Complète) n'est plus lue ni écrite, la vue
+ * d'ensemble n'a plus qu'une vue ; le champ reste dans le contrat. Les quatre clés `agenda.*`
+ * (contrat 0.11.1+, fiche 15) sont lues par l'agenda, qui ne les écrit pas.
  */
 export interface Preferences {
   'overview.window': '30d' | '90d' | '12m';
@@ -17,6 +18,13 @@ export interface Preferences {
   'entries.defaultVisibility': 'clinical' | 'private';
   /** Minutes, entier de 15 à 180. */
   'sessions.defaultDurationMin': number;
+  /** Première heure de la grille de l'agenda, entier de 0 à 23. */
+  'agenda.dayStartHour': number;
+  /** Dernière heure de la grille, entier de 1 à 24, après `agenda.dayStartHour`. */
+  'agenda.dayEndHour': number;
+  /** Jours travaillés, 1 (lundi) à 7 (dimanche), sans doublon, au moins un. */
+  'agenda.workingDays': number[];
+  'agenda.defaultView': 'day' | 'week' | 'month' | 'list';
 }
 
 export type PreferenceKey = keyof Preferences;
@@ -30,6 +38,10 @@ export const PREFERENCE_KEYS: readonly PreferenceKey[] = [
   'entryTypes.medicationVisible',
   'entries.defaultVisibility',
   'sessions.defaultDurationMin',
+  'agenda.dayStartHour',
+  'agenda.dayEndHour',
+  'agenda.workingDays',
+  'agenda.defaultView',
 ];
 
 export const SESSION_DURATION_MIN = 15;
@@ -43,6 +55,7 @@ const ENUMS: { [K in PreferenceKey]?: readonly Preferences[K][] } = {
   locale: ['fr', 'en'],
   'vocabulary.subjectLabel': ['patient', 'client'],
   'entries.defaultVisibility': ['clinical', 'private'],
+  'agenda.defaultView': ['day', 'week', 'month', 'list'],
 };
 
 /**
@@ -59,6 +72,10 @@ export function defaultPreferences(profession: Profession | null): Preferences {
     'entryTypes.medicationVisible': profession === 'psychiatrist',
     'entries.defaultVisibility': 'clinical',
     'sessions.defaultDurationMin': 60,
+    'agenda.dayStartHour': 8,
+    'agenda.dayEndHour': 19,
+    'agenda.workingDays': [1, 2, 3, 4, 5, 6],
+    'agenda.defaultView': 'week',
   };
 }
 
@@ -77,6 +94,17 @@ export function isValidPreference<K extends PreferenceKey>(
         value >= SESSION_DURATION_MIN &&
         value <= SESSION_DURATION_MAX
       );
+    case 'agenda.dayStartHour':
+      return isIntegerIn(value, 0, 23);
+    case 'agenda.dayEndHour':
+      return isIntegerIn(value, 1, 24);
+    case 'agenda.workingDays':
+      return (
+        Array.isArray(value) &&
+        value.length > 0 &&
+        value.every((day) => isIntegerIn(day, 1, 7)) &&
+        new Set(value).size === value.length
+      );
     default: {
       const allowed = ENUMS[key] as readonly unknown[] | undefined;
       return allowed !== undefined && allowed.includes(value);
@@ -84,9 +112,14 @@ export function isValidPreference<K extends PreferenceKey>(
   }
 }
 
+function isIntegerIn(value: unknown, min: number, max: number): boolean {
+  return typeof value === 'number' && Number.isInteger(value) && value >= min && value <= max;
+}
+
 /**
- * Complète un objet quelconque (réponse serveur, cache local) en 8 préférences valides : une clé
- * absente, inconnue ou hors domaine prend le défaut. C'est ce qui rend le cache tolérant à la
+ * Complète un objet quelconque (réponse serveur, cache local) en 12 préférences valides : une clé
+ * absente, inconnue ou hors domaine prend le défaut ; une fin de journée de l'agenda qui ne suit
+ * pas son début reprend les deux défauts. C'est ce qui rend le cache tolérant à la
  * corruption et le client indifférent à une clé que le serveur ajouterait.
  */
 export function completePreferences(
@@ -102,5 +135,10 @@ export function completePreferences(
     const value = source[key];
     if (isValidPreference(key, value)) result[key] = value;
   }
-  return result as unknown as Preferences;
+  const prefs = result as unknown as Preferences;
+  if (prefs['agenda.dayEndHour'] <= prefs['agenda.dayStartHour']) {
+    prefs['agenda.dayStartHour'] = defaults['agenda.dayStartHour'];
+    prefs['agenda.dayEndHour'] = defaults['agenda.dayEndHour'];
+  }
+  return prefs;
 }

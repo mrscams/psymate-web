@@ -4,35 +4,53 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import { PreferencesStore } from '../../../core/preferences';
-import { demoAgenda } from '../data/agenda.fixtures';
-import { fromIsoDay, rangeFor } from '../data/agenda.model';
-import { NewAppointmentData, NewAppointmentPanel } from './new-appointment.panel';
+import { AgendaApi } from '../data/agenda.api';
+import { appointmentOf } from '../testing/agenda.testing';
+import {
+  INPUT_DEBOUNCE_MS,
+  NewAppointmentData,
+  NewAppointmentPanel,
+} from './new-appointment.panel';
 
-const week = demoAgenda(rangeFor('week', fromIsoDay('2026-10-26')!));
-const marie = week.appointments.find((item) => item.patient.displayName === 'Marie D.')!;
+const wait = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms));
 
-async function settle(fixture: ComponentFixture<unknown>): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve));
-  await fixture.whenStable();
-  fixture.detectChanges();
+async function settle(fixture: ComponentFixture<unknown>, ms = 0): Promise<void> {
+  await wait(ms);
+  for (let i = 0; i < 2; i++) {
+    await wait();
+    await fixture.whenStable();
+    fixture.detectChanges();
+  }
 }
 
 function text(el: Element | null | undefined): string {
   return (el?.textContent ?? '').replace(/\s+/g, ' ').trim();
 }
 
-async function render(overrides: Partial<NewAppointmentData> = {}) {
-  const slot = new Date(2026, 10, 7, 10, 0);
+const marie = { id: 'p-1', displayName: 'Marie D.', age: 34 };
+
+const freeBusyEmpty = { conflicts: [], previous: null, next: null };
+
+async function render(
+  overrides: Partial<NewAppointmentData> = {},
+  api: Record<string, unknown> = {},
+) {
   const data: NewAppointmentData = {
-    slot,
-    patient: marie.patient,
-    lastSessionAt: new Date(2026, 9, 31, 10, 0).toISOString(),
-    // Le créneau cliqué est vide : la séance de Marie D. de la démonstration n'y est pas encore.
-    appointments: demoAgenda(rangeFor('week', slot)).appointments.filter(
-      (item) => item.patient.displayName !== 'Marie D.',
-    ),
-    busy: demoAgenda(rangeFor('week', slot)).busy,
+    slot: new Date(2026, 10, 7, 10, 0),
+    patient: null,
     ...overrides,
+  };
+  const mock = {
+    searchPatients: vi
+      .fn()
+      .mockResolvedValue([marie, { id: 'p-2', displayName: 'Marc A.', age: null }]),
+    patientAppointments: vi.fn().mockResolvedValue({
+      appointments: [appointmentOf({ startsAt: new Date(2026, 10, 12, 9, 0).toISOString() })],
+      defaults: { durationMin: 45, modality: 'phone', rhythm: 'toutes les 2 semaines' },
+    }),
+    freeBusy: vi.fn().mockResolvedValue(freeBusyEmpty),
+    create: vi.fn(),
+    ...api,
   };
   const dialogRef = { close: vi.fn() };
   TestBed.configureTestingModule({
@@ -42,105 +60,218 @@ async function render(overrides: Partial<NewAppointmentData> = {}) {
       { provide: LOCALE_ID, useValue: 'fr' },
       { provide: DIALOG_DATA, useValue: data },
       { provide: DialogRef, useValue: dialogRef },
+      { provide: AgendaApi, useValue: mock },
       { provide: PreferencesStore, useValue: { defaultDurationMin: () => 60 } },
     ],
   });
   const fixture = TestBed.createComponent(NewAppointmentPanel);
-  await settle(fixture);
+  document.body.append(fixture.nativeElement);
+  await settle(fixture, INPUT_DEBOUNCE_MS + 50);
   const el = fixture.nativeElement as HTMLElement;
-  const select = (label: string) =>
-    [...el.querySelectorAll<HTMLSelectElement>('select')].find(
-      (node) =>
-        el.querySelector(`label[for="${node.id}"]`)?.textContent?.includes(label) ||
-        node.getAttribute('aria-label') === label,
-    )!;
-  return { fixture, el, dialogRef, select };
+  const select = (id: string) => el.querySelector<HTMLSelectElement>(`#field-${id}`)!;
+  const choose = async (node: HTMLSelectElement, label: string) => {
+    node.value = [...node.options].find((o) => text(o).includes(label))!.value;
+    node.dispatchEvent(new Event('change'));
+    await settle(fixture);
+  };
+  const type = async (node: HTMLInputElement, value: string, ms = 0) => {
+    node.value = value;
+    node.dispatchEvent(new Event('input'));
+    await settle(fixture, ms);
+  };
+  return { fixture, el, dialogRef, api: mock, select, choose, type };
 }
 
 describe('NewAppointmentPanel (fiche 15b)', () => {
-  it('maquette : titre, créneau cliqué, carte patient, fin et voisinage, modalité, aperçu Google, pied', async () => {
-    const { el } = await render();
+  afterEach(() => document.querySelectorAll('pm-new-appointment-panel').forEach((n) => n.remove()));
+
+  it('créneau sans patient : recherche en focus initial, durée = préférence, pas de bloc Google', async () => {
+    const { el, select } = await render();
     expect(text(el.querySelector('.title'))).toBe('Nouveau rendez-vous');
     expect(text(el.querySelector('.subtitle'))).toBe('Créneau cliqué : samedi 7 novembre, 10:00');
-    expect(text(el.querySelector('.patient-card .name'))).toBe('Marie D.');
-    expect(text(el.querySelector('.patient-card .meta'))).toBe(
-      '34 ans · dernière séance le 31 oct. · rythme toutes les 1 à 2 semaines',
-    );
-    expect(text(el.querySelector('.rhythm'))).toBe(
-      'Le créneau respecte le rythme habituel (7 jours après le 31 oct.).',
-    );
-    expect(el.querySelector('.rhythm')?.classList.contains('ok')).toBe(true);
-    expect(el.querySelector<HTMLInputElement>('input.mono')?.value).toBe('10:00');
-    expect(text(el.querySelector('.slot + .hint'))).toBe(
-      'Se termine à 10:50 · suivi de Théo B. à 11:30, pas de chevauchement.',
-    );
+    expect(el.querySelector('.patient-card')).toBeNull();
+    const search = el.querySelector<HTMLInputElement>('#field-patientId')!;
+    expect(search.getAttribute('role')).toBe('combobox');
+    expect(search.hasAttribute('cdkfocusinitial')).toBe(true);
+    expect(text(select('duration').selectedOptions[0])).toBe('60 min');
+    expect(el.textContent).not.toContain('Google');
     const segments = [...el.querySelectorAll<HTMLButtonElement>('.segment')];
     expect(segments.map((b) => text(b))).toEqual(['Cabinet', 'Visio', 'Téléphone']);
-    expect(segments.map((b) => b.getAttribute('aria-pressed'))).toEqual(['true', 'false', 'false']);
-    expect(text(el.querySelector('.google-title'))).toBe(
-      'Sera copié dans Google Agenda « PsyMate »',
-    );
-    expect(text(el.querySelector('.preview .mono'))).toBe('Séance · M. D.');
-    expect(text(el.querySelector('.preview-text span:last-child'))).toBe(
-      'sam. 7 nov. · 10:00–10:50 · Cabinet',
-    );
-    expect(el.querySelector('.warning')).toBeNull();
     expect(text(el.querySelector('.submit'))).toBe('Planifier le rendez-vous');
-    expect(text(el.querySelector('.confirm'))).toBe('À confirmer avec la patiente');
-    expect(text(el.querySelector('.cancel'))).toBe('Annuler Échap');
   });
 
-  it('durée, heure et répétition recalculent la fin, les occurrences, l’aperçu et le bouton', async () => {
-    const { fixture, el, select } = await render();
-    const duration = select('Durée');
-    duration.value = [...duration.options].find((o) => o.textContent?.includes('90'))!.value;
-    duration.dispatchEvent(new Event('change'));
+  it('recherche : liste au clavier (↓, Entrée), carte du patient, défauts et prochain rendez-vous', async () => {
+    const { fixture, el, api, type, select } = await render();
+    const search = el.querySelector<HTMLInputElement>('#field-patientId')!;
+    await type(search, 'mar', INPUT_DEBOUNCE_MS + 50);
+    expect(api.searchPatients).toHaveBeenCalledTimes(1);
+    expect(api.searchPatients).toHaveBeenCalledWith('mar');
+    const options = [...el.querySelectorAll('[role=listbox] [role=option]')];
+    expect(options.map((o) => text(o))).toEqual(['Marie D. 34 ans', 'Marc A.']);
+    search.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await settle(fixture);
-    expect(text(el.querySelector('.slot + .hint'))).toContain('Se termine à 11:30');
-    expect(text(el.querySelector('.slot + .hint'))).toContain('suivi de Théo B. à 11:30');
+    expect(search.getAttribute('aria-activedescendant')).toBe(options[0].id);
+    search.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await settle(fixture);
+    expect(el.querySelector('[role=listbox]')).toBeNull();
+    expect(text(el.querySelector('.patient-card .name'))).toBe('Marie D.');
+    expect(api.patientAppointments).toHaveBeenCalledWith('p-1');
+    expect(text(el.querySelector('.patient-card .meta'))).toBe(
+      '34 ans · rythme toutes les 2 semaines · prochain rendez-vous le 12 nov. à 09:00',
+    );
+    expect(text(select('duration').selectedOptions[0])).toBe('45 min');
+    expect(el.querySelectorAll('.segment')[2].getAttribute('aria-pressed')).toBe('true');
+  });
 
-    const start = el.querySelector<HTMLInputElement>('input.mono')!;
-    start.value = '11:00';
-    start.dispatchEvent(new Event('input'));
-    await settle(fixture);
-    expect(text(el.querySelector('.slot + .hint'))).toContain('chevauche Théo B. (11:30–12:20)');
-
-    const repeat = select('Répéter');
-    repeat.value = [...repeat.options].find((o) => o.textContent?.includes('2 semaines'))!.value;
-    repeat.dispatchEvent(new Event('change'));
-    await settle(fixture);
-    const count = select('Nombre de répétitions');
-    expect([...count.options].map((o) => text(o))).toEqual([
-      '4 fois (jusqu’au 19 déc.)'.replace('’', "'"),
-      '8 fois',
-      'Jusqu’à une date…'.replace('’', "'"),
-    ]);
-    expect(text(el.querySelector('.submit'))).toBe('Planifier 4 rendez-vous');
-    expect(text(el.querySelector('.preview-text span:last-child'))).toContain('4 occurrences');
-    expect(text(el.querySelector('.repeat + .hint'))).toContain(
-      'Chaque occurrence est un rendez-vous distinct',
+  it('conflits et voisinage : freebusy débouncé (300 ms) ; bandeau ambre ou phrase de voisinage', async () => {
+    const freeBusy = vi
+      .fn()
+      .mockResolvedValueOnce({
+        conflicts: [],
+        previous: appointmentOf({
+          startsAt: new Date(2026, 10, 7, 9, 0).toISOString(),
+          patient: { id: 'x', displayName: 'Omar B.', birthDate: null, age: null, archived: false },
+        }),
+        next: null,
+      })
+      .mockResolvedValue({
+        conflicts: [
+          {
+            appointmentId: 'y',
+            patientDisplayName: 'Théo B.',
+            startsAt: new Date(2026, 10, 7, 11, 30).toISOString(),
+            endsAt: new Date(2026, 10, 7, 12, 20).toISOString(),
+            occurrenceStartsAt: '',
+          },
+        ],
+        previous: null,
+        next: null,
+      });
+    const { el, type } = await render({}, { freeBusy });
+    expect(freeBusy).toHaveBeenCalledTimes(1);
+    const [from, to, tz] = freeBusy.mock.calls[0];
+    expect([from.getHours(), to.getHours()]).toEqual([10, 11]);
+    expect(typeof tz).toBe('string');
+    expect(text(el.querySelector('.slot + .hint'))).toBe(
+      'Se termine à 11:00 · précédent : Omar B. à 09:00 · pas de chevauchement',
     );
 
-    el.querySelectorAll<HTMLButtonElement>('.segment')[1].click();
-    await settle(fixture);
-    expect(el.querySelectorAll('.segment')[1].getAttribute('aria-pressed')).toBe('true');
-    expect(text(el.querySelector('.preview-text span:last-child'))).toContain('Visio');
-  });
-
-  it('conflit avec un bloc Google : avertissement ambre nommant l’occurrence et le bloc', async () => {
-    const { el } = await render({ slot: new Date(2026, 10, 2, 14, 0) });
+    const start = el.querySelector<HTMLInputElement>('#field-start')!;
+    await type(start, '11:0');
+    await type(start, '11:00');
+    await type(start, '11:15', INPUT_DEBOUNCE_MS + 50);
+    expect(freeBusy).toHaveBeenCalledTimes(2);
     expect(text(el.querySelector('.warning'))).toBe(
-      "L'occurrence du 2 nov. chevauche un bloc « Occupé · Google Pro » (14:00–16:00). Elle sera créée quand même ; vous pourrez la déplacer depuis l'agenda.",
+      "Chevauche le rendez-vous de Théo B. (11:30–12:20). Il sera créé quand même ; vous pourrez le déplacer depuis l'agenda.",
     );
   });
 
-  it('sans patient prérempli : pas de carte ni de ligne de rythme, durée = préférence ; Annuler ferme', async () => {
-    const { el, dialogRef, select } = await render({ patient: null, lastSessionAt: null });
-    expect(el.querySelector('.patient-card')).toBeNull();
-    expect(el.querySelector('.rhythm')).toBeNull();
-    expect(text(select('Durée').selectedOptions[0])).toBe('60 min');
-    expect(text(el.querySelector('.preview .mono'))).toBe('Séance');
-    el.querySelector<HTMLButtonElement>('.cancel')!.click();
-    expect(dialogRef.close).toHaveBeenCalled();
+  it('soumission : POST avec répétition toutes les 2 semaines × 3, À confirmer, fuseau ; fermeture', async () => {
+    const created = {
+      appointments: [appointmentOf({ startsAt: '2026-11-07T09:00:00Z' })],
+      conflicts: [],
+    };
+    const create = vi.fn().mockResolvedValue(created);
+    const { fixture, el, dialogRef, select, choose } = await render({ patient: marie }, { create });
+    await choose(select('repeat'), 'Toutes les 2 semaines');
+    await choose(select('count'), '3 fois');
+    expect(text(select('count').selectedOptions[0])).toBe("3 fois (jusqu'au 5 déc.)");
+    expect(text(el.querySelector('.submit'))).toBe('Planifier 3 rendez-vous');
+    el.querySelector<HTMLInputElement>('.confirm input')!.click();
+    el.querySelector<HTMLFormElement>('form')!.dispatchEvent(new Event('submit'));
+    await settle(fixture);
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(create.mock.calls[0][0]).toMatchObject({
+      patientId: 'p-1',
+      startsAt: new Date(2026, 10, 7, 10, 0).toISOString(),
+      durationMin: 45,
+      modality: 'phone',
+      tentative: true,
+      recurrence: { everyWeeks: 2, count: 3 },
+    });
+    expect(create.mock.calls[0][0].tz).toBeTruthy();
+    expect(dialogRef.close).toHaveBeenCalledWith({ created });
+  });
+
+  it('422 : résumé et erreurs sous les champs (startsAt → Début, recurrence → Répétitions)', async () => {
+    const create = vi.fn().mockRejectedValue({
+      status: 422,
+      code: 'VALIDATION_FAILED',
+      errors: [
+        { field: 'startsAt', code: 'OUT_OF_RANGE', message: 'Début hors bornes.' },
+        { field: 'recurrence', code: 'TOO_MANY_OCCURRENCES', message: 'Au plus 26.' },
+      ],
+    });
+    const { fixture, el, dialogRef, select, choose } = await render({ patient: marie }, { create });
+    await choose(select('repeat'), 'Toutes les semaines');
+    el.querySelector<HTMLFormElement>('form')!.dispatchEvent(new Event('submit'));
+    await settle(fixture);
+    expect(dialogRef.close).not.toHaveBeenCalled();
+    expect(text(el.querySelector('pm-form-errors .title'))).toBe('2 champs à corriger.');
+    expect(text(el.querySelector('#field-start-error'))).toBe('Début hors bornes.');
+    expect(text(el.querySelector('#field-count-error'))).toBe('Au plus 26.');
+  });
+
+  it('« Jusqu’à une date… » sans date : soumission bloquée, erreur sous le champ', async () => {
+    const { fixture, el, api, select, choose } = await render({ patient: marie });
+    await choose(select('repeat'), 'Toutes les semaines');
+    await choose(select('count'), 'Jusqu');
+    el.querySelector<HTMLFormElement>('form')!.dispatchEvent(new Event('submit'));
+    await settle(fixture);
+    expect(api.create).not.toHaveBeenCalled();
+    expect(text(el.querySelector('#field-until-error'))).toBe('Ce champ est obligatoire.');
+  });
+
+  it('pendant l’envoi : Annuler désactivé, Échap retenu ; fermé quand même → onCreated prévient la page', async () => {
+    let resolve!: (value: unknown) => void;
+    const create = vi.fn(() => new Promise((r) => (resolve = r)));
+    const onCreated = vi.fn();
+    const { fixture, el, dialogRef } = await render({ patient: marie, onCreated }, { create });
+    el.querySelector<HTMLFormElement>('form')!.dispatchEvent(new Event('submit'));
+    await settle(fixture);
+    const cancel = el.querySelector<HTMLButtonElement>('.cancel')!;
+    expect(cancel.disabled).toBe(true);
+    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+    el.querySelector('textarea')!.dispatchEvent(escape);
+    expect(escape.defaultPrevented).toBe(true);
+    const created = {
+      appointments: [appointmentOf({ startsAt: '2026-11-07T09:00:00Z' })],
+      conflicts: [],
+    };
+    resolve(created);
+    await settle(fixture);
+    expect(onCreated).toHaveBeenCalledWith(created);
+    expect(dialogRef.close).toHaveBeenCalledWith({ created });
+  });
+
+  it('libellés : « À confirmer avec le patient » (vocabulaire du compte), heure d’exemple localisée', async () => {
+    const { el } = await render();
+    expect(text(el.querySelector('.confirm'))).toBe('À confirmer avec le patient');
+    expect(el.querySelector<HTMLInputElement>('#field-start')!.placeholder).toBe('10:00');
+  });
+
+  it('patient introuvable (404) : message général ; pas de double envoi pendant la requête', async () => {
+    let reject!: (value: unknown) => void;
+    const create = vi.fn(() => new Promise((_, r) => (reject = r)));
+    const { fixture, el } = await render({ patient: marie }, { create });
+    const form = el.querySelector<HTMLFormElement>('form')!;
+    form.dispatchEvent(new Event('submit'));
+    await settle(fixture);
+    expect(el.querySelector<HTMLButtonElement>('.submit')!.disabled).toBe(true);
+    form.dispatchEvent(new Event('submit'));
+    expect(create).toHaveBeenCalledTimes(1);
+    reject({ status: 404, code: 'PATIENT_NOT_FOUND' });
+    await settle(fixture);
+    expect(text(el.querySelector('.form-message'))).toBe(
+      "Ce patient n'est plus accessible : choisissez-en un autre.",
+    );
+  });
+
+  it('sans patient choisi : la soumission ne part pas, le champ patient est signalé', async () => {
+    const { fixture, el, api } = await render();
+    el.querySelector<HTMLFormElement>('form')!.dispatchEvent(new Event('submit'));
+    await settle(fixture);
+    expect(api.create).not.toHaveBeenCalled();
+    expect(text(el.querySelector('#field-patientId-error'))).toBe('Ce champ est obligatoire.');
   });
 });

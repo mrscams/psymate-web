@@ -72,6 +72,26 @@ export const PreferencesStore = signalStore(
     medicationVisible: computed(() => values()['entryTypes.medicationVisible']),
     defaultVisibility: computed(() => values()['entries.defaultVisibility']),
     defaultDurationMin: computed(() => values()['sessions.defaultDurationMin']),
+    /**
+     * Préférences `agenda.*` (fiche 15) : bornes de la grille, jours travaillés, vue par défaut.
+     * Égal par valeur : changer le thème ou la langue ne redessine pas l'agenda.
+     */
+    agenda: computed(
+      () => ({
+        dayStartHour: values()['agenda.dayStartHour'],
+        dayEndHour: values()['agenda.dayEndHour'],
+        workingDays: values()['agenda.workingDays'],
+        defaultView: values()['agenda.defaultView'],
+      }),
+      {
+        equal: (a, b) =>
+          a.dayStartHour === b.dayStartHour &&
+          a.dayEndHour === b.dayEndHour &&
+          a.defaultView === b.defaultView &&
+          a.workingDays.length === b.workingDays.length &&
+          a.workingDays.every((day, index) => day === b.workingDays[index]),
+      },
+    ),
   })),
   withMethods(
     (

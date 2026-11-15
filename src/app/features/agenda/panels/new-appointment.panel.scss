@@ -1,6 +1,6 @@
 // Panneau « Nouveau rendez-vous » (maquette 15b) : sections espacées de 18 px, intitulés 12 px / 600
-// en capitales espacées, champs de 42 px à rayon 10, segments de 44 px, bloc Google sur fond ground,
-// avertissement ambre. Le cadre (en-tête, corps défilant, pied) est pm-side-panel.
+// en capitales espacées, champs de 42 px à rayon 10, segments de 44 px, liste des patients sous la
+// recherche, avertissement ambre. Le cadre (en-tête, corps défilant, pied) est pm-side-panel.
 :host {
   display: block;
   height: 100%;
@@ -29,14 +29,6 @@ form {
   color: var(--text-secondary);
 }
 
-.never {
-  margin-left: 4px;
-  font-weight: 400;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--text-secondary);
-}
-
 .mono {
   font-family: var(--font-mono);
 }
@@ -48,6 +40,70 @@ form {
 .hint {
   font-size: 12px;
   color: var(--text-secondary);
+
+  &.warn {
+    color: var(--warning);
+  }
+}
+
+.form-message {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-size: 13px;
+}
+
+// Recherche de patient : liste sous le champ (combobox + listbox, option active en teinte).
+.combo {
+  position: relative;
+}
+
+.options {
+  position: absolute;
+  z-index: 1;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  max-height: 240px;
+  margin: 0;
+  padding: 4px;
+  overflow-y: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  box-shadow: 0 6px 18px var(--scrim);
+  list-style: none;
+
+  li {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &.active,
+    &:hover {
+      background: var(--primary-tint);
+    }
+
+    &.empty {
+      color: var(--text-secondary);
+      cursor: default;
+      background: none;
+    }
+  }
+
+  .name {
+    font-weight: 500;
+  }
+
+  .meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
 }
 
 // Carte du patient prérempli : bordure 2 px primaire sur teinte primaire.
@@ -140,32 +196,6 @@ input.mono {
   font-family: var(--font-mono);
 }
 
-.rhythm {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  font-size: 12px;
-
-  svg {
-    flex: none;
-    width: 12px;
-    height: 12px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  &.ok {
-    color: var(--success);
-  }
-
-  &.warn {
-    color: var(--warning);
-  }
-}
-
 .slot,
 .repeat {
   display: grid;
@@ -236,79 +266,6 @@ input.mono {
     border: 2px solid var(--tone);
     background: var(--tint);
     font-weight: 600;
-  }
-}
-
-// Bloc « Sera copié dans Google Agenda » : fond ground, aperçu sur carte blanche avec barre de modalité.
-.google {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  background: var(--surface-ground);
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--text-secondary);
-
-  // Lien dans un texte gris : souligné (axe link-in-text-block ; la maquette ne le soulignait pas).
-  a {
-    margin-left: 4px;
-    color: var(--primary);
-    text-decoration: underline;
-  }
-}
-
-.google-title {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  font-weight: 600;
-  color: var(--text-primary);
-
-  svg {
-    width: 12px;
-    height: 12px;
-    fill: none;
-    stroke: var(--success);
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-}
-
-.preview {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 8px 10px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  background: var(--surface-raised);
-
-  .bar {
-    width: 4px;
-    height: 28px;
-    border-radius: 2px;
-    background: var(--entry-session);
-  }
-
-  &.video .bar {
-    background: var(--primary);
-  }
-
-  &.phone .bar {
-    background: var(--entry-note);
-  }
-
-  .preview-text {
-    display: flex;
-    flex-direction: column;
-
-    .mono {
-      font-size: 13px;
-      color: var(--text-primary);
-    }
   }
 }
 

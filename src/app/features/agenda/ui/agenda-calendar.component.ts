@@ -30,11 +30,11 @@ import listPlugin from '@fullcalendar/list';
 import timeGridPlugin from '@fullcalendar/timegrid';
 
 import {
+  AgendaHours,
   AgendaView,
   Appointment,
   BusyBlock,
-  GRID_END_HOUR,
-  GRID_START_HOUR,
+  DEFAULT_HOURS,
   LIST_DAYS,
 } from '../data/agenda.model';
 import {
@@ -44,7 +44,6 @@ import {
   formatTimeRange,
   formatWeekdayDate,
   formatWeekdayShort,
-  googleCalendarLabel,
   modalityLabel,
   statusLabel,
 } from './agenda-format';
@@ -71,30 +70,35 @@ export interface Rescheduled {
 interface EventProps {
   kind: 'appointment' | 'busy';
   appointment?: Appointment;
-  /** Nom affiché (« Omar B. », « Appel · Inès V. »). */
+  /** Nom affiché (« Omar B. »). */
   name: string;
   /** « · visio », « · à confirmer » après le nom ; null au cabinet planifié. */
   suffix: string | null;
   suffixKind: 'modality' | 'status' | null;
   /** Modalité en clair, masquée visuellement quand le suffixe ne la dit pas. */
   modality: string;
-  /** « 09:00–09:50 » ; « 15:00 » pour un contact ; « 14:00 – 16:00 » pour un bloc Google. */
+  /** « 09:00–09:50 » ; « 14:00 – 16:00 » pour une indisponibilité. */
   time: string;
   /** « 09:00 » : heure de début seule (chips du mois). */
   startTime: string;
-  /** Titre d'un bloc Google (« Occupé · Google Pro »). */
+  /** Titre d'une indisponibilité (« Occupé · Google Pro »). */
   busyTitle?: string;
-  contact: boolean;
+}
+
+/** `HH:00:00` pour une heure de 0 à 24. */
+function hourTime(hour: number): string {
+  return `${String(hour).padStart(2, '0')}:00:00`;
 }
 
 /**
  * Zone centrale de l'agenda sur FullCalendar (fiche 15 : cœur MIT + daygrid, timegrid, list,
  * interaction, locale fr), habillée par agenda-calendar.component.scss avec les tokens Nordique
- * (variables `--fc-*` et surcharges) pour reproduire la maquette 15 : 8 h → 19 h à 52 px par
+ * (variables `--fc-*` et surcharges) pour reproduire la maquette 15 : bornes horaires des
+ * préférences `agenda.dayStartHour` / `agenda.dayEndHour` (8 h → 19 h par défaut) à 52 px par
  * heure, en-têtes « lun. 26 », événements teintés avec barre de modalité, « à confirmer » en
- * pointillé, sélection en fond plein, blocs « Occupé · Google » hachurés en événements de fond,
- * heures non travaillées (dimanche, vendredi et samedi après 13 h) hachurées par `businessHours`,
- * samedi teinté, ligne de l'heure courante. La barre d'outils est la nôtre (`headerToolbar`
+ * pointillé, sélection en fond plein, indisponibilités externes hachurées en événements de fond
+ * (aucune en V1), jours hors `agenda.workingDays` hachurés par `businessHours`, samedi ou dimanche
+ * travaillé teinté, ligne de l'heure courante. La barre d'outils est la nôtre (`headerToolbar`
  * désactivé) : la page donne la vue et la date d'ancrage, le composant les pousse à l'API du
  * calendrier. Glisser-déposer et redimensionnement (plugin interaction) remontent `rescheduled` ;
  * un clic sur un rendez-vous ouvre son détail (`/agenda/rdv/:id`), un double-clic le dossier, un
@@ -116,6 +120,8 @@ export class AgendaCalendarComponent {
   readonly appointments = input.required<readonly Appointment[]>();
   readonly busy = input<readonly BusyBlock[]>([]);
   readonly selectedId = input<string | null>(null);
+  /** Bornes de la grille et jours travaillés (préférences `agenda.*`). */
+  readonly hours = input<AgendaHours>(DEFAULT_HOURS);
   /** Double-clic sur un rendez-vous : le dossier du patient. */
   readonly opened = output<Appointment>();
   /** Clic sur un créneau vide (semaine, jour) : début du créneau. */
@@ -131,9 +137,9 @@ export class AgendaCalendarComponent {
   private readonly calendar = viewChild(FullCalendarComponent);
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  protected readonly sundayLabel = $localize`:Colonne du dimanche, non travaillé@@agenda.grid.sunday:Dimanche, non travaillé`;
+  protected readonly offLabel = $localize`:Colonne d'un jour non travaillé@@agenda.grid.off:non travaillé`;
 
-  /** Rendez-vous et blocs Google en événements FullCalendar. */
+  /** Rendez-vous et indisponibilités en événements FullCalendar. */
   protected readonly events = computed<EventInput[]>(() => {
     const selected = this.selectedId();
     const items: EventInput[] = this.appointments().map((appointment) => ({
@@ -146,7 +152,6 @@ export class AgendaCalendarComponent {
         'rdv',
         appointment.modality,
         appointment.status,
-        appointment.kind,
         ...(appointment.id === selected ? ['selected'] : []),
       ],
       extendedProps: this.propsOf(appointment),
@@ -159,17 +164,16 @@ export class AgendaCalendarComponent {
         display: 'background',
         editable: false,
         overlap: false,
-        classNames: ['busy', `google-${block.calendar}`],
+        classNames: ['busy'],
         extendedProps: {
           kind: 'busy',
           name: busyName(block.startsAt, block.endsAt, block.calendar, this.locale),
-          busyTitle: $localize`:Titre d'un bloc occupé Google dans la grille@@agenda.busy.title:Occupé · ${googleCalendarLabel(block.calendar)}:calendar:`,
+          busyTitle: $localize`:Titre d'une indisponibilité externe dans la grille@@agenda.busy.title:Occupé · ${block.calendar}:calendar:`,
           time: formatSpacedTimeRange(block.startsAt, block.endsAt, this.locale),
           startTime: formatTime(block.startsAt, this.locale),
           suffix: null,
           suffixKind: null,
           modality: '',
-          contact: false,
         } satisfies EventProps,
       });
     }
@@ -179,11 +183,44 @@ export class AgendaCalendarComponent {
   private built: CalendarOptions | null = null;
 
   /**
-   * Options fixes du calendrier, construites au premier rendu (les entrées sont alors connues) ;
-   * la vue, la date et les événements suivent ensuite les entrées.
+   * Options du calendrier : une base fixe, construite au premier rendu (les entrées sont alors
+   * connues ; la vue, la date et les événements suivent ensuite les entrées), plus les options des
+   * préférences `agenda.*`, recalculées quand elles changent (seules celles-ci sont repoussées).
    */
-  protected get options(): CalendarOptions {
-    return (this.built ??= this.buildOptions());
+  protected readonly options = computed<CalendarOptions>(() => ({
+    ...(this.built ??= untracked(() => this.buildOptions())),
+    ...this.hoursOptions(this.hours()),
+  }));
+
+  /** Un jour (0 = dimanche, comme FullCalendar) est-il non travaillé ? */
+  protected isOff(dow: number): boolean {
+    return !this.hours().workingDays.includes(dow === 0 ? 7 : dow);
+  }
+
+  /**
+   * Bornes de la grille ; heures travaillées = les jours de `agenda.workingDays`, toute la grille
+   * (le reste est hachuré, `.fc-non-business`) ; classes `pm-off` (non travaillé) et
+   * `pm-weekend-worked` (samedi ou dimanche travaillé, teinté comme le samedi de la maquette).
+   */
+  private hoursOptions(hours: AgendaHours): CalendarOptions {
+    const start = hourTime(hours.dayStartHour);
+    const end = hourTime(hours.dayEndHour);
+    const classes = ({ dow }: { dow: number }) => {
+      const worked = hours.workingDays.includes(dow === 0 ? 7 : dow);
+      if (!worked) return ['pm-off'];
+      return dow === 0 || dow === 6 ? ['pm-weekend-worked'] : [];
+    };
+    return {
+      slotMinTime: start,
+      slotMaxTime: end,
+      businessHours: {
+        daysOfWeek: hours.workingDays.map((day) => day % 7),
+        startTime: start,
+        endTime: end,
+      },
+      dayHeaderClassNames: classes,
+      dayCellClassNames: classes,
+    };
   }
 
   private buildOptions(): CalendarOptions {
@@ -197,21 +234,13 @@ export class AgendaCalendarComponent {
       height: 'auto',
       expandRows: false,
       allDaySlot: false,
-      slotMinTime: `${String(GRID_START_HOUR).padStart(2, '0')}:00:00`,
-      slotMaxTime: `${String(GRID_END_HOUR).padStart(2, '0')}:00:00`,
       slotDuration: '00:30:00',
       slotLabelInterval: '01:00',
       slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
       slotEventOverlap: false,
       nowIndicator: true,
-      // Heures travaillées (démonstration, fiche 15 §4) : lundi à jeudi 8 h–19 h, vendredi et
-      // samedi jusqu'à 13 h, rien le dimanche ; le reste est hachuré (`.fc-non-business`).
-      businessHours: [
-        { daysOfWeek: [1, 2, 3, 4], startTime: '08:00', endTime: '19:00' },
-        { daysOfWeek: [5, 6], startTime: '08:00', endTime: '13:00' },
-      ],
-      // Seules les séances planifiées ou à confirmer bougent ; un bloc Google (`overlap: false`)
-      // refuse le dépôt. Le serveur restera juge des règles métier au PATCH.
+      // Seuls les rendez-vous planifiés ou à confirmer bougent ; une indisponibilité
+      // (`overlap: false`) refuse le dépôt. Le serveur reste juge au PATCH (409 sinon).
       editable: true,
       eventStartEditable: true,
       eventDurationEditable: true,
@@ -295,24 +324,18 @@ export class AgendaCalendarComponent {
   }
 
   private propsOf(appointment: Appointment): EventProps {
-    const contact = appointment.kind === 'contact';
     const status = statusLabel(appointment.status);
     const modality = modalityLabel(appointment.modality);
-    const suffix = status ?? (contact || appointment.modality === 'in_person' ? null : modality);
+    const suffix = status ?? (appointment.modality === 'in_person' ? null : modality);
     return {
       kind: 'appointment',
       appointment,
-      name: contact
-        ? $localize`:Contact téléphonique dans la grille@@agenda.grid.call:Appel · ${appointment.patient.displayName}:name:`
-        : appointment.patient.displayName,
+      name: appointment.patient.displayName,
       suffix,
       suffixKind: status ? 'status' : suffix ? 'modality' : null,
       modality,
-      time: contact
-        ? formatTime(appointment.startsAt, this.locale)
-        : formatTimeRange(appointment.startsAt, appointment.endsAt, this.locale),
+      time: formatTimeRange(appointment.startsAt, appointment.endsAt, this.locale),
       startTime: formatTime(appointment.startsAt, this.locale),
-      contact,
     };
   }
 

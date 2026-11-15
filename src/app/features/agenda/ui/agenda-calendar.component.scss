@@ -72,7 +72,7 @@
       font: 600 18px/1.3 var(--font-mono);
     }
 
-    &.fc-day-sat {
+    &.pm-weekend-worked {
       background: var(--primary-tint);
 
       .weekday,
@@ -81,7 +81,7 @@
       }
     }
 
-    &.fc-day-sun .number {
+    &.pm-off .number {
       color: var(--text-secondary);
     }
   }
@@ -112,7 +112,7 @@
     width: 56px;
   }
 
-  .fc-timegrid-col.fc-day-sat {
+  .fc-timegrid-col.pm-weekend-worked {
     background: color-mix(in srgb, var(--surface-ground) 45%, var(--surface-raised));
   }
 
@@ -121,7 +121,7 @@
     opacity: 0.6;
   }
 
-  .fc-day-sun .fc-non-business {
+  .pm-off .fc-non-business {
     opacity: 1;
   }
 
@@ -174,7 +174,7 @@
   }
 
   // Semaine et jour : fond teinte + barre gauche 3 px, rayon 6 ; « à confirmer » pointillé ;
-  // sélectionné en fond plein, texte blanc, halo ; contact en bandeau fin.
+  // sélectionné en fond plein, texte blanc, halo.
   .fc-timegrid-event-harness {
     margin: 0 4px 0 1px;
   }
@@ -222,24 +222,13 @@
       font-size: 11px;
     }
 
-    &.contact {
-      border-radius: 4px;
-      font-size: 11px;
-      line-height: 14px;
-
-      .fc-event-main {
-        padding: 0 8px;
-        white-space: nowrap;
-      }
-    }
-
     &.fc-event-dragging,
     &.fc-event-resizing {
       box-shadow: 0 6px 18px var(--scrim);
     }
   }
 
-  // Bloc « Occupé · Google » : hachures 135°, bordure fine, 11 px.
+  // Indisponibilité externe : hachures 135°, bordure fine, 11 px.
   .fc-bg-event.busy {
     overflow: hidden;
     margin: 0 4px;
@@ -279,11 +268,11 @@
   }
 
   .fc-day-other .fc-daygrid-day-number,
-  .fc-daygrid-day.fc-day-sun .fc-daygrid-day-number {
+  .fc-daygrid-day.pm-off .fc-daygrid-day-number {
     color: var(--text-secondary);
   }
 
-  .fc-daygrid-day.fc-day-sun {
+  .fc-daygrid-day.pm-off {
     background: var(--stripes);
   }
 

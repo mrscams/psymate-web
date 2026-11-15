@@ -1,4 +1,4 @@
-<full-calendar [options]="options" [events]="events()">
+<full-calendar [options]="options()" [events]="events()">
   <!-- En-tête de colonne (semaine, jour) : « lun. » puis le chiffre en mono ; mois : « lun. » seul. -->
   <ng-template #dayHeaderContent let-arg>
     @if (arg.view.type === 'dayGridMonth') {
@@ -8,13 +8,13 @@
     } @else {
       <span class="weekday">{{ weekdayOf(arg.date) }}</span>
       <span class="number">{{ arg.date.getDate() }}</span>
-      @if (arg.dow === 0) {
-        <span class="sr-only">{{ sundayLabel }}</span>
+      @if (isOff(arg.dow)) {
+        <span class="sr-only">, {{ offLabel }}</span>
       }
     }
   </ng-template>
 
-  <!-- Événement : rendez-vous (nom, suffixe, heures) ou bloc « Occupé · Google » hachuré. -->
+  <!-- Événement : rendez-vous (nom, suffixe, heures) ou indisponibilité externe hachurée. -->
   <ng-template #eventContent let-arg>
     @let props = propsFrom(arg);
     @if (props.kind === 'busy') {
@@ -40,11 +40,7 @@
       } @else {
         <span class="sr-only"> · {{ props.modality }}</span>
       }
-      @if (props.contact) {
-        <span class="time mono"> {{ props.time }}</span>
-      } @else {
-        <br /><span class="time mono">{{ props.time }}</span>
-      }
+      <br /><span class="time mono">{{ props.time }}</span>
     }
   </ng-template>
 

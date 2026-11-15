@@ -5,10 +5,9 @@ import {
   AppointmentModality,
   AppointmentStatus,
   CalendarKey,
-  GoogleCalendar,
+  Conflict,
   isoWeek,
   LIST_DAYS,
-  startOfDay,
 } from '../data/agenda.model';
 
 /** Un morceau de libellé de date ; `sup` pour l'ordinal français (« 1<sup>er</sup> novembre »). */
@@ -70,16 +69,6 @@ export function formatWeekdayDate(date: Date, locale: string, capital = true): s
     month: 'long',
   }).format(date);
   return capital ? capitalize(text) : text;
-}
-
-/** « sam. 7 nov. 2026 » (créneau du panneau 15b). */
-export function formatShortDate(date: Date, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }).format(date);
 }
 
 /** « 31 oct. », « 19 déc. » : date courte sans année. */
@@ -199,13 +188,6 @@ export function statusLabel(status: AppointmentStatus): string | null {
   }
 }
 
-/** « Google Pro », « Google Perso » : nom d'un agenda Google en lecture. */
-export function googleCalendarLabel(calendar: GoogleCalendar): string {
-  return calendar === 'pro'
-    ? $localize`:Agenda Google professionnel en lecture@@agenda.google.pro:Google Pro`
-    : $localize`:Agenda Google personnel en lecture@@agenda.google.perso:Google Perso`;
-}
-
 /** Libellé d'une case du rail gauche (fiche 15 §3). */
 export function calendarLabel(key: CalendarKey): string {
   switch (key) {
@@ -215,33 +197,32 @@ export function calendarLabel(key: CalendarKey): string {
       return $localize`:Case du rail de l'agenda@@agenda.calendars.video:Séances en visio`;
     case 'phone':
       return $localize`:Case du rail de l'agenda@@agenda.calendars.phone:Contacts (appels)`;
-    case 'google-pro':
-      return $localize`:Case du rail de l'agenda, agenda Google Pro@@agenda.calendars.googlePro:Pro`;
-    case 'google-perso':
-      return $localize`:Case du rail de l'agenda, agenda Google Perso@@agenda.calendars.googlePerso:Perso`;
   }
 }
 
-/** Nom accessible d'un bloc Google : « Indisponible de 14:00 à 16:00, agenda Google Pro ». */
+/** Nom accessible d'une indisponibilité externe : « Indisponible de 14:00 à 16:00, agenda Google Pro ». */
 export function busyName(
   startsAt: string,
   endsAt: string,
-  calendar: GoogleCalendar,
+  calendar: string,
   locale: string,
 ): string {
   const from = formatTime(startsAt, locale);
   const to = formatTime(endsAt, locale);
-  const name = googleCalendarLabel(calendar);
-  return $localize`:Nom accessible d'un bloc occupé Google@@agenda.busy.name:Indisponible de ${from}:from: à ${to}:to:, agenda ${name}:calendar:`;
+  return $localize`:Nom accessible d'un bloc occupé externe@@agenda.busy.name:Indisponible de ${from}:from: à ${to}:to:, agenda ${calendar}:calendar:`;
 }
 
-/** « il y a 2 min » pour l'état de synchronisation. */
-export function minutesAgoLabel(minutes: number, locale: string): string {
-  return new Intl.RelativeTimeFormat(locale, { numeric: 'always', style: 'short' }).format(
-    -minutes,
-    'minute',
-  );
+/**
+ * Chevauchements signalés après une écriture (fiche 15b : jamais bloquants) : « Chevauche le
+ * rendez-vous de Théo B. à 11:30 », puis « et n autres » ; null sans chevauchement.
+ */
+export function conflictMessage(conflicts: readonly Conflict[], locale: string): string | null {
+  const first = conflicts[0];
+  if (!first) return null;
+  const name = first.patientDisplayName;
+  const at = formatTime(first.startsAt, locale);
+  const others = conflicts.length - 1;
+  return others > 0
+    ? $localize`:Toast, plusieurs chevauchements@@agenda.conflict.many:Chevauche le rendez-vous de ${name}:name: à ${at}:time: et ${others}:count: autre(s).`
+    : $localize`:Toast, un chevauchement@@agenda.conflict.one:Chevauche le rendez-vous de ${name}:name: à ${at}:time:.`;
 }
-
-/** Minuit du jour de la date (raccourci pour les gabarits). */
-export const dayOf = startOfDay;

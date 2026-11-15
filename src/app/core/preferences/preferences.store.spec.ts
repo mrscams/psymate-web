@@ -160,6 +160,49 @@ describe('PreferencesStore', () => {
       expect(completePreferences({ 'overview.view': 'simple' })).toEqual(defaultPreferences(null));
     });
 
+    it('agenda.* (fiche 15) : quatre clés lues, défauts 8, 19, lundi à samedi, semaine', () => {
+      const defaults = defaultPreferences(null);
+      expect(defaults['agenda.dayStartHour']).toBe(8);
+      expect(defaults['agenda.dayEndHour']).toBe(19);
+      expect(defaults['agenda.workingDays']).toEqual([1, 2, 3, 4, 5, 6]);
+      expect(defaults['agenda.defaultView']).toBe('week');
+      const read = completePreferences({
+        'agenda.dayStartHour': 10,
+        'agenda.dayEndHour': 18,
+        'agenda.workingDays': [1, 3, 7],
+        'agenda.defaultView': 'list',
+      });
+      expect(read['agenda.dayStartHour']).toBe(10);
+      expect(read['agenda.dayEndHour']).toBe(18);
+      expect(read['agenda.workingDays']).toEqual([1, 3, 7]);
+      expect(read['agenda.defaultView']).toBe('list');
+      // Hors domaine : défaut ; une fin qui ne suit pas le début reprend les deux défauts.
+      const odd = completePreferences({
+        'agenda.dayStartHour': 24,
+        'agenda.workingDays': [1, 1],
+        'agenda.defaultView': 'year',
+      });
+      expect(odd['agenda.dayStartHour']).toBe(8);
+      expect(odd['agenda.workingDays']).toEqual([1, 2, 3, 4, 5, 6]);
+      expect(odd['agenda.defaultView']).toBe('week');
+      const inverted = completePreferences({ 'agenda.dayStartHour': 20, 'agenda.dayEndHour': 9 });
+      expect([inverted['agenda.dayStartHour'], inverted['agenda.dayEndHour']]).toEqual([8, 19]);
+    });
+
+    it('le store expose agenda.* en un seul signal', () => {
+      localStorage.setItem(
+        PREFERENCES_CACHE_KEY,
+        JSON.stringify({ 'agenda.dayStartHour': 9, 'agenda.defaultView': 'day' }),
+      );
+      const { store } = setup({ sessionLoading: true });
+      expect(store.agenda()).toEqual({
+        dayStartHour: 9,
+        dayEndHour: 19,
+        workingDays: [1, 2, 3, 4, 5, 6],
+        defaultView: 'day',
+      });
+    });
+
     it('valeur hors domaine dans le cache : la clé prend son défaut', () => {
       localStorage.setItem(
         PREFERENCES_CACHE_KEY,
