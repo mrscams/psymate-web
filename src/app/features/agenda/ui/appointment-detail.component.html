@@ -1,130 +1,329 @@
-@let item = appointment();
-<div class="head">
-  <div class="kicker-row">
-    <span class="kicker">{{ kicker() }}</span>
-    <button type="button" class="close" [attr.aria-label]="closeLabel" (click)="closed.emit()">
-      ×
-    </button>
-  </div>
-  <div class="patient">
-    <span class="avatar" aria-hidden="true">{{ initials() }}</span>
-    <div class="identity">
-      <a class="name" [routerLink]="patientLink()">{{ item.patient.displayName }}</a>
-      <span class="meta">
-        {{ patientMeta() }}
-        @if (item.patient.flag; as flag) {
-          · <span class="flag">{{ flag }}</span>
-        }
-      </span>
-    </div>
-  </div>
-  <div class="when">
-    {{ dateLabel() }} · <span class="mono">{{ timeLabel() }}</span>
-  </div>
-  <div class="facts">
-    @if (item.place; as place) {
-      <span>{{ place }}</span>
-    }
-    <span>{{ sessionLabel() }}</span>
-    <span>{{ rhythmLabel() }}</span>
-  </div>
-</div>
-
-<div class="body">
-  <!-- Préparer : dernière séance, objectif, ce qui s'est passé depuis. -->
-  <section class="block">
-    <h2 i18n="Titre du bloc Préparer du détail@@agenda.detail.prepare">Préparer</h2>
-    <p class="prepare">
-      <ng-container i18n="Phrase Préparer du détail@@agenda.detail.prepareText"
-        >Dernière séance le <strong>{{ lastSession() }}</strong> — objectif fixé :
-        {{ item.preparation.objective }}. Depuis :
-        <strong class="feelings">{{ feelingsLabel() }}</strong> ({{
-          item.preparation.feelingValues
-        }}) et <strong>{{ eventsLabel() }}</strong> non commenté ({{
-          item.preparation.eventLabel
-        }}).</ng-container
-      >
-    </p>
-    <div class="links">
-      <a
-        class="btn"
-        [routerLink]="patientLink().concat('overview')"
-        i18n="Lien du détail vers la vue d'ensemble@@agenda.detail.overview"
-        >Vue d'ensemble</a
-      >
-      <a
-        class="btn"
-        [routerLink]="patientLink().concat('timeline')"
-        i18n="Lien du détail vers la timeline@@agenda.detail.timeline"
-        >Timeline</a
-      >
-    </div>
-  </section>
-
-  <!-- Note de planification : visible seulement ici. -->
-  <div class="block">
-    <label [for]="noteId" class="label" i18n="Champ note de planification@@agenda.detail.note"
-      >Note de planification</label
-    >
-    <textarea [id]="noteId" rows="2" readonly [value]="item.planningNote"></textarea>
-    <span class="hint" i18n="Aide de la note de planification@@agenda.detail.noteHint"
-      >Visible seulement ici ; jamais envoyée à Google.</span
-    >
-  </div>
-
-  <!-- Bloc Google : ce qui est dans Google, historique. -->
-  @if (item.google; as google) {
-    <div class="google">
-      <span class="google-title">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M20 6 9 17l-5-5" />
-        </svg>
-        <ng-container i18n="Titre du bloc Google du détail@@agenda.detail.google.title"
-          >Dans Google Agenda « PsyMate » :</ng-container
-        >
-        <span class="mono summary">{{ google.summary }}</span>
-      </span>
-      <span>{{ googleHistory() }}</span>
-    </div>
-  }
-
-  <!-- Rappel SMS : hors V1, désactivé. -->
-  <label class="reminder">
-    <input type="checkbox" role="switch" disabled />
-    <ng-container i18n="Interrupteur de rappel SMS du détail@@agenda.detail.sms"
-      >Rappel SMS à la patiente la veille</ng-container
-    >
-    <span class="hint" i18n="Rappel SMS non activé@@agenda.detail.smsOff">· non activé</span>
-  </label>
-</div>
-
-<!-- Les actions attendent l'API (module scheduling) : inertes et dites « à venir », comme le carreau Facture. -->
-<div class="foot">
-  <button
-    type="button"
-    class="start"
-    aria-disabled="true"
-    [attr.aria-label]="laterName(startLabel)"
-    [title]="laterName(startLabel)"
-    (click)="started.emit(item)"
-  >
-    {{ startLabel }}
-  </button>
-  <div class="actions">
-    @for (action of actions; track action.label) {
+@if (appointment(); as item) {
+  <div class="head">
+    <div class="kicker-row">
+      <span class="kicker">{{ kicker() }}</span>
       <button
         type="button"
-        [class.danger]="action.danger"
-        aria-disabled="true"
-        [attr.aria-label]="laterName(action.label)"
-        [title]="laterName(action.label)"
-        (click)="action.emit(item)"
+        class="close"
+        [attr.aria-label]="closeLabel"
+        (click)="closed.emit(appointment())"
       >
-        {{ action.label }}
+        ×
       </button>
+    </div>
+    <div class="patient">
+      <span class="avatar" aria-hidden="true">{{ initials() }}</span>
+      <div class="identity">
+        <a class="name" [routerLink]="patientLink()">{{ item.patient.displayName }}</a>
+        @if (patientMeta(); as meta) {
+          <span class="meta">{{ meta }}</span>
+        }
+      </div>
+    </div>
+    <div class="when">
+      {{ dateLabel() }} · <span class="mono">{{ timeLabel() }}</span>
+    </div>
+    <div class="facts">
+      @for (fact of facts(); track $index) {
+        <span>{{ fact }}</span>
+      }
+    </div>
+    @if (cancelledLabel(); as cancelled) {
+      <p class="cancelled">{{ cancelled }}</p>
     }
   </div>
-  <span class="help" i18n="Aide clavier du détail@@agenda.detail.help"
-    >Glisser le rendez-vous dans la grille pour le déplacer · <kbd>Échap</kbd> ferme le détail</span
-  >
-</div>
+
+  <div class="body">
+    <!-- Déplacer : équivalent clavier du glisser-déposer (fiche 15, accessibilité). -->
+    @if (mode() === 'move') {
+      <form
+        class="inline"
+        [id]="ids.moveForm"
+        [formGroup]="moveForm"
+        (ngSubmit)="submitMove()"
+        novalidate
+      >
+        <h2 i18n="Titre du formulaire Déplacer@@agenda.detail.moveTitle">
+          Déplacer le rendez-vous
+        </h2>
+        <div class="fields">
+          <div class="field">
+            <label [for]="ids.date" i18n="Champ date du formulaire Déplacer@@agenda.detail.moveDate"
+              >Date</label
+            >
+            <pm-date-field [inputId]="ids.date" formControlName="date" />
+            <pm-field-errors [control]="moveForm.controls.date" [id]="ids.date + '-error'" />
+          </div>
+          <div class="field">
+            <label
+              [for]="ids.start"
+              i18n="Champ heure du formulaire Déplacer@@agenda.detail.moveStart"
+              >Début</label
+            >
+            <input
+              [id]="ids.start"
+              type="text"
+              class="mono"
+              formControlName="start"
+              inputmode="numeric"
+              maxlength="5"
+              [attr.aria-describedby]="ids.start + '-error'"
+            />
+            <pm-field-errors [control]="moveForm.controls.start" [id]="ids.start + '-error'" />
+          </div>
+          <div class="field">
+            <label
+              [for]="ids.duration"
+              i18n="Champ durée du formulaire Déplacer@@agenda.detail.moveDuration"
+              >Durée</label
+            >
+            <select
+              [id]="ids.duration"
+              formControlName="duration"
+              [attr.aria-describedby]="ids.duration + '-error'"
+            >
+              @for (minutes of durations(); track minutes) {
+                <option [ngValue]="minutes" i18n="Option de durée@@agenda.detail.durationOption">
+                  {{ minutes }} min
+                </option>
+              }
+            </select>
+            <pm-field-errors
+              [control]="moveForm.controls.duration"
+              [id]="ids.duration + '-error'"
+            />
+          </div>
+        </div>
+        @if (actionError(); as error) {
+          <p class="error" role="alert">{{ error }}</p>
+        }
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="primary"
+            [disabled]="busy()"
+            i18n="Valider le déplacement@@agenda.detail.moveSubmit"
+          >
+            Déplacer
+          </button>
+          <button
+            type="button"
+            (click)="closeForm()"
+            i18n="Renoncer au déplacement@@agenda.detail.formCancel"
+          >
+            Annuler
+          </button>
+        </div>
+      </form>
+    }
+
+    <!-- Annuler le rendez-vous : confirmation sur place, motif facultatif. -->
+    @if (mode() === 'cancel') {
+      <form
+        class="inline"
+        [id]="ids.cancelForm"
+        [formGroup]="cancelForm"
+        (ngSubmit)="submitCancel()"
+        novalidate
+      >
+        <h2 i18n="Titre de la confirmation d'annulation@@agenda.detail.cancelTitle">
+          Annuler ce rendez-vous ?
+        </h2>
+        <div class="field">
+          <label [for]="ids.reason" i18n="Champ motif d'annulation@@agenda.detail.cancelReason"
+            >Motif (facultatif)</label
+          >
+          <textarea
+            [id]="ids.reason"
+            rows="2"
+            formControlName="reason"
+            [attr.maxlength]="reasonMax"
+          ></textarea>
+        </div>
+        @if (actionError(); as error) {
+          <p class="error" role="alert">{{ error }}</p>
+        }
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="danger-fill"
+            [disabled]="busy()"
+            i18n="Confirmer l'annulation@@agenda.detail.cancelSubmit"
+          >
+            Annuler le rendez-vous
+          </button>
+          <button
+            type="button"
+            (click)="closeForm()"
+            i18n="Garder le rendez-vous@@agenda.detail.cancelKeep"
+          >
+            Garder
+          </button>
+        </div>
+      </form>
+    }
+
+    <!-- Préparer : vue d'ensemble du patient ; jamais bloquant (erreur : les liens seuls). -->
+    <section class="block">
+      <h2 i18n="Titre du bloc Préparer du détail@@agenda.detail.prepare">Préparer</h2>
+      @switch (prepareState()) {
+        @case ('loading') {
+          <pm-state kind="loading" skeleton="row" [lines]="2" compact />
+        }
+        @case ('loaded') {
+          <p class="prepare">
+            @if (lastSession(); as last) {
+              <ng-container i18n="Dernière séance du patient@@agenda.detail.lastSession"
+                >Dernière séance le <strong>{{ last }}</strong></ng-container
+              >
+              @if (sinceLabel(); as since) {
+                ·
+                <ng-container i18n="Ce qui s'est passé depuis@@agenda.detail.since.text"
+                  >depuis : {{ since }}</ng-container
+                >
+              } @else {
+                ·
+                <ng-container i18n="Rien depuis la dernière séance@@agenda.detail.since.none"
+                  >rien de nouveau depuis</ng-container
+                >
+              }
+            } @else {
+              <ng-container i18n="Aucune séance clôturée@@agenda.detail.noSession"
+                >Aucune séance clôturée pour l'instant.</ng-container
+              >
+            }
+          </p>
+        }
+      }
+      <div class="links">
+        <a
+          class="btn"
+          [routerLink]="patientLink().concat('overview')"
+          i18n="Lien du détail vers la vue d'ensemble@@agenda.detail.overview"
+          >Vue d'ensemble</a
+        >
+        <a
+          class="btn"
+          [routerLink]="patientLink().concat('timeline')"
+          i18n="Lien du détail vers la timeline@@agenda.detail.timeline"
+          >Timeline</a
+        >
+      </div>
+    </section>
+
+    <!-- Note de planification : visible seulement ici, enregistrée au blur. -->
+    <div class="block">
+      <label [for]="ids.note" class="label" i18n="Champ note de planification@@agenda.detail.note"
+        >Note de planification</label
+      >
+      <textarea
+        [id]="ids.note"
+        rows="2"
+        [value]="noteDraft()"
+        [readOnly]="!active()"
+        [attr.maxlength]="noteMax"
+        [attr.aria-describedby]="ids.noteStatus"
+        (input)="editNote($any($event.target).value)"
+        (focus)="focusNote()"
+        (blur)="saveNote()"
+      ></textarea>
+      <span class="hint" [id]="ids.noteStatus">
+        <ng-container i18n="Aide de la note de planification@@agenda.detail.noteHint"
+          >Visible seulement dans l'agenda.</ng-container
+        >
+        <span class="saved" role="status">{{ noteStatusText() }}</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="foot">
+    @if (active()) {
+      <!-- Démarrer la séance : M11-08 non livrée, inerte et dit « à venir » comme le carreau Facture. -->
+      <button
+        type="button"
+        class="start"
+        aria-disabled="true"
+        [attr.aria-label]="startLater"
+        [title]="startLater"
+      >
+        {{ startLabel }}
+      </button>
+      @if (item.status === 'tentative') {
+        <button
+          type="button"
+          class="confirm"
+          [disabled]="busy()"
+          (click)="confirm()"
+          i18n="Action Confirmer du détail@@agenda.detail.confirm"
+        >
+          Confirmer le rendez-vous
+        </button>
+      }
+    }
+    <div class="actions">
+      @if (active()) {
+        <button
+          type="button"
+          [id]="ids.moveButton"
+          [attr.aria-expanded]="mode() === 'move'"
+          [attr.aria-controls]="ids.moveForm"
+          (click)="openMove()"
+          i18n="Action Déplacer du détail@@agenda.detail.move"
+        >
+          Déplacer
+        </button>
+      }
+      <button
+        type="button"
+        (click)="duplicate()"
+        i18n="Action Dupliquer du détail@@agenda.detail.duplicate"
+      >
+        Dupliquer
+      </button>
+      @if (active()) {
+        <button
+          type="button"
+          class="danger"
+          [id]="ids.cancelButton"
+          [attr.aria-expanded]="mode() === 'cancel'"
+          [attr.aria-controls]="ids.cancelForm"
+          (click)="openCancel()"
+          i18n="Action Annuler du détail@@agenda.detail.cancel"
+        >
+          Annuler
+        </button>
+      }
+    </div>
+    <span class="help" i18n="Aide clavier du détail@@agenda.detail.help"
+      >Glisser le rendez-vous dans la grille ou « Déplacer » · <kbd>Échap</kbd> ferme le
+      détail</span
+    >
+  </div>
+} @else {
+  <div class="head">
+    <div class="kicker-row">
+      <span class="kicker"></span>
+      <button
+        type="button"
+        class="close"
+        [attr.aria-label]="closeLabel"
+        (click)="closed.emit(appointment())"
+      >
+        ×
+      </button>
+    </div>
+  </div>
+  <div class="body">
+    @switch (state()) {
+      @case ('missing') {
+        <pm-state kind="empty" [title]="missingTitle" [message]="missingMessage" />
+      }
+      @case ('error') {
+        <pm-state kind="error" [action]="retry" />
+      }
+      @default {
+        <pm-state kind="loading" skeleton="block" [lines]="3" />
+      }
+    }
+  </div>
+}

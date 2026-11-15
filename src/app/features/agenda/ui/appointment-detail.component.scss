@@ -207,53 +207,103 @@ textarea {
   color: var(--text-secondary);
 }
 
-.google {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: var(--surface-ground);
-  font-size: 12px;
-  line-height: 1.5;
+.cancelled {
+  margin: 0;
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.saved {
   color: var(--text-secondary);
 }
 
-.google-title {
+.saved {
+  margin-left: 6px;
+}
+
+// Formulaires sur place (Déplacer, Annuler) : champs empilés, boutons à droite.
+.inline {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-  font-weight: 500;
-  color: var(--success);
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-ground);
+}
 
-  svg {
-    width: 12px;
-    height: 12px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
+.fields {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: 8px;
+}
 
-  .summary {
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+
+  input,
+  select {
+    box-sizing: border-box;
+    width: 100%;
+    height: 34px;
+    padding: 0 8px;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--surface-raised);
     color: var(--text-primary);
+    font-size: 13px;
   }
 }
 
-.reminder {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  font-size: 13px;
+.error {
+  margin: 0;
+  font-size: 12px;
+  color: var(--danger);
+}
 
-  input {
-    width: 16px;
-    height: 16px;
-    margin: 0;
-    accent-color: var(--primary);
+.form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.form-actions button,
+.confirm {
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: 500 13px/1 var(--font-ui);
+  cursor: pointer;
+
+  &.primary {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-on);
   }
+
+  &.danger-fill {
+    border-color: var(--danger);
+    background: var(--danger);
+    color: var(--surface-raised);
+  }
+
+  &:disabled {
+    cursor: progress;
+  }
+}
+
+.confirm {
+  height: 38px;
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .foot {

@@ -1,9 +1,9 @@
 import { SessionModalityCode } from '../../../shared/ui';
 
 /**
- * Modèle de vue de l'agenda (fiches 15 et 15b). Le backend (module `scheduling`) n'existe pas
- * encore : ces types décrivent ce que l'écran affiche ; agenda.api.ts les remplira depuis le client
- * généré le jour où le contrat portera l'agenda.
+ * Modèle de vue de l'agenda (fiches 15 et 15b). agenda.api.ts le remplit depuis le client généré
+ * (contrat `contract-v0.12.1`, module `agenda` de psymate-api) ; le store et les composants ne
+ * voient que ces types.
  */
 
 /** Les quatre vues de la barre d'outils (fiche 15 : `/agenda?view=day|week|month|list`). */
@@ -19,90 +19,166 @@ export const APPOINTMENT_MODALITIES: readonly AppointmentModality[] = [
   'phone',
 ];
 
-/** Statut (fiche 15) : planifié, à confirmer (15b `toConfirm`), annulé, fait. */
+/** Statut : planifié, à confirmer (case « À confirmer » de 15b), annulé, fait (séance rattachée). */
 export type AppointmentStatus = 'planned' | 'tentative' | 'cancelled' | 'done';
 
-/** Patient tel que le détail du rendez-vous le montre (fiche 15 §5). */
+/** Patient du rendez-vous (`AppointmentDto.patient`), âge calculé depuis la date de naissance. */
 export interface AppointmentPatient {
   id: string;
   displayName: string;
+  /** `yyyy-MM-dd`, null si inconnue. */
+  birthDate: string | null;
   age: number | null;
-  /** Mois du début du suivi, ISO `yyyy-MM-dd`. */
-  followedSince: string;
-  /** Drapeau du dossier (« à surveiller »), null sans drapeau. */
-  flag: string | null;
-  /** Rythme habituel en clair (« toutes les 1 à 2 semaines »). */
-  rhythm: string;
+  archived: boolean;
 }
 
-/** Bloc « Préparer » du détail (fiche 15 §5) : dernière séance, objectif, ce qui s'est passé depuis. */
-export interface AppointmentPreparation {
-  lastSessionAt: string;
-  objective: string;
-  feelings: number;
-  feelingValues: string;
-  events: number;
-  eventLabel: string;
-}
-
-/** Ce qui est dans Google pour ce rendez-vous (fiche 15 §5, bloc Google). */
-export interface AppointmentGoogle {
-  /** Titre de l'événement copié (« Séance · M. D. »). */
-  summary: string;
-  /** Historique (« déplacé depuis Google le 22 oct. (9:00 → 10:00) »), null sans mouvement. */
-  history: string | null;
-}
-
+/** Un rendez-vous (`AppointmentDto`). */
 export interface Appointment {
   id: string;
   patient: AppointmentPatient;
-  /** Début et fin, ISO avec fuseau (UTC en transit, affichés dans le fuseau du navigateur). */
+  /** Série de répétition ; null pour un rendez-vous isolé. */
+  seriesId: string | null;
+  /** Début et fin, ISO UTC (affichés dans le fuseau du navigateur). */
   startsAt: string;
   endsAt: string;
+  durationMin: number;
   modality: AppointmentModality;
   status: AppointmentStatus;
-  /** Séance planifiée, ou contact téléphonique (bandeau fin de 14 px). */
-  kind: 'session' | 'contact';
-  sessionNumber: number;
-  /** Lieu (« Cabinet · 12 rue Vendôme »), null en visio ou au téléphone. */
-  place: string | null;
-  planningNote: string;
-  google: AppointmentGoogle | null;
-  preparation: AppointmentPreparation;
+  planningNote: string | null;
+  cancelReason: string | null;
+  cancelledAt: string | null;
+  /** Séance rattachée (« Démarrer la séance », M11-08, pas encore livrée) ; null sinon. */
+  sessionEntryId: string | null;
 }
 
-/** Agenda Google en lecture (fiche 15 : Pro, Perso), rendu hachuré sans titre. */
-export type GoogleCalendar = 'pro' | 'perso';
-
+/**
+ * Indisponibilité externe (agenda Google ou Outlook, jalon ultérieur) : rendue hachurée, sans titre.
+ * L'API renvoie `busy: []` en V1 ; la grille sait déjà les dessiner.
+ */
 export interface BusyBlock {
   id: string;
-  calendar: GoogleCalendar;
+  /** Nom de l'agenda d'origine (« Google Pro »). */
+  calendar: string;
   startsAt: string;
   endsAt: string;
 }
 
-/** Ce que renvoie une lecture de l'agenda sur une plage (futur `GET /api/agenda?from&to`). */
+/** Ce que renvoie une lecture de l'agenda sur une plage (`GET /api/agenda?from&to`). */
 export interface AgendaData {
   appointments: Appointment[];
   busy: BusyBlock[];
 }
 
-/** Cases du rail gauche (fiche 15 §3) : trois agendas de l'application, deux agendas Google. */
-export type CalendarKey = AppointmentModality | 'google-pro' | 'google-perso';
-export const CALENDAR_KEYS: readonly CalendarKey[] = [
-  'in_person',
-  'video',
-  'phone',
-  'google-pro',
-  'google-perso',
-];
+/** Cases du rail gauche (fiche 15 §3) : les trois agendas de l'application, par modalité. */
+export type CalendarKey = AppointmentModality;
+export const CALENDAR_KEYS: readonly CalendarKey[] = ['in_person', 'video', 'phone'];
 
-/** État de synchronisation Google (fiche 15 §2) : vert, ambre, rouge, toujours avec texte. */
-export interface SyncStatus {
-  state: 'ok' | 'pending' | 'error';
-  /** Minutes depuis la dernière synchronisation réussie. */
-  minutesAgo: number;
+/** Rendez-vous chevauché (`ConflictDto`) : signalé, jamais bloquant (fiche 15b). */
+export interface Conflict {
+  appointmentId: string;
+  patientDisplayName: string;
+  startsAt: string;
+  endsAt: string;
+  /** Occurrence du créneau demandé que ce rendez-vous chevauche. */
+  occurrenceStartsAt: string;
 }
+
+/** Conflits et voisinage d'un créneau (`GET /api/agenda/freebusy`). */
+export interface FreeBusy {
+  conflicts: Conflict[];
+  previous: Appointment | null;
+  next: Appointment | null;
+}
+
+/** Défauts de création pour un patient (`AppointmentDefaultsDto`). */
+export interface PatientDefaults {
+  durationMin: number;
+  modality: AppointmentModality;
+  /** Rythme du suivi, texte libre affiché tel quel ; null s'il n'est pas renseigné. */
+  rhythm: string | null;
+}
+
+/** Rendez-vous à venir d'un patient et ses défauts (`GET /api/patients/{id}/appointments`). */
+export interface PatientAppointments {
+  appointments: Appointment[];
+  defaults: PatientDefaults;
+}
+
+/** Patient proposé par la recherche du panneau 15b (patients actifs du praticien). */
+export interface PatientOption {
+  id: string;
+  displayName: string;
+  age: number | null;
+}
+
+/** Bloc « Préparer » du détail, composé depuis la vue d'ensemble du patient. */
+export interface AppointmentPreparation {
+  /** Début de la dernière séance clôturée, ISO ; null s'il n'y en a pas. */
+  lastSessionAt: string | null;
+  /** Entrées depuis la dernière séance, par nature. */
+  feelings: number;
+  events: number;
+  others: number;
+  /** Début du suivi, ISO ; null si inconnu. */
+  followedSince: string | null;
+}
+
+/** Répétition d'une création : toutes les 1, 2 ou 4 semaines, un nombre ou une date de fin. */
+export interface AppointmentRecurrence {
+  everyWeeks: RepeatWeeks;
+  count?: number;
+  /** `yyyy-MM-dd`, inclus. */
+  until?: string;
+}
+
+export type RepeatWeeks = 1 | 2 | 4;
+
+/** Corps de `POST /api/appointments`. */
+export interface NewAppointment {
+  patientId: string;
+  startsAt: string;
+  durationMin: number;
+  modality: AppointmentModality;
+  planningNote?: string;
+  tentative: boolean;
+  /** Fuseau IANA du navigateur (heure locale des occurrences, lecture de `until`). */
+  tz: string;
+  recurrence?: AppointmentRecurrence;
+}
+
+/** Corps de `PATCH /api/appointments/{id}` (fusion partielle ; `planningNote: null` efface). */
+export interface AppointmentPatch {
+  startsAt?: string;
+  durationMin?: number;
+  modality?: AppointmentModality;
+  planningNote?: string | null;
+}
+
+/** Réponse d'une création : les occurrences créées et les chevauchements constatés. */
+export interface CreatedAppointments {
+  appointments: Appointment[];
+  conflicts: Conflict[];
+}
+
+/** Réponse d'une modification : le rendez-vous et les chevauchements constatés. */
+export interface UpdatedAppointment {
+  appointment: Appointment;
+  conflicts: Conflict[];
+}
+
+/** Préférences `agenda.*` lues par la grille : bornes horaires, jours travaillés (1 = lundi). */
+export interface AgendaHours {
+  dayStartHour: number;
+  dayEndHour: number;
+  workingDays: readonly number[];
+}
+
+/** Défauts du contrat pour `agenda.*` (8 h, 19 h, lundi à samedi). */
+export const DEFAULT_HOURS: AgendaHours = {
+  dayStartHour: 8,
+  dayEndHour: 19,
+  workingDays: [1, 2, 3, 4, 5, 6],
+};
 
 /** Plage affichée : début inclus, fin exclue, bornes à minuit (heure locale). */
 export interface AgendaRange {
@@ -110,16 +186,20 @@ export interface AgendaRange {
   to: Date;
 }
 
-/** Grille horaire (fiche 15 §4) : 8 h → 19 h, 52 px par heure (préférence `agenda.hours` plus tard). */
-export const GRID_START_HOUR = 8;
-export const GRID_END_HOUR = 19;
-export const HOUR_PX = 52;
-
 /** Vue Liste : les 30 prochains jours (fiche 15, interactions). */
 export const LIST_DAYS = 30;
 
-/** Durées proposées par le panneau 15b (segments), en minutes. */
+/** Durées proposées par le panneau 15b, en minutes (la durée du patient s'y ajoute). */
 export const DURATIONS_MIN: readonly number[] = [30, 45, 50, 60, 90];
+
+/** Au plus 26 occurrences par série (contrat : 422 TOO_MANY_OCCURRENCES au-delà). */
+export const MAX_OCCURRENCES = 26;
+
+/** Motif d'annulation : 500 caractères au plus (contrat). */
+export const CANCEL_REASON_MAX = 500;
+
+/** Note de planification : 2 000 caractères au plus (contrat). */
+export const PLANNING_NOTE_MAX = 2000;
 
 export const DAY_MS = 86_400_000;
 
@@ -234,43 +314,77 @@ export function daysOf(range: AgendaRange): Date[] {
   return days;
 }
 
-/** Minutes depuis minuit, heure locale. */
-export function minutesOfDay(value: string | Date): number {
+/** L'instant est-il dans la plage (début inclus, fin exclue) ? */
+export function inRange(range: AgendaRange, value: string | Date): boolean {
   const date = value instanceof Date ? value : new Date(value);
-  return date.getHours() * 60 + date.getMinutes();
+  return date >= range.from && date < range.to;
 }
 
-export function durationMin(startsAt: string, endsAt: string): number {
-  return Math.round((new Date(endsAt).getTime() - new Date(startsAt).getTime()) / 60_000);
+/** `HH:MM` → minutes depuis minuit ; null si la saisie ne se lit pas. */
+export function parseTime(value: string | null | undefined): number | null {
+  const match = /^(\d{1,2}):(\d{2})$/.exec((value ?? '').trim());
+  if (!match) return null;
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  return hours < 24 && minutes < 60 ? hours * 60 + minutes : null;
 }
 
-/** Position verticale (px) d'un instant dans la grille horaire, borné à la grille. */
-export function gridTop(value: string | Date): number {
-  const minutes = minutesOfDay(value) - GRID_START_HOUR * 60;
-  const max = (GRID_END_HOUR - GRID_START_HOUR) * 60;
-  return (Math.min(Math.max(minutes, 0), max) / 60) * HOUR_PX;
+/** Instant local d'un jour `yyyy-MM-dd` et d'une heure `HH:MM` ; null si l'un ne se lit pas. */
+export function atLocal(
+  day: string | null | undefined,
+  time: string | null | undefined,
+): Date | null {
+  const date = fromIsoDay(day);
+  const minutes = parseTime(time);
+  if (!date || minutes === null) return null;
+  date.setHours(Math.floor(minutes / 60), minutes % 60, 0, 0);
+  return date;
+}
+
+/** Fuseau IANA du navigateur (séries et voisinage, contrat : `tz`). */
+export function browserTimeZone(): string {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Paris';
+}
+
+/** Âge révolu à une date (heure locale) depuis `yyyy-MM-dd` ; null si la date ne se lit pas. */
+export function ageOf(
+  birthDate: string | null | undefined,
+  today: Date = new Date(),
+): number | null {
+  const birth = fromIsoDay(birthDate);
+  if (!birth || birth > today) return null;
+  const before =
+    today.getMonth() < birth.getMonth() ||
+    (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate());
+  return today.getFullYear() - birth.getFullYear() - (before ? 1 : 0);
 }
 
 /**
- * Plages non travaillées de la grille (fiche 15 §4 : dimanche hachuré, demi-journées hachurées).
- * Démonstration : vendredi et samedi après 13 h, dimanche entier ; une préférence les portera.
+ * Occurrences d'une série telles que le serveur les posera (même heure locale, toutes les n
+ * semaines) : `count` occurrences, ou jusqu'à `until` inclus. Bornée à `MAX_OCCURRENCES + 1` pour
+ * que l'écran sache dire « au-delà de 26 ».
  */
-export function offHours(day: Date): { fromMinutes: number; toMinutes: number } | null {
-  const weekday = day.getDay();
-  if (weekday === 0) return { fromMinutes: GRID_START_HOUR * 60, toMinutes: GRID_END_HOUR * 60 };
-  if (weekday === 5 || weekday === 6)
-    return { fromMinutes: 13 * 60, toMinutes: GRID_END_HOUR * 60 };
-  return null;
+export function occurrencesOf(start: Date, recurrence: AppointmentRecurrence | null): Date[] {
+  if (!recurrence) return [start];
+  const until = recurrence.until ? fromIsoDay(recurrence.until) : null;
+  const limit = recurrence.until ? MAX_OCCURRENCES + 1 : (recurrence.count ?? 1);
+  const list: Date[] = [];
+  for (let index = 0; index < limit; index++) {
+    const date = addDays(start, 7 * recurrence.everyWeeks * index);
+    if (until && date >= addDays(until, 1)) break;
+    list.push(date);
+  }
+  return list;
 }
 
-/** Le samedi est travaillé (teinte dans l'en-tête et la colonne, fiche 15 §4). */
-export function isWorkedSaturday(day: Date): boolean {
-  return day.getDay() === 6;
+/** Un rendez-vous se déplace, s'annule ou se confirme tant qu'il est planifié ou à confirmer. */
+export function isActive(item: Appointment): boolean {
+  return item.status === 'planned' || item.status === 'tentative';
 }
 
-/** La case du rail qui montre ou masque cet élément. */
-export function calendarOf(item: Appointment | BusyBlock): CalendarKey {
-  return 'modality' in item ? item.modality : `google-${item.calendar}`;
+/** La case du rail qui montre ou masque ce rendez-vous. */
+export function calendarOf(item: Appointment): CalendarKey {
+  return item.modality;
 }
 
 /** Tri chronologique, puis par identifiant pour une liste stable. */

@@ -10,9 +10,25 @@
 
 
 /**
- * Préférences à plat du compte : 9 clés connues, aux noms pointés (par exemple \"overview.view\"), sans objet imbriqué. En lecture, les 9 clés sont toujours présentes (valeur enregistrée, sinon défaut selon la profession). En PATCH, toutes les clés sont optionnelles : null remet la clé à son défaut, une clé inconnue est ignorée.
+ * Préférences à plat du compte : 13 clés connues, aux noms pointés (par exemple \"overview.view\"), sans objet imbriqué. En lecture, les 13 clés sont toujours présentes (valeur enregistrée, sinon défaut selon la profession). En PATCH, toutes les clés sont optionnelles : null remet la clé à son défaut, une clé inconnue est ignorée. Les bornes de la journée de l\'agenda doivent rester cohérentes : agenda.dayEndHour strictement supérieur à agenda.dayStartHour, sinon 422 OUT_OF_RANGE sur agenda.dayEndHour.
  */
 export interface Preferences { 
+    /**
+     * Dernière heure affichée dans la grille de l\'agenda (entier de 1 à 24), strictement supérieure à agenda.dayStartHour après fusion. Hors bornes ou non supérieure au début : 422 OUT_OF_RANGE. Défaut : 19.
+     */
+    'agenda.dayEndHour'?: number;
+    /**
+     * Première heure affichée dans la grille de l\'agenda (entier de 0 à 23). Hors bornes : 422 OUT_OF_RANGE. Défaut : 8.
+     */
+    'agenda.dayStartHour'?: number;
+    /**
+     * Vue ouverte par défaut dans l\'agenda : day = jour, week = semaine, month = mois, list = liste. Défaut : week.
+     */
+    'agenda.defaultView'?: PreferencesAgendaDefaultViewEnum;
+    /**
+     * Jours travaillés affichés dans l\'agenda : tableau d\'entiers de 1 (lundi) à 7 (dimanche), sans doublon, au moins un jour, dans l\'ordre enregistré (jour hors 1–7 : 422 OUT_OF_RANGE ; doublon, liste vide ou autre type : 422 INVALID_VALUE). Défaut : [1,2,3,4,5,6].
+     */
+    'agenda.workingDays'?: Array<number>;
     /**
      * Visibilité proposée par défaut pour une nouvelle entrée : clinical = clinique, private = privée. Défaut : clinical.
      */
@@ -50,6 +66,12 @@ export interface Preferences {
      */
     'vocabulary.subjectLabel'?: PreferencesVocabularySubjectLabelEnum;
 }
+export enum PreferencesAgendaDefaultViewEnum {
+    Day = 'day',
+    Week = 'week',
+    Month = 'month',
+    List = 'list'
+};
 export enum PreferencesEntriesDefaultVisibilityEnum {
     Clinical = 'clinical',
     Private = 'private'

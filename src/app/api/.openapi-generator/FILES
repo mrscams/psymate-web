@@ -11,6 +11,8 @@ api/administration-verifications.service.ts
 api/administration-verifications.serviceInterface.ts
 api/administration-vocabulaire-de-lannuaire.service.ts
 api/administration-vocabulaire-de-lannuaire.serviceInterface.ts
+api/agenda.service.ts
+api/agenda.serviceInterface.ts
 api/annuaire-public.service.ts
 api/annuaire-public.serviceInterface.ts
 api/api.ts
@@ -44,6 +46,8 @@ api/recherche.service.ts
 api/recherche.serviceInterface.ts
 api/recours.service.ts
 api/recours.serviceInterface.ts
+api/rendez-vous.service.ts
+api/rendez-vous.serviceInterface.ts
 api/seances.service.ts
 api/seances.serviceInterface.ts
 api/securite-du-compte.service.ts
@@ -77,6 +81,7 @@ model/admin-address-dto.ts
 model/admin-decision-dto.ts
 model/admin-document-dto.ts
 model/admin-signed-url-dto.ts
+model/agenda-window-dto.ts
 model/appeal-created-dto.ts
 model/appeal-decision-request.ts
 model/appeal-item-dto.ts
@@ -84,11 +89,20 @@ model/appeal-list-dto.ts
 model/appeal-otp-required-dto.ts
 model/appeal-request.ts
 model/appeal-summary-dto.ts
+model/appointment-created-dto.ts
+model/appointment-defaults-dto.ts
+model/appointment-dto.ts
+model/appointment-patient-dto.ts
+model/appointment-series-dto.ts
+model/appointment-updated-dto.ts
+model/cancel-appointment-request.ts
 model/card.ts
 model/change-link-type-request.ts
 model/close-session-request.ts
+model/conflict-dto.ts
 model/consents.ts
 model/contact-dto.ts
+model/create-appointment-request.ts
 model/create-emotion-request.ts
 model/create-entry-request.ts
 model/create-link-request.ts
@@ -137,6 +151,7 @@ model/feelings-dto.ts
 model/field-problem.ts
 model/flag-dto.ts
 model/flag-request.ts
+model/free-busy-dto.ts
 model/graph-dto.ts
 model/graph-edge-dto.ts
 model/graph-node-dto.ts
@@ -168,6 +183,7 @@ model/password-reset-confirm-request.ts
 model/password-reset-request.ts
 model/patch-entry-request.ts
 model/patch-request.ts
+model/patient-appointments-dto.ts
 model/patient-dto.ts
 model/patient-page.ts
 model/preferences.ts
@@ -186,6 +202,7 @@ model/recent-activity-item-dto.ts
 model/recent-session-dto.ts
 model/record-contact-request.ts
 model/recovery-codes-response.ts
+model/recurrence-request.ts
 model/register-request.ts
 model/register-response.ts
 model/rename-emotion-request.ts
@@ -218,6 +235,7 @@ model/trend-point-dto.ts
 model/two-factor-disable-request.ts
 model/two-factor-enable-response.ts
 model/two-factor-verify-request.ts
+model/update-appointment-request.ts
 model/update-profile-request.ts
 model/verification-dto.ts
 model/version-dto.ts

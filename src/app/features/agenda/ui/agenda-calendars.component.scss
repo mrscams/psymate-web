@@ -17,26 +17,27 @@
   background: var(--surface-raised);
 }
 
-h2 {
+h2,
+.google {
   margin: 0;
   font: 600 12px/1.4 var(--font-ui);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-secondary);
-
-  &.google {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
 }
 
-.connected {
-  font-size: 10px;
-  font-weight: 500;
+// « Google Agenda · à venir » : texte, pas un contrôle désactivé ; text-secondary (contraste AA).
+.google {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.later {
+  font-size: 11px;
+  font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
-  color: var(--success);
 }
 
 .row {
@@ -66,10 +67,6 @@ h2 {
   accent-color: var(--entry-note);
 }
 
-.accent-google {
-  accent-color: var(--text-secondary);
-}
-
 .swatch {
   width: 12px;
   height: 12px;
@@ -86,44 +83,12 @@ h2 {
   &.phone {
     background: var(--entry-note);
   }
-
-  &.hatched {
-    border: 1px solid var(--border-strong);
-    background: repeating-linear-gradient(
-      135deg,
-      var(--border-strong) 0 2px,
-      var(--surface-raised) 2px 4px
-    );
-  }
-}
-
-.read {
-  font-size: 11px;
-  color: var(--text-secondary);
 }
 
 .divider {
   height: 1px;
   margin: 2px 0;
   background: var(--surface-sunken);
-}
-
-.detail {
-  margin: 2px 0 0;
-  font-size: 11px;
-  line-height: 1.5;
-  color: var(--text-secondary);
-
-  // Lien dans un texte gris : souligné (axe link-in-text-block ; la maquette ne le soulignait pas).
-  a {
-    margin-left: 4px;
-    color: var(--primary);
-    text-decoration: underline;
-
-    &:hover {
-      color: var(--primary-hover);
-    }
-  }
 }
 
 .legend {
@@ -150,13 +115,5 @@ h2 {
 
   &.dashed {
     border: 1px dashed var(--text-secondary);
-  }
-
-  &.hatched {
-    background: repeating-linear-gradient(
-      135deg,
-      var(--border-strong) 0 2px,
-      var(--surface-raised) 2px 4px
-    );
   }
 }

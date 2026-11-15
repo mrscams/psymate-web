@@ -1,11 +1,13 @@
-import { demoAgenda } from './agenda.fixtures';
 import {
-  calendarOf,
+  ageOf,
+  atLocal,
   daysOf,
   fromIsoDay,
-  gridTop,
+  inRange,
   isoWeek,
-  offHours,
+  MAX_OCCURRENCES,
+  occurrencesOf,
+  parseTime,
   rangeFor,
   startOfWeek,
   stepDate,
@@ -50,49 +52,44 @@ describe('agenda.model : dates et plages', () => {
     expect(toIsoDay(stepDate('list', d('2026-10-26'), 1))).toBe('2026-11-25');
   });
 
-  it('gridTop : 52 px par heure depuis 8 h, borné à la grille', () => {
-    expect(gridTop(new Date(2026, 9, 26, 9, 0))).toBe(52);
-    expect(gridTop(new Date(2026, 9, 26, 10, 30))).toBe(130);
-    expect(gridTop(new Date(2026, 9, 26, 6, 0))).toBe(0);
-    expect(gridTop(new Date(2026, 9, 26, 22, 0))).toBe(11 * 52);
-  });
-
-  it('offHours : dimanche entier, vendredi et samedi après 13 h, rien les autres jours', () => {
-    expect(offHours(d('2026-11-01'))).toEqual({ fromMinutes: 480, toMinutes: 1140 });
-    expect(offHours(d('2026-10-30'))).toEqual({ fromMinutes: 780, toMinutes: 1140 });
-    expect(offHours(d('2026-10-31'))?.fromMinutes).toBe(780);
-    expect(offHours(d('2026-10-28'))).toBeNull();
+  it('inRange : début inclus, fin exclue', () => {
+    const week = rangeFor('week', d('2026-10-28'));
+    expect(inRange(week, new Date(2026, 9, 26, 0, 0))).toBe(true);
+    expect(inRange(week, new Date(2026, 10, 1, 23, 59))).toBe(true);
+    expect(inRange(week, new Date(2026, 10, 2, 0, 0))).toBe(false);
   });
 });
 
-describe('agenda.fixtures : la semaine de la maquette', () => {
-  const week = demoAgenda(rangeFor('week', d('2026-10-26')));
-
-  it('14 séances et 3 blocs Google, identifiants stables, Marie D. le samedi à 10 h', () => {
-    expect(week.appointments).toHaveLength(14);
-    expect(week.busy).toHaveLength(3);
-    const marie = week.appointments.find((item) => item.patient.displayName === 'Marie D.')!;
-    expect(marie.id).toBe('rdv-2026-10-31-13');
-    expect(new Date(marie.startsAt).getHours()).toBe(10);
-    expect(marie.status).toBe('planned');
-    expect(marie.google?.history).toContain('déplacé depuis Google');
-    expect(demoAgenda(rangeFor('day', d('2026-10-31'))).appointments.map((a) => a.id)).toEqual([
-      'rdv-2026-10-31-13',
-      'rdv-2026-10-31-14',
-    ]);
+describe('agenda.model : saisie et calculs', () => {
+  it('parseTime / atLocal : HH:MM en heure locale, saisies invalides refusées', () => {
+    expect(parseTime('09:30')).toBe(570);
+    expect(parseTime('9:05')).toBe(545);
+    expect(parseTime('24:00')).toBeNull();
+    expect(parseTime('10h')).toBeNull();
+    const date = atLocal('2026-11-07', '10:00')!;
+    expect([date.getDate(), date.getHours(), date.getMinutes()]).toEqual([7, 10, 0]);
+    expect(atLocal('2026-02-30', '10:00')).toBeNull();
   });
 
-  it('statuts et genres de la maquette : Yanis à confirmer, Inès en contact téléphonique', () => {
-    const yanis = week.appointments.find((item) => item.patient.displayName === 'Yanis M.')!;
-    expect(yanis.status).toBe('tentative');
-    const ines = week.appointments.find((item) => item.patient.displayName === 'Inès V.')!;
-    expect(ines.kind).toBe('contact');
-    expect(ines.modality).toBe('phone');
-    expect(calendarOf(ines)).toBe('phone');
-    expect(calendarOf(week.busy[0])).toBe('google-pro');
+  it('ageOf : âge révolu, anniversaire compris ; date inconnue → null', () => {
+    const today = new Date(2026, 10, 15);
+    expect(ageOf('1992-03-14', today)).toBe(34);
+    expect(ageOf('1992-11-15', today)).toBe(34);
+    expect(ageOf('1992-11-16', today)).toBe(33);
+    expect(ageOf(null, today)).toBeNull();
+    expect(ageOf('2030-01-01', today)).toBeNull();
   });
 
-  it('une plage vide (dimanche) ne contient rien', () => {
-    expect(demoAgenda(rangeFor('day', d('2026-11-01')))).toEqual({ appointments: [], busy: [] });
+  it('occurrencesOf : n fois toutes les 2 semaines, jusqu’à une date incluse, borné à 26 + 1', () => {
+    const start = new Date(2026, 10, 7, 10, 0);
+    expect(occurrencesOf(start, null)).toEqual([start]);
+    const three = occurrencesOf(start, { everyWeeks: 2, count: 3 });
+    expect(three.map(toIsoDay)).toEqual(['2026-11-07', '2026-11-21', '2026-12-05']);
+    expect(three[2].getHours()).toBe(10);
+    const until = occurrencesOf(start, { everyWeeks: 1, until: '2026-11-28' });
+    expect(until.map(toIsoDay)).toEqual(['2026-11-07', '2026-11-14', '2026-11-21', '2026-11-28']);
+    expect(occurrencesOf(start, { everyWeeks: 1, until: '2028-01-01' })).toHaveLength(
+      MAX_OCCURRENCES + 1,
+    );
   });
 });

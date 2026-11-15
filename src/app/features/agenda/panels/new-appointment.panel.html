@@ -1,20 +1,31 @@
 <pm-side-panel [title]="title" [subtitle]="subtitle">
-  <form [formGroup]="form" (ngSubmit)="submit()" novalidate [id]="ids.patient + '-form'">
-    <!-- Patient : carte préremplie, recherche, ligne de rythme. -->
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate [id]="formId">
+    <pm-form-errors [errors]="errors()" [labels]="fieldLabels" [unmatched]="unmatched()" />
+    @if (message(); as text) {
+      <p class="form-message" role="alert">{{ text }}</p>
+    }
+
+    <!-- Patient : carte du patient choisi, recherche parmi les patients actifs. -->
     <section class="section">
-      <label class="label" [for]="ids.patient" i18n="Section patient du panneau@@agenda.new.patient"
+      <label
+        class="label"
+        [for]="fieldId('patientId')"
+        i18n="Section patient du panneau@@agenda.new.patient"
         >Patient</label
       >
-      @if (data.patient; as patient) {
+      @if (chosen(); as patient) {
         <div class="patient-card">
           <span class="avatar" aria-hidden="true">{{ patientInitials() }}</span>
           <div class="who">
             <span class="name">{{ patient.displayName }}</span>
-            <span class="meta">{{ patientMeta() }}</span>
+            @if (patientMeta(); as meta) {
+              <span class="meta">{{ meta }}</span>
+            }
           </div>
           <button
             type="button"
             class="change"
+            cdkFocusInitial
             (click)="changePatient()"
             i18n="Bouton Changer de patient@@agenda.new.change"
           >
@@ -22,54 +33,102 @@
           </button>
         </div>
       }
-      <input
-        #search
-        [id]="ids.patient"
-        type="search"
-        class="search"
-        [placeholder]="searchPlaceholder"
-        autocomplete="off"
-      />
-      @if (rhythm(); as rhythm) {
-        <span class="rhythm" [class.ok]="rhythm.ok" [class.warn]="!rhythm.ok">
-          @if (rhythm.ok) {
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d="M20 6 9 17l-5-5" />
-            </svg>
-          } @else {
-            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-              <path d="M8 2.5 1.8 13.5h12.4L8 2.5zM8 7v3M8 12h.01" />
-            </svg>
-          }
-          {{ rhythm.text }}
-        </span>
-      }
+      <div class="combo">
+        <input
+          #search
+          [id]="fieldId('patientId')"
+          type="search"
+          class="search"
+          role="combobox"
+          aria-autocomplete="list"
+          [attr.aria-expanded]="listOpen()"
+          [attr.aria-controls]="listboxId"
+          [attr.aria-activedescendant]="activeId()"
+          [attr.aria-invalid]="invalid('patientId')"
+          [attr.aria-describedby]="fieldId('patientId') + '-error'"
+          [attr.cdkFocusInitial]="chosen() ? null : ''"
+          [placeholder]="chosen() ? otherPlaceholder : searchPlaceholder"
+          [formControl]="searchControl"
+          autocomplete="off"
+          (keydown)="onSearchKey($event)"
+        />
+        @if (listOpen()) {
+          @let results = store.results();
+          <ul class="options" role="listbox" [id]="listboxId" [attr.aria-label]="searchPlaceholder">
+            @for (option of results.data ?? []; track option.id; let index = $index) {
+              <li
+                role="option"
+                [id]="listboxId + '-' + index"
+                [attr.aria-selected]="index === activeIndex()"
+                [class.active]="index === activeIndex()"
+                tabindex="-1"
+                (mousedown)="$event.preventDefault()"
+                (click)="choose(option)"
+                (keydown.enter)="choose(option)"
+              >
+                <span class="name">{{ option.displayName }}</span>
+                @if (option.age !== null) {
+                  {{ ' ' }}
+                  <span class="meta" i18n="Âge d'un patient dans la recherche@@agenda.new.optionAge"
+                    >{{ option.age }} ans</span
+                  >
+                }
+              </li>
+            } @empty {
+              <li class="empty" role="option" aria-disabled="true" aria-selected="false">
+                @switch (results.status) {
+                  @case ('error') {
+                    {{ searchFailed }}
+                  }
+                  @case ('loaded') {
+                    {{ noResults }}
+                  }
+                  @default {
+                    {{ searching }}
+                  }
+                }
+              </li>
+            }
+          </ul>
+        }
+      </div>
+      <pm-field-errors [control]="form.controls.patientId" [id]="fieldId('patientId') + '-error'" />
     </section>
 
-    <!-- Créneau : date, début, durée ; fin et voisinage recalculés. -->
+    <!-- Créneau : date, début, durée ; fin et voisinage (GET /api/agenda/freebusy). -->
     <section class="section">
       <span class="label" i18n="Section créneau du panneau@@agenda.new.slot">Créneau</span>
       <div class="slot">
         <div class="field">
-          <label [for]="ids.date" i18n="Champ date du créneau@@agenda.new.date">Date</label>
-          <pm-date-field [inputId]="ids.date" formControlName="date" />
+          <label [for]="fieldId('date')" i18n="Champ date du créneau@@agenda.new.date">Date</label>
+          <pm-date-field [inputId]="fieldId('date')" formControlName="date" />
+          <pm-field-errors [control]="form.controls.date" [id]="fieldId('date') + '-error'" />
         </div>
         <div class="field">
-          <label [for]="ids.start" i18n="Champ heure de début@@agenda.new.start">Début</label>
+          <label [for]="fieldId('start')" i18n="Champ heure de début@@agenda.new.start"
+            >Début</label
+          >
           <input
-            [id]="ids.start"
+            [id]="fieldId('start')"
             type="text"
             class="mono"
             formControlName="start"
             inputmode="numeric"
-            placeholder="10:00"
+            [placeholder]="startPlaceholder"
             maxlength="5"
+            [attr.aria-invalid]="invalid('start')"
+            [attr.aria-describedby]="fieldId('start') + '-error'"
           />
+          <pm-field-errors [control]="form.controls.start" [id]="fieldId('start') + '-error'" />
         </div>
         <div class="field">
-          <label [for]="ids.duration" i18n="Champ durée@@agenda.new.duration">Durée</label>
-          <select [id]="ids.duration" formControlName="duration">
-            @for (minutes of durations; track minutes) {
+          <label [for]="fieldId('duration')" i18n="Champ durée@@agenda.new.duration">Durée</label>
+          <select
+            [id]="fieldId('duration')"
+            formControlName="duration"
+            [attr.aria-describedby]="fieldId('duration') + '-error'"
+          >
+            @for (minutes of durations(); track minutes) {
               <option
                 [ngValue]="minutes"
                 i18n="Option de durée du rendez-vous@@agenda.new.durationOption"
@@ -78,14 +137,31 @@
               </option>
             }
           </select>
+          <pm-field-errors
+            [control]="form.controls.duration"
+            [id]="fieldId('duration') + '-error'"
+          />
         </div>
       </div>
       <span class="hint" aria-live="polite">
         <ng-container i18n="Heure de fin du créneau@@agenda.new.endsAt"
           >Se termine à <span class="mono dark">{{ endLabel() }}</span></ng-container
         >
-        · {{ neighborLabel() }}.
+        @if (neighborLabel(); as neighbors) {
+          · {{ neighbors }}
+        }
       </span>
+      <!-- Chevauchement avec un rendez-vous existant : signalé, jamais bloquant. -->
+      <div aria-live="polite">
+        @if (conflict(); as text) {
+          <div class="warning">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M8 2.5 1.8 13.5h12.4L8 2.5zM8 7v3M8 12h.01" />
+            </svg>
+            <span>{{ text }}</span>
+          </div>
+        }
+      </div>
     </section>
 
     <!-- Modalité : trois segments. -->
@@ -96,7 +172,13 @@
         i18n="Section modalité du panneau@@agenda.new.modality"
         >Modalité</span
       >
-      <div role="group" aria-labelledby="agenda-new-modality" class="segments">
+      <div
+        role="group"
+        aria-labelledby="agenda-new-modality"
+        class="segments"
+        tabindex="-1"
+        [id]="fieldId('modality')"
+      >
         @for (modality of modalities; track modality) {
           <button
             type="button"
@@ -108,16 +190,19 @@
           </button>
         }
       </div>
-      <span class="hint">{{ modalityHint() }}</span>
+      <pm-field-errors [control]="form.controls.modality" [id]="fieldId('modality') + '-error'" />
     </section>
 
     <!-- Répéter : rythme, puis nombre ou date de fin. -->
     <section class="section">
-      <label class="label" [for]="ids.repeat" i18n="Section répéter du panneau@@agenda.new.repeat"
+      <label
+        class="label"
+        [for]="fieldId('repeat')"
+        i18n="Section répéter du panneau@@agenda.new.repeat"
         >Répéter</label
       >
       <div class="repeat">
-        <select [id]="ids.repeat" formControlName="repeat">
+        <select [id]="fieldId('repeat')" formControlName="repeat">
           <option [ngValue]="0" i18n="Option de récurrence@@agenda.new.repeat.none">
             Ne pas répéter
           </option>
@@ -132,26 +217,37 @@
           </option>
         </select>
         @if (repeating()) {
-          <select [id]="ids.count" formControlName="count" [attr.aria-label]="countAriaLabel">
-            <option value="4">{{ countLabel(4) }}</option>
-            <option value="8">{{ countLabel(8) }}</option>
+          <select
+            [id]="fieldId('count')"
+            formControlName="count"
+            [attr.aria-label]="countAriaLabel"
+            [attr.aria-describedby]="fieldId('count') + '-error'"
+          >
+            @for (count of counts; track count) {
+              <option [value]="'' + count">{{ countLabel(count) }}</option>
+            }
             <option value="until" i18n="Option de fin de série@@agenda.new.untilOption">
               Jusqu'à une date…
             </option>
           </select>
         }
       </div>
+      <pm-field-errors [control]="form.controls.count" [id]="fieldId('count') + '-error'" />
       @if (untilChosen()) {
         <div class="field">
-          <label [for]="ids.until" i18n="Champ date de fin de série@@agenda.new.until"
+          <label [for]="fieldId('until')" i18n="Champ date de fin de série@@agenda.new.until"
             >Jusqu'au</label
           >
           <pm-date-field
-            [inputId]="ids.until"
+            [inputId]="fieldId('until')"
             formControlName="until"
             [min]="form.controls.date.value"
           />
+          <pm-field-errors [control]="form.controls.until" [id]="fieldId('until') + '-error'" />
         </div>
+      }
+      @if (tooMany()) {
+        <span class="hint warn">{{ tooManyText }}</span>
       }
       @if (repeating()) {
         <span class="hint" i18n="Aide sur les occurrences@@agenda.new.repeatHint"
@@ -163,74 +259,34 @@
 
     <!-- Note de planification. -->
     <div class="section">
-      <label class="label" [for]="ids.note">
-        <ng-container i18n="Champ note de planification du panneau@@agenda.new.note"
-          >Note de planification</ng-container
-        >
-        <span class="never" i18n="Précision : jamais envoyée à Google@@agenda.new.noteNever"
-          >(jamais envoyée à Google)</span
-        >
-      </label>
+      <label
+        class="label"
+        [for]="fieldId('note')"
+        i18n="Champ note de planification du panneau@@agenda.new.note"
+        >Note de planification</label
+      >
       <textarea
-        [id]="ids.note"
+        [id]="fieldId('note')"
         rows="2"
         formControlName="note"
+        [attr.maxlength]="noteMax"
         [placeholder]="notePlaceholder"
+        [attr.aria-describedby]="fieldId('note') + '-error'"
       ></textarea>
-    </div>
-
-    <!-- Ce qui part vers Google. -->
-    <section class="google" [attr.aria-label]="googleLabel" aria-live="polite">
-      <span class="google-title">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M20 6 9 17l-5-5" />
-        </svg>
-        <ng-container i18n="Titre du bloc Google du panneau@@agenda.new.google.title"
-          >Sera copié dans Google Agenda « PsyMate »</ng-container
-        >
-      </span>
-      <div class="preview" [class]="'preview ' + form.controls.modality.value">
-        <span class="bar" aria-hidden="true"></span>
-        <span class="preview-text">
-          <span class="mono">{{ googleSummary() }}</span>
-          <span>{{ googleLine() }}</span>
-        </span>
-      </div>
-      <span>
-        <ng-container i18n="Niveau de détail Google@@agenda.new.google.detail"
-          >Niveau de détail : initiales seulement.</ng-container
-        >
-        <a
-          [routerLink]="preferencesPath"
-          i18n="Lien vers les préférences depuis le panneau@@agenda.new.google.settings"
-          >Modifier dans les préférences</a
-        >
-      </span>
-    </section>
-
-    <!-- Avertissement de conflit avec un bloc Google. -->
-    <div aria-live="polite">
-      @if (conflict(); as text) {
-        <div class="warning">
-          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-            <path d="M8 2.5 1.8 13.5h12.4L8 2.5zM8 7v3M8 12h.01" />
-          </svg>
-          <span>{{ text }}</span>
-        </div>
-      }
+      <pm-field-errors [control]="form.controls.note" [id]="fieldId('note') + '-error'" />
     </div>
   </form>
 
   <ng-container pmPanelFooter>
-    <button type="submit" class="submit" [attr.form]="ids.patient + '-form'">
+    <button type="submit" class="submit" [attr.form]="formId" [disabled]="store.submitting()">
       {{ submitLabel() }}
     </button>
     <label class="confirm">
-      <input type="checkbox" [formControl]="form.controls.toConfirm" />
-      {{ confirmLabel }}
+      <input type="checkbox" [id]="fieldId('toConfirm')" [formControl]="form.controls.toConfirm" />
+      {{ confirmLabel() }}
     </label>
     <span class="spacer"></span>
-    <button type="button" class="cancel" (click)="cancel()">
+    <button type="button" class="cancel" [disabled]="store.submitting()" (click)="cancel()">
       <ng-container i18n="Bouton Annuler du panneau@@agenda.new.cancel">Annuler</ng-container
       >{{ ' ' }}<kbd>Échap</kbd>
     </button>

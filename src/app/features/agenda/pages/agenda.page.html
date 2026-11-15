@@ -18,25 +18,6 @@
       </button>
     }
   </div>
-  @if (sync(); as sync) {
-    <span class="sync" [class]="'sync ' + sync.level">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        @switch (sync.level) {
-          @case ('ok') {
-            <path d="M20 6 9 17l-5-5" />
-          }
-          @case ('pending') {
-            <circle cx="12" cy="12" r="8" />
-            <path d="M12 8v4l3 2" />
-          }
-          @default {
-            <path d="M12 4 3 20h18L12 4zM12 10v4M12 17h.01" />
-          }
-        }
-      </svg>
-      {{ sync.text }}
-    </span>
-  }
   <button type="button" class="tb-btn primary" (click)="newAppointment()">{{ newLabel }}</button>
 </header>
 
@@ -54,6 +35,7 @@
 
   <section
     class="view"
+    tabindex="-1"
     [attr.aria-label]="viewName()"
     [class.refreshing]="store.data().status === 'loading'"
   >
@@ -74,6 +56,7 @@
         [appointments]="store.appointments()"
         [busy]="store.busy()"
         [selectedId]="store.selectedId()"
+        [hours]="hours()"
         (opened)="openPatient($event)"
         (slotPicked)="newAppointment($event)"
         (dayPicked)="openDay($event)"
@@ -82,7 +65,12 @@
     }
   </section>
 
-  @if (store.selected(); as appointment) {
-    <pm-appointment-detail [appointment]="appointment" (closed)="closeDetail()" />
+  @if (store.detailState() !== 'none') {
+    <pm-appointment-detail
+      [appointment]="store.selected()"
+      [state]="store.detailState()"
+      (closed)="closeDetail($event)"
+      (duplicated)="duplicate($event)"
+    />
   }
 </div>
