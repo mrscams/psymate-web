@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-15T20:48:08.622Z",
+  "task": "PROJET",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "Agenda branché sur l'API M11 (contrat contract-v0.12.1) fusionné dans main en squash (PR #90, commit bd3b934)",
+  "next": "M11-08 côté API pour Démarrer la séance ; tâche patient-shell pour Planifier une séance depuis la fiche patient ; EN ; Google (M12) hors V1",
+  "pr": "https://github.com/mrscams/psymate-web/pull/90",
+  "branch": "claude/suivi-agenda-api",
+  "checkout": "psymate-web"
+}
