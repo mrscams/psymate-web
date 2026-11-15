@@ -1,8 +1,8 @@
 # Écran 15b · Panneau « Nouveau rendez-vous » (agenda)
 
-> **Hors V1 (décision G Q25, 29 octobre 2026)** : conservé pour plus tard, aucune tâche ni module `scheduling`. Rien de cette fiche n'est à implémenter en V1.
+> **En V1 depuis le 15 novembre 2026 (G Q25 amendée)**. Le panneau est rendu à l'identique de la maquette (PR #86, `features/agenda/panels`) : patient, date, heure, durée, modalité, répétition, note, aperçu Google et case « À confirmer » ; la soumission attend `POST /api/appointments` (jalon M11 de psymate-api, module `agenda`) et ferme le panneau sans créer. Le bloc Google reste en démonstration (synchronisation hors V1). Écarts : fiche 15, « Écarts avec la maquette ».
 
-> Spécification pour agents. Maquette : `15b-nouveau-rendez-vous.html` / `.png`. Palette : Nordique. Module `scheduling` (`POST /api/appointments`, `practitioner_integration`), complète `15-agenda.md`.
+> Spécification pour agents. Maquette : `15b-nouveau-rendez-vous.html` / `.png`. Palette : Nordique. Module `agenda` (`POST /api/appointments` ; `practitioner_integration` avec Google, plus tard), complète `15-agenda.md`.
 
 ## Objectif
 Créer un ou plusieurs rendez-vous depuis un créneau cliqué dans l'agenda, en montrant **exactement** ce qui partira vers Google Agenda (et ce qui n'y partira jamais).

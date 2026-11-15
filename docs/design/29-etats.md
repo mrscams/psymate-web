@@ -72,4 +72,4 @@ Tous les codes ci-dessous sont documentés dans `docs/api-reference.md` (répons
 - Valeur et message du 422 : le module patients renvoie `errors[] {field, message}` sans `code` (schéma FieldProblem) ; la planche a été corrigée (date future, pas de code affiché). Les codes de champ des autres modules ne s'affichent jamais, ils servent aux tests.
 
 ## Hors périmètre V1
-Mode sombre des états (variables de l'étude §8, M6), déclinaison mobile, toast d'erreur, états des écrans agenda (15, 15b, G Q25) et signalements (23, V1.1), message d'introduction des suggestions IA (préparé pour V2, `ai`).
+Mode sombre des états (variables de l'étude §8, M6), déclinaison mobile, toast d'erreur, états de l'écran signalements (23, V1.1), message d'introduction des suggestions IA (préparé pour V2, `ai`).

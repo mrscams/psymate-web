@@ -31,7 +31,7 @@ Copie, le 2 novembre 2026, des documents de `psymate-api/docs/` dont un agent fr
 | `H-runbook-agents-frontend.md` | **Le mode opératoire du frontend** : préparation du dépôt, puis 8 lots avec le prompt exact à coller pour chacune des 30 tâches web |
 | `handbook/architecture-frontend.html` | **Comment on construit le frontend** : six couches, arborescence, frontières entre features, communication avec le backend (contrat, session, erreurs), état et signaux, tests, les 14 règles |
 
-Hors V1, conservées pour plus tard : `design/15-agenda.md`, `15b-nouveau-rendez-vous.md` (G Q25), `23-admin-signalements.md` (V1.1, G Q26). Rien de ces trois fiches ne s'implémente.
+Hors V1, conservée pour plus tard : `design/23-admin-signalements.md` (V1.1, G Q26) ; rien de cette fiche ne s'implémente. Les fiches `design/15-agenda.md` et `15b-nouveau-rendez-vous.md`, hors V1 à l'origine, sont entrées en V1 le 15 novembre 2026 (G Q25 amendée) : écrans livrés sur données de démonstration, API en cours (jalon M11 de psymate-api), synchronisation Google toujours hors V1.
 
 ## Écarts entre les fiches design et le contrat réel
 

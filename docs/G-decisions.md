@@ -1,6 +1,6 @@
 # Document G – Décisions prises sur les questions ouvertes
 
-29 octobre 2026 · Version 1.1 (complétée le 1er novembre 2026, puis le 2 novembre 2026) · Ce document tranche les 30 questions de la Partie 1 du runbook F (Q1–Q28) et de E7 (Q29, Q30), complétées ensuite par Q31 (G3), Q32 (G6) et Q33–Q43 (G7, revue d'architecture du 1er novembre 2026). Chaque agent applique ces décisions ; quand un autre document dit autre chose, **G l'emporte**. Les documents A, B, C, D, E et F ont été écrits avant ces décisions : les écarts connus sont listés en G5.
+29 octobre 2026 · Version 1.1 (complétée le 1er novembre 2026, puis le 2 novembre 2026) · Ce document tranche les 30 questions de la Partie 1 du runbook F (Q1–Q28) et de E7 (Q29, Q30), complétées ensuite par Q31 (G3), Q32 (G6), Q33–Q43 (G7, revue d'architecture du 1er novembre 2026) et Q50–Q51 (G8, outillage du frontend) ; Q25 a été amendée le 15 novembre 2026 (agenda en V1, G4). Chaque agent applique ces décisions ; quand un autre document dit autre chose, **G l'emporte**. Les documents A, B, C, D, E et F ont été écrits avant ces décisions : les écarts connus sont listés en G5.
 
 ## G1. Identité du produit et des dépôts
 
@@ -49,7 +49,7 @@
 | Q20 | Numéros d'urgence (3114 / 15) dans le pied de page public : **non**. |
 | Q22 | Patient DEMO : généré par M7-01 (18 mois, 20 séances), marqué « DEMO », relu par le propriétaire du projet. |
 | Q23 | **Français d'abord.** La structure i18n (`messages_fr/en.properties`, `messages.fr/en.xlf`) est conservée pour ajouter des langues sans changement de code ; les fichiers EN peuvent être en retard, rien n'est bloqué sur l'anglais. |
-| Q25 | Agenda Google (fiches 15, 15b) : **hors V1**. Pas de jalon « Agenda » (l'ancien M8) ; le module `scheduling` n'est pas créé ; les fiches 15 et 15b sont marquées « plus tard ». L'identifiant M8 a été réutilisé pour la migration JPA (Q32, plan C8). |
+| Q25 | Agenda Google (fiches 15, 15b) : **hors V1**. Pas de jalon « Agenda » (l'ancien M8) ; le module `scheduling` n'est pas créé ; les fiches 15 et 15b sont marquées « plus tard ». L'identifiant M8 a été réutilisé pour la migration JPA (Q32, plan C8). **Amendée le 15 novembre 2026** (décision du propriétaire) : **l'agenda entre en V1**, en deux temps et sans Google. **Web** : les écrans des fiches 15 et 15b sont rendus à l'identique des maquettes (en-tête excepté : barre d'application et rail existants) dans `features/agenda`, sur FullCalendar 6 ; routes `/agenda` (`?view=&date=`) et `/agenda/rdv/:id`, carreau Agenda du rail relié (PR psymate-web #86). Tant que le contrat ne porte pas l'agenda, `agenda.api.ts` sert des données de démonstration et **rien ne s'écrit** : actions du détail et soumission du panneau inertes, dites « à venir » ; glisser-déposer local. **API** : jalon **M11** de psymate-api (`docs/I-plan-agenda-api.md`), module **`agenda`** (et non `scheduling`), rendez-vous et séries sans intégration externe ; ses décisions (statuts, séries, chevauchements, préférences `agenda.*`) sont posées dans G par M11-01. **Reste hors V1** : la synchronisation Google Agenda (OAuth, agenda « PsyMate », `events.watch`, freebusy, `practitioner_integration`), jalon M12 non planifié ; l'écran garde les blocs Google de la maquette en démonstration. La règle « Agenda : aucune route » de CLAUDE.md et du document H est levée ; celle des signalements (Q26) reste. |
 | Q26 | Signalements de l'annuaire (fiche 23) : **V1.1**. DDL prêt en E6.1. |
 | Q27 | **M1-14b créée** : liste de tous les comptes, suspension / réactivation manuelle, journal paginé (vue `admin_journal_v`), migration `V10__admin_journal.sql`. S'insère après M1-14, en parallèle du lot 6. |
 | Q28 | Recours du compte suspendu (fiche 27) : dans **M1-14b** (table `practitioner_appeal` déjà créée par V03). |
@@ -68,6 +68,7 @@
 | A4.8 | Règle de grâce : 75 min (Q31), reporté le 2 novembre 2026. Suppression physique : périmètre de Q37. |
 | A3, A5, CLAUDE.md | Lecture SQL des projections (Q34), structure par rôle (Q33), un fichier par DTO (Q35), suppression physique (Q37), SQL natif (Q38) : reportés le 2 novembre 2026. |
 | C | Section C8 ajoutée le 2 novembre 2026 : tâches M8-01 à M8-06 (migration JPA, Q32) et M9-01 à M9-20 (restructuration, Q33–Q36). |
+| CLAUDE.md (web), H, README, B « Plus tard », couverture-ecrans, design/README, fiches 00 §9, 15, 15b, 29 | « Agenda hors V1 » → agenda en V1 (Q25 amendée) : reporté le 15 novembre 2026 dans psymate-web. Côté psymate-api, A (module `scheduling` → `agenda`), C (hors périmètre), E6.2, 00-contexte et CLAUDE.md : à reporter par M11-01. Numérotation : le plan I propose Q50–Q59 pour l'agenda alors que G8 occupe déjà Q50 et Q51 ; M11-01 les pose à partir de **Q52**. |
 
 ## G6. Décisions techniques
 

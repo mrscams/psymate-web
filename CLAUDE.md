@@ -28,7 +28,7 @@ G l'emporte sur tout autre document ; le contrat l'emporte sur une fiche.
 - Aucune couleur hexadécimale, aucun texte non $localize, aucune URL d'API écrite à la main.
 - Le serveur reste juge des règles métier ; le client vérifie la forme.
 - Après une écriture, on relit les projections (vue d'ensemble, recherche), on ne recalcule pas localement.
-- authorType en lecture seule, place réservée, jamais dessiné (A11). Agenda et signalements : aucune route (G Q25, Q26).
+- authorType en lecture seule, place réservée, jamais dessiné (A11). Agenda (G Q25 amendée le 15 nov. 2026) : feature `agenda`, rendu sur données de démonstration tant que le contrat ne porte pas l'agenda, aucune synchronisation Google. Signalements : aucune route (G Q26).
 
 ## Conventions
 Nommage : x.page.ts (PageX), x.component.ts (XComponent, sélecteur pm-x), x.store.ts (XStore), x.api.ts (XApi), x.routes.ts, x.guard.ts, x.interceptor.ts. Dossiers par feature : index.ts, routes, pages/, ui/, data/ (panels/ pour les panneaux).

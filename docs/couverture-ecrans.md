@@ -18,6 +18,8 @@
 | 12 | Inscription | `12-inscription.md` | html + png | M0-07, M1-15 |
 | 13 | Dossier professionnel | `13-dossier-professionnel.md` | html + png | M1-15 |
 | 14 | Préférences | `14-preferences-praticien.md` | html + png | M1-16 |
+| 15 | Agenda | `15-agenda.md` | html + png | hors plan C : rendu livré le 15 novembre 2026 (PR #86, G Q25 amendée), API jalon M11 de psymate-api |
+| 15b | Nouveau rendez-vous (panneau) | `15b-nouveau-rendez-vous.md` | html + png | idem ; soumission avec l'API |
 | 16 | Fiche patient (création, modification, archivage) | `16-fiche-patient.md` | html + png | M1-06 |
 | 17 | Émotions personnalisées | `17-emotions-personnalisees.md` | html + png | M1-09 |
 | 20 | Admin · Validation des praticiens | `20-admin-validation-praticiens.md` | html + png | M7-07 |
@@ -28,7 +30,7 @@
 | 26 | Mot de passe oublié | `26-mot-de-passe-oublie.md` | html + png | M0-07 |
 | 27 | Compte suspendu / refusé | `27-compte-suspendu.md` | html + png | M1-15 (état), M7-07 (recours) |
 
-Hors V1, fiches conservées mais rien à implémenter : 15 Agenda, 15b Nouveau rendez-vous (G Q25), 23 Signalements (V1.1, G Q26).
+Hors V1, fiche conservée mais rien à implémenter : 23 Signalements (V1.1, G Q26). L'agenda (15, 15b), hors V1 à l'origine (G Q25), est entré en V1 le 15 novembre 2026 : écrans rendus sur données de démonstration, API en cours, synchronisation Google toujours hors V1.
 
 ## 2. Ce qui manque
 
