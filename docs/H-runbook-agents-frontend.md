@@ -33,7 +33,7 @@ Les prompts renvoient aux documents de `psymate-web/docs/` : `B-ux.md` (expérie
 | G Q20 | Pas de numéros d'urgence sur les pages publiques. |
 | G Q21 | Inscription ouverte, aucun code d'invitation. |
 | G Q23 | Français d'abord : `messages.fr.xlf` complet à chaque tâche, EN non bloquant. `vocabulary.subjectLabel` remplace « patient » par « client ». |
-| G Q25, Q26 | Agenda (15, 15b) hors V1 ; signalements (23) V1.1 : aucune route, aucun onglet. |
+| G Q25, Q26 | Agenda (15, 15b) : en V1 depuis le 15 novembre 2026 (Q25 amendée), feature `agenda` rendue sans API, Google hors V1 ; signalements (23) V1.1 : aucune route, aucun onglet. |
 | G Q31 | Fenêtre de grâce 1 h 15 : le web l'affiche, ne la calcule pas. |
 | A11, B9 | `authorType` lu, jamais envoyé ; place réservée du marqueur « rapporté par le patient », jamais dessiné. |
 | C10 | Tâches M0-09 et M1-18 ajoutées ; M0-07, M1-06, M1-15, M1-16, M1-07, M4-08, M5-05, M6-03, M7-07 révisées ; ordre des briques. |
@@ -103,7 +103,7 @@ G l'emporte sur tout autre document ; le contrat l'emporte sur une fiche.
 - Aucune couleur hexadécimale, aucun texte non $localize, aucune URL d'API écrite à la main.
 - Le serveur reste juge des règles métier ; le client vérifie la forme.
 - Après une écriture, on relit les projections (vue d'ensemble, recherche), on ne recalcule pas localement.
-- authorType en lecture seule, place réservée, jamais dessiné (A11). Agenda et signalements : aucune route (G Q25, Q26).
+- authorType en lecture seule, place réservée, jamais dessiné (A11). Agenda (G Q25 amendée le 15 nov. 2026) : feature `agenda`, rendu sur données de démonstration tant que le contrat ne porte pas l'agenda, aucune synchronisation Google. Signalements : aucune route (G Q26).
 
 ## Conventions
 Nommage : x.page.ts (PageX), x.component.ts (XComponent, sélecteur pm-x), x.store.ts (XStore), x.api.ts (XApi), x.routes.ts, x.guard.ts, x.interceptor.ts. Dossiers par feature : index.ts, routes, pages/, ui/, data/ (panels/ pour les panneaux).
@@ -195,7 +195,7 @@ Vérifie, dans cet ordre, et réponds par une liste « bloquant / à corriger / 
 3. Contrat : chaque appel correspond à une opération de docs/api-reference.md (chemin, méthode, champs) ; les codes d'erreur traités sont ceux documentés ; aucun champ inventé.
 4. Couches : aucun HttpClient ni subscribe de requête dans un composant ; aucune transformation de DTO hors data/ ; état serveur dans un store, pas dupliqué dans un composant.
 5. Trois états : vide, chargement, erreur présents pour chaque bloc de données, via shared/ui/state.
-6. Couleurs, textes, URLs en dur ; secrets ; authorType envoyé en écriture ; routes agenda ou signalements.
+6. Couleurs, textes, URLs en dur ; secrets ; authorType envoyé en écriture ; routes signalements ; appel d'API agenda écrit à la main (le contrat ne le porte pas encore).
 7. Dépendances : toute nouvelle entrée de package.json est annoncée dans la PR, version figée.
 8. Accessibilité : rôles ARIA des panneaux et listes, labels de formulaire, parcours clavier décrit dans un e2e, axe-core appelé.
 9. i18n : messages.fr.xlf à jour ; aucune chaîne utilisateur hors $localize.
@@ -1091,6 +1091,6 @@ Livrable : PR « M7-04 Accessibilité et e2e », pnpm lint/test/build verts, e2e
 
 ## Après le lot 7
 
-Le frontend V1 est complet : les 32 fiches ont leur écran, les dix flux de B3 ont leur e2e, le contrat `contract-v0.11.0` est épinglé. Reste pour la bêta (C5) : le déploiement progressif 5 → 20 → 50 et l'étude hébergement (M7-06, côté API). Hors V1, conservés : agenda (15, 15b), signalements (23), déclinaison mobile, marqueur « rapporté par le patient » (B9).
+Le frontend V1 est complet : les 32 fiches ont leur écran, les dix flux de B3 ont leur e2e, le contrat `contract-v0.11.0` est épinglé. Reste pour la bêta (C5) : le déploiement progressif 5 → 20 → 50 et l'étude hébergement (M7-06, côté API). Hors V1, conservés : signalements (23), synchronisation Google de l'agenda, déclinaison mobile, marqueur « rapporté par le patient » (B9). L'agenda (15, 15b) est entré en V1 le 15 novembre 2026 (G Q25 amendée) : rendu livré (PR #86), API en cours (jalon M11 de psymate-api), à brancher par une PR de contrat puis `agenda.api.ts`.
 
 **Changement de contrat pendant la V1 web** : si l'API pose un tag (par exemple `contract-v0.12.0` après M10-07), une PR d'une ligne change `CONTRACT_TAG`, lance `pnpm contract:pull` et n'adapte que les `*.api.ts` concernés ; jamais mélangée à une tâche d'écran.

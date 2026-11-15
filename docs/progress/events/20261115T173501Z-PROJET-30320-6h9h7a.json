@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-15T17:35:01.304Z",
+  "task": "PROJET",
+  "agent": "claude",
+  "status": "done",
+  "summary": "Docs : agenda en V1 (G Q25 amendée le 15 nov. 2026) reporté dans CLAUDE.md, H, README, B, couverture-écrans, README design, fiches 00 §9, 15 (section Écarts avec la maquette), 15b et 29",
+  "notes": "Google reste hors V1 (M12). A, C, E6.2 et 00-contexte (module scheduling, DDL) sont à reporter par M11-01 côté psymate-api ; le plan I y propose Q50–Q59 alors que G8 occupe déjà Q50 et Q51 : numéroter à partir de Q52. Fiches 01, 03, 10, 14, 24, 27 non touchées (retraits toujours valables sans API ni Google).",
+  "next": "Fusion en squash ; côté API, M11-01 pose les décisions agenda dans G (Q52+) ; côté web, PR de contrat puis agenda.api.ts quand M11 pose son tag",
+  "pr": "https://github.com/mrscams/psymate-web/pull/88",
+  "branch": "claude/docs-agenda-v1",
+  "checkout": "psymate-web"
+}

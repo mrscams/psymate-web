@@ -4,6 +4,8 @@ Mis à jour le 29 octobre 2026 : renommages et décisions de docs/G-decisions.md
 
 Mis à jour le 11 novembre 2026 (UX-F1, après l'audit UX du 9 novembre) : les maquettes `.html`, qui n'existaient que dans la copie `docs/design` de psymate-web, sont versionnées ici ; les écarts voulus entre l'écran et la maquette (décisions G, contrat, fiche 00) y sont reportés, chaque maquette modifiée porte en tête un commentaire `UX-F1` et sa fiche le détaille dans « Écarts avec la maquette ». Les `.png` restent dans psymate-web et ne sont pas régénérés : ceux des écrans 01, 02, 02b, 06, 07, 11, 12, 14, 16, 17, 20, 21, 22, 25, 26 et 27 ne reflètent plus la maquette `.html`, qui fait foi.
 
+Mis à jour le 15 novembre 2026 : l'agenda (fiches 15, 15b) entre en V1 (G Q25 amendée). Les écrans sont rendus sur FullCalendar 6 à l'identique des maquettes (PR #86), sur des données de démonstration ; l'API suit (jalon M11 de psymate-api, module `agenda`) ; la synchronisation Google reste hors V1. Les écarts sont dans la fiche 15, « Écarts avec la maquette ».
+
 Chaque écran est livré en trois fichiers du même nom :
 
 | Fichier | Usage par l'agent |
@@ -27,10 +29,10 @@ Chaque écran est livré en trois fichiers du même nom :
 | 12 | Inscription (profession, téléphone, adresse) | — | `identity` | `auth` |
 | 13 | Dossier professionnel (justificatifs, vérification) | — | `identity.verification` | `account-verification` |
 | 14 | Préférences praticien | — | `identity`, `vocabulary` | `account-preferences` |
-| 15 | Agenda synchronisé Google (détail à droite) | — | **hors V1 (G Q25)** : aucun module, aucune tâche | `agenda` (plus tard) |
+| 15 | Agenda (détail à droite) | — | `agenda` (psymate-api M11, en cours ; Google hors V1) — **en V1 depuis le 15 novembre 2026 (G Q25 amendée)**, rendu livré sur données de démonstration (PR #86) | `agenda` |
 | 20 | Admin · Validation des praticiens | — | `identity.admin` (M1-14) | `admin` |
 | 06 | Éditeur de lien (panneau sur le graphe) | écran 6 | `linking` | `patient-graph` |
-| 15b | Panneau « Nouveau rendez-vous » (récurrence, aperçu Google, conflits) | — | **hors V1 (G Q25)** | `agenda` (plus tard) |
+| 15b | Panneau « Nouveau rendez-vous » (récurrence, aperçu Google, conflits) | — | `agenda` (M11) — **en V1 (G Q25 amendée)**, panneau rendu, soumission avec l'API | `agenda` |
 | 16 | Fiche patient (création + modification, drapeaux, tags, archivage) | — | `patients` | `patient-form` |
 | 17 | Émotions personnalisées (ajout, fusion ; promotion en V2) | — | `vocabulary` | `account-emotions` |
 | 21 | Admin · Praticiens (tous les comptes, suspendre / réactiver) | — | `identity.admin` (M1-14b) | `admin` |

@@ -4,6 +4,8 @@ Oct 24, 2026 · @Hayes · Version 1.1, complément du document A (architecture) 
 
 Mis à jour le 29 octobre 2026 : renommages et décisions de docs/G-decisions.md (nom PsyMate dans les maquettes, inscription ouverte, justificatifs diplôme + pièce d'identité, agenda hors V1, signalements V1.1). Quand ce document et G se contredisent, G l'emporte.
 
+Mis à jour le 15 novembre 2026 : l'agenda (écrans 15, 15b) entre en V1 sans Google (G Q25 amendée).
+
 ## B1. Utilisateurs et principes
 
 Le produit sert deux praticiens aux rythmes opposés : l'une écrit pendant la séance, l'autre après ; l'interface doit être aussi bonne à 15 secondes d'attention qu'à 15 minutes.
@@ -664,7 +666,8 @@ Praticien : 1 Patients → 2 Vue d'ensemble (simple | complète) → 3 Timeline 
             5 Saisie / éditeur d'entrée · 6 Éditeur de lien (panneaux)
             Mon compte : 10 Profil public · 13 Dossier professionnel · 14 Préférences · 17 Émotions · Sécurité · Données
 Admin : 20 Validation des praticiens · 21 Praticiens · 22 Journal · Vocabulaire de l'annuaire (M1-14b)
-Plus tard : 23 Signalements (V1.1) · 15, 15b Agenda (hors V1)
+            15 Agenda · 15b Nouveau rendez-vous (panneau) — rendu livré, API M11 (G Q25 amendée)
+Plus tard : 23 Signalements (V1.1) · synchronisation Google de l'agenda
 ```
 
 ### Principes retenus pour ces écrans
