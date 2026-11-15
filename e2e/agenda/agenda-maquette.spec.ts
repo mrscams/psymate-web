@@ -1,4 +1,3 @@
-import AxeBuilder from '@axe-core/playwright';
 import { expect, Page, test } from '@playwright/test';
 
 import { createAccount, signIn } from '../preferences/accounts';
@@ -31,6 +30,13 @@ test.beforeEach(async ({ page, request }) => {
   const account = await createAccount(request, 'agenda', 'psychologist');
   await signIn(page, account);
 });
+
+/** `yyyy-MM-dd` du jour, en heure locale, comme l'URL de l'agenda. */
+function isoToday(): string {
+  const now = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
 
 test('fiche 15 : le carreau Agenda du rail mène à la semaine ; barre d’outils, rail, grille et blocs Google de la maquette', async ({
   page,
@@ -89,7 +95,7 @@ test('fiche 15 : le carreau Agenda du rail mène à la semaine ; barre d’outil
   await expect(page).toHaveURL(/view=week&date=2026-11-02$/);
   await expect(a.range).toHaveText('2 – 8 novembre 2026');
   await page.getByRole('button', { name: "Aujourd'hui", exact: true }).click();
-  await expect(page).not.toHaveURL(/date=2026-11-02/);
+  await expect(page).toHaveURL(new RegExp(`view=week&date=${isoToday()}$`));
 });
 
 test('fiche 15 : un clic ouvre le détail à droite sans changer de vue ; ↓ ↑ changent de rendez-vous ; Échap ferme', async ({
@@ -120,16 +126,15 @@ test('fiche 15 : un clic ouvre le détail à droite sans changer de vue ; ↓ �
     'aria-pressed',
     'true',
   );
+  // Les actions attendent l'API : inertes, nommées « … · à venir » ; la note se lit seulement.
+  await expect(a.detail.getByRole('button', { name: 'Déplacer · à venir' })).toHaveAttribute(
+    'aria-disabled',
+    'true',
+  );
+  await expect(a.detail.getByLabel('Note de planification')).toHaveAttribute('readonly', '');
   await shoot(page, 'agenda-detail');
-  // Le rendez-vous sélectionné suit la maquette à la lettre (fond plein de la modalité, texte
-  // blanc : 3,9:1, sous le seuil AA) : il est exclu de cette mesure, à trancher (fiche 15, tokens) ;
-  // le reste de la page, détail compris, doit être propre.
-  await expect(page.locator('.mat-ripple-element')).toHaveCount(0);
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .exclude('a.fc-timegrid-event.selected')
-    .analyze();
-  expect(results.violations).toEqual([]);
+  // Le rendez-vous sélectionné garde le fond plein de la maquette, assombri pour le texte blanc.
+  await expectNoAxeViolations(page);
 
   await page.keyboard.press('ArrowDown');
   await expect(page).toHaveURL(/rdv-2026-10-31-14/);
@@ -140,9 +145,25 @@ test('fiche 15 : un clic ouvre le détail à droite sans changer de vue ; ↓ �
   await page.keyboard.press('Escape');
   await expect(page).toHaveURL(/\/fr\/agenda\?view=week&date=2026-10-26$/);
   await expect(a.detail).toHaveCount(0);
+  // Le focus revient au rendez-vous dans la grille ; ↓ ne fait plus rien sans détail.
+  await expect(a.grid.getByRole('link', { name: /^Marie D\./ })).toBeFocused();
+  await page.keyboard.press('ArrowDown');
+  await expect(page).toHaveURL(/\/fr\/agenda\?view=week&date=2026-10-26$/);
+
+  // Masquer l'agenda du rendez-vous ouvert ferme le détail ; ‹ › quittent /rdv/:id.
+  await a.grid.getByRole('link', { name: /^Léa T\./ }).click();
+  await expect(a.detail.getByRole('link', { name: 'Léa T.' })).toBeVisible();
+  await a.rail.getByRole('checkbox', { name: 'Séances en visio' }).uncheck();
+  await expect(a.detail).toHaveCount(0);
+  await a.rail.getByRole('checkbox', { name: 'Séances en visio' }).check();
+  await a.grid.getByRole('link', { name: /^Léa T\./ }).click();
+  await expect(a.detail).toBeVisible();
+  await page.getByRole('button', { name: 'Semaine suivante' }).click();
+  await expect(page).toHaveURL(/\/fr\/agenda\?view=week&date=2026-11-02$/);
+  await expect(a.detail).toHaveCount(0);
 });
 
-test('fiche 15 : les vues Jour, Mois et Liste ; la liste vide propose de planifier', async ({
+test('fiche 15 : les vues Jour, Mois et Liste ; tout masqué, la liste vide propose de planifier', async ({
   page,
 }) => {
   await page.goto('/fr/agenda?view=day&date=2026-10-31');
@@ -163,6 +184,12 @@ test('fiche 15 : les vues Jour, Mois et Liste ; la liste vide propose de planifi
     /samedi 31 octobre/i,
   );
   await expect(page.locator('pm-agenda-calendar .fc-list-event').first()).toContainText('Marie D.');
+  await expectNoAxeViolations(page);
+
+  // Tout masqué : la liste montre l'état vide de la fiche.
+  for (const box of await a.rail.getByRole('checkbox').all()) await box.uncheck();
+  await expect(page.getByText('Aucun rendez-vous dans les 30 prochains jours')).toBeVisible();
+  await expect(page.getByText(/« \+ Rendez-vous » pour en planifier un/)).toBeVisible();
   await expectNoAxeViolations(page);
 });
 

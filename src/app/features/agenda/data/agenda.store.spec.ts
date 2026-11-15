@@ -70,7 +70,7 @@ describe('AgendaStore', () => {
     expect(store.data().status).toBe('loaded');
   });
 
-  it('erreur de lecture : état error avec le problème, la donnée précédente conservée ; reload relit', async () => {
+  it('erreur de lecture sur une autre plage : état error avec le problème, sans la donnée de l’ancienne plage ; reload relit', async () => {
     const load = vi
       .fn()
       .mockResolvedValueOnce(demoAgenda({ from: d('2026-10-26'), to: d('2026-11-02') }))
@@ -81,7 +81,8 @@ describe('AgendaStore', () => {
     await store.show('week', d('2026-11-02'));
     expect(store.data().status).toBe('error');
     expect(store.data().problem).not.toBeNull();
-    expect(store.appointments()).toHaveLength(14);
+    expect(store.appointments()).toHaveLength(0);
+    expect(store.sessionCount()).toBe(0);
     await store.reload();
     expect(store.data().status).toBe('loaded');
     expect(store.appointments()).toHaveLength(0);

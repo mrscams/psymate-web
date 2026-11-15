@@ -182,7 +182,7 @@ export class NewAppointmentPanel {
     const list: Date[] = [];
     for (let index = 0; index < limit; index++) {
       const date = addDays(start, 7 * every * index);
-      if (until && date > addDays(until, 1)) break;
+      if (until && date >= addDays(until, 1)) break;
       list.push(date);
     }
     return list;

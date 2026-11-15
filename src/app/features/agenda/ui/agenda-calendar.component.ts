@@ -158,6 +158,7 @@ export class AgendaCalendarComponent {
         end: block.endsAt,
         display: 'background',
         editable: false,
+        overlap: false,
         classNames: ['busy', `google-${block.calendar}`],
         extendedProps: {
           kind: 'busy',
@@ -209,17 +210,27 @@ export class AgendaCalendarComponent {
         { daysOfWeek: [1, 2, 3, 4], startTime: '08:00', endTime: '19:00' },
         { daysOfWeek: [5, 6], startTime: '08:00', endTime: '13:00' },
       ],
+      // Seules les séances planifiées ou à confirmer bougent ; un bloc Google (`overlap: false`)
+      // refuse le dépôt. Le serveur restera juge des règles métier au PATCH.
       editable: true,
       eventStartEditable: true,
       eventDurationEditable: true,
       eventResizableFromStart: false,
+      eventAllow: (_span, event) => {
+        const props = event?.extendedProps as EventProps | undefined;
+        const status = props?.appointment?.status;
+        return status === 'planned' || status === 'tentative';
+      },
       dragRevertDuration: 120,
       // Mois : autant de semaines que le mois en compte (cinq pour octobre 2026), comme le modèle.
       fixedWeekCount: false,
       navLinks: true,
       navLinkDayClick: (date) => this.dayPicked.emit(date),
       dayMaxEvents: MONTH_CELL_MAX,
-      moreLinkClick: 'day',
+      // « + n autres » ouvre la vue Jour par l'URL, comme le numéro du jour : la barre d'outils suit.
+      moreLinkClick: (arg) => {
+        this.dayPicked.emit(arg.date);
+      },
       views: {
         timeGridWeek: { dayHeaderFormat: { weekday: 'short', day: 'numeric' } },
         timeGridDay: { dayHeaderFormat: { weekday: 'short', day: 'numeric' } },

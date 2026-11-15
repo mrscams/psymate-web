@@ -1,7 +1,7 @@
 import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { EventInput } from '@fullcalendar/core';
+import { CalendarOptions, EventInput, MoreLinkArg } from '@fullcalendar/core';
 
 import { demoAgenda } from '../data/agenda.fixtures';
 import { fromIsoDay, rangeFor } from '../data/agenda.model';
@@ -22,8 +22,16 @@ async function render(selectedId: string | null = null) {
   fixture.componentRef.setInput('selectedId', selectedId);
   await fixture.whenStable();
   fixture.detectChanges();
-  const component = fixture.componentInstance as unknown as { events: () => EventInput[] };
-  return { fixture, events: component.events(), el: fixture.nativeElement as HTMLElement };
+  const component = fixture.componentInstance as unknown as {
+    events: () => EventInput[];
+    options: CalendarOptions;
+  };
+  return {
+    fixture,
+    events: component.events(),
+    options: component.options,
+    el: fixture.nativeElement as HTMLElement,
+  };
 }
 
 describe('AgendaCalendarComponent (FullCalendar)', () => {
@@ -62,6 +70,7 @@ describe('AgendaCalendarComponent (FullCalendar)', () => {
     expect(busy[0]).toMatchObject({
       display: 'background',
       editable: false,
+      overlap: false,
       classNames: ['busy', 'google-pro'],
     });
     expect(busy[0].extendedProps).toMatchObject({
@@ -70,6 +79,23 @@ describe('AgendaCalendarComponent (FullCalendar)', () => {
       time: '14:00 – 16:00',
       name: 'Indisponible de 14:00 à 16:00, agenda Google Pro',
     });
+  });
+
+  it('« + n autres » du mois demande le jour à la page (dayPicked) au lieu de changer de vue en interne ; seules les séances planifiées ou à confirmer bougent', async () => {
+    const { fixture, options, events } = await render(null);
+    const picked: Date[] = [];
+    fixture.componentInstance.dayPicked.subscribe((date) => picked.push(date));
+    const more = options.moreLinkClick as (arg: MoreLinkArg) => unknown;
+    const date = fromIsoDay('2026-10-27')!;
+    expect(more({ date } as MoreLinkArg)).toBeUndefined();
+    expect(picked).toEqual([date]);
+
+    const allow = options.eventAllow!;
+    const byTitle = (title: string) =>
+      ({ extendedProps: events.find((item) => item.title === title)!.extendedProps }) as never;
+    expect(allow({} as never, byTitle('Omar B.'))).toBe(true);
+    expect(allow({} as never, byTitle('Yanis M.'))).toBe(true);
+    expect(allow({} as never, { extendedProps: { kind: 'busy' } } as never)).toBe(false);
   });
 
   it('sans sélection, aucun événement ne porte la classe selected ; le calendrier est monté', async () => {

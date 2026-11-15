@@ -1,10 +1,13 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
   effect,
+  ElementRef,
   inject,
+  Injector,
   LOCALE_ID,
   signal,
   untracked,
@@ -80,6 +83,8 @@ export class AgendaPage {
   private readonly route = inject(ActivatedRoute);
   private readonly panels = inject(SidePanelService);
   private readonly shortcuts = inject(ShortcutService);
+  private readonly injector = inject(Injector);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly locale = inject(LOCALE_ID);
 
   protected readonly views = AGENDA_VIEWS;
@@ -109,12 +114,16 @@ export class AgendaPage {
     const timer = setInterval(() => this.now.set(new Date()), CLOCK_TICK_MS);
     destroy.onDestroy(() => clearInterval(timer));
 
-    const releases = [
-      this.shortcuts.register('Escape', () => this.closeDetail(), this.escapeHelp),
-      this.shortcuts.register('ArrowDown', () => this.selectSibling(1), this.arrowsHelp),
-      this.shortcuts.register('ArrowUp', () => this.selectSibling(-1)),
-    ];
-    destroy.onDestroy(() => releases.forEach((release) => release()));
+    // Les raccourcis du détail ne valent que détail ouvert : ailleurs, ↑ ↓ font défiler la page.
+    effect((onCleanup) => {
+      if (!this.store.selected()) return;
+      const releases = [
+        this.shortcuts.register('Escape', () => void this.closeDetail(), this.escapeHelp),
+        this.shortcuts.register('ArrowDown', () => this.selectSibling(1), this.arrowsHelp),
+        this.shortcuts.register('ArrowUp', () => this.selectSibling(-1)),
+      ];
+      onCleanup(() => releases.forEach((release) => release()));
+    });
   }
 
   // --- Barre d'outils -------------------------------------------------------------------------
@@ -204,8 +213,9 @@ export class AgendaPage {
   // --- Vue ------------------------------------------------------------------------------------
 
   protected readonly kind = computed(() =>
-    stateKind(this.store.data(), (data) =>
-      this.store.view() === 'list' ? data.appointments.length === 0 : false,
+    stateKind(
+      this.store.data(),
+      () => this.store.view() === 'list' && this.store.appointments().length === 0,
     ),
   );
   /** La grille s'affiche vide quand il n'y a rien ; la liste montre l'état vide. */
@@ -224,8 +234,9 @@ export class AgendaPage {
 
   // --- Navigation -----------------------------------------------------------------------------
 
+  /** Changer de vue ou de date ferme le détail : l'URL ne garde pas `/rdv/:id`. */
   protected setView(view: AgendaView): void {
-    void this.router.navigate([], {
+    void this.router.navigate(['/agenda'], {
       queryParams: { [VIEW_PARAM]: view, [DATE_PARAM]: this.store.date() },
       queryParamsHandling: 'merge',
       replaceUrl: true,
@@ -233,7 +244,7 @@ export class AgendaPage {
   }
 
   protected goTo(date: Date, view: AgendaView = this.store.view()): void {
-    void this.router.navigate([], {
+    void this.router.navigate(['/agenda'], {
       queryParams: { [VIEW_PARAM]: view, [DATE_PARAM]: toIsoDay(date) },
       queryParamsHandling: 'merge',
       replaceUrl: true,
@@ -253,9 +264,17 @@ export class AgendaPage {
     this.goTo(date, 'day');
   }
 
-  protected closeDetail(): void {
-    if (!this.store.selectedId()) return;
-    void this.router.navigate(['/agenda'], { queryParamsHandling: 'preserve' });
+  /** Ferme le détail et rend le focus au rendez-vous dans la grille. */
+  protected async closeDetail(): Promise<void> {
+    const id = this.store.selectedId();
+    if (!id) return;
+    await this.router.navigate(['/agenda'], { queryParamsHandling: 'preserve' });
+    afterNextRender(() => this.focusEvent(id), { injector: this.injector });
+  }
+
+  private focusEvent(id: string): void {
+    const selector = `a.fc-event[href$="/rdv/${CSS.escape(id)}"], a.fc-event[href*="/rdv/${CSS.escape(id)}?"]`;
+    this.host.nativeElement.querySelector<HTMLElement>(selector)?.focus();
   }
 
   /** ↑ ↓ : le rendez-vous précédent / suivant du même jour, dans l'ordre de la grille. */
@@ -264,6 +283,7 @@ export class AgendaPage {
     if (!current) return;
     const siblings = this.store.selectedDaySiblings();
     const index = siblings.findIndex((item) => item.id === current);
+    if (index < 0) return;
     const next = siblings[index + direction];
     if (!next) return;
     void this.router.navigate(['/agenda', 'rdv', next.id], { queryParamsHandling: 'preserve' });

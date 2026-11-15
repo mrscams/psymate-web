@@ -70,7 +70,12 @@
           <label [for]="ids.duration" i18n="Champ durée@@agenda.new.duration">Durée</label>
           <select [id]="ids.duration" formControlName="duration">
             @for (minutes of durations; track minutes) {
-              <option [ngValue]="minutes">{{ minutes }} min</option>
+              <option
+                [ngValue]="minutes"
+                i18n="Option de durée du rendez-vous@@agenda.new.durationOption"
+              >
+                {{ minutes }} min
+              </option>
             }
           </select>
         </div>

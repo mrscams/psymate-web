@@ -2,12 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   input,
   LOCALE_ID,
   output,
-  signal,
+  linkedSignal,
 } from '@angular/core';
 
 import {
@@ -95,11 +94,7 @@ export class MiniMonthComponent {
   protected readonly nextLabel = $localize`:Mini-mois, mois suivant@@agenda.miniMonth.next:Mois suivant`;
 
   /** Premier jour du mois montré (feuilleté par ‹ ›, réaligné quand l'ancrage change). */
-  private readonly month = signal(startOfMonth(new Date()));
-
-  constructor() {
-    effect(() => this.month.set(startOfMonth(this.anchor())));
-  }
+  private readonly month = linkedSignal(() => startOfMonth(this.anchor()));
 
   protected readonly title = computed(() => formatMonthTitle(this.month(), this.locale));
 

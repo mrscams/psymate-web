@@ -71,12 +71,11 @@ export const AgendaStore = signalStore(
       busy,
       /** « 14 séances » de la barre d'outils : les séances visibles de la plage, contacts compris. */
       sessionCount: computed(() => appointments().length),
-      selected: computed(
-        () => data().data?.appointments.find((item) => item.id === selectedId()) ?? null,
-      ),
+      /** Le rendez-vous ouvert, s'il est visible : masquer son agenda ferme le détail. */
+      selected: computed(() => appointments().find((item) => item.id === selectedId()) ?? null),
       /** Les rendez-vous visibles du jour du rendez-vous sélectionné (↑ ↓ passent de l'un à l'autre). */
       selectedDaySiblings: computed(() => {
-        const current = data().data?.appointments.find((item) => item.id === selectedId());
+        const current = appointments().find((item) => item.id === selectedId());
         if (!current) return [];
         const day = new Date(current.startsAt);
         return appointments().filter((item) => sameDay(new Date(item.startsAt), day));
@@ -86,10 +85,15 @@ export const AgendaStore = signalStore(
   withMethods((store, api = inject(AgendaApi)) => {
     let request = 0;
 
-    async function load(): Promise<void> {
+    /**
+     * Lit la plage courante. `keep` garde la donnée affichée pendant la relecture (Réessayer) ;
+     * une autre plage repart de zéro, pour que l'erreur et le compte ne portent jamais sur
+     * l'ancienne plage.
+     */
+    async function load(keep: boolean): Promise<void> {
       const ticket = ++request;
       const range = store.range();
-      patchState(store, { data: loading(store.data()) });
+      patchState(store, { data: keep ? loading(store.data()) : loading() });
       try {
         const data = await api.load(range);
         if (ticket !== request) return;
@@ -117,9 +121,9 @@ export const AgendaStore = signalStore(
           before.from.getTime() === after.from.getTime() &&
           before.to.getTime() === after.to.getTime();
         if (first) void this.loadSync();
-        if (first || !sameRange) await load();
+        if (first || !sameRange) await load(false);
       },
-      reload: load,
+      reload: () => load(true),
       async loadSync(): Promise<void> {
         try {
           patchState(store, { sync: await api.syncStatus() });
@@ -135,20 +139,24 @@ export const AgendaStore = signalStore(
         patchState(store, { selectedId: id });
       },
       /**
-       * Rendez-vous déplacé ou étiré dans la grille : nouvelles bornes dans la plage lue. Sans
-       * module scheduling, le changement reste local à la visite ; il deviendra
-       * `PATCH /api/appointments/{id}` suivi d'une relecture de la plage.
+       * Rendez-vous déplacé ou étiré dans la grille : nouvelles bornes dans la plage lue, sans
+       * toucher à l'état de la lecture. Sans module scheduling, le changement reste local à la
+       * visite (la prochaine relecture le reprend) ; il deviendra `PATCH /api/appointments/{id}`
+       * suivi d'une relecture de la plage.
        */
       reschedule(id: string, startsAt: string, endsAt: string): void {
-        const data = store.data().data;
-        if (!data) return;
+        const current = store.data();
+        if (!current.data) return;
         patchState(store, {
-          data: loaded({
-            ...data,
-            appointments: data.appointments.map((item) =>
-              item.id === id ? { ...item, startsAt, endsAt } : item,
-            ),
-          }),
+          data: {
+            ...current,
+            data: {
+              ...current.data,
+              appointments: current.data.appointments.map((item) =>
+                item.id === id ? { ...item, startsAt, endsAt } : item,
+              ),
+            },
+          },
         });
       },
       toggleCalendar(key: CalendarKey): void {

@@ -66,7 +66,7 @@
     <label [for]="noteId" class="label" i18n="Champ note de planification@@agenda.detail.note"
       >Note de planification</label
     >
-    <textarea [id]="noteId" rows="2" [value]="item.planningNote"></textarea>
+    <textarea [id]="noteId" rows="2" readonly [value]="item.planningNote"></textarea>
     <span class="hint" i18n="Aide de la note de planification@@agenda.detail.noteHint"
       >Visible seulement ici ; jamais envoyée à Google.</span
     >
@@ -98,38 +98,31 @@
   </label>
 </div>
 
+<!-- Les actions attendent l'API (module scheduling) : inertes et dites « à venir », comme le carreau Facture. -->
 <div class="foot">
   <button
     type="button"
     class="start"
+    aria-disabled="true"
+    [attr.aria-label]="laterName(startLabel)"
+    [title]="laterName(startLabel)"
     (click)="started.emit(item)"
-    i18n="Bouton principal du détail@@agenda.detail.start"
   >
-    Démarrer la séance
+    {{ startLabel }}
   </button>
   <div class="actions">
-    <button
-      type="button"
-      (click)="moved.emit(item)"
-      i18n="Action Déplacer du détail@@agenda.detail.move"
-    >
-      Déplacer
-    </button>
-    <button
-      type="button"
-      (click)="duplicated.emit(item)"
-      i18n="Action Dupliquer du détail@@agenda.detail.duplicate"
-    >
-      Dupliquer
-    </button>
-    <button
-      type="button"
-      class="danger"
-      (click)="cancelled.emit(item)"
-      i18n="Action Annuler du détail@@agenda.detail.cancel"
-    >
-      Annuler
-    </button>
+    @for (action of actions; track action.label) {
+      <button
+        type="button"
+        [class.danger]="action.danger"
+        aria-disabled="true"
+        [attr.aria-label]="laterName(action.label)"
+        [title]="laterName(action.label)"
+        (click)="action.emit(item)"
+      >
+        {{ action.label }}
+      </button>
+    }
   </div>
   <span class="help" i18n="Aide clavier du détail@@agenda.detail.help"
     >Glisser le rendez-vous dans la grille pour le déplacer · <kbd>Échap</kbd> ferme le détail</span

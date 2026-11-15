@@ -22719,14 +22719,6 @@
         </context-group>
         <note priority="1" from="description">Carreau Patients du rail de navigation</note>
       </trans-unit>
-      <trans-unit id="navRail.agenda" datatype="html">
-        <source>Agenda</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
-          <context context-type="linenumber">53</context>
-        </context-group>
-        <note priority="1" from="description">Carreau Agenda du rail de navigation, à réaliser</note>
-      </trans-unit>
       <trans-unit id="navRail.invoice" datatype="html">
         <source>Facture</source>
         <context-group purpose="location">
@@ -23139,7 +23131,7 @@
         <source>Agenda</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">131</context>
         </context-group>
         <note priority="1" from="description">Titre de la page Agenda</note>
       </trans-unit>
@@ -23147,7 +23139,7 @@
         <source>Aujourd&apos;hui</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <note priority="1" from="description">Bouton Aujourd&apos;hui de l&apos;agenda</note>
       </trans-unit>
@@ -23155,7 +23147,7 @@
         <source>+ Rendez-vous</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <note priority="1" from="description">Bouton + Rendez-vous</note>
       </trans-unit>
@@ -23163,7 +23155,7 @@
         <source>Vue</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">134</context>
         </context-group>
         <note priority="1" from="description">Nom du groupe de vues</note>
       </trans-unit>
@@ -23171,7 +23163,7 @@
         <source>Navigation de l&apos;agenda</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <note priority="1" from="description">Nom du rail gauche de l&apos;agenda</note>
       </trans-unit>
@@ -23179,7 +23171,7 @@
         <source>Fermer le détail du rendez-vous</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">136</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis, Échap dans l&apos;agenda</note>
       </trans-unit>
@@ -23187,7 +23179,7 @@
         <source>Rendez-vous précédent / suivant du jour</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">137</context>
         </context-group>
         <note priority="1" from="description">Aide des raccourcis, flèches dans l&apos;agenda</note>
       </trans-unit>
@@ -23195,7 +23187,7 @@
         <source>Jour précédent</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">155</context>
         </context-group>
         <note priority="1" from="description">Bouton ‹ en vue jour</note>
       </trans-unit>
@@ -23203,7 +23195,7 @@
         <source>Jour suivant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <note priority="1" from="description">Bouton › en vue jour</note>
       </trans-unit>
@@ -23211,7 +23203,7 @@
         <source>Mois précédent</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <note priority="1" from="description">Bouton ‹ en vue mois</note>
       </trans-unit>
@@ -23219,7 +23211,7 @@
         <source>Mois suivant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">161</context>
         </context-group>
         <note priority="1" from="description">Bouton › en vue mois</note>
       </trans-unit>
@@ -23227,7 +23219,7 @@
         <source>Période précédente</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <note priority="1" from="description">Bouton ‹ en vue liste</note>
       </trans-unit>
@@ -23235,7 +23227,7 @@
         <source>Période suivante</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <note priority="1" from="description">Bouton › en vue liste</note>
       </trans-unit>
@@ -23243,7 +23235,7 @@
         <source>Semaine précédente</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">170</context>
         </context-group>
         <note priority="1" from="description">Bouton ‹ en vue semaine</note>
       </trans-unit>
@@ -23251,7 +23243,7 @@
         <source>Semaine suivante</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">171</context>
         </context-group>
         <note priority="1" from="description">Bouton › en vue semaine</note>
       </trans-unit>
@@ -23259,7 +23251,7 @@
         <source>Google Agenda synchronisé · <x id="ago" equiv-text="ago"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">184</context>
         </context-group>
         <note priority="1" from="description">État de synchronisation Google, à jour</note>
       </trans-unit>
@@ -23267,7 +23259,7 @@
         <source>Google Agenda · synchronisation en attente</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">187</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <note priority="1" from="description">État de synchronisation Google, en attente</note>
       </trans-unit>
@@ -23275,7 +23267,7 @@
         <source>Google Agenda · erreur, reconnecter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">192</context>
+          <context context-type="linenumber">195</context>
         </context-group>
         <note priority="1" from="description">État de synchronisation Google, erreur</note>
       </trans-unit>
@@ -23283,7 +23275,7 @@
         <source>Jour</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">203</context>
         </context-group>
         <note priority="1" from="description">Vue Jour</note>
       </trans-unit>
@@ -23291,7 +23283,7 @@
         <source>Semaine</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">205</context>
         </context-group>
         <note priority="1" from="description">Vue Semaine</note>
       </trans-unit>
@@ -23299,7 +23291,7 @@
         <source>Mois</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">204</context>
+          <context context-type="linenumber">207</context>
         </context-group>
         <note priority="1" from="description">Vue Mois</note>
       </trans-unit>
@@ -23307,7 +23299,7 @@
         <source>Liste</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">206</context>
+          <context context-type="linenumber">209</context>
         </context-group>
         <note priority="1" from="description">Vue Liste</note>
       </trans-unit>
@@ -23315,7 +23307,7 @@
         <source>Aucun rendez-vous dans les 30 prochains jours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">220</context>
+          <context context-type="linenumber">221</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;état vide de la vue liste</note>
       </trans-unit>
@@ -23323,7 +23315,7 @@
         <source>Cliquez sur un créneau de la semaine ou sur « + Rendez-vous » pour en planifier un.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">222</context>
         </context-group>
         <note priority="1" from="description">Phrase de l&apos;état vide de la vue liste</note>
       </trans-unit>
@@ -23331,7 +23323,7 @@
         <source>Réessayer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">224</context>
         </context-group>
         <note priority="1" from="description">Bouton Réessayer de l&apos;agenda</note>
       </trans-unit>
@@ -23383,11 +23375,19 @@
         </context-group>
         <note priority="1" from="description">Champ durée</note>
       </trans-unit>
+      <trans-unit id="agenda.new.durationOption" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ minutes }}"/> min </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">74,75</context>
+        </context-group>
+        <note priority="1" from="description">Option de durée du rendez-vous</note>
+      </trans-unit>
       <trans-unit id="agenda.new.endsAt" datatype="html">
         <source>Se termine à <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono dark&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ endLabel() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">80,81</context>
+          <context context-type="linenumber">82,83</context>
         </context-group>
         <note priority="1" from="description">Heure de fin du créneau</note>
       </trans-unit>
@@ -23395,7 +23395,7 @@
         <source>Modalité</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">92,94</context>
+          <context context-type="linenumber">94,96</context>
         </context-group>
         <note priority="1" from="description">Section modalité du panneau</note>
       </trans-unit>
@@ -23403,7 +23403,7 @@
         <source>Répéter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">112,115</context>
+          <context context-type="linenumber">114,117</context>
         </context-group>
         <note priority="1" from="description">Section répéter du panneau</note>
       </trans-unit>
@@ -23411,7 +23411,7 @@
         <source> Ne pas répéter </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">117,119</context>
+          <context context-type="linenumber">119,121</context>
         </context-group>
         <note priority="1" from="description">Option de récurrence</note>
       </trans-unit>
@@ -23419,7 +23419,7 @@
         <source> Toutes les semaines </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">120,122</context>
+          <context context-type="linenumber">122,124</context>
         </context-group>
         <note priority="1" from="description">Option de récurrence</note>
       </trans-unit>
@@ -23427,7 +23427,7 @@
         <source> Toutes les 2 semaines </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">123,125</context>
+          <context context-type="linenumber">125,127</context>
         </context-group>
         <note priority="1" from="description">Option de récurrence</note>
       </trans-unit>
@@ -23435,7 +23435,7 @@
         <source> Toutes les 4 semaines </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">126,129</context>
+          <context context-type="linenumber">128,131</context>
         </context-group>
         <note priority="1" from="description">Option de récurrence</note>
       </trans-unit>
@@ -23443,7 +23443,7 @@
         <source> Jusqu&apos;à une date… </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">134,137</context>
+          <context context-type="linenumber">136,139</context>
         </context-group>
         <note priority="1" from="description">Option de fin de série</note>
       </trans-unit>
@@ -23451,7 +23451,7 @@
         <source>Jusqu&apos;au</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">142,145</context>
+          <context context-type="linenumber">144,147</context>
         </context-group>
         <note priority="1" from="description">Champ date de fin de série</note>
       </trans-unit>
@@ -23459,7 +23459,7 @@
         <source>Chaque occurrence est un rendez-vous distinct ; vous pourrez en déplacer une sans toucher aux autres.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">153,159</context>
+          <context context-type="linenumber">155,161</context>
         </context-group>
         <note priority="1" from="description">Aide sur les occurrences</note>
       </trans-unit>
@@ -23467,7 +23467,7 @@
         <source>Note de planification</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">163,165</context>
+          <context context-type="linenumber">165,167</context>
         </context-group>
         <note priority="1" from="description">Champ note de planification du panneau</note>
       </trans-unit>
@@ -23475,7 +23475,7 @@
         <source>(jamais envoyée à Google)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">166,170</context>
+          <context context-type="linenumber">168,172</context>
         </context-group>
         <note priority="1" from="description">Précision : jamais envoyée à Google</note>
       </trans-unit>
@@ -23483,7 +23483,7 @@
         <source>Sera copié dans Google Agenda « PsyMate »</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">184,187</context>
+          <context context-type="linenumber">186,189</context>
         </context-group>
         <note priority="1" from="description">Titre du bloc Google du panneau</note>
       </trans-unit>
@@ -23491,7 +23491,7 @@
         <source>Niveau de détail : initiales seulement.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">196,199</context>
+          <context context-type="linenumber">198,201</context>
         </context-group>
         <note priority="1" from="description">Niveau de détail Google</note>
       </trans-unit>
@@ -23499,7 +23499,7 @@
         <source>Modifier dans les préférences</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">201,206</context>
+          <context context-type="linenumber">203,208</context>
         </context-group>
         <note priority="1" from="description">Lien vers les préférences depuis le panneau</note>
       </trans-unit>
@@ -23507,7 +23507,7 @@
         <source>Annuler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
-          <context context-type="linenumber">229,231</context>
+          <context context-type="linenumber">231,233</context>
         </context-group>
         <note priority="1" from="description">Bouton Annuler du panneau</note>
       </trans-unit>
@@ -23710,6 +23710,38 @@
           <context context-type="linenumber">310</context>
         </context-group>
         <note priority="1" from="description">Aide sous les segments de modalité</note>
+      </trans-unit>
+      <trans-unit id="agenda.grid.sunday" datatype="html">
+        <source>Dimanche, non travaillé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendar.component.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du dimanche, non travaillé</note>
+      </trans-unit>
+      <trans-unit id="agenda.busy.title" datatype="html">
+        <source>Occupé · <x id="calendar" equiv-text="googleCalendarLabel(block.calendar)"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendar.component.ts</context>
+          <context context-type="linenumber">166</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;un bloc occupé Google dans la grille</note>
+      </trans-unit>
+      <trans-unit id="agenda.month.more" datatype="html">
+        <source>+ <x id="count" equiv-text="count"/> autres</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendar.component.ts</context>
+          <context context-type="linenumber">294</context>
+        </context-group>
+        <note priority="1" from="description">Vue mois, rendez-vous non affichés dans la case</note>
+      </trans-unit>
+      <trans-unit id="agenda.grid.call" datatype="html">
+        <source>Appel · <x id="name" equiv-text="appointment.patient.displayName"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendar.component.ts</context>
+          <context context-type="linenumber">306</context>
+        </context-group>
+        <note priority="1" from="description">Contact téléphonique dans la grille</note>
       </trans-unit>
       <trans-unit id="agenda.calendars.mine" datatype="html">
         <source>Mes agendas</source>
@@ -23931,7 +23963,7 @@
         <source>Indisponible de <x id="from" equiv-text="from"/> à <x id="to" equiv-text="to"/>, agenda <x id="calendar" equiv-text="name"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
-          <context context-type="linenumber">250</context>
+          <context context-type="linenumber">235</context>
         </context-group>
         <note priority="1" from="description">Nom accessible d&apos;un bloc occupé Google</note>
       </trans-unit>
@@ -24007,47 +24039,15 @@
         <source>· non activé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
-          <context context-type="linenumber">97,103</context>
+          <context context-type="linenumber">97,101</context>
         </context-group>
         <note priority="1" from="description">Rappel SMS non activé</note>
-      </trans-unit>
-      <trans-unit id="agenda.detail.start" datatype="html">
-        <source> Démarrer la séance </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
-          <context context-type="linenumber">108,112</context>
-        </context-group>
-        <note priority="1" from="description">Bouton principal du détail</note>
-      </trans-unit>
-      <trans-unit id="agenda.detail.move" datatype="html">
-        <source> Déplacer </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
-          <context context-type="linenumber">116,120</context>
-        </context-group>
-        <note priority="1" from="description">Action Déplacer du détail</note>
-      </trans-unit>
-      <trans-unit id="agenda.detail.duplicate" datatype="html">
-        <source> Dupliquer </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
-          <context context-type="linenumber">123,127</context>
-        </context-group>
-        <note priority="1" from="description">Action Dupliquer du détail</note>
-      </trans-unit>
-      <trans-unit id="agenda.detail.cancel" datatype="html">
-        <source> Annuler </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
-          <context context-type="linenumber">131,134</context>
-        </context-group>
-        <note priority="1" from="description">Action Annuler du détail</note>
       </trans-unit>
       <trans-unit id="agenda.detail.help" datatype="html">
         <source>Glisser le rendez-vous dans la grille pour le déplacer · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Échap<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> ferme le détail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
-          <context context-type="linenumber">135,137</context>
+          <context context-type="linenumber">128,130</context>
         </context-group>
         <note priority="1" from="description">Aide clavier du détail</note>
       </trans-unit>
@@ -24067,11 +24067,51 @@
         </context-group>
         <note priority="1" from="description">Croix du détail du rendez-vous</note>
       </trans-unit>
+      <trans-unit id="agenda.detail.start" datatype="html">
+        <source>Démarrer la séance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">Bouton principal du détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.move" datatype="html">
+        <source>Déplacer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">Action Déplacer du détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.duplicate" datatype="html">
+        <source>Dupliquer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">Action Dupliquer du détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.cancel" datatype="html">
+        <source>Annuler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Action Annuler du détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.later" datatype="html">
+        <source><x id="action" equiv-text="label"/> · à venir</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <note priority="1" from="description">Action du détail non encore disponible</note>
+      </trans-unit>
       <trans-unit id="agenda.detail.kicker.contact" datatype="html">
         <source>Contact · <x id="modality" equiv-text="modality"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <note priority="1" from="description">Étiquette du détail, contact téléphonique</note>
       </trans-unit>
@@ -24079,7 +24119,7 @@
         <source>À confirmer · <x id="modality" equiv-text="modality"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <note priority="1" from="description">Étiquette du détail, à confirmer</note>
       </trans-unit>
@@ -24087,7 +24127,7 @@
         <source>Séance planifiée · <x id="modality" equiv-text="modality"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="description">Étiquette du détail, séance planifiée</note>
       </trans-unit>
@@ -24095,7 +24135,7 @@
         <source><x id="age" equiv-text="patient.age"/> ans</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">104</context>
         </context-group>
         <note priority="1" from="description">Âge du patient dans le détail</note>
       </trans-unit>
@@ -24103,7 +24143,7 @@
         <source>suivi depuis <x id="month" equiv-text="since"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <note priority="1" from="description">Début du suivi dans le détail</note>
       </trans-unit>
@@ -24111,7 +24151,7 @@
         <source>Séance n° <x id="number" equiv-text="this.appointment().sessionNumber"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">Numéro de séance dans le détail</note>
       </trans-unit>
@@ -24119,7 +24159,7 @@
         <source>Rythme : <x id="rhythm" equiv-text="this.appointment().patient.rhythm"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">125</context>
         </context-group>
         <note priority="1" from="description">Rythme du suivi dans le détail</note>
       </trans-unit>
@@ -24127,7 +24167,7 @@
         <source>1 ressenti</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <note priority="1" from="description">Un ressenti depuis la dernière séance</note>
       </trans-unit>
@@ -24135,7 +24175,7 @@
         <source><x id="count" equiv-text="count"/> ressentis</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">134</context>
         </context-group>
         <note priority="1" from="description">Ressentis depuis la dernière séance</note>
       </trans-unit>
@@ -24143,7 +24183,7 @@
         <source>1 événement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">139</context>
         </context-group>
         <note priority="1" from="description">Un événement depuis la dernière séance</note>
       </trans-unit>
@@ -24151,7 +24191,7 @@
         <source><x id="count" equiv-text="count"/> événements</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">140</context>
         </context-group>
         <note priority="1" from="description">Événements depuis la dernière séance</note>
       </trans-unit>
@@ -24159,7 +24199,7 @@
         <source>Créé par PsyMate · <x id="history" equiv-text="history"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <note priority="1" from="description">Historique Google du rendez-vous</note>
       </trans-unit>
@@ -24167,7 +24207,7 @@
         <source>Créé par PsyMate.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <note priority="1" from="description">Historique Google du rendez-vous, sans mouvement</note>
       </trans-unit>
@@ -24175,7 +24215,7 @@
         <source>Mois précédent</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/mini-month.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">93</context>
         </context-group>
         <note priority="1" from="description">Mini-mois, mois précédent</note>
       </trans-unit>
@@ -24183,7 +24223,7 @@
         <source>Mois suivant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/mini-month.component.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">94</context>
         </context-group>
         <note priority="1" from="description">Mini-mois, mois suivant</note>
       </trans-unit>
@@ -24191,41 +24231,17 @@
         <source>Aujourd&apos;hui, <x id="date" equiv-text="name"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/mini-month.component.ts</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <note priority="1" from="description">Mini-mois, jour d&apos;aujourd&apos;hui</note>
       </trans-unit>
-      <trans-unit id="agenda.month.more" datatype="html">
-        <source>+ <x id="count" equiv-text="count"/> autres</source>
+      <trans-unit id="navRail.agenda" datatype="html">
+        <source>Agenda</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/month-grid.component.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
+          <context context-type="linenumber">54</context>
         </context-group>
-        <note priority="1" from="description">Vue mois, rendez-vous non affichés dans la case</note>
-      </trans-unit>
-      <trans-unit id="agenda.busy.title" datatype="html">
-        <source>Occupé · <x id="calendar" equiv-text="googleCalendarLabel(block.calendar)"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/week-grid.component.ts</context>
-          <context context-type="linenumber">128</context>
-        </context-group>
-        <note priority="1" from="description">Titre d&apos;un bloc occupé Google dans la grille</note>
-      </trans-unit>
-      <trans-unit id="agenda.grid.sunday" datatype="html">
-        <source>Dimanche, non travaillé</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/week-grid.component.ts</context>
-          <context context-type="linenumber">129</context>
-        </context-group>
-        <note priority="1" from="description">Colonne du dimanche, non travaillé</note>
-      </trans-unit>
-      <trans-unit id="agenda.grid.call" datatype="html">
-        <source>Appel · <x id="name" equiv-text="appointment.patient.displayName"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/week-grid.component.ts</context>
-          <context context-type="linenumber">188</context>
-        </context-group>
-        <note priority="1" from="description">Contact téléphonique dans la grille</note>
+        <note priority="1" from="description">Carreau Agenda du rail de navigation</note>
       </trans-unit>
     </body>
   </file>

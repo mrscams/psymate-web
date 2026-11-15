@@ -53,6 +53,30 @@ export class AppointmentDetailComponent {
   protected readonly noteId = uniqueId('agenda-note');
   protected readonly panelLabel = $localize`:Nom de la zone de détail du rendez-vous@@agenda.detail.label:Détail du rendez-vous`;
   protected readonly closeLabel = $localize`:Croix du détail du rendez-vous@@agenda.detail.close:Fermer le détail`;
+  protected readonly startLabel = $localize`:Bouton principal du détail@@agenda.detail.start:Démarrer la séance`;
+  /** Déplacer, Dupliquer, Annuler : sorties émises, à câbler sur l'API ; inertes d'ici là. */
+  protected readonly actions = [
+    {
+      label: $localize`:Action Déplacer du détail@@agenda.detail.move:Déplacer`,
+      danger: false,
+      emit: (item: Appointment) => this.moved.emit(item),
+    },
+    {
+      label: $localize`:Action Dupliquer du détail@@agenda.detail.duplicate:Dupliquer`,
+      danger: false,
+      emit: (item: Appointment) => this.duplicated.emit(item),
+    },
+    {
+      label: $localize`:Action Annuler du détail@@agenda.detail.cancel:Annuler`,
+      danger: true,
+      emit: (item: Appointment) => this.cancelled.emit(item),
+    },
+  ];
+
+  /** « Déplacer · à venir » : nom accessible d'une action non câblée. */
+  protected laterName(label: string): string {
+    return $localize`:Action du détail non encore disponible@@agenda.detail.later:${label}:action: · à venir`;
+  }
 
   /** « Séance planifiée · cabinet », « Contact · téléphone », « À confirmer · cabinet ». */
   protected readonly kicker = computed(() => {

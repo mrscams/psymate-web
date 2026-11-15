@@ -199,16 +199,17 @@
       background: var(--surface-raised);
     }
 
+    // Fond plein de la modalité, assombri de 30 % pour le texte blanc (≥ 5:1 ; la maquette est à 3,9:1).
     &.selected {
-      border-left-color: color-mix(in srgb, var(--tone) 80%, var(--text-primary));
-      background: var(--tone);
+      border-left-color: color-mix(in srgb, var(--tone) 50%, var(--text-primary));
+      background: color-mix(in srgb, var(--tone) 70%, var(--text-primary));
       box-shadow: 0 0 0 3px var(--tint);
       color: var(--surface-raised);
 
       .suffix,
       .time,
       .chip-time {
-        color: var(--tint);
+        color: inherit;
       }
     }
   }
