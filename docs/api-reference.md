@@ -1,6 +1,6 @@
 # Référence de l'API PsyMate
 
-Généré depuis le contrat OpenAPI (`PsyMate API`, info.version 0.11.0). 89 chemins, 155 schémas.
+Généré depuis le contrat OpenAPI (`PsyMate API`, info.version 0.12.1). 97 chemins, 174 schémas.
 
 Toutes les routes `/api/**` exigent une session (cookie posé par `POST /api/auth/login`), sauf celles marquées publiques dans leur description (`/api/auth/*`, `/api/public/**`, `/api/me/appeal`, `/api/me/export`). Erreurs : `application/problem+json` avec `code` et `errors[]`.
 
@@ -10,6 +10,7 @@ Toutes les routes `/api/**` exigent une session (cookie posé par `POST /api/aut
 - [Administration : praticiens](#tag-administration-praticiens) (4)
 - [Administration : vocabulaire de l'annuaire](#tag-administration-vocabulaire-de-lannuaire) (3)
 - [Administration : vérifications](#tag-administration-verifications) (6)
+- [Agenda](#tag-agenda) (3)
 - [Annuaire public](#tag-annuaire-public) (3)
 - [Authentification](#tag-authentification) (13)
 - [Chronologie](#tag-chronologie) (2)
@@ -25,6 +26,7 @@ Toutes les routes `/api/**` exigent une session (cookie posé par `POST /api/aut
 - [Préférences](#tag-preferences) (2)
 - [Recherche](#tag-recherche) (1)
 - [Recours](#tag-recours) (3)
+- [Rendez-vous](#tag-rendez-vous) (6)
 - [Séances](#tag-seances) (4)
 - [Sécurité du compte](#tag-securite-du-compte) (2)
 - [Tags](#tag-tags) (4)
@@ -366,6 +368,77 @@ operationId : `getAdminDocumentUrl`
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. ADMIN_ROLE_REQUIRED : compte sans rôle admin ; TWO_FACTOR_REQUIRED : double authentification non activée sur le compte admin. |
 | 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | ADMIN_DOCUMENT_NOT_FOUND : justificatif inexistant, retiré par le praticien ou rattaché à un autre praticien. |
 | 410 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | ADMIN_DOCUMENT_PURGED : le fichier a été purgé, il n'existe plus. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+## <a id="tag-agenda"></a>Agenda
+
+### `GET /api/agenda`
+
+**Liste les rendez-vous du praticien sur une fenêtre de dates**
+
+Session praticien. Rendez-vous du praticien courant dont le créneau chevauche la fenêtre [from, to[ (startsAt < to et endsAt > from : un rendez-vous à cheval sur une borne est inclus), triés par début. Les rendez-vous annulés sont exclus sauf includeCancelled=true. Fenêtre de 62 jours au plus, assez pour une grille mensuelle avec débords. busy est réservé aux indisponibilités externes et toujours vide dans cette version.
+
+operationId : `window`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `from` | query | string (date-time) | non | Début de la fenêtre, inclus : date-heure ISO 8601 UTC. Obligatoire. |
+| `to` | query | string (date-time) | non | Fin de la fenêtre, exclue : date-heure ISO 8601 UTC, strictement après from et au plus 62 jours après. Obligatoire. |
+| `includeCancelled` | query | boolean | non | Vrai pour inclure les rendez-vous annulés. Défaut : faux. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [AgendaWindowDto](#schema-agendawindowdto) (*/*) | Rendez-vous de la fenêtre. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] {field, code, message} : from ou to REQUIRED (absent) ; to INVALID_VALUE (to ne suit pas from) ; from, to, includeCancelled INVALID_FORMAT (valeur illisible). WINDOW_TOO_LARGE avec errors[0].field = to : la fenêtre dépasse 62 jours. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `GET /api/agenda/freebusy`
+
+**Indique les conflits et le voisinage d'un créneau**
+
+Session praticien. Avant de créer un rendez-vous ou d'en déplacer un : rendez-vous actifs (planned, tentative) du praticien courant qui chevauchent [from, to[ (conflicts, jamais bloquants), dernier rendez-vous actif terminé au plus tard à from (previous) et premier commençant au plus tôt à to (next), tous deux le même jour calendaire que from dans le fuseau tz. excludeAppointmentId retire le rendez-vous déplacé de ses propres conflits et de son voisinage. Les annulés ne comptent jamais.
+
+operationId : `freeBusy`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `from` | query | string (date-time) | non | Début du créneau, inclus : date-heure ISO 8601 UTC. Obligatoire. |
+| `to` | query | string (date-time) | non | Fin du créneau, exclue : date-heure ISO 8601 UTC, strictement après from. Obligatoire. |
+| `excludeAppointmentId` | query | string (uuid) | non | Rendez-vous à ignorer : celui qu'on déplace. Absent : aucun n'est ignoré. |
+| `tz` | query | string | non | Fuseau IANA qui définit le jour calendaire de previous et next. Défaut : Europe/Paris. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [FreeBusyDto](#schema-freebusydto) (*/*) | Conflits et voisinage du créneau. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] {field, code, message} : from ou to REQUIRED (absent) ; to INVALID_VALUE (to ne suit pas from) ; tz INVALID_VALUE (fuseau inconnu) ; from, to, excludeAppointmentId INVALID_FORMAT (valeur illisible). WINDOW_TOO_LARGE avec errors[0].field = to : le créneau dépasse 62 jours. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `GET /api/patients/{id}/appointments`
+
+**Liste les rendez-vous à venir d'un patient et ses défauts de création**
+
+Session praticien, propriétaire du patient. Rendez-vous actifs (planned, tentative) du praticien courant pour ce patient qui ne sont pas terminés à l'instant from (défaut : maintenant), triés par début, au plus limit (1 à 100, 20 par défaut). defaults donne la durée et la modalité à préremplir (suivi du patient, sinon préférence sessions.defaultDurationMin, sinon 60 minutes au cabinet) et le rythme du suivi, affiché tel quel.
+
+operationId : `ofPatient`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du patient. |
+| `from` | query | string (date-time) | non | Instant de référence : date-heure ISO 8601 UTC ; seuls les rendez-vous qui se terminent après lui sont renvoyés. Absent : maintenant. |
+| `limit` | query | integer (int32) | non | Nombre maximal de rendez-vous, de 1 à 100. Défaut : 20. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [PatientAppointmentsDto](#schema-patientappointmentsdto) (*/*) | Rendez-vous du patient et défauts. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant du patient qui n'est pas un UUID. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_FORBIDDEN : patient d'un autre praticien. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : patient inexistant. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] {field, code, message} : limit OUT_OF_RANGE (hors 1 à 100) ; from, limit INVALID_FORMAT (valeur illisible). |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ## <a id="tag-annuaire-public"></a>Annuaire public
@@ -948,7 +1021,7 @@ Corps (`application/json`) : [AccountExportRequest](#schema-accountexportrequest
 
 | Réponse | Contenu | Description |
 | --- | --- | --- |
-| 202 | object (application/json) | Deux corps possibles : {jobId, statusUrl} quand le job est créé ; {otpRequired: true} quand le code de double authentification manque (aucun job créé). |
+| 202 | [requestAccountExport_202_response](#schema-requestaccountexport_202_response) (application/json) | Deux corps possibles : {jobId, statusUrl} quand le job est créé ; {otpRequired: true} quand le code de double authentification manque (aucun job créé). |
 | 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVALID_CREDENTIALS : identifiants incorrects ou code 2FA faux. |
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
 | 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EXPORT_IN_PROGRESS : un export de ce compte est déjà en file ou en cours ; ACCOUNT_NOT_SUSPENDED : le compte n'est ni refusé ni suspendu (approuvé, en cours de vérification ou clos) : se connecter normalement. |
@@ -1430,7 +1503,7 @@ Session praticien. Requête multipart/form-data avec la partie file : image JPEG
 
 operationId : `uploadPhoto`
 
-Corps (`multipart/form-data`) : object
+Corps (`multipart/form-data`) : [uploadPhoto_request](#schema-uploadphoto_request)
 
 | Réponse | Contenu | Description |
 | --- | --- | --- |
@@ -1497,13 +1570,13 @@ operationId : `unpublish`
 
 **Préférences du compte (valeurs stockées complétées par les défauts)**
 
-Session praticien. Renvoie toujours les 9 clés : la valeur enregistrée si elle est valide, sinon le défaut calculé selon la profession (coach : vocabulary.subjectLabel = client et entryTypes.medicationVisible = false ; psychiatre : entryTypes.medicationVisible = true). Les clés inconnues stockées ne sont pas renvoyées.
+Session praticien. Renvoie toujours les 13 clés : la valeur enregistrée si elle est valide, sinon le défaut calculé selon la profession (coach : vocabulary.subjectLabel = client et entryTypes.medicationVisible = false ; psychiatre : entryTypes.medicationVisible = true). Les clés inconnues stockées ne sont pas renvoyées.
 
 operationId : `getPreferences`
 
 | Réponse | Contenu | Description |
 | --- | --- | --- |
-| 200 | [Preferences](#schema-preferences) (application/json) | Les 9 préférences effectives du compte. |
+| 200 | [Preferences](#schema-preferences) (application/json) | Les 13 préférences effectives du compte. |
 | 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
@@ -1512,7 +1585,7 @@ operationId : `getPreferences`
 
 **Modifie les préférences (merge-patch RFC 7396, null = retour au défaut)**
 
-Session praticien. Corps JSON plat (application/json ou application/merge-patch+json) avec seulement les clés à changer : les autres sont conservées. null remet la clé à son défaut ; une clé inconnue est ignorée sans erreur. Une seule valeur hors domaine rejette toute la requête (422, errors[].field = clé fautive) et rien n'est appliqué. Renvoie les 9 préférences effectives après fusion ; un PATCH qui ne change rien est un succès.
+Session praticien. Corps JSON plat (application/json ou application/merge-patch+json) avec seulement les clés à changer : les autres sont conservées. null remet la clé à son défaut ; une clé inconnue est ignorée sans erreur. Une seule valeur hors domaine rejette toute la requête (422, errors[].field = clé fautive) et rien n'est appliqué. Renvoie les 13 préférences effectives après fusion ; un PATCH qui ne change rien est un succès.
 
 operationId : `updatePreferences`
 
@@ -1520,7 +1593,7 @@ Corps (`application/json`) : [Preferences](#schema-preferences)
 
 | Réponse | Contenu | Description |
 | --- | --- | --- |
-| 200 | [Preferences](#schema-preferences) (application/json) | Les 9 préférences effectives après fusion. |
+| 200 | [Preferences](#schema-preferences) (application/json) | Les 13 préférences effectives après fusion. |
 | 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
 | 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] {field, code, message} : code INVALID_VALUE, field = la clé fautive (par exemple overview.window) ; valeurs admises dans message ; rien n'est appliqué. |
@@ -1627,6 +1700,145 @@ Corps (`application/json`) : [AppealRequest](#schema-appealrequest)
 | 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | ACCOUNT_NOT_SUSPENDED : identifiants corrects mais le compte n'est ni refusé ni suspendu ; APPEAL_NOT_ALLOWED : aucune décision de refus ou de suspension à contester ; APPEAL_ALREADY_OPEN : un recours est déjà en attente ; APPEAL_ALREADY_USED : la décision contestée a déjà fait l'objet d'un recours examiné. |
 | 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] {field, code, message} ; codes de champ : REQUIRED (email, password, message), TOO_SHORT (message, moins de 20 caractères), TOO_LONG (message, plus de 4000 caractères). |
 | 423 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | ACCOUNT_LOCKED : 5 échecs d'identification en 15 minutes ; réessayer après retryAfterSeconds. |
+
+## <a id="tag-rendez-vous"></a>Rendez-vous
+
+### `POST /api/appointments`
+
+**Crée un rendez-vous depuis un créneau**
+
+Session praticien, propriétaire du patient. Le praticien et le cabinet viennent de la session. La fin vaut startsAt + durationMin. Statut planned, ou tentative si tentative = true (« À confirmer »). Les rendez-vous actifs du praticien qui chevauchent le créneau sont renvoyés dans conflicts sans empêcher la création ; un rendez-vous annulé ne compte pas. Avec recurrence (G Q55), une ligne par occurrence est créée dans la même transaction, toutes avec le même seriesId, le même statut et la même note, toutes les everyWeeks semaines à la même heure locale dans le fuseau tz (défaut Europe/Paris), count fois ou jusqu'à until inclus ; au-delà de 26 occurrences, rien n'est créé (422 TOO_MANY_OCCURRENCES). conflicts agrège alors les chevauchements de chaque occurrence, occurrenceStartsAt indiquant laquelle. Chaque occurrence se déplace et s'annule ensuite seule ; aucune règle de répétition n'est stockée. status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+
+operationId : `createAppointment`
+
+Corps (`application/json`) : [CreateAppointmentRequest](#schema-createappointmentrequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 201 | [AppointmentCreatedDto](#schema-appointmentcreateddto) (*/*) | Rendez-vous créé, ou occurrences de la série créées ; en-tête Location = /api/appointments/{id} de la première occurrence. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : corps JSON absent ou illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_FORBIDDEN : patient d'un autre praticien. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : patient inexistant. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED (errors[0].field = patientId) : patient archivé ; TOO_MANY_OCCURRENCES (errors[0].field = recurrence) : plus de 26 occurrences, rien n'est créé ; VALIDATION_FAILED avec errors[] : patientId, startsAt, durationMin, modality ou recurrence.everyWeeks REQUIRED ; durationMin OUT_OF_RANGE (hors 5 à 600) ; modality INVALID_VALUE (hors in_person, video, phone) ; planningNote OUT_OF_RANGE (plus de 2 000 caractères) ; recurrence.everyWeeks INVALID_VALUE (hors 1, 2, 4) ; recurrence.count OUT_OF_RANGE (moins de 1) ; recurrence REQUIRED (ni count ni until) ou INVALID_VALUE (count et until ensemble) ; recurrence.until INVALID_VALUE (avant le premier rendez-vous) ; tz INVALID_VALUE (fuseau inconnu) ; INVALID_FORMAT (date ou UUID illisible) ; UNKNOWN_FIELD (champ refusé). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `GET /api/appointments/{id}`
+
+**Détail d'un rendez-vous**
+
+Session praticien. Rendez-vous du praticien courant, avec son patient (nom affiché, date de naissance, archivé). Le rendez-vous d'un autre praticien répond 404.
+
+operationId : `getAppointment`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du rendez-vous. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [AppointmentDto](#schema-appointmentdto) (*/*) | Rendez-vous. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | APPOINTMENT_NOT_FOUND : rendez-vous inexistant ou d'un autre praticien. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `PATCH /api/appointments/{id}`
+
+**Déplace ou modifie un rendez-vous**
+
+Session praticien. Fusion partielle : startsAt déplace le rendez-vous en gardant sa durée, durationMin la change en gardant le début, modality et planningNote se remplacent ; un champ absent reste inchangé, planningNote à null efface la note. Refusé si le rendez-vous est annulé ou terminé (409). Les chevauchements du nouveau créneau sont renvoyés dans conflicts sans empêcher la modification. patientId, tentative (passer par /confirm), recurrence, status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+
+operationId : `updateAppointment`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du rendez-vous. |
+
+Corps (`application/json`) : [UpdateAppointmentRequest](#schema-updateappointmentrequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [AppointmentUpdatedDto](#schema-appointmentupdateddto) (*/*) | Rendez-vous modifié et chevauchements. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | APPOINTMENT_NOT_FOUND : rendez-vous inexistant ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | APPOINTMENT_NOT_ACTIVE : le rendez-vous est annulé ou terminé. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : durationMin OUT_OF_RANGE (hors 5 à 600) ; modality INVALID_VALUE ; planningNote OUT_OF_RANGE (plus de 2 000 caractères) ; INVALID_FORMAT (date illisible) ; UNKNOWN_FIELD (champ refusé). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `POST /api/appointments/{id}/cancel`
+
+**Annule un rendez-vous**
+
+Session praticien. Le rendez-vous passe à cancelled avec la date d'annulation et le motif facultatif ; il n'est jamais supprimé. Idempotent : annuler un rendez-vous déjà annulé répond 200 sans rien changer (motif et date d'origine gardés). Refusé si le rendez-vous est terminé (409). Corps facultatif.
+
+operationId : `cancelAppointment`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du rendez-vous. |
+
+Corps (`application/json`) : [CancelAppointmentRequest](#schema-cancelappointmentrequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [AppointmentDto](#schema-appointmentdto) (*/*) | Rendez-vous annulé. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | APPOINTMENT_NOT_FOUND : rendez-vous inexistant ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | APPOINTMENT_NOT_ACTIVE : le rendez-vous est terminé (séance rattachée). |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : reason OUT_OF_RANGE (plus de 500 caractères) ; UNKNOWN_FIELD (champ refusé). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `POST /api/appointments/{id}/confirm`
+
+**Confirme un rendez-vous à confirmer**
+
+Session praticien. Fait passer un rendez-vous tentative (« À confirmer ») à planned. Tout autre statut répond 409. Aucun corps.
+
+operationId : `confirmAppointment`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du rendez-vous. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [AppointmentDto](#schema-appointmentdto) (*/*) | Rendez-vous confirmé. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | APPOINTMENT_NOT_FOUND : rendez-vous inexistant ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | APPOINTMENT_NOT_ACTIVE : le rendez-vous n'est pas à confirmer (planned, annulé ou terminé). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `POST /api/appointments/series/{seriesId}/cancel`
+
+**Annule une série de rendez-vous**
+
+Session praticien. Annule toutes les occurrences encore actives (planned, tentative) de la série du praticien courant, déplacées ou non, avec le même motif facultatif ; les occurrences déjà annulées ou terminées restent telles quelles. Rien n'est supprimé. C'est l'« Annuler » du message affiché après la création d'une série. Répond toutes les occurrences de la série dans leur état final. Une série d'un autre praticien répond 404. Corps facultatif.
+
+operationId : `cancelSeries`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `seriesId` | path | string (uuid) | oui | Identifiant de la série (seriesId). |
+
+Corps (`application/json`) : [CancelAppointmentRequest](#schema-cancelappointmentrequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [AppointmentSeriesDto](#schema-appointmentseriesdto) (*/*) | Occurrences de la série, état final. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SERIES_NOT_FOUND : aucune occurrence de cette série n'est au praticien. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : reason OUT_OF_RANGE (plus de 500 caractères) ; UNKNOWN_FIELD (champ refusé). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ## <a id="tag-seances"></a>Séances
 
@@ -1986,7 +2198,7 @@ operationId : `uploadDocument`
 | `issuer` | query | string | non | Établissement ou organisme émetteur, 200 caractères au maximum. Facultatif. |
 | `year` | query | string | non | Année d'obtention, entier de 1950 à 2100. Facultatif. |
 
-Corps (`multipart/form-data`) : object
+Corps (`multipart/form-data`) : [uploadDocument_request](#schema-uploaddocument_request)
 
 | Réponse | Contenu | Description |
 | --- | --- | --- |
@@ -2213,7 +2425,7 @@ Détail d'un compte : mêmes champs que dans la liste, plus l'historique des dé
 | `role` | `practitioner` \| `admin` | non | Rôle du compte : practitioner ou admin. |
 | `suspendedAt` | string (date-time) | non | Date-heure UTC (ISO 8601) de la suspension ou du refus ; null si le compte n'est ni suspendu ni refusé (effacée à la réactivation). |
 | `twoFactorEnabled` | boolean | non | Vrai si la double authentification est activée sur le compte. |
-| `verification` | [AccountVerificationDto](#schema-accountverificationdto) | non | État de vérification du compte. |
+| `verification` | object | non | État de vérification du compte. |
 
 ### <a id="schema-accountexportrequest"></a>AccountExportRequest
 
@@ -2242,7 +2454,7 @@ Compte d'un praticien ou d'un administrateur dans la liste d'administration.
 | `role` | `practitioner` \| `admin` | non | Rôle du compte : practitioner ou admin. |
 | `suspendedAt` | string (date-time) | non | Date-heure UTC (ISO 8601) de la suspension ou du refus ; null si le compte n'est ni suspendu ni refusé (effacée à la réactivation). |
 | `twoFactorEnabled` | boolean | non | Vrai si la double authentification est activée sur le compte. |
-| `verification` | [AccountVerificationDto](#schema-accountverificationdto) | non | État de vérification du compte. |
+| `verification` | object | non | État de vérification du compte. |
 
 ### <a id="schema-accountlistdto"></a>AccountListDto
 
@@ -2387,6 +2599,17 @@ URL signée et éphémère pour ouvrir un justificatif.
 | `expiresAt` | string (date-time) | non | Date-heure UTC (ISO 8601) d'expiration, 5 minutes après l'émission. |
 | `url` | string | non | Chemin relatif de l'API (getAdminDocumentFile) avec exp et sig en paramètres de requête ; valable uniquement pour l'administrateur qui l'a demandée. |
 
+### <a id="schema-agendawindowdto"></a>AgendaWindowDto
+
+Rendez-vous du praticien qui chevauchent la fenêtre [from, to[, triés par début.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `appointments` | [AppointmentDto](#schema-appointmentdto)[] | non | Rendez-vous dont le créneau chevauche la fenêtre (startsAt < to et endsAt > from), triés par startsAt. Annulés exclus sauf includeCancelled=true. |
+| `busy` | object[] | non | Réservé aux indisponibilités externes (jalon ultérieur) : toujours vide dans cette version. |
+| `from` | string (date-time) | non | Début de la fenêtre, inclus, date-heure ISO 8601 UTC. |
+| `to` | string (date-time) | non | Fin de la fenêtre, exclue, date-heure ISO 8601 UTC. |
+
 ### <a id="schema-appealcreateddto"></a>AppealCreatedDto
 
 Recours enregistré.
@@ -2467,6 +2690,82 @@ Résumé d'un recours déposé par le praticien, dans le détail de son compte.
 | `reviewedAt` | string (date-time) | non | Date-heure UTC (ISO 8601) de l'examen ; null tant que le recours est ouvert. |
 | `submittedAt` | string (date-time) | non | Date-heure UTC (ISO 8601) du dépôt du recours. |
 
+### <a id="schema-appointmentcreateddto"></a>AppointmentCreatedDto
+
+Rendez-vous créés et chevauchements signalés (jamais bloquants).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `appointments` | [AppointmentDto](#schema-appointmentdto)[] | non | Rendez-vous créés, triés par début : un seul sans recurrence, sinon une occurrence par élément, de même seriesId. |
+| `conflicts` | [ConflictDto](#schema-conflictdto)[] | non | Rendez-vous actifs du praticien qui chevauchent l'une des occurrences créées (occurrenceStartsAt dit laquelle) ; vide sinon. |
+
+### <a id="schema-appointmentdefaultsdto"></a>AppointmentDefaultsDto
+
+Valeurs à préremplir pour un nouveau rendez-vous de ce patient. durationMin et modality restent obligatoires à la création.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `durationMin` | integer (int32) | non | Durée en minutes : celle du suivi du patient, sinon la préférence sessions.defaultDurationMin du praticien, sinon 60. |
+| `modality` | `in_person` \| `video` \| `phone` | non | Modalité : celle du suivi du patient si elle vaut in_person, video ou phone, sinon in_person. |
+| `rhythm` | string | non | Rythme du suivi, texte libre affiché tel quel (« toutes les 2 semaines »). Null s'il n'est pas renseigné. |
+
+### <a id="schema-appointmentdto"></a>AppointmentDto
+
+Rendez-vous du praticien. Dates UTC ISO 8601.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `cancelReason` | string | non | Motif d'annulation. Null si aucun. |
+| `cancelledAt` | string (date-time) | non | Instant d'annulation UTC. Null si le rendez-vous n'est pas annulé. |
+| `createdAt` | string (date-time) | non | Instant de création UTC. |
+| `durationMin` | integer (int32) | non | Durée en minutes (fin moins début). |
+| `endsAt` | string (date-time) | non | Fin du rendez-vous, UTC ISO 8601. |
+| `id` | string (uuid) | non | Identifiant du rendez-vous. |
+| `modality` | `in_person` \| `video` \| `phone` | non | Modalité du rendez-vous. |
+| `patient` | object | non | Patient du rendez-vous. |
+| `planningNote` | string | non | Note de planification, visible seulement dans l'agenda. Null si aucune. |
+| `seriesId` | string (uuid) | non | Série de répétition. Null pour un rendez-vous isolé. |
+| `sessionEntryId` | string (uuid) | non | Séance rattachée (entrée de type session). Null sinon. |
+| `startsAt` | string (date-time) | non | Début du rendez-vous, UTC ISO 8601. |
+| `status` | `planned` \| `tentative` \| `cancelled` \| `done` | non | Statut : planned (planifié), tentative (à confirmer), cancelled (annulé), done (séance rattachée). |
+| `updatedAt` | string (date-time) | non | Instant de dernière modification UTC. |
+
+### <a id="schema-appointmentpatientdto"></a>AppointmentPatientDto
+
+Patient du rendez-vous : identité affichée seulement, aucun contact.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `archived` | boolean | non | true si le patient est archivé. |
+| `birthDate` | string (date) | non | Date de naissance (AAAA-MM-JJ). Null si inconnue. |
+| `displayName` | string | non | Nom affiché du patient. |
+| `id` | string (uuid) | non | Identifiant du patient. |
+
+### <a id="schema-appointmentseriesdto"></a>AppointmentSeriesDto
+
+Toutes les occurrences de la série du praticien, triées par début.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `appointments` | [AppointmentDto](#schema-appointmentdto)[] | non | Occurrences de la série dans leur état final : les actives sont annulées, les terminées (done) et déjà annulées restent telles quelles. |
+
+### <a id="schema-appointmentupdateddto"></a>AppointmentUpdatedDto
+
+Rendez-vous modifié et chevauchements de son créneau (jamais bloquants).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `appointment` | object | non | Rendez-vous après modification. |
+| `conflicts` | [ConflictDto](#schema-conflictdto)[] | non | Rendez-vous actifs du praticien qui chevauchent ; vide sinon. |
+
+### <a id="schema-cancelappointmentrequest"></a>CancelAppointmentRequest
+
+Annulation d'un rendez-vous. Le corps est facultatif.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `reason` | string | non | Motif d'annulation, 500 caractères au plus. Facultatif. |
+
 ### <a id="schema-card"></a>Card
 
 Fiche résumée d'un praticien publié dans les résultats de recherche (sans coordonnées).
@@ -2505,6 +2804,18 @@ Clôture d'une séance ouverte. authorType et submissionId sont refusés (UNKNOW
 | `durationMin` | integer (int32) | non | Durée de la séance en minutes, de 1 à 600 (OUT_OF_RANGE sinon). Absente : la durée par défaut du praticien, sinon 60 minutes. |
 | `summary` | string | non | Compte rendu de la séance, texte libre. Vide ou absent : aucun compte rendu. |
 
+### <a id="schema-conflictdto"></a>ConflictDto
+
+Rendez-vous actif (planned ou tentative) du praticien qui chevauche le créneau : un avertissement, jamais un refus.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `appointmentId` | string (uuid) | non | Identifiant du rendez-vous chevauché. |
+| `endsAt` | string (date-time) | non | Fin du rendez-vous chevauché, UTC ISO 8601. |
+| `occurrenceStartsAt` | string (date-time) | non | Début, UTC ISO 8601, du créneau demandé que ce rendez-vous chevauche : l'occurrence concernée pour une série, sinon le début du rendez-vous créé ou déplacé, ou from pour freebusy. |
+| `patientDisplayName` | string | non | Nom affiché du patient du rendez-vous chevauché. |
+| `startsAt` | string (date-time) | non | Début du rendez-vous chevauché, UTC ISO 8601. |
+
 ### <a id="schema-consents"></a>Consents
 
 Consentements obligatoires à l'inscription : les deux doivent valoir true (422 INVALID_FIELD sinon). Ils sont consignés dans le journal de sécurité.
@@ -2520,10 +2831,25 @@ Coordonnées professionnelles du praticien, vues par l'administration.
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `address` | [AdminAddressDto](#schema-adminaddressdto) | non | Adresse du cabinet ; ses champs sont null si non renseignés. |
+| `address` | object | non | Adresse du cabinet ; ses champs sont null si non renseignés. |
 | `phone` | string | non | Téléphone professionnel ; null si non renseigné. |
 | `professionalNumber` | string | non | Numéro professionnel (RPPS, ADELI ou équivalent) ; null si non renseigné. |
 | `remoteOnly` | boolean | non | Vrai si le praticien exerce uniquement à distance. |
+
+### <a id="schema-createappointmentrequest"></a>CreateAppointmentRequest
+
+Création d'un rendez-vous, ou d'une série si recurrence est présent. status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `durationMin` | integer (int32) | oui | Durée en minutes, de 5 à 600. Obligatoire. |
+| `modality` | `in_person` \| `video` \| `phone` | oui | Modalité. Obligatoire. |
+| `patientId` | string (uuid) | oui | Patient du praticien, non archivé. Obligatoire. |
+| `planningNote` | string | non | Note de planification, 2 000 caractères au plus. Facultative. |
+| `recurrence` | object | non | Répétition (G Q55) : une ligne par occurrence, même seriesId, même statut, même note. Absente : un seul rendez-vous. |
+| `startsAt` | string (date-time) | oui | Début du rendez-vous, UTC ISO 8601. Obligatoire. |
+| `tentative` | boolean | non | true pour « À confirmer » (statut tentative, appliqué à toutes les occurrences). Défaut : false. |
+| `tz` | string | non | Fuseau IANA dans lequel les occurrences d'une série gardent la même heure locale et dans lequel until est lu (INVALID_VALUE si inconnu). Défaut : Europe/Paris. |
 
 ### <a id="schema-createemotionrequest"></a>CreateEmotionRequest
 
@@ -2541,11 +2867,11 @@ Création d'une entrée. Champs minimaux par type : note = body ; event = title 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
 | `body` | string | non | Texte (obligatoire pour note). Refusé pour une séance (NOT_ALLOWED_ON_CREATE) : le compte rendu se donne à la clôture. |
-| `feeling` | [EntryFeelingRequest](#schema-entryfeelingrequest) | non | Détail du ressenti, pour le type feeling uniquement. |
+| `feeling` | object | non | Détail du ressenti, pour le type feeling uniquement. |
 | `links` | [EntryLinkRequest](#schema-entrylinkrequest)[] | non | Liens à poser avec l'entrée, 20 au plus (OUT_OF_RANGE au-delà), tout ou rien : un lien refusé annule la création. Refusé pour une séance (NOT_ALLOWED_ON_CREATE). |
-| `medication` | [EntryMedicationRequest](#schema-entrymedicationrequest) | non | Détail du médicament, pour le type medication uniquement. |
-| `occurred` | [EntryOccurredRequest](#schema-entryoccurredrequest) | non | Moment auquel l'entrée a eu lieu. Absent : l'instant de saisie (obligatoire pour une situation). |
-| `session` | [EntrySessionRequest](#schema-entrysessionrequest) | non | Détail de la séance, pour le type session uniquement. |
+| `medication` | object | non | Détail du médicament, pour le type medication uniquement. |
+| `occurred` | object | non | Moment auquel l'entrée a eu lieu. Absent : l'instant de saisie (obligatoire pour une situation). |
+| `session` | object | non | Détail de la séance, pour le type session uniquement. |
 | `sessionId` | string (uuid) | non | Séance de rattachement, qui doit être une séance de ce patient (SESSION_INVALID sinon). Absent : la séance courante du patient (SESSION_REQUIRED s'il n'en a aucune). Interdit pour une séance (SESSION_NOT_ALLOWED). |
 | `status` | `draft` \| `final` | non | Statut : draft ou final (défaut final). Autre valeur : INVALID_VALUE. Ignoré pour une séance, toujours finale. |
 | `tags` | string[] | non | Libellés de tags existants du praticien (UNKNOWN_TAG sur tags[i] sinon). Refusé pour une séance (NOT_ALLOWED_ON_CREATE). |
@@ -2664,7 +2990,7 @@ Dossier complet d'un praticien pour la vérification : identité, coordonnées, 
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `contact` | [ContactDto](#schema-contactdto) | non | Coordonnées professionnelles. |
+| `contact` | object | non | Coordonnées professionnelles. |
 | `createdAt` | string (date-time) | non | Date-heure UTC (ISO 8601) de création du compte. |
 | `decisions` | [DecisionItemDto](#schema-decisionitemdto)[] | non | Historique des décisions sur ce compte, du plus récent au plus ancien. |
 | `displayName` | string | non | Nom d'affichage. |
@@ -2688,7 +3014,7 @@ Brouillons et séance ouverte.
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
 | `count` | integer (int32) | non | Nombre d'entrées en brouillon non archivées. |
-| `openSession` | [OpenSessionDto](#schema-opensessiondto) | non | Séance non clôturée la plus récente ; null s'il n'y en a pas. |
+| `openSession` | object | non | Séance non clôturée la plus récente ; null s'il n'y en a pas. |
 
 ### <a id="schema-emailchangerequest"></a>EmailChangeRequest
 
@@ -2747,15 +3073,15 @@ Entrée clinique complète (version courante, détail selon le type, tags). Une 
 | `archivedAt` | string (date-time) | non | Instant d'archivage UTC. Null si l'entrée n'est pas archivée. |
 | `authorType` | `practitioner` | non | Provenance de l'entrée. Lecture seule : vaut toujours practitioner en V1, jamais acceptée en écriture (422 UNKNOWN_FIELD). |
 | `body` | string | non | Texte de la version courante. Null si la version n'en a pas. |
-| `feeling` | [EntryFeelingDto](#schema-entryfeelingdto) | non | Détail du ressenti. Renseigné pour le type feeling, null sinon. |
+| `feeling` | object | non | Détail du ressenti. Renseigné pour le type feeling, null sinon. |
 | `id` | string (uuid) | non | Identifiant de l'entrée. |
 | `linkCount` | integer (int32) | non | Nombre de liens acceptés portant sur l'entrée. |
 | `links` | [EntryLinkDto](#schema-entrylinkdto)[] | non | Liens posés à la création, dans leur sens réel. Renseigné uniquement dans la réponse 201 de POST /api/patients/{id}/entries (liste vide si aucun lien demandé) ; null partout ailleurs (utiliser GET /api/entries/{id}/links). |
-| `medication` | [EntryMedicationDto](#schema-entrymedicationdto) | non | Détail du médicament. Renseigné pour le type medication, null sinon. |
-| `occurred` | [EntryOccurredDto](#schema-entryoccurreddto) | non | Moment auquel l'entrée a eu lieu, avec sa précision. |
+| `medication` | object | non | Détail du médicament. Renseigné pour le type medication, null sinon. |
+| `occurred` | object | non | Moment auquel l'entrée a eu lieu, avec sa précision. |
 | `patientId` | string (uuid) | non | Identifiant du patient du dossier. |
 | `recordedAt` | string (date-time) | non | Instant d'enregistrement de l'entrée, UTC ISO 8601. |
-| `session` | [EntrySessionDto](#schema-entrysessiondto) | non | Détail de la séance. Renseigné pour le type session, null sinon. |
+| `session` | object | non | Détail de la séance. Renseigné pour le type session, null sinon. |
 | `sessionId` | string (uuid) | non | Identifiant de la séance à laquelle l'entrée appartient. Null pour une séance (une séance n'est rattachée à aucune séance). |
 | `status` | `draft` \| `final` | non | Statut : draft = brouillon ; final = définitive. L'archivage n'est pas un statut, il est porté par archivedAt. |
 | `tags` | string[] | non | Libellés des tags actifs de l'entrée, triés sans tenir compte de la casse. Liste vide s'il n'y en a pas. |
@@ -2918,11 +3244,11 @@ Page de résultats d'une recherche : entrées, facettes et requête interprété
 | --- | --- | --- | --- |
 | `approximateCount` | integer (int32) | non | Nombre de résultats approchés dans items (page 1 seulement, et seulement s'il y a moins de 3 résultats exacts, avec un texte sans exclusion -mot ; 0 sinon). |
 | `exactCount` | integer (int32) | non | Nombre de résultats exacts dans items. |
-| `facets` | [EntrySearchFacetsDto](#schema-entrysearchfacetsdto) | non | Facettes calculées sur les résultats exacts. |
+| `facets` | object | non | Facettes calculées sur les résultats exacts. |
 | `items` | [EntrySearchItemDto](#schema-entrysearchitemdto)[] | non | Résultats de la page : exacts d'abord (par pertinence, puis date décroissante), puis approchés (par similarité). Sans texte : par date décroissante. |
 | `page` | integer (int32) | non | Numéro de la page renvoyée, à partir de 1. |
 | `pageSize` | integer (int32) | non | Taille de page, fixe : 20. |
-| `query` | [EntrySearchQueryDto](#schema-entrysearchquerydto) | non | Requête telle que le serveur l'a interprétée. |
+| `query` | object | non | Requête telle que le serveur l'a interprétée. |
 | `tookMs` | integer (int64) | non | Durée de traitement côté serveur, en millisecondes. |
 | `total` | integer (int64) | non | Nombre total de résultats exacts sur toutes les pages, hors résultats approchés. |
 
@@ -3112,6 +3438,16 @@ Drapeau à poser sur un patient (à la création ou via POST /flags).
 | `kind` | `watch` \| `risk` \| `shared_care` | oui | Nature du drapeau : watch = à surveiller, risk = risque, shared_care = suivi partagé. Toute autre valeur est refusée (422 INVALID_VALUE), l'absence aussi (422 REQUIRED). |
 | `reason` | string | non | Raison libre ; obligatoire (non vide) pour watch, facultative pour risk et shared_care. |
 
+### <a id="schema-freebusydto"></a>FreeBusyDto
+
+Ce qui entoure un créneau avant de le créer ou d'y déplacer un rendez-vous : conflits, rendez-vous précédent et suivant du même jour.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `conflicts` | [ConflictDto](#schema-conflictdto)[] | non | Rendez-vous actifs (planned, tentative) qui chevauchent le créneau, triés par début. Vide si le créneau est libre. |
+| `next` | object | non | Premier rendez-vous actif commençant au plus tôt à la fin du créneau, le même jour calendaire (fuseau tz). Null s'il n'y en a pas. |
+| `previous` | object | non | Dernier rendez-vous actif terminé au plus tard au début du créneau, le même jour calendaire (fuseau tz). Null s'il n'y en a pas. |
+
 ### <a id="schema-graphdto"></a>GraphDto
 
 Graphe d'un patient : au plus 150 nœuds (500 pour un développement par expand), leurs arêtes et les groupes de nœuds regroupés.
@@ -3205,7 +3541,7 @@ Ligne du journal d'administration : une décision ou un événement de sécurit�
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `actor` | [ActorDto](#schema-actordto) | non | Administrateur auteur de l'acte ; null si l'événement n'est pas l'acte d'un administrateur (praticien lui-même ou système). |
+| `actor` | object | non | Administrateur auteur de l'acte ; null si l'événement n'est pas l'acte d'un administrateur (praticien lui-même ou système). |
 | `actorType` | `admin` \| `practitioner` \| `system` | non | Nature de l'auteur : admin (un administrateur a agi), practitioner (le compte concerné lui-même) ou system (ni l'un ni l'autre). |
 | `at` | string (date-time) | non | Date-heure UTC (ISO 8601) de l'événement. |
 | `details` | object | non | Détails structurés de l'événement (clés et valeurs JSON variables selon kind, par exemple reason, previousStatus, newStatus, decisionId, appealId) ; objet vide s'il n'y en a pas. |
@@ -3302,7 +3638,7 @@ Sécurité du compte : sessions actives et dernière connexion.
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `lastLogin` | [LastLoginResponse](#schema-lastloginresponse) | non | Connexion précédente : la dernière connexion réussie (POST /api/auth/login) antérieure à l'ouverture de la session courante, sans compter celle-ci. null à la toute première connexion du compte (une session ouverte par confirmation d'e-mail n'est pas une connexion et lit la dernière connexion antérieure) ou pour une session ouverte avant cette fonction. |
+| `lastLogin` | object | non | Connexion précédente : la dernière connexion réussie (POST /api/auth/login) antérieure à l'ouverture de la session courante, sans compter celle-ci. null à la toute première connexion du compte (une session ouverte par confirmation d'e-mail n'est pas une connexion et lit la dernière connexion antérieure) ou pour une session ouverte avant cette fonction. |
 | `sessions` | [ActiveSessionResponse](#schema-activesessionresponse)[] | non | Sessions non expirées du praticien (les siennes uniquement), la plus récemment utilisée d'abord. Contient toujours la session courante. |
 
 ### <a id="schema-mergeemotionrequest"></a>MergeEmotionRequest
@@ -3377,16 +3713,16 @@ Synthèse clinique d'un patient pour une fenêtre (30d, 90d ou 12m) : faits clé
 | --- | --- | --- | --- |
 | `activeSituations` | [ActiveSituationDto](#schema-activesituationdto)[] | non | Situations en cours (sans fin connue), triées par nombre de liens décroissant ; liste vide s'il n'y en a pas. |
 | `computedAt` | string (date-time) | non | Date-heure du calcul de la projection, UTC ISO 8601 (jamais d'un jour UTC antérieur à aujourd'hui). |
-| `drafts` | [DraftsDto](#schema-draftsdto) | non | Brouillons en attente et séance ouverte. |
-| `emotions` | [EmotionsDto](#schema-emotionsdto) | non | Émotions dominantes de la fenêtre. |
-| `facts` | [OverviewFactsDto](#schema-overviewfactsdto) | non | Faits clés du dossier, indépendants de la fenêtre. |
-| `feelings` | [FeelingsDto](#schema-feelingsdto) | non | Ressentis réels de la fenêtre : un point par ressenti, une série par émotion. |
-| `narrative` | [NarrativeDto](#schema-narrativedto) | non | Résumé « En bref » rédigé par règles (sans IA), dans la langue d'Accept-Language. |
+| `drafts` | object | non | Brouillons en attente et séance ouverte. |
+| `emotions` | object | non | Émotions dominantes de la fenêtre. |
+| `facts` | object | non | Faits clés du dossier, indépendants de la fenêtre. |
+| `feelings` | object | non | Ressentis réels de la fenêtre : un point par ressenti, une série par émotion. |
+| `narrative` | object | non | Résumé « En bref » rédigé par règles (sans IA), dans la langue d'Accept-Language. |
 | `recentActivity` | [RecentActivityItemDto](#schema-recentactivityitemdto)[] | non | 10 dernières entrées non archivées saisies ou corrigées, de la plus récente à la plus ancienne, lues en direct (hors projection) ; entrées privées incluses. |
 | `recentSessions` | [RecentSessionDto](#schema-recentsessiondto)[] | non | 5 dernières séances non archivées, de la plus récente à la plus ancienne ; la plus récente porte son compte rendu entier. |
-| `sinceLastSession` | [SinceLastSessionDto](#schema-sincelastsessiondto) | non | Entrées saisies depuis la dernière séance clôturée. |
+| `sinceLastSession` | object | non | Entrées saisies depuis la dernière séance clôturée. |
 | `sourceRev` | integer (int64) | non | Révision du dossier (patient.clinical_rev) au moment du calcul : compteur croissant, utile pour détecter un changement. |
-| `trend` | [TrendDto](#schema-trenddto) | non | Courbe d'intensité et repères de la fenêtre. |
+| `trend` | object | non | Courbe d'intensité et repères de la fenêtre. |
 | `window` | `30d` \| `90d` \| `12m` | non | Fenêtre appliquée à trend, emotions et feelings. |
 
 ### <a id="schema-overviewfactsdto"></a>OverviewFactsDto
@@ -3446,11 +3782,11 @@ Correction partielle d'une entrée : un champ absent est inchangé ; occurred et
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
 | `body` | string | non | Nouveau texte. Une note ne peut pas perdre son texte (REQUIRED). |
-| `feeling` | [EntryFeelingRequest](#schema-entryfeelingrequest) | non | Détail du ressenti à fusionner (entrée de type feeling). |
-| `medication` | [EntryMedicationRequest](#schema-entrymedicationrequest) | non | Détail du médicament à fusionner (entrée de type medication). |
-| `occurred` | [EntryOccurredRequest](#schema-entryoccurredrequest) | non | Nouveau moment de l'entrée, remplacé en entier. |
+| `feeling` | object | non | Détail du ressenti à fusionner (entrée de type feeling). |
+| `medication` | object | non | Détail du médicament à fusionner (entrée de type medication). |
+| `occurred` | object | non | Nouveau moment de l'entrée, remplacé en entier. |
 | `reason` | string | non | Motif de la correction, conservé sur la nouvelle version. Sans effet quand la modification est faite en place pendant la fenêtre de grâce. |
-| `session` | [EntrySessionRequest](#schema-entrysessionrequest) | non | Détail de la séance à fusionner (entrée de type session). |
+| `session` | object | non | Détail de la séance à fusionner (entrée de type session). |
 | `status` | `draft` \| `final` | non | Nouveau statut : draft ou final. Autre valeur : INVALID_VALUE. |
 | `tags` | string[] | non | Nouveaux libellés de tags, remplaçant la liste actuelle (UNKNOWN_TAG sur tags[i] si un libellé n'existe pas). Un changement de tags seul ne crée jamais de version. |
 | `title` | string | non | Nouveau titre. Un event ou une situation ne peut pas perdre son titre (REQUIRED). |
@@ -3466,6 +3802,15 @@ Modification partielle d'une entrée : un champ absent reste inchangé. Le code 
 | `labelEn` | string | non | Nouveau libellé anglais, 120 caractères au plus ; chaîne vide : efface le libellé anglais. |
 | `labelFr` | string | non | Nouveau libellé français, non vide, 120 caractères au plus. |
 | `sortOrder` | integer (int32) | non | Nouveau rang d'affichage dans le type, de 0 à 32767. |
+
+### <a id="schema-patientappointmentsdto"></a>PatientAppointmentsDto
+
+Rendez-vous actifs d'un patient à partir d'un instant, et les valeurs à préremplir pour en créer un nouveau.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `appointments` | [AppointmentDto](#schema-appointmentdto)[] | non | Rendez-vous actifs (planned, tentative) du praticien courant pour ce patient, non terminés à l'instant from, triés par début. |
+| `defaults` | object | non | Défauts de création d'un rendez-vous pour ce patient. |
 
 ### <a id="schema-patientdto"></a>PatientDto
 
@@ -3501,10 +3846,14 @@ Page de patients, paginée par curseur opaque.
 
 ### <a id="schema-preferences"></a>Preferences
 
-Préférences à plat du compte : 9 clés connues, aux noms pointés (par exemple "overview.view"), sans objet imbriqué. En lecture, les 9 clés sont toujours présentes (valeur enregistrée, sinon défaut selon la profession). En PATCH, toutes les clés sont optionnelles : null remet la clé à son défaut, une clé inconnue est ignorée.
+Préférences à plat du compte : 13 clés connues, aux noms pointés (par exemple "overview.view"), sans objet imbriqué. En lecture, les 13 clés sont toujours présentes (valeur enregistrée, sinon défaut selon la profession). En PATCH, toutes les clés sont optionnelles : null remet la clé à son défaut, une clé inconnue est ignorée. Les bornes de la journée de l'agenda doivent rester cohérentes : agenda.dayEndHour strictement supérieur à agenda.dayStartHour, sinon 422 OUT_OF_RANGE sur agenda.dayEndHour.
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
+| `agenda.dayEndHour` | integer (int32) | non | Dernière heure affichée dans la grille de l'agenda (entier de 1 à 24), strictement supérieure à agenda.dayStartHour après fusion. Hors bornes ou non supérieure au début : 422 OUT_OF_RANGE. Défaut : 19. |
+| `agenda.dayStartHour` | integer (int32) | non | Première heure affichée dans la grille de l'agenda (entier de 0 à 23). Hors bornes : 422 OUT_OF_RANGE. Défaut : 8. |
+| `agenda.defaultView` | `day` \| `week` \| `month` \| `list` | non | Vue ouverte par défaut dans l'agenda : day = jour, week = semaine, month = mois, list = liste. Défaut : week. |
+| `agenda.workingDays` | integer (int32)[] | non | Jours travaillés affichés dans l'agenda : tableau d'entiers de 1 (lundi) à 7 (dimanche), sans doublon, au moins un jour, dans l'ordre enregistré (jour hors 1–7 : 422 OUT_OF_RANGE ; doublon, liste vide ou autre type : 422 INVALID_VALUE). Défaut : [1,2,3,4,5,6]. |
 | `entries.defaultVisibility` | `clinical` \| `private` | non | Visibilité proposée par défaut pour une nouvelle entrée : clinical = clinique, private = privée. Défaut : clinical. |
 | `entryTypes.medicationVisible` | boolean | non | true si le type d'entrée « médication » est proposé à la saisie. Défaut : true pour un psychiatre, false sinon. |
 | `locale` | `fr` \| `en` | non | Langue de l'interface : fr (français) ou en (anglais). Défaut : fr. |
@@ -3521,7 +3870,7 @@ Corps de toute réponse d'erreur (application/problem+json, RFC 9457). Les champ
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `allowedLinkTypes` | object[] | non | Types de lien autorisés pour ce couple d'entrées ; présent quand le code de champ est LINK_TYPE_NOT_ALLOWED. Objets {code, label} sur les routes de liens (POST /api/entries/{id}/links, PATCH /api/links/{id}) ; simples codes (chaînes) dans le 422 de POST /api/patients/{id}/entries. |
+| `allowedLinkTypes` | [ProblemDetail_allowedLinkTypes_inner](#schema-problemdetail_allowedlinktypes_inner)[] | non | Types de lien autorisés pour ce couple d'entrées ; présent quand le code de champ est LINK_TYPE_NOT_ALLOWED. Objets {code, label} sur les routes de liens (POST /api/entries/{id}/links, PATCH /api/links/{id}) ; simples codes (chaînes) dans le 422 de POST /api/patients/{id}/entries. |
 | `code` | string | oui | Code d'erreur stable, en MAJUSCULES_SOULIGNÉES, indépendant de la langue : c'est lui que le client teste. Codes transverses dans la description générale, codes métier sur chaque opération. |
 | `detail` | string | oui | Explication lisible destinée à l'utilisateur ; générique pour les erreurs 5xx (jamais de message interne). |
 | `errors` | [FieldProblem](#schema-fieldproblem)[] | non | Erreurs par champ ; présentes sur les 422 (VALIDATION_FAILED ou code métier de champ comme SESSION_REQUIRED), sur les 400 de paramètre (BAD_REQUEST, INVALID_PARAMETERS, SEARCH_BAD_REQUEST, OVERVIEW_BAD_REQUEST) et sur le 409 ENTRY_ARCHIVED des liens ; absentes sinon. |
@@ -3536,13 +3885,28 @@ Corps de toute réponse d'erreur (application/problem+json, RFC 9457). Les champ
 | `type` | string (uri) | oui | Type de problème (RFC 9457) ; toujours about:blank dans PsyMate. |
 | `usedByPublishedProfiles` | integer (int32) | non | Nombre de fiches publiées qui utilisent encore l'entrée de vocabulaire ; présent sur 409 VOCABULARY_IN_USE. |
 
+### <a id="schema-problemdetail_allowedlinktypes_inner"></a>ProblemDetail_allowedLinkTypes_inner
+
+Un type de lien autorisé : objet {code, label} sur les routes de liens, simple code (chaîne) sur la création d'entrée.
+
+Type : object
+
+### <a id="schema-problemdetail_allowedlinktypes_inner_oneof"></a>ProblemDetail_allowedLinkTypes_inner_oneOf
+
+Type de lien avec son libellé.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `code` | string | non | Code du type de lien. |
+| `label` | string | non | Libellé du type de lien. |
+
 ### <a id="schema-professionalinfodto"></a>ProfessionalInfoDto
 
 Informations professionnelles du praticien, telles qu'enregistrées.
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `address` | [AddressDto](#schema-addressdto) | non | Adresse du cabinet ; ses champs valent null si absents. |
+| `address` | object | non | Adresse du cabinet ; ses champs valent null si absents. |
 | `phone` | string | non | Téléphone, tel que saisi ; null si non renseigné. |
 | `professionalNumber` | string | non | Numéro professionnel (ADELI, RPPS ou autre) ; null si non renseigné. |
 | `remoteOnly` | boolean | non | true si le praticien exerce uniquement à distance (visio) : l'adresse n'est pas exigée. |
@@ -3553,7 +3917,7 @@ Mise à jour partielle des informations professionnelles : un champ absent ou nu
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `address` | [AddressDto](#schema-addressdto) | non | Adresse du cabinet, champ par champ (200 caractères au maximum chacun). Absente : adresse inchangée. |
+| `address` | object | non | Adresse du cabinet, champ par champ (200 caractères au maximum chacun). Absente : adresse inchangée. |
 | `phone` | string | non | Téléphone : 6 à 30 caractères parmi chiffres, + espace ( ) . et tiret. Vide : effacé. |
 | `professionalNumber` | string | non | Numéro professionnel : 4 à 20 caractères parmi lettres, chiffres, espace et tiret. Vide : effacé. |
 | `remoteOnly` | boolean | non | true pour exercer uniquement à distance. Absent ou null : inchangé. |
@@ -3718,14 +4082,24 @@ Codes de secours de la 2FA, en clair, montrés une seule fois.
 | --- | --- | --- | --- |
 | `recoveryCodes` | string[] | non | Dix codes de secours à usage unique, au format XXXXX-XXXXX (majuscules et chiffres). Ils remplacent tous les codes précédents, qui ne fonctionnent plus. |
 
+### <a id="schema-recurrencerequest"></a>RecurrenceRequest
+
+Répétition hebdomadaire : toutes les everyWeeks semaines, soit count fois, soit jusqu'à until inclus ; exactement un des deux (sinon 422 sur recurrence : REQUIRED si aucun, INVALID_VALUE si les deux). 26 occurrences au plus (422 TOO_MANY_OCCURRENCES). Chaque occurrence garde l'heure locale du premier rendez-vous dans le fuseau tz, même après un changement d'heure ; aucun décalage sur jour férié.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `count` | integer (int32) | non | Nombre d'occurrences, premier rendez-vous compris : 1 à 26 (au-delà, 422 TOO_MANY_OCCURRENCES). Exclusif de until. |
+| `everyWeeks` | integer (int32) | oui | Intervalle en semaines : 1, 2 ou 4 (INVALID_VALUE sinon). Obligatoire. |
+| `until` | string (date) | non | Dernier jour possible d'une occurrence, inclus, date ISO 8601 (AAAA-MM-JJ, par exemple 2026-12-28) lue dans le fuseau tz ; pas avant le jour du premier rendez-vous (INVALID_VALUE). Exclusif de count. |
+
 ### <a id="schema-registerrequest"></a>RegisterRequest
 
 Inscription ouverte d'un praticien (sans code d'invitation). L'adresse e-mail sert d'identifiant de connexion.
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `address` | [Address](#schema-address) | non | Adresse du cabinet ; obligatoire sauf si remoteOnly vaut true (422 ADDRESS_REQUIRED sinon). |
-| `consents` | [Consents](#schema-consents) | oui | Consentements CGU et confidentialité, tous deux à true. |
+| `address` | object | non | Adresse du cabinet ; obligatoire sauf si remoteOnly vaut true (422 ADDRESS_REQUIRED sinon). |
+| `consents` | object | oui | Consentements CGU et confidentialité, tous deux à true. |
 | `email` | string (email) | oui | Adresse e-mail du compte (254 caractères au maximum). |
 | `firstName` | string | oui | Prénom (100 caractères au maximum). |
 | `lastName` | string | oui | Nom de famille (100 caractères au maximum). |
@@ -3773,7 +4147,7 @@ Page de résultats de la recherche dans l'annuaire public.
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `facets` | [Facets](#schema-facets) | non | Facettes du lot filtré, toutes pages confondues. |
+| `facets` | object | non | Facettes du lot filtré, toutes pages confondues. |
 | `items` | [Card](#schema-card)[] | non | Fiches de la page, au plus 20, dans l'ordre du tri demandé. |
 | `page` | integer (int32) | non | Numéro de la page rendue, à partir de 1. |
 | `pageSize` | integer (int32) | non | Taille de page, toujours 20. |
@@ -3933,11 +4307,11 @@ Entrée allégée de la chronologie : de quoi dessiner une ligne sans charger l'
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
 | `authorType` | `practitioner` | non | Provenance de l'entrée. Lecture seule : vaut toujours practitioner en V1. |
-| `emotion` | [TimelineEmotionDto](#schema-timelineemotiondto) | non | Émotion du ressenti. Renseignée pour le type feeling, null sinon. |
+| `emotion` | object | non | Émotion du ressenti. Renseignée pour le type feeling, null sinon. |
 | `id` | string (uuid) | non | Identifiant de l'entrée. |
 | `intensity` | integer (int32) | non | Intensité du ressenti, de 0 à 10. Null pour les autres types. |
 | `linkCount` | integer (int32) | non | Nombre de liens acceptés portant sur l'entrée. |
-| `occurred` | [EntryOccurredDto](#schema-entryoccurreddto) | non | Moment auquel l'entrée a eu lieu, avec sa précision. |
+| `occurred` | object | non | Moment auquel l'entrée a eu lieu, avec sa précision. |
 | `ongoing` | boolean | non | Vrai pour une situation sans fin (occurred.to nul), toujours en cours. Faux pour tout autre élément. |
 | `recordedAt` | string (date-time) | non | Instant d'enregistrement de l'entrée, UTC ISO 8601. |
 | `sessionId` | string (uuid) | non | Identifiant de la séance de l'entrée. Null pour une séance (une séance n'est rattachée à aucune séance). |
@@ -3953,7 +4327,7 @@ Page de chronologie, triée par début d'occurrence décroissant (puis identifia
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
-| `facets` | [TimelineFacetsDto](#schema-timelinefacetsdto) | non | Facettes de toute la fenêtre filtrée. |
+| `facets` | object | non | Facettes de toute la fenêtre filtrée. |
 | `items` | [TimelineItemDto](#schema-timelineitemdto)[] | non | Entrées de la page, de la plus récente à la plus ancienne. |
 | `nextCursor` | string | non | Curseur opaque à renvoyer tel quel dans le paramètre cursor pour obtenir la page suivante. Null sur la dernière page. |
 | `ongoingSituations` | [TimelineItemDto](#schema-timelineitemdto)[] | non | Situations non archivées dont la plage chevauche la fenêtre, y compris celles commencées avant from et toujours en cours. Seuls les filtres de fenêtre, de brouillon et de visibilité s'appliquent (pas types, emotions ni tags) ; indépendantes de la pagination. |
@@ -4049,6 +4423,17 @@ Premier code TOTP produit par l'application d'authentification.
 | --- | --- | --- | --- |
 | `code` | string | oui | Code TOTP à 6 chiffres affiché par l'application (32 caractères max). |
 
+### <a id="schema-updateappointmentrequest"></a>UpdateAppointmentRequest
+
+Modification partielle : un champ absent reste inchangé ; planningNote à null efface la note. patientId, tentative, recurrence, status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `durationMin` | integer (int32) | non | Nouvelle durée en minutes, de 5 à 600 ; le début est conservé. |
+| `modality` | `in_person` \| `video` \| `phone` | non | Nouvelle modalité. |
+| `planningNote` | string | non | Nouvelle note de planification (2 000 caractères au plus) ; null l'efface. |
+| `startsAt` | string (date-time) | non | Nouveau début, UTC ISO 8601 ; la durée est conservée si elle n'est pas fournie. |
+
 ### <a id="schema-updateprofilerequest"></a>UpdateProfileRequest
 
 Contenu complet du profil d'annuaire : remplace toutes les colonnes éditables, un champ absent reprend sa valeur par défaut. published, slug, profession et photo ne s'envoient pas.
@@ -4088,7 +4473,7 @@ Dossier professionnel du praticien : état de la vérification, justificatifs ac
 | `documents` | [DocumentDto](#schema-documentdto)[] | non | Justificatifs actifs du dossier (20 au maximum), retirés exclus. |
 | `missing` | string[] | non | Types de justificatifs obligatoires encore absents (diploma, identity) ; le dossier ne peut être soumis que si la liste est vide. |
 | `profession` | `psychologist` \| `psychiatrist` \| `coach` | non | Profession du praticien : psychologist, psychiatrist ou coach. |
-| `professionalInfo` | [ProfessionalInfoDto](#schema-professionalinfodto) | non | Informations professionnelles enregistrées. |
+| `professionalInfo` | object | non | Informations professionnelles enregistrées. |
 | `recommended` | string[] | non | Types de justificatifs conseillés encore absents (registration pour un psychologue ou un psychiatre, certification pour un coach) ; jamais bloquant. |
 | `status` | `email_pending` \| `docs_pending` \| `under_review` \| `approved` \| `needs_more` \| `rejected` \| `suspended` \| `closed` | non | État du dossier : email_pending = e-mail non confirmé ; docs_pending = justificatifs à déposer ; under_review = dossier soumis, en cours d'examen ; approved = praticien vérifié ; needs_more = pièces complémentaires demandées ; rejected = dossier refusé ; suspended = compte suspendu ; closed = compte clos. Le dossier n'est modifiable qu'en docs_pending et needs_more. |
 | `submittedAt` | string (date-time) | non | Date-heure de la dernière soumission du dossier, en UTC ; null s'il n'a jamais été soumis. |
@@ -4104,3 +4489,19 @@ Instantané de la fiche après une modification par PATCH. La création (version
 | `reason` | string | non | Motif de la modification fourni par le champ reason du PATCH ; null si absent. |
 | `snapshot` | object | non | État de la fiche après la modification : objet JSON avec displayName, firstName, lastName, birthDate (AAAA-MM-JJ ou null), pronoun, phone, email, context et followUp. |
 | `version` | integer (int32) | non | Numéro de la version produite par la modification. |
+
+### <a id="schema-requestaccountexport_202_response"></a>requestAccountExport_202_response
+
+Type : object
+
+### <a id="schema-uploaddocument_request"></a>uploadDocument_request
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `file` | string (binary) | non | Fichier du justificatif : PDF, JPEG ou PNG, 10 Mo au maximum. Obligatoire. |
+
+### <a id="schema-uploadphoto_request"></a>uploadPhoto_request
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `file` | string (binary) | oui | Image JPEG ou PNG, 5 Mo et 25 millions de pixels au plus. |
