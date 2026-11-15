@@ -68,36 +68,17 @@
         [details]="store.data().problem?.detail"
       />
     } @else {
-      @switch (store.view()) {
-        @case ('month') {
-          <pm-month-grid
-            [days]="days()"
-            [month]="monthStart()"
-            [appointments]="store.appointments()"
-            [selectedId]="store.selectedId()"
-            [today]="now()"
-            (dayPicked)="openDay($event)"
-          />
-        }
-        @case ('list') {
-          <pm-agenda-list
-            [appointments]="store.appointments()"
-            [selectedId]="store.selectedId()"
-            [today]="now()"
-          />
-        }
-        @default {
-          <pm-week-grid
-            [days]="days()"
-            [appointments]="store.appointments()"
-            [busy]="store.busy()"
-            [selectedId]="store.selectedId()"
-            [now]="now()"
-            (opened)="openPatient($event)"
-            (slotPicked)="newAppointment($event)"
-          />
-        }
-      }
+      <pm-agenda-calendar
+        [view]="store.view()"
+        [anchor]="store.anchor()"
+        [appointments]="store.appointments()"
+        [busy]="store.busy()"
+        [selectedId]="store.selectedId()"
+        (opened)="openPatient($event)"
+        (slotPicked)="newAppointment($event)"
+        (dayPicked)="openDay($event)"
+        (rescheduled)="onRescheduled($event)"
+      />
     }
   </section>
 

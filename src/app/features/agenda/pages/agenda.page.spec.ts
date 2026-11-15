@@ -1,4 +1,4 @@
-import { Component, LOCALE_ID } from '@angular/core';
+import { Component, input, LOCALE_ID, output } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router, RouterOutlet } from '@angular/router';
 
@@ -6,7 +6,8 @@ import { SidePanelService } from '../../../shared/ui';
 import { AGENDA_ROUTES } from '../agenda.routes';
 import { AgendaApi } from '../data/agenda.api';
 import { demoAgenda } from '../data/agenda.fixtures';
-import { AgendaRange } from '../data/agenda.model';
+import { AgendaRange, AgendaView, Appointment, BusyBlock } from '../data/agenda.model';
+import { AgendaCalendarComponent, Rescheduled } from '../ui/agenda-calendar.component';
 import { AgendaPage } from './agenda.page';
 
 @Component({ selector: 'pm-host', imports: [RouterOutlet], template: '<router-outlet />' })
@@ -14,6 +15,55 @@ class Host {}
 
 @Component({ selector: 'pm-blank', template: '' })
 class Blank {}
+
+/**
+ * Doublure de pm-agenda-calendar : FullCalendar mesure le DOM, ce que jsdom ne fait pas. Elle expose
+ * ce que la page lui donne (vue, date, rendez-vous, blocs, sélection) et ses sorties par des boutons.
+ */
+@Component({
+  selector: 'pm-agenda-calendar',
+  template: `
+    <div
+      class="stub"
+      [attr.data-view]="view()"
+      [attr.data-anchor]="anchor().getDate()"
+      [attr.data-count]="appointments().length"
+      [attr.data-busy]="busy().length"
+      [attr.data-selected]="selectedId()"
+    ></div>
+    @for (item of appointments(); track item.id) {
+      <a class="event" [class.selected]="item.id === selectedId()" (dblclick)="opened.emit(item)">
+        {{ item.patient.displayName }}
+      </a>
+    }
+    <button type="button" class="slot" (click)="slotPicked.emit(anchor())">créneau</button>
+    <button type="button" class="day" (click)="dayPicked.emit(anchor())">jour</button>
+    <button
+      type="button"
+      class="move"
+      (click)="
+        rescheduled.emit({
+          id: appointments()[0].id,
+          startsAt: '2026-10-26T12:00:00.000Z',
+          endsAt: '2026-10-26T13:00:00.000Z',
+        })
+      "
+    >
+      déplacer
+    </button>
+  `,
+})
+class StubCalendar {
+  readonly view = input.required<AgendaView>();
+  readonly anchor = input.required<Date>();
+  readonly appointments = input.required<readonly Appointment[]>();
+  readonly busy = input<readonly BusyBlock[]>([]);
+  readonly selectedId = input<string | null>(null);
+  readonly opened = output<Appointment>();
+  readonly slotPicked = output<Date>();
+  readonly dayPicked = output<Date>();
+  readonly rescheduled = output<Rescheduled>();
+}
 
 const never = () => new Promise<never>(() => undefined);
 
@@ -49,6 +99,10 @@ async function render(url: string, api: Partial<AgendaApi> = {}) {
       { provide: SidePanelService, useValue: panels },
     ],
   });
+  TestBed.overrideComponent(AgendaPage, {
+    remove: { imports: [AgendaCalendarComponent] },
+    add: { imports: [StubCalendar] },
+  });
   const router = TestBed.inject(Router);
   await router.navigateByUrl(url);
   const fixture = TestBed.createComponent(Host);
@@ -61,12 +115,12 @@ async function render(url: string, api: Partial<AgendaApi> = {}) {
     router,
     panels,
     load,
-    page: () => fixture.debugElement.query((node) => node.componentInstance instanceof AgendaPage),
+    stub: () => el.querySelector<HTMLElement>('.stub')?.dataset ?? {},
     pressed: () =>
       [...el.querySelectorAll<HTMLButtonElement>('.views button')].map((b) =>
         b.getAttribute('aria-pressed'),
       ),
-    events: () => [...el.querySelectorAll<HTMLAnchorElement>('pm-week-grid a.event')],
+    events: () => [...el.querySelectorAll<HTMLAnchorElement>('pm-agenda-calendar a.event')],
     detail: () => el.querySelector<HTMLElement>('pm-appointment-detail'),
   };
 }
@@ -82,8 +136,8 @@ describe('AgendaPage', () => {
     document.querySelectorAll('pm-host').forEach((node) => node.remove());
   });
 
-  it('semaine de la maquette : barre d’outils, rail, 7 colonnes, 14 séances, 3 blocs Google', async () => {
-    const { el, pressed, events } = await render('/agenda?view=week&date=2026-10-26');
+  it('semaine de la maquette : barre d’outils, rail, 14 séances et 3 blocs donnés au calendrier', async () => {
+    const { el, pressed, stub } = await render('/agenda?view=week&date=2026-10-26');
     expect(text(el.querySelector('h1'))).toBe('Agenda');
     expect(text(el.querySelector('.range'))).toBe('26 octobre – 1er novembre 2026');
     expect(el.querySelector('.range sup')?.textContent).toBe('er');
@@ -93,33 +147,14 @@ describe('AgendaPage', () => {
     expect(el.querySelector('aside.rail pm-mini-month')).not.toBeNull();
     expect(text(el.querySelector('pm-mini-month .month'))).toBe('Octobre 2026');
     expect(el.querySelectorAll('pm-agenda-calendars input[type=checkbox]')).toHaveLength(5);
-    expect(el.querySelectorAll('pm-week-grid .day-head')).toHaveLength(7);
-    expect(events()).toHaveLength(14);
-    expect(el.querySelectorAll('pm-week-grid .busy[role=img]')).toHaveLength(3);
-    expect(el.querySelector('pm-week-grid .busy')?.getAttribute('aria-label')).toBe(
-      'Indisponible de 14:00 à 16:00, agenda Google Pro',
-    );
-    const marie = events().find((a) => a.textContent?.includes('Marie D.'))!;
-    expect(marie.getAttribute('href')).toBe(
-      '/agenda/rdv/rdv-2026-10-31-13?view=week&date=2026-10-26',
-    );
-    expect(text(marie)).toContain('Marie D.');
-    expect(text(marie.querySelector('.sr-only'))).toBe('· cabinet');
-    expect(text(marie)).toContain('10:00–10:50');
-    const yanis = events().find((a) => a.textContent?.includes('Yanis M.'))!;
-    expect(yanis.classList.contains('tentative')).toBe(true);
-    expect(text(yanis)).toContain('à confirmer');
-    const ines = events().find((a) => a.textContent?.includes('Inès V.'))!;
-    expect(ines.classList.contains('contact')).toBe(true);
-    expect(text(ines.querySelector('.sr-only'))).toBe('· téléphone');
-    expect(text(ines).replace(' · téléphone', '')).toBe('Appel · Inès V. 15:00');
+    expect(stub()).toMatchObject({ view: 'week', anchor: '26', count: '14', busy: '3' });
     expect(el.querySelector('pm-appointment-detail')).toBeNull();
   });
 
   it('chargement sans donnée : squelette ; erreur : bloc erreur et Réessayer relit', async () => {
     const loading = await render('/agenda?view=week&date=2026-10-26', { load: never });
     expect(loading.el.querySelector('pm-state [aria-busy="true"]')).not.toBeNull();
-    expect(loading.el.querySelector('pm-week-grid')).toBeNull();
+    expect(loading.el.querySelector('pm-agenda-calendar')).toBeNull();
     loading.fixture.destroy();
     document.querySelectorAll('pm-host').forEach((node) => node.remove());
     TestBed.resetTestingModule();
@@ -129,15 +164,14 @@ describe('AgendaPage', () => {
       .mockRejectedValueOnce(new Error('réseau'))
       .mockImplementation((range: AgendaRange) => Promise.resolve(demoAgenda(range)));
     const failed = await render('/agenda?view=week&date=2026-10-26', { load });
-    const alert = failed.el.querySelector('pm-state [role="alert"]');
-    expect(alert).not.toBeNull();
+    expect(failed.el.querySelector('pm-state [role="alert"]')).not.toBeNull();
     failed.el.querySelector<HTMLButtonElement>('pm-state button')!.click();
     await settle(failed.fixture);
     expect(load).toHaveBeenCalledTimes(2);
-    expect(failed.el.querySelectorAll('pm-week-grid a.event')).toHaveLength(14);
+    expect(failed.stub()['count']).toBe('14');
   });
 
-  it('vue liste vide : état vide ; vue liste pleine : jours groupés ; vue mois : six semaines', async () => {
+  it('vue liste vide : état vide ; vue liste pleine et vue mois passées au calendrier', async () => {
     const empty = await render('/agenda?view=list&date=2026-10-26', {
       load: vi.fn().mockResolvedValue({ appointments: [], busy: [] }),
     });
@@ -151,24 +185,23 @@ describe('AgendaPage', () => {
 
     const list = await render('/agenda?view=list&date=2026-10-26');
     expect(text(list.el.querySelector('.meta'))).toBe('· 30 prochains jours · 62 séances');
-    expect(list.el.querySelectorAll('pm-agenda-list section.day')).toHaveLength(26);
-    expect(text(list.el.querySelector('pm-agenda-list h3'))).toBe('Lundi 26 octobre');
+    expect(list.stub()).toMatchObject({ view: 'list', count: '62' });
     list.el.querySelectorAll<HTMLButtonElement>('.views button')[2].click();
     await settle(list.fixture);
     expect(list.router.url).toBe('/agenda?view=month&date=2026-10-26');
-    expect(list.el.querySelectorAll('pm-month-grid .cell')).toHaveLength(35);
+    expect(list.stub()['view']).toBe('month');
     expect(text(list.el.querySelector('.range'))).toBe('Octobre 2026');
+    // Un jour cliqué dans le mois ouvre la vue Jour.
+    list.el.querySelector<HTMLButtonElement>('pm-agenda-calendar .day')!.click();
+    await settle(list.fixture);
+    expect(list.router.url).toBe('/agenda?view=day&date=2026-10-26');
   });
 
-  it('clic sur un rendez-vous : /agenda/rdv/:id et détail à droite ; ↓ passe au suivant ; Échap ferme', async () => {
-    const { fixture, el, router, events, detail } = await render(
-      '/agenda?view=week&date=2026-10-26',
+  it('rendez-vous ouvert : /agenda/rdv/:id et détail à droite ; ↓ ↑ changent ; Échap ferme', async () => {
+    const { fixture, router, stub, detail } = await render(
+      '/agenda/rdv/rdv-2026-10-31-13?view=week&date=2026-10-26',
     );
-    events()
-      .find((a) => a.textContent?.includes('Marie D.'))!
-      .click();
-    await settle(fixture);
-    expect(router.url).toBe('/agenda/rdv/rdv-2026-10-31-13?view=week&date=2026-10-26');
+    expect(stub()['selected']).toBe('rdv-2026-10-31-13');
     const aside = detail()!;
     expect(aside.getAttribute('aria-label')).toBe('Détail du rendez-vous');
     expect(text(aside.querySelector('.kicker'))).toBe('Séance planifiée · cabinet');
@@ -188,10 +221,6 @@ describe('AgendaPage', () => {
     expect(text(aside.querySelector('.google'))).toContain('Séance · M. D.');
     expect(aside.querySelector<HTMLInputElement>('input[role=switch]')?.disabled).toBe(true);
     expect(text(aside.querySelector('.start'))).toBe('Démarrer la séance');
-    expect(el.querySelector('pm-week-grid a.event.selected')?.getAttribute('aria-current')).toBe(
-      'true',
-    );
-    expect(el.querySelector('a.event.selected')?.textContent).toContain('Marie D.');
 
     key('ArrowDown');
     await settle(fixture);
@@ -208,14 +237,16 @@ describe('AgendaPage', () => {
     await settle(fixture);
     expect(router.url).toBe('/agenda?view=week&date=2026-10-26');
     expect(detail()).toBeNull();
+    expect(stub()['selected']).toBeUndefined();
   });
 
-  it('Aujourd’hui, ‹ ›, mini-mois et cases du rail pilotent l’URL et la grille', async () => {
-    const { fixture, el, router, events } = await render('/agenda?view=week&date=2026-10-26');
+  it('Aujourd’hui, ‹ ›, mini-mois et cases du rail pilotent l’URL et les données du calendrier', async () => {
+    const { fixture, el, router, stub } = await render('/agenda?view=week&date=2026-10-26');
     el.querySelector<HTMLButtonElement>('.steps button:last-child')!.click();
     await settle(fixture);
     expect(router.url).toBe('/agenda?view=week&date=2026-11-02');
     expect(text(el.querySelector('.range'))).toBe('2 – 8 novembre 2026');
+    expect(stub()['anchor']).toBe('2');
     el.querySelector<HTMLButtonElement>('pm-mini-month .day.in-range')!.click();
     await settle(fixture);
     expect(router.url).toBe('/agenda?view=week&date=2026-11-02');
@@ -225,7 +256,7 @@ describe('AgendaPage', () => {
     )!;
     video.querySelector('input')!.click();
     await settle(fixture);
-    expect(events()).toHaveLength(11);
+    expect(stub()['count']).toBe('11');
     expect(text(el.querySelector('.meta'))).toBe('· semaine 45 · 11 séances');
 
     el.querySelector<HTMLButtonElement>('.toolbar .tb-btn')!.click();
@@ -235,7 +266,7 @@ describe('AgendaPage', () => {
     expect(router.url).toBe(`/agenda?view=week&date=${iso}`);
   });
 
-  it('« + Rendez-vous » ouvre le panneau 15b à 520 px sur le créneau de 10 h de la date ancrée', async () => {
+  it('« + Rendez-vous » et un créneau cliqué ouvrent le panneau 15b à 520 px', async () => {
     const { fixture, el, panels } = await render('/agenda?view=week&date=2026-10-26');
     el.querySelector<HTMLButtonElement>('.toolbar .tb-btn.primary')!.click();
     await settle(fixture);
@@ -246,16 +277,22 @@ describe('AgendaPage', () => {
     expect(options.data.slot.getDate()).toBe(26);
     expect(options.data.patient).toBeNull();
     expect(options.data.appointments).toHaveLength(14);
+
+    el.querySelector<HTMLButtonElement>('pm-agenda-calendar .slot')!.click();
+    await settle(fixture);
+    expect(panels.open).toHaveBeenCalledTimes(2);
   });
 
-  it('vue jour : une seule colonne, les deux séances du samedi ; double-clic → dossier patient', async () => {
-    const { fixture, el, router, events } = await render('/agenda?view=day&date=2026-10-31');
-    expect(el.querySelectorAll('pm-week-grid .day-head')).toHaveLength(1);
-    expect(events()).toHaveLength(2);
-    expect(text(el.querySelector('.range'))).toBe('Samedi 31 octobre 2026');
-    expect(text(el.querySelector('.meta'))).toBe('· 2 séances');
+  it('double-clic → dossier patient ; déplacement dans la grille → nouvelles bornes dans le store', async () => {
+    const { fixture, el, router, events } = await render('/agenda?view=day&date=2026-10-26');
+    expect(text(el.querySelector('.range'))).toBe('Lundi 26 octobre 2026');
+    expect(text(el.querySelector('.meta'))).toBe('· 3 séances');
+    el.querySelector<HTMLButtonElement>('pm-agenda-calendar .move')!.click();
+    await settle(fixture);
+    // Omar B. (09:00) déplacé à 12:00 UTC : le store garde l'ordre chronologique.
+    expect(events().map((a) => text(a))).toEqual(['Léa T.', 'Omar B.', 'Julie M.']);
     events()[0].dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
     await settle(fixture);
-    expect(router.url).toBe('/patients/demo-maried');
+    expect(router.url).toBe('/patients/demo-leat');
   });
 });

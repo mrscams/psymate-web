@@ -1,0 +1,53 @@
+<full-calendar [options]="options" [events]="events()">
+  <!-- En-tête de colonne (semaine, jour) : « lun. » puis le chiffre en mono ; mois : « lun. » seul. -->
+  <ng-template #dayHeaderContent let-arg>
+    @if (arg.view.type === 'dayGridMonth') {
+      <span class="weekday">{{ arg.text }}</span>
+    } @else if (arg.view.type === 'listThirty') {
+      {{ listDayOf(arg.date) }}
+    } @else {
+      <span class="weekday">{{ weekdayOf(arg.date) }}</span>
+      <span class="number">{{ arg.date.getDate() }}</span>
+      @if (arg.dow === 0) {
+        <span class="sr-only">{{ sundayLabel }}</span>
+      }
+    }
+  </ng-template>
+
+  <!-- Événement : rendez-vous (nom, suffixe, heures) ou bloc « Occupé · Google » hachuré. -->
+  <ng-template #eventContent let-arg>
+    @let props = propsFrom(arg);
+    @if (props.kind === 'busy') {
+      <span class="busy-title">{{ props.busyTitle }}</span>
+      <span class="busy-time mono">{{ props.time }}</span>
+    } @else if (arg.view.type === 'listThirty') {
+      <span class="list-time mono">{{ props.time }}</span>
+      <span class="list-name">{{ props.name }}</span>
+      <span class="list-meta">
+        {{ props.modality }}
+        @if (props.suffixKind === 'status') {
+          <span class="status">· {{ props.suffix }}</span>
+        }
+      </span>
+    } @else if (arg.view.type === 'dayGridMonth') {
+      <span class="chip-time mono">{{ props.startTime }}</span>
+      <span class="chip-name">{{ props.name }}</span>
+      <span class="sr-only"> · {{ props.modality }}</span>
+    } @else {
+      <span class="name">{{ props.name }}</span>
+      @if (props.suffix; as suffix) {
+        <span class="suffix" [class.status]="props.suffixKind === 'status'"> · {{ suffix }}</span>
+      } @else {
+        <span class="sr-only"> · {{ props.modality }}</span>
+      }
+      @if (props.contact) {
+        <span class="time mono"> {{ props.time }}</span>
+      } @else {
+        <br /><span class="time mono">{{ props.time }}</span>
+      }
+    }
+  </ng-template>
+
+  <!-- Vue mois : « + 2 autres ». -->
+  <ng-template #moreLinkContent let-arg>{{ moreLabel(arg.num) }}</ng-template>
+</full-calendar>

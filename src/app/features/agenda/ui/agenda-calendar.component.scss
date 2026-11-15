@@ -1,0 +1,380 @@
+// FullCalendar habillé aux tokens Nordique (maquette 15), sans encapsulation : tout est sous
+// `.pm-calendar`. Chaque événement porte sa modalité en classe ; `--tone` et `--tint` en dérivent
+// une fois, les vues (semaine, mois, liste) ne font que les lire.
+.pm-calendar {
+  --fc-border-color: var(--surface-sunken);
+  --fc-page-bg-color: var(--surface-raised);
+  --fc-neutral-bg-color: var(--surface-ground);
+  --fc-neutral-text-color: var(--text-secondary);
+  --fc-today-bg-color: transparent;
+  --fc-now-indicator-color: var(--primary);
+  --fc-event-text-color: var(--text-primary);
+  --fc-event-selected-overlay-color: transparent;
+  --fc-bg-event-opacity: 1;
+  --fc-non-business-color: transparent;
+  --fc-highlight-color: var(--primary-tint);
+  --fc-more-link-bg-color: transparent;
+  --fc-more-link-text-color: var(--text-secondary);
+  --fc-list-event-hover-bg-color: var(--surface-ground);
+  --fc-small-font-size: 11px;
+  --stripes: repeating-linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--surface-ground) 55%, var(--surface-raised)) 0 8px,
+    var(--surface-raised) 8px 16px
+  );
+
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: 12px/1.4 var(--font-ui);
+
+  .mono {
+    font-family: var(--font-mono);
+  }
+
+  .fc {
+    font-family: inherit;
+  }
+
+  .fc-scrollgrid,
+  .fc-list {
+    border: 0;
+  }
+
+  .fc-col-header {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  // En-têtes : « lun. » 11 px en capitales, chiffre mono 18 px ; samedi teinté ; dimanche gris.
+  .fc-col-header-cell {
+    padding: 10px 8px;
+    text-align: center;
+
+    .fc-col-header-cell-cushion {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .weekday {
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    .number {
+      font: 600 18px/1.3 var(--font-mono);
+    }
+
+    &.fc-day-sat {
+      background: var(--primary-tint);
+
+      .weekday,
+      .number {
+        color: var(--primary-hover);
+      }
+    }
+
+    &.fc-day-sun .number {
+      color: var(--text-secondary);
+    }
+  }
+
+  // Grille horaire : 52 px par heure, heures mono 11 px, samedi teinté, non travaillé hachuré.
+  .fc-timegrid-slot {
+    height: 26px;
+  }
+
+  .fc-timegrid-slot-minor {
+    border-top-style: none;
+  }
+
+  .fc-timegrid-slot-label {
+    border: 0;
+    vertical-align: top;
+  }
+
+  .fc-timegrid-slot-label-cushion {
+    position: relative;
+    top: -7px;
+    padding: 0 8px 0 0;
+    font: 11px/1 var(--font-mono);
+    color: var(--text-secondary);
+  }
+
+  .fc-timegrid-axis {
+    width: 56px;
+  }
+
+  .fc-timegrid-col.fc-day-sat {
+    background: color-mix(in srgb, var(--surface-ground) 45%, var(--surface-raised));
+  }
+
+  .fc-non-business {
+    background: var(--stripes);
+    opacity: 0.6;
+  }
+
+  .fc-day-sun .fc-non-business {
+    opacity: 1;
+  }
+
+  .fc-timegrid-now-indicator-line {
+    border-width: 2px 0 0;
+  }
+
+  .fc-timegrid-now-indicator-arrow {
+    display: none;
+  }
+
+  // Modalité → couleur et teinte, pour toutes les vues.
+  .fc-event {
+    --tone: var(--entry-session);
+    --tint: var(--success-bg);
+
+    &.video {
+      --tone: var(--primary);
+      --tint: var(--primary-tint);
+    }
+
+    &.phone {
+      --tone: var(--entry-note);
+      --tint: var(--surface-ground);
+    }
+
+    .suffix,
+    .time,
+    .chip-time,
+    .list-time,
+    .list-meta {
+      color: var(--text-secondary);
+    }
+
+    .status,
+    .suffix.status {
+      color: var(--warning);
+    }
+
+    .name,
+    .chip-name,
+    .list-name {
+      font-weight: 600;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+  }
+
+  // Semaine et jour : fond teinte + barre gauche 3 px, rayon 6 ; « à confirmer » pointillé ;
+  // sélectionné en fond plein, texte blanc, halo ; contact en bandeau fin.
+  .fc-timegrid-event-harness {
+    margin: 0 4px 0 1px;
+  }
+
+  .fc-timegrid-event,
+  .fc-daygrid-event {
+    border: 0;
+    border-left: 3px solid var(--tone);
+    background: var(--tint);
+    box-shadow: none;
+    color: var(--text-primary);
+
+    .fc-event-main {
+      padding: 4px 8px;
+      color: inherit;
+    }
+
+    &.tentative {
+      border: 1px dashed var(--tone);
+      border-left-width: 3px;
+      border-left-style: solid;
+      background: var(--surface-raised);
+    }
+
+    &.selected {
+      border-left-color: color-mix(in srgb, var(--tone) 80%, var(--text-primary));
+      background: var(--tone);
+      box-shadow: 0 0 0 3px var(--tint);
+      color: var(--surface-raised);
+
+      .suffix,
+      .time,
+      .chip-time {
+        color: var(--tint);
+      }
+    }
+  }
+
+  .fc-timegrid-event {
+    border-radius: 6px;
+    font-size: 12px;
+
+    .time {
+      font-size: 11px;
+    }
+
+    &.contact {
+      border-radius: 4px;
+      font-size: 11px;
+      line-height: 14px;
+
+      .fc-event-main {
+        padding: 0 8px;
+        white-space: nowrap;
+      }
+    }
+
+    &.fc-event-dragging,
+    &.fc-event-resizing {
+      box-shadow: 0 6px 18px var(--scrim);
+    }
+  }
+
+  // Bloc « Occupé · Google » : hachures 135°, bordure fine, 11 px.
+  .fc-bg-event.busy {
+    overflow: hidden;
+    margin: 0 4px;
+    padding: 4px 8px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    background: repeating-linear-gradient(
+      135deg,
+      var(--surface-sunken) 0 3px,
+      var(--surface-raised) 3px 6px
+    );
+    font-size: 11px;
+    color: var(--text-secondary);
+
+    .busy-title,
+    .busy-time {
+      display: block;
+    }
+  }
+
+  // Mois : cases de 112 px, numéros mono (aujourd'hui en noir), chips « 09:00 Omar B. ».
+  .fc-daygrid-day-frame {
+    min-height: 112px;
+    padding: 2px;
+  }
+
+  .fc-daygrid-day-number {
+    padding: 4px 6px;
+    font: 600 13px/1.4 var(--font-mono);
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  // Jours des mois voisins : FullCalendar les estompe à 30 % (1,5:1) ; text-secondary plein suffit.
+  .fc-day-other .fc-daygrid-day-top {
+    opacity: 1;
+  }
+
+  .fc-day-other .fc-daygrid-day-number,
+  .fc-daygrid-day.fc-day-sun .fc-daygrid-day-number {
+    color: var(--text-secondary);
+  }
+
+  .fc-daygrid-day.fc-day-sun {
+    background: var(--stripes);
+  }
+
+  .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+    border-radius: 6px;
+    background: var(--text-primary);
+    color: var(--surface-raised);
+  }
+
+  .fc-daygrid-event {
+    margin: 0 4px 3px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    white-space: nowrap;
+
+    .fc-event-main {
+      display: flex;
+      gap: 6px;
+      overflow: hidden;
+      padding: 2px 6px;
+    }
+
+    .chip-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .fc-daygrid-more-link {
+    margin: 0 4px;
+    font: 500 11px/1.4 var(--font-ui);
+    color: var(--text-secondary);
+  }
+
+  // Liste : en-têtes de jour 13 px / 600, lignes avec barre de modalité, heures mono, nom 600.
+  .fc-list-day-cushion {
+    padding: 10px 14px;
+    background: var(--surface-raised);
+    font: 600 13px/1.4 var(--font-ui);
+
+    a {
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+  }
+
+  .fc-list-day.fc-day-today .fc-list-day-cushion {
+    background: var(--primary-tint);
+
+    a {
+      color: var(--primary-hover);
+    }
+  }
+
+  .fc-list-event {
+    cursor: pointer;
+
+    td {
+      padding: 6px 14px;
+    }
+
+    .fc-list-event-time,
+    .fc-list-event-graphic {
+      display: none;
+    }
+
+    .fc-list-event-title {
+      display: grid;
+      grid-template-columns: 4px 96px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 32px;
+
+      &::before {
+        content: '';
+        height: 28px;
+        border-radius: 2px;
+        background: var(--tone);
+      }
+
+      a {
+        display: contents;
+        color: inherit;
+      }
+    }
+
+    .list-name {
+      font-size: 13px;
+    }
+
+    &.selected td {
+      background: var(--primary-tint);
+    }
+  }
+}

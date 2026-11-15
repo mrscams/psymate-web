@@ -21,12 +21,10 @@ import {
   AGENDA_VIEWS,
   AgendaView,
   Appointment,
-  daysOf,
   DEFAULT_VIEW,
   fromIsoDay,
   isAgendaView,
   startOfDay,
-  startOfMonth,
   toIsoDay,
 } from '../data/agenda.model';
 import { NewAppointmentData, NewAppointmentPanel } from '../panels/new-appointment.panel';
@@ -37,11 +35,9 @@ import {
   rangeSegments,
   sessionCountLabel,
 } from '../ui/agenda-format';
-import { AgendaListComponent } from '../ui/agenda-list.component';
+import { AgendaCalendarComponent, Rescheduled } from '../ui/agenda-calendar.component';
 import { AppointmentDetailComponent } from '../ui/appointment-detail.component';
 import { MiniMonthComponent } from '../ui/mini-month.component';
-import { MonthGridComponent } from '../ui/month-grid.component';
-import { WeekGridComponent } from '../ui/week-grid.component';
 
 /** Paramètres de l'URL (fiche 15) : `?view=day|week|month|list&date=yyyy-MM-dd`, `/agenda/rdv/:id`. */
 export const VIEW_PARAM = 'view';
@@ -70,9 +66,7 @@ export const CLOCK_TICK_MS = 60_000;
     StateComponent,
     MiniMonthComponent,
     AgendaCalendarsComponent,
-    WeekGridComponent,
-    MonthGridComponent,
-    AgendaListComponent,
+    AgendaCalendarComponent,
     AppointmentDetailComponent,
   ],
   providers: [AgendaStore],
@@ -209,8 +203,6 @@ export class AgendaPage {
 
   // --- Vue ------------------------------------------------------------------------------------
 
-  protected readonly days = computed(() => daysOf(this.store.range()));
-  protected readonly monthStart = computed(() => startOfMonth(this.store.anchor()));
   protected readonly kind = computed(() =>
     stateKind(this.store.data(), (data) =>
       this.store.view() === 'list' ? data.appointments.length === 0 : false,
@@ -275,6 +267,11 @@ export class AgendaPage {
     const next = siblings[index + direction];
     if (!next) return;
     void this.router.navigate(['/agenda', 'rdv', next.id], { queryParamsHandling: 'preserve' });
+  }
+
+  /** Glisser-déposer ou redimensionnement dans la grille : le store garde les nouvelles bornes. */
+  protected onRescheduled(change: Rescheduled): void {
+    this.store.reschedule(change.id, change.startsAt, change.endsAt);
   }
 
   /** Double-clic sur un rendez-vous : le dossier du patient. */

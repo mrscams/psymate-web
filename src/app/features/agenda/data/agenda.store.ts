@@ -134,6 +134,23 @@ export const AgendaStore = signalStore(
       select(id: string | null): void {
         patchState(store, { selectedId: id });
       },
+      /**
+       * Rendez-vous déplacé ou étiré dans la grille : nouvelles bornes dans la plage lue. Sans
+       * module scheduling, le changement reste local à la visite ; il deviendra
+       * `PATCH /api/appointments/{id}` suivi d'une relecture de la plage.
+       */
+      reschedule(id: string, startsAt: string, endsAt: string): void {
+        const data = store.data().data;
+        if (!data) return;
+        patchState(store, {
+          data: loaded({
+            ...data,
+            appointments: data.appointments.map((item) =>
+              item.id === id ? { ...item, startsAt, endsAt } : item,
+            ),
+          }),
+        });
+      },
       toggleCalendar(key: CalendarKey): void {
         const hidden = store.hidden();
         patchState(store, {

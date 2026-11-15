@@ -13,11 +13,11 @@ import { shoot } from '../support/captures';
 const WEEK = '/fr/agenda?view=week&date=2026-10-26';
 
 function agenda(page: Page) {
-  const grid = page.locator('pm-week-grid');
+  const grid = page.locator('pm-agenda-calendar');
   return {
     grid,
-    events: grid.locator('a.event'),
-    busy: grid.locator('.busy[role="img"]'),
+    events: grid.locator('a.fc-timegrid-event:not(.fc-event-mirror)'),
+    busy: grid.locator('.fc-bg-event.busy[role="img"]'),
     views: page.getByRole('group', { name: 'Vue' }),
     rail: page.getByRole('complementary', { name: "Navigation de l'agenda" }),
     detail: page.getByRole('complementary', { name: 'Détail du rendez-vous' }),
@@ -60,7 +60,7 @@ test('fiche 15 : le carreau Agenda du rail mène à la semaine ; barre d’outil
   await expect(a.rail.getByText('Indisponible (Google)')).toBeVisible();
 
   // Grille : sept colonnes, quatorze liens nommés, trois blocs « Occupé » nommés, samedi teinté.
-  await expect(a.grid.locator('.day-head')).toHaveCount(7);
+  await expect(a.grid.locator('.fc-col-header-cell')).toHaveCount(7);
   await expect(a.events).toHaveCount(14);
   await expect(a.busy).toHaveCount(3);
   await expect(a.busy.first()).toHaveAttribute(
@@ -72,7 +72,7 @@ test('fiche 15 : le carreau Agenda du rail mène à la semaine ; barre d’outil
     /tentative/,
   );
   await expect(a.grid.getByRole('link', { name: /^Appel · Inès V\./ })).toHaveClass(/contact/);
-  await expect(a.grid.locator('.column.saturday')).toHaveCount(1);
+  await expect(a.grid.locator('.fc-timegrid-col.fc-day-sat')).toHaveCount(1);
   await expect(a.detail).toHaveCount(0);
   await expectNoAxeViolations(page);
   await shoot(page, 'agenda-semaine');
@@ -112,7 +112,10 @@ test('fiche 15 : un clic ouvre le détail à droite sans changer de vue ; ↓ �
   await expect(a.detail.getByText('Séance · M. D.')).toBeVisible();
   await expect(a.detail.getByRole('switch')).toBeDisabled();
   await expect(a.detail.getByRole('button', { name: 'Démarrer la séance' })).toBeVisible();
-  await expect(a.grid.locator('a.event.selected')).toHaveAttribute('aria-current', 'true');
+  await expect(a.grid.locator('a.fc-timegrid-event.selected')).toHaveAttribute(
+    'aria-current',
+    'true',
+  );
   await expect(a.views.getByRole('button', { name: 'Semaine' })).toHaveAttribute(
     'aria-pressed',
     'true',
@@ -124,7 +127,7 @@ test('fiche 15 : un clic ouvre le détail à droite sans changer de vue ; ↓ �
   await expect(page.locator('.mat-ripple-element')).toHaveCount(0);
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .exclude('a.event.selected')
+    .exclude('a.fc-timegrid-event.selected')
     .analyze();
   expect(results.violations).toEqual([]);
 
@@ -144,21 +147,22 @@ test('fiche 15 : les vues Jour, Mois et Liste ; la liste vide propose de planifi
 }) => {
   await page.goto('/fr/agenda?view=day&date=2026-10-31');
   const a = agenda(page);
-  await expect(a.grid.locator('.day-head')).toHaveCount(1);
+  await expect(a.grid.locator('.fc-col-header-cell')).toHaveCount(1);
   await expect(a.events).toHaveCount(2);
   await expect(a.range).toHaveText('Samedi 31 octobre 2026');
 
   await a.views.getByRole('button', { name: 'Mois' }).click();
   await expect(page).toHaveURL(/view=month&date=2026-10-31$/);
   await expect(a.range).toHaveText('Octobre 2026');
-  await expect(page.locator('pm-month-grid .cell')).toHaveCount(35);
+  await expect(page.locator('pm-agenda-calendar .fc-daygrid-day')).toHaveCount(35);
   await expectNoAxeViolations(page);
 
   await a.views.getByRole('button', { name: 'Liste' }).click();
   await expect(page).toHaveURL(/view=list&date=2026-10-31$/);
-  await expect(page.locator('pm-agenda-list section.day').first()).toContainText(
-    'Samedi 31 octobre',
+  await expect(page.locator('pm-agenda-calendar .fc-list-day').first()).toContainText(
+    /samedi 31 octobre/i,
   );
+  await expect(page.locator('pm-agenda-calendar .fc-list-event').first()).toContainText('Marie D.');
   await expectNoAxeViolations(page);
 });
 
@@ -190,9 +194,37 @@ test('fiche 15b : « + Rendez-vous » et un créneau vide ouvrent le panneau de 
   await expect(dialog).toHaveCount(0);
 
   // Un clic sur un créneau vide (mercredi 11 h) ouvre le même panneau sur ce créneau.
-  const column = page.locator('pm-week-grid .column').nth(2);
+  const column = page.locator('pm-agenda-calendar .fc-timegrid-col.fc-day-wed');
   const box = (await column.boundingBox())!;
   await page.mouse.click(box.x + box.width / 2, box.y + 3 * 52 + 10);
   await expect(page.getByRole('dialog', { name: 'Nouveau rendez-vous' })).toBeVisible();
   await expect(page.getByText('Créneau cliqué : mercredi 28 octobre, 11:00')).toBeVisible();
+});
+
+test('fiche 15 : glisser un rendez-vous le déplace, tirer son bord l’allonge (en local, PATCH à venir)', async ({
+  page,
+}) => {
+  await page.goto(WEEK);
+  const a = agenda(page);
+  const omar = a.events.filter({ hasText: 'Omar B.' });
+  await expect(omar).toContainText('09:00–09:50');
+  const from = (await omar.boundingBox())!;
+  // Glisser d'une heure vers le bas (52 px), par petits pas : le plugin interaction suit le pointeur.
+  await page.mouse.move(from.x + from.width / 2, from.y + 10);
+  await page.mouse.down();
+  await page.mouse.move(from.x + from.width / 2, from.y + 10 + 52, { steps: 12 });
+  await page.mouse.up();
+  await expect(page.locator('.fc-event-mirror')).toHaveCount(0);
+  await expect(omar).toContainText('10:00–10:50');
+  await expect(a.meta).toHaveText('· semaine 44 · 14 séances');
+
+  // Tirer le bord bas de 26 px : la séance dure 80 minutes.
+  const moved = (await omar.boundingBox())!;
+  await page.mouse.move(moved.x + moved.width / 2, moved.y + moved.height - 2);
+  await page.mouse.down();
+  await page.mouse.move(moved.x + moved.width / 2, moved.y + moved.height - 2 + 26, { steps: 8 });
+  await page.mouse.up();
+  await expect(page.locator('.fc-event-mirror')).toHaveCount(0);
+  await expect(omar).toContainText('10:00–11:20');
+  await expectNoAxeViolations(page);
 });
