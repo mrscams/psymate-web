@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-15T23:43:52.294Z",
+  "task": "PROJET",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "e2e alignés sur l'API main M11-11 fusionnés (PR 93, 16e3c3e)",
+  "notes": "Squash sur main après CI verte (checks, e2e). Branche de la PR 92 mise à jour pour relancer sa CI",
+  "next": "PR 92 (contrat 0.13.0, docs) à fusionner quand sa CI est verte ; brancher le web sur 0.13.0 (rendez-vous invité, export) dans une tâche à part",
+  "branch": "claude/suivi-e2e-m11-11",
+  "checkout": "psymate-web"
+}
