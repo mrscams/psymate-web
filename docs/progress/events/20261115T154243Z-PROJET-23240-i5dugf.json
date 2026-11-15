@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-15T15:42:43.385Z",
+  "task": "PROJET",
+  "agent": "claude",
+  "status": "done",
+  "summary": "Agenda (fiches 15, 15b) : rendu des écrans sans API sur FullCalendar 6.1.22, à l'identique des maquettes (en-tête excepté) ; routes /agenda et /agenda/rdv/:id, panneau Nouveau rendez-vous, carreau Agenda du rail relié ; glisser-déposer local jusqu'au PATCH",
+  "notes": "Décision du propriétaire du 15 nov. 2026 malgré G Q25 (à mettre à jour avec README design, fiche 00 §9, couverture-écrans). Six paquets @fullcalendar 6.1.22 dans le chunk paresseux. Écarts axe : liens soulignés, jours voisins en text-secondary, étiquette du détail assombrie ; sélection en fond plein exclue de la mesure. Variante grille maison sur la branche locale claude/agenda-rendu-fiche-15, non poussée. Vitest 2165, e2e agenda 5 et shell 11 verts.",
+  "next": "Fusion en squash ; PR de docs (G Q25, README design, fiche 00, couverture-écrans) ; quand le backend est prêt : client généré dans agenda.api.ts, actions du détail, soumission du panneau et PATCH du glisser-déposer",
+  "pr": "https://github.com/mrscams/psymate-web/pull/86",
+  "branch": "claude/agenda-fullcalendar",
+  "checkout": "psymate-web"
+}
