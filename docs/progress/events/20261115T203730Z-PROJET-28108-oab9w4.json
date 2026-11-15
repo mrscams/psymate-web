@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-15T20:37:30.235Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Agenda (fiches 15, 15b) branché sur l'API M11, contrat contract-v0.12.1 : lecture, création (séries), déplacement, annulation, confirmation, note, préférences agenda.* ; CONTRACT_TAG passé à 0.12.1 et client regénéré dans la même branche",
+  "notes": "Décision du propriétaire : contrat et développement dans une seule PR. core/preferences étendu aux quatre clés agenda.* (écart borné). Démarrer la séance inerte (M11-08 absente) ; Google hors V1 (M12) ; Planifier une séance depuis la fiche patient non relié. Vitest 2203, e2e agenda 5 verts trois fois contre l'API M11 locale (port 8081), relecture : 13 constats corrigés.",
+  "next": "Fusion en squash après CI ; M11-08 côté API pour Démarrer la séance ; tâche patient-shell pour Planifier une séance ; EN",
+  "branch": "claude/contract-v0.12.1-agenda",
+  "checkout": "psymate-web"
+}
