@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-15T17:45:23.783Z",
+  "task": "PROJET",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "Docs agenda en V1 (G Q25 amendée) fusionnées dans main en squash (PR #88, commit 2193e01)",
+  "next": "Côté API : M11-01 pose les décisions agenda dans G à partir de Q52 et reporte A, C, E6.2, 00-contexte ; côté web : PR de contrat puis agenda.api.ts quand M11 pose son tag",
+  "pr": "https://github.com/mrscams/psymate-web/pull/88",
+  "branch": "claude/suivi-docs-agenda",
+  "checkout": "psymate-web"
+}
