@@ -3,8 +3,8 @@
 `openapi.yaml` est la copie du contrat OpenAPI 3 généré par `psymate-api` (springdoc) à partir des contrôleurs.
 Il décrit **toutes** les routes `/api/**` et `/api/public/**` du backend V1 : 89 chemins, 102 opérations, 155 schémas, chaque opération avec son résumé, sa description (qui peut appeler, préconditions, limites, pagination), ses paramètres, ses réponses et la liste des codes d'erreur (`code`) à gérer ; `info.description` donne les conventions transverses (session, routes publiques, format d'erreur, débit, dates).
 
-- Source de vérité : `psymate-api/contract/openapi.yaml`, `main` (tag `contract-v0.11.0`, 3 novembre 2026 : compléments M10 pour la V1 web).
-- Le champ `info.version` vaut `0.11.0` : c'est le **dernier tag posé**, pas un numéro de version du fichier.
+- Source de vérité : `psymate-api/contract/openapi.yaml`, `main` (tag `contract-v0.12.1`, 15 novembre 2026 : agenda M11).
+- Le champ `info.version` vaut `0.12.1` : c'est le **dernier tag posé**, pas un numéro de version du fichier.
   Les tags `contract-vX.Y.Z` du dépôt API marquent les jalons de contenu attendus par le frontend :
 
 | Tag | Couvre | Écrans web concernés |
@@ -19,6 +19,7 @@ Il décrit **toutes** les routes `/api/**` et `/api/public/**` du backend V1 : 8
 | `contract-v0.9.0` | documentation complète de toutes les opérations (M7-09), sans nouveau chemin | — |
 | `contract-v0.10.0` | compléments M10-01 à M10-05 : `GET /api/public/directory/vocabulary`, filtre et facette `specialties`, `GET /api/auth/me` avec `role` / `twoFactorEnabled` / `passwordChangeRequired`, changement d'e-mail d'un compte confirmé, `errors[].code` dans patients | M0-07, M1-17, M5-05, M1-06 |
 | `contract-v0.11.0` | `GET /api/me/security` (sessions actives, connexion précédente), `POST /api/me/sessions/{id}/revoke` (M10-06) | M1-17 |
+| `contract-v0.11.1` / `0.12.0` / `0.12.1` | agenda M11 : préférences `agenda.*`, `GET /api/agenda`, `GET /api/agenda/freebusy`, `GET /api/patients/{id}/appointments`, `POST/GET/PATCH /api/appointments`, `cancel`, `confirm`, séries (`recurrence`, `POST /api/appointments/series/{seriesId}/cancel`) ; fiche `agenda-api-v0.12.1.md` | écrans 15, 15b (jalon web Agenda) |
 
 Conventions du backend (voir `psymate-api/CLAUDE.md`) : JSON camelCase, erreurs RFC 9457 `application/problem+json` avec `code` et `errors[{field, code, message}]`, pagination par curseur (`nextCursor`) sauf annuaire public et recherche (page), dates UTC ISO 8601, session par cookie HttpOnly (`POST /api/auth/login`), `authorType` présent en lecture seulement.
 

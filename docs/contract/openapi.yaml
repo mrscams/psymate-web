@@ -474,6 +474,27 @@ components:
           example: /api/admin/verifications/9b4c0c7e-3c1a-4f2e-9d6a-2a4d6f8b1c3e/documents/4d8f1e52-7a3b-4c19-8e60-1f2a3b4c5d6e/file?exp=1773564900&sig=Zm9v
           type: string
       type: object
+    AgendaWindowDto:
+      description: Rendez-vous du praticien qui chevauchent la fenêtre [from, to[, triés par début.
+      properties:
+        appointments:
+          description: Rendez-vous dont le créneau chevauche la fenêtre (startsAt < to et endsAt > from), triés par startsAt. Annulés exclus sauf includeCancelled=true.
+          items:
+            $ref: '#/components/schemas/AppointmentDto'
+          type: array
+        busy:
+          description: 'Réservé aux indisponibilités externes (jalon ultérieur) : toujours vide dans cette version.'
+          items: {}
+          type: array
+        from:
+          description: Début de la fenêtre, inclus, date-heure ISO 8601 UTC.
+          format: date-time
+          type: string
+        to:
+          description: Fin de la fenêtre, exclue, date-heure ISO 8601 UTC.
+          format: date-time
+          type: string
+      type: object
     AppealCreatedDto:
       description: Recours enregistré.
       properties:
@@ -651,6 +672,156 @@ components:
           format: date-time
           type: string
       type: object
+    AppointmentCreatedDto:
+      description: Rendez-vous créés et chevauchements signalés (jamais bloquants).
+      properties:
+        appointments:
+          description: 'Rendez-vous créés, triés par début : un seul sans recurrence, sinon une occurrence par élément, de même seriesId.'
+          items:
+            $ref: '#/components/schemas/AppointmentDto'
+          type: array
+        conflicts:
+          description: Rendez-vous actifs du praticien qui chevauchent l'une des occurrences créées (occurrenceStartsAt dit laquelle) ; vide sinon.
+          items:
+            $ref: '#/components/schemas/ConflictDto'
+          type: array
+      type: object
+    AppointmentDefaultsDto:
+      description: Valeurs à préremplir pour un nouveau rendez-vous de ce patient. durationMin et modality restent obligatoires à la création.
+      properties:
+        durationMin:
+          description: 'Durée en minutes : celle du suivi du patient, sinon la préférence sessions.defaultDurationMin du praticien, sinon 60.'
+          example: 50
+          format: int32
+          type: integer
+        modality:
+          description: 'Modalité : celle du suivi du patient si elle vaut in_person, video ou phone, sinon in_person.'
+          enum:
+          - in_person
+          - video
+          - phone
+          example: in_person
+          type: string
+        rhythm:
+          description: Rythme du suivi, texte libre affiché tel quel (« toutes les 2 semaines »). Null s'il n'est pas renseigné.
+          type: string
+      type: object
+    AppointmentDto:
+      description: Rendez-vous du praticien. Dates UTC ISO 8601.
+      properties:
+        cancelReason:
+          description: Motif d'annulation. Null si aucun.
+          type: string
+        cancelledAt:
+          description: Instant d'annulation UTC. Null si le rendez-vous n'est pas annulé.
+          format: date-time
+          type: string
+        createdAt:
+          description: Instant de création UTC.
+          format: date-time
+          type: string
+        durationMin:
+          description: Durée en minutes (fin moins début).
+          example: 50
+          format: int32
+          type: integer
+        endsAt:
+          description: Fin du rendez-vous, UTC ISO 8601.
+          example: 2026-11-16T09:50:00Z
+          format: date-time
+          type: string
+        id:
+          description: Identifiant du rendez-vous.
+          format: uuid
+          type: string
+        modality:
+          description: Modalité du rendez-vous.
+          enum:
+          - in_person
+          - video
+          - phone
+          type: string
+        patient:
+          $ref: '#/components/schemas/AppointmentPatientDto'
+          description: Patient du rendez-vous.
+        planningNote:
+          description: Note de planification, visible seulement dans l'agenda. Null si aucune.
+          type: string
+        seriesId:
+          description: Série de répétition. Null pour un rendez-vous isolé.
+          format: uuid
+          type: string
+        sessionEntryId:
+          description: Séance rattachée (entrée de type session). Null sinon.
+          format: uuid
+          type: string
+        startsAt:
+          description: Début du rendez-vous, UTC ISO 8601.
+          example: 2026-11-16T09:00:00Z
+          format: date-time
+          type: string
+        status:
+          description: 'Statut : planned (planifié), tentative (à confirmer), cancelled (annulé), done (séance rattachée).'
+          enum:
+          - planned
+          - tentative
+          - cancelled
+          - done
+          type: string
+        updatedAt:
+          description: Instant de dernière modification UTC.
+          format: date-time
+          type: string
+      type: object
+    AppointmentPatientDto:
+      description: 'Patient du rendez-vous : identité affichée seulement, aucun contact.'
+      properties:
+        archived:
+          description: true si le patient est archivé.
+          type: boolean
+        birthDate:
+          description: Date de naissance (AAAA-MM-JJ). Null si inconnue.
+          format: date
+          type: string
+        displayName:
+          description: Nom affiché du patient.
+          example: Théo B.
+          type: string
+        id:
+          description: Identifiant du patient.
+          format: uuid
+          type: string
+      type: object
+    AppointmentSeriesDto:
+      description: Toutes les occurrences de la série du praticien, triées par début.
+      properties:
+        appointments:
+          description: 'Occurrences de la série dans leur état final : les actives sont annulées, les terminées (done) et déjà annulées restent telles quelles.'
+          items:
+            $ref: '#/components/schemas/AppointmentDto'
+          type: array
+      type: object
+    AppointmentUpdatedDto:
+      description: Rendez-vous modifié et chevauchements de son créneau (jamais bloquants).
+      properties:
+        appointment:
+          $ref: '#/components/schemas/AppointmentDto'
+          description: Rendez-vous après modification.
+        conflicts:
+          description: Rendez-vous actifs du praticien qui chevauchent ; vide sinon.
+          items:
+            $ref: '#/components/schemas/ConflictDto'
+          type: array
+      type: object
+    CancelAppointmentRequest:
+      description: Annulation d'un rendez-vous. Le corps est facultatif.
+      properties:
+        reason:
+          description: Motif d'annulation, 500 caractères au plus. Facultatif.
+          maxLength: 500
+          minLength: 0
+          type: string
+      type: object
     Card:
       description: Fiche résumée d'un praticien publié dans les résultats de recherche (sans coordonnées).
       properties:
@@ -743,6 +914,30 @@ components:
           description: 'Compte rendu de la séance, texte libre. Vide ou absent : aucun compte rendu.'
           type: string
       type: object
+    ConflictDto:
+      description: 'Rendez-vous actif (planned ou tentative) du praticien qui chevauche le créneau : un avertissement, jamais un refus.'
+      properties:
+        appointmentId:
+          description: Identifiant du rendez-vous chevauché.
+          format: uuid
+          type: string
+        endsAt:
+          description: Fin du rendez-vous chevauché, UTC ISO 8601.
+          format: date-time
+          type: string
+        occurrenceStartsAt:
+          description: 'Début, UTC ISO 8601, du créneau demandé que ce rendez-vous chevauche : l''occurrence concernée pour une série, sinon le début du rendez-vous créé ou déplacé, ou from pour freebusy.'
+          format: date-time
+          type: string
+        patientDisplayName:
+          description: Nom affiché du patient du rendez-vous chevauché.
+          example: Théo B.
+          type: string
+        startsAt:
+          description: Début du rendez-vous chevauché, UTC ISO 8601.
+          format: date-time
+          type: string
+      type: object
     Consents:
       description: 'Consentements obligatoires à l''inscription : les deux doivent valoir true (422 INVALID_FIELD sinon). Ils sont consignés dans le journal de sécurité.'
       properties:
@@ -772,6 +967,55 @@ components:
         remoteOnly:
           description: Vrai si le praticien exerce uniquement à distance.
           type: boolean
+      type: object
+    CreateAppointmentRequest:
+      description: Création d'un rendez-vous, ou d'une série si recurrence est présent. status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+      properties:
+        durationMin:
+          description: Durée en minutes, de 5 à 600. Obligatoire.
+          example: 50
+          format: int32
+          maximum: 600
+          minimum: 5
+          type: integer
+        modality:
+          description: Modalité. Obligatoire.
+          enum:
+          - in_person
+          - video
+          - phone
+          example: in_person
+          pattern: in_person|video|phone
+          type: string
+        patientId:
+          description: Patient du praticien, non archivé. Obligatoire.
+          format: uuid
+          type: string
+        planningNote:
+          description: Note de planification, 2 000 caractères au plus. Facultative.
+          maxLength: 2000
+          minLength: 0
+          type: string
+        recurrence:
+          $ref: '#/components/schemas/RecurrenceRequest'
+          description: 'Répétition (G Q55) : une ligne par occurrence, même seriesId, même statut, même note. Absente : un seul rendez-vous.'
+        startsAt:
+          description: Début du rendez-vous, UTC ISO 8601. Obligatoire.
+          example: 2026-11-16T09:00:00Z
+          format: date-time
+          type: string
+        tentative:
+          description: 'true pour « À confirmer » (statut tentative, appliqué à toutes les occurrences). Défaut : false.'
+          type: boolean
+        tz:
+          description: 'Fuseau IANA dans lequel les occurrences d''une série gardent la même heure locale et dans lequel until est lu (INVALID_VALUE si inconnu). Défaut : Europe/Paris.'
+          example: Europe/Paris
+          type: string
+      required:
+      - durationMin
+      - modality
+      - patientId
+      - startsAt
       type: object
     CreateEmotionRequest:
       description: Création d'une émotion personnalisée.
@@ -2298,6 +2542,21 @@ components:
       required:
       - kind
       type: object
+    FreeBusyDto:
+      description: 'Ce qui entoure un créneau avant de le créer ou d''y déplacer un rendez-vous : conflits, rendez-vous précédent et suivant du même jour.'
+      properties:
+        conflicts:
+          description: Rendez-vous actifs (planned, tentative) qui chevauchent le créneau, triés par début. Vide si le créneau est libre.
+          items:
+            $ref: '#/components/schemas/ConflictDto'
+          type: array
+        next:
+          $ref: '#/components/schemas/AppointmentDto'
+          description: Premier rendez-vous actif commençant au plus tôt à la fin du créneau, le même jour calendaire (fuseau tz). Null s'il n'y en a pas.
+        previous:
+          $ref: '#/components/schemas/AppointmentDto'
+          description: Dernier rendez-vous actif terminé au plus tard au début du créneau, le même jour calendaire (fuseau tz). Null s'il n'y en a pas.
+      type: object
     GraphDto:
       description: 'Graphe d''un patient : au plus 150 nœuds (500 pour un développement par expand), leurs arêtes et les groupes de nœuds regroupés.'
       properties:
@@ -3119,6 +3378,18 @@ components:
           minimum: 0
           type: integer
       type: object
+    PatientAppointmentsDto:
+      description: Rendez-vous actifs d'un patient à partir d'un instant, et les valeurs à préremplir pour en créer un nouveau.
+      properties:
+        appointments:
+          description: Rendez-vous actifs (planned, tentative) du praticien courant pour ce patient, non terminés à l'instant from, triés par début.
+          items:
+            $ref: '#/components/schemas/AppointmentDto'
+          type: array
+        defaults:
+          $ref: '#/components/schemas/AppointmentDefaultsDto'
+          description: Défauts de création d'un rendez-vous pour ce patient.
+      type: object
     PatientDto:
       description: Fiche d'un patient du praticien connecté, avec ses drapeaux actifs et ses tags. Chaque modification par PATCH incrémente currentVersion et archive un instantané consultable via GET /api/patients/{id}/versions.
       properties:
@@ -3209,8 +3480,44 @@ components:
           type: string
       type: object
     Preferences:
-      description: 'Préférences à plat du compte : 9 clés connues, aux noms pointés (par exemple "overview.view"), sans objet imbriqué. En lecture, les 9 clés sont toujours présentes (valeur enregistrée, sinon défaut selon la profession). En PATCH, toutes les clés sont optionnelles : null remet la clé à son défaut, une clé inconnue est ignorée.'
+      description: 'Préférences à plat du compte : 13 clés connues, aux noms pointés (par exemple "overview.view"), sans objet imbriqué. En lecture, les 13 clés sont toujours présentes (valeur enregistrée, sinon défaut selon la profession). En PATCH, toutes les clés sont optionnelles : null remet la clé à son défaut, une clé inconnue est ignorée. Les bornes de la journée de l''agenda doivent rester cohérentes : agenda.dayEndHour strictement supérieur à agenda.dayStartHour, sinon 422 OUT_OF_RANGE sur agenda.dayEndHour.'
       properties:
+        agenda.dayEndHour:
+          description: 'Dernière heure affichée dans la grille de l''agenda (entier de 1 à 24), strictement supérieure à agenda.dayStartHour après fusion. Hors bornes ou non supérieure au début : 422 OUT_OF_RANGE. Défaut : 19.'
+          example: 19
+          format: int32
+          maximum: 24
+          minimum: 1
+          type: integer
+        agenda.dayStartHour:
+          description: 'Première heure affichée dans la grille de l''agenda (entier de 0 à 23). Hors bornes : 422 OUT_OF_RANGE. Défaut : 8.'
+          example: 8
+          format: int32
+          maximum: 23
+          minimum: 0
+          type: integer
+        agenda.defaultView:
+          description: 'Vue ouverte par défaut dans l''agenda : day = jour, week = semaine, month = mois, list = liste. Défaut : week.'
+          enum:
+          - day
+          - week
+          - month
+          - list
+          example: week
+          type: string
+        agenda.workingDays:
+          description: 'Jours travaillés affichés dans l''agenda : tableau d''entiers de 1 (lundi) à 7 (dimanche), sans doublon, au moins un jour, dans l''ordre enregistré (jour hors 1–7 : 422 OUT_OF_RANGE ; doublon, liste vide ou autre type : 422 INVALID_VALUE). Défaut : [1,2,3,4,5,6].'
+          example:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          items:
+            format: int32
+            type: integer
+          type: array
         entries.defaultVisibility:
           description: 'Visibilité proposée par défaut pour une nouvelle entrée : clinical = clinique, private = privée. Défaut : clinical.'
           enum:
@@ -3867,6 +4174,27 @@ components:
           items:
             type: string
           type: array
+      type: object
+    RecurrenceRequest:
+      description: 'Répétition hebdomadaire : toutes les everyWeeks semaines, soit count fois, soit jusqu''à until inclus ; exactement un des deux (sinon 422 sur recurrence : REQUIRED si aucun, INVALID_VALUE si les deux). 26 occurrences au plus (422 TOO_MANY_OCCURRENCES). Chaque occurrence garde l''heure locale du premier rendez-vous dans le fuseau tz, même après un changement d''heure ; aucun décalage sur jour férié.'
+      properties:
+        count:
+          description: 'Nombre d''occurrences, premier rendez-vous compris : 1 à 26 (au-delà, 422 TOO_MANY_OCCURRENCES). Exclusif de until.'
+          example: 4
+          format: int32
+          minimum: 1
+          type: integer
+        everyWeeks:
+          description: 'Intervalle en semaines : 1, 2 ou 4 (INVALID_VALUE sinon). Obligatoire.'
+          example: 1
+          format: int32
+          type: integer
+        until:
+          description: Dernier jour possible d'une occurrence, inclus, date ISO 8601 (AAAA-MM-JJ, par exemple 2026-12-28) lue dans le fuseau tz ; pas avant le jour du premier rendez-vous (INVALID_VALUE). Exclusif de count.
+          format: date
+          type: string
+      required:
+      - everyWeeks
       type: object
     RegisterRequest:
       description: Inscription ouverte d'un praticien (sans code d'invitation). L'adresse e-mail sert d'identifiant de connexion.
@@ -4612,6 +4940,37 @@ components:
       required:
       - code
       type: object
+    UpdateAppointmentRequest:
+      description: 'Modification partielle : un champ absent reste inchangé ; planningNote à null efface la note. patientId, tentative, recurrence, status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).'
+      properties:
+        durationMin:
+          description: Nouvelle durée en minutes, de 5 à 600 ; le début est conservé.
+          example: 50
+          format: int32
+          maximum: 600
+          minimum: 5
+          type: integer
+        modality:
+          description: Nouvelle modalité.
+          enum:
+          - in_person
+          - video
+          - phone
+          pattern: in_person|video|phone
+          type: string
+        planningNote:
+          description: Nouvelle note de planification (2 000 caractères au plus) ; null l'efface.
+          maxLength: 2000
+          minLength: 0
+          type:
+          - string
+          - 'null'
+        startsAt:
+          description: Nouveau début, UTC ISO 8601 ; la durée est conservée si elle n'est pas fournie.
+          example: 2026-11-16T10:00:00Z
+          format: date-time
+          type: string
+      type: object
     UpdateProfileRequest:
       description: 'Contenu complet du profil d''annuaire : remplace toutes les colonnes éditables, un champ absent reprend sa valeur par défaut. published, slug, profession et photo ne s''envoient pas.'
       properties:
@@ -4816,7 +5175,7 @@ info:
 
     **Version du contrat** : `info.version` est incrémentée à chaque changement du contrat et un tag `contract-vX.Y.Z` est posé. Les tags regroupent les opérations par contrôleur, dans l'ordre d'usage : identité, dossier clinique, exploration, annuaire, administration.
   title: PsyMate API
-  version: 0.11.0
+  version: 0.12.1
 openapi: 3.1.0
 paths:
   /api/admin/appeals:
@@ -6034,6 +6393,564 @@ paths:
       summary: Modifie les libellés, le rang ou l'activation d'une entrée du vocabulaire
       tags:
       - 'Administration : vocabulaire de l''annuaire'
+  /api/agenda:
+    get:
+      description: 'Session praticien. Rendez-vous du praticien courant dont le créneau chevauche la fenêtre [from, to[ (startsAt < to et endsAt > from : un rendez-vous à cheval sur une borne est inclus), triés par début. Les rendez-vous annulés sont exclus sauf includeCancelled=true. Fenêtre de 62 jours au plus, assez pour une grille mensuelle avec débords. busy est réservé aux indisponibilités externes et toujours vide dans cette version.'
+      operationId: window
+      parameters:
+      - description: 'Début de la fenêtre, inclus : date-heure ISO 8601 UTC. Obligatoire.'
+        example: 2026-11-16T00:00:00Z
+        in: query
+        name: from
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: 'Fin de la fenêtre, exclue : date-heure ISO 8601 UTC, strictement après from et au plus 62 jours après. Obligatoire.'
+        example: 2026-11-23T00:00:00Z
+        in: query
+        name: to
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: 'Vrai pour inclure les rendez-vous annulés. Défaut : faux.'
+        example: false
+        in: query
+        name: includeCancelled
+        required: false
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AgendaWindowDto'
+          description: Rendez-vous de la fenêtre.
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué).'
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée.'
+        '422':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'VALIDATION_FAILED avec errors[] {field, code, message} : from ou to REQUIRED (absent) ; to INVALID_VALUE (to ne suit pas from) ; from, to, includeCancelled INVALID_FORMAT (valeur illisible). WINDOW_TOO_LARGE avec errors[0].field = to : la fenêtre dépasse 62 jours.'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes).'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Liste les rendez-vous du praticien sur une fenêtre de dates
+      tags:
+      - Agenda
+  /api/agenda/freebusy:
+    get:
+      description: 'Session praticien. Avant de créer un rendez-vous ou d''en déplacer un : rendez-vous actifs (planned, tentative) du praticien courant qui chevauchent [from, to[ (conflicts, jamais bloquants), dernier rendez-vous actif terminé au plus tard à from (previous) et premier commençant au plus tôt à to (next), tous deux le même jour calendaire que from dans le fuseau tz. excludeAppointmentId retire le rendez-vous déplacé de ses propres conflits et de son voisinage. Les annulés ne comptent jamais.'
+      operationId: freeBusy
+      parameters:
+      - description: 'Début du créneau, inclus : date-heure ISO 8601 UTC. Obligatoire.'
+        example: 2026-11-16T10:00:00Z
+        in: query
+        name: from
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: 'Fin du créneau, exclue : date-heure ISO 8601 UTC, strictement après from. Obligatoire.'
+        example: 2026-11-16T10:50:00Z
+        in: query
+        name: to
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: 'Rendez-vous à ignorer : celui qu''on déplace. Absent : aucun n''est ignoré.'
+        in: query
+        name: excludeAppointmentId
+        required: false
+        schema:
+          format: uuid
+          type: string
+      - description: 'Fuseau IANA qui définit le jour calendaire de previous et next. Défaut : Europe/Paris.'
+        example: Europe/Paris
+        in: query
+        name: tz
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FreeBusyDto'
+          description: Conflits et voisinage du créneau.
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué).'
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée.'
+        '422':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'VALIDATION_FAILED avec errors[] {field, code, message} : from ou to REQUIRED (absent) ; to INVALID_VALUE (to ne suit pas from) ; tz INVALID_VALUE (fuseau inconnu) ; from, to, excludeAppointmentId INVALID_FORMAT (valeur illisible). WINDOW_TOO_LARGE avec errors[0].field = to : le créneau dépasse 62 jours.'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes).'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Indique les conflits et le voisinage d'un créneau
+      tags:
+      - Agenda
+  /api/appointments:
+    post:
+      description: Session praticien, propriétaire du patient. Le praticien et le cabinet viennent de la session. La fin vaut startsAt + durationMin. Statut planned, ou tentative si tentative = true (« À confirmer »). Les rendez-vous actifs du praticien qui chevauchent le créneau sont renvoyés dans conflicts sans empêcher la création ; un rendez-vous annulé ne compte pas. Avec recurrence (G Q55), une ligne par occurrence est créée dans la même transaction, toutes avec le même seriesId, le même statut et la même note, toutes les everyWeeks semaines à la même heure locale dans le fuseau tz (défaut Europe/Paris), count fois ou jusqu'à until inclus ; au-delà de 26 occurrences, rien n'est créé (422 TOO_MANY_OCCURRENCES). conflicts agrège alors les chevauchements de chaque occurrence, occurrenceStartsAt indiquant laquelle. Chaque occurrence se déplace et s'annule ensuite seule ; aucune règle de répétition n'est stockée. status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+      operationId: createAppointment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAppointmentRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppointmentCreatedDto'
+          description: Rendez-vous créé, ou occurrences de la série créées ; en-tête Location = /api/appointments/{id} de la première occurrence.
+          headers:
+            Location:
+              description: URL du rendez-vous créé (première occurrence d'une série), /api/appointments/{id}.
+              schema:
+                type: string
+              style: simple
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'MALFORMED_REQUEST : corps JSON absent ou illisible.'
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué).'
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'PATIENT_FORBIDDEN : patient d''un autre praticien. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée.'
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'PATIENT_NOT_FOUND : patient inexistant.'
+        '422':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'PATIENT_ARCHIVED (errors[0].field = patientId) : patient archivé ; TOO_MANY_OCCURRENCES (errors[0].field = recurrence) : plus de 26 occurrences, rien n''est créé ; VALIDATION_FAILED avec errors[] : patientId, startsAt, durationMin, modality ou recurrence.everyWeeks REQUIRED ; durationMin OUT_OF_RANGE (hors 5 à 600) ; modality INVALID_VALUE (hors in_person, video, phone) ; planningNote OUT_OF_RANGE (plus de 2 000 caractères) ; recurrence.everyWeeks INVALID_VALUE (hors 1, 2, 4) ; recurrence.count OUT_OF_RANGE (moins de 1) ; recurrence REQUIRED (ni count ni until) ou INVALID_VALUE (count et until ensemble) ; recurrence.until INVALID_VALUE (avant le premier rendez-vous) ; tz INVALID_VALUE (fuseau inconnu) ; INVALID_FORMAT (date ou UUID illisible) ; UNKNOWN_FIELD (champ refusé).'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes).'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Crée un rendez-vous depuis un créneau
+      tags:
+      - Rendez-vous
+  /api/appointments/series/{seriesId}/cancel:
+    post:
+      description: Session praticien. Annule toutes les occurrences encore actives (planned, tentative) de la série du praticien courant, déplacées ou non, avec le même motif facultatif ; les occurrences déjà annulées ou terminées restent telles quelles. Rien n'est supprimé. C'est l'« Annuler » du message affiché après la création d'une série. Répond toutes les occurrences de la série dans leur état final. Une série d'un autre praticien répond 404. Corps facultatif.
+      operationId: cancelSeries
+      parameters:
+      - description: Identifiant de la série (seriesId).
+        example: 5d2f6a1e-8b3c-4d7e-9f10-2a3b4c5d6e7f
+        in: path
+        name: seriesId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelAppointmentRequest'
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppointmentSeriesDto'
+          description: Occurrences de la série, état final.
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'MALFORMED_REQUEST : identifiant qui n''est pas un UUID, ou corps JSON illisible.'
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué).'
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée.'
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'SERIES_NOT_FOUND : aucune occurrence de cette série n''est au praticien.'
+        '422':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'VALIDATION_FAILED avec errors[] : reason OUT_OF_RANGE (plus de 500 caractères) ; UNKNOWN_FIELD (champ refusé).'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes).'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Annule une série de rendez-vous
+      tags:
+      - Rendez-vous
+  /api/appointments/{id}:
+    get:
+      description: Session praticien. Rendez-vous du praticien courant, avec son patient (nom affiché, date de naissance, archivé). Le rendez-vous d'un autre praticien répond 404.
+      operationId: getAppointment
+      parameters:
+      - description: Identifiant du rendez-vous.
+        example: 5d2f6a1e-8b3c-4d7e-9f10-2a3b4c5d6e7f
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppointmentDto'
+          description: Rendez-vous.
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'MALFORMED_REQUEST : identifiant qui n''est pas un UUID, ou corps JSON illisible.'
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué).'
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée.'
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'APPOINTMENT_NOT_FOUND : rendez-vous inexistant ou d''un autre praticien.'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes).'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Détail d'un rendez-vous
+      tags:
+      - Rendez-vous
+    patch:
+      description: 'Session praticien. Fusion partielle : startsAt déplace le rendez-vous en gardant sa durée, durationMin la change en gardant le début, modality et planningNote se remplacent ; un champ absent reste inchangé, planningNote à null efface la note. Refusé si le rendez-vous est annulé ou terminé (409). Les chevauchements du nouveau créneau sont renvoyés dans conflicts sans empêcher la modification. patientId, tentative (passer par /confirm), recurrence, status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).'
+      operationId: updateAppointment
+      parameters:
+      - description: Identifiant du rendez-vous.
+        example: 5d2f6a1e-8b3c-4d7e-9f10-2a3b4c5d6e7f
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAppointmentRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppointmentUpdatedDto'
+          description: Rendez-vous modifié et chevauchements.
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'MALFORMED_REQUEST : identifiant qui n''est pas un UUID, ou corps JSON illisible.'
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué).'
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée.'
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'APPOINTMENT_NOT_FOUND : rendez-vous inexistant ou d''un autre praticien.'
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'APPOINTMENT_NOT_ACTIVE : le rendez-vous est annulé ou terminé.'
+        '422':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'VALIDATION_FAILED avec errors[] : durationMin OUT_OF_RANGE (hors 5 à 600) ; modality INVALID_VALUE ; planningNote OUT_OF_RANGE (plus de 2 000 caractères) ; INVALID_FORMAT (date illisible) ; UNKNOWN_FIELD (champ refusé).'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes).'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Déplace ou modifie un rendez-vous
+      tags:
+      - Rendez-vous
+  /api/appointments/{id}/cancel:
+    post:
+      description: 'Session praticien. Le rendez-vous passe à cancelled avec la date d''annulation et le motif facultatif ; il n''est jamais supprimé. Idempotent : annuler un rendez-vous déjà annulé répond 200 sans rien changer (motif et date d''origine gardés). Refusé si le rendez-vous est terminé (409). Corps facultatif.'
+      operationId: cancelAppointment
+      parameters:
+      - description: Identifiant du rendez-vous.
+        example: 5d2f6a1e-8b3c-4d7e-9f10-2a3b4c5d6e7f
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelAppointmentRequest'
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppointmentDto'
+          description: Rendez-vous annulé.
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'MALFORMED_REQUEST : identifiant qui n''est pas un UUID, ou corps JSON illisible.'
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué).'
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée.'
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'APPOINTMENT_NOT_FOUND : rendez-vous inexistant ou d''un autre praticien.'
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'APPOINTMENT_NOT_ACTIVE : le rendez-vous est terminé (séance rattachée).'
+        '422':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'VALIDATION_FAILED avec errors[] : reason OUT_OF_RANGE (plus de 500 caractères) ; UNKNOWN_FIELD (champ refusé).'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes).'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Annule un rendez-vous
+      tags:
+      - Rendez-vous
+  /api/appointments/{id}/confirm:
+    post:
+      description: Session praticien. Fait passer un rendez-vous tentative (« À confirmer ») à planned. Tout autre statut répond 409. Aucun corps.
+      operationId: confirmAppointment
+      parameters:
+      - description: Identifiant du rendez-vous.
+        example: 5d2f6a1e-8b3c-4d7e-9f10-2a3b4c5d6e7f
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppointmentDto'
+          description: Rendez-vous confirmé.
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'MALFORMED_REQUEST : identifiant qui n''est pas un UUID, ou corps JSON illisible.'
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué).'
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée.'
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'APPOINTMENT_NOT_FOUND : rendez-vous inexistant ou d''un autre praticien.'
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'APPOINTMENT_NOT_ACTIVE : le rendez-vous n''est pas à confirmer (planned, annulé ou terminé).'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes).'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Confirme un rendez-vous à confirmer
+      tags:
+      - Rendez-vous
   /api/auth/email/change:
     post:
       description: 'Deux variantes, même route. Avec une session (compte confirmé : docs_pending, under_review, needs_more ou approved) : corps { newEmail, password }, le compte est celui de la session (email est ignoré). Le mot de passe est vérifié : faux, il donne 422 INVALID_PASSWORD et compte dans un verrou propre au compte (5 échecs, 423 pendant 15 min, quelle que soit l''IP). Sinon la réponse est 202 dans tous les cas : un lien de confirmation (24 h, usage unique) part à la NOUVELLE adresse, et si cette adresse appartient déjà à un compte elle reçoit à la place l''e-mail « vous avez déjà un compte », sans que la réponse diffère. L''ancienne adresse reste valide pour se connecter jusqu''à la confirmation par POST /api/auth/email/confirm ; une nouvelle demande invalide le lien précédent (1 par minute, 5 par jour, au-delà rien ne part). Sans session (variante publique, compte email_pending) : corps { email, password, newEmail } ; réponse 202 dans tous les cas (compte inconnu, mot de passe faux, compte déjà confirmé, nouvelle adresse déjà prise, limite atteinte : aucune différence visible) ; seul un compte en email_pending change d''adresse, un nouveau lien de confirmation part à la nouvelle adresse (1 changement ou renvoi par minute, 5 par jour) ; les mots de passe faux comptent dans le verrou e-mail + IP du login (5 échecs, 423 pendant 15 min).'
@@ -7714,7 +8631,7 @@ paths:
       - Export de compte
   /api/me/preferences:
     get:
-      description: 'Session praticien. Renvoie toujours les 9 clés : la valeur enregistrée si elle est valide, sinon le défaut calculé selon la profession (coach : vocabulary.subjectLabel = client et entryTypes.medicationVisible = false ; psychiatre : entryTypes.medicationVisible = true). Les clés inconnues stockées ne sont pas renvoyées.'
+      description: 'Session praticien. Renvoie toujours les 13 clés : la valeur enregistrée si elle est valide, sinon le défaut calculé selon la profession (coach : vocabulary.subjectLabel = client et entryTypes.medicationVisible = false ; psychiatre : entryTypes.medicationVisible = true). Les clés inconnues stockées ne sont pas renvoyées.'
       operationId: getPreferences
       responses:
         '200':
@@ -7722,7 +8639,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Preferences'
-          description: Les 9 préférences effectives du compte.
+          description: Les 13 préférences effectives du compte.
         '401':
           content:
             application/problem+json:
@@ -7751,7 +8668,7 @@ paths:
       tags:
       - Préférences
     patch:
-      description: 'Session praticien. Corps JSON plat (application/json ou application/merge-patch+json) avec seulement les clés à changer : les autres sont conservées. null remet la clé à son défaut ; une clé inconnue est ignorée sans erreur. Une seule valeur hors domaine rejette toute la requête (422, errors[].field = clé fautive) et rien n''est appliqué. Renvoie les 9 préférences effectives après fusion ; un PATCH qui ne change rien est un succès.'
+      description: 'Session praticien. Corps JSON plat (application/json ou application/merge-patch+json) avec seulement les clés à changer : les autres sont conservées. null remet la clé à son défaut ; une clé inconnue est ignorée sans erreur. Une seule valeur hors domaine rejette toute la requête (422, errors[].field = clé fautive) et rien n''est appliqué. Renvoie les 13 préférences effectives après fusion ; un PATCH qui ne change rien est un succès.'
       operationId: updatePreferences
       requestBody:
         content:
@@ -7769,7 +8686,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Preferences'
-          description: Les 9 préférences effectives après fusion.
+          description: Les 13 préférences effectives après fusion.
         '401':
           content:
             application/problem+json:
@@ -9033,6 +9950,90 @@ paths:
       summary: Modifie la fiche d'un patient en créant une version
       tags:
       - Patients
+  /api/patients/{id}/appointments:
+    get:
+      description: 'Session praticien, propriétaire du patient. Rendez-vous actifs (planned, tentative) du praticien courant pour ce patient qui ne sont pas terminés à l''instant from (défaut : maintenant), triés par début, au plus limit (1 à 100, 20 par défaut). defaults donne la durée et la modalité à préremplir (suivi du patient, sinon préférence sessions.defaultDurationMin, sinon 60 minutes au cabinet) et le rythme du suivi, affiché tel quel.'
+      operationId: ofPatient
+      parameters:
+      - description: Identifiant du patient.
+        example: 9b4c0c7e-3c1a-4f2e-9d6a-2a4d6f8b1c3e
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+      - description: 'Instant de référence : date-heure ISO 8601 UTC ; seuls les rendez-vous qui se terminent après lui sont renvoyés. Absent : maintenant.'
+        example: 2026-11-16T00:00:00Z
+        in: query
+        name: from
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: 'Nombre maximal de rendez-vous, de 1 à 100. Défaut : 20.'
+        example: 20
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          format: int32
+          maximum: 100
+          minimum: 1
+          type: integer
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PatientAppointmentsDto'
+          description: Rendez-vous du patient et défauts.
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'MALFORMED_REQUEST : identifiant du patient qui n''est pas un UUID.'
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué).'
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'PATIENT_FORBIDDEN : patient d''un autre praticien. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée.'
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'PATIENT_NOT_FOUND : patient inexistant.'
+        '422':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'VALIDATION_FAILED avec errors[] {field, code, message} : limit OUT_OF_RANGE (hors 1 à 100) ; from, limit INVALID_FORMAT (valeur illisible).'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes).'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Liste les rendez-vous à venir d'un patient et ses défauts de création
+      tags:
+      - Agenda
   /api/patients/{id}/entries:
     post:
       description: 'Session praticien, propriétaire du patient. L''entrée appartient à une séance : sessionId explicite, sinon la séance courante du patient (SESSION_REQUIRED s''il n''en a aucune). Un corps de type session démarre une séance (une seule ouverte à la fois). Les liens demandés (links, 20 au plus) sont posés dans la même transaction, tout ou rien. authorType et submissionId sont en lecture seule (UNKNOWN_FIELD). Réponse 201 avec Location et liens posés dans links.'
@@ -11131,7 +12132,7 @@ tags:
   name: Authentification
 - description: Activation, désactivation et codes de secours de la double authentification TOTP du praticien connecté.
   name: Double authentification
-- description: 'Préférences d''affichage et de saisie du praticien connecté, mémorisées par compte : neuf clés plates, modifiées par merge-patch (RFC 7396).'
+- description: 'Préférences d''affichage et de saisie du praticien connecté, mémorisées par compte : treize clés plates (affichage, saisie, agenda), modifiées par merge-patch (RFC 7396).'
   name: Préférences
 - description: 'Dossier professionnel du praticien connecté : justificatifs, informations professionnelles, soumission du dossier à l''examen de l''administration.'
   name: Vérification du praticien
@@ -11179,5 +12180,9 @@ tags:
   name: 'Administration : journal'
 - description: 'Gestion par l''administrateur des spécialités et des publics proposés dans l''annuaire : ajout, renommage, ordre et activation (jamais de suppression).'
   name: 'Administration : vocabulaire de l''annuaire'
+- description: 'Agenda du praticien : rendez-vous planifiés, fenêtre de la grille, conflits d''un créneau et rendez-vous d''un patient. Dates en UTC ISO 8601 ; le client convertit dans le fuseau du praticien. Aucune synchronisation externe dans cette version.'
+  name: Agenda
+- description: 'Rendez-vous de l''agenda du praticien : création depuis un créneau, détail, déplacement, annulation et confirmation. Un chevauchement n''est jamais bloquant : il est signalé dans conflicts. Un rendez-vous ne se supprime jamais.'
+  name: Rendez-vous
 - description: Sessions actives du praticien, dernière connexion et révocation d'une session (fiche 18).
   name: Sécurité du compte
