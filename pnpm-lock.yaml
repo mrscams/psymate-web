@@ -196,6 +196,24 @@ importers:
       '@angular/ssr':
         specifier: 22.2.6
         version: 22.2.6(@angular/common@22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(@angular/platform-server@22.2.5(@angular/common@22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/compiler@22.2.5)(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(@angular/platform-browser@22.2.5(@angular/common@22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)))(rxjs@7.8.2))(@angular/router@22.2.5(@angular/common@22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(@angular/platform-browser@22.2.5(@angular/common@22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)))(rxjs@7.8.2))
+      '@fullcalendar/angular':
+        specifier: 6.1.22
+        version: 6.1.22(@angular/common@22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(@fullcalendar/core@6.1.22)
+      '@fullcalendar/core':
+        specifier: 6.1.22
+        version: 6.1.22
+      '@fullcalendar/daygrid':
+        specifier: 6.1.22
+        version: 6.1.22(@fullcalendar/core@6.1.22)
+      '@fullcalendar/interaction':
+        specifier: 6.1.22
+        version: 6.1.22(@fullcalendar/core@6.1.22)
+      '@fullcalendar/list':
+        specifier: 6.1.22
+        version: 6.1.22(@fullcalendar/core@6.1.22)
+      '@fullcalendar/timegrid':
+        specifier: 6.1.22
+        version: 6.1.22(@fullcalendar/core@6.1.22)
       '@ngrx/signals':
         specifier: 22.0.1
         version: 22.0.1(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(rxjs@7.8.2)
@@ -846,6 +864,36 @@ packages:
     peerDependenciesMeta:
       '@noble/hashes':
         optional: true
+
+  '@fullcalendar/angular@6.1.22':
+    resolution: {integrity: sha512-lc3Ua8R5EAHBjnQP1/qfsXEgUHhOkLmgRUBm5okbnLktMKGYvYIISI2zU0Q+j6TQMZGSxSRSXL5poEIHAjsqrQ==}
+    peerDependencies:
+      '@angular/common': 12 - 22
+      '@angular/core': 12 - 22
+      '@fullcalendar/core': ~6.1.22
+
+  '@fullcalendar/core@6.1.22':
+    resolution: {integrity: sha512-ju5PJUE++zr8XXCGtlXlrodF6doUy9BDfzx+VmE0B+XDBM2A5cUi/aU3M1ANfw/StmKhwqew7Ps7bXMiv/JREg==}
+
+  '@fullcalendar/daygrid@6.1.22':
+    resolution: {integrity: sha512-cpom5+bAvsGG5nX+snsCtpMIyyhAr+QlseD9mhz5Vq7rMBTzx43mSkz6IBvQ3vz5h2idbDmT1cggEn/dzZwt9Q==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.22
+
+  '@fullcalendar/interaction@6.1.22':
+    resolution: {integrity: sha512-r8Njw8aPNFGRwDjVAh9NTh3ZJib5tcUoLi/BM4uYJt5Cs9tDiirmImaqxhx56hclVFX7ktd5CdaMX0+ArSbm5A==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.22
+
+  '@fullcalendar/list@6.1.22':
+    resolution: {integrity: sha512-7e5kZbeT3fhtXsts6VMQxbGtpoCFOZCxrIckHfn5VTrRh8Up0TKoYj/AOaIj94uz0qebWgaLXwd9Ijiu3uTwjg==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.22
+
+  '@fullcalendar/timegrid@6.1.22':
+    resolution: {integrity: sha512-gNMtkXrkfN3iszXty+pYbJwGxcozL0xBVKYmEd1lm0DMEbrffpVJyV+vifmtl/eIbWCNRWrMWUtGLbYy/ukykA==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.22
 
   '@harperfast/extended-iterable@1.0.5':
     resolution: {integrity: sha512-4ScXlphaKEa49RpHmqwATq9QI9aUTdWVYDlJkzxhsD7ShJP+pHCYLznMO9n/wREY8jPjRZ59wLJY6HM5yB5Gkw==}
@@ -2988,6 +3036,9 @@ packages:
     resolution: {integrity: sha512-LJlKCCAUFKOuZxipUdYw1NzIITEsPcgyOG9LkvRJvuKj/bRzbuRY0ARXvL0pWGpsZvn8jku+LMep2eU0seHp8g==}
     engines: {node: ^10 || ^12 || >=14}
 
+  preact@10.12.1:
+    resolution: {integrity: sha512-l8386ixSsBdbreOAkqtrwqHwdvR35ID8c3rKPa8lCWuO86dBi32QWHV4vfsZK1utLLFMvw+Z5Ad4XLkZzchscg==}
+
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
@@ -4211,6 +4262,34 @@ snapshots:
       levn: 0.4.1
 
   '@exodus/bytes@1.16.0': {}
+
+  '@fullcalendar/angular@6.1.22(@angular/common@22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(@fullcalendar/core@6.1.22)':
+    dependencies:
+      '@angular/common': 22.2.5(@angular/core@22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/core': 22.2.5(@angular/compiler@22.2.5)(rxjs@7.8.2)
+      '@fullcalendar/core': 6.1.22
+      tslib: 2.9.1
+
+  '@fullcalendar/core@6.1.22':
+    dependencies:
+      preact: 10.12.1
+
+  '@fullcalendar/daygrid@6.1.22(@fullcalendar/core@6.1.22)':
+    dependencies:
+      '@fullcalendar/core': 6.1.22
+
+  '@fullcalendar/interaction@6.1.22(@fullcalendar/core@6.1.22)':
+    dependencies:
+      '@fullcalendar/core': 6.1.22
+
+  '@fullcalendar/list@6.1.22(@fullcalendar/core@6.1.22)':
+    dependencies:
+      '@fullcalendar/core': 6.1.22
+
+  '@fullcalendar/timegrid@6.1.22(@fullcalendar/core@6.1.22)':
+    dependencies:
+      '@fullcalendar/core': 6.1.22
+      '@fullcalendar/daygrid': 6.1.22(@fullcalendar/core@6.1.22)
 
   '@harperfast/extended-iterable@1.0.5':
     optional: true
@@ -6094,6 +6173,8 @@ snapshots:
       nanoid: 3.3.20
       picocolors: 1.1.1
       source-map-js: 1.2.2
+
+  preact@10.12.1: {}
 
   prelude-ls@1.2.1: {}
 

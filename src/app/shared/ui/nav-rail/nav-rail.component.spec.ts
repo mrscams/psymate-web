@@ -62,20 +62,22 @@ describe('NavRailComponent (rail)', () => {
     document.querySelectorAll('pm-nav-rail').forEach((n) => n.remove());
   });
 
-  it('trois entrées : Patients lié, Agenda et Facture à réaliser, sans lien ni route', async () => {
+  it('trois entrées : Patients et Agenda liés, Facture à réaliser, sans lien ni route', async () => {
     expect(navRailEntries().map((entry) => [entry.key, entry.route])).toEqual([
       ['patients', '/patients'],
-      ['agenda', null],
+      ['agenda', '/agenda'],
       ['invoice', null],
     ]);
     const { el, rail } = await render();
     expect(rail.getAttribute('aria-label')).toBe('Navigation');
     const items = [...el.querySelectorAll<HTMLElement>('.item')];
     expect(items).toHaveLength(3);
-    expect(el.querySelectorAll('a[href]')).toHaveLength(1);
-    expect(el.querySelector('a[href]')?.getAttribute('href')).toBe('/patients');
+    expect([...el.querySelectorAll('a[href]')].map((a) => a.getAttribute('href'))).toEqual([
+      '/patients',
+      '/agenda',
+    ]);
     const later = el.querySelectorAll<HTMLElement>('.item.later');
-    expect(later).toHaveLength(2);
+    expect(later).toHaveLength(1);
     for (const item of later) {
       expect(item.tagName).toBe('SPAN');
       expect(item.getAttribute('aria-disabled')).toBe('true');
@@ -84,7 +86,6 @@ describe('NavRailComponent (rail)', () => {
       expect(item.hasAttribute('tabindex')).toBe(false);
     }
     expect([...later].map((item) => item.getAttribute('aria-label'))).toEqual([
-      'Agenda, à réaliser',
       'Facture, à réaliser',
     ]);
     expect(later[0].querySelector('small')?.textContent).toBe('à réaliser');
@@ -98,9 +99,7 @@ describe('NavRailComponent (rail)', () => {
     for (const label of labels()) expect(getComputedStyle(label).display).toBe('none');
     expect(patients.getAttribute('aria-label')).toBe('Patients');
     expect(patients.getAttribute('title')).toBe('Patients');
-    expect(rail.querySelectorAll('.item.later')[1].getAttribute('title')).toBe(
-      'Facture, à réaliser',
-    );
+    expect(rail.querySelector('.item.later')?.getAttribute('title')).toBe('Facture, à réaliser');
   });
 
   it('carreau actif selon la route : /patients et /patients/**, pas ailleurs', async () => {

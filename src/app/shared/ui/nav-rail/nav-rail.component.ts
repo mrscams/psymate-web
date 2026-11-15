@@ -37,8 +37,9 @@ export const NAV_RAIL_MIN_VIEWPORT = 900;
 export const NAV_RAIL_SHORTCUT = 'ctrl+b';
 
 /**
- * Les carreaux, dans l'ordre (décision du 14 novembre 2026) : Patients, puis Agenda (hors V1, G Q25)
- * et Facture, « à réaliser », sans route. Rien d'autre : ni séances, ni patients récents, ni Mon compte.
+ * Les carreaux, dans l'ordre (décision du 14 novembre 2026) : Patients, Agenda (lié depuis le
+ * 15 novembre 2026 : rendu de la fiche 15 sans API, G Q25 à mettre à jour) et Facture, « à réaliser »,
+ * sans route. Rien d'autre : ni séances, ni patients récents, ni Mon compte.
  */
 export function navRailEntries(): readonly NavRailEntry[] {
   return [
@@ -50,9 +51,9 @@ export function navRailEntries(): readonly NavRailEntry[] {
     },
     {
       key: 'agenda',
-      label: $localize`:Carreau Agenda du rail de navigation, à réaliser@@navRail.agenda:Agenda`,
+      label: $localize`:Carreau Agenda du rail de navigation@@navRail.agenda:Agenda`,
       icon: 'agenda',
-      route: null,
+      route: '/agenda',
     },
     {
       key: 'invoice',

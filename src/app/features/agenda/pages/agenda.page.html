@@ -1,0 +1,88 @@
+<!-- Barre d'outils de l'agenda (maquette 15) : bande blanche sous la barre d'application. -->
+<header class="toolbar">
+  <h1>{{ title }}</h1>
+  <button type="button" class="tb-btn" (click)="today()">{{ todayLabel }}</button>
+  <div class="steps">
+    <button type="button" [attr.aria-label]="stepLabels().prev" (click)="step(-1)">‹</button>
+    <button type="button" [attr.aria-label]="stepLabels().next" (click)="step(1)">›</button>
+  </div>
+  <!-- Les segments se suivent sans espace (« 1<sup>er</sup> novembre ») : une seule ligne. -->
+  <!-- prettier-ignore -->
+  <span class="range" aria-live="polite">@for (segment of rangeSegments(); track $index) {@if (segment.sup) {<sup>{{ segment.text }}</sup>} @else {{{ segment.text }}}}</span>
+  <span class="meta">{{ meta() }}</span>
+  <span class="spacer"></span>
+  <div role="group" [attr.aria-label]="viewsLabel" class="views">
+    @for (view of views; track view) {
+      <button type="button" [attr.aria-pressed]="store.view() === view" (click)="setView(view)">
+        {{ viewLabel(view) }}
+      </button>
+    }
+  </div>
+  @if (sync(); as sync) {
+    <span class="sync" [class]="'sync ' + sync.level">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        @switch (sync.level) {
+          @case ('ok') {
+            <path d="M20 6 9 17l-5-5" />
+          }
+          @case ('pending') {
+            <circle cx="12" cy="12" r="8" />
+            <path d="M12 8v4l3 2" />
+          }
+          @default {
+            <path d="M12 4 3 20h18L12 4zM12 10v4M12 17h.01" />
+          }
+        }
+      </svg>
+      {{ sync.text }}
+    </span>
+  }
+  <button type="button" class="tb-btn primary" (click)="newAppointment()">{{ newLabel }}</button>
+</header>
+
+<!-- Corps : rail gauche · vue · détail. -->
+<div class="body">
+  <aside class="rail" [attr.aria-label]="railLabel">
+    <pm-mini-month
+      [anchor]="store.anchor()"
+      [range]="store.range()"
+      [today]="now()"
+      (picked)="goTo($event)"
+    />
+    <pm-agenda-calendars [hidden]="store.hidden()" (toggled)="store.toggleCalendar($event)" />
+  </aside>
+
+  <section
+    class="view"
+    [attr.aria-label]="viewName()"
+    [class.refreshing]="store.data().status === 'loading'"
+  >
+    @if (kind(); as kind) {
+      <pm-state
+        [kind]="kind"
+        skeleton="block"
+        [lines]="4"
+        [title]="kind === 'empty' ? emptyTitle : undefined"
+        [message]="kind === 'empty' ? emptyMessage : undefined"
+        [action]="kind === 'error' ? retry : undefined"
+        [details]="store.data().problem?.detail"
+      />
+    } @else {
+      <pm-agenda-calendar
+        [view]="store.view()"
+        [anchor]="store.anchor()"
+        [appointments]="store.appointments()"
+        [busy]="store.busy()"
+        [selectedId]="store.selectedId()"
+        (opened)="openPatient($event)"
+        (slotPicked)="newAppointment($event)"
+        (dayPicked)="openDay($event)"
+        (rescheduled)="onRescheduled($event)"
+      />
+    }
+  </section>
+
+  @if (store.selected(); as appointment) {
+    <pm-appointment-detail [appointment]="appointment" (closed)="closeDetail()" />
+  }
+</div>

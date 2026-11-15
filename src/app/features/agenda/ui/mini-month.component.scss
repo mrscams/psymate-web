@@ -1,0 +1,102 @@
+// Mini-mois de la maquette 15 : carte blanche, rayon 12, 12 px 14 px ; en-tête 13 px / 600 ;
+// initiales 11 px en text-disabled ; chiffres 12 px JetBrains Mono, 4 px de marge verticale.
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font: 600 13px/1.4 var(--font-ui);
+}
+
+.arrows {
+  display: inline-flex;
+  gap: 4px;
+
+  button {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-secondary);
+    font: inherit;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--surface-sunken);
+    }
+  }
+}
+
+.weekdays,
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+  text-align: center;
+}
+
+.weekdays {
+  font-size: 11px;
+  color: var(--text-disabled);
+}
+
+.day {
+  padding: 4px 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-primary);
+  font: 400 12px/1.4 var(--font-mono);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-sunken);
+  }
+
+  // Jours des mois voisins et dimanches : la maquette les met en border-strong (1,8:1) et
+  // text-disabled (3:1) ; ce sont des boutons de 12 px, text-secondary (6,3:1) les garde lisibles.
+  &.outside,
+  &.sunday {
+    color: var(--text-secondary);
+  }
+
+  // Semaine affichée : teinte primaire continue, arrondie aux deux bouts, texte primary-hover 500.
+  &.in-range {
+    border-radius: 0;
+    background: var(--primary-tint);
+    color: var(--primary-hover);
+    font-weight: 500;
+
+    &.range-start {
+      border-radius: 6px 0 0 6px;
+    }
+
+    &.range-end {
+      border-radius: 0 6px 6px 0;
+    }
+
+    &.range-start.range-end {
+      border-radius: 6px;
+    }
+  }
+
+  // Aujourd'hui : fond text-primary (#1E2633), chiffre blanc (surface-raised).
+  &.today {
+    border-radius: 6px;
+    background: var(--text-primary);
+    color: var(--surface-raised);
+    font-weight: 500;
+  }
+}

@@ -30,6 +30,13 @@ export const routes: Routes = [
     canActivate: [authGuard, statusGuard],
     loadChildren: () => import('./features/patient-shell').then((m) => m.PATIENT_SHELL_ROUTES),
   },
+  // Agenda (fiches 15, 15b ; hors V1 selon G Q25, rendu repris le 15 novembre 2026 sans API) :
+  // la vue et sa date dans la requête, le rendez-vous ouvert dans /agenda/rdv/:id.
+  {
+    path: 'agenda',
+    canActivate: [authGuard, statusGuard],
+    loadChildren: () => import('./features/agenda').then((m) => m.AGENDA_ROUTES),
+  },
   // Mon compte (fiche 00 §3) : dossier professionnel (M1-15), préférences (M1-16)…
   {
     path: 'mon-compte',

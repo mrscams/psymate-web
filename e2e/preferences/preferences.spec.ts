@@ -136,7 +136,7 @@ test('coach nouvellement inscrit : « client » et type médicament masqué sans
   await expectNoAxeViolations(page);
 });
 
-test('clé inconnue dans le PATCH : ignorée, 200, les 9 clés renvoyées', async ({
+test('clé inconnue dans le PATCH : ignorée, 200, les clés connues renvoyées', async ({
   page,
   request,
 }) => {
@@ -147,8 +147,10 @@ test('clé inconnue dans le PATCH : ignorée, 200, les 9 clés renvoyées', asyn
   });
   expect(response.status(), await response.text()).toBe(200);
   const body = (await response.json()) as Record<string, unknown>;
-  expect(Object.keys(body).sort()).toEqual(
-    [
+  // Les neuf clés du contrat épinglé, au moins : l'API (main) en ajoute déjà pour l'agenda
+  // (`agenda.*`), que ce frontend ne lit pas encore.
+  expect(Object.keys(body)).toEqual(
+    expect.arrayContaining([
       'entries.defaultVisibility',
       'entryTypes.medicationVisible',
       'locale',
@@ -158,7 +160,7 @@ test('clé inconnue dans le PATCH : ignorée, 200, les 9 clés renvoyées', asyn
       'theme',
       'timeline.groupBy',
       'vocabulary.subjectLabel',
-    ].sort(),
+    ]),
   );
   expect(body['overview.window']).toBe('12m');
   expect('cleInconnue' in body).toBe(false);
