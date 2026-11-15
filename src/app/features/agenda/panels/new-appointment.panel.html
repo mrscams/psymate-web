@@ -1,0 +1,233 @@
+<pm-side-panel [title]="title" [subtitle]="subtitle">
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate [id]="ids.patient + '-form'">
+    <!-- Patient : carte préremplie, recherche, ligne de rythme. -->
+    <section class="section">
+      <label class="label" [for]="ids.patient" i18n="Section patient du panneau@@agenda.new.patient"
+        >Patient</label
+      >
+      @if (data.patient; as patient) {
+        <div class="patient-card">
+          <span class="avatar" aria-hidden="true">{{ patientInitials() }}</span>
+          <div class="who">
+            <span class="name">{{ patient.displayName }}</span>
+            <span class="meta">{{ patientMeta() }}</span>
+          </div>
+          <button
+            type="button"
+            class="change"
+            (click)="changePatient()"
+            i18n="Bouton Changer de patient@@agenda.new.change"
+          >
+            Changer
+          </button>
+        </div>
+      }
+      <input
+        #search
+        [id]="ids.patient"
+        type="search"
+        class="search"
+        [placeholder]="searchPlaceholder"
+        autocomplete="off"
+      />
+      @if (rhythm(); as rhythm) {
+        <span class="rhythm" [class.ok]="rhythm.ok" [class.warn]="!rhythm.ok">
+          @if (rhythm.ok) {
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          } @else {
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M8 2.5 1.8 13.5h12.4L8 2.5zM8 7v3M8 12h.01" />
+            </svg>
+          }
+          {{ rhythm.text }}
+        </span>
+      }
+    </section>
+
+    <!-- Créneau : date, début, durée ; fin et voisinage recalculés. -->
+    <section class="section">
+      <span class="label" i18n="Section créneau du panneau@@agenda.new.slot">Créneau</span>
+      <div class="slot">
+        <div class="field">
+          <label [for]="ids.date" i18n="Champ date du créneau@@agenda.new.date">Date</label>
+          <pm-date-field [inputId]="ids.date" formControlName="date" />
+        </div>
+        <div class="field">
+          <label [for]="ids.start" i18n="Champ heure de début@@agenda.new.start">Début</label>
+          <input
+            [id]="ids.start"
+            type="text"
+            class="mono"
+            formControlName="start"
+            inputmode="numeric"
+            placeholder="10:00"
+            maxlength="5"
+          />
+        </div>
+        <div class="field">
+          <label [for]="ids.duration" i18n="Champ durée@@agenda.new.duration">Durée</label>
+          <select [id]="ids.duration" formControlName="duration">
+            @for (minutes of durations; track minutes) {
+              <option [ngValue]="minutes">{{ minutes }} min</option>
+            }
+          </select>
+        </div>
+      </div>
+      <span class="hint" aria-live="polite">
+        <ng-container i18n="Heure de fin du créneau@@agenda.new.endsAt"
+          >Se termine à <span class="mono dark">{{ endLabel() }}</span></ng-container
+        >
+        · {{ neighborLabel() }}.
+      </span>
+    </section>
+
+    <!-- Modalité : trois segments. -->
+    <section class="section">
+      <span
+        class="label"
+        id="agenda-new-modality"
+        i18n="Section modalité du panneau@@agenda.new.modality"
+        >Modalité</span
+      >
+      <div role="group" aria-labelledby="agenda-new-modality" class="segments">
+        @for (modality of modalities; track modality) {
+          <button
+            type="button"
+            [class]="'segment ' + modality"
+            [attr.aria-pressed]="isModality(modality)"
+            (click)="setModality(modality)"
+          >
+            <span class="dot" aria-hidden="true"></span>{{ modalityTitle(modality) }}
+          </button>
+        }
+      </div>
+      <span class="hint">{{ modalityHint() }}</span>
+    </section>
+
+    <!-- Répéter : rythme, puis nombre ou date de fin. -->
+    <section class="section">
+      <label class="label" [for]="ids.repeat" i18n="Section répéter du panneau@@agenda.new.repeat"
+        >Répéter</label
+      >
+      <div class="repeat">
+        <select [id]="ids.repeat" formControlName="repeat">
+          <option [ngValue]="0" i18n="Option de récurrence@@agenda.new.repeat.none">
+            Ne pas répéter
+          </option>
+          <option [ngValue]="1" i18n="Option de récurrence@@agenda.new.repeat.weekly">
+            Toutes les semaines
+          </option>
+          <option [ngValue]="2" i18n="Option de récurrence@@agenda.new.repeat.biweekly">
+            Toutes les 2 semaines
+          </option>
+          <option [ngValue]="4" i18n="Option de récurrence@@agenda.new.repeat.monthly">
+            Toutes les 4 semaines
+          </option>
+        </select>
+        @if (repeating()) {
+          <select [id]="ids.count" formControlName="count" [attr.aria-label]="countAriaLabel">
+            <option value="4">{{ countLabel(4) }}</option>
+            <option value="8">{{ countLabel(8) }}</option>
+            <option value="until" i18n="Option de fin de série@@agenda.new.untilOption">
+              Jusqu'à une date…
+            </option>
+          </select>
+        }
+      </div>
+      @if (untilChosen()) {
+        <div class="field">
+          <label [for]="ids.until" i18n="Champ date de fin de série@@agenda.new.until"
+            >Jusqu'au</label
+          >
+          <pm-date-field
+            [inputId]="ids.until"
+            formControlName="until"
+            [min]="form.controls.date.value"
+          />
+        </div>
+      }
+      @if (repeating()) {
+        <span class="hint" i18n="Aide sur les occurrences@@agenda.new.repeatHint"
+          >Chaque occurrence est un rendez-vous distinct ; vous pourrez en déplacer une sans toucher
+          aux autres.</span
+        >
+      }
+    </section>
+
+    <!-- Note de planification. -->
+    <div class="section">
+      <label class="label" [for]="ids.note">
+        <ng-container i18n="Champ note de planification du panneau@@agenda.new.note"
+          >Note de planification</ng-container
+        >
+        <span class="never" i18n="Précision : jamais envoyée à Google@@agenda.new.noteNever"
+          >(jamais envoyée à Google)</span
+        >
+      </label>
+      <textarea
+        [id]="ids.note"
+        rows="2"
+        formControlName="note"
+        [placeholder]="notePlaceholder"
+      ></textarea>
+    </div>
+
+    <!-- Ce qui part vers Google. -->
+    <section class="google" [attr.aria-label]="googleLabel" aria-live="polite">
+      <span class="google-title">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M20 6 9 17l-5-5" />
+        </svg>
+        <ng-container i18n="Titre du bloc Google du panneau@@agenda.new.google.title"
+          >Sera copié dans Google Agenda « PsyMate »</ng-container
+        >
+      </span>
+      <div class="preview" [class]="'preview ' + form.controls.modality.value">
+        <span class="bar" aria-hidden="true"></span>
+        <span class="preview-text">
+          <span class="mono">{{ googleSummary() }}</span>
+          <span>{{ googleLine() }}</span>
+        </span>
+      </div>
+      <span>
+        <ng-container i18n="Niveau de détail Google@@agenda.new.google.detail"
+          >Niveau de détail : initiales seulement.</ng-container
+        >
+        <a
+          [routerLink]="preferencesPath"
+          i18n="Lien vers les préférences depuis le panneau@@agenda.new.google.settings"
+          >Modifier dans les préférences</a
+        >
+      </span>
+    </section>
+
+    <!-- Avertissement de conflit avec un bloc Google. -->
+    <div aria-live="polite">
+      @if (conflict(); as text) {
+        <div class="warning">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path d="M8 2.5 1.8 13.5h12.4L8 2.5zM8 7v3M8 12h.01" />
+          </svg>
+          <span>{{ text }}</span>
+        </div>
+      }
+    </div>
+  </form>
+
+  <ng-container pmPanelFooter>
+    <button type="submit" class="submit" [attr.form]="ids.patient + '-form'">
+      {{ submitLabel() }}
+    </button>
+    <label class="confirm">
+      <input type="checkbox" [formControl]="form.controls.toConfirm" />
+      {{ confirmLabel }}
+    </label>
+    <span class="spacer"></span>
+    <button type="button" class="cancel" (click)="cancel()">
+      <ng-container i18n="Bouton Annuler du panneau@@agenda.new.cancel">Annuler</ng-container
+      >{{ ' ' }}<kbd>Échap</kbd>
+    </button>
+  </ng-container>
+</pm-side-panel>

@@ -1,0 +1,187 @@
+// Vue Mois : même carte que la grille semaine ; cases de 7 colonnes, 112 px de haut au moins.
+:host {
+  display: block;
+  overflow: hidden;
+  min-width: 672px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+}
+
+.weekdays,
+.cells {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.weekdays {
+  border-bottom: 1px solid var(--border-subtle);
+
+  div {
+    padding: 8px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+
+    & + div {
+      border-left: 1px solid var(--surface-sunken);
+    }
+  }
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 112px;
+  padding: 6px;
+  border-top: 1px solid var(--surface-sunken);
+  border-left: 1px solid var(--surface-sunken);
+
+  &:nth-child(7n + 1) {
+    border-left: 0;
+  }
+
+  &:nth-child(-n + 7) {
+    border-top: 0;
+  }
+
+  &.outside .number {
+    color: var(--text-secondary);
+  }
+
+  &.sunday {
+    background: repeating-linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--surface-ground) 55%, var(--surface-raised)) 0 8px,
+      var(--surface-raised) 8px 16px
+    );
+
+    .number {
+      color: var(--text-secondary);
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.number {
+  align-self: flex-start;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-primary);
+  font: 600 13px/24px var(--font-mono);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-sunken);
+  }
+
+  .today & {
+    background: var(--text-primary);
+    color: var(--surface-raised);
+  }
+}
+
+// Même langage que les événements de la grille : teinte + barre gauche de la modalité.
+.chip {
+  display: flex;
+  gap: 6px;
+  overflow: hidden;
+  padding: 2px 6px;
+  border-left: 3px solid var(--entry-session);
+  border-radius: 4px;
+  background: var(--success-bg);
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--text-primary);
+  text-decoration: none;
+  white-space: nowrap;
+
+  .time {
+    flex: none;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+  }
+
+  .who {
+    overflow: hidden;
+    font-weight: 600;
+    text-overflow: ellipsis;
+  }
+
+  &.video {
+    border-left-color: var(--primary);
+    background: var(--primary-tint);
+  }
+
+  &.phone {
+    border-left-color: var(--entry-note);
+    background: var(--surface-ground);
+  }
+
+  &.tentative {
+    border: 1px dashed var(--entry-session);
+    border-left: 3px solid var(--entry-session);
+    background: var(--surface-raised);
+  }
+
+  &.selected {
+    background: var(--entry-session);
+    color: var(--surface-raised);
+
+    .time {
+      color: var(--success-bg);
+    }
+
+    &.video {
+      background: var(--primary);
+
+      .time {
+        color: var(--primary-tint);
+      }
+    }
+
+    &.phone {
+      background: var(--entry-note);
+
+      .time {
+        color: var(--surface-ground);
+      }
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+  }
+}
+
+.more {
+  align-self: flex-start;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font: 500 11px/1.4 var(--font-ui);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+}

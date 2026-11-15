@@ -1,0 +1,137 @@
+@let item = appointment();
+<div class="head">
+  <div class="kicker-row">
+    <span class="kicker">{{ kicker() }}</span>
+    <button type="button" class="close" [attr.aria-label]="closeLabel" (click)="closed.emit()">
+      ×
+    </button>
+  </div>
+  <div class="patient">
+    <span class="avatar" aria-hidden="true">{{ initials() }}</span>
+    <div class="identity">
+      <a class="name" [routerLink]="patientLink()">{{ item.patient.displayName }}</a>
+      <span class="meta">
+        {{ patientMeta() }}
+        @if (item.patient.flag; as flag) {
+          · <span class="flag">{{ flag }}</span>
+        }
+      </span>
+    </div>
+  </div>
+  <div class="when">
+    {{ dateLabel() }} · <span class="mono">{{ timeLabel() }}</span>
+  </div>
+  <div class="facts">
+    @if (item.place; as place) {
+      <span>{{ place }}</span>
+    }
+    <span>{{ sessionLabel() }}</span>
+    <span>{{ rhythmLabel() }}</span>
+  </div>
+</div>
+
+<div class="body">
+  <!-- Préparer : dernière séance, objectif, ce qui s'est passé depuis. -->
+  <section class="block">
+    <h2 i18n="Titre du bloc Préparer du détail@@agenda.detail.prepare">Préparer</h2>
+    <p class="prepare">
+      <ng-container i18n="Phrase Préparer du détail@@agenda.detail.prepareText"
+        >Dernière séance le <strong>{{ lastSession() }}</strong> — objectif fixé :
+        {{ item.preparation.objective }}. Depuis :
+        <strong class="feelings">{{ feelingsLabel() }}</strong> ({{
+          item.preparation.feelingValues
+        }}) et <strong>{{ eventsLabel() }}</strong> non commenté ({{
+          item.preparation.eventLabel
+        }}).</ng-container
+      >
+    </p>
+    <div class="links">
+      <a
+        class="btn"
+        [routerLink]="patientLink().concat('overview')"
+        i18n="Lien du détail vers la vue d'ensemble@@agenda.detail.overview"
+        >Vue d'ensemble</a
+      >
+      <a
+        class="btn"
+        [routerLink]="patientLink().concat('timeline')"
+        i18n="Lien du détail vers la timeline@@agenda.detail.timeline"
+        >Timeline</a
+      >
+    </div>
+  </section>
+
+  <!-- Note de planification : visible seulement ici. -->
+  <div class="block">
+    <label [for]="noteId" class="label" i18n="Champ note de planification@@agenda.detail.note"
+      >Note de planification</label
+    >
+    <textarea [id]="noteId" rows="2" [value]="item.planningNote"></textarea>
+    <span class="hint" i18n="Aide de la note de planification@@agenda.detail.noteHint"
+      >Visible seulement ici ; jamais envoyée à Google.</span
+    >
+  </div>
+
+  <!-- Bloc Google : ce qui est dans Google, historique. -->
+  @if (item.google; as google) {
+    <div class="google">
+      <span class="google-title">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M20 6 9 17l-5-5" />
+        </svg>
+        <ng-container i18n="Titre du bloc Google du détail@@agenda.detail.google.title"
+          >Dans Google Agenda « PsyMate » :</ng-container
+        >
+        <span class="mono summary">{{ google.summary }}</span>
+      </span>
+      <span>{{ googleHistory() }}</span>
+    </div>
+  }
+
+  <!-- Rappel SMS : hors V1, désactivé. -->
+  <label class="reminder">
+    <input type="checkbox" role="switch" disabled />
+    <ng-container i18n="Interrupteur de rappel SMS du détail@@agenda.detail.sms"
+      >Rappel SMS à la patiente la veille</ng-container
+    >
+    <span class="hint" i18n="Rappel SMS non activé@@agenda.detail.smsOff">· non activé</span>
+  </label>
+</div>
+
+<div class="foot">
+  <button
+    type="button"
+    class="start"
+    (click)="started.emit(item)"
+    i18n="Bouton principal du détail@@agenda.detail.start"
+  >
+    Démarrer la séance
+  </button>
+  <div class="actions">
+    <button
+      type="button"
+      (click)="moved.emit(item)"
+      i18n="Action Déplacer du détail@@agenda.detail.move"
+    >
+      Déplacer
+    </button>
+    <button
+      type="button"
+      (click)="duplicated.emit(item)"
+      i18n="Action Dupliquer du détail@@agenda.detail.duplicate"
+    >
+      Dupliquer
+    </button>
+    <button
+      type="button"
+      class="danger"
+      (click)="cancelled.emit(item)"
+      i18n="Action Annuler du détail@@agenda.detail.cancel"
+    >
+      Annuler
+    </button>
+  </div>
+  <span class="help" i18n="Aide clavier du détail@@agenda.detail.help"
+    >Glisser le rendez-vous dans la grille pour le déplacer · <kbd>Échap</kbd> ferme le détail</span
+  >
+</div>

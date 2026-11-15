@@ -1,0 +1,394 @@
+// Panneau « Nouveau rendez-vous » (maquette 15b) : sections espacées de 18 px, intitulés 12 px / 600
+// en capitales espacées, champs de 42 px à rayon 10, segments de 44 px, bloc Google sur fond ground,
+// avertissement ambre. Le cadre (en-tête, corps défilant, pied) est pm-side-panel.
+:host {
+  display: block;
+  height: 100%;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font: 600 12px/1.4 var(--font-ui);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.never {
+  margin-left: 4px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-secondary);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.dark {
+  color: var(--text-primary);
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+// Carte du patient prérempli : bordure 2 px primaire sur teinte primaire.
+.patient-card {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+  background: var(--primary-tint);
+
+  .avatar {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--surface-raised);
+    color: var(--primary-hover);
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .who {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+
+  .name {
+    font-weight: 600;
+  }
+
+  .meta {
+    font-size: 12px;
+    color: var(--primary-hover);
+  }
+
+  .change {
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--surface-raised);
+    color: var(--text-primary);
+    font: 400 12px/1 var(--font-ui);
+    cursor: pointer;
+  }
+}
+
+input,
+select,
+textarea {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: 400 14px/1.4 var(--font-ui);
+}
+
+input,
+select {
+  height: 42px;
+  padding: 0 12px;
+}
+
+.search {
+  height: 40px;
+}
+
+select {
+  padding: 0 10px;
+}
+
+textarea {
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+input.mono {
+  font-family: var(--font-mono);
+}
+
+.rhythm {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 12px;
+
+  svg {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &.ok {
+    color: var(--success);
+  }
+
+  &.warn {
+    color: var(--warning);
+  }
+}
+
+.slot,
+.repeat {
+  display: grid;
+  gap: 10px;
+}
+
+// La date (pm-date-field, jj/mm/aaaa + calendrier) a besoin de plus de place que l'heure et la durée.
+.slot {
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.repeat {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 13px;
+    font-weight: 500;
+  }
+}
+
+// Segments de modalité : 44 px, rayon 10 ; actif = bordure 2 px et teinte de la modalité.
+.segments {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.segment {
+  --tone: var(--entry-session);
+  --tint: var(--success-bg);
+
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: 400 13px/1 var(--font-ui);
+  cursor: pointer;
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: var(--tone);
+  }
+
+  &.video {
+    --tone: var(--primary);
+    --tint: var(--primary-tint);
+  }
+
+  &.phone {
+    --tone: var(--entry-note);
+    --tint: var(--surface-ground);
+  }
+
+  &[aria-pressed='true'] {
+    border: 2px solid var(--tone);
+    background: var(--tint);
+    font-weight: 600;
+  }
+}
+
+// Bloc « Sera copié dans Google Agenda » : fond ground, aperçu sur carte blanche avec barre de modalité.
+.google {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--surface-ground);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+
+  // Lien dans un texte gris : souligné (axe link-in-text-block ; la maquette ne le soulignait pas).
+  a {
+    margin-left: 4px;
+    color: var(--primary);
+    text-decoration: underline;
+  }
+}
+
+.google-title {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-weight: 600;
+  color: var(--text-primary);
+
+  svg {
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: var(--success);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+.preview {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-raised);
+
+  .bar {
+    width: 4px;
+    height: 28px;
+    border-radius: 2px;
+    background: var(--entry-session);
+  }
+
+  &.video .bar {
+    background: var(--primary);
+  }
+
+  &.phone .bar {
+    background: var(--entry-note);
+  }
+
+  .preview-text {
+    display: flex;
+    flex-direction: column;
+
+    .mono {
+      font-size: 13px;
+      color: var(--text-primary);
+    }
+  }
+}
+
+.warning {
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--warning-bg);
+  color: var(--warning);
+  font-size: 12px;
+  line-height: 1.5;
+
+  svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+}
+
+// Pied (dans pm-side-panel) : bouton principal, case « À confirmer », Annuler à droite.
+.submit {
+  height: 42px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--primary);
+  color: var(--primary-on);
+  font: 600 14px/1 var(--font-ui);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--primary-hover);
+  }
+}
+
+.confirm {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+
+  input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--primary);
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.cancel {
+  height: 42px;
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font: 400 14px/1 var(--font-ui);
+  cursor: pointer;
+
+  kbd {
+    margin-left: 4px;
+    font: 400 11px/1 var(--font-mono);
+  }
+}
+
+@media (max-width: 600px) {
+  .slot,
+  .segments {
+    grid-template-columns: 1fr;
+  }
+}
