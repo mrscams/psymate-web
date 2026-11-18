@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-18T20:37:18.479Z",
+  "task": "M13-04",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Contrat 0.14.0 épinglé (client régénéré) ; agenda : rendez-vous invité affiché par son nom ou « Invité purgé », sans dossier ; déplacer et annuler inchangés",
+  "next": "Création et rattachement d'invité à planifier (J5) ; M13-06 peut partir",
+  "pr": "https://github.com/mrscams/psymate-web/pull/97",
+  "branch": "claude/m13-04-contrat-0-14-3598ce",
+  "checkout": "ux-s9-timeline-b36a59"
+}
