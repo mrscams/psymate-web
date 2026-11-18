@@ -17907,6 +17907,168 @@
         </context-group>
         <note priority="1" from="description">Titre de l&apos;onglet 4 du dossier</note>
       </trans-unit>
+      <trans-unit id="profile360.category.history" datatype="html">
+        <source>Histoire et souvenirs</source>
+        <target state="translated">History and memories</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <note priority="1" from="description">Rubrique du Profil 360</note>
+      </trans-unit>
+      <trans-unit id="profile360.category.history.help" datatype="html">
+        <source>Les périodes de vie, les tournants et les souvenirs qui comptent</source>
+        <target state="translated">Life periods, turning points and memories that matter</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">Phrase d&apos;aide de la rubrique Histoire et souvenirs</note>
+      </trans-unit>
+      <trans-unit id="profile360.category.family" datatype="html">
+        <source>Famille et entourage</source>
+        <target state="translated">Family and close ones</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Rubrique du Profil 360</note>
+      </trans-unit>
+      <trans-unit id="profile360.category.family.help" datatype="html">
+        <source>Les personnes qui comptent</source>
+        <target state="translated">The people who matter</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Phrase d&apos;aide de la rubrique Famille et entourage</note>
+      </trans-unit>
+      <trans-unit id="profile360.category.health" datatype="html">
+        <source>Santé et antécédents</source>
+        <target state="translated">Health and history</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">Rubrique du Profil 360</note>
+      </trans-unit>
+      <trans-unit id="profile360.category.health.help" datatype="html">
+        <source>Traitements, antécédents, suivis</source>
+        <target state="translated">Treatments, medical history, care</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Phrase d&apos;aide de la rubrique Santé et antécédents</note>
+      </trans-unit>
+      <trans-unit id="profile360.category.values_goals" datatype="html">
+        <source>Valeurs et projets</source>
+        <target state="translated">Values and goals</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <note priority="1" from="description">Rubrique du Profil 360</note>
+      </trans-unit>
+      <trans-unit id="profile360.category.values_goals.help" datatype="html">
+        <source>Ce vers quoi la personne veut aller</source>
+        <target state="translated">Where the person wants to go</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <note priority="1" from="description">Phrase d&apos;aide de la rubrique Valeurs et projets</note>
+      </trans-unit>
+      <trans-unit id="profile360.count.one" datatype="html">
+        <source>1 information</source>
+        <target state="translated">1 item</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <note priority="1" from="description">Compteur d&apos;une rubrique, singulier</note>
+      </trans-unit>
+      <trans-unit id="profile360.count.many" datatype="html">
+        <source><x id="count" equiv-text="count"/> informations</source>
+        <target state="translated"><x id="count" equiv-text="count"/> items</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+        <note priority="1" from="description">Compteur d&apos;une rubrique, pluriel (0 ou plus de 1)</note>
+      </trans-unit>
+      <trans-unit id="profile360.menu.label" datatype="html">
+        <source>Rubriques du profil</source>
+        <target state="translated">Profile sections</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/ui/profile-menu.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <note priority="1" from="description">Nom du menu des rubriques du Profil 360</note>
+      </trans-unit>
+      <trans-unit id="profile360.menu.title" datatype="html">
+        <source> Rubriques </source>
+        <target state="translated"> Sections </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/ui/profile-menu.component.ts</context>
+          <context context-type="linenumber">31,36</context>
+        </context-group>
+        <note priority="1" from="description">Titre du menu des rubriques</note>
+      </trans-unit>
+      <trans-unit id="profile360.menu.item" datatype="html">
+        <source><x id="label" equiv-text="label"/> <x id="count" equiv-text="count"/></source>
+        <target state="translated"><x id="label" equiv-text="label"/> <x id="count" equiv-text="count"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/ui/profile-menu.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <note priority="1" from="description">Nom lu d&apos;une rubrique du menu (libellé, nombre d&apos;informations)</note>
+      </trans-unit>
+      <trans-unit id="profile360.rubric.empty" datatype="html">
+        <source>Rien dans cette rubrique pour l&apos;instant</source>
+        <target state="translated">Nothing in this section yet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/ui/profile-rubric.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">État vide d&apos;une rubrique du Profil 360</note>
+      </trans-unit>
+      <trans-unit id="profile360.error.title" datatype="html">
+        <source>Le profil n&apos;a pas pu être chargé</source>
+        <target state="translated">The profile could not be loaded</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">État erreur du Profil 360</note>
+      </trans-unit>
+      <trans-unit id="profile360.error.retry" datatype="html">
+        <source>Réessayer</source>
+        <target state="translated">Retry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;état erreur du Profil 360</note>
+      </trans-unit>
+      <trans-unit id="profile360.empty.title" datatype="html">
+        <source>Aucune information dans le profil</source>
+        <target state="translated">No information in the profile</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <note priority="1" from="description">État vide du Profil 360 (aucune information)</note>
+      </trans-unit>
+      <trans-unit id="profile360.empty.message" datatype="html">
+        <source>L&apos;histoire, la famille, la santé et les valeurs de la personne se rangent ici.</source>
+        <target state="translated">The person&apos;s history, family, health and values are kept here.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">Phrase de l&apos;état vide du Profil 360</note>
+      </trans-unit>
       <trans-unit id="overview.situations.empty.title" datatype="html">
         <source>Aucune situation en cours</source>
         <target state="translated">No ongoing situation</target>

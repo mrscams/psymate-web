@@ -1,0 +1,66 @@
+<section class="card" [attr.aria-labelledby]="'profile360-rubric-' + category()">
+  <div class="dhead">
+    <span class="isq"><pm-profile-icon [icon]="meta().icon" [size]="20" /></span>
+    <div class="txt" aria-live="polite">
+      <h3 [id]="'profile360-rubric-' + category()">{{ meta().label }}</h3>
+      <p>{{ meta().help }} · {{ count() }}</p>
+    </div>
+  </div>
+
+  @if (items().length === 0) {
+    <pm-state
+      kind="empty"
+      compact
+      title="Rien dans cette rubrique pour l'instant"
+      i18n-title="État vide d'une rubrique du Profil 360@@profile360.rubric.empty"
+    />
+  } @else {
+    @switch (category()) {
+      @case ('history') {
+        <ol class="rows tl">
+          @for (item of items(); track item.id) {
+            <li class="item">
+              <span class="k">{{ item.periodLabel ?? '' }}</span>
+              <span class="dot" aria-hidden="true"></span>
+              <span class="body">
+                <span class="t">{{ item.title }}</span>
+                @if (item.detail) {
+                  <span class="d">{{ item.detail }}</span>
+                }
+              </span>
+            </li>
+          }
+        </ol>
+      }
+      @case ('family') {
+        <ul class="rows people">
+          @for (item of items(); track item.id) {
+            <li class="item">
+              <span class="av" aria-hidden="true">{{ initialOf(item.title) }}</span>
+              <span class="body">
+                <span class="t">{{ item.title }}</span>
+                @if (item.detail) {
+                  <span class="d">{{ item.detail }}</span>
+                }
+              </span>
+            </li>
+          }
+        </ul>
+      }
+      @default {
+        <ul class="rows std">
+          @for (item of items(); track item.id) {
+            <li class="item">
+              <span class="body">
+                <span class="t">{{ item.title }}</span>
+                @if (item.detail) {
+                  <span class="d">{{ item.detail }}</span>
+                }
+              </span>
+            </li>
+          }
+        </ul>
+      }
+    }
+  }
+</section>
