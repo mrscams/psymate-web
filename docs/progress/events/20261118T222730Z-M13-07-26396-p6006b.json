@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-18T22:27:30.639Z",
+  "task": "M13-07",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR #99 fusionnée en squash (b830449) ; jalon M13 Profil 360 (web) terminé",
+  "next": "Capture .png de la fiche 30 ; suites listées en J5",
+  "pr": "https://github.com/mrscams/psymate-web/pull/99",
+  "branch": "suivi-m13-07-fusionnee",
+  "checkout": "psymate-web"
+}
