@@ -77,12 +77,12 @@ import {
   templateUrl: './patient-shell.page.html',
   styleUrl: './patient-shell.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // UX-S5, UX-S6, UX-S9 : sur les onglets Séance, Vue d'ensemble et Timeline le <main> n'a ni borne
-  // ni marge (data.contentWidth full) ; la page pose alors ses marges intérieures et la barre de
-  // séance perd ses marges négatives.
+  // UX-S5, UX-S6, UX-S9, M13-05 : sur les onglets Séance, Vue d'ensemble, Timeline et Profil 360 le
+  // <main> n'a ni borne ni marge (data.contentWidth full) ; la page pose alors ses marges
+  // intérieures et la barre de séance perd ses marges négatives.
   host: {
     '[class.full-bleed]':
-      "activeTab() === 'session' || activeTab() === 'overview' || activeTab() === 'timeline'",
+      "activeTab() === 'session' || activeTab() === 'overview' || activeTab() === 'timeline' || activeTab() === 'profile'",
   },
 })
 export class PatientShellPage {

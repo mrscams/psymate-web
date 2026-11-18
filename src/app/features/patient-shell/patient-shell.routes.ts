@@ -3,8 +3,8 @@ import { Routes } from '@angular/router';
 /**
  * Montées sous /patients/:id par app.routes.ts (authGuard, statusGuard) : la page patient et ses
  * onglets (B2), chacun chargé à la demande avec son data.tab : overview (M4-05), session (UX-S3 :
- * l'onglet « Séance », tant qu'une séance est ouverte), timeline (M3-02), graph (M2-06) et search
- * (M4-08).
+ * l'onglet « Séance », tant qu'une séance est ouverte), timeline (M3-02), graph (M2-06), profile
+ * (M13-05, fiche 30 : l'onglet 4 « Profil 360 », features/profile360) et search (M4-08).
  * /patients/:id/overview (destination de M1-06 après création) renvoie sur l'onglet 1,
  * /patients/:id, celui que l'en-tête désigne.
  * La page est chargée à la demande : app.component importe l'index (aide des raccourcis) sans
@@ -45,6 +45,13 @@ export const PATIENT_SHELL_ROUTES: Routes = [
         loadComponent: () => import('../graph').then((m) => m.loadGraphPage()),
         data: { tab: 'graph' },
         title: $localize`:Titre d'onglet du dossier@@patientShell.graph.pageTitle:Graphe · PsyMate`,
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('../profile360').then((m) => m.loadProfile360Page()),
+        // M13-05 (G Q52) : le Profil 360 en pleine largeur (menu des rubriques et contenu, fiche 30).
+        data: { tab: 'profile', contentWidth: 'full' },
+        title: $localize`:Titre d'onglet du dossier@@patientShell.profile.pageTitle:Profil 360 · PsyMate`,
       },
       {
         path: 'search',

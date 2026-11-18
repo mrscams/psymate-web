@@ -6,6 +6,8 @@ Mis à jour le 11 novembre 2026 (UX-F1, après l'audit UX du 9 novembre) : les m
 
 Mis à jour le 15 novembre 2026 : l'agenda (fiches 15, 15b) entre en V1 (G Q25 amendée). Les écrans sont rendus sur FullCalendar 6 à l'identique des maquettes (PR #86), sur des données de démonstration ; l'API suit (jalon M11 de psymate-api, module `agenda`) ; la synchronisation Google reste hors V1. Les écarts sont dans la fiche 15, « Écarts avec la maquette ».
 
+Mis à jour le 18 novembre 2026 : fiche 30 « Profil 360 » (quatrième onglet du dossier, feature `profile360`, API jalon M13 de psymate-api, contrat `contract-v0.14.0`) ; décisions G Q52 à Q57, plan `docs/J-plan-profil-360-web.md`.
+
 Chaque écran est livré en trois fichiers du même nom :
 
 | Fichier | Usage par l'agent |
@@ -57,6 +59,12 @@ Ajoutés le 2 novembre 2026 (maquettes HTML écrites à la main depuis B, C et l
 
 | 00 | Composants partagés (barre d'application, en-tête patient, navigation Mon compte, layout public, barre admin, panneau latéral, composant « état ») — pas de maquette propre | B2, B7 | — | `shared`, `core` (M1-07, M0-07, M7-07) |
 
+Ajouté le 18 novembre 2026 (maquette `.html` validée par l'utilisateur, `.png` à produire une fois l'écran livré) :
+
+| N° | Écran | Doc B | Module(s) backend | Feature Angular |
+|---|---|---|---|---|
+| 30 | Profil 360 (quatrième onglet du dossier, touche `4` ; panneau « Ajouter au profil ») | — | `patients` (psymate-api M13, `contract-v0.14.0`, routes `/api/patients/{id}/profile-items`) | `profile360` (M13-04 à M13-07, C11) |
+
 Encore à faire : déclinaison mobile (après V1). Les sept fiches du 2 novembre n'ont pas de `.png` (la maquette `.html` suffit). Les écarts avec le contrat relevés par ces fiches sont les tâches **M10** de `C-plan.md` C9. Les anciens canevas de `UI/` (timeline, saisie en séance, annuaire) sont remplacés par 03, 05 et 08.
 
 ## Parcours praticien (décision du 25 oct.)
@@ -64,7 +72,7 @@ Encore à faire : déclinaison mobile (après V1). Les sept fiches du 2 novembre
 
 ## Conventions communes
 - Palette et tokens : `Etude-couleurs-Nordique.md`. Aucune couleur en dur (`eslint no-hardcoded-color`).
-- Éléments partagés : barre d'application ; en-tête patient (01/02/04/07/06/16) ; navigation « Mon compte » (10/14/13/17) ; layout public (09/11/12/24/25/26/27) ; barre admin (20/21/22/23) ; panneau latéral `role="dialog"` (06/15b/15). À implémenter une fois dans `shared/ui/*`.
+- Éléments partagés : barre d'application ; en-tête patient (01/02/04/07/06/16/30) ; navigation « Mon compte » (10/14/13/17) ; layout public (09/11/12/24/25/26/27) ; barre admin (20/21/22/23) ; panneau latéral `role="dialog"` (06/15b/15/30). À implémenter une fois dans `shared/ui/*`.
 - Formes par type d'entrée : note rectangle, événement losange, situation barre, ressenti cercle, séance carré arrondi, médicament capsule.
 - Le lavande `#8B7BD6` est réservé aux ressentis ; les couleurs de familles d'émotions servent uniquement aux courbes et pastilles de famille.
 - Préférences par compte (`practitioner.preferences` JSONB) : une seule source de vérité pour les bascules présentes sur plusieurs écrans (`14-preferences-praticien.md`).

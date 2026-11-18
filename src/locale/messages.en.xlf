@@ -2722,6 +2722,15 @@
         </context-group>
         <note priority="1" from="description">Onglet du dossier</note>
       </trans-unit>
+      <trans-unit id="patientHeader.tab.profile" datatype="html">
+        <source>Profil 360</source>
+        <target state="translated">Profile 360</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+        <note priority="1" from="description">Onglet du dossier</note>
+      </trans-unit>
       <trans-unit id="patientHeader.session.last" datatype="html">
         <source>Dernière séance : <x id="last" equiv-text="last"/></source>
         <target state="translated">Last session: <x id="last" equiv-text="last"/></target>
@@ -10345,6 +10354,15 @@
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet du dossier</note>
       </trans-unit>
+      <trans-unit id="patientShell.profile.pageTitle" datatype="html">
+        <source>Profil 360 · PsyMate</source>
+        <target state="translated">Profile 360 · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet du dossier</note>
+      </trans-unit>
       <trans-unit id="patientShell.search.pageTitle" datatype="html">
         <source>Recherche · PsyMate</source>
         <target state="translated">Search · PsyMate</target>
@@ -17879,6 +17897,15 @@
           <context context-type="linenumber">4,8</context>
         </context-group>
         <note priority="1" from="description">Titre de l&apos;onglet 1 du dossier</note>
+      </trans-unit>
+      <trans-unit id="profile360.heading" datatype="html">
+        <source> Profil 360 </source>
+        <target state="translated">Profile 360</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.html</context>
+          <context context-type="linenumber">4,10</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;onglet 4 du dossier</note>
       </trans-unit>
       <trans-unit id="overview.situations.empty.title" datatype="html">
         <source>Aucune situation en cours</source>

@@ -552,6 +552,62 @@ describe('PatientShellPage', () => {
     expect(reflectComponentType(component)?.selector).toBe('pm-overview-page');
   });
 
+  it('onglet 4 : la route profile charge le Profil 360 (features/profile360) à la demande, data.tab gardé, pleine largeur (M13-05, G Q52)', async () => {
+    const route = PATIENT_SHELL_ROUTES[0].children!.find((r) => r.path === 'profile')!;
+    expect(route.data).toEqual({ tab: 'profile', contentWidth: 'full' });
+    expect(route.title).toBe('Profil 360 · PsyMate');
+    const component = await (
+      route.loadComponent as () => Promise<Parameters<typeof reflectComponentType>[0]>
+    )();
+    expect(reflectComponentType(component)?.selector).toBe('pm-profile360-page');
+  });
+
+  it('onglet Profil 360 : aria-current, pleine largeur, ni bloc de saisie ni colonne de contexte, hors séance comme en séance (G Q56)', async () => {
+    const { el, harness } = await render({}, '/patients/p-marie/profile');
+    const router = TestBed.inject(Router);
+    expect(router.url).toBe('/patients/p-marie/profile');
+    const current = el.querySelector('nav.tabs a[aria-current="page"]');
+    expect(current?.getAttribute('href')).toBe('/patients/p-marie/profile');
+    expect(text(current?.querySelector('span'))).toBe('Profil 360');
+    expect(el.querySelector('.pad-main .tab-content pm-profile360-page')).not.toBeNull();
+    expect(el.querySelector('pm-capture-block')).toBeNull();
+    expect(el.querySelector('aside.ctx')).toBeNull();
+    // Le sélecteur de fenêtre n'existe que sur la vue d'ensemble.
+    expect(el.querySelector('.view-toggle')).toBeNull();
+    expect(el.querySelector('pm-patient-shell-page')!.classList.contains('full-bleed')).toBe(true);
+
+    // La touche 1 ramène à la vue d'ensemble (hors séance), la touche 4 au Profil 360.
+    const press = (key: string) =>
+      document.body.dispatchEvent(
+        new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }),
+      );
+    press('1');
+    await settle(harness);
+    expect(router.url).toBe('/patients/p-marie');
+    press('4');
+    await settle(harness);
+    expect(router.url).toBe('/patients/p-marie/profile');
+  });
+
+  it('séance ouverte : la touche 4 quitte l’onglet Séance pour le Profil 360, sous la barre de séance, sans bloc de saisie (G Q56)', async () => {
+    const { el, harness } = await render({ current: vi.fn().mockResolvedValue(openSession()) });
+    const router = TestBed.inject(Router);
+    expect(router.url).toBe('/patients/p-marie/session');
+    expect(el.querySelector('pm-capture-block')).not.toBeNull();
+
+    document.body.dispatchEvent(
+      new KeyboardEvent('keydown', { key: '4', bubbles: true, cancelable: true }),
+    );
+    await settle(harness);
+    expect(router.url).toBe('/patients/p-marie/profile');
+    expect(el.querySelector('pm-session-bar')).not.toBeNull();
+    expect(el.querySelector('.pad-main .tab-content pm-profile360-page')).not.toBeNull();
+    expect(el.querySelector('pm-capture-block')).toBeNull();
+    expect(el.querySelector('aside.ctx')).toBeNull();
+    expect(el.querySelector('.pad-layout')!.classList.contains('in-session')).toBe(false);
+    expect(text(el.querySelector('nav.tabs a[aria-current="page"] span'))).toBe('Profil 360');
+  });
+
   it('éditeur de lien fermé (?link= retiré de l’URL) : écriture notée, les projections se relisent', async () => {
     const { harness } = await render();
     const store = shellStore(harness);

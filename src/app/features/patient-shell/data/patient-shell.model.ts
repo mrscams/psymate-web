@@ -6,15 +6,16 @@ import { EntryType } from '../../../shared/ui';
 /**
  * Les onglets du dossier dont l'état est mémorisé (B2) ; search remplace le contenu de l'onglet ;
  * session est l'onglet « Séance » (UX-S3), affiché à la place de la vue d'ensemble tant qu'une
- * séance est ouverte.
+ * séance est ouverte ; profile est l'onglet 4 « Profil 360 » (fiche 30, G Q52).
  */
-export type ShellTab = 'overview' | 'session' | 'timeline' | 'graph' | 'search';
+export type ShellTab = 'overview' | 'session' | 'timeline' | 'graph' | 'profile' | 'search';
 
 export const SHELL_TABS: readonly ShellTab[] = [
   'overview',
   'session',
   'timeline',
   'graph',
+  'profile',
   'search',
 ];
 

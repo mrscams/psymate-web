@@ -46,9 +46,9 @@
   <p class="sr-only" role="status" aria-live="polite">{{ announcement() }}</p>
   @if (store.patient()) {
     <!-- Colonne de contenu (04b .pad-layout). Le bloc de saisie et la colonne latérale de 340 px
-         n'existent que sur l'onglet Séance (décision du 14 novembre 2026) : Vue d'ensemble, Timeline
-         et Graphe gardent leur page entière, séance ouverte ou non ; seule la barre de séance les
-         coiffe. L'indice de première entrée et l'onglet courant sont toujours là. -->
+         n'existent que sur l'onglet Séance (décision du 14 novembre 2026) : Vue d'ensemble, Timeline,
+         Graphe et Profil 360 (G Q56) gardent leur page entière, séance ouverte ou non ; seule la
+         barre de séance les coiffe. L'indice de première entrée et l'onglet courant sont toujours là. -->
     <div
       class="pad-layout"
       [class.in-session]="onSessionTab()"
