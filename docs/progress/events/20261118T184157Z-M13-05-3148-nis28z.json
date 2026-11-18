@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-18T18:41:57.142Z",
+  "task": "M13-05",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Profil 360 : G9 (Q52 à Q57) et C11, quatrième onglet « Profil 360 » (/patients/:id/profile, touche 4), route profile du dossier et squelette de la feature profile360 ; plan web, fiche 30 et maquette inclus",
+  "next": "M13-06 après fusion de M13-04 et M13-05 ; touche 4 absente de l'aide des raccourcis (core, tâche dédiée)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/96",
+  "branch": "claude/m13-05-profil-360-onglet-86048d",
+  "checkout": "ux-a5-entry-title-c415c2"
+}
