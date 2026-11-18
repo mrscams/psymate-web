@@ -1,0 +1,157 @@
+// Panneau « Ajouter au profil » (maquette 30 `.panel-body`, `.field`, `.two`, `.panel-foot`) :
+// champs espacés de 16 px, intitulés 13 px / 600, saisies de 36 px à rayon 8, Période et Année côte
+// à côte. Le cadre (en-tête, corps défilant, pied, croix) est pm-side-panel.
+:host {
+  display: block;
+  height: 100%;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-message {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-size: 13px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+  }
+}
+
+.opt {
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+input,
+select,
+textarea {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: 400 14px/1.4 var(--font-ui);
+}
+
+input,
+select {
+  height: 36px;
+  padding: 0 10px;
+}
+
+textarea {
+  min-height: 96px;
+  padding: 8px 10px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+input[aria-invalid='true'],
+textarea[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+
+.help {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+// Période et Année (Histoire et souvenirs seulement) : la période large, l'année sur 120 px.
+.two {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px;
+  gap: 12px;
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+}
+
+// Pied : « Retirer du profil » à gauche (texte neutre, jamais rouge), Annuler, bouton principal.
+.spacer {
+  flex: 1 1 auto;
+}
+
+.btn,
+.btn-primary,
+.btn-text {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  border-radius: 8px;
+  font: 500 13px/1 var(--font-ui);
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+  }
+}
+
+.btn {
+  padding: 0 12px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+
+  &:hover:not(:disabled) {
+    border-color: var(--border-strong);
+  }
+}
+
+.btn-primary {
+  padding: 0 14px;
+  border: 0;
+  background: var(--primary);
+  color: var(--primary-on);
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    background: var(--primary-hover);
+  }
+}
+
+.btn-text {
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+
+  &:hover:not(:disabled) {
+    background: var(--surface-ground);
+    color: var(--text-primary);
+  }
+}
+
+@media (max-width: 600px) {
+  .two {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

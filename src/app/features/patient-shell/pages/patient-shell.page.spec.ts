@@ -572,8 +572,11 @@ describe('PatientShellPage', () => {
     expect(el.querySelector('.pad-main .tab-content pm-profile360-page')).not.toBeNull();
     expect(el.querySelector('pm-capture-block')).toBeNull();
     expect(el.querySelector('aside.ctx')).toBeNull();
-    // Le sélecteur de fenêtre n'existe que sur la vue d'ensemble.
-    expect(el.querySelector('.view-toggle')).toBeNull();
+    // Le sélecteur de fenêtre n'existe que sur la vue d'ensemble ; au bout de la ligne des onglets,
+    // « Ajouter au profil » seul (M13-07, G Q54).
+    expect(el.querySelector('.view-toggle pm-overview-window')).toBeNull();
+    expect(el.querySelectorAll('.view-toggle > *')).toHaveLength(1);
+    expect(text(el.querySelector('.view-toggle pm-profile-add a'))).toBe('Ajouter au profil');
     expect(el.querySelector('pm-patient-shell-page')!.classList.contains('full-bleed')).toBe(true);
 
     // La touche 1 ramène à la vue d'ensemble (hors séance), la touche 4 au Profil 360.
@@ -587,6 +590,33 @@ describe('PatientShellPage', () => {
     press('4');
     await settle(harness);
     expect(router.url).toBe('/patients/p-marie/profile');
+  });
+
+  it('« Ajouter au profil » (M13-07) : au bout de la ligne des onglets sur l’onglet Profil 360 seulement, lien ?ajouter=1 qui garde ?rubrique=', async () => {
+    const { el, harness } = await render({}, '/patients/p-marie/profile?rubrique=family');
+    const link = el.querySelector<HTMLAnchorElement>('.tabs-row .view-toggle pm-profile-add a');
+    expect(link?.getAttribute('href')).toBe('/patients/p-marie/profile?rubrique=family&ajouter=1');
+
+    // Vue d'ensemble : le sélecteur de fenêtre, inchangé, et pas de bouton d'ajout.
+    await harness.navigateByUrl('/patients/p-marie');
+    await settle(harness);
+    expect(el.querySelector('.view-toggle pm-overview-window [role="group"]')).not.toBeNull();
+    expect(el.querySelector('pm-profile-add')).toBeNull();
+    // Graphe : ni l'un ni l'autre (la Timeline suit la même règle, activeTab() !== 'profile').
+    await harness.navigateByUrl('/patients/p-marie/graph');
+    await settle(harness);
+    expect(el.querySelector('.view-toggle')).toBeNull();
+    expect(el.querySelector('pm-profile-add')).toBeNull();
+  });
+
+  it('patient archivé (archivedAt) : pas de « Ajouter au profil » sur l’onglet Profil 360 (M13-07)', async () => {
+    const { el } = await render(
+      { patient: vi.fn().mockResolvedValue(shellPatient({ archived: true })) },
+      '/patients/p-marie/profile',
+    );
+    expect(el.querySelector('pm-profile360-page')).not.toBeNull();
+    expect(el.querySelector('pm-profile-add')).toBeNull();
+    expect(el.querySelector('.view-toggle')).toBeNull();
   });
 
   it('séance ouverte : la touche 4 quitte l’onglet Séance pour le Profil 360, sous la barre de séance, sans bloc de saisie (G Q56)', async () => {

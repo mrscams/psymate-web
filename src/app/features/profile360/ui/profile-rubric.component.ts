@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 import { StateComponent } from '../../../shared/ui';
 import {
@@ -19,11 +20,13 @@ import { ProfileIconComponent } from './profile-icon.component';
  * - Famille et entourage : une pastille à la première lettre du titre ;
  * - Santé et antécédents, Valeurs et projets : une ligne par information.
  * Rubrique vide dans un profil non vide : « Rien dans cette rubrique pour l'instant ».
- * Les informations ne sont pas encore activables : le panneau de modification est M13-07.
+ * M13-07 : chaque information est un bouton nommé par son contenu (clic, Entrée) qui ouvre le panneau
+ * en modification (`edit`) ; en lecture seule (patient archivé), un simple élément de liste. Le
+ * titre de la rubrique peut recevoir le focus (après un retrait, l'information n'existe plus).
  */
 @Component({
   selector: 'pm-profile-rubric',
-  imports: [ProfileIconComponent, StateComponent],
+  imports: [NgTemplateOutlet, ProfileIconComponent, StateComponent],
   templateUrl: './profile-rubric.component.html',
   styleUrl: './profile-rubric.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,6 +35,10 @@ export class ProfileRubricComponent {
   readonly category = input.required<ProfileCategory>();
   /** Les informations de la rubrique, dans l'ordre du serveur (jamais retriées ici). */
   readonly items = input.required<readonly ProfileItem[]>();
+  /** Faux en lecture seule (patient archivé) : les informations ne sont pas activables. */
+  readonly editable = input(false);
+  /** Clic ou Entrée sur une information : le panneau s'ouvre en modification. */
+  readonly edit = output<ProfileItem>();
 
   protected readonly meta = computed(() => CATEGORY_META[this.category()]);
   protected readonly count = computed(() => countLabel(this.items().length));

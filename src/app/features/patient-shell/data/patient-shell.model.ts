@@ -38,6 +38,11 @@ export interface ShellPatient {
   sessionModality: SessionModality;
   /** Durée habituelle d'une séance (followUp.durationMin, fiche 16) ; null si non renseignée. */
   plannedDurationMin: number | null;
+  /**
+   * Patient archivé (archivedAt renseigné par GET /api/patients/{id}) : le dossier se lit, rien ne
+   * s'y écrit (Profil 360 en lecture seule, fiche 30, G Q55). Absent : patient actif.
+   */
+  archived?: boolean;
 }
 
 /**

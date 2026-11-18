@@ -1,0 +1,179 @@
+<pm-side-panel [title]="title">
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate [id]="formId">
+    @if (message(); as text) {
+      <p class="form-message" role="alert">{{ text }}</p>
+    }
+
+    <div class="field">
+      <label [for]="fieldId('category')" i18n="Champ Rubrique du panneau@@profile360.panel.category"
+        >Rubrique</label
+      >
+      <select [id]="fieldId('category')" formControlName="category">
+        @for (option of categories; track option) {
+          <option [value]="option">{{ categoryLabel(option) }}</option>
+        }
+      </select>
+      <pm-field-errors
+        [control]="form.controls.category"
+        [id]="fieldId('category') + '-error'"
+        [force]="submitted()"
+      />
+    </div>
+
+    <div class="field">
+      <label [for]="fieldId('title')" i18n="Champ Information du panneau@@profile360.panel.title"
+        >Information</label
+      >
+      <input
+        [id]="fieldId('title')"
+        type="text"
+        autocomplete="off"
+        cdkFocusInitial
+        formControlName="title"
+        [attr.maxlength]="titleMax"
+        [attr.aria-invalid]="
+          form.controls.title.invalid && (form.controls.title.touched || submitted())
+        "
+        [attr.aria-describedby]="fieldId('title') + '-error'"
+      />
+      <pm-field-errors
+        [control]="form.controls.title"
+        [id]="fieldId('title') + '-error'"
+        [force]="submitted()"
+      />
+    </div>
+
+    <div class="field">
+      <label [for]="fieldId('detail')"
+        ><ng-container i18n="Champ Précision du panneau@@profile360.panel.detail"
+          >Précision</ng-container
+        >{{ ' '
+        }}<span class="opt" i18n="Mention d'un champ facultatif@@profile360.panel.optional"
+          >(facultatif)</span
+        ></label
+      >
+      <textarea
+        [id]="fieldId('detail')"
+        formControlName="detail"
+        [attr.maxlength]="detailMax"
+        [attr.aria-invalid]="form.controls.detail.invalid && form.controls.detail.touched"
+        [attr.aria-describedby]="fieldId('detail') + '-error'"
+      ></textarea>
+      <pm-field-errors
+        [control]="form.controls.detail"
+        [id]="fieldId('detail') + '-error'"
+        [force]="submitted()"
+      />
+    </div>
+
+    @if (withPeriod()) {
+      <!-- Histoire et souvenirs seulement (fiche 30) : Période et Année. -->
+      <div class="two">
+        <div class="field">
+          <label [for]="fieldId('periodLabel')"
+            ><ng-container i18n="Champ Période du panneau@@profile360.panel.periodLabel"
+              >Période</ng-container
+            >{{ ' '
+            }}<span class="opt" i18n="Mention d'un champ facultatif@@profile360.panel.optional"
+              >(facultatif)</span
+            ></label
+          >
+          <input
+            [id]="fieldId('periodLabel')"
+            type="text"
+            autocomplete="off"
+            formControlName="periodLabel"
+            [attr.maxlength]="periodLabelMax"
+            [attr.aria-invalid]="
+              form.controls.periodLabel.invalid && form.controls.periodLabel.touched
+            "
+            [attr.aria-describedby]="
+              fieldId('periodLabel') + '-help ' + fieldId('periodLabel') + '-error'
+            "
+          />
+          <span
+            class="help"
+            [id]="fieldId('periodLabel') + '-help'"
+            i18n="Aide du champ Période@@profile360.panel.periodLabel.help"
+            >Par exemple : Enfance, vers 2000, 2002 – 2009.</span
+          >
+          <pm-field-errors
+            [control]="form.controls.periodLabel"
+            [id]="fieldId('periodLabel') + '-error'"
+            [force]="submitted()"
+          />
+        </div>
+        <div class="field">
+          <label [for]="fieldId('periodYear')"
+            ><ng-container i18n="Champ Année du panneau@@profile360.panel.periodYear"
+              >Année</ng-container
+            >{{ ' '
+            }}<span class="opt" i18n="Mention d'un champ facultatif@@profile360.panel.optional"
+              >(facultatif)</span
+            ></label
+          >
+          <input
+            [id]="fieldId('periodYear')"
+            type="number"
+            inputmode="numeric"
+            [attr.min]="yearMin"
+            [attr.max]="yearMax"
+            step="1"
+            formControlName="periodYear"
+            [attr.aria-invalid]="
+              form.controls.periodYear.invalid && form.controls.periodYear.touched
+            "
+            [attr.aria-describedby]="
+              fieldId('periodYear') + '-help ' + fieldId('periodYear') + '-error'
+            "
+          />
+          <pm-field-errors
+            [control]="form.controls.periodYear"
+            [id]="fieldId('periodYear') + '-error'"
+            [force]="submitted()"
+          />
+        </div>
+        <span
+          class="help wide"
+          [id]="fieldId('periodYear') + '-help'"
+          i18n="Aide des champs Période et Année@@profile360.panel.periodYear.help"
+          >Période et Année n'apparaissent que pour Histoire et souvenirs. L'année sert à classer
+          dans le fil : laissez-la vide si vous ne savez pas.</span
+        >
+      </div>
+    }
+  </form>
+
+  <ng-container pmPanelFooter>
+    @if (editing) {
+      <button
+        type="button"
+        class="btn-text"
+        [disabled]="store.saving()"
+        (click)="remove()"
+        i18n="Bouton Retirer du profil du panneau@@profile360.panel.remove"
+      >
+        Retirer du profil
+      </button>
+    }
+    <span class="spacer"></span>
+    <button
+      type="button"
+      class="btn"
+      [disabled]="store.saving()"
+      (click)="cancel()"
+      i18n="Bouton Annuler du panneau@@profile360.panel.cancel"
+    >
+      Annuler
+    </button>
+    <button
+      type="submit"
+      class="btn-primary"
+      [attr.form]="formId"
+      [disabled]="store.saving()"
+      [attr.aria-busy]="store.saving()"
+    >
+      {{ submitLabel }}
+    </button>
+  </ng-container>
+</pm-side-panel>

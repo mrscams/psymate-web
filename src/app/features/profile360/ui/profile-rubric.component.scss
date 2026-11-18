@@ -57,11 +57,39 @@
   list-style: none;
 }
 
+// Une information (maquette 30 `.item`) : un bouton (modification, M13-07) ou, en lecture seule,
+// un simple élément ; même gabarit.
 .item {
   display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
   padding: 11px 8px;
+  border: 0;
   border-top: 1px solid var(--surface-sunken);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
   line-height: 1.45;
+  text-align: left;
+}
+
+button.item {
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-ground);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
+}
+
+h3:focus {
+  outline: none;
 }
 
 .t {
@@ -109,13 +137,8 @@
 .rows.tl {
   padding-top: 8px;
 
-  .item {
+  li {
     position: relative;
-    display: grid;
-    grid-template-columns: 96px 16px minmax(0, 1fr);
-    gap: 12px;
-    padding: 0 8px 22px 0;
-    border-top: 0;
 
     // Le trait du fil, décoratif (pseudo-élément, jamais lu).
     &::before {
@@ -129,12 +152,23 @@
     }
 
     &:last-child {
-      padding-bottom: 4px;
-
       &::before {
         display: none;
       }
+
+      .item {
+        padding-bottom: 4px;
+      }
     }
+  }
+
+  .item {
+    display: grid;
+    grid-template-columns: 96px 16px minmax(0, 1fr);
+    gap: 12px;
+    padding: 0 8px 22px 0;
+    border-top: 0;
+    border-radius: 8px;
   }
 
   .k {

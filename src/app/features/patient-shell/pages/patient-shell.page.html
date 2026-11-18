@@ -35,12 +35,19 @@
     [session]="headerSession()"
     [state]="headerState()"
     [busy]="store.busy()"
-    [showViewToggle]="activeTab() === 'overview'"
+    [showViewToggle]="activeTab() === 'overview' || showProfileAdd()"
     (startSession)="start()"
     (retry)="reload()"
   >
+    <!-- Emplacement de fin de ligne des onglets : un seul occupant selon l'onglet. -->
     <!-- Sélecteur « Fenêtre : 30 j · 90 j · 1 an » (features/overview, UX-S6) : onglet Vue d'ensemble. -->
-    <pm-overview-window pmViewToggle />
+    @if (activeTab() === 'overview') {
+      <pm-overview-window pmViewToggle />
+    }
+    <!-- « Ajouter au profil » (features/profile360, M13-07, G Q54) : onglet Profil 360, patient actif. -->
+    @if (showProfileAdd()) {
+      <pm-profile-add pmViewToggle [patientId]="id()" />
+    }
   </pm-patient-header>
   <!-- Annonce polie (séance démarrée) : pas de toast, la couleur et le chronomètre le disent (04b). -->
   <p class="sr-only" role="status" aria-live="polite">{{ announcement() }}</p>

@@ -2,6 +2,19 @@
   display: block;
 }
 
+// Profil vide : l'état, puis « Ajouter au profil » centré dessous.
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding-bottom: 24px;
+
+  pm-state {
+    align-self: stretch;
+  }
+}
+
 // Maquette 30 `.menu` : deux colonnes, le menu des rubriques (272 px) et la rubrique affichée.
 .menu {
   display: grid;

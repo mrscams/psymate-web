@@ -2,7 +2,7 @@
   <div class="dhead">
     <span class="isq"><pm-profile-icon [icon]="meta().icon" [size]="20" /></span>
     <div class="txt" aria-live="polite">
-      <h3 [id]="'profile360-rubric-' + category()">{{ meta().label }}</h3>
+      <h3 [id]="'profile360-rubric-' + category()" tabindex="-1">{{ meta().label }}</h3>
       <p>{{ meta().help }} · {{ count() }}</p>
     </div>
   </div>
@@ -19,15 +19,10 @@
       @case ('history') {
         <ol class="rows tl">
           @for (item of items(); track item.id) {
-            <li class="item">
-              <span class="k">{{ item.periodLabel ?? '' }}</span>
-              <span class="dot" aria-hidden="true"></span>
-              <span class="body">
-                <span class="t">{{ item.title }}</span>
-                @if (item.detail) {
-                  <span class="d">{{ item.detail }}</span>
-                }
-              </span>
+            <li>
+              <ng-container
+                *ngTemplateOutlet="row; context: { $implicit: item, content: history }"
+              />
             </li>
           }
         </ol>
@@ -35,14 +30,10 @@
       @case ('family') {
         <ul class="rows people">
           @for (item of items(); track item.id) {
-            <li class="item">
-              <span class="av" aria-hidden="true">{{ initialOf(item.title) }}</span>
-              <span class="body">
-                <span class="t">{{ item.title }}</span>
-                @if (item.detail) {
-                  <span class="d">{{ item.detail }}</span>
-                }
-              </span>
+            <li>
+              <ng-container
+                *ngTemplateOutlet="row; context: { $implicit: item, content: person }"
+              />
             </li>
           }
         </ul>
@@ -50,13 +41,8 @@
       @default {
         <ul class="rows std">
           @for (item of items(); track item.id) {
-            <li class="item">
-              <span class="body">
-                <span class="t">{{ item.title }}</span>
-                @if (item.detail) {
-                  <span class="d">{{ item.detail }}</span>
-                }
-              </span>
+            <li>
+              <ng-container *ngTemplateOutlet="row; context: { $implicit: item, content: plain }" />
             </li>
           }
         </ul>
@@ -64,3 +50,42 @@
     }
   }
 </section>
+
+<!-- Une information : bouton nommé par son contenu (la période d'abord dans le fil, puis le titre et
+     le détail : le texte visible est dans le nom, WCAG 2.5.3), qui ouvre le panneau en
+     modification ; en lecture seule, un simple élément. -->
+<ng-template #row let-item let-content="content">
+  @if (editable()) {
+    <button type="button" class="item" [attr.data-item-id]="item.id" (click)="edit.emit(item)">
+      <ng-container *ngTemplateOutlet="content; context: { $implicit: item }" />
+    </button>
+  } @else {
+    <div class="item" [attr.data-item-id]="item.id">
+      <ng-container *ngTemplateOutlet="content; context: { $implicit: item }" />
+    </div>
+  }
+</ng-template>
+
+<ng-template #history let-item>
+  <span class="k">{{ item.periodLabel ?? '' }}</span>
+  <span class="dot" aria-hidden="true"></span>
+  <ng-container *ngTemplateOutlet="body; context: { $implicit: item }" />
+</ng-template>
+
+<ng-template #person let-item>
+  <span class="av" aria-hidden="true">{{ initialOf(item.title) }}</span>
+  <ng-container *ngTemplateOutlet="body; context: { $implicit: item }" />
+</ng-template>
+
+<ng-template #plain let-item>
+  <ng-container *ngTemplateOutlet="body; context: { $implicit: item }" />
+</ng-template>
+
+<ng-template #body let-item>
+  <span class="body">
+    <span class="t">{{ item.title }}</span>
+    @if (item.detail) {
+      <span class="d">{{ item.detail }}</span>
+    }
+  </span>
+</ng-template>

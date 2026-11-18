@@ -32,6 +32,7 @@ import { CaptureBlockComponent, CapturedEntry } from '../../capture';
 import { ENTRY_QUERY_PARAM, EntryPrefill, openEntryEditor } from '../../entries';
 import { connectLinkEditor, LINK_QUERY_PARAM } from '../../graph';
 import { OverviewWindowComponent } from '../../overview';
+import { ProfileAddComponent } from '../../profile360';
 import { ShellTab } from '../data/patient-shell.model';
 import { PatientShellStore } from '../data/patient-shell.store';
 import {
@@ -67,6 +68,7 @@ import {
     CaptureBlockComponent,
     OverviewWindowComponent,
     PatientHeaderComponent,
+    ProfileAddComponent,
     RouterLink,
     RouterOutlet,
     SessionBarComponent,
@@ -123,6 +125,14 @@ export class PatientShellPage {
     this.navigated();
     return (this.route.firstChild?.snapshot.data['tab'] as ShellTab | undefined) ?? null;
   });
+
+  /**
+   * « Ajouter au profil » au bout de la ligne des onglets (fiche 30, G Q54) : onglet Profil 360
+   * seulement, dossier lu, jamais pour un patient archivé.
+   */
+  protected readonly showProfileAdd = computed(
+    () => this.activeTab() === 'profile' && !!this.store.patient() && !this.store.archived(),
+  );
 
   protected readonly headerPatient = computed(() => {
     const patient = this.store.patient();

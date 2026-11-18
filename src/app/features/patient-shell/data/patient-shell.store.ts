@@ -134,6 +134,11 @@ export const PatientShellStore = signalStore(
   withComputed((store, prefs = inject(PreferencesStore)) => ({
     busy: computed(() => store.status() === 'saving'),
     /**
+     * Patient archivé (archivedAt de GET /api/patients/{id}) : le Profil 360 passe en lecture seule
+     * et « Ajouter au profil » n'est pas posé (fiche 30, G Q55). Faux tant que le dossier n'est pas lu.
+     */
+    archived: computed(() => store.patient()?.archived === true),
+    /**
      * « suivi·e depuis » de l'en-tête (UX-G2c) : followedSince du dossier (follow_up.since, sinon
      * création), seulement si aucune séance ne le précède d'un mois ou plus. Un dossier créé après
      * ses séances (reprise d'un suivi) dirait sinon « depuis novembre 2026 » au-dessus d'une page

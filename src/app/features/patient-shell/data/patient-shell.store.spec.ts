@@ -91,6 +91,23 @@ describe('PatientShellStore', () => {
       expect(store.lastSession()?.id ?? null).toBe(last);
     });
 
+    it('archived : faux avant la lecture et pour un patient actif, vrai pour un patient archivé (M13-07)', async () => {
+      const active = setup({
+        patient: vi.fn().mockResolvedValue(shellPatient()),
+        current: vi.fn().mockResolvedValue(null),
+      });
+      expect(active.archived()).toBe(false);
+      await active.load('p-marie');
+      expect(active.archived()).toBe(false);
+
+      const archived = setup({
+        patient: vi.fn().mockResolvedValue(shellPatient({ archived: true })),
+        current: vi.fn().mockResolvedValue(null),
+      });
+      await archived.load('p-marie');
+      expect(archived.archived()).toBe(true);
+    });
+
     it.each([
       ['403 PATIENT_FORBIDDEN', forbidden],
       ['404 PATIENT_NOT_FOUND', notFound],

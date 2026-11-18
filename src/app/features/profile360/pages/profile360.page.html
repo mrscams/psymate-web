@@ -23,19 +23,30 @@
       />
     }
     @case ('empty') {
-      <pm-state
-        kind="empty"
-        title="Aucune information dans le profil"
-        i18n-title="État vide du Profil 360 (aucune information)@@profile360.empty.title"
-        message="L'histoire, la famille, la santé et les valeurs de la personne se rangent ici."
-        i18n-message="Phrase de l'état vide du Profil 360@@profile360.empty.message"
-      />
+      <div class="empty">
+        <pm-state
+          kind="empty"
+          title="Aucune information dans le profil"
+          i18n-title="État vide du Profil 360 (aucune information)@@profile360.empty.title"
+          message="L'histoire, la famille, la santé et les valeurs de la personne se rangent ici."
+          i18n-message="Phrase de l'état vide du Profil 360@@profile360.empty.message"
+        />
+        <!-- Le même bouton que sur la ligne des onglets (G Q54) ; absent en lecture seule. -->
+        @if (!readOnly() && patientId(); as id) {
+          <pm-profile-add [patientId]="id" />
+        }
+      </div>
     }
     @default {
       <!-- Maquette 30 `.menu` : menu de 272 px et rubrique affichée, 16 px d'écart. -->
       <div class="menu">
         <pm-profile-menu [current]="category()" [counts]="store.counts()" />
-        <pm-profile-rubric [category]="category()" [items]="store.groups()[category()]" />
+        <pm-profile-rubric
+          [category]="category()"
+          [items]="store.groups()[category()]"
+          [editable]="!readOnly()"
+          (edit)="edit($event)"
+        />
       </div>
     }
   }
