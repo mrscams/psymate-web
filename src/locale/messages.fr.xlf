@@ -23919,6 +23919,14 @@
         </context-group>
         <note priority="1" from="description">Nombre de séances de la plage affichée</note>
       </trans-unit>
+      <trans-unit id="agenda.guest.purged" datatype="html">
+        <source>Invité purgé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;un invité dont l&apos;identité a été purgée (six mois après le rendez-vous)</note>
+      </trans-unit>
       <trans-unit id="agenda.modality.inPerson" datatype="html">
         <source>Cabinet</source>
         <context-group purpose="location">
@@ -24310,6 +24318,14 @@
           <context context-type="linenumber">205</context>
         </context-group>
         <note priority="1" from="description">Étiquette du détail, séance planifiée</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.guest" datatype="html">
+        <source>invité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">247</context>
+        </context-group>
+        <note priority="1" from="description">Rendez-vous invité (personne sans dossier patient), dans le détail</note>
       </trans-unit>
       <trans-unit id="agenda.detail.age" datatype="html">
         <source><x id="age" equiv-text="item.patient.age"/> ans</source>

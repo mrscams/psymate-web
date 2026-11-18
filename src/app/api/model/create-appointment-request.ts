@@ -8,10 +8,11 @@
  * Do not edit the class manually.
  */
 import { RecurrenceRequest } from './recurrence-request';
+import { GuestRequest } from './guest-request';
 
 
 /**
- * Création d\'un rendez-vous, ou d\'une série si recurrence est présent. status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+ * Création d\'un rendez-vous, ou d\'une série si recurrence est présent. Exactement un de patientId et guest : aucun, 422 REQUIRED sur patientId ; les deux, 422 INVALID_VALUE sur guest. status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
  */
 export interface CreateAppointmentRequest { 
     /**
@@ -19,13 +20,17 @@ export interface CreateAppointmentRequest {
      */
     durationMin: number;
     /**
+     * Invité : personne qui n\'a pas encore de fiche patient (G Q60). Exclusif de patientId ; recopié sur chaque occurrence d\'une série.
+     */
+    guest?: GuestRequest;
+    /**
      * Modalité. Obligatoire.
      */
     modality: CreateAppointmentRequestModalityEnum;
     /**
-     * Patient du praticien, non archivé. Obligatoire.
+     * Patient du praticien, non archivé. Obligatoire sauf pour un rendez-vous invité (guest).
      */
-    patientId: string;
+    patientId?: string;
     /**
      * Note de planification, 2 000 caractères au plus. Facultative.
      */

@@ -1,7 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ApiProblem } from '../../../core/http';
-import { appointmentOf, weekAgenda } from '../testing/agenda.testing';
+import {
+  appointmentOf,
+  guestAppointmentOf,
+  PURGED_GUEST,
+  weekAgenda,
+} from '../testing/agenda.testing';
 import { AgendaApi } from './agenda.api';
 import { AgendaData, AgendaRange, fromIsoDay } from './agenda.model';
 import { AgendaStore } from './agenda.store';
@@ -63,7 +68,7 @@ describe('AgendaStore', () => {
     expect(store.range().from.getDate()).toBe(2);
     await store.show('day', d('2026-11-04'));
     expect(load).toHaveBeenCalledTimes(3);
-    expect(store.appointments().map((a) => a.patient.displayName)).toEqual(['Adam D.', 'Paul L.']);
+    expect(store.appointments().map((a) => a.patient?.displayName)).toEqual(['Adam D.', 'Paul L.']);
   });
 
   it('une réponse arrivée après un changement de plage est ignorée', async () => {
@@ -103,7 +108,7 @@ describe('AgendaStore', () => {
     const { store } = setup();
     await store.show('week', d('2026-10-26'));
     store.select('rdv-2026-10-26-2');
-    expect(store.selected()?.patient.displayName).toBe('Léa T.');
+    expect(store.selected()?.patient?.displayName).toBe('Léa T.');
     store.toggleCalendar('video');
     expect(store.isVisible('video')).toBe(false);
     expect(store.appointments().some((a) => a.modality === 'video')).toBe(false);
@@ -118,7 +123,7 @@ describe('AgendaStore', () => {
     const { store, api } = setup();
     await store.show('week', d('2026-10-26'));
     store.select('rdv-2026-10-31-13');
-    expect(store.selected()?.patient.displayName).toBe('Marie D.');
+    expect(store.selected()?.patient?.displayName).toBe('Marie D.');
     expect(store.detailState()).toBe('ready');
     expect(store.selectedDaySiblings().map((a) => a.id)).toEqual([
       'rdv-2026-10-31-13',
@@ -222,6 +227,79 @@ describe('AgendaStore', () => {
     await store.loadContext('p-2');
     expect(store.context()?.preparation.status).toBe('error');
     expect(store.context()?.rhythm).toBe('toutes les 2 semaines');
+  });
+
+  it('rendez-vous invité et invité purgé (contrat 0.13.0) : dans la plage, sélection, voisins du jour, déplacer et annuler', async () => {
+    const guest = guestAppointmentOf({ id: 'invite', startsAt: '2026-10-27T13:00:00Z' });
+    const purged = guestAppointmentOf({
+      id: 'purge',
+      startsAt: '2026-10-27T15:00:00Z',
+      guest: PURGED_GUEST,
+      status: 'cancelled',
+    });
+    const load = vi.fn((range: AgendaRange) => {
+      const week = weekAgenda(range);
+      return Promise.resolve({ ...week, appointments: [...week.appointments, guest, purged] });
+    });
+    const update = vi.fn().mockResolvedValue({ appointment: guest, conflicts: [] });
+    const cancel = vi.fn().mockResolvedValue({ ...guest, status: 'cancelled' });
+    const { store } = setup({ load, update, cancel });
+    await store.show('week', d('2026-10-26'));
+    expect(store.appointments()).toHaveLength(16);
+
+    store.select('invite');
+    expect(store.detailState()).toBe('ready');
+    expect(store.selected()?.patient).toBeNull();
+    expect(store.selected()?.guest).toMatchObject({ firstName: 'Sara', lastName: 'Benali' });
+    expect(store.selectedDaySiblings().map((a) => a.id)).toContain('invite');
+    store.select('purge');
+    expect(store.selected()?.guest?.purgedAt).toBe('2027-05-01T03:30:00Z');
+
+    const moved = await store.move('invite', '2026-10-27T14:00:00.000Z', 50);
+    expect(moved.ok).toBe(true);
+    expect(update).toHaveBeenCalledWith('invite', {
+      startsAt: '2026-10-27T14:00:00.000Z',
+      durationMin: 50,
+    });
+    expect((await store.cancel('invite')).ok).toBe(true);
+    expect(cancel).toHaveBeenCalledWith('invite', undefined);
+  });
+
+  it('invité purgé hors de la plage : lu à part, prêt comme un autre', async () => {
+    const purged = guestAppointmentOf({
+      id: 'purge',
+      startsAt: '2026-12-01T09:00:00Z',
+      guest: PURGED_GUEST,
+    });
+    const { store } = setup({ get: vi.fn().mockResolvedValue(purged) });
+    store.select('purge');
+    await store.show('week', d('2026-10-26'));
+    await flush();
+    expect(store.detailState()).toBe('ready');
+    expect(store.selected()).toEqual(purged);
+  });
+
+  it('contexte d’un invité (null) : pas de lecture, le contexte du patient précédent est effacé, sa réponse tardive ignorée', async () => {
+    let resolve!: (value: unknown) => void;
+    const preparation = vi.fn(() => new Promise((done) => (resolve = done)));
+    const { store, api } = setup({ preparation });
+    const pending = store.loadContext('p-1');
+    expect(store.context()?.patientId).toBe('p-1');
+
+    await store.loadContext(null);
+    expect(store.context()).toBeNull();
+    resolve({ lastSessionAt: null, feelings: 1, events: 0, others: 0, followedSince: null });
+    await pending;
+    expect(store.context()).toBeNull();
+    expect(preparation).toHaveBeenCalledTimes(1);
+    expect(api.patientAppointments).toHaveBeenCalledTimes(1);
+
+    // Retour au patient : relu (le contexte a été effacé).
+    const again = store.loadContext('p-1');
+    expect(preparation).toHaveBeenCalledTimes(2);
+    resolve({ lastSessionAt: null, feelings: 3, events: 0, others: 0, followedSince: null });
+    await again;
+    expect(store.context()?.preparation.data?.feelings).toBe(3);
   });
 
   it('stepped : la date suivante selon la vue, sans changer l’état', async () => {

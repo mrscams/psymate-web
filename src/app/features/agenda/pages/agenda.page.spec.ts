@@ -14,7 +14,7 @@ import {
   BusyBlock,
   CreatedAppointments,
 } from '../data/agenda.model';
-import { appointmentOf, weekAgenda } from '../testing/agenda.testing';
+import { appointmentOf, guestAppointmentOf, weekAgenda } from '../testing/agenda.testing';
 import { NewAppointmentData } from '../panels/new-appointment.panel';
 import { AgendaCalendarComponent, Rescheduled } from '../ui/agenda-calendar.component';
 import { AgendaPage } from './agenda.page';
@@ -42,7 +42,7 @@ class Blank {}
     ></div>
     @for (item of appointments(); track item.id) {
       <a class="event" [class.selected]="item.id === selectedId()" (dblclick)="opened.emit(item)">
-        {{ item.patient.displayName }}
+        {{ item.patient?.displayName ?? item.guest?.lastName }}
       </a>
     }
     <button type="button" class="slot" (click)="slotPicked.emit(anchor())">créneau</button>
@@ -428,5 +428,35 @@ describe('AgendaPage', () => {
     events()[1].dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
     await settle(fixture);
     expect(router.url).toBe('/patients/p-leat');
+  });
+
+  it('rendez-vous invité : détail sans lien ni Dupliquer, double-clic sans dossier, « + Rendez-vous » sans patient', async () => {
+    const guest = guestAppointmentOf({
+      id: 'invite',
+      startsAt: new Date(2026, 9, 26, 14, 0).toISOString(),
+    });
+    const load = vi.fn((range: AgendaRange) => {
+      const week = weekAgenda(range);
+      return Promise.resolve({ ...week, appointments: [...week.appointments, guest] });
+    });
+    const { fixture, el, router, panels, api, events, detail } = await render(
+      '/agenda/rdv/invite?view=day&date=2026-10-26',
+      { api: { load } },
+    );
+    expect(text(detail()!.querySelector('.name'))).toBe('Sara Benali');
+    expect(detail()!.querySelector('a[href*="/patients"]')).toBeNull();
+    expect(api.preparation).not.toHaveBeenCalled();
+
+    const sara = events().find((item) => text(item) === 'Benali')!;
+    sara.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    await settle(fixture);
+    expect(router.url).toBe('/agenda/rdv/invite?view=day&date=2026-10-26');
+
+    const actions = [...detail()!.querySelectorAll<HTMLButtonElement>('.actions button')];
+    expect(actions.map((button) => text(button))).not.toContain('Dupliquer');
+
+    el.querySelector<HTMLButtonElement>('.toolbar .tb-btn.primary')!.click();
+    await settle(fixture);
+    expect(panels.open.mock.calls[0][1].data.patient).toBeNull();
   });
 });

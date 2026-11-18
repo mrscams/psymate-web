@@ -12,9 +12,16 @@
       </button>
     </div>
     <div class="patient">
-      <span class="avatar" aria-hidden="true">{{ initials() }}</span>
+      <!-- Invité : ni initiales ni lien, il n'a pas de dossier. -->
+      @if (item.patient) {
+        <span class="avatar" aria-hidden="true">{{ initials() }}</span>
+      }
       <div class="identity">
-        <a class="name" [routerLink]="patientLink()">{{ item.patient.displayName }}</a>
+        @if (item.patient) {
+          <a class="name" [routerLink]="patientLink()">{{ name() }}</a>
+        } @else {
+          <span class="name">{{ name() }}</span>
+        }
         @if (patientMeta(); as meta) {
           <span class="meta">{{ meta }}</span>
         }
@@ -163,53 +170,56 @@
       </form>
     }
 
-    <!-- Préparer : vue d'ensemble du patient ; jamais bloquant (erreur : les liens seuls). -->
-    <section class="block">
-      <h2 i18n="Titre du bloc Préparer du détail@@agenda.detail.prepare">Préparer</h2>
-      @switch (prepareState()) {
-        @case ('loading') {
-          <pm-state kind="loading" skeleton="row" [lines]="2" compact />
-        }
-        @case ('loaded') {
-          <p class="prepare">
-            @if (lastSession(); as last) {
-              <ng-container i18n="Dernière séance du patient@@agenda.detail.lastSession"
-                >Dernière séance le <strong>{{ last }}</strong></ng-container
-              >
-              @if (sinceLabel(); as since) {
-                ·
-                <ng-container i18n="Ce qui s'est passé depuis@@agenda.detail.since.text"
-                  >depuis : {{ since }}</ng-container
+    <!-- Préparer : vue d'ensemble du patient ; jamais bloquant (erreur : les liens seuls) ; aucun
+         pour un invité, sans dossier. -->
+    @if (item.patient) {
+      <section class="block">
+        <h2 i18n="Titre du bloc Préparer du détail@@agenda.detail.prepare">Préparer</h2>
+        @switch (prepareState()) {
+          @case ('loading') {
+            <pm-state kind="loading" skeleton="row" [lines]="2" compact />
+          }
+          @case ('loaded') {
+            <p class="prepare">
+              @if (lastSession(); as last) {
+                <ng-container i18n="Dernière séance du patient@@agenda.detail.lastSession"
+                  >Dernière séance le <strong>{{ last }}</strong></ng-container
                 >
+                @if (sinceLabel(); as since) {
+                  ·
+                  <ng-container i18n="Ce qui s'est passé depuis@@agenda.detail.since.text"
+                    >depuis : {{ since }}</ng-container
+                  >
+                } @else {
+                  ·
+                  <ng-container i18n="Rien depuis la dernière séance@@agenda.detail.since.none"
+                    >rien de nouveau depuis</ng-container
+                  >
+                }
               } @else {
-                ·
-                <ng-container i18n="Rien depuis la dernière séance@@agenda.detail.since.none"
-                  >rien de nouveau depuis</ng-container
+                <ng-container i18n="Aucune séance clôturée@@agenda.detail.noSession"
+                  >Aucune séance clôturée pour l'instant.</ng-container
                 >
               }
-            } @else {
-              <ng-container i18n="Aucune séance clôturée@@agenda.detail.noSession"
-                >Aucune séance clôturée pour l'instant.</ng-container
-              >
-            }
-          </p>
+            </p>
+          }
         }
-      }
-      <div class="links">
-        <a
-          class="btn"
-          [routerLink]="patientLink().concat('overview')"
-          i18n="Lien du détail vers la vue d'ensemble@@agenda.detail.overview"
-          >Vue d'ensemble</a
-        >
-        <a
-          class="btn"
-          [routerLink]="patientLink().concat('timeline')"
-          i18n="Lien du détail vers la timeline@@agenda.detail.timeline"
-          >Timeline</a
-        >
-      </div>
-    </section>
+        <div class="links">
+          <a
+            class="btn"
+            [routerLink]="patientLink().concat('overview')"
+            i18n="Lien du détail vers la vue d'ensemble@@agenda.detail.overview"
+            >Vue d'ensemble</a
+          >
+          <a
+            class="btn"
+            [routerLink]="patientLink().concat('timeline')"
+            i18n="Lien du détail vers la timeline@@agenda.detail.timeline"
+            >Timeline</a
+          >
+        </div>
+      </section>
+    }
 
     <!-- Note de planification : visible seulement ici, enregistrée au blur. -->
     <div class="block">
@@ -273,13 +283,16 @@
           Déplacer
         </button>
       }
-      <button
-        type="button"
-        (click)="duplicate()"
-        i18n="Action Dupliquer du détail@@agenda.detail.duplicate"
-      >
-        Dupliquer
-      </button>
+      <!-- Invité : pas de « Dupliquer », le panneau 15b ne sait pas garder un invité (M13-04). -->
+      @if (item.patient) {
+        <button
+          type="button"
+          (click)="duplicate()"
+          i18n="Action Dupliquer du détail@@agenda.detail.duplicate"
+        >
+          Dupliquer
+        </button>
+      }
       @if (active()) {
         <button
           type="button"

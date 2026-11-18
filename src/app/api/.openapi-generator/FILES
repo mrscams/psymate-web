@@ -42,6 +42,8 @@ api/preferences.service.ts
 api/preferences.serviceInterface.ts
 api/profil-annuaire.service.ts
 api/profil-annuaire.serviceInterface.ts
+api/profil360.service.ts
+api/profil360.serviceInterface.ts
 api/recherche.service.ts
 api/recherche.serviceInterface.ts
 api/recours.service.ts
@@ -95,6 +97,8 @@ model/appointment-dto.ts
 model/appointment-patient-dto.ts
 model/appointment-series-dto.ts
 model/appointment-updated-dto.ts
+model/attach-patient-request.ts
+model/attached-appointments-dto.ts
 model/cancel-appointment-request.ts
 model/card.ts
 model/change-link-type-request.ts
@@ -106,6 +110,7 @@ model/create-appointment-request.ts
 model/create-emotion-request.ts
 model/create-entry-request.ts
 model/create-link-request.ts
+model/create-patient-profile-item-request.ts
 model/create-patient-request.ts
 model/create-request.ts
 model/decision-dto.ts
@@ -156,6 +161,8 @@ model/graph-dto.ts
 model/graph-edge-dto.ts
 model/graph-node-dto.ts
 model/graph-super-node-dto.ts
+model/guest-dto.ts
+model/guest-request.ts
 model/item-dto.ts
 model/item.ts
 model/journal-dto.ts
@@ -186,6 +193,8 @@ model/patch-request.ts
 model/patient-appointments-dto.ts
 model/patient-dto.ts
 model/patient-page.ts
+model/patient-profile-dto.ts
+model/patient-profile-item-dto.ts
 model/preferences.ts
 model/problem-detail-allowed-link-types-inner-one-of.ts
 model/problem-detail-allowed-link-types-inner.ts
@@ -236,6 +245,7 @@ model/two-factor-disable-request.ts
 model/two-factor-enable-response.ts
 model/two-factor-verify-request.ts
 model/update-appointment-request.ts
+model/update-patient-profile-item-request.ts
 model/update-profile-request.ts
 model/verification-dto.ts
 model/version-dto.ts

@@ -2,6 +2,7 @@ import {
   AgendaData,
   AgendaRange,
   Appointment,
+  AppointmentGuest,
   AppointmentModality,
   AppointmentStatus,
   daysOf,
@@ -67,6 +68,7 @@ export function appointmentOf(partial: Partial<Appointment> & { startsAt: string
       age: null,
       archived: false,
     },
+    guest: null,
     seriesId: null,
     endsAt: new Date(new Date(partial.startsAt).getTime() + durationMin * 60_000).toISOString(),
     durationMin,
@@ -78,6 +80,32 @@ export function appointmentOf(partial: Partial<Appointment> & { startsAt: string
     sessionEntryId: null,
     ...partial,
   };
+}
+
+/** Invité Sara Benali (exemple du contrat 0.13.0), à compléter par les champs donnés. */
+export function guestOf(partial: Partial<AppointmentGuest> = {}): AppointmentGuest {
+  return {
+    firstName: 'Sara',
+    lastName: 'Benali',
+    phone: '+33 6 12 34 56 78',
+    purgedAt: null,
+    ...partial,
+  };
+}
+
+/** Invité purgé : nom, prénom et téléphone effacés, `purgedAt` renseigné. */
+export const PURGED_GUEST: AppointmentGuest = {
+  firstName: null,
+  lastName: null,
+  phone: null,
+  purgedAt: '2027-05-01T03:30:00Z',
+};
+
+/** Un rendez-vous invité (`patient` null), à compléter par les champs donnés. */
+export function guestAppointmentOf(
+  partial: Partial<Appointment> & { startsAt: string },
+): Appointment {
+  return appointmentOf({ patient: null, guest: guestOf(), ...partial });
 }
 
 function at(day: Date, time: string): Date {

@@ -5,7 +5,7 @@ import { provideRouter } from '@angular/router';
 
 import { PreferencesStore } from '../../../core/preferences';
 import { AgendaApi } from '../data/agenda.api';
-import { appointmentOf } from '../testing/agenda.testing';
+import { appointmentOf, guestAppointmentOf, PURGED_GUEST } from '../testing/agenda.testing';
 import {
   INPUT_DEBOUNCE_MS,
   NewAppointmentData,
@@ -163,6 +163,21 @@ describe('NewAppointmentPanel (fiche 15b)', () => {
     expect(freeBusy).toHaveBeenCalledTimes(2);
     expect(text(el.querySelector('.warning'))).toBe(
       "Chevauche le rendez-vous de Théo B. (11:30–12:20). Il sera créé quand même ; vous pourrez le déplacer depuis l'agenda.",
+    );
+  });
+
+  it('voisinage d’invités : « Prénom Nom » et « Invité purgé » (le panneau ne crée pas d’invité)', async () => {
+    const freeBusy = vi.fn().mockResolvedValue({
+      conflicts: [],
+      previous: guestAppointmentOf({ startsAt: new Date(2026, 10, 7, 9, 0).toISOString() }),
+      next: guestAppointmentOf({
+        startsAt: new Date(2026, 10, 7, 11, 30).toISOString(),
+        guest: PURGED_GUEST,
+      }),
+    });
+    const { el } = await render({}, { freeBusy });
+    expect(text(el.querySelector('.slot + .hint'))).toBe(
+      'Se termine à 11:00 · précédent : Sara Benali à 09:00 · suivant : Invité purgé à 11:30 · pas de chevauchement',
     );
   });
 

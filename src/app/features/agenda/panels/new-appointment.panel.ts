@@ -44,6 +44,7 @@ import {
 } from '../data/agenda.model';
 import { NewAppointmentStore } from '../data/new-appointment.store';
 import {
+  appointmentName,
   formatDayMonth,
   formatTime,
   formatTimeRange,
@@ -395,14 +396,14 @@ export class NewAppointmentPanel {
     if (!freeBusy || freeBusy.conflicts.length > 0) return null;
     const parts: string[] = [];
     if (freeBusy.previous) {
-      const name = freeBusy.previous.patient.displayName;
+      const name = appointmentName(freeBusy.previous);
       const at = formatTime(freeBusy.previous.startsAt, this.locale);
       parts.push(
         $localize`:Rendez-vous précédent du créneau@@agenda.new.previous:précédent : ${name}:name: à ${at}:time:`,
       );
     }
     if (freeBusy.next) {
-      const name = freeBusy.next.patient.displayName;
+      const name = appointmentName(freeBusy.next);
       const at = formatTime(freeBusy.next.startsAt, this.locale);
       parts.push(
         $localize`:Rendez-vous suivant du créneau@@agenda.new.next:suivant : ${name}:name: à ${at}:time:`,

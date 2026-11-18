@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { GuestDto } from './guest-dto';
 import { AppointmentPatientDto } from './appointment-patient-dto';
 
 
@@ -35,6 +36,10 @@ export interface AppointmentDto {
      */
     endsAt?: string;
     /**
+     * Invité du rendez-vous (G Q60) : personne sans fiche patient. Null pour un rendez-vous patient.
+     */
+    guest?: GuestDto;
+    /**
      * Identifiant du rendez-vous.
      */
     id?: string;
@@ -43,7 +48,7 @@ export interface AppointmentDto {
      */
     modality?: AppointmentDtoModalityEnum;
     /**
-     * Patient du rendez-vous.
+     * Patient du rendez-vous. Null pour un rendez-vous invité.
      */
     patient?: AppointmentPatientDto;
     /**

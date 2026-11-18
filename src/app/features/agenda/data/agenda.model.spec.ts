@@ -3,6 +3,7 @@ import {
   atLocal,
   daysOf,
   fromIsoDay,
+  guestFullName,
   inRange,
   isoWeek,
   MAX_OCCURRENCES,
@@ -91,5 +92,23 @@ describe('agenda.model : saisie et calculs', () => {
     expect(occurrencesOf(start, { everyWeeks: 1, until: '2028-01-01' })).toHaveLength(
       MAX_OCCURRENCES + 1,
     );
+  });
+});
+
+describe('agenda.model : invités (contrat 0.13.0)', () => {
+  const guest = { firstName: 'Sara', lastName: 'Benali', phone: null, purgedAt: null };
+
+  it('guestFullName : « Prénom Nom », le nom seul sans prénom, null après la purge', () => {
+    expect(guestFullName(guest)).toBe('Sara Benali');
+    expect(guestFullName({ ...guest, firstName: null })).toBe('Benali');
+    expect(guestFullName({ ...guest, firstName: '  ' })).toBe('Benali');
+    expect(
+      guestFullName({
+        firstName: null,
+        lastName: null,
+        phone: null,
+        purgedAt: '2027-05-01T03:30:00Z',
+      }),
+    ).toBeNull();
   });
 });

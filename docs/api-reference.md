@@ -1,6 +1,6 @@
 # Référence de l'API PsyMate
 
-Généré depuis le contrat OpenAPI (`PsyMate API`, info.version 0.12.1). 97 chemins, 174 schémas.
+Généré depuis le contrat OpenAPI (`PsyMate API`, info.version 0.14.0). 100 chemins, 182 schémas.
 
 Toutes les routes `/api/**` exigent une session (cookie posé par `POST /api/auth/login`), sauf celles marquées publiques dans leur description (`/api/auth/*`, `/api/public/**`, `/api/me/appeal`, `/api/me/export`). Erreurs : `application/problem+json` avec `code` et `errors[]`.
 
@@ -22,11 +22,12 @@ Toutes les routes `/api/**` exigent une session (cookie posé par `POST /api/aut
 - [Graphe](#tag-graphe) (2)
 - [Liens](#tag-liens) (4)
 - [Patients](#tag-patients) (10)
+- [Profil 360](#tag-profil-360) (4)
 - [Profil annuaire](#tag-profil-annuaire) (6)
 - [Préférences](#tag-preferences) (2)
 - [Recherche](#tag-recherche) (1)
 - [Recours](#tag-recours) (3)
-- [Rendez-vous](#tag-rendez-vous) (6)
+- [Rendez-vous](#tag-rendez-vous) (7)
 - [Séances](#tag-seances) (4)
 - [Sécurité du compte](#tag-securite-du-compte) (2)
 - [Tags](#tag-tags) (4)
@@ -1457,6 +1458,101 @@ operationId : `listPatientVersions`
 | 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : aucun patient avec cet identifiant. |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
+## <a id="tag-profil-360"></a>Profil 360
+
+### `GET /api/patients/{id}/profile-items`
+
+**Lit tout le Profil 360 d'un patient**
+
+Session praticien propriétaire du patient ; fonctionne aussi pour un patient archivé. Renvoie toutes les informations actives d'un coup, sans pagination (500 au plus par patient) ; une information retirée n'est plus renvoyée. Tri : rubrique dans l'ordre history, family, health, values_goals ; dans history, periodYear croissant (les informations sans année en dernier) puis createdAt ; ailleurs, createdAt croissant.
+
+operationId : `listPatientProfileItems`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du patient. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [PatientProfileDto](#schema-patientprofiledto) (*/*) | Profil du patient (liste éventuellement vide). |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_FORBIDDEN : patient d'un autre praticien (ou d'un autre cabinet). EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : aucun patient avec cet identifiant. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `POST /api/patients/{id}/profile-items`
+
+**Ajoute une information au Profil 360**
+
+Session praticien propriétaire du patient, patient actif (409 PATIENT_ARCHIVED sinon). L'information n'appartient à aucune séance et ne crée aucune entrée. La période (periodLabel, periodYear) n'est admise que dans history. Un patient compte 500 informations actives au plus (422 PROFILE_ITEM_LIMIT_REACHED au-delà). Réponse 201 avec l'information créée.
+
+operationId : `createPatientProfileItem`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du patient. |
+
+Corps (`application/json`) : [CreatePatientProfileItemRequest](#schema-createpatientprofileitemrequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 201 | [PatientProfileItemDto](#schema-patientprofileitemdto) (*/*) | Information créée ; en-tête Location = /api/patients/{id}/profile-items/{itemId}. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_JSON : corps absent ou JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_FORBIDDEN : patient d'un autre praticien. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : aucun patient avec cet identifiant. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED : patient archivé, restaurer d'abord. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PROFILE_ITEM_LIMIT_REACHED : le patient a déjà 500 informations actives ; VALIDATION_FAILED avec errors[] {field, code, message} : category REQUIRED (absente) ou INVALID_VALUE (hors history, family, health, values_goals) ; title REQUIRED (absent ou vide) ou OUT_OF_RANGE (plus de 200 caractères) ; detail OUT_OF_RANGE (plus de 2 000 caractères) ; periodLabel OUT_OF_RANGE (plus de 60 caractères) ; periodYear OUT_OF_RANGE (hors 1900 à 2100) ; periodLabel ou periodYear INVALID_VALUE (rubrique autre que history) ; INVALID_FORMAT (valeur illisible, periodYear non entier) ; UNKNOWN_FIELD (clé inconnue). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `PATCH /api/patients/{id}/profile-items/{itemId}`
+
+**Corrige une information du Profil 360**
+
+Session praticien propriétaire du patient, patient actif (409 PATIENT_ARCHIVED sinon). Correction partielle et sur place, sans version : une clé absente reste inchangée ; null efface detail, periodLabel ou periodYear ; title ne peut pas devenir vide. La rubrique peut changer : en quittant history, la période est effacée par le serveur. updatedAt avance si un champ change. Une information retirée ne se corrige plus (409 PROFILE_ITEM_ARCHIVED).
+
+operationId : `updatePatientProfileItem`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du patient. |
+| `itemId` | path | string (uuid) | oui | Identifiant de l'information. |
+
+Corps (`application/json`) : [UpdatePatientProfileItemRequest](#schema-updatepatientprofileitemrequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [PatientProfileItemDto](#schema-patientprofileitemdto) (*/*) | Information corrigée. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_JSON : corps absent ou JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_FORBIDDEN : patient d'un autre praticien. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : aucun patient avec cet identifiant ; PROFILE_ITEM_NOT_FOUND : aucune information de ce patient avec cet identifiant. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED : patient archivé ; PROFILE_ITEM_ARCHIVED : information retirée du profil. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] {field, code, message} : category REQUIRED (null) ou INVALID_VALUE (hors history, family, health, values_goals) ; title REQUIRED (null ou vide) ou OUT_OF_RANGE (plus de 200 caractères) ; detail OUT_OF_RANGE (plus de 2 000 caractères) ; periodLabel OUT_OF_RANGE (plus de 60 caractères) ; periodYear OUT_OF_RANGE (hors 1900 à 2100) ; periodLabel ou periodYear INVALID_VALUE (non null avec une rubrique finale autre que history) ; INVALID_FORMAT (valeur illisible) ; UNKNOWN_FIELD (clé inconnue). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `DELETE /api/patients/{id}/profile-items/{itemId}`
+
+**Retire une information du Profil 360**
+
+Session praticien propriétaire du patient, patient actif (409 PATIENT_ARCHIVED sinon). Archivage logique : rien n'est supprimé, l'information n'est plus renvoyée par la lecture et ne se corrige plus. Idempotent : retirer une information déjà retirée renvoie aussi 204. Aucune restauration n'existe.
+
+operationId : `archivePatientProfileItem`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du patient. |
+| `itemId` | path | string (uuid) | oui | Identifiant de l'information. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 204 | — | Information retirée (ou déjà retirée) ; pas de corps. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_FORBIDDEN : patient d'un autre praticien. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : aucun patient avec cet identifiant ; PROFILE_ITEM_NOT_FOUND : aucune information de ce patient avec cet identifiant. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED : patient archivé, restaurer d'abord. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
 ## <a id="tag-profil-annuaire"></a>Profil annuaire
 
 ### `GET /api/me/profile`
@@ -1707,7 +1803,7 @@ Corps (`application/json`) : [AppealRequest](#schema-appealrequest)
 
 **Crée un rendez-vous depuis un créneau**
 
-Session praticien, propriétaire du patient. Le praticien et le cabinet viennent de la session. La fin vaut startsAt + durationMin. Statut planned, ou tentative si tentative = true (« À confirmer »). Les rendez-vous actifs du praticien qui chevauchent le créneau sont renvoyés dans conflicts sans empêcher la création ; un rendez-vous annulé ne compte pas. Avec recurrence (G Q55), une ligne par occurrence est créée dans la même transaction, toutes avec le même seriesId, le même statut et la même note, toutes les everyWeeks semaines à la même heure locale dans le fuseau tz (défaut Europe/Paris), count fois ou jusqu'à until inclus ; au-delà de 26 occurrences, rien n'est créé (422 TOO_MANY_OCCURRENCES). conflicts agrège alors les chevauchements de chaque occurrence, occurrenceStartsAt indiquant laquelle. Chaque occurrence se déplace et s'annule ensuite seule ; aucune règle de répétition n'est stockée. status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+Session praticien, propriétaire du patient. Le praticien et le cabinet viennent de la session. Le rendez-vous vise exactement un de patientId (patient du praticien, non archivé) et guest (invité, G Q60 : personne sans fiche patient, décrite par nom, prénom et téléphone, purgée 6 mois après la fin ou l'annulation du rendez-vous ; elle n'apparaît ni dans les patients, ni dans la recherche). La fin vaut startsAt + durationMin. Statut planned, ou tentative si tentative = true (« À confirmer »). Les rendez-vous actifs du praticien qui chevauchent le créneau sont renvoyés dans conflicts sans empêcher la création ; un rendez-vous annulé ne compte pas. Avec recurrence (G Q55), une ligne par occurrence est créée dans la même transaction, toutes avec le même seriesId, le même statut et la même note, toutes les everyWeeks semaines à la même heure locale dans le fuseau tz (défaut Europe/Paris), count fois ou jusqu'à until inclus ; au-delà de 26 occurrences, rien n'est créé (422 TOO_MANY_OCCURRENCES). conflicts agrège alors les chevauchements de chaque occurrence, occurrenceStartsAt indiquant laquelle. Chaque occurrence se déplace et s'annule ensuite seule ; aucune règle de répétition n'est stockée. status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
 
 operationId : `createAppointment`
 
@@ -1720,7 +1816,7 @@ Corps (`application/json`) : [CreateAppointmentRequest](#schema-createappointmen
 | 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_FORBIDDEN : patient d'un autre praticien. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
 | 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : patient inexistant. |
-| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED (errors[0].field = patientId) : patient archivé ; TOO_MANY_OCCURRENCES (errors[0].field = recurrence) : plus de 26 occurrences, rien n'est créé ; VALIDATION_FAILED avec errors[] : patientId, startsAt, durationMin, modality ou recurrence.everyWeeks REQUIRED ; durationMin OUT_OF_RANGE (hors 5 à 600) ; modality INVALID_VALUE (hors in_person, video, phone) ; planningNote OUT_OF_RANGE (plus de 2 000 caractères) ; recurrence.everyWeeks INVALID_VALUE (hors 1, 2, 4) ; recurrence.count OUT_OF_RANGE (moins de 1) ; recurrence REQUIRED (ni count ni until) ou INVALID_VALUE (count et until ensemble) ; recurrence.until INVALID_VALUE (avant le premier rendez-vous) ; tz INVALID_VALUE (fuseau inconnu) ; INVALID_FORMAT (date ou UUID illisible) ; UNKNOWN_FIELD (champ refusé). |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED (errors[0].field = patientId) : patient archivé ; TOO_MANY_OCCURRENCES (errors[0].field = recurrence) : plus de 26 occurrences, rien n'est créé ; VALIDATION_FAILED avec errors[] : patientId REQUIRED (ni patientId ni guest) ; guest INVALID_VALUE (patientId et guest ensemble) ; guest.lastName REQUIRED ; guest.firstName, guest.lastName OUT_OF_RANGE (plus de 100 caractères) ; guest.phone OUT_OF_RANGE (plus de 30 caractères) ou INVALID_FORMAT (autre chose que chiffres, espaces, +, point, tiret, parenthèses) ; startsAt, durationMin, modality ou recurrence.everyWeeks REQUIRED ; durationMin OUT_OF_RANGE (hors 5 à 600) ; modality INVALID_VALUE (hors in_person, video, phone) ; planningNote OUT_OF_RANGE (plus de 2 000 caractères) ; recurrence.everyWeeks INVALID_VALUE (hors 1, 2, 4) ; recurrence.count OUT_OF_RANGE (moins de 1) ; recurrence REQUIRED (ni count ni until) ou INVALID_VALUE (count et until ensemble) ; recurrence.until INVALID_VALUE (avant le premier rendez-vous) ; tz INVALID_VALUE (fuseau inconnu) ; INVALID_FORMAT (date ou UUID illisible) ; UNKNOWN_FIELD (champ refusé). |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ### `GET /api/appointments/{id}`
@@ -1748,7 +1844,7 @@ operationId : `getAppointment`
 
 **Déplace ou modifie un rendez-vous**
 
-Session praticien. Fusion partielle : startsAt déplace le rendez-vous en gardant sa durée, durationMin la change en gardant le début, modality et planningNote se remplacent ; un champ absent reste inchangé, planningNote à null efface la note. Refusé si le rendez-vous est annulé ou terminé (409). Les chevauchements du nouveau créneau sont renvoyés dans conflicts sans empêcher la modification. patientId, tentative (passer par /confirm), recurrence, status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+Session praticien. Fusion partielle : startsAt déplace le rendez-vous en gardant sa durée, durationMin la change en gardant le début, modality et planningNote se remplacent ; un champ absent reste inchangé, planningNote à null efface la note. guest corrige l'identité d'un rendez-vous invité (G Q60) : lastName obligatoire et remplacé, firstName et phone absents restent inchangés, une chaîne vide les efface ; 422 INVALID_VALUE sur guest si le rendez-vous vise un patient ou si l'invité est purgé. Refusé si le rendez-vous est annulé ou terminé (409). Les chevauchements du nouveau créneau sont renvoyés dans conflicts sans empêcher la modification. patientId, tentative (passer par /confirm), recurrence, status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
 
 operationId : `updateAppointment`
 
@@ -1766,7 +1862,32 @@ Corps (`application/json`) : [UpdateAppointmentRequest](#schema-updateappointmen
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
 | 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | APPOINTMENT_NOT_FOUND : rendez-vous inexistant ou d'un autre praticien. |
 | 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | APPOINTMENT_NOT_ACTIVE : le rendez-vous est annulé ou terminé. |
-| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : durationMin OUT_OF_RANGE (hors 5 à 600) ; modality INVALID_VALUE ; planningNote OUT_OF_RANGE (plus de 2 000 caractères) ; INVALID_FORMAT (date illisible) ; UNKNOWN_FIELD (champ refusé). |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : durationMin OUT_OF_RANGE (hors 5 à 600) ; modality INVALID_VALUE ; planningNote OUT_OF_RANGE (plus de 2 000 caractères) ; guest INVALID_VALUE (rendez-vous patient ou invité purgé) ; guest.lastName REQUIRED ; guest.phone INVALID_FORMAT ; guest.* OUT_OF_RANGE ; INVALID_FORMAT (date illisible) ; UNKNOWN_FIELD (champ refusé). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `POST /api/appointments/{id}/attach-patient`
+
+**Rattache un rendez-vous invité à un patient**
+
+Session praticien, propriétaire du patient. Le jour où l'invité (personne sans fiche, G Q60) devient patient, le praticien crée sa fiche puis y rattache le rendez-vous : patient renseigné, nom, prénom et téléphone de l'invité effacés du rendez-vous. Avec includeSameGuest = true, tous les autres rendez-vous invités non purgés du praticien ayant les mêmes nom, prénom et téléphone (casse et espaces ignorés) sont rattachés aussi, quel que soit leur statut. Le patient doit être au praticien et non archivé. Refusé si le rendez-vous vise déjà un patient ou si l'invité est purgé (409). Répond les rendez-vous rattachés, triés par début.
+
+operationId : `attachPatient`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du rendez-vous invité. |
+
+Corps (`application/json`) : [AttachPatientRequest](#schema-attachpatientrequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [AttachedAppointmentsDto](#schema-attachedappointmentsdto) (*/*) | Rendez-vous rattachés. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_FORBIDDEN : patient d'un autre praticien. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | APPOINTMENT_NOT_FOUND : rendez-vous inexistant ou d'un autre praticien ; PATIENT_NOT_FOUND : patient inexistant. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | APPOINTMENT_NOT_ACTIVE : le rendez-vous vise déjà un patient, ou l'invité est purgé. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED (errors[0].field = patientId) : patient archivé ; VALIDATION_FAILED avec errors[] : patientId REQUIRED ; INVALID_FORMAT (UUID illisible) ; UNKNOWN_FIELD (champ refusé). |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ### `POST /api/appointments/{id}/cancel`
@@ -2720,9 +2841,10 @@ Rendez-vous du praticien. Dates UTC ISO 8601.
 | `createdAt` | string (date-time) | non | Instant de création UTC. |
 | `durationMin` | integer (int32) | non | Durée en minutes (fin moins début). |
 | `endsAt` | string (date-time) | non | Fin du rendez-vous, UTC ISO 8601. |
+| `guest` | object | non | Invité du rendez-vous (G Q60) : personne sans fiche patient. Null pour un rendez-vous patient. |
 | `id` | string (uuid) | non | Identifiant du rendez-vous. |
 | `modality` | `in_person` \| `video` \| `phone` | non | Modalité du rendez-vous. |
-| `patient` | object | non | Patient du rendez-vous. |
+| `patient` | object | non | Patient du rendez-vous. Null pour un rendez-vous invité. |
 | `planningNote` | string | non | Note de planification, visible seulement dans l'agenda. Null si aucune. |
 | `seriesId` | string (uuid) | non | Série de répétition. Null pour un rendez-vous isolé. |
 | `sessionEntryId` | string (uuid) | non | Séance rattachée (entrée de type session). Null sinon. |
@@ -2757,6 +2879,23 @@ Rendez-vous modifié et chevauchements de son créneau (jamais bloquants).
 | --- | --- | --- | --- |
 | `appointment` | object | non | Rendez-vous après modification. |
 | `conflicts` | [ConflictDto](#schema-conflictdto)[] | non | Rendez-vous actifs du praticien qui chevauchent ; vide sinon. |
+
+### <a id="schema-attachpatientrequest"></a>AttachPatientRequest
+
+Rattachement d'un rendez-vous invité à un patient du praticien.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `includeSameGuest` | boolean | non | true pour rattacher aussi tous les autres rendez-vous invités non purgés du praticien ayant les mêmes nom, prénom et téléphone (casse et espaces ignorés). Défaut : false. |
+| `patientId` | string (uuid) | oui | Patient du praticien, non archivé. Obligatoire. |
+
+### <a id="schema-attachedappointmentsdto"></a>AttachedAppointmentsDto
+
+Rendez-vous rattachés au patient, triés par début.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `appointments` | [AppointmentDto](#schema-appointmentdto)[] | non | Le rendez-vous demandé et, avec includeSameGuest, les autres rendez-vous du même invité, dans leur état final (patient renseigné, guest null). |
 
 ### <a id="schema-cancelappointmentrequest"></a>CancelAppointmentRequest
 
@@ -2813,7 +2952,7 @@ Rendez-vous actif (planned ou tentative) du praticien qui chevauche le créneau 
 | `appointmentId` | string (uuid) | non | Identifiant du rendez-vous chevauché. |
 | `endsAt` | string (date-time) | non | Fin du rendez-vous chevauché, UTC ISO 8601. |
 | `occurrenceStartsAt` | string (date-time) | non | Début, UTC ISO 8601, du créneau demandé que ce rendez-vous chevauche : l'occurrence concernée pour une série, sinon le début du rendez-vous créé ou déplacé, ou from pour freebusy. |
-| `patientDisplayName` | string | non | Nom affiché du patient du rendez-vous chevauché. |
+| `patientDisplayName` | string | non | Nom affiché du patient du rendez-vous chevauché ; pour un invité (G Q60), « Prénom Nom » (le nom seul sans prénom), ou « Invité purgé » après la purge. |
 | `startsAt` | string (date-time) | non | Début du rendez-vous chevauché, UTC ISO 8601. |
 
 ### <a id="schema-consents"></a>Consents
@@ -2838,13 +2977,14 @@ Coordonnées professionnelles du praticien, vues par l'administration.
 
 ### <a id="schema-createappointmentrequest"></a>CreateAppointmentRequest
 
-Création d'un rendez-vous, ou d'une série si recurrence est présent. status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+Création d'un rendez-vous, ou d'une série si recurrence est présent. Exactement un de patientId et guest : aucun, 422 REQUIRED sur patientId ; les deux, 422 INVALID_VALUE sur guest. status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
 | `durationMin` | integer (int32) | oui | Durée en minutes, de 5 à 600. Obligatoire. |
+| `guest` | object | non | Invité : personne qui n'a pas encore de fiche patient (G Q60). Exclusif de patientId ; recopié sur chaque occurrence d'une série. |
 | `modality` | `in_person` \| `video` \| `phone` | oui | Modalité. Obligatoire. |
-| `patientId` | string (uuid) | oui | Patient du praticien, non archivé. Obligatoire. |
+| `patientId` | string (uuid) | non | Patient du praticien, non archivé. Obligatoire sauf pour un rendez-vous invité (guest). |
 | `planningNote` | string | non | Note de planification, 2 000 caractères au plus. Facultative. |
 | `recurrence` | object | non | Répétition (G Q55) : une ligne par occurrence, même seriesId, même statut, même note. Absente : un seul rendez-vous. |
 | `startsAt` | string (date-time) | oui | Début du rendez-vous, UTC ISO 8601. Obligatoire. |
@@ -2889,6 +3029,18 @@ Lien à poser entre l'entrée de l'URL et une autre entrée du même patient. La
 | `linkType` | string | oui | Code du type de lien, parmi ceux de GET /api/vocabulary/link-types (par exemple triggers, caused_by, worsens, relieves, co_occurs, follows, part_of, treats). Le type doit être autorisé pour le couple (type de l'entrée source, type de l'entrée cible). |
 | `rationale` | string | non | Justification libre du lien, 500 caractères au plus ; espaces de début et de fin retirés, vide traité comme absent. Optionnelle. |
 | `targetId` | string (uuid) | oui | Identifiant de l'autre entrée à lier ; elle doit être du même patient, non archivée et différente de l'entrée de l'URL. |
+
+### <a id="schema-createpatientprofileitemrequest"></a>CreatePatientProfileItemRequest
+
+Ajout d'une information au Profil 360. La période (periodLabel, periodYear) n'est admise que dans la rubrique history (422 INVALID_VALUE sinon). Les espaces de bord sont retirés ; toute autre clé est refusée (422 UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `category` | `history` \| `family` \| `health` \| `values_goals` | oui | Rubrique : history = Histoire et souvenirs, family = Famille et entourage, health = Santé et antécédents, values_goals = Valeurs et projets. Obligatoire (422 REQUIRED) ; autre valeur : 422 INVALID_VALUE. |
+| `detail` | string | non | Seconde ligne facultative (précision, citation), 2 000 caractères au plus (422 OUT_OF_RANGE). |
+| `periodLabel` | string | non | history seulement : période libre, affichée telle quelle (« Enfance », « Vers 2000 », « 2002 – 2009 »), 60 caractères au plus (422 OUT_OF_RANGE). |
+| `periodYear` | integer (int32) | non | history seulement : année qui ne sert qu'à trier le fil chronologique, de 1900 à 2100 (422 OUT_OF_RANGE). |
+| `title` | string | oui | L'information elle-même : obligatoire, non vide (422 REQUIRED), 200 caractères au plus après retrait des espaces de bord (422 OUT_OF_RANGE). |
 
 ### <a id="schema-createpatientrequest"></a>CreatePatientRequest
 
@@ -3440,7 +3592,7 @@ Drapeau à poser sur un patient (à la création ou via POST /flags).
 
 ### <a id="schema-freebusydto"></a>FreeBusyDto
 
-Ce qui entoure un créneau avant de le créer ou d'y déplacer un rendez-vous : conflits, rendez-vous précédent et suivant du même jour.
+Ce qui entoure un créneau avant de le créer ou d'y déplacer un rendez-vous : conflits, rendez-vous précédent et suivant du même jour. Les rendez-vous invités (G Q60) comptent comme les autres : leur patientDisplayName vaut « Prénom Nom », ou « Invité purgé » après la purge, et previous / next portent guest au lieu de patient.
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
@@ -3501,6 +3653,27 @@ Super-nœud : regroupement de nœuds de degré 1 d'un même type d'entrée reli�
 | `memberIds` | string (uuid)[] | non | Identifiants des entrées regroupées, triés par ordre croissant. |
 | `neighborId` | string (uuid) | non | Identifiant de l'entrée voisine, rendue dans nodes, à laquelle le groupe est relié. |
 | `type` | string | non | Code du type d'entrée commun à tous les membres. |
+
+### <a id="schema-guestdto"></a>GuestDto
+
+Invité du rendez-vous : personne sans fiche patient (G Q60). Après la purge (6 mois après la fin ou l'annulation du rendez-vous), firstName, lastName et phone sont null et purgedAt est renseigné.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `firstName` | string | non | Prénom. Null si inconnu ou purgé. |
+| `lastName` | string | non | Nom. Null seulement après la purge. |
+| `phone` | string | non | Téléphone. Null si inconnu ou purgé. |
+| `purgedAt` | string (date-time) | non | Instant de la purge UTC. Null tant que l'invité n'est pas purgé. |
+
+### <a id="schema-guestrequest"></a>GuestRequest
+
+Invité : personne qui n'a pas encore de fiche patient (G Q60). Nom obligatoire, prénom et téléphone facultatifs. Ses données ne vivent que dans le rendez-vous, avec les mêmes règles d'accès qu'un patient, et sont purgées 6 mois après la fin (ou l'annulation) du rendez-vous.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `firstName` | string | non | Prénom, 100 caractères au plus. |
+| `lastName` | string | oui | Nom, 100 caractères au plus. Obligatoire. |
+| `phone` | string | non | Téléphone, 30 caractères au plus : chiffres, espaces, +, point, tiret, parenthèses, au moins un chiffre (INVALID_FORMAT sinon) ; chaîne vide : aucun téléphone. |
 
 ### <a id="schema-item"></a>Item
 
@@ -3843,6 +4016,30 @@ Page de patients, paginée par curseur opaque.
 | --- | --- | --- | --- |
 | `items` | [PatientDto](#schema-patientdto)[] | non | Patients de la page, dans l'ordre du paramètre sort. |
 | `nextCursor` | string | non | Curseur opaque à renvoyer tel quel dans le paramètre cursor pour obtenir la page suivante ; null sur la dernière page. |
+
+### <a id="schema-patientprofiledto"></a>PatientProfileDto
+
+Profil 360 complet d'un patient, pour l'onglet : toutes les informations actives, sans pagination (500 au plus).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `items` | [PatientProfileItemDto](#schema-patientprofileitemdto)[] | non | Informations actives, triées par rubrique (history, family, health, values_goals) ; dans history, periodYear croissant (sans année en dernier) puis createdAt ; ailleurs, createdAt croissant. Liste vide si le profil est vide. |
+| `patientId` | string (uuid) | non | Identifiant du patient. |
+
+### <a id="schema-patientprofileitemdto"></a>PatientProfileItemDto
+
+Information du Profil 360 d'un patient : ce qui décrit la personne, hors séance. Elle n'appartient à aucune séance et se corrige sur place, sans historique.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `category` | `history` \| `family` \| `health` \| `values_goals` | non | Rubrique : history = Histoire et souvenirs, family = Famille et entourage, health = Santé et antécédents, values_goals = Valeurs et projets. |
+| `createdAt` | string (date-time) | non | Date-heure de création, UTC ISO 8601. |
+| `detail` | string | non | Seconde ligne facultative (précision, citation), 2 000 caractères au plus ; null si aucune. |
+| `id` | string (uuid) | non | Identifiant de l'information. |
+| `periodLabel` | string | non | Période libre, affichée telle quelle et jamais interprétée (history seulement) ; null si aucune ou hors history. |
+| `periodYear` | integer (int32) | non | Année de tri du fil chronologique, 1900 à 2100 (history seulement) ; null si aucune ou hors history. |
+| `title` | string | non | L'information elle-même, 200 caractères au plus. |
+| `updatedAt` | string (date-time) | non | Date-heure de la dernière correction (égale à createdAt si jamais corrigée), UTC ISO 8601. |
 
 ### <a id="schema-preferences"></a>Preferences
 
@@ -4425,14 +4622,27 @@ Premier code TOTP produit par l'application d'authentification.
 
 ### <a id="schema-updateappointmentrequest"></a>UpdateAppointmentRequest
 
-Modification partielle : un champ absent reste inchangé ; planningNote à null efface la note. patientId, tentative, recurrence, status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+Modification partielle : un champ absent reste inchangé ; planningNote à null efface la note ; guest remplace l'identité d'un invité. patientId (passer par /attach-patient), tentative, recurrence, status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
 | `durationMin` | integer (int32) | non | Nouvelle durée en minutes, de 5 à 600 ; le début est conservé. |
+| `guest` | object | non | Correction de l'identité de l'invité (G Q60) : lastName obligatoire et remplacé ; firstName et phone absents ou null restent inchangés, une chaîne vide les efface. 422 INVALID_VALUE si le rendez-vous vise un patient ou si l'invité est purgé. |
 | `modality` | `in_person` \| `video` \| `phone` | non | Nouvelle modalité. |
 | `planningNote` | string | non | Nouvelle note de planification (2 000 caractères au plus) ; null l'efface. |
 | `startsAt` | string (date-time) | non | Nouveau début, UTC ISO 8601 ; la durée est conservée si elle n'est pas fournie. |
+
+### <a id="schema-updatepatientprofileitemrequest"></a>UpdatePatientProfileItemRequest
+
+Correction partielle : une clé absente reste inchangée ; null efface detail, periodLabel ou periodYear ; title ne peut pas devenir vide. La rubrique peut changer : en quittant history, la période est effacée par le serveur ; une période envoyée avec une rubrique autre que history est refusée (422 INVALID_VALUE). Toute autre clé est refusée (422 UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `category` | `history` \| `family` \| `health` \| `values_goals` | non | Nouvelle rubrique : history, family, health ou values_goals (422 INVALID_VALUE sinon ; null : 422 REQUIRED). |
+| `detail` | string | non | Nouveau détail, 2 000 caractères au plus (422 OUT_OF_RANGE) ; null l'efface. |
+| `periodLabel` | string | non | history seulement : nouvelle période libre, 60 caractères au plus (422 OUT_OF_RANGE) ; null l'efface. |
+| `periodYear` | integer (int32) | non | history seulement : nouvelle année de tri, de 1900 à 2100 (422 OUT_OF_RANGE) ; null l'efface. |
+| `title` | string | non | Nouveau texte de l'information : non vide (422 REQUIRED), 200 caractères au plus après retrait des espaces de bord (422 OUT_OF_RANGE). |
 
 ### <a id="schema-updateprofilerequest"></a>UpdateProfileRequest
 

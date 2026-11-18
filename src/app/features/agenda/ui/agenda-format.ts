@@ -2,10 +2,12 @@ import { sessionModalityLabel } from '../../../shared/ui';
 import {
   AgendaRange,
   AgendaView,
+  Appointment,
   AppointmentModality,
   AppointmentStatus,
   CalendarKey,
   Conflict,
+  guestFullName,
   isoWeek,
   LIST_DAYS,
 } from '../data/agenda.model';
@@ -155,6 +157,20 @@ export function sessionCountLabel(count: number): string {
     return $localize`:Une séance dans la plage affichée@@agenda.toolbar.sessions.one:1 séance`;
   }
   return $localize`:Nombre de séances de la plage affichée@@agenda.toolbar.sessions.many:${count}:count: séances`;
+}
+
+/**
+ * Nom affiché d'un rendez-vous (grille, liste, détail, voisinage du panneau 15b) : le patient ;
+ * pour un invité, « Prénom Nom » (le nom seul sans prénom), ou « Invité purgé » après la purge,
+ * comme `ConflictDto.patientDisplayName`.
+ */
+export function appointmentName(item: Pick<Appointment, 'patient' | 'guest'>): string {
+  if (item.patient) return item.patient.displayName;
+  if (!item.guest) return '';
+  if (item.guest.purgedAt) {
+    return $localize`:Nom d'un invité dont l'identité a été purgée (six mois après le rendez-vous)@@agenda.guest.purged:Invité purgé`;
+  }
+  return guestFullName(item.guest) ?? '';
 }
 
 /** Libellé d'une modalité en minuscules (« cabinet », « visio », « téléphone »), celui de l'en-tête patient. */

@@ -1,10 +1,10 @@
 import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { CalendarOptions, EventInput, MoreLinkArg } from '@fullcalendar/core';
+import { CalendarOptions, EventInput, EventMountArg, MoreLinkArg } from '@fullcalendar/core';
 
-import { AgendaHours, BusyBlock, fromIsoDay, rangeFor } from '../data/agenda.model';
-import { weekAgenda } from '../testing/agenda.testing';
+import { AgendaHours, Appointment, BusyBlock, fromIsoDay, rangeFor } from '../data/agenda.model';
+import { guestAppointmentOf, PURGED_GUEST, weekAgenda } from '../testing/agenda.testing';
 import { AgendaCalendarComponent } from './agenda-calendar.component';
 
 const week = weekAgenda(rangeFor('week', fromIsoDay('2026-10-26')!));
@@ -17,7 +17,11 @@ const busy: BusyBlock[] = [
   },
 ];
 
-async function render(selectedId: string | null = null, hours?: AgendaHours) {
+async function render(
+  selectedId: string | null = null,
+  hours?: AgendaHours,
+  appointments: readonly Appointment[] = week.appointments,
+) {
   TestBed.configureTestingModule({
     imports: [AgendaCalendarComponent],
     providers: [provideRouter([]), { provide: LOCALE_ID, useValue: 'fr' }],
@@ -25,7 +29,7 @@ async function render(selectedId: string | null = null, hours?: AgendaHours) {
   const fixture = TestBed.createComponent(AgendaCalendarComponent);
   fixture.componentRef.setInput('view', 'week');
   fixture.componentRef.setInput('anchor', fromIsoDay('2026-10-26')!);
-  fixture.componentRef.setInput('appointments', week.appointments);
+  fixture.componentRef.setInput('appointments', appointments);
   fixture.componentRef.setInput('busy', busy);
   fixture.componentRef.setInput('selectedId', selectedId);
   if (hours) fixture.componentRef.setInput('hours', hours);
@@ -137,6 +141,42 @@ describe('AgendaCalendarComponent (FullCalendar)', () => {
     const after = options();
     expect(after.slotMinTime).toBe('07:00:00');
     expect(after.eventClick).toBe(before.eventClick);
+  });
+
+  it('rendez-vous invité : « Prénom Nom » ou « Invité purgé » ; le double-clic n’ouvre aucun dossier', async () => {
+    const guest = guestAppointmentOf({
+      id: 'invite',
+      startsAt: new Date(2026, 9, 27, 14, 0).toISOString(),
+      modality: 'video',
+    });
+    const purged = guestAppointmentOf({
+      id: 'purge',
+      startsAt: new Date(2026, 9, 28, 9, 0).toISOString(),
+      guest: PURGED_GUEST,
+    });
+    const { fixture, events, options } = await render(null, undefined, [
+      ...week.appointments,
+      guest,
+      purged,
+    ]);
+    const sara = events.find((item) => item.id === 'invite')!;
+    expect(sara.title).toBe('Sara Benali');
+    expect(sara.url).toBe('/agenda/rdv/invite');
+    expect(sara.extendedProps).toMatchObject({ name: 'Sara Benali', suffix: 'visio' });
+    expect(events.find((item) => item.id === 'purge')!.title).toBe('Invité purgé');
+
+    const opened: Appointment[] = [];
+    fixture.componentInstance.opened.subscribe((item) => opened.push(item));
+    const mount = options().eventDidMount as (arg: EventMountArg) => void;
+    const dblclick = (event: EventInput) => {
+      const el = document.createElement('a');
+      mount({ el, event: { classNames: [], extendedProps: event.extendedProps } } as never);
+      el.dispatchEvent(new MouseEvent('dblclick'));
+    };
+    dblclick(sara);
+    expect(opened).toEqual([]);
+    dblclick(events.find((item) => item.title === 'Omar B.')!);
+    expect(opened.map((item) => item.patient?.displayName)).toEqual(['Omar B.']);
   });
 
   it('sans sélection, aucun événement ne porte la classe selected ; le calendrier est monté', async () => {

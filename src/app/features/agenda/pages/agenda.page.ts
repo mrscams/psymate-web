@@ -30,6 +30,7 @@ import {
   fromIsoDay,
   inRange,
   isAgendaView,
+  PatientOption,
   sameDay,
   startOfDay,
   toIsoDay,
@@ -322,8 +323,9 @@ export class AgendaPage {
     if (conflicts) this.toasts.info(conflicts);
   }
 
-  /** Double-clic sur un rendez-vous : le dossier du patient. */
+  /** Double-clic sur un rendez-vous : le dossier du patient ; un invité n'en a pas. */
   protected openPatient(appointment: Appointment): void {
+    if (!appointment.patient) return;
     void this.router.navigate(['/patients', appointment.patient.id]);
   }
 
@@ -336,7 +338,10 @@ export class AgendaPage {
     });
   }
 
-  /** « Dupliquer » : le panneau prérempli, même créneau une semaine plus tard. */
+  /**
+   * « Dupliquer » : le panneau prérempli, même créneau une semaine plus tard. Le détail ne propose
+   * pas « Dupliquer » pour un invité (le panneau ne sait pas créer d'invité).
+   */
   protected duplicate(appointment: Appointment): void {
     this.openPanel({
       slot: addDays(new Date(appointment.startsAt), 7),
@@ -349,7 +354,9 @@ export class AgendaPage {
     });
   }
 
-  private optionOf(appointment: Appointment) {
+  /** Le patient du rendez-vous pour le panneau 15b ; null pour un invité. */
+  private optionOf(appointment: Appointment): PatientOption | null {
+    if (!appointment.patient) return null;
     const { id, displayName, age } = appointment.patient;
     return { id, displayName, age };
   }

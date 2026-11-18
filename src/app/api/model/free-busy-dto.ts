@@ -12,7 +12,7 @@ import { AppointmentDto } from './appointment-dto';
 
 
 /**
- * Ce qui entoure un créneau avant de le créer ou d\'y déplacer un rendez-vous : conflits, rendez-vous précédent et suivant du même jour.
+ * Ce qui entoure un créneau avant de le créer ou d\'y déplacer un rendez-vous : conflits, rendez-vous précédent et suivant du même jour. Les rendez-vous invités (G Q60) comptent comme les autres : leur patientDisplayName vaut « Prénom Nom », ou « Invité purgé » après la purge, et previous / next portent guest au lieu de patient.
  */
 export interface FreeBusyDto { 
     /**
