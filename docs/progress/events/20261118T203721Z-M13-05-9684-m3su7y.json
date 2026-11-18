@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-18T20:37:21.584Z",
+  "task": "M13-05",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR #96 fusionnée en squash (484718d) ; elle portait aussi le plan web, la fiche 30 et sa maquette",
+  "pr": "https://github.com/mrscams/psymate-web/pull/96",
+  "branch": "claude/m13-04-contrat-0-14-3598ce",
+  "checkout": "ux-s9-timeline-b36a59"
+}

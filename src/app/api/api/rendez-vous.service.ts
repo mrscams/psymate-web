@@ -25,6 +25,10 @@ import { AppointmentSeriesDto } from '../model/appointment-series-dto';
 // @ts-ignore
 import { AppointmentUpdatedDto } from '../model/appointment-updated-dto';
 // @ts-ignore
+import { AttachPatientRequest } from '../model/attach-patient-request';
+// @ts-ignore
+import { AttachedAppointmentsDto } from '../model/attached-appointments-dto';
+// @ts-ignore
 import { CancelAppointmentRequest } from '../model/cancel-appointment-request';
 // @ts-ignore
 import { CreateAppointmentRequest } from '../model/create-appointment-request';
@@ -50,6 +54,78 @@ export class RendezVousService extends BaseService implements RendezVousServiceI
 
     constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string|string[], @Optional() configuration?: Configuration) {
         super(basePath, configuration);
+    }
+
+    /**
+     * Rattache un rendez-vous invité à un patient
+     * Session praticien, propriétaire du patient. Le jour où l\&#39;invité (personne sans fiche, G Q60) devient patient, le praticien crée sa fiche puis y rattache le rendez-vous : patient renseigné, nom, prénom et téléphone de l\&#39;invité effacés du rendez-vous. Avec includeSameGuest &#x3D; true, tous les autres rendez-vous invités non purgés du praticien ayant les mêmes nom, prénom et téléphone (casse et espaces ignorés) sont rattachés aussi, quel que soit leur statut. Le patient doit être au praticien et non archivé. Refusé si le rendez-vous vise déjà un patient ou si l\&#39;invité est purgé (409). Répond les rendez-vous rattachés, triés par début.
+     * @endpoint post /api/appointments/{id}/attach-patient
+     * @param id Identifiant du rendez-vous invité.
+     * @param attachPatientRequest 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public attachPatient(id: string, attachPatientRequest: AttachPatientRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<AttachedAppointmentsDto>;
+    public attachPatient(id: string, attachPatientRequest: AttachPatientRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<AttachedAppointmentsDto>>;
+    public attachPatient(id: string, attachPatientRequest: AttachPatientRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<AttachedAppointmentsDto>>;
+    public attachPatient(id: string, attachPatientRequest: AttachPatientRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling attachPatient.');
+        }
+        if (attachPatientRequest === null || attachPatientRequest === undefined) {
+            throw new Error('Required parameter attachPatientRequest was null or undefined when calling attachPatient.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            '*/*',
+            'application/problem+json'
+        ]);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/appointments/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: "uuid"})}/attach-patient`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<AttachedAppointmentsDto>('post', `${basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                body: attachPatientRequest,
+                responseType: <any>responseType_,
+                ...(withCredentials ? { withCredentials } : {}),
+                headers: localVarHeaders,
+                observe: observe,
+                ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+                reportProgress: reportProgress
+            }
+        );
     }
 
     /**
@@ -250,7 +326,7 @@ export class RendezVousService extends BaseService implements RendezVousServiceI
 
     /**
      * Crée un rendez-vous depuis un créneau
-     * Session praticien, propriétaire du patient. Le praticien et le cabinet viennent de la session. La fin vaut startsAt + durationMin. Statut planned, ou tentative si tentative &#x3D; true (« À confirmer »). Les rendez-vous actifs du praticien qui chevauchent le créneau sont renvoyés dans conflicts sans empêcher la création ; un rendez-vous annulé ne compte pas. Avec recurrence (G Q55), une ligne par occurrence est créée dans la même transaction, toutes avec le même seriesId, le même statut et la même note, toutes les everyWeeks semaines à la même heure locale dans le fuseau tz (défaut Europe/Paris), count fois ou jusqu\&#39;à until inclus ; au-delà de 26 occurrences, rien n\&#39;est créé (422 TOO_MANY_OCCURRENCES). conflicts agrège alors les chevauchements de chaque occurrence, occurrenceStartsAt indiquant laquelle. Chaque occurrence se déplace et s\&#39;annule ensuite seule ; aucune règle de répétition n\&#39;est stockée. status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+     * Session praticien, propriétaire du patient. Le praticien et le cabinet viennent de la session. Le rendez-vous vise exactement un de patientId (patient du praticien, non archivé) et guest (invité, G Q60 : personne sans fiche patient, décrite par nom, prénom et téléphone, purgée 6 mois après la fin ou l\&#39;annulation du rendez-vous ; elle n\&#39;apparaît ni dans les patients, ni dans la recherche). La fin vaut startsAt + durationMin. Statut planned, ou tentative si tentative &#x3D; true (« À confirmer »). Les rendez-vous actifs du praticien qui chevauchent le créneau sont renvoyés dans conflicts sans empêcher la création ; un rendez-vous annulé ne compte pas. Avec recurrence (G Q55), une ligne par occurrence est créée dans la même transaction, toutes avec le même seriesId, le même statut et la même note, toutes les everyWeeks semaines à la même heure locale dans le fuseau tz (défaut Europe/Paris), count fois ou jusqu\&#39;à until inclus ; au-delà de 26 occurrences, rien n\&#39;est créé (422 TOO_MANY_OCCURRENCES). conflicts agrège alors les chevauchements de chaque occurrence, occurrenceStartsAt indiquant laquelle. Chaque occurrence se déplace et s\&#39;annule ensuite seule ; aucune règle de répétition n\&#39;est stockée. status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
      * @endpoint post /api/appointments
      * @param createAppointmentRequest 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -376,7 +452,7 @@ export class RendezVousService extends BaseService implements RendezVousServiceI
 
     /**
      * Déplace ou modifie un rendez-vous
-     * Session praticien. Fusion partielle : startsAt déplace le rendez-vous en gardant sa durée, durationMin la change en gardant le début, modality et planningNote se remplacent ; un champ absent reste inchangé, planningNote à null efface la note. Refusé si le rendez-vous est annulé ou terminé (409). Les chevauchements du nouveau créneau sont renvoyés dans conflicts sans empêcher la modification. patientId, tentative (passer par /confirm), recurrence, status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+     * Session praticien. Fusion partielle : startsAt déplace le rendez-vous en gardant sa durée, durationMin la change en gardant le début, modality et planningNote se remplacent ; un champ absent reste inchangé, planningNote à null efface la note. guest corrige l\&#39;identité d\&#39;un rendez-vous invité (G Q60) : lastName obligatoire et remplacé, firstName et phone absents restent inchangés, une chaîne vide les efface ; 422 INVALID_VALUE sur guest si le rendez-vous vise un patient ou si l\&#39;invité est purgé. Refusé si le rendez-vous est annulé ou terminé (409). Les chevauchements du nouveau créneau sont renvoyés dans conflicts sans empêcher la modification. patientId, tentative (passer par /confirm), recurrence, status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
      * @endpoint patch /api/appointments/{id}
      * @param id Identifiant du rendez-vous.
      * @param updateAppointmentRequest 

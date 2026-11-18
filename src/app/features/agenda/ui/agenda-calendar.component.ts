@@ -38,6 +38,7 @@ import {
   LIST_DAYS,
 } from '../data/agenda.model';
 import {
+  appointmentName,
   busyName,
   formatSpacedTimeRange,
   formatTime,
@@ -122,7 +123,7 @@ export class AgendaCalendarComponent {
   readonly selectedId = input<string | null>(null);
   /** Bornes de la grille et jours travaillés (préférences `agenda.*`). */
   readonly hours = input<AgendaHours>(DEFAULT_HOURS);
-  /** Double-clic sur un rendez-vous : le dossier du patient. */
+  /** Double-clic sur un rendez-vous : le dossier du patient (rien pour un invité, sans dossier). */
   readonly opened = output<Appointment>();
   /** Clic sur un créneau vide (semaine, jour) : début du créneau. */
   readonly slotPicked = output<Date>();
@@ -146,7 +147,7 @@ export class AgendaCalendarComponent {
       id: appointment.id,
       start: appointment.startsAt,
       end: appointment.endsAt,
-      title: appointment.patient.displayName,
+      title: appointmentName(appointment),
       url: this.hrefOf(appointment),
       classNames: [
         'rdv',
@@ -330,7 +331,7 @@ export class AgendaCalendarComponent {
     return {
       kind: 'appointment',
       appointment,
-      name: appointment.patient.displayName,
+      name: appointmentName(appointment),
       suffix,
       suffixKind: status ? 'status' : suffix ? 'modality' : null,
       modality,
@@ -365,7 +366,7 @@ export class AgendaCalendarComponent {
     }
     if (arg.event.classNames.includes('selected')) arg.el.setAttribute('aria-current', 'true');
     arg.el.addEventListener('dblclick', () => {
-      if (props.appointment) this.opened.emit(props.appointment);
+      if (props.appointment?.patient) this.opened.emit(props.appointment);
     });
   }
 

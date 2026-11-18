@@ -6,7 +6,12 @@ import { ToastService } from '../../../shared/ui';
 import { loaded } from '../../../shared/util';
 import { Appointment } from '../data/agenda.model';
 import { AgendaStore, DetailState } from '../data/agenda.store';
-import { appointmentOf } from '../testing/agenda.testing';
+import {
+  appointmentOf,
+  guestAppointmentOf,
+  guestOf,
+  PURGED_GUEST,
+} from '../testing/agenda.testing';
 import { AppointmentDetailComponent } from './appointment-detail.component';
 
 const ok = (value: unknown = null) => Promise.resolve({ ok: true, value, conflicts: [] });
@@ -229,6 +234,88 @@ describe('AppointmentDetailComponent (fiche 15 §5)', () => {
     await settle(fixture);
     expect(store.saveNote).toHaveBeenCalledWith('a-1', null);
     expect(text(el.querySelector('.saved'))).toBe('Enregistré');
+  });
+
+  it('patient : initiales, nom lié au dossier, âge, bloc Préparer avec ses liens', async () => {
+    const { el } = await render({
+      ...base,
+      patient: {
+        id: 'p-1',
+        displayName: 'Marie D.',
+        birthDate: '1992-03-14',
+        age: 34,
+        archived: false,
+      },
+    });
+    expect(text(el.querySelector('.avatar'))).toBe('MD');
+    const name = el.querySelector<HTMLAnchorElement>('a.name')!;
+    expect(text(name)).toBe('Marie D.');
+    expect(name.getAttribute('href')).toBe('/patients/p-1');
+    expect(text(el.querySelector('.meta'))).toBe('34 ans');
+    expect(text(el.querySelector('.block h2'))).toBe('Préparer');
+  });
+
+  const guest = guestAppointmentOf({
+    id: 'a-2',
+    startsAt: new Date(2026, 9, 31, 14, 0).toISOString(),
+  });
+
+  it('invité : « Prénom Nom » sans lien ni initiales, ni âge, ni Préparer ; pas de contexte lu', async () => {
+    const { el, store } = await render(guest);
+    expect(store.loadContext).toHaveBeenCalledWith(null);
+    expect(store.loadContext).not.toHaveBeenCalledWith('p-1');
+    expect(el.querySelector('.avatar')).toBeNull();
+    expect(el.querySelector('a.name')).toBeNull();
+    expect(el.querySelector('a[href^="/patients"]')).toBeNull();
+    expect(text(el.querySelector('.name'))).toBe('Sara Benali');
+    expect(text(el.querySelector('.meta'))).toBe('invité · +33 6 12 34 56 78');
+    expect(el.textContent).not.toContain('Préparer');
+    expect(el.textContent).not.toContain('suivi depuis');
+    expect(el.textContent).not.toContain('Rythme');
+    expect(text(el.querySelector('.kicker'))).toBe('Séance planifiée · cabinet');
+
+    TestBed.resetTestingModule();
+    const lastNameOnly = await render({
+      ...guest,
+      guest: guestOf({ firstName: null, phone: null }),
+    });
+    expect(text(lastNameOnly.el.querySelector('.name'))).toBe('Benali');
+    expect(text(lastNameOnly.el.querySelector('.meta'))).toBe('invité');
+  });
+
+  it('invité : Déplacer et Annuler comme pour un patient, pas de Dupliquer', async () => {
+    const { fixture, el, button, store, closed } = await render(guest);
+    expect([...el.querySelectorAll('.actions button')].map((b) => text(b))).toEqual([
+      'Déplacer',
+      'Annuler',
+    ]);
+    button('Déplacer')!.click();
+    await settle(fixture);
+    const start = el.querySelector<HTMLInputElement>('.inline input.mono')!;
+    expect(start.value).toBe('14:00');
+    start.value = '15:30';
+    start.dispatchEvent(new Event('input'));
+    el.querySelector<HTMLButtonElement>('.inline button[type=submit]')!.click();
+    await settle(fixture);
+    expect(store.move).toHaveBeenCalledWith('a-2', new Date(2026, 9, 31, 15, 30).toISOString(), 50);
+
+    button('Annuler')!.click();
+    await settle(fixture);
+    button('Annuler le rendez-vous')!.click();
+    await settle(fixture);
+    expect(store.cancel).toHaveBeenCalledWith('a-2', undefined);
+    expect(closed).toHaveBeenCalledWith(guest);
+  });
+
+  it('invité purgé : « Invité purgé », sans téléphone, lien ni Préparer', async () => {
+    const { el, store } = await render({ ...guest, guest: PURGED_GUEST, status: 'cancelled' });
+    expect(store.loadContext).toHaveBeenCalledWith(null);
+    expect(text(el.querySelector('.name'))).toBe('Invité purgé');
+    expect(el.querySelector('a.name')).toBeNull();
+    expect(el.querySelector('.avatar')).toBeNull();
+    expect(el.querySelector('.meta')).toBeNull();
+    expect(el.textContent).not.toContain('Préparer');
+    expect(text(el.querySelector('.kicker'))).toBe('Annulé · cabinet');
   });
 
   it('Dupliquer émet le rendez-vous ; 404 : « Rendez-vous introuvable » dans la carte', async () => {

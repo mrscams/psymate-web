@@ -26,7 +26,7 @@ export interface ConflictDto {
      */
     occurrenceStartsAt?: string;
     /**
-     * Nom affiché du patient du rendez-vous chevauché.
+     * Nom affiché du patient du rendez-vous chevauché ; pour un invité (G Q60), « Prénom Nom » (le nom seul sans prénom), ou « Invité purgé » après la purge.
      */
     patientDisplayName?: string;
     /**

@@ -72,7 +72,7 @@ const initialState: AgendaState = {
 /**
  * État serveur de l'agenda (fiche 15) : la vue et sa date d'ancrage, la plage lue
  * (`GET /api/agenda`), les agendas masqués, le rendez-vous ouvert (lu à part s'il n'est pas dans la
- * plage) et le contexte de son patient. Après toute écriture (déplacer, annuler, confirmer, note),
+ * plage) et le contexte de son patient (aucun pour un invité). Après toute écriture (déplacer, annuler, confirmer, note),
  * la plage est relue : rien n'est recalculé localement. Une réponse arrivée après un changement de
  * plage est ignorée. Fourni par la page : rien ne survit à la sortie de l'agenda.
  */
@@ -237,8 +237,15 @@ export const AgendaStore = signalStore(
       /**
        * Contexte du patient du rendez-vous ouvert : vue d'ensemble (bloc « Préparer ») et rythme
        * (`defaults.rhythm`). N'empêche jamais l'ouverture du détail ; une erreur laisse les liens.
+       * `null` : rendez-vous invité, sans dossier donc sans contexte ; le contexte précédent est
+       * effacé et une lecture encore en cours pour un patient est ignorée.
        */
-      async loadContext(patientId: string): Promise<void> {
+      async loadContext(patientId: string | null): Promise<void> {
+        if (patientId === null) {
+          contextTicket++;
+          patchState(store, { context: null });
+          return;
+        }
         if (store.context()?.patientId === patientId) return;
         const ticket = ++contextTicket;
         patchState(store, {

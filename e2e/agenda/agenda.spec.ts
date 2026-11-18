@@ -5,7 +5,7 @@ import { confirmationToken, TestAccount, uniqueEmail } from '../support/accounts
 import { expectNoAxeViolations } from '../support/axe';
 import { shoot } from '../support/captures';
 
-// Fiches 15 et 15b contre l'API réelle (module agenda de psymate-api, contrat 0.12.1, M11) :
+// Fiches 15 et 15b contre l'API réelle (module agenda de psymate-api, contrat 0.14.0, M11) :
 // jamais de mock du backend. Chaque test crée son compte jetable, ses patients et ses rendez-vous
 // par l'API, à des heures connues de la semaine courante, puis vérifie l'écran et relit l'API
 // après chaque écriture. Les appels passent par l'application servie (`baseURL`, proxy /api de
@@ -139,6 +139,20 @@ async function createAppointment(
         modality: options.modality ?? 'in_person',
         tentative: options.tentative ?? false,
       },
+    }),
+  );
+  return created.appointments[0];
+}
+
+/** Rendez-vous invité (contrat 0.13.0) : `guest` à la place de `patientId`, posé par l'API. */
+async function createGuestAppointment(
+  api: APIRequestContext,
+  guest: { firstName?: string; lastName: string; phone?: string },
+  startsAt: Date,
+): Promise<Appointment> {
+  const created = await ok<{ appointments: Appointment[] }>(
+    api.post('/api/appointments', {
+      data: { guest, startsAt: startsAt.toISOString(), durationMin: 50, modality: 'in_person' },
     }),
   );
   return created.appointments[0];
@@ -398,6 +412,60 @@ test('fiche 15b : recherche du patient, défauts, chevauchement, toutes les 2 se
     expect((await getAppointment(request, item.id)).status).toBe('cancelled');
   }
   await expectNoAxeViolations(page);
+});
+
+test('rendez-vous invité (contrat 0.13.0) : nom dans la grille, la liste et le détail, sans dossier ; déplacer puis annuler', async ({
+  page,
+  request,
+}) => {
+  const account = await createAccount(request, 'agenda.invite');
+  const guest = await createGuestAppointment(
+    request,
+    { firstName: 'Sara', lastName: 'Benali', phone: '+33 6 12 34 56 78' },
+    at(2, 9),
+  );
+  await signIn(page, account);
+  await page.goto(WEEK());
+  const a = agenda(page);
+  await expect(a.events).toHaveCount(1);
+  const event = a.grid.getByRole('link', { name: /^Sara Benali/ });
+  await expect(event).toContainText('09:00–09:50');
+
+  await event.click();
+  await expect(page).toHaveURL(new RegExp(`/fr/agenda/rdv/${guest.id}\\?`));
+  await expect(a.detail.getByText('Sara Benali', { exact: true })).toBeVisible();
+  // Téléphone de l'invité tel que l'API le rend, après « invité ».
+  await expect(a.detail.locator('.meta')).toHaveText(/^invité · .*12/);
+  await expect(a.detail.getByRole('link', { name: 'Sara Benali' })).toHaveCount(0);
+  await expect(a.detail.locator('a[href*="/patients/"]')).toHaveCount(0);
+  await expect(a.detail.getByRole('heading', { name: 'Préparer' })).toHaveCount(0);
+  await expectNoAxeViolations(page);
+  await shoot(page, 'agenda-detail-invite');
+
+  // Déplacer par le formulaire du détail : même PATCH que pour un patient.
+  await a.detail.getByRole('button', { name: 'Déplacer', exact: true }).click();
+  const form = a.detail.locator('form');
+  await form.getByLabel('Début').fill('11:00');
+  const moved = page.waitForResponse(isWrite('PATCH', /\/api\/appointments\/[^/]+$/));
+  await form.getByRole('button', { name: 'Déplacer', exact: true }).click();
+  expect((await moved).status()).toBe(200);
+  await expect(event).toContainText('11:00–11:50');
+  expect(new Date((await getAppointment(request, guest.id)).startsAt).getTime()).toBe(
+    at(2, 11).getTime(),
+  );
+
+  await a.views.getByRole('button', { name: 'Liste' }).click();
+  await expect(page.locator('.fc-list-event').filter({ hasText: 'Sara Benali' })).toHaveCount(1);
+  await expectNoAxeViolations(page);
+
+  await a.views.getByRole('button', { name: 'Semaine' }).click();
+  await a.grid.getByRole('link', { name: /^Sara Benali/ }).click();
+  await a.detail.getByRole('button', { name: 'Annuler', exact: true }).click();
+  const cancelled = page.waitForResponse(isWrite('POST', /\/cancel$/));
+  await a.detail.getByRole('button', { name: 'Annuler le rendez-vous' }).click();
+  expect((await cancelled).status()).toBe(200);
+  await expect(a.events).toHaveCount(0);
+  expect((await getAppointment(request, guest.id)).status).toBe('cancelled');
 });
 
 test('préférences agenda.* : la grille commence à agenda.dayStartHour ; /agenda ouvre agenda.defaultView', async ({

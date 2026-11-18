@@ -34,6 +34,7 @@ import {
 } from '../data/agenda.model';
 import { AgendaStore, DetailState } from '../data/agenda.store';
 import {
+  appointmentName,
   conflictMessage,
   formatDayMonth,
   formatSpacedTimeRange,
@@ -68,7 +69,10 @@ export function problemText(problem: ApiProblem): string {
  * pied : « Démarrer la séance » (à venir, M11-08), Confirmer (à confirmer seulement), Déplacer
  * (formulaire inline, équivalent clavier du glisser-déposer), Dupliquer (panneau 15b prérempli),
  * Annuler (motif facultatif). Un rendez-vous annulé ou fait ne se déplace ni ne s'annule plus. Sans
- * rendez-vous (lecture à part, 404, erreur), l'état est montré dans la carte.
+ * rendez-vous (lecture à part, 404, erreur), l'état est montré dans la carte. Rendez-vous invité
+ * (contrat 0.13.0) : « Prénom Nom » ou « Invité purgé » en texte, sans initiales, lien, âge, « suivi
+ * depuis », rythme ni bloc « Préparer » (tout cela vient du dossier) ; déplacer, annuler, confirmer
+ * et la note fonctionnent comme pour un patient.
  */
 @Component({
   selector: 'pm-appointment-detail',
@@ -164,7 +168,11 @@ export class AppointmentDetailComponent {
   });
 
   private readonly itemId = computed(() => this.appointment()?.id ?? null);
-  private readonly patientId = computed(() => this.appointment()?.patient.id ?? null);
+  /** Patient du rendez-vous ouvert ; null pour un invité ; undefined sans rendez-vous. */
+  private readonly patientId = computed(() => {
+    const item = this.appointment();
+    return item ? (item.patient?.id ?? null) : undefined;
+  });
 
   constructor() {
     // Un autre rendez-vous (pas une relecture du même) : formulaires fermés, indicateurs à zéro.
@@ -177,10 +185,11 @@ export class AppointmentDetailComponent {
         this.noteDirty = false;
       });
     });
-    // Contexte du patient (bloc « Préparer », rythme) : lu une fois par patient.
+    // Contexte du patient (bloc « Préparer », rythme) : lu une fois par patient ; aucun pour un
+    // invité (null efface celui du patient précédent).
     effect(() => {
       const id = this.patientId();
-      if (id) untracked(() => void this.store.loadContext(id));
+      if (id !== undefined) untracked(() => void this.store.loadContext(id));
     });
   }
 
@@ -206,24 +215,38 @@ export class AppointmentDetailComponent {
     }
   });
 
+  /** Nom du patient, ou de l'invité (« Invité purgé » après la purge). */
+  protected readonly name = computed(() => {
+    const item = this.appointment();
+    return item ? appointmentName(item) : '';
+  });
   protected readonly initials = computed(() =>
-    initials(this.appointment()?.patient.displayName ?? ''),
+    initials(this.appointment()?.patient?.displayName ?? ''),
   );
   protected readonly patientLink = computed(() => [
     '/patients',
-    this.appointment()?.patient.id ?? '',
+    this.appointment()?.patient?.id ?? '',
   ]);
 
   /** Contexte du patient (bloc « Préparer », rythme), s'il est celui du rendez-vous ouvert. */
   private readonly context = computed(() => {
     const context = this.store.context();
-    return context && context.patientId === this.appointment()?.patient.id ? context : null;
+    const patientId = this.appointment()?.patient?.id;
+    return context && patientId && context.patientId === patientId ? context : null;
   });
 
-  /** « 34 ans · suivi depuis mars 2025 · dossier archivé », sans ce qui est inconnu. */
+  /**
+   * « 34 ans · suivi depuis mars 2025 · dossier archivé », sans ce qui est inconnu. Invité :
+   * « invité · 06 12 34 56 78 » (téléphone s'il est connu) ; rien après la purge.
+   */
   protected readonly patientMeta = computed(() => {
     const item = this.appointment();
     if (!item) return '';
+    if (!item.patient) {
+      if (!item.guest || item.guest.purgedAt) return '';
+      const guest = $localize`:Rendez-vous invité (personne sans dossier patient), dans le détail@@agenda.detail.guest:invité`;
+      return item.guest.phone ? `${guest} · ${item.guest.phone}` : guest;
+    }
     const parts: string[] = [];
     if (item.patient.age !== null) {
       parts.push(

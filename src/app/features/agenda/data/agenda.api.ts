@@ -9,6 +9,7 @@ import {
   CreateAppointmentRequest,
   CreateAppointmentRequestModalityEnum,
   FreeBusyDto,
+  GuestDto,
   OverviewDto,
   PatientAppointmentsDto,
   PatientDto,
@@ -23,6 +24,7 @@ import {
   AgendaRange,
   ageOf,
   Appointment,
+  AppointmentGuest,
   AppointmentModality,
   AppointmentPatch,
   AppointmentPreparation,
@@ -44,7 +46,7 @@ const STATUSES: readonly AppointmentStatus[] = ['planned', 'tentative', 'cancell
 
 /**
  * Service de données de features/agenda (handbook §2, couche 4) : seul fichier de la feature qui
- * importe `src/app/api` (contrat `contract-v0.12.1`, module `agenda` de psymate-api). Il traduit
+ * importe `src/app/api` (contrat `contract-v0.14.0`, module `agenda` de psymate-api). Il traduit
  * les DTO en modèle de vue (agenda.model.ts) et rend des promesses ; les erreurs arrivent déjà en
  * ApiProblem (problem.interceptor). Dates en UTC ISO à l'aller comme au retour.
  */
@@ -163,6 +165,25 @@ function statusOf(value: unknown): AppointmentStatus {
   return STATUSES.includes(value as AppointmentStatus) ? (value as AppointmentStatus) : 'planned';
 }
 
+/** Chaîne vide ou blanche → null (champs facultatifs de l'invité). */
+function textOrNull(value: string | null | undefined): string | null {
+  return value?.trim() || null;
+}
+
+/** Invité (`GuestDto`) : champs vides → null ; après la purge, seul `purgedAt` reste. */
+export function toGuest(dto: GuestDto): AppointmentGuest {
+  return {
+    firstName: textOrNull(dto.firstName),
+    lastName: textOrNull(dto.lastName),
+    phone: textOrNull(dto.phone),
+    purgedAt: dto.purgedAt ?? null,
+  };
+}
+
+/**
+ * Rendez-vous : `patient` pour un patient, `guest` pour un invité (contrat 0.13.0, l'un ou
+ * l'autre) ; un patient l'emporte si le serveur renvoyait les deux.
+ */
 export function toAppointment(dto: AppointmentDto): Appointment {
   const startsAt = dto.startsAt ?? '';
   const endsAt = dto.endsAt ?? startsAt;
@@ -171,13 +192,16 @@ export function toAppointment(dto: AppointmentDto): Appointment {
     Math.round((new Date(endsAt).getTime() - new Date(startsAt).getTime()) / 60_000);
   return {
     id: dto.id ?? '',
-    patient: {
-      id: dto.patient?.id ?? '',
-      displayName: dto.patient?.displayName ?? '',
-      birthDate: dto.patient?.birthDate ?? null,
-      age: ageOf(dto.patient?.birthDate),
-      archived: dto.patient?.archived ?? false,
-    },
+    patient: dto.patient
+      ? {
+          id: dto.patient.id ?? '',
+          displayName: dto.patient.displayName ?? '',
+          birthDate: dto.patient.birthDate ?? null,
+          age: ageOf(dto.patient.birthDate),
+          archived: dto.patient.archived ?? false,
+        }
+      : null,
+    guest: !dto.patient && dto.guest ? toGuest(dto.guest) : null,
     seriesId: dto.seriesId ?? null,
     startsAt,
     endsAt,

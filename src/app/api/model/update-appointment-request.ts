@@ -7,16 +7,21 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { GuestRequest } from './guest-request';
 
 
 /**
- * Modification partielle : un champ absent reste inchangé ; planningNote à null efface la note. patientId, tentative, recurrence, status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
+ * Modification partielle : un champ absent reste inchangé ; planningNote à null efface la note ; guest remplace l\'identité d\'un invité. patientId (passer par /attach-patient), tentative, recurrence, status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).
  */
 export interface UpdateAppointmentRequest { 
     /**
      * Nouvelle durée en minutes, de 5 à 600 ; le début est conservé.
      */
     durationMin?: number;
+    /**
+     * Correction de l\'identité de l\'invité (G Q60) : lastName obligatoire et remplacé ; firstName et phone absents ou null restent inchangés, une chaîne vide les efface. 422 INVALID_VALUE si le rendez-vous vise un patient ou si l\'invité est purgé.
+     */
+    guest?: GuestRequest;
     /**
      * Nouvelle modalité.
      */

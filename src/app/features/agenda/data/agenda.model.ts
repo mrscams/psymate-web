@@ -2,7 +2,7 @@ import { SessionModalityCode } from '../../../shared/ui';
 
 /**
  * Modèle de vue de l'agenda (fiches 15 et 15b). agenda.api.ts le remplit depuis le client généré
- * (contrat `contract-v0.12.1`, module `agenda` de psymate-api) ; le store et les composants ne
+ * (contrat `contract-v0.14.0`, module `agenda` de psymate-api) ; le store et les composants ne
  * voient que ces types.
  */
 
@@ -32,10 +32,27 @@ export interface AppointmentPatient {
   archived: boolean;
 }
 
-/** Un rendez-vous (`AppointmentDto`). */
+/**
+ * Invité du rendez-vous (`AppointmentDto.guest`, contrat 0.13.0) : personne sans fiche patient,
+ * décrite par son nom, son prénom et son téléphone. Purgé six mois après la fin ou l'annulation du
+ * rendez-vous : les trois champs passent à null et `purgedAt` est renseigné.
+ */
+export interface AppointmentGuest {
+  firstName: string | null;
+  lastName: string | null;
+  phone: string | null;
+  /** Instant de la purge, ISO UTC ; null tant que l'invité n'est pas purgé. */
+  purgedAt: string | null;
+}
+
+/**
+ * Un rendez-vous (`AppointmentDto`). Il vise soit un patient (`patient` renseigné, `guest` null),
+ * soit un invité (`patient` null, `guest` renseigné) : sans dossier, ni lien, ni contexte.
+ */
 export interface Appointment {
   id: string;
-  patient: AppointmentPatient;
+  patient: AppointmentPatient | null;
+  guest: AppointmentGuest | null;
   /** Série de répétition ; null pour un rendez-vous isolé. */
   seriesId: string | null;
   /** Début et fin, ISO UTC (affichés dans le fuseau du navigateur). */
@@ -380,6 +397,19 @@ export function occurrencesOf(start: Date, recurrence: AppointmentRecurrence | n
 /** Un rendez-vous se déplace, s'annule ou se confirme tant qu'il est planifié ou à confirmer. */
 export function isActive(item: Appointment): boolean {
   return item.status === 'planned' || item.status === 'tentative';
+}
+
+/**
+ * « Prénom Nom » d'un invité, le nom seul sans prénom (comme `ConflictDto.patientDisplayName`) ;
+ * null s'il est purgé ou sans nom. « Invité purgé » se traduit dans ui/agenda-format.ts.
+ */
+export function guestFullName(guest: AppointmentGuest): string | null {
+  if (guest.purgedAt) return null;
+  const name = [guest.firstName, guest.lastName]
+    .map((part) => part?.trim() ?? '')
+    .filter((part) => part !== '')
+    .join(' ');
+  return name || null;
 }
 
 /** La case du rail qui montre ou masque ce rendez-vous. */
