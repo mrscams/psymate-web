@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-18T21:17:15.242Z",
+  "task": "M13-06",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Onglet Profil 360 en lecture : un seul GET profile-items, store groupé sans retri, menu de 272 px et ?rubrique=, fil chronologique, pastille Famille, trois états ; Vitest 2245 verts, e2e profil-360 2/2 avec axe clair et sombre",
+  "pr": "https://github.com/mrscams/psymate-web/pull/98",
+  "branch": "worktree-M13-06",
+  "checkout": "M13-06"
+}
