@@ -107,3 +107,83 @@ export function initialOf(title: string): string {
   const letter = /\p{L}|\p{N}/u.exec(title)?.[0] ?? title.trim().charAt(0);
   return letter.toLocaleUpperCase();
 }
+
+// ---------------------------------------------------------------- écriture (M13-07, G Q54)
+
+/** Paramètre d'URL qui ouvre le panneau en création (`?ajouter=1`, comme `/agenda?nouveau=…`). */
+export const ADD_QUERY_PARAM = 'ajouter';
+
+/** Bornes du contrat (POST et PATCH profile-items) : le client vérifie la forme, le serveur juge. */
+export const TITLE_MAX = 200;
+export const DETAIL_MAX = 2000;
+export const PERIOD_LABEL_MAX = 60;
+export const YEAR_MIN = 1900;
+export const YEAR_MAX = 2100;
+
+/**
+ * Ce que le panneau saisit. Une valeur vide est null ; période et année n'ont de sens que pour
+ * Histoire et souvenirs (le panneau les vide en quittant cette rubrique).
+ */
+export interface ProfileItemInput {
+  category: ProfileCategory;
+  title: string;
+  detail: string | null;
+  periodLabel: string | null;
+  periodYear: number | null;
+}
+
+/** Corps de POST /api/patients/{id}/profile-items : les champs vides sont absents. */
+export interface CreateProfileItemBody {
+  category: ProfileCategory;
+  title: string;
+  detail?: string;
+  periodLabel?: string;
+  periodYear?: number;
+}
+
+/**
+ * Corps de PATCH …/profile-items/{itemId} : seuls les champs modifiés ; null efface la précision,
+ * la période ou l'année.
+ */
+export interface UpdateProfileItemBody {
+  category?: ProfileCategory;
+  title?: string;
+  detail?: string | null;
+  periodLabel?: string | null;
+  periodYear?: number | null;
+}
+
+/** Les champs de période ne partent que pour Histoire et souvenirs. */
+export function hasPeriod(category: ProfileCategory): boolean {
+  return category === 'history';
+}
+
+/** Création : rien de vide, et jamais de période hors Histoire et souvenirs. */
+export function createBody(input: ProfileItemInput): CreateProfileItemBody {
+  const body: CreateProfileItemBody = { category: input.category, title: input.title };
+  if (input.detail !== null) body.detail = input.detail;
+  if (hasPeriod(input.category)) {
+    if (input.periodLabel !== null) body.periodLabel = input.periodLabel;
+    if (input.periodYear !== null) body.periodYear = input.periodYear;
+  }
+  return body;
+}
+
+/**
+ * Modification : les seuls champs qui changent. En quittant Histoire et souvenirs, la période
+ * n'est pas envoyée : le serveur l'efface lui-même (contrat, PATCH profile-items). Vide si rien ne
+ * change.
+ */
+export function updateBody(item: ProfileItem, input: ProfileItemInput): UpdateProfileItemBody {
+  const body: UpdateProfileItemBody = {};
+  if (input.category !== item.category) body.category = input.category;
+  if (input.title !== item.title) body.title = input.title;
+  if (input.detail !== item.detail) body.detail = input.detail;
+  if (hasPeriod(input.category)) {
+    const label = hasPeriod(item.category) ? item.periodLabel : null;
+    const year = hasPeriod(item.category) ? item.periodYear : null;
+    if (input.periodLabel !== label) body.periodLabel = input.periodLabel;
+    if (input.periodYear !== year) body.periodYear = input.periodYear;
+  }
+  return body;
+}

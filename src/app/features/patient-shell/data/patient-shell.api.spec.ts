@@ -13,6 +13,22 @@ function setup() {
   return { api: TestBed.inject(PatientShellApi), http: TestBed.inject(HttpTestingController) };
 }
 
+describe('PatientShellApi.patient (M13-07)', () => {
+  afterEach(() => TestBed.inject(HttpTestingController).verify());
+
+  it.each([
+    ['archivedAt renseigné → archivé', '2026-11-10T09:00:00Z', true],
+    ['sans archivedAt → actif', undefined, false],
+  ])('%s', async (_label, archivedAt, expected) => {
+    const { api, http } = setup();
+    const pending = api.patient('p-1');
+    http
+      .expectOne((r) => r.url === '/api/patients/p-1' && r.method === 'GET')
+      .flush({ id: 'p-1', displayName: 'Lou P.', archivedAt });
+    expect((await pending).archived).toBe(expected);
+  });
+});
+
 describe('PatientShellApi.hasEntries (indice de première entrée, M7-03)', () => {
   afterEach(() => TestBed.inject(HttpTestingController).verify());
 

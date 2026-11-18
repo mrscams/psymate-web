@@ -61,4 +61,36 @@ describe('Profile360Api', () => {
     expect((await result).map((item) => item.title)).toEqual(['Migraines']);
     http.verify();
   });
+
+  it('écritures : POST, PATCH (null gardé pour effacer) et DELETE sur …/profile-items', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideApiClient()],
+    });
+    const http = TestBed.inject(HttpTestingController);
+    const api = TestBed.inject(Profile360Api);
+
+    const created = api.create('p-1', { category: 'health', title: 'Migraines' });
+    const post = http.expectOne('/api/patients/p-1/profile-items');
+    expect(post.request.method).toBe('POST');
+    expect(post.request.body).toEqual({ category: 'health', title: 'Migraines' });
+    post.flush(
+      { id: 'i-1', category: 'health', title: 'Migraines' },
+      { status: 201, statusText: 'Created' },
+    );
+    await created;
+
+    const updated = api.update('p-1', 'i-1', { title: 'Migraines rares', detail: null });
+    const patch = http.expectOne('/api/patients/p-1/profile-items/i-1');
+    expect(patch.request.method).toBe('PATCH');
+    expect(patch.request.body).toEqual({ title: 'Migraines rares', detail: null });
+    patch.flush({ id: 'i-1', category: 'health', title: 'Migraines rares' });
+    await updated;
+
+    const removed = api.remove('p-1', 'i-1');
+    const del = http.expectOne('/api/patients/p-1/profile-items/i-1');
+    expect(del.request.method).toBe('DELETE');
+    del.flush(null, { status: 204, statusText: 'No Content' });
+    await removed;
+    http.verify();
+  });
 });

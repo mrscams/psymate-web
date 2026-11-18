@@ -221,7 +221,7 @@ Six écrans par thème sont écrits mais ignorés sans administrateur, et n'ont 
 | 10 | mon profil public | `flux-8-profil-public/*` |
 | 18 | compte et sécurité ; panneau 2FA (QR) | `securite/*` |
 | 19 | données et export | `export/export.spec.ts` |
-| 30 | Profil 360 : quatrième onglet (clic, touche `4`, `aria-current`, pas de bloc de saisie, hors séance et en séance ; squelette en chargement, M13-05, thème clair) | `shell/shell.spec.ts` « quatrième onglet » ; lecture et écriture, deux thèmes : `profil-360/*` (M13-06, M13-07, à venir) |
+| 30 | Profil 360 : quatrième onglet (clic, touche `4`, `aria-current`, pas de bloc de saisie, hors séance et en séance ; squelette en chargement, M13-05, thème clair) | `shell/shell.spec.ts` « quatrième onglet » ; lecture, deux thèmes et sous 820 px : `profil-360/lecture.spec.ts` (M13-06) ; bouton « Ajouter au profil » sur l'onglet 4 seulement, `?ajouter=1`, ajouter, modifier, retirer (confirmation, annulation), relecture, Échap et focus rendu, patient archivé en lecture seule, axe-core panneau ouvert en clair et en sombre : `profil-360/ecriture.spec.ts` (M13-07) |
 
 ### Pages publiques et d'authentification
 

@@ -13710,6 +13710,206 @@
         </context-group>
         <note priority="1" from="description">Phrase de l&apos;état vide du Profil 360</note>
       </trans-unit>
+      <trans-unit id="profile360.add" datatype="html">
+        <source>Ajouter au profil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/ui/profile-add.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui ouvre le panneau Ajouter au profil</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.addTitle" datatype="html">
+        <source>Ajouter au profil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Titre du panneau en création</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.editTitle" datatype="html">
+        <source>Modifier l&apos;information</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Titre du panneau en modification</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.save" datatype="html">
+        <source>Enregistrer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Bouton principal du panneau en modification</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.create" datatype="html">
+        <source>Ajouter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Bouton principal du panneau en création</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.category" datatype="html">
+        <source>Rubrique</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Champ Rubrique du panneau</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.title" datatype="html">
+        <source>Information</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Champ Information du panneau</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.detail" datatype="html">
+        <source>Précision</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Champ Précision du panneau</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.optional" datatype="html">
+        <source>(facultatif)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Mention d&apos;un champ facultatif</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.periodLabel" datatype="html">
+        <source>Période</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Champ Période du panneau</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.periodLabel.help" datatype="html">
+        <source>Par exemple : Enfance, vers 2000, 2002 – 2009.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Aide du champ Période</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.periodYear" datatype="html">
+        <source>Année</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Champ Année du panneau</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.periodYear.help" datatype="html">
+        <source>Période et Année n&apos;apparaissent que pour Histoire et souvenirs. L&apos;année sert à classer dans le fil : laissez-la vide si vous ne savez pas.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Aide des champs Période et Année</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.remove" datatype="html">
+        <source>Retirer du profil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Retirer du profil du panneau</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.cancel" datatype="html">
+        <source>Annuler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Annuler du panneau</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.limit" datatype="html">
+        <source>Ce profil compte déjà 500 informations. Retirez-en une avant d&apos;en ajouter.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Limite de 500 informations atteinte</note>
+      </trans-unit>
+      <trans-unit id="profile360.panel.failed" datatype="html">
+        <source>L&apos;enregistrement n&apos;a pas abouti. Réessayez.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Échec d&apos;une écriture du Profil 360</note>
+      </trans-unit>
+      <trans-unit id="profile360.remove.title" datatype="html">
+        <source>Retirer cette information du profil ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation du retrait d&apos;une information</note>
+      </trans-unit>
+      <trans-unit id="profile360.remove.body" datatype="html">
+        <source>Elle ne sera plus affichée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Explication du retrait d&apos;une information</note>
+      </trans-unit>
+      <trans-unit id="profile360.remove.confirm" datatype="html">
+        <source>Retirer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de confirmation du retrait</note>
+      </trans-unit>
+      <trans-unit id="profile360.toast.created" datatype="html">
+        <source>Information ajoutée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Toast après un ajout au profil</note>
+      </trans-unit>
+      <trans-unit id="profile360.toast.updated" datatype="html">
+        <source>Information modifiée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une modification du profil</note>
+      </trans-unit>
+      <trans-unit id="profile360.toast.removed" datatype="html">
+        <source>Information retirée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Toast après un retrait du profil</note>
+      </trans-unit>
+      <trans-unit id="profile360.toast.gone" datatype="html">
+        <source>Cette information a déjà été retirée du profil. Le profil a été relu.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Toast, information retirée entre-temps</note>
+      </trans-unit>
+      <trans-unit id="profile360.toast.archived" datatype="html">
+        <source>Ce patient est archivé : le profil est en lecture seule.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Toast, patient archivé pendant l&apos;écriture</note>
+      </trans-unit>
       <trans-unit id="overview.reloadFailed.title" datatype="html">
         <source>La synthèse n&apos;a pas pu être relue</source>
         <context-group purpose="location">

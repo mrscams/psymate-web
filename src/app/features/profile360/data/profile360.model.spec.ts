@@ -2,9 +2,11 @@ import { profileItem } from './profile360.fixtures';
 import {
   categoryFromParam,
   countLabel,
+  createBody,
   groupByCategory,
   initialOf,
   PROFILE_CATEGORIES,
+  updateBody,
 } from './profile360.model';
 
 describe('profile360.model', () => {
@@ -44,5 +46,57 @@ describe('profile360.model', () => {
     expect(countLabel(1)).toBe('1 information');
     expect(countLabel(6)).toBe('6 informations');
     expect(countLabel(0)).toBe('0 informations');
+  });
+
+  describe('corps des écritures (M13-07)', () => {
+    const base = {
+      category: 'history' as const,
+      title: 'Enfance',
+      detail: null,
+      periodLabel: null,
+      periodYear: null,
+    };
+
+    it('createBody : rien de vide ; période seulement pour history', () => {
+      expect(createBody(base)).toEqual({ category: 'history', title: 'Enfance' });
+      expect(
+        createBody({ ...base, detail: 'Nantes', periodLabel: 'Enfance', periodYear: 1991 }),
+      ).toEqual({
+        category: 'history',
+        title: 'Enfance',
+        detail: 'Nantes',
+        periodLabel: 'Enfance',
+        periodYear: 1991,
+      });
+      expect(
+        createBody({ ...base, category: 'family', periodLabel: 'X', periodYear: 2000 }),
+      ).toEqual({
+        category: 'family',
+        title: 'Enfance',
+      });
+    });
+
+    it('updateBody : champs modifiés seulement, null pour effacer ; en quittant history, période non envoyée', () => {
+      const item = profileItem('history', 'Enfance', {
+        detail: 'Nantes',
+        periodLabel: '1991',
+        periodYear: 1991,
+      });
+      const same = { ...base, detail: 'Nantes', periodLabel: '1991', periodYear: 1991 };
+      expect(updateBody(item, same)).toEqual({});
+      expect(updateBody(item, { ...same, detail: null, periodYear: null })).toEqual({
+        detail: null,
+        periodYear: null,
+      });
+      expect(
+        updateBody(item, { ...same, category: 'family', periodLabel: null, periodYear: null }),
+      ).toEqual({
+        category: 'family',
+      });
+      const family = profileItem('family', 'Thomas');
+      expect(
+        updateBody(family, { ...base, title: 'Thomas', category: 'history', periodYear: 2020 }),
+      ).toEqual({ category: 'history', periodYear: 2020 });
+    });
   });
 });

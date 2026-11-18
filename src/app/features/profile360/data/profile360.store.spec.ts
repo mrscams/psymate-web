@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { ApiProblem } from '../../../core/http';
 import { stateKind } from '../../../shared/util';
 import { fullProfile, profileItem } from './profile360.fixtures';
-import { ProfileItem } from './profile360.model';
+import { ProfileItem, ProfileItemInput } from './profile360.model';
 import { Profile360Api } from './profile360.api';
 import { Profile360Store } from './profile360.store';
 
@@ -132,5 +132,107 @@ describe('Profile360Store', () => {
     const { api, store } = setup(() => Promise.resolve([]));
     await store.refresh();
     expect(api.profile).not.toHaveBeenCalled();
+  });
+
+  describe('écritures (M13-07) : écrire, puis relire, jamais corriger localement', () => {
+    const input: ProfileItemInput = {
+      category: 'health',
+      title: 'Asthme',
+      detail: null,
+      periodLabel: null,
+      periodYear: null,
+    };
+
+    function writable(
+      api: Partial<Record<'create' | 'update' | 'remove', ReturnType<typeof vi.fn>>>,
+    ) {
+      let reads = 0;
+      const first = fullProfile();
+      const second = [...first, profileItem('health', 'Asthme')];
+      const mock = {
+        profile: vi.fn(() => Promise.resolve(reads++ === 0 ? first : second)),
+        create: vi.fn().mockResolvedValue(undefined),
+        update: vi.fn().mockResolvedValue(undefined),
+        remove: vi.fn().mockResolvedValue(undefined),
+        ...api,
+      };
+      TestBed.configureTestingModule({
+        providers: [Profile360Store, { provide: Profile360Api, useValue: mock }],
+      });
+      return { api: mock, store: TestBed.inject(Profile360Store), second };
+    }
+
+    it('create : POST sans champ vide ni période hors history, puis relecture ; la liste est celle du serveur', async () => {
+      const { api, store, second } = writable({});
+      await store.load('p-1');
+      const pending = store.create({ ...input, periodLabel: 'ignorée', periodYear: 2001 });
+      expect(store.saving()).toBe(true);
+      await expect(pending).resolves.toEqual({ status: 'done' });
+      expect(api.create).toHaveBeenCalledWith('p-1', { category: 'health', title: 'Asthme' });
+      expect(api.profile).toHaveBeenCalledTimes(2);
+      expect(store.items()).toBe(second);
+      expect(store.counts().health).toBe(2);
+      expect(store.saving()).toBe(false);
+    });
+
+    it('update : seuls les champs modifiés, null pour effacer ; sans changement, aucune requête', async () => {
+      const { api, store } = writable({});
+      await store.load('p-1');
+      const item = profileItem('health', 'Migraines', { detail: 'Depuis 2010' });
+      const same = { ...input, title: 'Migraines', detail: 'Depuis 2010' };
+      await expect(store.update(item, same)).resolves.toEqual({ status: 'unchanged' });
+      expect(api.update).not.toHaveBeenCalled();
+
+      await expect(
+        store.update(item, { ...same, title: 'Migraines rares', detail: null }),
+      ).resolves.toEqual({
+        status: 'done',
+      });
+      expect(api.update).toHaveBeenCalledWith('p-1', item.id, {
+        title: 'Migraines rares',
+        detail: null,
+      });
+      expect(api.profile).toHaveBeenCalledTimes(2);
+    });
+
+    it('remove : DELETE puis relecture', async () => {
+      const { api, store } = writable({});
+      await store.load('p-1');
+      const item = store.items()[0];
+      await expect(store.remove(item)).resolves.toEqual({ status: 'done' });
+      expect(api.remove).toHaveBeenCalledWith('p-1', item.id);
+      expect(api.profile).toHaveBeenCalledTimes(2);
+    });
+
+    it.each([
+      [
+        '422 par champ',
+        {
+          status: 422,
+          code: 'VALIDATION_FAILED',
+          errors: [{ field: 'title', code: 'REQUIRED', message: 'Obligatoire' }],
+        },
+        'invalid',
+        1,
+      ],
+      [
+        '422 PROFILE_ITEM_LIMIT_REACHED',
+        { status: 422, code: 'PROFILE_ITEM_LIMIT_REACHED' },
+        'limit',
+        1,
+      ],
+      ['404 PROFILE_ITEM_NOT_FOUND', { status: 404, code: 'PROFILE_ITEM_NOT_FOUND' }, 'gone', 2],
+      ['409 PROFILE_ITEM_ARCHIVED', { status: 409, code: 'PROFILE_ITEM_ARCHIVED' }, 'gone', 2],
+      ['409 PATIENT_ARCHIVED', { status: 409, code: 'PATIENT_ARCHIVED' }, 'archived', 1],
+      ['réseau', networkError, 'failed', 1],
+    ])('%s → %s, %d lecture(s)', async (_label, problem, status, reads) => {
+      const { api, store } = writable({ remove: vi.fn().mockRejectedValue(problem) });
+      await store.load('p-1');
+      const outcome = await store.remove(store.items()[0]);
+      expect(outcome.status).toBe(status);
+      expect(api.profile).toHaveBeenCalledTimes(reads);
+      expect(store.archivedOnWrite()).toBe(status === 'archived');
+      expect(store.saving()).toBe(false);
+    });
   });
 });

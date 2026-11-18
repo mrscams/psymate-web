@@ -250,6 +250,7 @@ function toPatient(dto: PatientDto): ShellPatient {
       .filter((kind): kind is FlagKind => !!kind),
     sessionModality: toModality(dto.followUp?.['modality'], 'in_person'),
     plannedDurationMin: Number.isInteger(duration) && duration > 0 ? duration : null,
+    archived: !!dto.archivedAt,
   };
 }
 

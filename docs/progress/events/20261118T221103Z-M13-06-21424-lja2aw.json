@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-18T22:11:03.465Z",
+  "task": "M13-06",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR #98 fusionnée en squash (c00f7ab)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/98",
+  "branch": "claude/m13-07-profil-360-panneau-e81da2",
+  "checkout": "ux-a5-entry-title-c415c2"
+}

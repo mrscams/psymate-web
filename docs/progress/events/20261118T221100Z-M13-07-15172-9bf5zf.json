@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-18T22:11:00.615Z",
+  "task": "M13-07",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Profil 360 : bouton Ajouter au profil sur la ligne des onglets et panneau latéral (ajouter, modifier, retirer), relecture après chaque écriture, patient archivé en lecture seule",
+  "notes": "Vitest 2284 verts ; e2e profil-360 (5) et shell (12) verts contre l'API main 54700d3 ; revue J4 sans bloquant ; archived tiré de archivedAt (GET /api/patients/{id}) ; nom des informations par leur contenu (axe 2.5.3) ; bouton d'en-tête visible après un 409 PATIENT_ARCHIVED en cours de session (n'ouvre plus rien)",
+  "next": "Fusion de la PR #99 ; capture png de la fiche 30 (J5)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/99",
+  "branch": "claude/m13-07-profil-360-panneau-e81da2",
+  "checkout": "ux-a5-entry-title-c415c2"
+}

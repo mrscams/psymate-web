@@ -6,29 +6,60 @@ import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { ApiProblem } from '../../../core/http';
+import { SidePanelService, ToastService } from '../../../shared/ui';
 import { PatientShellStore } from '../../patient-shell';
 import { Profile360Api } from '../data/profile360.api';
+import { Profile360Store } from '../data/profile360.store';
 import { fullProfile, profileItem } from '../data/profile360.fixtures';
 import { ProfileItem } from '../data/profile360.model';
 import { loadProfile360Page } from '../index';
+import { ProfileItemPanel, ProfileItemPanelResult } from '../panels/profile-item.panel';
 import { Profile360Page } from './profile360.page';
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 const networkError: ApiProblem = { status: 0, code: 'NETWORK_ERROR' };
 
+interface RenderOptions {
+  /** Patient archivé (PatientShellStore.archived). */
+  archived?: boolean;
+  /** Résultat rendu par le panneau à sa fermeture (undefined : fermé sans écrire). */
+  panelResult?: ProfileItemPanelResult;
+}
+
 async function render(
   url = '/patients/p-1/profile',
   profile: (patientId: string) => Promise<ProfileItem[]> = () => Promise.resolve(fullProfile()),
+  options: RenderOptions = {},
 ) {
-  const api = { profile: vi.fn(profile) };
+  const api = {
+    profile: vi.fn(profile),
+    create: vi.fn().mockRejectedValue({ status: 409, code: 'PATIENT_ARCHIVED' }),
+  };
+  // Le panneau est simulé : la page l'ouvre et lit son résultat (le panneau a son propre test).
+  let close!: (result: ProfileItemPanelResult | undefined) => void;
+  const panels = {
+    open: vi.fn(() => ({
+      closed: new Promise<ProfileItemPanelResult | undefined>((resolve) => (close = resolve)),
+    })),
+  };
+  const toast = { success: vi.fn(), warning: vi.fn() };
   TestBed.configureTestingModule({
     providers: [
       provideRouter([{ path: 'patients/:id/profile', component: Profile360Page }]),
       provideHttpClient(),
       provideHttpClientTesting(),
       { provide: Profile360Api, useValue: api },
-      { provide: PatientShellStore, useValue: { patientId: signal('p-1') } },
+      { provide: SidePanelService, useValue: panels },
+      { provide: ToastService, useValue: toast },
+      {
+        provide: PatientShellStore,
+        useValue: {
+          patientId: signal('p-1'),
+          patient: signal({ id: 'p-1' }),
+          archived: signal(options.archived ?? false),
+        },
+      },
     ],
   });
   const harness = await RouterTestingHarness.create();
@@ -36,7 +67,26 @@ async function render(
   await tick();
   harness.detectChanges();
   await harness.fixture.whenStable();
-  return { api, harness, el: harness.routeNativeElement as HTMLElement };
+  const settle = async () => {
+    await tick();
+    await tick();
+    harness.detectChanges();
+    await harness.fixture.whenStable();
+  };
+  /** Ferme le panneau simulé avec un résultat, puis laisse la page relire et rendre. */
+  const closePanel = async (result: ProfileItemPanelResult | undefined) => {
+    close(result);
+    await settle();
+  };
+  return {
+    api,
+    panels,
+    toast,
+    harness,
+    closePanel,
+    settle,
+    el: harness.routeNativeElement as HTMLElement,
+  };
 }
 
 function menuLinks(el: HTMLElement): HTMLAnchorElement[] {
@@ -97,7 +147,7 @@ describe('Profile360Page', () => {
     const list = el.querySelector('pm-profile-rubric ol.tl');
     expect(list).not.toBeNull();
     expect(titles(el)).toEqual(['Enfance à Nantes', 'Divorce des parents', "L'odeur du tilleul"]);
-    const first = list!.querySelector('li')!;
+    const first = list!.querySelector('li .item')!;
     // La période est le premier enfant (à gauche, lue avant le titre) ; le point est décoratif.
     expect(first.children[0].classList.contains('k')).toBe(true);
     expect(first.children[0].textContent?.trim()).toBe('1991 – 2002');
@@ -106,8 +156,13 @@ describe('Profile360Page', () => {
     // Sans année ni période : la colonne de gauche reste vide, l'information est en dernier.
     const last = list!.querySelectorAll('li')[2];
     expect(last.querySelector('.k')?.textContent?.trim()).toBe('');
-    // Pas de bouton : les informations ne sont pas activables avant M13-07.
-    expect(el.querySelectorAll('pm-profile-rubric button')).toHaveLength(0);
+    // M13-07 : chaque information est un bouton, nommé par son contenu (période, titre, détail).
+    const buttons = el.querySelectorAll<HTMLButtonElement>('pm-profile-rubric li > button.item');
+    expect(buttons).toHaveLength(3);
+    expect(buttons[0].hasAttribute('aria-label')).toBe(false);
+    expect(
+      Array.from(buttons[0].querySelectorAll('.k, .t, .d')).map((n) => n.textContent?.trim()),
+    ).toEqual(['1991 – 2002', 'Enfance à Nantes', '« Sage, première de classe »']);
   });
 
   it('?rubrique=family : Famille et entourage, pastille à la première lettre du titre, titre et détail seulement', async () => {
@@ -137,7 +192,7 @@ describe('Profile360Page', () => {
       const rows = Array.from(el.querySelectorAll('pm-profile-rubric ul.std li'));
       expect(rows).toHaveLength(1);
       expect(rows[0].querySelector('.t')?.textContent?.trim()).toBe(title);
-      expect(rows[0].children).toHaveLength(1);
+      expect(rows[0].querySelector('.item')?.children).toHaveLength(1);
       expect(el.querySelector('pm-profile-rubric .av, pm-profile-rubric .k')).toBeNull();
     }
   });
@@ -207,6 +262,119 @@ describe('Profile360Page', () => {
     expect(api.profile).toHaveBeenCalledTimes(2);
     expect(el.querySelector('[role="alert"]')).toBeNull();
     expect(rubricHeading(el)).toBe('Histoire et souvenirs');
+  });
+
+  describe('écriture (M13-07)', () => {
+    it('?ajouter=1 ouvre le panneau en création, rubrique affichée préremplie ; fermé sans écrire, le paramètre est retiré', async () => {
+      const { panels, toast, closePanel } = await render(
+        '/patients/p-1/profile?rubrique=health&ajouter=1',
+      );
+      expect(panels.open).toHaveBeenCalledTimes(1);
+      const [component, options] = panels.open.mock.calls[0] as unknown as [
+        unknown,
+        { data: { category: string; item: unknown }; width: number },
+      ];
+      expect(component).toBe(ProfileItemPanel);
+      expect(options.width).toBe(480);
+      expect(options.data.category).toBe('health');
+      expect(options.data.item).toBeNull();
+
+      await closePanel(undefined);
+      expect(TestBed.inject(Router).url).toBe('/patients/p-1/profile?rubrique=health');
+      expect(panels.open).toHaveBeenCalledTimes(1);
+      expect(toast.success).not.toHaveBeenCalled();
+    });
+
+    it('ajout réussi : ?ajouter= retiré, rubrique concernée affichée, toast « Information ajoutée », focus rendu au déclencheur', async () => {
+      const trigger = document.createElement('a');
+      trigger.href = '#';
+      document.body.appendChild(trigger);
+      trigger.focus();
+      const { toast, closePanel, el } = await render('/patients/p-1/profile?ajouter=1');
+      await closePanel({ action: 'created', category: 'family', itemId: null });
+      expect(TestBed.inject(Router).url).toBe('/patients/p-1/profile?rubrique=family');
+      expect(rubricHeading(el)).toBe('Famille et entourage');
+      expect(toast.success).toHaveBeenCalledWith('Information ajoutée');
+      expect(document.activeElement).toBe(trigger);
+      trigger.remove();
+    });
+
+    it('clic sur une information : panneau en modification avec l’information ; modifiée, toast et focus sur elle', async () => {
+      const { panels, toast, closePanel, el } = await render(
+        '/patients/p-1/profile?rubrique=family',
+      );
+      const button = el.querySelector<HTMLButtonElement>('pm-profile-rubric li > button.item')!;
+      button.focus();
+      button.click();
+      const options = (
+        panels.open.mock.calls[0] as unknown as [unknown, { data: { item: ProfileItem } }]
+      )[1];
+      expect(options.data.item.title).toBe('Thomas, compagnon');
+
+      await closePanel({ action: 'updated', category: 'family', itemId: options.data.item.id });
+      expect(toast.success).toHaveBeenCalledWith('Information modifiée');
+      expect(document.activeElement).toBe(button);
+    });
+
+    it('retrait : toast « Information retirée », focus sur le titre de la rubrique (l’information n’est plus là)', async () => {
+      const { toast, closePanel, el } = await render('/patients/p-1/profile?rubrique=health');
+      const button = el.querySelector<HTMLButtonElement>('pm-profile-rubric li > button.item')!;
+      button.focus();
+      button.click();
+      button.remove();
+      await closePanel({ action: 'removed', category: 'health', itemId: null });
+      expect(toast.success).toHaveBeenCalledWith('Information retirée');
+      expect(document.activeElement).toBe(el.querySelector('pm-profile-rubric h3'));
+    });
+
+    it('information retirée entre-temps : toast d’avertissement ; patient archivé à l’écriture : lecture seule', async () => {
+      const { toast, closePanel, el } = await render();
+      el.querySelector<HTMLButtonElement>('pm-profile-rubric li > button.item')!.click();
+      await closePanel({ action: 'gone' });
+      expect(toast.warning).toHaveBeenCalledWith(
+        'Cette information a déjà été retirée du profil. Le profil a été relu.',
+      );
+      TestBed.resetTestingModule();
+
+      // 409 PATIENT_ARCHIVED : le store le note ; l'onglet ne propose plus rien.
+      const archived = await render('/patients/p-1/profile', () => Promise.resolve(fullProfile()));
+      archived.el.querySelector<HTMLButtonElement>('pm-profile-rubric li > button.item')!.click();
+      // Ce que fait le panneau : une écriture refusée par 409 PATIENT_ARCHIVED (service simulé).
+      const store = archived.harness.routeDebugElement!.injector.get(Profile360Store);
+      const outcome = await store.create({
+        category: 'health',
+        title: 'Migraines',
+        detail: null,
+        periodLabel: null,
+        periodYear: null,
+      });
+      expect(outcome.status).toBe('archived');
+      await archived.closePanel({ action: 'archived' });
+      expect(archived.toast.warning).toHaveBeenCalledWith(
+        'Ce patient est archivé : le profil est en lecture seule.',
+      );
+      expect(archived.el.querySelectorAll('pm-profile-rubric button')).toHaveLength(0);
+    });
+
+    it('patient archivé : informations non activables, ?ajouter=1 n’ouvre rien et le paramètre est retiré', async () => {
+      const { panels, el } = await render('/patients/p-1/profile?ajouter=1', undefined, {
+        archived: true,
+      });
+      expect(panels.open).not.toHaveBeenCalled();
+      expect(TestBed.inject(Router).url).toBe('/patients/p-1/profile');
+      expect(el.querySelectorAll('pm-profile-rubric button')).toHaveLength(0);
+      expect(el.querySelectorAll('pm-profile-rubric li > div.item')).toHaveLength(3);
+    });
+
+    it('profil vide : « Ajouter au profil » sous l’état vide (lien ?ajouter=1) ; absent si archivé', async () => {
+      const { el } = await render(undefined, () => Promise.resolve([]));
+      const link = el.querySelector<HTMLAnchorElement>('.empty pm-profile-add a');
+      expect(link?.textContent?.trim()).toBe('Ajouter au profil');
+      expect(link?.getAttribute('href')).toBe('/patients/p-1/profile?ajouter=1');
+      TestBed.resetTestingModule();
+      const archived = await render(undefined, () => Promise.resolve([]), { archived: true });
+      expect(archived.el.querySelector('pm-profile-add')).toBeNull();
+    });
   });
 
   it('loadProfile360Page (index public) charge la page à la demande', async () => {
