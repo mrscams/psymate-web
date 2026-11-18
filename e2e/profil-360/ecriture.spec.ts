@@ -115,6 +115,11 @@ test('ajouter, modifier, retirer : panneau, relecture après chaque écriture, t
   await expect(header(page).getByRole('group', { name: 'Fenêtre' })).toBeVisible();
   await expect(addButton(page)).toHaveCount(0);
   await header(page)
+    .getByRole('link', { name: /Timeline/ })
+    .click();
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/timeline`));
+  await expect(addButton(page)).toHaveCount(0);
+  await header(page)
     .getByRole('link', { name: /Graphe/ })
     .click();
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/graph`));
@@ -295,6 +300,8 @@ test('?ajouter=1 ouvre le panneau directement ; axe-core panneau ouvert, thèmes
   await dialog.getByRole('button', { name: 'Annuler' }).click();
   await expect(dialog).toHaveCount(0);
   await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/profile\\?rubrique=family$`));
+  // Sans déclencheur (lien direct), le focus va au titre de la rubrique, pas sur <body>.
+  await expect(rubric(page).getByRole('heading', { level: 3 })).toBeFocused();
 
   // Thème sombre : panneau en modification dans Histoire (Période, Année, « Retirer du profil »).
   const theme = await request.patch(`${API}/api/me/preferences`, { data: { theme: 'dark' } });

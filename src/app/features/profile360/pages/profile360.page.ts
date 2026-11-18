@@ -139,7 +139,9 @@ export class Profile360Page {
    * rubrique concernée, confirme et rend le focus. Le profil a déjà été relu par le store.
    */
   private async openPanel(item: ProfileItem | null): Promise<void> {
-    const trigger = this.document.activeElement as HTMLElement | null;
+    // Ouverture par un lien direct (?ajouter=1) : aucun déclencheur, le focus était sur <body>.
+    const active = this.document.activeElement as HTMLElement | null;
+    const trigger = active && active !== this.document.body ? active : null;
     const ref = this.panels.open<ProfileItemPanel, ProfileItemPanelData, ProfileItemPanelResult>(
       ProfileItemPanel,
       { data: { store: this.store, category: this.category(), item }, width: 480 },
@@ -152,7 +154,11 @@ export class Profile360Page {
     if (result && 'category' in result) params[CATEGORY_QUERY_PARAM] = result.category;
     if (Object.keys(params).length > 0) await this.navigate(params);
     this.panelOpen.set(false);
-    if (!result) return;
+    if (!result) {
+      // Fermé sans écrire : le CDK rend le focus au déclencheur ; sans déclencheur, au titre.
+      if (!trigger) this.restoreFocus(null, null);
+      return;
+    }
     switch (result.action) {
       case 'created':
         this.toast.success(
