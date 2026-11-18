@@ -17,7 +17,7 @@ G l'emporte sur tout autre document ; le contrat l'emporte sur une fiche.
 - pnpm progress:log --task <ID> --agent frontend-feature-dev --status <done|review|blocked|merged> --summary "…" [--pr … --notes … --next …] : enregistre l'avancement (skill progress-log) ; pnpm progress : regénère docs/progress/index.html
 
 ## Architecture (règles non négociables, handbook §11)
-- Une feature par contexte (auth, patients, patient-shell, overview, timeline, graph, entries, search, capture, account, public, admin), lazy, avec un index.ts public. Aucun import de l'intérieur d'une autre feature. admin n'importe jamais une feature patient.
+- Une feature par contexte (auth, patients, patient-shell, overview, timeline, graph, entries, search, capture, profile360, account, public, admin), lazy, avec un index.ts public. Aucun import de l'intérieur d'une autre feature. admin n'importe jamais une feature patient.
 - src/app/api est généré au tag CONTRACT_TAG et jamais édité. Seuls les fichiers data/*.api.ts l'importent. Changer de tag = une PR dédiée.
 - Six couches : page → composant UI → store → service de données → client généré → transport. Une couche ne parle qu'à celle du dessous.
 - Standalone, zoneless, OnPush, signaux. Pas de store RxJS maison ; RxJS seulement pour HTTP et événements DOM.
@@ -29,6 +29,7 @@ G l'emporte sur tout autre document ; le contrat l'emporte sur une fiche.
 - Le serveur reste juge des règles métier ; le client vérifie la forme.
 - Après une écriture, on relit les projections (vue d'ensemble, recherche), on ne recalcule pas localement.
 - authorType en lecture seule, place réservée, jamais dessiné (A11). Agenda (G Q25 amendée le 15 nov. 2026) : feature `agenda`, rendu sur données de démonstration tant que le contrat ne porte pas l'agenda, aucune synchronisation Google. Signalements : aucune route (G Q26).
+- Profil 360 : feature profile360, fiche 30, docs/J-plan-profil-360-web.md ; titre et détail seulement, relecture après écriture.
 
 ## Conventions
 Nommage : x.page.ts (PageX), x.component.ts (XComponent, sélecteur pm-x), x.store.ts (XStore), x.api.ts (XApi), x.routes.ts, x.guard.ts, x.interceptor.ts. Dossiers par feature : index.ts, routes, pages/, ui/, data/ (panels/ pour les panneaux).

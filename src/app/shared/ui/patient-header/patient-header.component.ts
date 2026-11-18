@@ -60,7 +60,7 @@ export type PatientSessionInfo =
  */
 export const UNCLOSED_SESSION_AFTER_MIN = 180;
 
-/** Les trois onglets du dossier et leurs routes (fiches 02, 03, 04). */
+/** Les quatre onglets du dossier et leurs routes (fiches 02, 03, 04, 30 ; G Q52). */
 export const PATIENT_TABS = [
   {
     key: '1',
@@ -76,6 +76,11 @@ export const PATIENT_TABS = [
     key: '3',
     segment: 'graph',
     label: () => $localize`:Onglet du dossier@@patientHeader.tab.graph:Graphe`,
+  },
+  {
+    key: '4',
+    segment: 'profile',
+    label: () => $localize`:Onglet du dossier@@patientHeader.tab.profile:Profil 360`,
   },
 ] as const;
 
@@ -100,7 +105,7 @@ export function sessionModalityLabel(modality: SessionModalityCode | null | unde
  * ligne d'identité de 44 px + onglets de 38 px). Ligne d'identité : nom, âge, « suivi·e depuis »,
  * drapeaux ambre sur une même ligne de base ; à droite, hors séance, « Dernière séance : … » et
  * Démarrer la séance (en `output()`). En séance, rien à droite : le chronomètre et Clôturer sont
- * dans pm-session-bar, posée au-dessus par la feature. Onglets 1 · 2 · 3 (touches 1 2 3,
+ * dans pm-session-bar, posée au-dessus par la feature. Onglets 1 · 2 · 3 · 4 (touches 1 2 3 4,
  * `aria-current`) : l'onglet 1 s'appelle « Séance » et mène à /patients/:id/session tant qu'une
  * séance est ouverte (UX-S3), « Vue d'ensemble » (/patients/:id) sinon ; en séance, « Vue
  * d'ensemble » reste à un clic, à droite des onglets (04b, question 1) ; emplacement [pmViewToggle]
@@ -183,7 +188,7 @@ export class PatientHeaderComponent {
       const timer = setInterval(() => this.now.set(Date.now()), 60_000);
       onCleanup(() => clearInterval(timer));
     });
-    // Touches 1 2 3 (B2) tant qu'un patient est affiché.
+    // Touches 1 2 3 4 (B2, G Q52) tant qu'un patient est affiché.
     effect((onCleanup) => {
       const patient = this.patient();
       if (!patient) return;

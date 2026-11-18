@@ -140,6 +140,103 @@ test('onglets : 1 2 3 et clic, état conservé au retour, inactifs dans la barre
   await expect(h.name).toHaveText('Inès M.');
 });
 
+test('quatrième onglet : « Profil 360 » (clic, touche 4), aria-current, pleine largeur, pas de bloc de saisie, hors séance et en séance (M13-05, G Q52, Q56)', async ({
+  page,
+  request,
+}) => {
+  test.setTimeout(90_000);
+  const account = await createAccount(request, 'm13-05.profil', 'psychologist');
+  const id = await createPatient(request, 'Lina V.');
+  // La séance d'accueil est créée de façon asynchrone après le patient : on l'attend.
+  await expect
+    .poll(async () => (await request.get(`${API}/api/patients/${id}/sessions/current`)).status(), {
+      timeout: 10_000,
+    })
+    .toBe(200);
+  await signIn(page, account);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  // Ouvrir l'onglet n'écrit rien (G Q56) : aucune requête d'écriture vers l'API sur cet onglet.
+  const writes: string[] = [];
+  page.on('request', (r) => {
+    const path = new URL(r.url()).pathname;
+    if (r.method() !== 'GET' && path.startsWith('/api/') && page.url().endsWith('/profile')) {
+      writes.push(`${r.method()} ${path}`);
+    }
+  });
+
+  await page.goto(`/fr/patients/${id}`);
+  const h = header(page);
+  const profile = h.tabs.getByRole('link', { name: /Profil 360/ });
+  await expect(h.name).toHaveText('Lina V.');
+  // Hors séance : quatre onglets, dans l'ordre, touches 1 à 4.
+  await expect(h.tabs.getByRole('link')).toHaveText([
+    /1\s*Vue d'ensemble/,
+    /2\s*Timeline/,
+    /3\s*Graphe/,
+    /4\s*Profil 360/,
+  ]);
+  await expect(profile).not.toHaveAttribute('aria-current', 'page');
+
+  // Clic : /patients/:id/profile, l'onglet porte aria-current, le titre de l'onglet est là.
+  await profile.click();
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/profile$`));
+  await expect(profile).toHaveAttribute('aria-current', 'page');
+  await expect(h.tabs.locator('a[aria-current="page"]')).toHaveCount(1);
+  await expect(page).toHaveTitle('Profil 360 · PsyMate');
+  await expect(page.getByRole('heading', { level: 2, name: 'Profil 360' })).toBeAttached();
+  // L'en-tête et le rail sont ceux des autres onglets ; pas de bloc de saisie ni de colonne de
+  // contexte (ils n'existent que sur l'onglet Séance), pas de sélecteur de fenêtre.
+  await expect(h.start).toBeVisible();
+  await expect(h.bar).toHaveCount(0);
+  await expect(page.locator('pm-capture-block')).toHaveCount(0);
+  await expect(h.capture).toHaveCount(0);
+  await expect(page.locator('.pad-layout aside.ctx')).toHaveCount(0);
+  await expect(page.locator('pm-overview-window')).toHaveCount(0);
+  await expect(page.locator('.pad-layout .pad-main pm-profile360-page')).toBeVisible();
+  await expect(rail(page).patients).toHaveAttribute('aria-current', 'page');
+  // Pleine largeur (data.contentWidth full) : le <main> va du rail (56 px) au bord droit.
+  const width = await page.evaluate(() => document.documentElement.clientWidth);
+  const main = await rect(page, 'main#main');
+  expect(main.x).toBe(56);
+  expect(main.width).toBe(width - 56);
+  await expectNoAxeViolations(page);
+
+  // Touches : 2 → Timeline, 4 → Profil 360, 1 → Vue d'ensemble ; les onglets 1 à 3 inchangés.
+  await page.keyboard.press('2');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/timeline$`));
+  await page.keyboard.press('4');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/profile$`));
+  await expect(profile).toHaveAttribute('aria-current', 'page');
+  await page.keyboard.press('1');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}$`));
+  await expect(page.getByRole('heading', { level: 2, name: "Vue d'ensemble" })).toBeAttached();
+
+  // En séance : l'onglet 1 est « Séance », le Profil 360 reste le quatrième, sous la barre de
+  // séance, toujours sans bloc de saisie ; la touche 1 ramène à l'onglet Séance et à son bloc.
+  const start = await request.post(`${API}/api/patients/${id}/sessions/start`, {
+    data: { modality: 'in_person' },
+  });
+  expect(start.status(), await start.text()).toBe(201);
+  await page.goto(`/fr/patients/${id}`);
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
+  await expect(h.capture).toBeVisible();
+  // Les touches d'onglet sont muettes dans un champ : aucun champ n'a le focus avant la touche 4.
+  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+  await page.keyboard.press('4');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/profile$`));
+  await expect(profile).toHaveAttribute('aria-current', 'page');
+  await expect(h.bar).toBeVisible();
+  await expect(page.locator('pm-capture-block')).toHaveCount(0);
+  await expect(page.locator('.pad-layout aside.ctx')).toHaveCount(0);
+  await expect(h.tabs.getByRole('link', { name: /Vue d'ensemble/ })).toBeVisible();
+  await expectNoAxeViolations(page);
+  await page.keyboard.press('1');
+  await expect(page).toHaveURL(new RegExp(`/fr/patients/${id}/session$`));
+  await expect(h.capture).toBeVisible();
+
+  expect(writes, 'aucune écriture depuis l’onglet Profil 360').toEqual([]);
+});
+
 test('« suivi·e depuis » : même début de suivi dans l’en-tête et le cadre du suivi (UX-G2c, UX-S6)', async ({
   page,
   request,
@@ -354,7 +451,7 @@ test('UX-S2 : en-tête compact (identité 44, onglets 38), barre de séance de 4
   expect(Math.abs(metaBox.y + metaBox.height - (nameBox.y + nameBox.height))).toBeLessThan(8);
   const startBox = (await h.start.boundingBox())!;
   expect(startBox.y).toBeLessThan(nameBox.y + nameBox.height);
-  for (const tab of ["Vue d'ensemble", 'Timeline', 'Graphe']) {
+  for (const tab of ["Vue d'ensemble", 'Timeline', 'Graphe', 'Profil 360']) {
     within(
       (await h.tabs.getByRole('link', { name: new RegExp(tab) }).boundingBox())!.height,
       38,

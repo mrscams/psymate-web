@@ -82,7 +82,7 @@ describe('PatientHeaderComponent', () => {
     expect(el.querySelector('button.retry')).not.toBeNull();
   });
 
-  it('hors séance : nom, âge, suivi (mois abrégé), drapeau ambre, dernière séance avec modalité et durée, Démarrer, onglets 1 2 3', async () => {
+  it('hors séance : nom, âge, suivi (mois abrégé), drapeau ambre, dernière séance avec modalité et durée, Démarrer, onglets 1 2 3 4', async () => {
     vi.setSystemTime(new Date('2026-10-24T14:18:00Z'));
     const { el } = await render({
       patient: marie,
@@ -107,6 +107,7 @@ describe('PatientHeaderComponent', () => {
       ['/patients/p1', '1', "Vue d'ensemble"],
       ['/patients/p1/timeline', '2', 'Timeline'],
       ['/patients/p1/graph', '3', 'Graphe'],
+      ['/patients/p1/profile', '4', 'Profil 360'],
     ]);
     expect(el.querySelector('.toggle-slot')).toBeNull();
   });
@@ -146,6 +147,7 @@ describe('PatientHeaderComponent', () => {
       ['/patients/p1/session', '1', 'Séance'],
       ['/patients/p1/timeline', '2', 'Timeline'],
       ['/patients/p1/graph', '3', 'Graphe'],
+      ['/patients/p1/profile', '4', 'Profil 360'],
       ['/patients/p1', undefined, "Vue d'ensemble"],
     ]);
     expect(el.querySelector('nav.tabs a.overview-link')).not.toBeNull();
@@ -157,11 +159,16 @@ describe('PatientHeaderComponent', () => {
       new KeyboardEvent('keydown', { key: '1', bubbles: true, cancelable: true }),
     );
     expect(navigate).toHaveBeenCalledWith(['/patients', 'p1', 'session']);
+    // Touche 4 en séance : le Profil 360, comme hors séance.
+    document.body.dispatchEvent(
+      new KeyboardEvent('keydown', { key: '4', bubbles: true, cancelable: true }),
+    );
+    expect(navigate).toHaveBeenCalledWith(['/patients', 'p1', 'profile']);
 
     // Séance clôturée : l'onglet 1 redevient « Vue d'ensemble », le lien disparaît, Démarrer revient.
     fixture.componentRef.setInput('session', { kind: 'last', date: '2026-10-24' });
     await fixture.whenStable();
-    expect(tabLabels(el)).toHaveLength(3);
+    expect(tabLabels(el)).toHaveLength(4);
     expect(tabLabels(el)[0]).toEqual(['/patients/p1', '1', "Vue d'ensemble"]);
     expect(el.querySelector('button.start-session')).not.toBeNull();
   });
@@ -185,7 +192,7 @@ describe('PatientHeaderComponent', () => {
     expect(UNCLOSED_SESSION_AFTER_MIN).toBe(180);
   });
 
-  it('les touches 1 2 3 naviguent entre les onglets ; aria-current suit la route', async () => {
+  it('les touches 1 2 3 4 naviguent entre les onglets ; aria-current suit la route', async () => {
     const { el, fixture } = await render({ patient: marie });
     const router = TestBed.inject(Router);
     const navigate = vi.spyOn(router, 'navigate');
@@ -204,13 +211,26 @@ describe('PatientHeaderComponent', () => {
     );
     expect(navigate).toHaveBeenCalledWith(['/patients', 'p1']);
 
+    // Touche 4 (G Q52) : l'onglet Profil 360, /patients/:id/profile, marqué aria-current.
+    document.body.dispatchEvent(
+      new KeyboardEvent('keydown', { key: '4', bubbles: true, cancelable: true }),
+    );
+    expect(navigate).toHaveBeenCalledWith(['/patients', 'p1', 'profile']);
+    await fixture.whenStable();
+    const current = el.querySelector('nav.tabs a[aria-current="page"]');
+    expect(current?.getAttribute('href')).toBe('/patients/p1/profile');
+    expect(current?.querySelector('span')?.textContent).toBe('Profil 360');
+    expect(el.querySelectorAll('nav.tabs a[aria-current="page"]')).toHaveLength(1);
+
     fixture.componentRef.setInput('patient', null);
     fixture.componentRef.setInput('state', 'loading');
     await fixture.whenStable();
     navigate.mockClear();
-    document.body.dispatchEvent(
-      new KeyboardEvent('keydown', { key: '3', bubbles: true, cancelable: true }),
-    );
+    for (const key of ['3', '4']) {
+      document.body.dispatchEvent(
+        new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }),
+      );
+    }
     expect(navigate).not.toHaveBeenCalled();
   });
 });

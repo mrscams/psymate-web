@@ -17,6 +17,7 @@ const PATIENT_FEATURES = [
   'entries',
   'search',
   'capture',
+  'profile360',
 ];
 
 /** Seul fichier autorisé à importer le client généré : data/<x>.api.ts (une couche « service de données »). */

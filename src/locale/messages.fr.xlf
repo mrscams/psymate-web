@@ -13558,6 +13558,14 @@
         </context-group>
         <note priority="1" from="description">Titre de l&apos;onglet 1 du dossier</note>
       </trans-unit>
+      <trans-unit id="profile360.heading" datatype="html">
+        <source> Profil 360 </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.html</context>
+          <context context-type="linenumber">4,10</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;onglet 4 du dossier</note>
+      </trans-unit>
       <trans-unit id="overview.reloadFailed.title" datatype="html">
         <source>La synthèse n&apos;a pas pu être relue</source>
         <context-group purpose="location">
@@ -14405,6 +14413,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
           <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientShell.profile.pageTitle" datatype="html">
+        <source>Profil 360 · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet du dossier</note>
       </trans-unit>
@@ -20717,6 +20733,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
           <context context-type="linenumber">70</context>
+        </context-group>
+        <note priority="1" from="description">Onglet du dossier</note>
+      </trans-unit>
+      <trans-unit id="patientHeader.tab.profile" datatype="html">
+        <source>Profil 360</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">Onglet du dossier</note>
       </trans-unit>

@@ -29,6 +29,7 @@
 | 25 | Confirmation d'e-mail | `25-confirmation-email.md` | html + png | M0-07, M1-15 |
 | 26 | Mot de passe oublié | `26-mot-de-passe-oublie.md` | html + png | M0-07 |
 | 27 | Compte suspendu / refusé | `27-compte-suspendu.md` | html + png | M1-15 (état), M7-07 (recours) |
+| 30 | Profil 360 (quatrième onglet du dossier, panneau « Ajouter au profil ») | `30-profil-360.md` | html (png après livraison) | hors plan C2 : C11, M13-04 à M13-07 (plan `J-plan-profil-360-web.md`, G Q52 à Q57) ; API jalon M13 de psymate-api, `contract-v0.14.0` ; onglet et squelette posés par M13-05, écran en cours |
 
 Hors V1, fiche conservée mais rien à implémenter : 23 Signalements (V1.1, G Q26). L'agenda (15, 15b), hors V1 à l'origine (G Q25), est entré en V1 le 15 novembre 2026 : écrans rendus sur données de démonstration, API en cours, synchronisation Google toujours hors V1.
 
