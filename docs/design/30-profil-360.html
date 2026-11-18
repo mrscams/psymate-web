@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>30 · Profil 360 — maquette PsyMate (palette Nordique)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Maquette statique de la fiche 30 : tout le contenu est dans le HTML et se lit sans script (les
+   quatre rubriques l'une sous l'autre, puis le panneau). Avec le script, une seule rubrique est
+   affichée à la fois et le panneau s'ouvre à droite. La barre d'application et l'en-tête patient
+   dessinés ici sont un décor : dans l'application ce sont les composants partagés (fiche 00). */
+:root{
+  --surface-ground:#eef1f6; --surface-raised:#ffffff; --surface-sunken:#e4e8f0;
+  --border-subtle:#d6dce6; --border-strong:#b9c2d1;
+  --text-primary:#1e2633; --text-secondary:#5a6679; --text-disabled:#8a94a6;
+  --primary:#3a63c2; --primary-hover:#2c4c99; --primary-tint:#e3eaf8; --primary-on:#ffffff;
+  --warning:#7a5a12; --flag-bg:#fbf1dc;
+  --scrim:rgba(30,38,51,.45);
+  --font-ui:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-ground);color:var(--text-primary);font-family:var(--font-ui);font-size:14px;line-height:1.4}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;box-shadow:0 0 0 4px var(--primary-tint)}
+[hidden]{display:none!important}
+.band{padding-left:24px;padding-right:24px}
+.spacer{flex:1 1 auto}
+
+.appbar{display:flex;align-items:center;gap:16px;min-height:48px;padding-top:8px;padding-bottom:8px;background:var(--surface-raised);border-bottom:1px solid var(--border-subtle);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:600;font-size:15px}
+.crumb{font-size:13px;color:var(--text-secondary)}
+.btn{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--border-subtle);border-radius:8px;background:var(--surface-raised);color:var(--text-primary);font-size:13px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--border-strong)}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 14px;border:0;border-radius:8px;background:var(--primary);color:var(--primary-on);font-size:13px;font-weight:600;white-space:nowrap}
+.btn-text{height:32px;padding:0 8px;border:0;border-radius:8px;background:transparent;color:var(--text-secondary);font-size:13px;font-weight:500}
+.btn-text:hover{background:var(--surface-ground);color:var(--text-primary)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--primary);color:var(--primary-on);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px}
+
+.phead{display:flex;flex-direction:column;gap:12px;padding-top:16px;background:var(--surface-raised);border-bottom:1px solid var(--border-subtle)}
+.phead-top{display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap}
+.phead h1{margin:0;font-size:22px;font-weight:600;letter-spacing:-0.01em}
+.phead-meta{color:var(--text-secondary)}
+.flagchip{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--flag-bg);color:var(--warning);font-size:12px;font-weight:500}
+.pill{display:inline-flex;align-items:center;height:32px;padding:0 12px;border:1px solid var(--border-subtle);border-radius:999px;font-size:13px;white-space:nowrap}
+/* ligne des onglets : les quatre onglets, puis « Ajouter au profil » au bout de la ligne */
+.ptabs-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ptabs{display:flex;gap:4px;overflow-x:auto}
+.ptab{display:inline-flex;align-items:center;height:36px;padding:0 12px;color:var(--text-secondary);font-weight:500;font-size:13px;border-bottom:2px solid transparent;white-space:nowrap}
+.ptab[aria-current="page"]{color:var(--text-primary);font-weight:600;border-bottom-color:var(--primary)}
+.ptabs-row .btn{margin-bottom:6px}
+
+.view{padding-top:16px;padding-bottom:48px}
+.card{background:var(--surface-raised);border:1px solid var(--border-subtle);border-radius:12px;padding:20px;min-width:0}
+.menu{display:grid;grid-template-columns:272px minmax(0,1fr);gap:16px;align-items:start}
+.rubs{display:flex;flex-direction:column;gap:16px;min-width:0}
+.nav{padding:8px;display:flex;flex-direction:column;gap:2px}
+.nav-title{margin:0;padding:8px 8px 6px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary)}
+.navb{display:flex;align-items:center;gap:10px;width:100%;padding:8px;border-radius:8px;font-size:13.5px;font-weight:500}
+.navb:hover{background:var(--surface-ground)}
+.navb .n{flex:1 1 auto;min-width:0}
+.navb .c{font-size:12px;color:var(--text-secondary);font-weight:400;font-variant-numeric:tabular-nums}
+.navb[aria-current="true"]{background:var(--primary-tint);color:var(--primary-hover);font-weight:600}
+.navb[aria-current="true"] .isq{background:var(--surface-raised);color:var(--primary-hover)}
+.navb[aria-current="true"] .c{color:var(--primary-hover)}
+@media (max-width:820px){
+  .menu{grid-template-columns:minmax(0,1fr)}
+  .nav{flex-direction:row;overflow-x:auto}
+  .nav-title{display:none}
+  .navb{width:auto;flex:0 0 auto;white-space:nowrap}
+}
+.isq{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;background:var(--surface-ground);color:var(--text-secondary);flex:0 0 auto}
+.isq.sm{width:32px;height:32px;border-radius:8px}
+.isq.on{background:var(--primary-tint);color:var(--primary-hover)}
+.dhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.dhead h2{margin:0;font-size:17px;font-weight:600;letter-spacing:-0.01em}
+.dhead p{margin:2px 0 0;font-size:13px;color:var(--text-secondary)}
+.dhead .txt{flex:1 1 200px;min-width:0}
+
+/* informations : titre et détail seulement (G Q53) */
+.rows{margin:0;padding:0;list-style:none;max-width:720px}
+.item{display:block;width:100%;padding:11px 8px;border:0;border-top:1px solid var(--surface-sunken);border-radius:0;background:transparent;text-align:left;line-height:1.45}
+.item:hover{background:var(--surface-ground)}
+.item .t{display:block}
+.item .d{display:block;font-size:13px;color:var(--text-secondary);margin-top:1px}
+.rows.people .item{display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;align-items:center}
+.av{width:36px;height:36px;border-radius:50%;background:var(--surface-ground);color:var(--text-secondary);font-weight:600;display:flex;align-items:center;justify-content:center}
+.rows.people .t{font-weight:600}
+/* Histoire et souvenirs : fil chronologique, la période à gauche */
+.rows.tl{padding-top:8px}
+.rows.tl li{position:relative}
+.rows.tl .item{display:grid;grid-template-columns:96px 16px minmax(0,1fr);gap:12px;border-top:0;padding:0 8px 22px 0;border-radius:8px}
+.rows.tl li:last-child .item{padding-bottom:4px}
+.rows.tl .k{text-align:right;color:var(--text-secondary);font-size:12.5px;font-variant-numeric:tabular-nums;padding-top:2px}
+.rows.tl .dot{width:12px;height:12px;border-radius:50%;background:var(--surface-raised);border:2px solid var(--primary);margin:4px 2px 0;position:relative;z-index:1}
+.rows.tl li::before{content:"";position:absolute;left:115px;top:12px;bottom:-6px;width:2px;background:var(--border-subtle)}
+.rows.tl li:last-child::before{display:none}
+
+/* panneau latéral (composant partagé, 480 px). Sans script : posé sous la page, pour être lu. */
+.panel-note{margin:32px 0 12px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary)}
+.panel{width:min(480px,100%);display:flex;flex-direction:column;background:var(--surface-raised);border:1px solid var(--border-subtle);border-radius:12px}
+.panel-head{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border-subtle)}
+.panel-head h2{margin:0;font-size:17px;font-weight:600;flex:1 1 auto}
+.panel-body{flex:1 1 auto;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px}
+.panel-foot{display:flex;align-items:center;gap:8px;padding:12px 20px;border-top:1px solid var(--border-subtle)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:13px;font-weight:600}
+.field .opt{font-weight:400;color:var(--text-secondary)}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface-raised);padding:8px 10px}
+.field input,.field select{height:36px}
+.field textarea{min-height:96px;resize:vertical;line-height:1.45}
+.field .help{font-size:12.5px;color:var(--text-secondary)}
+.two{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:12px}
+.scrim{display:none}
+
+/* avec script : une rubrique à la fois, panneau fixé à droite et fermé au départ */
+.js .rub:not(.is-current){display:none}
+.js .panel-note{display:none}
+.js .panel{position:fixed;top:0;right:0;bottom:0;z-index:30;border:0;border-left:1px solid var(--border-subtle);border-radius:0}
+.js .panel:not(.is-open){display:none}
+.js .scrim.is-open{display:block;position:fixed;inset:0;background:var(--scrim);z-index:20}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-hist" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l2.8 1.7"/></g></symbol>
+    <symbol id="i-fam" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7" r="2.6"/><path d="M2.5 16c.5-2.8 2.4-4.3 5-4.3s4.5 1.5 5 4.3"/><circle cx="14" cy="6.5" r="2"/><path d="M13.8 11.3c2.1.1 3.3 1.5 3.7 3.7"/></g></symbol>
+    <symbol id="i-sante" viewBox="0 0 20 20"><path d="M10 16.5s-6-3.6-6-8a3.5 3.5 0 0 1 6-2.3 3.5 3.5 0 0 1 6 2.3c0 4.4-6 8-6 8z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="i-val" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M12.8 7.2l-1.6 4-4 1.6 1.6-4z"/></g></symbol>
+    <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3.5v9M3.5 8h9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="appbar band">
+  <div class="brand">
+    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#3A63C2" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="10" r="2.5"/><circle cx="15" cy="5" r="2.5"/><circle cx="15" cy="15" r="2.5"/><path d="M7.2 9l5.6-3M7.2 11l5.6 3"/></svg>
+    PsyMate
+  </div>
+  <span class="crumb">Patients / Marie D.</span>
+  <div class="spacer"></div>
+  <span class="btn">Rechercher dans le dossier</span>
+  <div class="avatar" role="img" aria-label="Compte de Claire">CL</div>
+</header>
+
+<div class="phead band">
+  <div class="phead-top">
+    <h1>Marie D.</h1>
+    <span class="phead-meta">34 ans · suivie depuis mars 2025</span>
+    <span class="flagchip">à surveiller</span>
+    <div class="spacer"></div>
+    <span class="pill">Dernière séance : 14 nov.</span>
+    <span class="btn-primary">Démarrer la séance</span>
+  </div>
+  <div class="ptabs-row">
+    <nav class="ptabs" aria-label="Vues du dossier">
+      <span class="ptab">Vue d'ensemble</span>
+      <span class="ptab">Timeline</span>
+      <span class="ptab">Graphe</span>
+      <span class="ptab" aria-current="page">Profil 360</span>
+    </nav>
+    <div class="spacer"></div>
+    <button type="button" class="btn" id="add"><svg aria-hidden="true" width="14" height="14"><use href="#i-plus"/></svg>Ajouter au profil</button>
+  </div>
+</div>
+
+<main class="band view">
+  <div class="menu">
+    <nav class="card nav" id="nav" aria-label="Rubriques du profil">
+      <p class="nav-title">Rubriques</p>
+      <a class="navb" href="#r-history" data-c="history" aria-current="true"><span class="isq sm"><svg aria-hidden="true" width="18" height="18"><use href="#i-hist"/></svg></span><span class="n">Histoire et souvenirs</span><span class="c">12</span></a>
+      <a class="navb" href="#r-family" data-c="family"><span class="isq sm"><svg aria-hidden="true" width="18" height="18"><use href="#i-fam"/></svg></span><span class="n">Famille et entourage</span><span class="c">6</span></a>
+      <a class="navb" href="#r-health" data-c="health"><span class="isq sm"><svg aria-hidden="true" width="18" height="18"><use href="#i-sante"/></svg></span><span class="n">Santé et antécédents</span><span class="c">4</span></a>
+      <a class="navb" href="#r-values_goals" data-c="values_goals"><span class="isq sm"><svg aria-hidden="true" width="18" height="18"><use href="#i-val"/></svg></span><span class="n">Valeurs et projets</span><span class="c">4</span></a>
+    </nav>
+    <div class="rubs" id="rubs">
+    <section class="card rub" id="r-history" data-c="history" aria-labelledby="h-history">
+      <div class="dhead"><span class="isq on"><svg aria-hidden="true" width="20" height="20"><use href="#i-hist"/></svg></span><div class="txt"><h2 id="h-history">Histoire et souvenirs</h2><p>Les périodes de vie, les tournants et les souvenirs qui comptent · 12 informations</p></div></div>
+      <ol class="rows tl">
+        <li><button type="button" class="item" data-t="Enfance à Nantes" data-d="« Sage, première de classe »" data-p="1991 – 2002"><span class="k">1991 – 2002</span><span class="dot" aria-hidden="true"></span><span><span class="t">Enfance à Nantes</span><span class="d">« Sage, première de classe »</span></span></button></li>
+        <li><button type="button" class="item" data-t="Les mercredis chez sa grand-mère" data-d="« Le seul endroit sans notes »" data-p="Enfance"><span class="k">Enfance</span><span class="dot" aria-hidden="true"></span><span><span class="t">Les mercredis chez sa grand-mère</span><span class="d">« Le seul endroit sans notes »</span></span></button></li>
+        <li><button type="button" class="item" data-t="Le bulletin posé sur la table" data-d="« Ma mère qui ne dit rien »" data-p="Vers 2000"><span class="k">Vers 2000</span><span class="dot" aria-hidden="true"></span><span><span class="t">Le bulletin posé sur la table</span><span class="d">« Ma mère qui ne dit rien »</span></span></button></li>
+        <li><button type="button" class="item" data-t="Divorce des parents, départ à Lyon" data-d="À 11 ans, avec sa mère et sa sœur" data-p="2002"><span class="k">2002</span><span class="dot" aria-hidden="true"></span><span><span class="t">Divorce des parents, départ à Lyon</span><span class="d">À 11 ans, avec sa mère et sa sœur</span></span></button></li>
+        <li><button type="button" class="item" data-t="Adolescence à Lyon" data-d="Chez sa mère" data-p="2002 – 2009"><span class="k">2002 – 2009</span><span class="dot" aria-hidden="true"></span><span><span class="t">Adolescence à Lyon</span><span class="d">Chez sa mère</span></span></button></li>
+        <li><button type="button" class="item" data-t="Études de droit" data-d="" data-p="2009 – 2014"><span class="k">2009 – 2014</span><span class="dot" aria-hidden="true"></span><span><span class="t">Études de droit</span></span></button></li>
+        <li><button type="button" class="item" data-t="Décès de sa grand-mère" data-d="À 21 ans" data-p="2012"><span class="k">2012</span><span class="dot" aria-hidden="true"></span><span><span class="t">Décès de sa grand-mère</span><span class="d">À 21 ans</span></span></button></li>
+        <li><button type="button" class="item" data-t="La salle d'attente de l'oral du barreau" data-d="« Les mains qui tremblent »" data-p="2014"><span class="k">2014</span><span class="dot" aria-hidden="true"></span><span><span class="t">La salle d'attente de l'oral du barreau</span><span class="d">« Les mains qui tremblent »</span></span></button></li>
+        <li><button type="button" class="item" data-t="Oral du barreau raté" data-d="Renonce à être avocate" data-p="2014"><span class="k">2014</span><span class="dot" aria-hidden="true"></span><span><span class="t">Oral du barreau raté</span><span class="d">Renonce à être avocate</span></span></button></li>
+        <li><button type="button" class="item" data-t="Premier poste" data-d="" data-p="2014 – 2019"><span class="k">2014 – 2019</span><span class="dot" aria-hidden="true"></span><span><span class="t">Premier poste</span></span></button></li>
+        <li><button type="button" class="item" data-t="Juriste d'entreprise" data-d="Surcharge de travail depuis 2026" data-p="Depuis 2019"><span class="k">Depuis 2019</span><span class="dot" aria-hidden="true"></span><span><span class="t">Juriste d'entreprise</span><span class="d">Surcharge de travail depuis 2026</span></span></button></li>
+        <li><button type="button" class="item" data-t="L'odeur du tilleul dans la cour de l'école" data-d="Souvenir sans date" data-p=""><span class="k"></span><span class="dot" aria-hidden="true"></span><span><span class="t">L'odeur du tilleul dans la cour de l'école</span><span class="d">Souvenir sans date</span></span></button></li>
+      </ol>
+    </section>
+    <section class="card rub" id="r-family" data-c="family" aria-labelledby="h-family">
+      <div class="dhead"><span class="isq on"><svg aria-hidden="true" width="20" height="20"><use href="#i-fam"/></svg></span><div class="txt"><h2 id="h-family">Famille et entourage</h2><p>Les personnes qui comptent · 6 informations</p></div></div>
+      <ul class="rows people">
+        <li><button type="button" class="item" data-t="Thomas, compagnon" data-d="Vie commune depuis 2020. Soutien au quotidien." data-p=""><span class="av" aria-hidden="true">T</span><span><span class="t">Thomas, compagnon</span><span class="d">Vie commune depuis 2020. Soutien au quotidien.</span></span></button></li>
+        <li><button type="button" class="item" data-t="Hélène, sa mère" data-d="« Jamais assez bien pour elle »" data-p=""><span class="av" aria-hidden="true">H</span><span><span class="t">Hélène, sa mère</span><span class="d">« Jamais assez bien pour elle »</span></span></button></li>
+        <li><button type="button" class="item" data-t="Anne, sœur aînée" data-d="En conflit depuis 3 ans" data-p=""><span class="av" aria-hidden="true">A</span><span><span class="t">Anne, sœur aînée</span><span class="d">En conflit depuis 3 ans</span></span></button></li>
+        <li><button type="button" class="item" data-t="Son père" data-d="Distant depuis le divorce" data-p=""><span class="av" aria-hidden="true">S</span><span><span class="t">Son père</span><span class="d">Distant depuis le divorce</span></span></button></li>
+        <li><button type="button" class="item" data-t="Léa, amie depuis la fac" data-d="Confidente" data-p=""><span class="av" aria-hidden="true">L</span><span><span class="t">Léa, amie depuis la fac</span><span class="d">Confidente</span></span></button></li>
+        <li><button type="button" class="item" data-t="Grand-mère maternelle" data-d="Décédée en 2012. Très proche pendant l'enfance." data-p=""><span class="av" aria-hidden="true">G</span><span><span class="t">Grand-mère maternelle</span><span class="d">Décédée en 2012. Très proche pendant l'enfance.</span></span></button></li>
+      </ul>
+    </section>
+    <section class="card rub" id="r-health" data-c="health" aria-labelledby="h-health">
+      <div class="dhead"><span class="isq on"><svg aria-hidden="true" width="20" height="20"><use href="#i-sante"/></svg></span><div class="txt"><h2 id="h-health">Santé et antécédents</h2><p>Traitements, antécédents, suivis · 4 informations</p></div></div>
+      <ul class="rows std">
+        <li><button type="button" class="item" data-t="Sertraline 75 mg, le matin" data-d="En cours, depuis septembre 2026" data-p=""><span class="t">Sertraline 75 mg, le matin</span><span class="d">En cours, depuis septembre 2026</span></button></li>
+        <li><button type="button" class="item" data-t="Troubles du sommeil" data-d="Depuis septembre 2026, réveils vers 4 h" data-p=""><span class="t">Troubles du sommeil</span><span class="d">Depuis septembre 2026, réveils vers 4 h</span></button></li>
+        <li><button type="button" class="item" data-t="Épuisement professionnel" data-d="2023, arrêt de 3 semaines" data-p=""><span class="t">Épuisement professionnel</span><span class="d">2023, arrêt de 3 semaines</span></button></li>
+        <li><button type="button" class="item" data-t="Migraines" data-d="Depuis l'adolescence" data-p=""><span class="t">Migraines</span><span class="d">Depuis l'adolescence</span></button></li>
+      </ul>
+    </section>
+    <section class="card rub" id="r-values_goals" data-c="values_goals" aria-labelledby="h-values_goals">
+      <div class="dhead"><span class="isq on"><svg aria-hidden="true" width="20" height="20"><use href="#i-val"/></svg></span><div class="txt"><h2 id="h-values_goals">Valeurs et projets</h2><p>Ce vers quoi elle veut aller · 4 informations</p></div></div>
+      <ul class="rows std">
+        <li><button type="button" class="item" data-t="« Faire les choses bien, mais plus à n'importe quel prix »" data-d="" data-p=""><span class="t">« Faire les choses bien, mais plus à n'importe quel prix »</span></button></li>
+        <li><button type="button" class="item" data-t="Passer à 80 % au travail" data-d="Projet pour 2027" data-p=""><span class="t">Passer à 80 % au travail</span><span class="d">Projet pour 2027</span></button></li>
+        <li><button type="button" class="item" data-t="Se réconcilier avec sa sœur" data-d="" data-p=""><span class="t">Se réconcilier avec sa sœur</span></button></li>
+        <li><button type="button" class="item" data-t="Reprendre le piano" data-d="Arrêté à 15 ans" data-p=""><span class="t">Reprendre le piano</span><span class="d">Arrêté à 15 ans</span></button></li>
+      </ul>
+    </section>
+    </div>
+  </div>
+
+  <p class="panel-note">Panneau « Ajouter au profil » (s'ouvre à droite, 480 px)</p>
+  <div class="scrim" id="scrim"></div>
+  <aside class="panel" id="panel" role="dialog" aria-labelledby="panel-title">
+    <div class="panel-head">
+      <h2 id="panel-title">Ajouter au profil</h2>
+      <button type="button" class="btn" id="panel-close">Fermer</button>
+    </div>
+    <form class="panel-body" id="panel-form">
+      <div class="field">
+        <label for="f-cat">Rubrique</label>
+        <select id="f-cat">
+          <option value="history">Histoire et souvenirs</option>
+          <option value="family">Famille et entourage</option>
+          <option value="health">Santé et antécédents</option>
+          <option value="values_goals">Valeurs et projets</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-title">Information</label>
+        <input id="f-title" type="text" maxlength="200" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="f-detail">Précision <span class="opt">(facultatif)</span></label>
+        <textarea id="f-detail" maxlength="2000"></textarea>
+      </div>
+      <div class="two" id="f-period">
+        <div class="field">
+          <label for="f-plabel">Période <span class="opt">(facultatif)</span></label>
+          <input id="f-plabel" type="text" maxlength="60" autocomplete="off">
+          <span class="help">Par exemple : Enfance, vers 2000, 2002 – 2009.</span>
+        </div>
+        <div class="field">
+          <label for="f-pyear">Année <span class="opt">(facultatif)</span></label>
+          <input id="f-pyear" type="number" min="1900" max="2100" inputmode="numeric">
+        </div>
+        <span class="help" style="grid-column:1 / -1">Période et Année n'apparaissent que pour Histoire et souvenirs. L'année sert à classer dans le fil : laissez-la vide si vous ne savez pas.</span>
+      </div>
+    </form>
+    <div class="panel-foot">
+      <button type="button" class="btn-text" id="panel-remove" hidden>Retirer du profil</button>
+      <div class="spacer"></div>
+      <button type="button" class="btn" id="panel-cancel">Annuler</button>
+      <button type="button" class="btn-primary" id="panel-submit">Ajouter</button>
+    </div>
+  </aside>
+</main>
+
+<script>
+/* Facultatif : la page se lit sans ce script. Il n'affiche qu'une rubrique à la fois et ouvre le
+   panneau à droite, en création (bouton « Ajouter au profil ») ou en modification (clic sur une
+   information). */
+(function () {
+  document.documentElement.classList.add("js");
+  var current = "history";
+  var nav = document.getElementById("nav"), rubs = document.getElementById("rubs");
+  var panel = document.getElementById("panel"), scrim = document.getElementById("scrim");
+  var fCat = document.getElementById("f-cat"), fTitle = document.getElementById("f-title"), fDetail = document.getElementById("f-detail");
+  var fPLabel = document.getElementById("f-plabel"), fPYear = document.getElementById("f-pyear"), fPeriod = document.getElementById("f-period");
+  var trigger = null;
+
+  function show(id) {
+    current = id;
+    Array.prototype.forEach.call(nav.querySelectorAll(".navb"), function (a) {
+      if (a.getAttribute("data-c") === id) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
+    });
+    Array.prototype.forEach.call(rubs.querySelectorAll(".rub"), function (s) {
+      s.classList.toggle("is-current", s.getAttribute("data-c") === id);
+    });
+  }
+  function syncPeriod() {
+    var isHistory = fCat.value === "history";
+    fPeriod.hidden = !isHistory;
+    if (!isHistory) { fPLabel.value = ""; fPYear.value = ""; }
+  }
+  function openPanel(item, from) {
+    trigger = from || null;
+    var editing = !!item;
+    document.getElementById("panel-title").textContent = editing ? "Modifier l'information" : "Ajouter au profil";
+    document.getElementById("panel-submit").textContent = editing ? "Enregistrer" : "Ajouter";
+    document.getElementById("panel-remove").hidden = !editing;
+    fCat.value = current;
+    fTitle.value = editing ? item.getAttribute("data-t") : "";
+    fDetail.value = editing ? item.getAttribute("data-d") : "";
+    fPLabel.value = editing ? item.getAttribute("data-p") : "";
+    fPYear.value = "";
+    syncPeriod();
+    panel.classList.add("is-open"); scrim.classList.add("is-open");
+    fTitle.focus();
+  }
+  function closePanel() {
+    if (!panel.classList.contains("is-open")) return;
+    panel.classList.remove("is-open"); scrim.classList.remove("is-open");
+    if (trigger) trigger.focus();
+  }
+
+  nav.addEventListener("click", function (e) {
+    var a = e.target.closest(".navb");
+    if (!a) return;
+    e.preventDefault();
+    show(a.getAttribute("data-c"));
+  });
+  rubs.addEventListener("click", function (e) {
+    var it = e.target.closest(".item");
+    if (it) openPanel(it, it);
+  });
+  document.getElementById("add").addEventListener("click", function (e) { openPanel(null, e.currentTarget); });
+  fCat.addEventListener("change", syncPeriod);
+  ["panel-close", "panel-cancel", "panel-submit", "panel-remove"].forEach(function (id) {
+    document.getElementById(id).addEventListener("click", closePanel);
+  });
+  scrim.addEventListener("click", closePanel);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closePanel(); });
+
+  show(current);
+})();
+</script>
+</body>
+</html>
