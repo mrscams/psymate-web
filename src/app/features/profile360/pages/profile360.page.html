@@ -8,6 +8,35 @@
   >
     Profil 360
   </h2>
-  <!-- Squelette (M13-05) : le profil n'est pas encore lu (M13-06). -->
-  <pm-state kind="loading" skeleton="block" [lines]="4" />
+
+  @switch (state()) {
+    @case ('loading') {
+      <pm-state kind="loading" skeleton="block" [lines]="4" />
+    }
+    @case ('error') {
+      <pm-state
+        kind="error"
+        title="Le profil n'a pas pu être chargé"
+        i18n-title="État erreur du Profil 360@@profile360.error.title"
+        [action]="retryAction"
+        [details]="store.profile().problem?.code"
+      />
+    }
+    @case ('empty') {
+      <pm-state
+        kind="empty"
+        title="Aucune information dans le profil"
+        i18n-title="État vide du Profil 360 (aucune information)@@profile360.empty.title"
+        message="L'histoire, la famille, la santé et les valeurs de la personne se rangent ici."
+        i18n-message="Phrase de l'état vide du Profil 360@@profile360.empty.message"
+      />
+    }
+    @default {
+      <!-- Maquette 30 `.menu` : menu de 272 px et rubrique affichée, 16 px d'écart. -->
+      <div class="menu">
+        <pm-profile-menu [current]="category()" [counts]="store.counts()" />
+        <pm-profile-rubric [category]="category()" [items]="store.groups()[category()]" />
+      </div>
+    }
+  }
 </section>

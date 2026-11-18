@@ -1,0 +1,158 @@
+// Rubrique affichée (maquette 30 `.card.rub`, `.dhead`, `.rows`) : titre et détail seulement (G Q53).
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.card {
+  min-width: 0;
+  padding: 20px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+}
+
+.dhead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+}
+
+.txt {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.isq {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--primary-tint);
+  color: var(--primary-hover);
+}
+
+.rows {
+  max-width: 720px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: block;
+  padding: 11px 8px;
+  border-top: 1px solid var(--surface-sunken);
+  line-height: 1.45;
+}
+
+.t {
+  display: block;
+}
+
+.d {
+  display: block;
+  margin-top: 1px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.body {
+  min-width: 0;
+}
+
+// Famille et entourage : pastille ronde à la première lettre du titre.
+.rows.people {
+  .item {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+  }
+
+  .t {
+    font-weight: 600;
+  }
+}
+
+.av {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface-ground);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+// Histoire et souvenirs : fil chronologique vertical, la période à gauche (96 px, alignée à droite).
+.rows.tl {
+  padding-top: 8px;
+
+  .item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 96px 16px minmax(0, 1fr);
+    gap: 12px;
+    padding: 0 8px 22px 0;
+    border-top: 0;
+
+    // Le trait du fil, décoratif (pseudo-élément, jamais lu).
+    &::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      bottom: -6px;
+      left: 115px;
+      width: 2px;
+      background: var(--border-subtle);
+    }
+
+    &:last-child {
+      padding-bottom: 4px;
+
+      &::before {
+        display: none;
+      }
+    }
+  }
+
+  .k {
+    padding-top: 2px;
+    text-align: right;
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-secondary);
+  }
+}
+
+.dot {
+  position: relative;
+  z-index: 1;
+  width: 12px;
+  height: 12px;
+  margin: 4px 2px 0;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  background: var(--surface-raised);
+}

@@ -1,3 +1,18 @@
 :host {
   display: block;
 }
+
+// Maquette 30 `.menu` : deux colonnes, le menu des rubriques (272 px) et la rubrique affichée.
+.menu {
+  display: grid;
+  grid-template-columns: 272px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+// Sous 820 px (fiche 30) : une colonne, le menu (en rangée défilante) au-dessus du contenu.
+@media (max-width: 820px) {
+  .menu {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
