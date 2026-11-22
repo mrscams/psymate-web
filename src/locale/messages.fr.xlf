@@ -25003,6 +25003,584 @@
         </context-group>
         <note priority="1" from="description">Toast de retour du réseau, plusieurs envois</note>
       </trans-unit>
+      <trans-unit id="preferences.booking.section" datatype="html">
+        <source> Prise de rendez-vous en ligne </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">209,212</context>
+        </context-group>
+        <note priority="1" from="description">Section Prise de rendez-vous en ligne</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.pageLink" datatype="html">
+        <source>Voir ma page de rendez-vous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">214,215</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la page publique de rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.newTab" datatype="html">
+        <source> (nouvel onglet)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">223,228</context>
+        </context-group>
+        <note priority="1" from="description">Mention d&apos;un lien ouvert dans un nouvel onglet</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.unpublished" datatype="html">
+        <source>Votre profil public n&apos;est pas publié : la prise de rendez-vous ne sera proposée qu&apos;une fois le profil publié.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">239,243</context>
+        </context-group>
+        <note priority="1" from="description">Bandeau du profil public non publié</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.unpublished.link" datatype="html">
+        <source>Mon profil public</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">245,251</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers Mon profil public</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.activation.label" datatype="html">
+        <source>Activation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">254,255</context>
+        </context-group>
+        <note priority="1" from="description">Réglage de l&apos;activation en ligne</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.activation.help" datatype="html">
+        <source>Ajoute le bouton « Prendre rendez-vous » à votre fiche publique.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">256,257</context>
+        </context-group>
+        <note priority="1" from="description">Aide de l&apos;activation en ligne</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.activation.toggle" datatype="html">
+        <source> Proposer la prise de rendez-vous en ligne </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">271,274</context>
+        </context-group>
+        <note priority="1" from="description">Interrupteur de la prise de rendez-vous en
+                  ligne</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.mode.label" datatype="html">
+        <source>Confirmation des demandes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">287,288</context>
+        </context-group>
+        <note priority="1" from="description">Réglage du mode de confirmation</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.mode.help" datatype="html">
+        <source>Le mode est annoncé au demandeur avant l&apos;envoi.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">289,290</context>
+        </context-group>
+        <note priority="1" from="description">Aide du mode de confirmation</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.mode.manual" datatype="html">
+        <source>Je valide chaque demande</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">304,307</context>
+        </context-group>
+        <note priority="1" from="description">Mode manuel</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.mode.manual.text" datatype="html">
+        <source>Chaque demande attend votre réponse dans l&apos;agenda. Sans réponse sous 72 h, elle est annulée et le demandeur est prévenu.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">309,313</context>
+        </context-group>
+        <note priority="1" from="description">Phrase du mode manuel</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.mode.auto" datatype="html">
+        <source>Acceptation automatique dans mes plages</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">325,328</context>
+        </context-group>
+        <note priority="1" from="description">Mode automatique</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.mode.auto.text" datatype="html">
+        <source>Le rendez-vous est confirmé dès que le demandeur a validé son adresse e-mail.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">330,334</context>
+        </context-group>
+        <note priority="1" from="description">Phrase du mode automatique</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.windows.label" datatype="html">
+        <source>Plages ouvertes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">353,356</context>
+        </context-group>
+        <note priority="1" from="description">Réglage des plages</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.windows.help" datatype="html">
+        <source>Les créneaux proposés sont découpés dans ces plages, à partir de leur début. Les plages s&apos;enregistrent avec leur bouton ; les autres réglages, dès que vous les changez.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">359,363</context>
+        </context-group>
+        <note priority="1" from="description">Aide des plages</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.windows.addHint" datatype="html">
+        <source> Ajoutez au moins une plage pour que la prise de rendez-vous soit proposée. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">377,381</context>
+        </context-group>
+        <note priority="1" from="description">Invitation à ajouter une plage</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.modalities.label" datatype="html">
+        <source>Modalités proposées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">421,422</context>
+        </context-group>
+        <note priority="1" from="description">Réglage des modalités proposées</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.modalities.help" datatype="html">
+        <source>Le demandeur choisit parmi celles-ci. Au moins une.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">423,424</context>
+        </context-group>
+        <note priority="1" from="description">Aide des modalités proposées</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.timezone.label" datatype="html">
+        <source>Fuseau horaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">459,460</context>
+        </context-group>
+        <note priority="1" from="description">Réglage du fuseau horaire</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.timezone.help" datatype="html">
+        <source>Les heures des plages sont celles de ce fuseau.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">461,462</context>
+        </context-group>
+        <note priority="1" from="description">Aide du fuseau horaire</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.timezone.browser" datatype="html">
+        <source>Votre navigateur est réglé sur <x id="INTERPOLATION" equiv-text="{{ browserTimeZone }}"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">486,487</context>
+        </context-group>
+        <note priority="1" from="description">Fuseau du navigateur proposé</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.timezone.use" datatype="html">
+        <source> Utiliser ce fuseau </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">495,499</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui adopte le fuseau du navigateur</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.status.disabled" datatype="html">
+        <source>Désactivée : votre fiche publique n&apos;a pas de bouton « Prendre rendez-vous ».</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">277</context>
+        </context-group>
+        <note priority="1" from="description">État de la prise de rendez-vous désactivée</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.status.noWindow" datatype="html">
+        <source>La prise de rendez-vous n&apos;est pas proposée tant qu&apos;il n&apos;y a pas de plage.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">280</context>
+        </context-group>
+        <note priority="1" from="description">État de la prise de rendez-vous sans plage</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.status.offered" datatype="html">
+        <source>Proposée sur votre fiche publique.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">283</context>
+        </context-group>
+        <note priority="1" from="description">État de la prise de rendez-vous proposée</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.modalities.error" datatype="html">
+        <source>Gardez au moins une modalité.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
+          <context context-type="linenumber">377</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, aucune modalité cochée</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.1.title" datatype="html">
+        <source>Lundi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">Jour, titre d&apos;une ligne de plages</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.1.inline" datatype="html">
+        <source>lundi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">Jour, dans une phrase (du …)</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.2.title" datatype="html">
+        <source>Mardi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">Jour, titre d&apos;une ligne de plages</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.2.inline" datatype="html">
+        <source>mardi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Jour, dans une phrase (du …)</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.3.title" datatype="html">
+        <source>Mercredi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">Jour, titre d&apos;une ligne de plages</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.3.inline" datatype="html">
+        <source>mercredi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <note priority="1" from="description">Jour, dans une phrase (du …)</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.4.title" datatype="html">
+        <source>Jeudi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">Jour, titre d&apos;une ligne de plages</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.4.inline" datatype="html">
+        <source>jeudi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">Jour, dans une phrase (du …)</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.5.title" datatype="html">
+        <source>Vendredi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">Jour, titre d&apos;une ligne de plages</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.5.inline" datatype="html">
+        <source>vendredi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Jour, dans une phrase (du …)</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.6.title" datatype="html">
+        <source>Samedi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <note priority="1" from="description">Jour, titre d&apos;une ligne de plages</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.6.inline" datatype="html">
+        <source>samedi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <note priority="1" from="description">Jour, dans une phrase (du …)</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.7.title" datatype="html">
+        <source>Dimanche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <note priority="1" from="description">Jour, titre d&apos;une ligne de plages</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.7.inline" datatype="html">
+        <source>dimanche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <note priority="1" from="description">Jour, dans une phrase (du …)</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.day.group" datatype="html">
+        <source>Plages du <x id="day" equiv-text="name"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Nom du groupe des plages d&apos;un jour</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.start" datatype="html">
+        <source>Début de la plage <x id="index" equiv-text="index"/> du <x id="day" equiv-text="name"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">Nom du champ Début d&apos;une plage</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.end" datatype="html">
+        <source>Fin de la plage <x id="index" equiv-text="index"/> du <x id="day" equiv-text="name"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <note priority="1" from="description">Nom du champ Fin d&apos;une plage</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.remove" datatype="html">
+        <source>Retirer la plage du <x id="day" equiv-text="name"/>, <x id="start" equiv-text="start"/> à <x id="end" equiv-text="end"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Nom du bouton qui retire une plage</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.error.format" datatype="html">
+        <source>Heure attendue au format HH:MM, minutes de <x id="step" equiv-text="step"/> en <x id="step" equiv-text="step"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de plage, heure mal formée</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.error.order" datatype="html">
+        <source>La fin doit être après le début.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de plage, fin avant le début</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.error.overlap" datatype="html">
+        <source>Cette plage chevauche une autre plage du même jour.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Erreur de plage, chevauchement</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.duration.label" datatype="html">
+        <source>Durée d&apos;un créneau</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <note priority="1" from="description">Réglage de la durée d&apos;un créneau en ligne</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.duration.help" datatype="html">
+        <source>De <x id="min" equiv-text="slotMin"/> à <x id="max" equiv-text="slotMax"/> minutes, par pas de <x id="step" equiv-text="step"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la durée d&apos;un créneau</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.duration.unit" datatype="html">
+        <source>min</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+        <note priority="1" from="description">Unité minutes</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.duration.error" datatype="html">
+        <source>Entre <x id="min" equiv-text="slotMin"/> et <x id="max" equiv-text="slotMax"/>, par pas de <x id="step" equiv-text="step"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, durée d&apos;un créneau hors bornes</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.notice.label" datatype="html">
+        <source>Délai minimal</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <note priority="1" from="description">Réglage du délai minimal</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.notice.help" datatype="html">
+        <source>Temps entre la demande et le début du créneau, de <x id="min" equiv-text="noticeMin"/> à <x id="max" equiv-text="noticeMax"/> heures.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+        <note priority="1" from="description">Aide du délai minimal</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.notice.unit" datatype="html">
+        <source>h</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+        <note priority="1" from="description">Unité heures</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.notice.error" datatype="html">
+        <source>Entre <x id="min" equiv-text="noticeMin"/> et <x id="max" equiv-text="noticeMax"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, délai minimal hors bornes</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.horizon.label" datatype="html">
+        <source>Horizon</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <note priority="1" from="description">Réglage de l&apos;horizon</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.horizon.help" datatype="html">
+        <source>Aucun créneau n&apos;est proposé au-delà, de <x id="min" equiv-text="horizonMin"/> à <x id="max" equiv-text="horizonMax"/> jours.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">135</context>
+        </context-group>
+        <note priority="1" from="description">Aide de l&apos;horizon</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.horizon.unit" datatype="html">
+        <source>jours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+        <note priority="1" from="description">Unité jours</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.horizon.error" datatype="html">
+        <source>Entre <x id="min" equiv-text="horizonMin"/> et <x id="max" equiv-text="horizonMax"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+        <note priority="1" from="description">Erreur, horizon hors bornes</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.modality.in_person" datatype="html">
+        <source>Au cabinet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">145</context>
+        </context-group>
+        <note priority="1" from="description">Modalité au cabinet</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.modality.video" datatype="html">
+        <source>En visio</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+        <note priority="1" from="description">Modalité en visio</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.modality.phone" datatype="html">
+        <source>Par téléphone</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+        <note priority="1" from="description">Modalité par téléphone</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.none" datatype="html">
+        <source> Aucune plage </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-windows-editor.component.ts</context>
+          <context context-type="linenumber">60,62</context>
+        </context-group>
+        <note priority="1" from="description">Jour sans plage</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.removeTitle" datatype="html">
+        <source>Retirer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-windows-editor.component.ts</context>
+          <context context-type="linenumber">103,105</context>
+        </context-group>
+        <note priority="1" from="description">Infobulle du bouton qui retire une
+                            plage</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.add" datatype="html">
+        <source>Ajouter une plage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-windows-editor.component.ts</context>
+          <context context-type="linenumber">139,144</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui ajoute une plage à un jour</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.count" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {0 plage sur <x id="INTERPOLATION"/>} =1 {1 plage sur <x id="INTERPOLATION"/>} other {<x id="INTERPOLATION_1"/> plages sur <x id="INTERPOLATION"/>}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-windows-editor.component.ts</context>
+          <context context-type="linenumber">149,155</context>
+        </context-group>
+        <note priority="1" from="description">Compteur des plages de l&apos;éditeur</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.cancel" datatype="html">
+        <source> Annuler les modifications </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-windows-editor.component.ts</context>
+          <context context-type="linenumber">170,175</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui annule les modifications des plages</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.save" datatype="html">
+        <source> Enregistrer les plages </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-windows-editor.component.ts</context>
+          <context context-type="linenumber">181,186</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui enregistre les plages</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.max" datatype="html">
+        <source><x id="max" equiv-text="BOOKING_WINDOWS_MAX"/> plages au plus.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-windows-editor.component.ts</context>
+          <context context-type="linenumber">383</context>
+        </context-group>
+        <note priority="1" from="description">Plafond des plages atteint</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.unsaved" datatype="html">
+        <source>Modifications non enregistrées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-windows-editor.component.ts</context>
+          <context context-type="linenumber">409</context>
+        </context-group>
+        <note priority="1" from="description">Plages modifiées pas encore enregistrées</note>
+      </trans-unit>
+      <trans-unit id="preferences.booking.window.saved" datatype="html">
+        <source>Enregistré</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-windows-editor.component.ts</context>
+          <context context-type="linenumber">412</context>
+        </context-group>
+        <note priority="1" from="description">Plages enregistrées</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

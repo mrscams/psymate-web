@@ -207,12 +207,203 @@ h2 {
   }
 }
 
+// Prise de rendez-vous en ligne (M14-11, maquette propositions-2026-11/14-preferences-prise-de-rendez-vous).
+.booking {
+  .card-header a.external {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  svg {
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+.section-status {
+  margin: -12px 0 0;
+  color: var(--text-secondary);
+  font: var(--mat-sys-body-medium);
+}
+
+// Bandeau d'information dans la carte (fiche 14 : profil non publié, aucune plage).
+.bar {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  background: var(--info-bg);
+  color: var(--text-primary);
+  font: var(--mat-sys-body-medium);
+
+  svg {
+    width: 20px;
+    height: 20px;
+    color: var(--info);
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    margin-left: 4px;
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+}
+
+.booking-rows {
+  align-items: start;
+}
+
+// Ligne « Plages ouvertes » : libellé et aide en tête, éditeur sur toute la largeur.
+.row-full {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .label {
+    color: var(--text-primary);
+    font: var(--mat-sys-body-medium);
+    font-weight: 500;
+  }
+  .help {
+    color: var(--text-secondary);
+    font: var(--mat-sys-body-small);
+  }
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.option,
+.check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  cursor: pointer;
+
+  input {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin: 1px 0 0;
+    accent-color: var(--primary);
+  }
+}
+
+.option .text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--text-primary);
+  font: var(--mat-sys-body-medium);
+
+  strong {
+    font-weight: 600;
+  }
+  span {
+    color: var(--text-secondary);
+    font: var(--mat-sys-body-small);
+  }
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+.check {
+  gap: 8px;
+  min-height: 24px;
+  color: var(--text-primary);
+  font: var(--mat-sys-body-medium);
+}
+
+.number[aria-invalid='true'],
+.select[aria-invalid='true'] {
+  border-color: var(--danger);
+  border-width: 2px;
+}
+
+.select.tz {
+  max-width: 100%;
+}
+
+.error {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  margin: 0;
+  color: var(--danger);
+  font: var(--mat-sys-body-small);
+
+  svg {
+    width: 14px;
+    height: 14px;
+    margin-top: 1px;
+  }
+}
+
 @media (max-width: 720px) {
   .rows {
     grid-template-columns: minmax(0, 1fr);
     gap: 8px;
   }
-  .rows > pm-setting-row + pm-setting-row {
+  .rows > pm-setting-row + pm-setting-row,
+  .rows > .row-full,
+  .rows > .row-full + pm-setting-row {
     margin-top: 10px;
+  }
+  .select.tz {
+    min-width: 0;
+    width: 100%;
   }
 }

@@ -183,6 +183,14 @@ export const ProfileStore = signalStore(
       loadVocabulary,
 
       /**
+       * GET /api/me/profile seul, sans la liste de l'annuaire : la page Préférences n'a besoin que
+       * de savoir si le profil est publié et de son adresse (section Prise de rendez-vous, M14-11).
+       */
+      async loadProfile(): Promise<void> {
+        await reloadProfile();
+      },
+
+      /**
        * Une modification du formulaire (déjà valide côté client) : le PUT part 800 ms après la
        * dernière, avec le contenu complet le plus récent.
        */
