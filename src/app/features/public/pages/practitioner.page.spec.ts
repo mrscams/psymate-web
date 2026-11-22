@@ -3,12 +3,18 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
+import { BookingApi } from '../data/booking.api';
+import { CLAIRE_BOOKING } from '../data/booking.fixtures';
 import { DirectoryApi } from '../data/directory.api';
 import { CLAIRE_PROFILE, VOCABULARY } from '../data/directory.fixtures';
 import { PractitionerProfile } from '../data/directory.models';
 import { PractitionerPage } from './practitioner.page';
 
-async function render(api: Partial<Record<keyof DirectoryApi, ReturnType<typeof vi.fn>>>) {
+async function render(
+  api: Partial<Record<keyof DirectoryApi, ReturnType<typeof vi.fn>>>,
+  // Prise de rendez-vous non offerte par défaut (404 BOOKING_NOT_AVAILABLE).
+  bookingSettings = vi.fn().mockRejectedValue({ status: 404, code: 'BOOKING_NOT_AVAILABLE' }),
+) {
   const mock = {
     profile: vi.fn().mockResolvedValue(CLAIRE_PROFILE),
     vocabulary: vi.fn().mockResolvedValue(VOCABULARY),
@@ -22,6 +28,7 @@ async function render(api: Partial<Record<keyof DirectoryApi, ReturnType<typeof 
         withComponentInputBinding(),
       ),
       { provide: DirectoryApi, useValue: mock },
+      { provide: BookingApi, useValue: { settings: bookingSettings } },
     ],
   });
   const harness = await RouterTestingHarness.create('/praticiens/claire-moreau');
@@ -145,5 +152,46 @@ describe('PractitionerPage', () => {
     await vi.waitFor(() => expect(profile).toHaveBeenCalledTimes(2));
     await harness.fixture.whenStable();
     expect(el.querySelector('h1')?.textContent?.trim()).toBe('Claire Moreau');
+  });
+
+  describe('prise de rendez-vous en ligne (fiche 09, complément M14)', () => {
+    const actions = (el: HTMLElement) =>
+      [...el.querySelectorAll('.identity .actions a, .identity .actions button')].map((node) => ({
+        text: node.textContent?.trim(),
+        flat: node.hasAttribute('mat-flat-button'),
+        href: node.getAttribute('href'),
+      }));
+
+    it('200 : « Prendre rendez-vous » plein, avant « Prendre contact » qui passe en contour', async () => {
+      const settings = vi.fn().mockResolvedValue(CLAIRE_BOOKING);
+      const { el, harness } = await render({}, settings);
+      await harness.fixture.whenStable();
+      expect(settings).toHaveBeenCalledWith('claire-moreau');
+      expect(actions(el)).toEqual([
+        {
+          text: 'Prendre rendez-vous',
+          flat: true,
+          href: '/praticiens/claire-moreau/rendez-vous',
+        },
+        { text: 'Prendre contact', flat: false, href: '/praticiens/claire-moreau#contact' },
+        { text: 'Partager', flat: false, href: null },
+      ]);
+    });
+
+    it.each([
+      ['404 BOOKING_NOT_AVAILABLE', { status: 404, code: 'BOOKING_NOT_AVAILABLE' }],
+      ['requête coupée', { status: 0, code: 'NETWORK_ERROR' }],
+      ['429', { status: 429, code: 'RATE_LIMITED' }],
+    ])(
+      '%s : pas de bouton, fiche entière, « Prendre contact » reste plein, aucun message',
+      async (_, problem) => {
+        const { el, harness } = await render({}, vi.fn().mockRejectedValue(problem));
+        await harness.fixture.whenStable();
+        expect(el.querySelector('h1')?.textContent?.trim()).toBe('Claire Moreau');
+        expect(actions(el).map((a) => a.text)).toEqual(['Prendre contact', 'Partager']);
+        expect(actions(el)[0].flat).toBe(true);
+        expect(el.querySelector('[role="alert"]')).toBeNull();
+      },
+    );
   });
 });

@@ -24,6 +24,13 @@ export const PUBLIC_ROUTES: Routes = [
     data: { wide: true },
     title: $localize`:Titre d'onglet de la fiche avant chargement@@public.practitioner.pageTitle:Fiche praticien · PsyMate`,
   },
+  // Prise de rendez-vous en ligne (fiche 31, G Q60) : chargée à la demande, non prérendue, noindex.
+  {
+    path: 'praticiens/:slug/rendez-vous',
+    loadComponent: () => import('./pages/booking.page').then((m) => m.BookingPage),
+    data: { wide: true },
+    title: $localize`:Titre d'onglet de la prise de rendez-vous@@public.booking.pageTitle:Prendre rendez-vous · PsyMate`,
+  },
   {
     path: 'comment-ca-marche',
     component: HowItWorksPage,

@@ -10,4 +10,16 @@ export const PUBLIC_FACTS = {
   emailConfirmationHours: 24,
   documentsPurgeDays: 90,
   contactRetentionDays: 30,
+  /** Validité du lien de vérification d'une demande de rendez-vous (contrat 0.15.0, K10). */
+  bookingLinkMinutes: 30,
+} as const;
+
+/**
+ * Numéros de la mention d'urgence des pages de prise de rendez-vous (G Q63, fiche 31) : 112
+ * (urgences, Europe) et 3114 (prévention du suicide, France). Liste par pays à valider (K10) ; les
+ * libellés sont dans $localize, les numéros seulement ici.
+ */
+export const EMERGENCY_NUMBERS = {
+  emergency: '112',
+  suicidePrevention: '3114',
 } as const;
