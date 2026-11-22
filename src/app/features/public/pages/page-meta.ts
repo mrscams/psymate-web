@@ -17,6 +17,11 @@ export interface PublicPageMeta {
   ogType?: 'website' | 'profile';
   /** Données structurées JSON-LD (fiche 09 : Person minimal), ou null. */
   jsonLd?: Record<string, unknown> | null;
+  /**
+   * `<meta name="referrer">` (fiche 32) : no-referrer sur les pages dont le chemin porte un jeton,
+   * pour qu'il ne parte dans aucun en-tête Referer ; absent : aucune balise.
+   */
+  referrer?: 'no-referrer';
 }
 
 const MANAGED_SELECTOR = '[data-pm-public-meta]';
@@ -54,6 +59,7 @@ export class PublicMeta {
     this.tag('property', 'og:site_name', 'PsyMate');
     this.links(page.canonicalPath);
     this.jsonLd(page.jsonLd ?? null);
+    this.referrer(page.referrer ?? null);
     destroyRef?.onDestroy(() => this.clear());
   }
 
@@ -64,6 +70,40 @@ export class PublicMeta {
       this.meta.removeTag(`property="${property}"`);
     }
     this.document.head.querySelectorAll(MANAGED_SELECTOR).forEach((node) => node.remove());
+    this.referrer(null);
+  }
+
+  /**
+   * Politique de référent du document hôte (`src/index.html`, posée avant le démarrage), lue une
+   * fois avant toute modification ; null si le document n'en pose pas.
+   */
+  private baseReferrer: string | null | undefined;
+
+  /**
+   * `<meta name="referrer">` : la politique demandée par la page (balise gérée, retirée par
+   * `clear`), sinon celle du document hôte, rétablie. Les balises sont remplacées, pas modifiées :
+   * le navigateur applique la politique d'une balise à son insertion.
+   */
+  private referrer(policy: string | null): void {
+    const head = this.document.head;
+    const current = [...head.querySelectorAll('meta[name="referrer"]')];
+    if (this.baseReferrer === undefined) {
+      const base = current.find((node) => !node.hasAttribute('data-pm-public-meta'));
+      this.baseReferrer = base?.getAttribute('content') ?? null;
+    }
+    const content = policy ?? this.baseReferrer;
+    const kept = current.find(
+      (node) =>
+        node.getAttribute('content') === content &&
+        node.hasAttribute('data-pm-public-meta') === (policy !== null),
+    );
+    current.filter((node) => node !== kept).forEach((node) => node.remove());
+    if (kept || !content) return;
+    const meta = this.document.createElement('meta');
+    meta.setAttribute('name', 'referrer');
+    meta.setAttribute('content', content);
+    if (policy !== null) meta.setAttribute('data-pm-public-meta', '');
+    head.appendChild(meta);
   }
 
   private tag(attribute: 'name' | 'property', key: string, content: string): void {

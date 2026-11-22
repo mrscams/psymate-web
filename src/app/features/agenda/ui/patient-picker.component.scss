@@ -1,0 +1,126 @@
+// Sélecteur de patient (maquette 15b) : carte du patient choisi, bordure 2 px primaire sur teinte
+// primaire ; recherche de 40 px à rayon 10 ; liste des patients sous le champ, option active en
+// teinte. Repris tel quel du panneau « Nouveau rendez-vous ».
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+.search {
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: 400 14px/1.4 var(--font-ui);
+}
+
+.combo {
+  position: relative;
+}
+
+.options {
+  position: absolute;
+  z-index: 1;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  max-height: 240px;
+  margin: 0;
+  padding: 4px;
+  overflow-y: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  box-shadow: 0 6px 18px var(--scrim);
+  list-style: none;
+
+  li {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &.active,
+    &:hover {
+      background: var(--primary-tint);
+    }
+
+    &.empty {
+      color: var(--text-secondary);
+      cursor: default;
+      background: none;
+    }
+  }
+
+  .name {
+    font-weight: 500;
+  }
+
+  .meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+}
+
+.patient-card {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+  background: var(--primary-tint);
+
+  .avatar {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--surface-raised);
+    color: var(--primary-hover);
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .who {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+
+  .name {
+    font-weight: 600;
+  }
+
+  .meta {
+    font-size: 12px;
+    color: var(--primary-hover);
+  }
+
+  .change {
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--surface-raised);
+    color: var(--text-primary);
+    font: 400 12px/1 var(--font-ui);
+    cursor: pointer;
+  }
+}

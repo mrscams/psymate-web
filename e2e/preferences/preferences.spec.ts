@@ -2,11 +2,14 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, Page, test } from '@playwright/test';
 
 import { createAccount, signIn } from './accounts';
+import { API } from '../support/env';
 
 // Fiche 14, M1-16 : contre l'API locale (seed small, Mailpit), jamais de mock du backend. Chaque test
 // crée son compte jetable : les préférences sont par compte et les tests tournent en parallèle.
 
 const PREFERENCES = '/fr/mon-compte/preferences';
+// Deux interrupteurs sur la page depuis M14-11 (type médicament, prise de rendez-vous en ligne).
+const MEDICATION = 'Afficher le type médicament dans la saisie et la timeline';
 const PATCH = (response: { url(): string; request(): { method(): string } }): boolean =>
   response.url().endsWith('/api/me/preferences') && response.request().method() === 'PATCH';
 
@@ -118,7 +121,7 @@ test('coach nouvellement inscrit : « client » et type médicament masqué sans
   );
   // Le pipe subjectLabel suit la préférence : l'aide de la ligne parle de « clients ».
   await expect(page.locator('#subject-help')).toContainText('« clients »');
-  await expect(page.getByRole('switch')).not.toBeChecked();
+  await expect(page.getByRole('switch', { name: MEDICATION })).not.toBeChecked();
   await expect(page.getByRole('spinbutton', { name: 'Durée de séance par défaut' })).toHaveValue(
     '60',
   );
@@ -142,7 +145,7 @@ test('clé inconnue dans le PATCH : ignorée, 200, les clés connues renvoyées'
 }) => {
   // `request` porte la session ouverte par la confirmation d'e-mail (e2e/support/accounts.ts).
   const account = await createAccount(request, 'm1-16.inconnue', 'psychologist');
-  const response = await request.patch('http://localhost:8080/api/me/preferences', {
+  const response = await request.patch(`${API}/api/me/preferences`, {
     data: { 'overview.window': '12m', cleInconnue: 'ignorée' },
   });
   expect(response.status(), await response.text()).toBe(200);
@@ -229,7 +232,7 @@ test('parcours clavier et axe-core', async ({ page, request }) => {
   const account = await createAccount(request, 'm1-16.a11y', 'psychiatrist');
   await signIn(page, account);
   await openPreferences(page);
-  await expect(page.getByRole('switch')).toBeChecked();
+  await expect(page.getByRole('switch', { name: MEDICATION })).toBeChecked();
   await expectNoAxeViolations(page);
 
   // Au clavier : focus sur « 90 j », Tab vers « 1 an », puis Entrée enregistre.

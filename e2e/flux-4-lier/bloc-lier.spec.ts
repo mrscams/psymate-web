@@ -3,14 +3,13 @@ import { APIRequestContext, APIResponse, expect, Page, test } from '@playwright/
 import { block, settled } from '../flux-3-saisie/bloc-support';
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { API } from '../support/env';
 
 // B3 flux 4 depuis le bloc de saisie (UX-S1, proposition 04c « Relier, pas à pas ») : un lien en un
 // clic parmi les cinq cibles du rail, le verbe en clair choisi par la matrice et modifiable, `>` puis
 // le début du nom, « Autre entrée… » pour une cible hors des cinq, le lien enregistré dans le même
 // POST (links[], tout ou rien) et relu par GET /api/entries/{id}/links. Contre l'API locale (seed
 // small, Mailpit), jamais de mock du backend.
-
-const API = 'http://localhost:8080';
 
 interface LinkDto {
   sourceId: string;

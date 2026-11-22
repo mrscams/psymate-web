@@ -14,7 +14,12 @@ import {
   BusyBlock,
   CreatedAppointments,
 } from '../data/agenda.model';
-import { appointmentOf, guestAppointmentOf, weekAgenda } from '../testing/agenda.testing';
+import {
+  appointmentOf,
+  guestAppointmentOf,
+  onlineRequestOf,
+  weekAgenda,
+} from '../testing/agenda.testing';
 import { NewAppointmentData } from '../panels/new-appointment.panel';
 import { AgendaCalendarComponent, Rescheduled } from '../ui/agenda-calendar.component';
 import { AgendaPage } from './agenda.page';
@@ -106,6 +111,7 @@ async function render(url: string, options: RenderOptions = {}) {
   const load = vi.fn((range: AgendaRange) => Promise.resolve(weekAgenda(range)));
   const api = {
     load,
+    requests: vi.fn().mockResolvedValue([]),
     get: vi.fn(),
     update: vi.fn(),
     cancel: vi.fn(),
@@ -173,7 +179,16 @@ async function render(url: string, options: RenderOptions = {}) {
       ),
     events: () => [...el.querySelectorAll<HTMLAnchorElement>('pm-agenda-calendar a.event')],
     detail: () => el.querySelector<HTMLElement>('pm-appointment-detail'),
+    requestsButton: () => el.querySelector<HTMLButtonElement>('.toolbar button.requests')!,
+    requestsPanel: () => el.querySelector<HTMLElement>('pm-online-requests'),
   };
+}
+
+/** Nom tiré du contenu, sans ce qui est `aria-hidden` (la pastille du compteur). */
+function nameOf(el: Element): string {
+  const clone = el.cloneNode(true) as Element;
+  clone.querySelectorAll('[aria-hidden="true"]').forEach((node) => node.remove());
+  return text(clone);
 }
 
 function key(name: string): void {
@@ -198,7 +213,9 @@ describe('AgendaPage', () => {
     expect(text(el.querySelector('pm-mini-month .month'))).toBe('Octobre 2026');
     expect(el.querySelectorAll('pm-agenda-calendars input[type=checkbox]')).toHaveLength(3);
     expect(text(el.querySelector('pm-agenda-calendars .google'))).toBe('Google Agenda à venir');
-    expect(text(el.querySelector('pm-agenda-calendars .legend'))).toBe('À confirmer');
+    expect(
+      [...el.querySelectorAll('pm-agenda-calendars .legend li')].map((li) => text(li)),
+    ).toEqual(['À confirmer', 'Demande en ligne']);
     expect(stub()).toMatchObject({ view: 'week', anchor: '26', count: '14', startHour: '9' });
     expect(el.querySelector('pm-appointment-detail')).toBeNull();
   });
@@ -458,5 +475,165 @@ describe('AgendaPage', () => {
     el.querySelector<HTMLButtonElement>('.toolbar .tb-btn.primary')!.click();
     await settle(fixture);
     expect(panels.open.mock.calls[0][1].data.patient).toBeNull();
+  });
+
+  describe('demandes en ligne', () => {
+    const sara = onlineRequestOf({
+      id: 'req-1',
+      startsAt: new Date(2026, 9, 29, 10, 0).toISOString(),
+      durationMin: 60,
+    });
+    const hugo = onlineRequestOf({
+      id: 'req-2',
+      startsAt: new Date(2026, 11, 1, 14, 0).toISOString(),
+      durationMin: 60,
+      modality: 'video',
+    });
+
+    it('entrée « Demandes » entre les vues et « + Rendez-vous » : compteur de l’API dans la pastille et le nom', async () => {
+      const requests = vi.fn().mockResolvedValue([sara, hugo]);
+      const { el, requestsButton, requestsPanel } = await render(
+        '/agenda?view=week&date=2026-10-26',
+        { api: { requests } },
+      );
+      expect(requests).toHaveBeenCalledTimes(1);
+      const toolbar = [...el.querySelector('.toolbar')!.children].map((child) =>
+        child.classList.contains('views') ? 'vues' : nameOf(child),
+      );
+      expect(toolbar.slice(-3)).toEqual([
+        'vues',
+        'Demandes en ligne, 2 en attente',
+        '+ Rendez-vous',
+      ]);
+      const button = requestsButton();
+      // À l'écran : « Demandes » et la pastille ; le reste du nom est masqué (sr-only).
+      expect(button.querySelector('.sr-only')?.textContent).toBe(' en ligne, 2 en attente');
+      expect(button.querySelector('.count')!.getAttribute('aria-hidden')).toBe('true');
+      expect(text(button.querySelector('.count'))).toBe('2');
+      expect(button.getAttribute('aria-expanded')).toBe('false');
+      expect(requestsPanel()).toBeNull();
+    });
+
+    it('aucune demande : l’entrée reste, sans pastille ; le panneau montre l’état vide', async () => {
+      const { fixture, requestsButton, requestsPanel } = await render(
+        '/agenda?view=week&date=2026-10-26',
+      );
+      const button = requestsButton();
+      expect(text(button)).toBe('Demandes en ligne, aucune en attente');
+      expect(button.querySelector('.sr-only')?.textContent).toBe(' en ligne, aucune en attente');
+      expect(button.querySelector('.count')).toBeNull();
+      expect(nameOf(button)).toBe('Demandes en ligne, aucune en attente');
+      button.click();
+      await settle(fixture);
+      expect(text(requestsPanel()?.querySelector('pm-state'))).toContain(
+        'Aucune demande en attente',
+      );
+    });
+
+    it('ouvrir à la place du détail, choisir une demande hors de la semaine : grille à sa date, détail ouvert et focalisé', async () => {
+      const requests = vi.fn().mockResolvedValue([sara, hugo]);
+      const get = vi.fn().mockResolvedValue(hugo);
+      const { fixture, router, stub, detail, requestsButton, requestsPanel } = await render(
+        '/agenda/rdv/rdv-2026-10-31-13?view=week&date=2026-10-26',
+        { api: { requests, get } },
+      );
+      expect(detail()).not.toBeNull();
+      requestsButton().click();
+      await settle(fixture);
+      // Le panneau prend la place du détail (le détail se ferme, l'URL perd /rdv/:id).
+      expect(router.url).toBe('/agenda?view=week&date=2026-10-26');
+      expect(detail()).toBeNull();
+      const panel = requestsPanel()!;
+      expect(panel.id).toBe(requestsButton().getAttribute('aria-controls'));
+      expect(requestsButton().getAttribute('aria-expanded')).toBe('true');
+      expect(document.activeElement).toBe(panel.querySelector('h2'));
+      const rows = [...panel.querySelectorAll<HTMLButtonElement>('ul.req-list button')];
+      expect(rows.map((row) => text(row.querySelector('.who')))).toEqual([
+        'Sara Benali · Cabinet',
+        'Sara Benali · Visio',
+      ]);
+
+      rows[1].click();
+      await settle(fixture);
+      expect(router.url).toBe('/agenda/rdv/req-2?view=week&date=2026-12-01');
+      expect(stub()['anchor']).toBe('1');
+      expect(requestsPanel()).toBeNull();
+      expect(get).toHaveBeenCalledWith('req-2');
+      expect(text(detail()?.querySelector('.online'))).toBe('Demande en ligne');
+      expect(document.activeElement).toBe(detail());
+      // La nouvelle plage a relu les demandes.
+      expect(requests).toHaveBeenCalledTimes(2);
+    });
+
+    it('Échap ferme le panneau et rend le focus à l’entrée ; « Demandes » le referme aussi', async () => {
+      const { fixture, requestsButton, requestsPanel } = await render(
+        '/agenda?view=week&date=2026-10-26',
+        { api: { requests: vi.fn().mockResolvedValue([sara]) } },
+      );
+      requestsButton().click();
+      await settle(fixture);
+      expect(requestsPanel()).not.toBeNull();
+      key('Escape');
+      await settle(fixture);
+      expect(requestsPanel()).toBeNull();
+      expect(document.activeElement).toBe(requestsButton());
+      requestsButton().click();
+      await settle(fixture);
+      requestsButton().click();
+      await settle(fixture);
+      expect(requestsPanel()).toBeNull();
+      expect(requestsButton().getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('erreur de lecture des demandes : la grille reste ; le panneau dit l’erreur et Réessayer relit la liste', async () => {
+      const requests = vi
+        .fn()
+        .mockRejectedValueOnce({ status: 0, code: 'NETWORK_ERROR' })
+        .mockResolvedValue([sara]);
+      const { fixture, stub, load, requestsButton, requestsPanel } = await render(
+        '/agenda?view=week&date=2026-10-26',
+        { api: { requests } },
+      );
+      expect(stub()['count']).toBe('14');
+      expect(nameOf(requestsButton())).toBe('Demandes en ligne');
+      requestsButton().click();
+      await settle(fixture);
+      const panel = requestsPanel()!;
+      expect(text(panel.querySelector('pm-state [role="alert"]'))).toContain(
+        "Les demandes n'ont pas pu être chargées.",
+      );
+      panel.querySelector<HTMLButtonElement>('pm-state button')!.click();
+      await settle(fixture);
+      expect(requests).toHaveBeenCalledTimes(2);
+      expect(load).toHaveBeenCalledTimes(1);
+      expect(nameOf(requestsButton())).toBe('Demandes en ligne, 1 en attente');
+      expect(requestsPanel()?.querySelectorAll('ul.req-list button')).toHaveLength(1);
+    });
+
+    it('confirmer une demande dans le détail : relecture de la plage et des demandes, compteur relu', async () => {
+      const requests = vi.fn().mockResolvedValueOnce([sara, hugo]).mockResolvedValue([hugo]);
+      const load = vi.fn((range: AgendaRange) => {
+        const week = weekAgenda(range);
+        return Promise.resolve({ ...week, appointments: [...week.appointments, sara] });
+      });
+      const confirm = vi.fn().mockResolvedValue({ ...sara, status: 'planned' });
+      const { fixture, detail, toasts, requestsButton } = await render(
+        '/agenda/rdv/req-1?view=week&date=2026-10-26',
+        { api: { requests, load, confirm } },
+      );
+      expect(nameOf(requestsButton())).toBe('Demandes en ligne, 2 en attente');
+      [...detail()!.querySelectorAll<HTMLButtonElement>('button')]
+        .find((b) => text(b) === 'Confirmer le rendez-vous')!
+        .click();
+      await settle(fixture);
+      expect(confirm).toHaveBeenCalledWith('req-1');
+      expect(load).toHaveBeenCalledTimes(2);
+      expect(requests).toHaveBeenCalledTimes(2);
+      expect(nameOf(requestsButton())).toBe('Demandes en ligne, 1 en attente');
+      expect(text(requestsButton().querySelector('.count'))).toBe('1');
+      expect(toasts.toasts().map((t) => t.message)).toEqual([
+        'Rendez-vous confirmé. Le demandeur est prévenu par e-mail.',
+      ]);
+    });
   });
 });

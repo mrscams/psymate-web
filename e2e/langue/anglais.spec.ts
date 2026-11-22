@@ -3,14 +3,13 @@ import { expect, Page, Request, test } from '@playwright/test';
 import { createAccount, signIn } from '../preferences/accounts';
 import { uniqueEmail } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { API } from '../support/env';
 
 // Anglais de bout en bout, contre l'API réelle (jamais de mock du backend). Deux choses :
 // - l'agenda (fiches 15 et 15b), dernier écran resté en français dans le bundle /en/ ;
 // - la langue de l'écran annoncée à l'API (Accept-Language, core/http locale.interceptor) : le
 //   serveur écrit ses messages dans la langue de l'application, pas dans celle du navigateur.
 // Le navigateur des e2e est en fr-FR (playwright.config.ts), ce qui rend le second point visible.
-
-const API = 'http://localhost:8080';
 
 const LOGIN = (request: Request) =>
   request.method() === 'POST' && new URL(request.url()).pathname === '/api/auth/login';

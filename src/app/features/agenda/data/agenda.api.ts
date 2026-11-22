@@ -67,6 +67,16 @@ export class AgendaApi {
     return toAgendaData(dto);
   }
 
+  /**
+   * `GET /api/agenda/requests` : demandes en ligne en attente (origine `online`, à confirmer, à
+   * venir), triées par début, 100 au plus. Leur nombre est le compteur de « Demandes » : rien n'est
+   * compté ni filtré côté client (fiche 15, demandes en ligne).
+   */
+  async requests(): Promise<Appointment[]> {
+    const dto = await firstValueFrom(this.agenda.pendingRequests());
+    return (dto.appointments ?? []).map(toAppointment);
+  }
+
   /** `GET /api/agenda/freebusy` : conflits et voisinage d'un créneau. */
   async freeBusy(
     from: Date,
@@ -124,6 +134,23 @@ export class AgendaApi {
   /** `POST /api/appointments/{id}/confirm` : à confirmer → planifié (409 sinon). */
   async confirm(id: string): Promise<Appointment> {
     return toAppointment(await firstValueFrom(this.appointments.confirmAppointment(id)));
+  }
+
+  /**
+   * `POST /api/appointments/{id}/attach-patient` : rattache un rendez-vous invité à un patient du
+   * praticien, non archivé ; avec `includeSameGuest`, aussi les autres rendez-vous du même invité
+   * (mêmes nom, prénom et téléphone). Rend les rendez-vous rattachés, triés par début. Erreurs :
+   * 403 PATIENT_FORBIDDEN, 404, 409 APPOINTMENT_NOT_ACTIVE, 422 PATIENT_ARCHIVED.
+   */
+  async attachPatient(
+    id: string,
+    patientId: string,
+    includeSameGuest: boolean,
+  ): Promise<Appointment[]> {
+    const dto = await firstValueFrom(
+      this.appointments.attachPatient(id, { patientId, includeSameGuest }),
+    );
+    return (dto.appointments ?? []).map(toAppointment);
   }
 
   /** `POST /api/appointments/series/{seriesId}/cancel` : « Annuler » du toast après une série. */

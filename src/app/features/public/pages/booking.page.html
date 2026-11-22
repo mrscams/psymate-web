@@ -1,0 +1,241 @@
+<div class="booking" [attr.aria-busy]="store.settings().status === 'loading' ? 'true' : null">
+  @if (settings(); as s) {
+    <nav
+      class="crumbs"
+      aria-label="Fil d'Ariane"
+      i18n-aria-label="Étiquette du fil d'Ariane@@public.booking.crumbs"
+    >
+      <ol>
+        <li>
+          <a
+            class="pm-link-target"
+            [routerLink]="paths.directory"
+            i18n="Fil d'Ariane, annuaire@@public.booking.crumbs.directory"
+            >Annuaire</a
+          >
+        </li>
+        <li>
+          <a class="pm-link-target" [routerLink]="practitionerLink()">{{ s.displayName }}</a>
+        </li>
+        <li aria-current="page" i18n="Fil d'Ariane, page courante@@public.booking.crumbs.current">
+          Prendre rendez-vous
+        </li>
+      </ol>
+    </nav>
+
+    @if (step() === 'sent') {
+      <section class="card step sent" [attr.aria-labelledby]="titles.sent">
+        <span class="badge-icon" aria-hidden="true">
+          <svg class="icon" viewBox="0 0 24 24" focusable="false">
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <path d="m3 7 9 6 9-6" />
+          </svg>
+        </span>
+        <h1
+          [id]="titles.sent"
+          tabindex="-1"
+          i18n="Titre de l'écran d'attente@@public.booking.sent.title"
+        >
+          Consultez votre boîte mail
+        </h1>
+        <p i18n="Validité du lien de vérification@@public.booking.sent.validity">
+          Le lien est valable {{ linkMinutes }} minutes.
+        </p>
+        @if (recap(); as r) {
+          <div class="recap">
+            <p class="recap-text">
+              <span i18n="Rappel du créneau demandé@@public.booking.sent.slot"
+                >Créneau demandé</span
+              >
+              <strong
+                >{{ r.day }} · <span class="mono">{{ r.hours }}</span> ·
+                {{ sentModality() }}</strong
+              >
+              <span>{{ r.zone }}</span>
+            </p>
+          </div>
+        }
+        <ul class="next">
+          <li i18n="Écran d'attente, rien n'est transmis@@public.booking.sent.nothingYet">
+            Tant que vous n'avez pas ouvert ce lien, rien n'est transmis au praticien.
+          </li>
+          <li i18n="Écran d'attente, rien reçu@@public.booking.sent.nothingReceived">
+            Rien reçu ? Regardez dans le courrier indésirable, puis refaites une demande.
+          </li>
+        </ul>
+      </section>
+      <pm-emergency-note />
+      <p>
+        <a
+          mat-stroked-button
+          [routerLink]="practitionerLink()"
+          i18n="Lien de retour vers la fiche@@public.booking.sent.back"
+          >Revenir à la fiche de {{ s.displayName }}</a
+        >
+      </p>
+    } @else {
+      <section class="card head-card" aria-labelledby="booking-title">
+        <h1 id="booking-title" i18n="Titre de la page de rendez-vous@@public.booking.title">
+          Prendre rendez-vous avec {{ s.displayName }}
+        </h1>
+        <ul class="facts">
+          @for (fact of facts(); track fact) {
+            <li>{{ fact }}</li>
+          }
+        </ul>
+        <pm-booking-bar level="info" role="note">{{ mode() }}</pm-booking-bar>
+      </section>
+
+      <pm-emergency-note />
+
+      @if (step() === 'slots') {
+        <section class="card step" [attr.aria-labelledby]="titles.slots">
+          <div class="step-head">
+            <span class="step-kicker" i18n="Indication d'étape@@public.booking.step1.kicker"
+              >Étape 1 sur 2</span
+            >
+            <h2
+              [id]="titles.slots"
+              tabindex="-1"
+              i18n="Titre de l'étape 1@@public.booking.step1.title"
+            >
+              Choisissez un créneau
+            </h2>
+          </div>
+          @if (slotGone()) {
+            <pm-booking-bar level="warning" role="alert">
+              <ng-container i18n="Créneau plus disponible (409)@@public.booking.slotGone"
+                ><strong>Ce créneau n'est plus disponible.</strong> Choisissez-en un autre : vos
+                coordonnées sont conservées.</ng-container
+              >
+            </pm-booking-bar>
+          }
+          @if (window(); as w) {
+            <pm-booking-slots
+              [slots]="store.slots()"
+              [window]="w"
+              [timezone]="s.timezone"
+              [canPrevious]="windowIndex() > 0"
+              [canNext]="canNext()"
+              [practitionerLink]="practitionerLink()"
+              (previous)="moveWindow(-1)"
+              (next)="moveWindow(1)"
+              (pick)="pick($event)"
+              (retry)="retrySlots()"
+            />
+          }
+        </section>
+      } @else {
+        <section class="card step" [attr.aria-labelledby]="titles.details">
+          <div class="step-head">
+            <span class="step-kicker" i18n="Indication d'étape@@public.booking.step2.kicker"
+              >Étape 2 sur 2</span
+            >
+            <h2
+              [id]="titles.details"
+              tabindex="-1"
+              i18n="Titre de l'étape 2@@public.booking.step2.title"
+            >
+              Vos coordonnées
+            </h2>
+          </div>
+          @if (recap(); as r) {
+            <div class="recap">
+              <p class="recap-text">
+                <span i18n="Rappel du créneau choisi@@public.booking.step2.slot"
+                  >Créneau choisi</span
+                >
+                <strong
+                  >{{ r.day }} · <span class="mono">{{ r.hours }}</span></strong
+                >
+                <span>{{ r.zone }}</span>
+              </p>
+              <button
+                mat-stroked-button
+                type="button"
+                [disabled]="sendStatus() === 'sending'"
+                (click)="changeSlot()"
+                i18n="Bouton Changer de créneau@@public.booking.changeSlot"
+              >
+                Changer de créneau
+              </button>
+            </div>
+          }
+          <pm-booking-form
+            [form]="form"
+            [practitionerName]="s.displayName"
+            [confirmation]="s.confirmation"
+            [modalities]="s.modalities"
+            [status]="sendStatus()"
+            [problem]="sendProblem()"
+            [labelledBy]="titles.details"
+            (submitted)="send()"
+          />
+        </section>
+      }
+    }
+  } @else if (settingsFailed()) {
+    <nav
+      class="crumbs"
+      aria-label="Fil d'Ariane"
+      i18n-aria-label="Étiquette du fil d'Ariane@@public.booking.crumbs"
+    >
+      <ol>
+        <li>
+          <a
+            class="pm-link-target"
+            [routerLink]="paths.directory"
+            i18n="Fil d'Ariane, annuaire@@public.booking.crumbs.directory"
+            >Annuaire</a
+          >
+        </li>
+        <li aria-current="page" i18n="Fil d'Ariane, page courante@@public.booking.crumbs.current">
+          Prendre rendez-vous
+        </li>
+      </ol>
+    </nav>
+    <pm-emergency-note />
+    <section class="card step">
+      <div class="failed" [class.warning]="settingsRateLimited()" role="alert">
+        <svg class="icon state-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 3.5 2.5 20h19L12 3.5Z" />
+          <path d="M12 10v5M12 17.5v.5" />
+        </svg>
+        <h1 i18n="Réglages non chargés@@public.booking.settings.error.title">
+          La prise de rendez-vous n'a pas pu être chargée.
+        </h1>
+        @if (settingsRateLimited()) {
+          <p i18n="Réglages, 429@@public.booking.settings.rateLimited">
+            Trop de requêtes depuis votre connexion. Réessayez dans
+            {{ settingsRetryMinutes() }} min.
+          </p>
+        } @else {
+          <p i18n="Réglages, erreur de chargement@@public.booking.settings.error.message">
+            Vérifiez votre connexion, puis réessayez.
+          </p>
+        }
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="retrySettings()"
+          i18n="Bouton Réessayer des réglages@@public.booking.settings.retry"
+        >
+          Réessayer
+        </button>
+      </div>
+    </section>
+  } @else {
+    <h1 class="sr-only" i18n="Titre caché pendant le chargement@@public.booking.loadingTitle">
+      Prendre rendez-vous
+    </h1>
+    <section class="card head-card skeleton" aria-hidden="true">
+      <span class="skel title"></span>
+      <span class="skel short"></span>
+      <span class="skel block"></span>
+    </section>
+    <pm-emergency-note />
+    <section class="card step">
+      <pm-state kind="loading" skeleton="row" [lines]="4" />
+    </section>
+  }
+</div>

@@ -13,6 +13,7 @@ import {
   output,
   signal,
   untracked,
+  viewChild,
 } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -29,6 +30,7 @@ import {
   CANCEL_REASON_MAX,
   DURATIONS_MIN,
   isActive,
+  PatientOption,
   PLANNING_NOTE_MAX,
   toIsoDay,
 } from '../data/agenda.model';
@@ -42,15 +44,44 @@ import {
   formatWeekdayDate,
   modalityLabel,
   modalityTitle,
+  onlineMention,
 } from './agenda-format';
+import { OnlineGlobeComponent } from './online-globe.component';
+import { PatientPickerComponent } from './patient-picker.component';
 
 /** Champ du contrat (errors[].field d'un 422 du PATCH) → contrôle du formulaire Déplacer. */
 const MOVE_FIELDS: Record<string, string> = { startsAt: 'start', durationMin: 'duration' };
 
-/** Ce que le détail a ouvert sous l'en-tête : rien, le formulaire Déplacer, ou l'annulation. */
-type Mode = 'idle' | 'move' | 'cancel';
+/**
+ * Ce que le détail a ouvert sous l'en-tête : rien, le formulaire Déplacer, l'annulation, ou
+ * « Rattacher à un patient » (invité non purgé).
+ */
+type Mode = 'idle' | 'move' | 'cancel' | 'attach';
 
 type NoteStatus = 'idle' | 'saving' | 'saved' | 'error';
+
+/** Le demandeur vient d'annuler sa demande : `409 APPOINTMENT_NOT_ACTIVE` sur une demande en attente. */
+export function isWithdrawn(problem: ApiProblem): boolean {
+  return problem.status === 409 && problem.code === 'APPOINTMENT_NOT_ACTIVE';
+}
+
+/** Deux motifs d'annulation identiques (absent, vide et null se valent). */
+export function sameReason(a: string | null | undefined, b: string | null | undefined): boolean {
+  return (a?.trim() || null) === (b?.trim() || null);
+}
+
+/** `422 PATIENT_ARCHIVED` du rattachement : code du problème, ou d'une erreur de champ. */
+export function isPatientArchived(problem: ApiProblem): boolean {
+  return (
+    problem.code === 'PATIENT_ARCHIVED' ||
+    (problem.errors ?? []).some((error) => error.code === 'PATIENT_ARCHIVED')
+  );
+}
+
+/** Le patient choisi n'est plus accessible au rattachement : `403` ou `404` du patient. */
+export function isPatientUnavailable(problem: ApiProblem): boolean {
+  return problem.code === 'PATIENT_FORBIDDEN' || problem.code === 'PATIENT_NOT_FOUND';
+}
 
 /** Message d'un problème d'écriture : le `detail` du serveur, sinon une phrase générique. */
 export function problemText(problem: ApiProblem): string {
@@ -71,8 +102,19 @@ export function problemText(problem: ApiProblem): string {
  * Annuler (motif facultatif). Un rendez-vous annulé ou fait ne se déplace ni ne s'annule plus. Sans
  * rendez-vous (lecture à part, 404, erreur), l'état est montré dans la carte. Rendez-vous invité
  * (contrat 0.13.0) : « Prénom Nom » ou « Invité purgé » en texte, sans initiales, lien, âge, « suivi
- * depuis », rythme ni bloc « Préparer » (tout cela vient du dossier) ; déplacer, annuler, confirmer
- * et la note fonctionnent comme pour un patient.
+ * depuis », rythme ni bloc « Préparer » (tout cela vient du dossier), avec un bloc Contact (e-mail,
+ * téléphone) ; déplacer, annuler, confirmer et la note fonctionnent comme pour un patient.
+ * Demande en ligne (origine `online`, fiche 15 « Demandes en ligne ») : pastille « Demande en
+ * ligne » ; en attente, « Refuser » (neutre) remplace « Annuler » et ouvre le formulaire
+ * d'annulation sous le titre « Refuser cette demande ? » ; quand l'invité a un e-mail, les
+ * formulaires disent que le demandeur sera prévenu (jamais du motif). `409 APPOINTMENT_NOT_ACTIVE`
+ * à la confirmation d'une demande en attente (le demandeur vient d'annuler) : toast, relecture,
+ * détail fermé. Au refus ou à l'annulation, l'API répond 200 sur un rendez-vous déjà annulé : un
+ * motif renvoyé différent de celui envoyé le révèle (toast neutre, relecture, détail fermé).
+ * Invité non purgé (M14-15, K3.2 étape 5) : « Rattacher à un patient » ouvre sur place le
+ * sélecteur de patient du panneau 15b et la case « Rattacher aussi les autres rendez-vous de cette
+ * personne » (`includeSameGuest`) ; `POST …/attach-patient`, relecture, le détail montre le
+ * patient. 409 et 422 PATIENT_ARCHIVED en message sur place ; 403 / 404 du patient en toast.
  */
 @Component({
   selector: 'pm-appointment-detail',
@@ -82,12 +124,16 @@ export function problemText(problem: ApiProblem): string {
     StateComponent,
     DateFieldComponent,
     FieldErrorsComponent,
+    OnlineGlobeComponent,
+    PatientPickerComponent,
   ],
   templateUrl: './appointment-detail.component.html',
   styleUrl: './appointment-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'complementary',
+    // Reçoit le focus quand une demande est choisie dans le panneau « Demandes en ligne ».
+    tabindex: '-1',
     '[attr.aria-label]': 'panelLabel',
     '[class]': 'appointment()?.modality ?? ""',
   },
@@ -114,10 +160,16 @@ export class AppointmentDetailComponent {
     start: uniqueId('agenda-move-start'),
     duration: uniqueId('agenda-move-duration'),
     reason: uniqueId('agenda-cancel-reason'),
+    reasonHint: uniqueId('agenda-cancel-hint'),
     moveForm: uniqueId('agenda-move-form'),
     cancelForm: uniqueId('agenda-cancel-form'),
     moveButton: uniqueId('agenda-move-button'),
     cancelButton: uniqueId('agenda-cancel-button'),
+    attachForm: uniqueId('agenda-attach-form'),
+    attachButton: uniqueId('agenda-attach-button'),
+    attachPatient: uniqueId('agenda-attach-patient'),
+    attachHint: uniqueId('agenda-attach-hint'),
+    patientLink: uniqueId('agenda-patient-link'),
   };
   protected readonly reasonMax = CANCEL_REASON_MAX;
   protected readonly noteMax = PLANNING_NOTE_MAX;
@@ -166,6 +218,16 @@ export class AppointmentDetailComponent {
   protected readonly cancelForm = this.fb.group({
     reason: ['', Validators.maxLength(CANCEL_REASON_MAX)],
   });
+  /** « Rattacher à un patient » : le patient choisi (seul son identifiant part) et la case. */
+  protected readonly attachForm = this.fb.group({
+    patientId: ['', Validators.required],
+    includeSameGuest: [false],
+  });
+  /** Patient choisi dans le sélecteur, montré en carte. */
+  protected readonly attachChosen = signal<PatientOption | null>(null);
+  private readonly picker = viewChild(PatientPickerComponent);
+  /** Rattachement réussi : le lien du dossier prend le focus dès que le patient est affiché. */
+  private readonly focusPatientLink = signal(false);
 
   private readonly itemId = computed(() => this.appointment()?.id ?? null);
   /** Patient du rendez-vous ouvert ; null pour un invité ; undefined sans rendez-vous. */
@@ -183,6 +245,15 @@ export class AppointmentDetailComponent {
         this.actionError.set(null);
         this.noteStatus.set('idle');
         this.noteDirty = false;
+        this.focusPatientLink.set(false);
+      });
+    });
+    // Après un rattachement, la relecture apporte le patient : son lien prend le focus.
+    effect(() => {
+      if (!this.focusPatientLink() || !this.appointment()?.patient) return;
+      untracked(() => {
+        this.focusPatientLink.set(false);
+        this.focusAfterRender(this.ids.patientLink);
       });
     });
     // Contexte du patient (bloc « Préparer », rythme) : lu une fois par patient ; aucun pour un
@@ -192,6 +263,58 @@ export class AppointmentDetailComponent {
       if (id !== undefined) untracked(() => void this.store.loadContext(id));
     });
   }
+
+  /** Rendez-vous pris en ligne (origine `online`), confirmé ou non. */
+  protected readonly online = computed(() => this.appointment()?.origin === 'online');
+  /** Demande en ligne qui attend la réponse du praticien : « Refuser » à la place d'« Annuler ». */
+  protected readonly pendingRequest = computed(
+    () => this.online() && this.appointment()?.status === 'tentative',
+  );
+  /**
+   * Le serveur prévient le demandeur par e-mail (rendez-vous en ligne dont l'invité a un e-mail) :
+   * plus rien ne part après une purge ou un rattachement à un patient.
+   */
+  protected readonly notifiesRequester = computed(
+    () => this.online() && !!this.appointment()?.guest?.email,
+  );
+
+  protected readonly onlineLabel = onlineMention();
+
+  /** Contact de l'invité (e-mail, téléphone), chacun absent quand il est inconnu ou purgé. */
+  protected readonly contact = computed(() => {
+    const guest = this.appointment()?.guest;
+    if (!guest || guest.purgedAt) return null;
+    const email = guest.email;
+    const phone = guest.phone;
+    if (!email && !phone) return null;
+    return {
+      email,
+      phone,
+      phoneHref: phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : null,
+    };
+  });
+
+  /** Textes du formulaire d'annulation : « Refuser cette demande ? » pour une demande en attente. */
+  protected readonly cancelTexts = computed(() => {
+    if (this.pendingRequest()) {
+      return {
+        title: $localize`:Titre de la confirmation du refus d'une demande en ligne@@agenda.detail.refuseTitle:Refuser cette demande ?`,
+        submit: $localize`:Confirmer le refus d'une demande en ligne@@agenda.detail.refuseSubmit:Refuser la demande`,
+        hint: this.notifiesRequester()
+          ? $localize`:Refus d'une demande en ligne, ce que reçoit le demandeur@@agenda.detail.refuseHint:Le demandeur sera prévenu par e-mail. Le motif reste dans votre agenda : il ne lui est jamais transmis.`
+          : null,
+      };
+    }
+    return {
+      title: $localize`:Titre de la confirmation d'annulation@@agenda.detail.cancelTitle:Annuler ce rendez-vous ?`,
+      submit: $localize`:Confirmer l'annulation@@agenda.detail.cancelSubmit:Annuler le rendez-vous`,
+      hint: this.notifiesRequester()
+        ? `${this.notifiedText} ${$localize`:Annulation d'un rendez-vous en ligne, le motif@@agenda.detail.cancelReasonPrivate:Le motif ne lui est jamais transmis.`}`
+        : null,
+    };
+  });
+  /** « Le demandeur sera prévenu par e-mail. » (Déplacer, Annuler d'un rendez-vous en ligne). */
+  protected readonly notifiedText = $localize`:Rendez-vous en ligne, le demandeur reçoit un e-mail@@agenda.detail.requesterNotified:Le demandeur sera prévenu par e-mail.`;
 
   protected readonly active = computed(() => {
     const item = this.appointment();
@@ -244,15 +367,11 @@ export class AppointmentDetailComponent {
     if (!item) return '';
     if (!item.patient) {
       if (!item.guest || item.guest.purgedAt) return '';
-      const guest = $localize`:Rendez-vous invité (personne sans dossier patient), dans le détail@@agenda.detail.guest:invité`;
-      return item.guest.phone ? `${guest} · ${item.guest.phone}` : guest;
+      // Le téléphone et l'e-mail sont dans le bloc Contact.
+      return $localize`:Rendez-vous invité (personne sans dossier patient), dans le détail@@agenda.detail.guest:invité`;
     }
     const parts: string[] = [];
-    if (item.patient.age !== null) {
-      parts.push(
-        $localize`:Âge du patient dans le détail@@agenda.detail.age:${item.patient.age}:age: ans`,
-      );
-    }
+    if (item.patient.age !== null) parts.push(this.ageText(item.patient.age));
     const since = this.context()?.preparation.data?.followedSince;
     if (since) {
       const month = formatMonthYear(since, this.locale);
@@ -267,6 +386,10 @@ export class AppointmentDetailComponent {
     }
     return parts.join(' · ');
   });
+
+  private ageText(age: number): string {
+    return $localize`:Âge du patient dans le détail@@agenda.detail.age:${age}:age: ans`;
+  }
 
   protected readonly dateLabel = computed(() => {
     const item = this.appointment();
@@ -351,6 +474,118 @@ export class AppointmentDetailComponent {
     return [...list].sort((a, b) => a - b);
   });
 
+  // --- Rattacher à un patient ----------------------------------------------------------------
+
+  /**
+   * Invité non purgé : l'action « Rattacher à un patient » est offerte, quel que soit le statut
+   * (l'API rattache aussi un rendez-vous annulé ou fait ; elle refuse un patient ou un purgé).
+   */
+  protected readonly attachable = computed(() => {
+    const item = this.appointment();
+    return !!item && !item.patient && !!item.guest && !item.guest.purgedAt;
+  });
+  /** Ligne sous le nom du patient choisi : son âge, s'il est connu. */
+  protected readonly attachMeta = computed(() => {
+    const age = this.attachChosen()?.age;
+    return age === null || age === undefined ? '' : this.ageText(age);
+  });
+  /**
+   * Demande en ligne dont l'invité a un e-mail : le rattachement efface les coordonnées de
+   * l'invité, et les e-mails automatiques au demandeur s'arrêtent (K3.4).
+   */
+  protected readonly attachStopsEmails = $localize`:Rattachement d'une demande en ligne, fin des e-mails au demandeur@@agenda.attach.stopsEmails:Après le rattachement, le demandeur ne recevra plus d'e-mails automatiques.`;
+
+  protected openAttach(): void {
+    this.attachForm.reset({ patientId: '', includeSameGuest: false });
+    this.attachChosen.set(null);
+    this.actionError.set(null);
+    this.mode.set('attach');
+    this.focusAfterRender(this.ids.attachPatient);
+  }
+
+  protected chooseAttach(patient: PatientOption): void {
+    this.attachChosen.set(patient);
+    this.attachForm.controls.patientId.setValue(patient.id);
+    this.actionError.set(null);
+  }
+
+  /**
+   * Échap dans le formulaire « Rattacher » : le formulaire se ferme et rend le focus à l'action (le
+   * détail reste ouvert). La liste des patients ouverte prend Échap avant lui.
+   */
+  protected escapeAttach(event: Event): void {
+    if (event.defaultPrevented) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (!this.busy()) this.closeForm();
+  }
+
+  /**
+   * « Rattacher » : `POST …/attach-patient`, relecture de la plage et des demandes. Succès : toast,
+   * le détail montre le patient et son lien (focus posé dessus). 409 et 422 PATIENT_ARCHIVED :
+   * message sur place ; 403 / 404 du patient : toast, choix effacé ; autre échec (réseau) : message
+   * sur place, saisie gardée, action rejouable.
+   */
+  protected async submitAttach(): Promise<void> {
+    const item = this.appointment();
+    if (!item || this.busy()) return;
+    if (this.attachForm.invalid) {
+      this.attachForm.markAllAsTouched();
+      this.picker()?.focus();
+      return;
+    }
+    const { patientId, includeSameGuest } = this.attachForm.getRawValue();
+    const chosen = this.attachChosen();
+    this.busy.set(true);
+    this.actionError.set(null);
+    const result = await this.store.attachPatient(item.id, patientId, includeSameGuest);
+    this.busy.set(false);
+    if (result.ok) {
+      this.mode.set('idle');
+      const count = Math.max(result.value.length, 1);
+      const name = result.value[0]?.patient?.displayName || chosen?.displayName || '';
+      this.toasts.success(
+        count === 1
+          ? $localize`:Toast après le rattachement d'un rendez-vous invité à un patient@@agenda.toast.attached:Rendez-vous rattaché : ${name}:name:`
+          : $localize`:Toast après le rattachement de plusieurs rendez-vous d'un invité à un patient@@agenda.toast.attachedMany:${count}:count: rendez-vous rattachés : ${name}:name:`,
+      );
+      this.focusPatientLink.set(true);
+      return;
+    }
+    this.showAttachProblem(result.problem);
+  }
+
+  private showAttachProblem(problem: ApiProblem): void {
+    if (problem.status === 409 && problem.code === 'APPOINTMENT_NOT_ACTIVE') {
+      this.actionError.set(
+        $localize`:Rattachement refusé, le rendez-vous vise déjà un patient ou l'invité est purgé@@agenda.attach.notActive:Ce rendez-vous ne peut plus être rattaché : il vise déjà un patient, ou les coordonnées de l'invité ont été effacées.`,
+      );
+      return;
+    }
+    if (problem.status === 422 && isPatientArchived(problem)) {
+      this.actionError.set(
+        $localize`:Rattachement refusé, patient archivé@@agenda.attach.archived:Ce patient est archivé : choisissez un patient actif.`,
+      );
+      return;
+    }
+    if (isPatientUnavailable(problem)) {
+      this.attachChosen.set(null);
+      this.attachForm.controls.patientId.setValue('');
+      this.toasts.warning(
+        $localize`:Rattachement refusé, patient inaccessible@@agenda.attach.patientUnavailable:Ce patient n'est plus accessible : choisissez-en un autre.`,
+      );
+      this.focusAfterRender(this.ids.attachPatient);
+      return;
+    }
+    if (problem.status === 403 || problem.status === 404) {
+      // Le rendez-vous lui-même n'est plus accessible : la relecture a mis le détail à jour.
+      this.mode.set('idle');
+      this.toasts.warning(problemText(problem));
+      return;
+    }
+    this.actionError.set(problemText(problem));
+  }
+
   // --- Note de planification ------------------------------------------------------------------
 
   protected readonly noteStatusText = computed(() => {
@@ -417,7 +652,13 @@ export class AppointmentDetailComponent {
 
   /** « Annuler » / « Garder » : le formulaire se ferme, le focus revient au bouton d'origine. */
   protected closeForm(): void {
-    const origin = this.mode() === 'cancel' ? this.ids.cancelButton : this.ids.moveButton;
+    const origins: Record<Mode, string> = {
+      idle: this.ids.moveButton,
+      move: this.ids.moveButton,
+      cancel: this.ids.cancelButton,
+      attach: this.ids.attachButton,
+    };
+    const origin = origins[this.mode()];
     this.mode.set('idle');
     this.actionError.set(null);
     this.focusAfterRender(origin);
@@ -482,6 +723,9 @@ export class AppointmentDetailComponent {
       return;
     }
     const reason = this.cancelForm.getRawValue().reason.trim();
+    const refusing = this.pendingRequest();
+    const online = this.online();
+    const notifies = this.notifiesRequester();
     this.busy.set(true);
     const result = await this.store.cancel(item.id, reason || undefined);
     this.busy.set(false);
@@ -489,8 +733,39 @@ export class AppointmentDetailComponent {
       this.actionError.set(problemText(result.problem));
       return;
     }
-    this.toasts.success(
-      $localize`:Toast après une annulation@@agenda.toast.cancelled:Rendez-vous annulé.`,
+    // `POST …/cancel` est idempotent : sur un rendez-vous déjà annulé (le demandeur vient
+    // d'annuler), il répond 200 avec le motif d'origine. Un motif renvoyé différent de celui
+    // envoyé dit que rien n'a changé : aucun e-mail n'est parti, le motif n'est pas enregistré.
+    if (online && !sameReason(result.value.cancelReason, reason)) {
+      this.mode.set('idle');
+      this.toasts.info(
+        refusing
+          ? $localize`:Toast quand une demande en ligne refusée était déjà annulée par le demandeur@@agenda.toast.alreadyCancelledRequest:Cette demande était déjà annulée.`
+          : $localize`:Toast quand un rendez-vous en ligne était déjà annulé par le demandeur@@agenda.toast.alreadyCancelled:Ce rendez-vous était déjà annulé.`,
+      );
+      this.closed.emit(item);
+      return;
+    }
+    if (refusing && notifies) {
+      this.toasts.success(
+        $localize`:Toast après le refus d'une demande en ligne@@agenda.toast.refused:Demande refusée. Le demandeur est prévenu par e-mail.`,
+      );
+    } else {
+      this.toasts.success(
+        $localize`:Toast après une annulation@@agenda.toast.cancelled:Rendez-vous annulé.`,
+      );
+    }
+    this.closed.emit(item);
+  }
+
+  /**
+   * La demande n'est plus en attente : le demandeur vient de l'annuler. La plage et les demandes
+   * ont été relues par le store ; le détail se ferme.
+   */
+  private withdrawn(item: Appointment): void {
+    this.mode.set('idle');
+    this.toasts.warning(
+      $localize`:Toast quand une demande en ligne vient d'être annulée par le demandeur@@agenda.toast.withdrawn:Cette demande n'est plus en attente : elle vient d'être annulée.`,
     );
     this.closed.emit(item);
   }
@@ -499,13 +774,19 @@ export class AppointmentDetailComponent {
   protected async confirm(): Promise<void> {
     const item = this.appointment();
     if (!item || this.busy()) return;
+    const request = this.pendingRequest();
+    const notifies = this.notifiesRequester();
     this.busy.set(true);
     const result = await this.store.confirm(item.id);
     this.busy.set(false);
     if (result.ok) {
       this.toasts.success(
-        $localize`:Toast après une confirmation@@agenda.toast.confirmed:Rendez-vous confirmé.`,
+        request && notifies
+          ? $localize`:Toast après la confirmation d'une demande en ligne@@agenda.toast.confirmedRequest:Rendez-vous confirmé. Le demandeur est prévenu par e-mail.`
+          : $localize`:Toast après une confirmation@@agenda.toast.confirmed:Rendez-vous confirmé.`,
       );
+    } else if (request && isWithdrawn(result.problem)) {
+      this.withdrawn(item);
     } else {
       this.toasts.warning(problemText(result.problem));
     }

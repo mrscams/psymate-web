@@ -207,6 +207,60 @@ textarea {
   color: var(--text-secondary);
 }
 
+// Pastille « Demande en ligne » (fiche 15, demandes en ligne) : info sur info-bg, globe et texte.
+.online {
+  margin: 0;
+}
+
+.pill {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font: 600 12px/1.4 var(--font-ui);
+  white-space: nowrap;
+
+  &.info {
+    background: var(--info-bg);
+    color: var(--info);
+  }
+}
+
+.pill pm-online-globe {
+  --globe-size: 14px;
+}
+
+// Contact de l'invité : libellé à gauche, valeur à droite, une ligne par moyen.
+.contact {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  align-items: baseline;
+  margin: 0;
+
+  dt {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  dd {
+    min-width: 0;
+    margin: 0;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+
+  a {
+    color: var(--primary);
+  }
+}
+
+.inline .hint {
+  margin: 0;
+  font-size: 12px;
+}
+
 .cancelled {
   margin: 0;
   font-size: 13px;
@@ -221,7 +275,7 @@ textarea {
   margin-left: 6px;
 }
 
-// Formulaires sur place (Déplacer, Annuler) : champs empilés, boutons à droite.
+// Formulaires sur place (Déplacer, Annuler, Rattacher) : champs empilés, boutons à droite.
 .inline {
   display: flex;
   flex-direction: column;
@@ -257,6 +311,25 @@ textarea {
     background: var(--surface-raised);
     color: var(--text-primary);
     font-size: 13px;
+  }
+}
+
+// Case « Rattacher aussi les autres rendez-vous de cette personne » : comme « À confirmer » du
+// panneau 15b (case de 16 px à la couleur primaire, texte 13 px secondaire).
+.check {
+  display: inline-flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+
+  input {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin: 1px 0 0;
+    accent-color: var(--primary);
   }
 }
 
@@ -330,6 +403,7 @@ textarea {
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 
   button {

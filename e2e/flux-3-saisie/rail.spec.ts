@@ -2,12 +2,11 @@ import { APIRequestContext, APIResponse, expect, Locator, Page, test } from '@pl
 
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { API } from '../support/env';
 
 // B3 flux 3, rail « Lié à… » de l'éditeur d'entrée (M2-05, fiche 05 §7, B5) : contre l'API locale
 // (seed small, Mailpit), jamais de mock du backend. Le test du lien invalide réécrit la requête POST
 // (type de lien hors matrice) pour que le serveur réel réponde 422 : la réponse n'est pas simulée.
-
-const API = 'http://localhost:8080';
 
 interface LinkDto {
   id: string;

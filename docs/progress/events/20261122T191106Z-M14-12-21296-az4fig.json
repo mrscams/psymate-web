@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-22T19:11:06.995Z",
+  "task": "M14-12",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Page publique /praticiens/:slug/rendez-vous (créneaux par fenêtres de 14 jours dans le fuseau du praticien, formulaire sans champ libre, écran d'attente, mention d'urgence) et bouton « Prendre rendez-vous » sur la fiche ; BookingApi + BookingStore ; 1 seule création dans les e2e",
+  "pr": "https://github.com/mrscams/psymate-web/pull/109",
+  "branch": "M14-12-page-publique-prise-rdv",
+  "checkout": "agent-a746161d3661ae4e5"
+}

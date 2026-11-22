@@ -13,13 +13,13 @@ import {
 import { createAccount, signIn } from '../preferences/accounts';
 import { SEED, TestAccount } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { API } from '../support/env';
 
 // M6-06, fiche 19 « Données et export » et fiche 16 (menu « Exporter le dossier ») : contre l'API
 // locale (seed small, Mailpit), jamais de mock du backend. Le PDF vient d'un patient du seed
 // (claire) ; l'export Markdown et l'export du compte utilisent un compte jetable, pour que le job
 // d'export (un seul par compte) ne gêne aucun autre test.
 
-const API = 'http://localhost:8080';
 const DATA_PAGE = '/fr/mon-compte/donnees';
 
 async function post<T>(api: APIRequestContext, path: string, data: unknown): Promise<T> {

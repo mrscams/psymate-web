@@ -8,12 +8,12 @@ import {
   suspendPractitioner,
 } from '../support/admin';
 import { expectNoAxeViolations } from '../support/axe';
+import { API } from '../support/env';
 
 // Fiche 27 (M1-18) : compte suspendu. La suspension passe par l'API admin (un administrateur
 // local avec 2FA, voir e2e/support/admin.ts) ; sans lui, le premier test est ignoré et le dit.
 // Contre l'API locale, jamais de mock.
 
-const API = 'http://localhost:8080';
 const APPEAL =
   'Le diplôme transmis est bien celui de mon établissement : voici pourquoi la décision me semble erronée.';
 

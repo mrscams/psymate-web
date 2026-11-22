@@ -4,14 +4,13 @@ import { enableProbe, graphReady } from '../flux-6-graphe/graph-support';
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { keyboardOnly, tabTo } from '../support/clavier';
+import { API } from '../support/env';
 
 // B3 flux 4 au clavier seul (M7-04, B7, fiche 06) : une entrée ouverte depuis la timeline, L ouvre
 // l'éditeur de lien, la recherche filtre, la cible se choisit aux flèches, le type parmi ceux de la
 // matrice, le sens s'inverse, justification, Entrée ; puis la variante graphe (le glisser-déposer
 // a pour équivalent clavier « Lier (L) » dans le détail d'une entrée de la liste équivalente).
 // Aucun geste de pointeur (keyboardOnly). Contre l'API locale, jamais de mock du backend.
-
-const API = 'http://localhost:8080';
 
 async function ok<T>(response: Promise<APIResponse>): Promise<T> {
   const res = await response;

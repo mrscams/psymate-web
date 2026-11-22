@@ -17,12 +17,11 @@ import {
   smallFolder,
   zoom,
 } from './graph-support';
+import { API } from '../support/env';
 
 // Vue graphe (M2-06, fiche 04, B4 écran 4, B3 flux 4 variante graphe), contre l'API locale (seed
 // small, Mailpit), jamais de mock du backend. Les dossiers relus sont créés par l'API dans un
 // compte jetable ; la mesure « 150 nœuds » lit un patient du seed sans rien y écrire.
-
-const API = 'http://localhost:8080';
 
 test.describe('vue graphe', () => {
   test.describe.configure({ timeout: 120_000 });

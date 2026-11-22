@@ -214,6 +214,23 @@ export function statusLabel(status: AppointmentStatus): string | null {
   }
 }
 
+/**
+ * « Demande en ligne » : mention d'un rendez-vous d'origine `online` (grille, liste, mois, légende,
+ * détail ; fiche 15, demandes en ligne), jamais portée par la couleur seule.
+ */
+export function onlineMention(): string {
+  return $localize`:Mention d'un rendez-vous demandé depuis la page publique de prise de rendez-vous@@agenda.online.mention:Demande en ligne`;
+}
+
+/** « jeu. 26 nov. » : jour abrégé, quantième et mois court (liste des demandes en ligne). */
+export function formatShortWeekdayDate(date: Date, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+  }).format(date);
+}
+
 /** Libellé d'une case du rail gauche (fiche 15 §3). */
 export function calendarLabel(key: CalendarKey): string {
   switch (key) {

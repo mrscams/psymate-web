@@ -5,6 +5,7 @@ import { createAccount, signIn } from '../preferences/accounts';
 import { confirmationToken, uniqueEmail } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { keyboardOnly, tabTo } from '../support/clavier';
+import { API } from '../support/env';
 
 // B3 flux 1 au clavier seul (M7-04, B7, C5 « navigation clavier complète ») : inscription,
 // confirmation, état vide, aide des raccourcis, premier patient, première entrée, retour à la liste ;
@@ -12,7 +13,6 @@ import { keyboardOnly, tabTo } from '../support/clavier';
 // Tab, Maj+Tab, Entrée, Espace, flèches, raccourcis. Contre l'API locale (seed small, Mailpit),
 // jamais de mock du backend ; chaque test crée son compte.
 
-const API = 'http://localhost:8080';
 const PASSWORD = 'Vendôme-Lyon-2026!x';
 
 async function archive(api: APIRequestContext, id: string): Promise<void> {

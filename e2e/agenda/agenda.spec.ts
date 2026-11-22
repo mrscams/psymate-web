@@ -434,8 +434,10 @@ test('rendez-vous invité (contrat 0.13.0) : nom dans la grille, la liste et le 
   await event.click();
   await expect(page).toHaveURL(new RegExp(`/fr/agenda/rdv/${guest.id}\\?`));
   await expect(a.detail.getByText('Sara Benali', { exact: true })).toBeVisible();
-  // Téléphone de l'invité tel que l'API le rend, après « invité ».
-  await expect(a.detail.locator('.meta')).toHaveText(/^invité · .*12/);
+  // Téléphone de l'invité tel que l'API le rend, dans le bloc Contact (M14-14) ; « invité » seul.
+  await expect(a.detail.locator('.meta')).toHaveText('invité');
+  await expect(a.detail.locator('.contact')).toContainText(/Téléphone.*12/);
+  await expect(a.detail.getByText('Demande en ligne')).toHaveCount(0);
   await expect(a.detail.getByRole('link', { name: 'Sara Benali' })).toHaveCount(0);
   await expect(a.detail.locator('a[href*="/patients/"]')).toHaveCount(0);
   await expect(a.detail.getByRole('heading', { name: 'Préparer' })).toHaveCount(0);
