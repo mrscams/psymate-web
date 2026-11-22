@@ -1,0 +1,2034 @@
+<!-- Maquette statique autonome · habillage Fluent 2 (valeurs de docs/design/fluent2.md embarquées, thèmes clair et sombre) · complément de docs/design/14-preferences-praticien.md, section « Prise de rendez-vous en ligne » · M14-09, 22 novembre 2026. Barre d'application, rail et navigation Mon compte : fiche 00 §1, §3 et §9. Les autres sections de la page sont réduites à leur titre : elles ne changent pas. La barre sombre du haut choisit la vue et le thème et ne fait pas partie de l'écran. -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Préférences · prise de rendez-vous en ligne (maquette, fiche 14)</title>
+<style>
+/* ---------- Tokens Fluent 2 (docs/design/fluent2.md), thèmes clair et sombre ---------- */
+:root{
+  color-scheme:light;
+  --surface-ground:#F5F5F5;--surface-raised:#FFFFFF;--surface-sunken:#EBEBEB;
+  --border-subtle:#E0E0E0;--border-strong:#D1D1D1;--border-accessible:#616161;
+  --text-primary:#242424;--text-secondary:#616161;--text-disabled:#8A8A8A;
+  --primary:#0F6CBD;--primary-hover:#115EA3;--primary-tint:#EBF3FC;--primary-on:#FFFFFF;
+  --focus-outer:#000000;--focus-inner:#FFFFFF;--scrim:rgba(0,0,0,.4);
+  --danger:#B10E1C;--danger-bg:#FDF3F4;--warning:#BC4B09;--warning-bg:#FFF9F5;
+  --success:#0E700E;--success-bg:#F1FAF1;--info:#115EA3;--info-bg:#EBF3FC;
+  --entry-session:#038387;--entry-note:#69797E;
+  --shadow-key:rgba(0,0,0,.14);--shadow-ambient:rgba(0,0,0,.12);
+  --admin-bar-bg:#1A1A1A;--admin-bar-text:#FFFFFF;--admin-bar-muted:#ADADAD;--admin-bar-line:#3D3D3D;--admin-focus:#FFFFFF;
+  --radius-sm:2px;--radius-md:4px;--radius-xl:8px;--radius-pill:9999px;
+  --shadow-2:0 0 2px var(--shadow-ambient),0 1px 2px var(--shadow-key);
+  --shadow-8:0 0 2px var(--shadow-ambient),0 4px 8px var(--shadow-key);
+  --shadow-16:0 0 2px var(--shadow-ambient),0 8px 16px var(--shadow-key);
+  --shadow-64:0 0 8px var(--shadow-ambient),0 32px 64px var(--shadow-key);
+  --font-ui:'Segoe UI Variable Text','Segoe UI','Segoe UI Web (West European)',-apple-system,BlinkMacSystemFont,Roboto,'Helvetica Neue',sans-serif;
+  --font-mono:'Cascadia Mono',Consolas,'Courier New',Courier,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --surface-ground:#1F1F1F;--surface-raised:#292929;--surface-sunken:#333333;
+    --border-subtle:#525252;--border-strong:#666666;--border-accessible:#ADADAD;
+    --text-primary:#FFFFFF;--text-secondary:#ADADAD;--text-disabled:#808080;
+    --primary:#479EF5;--primary-hover:#62ABF5;--primary-tint:#082338;--primary-on:#242424;
+    --focus-outer:#FFFFFF;--focus-inner:#000000;--scrim:rgba(0,0,0,.5);
+    --danger:#E37D80;--danger-bg:#3B0509;--warning:#FAA06B;--warning-bg:#4A1E04;
+    --success:#54B054;--success-bg:#052505;--info:#62ABF5;--info-bg:#082338;
+    --entry-session:#4CB4B7;--entry-note:#A0ADB2;
+    --shadow-key:rgba(0,0,0,.28);--shadow-ambient:rgba(0,0,0,.24);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --surface-ground:#1F1F1F;--surface-raised:#292929;--surface-sunken:#333333;
+  --border-subtle:#525252;--border-strong:#666666;--border-accessible:#ADADAD;
+  --text-primary:#FFFFFF;--text-secondary:#ADADAD;--text-disabled:#808080;
+  --primary:#479EF5;--primary-hover:#62ABF5;--primary-tint:#082338;--primary-on:#242424;
+  --focus-outer:#FFFFFF;--focus-inner:#000000;--scrim:rgba(0,0,0,.5);
+  --danger:#E37D80;--danger-bg:#3B0509;--warning:#FAA06B;--warning-bg:#4A1E04;
+  --success:#54B054;--success-bg:#052505;--info:#62ABF5;--info-bg:#082338;
+  --entry-session:#4CB4B7;--entry-note:#A0ADB2;
+  --shadow-key:rgba(0,0,0,.28);--shadow-ambient:rgba(0,0,0,.24);
+}
+
+/* ---------- Base ---------- */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--surface-ground);color:var(--text-primary);font:400 14px/20px var(--font-ui)}
+h1,h2,h3,h4,p,ul,ol,dl,dd,fieldset{margin:0;padding:0}
+ul,ol{list-style:none}
+fieldset{border:0;min-width:0}
+a{color:var(--primary)}
+a:hover{color:var(--primary-hover)}
+button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.mono{font-family:var(--font-mono)}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+:focus-visible{outline:2px solid var(--focus-outer);outline-offset:2px;box-shadow:0 0 0 2px var(--focus-inner)}
+
+/* Boutons Fluent 2 : 32 px, rayon 4, libellé 14 px semi-gras */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:5px 12px;border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--surface-raised);color:var(--text-primary);font:600 14px/20px var(--font-ui);text-decoration:none;cursor:pointer}
+.btn:hover{border-color:var(--border-accessible);color:var(--text-primary)}
+.btn.primary{border-color:var(--primary);background:var(--primary);color:var(--primary-on)}
+.btn.primary:hover{border-color:var(--primary-hover);background:var(--primary-hover);color:var(--primary-on)}
+.btn.danger{border-color:var(--danger);background:var(--danger);color:var(--primary-on)}
+.btn.text{border-color:transparent;background:transparent;color:var(--primary)}
+.btn.large{min-height:40px;padding:9px 16px}
+.btn[disabled],.btn[aria-disabled="true"]{border-color:var(--border-subtle);background:var(--surface-sunken);color:var(--text-secondary);cursor:not-allowed}
+.btn .ic{width:16px;height:16px}
+
+/* Champs : contour, 40 px, rayon 4 */
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label,.field .label{font:600 14px/20px var(--font-ui)}
+.field .optional{font-weight:400;color:var(--text-secondary)}
+.input{width:100%;height:40px;padding:0 12px;border:1px solid var(--border-accessible);border-radius:var(--radius-md);background:var(--surface-raised);color:var(--text-primary)}
+textarea.input{height:auto;padding:8px 12px;resize:vertical}
+.input:hover{border-color:var(--text-primary)}
+.input[aria-invalid="true"]{border-color:var(--danger);border-width:2px}
+.hint{color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+.error{display:flex;gap:6px;align-items:flex-start;color:var(--danger);font:400 12px/16px var(--font-ui)}
+.error .ic{width:14px;height:14px;margin-top:1px}
+
+/* Bandeaux (message bar) : statut porté par le fond, l'icône et le texte */
+.bar{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);color:var(--text-primary)}
+.bar .ic{margin-top:0}
+.bar.info{background:var(--info-bg)}.bar.info>.ic{color:var(--info)}
+.bar.warning{background:var(--warning-bg)}.bar.warning>.ic{color:var(--warning)}
+.bar.danger{background:var(--danger-bg)}.bar.danger>.ic{color:var(--danger)}
+.bar.success{background:var(--success-bg)}.bar.success>.ic{color:var(--success)}
+.bar a{color:var(--text-primary);font-weight:600}
+.bar p+p{margin-top:2px}
+
+.card{border:1px solid var(--border-subtle);border-radius:var(--radius-xl);background:var(--surface-raised);box-shadow:var(--shadow-2)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:var(--radius-pill);font:600 12px/16px var(--font-ui);white-space:nowrap}
+.pill .ic{width:14px;height:14px}
+.pill.info{background:var(--info-bg);color:var(--info)}
+.pill.success{background:var(--success-bg);color:var(--success)}
+.pill.neutral{background:var(--surface-sunken);color:var(--text-primary)}
+.pill.count{min-width:20px;justify-content:center;padding:2px 6px;background:var(--primary);color:var(--primary-on)}
+
+/* Squelettes et états (shared/ui/state) */
+.skel{display:block;height:14px;border-radius:var(--radius-md);background:var(--surface-sunken)}
+.state{display:flex;flex-direction:column;align-items:center;gap:8px;padding:32px 16px;text-align:center}
+.state .ic{width:32px;height:32px;color:var(--text-secondary)}
+.state.error .ic{color:var(--danger)}
+.state h2,.state h3,.state .state-title{font:600 16px/22px var(--font-ui)}
+.state p{max-width:44ch;color:var(--text-secondary)}
+.state .btn{margin-top:8px}
+
+/* ---------- Barre de maquette : hors de l'écran dessiné ---------- */
+.mq-bar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:8px 16px;border-bottom:1px solid var(--admin-bar-line);background:var(--admin-bar-bg);color:var(--admin-bar-text);font:400 12px/16px var(--font-ui)}
+.mq-bar strong{font-weight:600}
+.mq-bar .mq-note{color:var(--admin-bar-muted)}
+.mq-bar label{display:inline-flex;flex:1 1 auto;gap:6px;align-items:center;min-width:0}
+.mq-bar select,.mq-bar button{height:28px;padding:0 8px;border:1px solid var(--admin-bar-muted);border-radius:var(--radius-md);background:var(--admin-bar-bg);color:var(--admin-bar-text);font:600 12px/16px var(--font-ui);cursor:pointer}
+.mq-bar select{width:100%;min-width:0;max-width:320px}
+.mq-bar button[aria-pressed="true"]{background:var(--admin-bar-text);color:var(--admin-bar-bg)}
+.mq-bar :focus-visible{outline-color:var(--admin-focus);box-shadow:none}
+.mq-bar .mq-group{display:inline-flex;gap:4px;align-items:center;min-width:0;max-width:100%}
+.mq-bar .mq-spacer{flex:1 1 0}
+.mq-legende{margin:0;padding:6px 16px;border-bottom:1px solid var(--admin-bar-line);background:var(--admin-bar-bg);color:var(--admin-bar-muted);font:400 12px/16px var(--font-mono)}
+.mq-legende strong{color:var(--admin-bar-text);font-weight:600}
+.mq-note-inline{padding:8px 12px;border:1px dashed var(--border-accessible);border-radius:var(--radius-md);color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+
+/* ---------- Layout public (fiche 00 §4 : bandeau et pied de shared/ui/public-layout) ---------- */
+.public-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 24px;min-height:56px;padding:8px 24px;border-bottom:1px solid var(--border-subtle);background:var(--surface-raised)}
+.brand{display:inline-flex;align-items:baseline;gap:8px;color:var(--text-primary);font:600 16px/22px var(--font-ui);text-decoration:none}
+.brand .logo{align-self:center;width:22px;height:22px;fill:none;stroke:var(--primary);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.brand .tagline{color:var(--text-secondary);font:400 14px/20px var(--font-ui)}
+.public-header .links{display:flex;gap:16px;margin-left:auto}
+.public-header .links a{padding:6px 0;border-bottom:2px solid transparent;color:var(--text-secondary);font:600 14px/20px var(--font-ui);text-decoration:none}
+.locale-switch{color:var(--primary);font:600 14px/20px var(--font-ui);text-decoration:none}
+.public-main{width:100%;max-width:1120px;margin:0 auto;padding:32px 24px}
+.public-footer{padding:16px 24px;border-top:1px solid var(--border-subtle);color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+.public-footer nav{display:flex;flex-wrap:wrap;gap:16px}
+.public-footer a{color:var(--text-secondary)}
+@media (max-width:600px){
+  .public-header{padding:8px 16px}
+  .public-header .links{margin-left:0;order:3;width:100%}
+  .public-header .locale-switch{margin-left:auto}
+  .public-main{padding:24px 16px}
+  .public-footer{padding:16px}
+}
+
+/* Mention d'urgence (G Q63) */
+.urgence{margin:0}
+.urgence strong{font-weight:600}
+
+/* ---------- Coquille praticien (fiche 00 §1 et §9 : barre d'application, rail) ---------- */
+.app-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;height:48px;padding:0 16px;border-bottom:1px solid var(--border-subtle);background:var(--surface-raised)}
+.app-bar .menu{display:none;width:32px;height:32px;padding:0;border:0;border-radius:var(--radius-md);background:transparent;color:var(--text-primary);cursor:pointer;align-items:center;justify-content:center}
+.app-bar .section{display:inline-flex;gap:8px;color:var(--text-secondary)}
+.app-bar .spacer{flex:1 1 0}
+.app-bar .search{display:flex;align-items:center;gap:6px;width:min(320px,32vw);height:32px;padding:0 8px 0 10px;border:1px solid var(--border-strong);border-bottom-color:var(--border-accessible);border-radius:var(--radius-md);background:var(--surface-raised);color:var(--text-secondary)}
+.app-bar .search .ic{width:16px;height:16px}
+.app-bar .search input{flex:1;min-width:0;height:100%;border:0;background:transparent;outline:0}
+.app-bar .search input::placeholder{color:var(--text-secondary);opacity:1}
+.app-bar kbd,.kbd{padding:0 5px;border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--surface-ground);color:var(--text-secondary);font:400 12px/16px var(--font-mono)}
+.app-bar .avatar{width:32px;height:32px;padding:0;border:0;border-radius:var(--radius-pill);background:var(--primary-tint);color:var(--primary);font:600 12px/16px var(--font-ui);cursor:pointer}
+.shell{display:flex;align-items:stretch;min-height:calc(100vh - 120px)}
+.nav-rail{flex:none;width:56px;padding:8px 6px;border-right:1px solid var(--border-subtle);background:var(--surface-raised)}
+.nav-rail ul{display:flex;flex-direction:column;gap:4px}
+.nav-rail a,.nav-rail span.tile{display:flex;align-items:center;justify-content:center;height:44px;border-left:3px solid transparent;border-radius:var(--radius-md);color:var(--text-secondary)}
+.nav-rail .ic{width:22px;height:22px}
+.nav-rail a[aria-current="page"]{border-left-color:var(--primary);background:var(--surface-sunken);color:var(--text-primary)}
+.nav-rail span.tile{color:var(--text-disabled)}
+.shell>main{flex:1 1 0;min-width:0}
+@media (max-width:899.98px){
+  .app-bar .menu{display:inline-flex}
+  .nav-rail{display:none}
+}
+@media (max-width:600px){
+  .app-bar{row-gap:8px;height:auto;min-height:48px;padding:8px 16px}
+  .app-bar .section{display:none}
+  .app-bar .search{order:5;width:100%}
+}
+
+/* ---------- Fiche 14, section « Prise de rendez-vous en ligne » : /mon-compte/preferences ---------- */
+.account{display:flex;gap:32px;align-items:flex-start;max-width:1120px;margin:0 auto;padding:24px}
+.account-nav{flex:none;width:220px}
+.account-nav .who{display:flex;flex-direction:column;gap:2px;margin-bottom:12px}
+.account-nav .who strong{font:600 16px/22px var(--font-ui)}
+.account-nav .who span{color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+.account-nav ul{display:flex;flex-direction:column;gap:2px}
+.account-nav a{display:flex;gap:8px;align-items:center;justify-content:space-between;min-height:36px;padding:6px 10px;border-left:3px solid transparent;border-radius:var(--radius-md);color:var(--text-secondary);text-decoration:none}
+.account-nav a[aria-current="page"]{border-left-color:var(--primary);background:var(--surface-sunken);color:var(--text-primary);font-weight:600}
+.content{display:flex;flex:1;flex-direction:column;gap:16px;min-width:0}
+.page-header{display:flex;flex-direction:column;gap:4px}
+.page-header h1{font:600 28px/36px var(--font-ui)}
+.page-header .intro,.page-header .saved{color:var(--text-secondary)}
+.content>.card{padding:20px 24px}
+.stub{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.card h2{font:600 16px/22px var(--font-ui)}
+.card-header{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.card-header a{display:inline-flex;gap:6px;align-items:center;font-weight:600}
+.card-header a .ic{width:16px;height:16px}
+.section-status{margin-top:4px;color:var(--text-secondary)}
+.section-bar{margin-top:12px}
+.rows{display:grid;grid-template-columns:minmax(200px,280px) 1fr;gap:0 32px;margin-top:8px}
+.row{display:grid;grid-template-columns:subgrid;grid-column:1/-1;gap:8px 32px;align-items:start;padding:16px 0;border-top:1px solid var(--border-subtle)}
+.row:first-child{border-top:0}
+.row-text{display:flex;flex-direction:column;gap:2px}
+.row-text .label{font-weight:600}
+.row-text .help{color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+.control{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-width:0}
+.control.column{flex-direction:column;align-items:stretch}
+.row.full .control{grid-column:1/-1}
+.native{height:32px;padding:0 8px;border:1px solid var(--border-strong);border-bottom-color:var(--border-accessible);border-radius:var(--radius-md);background:var(--surface-raised);color:var(--text-primary)}
+.native[aria-invalid="true"]{border-color:var(--danger);border-bottom-width:2px}
+.number{width:80px;font-family:var(--font-mono)}
+.time{width:72px;text-align:center;font-family:var(--font-mono)}
+select.native{max-width:100%}
+.unit{color:var(--text-secondary)}
+.switch{display:inline-flex;gap:10px;align-items:center;cursor:pointer}
+.switch input{position:absolute;opacity:0;width:40px;height:20px;margin:0}
+.switch .track{position:relative;flex:none;width:40px;height:20px;border:1px solid var(--border-accessible);border-radius:var(--radius-pill);background:var(--surface-raised)}
+.switch .track::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:var(--radius-pill);background:var(--border-accessible)}
+.switch input:checked+.track{border-color:var(--primary);background:var(--primary)}
+.switch input:checked+.track::after{left:22px;background:var(--primary-on)}
+.switch input:focus-visible+.track{outline:2px solid var(--focus-outer);outline-offset:2px}
+.options{display:flex;flex-direction:column;gap:12px}
+.option{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.option input,.check input{flex:none;width:18px;height:18px;margin:1px 0 0;accent-color:var(--primary)}
+.option .text{display:flex;flex-direction:column;gap:2px}
+.option .text strong{font-weight:600}
+.option .text span{color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+.checks{display:flex;flex-wrap:wrap;gap:8px 24px}
+.check{display:inline-flex;gap:8px;align-items:flex-start;min-height:24px;cursor:pointer}
+/* Éditeur de plages (ui/preferences/booking-windows-editor) */
+.editor{border:1px solid var(--border-subtle);border-radius:var(--radius-md)}
+.wd-day{display:grid;grid-template-columns:112px 1fr;gap:8px 16px;align-items:start;padding:10px 12px;border-top:1px solid var(--border-subtle)}
+.wd-day:first-child{border-top:0}
+.wd-day h3{padding-top:6px;font:600 14px/20px var(--font-ui)}
+.wd-body{display:flex;flex-direction:column;gap:8px;align-items:flex-start;min-width:0}
+.wd-range{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.wd-range .dash{color:var(--text-secondary)}
+.wd-none{padding-top:6px;color:var(--text-secondary)}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0;border:1px solid transparent;border-radius:var(--radius-md);background:transparent;color:var(--text-secondary);cursor:pointer}
+.icon-btn:hover{border-color:var(--border-strong);color:var(--text-primary)}
+.icon-btn .ic{width:16px;height:16px}
+.wd-add{padding-left:4px;padding-right:8px}
+.wd-foot{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding:10px 12px;border-top:1px solid var(--border-subtle);background:var(--surface-ground);border-radius:0 0 var(--radius-md) var(--radius-md)}
+.wd-foot .count{color:var(--text-secondary)}
+.wd-foot .buttons{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.saved-flag{color:var(--text-secondary)}
+@media (max-width:899.98px){
+  .account{gap:24px}
+}
+@media (max-width:760px){
+  .account{flex-direction:column;gap:16px;padding:16px}
+  .account-nav{width:100%}
+  .account-nav .who{display:none}
+  .account-nav ul{flex-direction:row;gap:4px;overflow-x:auto;padding-bottom:4px}
+  .account-nav a{flex:none;border-left:0;border-bottom:2px solid transparent;border-radius:0;white-space:nowrap}
+  .account-nav a[aria-current="page"]{border-bottom-color:var(--primary);background:transparent}
+  .content>.card{padding:16px}
+  .rows{grid-template-columns:1fr}
+  .row{gap:10px}
+  .wd-day{grid-template-columns:1fr}
+  .wd-day h3{padding-top:0}
+  .wd-none{padding-top:0}
+  .wd-foot .buttons,.wd-foot .buttons .btn{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="mq-bar" role="region" aria-label="Barre de maquette (ne fait pas partie de l'écran)">
+  <strong>Maquette · Préférences › Prise de rendez-vous en ligne (fiche 14)</strong>
+  <span class="mq-group">
+    <button type="button" id="mq-prev" aria-label="Vue précédente">‹</button>
+    <label><span>Vue</span>
+      <select id="mq-vue">
+        <option value="desactivee">1. Désactivée (valeurs par défaut)</option>
+        <option value="offerte">2. Activée et offerte (mode manuel)</option>
+        <option value="premiere-activation">3. Première activation, sans plage</option>
+        <option value="non-publie">4. Profil public non publié</option>
+        <option value="modification">5. Plages modifiées, pas encore enregistrées</option>
+        <option value="erreurs">6. Erreurs de forme (aucune requête)</option>
+        <option value="erreur-serveur">7. Refus du serveur</option>
+        <option value="toutes">Toutes les vues à la suite</option>
+      </select>
+    </label>
+    <button type="button" id="mq-next" aria-label="Vue suivante">›</button>
+  </span>
+  <span class="mq-group" role="group" aria-label="Thème">
+    <button type="button" data-mq-theme="system" aria-pressed="true">Système</button>
+    <button type="button" data-mq-theme="light" aria-pressed="false">Clair</button>
+    <button type="button" data-mq-theme="dark" aria-pressed="false">Sombre</button>
+  </span>
+  <span class="mq-spacer"></span>
+  <span class="mq-note">Barre de maquette : elle ne fait pas partie de l'écran.</span>
+</div>
+<section class="vue" id="desactivee" aria-label="Vue 1 : Désactivée (valeurs par défaut)">
+<p class="mq-legende"><strong>Vue 1 sur 7 · Désactivée (valeurs par défaut)</strong> · GET /api/me/preferences → booking.enabled false, booking.windows []</p>
+<header class="app-bar">
+  <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
+  <span class="section" aria-current="location"><span aria-hidden="true">·</span> Mon compte</span>
+  <div class="spacer"></div>
+  <form class="search" role="search"><label class="sr-only" for="app-bar-search-desactivee">Rechercher</label><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="app-bar-search-desactivee" type="search" placeholder="Rechercher un patient" autocomplete="off"><kbd aria-hidden="true">/</kbd></form>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <button type="button" class="avatar" aria-haspopup="menu"><span aria-hidden="true">CM</span><span class="sr-only">Claire Martin, menu du compte</span></button>
+</header>
+<div class="shell">
+<nav class="nav-rail" aria-label="Navigation"><ul>
+  <li><a href="#" aria-label="Patients" title="Patients"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-4 3-6 6.5-6s6 2 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.5 0 4.2 1.5 4.7 4.5"/></svg></a></li>
+  <li><a href="#" aria-label="Agenda" title="Agenda"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></a></li>
+  <li><span class="tile" role="link" aria-disabled="true" aria-label="Facture, à réaliser" title="Facture, à réaliser"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></svg></span></li>
+</ul></nav>
+<main>
+<div class="account">
+<nav class="account-nav" aria-label="Mon compte">
+  <p class="who"><strong>Claire Martin</strong><span>Psychologue · Lyon</span></p>
+  <ul>
+    <li><a href="#"><span>Profil public</span><span class="pill success">publié</span></a></li>
+    <li><a href="#" aria-current="page"><span>Préférences</span></a></li>
+    <li><a href="#"><span>Émotions personnalisées</span></a></li>
+    <li><a href="#"><span>Dossier professionnel</span><span class="pill success">approuvé</span></a></li>
+    <li><a href="#"><span>Compte et sécurité</span></a></li>
+    <li><a href="#"><span>Données et export</span></a></li>
+  </ul>
+</nav>
+<div class="content">
+  <header class="page-header">
+    <h1>Préférences</h1>
+    <p class="intro">Mémorisées sur votre compte : vous les retrouvez sur tous vos appareils. Chaque changement est enregistré immédiatement.</p>
+    <p class="saved"><span role="status">Enregistré</span> · il y a 12 s</p>
+  </header>
+  <section class="card stub" aria-labelledby="desactivee-9"><h2 id="desactivee-9">Affichage</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="desactivee-21"><h2 id="desactivee-21">Vocabulaire et saisie</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card" aria-labelledby="desactivee-titre">
+  <div class="card-header">
+    <h2 id="desactivee-titre">Prise de rendez-vous en ligne</h2>
+    
+  </div>
+  <p class="section-status" role="status">Désactivée : votre fiche publique n'a pas de bouton « Prendre rendez-vous ».</p>
+  
+  <div class="rows">
+    <div class="row">
+      <div class="row-text"><span class="label" id="desactivee-activation-label">Activation</span><span class="help" id="desactivee-activation-help">Ajoute le bouton « Prendre rendez-vous » à votre fiche publique.</span></div>
+      <div class="control column"><label class="switch"><input type="checkbox" role="switch" aria-describedby="desactivee-activation-help"><span class="track" aria-hidden="true"></span><span>Proposer la prise de rendez-vous en ligne</span></label></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="desactivee-mode-label">Confirmation des demandes</span><span class="help">Le mode est annoncé au demandeur avant l'envoi.</span></div>
+      <fieldset class="control column" aria-labelledby="desactivee-mode-label">
+        <div class="options">
+          <label class="option"><input type="radio" name="desactivee-mode" checked aria-describedby="desactivee-mode-manual"><span class="text"><strong>Je valide chaque demande</strong><span id="desactivee-mode-manual">Chaque demande attend votre réponse dans l'agenda. Sans réponse sous 72 h, elle est annulée et le demandeur est prévenu.</span></span></label>
+          <label class="option"><input type="radio" name="desactivee-mode" aria-describedby="desactivee-mode-auto"><span class="text"><strong>Acceptation automatique dans mes plages</strong><span id="desactivee-mode-auto">Le rendez-vous est confirmé dès que le demandeur a validé son adresse e-mail.</span></span></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="row full">
+      <div class="row-text" style="grid-column:1/-1"><span class="label">Plages ouvertes</span><span class="help">Les créneaux proposés sont découpés dans ces plages, à partir de leur début. Les plages s'enregistrent avec leur bouton ; les autres réglages, dès que vous les changez.</span></div>
+      <div class="control column"><div class="editor">
+      <div class="wd-day" role="group" aria-labelledby="desactivee-jour-0">
+        <h3 id="desactivee-jour-0">Lundi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="desactivee-jour-1">
+        <h3 id="desactivee-jour-1">Mardi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="desactivee-jour-2">
+        <h3 id="desactivee-jour-2">Mercredi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="desactivee-jour-3">
+        <h3 id="desactivee-jour-3">Jeudi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="desactivee-jour-4">
+        <h3 id="desactivee-jour-4">Vendredi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="desactivee-jour-5">
+        <h3 id="desactivee-jour-5">Samedi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="desactivee-jour-6">
+        <h3 id="desactivee-jour-6">Dimanche</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+      <div class="wd-foot">
+        <span class="count">0 plage sur 21</span>
+        <span class="buttons">
+          
+          <button type="button" class="btn primary" disabled>Enregistrer les plages</button>
+        </span>
+      </div>
+    </div>
+    
+    </div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="desactivee-duree-label">Durée d'un créneau</span><span class="help" id="desactivee-duree-help">De 15 à 180 minutes, par pas de 5.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="60" aria-labelledby="desactivee-duree-label" aria-describedby="desactivee-duree-help">
+        <span class="unit">min</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="desactivee-delai-label">Délai minimal</span><span class="help" id="desactivee-delai-help">Temps entre la demande et le début du créneau, de 1 à 168 heures.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="24" aria-labelledby="desactivee-delai-label" aria-describedby="desactivee-delai-help">
+        <span class="unit">h</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="desactivee-horizon-label">Horizon</span><span class="help" id="desactivee-horizon-help">Aucun créneau n'est proposé au-delà, de 7 à 90 jours.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="28" aria-labelledby="desactivee-horizon-label" aria-describedby="desactivee-horizon-help">
+        <span class="unit">jours</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="desactivee-modalites-label">Modalités proposées</span><span class="help">Le demandeur choisit parmi celles-ci. Au moins une.</span></div>
+      <fieldset class="control column" aria-labelledby="desactivee-modalites-label">
+        <div class="checks"><label class="check"><input type="checkbox" checked><span>Au cabinet</span></label><label class="check"><input type="checkbox"><span>En visio</span></label><label class="check"><input type="checkbox"><span>Par téléphone</span></label></div>
+        
+      </fieldset>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="desactivee-fuseau-label">Fuseau horaire</span><span class="help" id="desactivee-fuseau-help">Les heures des plages sont celles de ce fuseau.</span></div>
+      <div class="control column"><span class="control"><select class="native" aria-labelledby="desactivee-fuseau-label" aria-describedby="desactivee-fuseau-help"><option>America/Montreal</option><option>Europe/Brussels</option><option selected>Europe/Paris</option><option>Europe/Zurich</option></select></span>
+      </div>
+    </div>
+  </div>
+</section>
+  <section class="card stub" aria-labelledby="desactivee-23"><h2 id="desactivee-23">Émotions personnalisées</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="desactivee-18"><h2 id="desactivee-18">Compte et sécurité</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+</div>
+</div>
+</main>
+</div>
+</section>
+<section class="vue" id="offerte" aria-label="Vue 2 : Activée et offerte (mode manuel)">
+<p class="mq-legende"><strong>Vue 2 sur 7 · Activée et offerte (mode manuel)</strong> · booking.enabled true, 10 plages, profil publié</p>
+<header class="app-bar">
+  <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
+  <span class="section" aria-current="location"><span aria-hidden="true">·</span> Mon compte</span>
+  <div class="spacer"></div>
+  <form class="search" role="search"><label class="sr-only" for="app-bar-search-offerte">Rechercher</label><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="app-bar-search-offerte" type="search" placeholder="Rechercher un patient" autocomplete="off"><kbd aria-hidden="true">/</kbd></form>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <button type="button" class="avatar" aria-haspopup="menu"><span aria-hidden="true">CM</span><span class="sr-only">Claire Martin, menu du compte</span></button>
+</header>
+<div class="shell">
+<nav class="nav-rail" aria-label="Navigation"><ul>
+  <li><a href="#" aria-label="Patients" title="Patients"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-4 3-6 6.5-6s6 2 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.5 0 4.2 1.5 4.7 4.5"/></svg></a></li>
+  <li><a href="#" aria-label="Agenda" title="Agenda"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></a></li>
+  <li><span class="tile" role="link" aria-disabled="true" aria-label="Facture, à réaliser" title="Facture, à réaliser"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></svg></span></li>
+</ul></nav>
+<main>
+<div class="account">
+<nav class="account-nav" aria-label="Mon compte">
+  <p class="who"><strong>Claire Martin</strong><span>Psychologue · Lyon</span></p>
+  <ul>
+    <li><a href="#"><span>Profil public</span><span class="pill success">publié</span></a></li>
+    <li><a href="#" aria-current="page"><span>Préférences</span></a></li>
+    <li><a href="#"><span>Émotions personnalisées</span></a></li>
+    <li><a href="#"><span>Dossier professionnel</span><span class="pill success">approuvé</span></a></li>
+    <li><a href="#"><span>Compte et sécurité</span></a></li>
+    <li><a href="#"><span>Données et export</span></a></li>
+  </ul>
+</nav>
+<div class="content">
+  <header class="page-header">
+    <h1>Préférences</h1>
+    <p class="intro">Mémorisées sur votre compte : vous les retrouvez sur tous vos appareils. Chaque changement est enregistré immédiatement.</p>
+    <p class="saved"><span role="status">Enregistré</span> · il y a 12 s</p>
+  </header>
+  <section class="card stub" aria-labelledby="offerte-9"><h2 id="offerte-9">Affichage</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="offerte-21"><h2 id="offerte-21">Vocabulaire et saisie</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card" aria-labelledby="offerte-titre">
+  <div class="card-header">
+    <h2 id="offerte-titre">Prise de rendez-vous en ligne</h2>
+    <a href="#">Voir ma page de rendez-vous<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr-only"> (nouvel onglet)</span></a>
+  </div>
+  <p class="section-status" role="status">Proposée sur votre fiche publique.</p>
+  
+  <div class="rows">
+    <div class="row">
+      <div class="row-text"><span class="label" id="offerte-activation-label">Activation</span><span class="help" id="offerte-activation-help">Ajoute le bouton « Prendre rendez-vous » à votre fiche publique.</span></div>
+      <div class="control column"><label class="switch"><input type="checkbox" role="switch" checked aria-describedby="offerte-activation-help"><span class="track" aria-hidden="true"></span><span>Proposer la prise de rendez-vous en ligne</span></label></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="offerte-mode-label">Confirmation des demandes</span><span class="help">Le mode est annoncé au demandeur avant l'envoi.</span></div>
+      <fieldset class="control column" aria-labelledby="offerte-mode-label">
+        <div class="options">
+          <label class="option"><input type="radio" name="offerte-mode" checked aria-describedby="offerte-mode-manual"><span class="text"><strong>Je valide chaque demande</strong><span id="offerte-mode-manual">Chaque demande attend votre réponse dans l'agenda. Sans réponse sous 72 h, elle est annulée et le demandeur est prévenu.</span></span></label>
+          <label class="option"><input type="radio" name="offerte-mode" aria-describedby="offerte-mode-auto"><span class="text"><strong>Acceptation automatique dans mes plages</strong><span id="offerte-mode-auto">Le rendez-vous est confirmé dès que le demandeur a validé son adresse e-mail.</span></span></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="row full">
+      <div class="row-text" style="grid-column:1/-1"><span class="label">Plages ouvertes</span><span class="help">Les créneaux proposés sont découpés dans ces plages, à partir de leur début. Les plages s'enregistrent avec leur bouton ; les autres réglages, dès que vous les changez.</span></div>
+      <div class="control column"><div class="editor">
+      <div class="wd-day" role="group" aria-labelledby="offerte-jour-0">
+        <h3 id="offerte-jour-0">Lundi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="offerte-debut-0-0">Début de la plage 1 du lundi</label>
+              <input class="native time" id="offerte-debut-0-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="offerte-fin-0-0">Fin de la plage 1 du lundi</label>
+              <input class="native time" id="offerte-fin-0-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du lundi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="offerte-debut-0-1">Début de la plage 2 du lundi</label>
+              <input class="native time" id="offerte-debut-0-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="offerte-fin-0-1">Fin de la plage 2 du lundi</label>
+              <input class="native time" id="offerte-fin-0-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du lundi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="offerte-jour-1">
+        <h3 id="offerte-jour-1">Mardi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="offerte-debut-1-0">Début de la plage 1 du mardi</label>
+              <input class="native time" id="offerte-debut-1-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="offerte-fin-1-0">Fin de la plage 1 du mardi</label>
+              <input class="native time" id="offerte-fin-1-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mardi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="offerte-debut-1-1">Début de la plage 2 du mardi</label>
+              <input class="native time" id="offerte-debut-1-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="offerte-fin-1-1">Fin de la plage 2 du mardi</label>
+              <input class="native time" id="offerte-fin-1-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mardi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="offerte-jour-2">
+        <h3 id="offerte-jour-2">Mercredi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="offerte-debut-2-0">Début de la plage 1 du mercredi</label>
+              <input class="native time" id="offerte-debut-2-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="offerte-fin-2-0">Fin de la plage 1 du mercredi</label>
+              <input class="native time" id="offerte-fin-2-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mercredi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="offerte-debut-2-1">Début de la plage 2 du mercredi</label>
+              <input class="native time" id="offerte-debut-2-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="offerte-fin-2-1">Fin de la plage 2 du mercredi</label>
+              <input class="native time" id="offerte-fin-2-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mercredi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="offerte-jour-3">
+        <h3 id="offerte-jour-3">Jeudi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="offerte-debut-3-0">Début de la plage 1 du jeudi</label>
+              <input class="native time" id="offerte-debut-3-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="offerte-fin-3-0">Fin de la plage 1 du jeudi</label>
+              <input class="native time" id="offerte-fin-3-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du jeudi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="offerte-debut-3-1">Début de la plage 2 du jeudi</label>
+              <input class="native time" id="offerte-debut-3-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="offerte-fin-3-1">Fin de la plage 2 du jeudi</label>
+              <input class="native time" id="offerte-fin-3-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du jeudi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="offerte-jour-4">
+        <h3 id="offerte-jour-4">Vendredi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="offerte-debut-4-0">Début de la plage 1 du vendredi</label>
+              <input class="native time" id="offerte-debut-4-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="offerte-fin-4-0">Fin de la plage 1 du vendredi</label>
+              <input class="native time" id="offerte-fin-4-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du vendredi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="offerte-debut-4-1">Début de la plage 2 du vendredi</label>
+              <input class="native time" id="offerte-debut-4-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="offerte-fin-4-1">Fin de la plage 2 du vendredi</label>
+              <input class="native time" id="offerte-fin-4-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du vendredi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="offerte-jour-5">
+        <h3 id="offerte-jour-5">Samedi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="offerte-jour-6">
+        <h3 id="offerte-jour-6">Dimanche</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+      <div class="wd-foot">
+        <span class="count">10 plages sur 21</span>
+        <span class="buttons">
+          <span class="saved-flag" role="status">Enregistré</span>
+          <button type="button" class="btn primary" disabled>Enregistrer les plages</button>
+        </span>
+      </div>
+    </div>
+    
+    </div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="offerte-duree-label">Durée d'un créneau</span><span class="help" id="offerte-duree-help">De 15 à 180 minutes, par pas de 5.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="60" aria-labelledby="offerte-duree-label" aria-describedby="offerte-duree-help">
+        <span class="unit">min</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="offerte-delai-label">Délai minimal</span><span class="help" id="offerte-delai-help">Temps entre la demande et le début du créneau, de 1 à 168 heures.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="24" aria-labelledby="offerte-delai-label" aria-describedby="offerte-delai-help">
+        <span class="unit">h</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="offerte-horizon-label">Horizon</span><span class="help" id="offerte-horizon-help">Aucun créneau n'est proposé au-delà, de 7 à 90 jours.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="28" aria-labelledby="offerte-horizon-label" aria-describedby="offerte-horizon-help">
+        <span class="unit">jours</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="offerte-modalites-label">Modalités proposées</span><span class="help">Le demandeur choisit parmi celles-ci. Au moins une.</span></div>
+      <fieldset class="control column" aria-labelledby="offerte-modalites-label">
+        <div class="checks"><label class="check"><input type="checkbox" checked><span>Au cabinet</span></label><label class="check"><input type="checkbox" checked><span>En visio</span></label><label class="check"><input type="checkbox"><span>Par téléphone</span></label></div>
+        
+      </fieldset>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="offerte-fuseau-label">Fuseau horaire</span><span class="help" id="offerte-fuseau-help">Les heures des plages sont celles de ce fuseau.</span></div>
+      <div class="control column"><span class="control"><select class="native" aria-labelledby="offerte-fuseau-label" aria-describedby="offerte-fuseau-help"><option>America/Montreal</option><option>Europe/Brussels</option><option selected>Europe/Paris</option><option>Europe/Zurich</option></select></span>
+      </div>
+    </div>
+  </div>
+</section>
+  <section class="card stub" aria-labelledby="offerte-23"><h2 id="offerte-23">Émotions personnalisées</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="offerte-18"><h2 id="offerte-18">Compte et sécurité</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+</div>
+</div>
+</main>
+</div>
+</section>
+<section class="vue" id="premiere-activation" aria-label="Vue 3 : Première activation, sans plage">
+<p class="mq-legende"><strong>Vue 3 sur 7 · Première activation, sans plage</strong> · PATCH { &quot;booking.enabled&quot;: true } puis relecture ; fuseau du navigateur proposé, rien enregistré sans geste</p>
+<header class="app-bar">
+  <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
+  <span class="section" aria-current="location"><span aria-hidden="true">·</span> Mon compte</span>
+  <div class="spacer"></div>
+  <form class="search" role="search"><label class="sr-only" for="app-bar-search-premiere-activation">Rechercher</label><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="app-bar-search-premiere-activation" type="search" placeholder="Rechercher un patient" autocomplete="off"><kbd aria-hidden="true">/</kbd></form>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <button type="button" class="avatar" aria-haspopup="menu"><span aria-hidden="true">CM</span><span class="sr-only">Claire Martin, menu du compte</span></button>
+</header>
+<div class="shell">
+<nav class="nav-rail" aria-label="Navigation"><ul>
+  <li><a href="#" aria-label="Patients" title="Patients"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-4 3-6 6.5-6s6 2 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.5 0 4.2 1.5 4.7 4.5"/></svg></a></li>
+  <li><a href="#" aria-label="Agenda" title="Agenda"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></a></li>
+  <li><span class="tile" role="link" aria-disabled="true" aria-label="Facture, à réaliser" title="Facture, à réaliser"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></svg></span></li>
+</ul></nav>
+<main>
+<div class="account">
+<nav class="account-nav" aria-label="Mon compte">
+  <p class="who"><strong>Claire Martin</strong><span>Psychologue · Lyon</span></p>
+  <ul>
+    <li><a href="#"><span>Profil public</span><span class="pill success">publié</span></a></li>
+    <li><a href="#" aria-current="page"><span>Préférences</span></a></li>
+    <li><a href="#"><span>Émotions personnalisées</span></a></li>
+    <li><a href="#"><span>Dossier professionnel</span><span class="pill success">approuvé</span></a></li>
+    <li><a href="#"><span>Compte et sécurité</span></a></li>
+    <li><a href="#"><span>Données et export</span></a></li>
+  </ul>
+</nav>
+<div class="content">
+  <header class="page-header">
+    <h1>Préférences</h1>
+    <p class="intro">Mémorisées sur votre compte : vous les retrouvez sur tous vos appareils. Chaque changement est enregistré immédiatement.</p>
+    <p class="saved"><span role="status">Enregistré</span> · il y a 12 s</p>
+  </header>
+  <section class="card stub" aria-labelledby="premiere-activation-9"><h2 id="premiere-activation-9">Affichage</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="premiere-activation-21"><h2 id="premiere-activation-21">Vocabulaire et saisie</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card" aria-labelledby="premiere-activation-titre">
+  <div class="card-header">
+    <h2 id="premiere-activation-titre">Prise de rendez-vous en ligne</h2>
+    
+  </div>
+  <p class="section-status" role="status">La prise de rendez-vous n'est pas proposée tant qu'il n'y a pas de plage.</p>
+  
+  <div class="rows">
+    <div class="row">
+      <div class="row-text"><span class="label" id="premiere-activation-activation-label">Activation</span><span class="help" id="premiere-activation-activation-help">Ajoute le bouton « Prendre rendez-vous » à votre fiche publique.</span></div>
+      <div class="control column"><label class="switch"><input type="checkbox" role="switch" checked aria-describedby="premiere-activation-activation-help"><span class="track" aria-hidden="true"></span><span>Proposer la prise de rendez-vous en ligne</span></label></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="premiere-activation-mode-label">Confirmation des demandes</span><span class="help">Le mode est annoncé au demandeur avant l'envoi.</span></div>
+      <fieldset class="control column" aria-labelledby="premiere-activation-mode-label">
+        <div class="options">
+          <label class="option"><input type="radio" name="premiere-activation-mode" checked aria-describedby="premiere-activation-mode-manual"><span class="text"><strong>Je valide chaque demande</strong><span id="premiere-activation-mode-manual">Chaque demande attend votre réponse dans l'agenda. Sans réponse sous 72 h, elle est annulée et le demandeur est prévenu.</span></span></label>
+          <label class="option"><input type="radio" name="premiere-activation-mode" aria-describedby="premiere-activation-mode-auto"><span class="text"><strong>Acceptation automatique dans mes plages</strong><span id="premiere-activation-mode-auto">Le rendez-vous est confirmé dès que le demandeur a validé son adresse e-mail.</span></span></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="row full">
+      <div class="row-text" style="grid-column:1/-1"><span class="label">Plages ouvertes</span><span class="help">Les créneaux proposés sont découpés dans ces plages, à partir de leur début. Les plages s'enregistrent avec leur bouton ; les autres réglages, dès que vous les changez.</span></div>
+      <div class="control column"><div class="editor">
+      <div class="wd-day" role="group" aria-labelledby="premiere-activation-jour-0">
+        <h3 id="premiere-activation-jour-0">Lundi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="premiere-activation-jour-1">
+        <h3 id="premiere-activation-jour-1">Mardi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="premiere-activation-jour-2">
+        <h3 id="premiere-activation-jour-2">Mercredi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="premiere-activation-jour-3">
+        <h3 id="premiere-activation-jour-3">Jeudi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="premiere-activation-jour-4">
+        <h3 id="premiere-activation-jour-4">Vendredi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="premiere-activation-jour-5">
+        <h3 id="premiere-activation-jour-5">Samedi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="premiere-activation-jour-6">
+        <h3 id="premiere-activation-jour-6">Dimanche</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+      <div class="wd-foot">
+        <span class="count">0 plage sur 21</span>
+        <span class="buttons">
+          
+          <button type="button" class="btn primary" disabled>Enregistrer les plages</button>
+        </span>
+      </div>
+    </div>
+    
+    <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Ajoutez au moins une plage pour que la prise de rendez-vous soit proposée.</p></div></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="premiere-activation-duree-label">Durée d'un créneau</span><span class="help" id="premiere-activation-duree-help">De 15 à 180 minutes, par pas de 5.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="60" aria-labelledby="premiere-activation-duree-label" aria-describedby="premiere-activation-duree-help">
+        <span class="unit">min</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="premiere-activation-delai-label">Délai minimal</span><span class="help" id="premiere-activation-delai-help">Temps entre la demande et le début du créneau, de 1 à 168 heures.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="24" aria-labelledby="premiere-activation-delai-label" aria-describedby="premiere-activation-delai-help">
+        <span class="unit">h</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="premiere-activation-horizon-label">Horizon</span><span class="help" id="premiere-activation-horizon-help">Aucun créneau n'est proposé au-delà, de 7 à 90 jours.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="28" aria-labelledby="premiere-activation-horizon-label" aria-describedby="premiere-activation-horizon-help">
+        <span class="unit">jours</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="premiere-activation-modalites-label">Modalités proposées</span><span class="help">Le demandeur choisit parmi celles-ci. Au moins une.</span></div>
+      <fieldset class="control column" aria-labelledby="premiere-activation-modalites-label">
+        <div class="checks"><label class="check"><input type="checkbox" checked><span>Au cabinet</span></label><label class="check"><input type="checkbox"><span>En visio</span></label><label class="check"><input type="checkbox"><span>Par téléphone</span></label></div>
+        
+      </fieldset>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="premiere-activation-fuseau-label">Fuseau horaire</span><span class="help" id="premiere-activation-fuseau-help">Les heures des plages sont celles de ce fuseau.</span></div>
+      <div class="control column"><span class="control"><select class="native" aria-labelledby="premiere-activation-fuseau-label" aria-describedby="premiere-activation-fuseau-help"><option>America/Montreal</option><option>Europe/Brussels</option><option selected>Europe/Paris</option><option>Europe/Zurich</option></select></span>
+      <span class="control"><span class="unit">Votre navigateur est réglé sur America/Montreal.</span><button type="button" class="btn">Utiliser ce fuseau</button></span></div>
+    </div>
+  </div>
+</section>
+  <section class="card stub" aria-labelledby="premiere-activation-23"><h2 id="premiere-activation-23">Émotions personnalisées</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="premiere-activation-18"><h2 id="premiere-activation-18">Compte et sécurité</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+</div>
+</div>
+</main>
+</div>
+</section>
+<section class="vue" id="non-publie" aria-label="Vue 4 : Profil public non publié">
+<p class="mq-legende"><strong>Vue 4 sur 7 · Profil public non publié</strong> · profil non publié : bandeau, réglages toujours modifiables</p>
+<header class="app-bar">
+  <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
+  <span class="section" aria-current="location"><span aria-hidden="true">·</span> Mon compte</span>
+  <div class="spacer"></div>
+  <form class="search" role="search"><label class="sr-only" for="app-bar-search-non-publie">Rechercher</label><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="app-bar-search-non-publie" type="search" placeholder="Rechercher un patient" autocomplete="off"><kbd aria-hidden="true">/</kbd></form>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <button type="button" class="avatar" aria-haspopup="menu"><span aria-hidden="true">CM</span><span class="sr-only">Claire Martin, menu du compte</span></button>
+</header>
+<div class="shell">
+<nav class="nav-rail" aria-label="Navigation"><ul>
+  <li><a href="#" aria-label="Patients" title="Patients"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-4 3-6 6.5-6s6 2 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.5 0 4.2 1.5 4.7 4.5"/></svg></a></li>
+  <li><a href="#" aria-label="Agenda" title="Agenda"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></a></li>
+  <li><span class="tile" role="link" aria-disabled="true" aria-label="Facture, à réaliser" title="Facture, à réaliser"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></svg></span></li>
+</ul></nav>
+<main>
+<div class="account">
+<nav class="account-nav" aria-label="Mon compte">
+  <p class="who"><strong>Claire Martin</strong><span>Psychologue · Lyon</span></p>
+  <ul>
+    <li><a href="#"><span>Profil public</span></a></li>
+    <li><a href="#" aria-current="page"><span>Préférences</span></a></li>
+    <li><a href="#"><span>Émotions personnalisées</span></a></li>
+    <li><a href="#"><span>Dossier professionnel</span><span class="pill success">approuvé</span></a></li>
+    <li><a href="#"><span>Compte et sécurité</span></a></li>
+    <li><a href="#"><span>Données et export</span></a></li>
+  </ul>
+</nav>
+<div class="content">
+  <header class="page-header">
+    <h1>Préférences</h1>
+    <p class="intro">Mémorisées sur votre compte : vous les retrouvez sur tous vos appareils. Chaque changement est enregistré immédiatement.</p>
+    <p class="saved"><span role="status">Enregistré</span> · il y a 12 s</p>
+  </header>
+  <section class="card stub" aria-labelledby="non-publie-9"><h2 id="non-publie-9">Affichage</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="non-publie-21"><h2 id="non-publie-21">Vocabulaire et saisie</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card" aria-labelledby="non-publie-titre">
+  <div class="card-header">
+    <h2 id="non-publie-titre">Prise de rendez-vous en ligne</h2>
+    
+  </div>
+  
+  <div class="bar info section-bar" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Votre profil public n'est pas publié : la prise de rendez-vous ne sera proposée qu'une fois le profil publié. <a href="#">Mon profil public</a></p></div>
+  <div class="rows">
+    <div class="row">
+      <div class="row-text"><span class="label" id="non-publie-activation-label">Activation</span><span class="help" id="non-publie-activation-help">Ajoute le bouton « Prendre rendez-vous » à votre fiche publique.</span></div>
+      <div class="control column"><label class="switch"><input type="checkbox" role="switch" checked aria-describedby="non-publie-activation-help"><span class="track" aria-hidden="true"></span><span>Proposer la prise de rendez-vous en ligne</span></label></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="non-publie-mode-label">Confirmation des demandes</span><span class="help">Le mode est annoncé au demandeur avant l'envoi.</span></div>
+      <fieldset class="control column" aria-labelledby="non-publie-mode-label">
+        <div class="options">
+          <label class="option"><input type="radio" name="non-publie-mode" checked aria-describedby="non-publie-mode-manual"><span class="text"><strong>Je valide chaque demande</strong><span id="non-publie-mode-manual">Chaque demande attend votre réponse dans l'agenda. Sans réponse sous 72 h, elle est annulée et le demandeur est prévenu.</span></span></label>
+          <label class="option"><input type="radio" name="non-publie-mode" aria-describedby="non-publie-mode-auto"><span class="text"><strong>Acceptation automatique dans mes plages</strong><span id="non-publie-mode-auto">Le rendez-vous est confirmé dès que le demandeur a validé son adresse e-mail.</span></span></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="row full">
+      <div class="row-text" style="grid-column:1/-1"><span class="label">Plages ouvertes</span><span class="help">Les créneaux proposés sont découpés dans ces plages, à partir de leur début. Les plages s'enregistrent avec leur bouton ; les autres réglages, dès que vous les changez.</span></div>
+      <div class="control column"><div class="editor">
+      <div class="wd-day" role="group" aria-labelledby="non-publie-jour-0">
+        <h3 id="non-publie-jour-0">Lundi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="non-publie-debut-0-0">Début de la plage 1 du lundi</label>
+              <input class="native time" id="non-publie-debut-0-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="non-publie-fin-0-0">Fin de la plage 1 du lundi</label>
+              <input class="native time" id="non-publie-fin-0-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du lundi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="non-publie-debut-0-1">Début de la plage 2 du lundi</label>
+              <input class="native time" id="non-publie-debut-0-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="non-publie-fin-0-1">Fin de la plage 2 du lundi</label>
+              <input class="native time" id="non-publie-fin-0-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du lundi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="non-publie-jour-1">
+        <h3 id="non-publie-jour-1">Mardi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="non-publie-debut-1-0">Début de la plage 1 du mardi</label>
+              <input class="native time" id="non-publie-debut-1-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="non-publie-fin-1-0">Fin de la plage 1 du mardi</label>
+              <input class="native time" id="non-publie-fin-1-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mardi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="non-publie-debut-1-1">Début de la plage 2 du mardi</label>
+              <input class="native time" id="non-publie-debut-1-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="non-publie-fin-1-1">Fin de la plage 2 du mardi</label>
+              <input class="native time" id="non-publie-fin-1-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mardi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="non-publie-jour-2">
+        <h3 id="non-publie-jour-2">Mercredi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="non-publie-debut-2-0">Début de la plage 1 du mercredi</label>
+              <input class="native time" id="non-publie-debut-2-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="non-publie-fin-2-0">Fin de la plage 1 du mercredi</label>
+              <input class="native time" id="non-publie-fin-2-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mercredi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="non-publie-debut-2-1">Début de la plage 2 du mercredi</label>
+              <input class="native time" id="non-publie-debut-2-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="non-publie-fin-2-1">Fin de la plage 2 du mercredi</label>
+              <input class="native time" id="non-publie-fin-2-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mercredi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="non-publie-jour-3">
+        <h3 id="non-publie-jour-3">Jeudi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="non-publie-debut-3-0">Début de la plage 1 du jeudi</label>
+              <input class="native time" id="non-publie-debut-3-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="non-publie-fin-3-0">Fin de la plage 1 du jeudi</label>
+              <input class="native time" id="non-publie-fin-3-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du jeudi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="non-publie-debut-3-1">Début de la plage 2 du jeudi</label>
+              <input class="native time" id="non-publie-debut-3-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="non-publie-fin-3-1">Fin de la plage 2 du jeudi</label>
+              <input class="native time" id="non-publie-fin-3-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du jeudi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="non-publie-jour-4">
+        <h3 id="non-publie-jour-4">Vendredi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="non-publie-debut-4-0">Début de la plage 1 du vendredi</label>
+              <input class="native time" id="non-publie-debut-4-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="non-publie-fin-4-0">Fin de la plage 1 du vendredi</label>
+              <input class="native time" id="non-publie-fin-4-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du vendredi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="non-publie-debut-4-1">Début de la plage 2 du vendredi</label>
+              <input class="native time" id="non-publie-debut-4-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="non-publie-fin-4-1">Fin de la plage 2 du vendredi</label>
+              <input class="native time" id="non-publie-fin-4-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du vendredi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="non-publie-jour-5">
+        <h3 id="non-publie-jour-5">Samedi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="non-publie-jour-6">
+        <h3 id="non-publie-jour-6">Dimanche</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+      <div class="wd-foot">
+        <span class="count">10 plages sur 21</span>
+        <span class="buttons">
+          <span class="saved-flag" role="status">Enregistré</span>
+          <button type="button" class="btn primary" disabled>Enregistrer les plages</button>
+        </span>
+      </div>
+    </div>
+    
+    </div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="non-publie-duree-label">Durée d'un créneau</span><span class="help" id="non-publie-duree-help">De 15 à 180 minutes, par pas de 5.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="60" aria-labelledby="non-publie-duree-label" aria-describedby="non-publie-duree-help">
+        <span class="unit">min</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="non-publie-delai-label">Délai minimal</span><span class="help" id="non-publie-delai-help">Temps entre la demande et le début du créneau, de 1 à 168 heures.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="24" aria-labelledby="non-publie-delai-label" aria-describedby="non-publie-delai-help">
+        <span class="unit">h</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="non-publie-horizon-label">Horizon</span><span class="help" id="non-publie-horizon-help">Aucun créneau n'est proposé au-delà, de 7 à 90 jours.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="28" aria-labelledby="non-publie-horizon-label" aria-describedby="non-publie-horizon-help">
+        <span class="unit">jours</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="non-publie-modalites-label">Modalités proposées</span><span class="help">Le demandeur choisit parmi celles-ci. Au moins une.</span></div>
+      <fieldset class="control column" aria-labelledby="non-publie-modalites-label">
+        <div class="checks"><label class="check"><input type="checkbox" checked><span>Au cabinet</span></label><label class="check"><input type="checkbox" checked><span>En visio</span></label><label class="check"><input type="checkbox"><span>Par téléphone</span></label></div>
+        
+      </fieldset>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="non-publie-fuseau-label">Fuseau horaire</span><span class="help" id="non-publie-fuseau-help">Les heures des plages sont celles de ce fuseau.</span></div>
+      <div class="control column"><span class="control"><select class="native" aria-labelledby="non-publie-fuseau-label" aria-describedby="non-publie-fuseau-help"><option>America/Montreal</option><option>Europe/Brussels</option><option selected>Europe/Paris</option><option>Europe/Zurich</option></select></span>
+      </div>
+    </div>
+  </div>
+</section>
+  <section class="card stub" aria-labelledby="non-publie-23"><h2 id="non-publie-23">Émotions personnalisées</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="non-publie-18"><h2 id="non-publie-18">Compte et sécurité</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+</div>
+</div>
+</main>
+</div>
+</section>
+<section class="vue" id="modification" aria-label="Vue 5 : Plages modifiées, pas encore enregistrées">
+<p class="mq-legende"><strong>Vue 5 sur 7 · Plages modifiées, pas encore enregistrées</strong> · aucune requête avant « Enregistrer les plages » ; puis PATCH { &quot;booking.windows&quot;: […] } et relecture</p>
+<header class="app-bar">
+  <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
+  <span class="section" aria-current="location"><span aria-hidden="true">·</span> Mon compte</span>
+  <div class="spacer"></div>
+  <form class="search" role="search"><label class="sr-only" for="app-bar-search-modification">Rechercher</label><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="app-bar-search-modification" type="search" placeholder="Rechercher un patient" autocomplete="off"><kbd aria-hidden="true">/</kbd></form>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <button type="button" class="avatar" aria-haspopup="menu"><span aria-hidden="true">CM</span><span class="sr-only">Claire Martin, menu du compte</span></button>
+</header>
+<div class="shell">
+<nav class="nav-rail" aria-label="Navigation"><ul>
+  <li><a href="#" aria-label="Patients" title="Patients"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-4 3-6 6.5-6s6 2 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.5 0 4.2 1.5 4.7 4.5"/></svg></a></li>
+  <li><a href="#" aria-label="Agenda" title="Agenda"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></a></li>
+  <li><span class="tile" role="link" aria-disabled="true" aria-label="Facture, à réaliser" title="Facture, à réaliser"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></svg></span></li>
+</ul></nav>
+<main>
+<div class="account">
+<nav class="account-nav" aria-label="Mon compte">
+  <p class="who"><strong>Claire Martin</strong><span>Psychologue · Lyon</span></p>
+  <ul>
+    <li><a href="#"><span>Profil public</span><span class="pill success">publié</span></a></li>
+    <li><a href="#" aria-current="page"><span>Préférences</span></a></li>
+    <li><a href="#"><span>Émotions personnalisées</span></a></li>
+    <li><a href="#"><span>Dossier professionnel</span><span class="pill success">approuvé</span></a></li>
+    <li><a href="#"><span>Compte et sécurité</span></a></li>
+    <li><a href="#"><span>Données et export</span></a></li>
+  </ul>
+</nav>
+<div class="content">
+  <header class="page-header">
+    <h1>Préférences</h1>
+    <p class="intro">Mémorisées sur votre compte : vous les retrouvez sur tous vos appareils. Chaque changement est enregistré immédiatement.</p>
+    <p class="saved"><span role="status">Enregistré</span> · il y a 12 s</p>
+  </header>
+  <section class="card stub" aria-labelledby="modification-9"><h2 id="modification-9">Affichage</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="modification-21"><h2 id="modification-21">Vocabulaire et saisie</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card" aria-labelledby="modification-titre">
+  <div class="card-header">
+    <h2 id="modification-titre">Prise de rendez-vous en ligne</h2>
+    <a href="#">Voir ma page de rendez-vous<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr-only"> (nouvel onglet)</span></a>
+  </div>
+  <p class="section-status" role="status">Proposée sur votre fiche publique.</p>
+  
+  <div class="rows">
+    <div class="row">
+      <div class="row-text"><span class="label" id="modification-activation-label">Activation</span><span class="help" id="modification-activation-help">Ajoute le bouton « Prendre rendez-vous » à votre fiche publique.</span></div>
+      <div class="control column"><label class="switch"><input type="checkbox" role="switch" checked aria-describedby="modification-activation-help"><span class="track" aria-hidden="true"></span><span>Proposer la prise de rendez-vous en ligne</span></label></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="modification-mode-label">Confirmation des demandes</span><span class="help">Le mode est annoncé au demandeur avant l'envoi.</span></div>
+      <fieldset class="control column" aria-labelledby="modification-mode-label">
+        <div class="options">
+          <label class="option"><input type="radio" name="modification-mode" aria-describedby="modification-mode-manual"><span class="text"><strong>Je valide chaque demande</strong><span id="modification-mode-manual">Chaque demande attend votre réponse dans l'agenda. Sans réponse sous 72 h, elle est annulée et le demandeur est prévenu.</span></span></label>
+          <label class="option"><input type="radio" name="modification-mode" checked aria-describedby="modification-mode-auto"><span class="text"><strong>Acceptation automatique dans mes plages</strong><span id="modification-mode-auto">Le rendez-vous est confirmé dès que le demandeur a validé son adresse e-mail.</span></span></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="row full">
+      <div class="row-text" style="grid-column:1/-1"><span class="label">Plages ouvertes</span><span class="help">Les créneaux proposés sont découpés dans ces plages, à partir de leur début. Les plages s'enregistrent avec leur bouton ; les autres réglages, dès que vous les changez.</span></div>
+      <div class="control column"><div class="editor">
+      <div class="wd-day" role="group" aria-labelledby="modification-jour-0">
+        <h3 id="modification-jour-0">Lundi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="modification-debut-0-0">Début de la plage 1 du lundi</label>
+              <input class="native time" id="modification-debut-0-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="modification-fin-0-0">Fin de la plage 1 du lundi</label>
+              <input class="native time" id="modification-fin-0-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du lundi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="modification-debut-0-1">Début de la plage 2 du lundi</label>
+              <input class="native time" id="modification-debut-0-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="modification-fin-0-1">Fin de la plage 2 du lundi</label>
+              <input class="native time" id="modification-fin-0-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du lundi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="modification-jour-1">
+        <h3 id="modification-jour-1">Mardi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="modification-debut-1-0">Début de la plage 1 du mardi</label>
+              <input class="native time" id="modification-debut-1-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="modification-fin-1-0">Fin de la plage 1 du mardi</label>
+              <input class="native time" id="modification-fin-1-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mardi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="modification-debut-1-1">Début de la plage 2 du mardi</label>
+              <input class="native time" id="modification-debut-1-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="modification-fin-1-1">Fin de la plage 2 du mardi</label>
+              <input class="native time" id="modification-fin-1-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mardi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="modification-jour-2">
+        <h3 id="modification-jour-2">Mercredi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="modification-debut-2-0">Début de la plage 1 du mercredi</label>
+              <input class="native time" id="modification-debut-2-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="modification-fin-2-0">Fin de la plage 1 du mercredi</label>
+              <input class="native time" id="modification-fin-2-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mercredi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="modification-debut-2-1">Début de la plage 2 du mercredi</label>
+              <input class="native time" id="modification-debut-2-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="modification-fin-2-1">Fin de la plage 2 du mercredi</label>
+              <input class="native time" id="modification-fin-2-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mercredi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="modification-jour-3">
+        <h3 id="modification-jour-3">Jeudi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="modification-debut-3-0">Début de la plage 1 du jeudi</label>
+              <input class="native time" id="modification-debut-3-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="modification-fin-3-0">Fin de la plage 1 du jeudi</label>
+              <input class="native time" id="modification-fin-3-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du jeudi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="modification-debut-3-1">Début de la plage 2 du jeudi</label>
+              <input class="native time" id="modification-debut-3-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="modification-fin-3-1">Fin de la plage 2 du jeudi</label>
+              <input class="native time" id="modification-fin-3-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du jeudi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="modification-jour-4">
+        <h3 id="modification-jour-4">Vendredi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="modification-debut-4-0">Début de la plage 1 du vendredi</label>
+              <input class="native time" id="modification-debut-4-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="modification-fin-4-0">Fin de la plage 1 du vendredi</label>
+              <input class="native time" id="modification-fin-4-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du vendredi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="modification-debut-4-1">Début de la plage 2 du vendredi</label>
+              <input class="native time" id="modification-debut-4-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="modification-fin-4-1">Fin de la plage 2 du vendredi</label>
+              <input class="native time" id="modification-fin-4-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du vendredi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="modification-jour-5">
+        <h3 id="modification-jour-5">Samedi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="modification-debut-5-0">Début de la plage 1 du samedi</label>
+              <input class="native time" id="modification-debut-5-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="modification-fin-5-0">Fin de la plage 1 du samedi</label>
+              <input class="native time" id="modification-fin-5-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du samedi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="modification-jour-6">
+        <h3 id="modification-jour-6">Dimanche</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+      <div class="wd-foot">
+        <span class="count">11 plages sur 21</span>
+        <span class="buttons">
+          <span class="saved-flag" role="status">Modifications non enregistrées</span><button type="button" class="btn">Annuler les modifications</button>
+          <button type="button" class="btn primary">Enregistrer les plages</button>
+        </span>
+      </div>
+    </div>
+    
+    </div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="modification-duree-label">Durée d'un créneau</span><span class="help" id="modification-duree-help">De 15 à 180 minutes, par pas de 5.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="60" aria-labelledby="modification-duree-label" aria-describedby="modification-duree-help">
+        <span class="unit">min</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="modification-delai-label">Délai minimal</span><span class="help" id="modification-delai-help">Temps entre la demande et le début du créneau, de 1 à 168 heures.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="24" aria-labelledby="modification-delai-label" aria-describedby="modification-delai-help">
+        <span class="unit">h</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="modification-horizon-label">Horizon</span><span class="help" id="modification-horizon-help">Aucun créneau n'est proposé au-delà, de 7 à 90 jours.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="28" aria-labelledby="modification-horizon-label" aria-describedby="modification-horizon-help">
+        <span class="unit">jours</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="modification-modalites-label">Modalités proposées</span><span class="help">Le demandeur choisit parmi celles-ci. Au moins une.</span></div>
+      <fieldset class="control column" aria-labelledby="modification-modalites-label">
+        <div class="checks"><label class="check"><input type="checkbox" checked><span>Au cabinet</span></label><label class="check"><input type="checkbox" checked><span>En visio</span></label><label class="check"><input type="checkbox"><span>Par téléphone</span></label></div>
+        
+      </fieldset>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="modification-fuseau-label">Fuseau horaire</span><span class="help" id="modification-fuseau-help">Les heures des plages sont celles de ce fuseau.</span></div>
+      <div class="control column"><span class="control"><select class="native" aria-labelledby="modification-fuseau-label" aria-describedby="modification-fuseau-help"><option>America/Montreal</option><option>Europe/Brussels</option><option selected>Europe/Paris</option><option>Europe/Zurich</option></select></span>
+      </div>
+    </div>
+  </div>
+</section>
+  <section class="card stub" aria-labelledby="modification-23"><h2 id="modification-23">Émotions personnalisées</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="modification-18"><h2 id="modification-18">Compte et sécurité</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+</div>
+</div>
+</main>
+</div>
+</section>
+<section class="vue" id="erreurs" aria-label="Vue 6 : Erreurs de forme (aucune requête)">
+<p class="mq-legende"><strong>Vue 6 sur 7 · Erreurs de forme (aucune requête)</strong> · fin avant début, chevauchement, format, bornes, aucune modalité</p>
+<header class="app-bar">
+  <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
+  <span class="section" aria-current="location"><span aria-hidden="true">·</span> Mon compte</span>
+  <div class="spacer"></div>
+  <form class="search" role="search"><label class="sr-only" for="app-bar-search-erreurs">Rechercher</label><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="app-bar-search-erreurs" type="search" placeholder="Rechercher un patient" autocomplete="off"><kbd aria-hidden="true">/</kbd></form>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <button type="button" class="avatar" aria-haspopup="menu"><span aria-hidden="true">CM</span><span class="sr-only">Claire Martin, menu du compte</span></button>
+</header>
+<div class="shell">
+<nav class="nav-rail" aria-label="Navigation"><ul>
+  <li><a href="#" aria-label="Patients" title="Patients"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-4 3-6 6.5-6s6 2 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.5 0 4.2 1.5 4.7 4.5"/></svg></a></li>
+  <li><a href="#" aria-label="Agenda" title="Agenda"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></a></li>
+  <li><span class="tile" role="link" aria-disabled="true" aria-label="Facture, à réaliser" title="Facture, à réaliser"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></svg></span></li>
+</ul></nav>
+<main>
+<div class="account">
+<nav class="account-nav" aria-label="Mon compte">
+  <p class="who"><strong>Claire Martin</strong><span>Psychologue · Lyon</span></p>
+  <ul>
+    <li><a href="#"><span>Profil public</span><span class="pill success">publié</span></a></li>
+    <li><a href="#" aria-current="page"><span>Préférences</span></a></li>
+    <li><a href="#"><span>Émotions personnalisées</span></a></li>
+    <li><a href="#"><span>Dossier professionnel</span><span class="pill success">approuvé</span></a></li>
+    <li><a href="#"><span>Compte et sécurité</span></a></li>
+    <li><a href="#"><span>Données et export</span></a></li>
+  </ul>
+</nav>
+<div class="content">
+  <header class="page-header">
+    <h1>Préférences</h1>
+    <p class="intro">Mémorisées sur votre compte : vous les retrouvez sur tous vos appareils. Chaque changement est enregistré immédiatement.</p>
+    <p class="saved"><span role="status">Enregistré</span> · il y a 12 s</p>
+  </header>
+  <section class="card stub" aria-labelledby="erreurs-9"><h2 id="erreurs-9">Affichage</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="erreurs-21"><h2 id="erreurs-21">Vocabulaire et saisie</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card" aria-labelledby="erreurs-titre">
+  <div class="card-header">
+    <h2 id="erreurs-titre">Prise de rendez-vous en ligne</h2>
+    <a href="#">Voir ma page de rendez-vous<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr-only"> (nouvel onglet)</span></a>
+  </div>
+  <p class="section-status" role="status">Proposée sur votre fiche publique.</p>
+  
+  <div class="rows">
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreurs-activation-label">Activation</span><span class="help" id="erreurs-activation-help">Ajoute le bouton « Prendre rendez-vous » à votre fiche publique.</span></div>
+      <div class="control column"><label class="switch"><input type="checkbox" role="switch" checked aria-describedby="erreurs-activation-help"><span class="track" aria-hidden="true"></span><span>Proposer la prise de rendez-vous en ligne</span></label></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreurs-mode-label">Confirmation des demandes</span><span class="help">Le mode est annoncé au demandeur avant l'envoi.</span></div>
+      <fieldset class="control column" aria-labelledby="erreurs-mode-label">
+        <div class="options">
+          <label class="option"><input type="radio" name="erreurs-mode" checked aria-describedby="erreurs-mode-manual"><span class="text"><strong>Je valide chaque demande</strong><span id="erreurs-mode-manual">Chaque demande attend votre réponse dans l'agenda. Sans réponse sous 72 h, elle est annulée et le demandeur est prévenu.</span></span></label>
+          <label class="option"><input type="radio" name="erreurs-mode" aria-describedby="erreurs-mode-auto"><span class="text"><strong>Acceptation automatique dans mes plages</strong><span id="erreurs-mode-auto">Le rendez-vous est confirmé dès que le demandeur a validé son adresse e-mail.</span></span></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="row full">
+      <div class="row-text" style="grid-column:1/-1"><span class="label">Plages ouvertes</span><span class="help">Les créneaux proposés sont découpés dans ces plages, à partir de leur début. Les plages s'enregistrent avec leur bouton ; les autres réglages, dès que vous les changez.</span></div>
+      <div class="control column"><div class="editor">
+      <div class="wd-day" role="group" aria-labelledby="erreurs-jour-0">
+        <h3 id="erreurs-jour-0">Lundi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreurs-debut-0-0">Début de la plage 1 du lundi</label>
+              <input class="native time" id="erreurs-debut-0-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreurs-fin-0-0">Fin de la plage 1 du lundi</label>
+              <input class="native time" id="erreurs-fin-0-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du lundi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreurs-debut-0-1">Début de la plage 2 du lundi</label>
+              <input class="native time" id="erreurs-debut-0-1" type="text" inputmode="numeric" maxlength="5" value="14:00" aria-invalid="true" aria-describedby="erreurs-plage-0-1-erreur">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreurs-fin-0-1">Fin de la plage 2 du lundi</label>
+              <input class="native time" id="erreurs-fin-0-1" type="text" inputmode="numeric" maxlength="5" value="12:00" aria-invalid="true" aria-describedby="erreurs-plage-0-1-erreur">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du lundi, 14:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            <p class="error" id="erreurs-plage-0-1-erreur" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>La fin doit être après le début.</span></p>
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="erreurs-jour-1">
+        <h3 id="erreurs-jour-1">Mardi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreurs-debut-1-0">Début de la plage 1 du mardi</label>
+              <input class="native time" id="erreurs-debut-1-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreurs-fin-1-0">Fin de la plage 1 du mardi</label>
+              <input class="native time" id="erreurs-fin-1-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mardi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreurs-debut-1-1">Début de la plage 2 du mardi</label>
+              <input class="native time" id="erreurs-debut-1-1" type="text" inputmode="numeric" maxlength="5" value="11:00" aria-invalid="true" aria-describedby="erreurs-plage-1-1-erreur">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreurs-fin-1-1">Fin de la plage 2 du mardi</label>
+              <input class="native time" id="erreurs-fin-1-1" type="text" inputmode="numeric" maxlength="5" value="13:00" aria-invalid="true" aria-describedby="erreurs-plage-1-1-erreur">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mardi, 11:00 à 13:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            <p class="error" id="erreurs-plage-1-1-erreur" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>Cette plage chevauche une autre plage du même jour.</span></p>
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="erreurs-jour-2">
+        <h3 id="erreurs-jour-2">Mercredi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreurs-debut-2-0">Début de la plage 1 du mercredi</label>
+              <input class="native time" id="erreurs-debut-2-0" type="text" inputmode="numeric" maxlength="5" value="9h" aria-invalid="true" aria-describedby="erreurs-plage-2-0-erreur">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreurs-fin-2-0">Fin de la plage 1 du mercredi</label>
+              <input class="native time" id="erreurs-fin-2-0" type="text" inputmode="numeric" maxlength="5" value="12:00" aria-invalid="true" aria-describedby="erreurs-plage-2-0-erreur">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mercredi, 9h à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            <p class="error" id="erreurs-plage-2-0-erreur" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>Heure attendue au format HH:MM, minutes de 5 en 5.</span></p>
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreurs-debut-2-1">Début de la plage 2 du mercredi</label>
+              <input class="native time" id="erreurs-debut-2-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreurs-fin-2-1">Fin de la plage 2 du mercredi</label>
+              <input class="native time" id="erreurs-fin-2-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mercredi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="erreurs-jour-3">
+        <h3 id="erreurs-jour-3">Jeudi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreurs-debut-3-0">Début de la plage 1 du jeudi</label>
+              <input class="native time" id="erreurs-debut-3-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreurs-fin-3-0">Fin de la plage 1 du jeudi</label>
+              <input class="native time" id="erreurs-fin-3-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du jeudi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreurs-debut-3-1">Début de la plage 2 du jeudi</label>
+              <input class="native time" id="erreurs-debut-3-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreurs-fin-3-1">Fin de la plage 2 du jeudi</label>
+              <input class="native time" id="erreurs-fin-3-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du jeudi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="erreurs-jour-4">
+        <h3 id="erreurs-jour-4">Vendredi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreurs-debut-4-0">Début de la plage 1 du vendredi</label>
+              <input class="native time" id="erreurs-debut-4-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreurs-fin-4-0">Fin de la plage 1 du vendredi</label>
+              <input class="native time" id="erreurs-fin-4-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du vendredi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreurs-debut-4-1">Début de la plage 2 du vendredi</label>
+              <input class="native time" id="erreurs-debut-4-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreurs-fin-4-1">Fin de la plage 2 du vendredi</label>
+              <input class="native time" id="erreurs-fin-4-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du vendredi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="erreurs-jour-5">
+        <h3 id="erreurs-jour-5">Samedi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="erreurs-jour-6">
+        <h3 id="erreurs-jour-6">Dimanche</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+      <div class="wd-foot">
+        <span class="count">10 plages sur 21</span>
+        <span class="buttons">
+          <span class="saved-flag" role="status">Modifications non enregistrées</span><button type="button" class="btn">Annuler les modifications</button>
+          <button type="button" class="btn primary" disabled>Enregistrer les plages</button>
+        </span>
+      </div>
+    </div>
+    
+    </div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreurs-duree-label">Durée d'un créneau</span><span class="help" id="erreurs-duree-help">De 15 à 180 minutes, par pas de 5.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="10" aria-labelledby="erreurs-duree-label" aria-describedby="erreurs-duree-help erreurs-duree-erreur" aria-invalid="true">
+        <span class="unit">min</span>
+      </span><p class="error" id="erreurs-duree-erreur" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>Entre 15 et 180, par pas de 5.</span></p></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreurs-delai-label">Délai minimal</span><span class="help" id="erreurs-delai-help">Temps entre la demande et le début du créneau, de 1 à 168 heures.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="0" aria-labelledby="erreurs-delai-label" aria-describedby="erreurs-delai-help erreurs-delai-erreur" aria-invalid="true">
+        <span class="unit">h</span>
+      </span><p class="error" id="erreurs-delai-erreur" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>Entre 1 et 168.</span></p></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreurs-horizon-label">Horizon</span><span class="help" id="erreurs-horizon-help">Aucun créneau n'est proposé au-delà, de 7 à 90 jours.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="91" aria-labelledby="erreurs-horizon-label" aria-describedby="erreurs-horizon-help erreurs-horizon-erreur" aria-invalid="true">
+        <span class="unit">jours</span>
+      </span><p class="error" id="erreurs-horizon-erreur" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>Entre 7 et 90.</span></p></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreurs-modalites-label">Modalités proposées</span><span class="help">Le demandeur choisit parmi celles-ci. Au moins une.</span></div>
+      <fieldset class="control column" aria-labelledby="erreurs-modalites-label" aria-describedby="erreurs-modalites-erreur">
+        <div class="checks"><label class="check"><input type="checkbox"><span>Au cabinet</span></label><label class="check"><input type="checkbox"><span>En visio</span></label><label class="check"><input type="checkbox"><span>Par téléphone</span></label></div>
+        <p class="error" id="erreurs-modalites-erreur" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>Gardez au moins une modalité.</span></p>
+      </fieldset>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreurs-fuseau-label">Fuseau horaire</span><span class="help" id="erreurs-fuseau-help">Les heures des plages sont celles de ce fuseau.</span></div>
+      <div class="control column"><span class="control"><select class="native" aria-labelledby="erreurs-fuseau-label" aria-describedby="erreurs-fuseau-help"><option>America/Montreal</option><option>Europe/Brussels</option><option selected>Europe/Paris</option><option>Europe/Zurich</option></select></span>
+      </div>
+    </div>
+  </div>
+</section>
+  <section class="card stub" aria-labelledby="erreurs-23"><h2 id="erreurs-23">Émotions personnalisées</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="erreurs-18"><h2 id="erreurs-18">Compte et sécurité</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+</div>
+</div>
+</main>
+</div>
+</section>
+<section class="vue" id="erreur-serveur" aria-label="Vue 7 : Refus du serveur">
+<p class="mq-legende"><strong>Vue 7 sur 7 · Refus du serveur</strong> · PATCH /api/me/preferences → 422 VALIDATION_FAILED, errors[].field = booking.windows (message du serveur)</p>
+<header class="app-bar">
+  <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
+  <span class="section" aria-current="location"><span aria-hidden="true">·</span> Mon compte</span>
+  <div class="spacer"></div>
+  <form class="search" role="search"><label class="sr-only" for="app-bar-search-erreur-serveur">Rechercher</label><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="app-bar-search-erreur-serveur" type="search" placeholder="Rechercher un patient" autocomplete="off"><kbd aria-hidden="true">/</kbd></form>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <button type="button" class="avatar" aria-haspopup="menu"><span aria-hidden="true">CM</span><span class="sr-only">Claire Martin, menu du compte</span></button>
+</header>
+<div class="shell">
+<nav class="nav-rail" aria-label="Navigation"><ul>
+  <li><a href="#" aria-label="Patients" title="Patients"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-4 3-6 6.5-6s6 2 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.5 0 4.2 1.5 4.7 4.5"/></svg></a></li>
+  <li><a href="#" aria-label="Agenda" title="Agenda"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></a></li>
+  <li><span class="tile" role="link" aria-disabled="true" aria-label="Facture, à réaliser" title="Facture, à réaliser"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></svg></span></li>
+</ul></nav>
+<main>
+<div class="account">
+<nav class="account-nav" aria-label="Mon compte">
+  <p class="who"><strong>Claire Martin</strong><span>Psychologue · Lyon</span></p>
+  <ul>
+    <li><a href="#"><span>Profil public</span><span class="pill success">publié</span></a></li>
+    <li><a href="#" aria-current="page"><span>Préférences</span></a></li>
+    <li><a href="#"><span>Émotions personnalisées</span></a></li>
+    <li><a href="#"><span>Dossier professionnel</span><span class="pill success">approuvé</span></a></li>
+    <li><a href="#"><span>Compte et sécurité</span></a></li>
+    <li><a href="#"><span>Données et export</span></a></li>
+  </ul>
+</nav>
+<div class="content">
+  <header class="page-header">
+    <h1>Préférences</h1>
+    <p class="intro">Mémorisées sur votre compte : vous les retrouvez sur tous vos appareils. Chaque changement est enregistré immédiatement.</p>
+    <p class="saved"><span role="status">Enregistré</span> · il y a 12 s</p>
+  </header>
+  <section class="card stub" aria-labelledby="erreur-serveur-9"><h2 id="erreur-serveur-9">Affichage</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="erreur-serveur-21"><h2 id="erreur-serveur-21">Vocabulaire et saisie</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card" aria-labelledby="erreur-serveur-titre">
+  <div class="card-header">
+    <h2 id="erreur-serveur-titre">Prise de rendez-vous en ligne</h2>
+    <a href="#">Voir ma page de rendez-vous<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr-only"> (nouvel onglet)</span></a>
+  </div>
+  <p class="section-status" role="status">Proposée sur votre fiche publique.</p>
+  
+  <div class="rows">
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreur-serveur-activation-label">Activation</span><span class="help" id="erreur-serveur-activation-help">Ajoute le bouton « Prendre rendez-vous » à votre fiche publique.</span></div>
+      <div class="control column"><label class="switch"><input type="checkbox" role="switch" checked aria-describedby="erreur-serveur-activation-help"><span class="track" aria-hidden="true"></span><span>Proposer la prise de rendez-vous en ligne</span></label></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreur-serveur-mode-label">Confirmation des demandes</span><span class="help">Le mode est annoncé au demandeur avant l'envoi.</span></div>
+      <fieldset class="control column" aria-labelledby="erreur-serveur-mode-label">
+        <div class="options">
+          <label class="option"><input type="radio" name="erreur-serveur-mode" checked aria-describedby="erreur-serveur-mode-manual"><span class="text"><strong>Je valide chaque demande</strong><span id="erreur-serveur-mode-manual">Chaque demande attend votre réponse dans l'agenda. Sans réponse sous 72 h, elle est annulée et le demandeur est prévenu.</span></span></label>
+          <label class="option"><input type="radio" name="erreur-serveur-mode" aria-describedby="erreur-serveur-mode-auto"><span class="text"><strong>Acceptation automatique dans mes plages</strong><span id="erreur-serveur-mode-auto">Le rendez-vous est confirmé dès que le demandeur a validé son adresse e-mail.</span></span></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="row full">
+      <div class="row-text" style="grid-column:1/-1"><span class="label">Plages ouvertes</span><span class="help">Les créneaux proposés sont découpés dans ces plages, à partir de leur début. Les plages s'enregistrent avec leur bouton ; les autres réglages, dès que vous les changez.</span></div>
+      <div class="control column"><div class="editor">
+      <div class="wd-day" role="group" aria-labelledby="erreur-serveur-jour-0">
+        <h3 id="erreur-serveur-jour-0">Lundi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreur-serveur-debut-0-0">Début de la plage 1 du lundi</label>
+              <input class="native time" id="erreur-serveur-debut-0-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreur-serveur-fin-0-0">Fin de la plage 1 du lundi</label>
+              <input class="native time" id="erreur-serveur-fin-0-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du lundi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreur-serveur-debut-0-1">Début de la plage 2 du lundi</label>
+              <input class="native time" id="erreur-serveur-debut-0-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreur-serveur-fin-0-1">Fin de la plage 2 du lundi</label>
+              <input class="native time" id="erreur-serveur-fin-0-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du lundi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="erreur-serveur-jour-1">
+        <h3 id="erreur-serveur-jour-1">Mardi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreur-serveur-debut-1-0">Début de la plage 1 du mardi</label>
+              <input class="native time" id="erreur-serveur-debut-1-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreur-serveur-fin-1-0">Fin de la plage 1 du mardi</label>
+              <input class="native time" id="erreur-serveur-fin-1-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mardi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreur-serveur-debut-1-1">Début de la plage 2 du mardi</label>
+              <input class="native time" id="erreur-serveur-debut-1-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreur-serveur-fin-1-1">Fin de la plage 2 du mardi</label>
+              <input class="native time" id="erreur-serveur-fin-1-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mardi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="erreur-serveur-jour-2">
+        <h3 id="erreur-serveur-jour-2">Mercredi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreur-serveur-debut-2-0">Début de la plage 1 du mercredi</label>
+              <input class="native time" id="erreur-serveur-debut-2-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreur-serveur-fin-2-0">Fin de la plage 1 du mercredi</label>
+              <input class="native time" id="erreur-serveur-fin-2-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mercredi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreur-serveur-debut-2-1">Début de la plage 2 du mercredi</label>
+              <input class="native time" id="erreur-serveur-debut-2-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreur-serveur-fin-2-1">Fin de la plage 2 du mercredi</label>
+              <input class="native time" id="erreur-serveur-fin-2-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mercredi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="erreur-serveur-jour-3">
+        <h3 id="erreur-serveur-jour-3">Jeudi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreur-serveur-debut-3-0">Début de la plage 1 du jeudi</label>
+              <input class="native time" id="erreur-serveur-debut-3-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreur-serveur-fin-3-0">Fin de la plage 1 du jeudi</label>
+              <input class="native time" id="erreur-serveur-fin-3-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du jeudi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreur-serveur-debut-3-1">Début de la plage 2 du jeudi</label>
+              <input class="native time" id="erreur-serveur-debut-3-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreur-serveur-fin-3-1">Fin de la plage 2 du jeudi</label>
+              <input class="native time" id="erreur-serveur-fin-3-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du jeudi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="erreur-serveur-jour-4">
+        <h3 id="erreur-serveur-jour-4">Vendredi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreur-serveur-debut-4-0">Début de la plage 1 du vendredi</label>
+              <input class="native time" id="erreur-serveur-debut-4-0" type="text" inputmode="numeric" maxlength="5" value="09:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreur-serveur-fin-4-0">Fin de la plage 1 du vendredi</label>
+              <input class="native time" id="erreur-serveur-fin-4-0" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du vendredi, 09:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="erreur-serveur-debut-4-1">Début de la plage 2 du vendredi</label>
+              <input class="native time" id="erreur-serveur-debut-4-1" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="erreur-serveur-fin-4-1">Fin de la plage 2 du vendredi</label>
+              <input class="native time" id="erreur-serveur-fin-4-1" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du vendredi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="erreur-serveur-jour-5">
+        <h3 id="erreur-serveur-jour-5">Samedi</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="erreur-serveur-jour-6">
+        <h3 id="erreur-serveur-jour-6">Dimanche</h3>
+        <div class="wd-body">
+          <p class="wd-none">Aucune plage</p>
+          <button type="button" class="btn text wd-add"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+      <div class="wd-foot">
+        <span class="count">10 plages sur 21</span>
+        <span class="buttons">
+          <span class="saved-flag" role="status">Modifications non enregistrées</span><button type="button" class="btn">Annuler les modifications</button>
+          <button type="button" class="btn primary">Enregistrer les plages</button>
+        </span>
+      </div>
+    </div>
+    <p class="error" id="erreur-serveur-plages-erreur" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>Plages invalides : deux plages du même jour se chevauchent.</span></p>
+    </div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreur-serveur-duree-label">Durée d'un créneau</span><span class="help" id="erreur-serveur-duree-help">De 15 à 180 minutes, par pas de 5.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="60" aria-labelledby="erreur-serveur-duree-label" aria-describedby="erreur-serveur-duree-help">
+        <span class="unit">min</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreur-serveur-delai-label">Délai minimal</span><span class="help" id="erreur-serveur-delai-help">Temps entre la demande et le début du créneau, de 1 à 168 heures.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="24" aria-labelledby="erreur-serveur-delai-label" aria-describedby="erreur-serveur-delai-help">
+        <span class="unit">h</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreur-serveur-horizon-label">Horizon</span><span class="help" id="erreur-serveur-horizon-help">Aucun créneau n'est proposé au-delà, de 7 à 90 jours.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="28" aria-labelledby="erreur-serveur-horizon-label" aria-describedby="erreur-serveur-horizon-help">
+        <span class="unit">jours</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreur-serveur-modalites-label">Modalités proposées</span><span class="help">Le demandeur choisit parmi celles-ci. Au moins une.</span></div>
+      <fieldset class="control column" aria-labelledby="erreur-serveur-modalites-label">
+        <div class="checks"><label class="check"><input type="checkbox" checked><span>Au cabinet</span></label><label class="check"><input type="checkbox" checked><span>En visio</span></label><label class="check"><input type="checkbox"><span>Par téléphone</span></label></div>
+        
+      </fieldset>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="erreur-serveur-fuseau-label">Fuseau horaire</span><span class="help" id="erreur-serveur-fuseau-help">Les heures des plages sont celles de ce fuseau.</span></div>
+      <div class="control column"><span class="control"><select class="native" aria-labelledby="erreur-serveur-fuseau-label" aria-describedby="erreur-serveur-fuseau-help"><option>America/Montreal</option><option>Europe/Brussels</option><option selected>Europe/Paris</option><option>Europe/Zurich</option></select></span>
+      </div>
+    </div>
+  </div>
+</section>
+  <section class="card stub" aria-labelledby="erreur-serveur-23"><h2 id="erreur-serveur-23">Émotions personnalisées</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="erreur-serveur-18"><h2 id="erreur-serveur-18">Compte et sécurité</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+</div>
+</div>
+</main>
+</div>
+</section>
+<script>
+(function () {
+  var root = document.documentElement;
+  var vues = Array.prototype.slice.call(document.querySelectorAll('.vue'));
+  var select = document.getElementById('mq-vue');
+  var themeButtons = Array.prototype.slice.call(document.querySelectorAll('[data-mq-theme]'));
+  function show(id) {
+    var all = id === 'toutes';
+    vues.forEach(function (vue) { vue.hidden = !(all || vue.id === id); });
+    select.value = id;
+    window.scrollTo(0, 0);
+  }
+  function fromHash() {
+    var id = decodeURIComponent(location.hash.replace(/^#(vue=)?/, ''));
+    if (id !== 'toutes' && !document.getElementById(id)) id = vues[0].id;
+    show(id);
+  }
+  function setTheme(theme) {
+    if (theme === 'light' || theme === 'dark') root.setAttribute('data-theme', theme);
+    else root.removeAttribute('data-theme');
+    themeButtons.forEach(function (button) {
+      button.setAttribute('aria-pressed', String(button.getAttribute('data-mq-theme') === (theme || 'system')));
+    });
+  }
+  select.addEventListener('change', function () { location.hash = 'vue=' + select.value; });
+  document.getElementById('mq-prev').addEventListener('click', function () { step(-1); });
+  document.getElementById('mq-next').addEventListener('click', function () { step(1); });
+  function step(delta) {
+    var index = Math.max(0, vues.findIndex(function (vue) { return vue.id === select.value; }));
+    location.hash = 'vue=' + vues[(index + delta + vues.length) % vues.length].id;
+  }
+  themeButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      var theme = button.getAttribute('data-mq-theme');
+      setTheme(theme === 'system' ? '' : theme);
+    });
+  });
+  window.addEventListener('hashchange', fromHash);
+  var asked = /[?&]theme=(light|dark)/.exec(location.search);
+  setTheme(asked ? asked[1] : '');
+  fromHash();
+})();
+</script>
+</body>
+</html>

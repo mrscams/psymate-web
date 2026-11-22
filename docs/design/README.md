@@ -8,6 +8,8 @@ Mis à jour le 15 novembre 2026 : l'agenda (fiches 15, 15b) entre en V1 (G Q25 a
 
 Mis à jour le 18 novembre 2026 : fiche 30 « Profil 360 » (quatrième onglet du dossier, feature `profile360`, API jalon M13 de psymate-api, contrat `contract-v0.14.0`) ; décisions G Q52 à Q57, plan `docs/J-plan-profil-360-web.md`.
 
+Mis à jour le 22 novembre 2026 (M14-09) : prise de rendez-vous en ligne (jalon M14, G Q60 à Q66, plan `docs/K-plan-prise-de-rendez-vous.md`, contrat `contract-v0.15.0`) : fiches 31 et 32 avec leurs maquettes, sections « M14 » des fiches 09, 14 et 15, et deux maquettes de complément dans `propositions-2026-11/`. Ces quatre maquettes sont dessinées avec l'habillage Fluent 2 (valeurs embarquées dans chaque fichier, thèmes clair et sombre, sans police ni ressource externe) et montrent une vue par état : la barre sombre du haut choisit la vue et le thème, elle ne fait pas partie de l'écran. Captures : `captures-m14-09/`.
+
 Chaque écran est livré en trois fichiers du même nom :
 
 | Fichier | Usage par l'agent |
@@ -65,6 +67,14 @@ Ajouté le 18 novembre 2026 (maquette `.html` validée par l'utilisateur, `.png`
 |---|---|---|---|---|
 | 30 | Profil 360 (quatrième onglet du dossier, touche `4` ; panneau « Ajouter au profil ») | — | `patients` (psymate-api M13, `contract-v0.14.0`, routes `/api/patients/{id}/profile-items`) | `profile360` (M13-04 à M13-07, C11) |
 
+Ajoutés le 22 novembre 2026 (M14-09 ; maquettes `.html` en Fluent 2, publiées avec la PR : l'utilisateur peut les corriger après coup, les tâches d'écran les suivent à la lettre) :
+
+| N° | Écran | Doc B | Module(s) backend | Feature Angular |
+|---|---|---|---|---|
+| 31 | Prise de rendez-vous publique (créneaux, coordonnées, « Consultez votre boîte mail ») | — | `agenda` (psymate-api M14, `contract-v0.15.0`, routes `/api/public/booking/practitioners/…`) | `public` (M14-12, C12) |
+| 32 | Rendez-vous par lien (vérification de l'e-mail, gestion et annulation) | — | `agenda` (M14, routes `/api/public/booking/requests/verify`, `/manage`, `/manage/cancel`) | `public` (M14-13, C12) |
+| 09, 14, 15 | Compléments M14 : bouton « Prendre rendez-vous » (09) ; section « Prise de rendez-vous en ligne » des préférences (14, maquette `propositions-2026-11/14-preferences-prise-de-rendez-vous.html`) ; demandes en ligne dans l'agenda (15, maquette `propositions-2026-11/15-agenda-demandes-en-ligne.html`) | — | `agenda`, `identity` (préférences `booking.*`) | `public` (M14-12), `account` (M14-11), `agenda` (M14-14, M14-15) |
+
 Encore à faire : déclinaison mobile (après V1). Les sept fiches du 2 novembre n'ont pas de `.png` (la maquette `.html` suffit). Les écarts avec le contrat relevés par ces fiches sont les tâches **M10** de `C-plan.md` C9. Les anciens canevas de `UI/` (timeline, saisie en séance, annuaire) sont remplacés par 03, 05 et 08.
 
 ## Parcours praticien (décision du 25 oct.)
@@ -72,11 +82,11 @@ Encore à faire : déclinaison mobile (après V1). Les sept fiches du 2 novembre
 
 ## Conventions communes
 - Palette et tokens : `Etude-couleurs-Nordique.md`. Aucune couleur en dur (`eslint no-hardcoded-color`).
-- Éléments partagés : barre d'application ; en-tête patient (01/02/04/07/06/16/30) ; navigation « Mon compte » (10/14/13/17) ; layout public (09/11/12/24/25/26/27) ; barre admin (20/21/22/23) ; panneau latéral `role="dialog"` (06/15b/15/30). À implémenter une fois dans `shared/ui/*`.
+- Éléments partagés : barre d'application ; en-tête patient (01/02/04/07/06/16/30) ; navigation « Mon compte » (10/14/13/17) ; layout public (09/11/12/24/25/26/27/31/32) ; barre admin (20/21/22/23) ; panneau latéral `role="dialog"` (06/15b/15/30). À implémenter une fois dans `shared/ui/*`.
 - Formes par type d'entrée : note rectangle, événement losange, situation barre, ressenti cercle, séance carré arrondi, médicament capsule.
 - Le lavande `#8B7BD6` est réservé aux ressentis ; les couleurs de familles d'émotions servent uniquement aux courbes et pastilles de famille.
 - Préférences par compte (`practitioner.preferences` JSONB) : une seule source de vérité pour les bascules présentes sur plusieurs écrans (`14-preferences-praticien.md`).
-- Textes : français d'abord (G Q23) ; les fichiers de traduction EN peuvent suivre sans bloquer une tâche. Pas de pied de page « numéros d'urgence » sur les pages publiques (G Q20).
+- Textes : français d'abord (G Q23) ; les fichiers de traduction EN peuvent suivre sans bloquer une tâche. Pas de pied de page « numéros d'urgence » sur les pages publiques (G Q20) ; les trois pages de prise de rendez-vous (fiches 31 et 32) portent, dans leur contenu, la mention d'urgence de G Q63.
 - Textes et exemples (Marie D., Claire Moreau, Dr Lenoir…) sont des données de seed fictives ; `[TARIF]`, `[TÉLÉPHONE]`, `[E-MAIL]` sont des champs à renseigner.
 
 ## Prompt type pour un agent frontend

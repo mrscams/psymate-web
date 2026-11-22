@@ -1,0 +1,1098 @@
+<!-- Maquette statique autonome · habillage Fluent 2 (valeurs de docs/design/fluent2.md embarquées, thèmes clair et sombre) · fiche docs/design/32-rendez-vous-par-lien.md · M14-09, 22 novembre 2026. Bandeau et pied : shared/ui/public-layout (fiche 00 §4). Vues c-… : /rendez-vous/confirmer/:token ; vues g-… : /rendez-vous/gerer/:token. Une vue par réponse de l'API ; la barre sombre du haut choisit la vue et le thème et ne fait pas partie de l'écran. -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Votre rendez-vous · PsyMate (maquette 32)</title>
+<style>
+/* ---------- Tokens Fluent 2 (docs/design/fluent2.md), thèmes clair et sombre ---------- */
+:root{
+  color-scheme:light;
+  --surface-ground:#F5F5F5;--surface-raised:#FFFFFF;--surface-sunken:#EBEBEB;
+  --border-subtle:#E0E0E0;--border-strong:#D1D1D1;--border-accessible:#616161;
+  --text-primary:#242424;--text-secondary:#616161;--text-disabled:#8A8A8A;
+  --primary:#0F6CBD;--primary-hover:#115EA3;--primary-tint:#EBF3FC;--primary-on:#FFFFFF;
+  --focus-outer:#000000;--focus-inner:#FFFFFF;--scrim:rgba(0,0,0,.4);
+  --danger:#B10E1C;--danger-bg:#FDF3F4;--warning:#BC4B09;--warning-bg:#FFF9F5;
+  --success:#0E700E;--success-bg:#F1FAF1;--info:#115EA3;--info-bg:#EBF3FC;
+  --entry-session:#038387;--entry-note:#69797E;
+  --shadow-key:rgba(0,0,0,.14);--shadow-ambient:rgba(0,0,0,.12);
+  --admin-bar-bg:#1A1A1A;--admin-bar-text:#FFFFFF;--admin-bar-muted:#ADADAD;--admin-bar-line:#3D3D3D;--admin-focus:#FFFFFF;
+  --radius-sm:2px;--radius-md:4px;--radius-xl:8px;--radius-pill:9999px;
+  --shadow-2:0 0 2px var(--shadow-ambient),0 1px 2px var(--shadow-key);
+  --shadow-8:0 0 2px var(--shadow-ambient),0 4px 8px var(--shadow-key);
+  --shadow-16:0 0 2px var(--shadow-ambient),0 8px 16px var(--shadow-key);
+  --shadow-64:0 0 8px var(--shadow-ambient),0 32px 64px var(--shadow-key);
+  --font-ui:'Segoe UI Variable Text','Segoe UI','Segoe UI Web (West European)',-apple-system,BlinkMacSystemFont,Roboto,'Helvetica Neue',sans-serif;
+  --font-mono:'Cascadia Mono',Consolas,'Courier New',Courier,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --surface-ground:#1F1F1F;--surface-raised:#292929;--surface-sunken:#333333;
+    --border-subtle:#525252;--border-strong:#666666;--border-accessible:#ADADAD;
+    --text-primary:#FFFFFF;--text-secondary:#ADADAD;--text-disabled:#808080;
+    --primary:#479EF5;--primary-hover:#62ABF5;--primary-tint:#082338;--primary-on:#242424;
+    --focus-outer:#FFFFFF;--focus-inner:#000000;--scrim:rgba(0,0,0,.5);
+    --danger:#E37D80;--danger-bg:#3B0509;--warning:#FAA06B;--warning-bg:#4A1E04;
+    --success:#54B054;--success-bg:#052505;--info:#62ABF5;--info-bg:#082338;
+    --entry-session:#4CB4B7;--entry-note:#A0ADB2;
+    --shadow-key:rgba(0,0,0,.28);--shadow-ambient:rgba(0,0,0,.24);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --surface-ground:#1F1F1F;--surface-raised:#292929;--surface-sunken:#333333;
+  --border-subtle:#525252;--border-strong:#666666;--border-accessible:#ADADAD;
+  --text-primary:#FFFFFF;--text-secondary:#ADADAD;--text-disabled:#808080;
+  --primary:#479EF5;--primary-hover:#62ABF5;--primary-tint:#082338;--primary-on:#242424;
+  --focus-outer:#FFFFFF;--focus-inner:#000000;--scrim:rgba(0,0,0,.5);
+  --danger:#E37D80;--danger-bg:#3B0509;--warning:#FAA06B;--warning-bg:#4A1E04;
+  --success:#54B054;--success-bg:#052505;--info:#62ABF5;--info-bg:#082338;
+  --entry-session:#4CB4B7;--entry-note:#A0ADB2;
+  --shadow-key:rgba(0,0,0,.28);--shadow-ambient:rgba(0,0,0,.24);
+}
+
+/* ---------- Base ---------- */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--surface-ground);color:var(--text-primary);font:400 14px/20px var(--font-ui)}
+h1,h2,h3,h4,p,ul,ol,dl,dd,fieldset{margin:0;padding:0}
+ul,ol{list-style:none}
+fieldset{border:0;min-width:0}
+a{color:var(--primary)}
+a:hover{color:var(--primary-hover)}
+button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.mono{font-family:var(--font-mono)}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+:focus-visible{outline:2px solid var(--focus-outer);outline-offset:2px;box-shadow:0 0 0 2px var(--focus-inner)}
+
+/* Boutons Fluent 2 : 32 px, rayon 4, libellé 14 px semi-gras */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:5px 12px;border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--surface-raised);color:var(--text-primary);font:600 14px/20px var(--font-ui);text-decoration:none;cursor:pointer}
+.btn:hover{border-color:var(--border-accessible);color:var(--text-primary)}
+.btn.primary{border-color:var(--primary);background:var(--primary);color:var(--primary-on)}
+.btn.primary:hover{border-color:var(--primary-hover);background:var(--primary-hover);color:var(--primary-on)}
+.btn.danger{border-color:var(--danger);background:var(--danger);color:var(--primary-on)}
+.btn.text{border-color:transparent;background:transparent;color:var(--primary)}
+.btn.large{min-height:40px;padding:9px 16px}
+.btn[disabled],.btn[aria-disabled="true"]{border-color:var(--border-subtle);background:var(--surface-sunken);color:var(--text-secondary);cursor:not-allowed}
+.btn .ic{width:16px;height:16px}
+
+/* Champs : contour, 40 px, rayon 4 */
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label,.field .label{font:600 14px/20px var(--font-ui)}
+.field .optional{font-weight:400;color:var(--text-secondary)}
+.input{width:100%;height:40px;padding:0 12px;border:1px solid var(--border-accessible);border-radius:var(--radius-md);background:var(--surface-raised);color:var(--text-primary)}
+textarea.input{height:auto;padding:8px 12px;resize:vertical}
+.input:hover{border-color:var(--text-primary)}
+.input[aria-invalid="true"]{border-color:var(--danger);border-width:2px}
+.hint{color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+.error{display:flex;gap:6px;align-items:flex-start;color:var(--danger);font:400 12px/16px var(--font-ui)}
+.error .ic{width:14px;height:14px;margin-top:1px}
+
+/* Bandeaux (message bar) : statut porté par le fond, l'icône et le texte */
+.bar{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);color:var(--text-primary)}
+.bar .ic{margin-top:0}
+.bar.info{background:var(--info-bg)}.bar.info>.ic{color:var(--info)}
+.bar.warning{background:var(--warning-bg)}.bar.warning>.ic{color:var(--warning)}
+.bar.danger{background:var(--danger-bg)}.bar.danger>.ic{color:var(--danger)}
+.bar.success{background:var(--success-bg)}.bar.success>.ic{color:var(--success)}
+.bar a{color:var(--text-primary);font-weight:600}
+.bar p+p{margin-top:2px}
+
+.card{border:1px solid var(--border-subtle);border-radius:var(--radius-xl);background:var(--surface-raised);box-shadow:var(--shadow-2)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:var(--radius-pill);font:600 12px/16px var(--font-ui);white-space:nowrap}
+.pill .ic{width:14px;height:14px}
+.pill.info{background:var(--info-bg);color:var(--info)}
+.pill.success{background:var(--success-bg);color:var(--success)}
+.pill.neutral{background:var(--surface-sunken);color:var(--text-primary)}
+.pill.count{min-width:20px;justify-content:center;padding:2px 6px;background:var(--primary);color:var(--primary-on)}
+
+/* Squelettes et états (shared/ui/state) */
+.skel{display:block;height:14px;border-radius:var(--radius-md);background:var(--surface-sunken)}
+.state{display:flex;flex-direction:column;align-items:center;gap:8px;padding:32px 16px;text-align:center}
+.state .ic{width:32px;height:32px;color:var(--text-secondary)}
+.state.error .ic{color:var(--danger)}
+.state h2,.state h3,.state .state-title{font:600 16px/22px var(--font-ui)}
+.state p{max-width:44ch;color:var(--text-secondary)}
+.state .btn{margin-top:8px}
+
+/* ---------- Barre de maquette : hors de l'écran dessiné ---------- */
+.mq-bar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:8px 16px;border-bottom:1px solid var(--admin-bar-line);background:var(--admin-bar-bg);color:var(--admin-bar-text);font:400 12px/16px var(--font-ui)}
+.mq-bar strong{font-weight:600}
+.mq-bar .mq-note{color:var(--admin-bar-muted)}
+.mq-bar label{display:inline-flex;flex:1 1 auto;gap:6px;align-items:center;min-width:0}
+.mq-bar select,.mq-bar button{height:28px;padding:0 8px;border:1px solid var(--admin-bar-muted);border-radius:var(--radius-md);background:var(--admin-bar-bg);color:var(--admin-bar-text);font:600 12px/16px var(--font-ui);cursor:pointer}
+.mq-bar select{width:100%;min-width:0;max-width:320px}
+.mq-bar button[aria-pressed="true"]{background:var(--admin-bar-text);color:var(--admin-bar-bg)}
+.mq-bar :focus-visible{outline-color:var(--admin-focus);box-shadow:none}
+.mq-bar .mq-group{display:inline-flex;gap:4px;align-items:center;min-width:0;max-width:100%}
+.mq-bar .mq-spacer{flex:1 1 0}
+.mq-legende{margin:0;padding:6px 16px;border-bottom:1px solid var(--admin-bar-line);background:var(--admin-bar-bg);color:var(--admin-bar-muted);font:400 12px/16px var(--font-mono)}
+.mq-legende strong{color:var(--admin-bar-text);font-weight:600}
+.mq-note-inline{padding:8px 12px;border:1px dashed var(--border-accessible);border-radius:var(--radius-md);color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+
+/* ---------- Layout public (fiche 00 §4 : bandeau et pied de shared/ui/public-layout) ---------- */
+.public-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 24px;min-height:56px;padding:8px 24px;border-bottom:1px solid var(--border-subtle);background:var(--surface-raised)}
+.brand{display:inline-flex;align-items:baseline;gap:8px;color:var(--text-primary);font:600 16px/22px var(--font-ui);text-decoration:none}
+.brand .logo{align-self:center;width:22px;height:22px;fill:none;stroke:var(--primary);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.brand .tagline{color:var(--text-secondary);font:400 14px/20px var(--font-ui)}
+.public-header .links{display:flex;gap:16px;margin-left:auto}
+.public-header .links a{padding:6px 0;border-bottom:2px solid transparent;color:var(--text-secondary);font:600 14px/20px var(--font-ui);text-decoration:none}
+.locale-switch{color:var(--primary);font:600 14px/20px var(--font-ui);text-decoration:none}
+.public-main{width:100%;max-width:1120px;margin:0 auto;padding:32px 24px}
+.public-footer{padding:16px 24px;border-top:1px solid var(--border-subtle);color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+.public-footer nav{display:flex;flex-wrap:wrap;gap:16px}
+.public-footer a{color:var(--text-secondary)}
+@media (max-width:600px){
+  .public-header{padding:8px 16px}
+  .public-header .links{margin-left:0;order:3;width:100%}
+  .public-header .locale-switch{margin-left:auto}
+  .public-main{padding:24px 16px}
+  .public-footer{padding:16px}
+}
+
+/* Mention d'urgence (G Q63) */
+.urgence{margin:0}
+.urgence strong{font-weight:600}
+
+/* ---------- Coquille praticien (fiche 00 §1 et §9 : barre d'application, rail) ---------- */
+.app-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;height:48px;padding:0 16px;border-bottom:1px solid var(--border-subtle);background:var(--surface-raised)}
+.app-bar .menu{display:none;width:32px;height:32px;padding:0;border:0;border-radius:var(--radius-md);background:transparent;color:var(--text-primary);cursor:pointer;align-items:center;justify-content:center}
+.app-bar .section{display:inline-flex;gap:8px;color:var(--text-secondary)}
+.app-bar .spacer{flex:1 1 0}
+.app-bar .search{display:flex;align-items:center;gap:6px;width:min(320px,32vw);height:32px;padding:0 8px 0 10px;border:1px solid var(--border-strong);border-bottom-color:var(--border-accessible);border-radius:var(--radius-md);background:var(--surface-raised);color:var(--text-secondary)}
+.app-bar .search .ic{width:16px;height:16px}
+.app-bar .search input{flex:1;min-width:0;height:100%;border:0;background:transparent;outline:0}
+.app-bar .search input::placeholder{color:var(--text-secondary);opacity:1}
+.app-bar kbd,.kbd{padding:0 5px;border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--surface-ground);color:var(--text-secondary);font:400 12px/16px var(--font-mono)}
+.app-bar .avatar{width:32px;height:32px;padding:0;border:0;border-radius:var(--radius-pill);background:var(--primary-tint);color:var(--primary);font:600 12px/16px var(--font-ui);cursor:pointer}
+.shell{display:flex;align-items:stretch;min-height:calc(100vh - 120px)}
+.nav-rail{flex:none;width:56px;padding:8px 6px;border-right:1px solid var(--border-subtle);background:var(--surface-raised)}
+.nav-rail ul{display:flex;flex-direction:column;gap:4px}
+.nav-rail a,.nav-rail span.tile{display:flex;align-items:center;justify-content:center;height:44px;border-left:3px solid transparent;border-radius:var(--radius-md);color:var(--text-secondary)}
+.nav-rail .ic{width:22px;height:22px}
+.nav-rail a[aria-current="page"]{border-left-color:var(--primary);background:var(--surface-sunken);color:var(--text-primary)}
+.nav-rail span.tile{color:var(--text-disabled)}
+.shell>main{flex:1 1 0;min-width:0}
+@media (max-width:899.98px){
+  .app-bar .menu{display:inline-flex}
+  .nav-rail{display:none}
+}
+@media (max-width:600px){
+  .app-bar{row-gap:8px;height:auto;min-height:48px;padding:8px 16px}
+  .app-bar .section{display:none}
+  .app-bar .search{order:5;width:100%}
+}
+
+/* ---------- Fiche 32 : /rendez-vous/confirmer/:token et /rendez-vous/gerer/:token ---------- */
+.link-main{position:relative}
+.link-card{display:flex;flex-direction:column;gap:20px;width:100%;max-width:520px;margin:0 auto;padding:32px}
+.link-card h1{font:600 24px/32px var(--font-ui)}
+.link-head{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.badge-icon{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:var(--radius-xl)}
+.badge-icon .ic{width:24px;height:24px}
+.badge-icon.ok{background:var(--success-bg);color:var(--success)}
+.badge-icon.wait{background:var(--info-bg);color:var(--info)}
+.badge-icon.warn{background:var(--warning-bg);color:var(--warning)}
+.badge-icon.muted{background:var(--surface-sunken);color:var(--text-secondary)}
+.link-text{display:flex;flex-direction:column;gap:8px}
+.link-text .secondary{color:var(--text-secondary)}
+.detail{display:grid;grid-template-columns:112px 1fr;gap:8px 16px;padding:16px;border-radius:var(--radius-md);background:var(--surface-ground)}
+.detail dt{color:var(--text-secondary)}
+.detail dd{min-width:0;font-weight:600}
+.detail dd .tz{display:block;color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+.actions{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.scrim{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;background:var(--scrim)}
+.dialog{display:flex;flex-direction:column;gap:16px;width:100%;max-width:440px;padding:24px;border-radius:var(--radius-xl);background:var(--surface-raised);box-shadow:var(--shadow-64)}
+.dialog h2{font:600 20px/28px var(--font-ui)}
+.dialog .actions{justify-content:flex-end}
+.skel-card{display:flex;flex-direction:column;gap:12px}
+@media (max-width:600px){
+  .link-card{padding:20px 16px}
+  .detail{grid-template-columns:1fr;gap:2px}
+  .detail dd{margin-bottom:8px}
+  .detail dd:last-child{margin-bottom:0}
+  .link-card .actions .btn,.dialog .actions .btn{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="mq-bar" role="region" aria-label="Barre de maquette (ne fait pas partie de l'écran)">
+  <strong>Maquette 32 · Rendez-vous par lien</strong>
+  <span class="mq-group">
+    <button type="button" id="mq-prev" aria-label="Vue précédente">‹</button>
+    <label><span>Vue</span>
+      <select id="mq-vue">
+        <option value="c-verification">1. Vérification en cours</option>
+        <option value="c-transmise">2. Demande transmise (mode manuel)</option>
+        <option value="c-confirme">3. Rendez-vous confirmé (mode automatique)</option>
+        <option value="c-rechargee">4. Page rechargée : même état, sans lien de gestion</option>
+        <option value="c-annule">5. Lien rouvert : rendez-vous annulé</option>
+        <option value="c-passe">6. Lien rouvert : rendez-vous passé</option>
+        <option value="c-expire">7. Lien expiré</option>
+        <option value="c-inconnu">8. Lien inconnu</option>
+        <option value="c-indisponible">9. Créneau plus disponible</option>
+        <option value="c-deja-actif">10. Rendez-vous déjà actif</option>
+        <option value="c-fermee">11. Fonction fermée</option>
+        <option value="c-plafond">12. Plafond atteint (vérification)</option>
+        <option value="c-erreur">13. Erreur (vérification)</option>
+        <option value="g-chargement">14. Gestion : chargement</option>
+        <option value="g-attente">15. Gestion : en attente de réponse</option>
+        <option value="g-confirme">16. Gestion : confirmé</option>
+        <option value="g-dialogue">17. Gestion : confirmation d'annulation</option>
+        <option value="g-annule-visiteur">18. Gestion : annulé par le demandeur</option>
+        <option value="g-annule-praticien">19. Gestion : annulé par le praticien</option>
+        <option value="g-annule-expire">20. Gestion : demande expirée</option>
+        <option value="g-passe">21. Gestion : passé</option>
+        <option value="g-sans-praticien">22. Gestion : fiche du praticien dépubliée</option>
+        <option value="g-trop-tard">23. Gestion : trop tard pour annuler</option>
+        <option value="g-inconnu">24. Gestion : lien inconnu</option>
+        <option value="g-plafond">25. Gestion : plafond atteint</option>
+        <option value="g-erreur">26. Gestion : erreur</option>
+        <option value="toutes">Toutes les vues à la suite</option>
+      </select>
+    </label>
+    <button type="button" id="mq-next" aria-label="Vue suivante">›</button>
+  </span>
+  <span class="mq-group" role="group" aria-label="Thème">
+    <button type="button" data-mq-theme="system" aria-pressed="true">Système</button>
+    <button type="button" data-mq-theme="light" aria-pressed="false">Clair</button>
+    <button type="button" data-mq-theme="dark" aria-pressed="false">Sombre</button>
+  </span>
+  <span class="mq-spacer"></span>
+  <span class="mq-note">Barre de maquette : elle ne fait pas partie de l'écran.</span>
+</div>
+<section class="vue" id="c-verification" aria-label="Vue 1 : Vérification en cours">
+<p class="mq-legende"><strong>Vue 1 sur 26 · Vérification en cours</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify parti</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-busy="true">
+  <div class="skel-card" role="status" aria-label="Vérification de votre adresse…">
+    <span class="skel" style="width:48px;height:48px"></span>
+    <span class="skel" style="width:70%;height:28px"></span>
+    <span class="skel" style="width:90%"></span>
+    <span class="skel" style="height:120px"></span>
+  </div>
+  <p class="sr-only">Vérification de votre adresse…</p>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+</section>
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="c-transmise" aria-label="Vue 2 : Demande transmise (mode manuel)">
+<p class="mq-legende"><strong>Vue 2 sur 26 · Demande transmise (mode manuel)</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, status pending, manageToken</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-1">
+  <div class="link-head" role="status">
+    <span class="badge-icon wait" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+    <h1 id="titre-1" tabindex="-1">Votre demande est transmise</h1>
+    
+    <div class="link-text"><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+  </div>
+  
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><a class="btn primary large" href="#">Gérer ma demande</a></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="c-confirme" aria-label="Vue 3 : Rendez-vous confirmé (mode automatique)">
+<p class="mq-legende"><strong>Vue 3 sur 26 · Rendez-vous confirmé (mode automatique)</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, status confirmed, manageToken</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-2">
+  <div class="link-head" role="status">
+    <span class="badge-icon ok" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/></svg></span>
+    <h1 id="titre-2" tabindex="-1">Votre rendez-vous est confirmé</h1>
+    
+    <div class="link-text"><p>Vous recevez un e-mail de confirmation avec le lien pour le gérer.</p></div>
+  </div>
+  
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><a class="btn primary large" href="#">Gérer mon rendez-vous</a></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="c-rechargee" aria-label="Vue 4 : Page rechargée : même état, sans lien de gestion">
+<p class="mq-legende"><strong>Vue 4 sur 26 · Page rechargée : même état, sans lien de gestion</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, manageToken: null (même après les 30 minutes)</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-3">
+  <div class="link-head" role="status">
+    <span class="badge-icon wait" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+    <h1 id="titre-3" tabindex="-1">Votre demande est transmise</h1>
+    
+    <div class="link-text"><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p><p class="secondary">Pour suivre ou annuler votre demande, utilisez le lien de l'e-mail que nous vous avons envoyé.</p></div>
+  </div>
+  
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="c-annule" aria-label="Vue 5 : Lien rouvert : rendez-vous annulé">
+<p class="mq-legende"><strong>Vue 5 sur 26 · Lien rouvert : rendez-vous annulé</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, status cancelled, cancelledBy practitioner</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-4">
+  <div class="link-head" role="status">
+    <span class="badge-icon muted" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></svg></span>
+    <h1 id="titre-4" tabindex="-1">Ce rendez-vous est annulé</h1>
+    
+    <div class="link-text"><p>Le praticien a annulé ce rendez-vous.</p></div>
+  </div>
+  
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><a class="btn " href="#">Choisir un autre créneau</a></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="c-passe" aria-label="Vue 6 : Lien rouvert : rendez-vous passé">
+<p class="mq-legende"><strong>Vue 6 sur 26 · Lien rouvert : rendez-vous passé</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, status past</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-5">
+  <div class="link-head" role="status">
+    <span class="badge-icon muted" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>
+    <h1 id="titre-5" tabindex="-1">Ce rendez-vous est passé</h1>
+    
+    
+  </div>
+  
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="c-expire" aria-label="Vue 7 : Lien expiré">
+<p class="mq-legende"><strong>Vue 7 sur 26 · Lien expiré</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 410 BOOKING_TOKEN_EXPIRED</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-6">
+  <div class="link-head" role="alert">
+    <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+    <h1 id="titre-6" tabindex="-1">Ce lien n'est plus valable</h1>
+    
+    <div class="link-text"><p>Le lien de vérification est valable 30 minutes : celui-ci a expiré. Aucune demande n'a été transmise au praticien.</p></div>
+  </div>
+  
+  
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><a class="btn " href="#">Retrouver le praticien dans l'annuaire</a></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="c-inconnu" aria-label="Vue 8 : Lien inconnu">
+<p class="mq-legende"><strong>Vue 8 sur 26 · Lien inconnu</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 404 BOOKING_TOKEN_INVALID (ou 422 sur token)</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-7">
+  <div class="link-head" role="alert">
+    <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/><path d="m4 4 16 16"/></svg></span>
+    <h1 id="titre-7" tabindex="-1">Ce lien n'est plus valable</h1>
+    
+    <div class="link-text"><p>Nous ne reconnaissons pas ce lien : il est peut-être incomplet, ou la demande a été effacée.</p></div>
+  </div>
+  
+  
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><a class="btn " href="#">Retrouver le praticien dans l'annuaire</a></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="c-indisponible" aria-label="Vue 9 : Créneau plus disponible">
+<p class="mq-legende"><strong>Vue 9 sur 26 · Créneau plus disponible</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 409 SLOT_TAKEN</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-8">
+  <div class="link-head" role="alert">
+    <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg></span>
+    <h1 id="titre-8" tabindex="-1">Ce créneau n'est plus disponible</h1>
+    
+    <div class="link-text"><p>Aucun rendez-vous n'a été créé. Choisissez un autre créneau sur la page du praticien.</p></div>
+  </div>
+  
+  
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><a class="btn " href="#">Retrouver le praticien dans l'annuaire</a></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="c-deja-actif" aria-label="Vue 10 : Rendez-vous déjà actif">
+<p class="mq-legende"><strong>Vue 10 sur 26 · Rendez-vous déjà actif</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 409 BOOKING_ALREADY_ACTIVE</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-9">
+  <div class="link-head" role="alert">
+    <span class="badge-icon wait" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>
+    <h1 id="titre-9" tabindex="-1">Vous avez déjà un rendez-vous à venir avec ce praticien</h1>
+    
+    <div class="link-text"><p>Aucune nouvelle demande n'a été créée. Pour suivre ou annuler votre rendez-vous, utilisez le lien du dernier e-mail reçu.</p></div>
+  </div>
+  
+  
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="c-fermee" aria-label="Vue 11 : Fonction fermée">
+<p class="mq-legende"><strong>Vue 11 sur 26 · Fonction fermée</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 404 BOOKING_NOT_AVAILABLE</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-10">
+  <div class="link-head" role="alert">
+    <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg></span>
+    <h1 id="titre-10" tabindex="-1">Ce praticien ne propose plus la prise de rendez-vous en ligne</h1>
+    
+    <div class="link-text"><p>Aucun rendez-vous n'a été créé.</p></div>
+  </div>
+  
+  
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><a class="btn " href="#">Retrouver le praticien dans l'annuaire</a></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="c-plafond" aria-label="Vue 12 : Plafond atteint (vérification)">
+<p class="mq-legende"><strong>Vue 12 sur 26 · Plafond atteint (vérification)</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 429 RATE_LIMITED</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-11">
+  <div class="link-head" role="alert">
+    <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg></span>
+    <h1 id="titre-11" tabindex="-1">La vérification n'a pas abouti</h1>
+    
+    
+  </div>
+  <div class="bar warning" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p>Trop de tentatives depuis votre connexion. Réessayez dans 1 min.</p></div>
+  
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><button type="button" class="btn ">Réessayer</button></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="c-erreur" aria-label="Vue 13 : Erreur (vérification)">
+<p class="mq-legende"><strong>Vue 13 sur 26 · Erreur (vérification)</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → réseau, 5xx</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-12">
+  <div class="link-head" role="alert">
+    <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg></span>
+    <h1 id="titre-12" tabindex="-1">La vérification n'a pas abouti</h1>
+    
+    <div class="link-text"><p>Vérifiez votre connexion, puis réessayez : votre lien reste valable.</p></div>
+  </div>
+  
+  
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><button type="button" class="btn ">Réessayer</button></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-chargement" aria-label="Vue 14 : Gestion : chargement">
+<p class="mq-legende"><strong>Vue 14 sur 26 · Gestion : chargement</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage parti</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-busy="true">
+  <div class="skel-card" role="status" aria-label="Chargement de votre rendez-vous…">
+    <span class="skel" style="width:48px;height:48px"></span>
+    <span class="skel" style="width:70%;height:28px"></span>
+    <span class="skel" style="width:90%"></span>
+    <span class="skel" style="height:120px"></span>
+  </div>
+  <p class="sr-only">Chargement de votre rendez-vous…</p>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+</section>
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-attente" aria-label="Vue 15 : Gestion : en attente de réponse">
+<p class="mq-legende"><strong>Vue 15 sur 26 · Gestion : en attente de réponse</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, status pending, canCancel</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-13">
+  <div class="link-head" role="status">
+    <span class="badge-icon wait" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+    <h1 id="titre-13" tabindex="-1">Votre demande de rendez-vous</h1>
+    <span class="pill info">En attente de réponse</span>
+    <div class="link-text"><p>Le praticien vous répondra par e-mail.</p></div>
+  </div>
+  
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><button type="button" class="btn ">Annuler ma demande</button></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-confirme" aria-label="Vue 16 : Gestion : confirmé">
+<p class="mq-legende"><strong>Vue 16 sur 26 · Gestion : confirmé</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, status confirmed, canCancel</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-14">
+  <div class="link-head" role="status">
+    <span class="badge-icon ok" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/></svg></span>
+    <h1 id="titre-14" tabindex="-1">Votre rendez-vous</h1>
+    <span class="pill success">Confirmé</span>
+    
+  </div>
+  
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><button type="button" class="btn ">Annuler mon rendez-vous</button></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-dialogue" aria-label="Vue 17 : Gestion : confirmation d'annulation">
+<p class="mq-legende"><strong>Vue 17 sur 26 · Gestion : confirmation d'annulation</strong> · dialogue partagé (shared/ui/confirm-dialog), aucun motif demandé</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-15">
+  <div class="link-head" role="status">
+    <span class="badge-icon ok" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/></svg></span>
+    <h1 id="titre-15" tabindex="-1">Votre rendez-vous</h1>
+    <span class="pill success">Confirmé</span>
+    
+  </div>
+  
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><button type="button" class="btn ">Annuler mon rendez-vous</button></div>
+</section>
+<div class="scrim"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="titre-dialogue">
+  <h2 id="titre-dialogue">Annuler ce rendez-vous ?</h2>
+  <p>Le praticien sera prévenu par e-mail. Pour un autre créneau, il faudra refaire une demande.</p>
+  <div class="actions"><button type="button" class="btn ">Garder</button><button type="button" class="btn danger">Annuler le rendez-vous</button></div>
+</div></div>
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-annule-visiteur" aria-label="Vue 18 : Gestion : annulé par le demandeur">
+<p class="mq-legende"><strong>Vue 18 sur 26 · Gestion : annulé par le demandeur</strong> · POST …/manage/cancel → 200, puis /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, cancelled, cancelledBy visitor</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-16">
+  <div class="link-head" role="status">
+    <span class="badge-icon muted" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></svg></span>
+    <h1 id="titre-16" tabindex="-1">Votre rendez-vous</h1>
+    <span class="pill neutral">Annulé</span>
+    <div class="link-text"><p>Vous avez annulé ce rendez-vous.</p></div>
+  </div>
+  
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><a class="btn " href="#">Choisir un autre créneau</a></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-annule-praticien" aria-label="Vue 19 : Gestion : annulé par le praticien">
+<p class="mq-legende"><strong>Vue 19 sur 26 · Gestion : annulé par le praticien</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, cancelled, cancelledBy practitioner (refus ou annulation)</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-17">
+  <div class="link-head" role="status">
+    <span class="badge-icon muted" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></svg></span>
+    <h1 id="titre-17" tabindex="-1">Votre rendez-vous</h1>
+    <span class="pill neutral">Annulé</span>
+    <div class="link-text"><p>Le praticien a annulé ce rendez-vous.</p></div>
+  </div>
+  
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><a class="btn " href="#">Choisir un autre créneau</a></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-annule-expire" aria-label="Vue 20 : Gestion : demande expirée">
+<p class="mq-legende"><strong>Vue 20 sur 26 · Gestion : demande expirée</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, cancelled, cancelledBy expired</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-18">
+  <div class="link-head" role="status">
+    <span class="badge-icon muted" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></svg></span>
+    <h1 id="titre-18" tabindex="-1">Votre rendez-vous</h1>
+    <span class="pill neutral">Annulé</span>
+    <div class="link-text"><p>La demande a expiré : le praticien n'a pas répondu à temps.</p></div>
+  </div>
+  
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><a class="btn " href="#">Choisir un autre créneau</a></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-passe" aria-label="Vue 21 : Gestion : passé">
+<p class="mq-legende"><strong>Vue 21 sur 26 · Gestion : passé</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, status past, canCancel false</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-19">
+  <div class="link-head" role="status">
+    <span class="badge-icon muted" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>
+    <h1 id="titre-19" tabindex="-1">Votre rendez-vous</h1>
+    <span class="pill neutral">Passé</span>
+    
+  </div>
+  
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-sans-praticien" aria-label="Vue 22 : Gestion : fiche du praticien dépubliée">
+<p class="mq-legende"><strong>Vue 22 sur 26 · Gestion : fiche du praticien dépubliée</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, practitioner { slug: null, displayName: null }</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-20">
+  <div class="link-head" role="status">
+    <span class="badge-icon ok" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/></svg></span>
+    <h1 id="titre-20" tabindex="-1">Votre rendez-vous</h1>
+    <span class="pill success">Confirmé</span>
+    
+  </div>
+  
+  <dl class="detail">
+    
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><button type="button" class="btn ">Annuler mon rendez-vous</button></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-trop-tard" aria-label="Vue 23 : Gestion : trop tard pour annuler">
+<p class="mq-legende"><strong>Vue 23 sur 26 · Gestion : trop tard pour annuler</strong> · POST …/manage/cancel → 409 APPOINTMENT_NOT_ACTIVE, puis état relu</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-21">
+  <div class="link-head" role="status">
+    <span class="badge-icon ok" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/></svg></span>
+    <h1 id="titre-21" tabindex="-1">Votre rendez-vous</h1>
+    <span class="pill success">Confirmé</span>
+    
+  </div>
+  <div class="bar warning" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p>Ce rendez-vous a commencé ou est terminé : il ne peut plus être annulé.</p></div>
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-inconnu" aria-label="Vue 24 : Gestion : lien inconnu">
+<p class="mq-legende"><strong>Vue 24 sur 26 · Gestion : lien inconnu</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 404 BOOKING_TOKEN_INVALID (ou 422 sur token)</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-22">
+  <div class="link-head" role="alert">
+    <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/><path d="m4 4 16 16"/></svg></span>
+    <h1 id="titre-22" tabindex="-1">Ce lien n'est plus valable</h1>
+    
+    <div class="link-text"><p>Utilisez le lien du dernier e-mail reçu.</p></div>
+  </div>
+  
+  
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><a class="btn " href="#">Retrouver le praticien dans l'annuaire</a></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-plafond" aria-label="Vue 25 : Gestion : plafond atteint">
+<p class="mq-legende"><strong>Vue 25 sur 26 · Gestion : plafond atteint</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 429 RATE_LIMITED</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-23">
+  <div class="link-head" role="alert">
+    <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg></span>
+    <h1 id="titre-23" tabindex="-1">Votre rendez-vous n'a pas pu être chargé</h1>
+    
+    
+  </div>
+  <div class="bar warning" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p>Trop de tentatives depuis votre connexion. Réessayez dans 1 min.</p></div>
+  
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><button type="button" class="btn ">Réessayer</button></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-erreur" aria-label="Vue 26 : Gestion : erreur">
+<p class="mq-legende"><strong>Vue 26 sur 26 · Gestion : erreur</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → réseau, 5xx</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-24">
+  <div class="link-head" role="alert">
+    <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg></span>
+    <h1 id="titre-24" tabindex="-1">Votre rendez-vous n'a pas pu être chargé</h1>
+    
+    <div class="link-text"><p>Vérifiez votre connexion, puis réessayez.</p></div>
+  </div>
+  
+  
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><button type="button" class="btn ">Réessayer</button></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<script>
+(function () {
+  var root = document.documentElement;
+  var vues = Array.prototype.slice.call(document.querySelectorAll('.vue'));
+  var select = document.getElementById('mq-vue');
+  var themeButtons = Array.prototype.slice.call(document.querySelectorAll('[data-mq-theme]'));
+  function show(id) {
+    var all = id === 'toutes';
+    vues.forEach(function (vue) { vue.hidden = !(all || vue.id === id); });
+    select.value = id;
+    window.scrollTo(0, 0);
+  }
+  function fromHash() {
+    var id = decodeURIComponent(location.hash.replace(/^#(vue=)?/, ''));
+    if (id !== 'toutes' && !document.getElementById(id)) id = vues[0].id;
+    show(id);
+  }
+  function setTheme(theme) {
+    if (theme === 'light' || theme === 'dark') root.setAttribute('data-theme', theme);
+    else root.removeAttribute('data-theme');
+    themeButtons.forEach(function (button) {
+      button.setAttribute('aria-pressed', String(button.getAttribute('data-mq-theme') === (theme || 'system')));
+    });
+  }
+  select.addEventListener('change', function () { location.hash = 'vue=' + select.value; });
+  document.getElementById('mq-prev').addEventListener('click', function () { step(-1); });
+  document.getElementById('mq-next').addEventListener('click', function () { step(1); });
+  function step(delta) {
+    var index = Math.max(0, vues.findIndex(function (vue) { return vue.id === select.value; }));
+    location.hash = 'vue=' + vues[(index + delta + vues.length) % vues.length].id;
+  }
+  themeButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      var theme = button.getAttribute('data-mq-theme');
+      setTheme(theme === 'system' ? '' : theme);
+    });
+  });
+  window.addEventListener('hashchange', fromHash);
+  var asked = /[?&]theme=(light|dark)/.exec(location.search);
+  setTheme(asked ? asked[1] : '');
+  fromHash();
+})();
+</script>
+</body>
+</html>

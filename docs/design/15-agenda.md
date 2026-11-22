@@ -4,6 +4,8 @@
 
 > Spécification pour agents. Maquette : `15-agenda.html` / `.png`. Palette : Nordique. Module backend `agenda` (le plan I l'a renommé depuis `scheduling`) ; front `features/agenda`.
 
+> Mis à jour le 22 novembre 2026 (M14-09, jalon M14, G Q65) : demandes de rendez-vous en ligne dans l'agenda (mention « Demande en ligne », entrée « Demandes » avec compteur, « Confirmer » et « Refuser », e-mail de l'invité), contrat `contract-v0.15.0`. Maquette du complément : `propositions-2026-11/15-agenda-demandes-en-ligne.html` ; la maquette `15-agenda.html` n'est pas modifiée. Voir « Demandes en ligne (M14) ».
+
 ## Objectif
 Le praticien voit sa semaine, planifie et déplace ses séances, voit ses indisponibilités Google sans les copier, et ouvre le détail d'un rendez-vous **à droite** d'un clic — avec de quoi préparer la séance et la démarrer. L'application reste la source de vérité des séances ; Google Agenda est un miroir bidirectionnel limité à ce que le praticien accepte d'y mettre.
 
@@ -68,6 +70,63 @@ Google Agenda n'est pas un hébergeur de données de santé. Par défaut, l'év�
 - [ ] *Démarrer la séance* → `entry_session` créée avec `session_id` prêt, redirection vers `/patients/:id`.
 - [ ] axe-core 0 violation ; parcours clavier : ouvrir un rendez-vous, le fermer, démarrer la séance.
 
+## Demandes en ligne (M14, ajouté le 22 novembre 2026)
+Complément de M14-09 (plan `docs/K-plan-prise-de-rendez-vous.md` K3.2 étapes 2 à 5, K5.2 ; G Q65) ; construit par **M14-14** (demandes, confirmer, refuser) puis **M14-15** (rattacher un invité à un patient), à reproduire depuis `propositions-2026-11/15-agenda-demandes-en-ligne.html`. La maquette reprend la structure réelle de l'écran (barre d'application et rail de la fiche 00 §9, barre d'outils, rail gauche, grille, détail à droite), pas l'en-tête de la maquette 15.
+
+### Données (contrat `contract-v0.15.0`)
+- `AppointmentDto.origin` : `practitioner` ou `online`, fixé par le serveur. `AppointmentDto.guest.email` : e-mail de l'invité, `null` s'il est inconnu ou purgé. Les deux entrent dans le modèle de l'agenda avec M14-10.
+- `GET /api/agenda/requests` → `BookingRequestsDto { appointments: [AppointmentDto…] }` : rendez-vous du praticien d'origine `online`, au statut `tentative`, à venir, triés par début, 100 au plus. Erreurs : `401`, `403 EMAIL_NOT_CONFIRMED`, `429` (intercepteurs).
+- `POST /api/appointments/{id}/confirm` et `POST /api/appointments/{id}/cancel` (`reason` facultatif, 500 au plus) : forme inchangée. Sur un rendez-vous en ligne dont l'invité a un e-mail, le serveur prévient le demandeur ; **le motif ne lui est jamais transmis**.
+- `PATCH /api/appointments/{id}` : un déplacement (`startsAt`, `durationMin`) ou un changement de modalité prévient aussi le demandeur (« Votre rendez-vous est déplacé », « Votre rendez-vous est modifié ») ; un changement de note ne prévient personne.
+- Le store porte les demandes en attente et leurs trois états. **Le compteur est la longueur de la liste renvoyée** : rien n'est compté ni filtré côté client à partir de la fenêtre affichée. La liste est relue après une confirmation, un refus, une annulation, un déplacement, et à chaque rechargement de la fenêtre.
+
+### Structure
+1. **Entrée « Demandes »** : bouton de la barre d'outils, entre le groupe des vues et « + Rendez-vous ». Libellé « Demandes », suivi d'une pastille portant le compteur quand il y a au moins une demande ; nom accessible « Demandes en ligne, 2 en attente » (ou « Demandes en ligne, aucune en attente ») ; `aria-expanded`, `aria-controls`. Sans demande, l'entrée reste, sans pastille.
+2. **Panneau « Demandes en ligne »** : s'ouvre **à la place du détail**, dans la colonne de droite (même largeur, 320 à 360 px, même comportement sous 900 px), jamais par-dessus la grille. En-tête : titre « Demandes en ligne », bouton fermer ; phrase « 2 demandes attendent votre réponse. » (« 1 demande attend votre réponse. »). Liste dans l'ordre de l'API ; chaque demande est un bouton sur deux lignes : date courte et heures (« jeu. 26 nov. · 10:00–11:00 », heures à chasse fixe), puis nom de l'invité et modalité (« Sara Benali · Cabinet »). Trois états par `shared/ui/state` : chargement (squelette de trois lignes), vide (« Aucune demande en attente » · « Les demandes faites depuis votre page de rendez-vous arrivent ici. »), erreur (« Réessayer »).
+3. **Choisir une demande** : la grille va à la date de la demande (même vue), le panneau laisse la place au détail de ce rendez-vous (`/agenda/rdv/:id`). Les demandes hors de la fenêtre affichée sont donc atteignables.
+4. **Grille, vue Liste, vue Mois** : un rendez-vous d'origine `online` porte la mention **« Demande en ligne »** : dans la grille, une ligne sous le nom, précédée d'un pictogramme (globe) décoratif ; dans la vue Liste, le texte après le statut ; dans la vue Mois, dans un bloc trop court pour trois lignes et dans une colonne de moins de 130 px (détail ou panneau ouvert à 1440 px, écran étroit), le pictogramme seul, avec le nom accessible « Demande en ligne ». Jamais par la couleur seule. Tant qu'elle attend, la demande garde le rendu « à confirmer » (fond de carte, bordure pointillée) ; confirmée, elle a le rendu plein de sa modalité et garde la mention. La légende du rail gagne une ligne « Demande en ligne » (pictogramme et texte) sous « À confirmer ».
+5. **Détail d'un rendez-vous d'origine `online`** (structure du détail existant, plus) :
+   - sous l'étiquette (« À confirmer · cabinet »), la pastille **« Demande en ligne »** (pictogramme et texte) ;
+   - le nom de l'invité, sans initiales ni lien (il n'a pas de dossier) ;
+   - un bloc **Contact** : deux lignes voisines, « E-mail » (lien `mailto:`) puis « Téléphone » (lien `tel:`), libellé à gauche et valeur à droite (dans un détail de 320 à 360 px, une adresse ne tient pas sur la même ligne qu'un numéro) ; une ligne absente quand la valeur est `null` ; le bloc vaut pour tout invité, en ligne ou non ;
+   - pour une demande en attente (`tentative`) : **« Confirmer le rendez-vous »** (bouton existant) et, dans la rangée d'actions, **« Refuser »** à la place d'« Annuler » ; « Déplacer » reste ;
+   - « Refuser » ouvre sur place le formulaire d'annulation existant, avec le titre « Refuser cette demande ? », le champ « Motif (facultatif) », la phrase « Le demandeur sera prévenu par e-mail. Le motif reste dans votre agenda : il ne lui est jamais transmis. », et les boutons « Refuser la demande » et « Garder » ;
+   - pour un rendez-vous en ligne confirmé (`planned`) : les actions habituelles ; les formulaires « Annuler » et « Déplacer » portent la phrase « Le demandeur sera prévenu par e-mail. » (suivie, pour l'annulation, de « Le motif ne lui est jamais transmis. ») ;
+   - ces phrases ne s'affichent que si l'invité a un e-mail (`guest.email` non `null`) : après un rattachement à un patient ou une purge, plus aucun e-mail ne part.
+6. **Toasts** : « Rendez-vous confirmé. Le demandeur est prévenu par e-mail. » ; « Demande refusée. Le demandeur est prévenu par e-mail. » ; la fenêtre et la liste des demandes sont relues, jamais corrigées localement.
+7. **`409 APPOINTMENT_NOT_ACTIVE`** (le demandeur vient d'annuler) : toast d'avertissement « Cette demande n'est plus en attente : elle vient d'être annulée. », relecture, le détail se ferme.
+
+### Boutons
+- « Demandes » : bouton à contour de la barre d'outils, comme « Aujourd'hui » ; la pastille du compteur est en `primary` / `primary-on`.
+- « Refuser » (rangée d'actions) : **bouton neutre**, à contour, comme « Déplacer » ; pas de rouge. « Refuser la demande » (confirmation sur place) garde le style du bouton « Annuler le rendez-vous » existant (`danger`).
+- Pastille « Demande en ligne » : `info` sur `info-bg`, pictogramme et texte.
+
+### Accessibilité
+- L'entrée « Demandes » annonce son compteur dans son nom ; le panneau est un `aside` nommé « Demandes en ligne », son titre reçoit le focus à l'ouverture (ce qui l'amène dans la vue sous 900 px) ; `Échap` le ferme et rend le focus à l'entrée.
+- La liste des demandes est une liste de boutons ; chaque nom accessible dit la date, les heures, le nom et la modalité.
+- Dans la grille, le nom accessible d'un rendez-vous en ligne contient « demande en ligne ».
+- Le compteur est annoncé après chaque relecture (`role="status"` sur la phrase du panneau).
+
+### Critères d'acceptation (M14-14)
+- [ ] Avec le seed (compte `claire.seed@example.test`, fiche `claire-martin`, mode manuel), l'entrée « Demandes » affiche le compteur renvoyé par `GET /api/agenda/requests` (2) ; le panneau montre les deux demandes dans l'ordre de l'API, chacune avec sa date, ses heures, le nom de l'invité et la modalité.
+- [ ] Choisir une demande située hors de la semaine affichée amène la grille à sa date et ouvre son détail, avec la pastille « Demande en ligne », l'e-mail et le téléphone de l'invité.
+- [ ] Confirmer : le rendez-vous n'est plus en pointillé, garde la mention « Demande en ligne », le compteur baisse de un, toast ; le test lit `POST …/confirm` puis la relecture de `GET /api/agenda` et de `GET /api/agenda/requests`.
+- [ ] Refuser : le formulaire sur place montre la phrase sur l'e-mail et le motif ; « Garder » n'envoie rien ; « Refuser la demande » envoie `POST …/cancel`, le rendez-vous disparaît de la grille (annulés masqués), le compteur baisse de un, toast.
+- [ ] Un rendez-vous « à confirmer » posé par le praticien (`origin = practitioner`) n'a ni la mention, ni « Refuser » (il garde « Annuler »), ni la phrase sur l'e-mail, et ne compte pas dans « Demandes ».
+- [ ] Un rendez-vous en ligne confirmé garde « Annuler » ; son formulaire d'annulation et son formulaire « Déplacer » portent la phrase « Le demandeur sera prévenu par e-mail. » ; un invité sans e-mail ne l'affiche pas.
+- [ ] `409 APPOINTMENT_NOT_ACTIVE` simulé à la confirmation : toast, relecture, le détail se ferme.
+- [ ] Sans demande : l'entrée « Demandes » reste, sans pastille, et le panneau montre l'état vide ; trois états du panneau (chargement, vide, erreur avec « Réessayer »).
+- [ ] La mention « Demande en ligne » est présente dans la grille, la vue Liste et la vue Mois (texte ou pictogramme nommé), et dans la légende.
+- [ ] Tout se fait au clavier (ouvrir « Demandes », choisir, confirmer, refuser, `Échap`) ; axe-core 0 violation, thèmes clair et sombre ; les e2e existants de `e2e/agenda/` restent verts.
+
+### Rattacher un invité à un patient (M14-15)
+Non dessiné par M14-09 (K3.2 étape 5, K3.4) : action « Rattacher à un patient » du détail d'un rendez-vous invité non purgé, avec le sélecteur de patient du panneau 15b et la case « Rattacher aussi les autres rendez-vous de cette personne » (`includeSameGuest`). Pour une demande en ligne, une phrase prévient que les e-mails automatiques au demandeur s'arrêtent après le rattachement. Si cette description ne suffit pas, M14-15 propose une maquette avant de construire.
+
+### Points ouverts (repris de K10)
+- Plafond de demandes en attente par praticien et liste de blocage : reportés après M14.
+- Les rendez-vous en ligne dans l'export du compte (colonne « Origine », e-mail de l'invité) : reportés après M14.
+- Délai d'expiration d'une demande (72 h) : non exposé par le contrat, le détail ne l'affiche pas.
+
 ## Écarts avec la maquette (rendu du 15 novembre 2026, PR #86 ; branchement sur `contract-v0.12.1`)
 - **En-tête** : la maquette dessine une barre d'application « Patients · Agenda » ; l'écran garde la barre d'application et le rail de navigation existants (fiche 00 §9), carreau Agenda actif. Décision du propriétaire du 15 novembre ; maquette non modifiée.
 - **Bibliothèque** : FullCalendar 6.1.22 (`@fullcalendar/angular`, `core`, `daygrid`, `timegrid`, `list`, `interaction` ; versions exactes, chunk paresseux), habillé aux tokens Nordique sous `.pm-calendar` (`pm-agenda-calendar`). Pas de plugin `rrule` : la répétition est portée par l'API (une ligne par occurrence, même `seriesId`) ; le panneau 15b n'en calcule que l'aperçu. Mini-mois, rail « Mes agendas », barre d'outils, détail et panneau sont des composants maison.
@@ -84,4 +143,4 @@ Google Agenda n'est pas un hébergeur de données de santé. Par défaut, l'év�
 - **Traductions** : `messages.fr.xlf` complet ; EN absent (G Q23, avertissements au build).
 
 ## Hors périmètre
-Prise de rendez-vous en ligne par les patients, rappels SMS/e-mail, salle d'attente visio, multi-praticiens (cabinet de groupe), Outlook / iCloud (le flux iCal couvre la lecture).
+Rappels SMS/e-mail avant un rendez-vous, salle d'attente visio, multi-praticiens (cabinet de groupe), Outlook / iCloud (le flux iCal couvre la lecture). La prise de rendez-vous en ligne, hors périmètre à l'origine, est construite par le jalon M14 (fiches 31 et 32, section « Demandes en ligne » ci-dessus).
