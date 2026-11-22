@@ -1,14 +1,20 @@
 import { TestBed } from '@angular/core/testing';
 
+import { BookingApi } from './booking.api';
+import { CLAIRE_BOOKING } from './booking.fixtures';
 import { DirectoryApi } from './directory.api';
 import { CLAIRE_PROFILE } from './directory.fixtures';
 import { ContactMessage } from './directory.models';
 import { CONTACT_MIN_DELAY_MS, PractitionerStore } from './practitioner.store';
 import { VocabularyStore } from './vocabulary.store';
 
-function setup(api: Partial<DirectoryApi>) {
+function setup(api: Partial<DirectoryApi>, booking: Partial<BookingApi> = {}) {
   TestBed.configureTestingModule({
-    providers: [PractitionerStore, { provide: DirectoryApi, useValue: api }],
+    providers: [
+      PractitionerStore,
+      { provide: DirectoryApi, useValue: api },
+      { provide: BookingApi, useValue: booking },
+    ],
   });
   return TestBed.inject(PractitionerStore);
 }
@@ -37,6 +43,25 @@ describe('PractitionerStore', () => {
     expect(profile).toHaveBeenCalledWith('claire-moreau');
     expect(store.profile().data?.displayName).toBe('Claire Moreau');
     expect(store.notFound()).toBe(false);
+  });
+
+  it('prise de rendez-vous : offerte sur un 200, absente sur un 404 ou un échec', async () => {
+    const settings = vi
+      .fn()
+      .mockResolvedValueOnce(CLAIRE_BOOKING)
+      .mockRejectedValueOnce({ status: 404, code: 'BOOKING_NOT_AVAILABLE' })
+      .mockRejectedValueOnce({ status: 0, code: 'NETWORK_ERROR' });
+    const store = setup({ profile: vi.fn().mockResolvedValue(CLAIRE_PROFILE) }, { settings });
+    await store.load('claire-moreau');
+    expect(store.bookingOffered()).toBe(false);
+    await store.checkBooking('claire-moreau');
+    expect(settings).toHaveBeenCalledWith('claire-moreau');
+    expect(store.bookingOffered()).toBe(true);
+    await store.checkBooking('claire-moreau');
+    expect(store.bookingOffered()).toBe(false);
+    await store.checkBooking('claire-moreau');
+    expect(store.bookingOffered()).toBe(false);
+    expect(store.profile().status).toBe('loaded');
   });
 
   it('404 PROFILE_NOT_FOUND : notFound (profil inconnu ou non publié)', async () => {

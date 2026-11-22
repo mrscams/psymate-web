@@ -17,3 +17,11 @@ export const PUBLIC_FEATURE_PATHS = {
 export function practitionerPath(slug: string): string {
   return `${PUBLIC_FEATURE_PATHS.practitioners}/${encodeURIComponent(slug)}`;
 }
+
+/** Segment de la prise de rendez-vous sous la fiche (fiche 31) : /praticiens/{slug}/rendez-vous. */
+export const BOOKING_SEGMENT = 'rendez-vous';
+
+/** /praticiens/{slug}/rendez-vous (fiche 31). */
+export function bookingPath(slug: string): string {
+  return `${practitionerPath(slug)}/${BOOKING_SEGMENT}`;
+}

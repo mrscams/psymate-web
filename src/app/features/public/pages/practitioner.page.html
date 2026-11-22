@@ -70,14 +70,34 @@
             <li class="availability"><pm-availability [availability]="p.availability" /></li>
           </ul>
           <div class="actions">
-            <a
-              mat-flat-button
-              [routerLink]="[]"
-              fragment="contact"
-              (click)="scrollToContact()"
-              i18n="Bouton vers le formulaire de contact@@public.practitioner.contactCta"
-              >Prendre contact</a
-            >
+            <!-- Fiche 09, complément M14 : « Prendre rendez-vous » devient le bouton plein, avant
+                 « Prendre contact » qui passe en contour ; absent tant que GET …/booking n'a pas
+                 répondu 200. -->
+            @if (store.bookingOffered()) {
+              <a
+                mat-flat-button
+                [routerLink]="bookingLink()"
+                i18n="Bouton vers la prise de rendez-vous@@public.practitioner.bookingCta"
+                >Prendre rendez-vous</a
+              >
+              <a
+                mat-stroked-button
+                [routerLink]="[]"
+                fragment="contact"
+                (click)="scrollToContact()"
+                i18n="Bouton vers le formulaire de contact@@public.practitioner.contactCta"
+                >Prendre contact</a
+              >
+            } @else {
+              <a
+                mat-flat-button
+                [routerLink]="[]"
+                fragment="contact"
+                (click)="scrollToContact()"
+                i18n="Bouton vers le formulaire de contact@@public.practitioner.contactCta"
+                >Prendre contact</a
+              >
+            }
             <button
               mat-stroked-button
               type="button"

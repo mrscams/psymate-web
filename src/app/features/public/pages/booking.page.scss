@@ -1,0 +1,238 @@
+:host {
+  display: block;
+}
+
+// Colonne unique centrée de 720 px au plus dans le layout public (fiche 31, Structure).
+.booking {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+p,
+h1,
+h2,
+ul {
+  margin: 0;
+}
+
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-secondary);
+  font: 400 12px/16px var(--font-ui);
+
+  li + li::before {
+    content: '›';
+    margin-right: 8px;
+  }
+
+  a {
+    color: var(--text-secondary);
+  }
+
+  [aria-current='page'] {
+    color: var(--text-primary);
+  }
+}
+
+.card {
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  box-shadow: 0 1px 2px var(--scrim);
+}
+
+.head-card,
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+}
+
+h1 {
+  font: 600 24px/32px var(--font-ui);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  padding: 0;
+  list-style: none;
+  color: var(--text-secondary);
+
+  li + li::before {
+    content: '·';
+    margin-right: 8px;
+  }
+}
+
+.step-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.step-kicker {
+  color: var(--text-secondary);
+  font: 600 12px/16px var(--font-ui);
+}
+
+h2 {
+  font: 600 20px/28px var(--font-ui);
+}
+
+// Cibles du focus après un changement d'étape : des titres, pas des commandes.
+h1[tabindex='-1']:focus,
+h2[tabindex='-1']:focus {
+  outline: none;
+}
+
+.recap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 12px;
+  border-radius: 4px;
+  background: var(--surface-ground);
+}
+
+.recap-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  > span {
+    color: var(--text-secondary);
+    font: 400 12px/16px var(--font-ui);
+  }
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+// Écran d'attente (vue 16).
+.sent {
+  align-items: flex-start;
+
+  .recap {
+    align-self: stretch;
+  }
+}
+
+.badge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: var(--info-bg);
+  color: var(--info);
+
+  .icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.next {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+  color: var(--text-secondary);
+}
+
+.icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+// Réglages non chargés (vues 13 et 15 au niveau de la page) : le titre est le h1.
+.failed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 16px;
+  text-align: center;
+
+  h1 {
+    font: 600 16px/22px var(--font-ui);
+  }
+
+  p {
+    max-width: 44ch;
+    color: var(--text-secondary);
+  }
+
+  button {
+    margin-top: 8px;
+  }
+
+  .state-icon {
+    width: 32px;
+    height: 32px;
+    color: var(--danger);
+  }
+
+  &.warning .state-icon {
+    color: var(--warning);
+  }
+}
+
+// Chargement des réglages (vue 12) : squelette de la carte d'en-tête.
+.skel {
+  display: block;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--surface-sunken);
+
+  &.title {
+    width: 62%;
+    height: 28px;
+  }
+
+  &.short {
+    width: 38%;
+  }
+
+  &.block {
+    height: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .head-card,
+  .step {
+    padding: 16px;
+  }
+
+  .recap button,
+  .sent + pm-emergency-note + p a {
+    width: 100%;
+  }
+}

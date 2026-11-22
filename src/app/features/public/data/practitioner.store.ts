@@ -3,6 +3,7 @@ import { patchState, signalStore, withComputed, withMethods, withState } from '@
 
 import { ApiProblem, asProblem } from '../../../core/http';
 import { failed, idle, Loadable, loaded, loading } from '../../../shared/util';
+import { BookingApi } from './booking.api';
 import { DirectoryApi } from './directory.api';
 import { ContactMessage, PractitionerProfile } from './directory.models';
 
@@ -18,6 +19,12 @@ export type ContactStatus = 'idle' | 'sending' | 'sent' | 'invalid' | 'rate-limi
 interface PractitionerState {
   slug: string | null;
   profile: Loadable<PractitionerProfile>;
+  /**
+   * Prise de rendez-vous en ligne offerte (fiche 09, complément M14) : true sur un 200 de
+   * GET /api/public/booking/practitioners/{slug} ; false pendant l'appel, sur un 404 et sur tout
+   * échec (la fiche reste entière, sans le bouton et sans message).
+   */
+  bookingOffered: boolean;
   contact: {
     status: ContactStatus;
     problem: ApiProblem | null;
@@ -29,6 +36,7 @@ interface PractitionerState {
 const initialState: PractitionerState = {
   slug: null,
   profile: idle<PractitionerProfile>(),
+  bookingOffered: false,
   contact: { status: 'idle', problem: null, retryAt: null },
 };
 
@@ -44,7 +52,7 @@ export const PractitionerStore = signalStore(
     /** 404 PROFILE_NOT_FOUND : profil inconnu ou non publié. */
     notFound: computed(() => profile().problem?.status === 404),
   })),
-  withMethods((store, api = inject(DirectoryApi)) => ({
+  withMethods((store, api = inject(DirectoryApi), booking = inject(BookingApi)) => ({
     /** GET /api/public/directory/practitioners/{slug}. */
     async load(slug: string): Promise<void> {
       const previous = store.slug() === slug ? store.profile() : undefined;
@@ -56,6 +64,17 @@ export const PractitionerStore = signalStore(
       } catch (error) {
         if (store.slug() !== slug) return;
         patchState(store, { profile: failed(asProblem(error), previous) });
+      }
+    },
+
+    /** GET /api/public/booking/practitioners/{slug} : le bouton « Prendre rendez-vous » ou rien. */
+    async checkBooking(slug: string): Promise<void> {
+      patchState(store, { bookingOffered: false });
+      try {
+        await booking.settings(slug);
+        if (store.slug() === slug) patchState(store, { bookingOffered: true });
+      } catch {
+        // 404 BOOKING_NOT_AVAILABLE, réseau, 5xx, 429 : pas de bouton, rien d'autre ne change.
       }
     },
 
