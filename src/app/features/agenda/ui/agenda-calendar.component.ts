@@ -112,7 +112,8 @@ function hourTime(hour: number): string {
   selector: 'pm-agenda-calendar',
   imports: [FullCalendarModule, NgTemplateOutlet],
   templateUrl: './agenda-calendar.component.html',
-  styleUrl: './agenda-calendar.component.scss',
+  // La mention « Demande en ligne » a sa feuille (M14-14) : chaque feuille reste sous 8 kB.
+  styleUrls: ['./agenda-calendar.component.scss', './agenda-calendar.online.scss'],
   // Styles globaux sous `.pm-calendar` : FullCalendar rend hors de la vue Angular.
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

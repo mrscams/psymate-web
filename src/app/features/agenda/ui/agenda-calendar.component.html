@@ -52,6 +52,10 @@
         <ng-container [ngTemplateOutlet]="globe" /><span class="sr-only"> · {{ onlineLabel }}</span>
       }
     } @else {
+      <!-- Place du globe en coin, réservée sur la première ligne quand le bloc est compact. -->
+      @if (props.online) {
+        <span class="online-slot"></span>
+      }
       <span class="name">{{ props.name }}</span>
       @if (props.suffix; as suffix) {
         <span class="suffix" [class.status]="props.suffixKind === 'status'"> · {{ suffix }}</span>

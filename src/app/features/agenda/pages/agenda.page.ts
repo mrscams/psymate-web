@@ -186,15 +186,18 @@ export class AgendaPage {
   protected readonly requestsShown = computed(
     () => this.requestsOpen() && this.store.detailState() === 'none',
   );
-  /** Nom accessible de l'entrée : « Demandes en ligne, 2 en attente » (le compteur de l'API). */
-  protected readonly requestsName = computed(() => {
+  /**
+   * Suite du nom accessible de l'entrée, lue après « Demandes » et masquée à l'écran (maquette) :
+   * « Demandes en ligne, 2 en attente » ; la pastille visible est `aria-hidden`.
+   */
+  protected readonly requestsSuffix = computed(() => {
     const count = this.store.requestCount();
     if (count === null) {
-      return $localize`:Nom accessible de l'entrée Demandes, compteur pas encore lu@@agenda.toolbar.requestsName:Demandes en ligne`;
+      return $localize`:Suite masquée du nom de l'entrée Demandes (« Demandes en ligne »), compteur pas encore lu@@agenda.toolbar.requestsSuffix: en ligne`;
     }
     return count === 0
-      ? $localize`:Nom accessible de l'entrée Demandes, aucune demande@@agenda.toolbar.requestsNone:Demandes en ligne, aucune en attente`
-      : $localize`:Nom accessible de l'entrée Demandes, avec le compteur@@agenda.toolbar.requestsCount:Demandes en ligne, ${count}:count: en attente`;
+      ? $localize`:Suite masquée du nom de l'entrée Demandes (« Demandes en ligne, aucune en attente »)@@agenda.toolbar.requestsSuffixNone: en ligne, aucune en attente`
+      : $localize`:Suite masquée du nom de l'entrée Demandes (« Demandes en ligne, 2 en attente »)@@agenda.toolbar.requestsSuffixCount: en ligne, ${count}:count: en attente`;
   });
 
   protected readonly title = $localize`:Titre de la page Agenda@@agenda.title:Agenda`;

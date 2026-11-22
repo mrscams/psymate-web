@@ -184,6 +184,13 @@ async function render(url: string, options: RenderOptions = {}) {
   };
 }
 
+/** Nom tiré du contenu, sans ce qui est `aria-hidden` (la pastille du compteur). */
+function nameOf(el: Element): string {
+  const clone = el.cloneNode(true) as Element;
+  clone.querySelectorAll('[aria-hidden="true"]').forEach((node) => node.remove());
+  return text(clone);
+}
+
 function key(name: string): void {
   document.dispatchEvent(
     new KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true }),
@@ -491,12 +498,18 @@ describe('AgendaPage', () => {
       );
       expect(requests).toHaveBeenCalledTimes(1);
       const toolbar = [...el.querySelector('.toolbar')!.children].map((child) =>
-        child.classList.contains('views') ? 'vues' : text(child),
+        child.classList.contains('views') ? 'vues' : nameOf(child),
       );
-      expect(toolbar.slice(-3)).toEqual(['vues', 'Demandes 2', '+ Rendez-vous']);
+      expect(toolbar.slice(-3)).toEqual([
+        'vues',
+        'Demandes en ligne, 2 en attente',
+        '+ Rendez-vous',
+      ]);
       const button = requestsButton();
-      expect(button.getAttribute('aria-label')).toBe('Demandes en ligne, 2 en attente');
+      // À l'écran : « Demandes » et la pastille ; le reste du nom est masqué (sr-only).
+      expect(button.querySelector('.sr-only')?.textContent).toBe(' en ligne, 2 en attente');
       expect(button.querySelector('.count')!.getAttribute('aria-hidden')).toBe('true');
+      expect(text(button.querySelector('.count'))).toBe('2');
       expect(button.getAttribute('aria-expanded')).toBe('false');
       expect(requestsPanel()).toBeNull();
     });
@@ -506,9 +519,10 @@ describe('AgendaPage', () => {
         '/agenda?view=week&date=2026-10-26',
       );
       const button = requestsButton();
-      expect(text(button)).toBe('Demandes');
+      expect(text(button)).toBe('Demandes en ligne, aucune en attente');
+      expect(button.querySelector('.sr-only')?.textContent).toBe(' en ligne, aucune en attente');
       expect(button.querySelector('.count')).toBeNull();
-      expect(button.getAttribute('aria-label')).toBe('Demandes en ligne, aucune en attente');
+      expect(nameOf(button)).toBe('Demandes en ligne, aucune en attente');
       button.click();
       await settle(fixture);
       expect(text(requestsPanel()?.querySelector('pm-state'))).toContain(
@@ -581,7 +595,7 @@ describe('AgendaPage', () => {
         { api: { requests } },
       );
       expect(stub()['count']).toBe('14');
-      expect(requestsButton().getAttribute('aria-label')).toBe('Demandes en ligne');
+      expect(nameOf(requestsButton())).toBe('Demandes en ligne');
       requestsButton().click();
       await settle(fixture);
       const panel = requestsPanel()!;
@@ -592,7 +606,7 @@ describe('AgendaPage', () => {
       await settle(fixture);
       expect(requests).toHaveBeenCalledTimes(2);
       expect(load).toHaveBeenCalledTimes(1);
-      expect(requestsButton().getAttribute('aria-label')).toBe('Demandes en ligne, 1 en attente');
+      expect(nameOf(requestsButton())).toBe('Demandes en ligne, 1 en attente');
       expect(requestsPanel()?.querySelectorAll('ul.req-list button')).toHaveLength(1);
     });
 
@@ -607,7 +621,7 @@ describe('AgendaPage', () => {
         '/agenda/rdv/req-1?view=week&date=2026-10-26',
         { api: { requests, load, confirm } },
       );
-      expect(requestsButton().getAttribute('aria-label')).toBe('Demandes en ligne, 2 en attente');
+      expect(nameOf(requestsButton())).toBe('Demandes en ligne, 2 en attente');
       [...detail()!.querySelectorAll<HTMLButtonElement>('button')]
         .find((b) => text(b) === 'Confirmer le rendez-vous')!
         .click();
@@ -615,7 +629,7 @@ describe('AgendaPage', () => {
       expect(confirm).toHaveBeenCalledWith('req-1');
       expect(load).toHaveBeenCalledTimes(2);
       expect(requests).toHaveBeenCalledTimes(2);
-      expect(requestsButton().getAttribute('aria-label')).toBe('Demandes en ligne, 1 en attente');
+      expect(nameOf(requestsButton())).toBe('Demandes en ligne, 1 en attente');
       expect(text(requestsButton().querySelector('.count'))).toBe('1');
       expect(toasts.toasts().map((t) => t.message)).toEqual([
         'Rendez-vous confirmé. Le demandeur est prévenu par e-mail.',

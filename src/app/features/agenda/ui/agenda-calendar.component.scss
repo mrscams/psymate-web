@@ -228,65 +228,6 @@
     }
   }
 
-  // « Demande en ligne » (fiche 15, demandes en ligne) : globe décoratif, la mention est un texte.
-  .globe {
-    flex: none;
-    width: 12px;
-    height: 12px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.7;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    vertical-align: -2px;
-  }
-
-  // Grille : une ligne sous les heures ; le bloc est le conteneur mesuré (largeur et hauteur).
-  .fc-timegrid-event-harness {
-    container-type: size;
-  }
-
-  .online-mark {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    white-space: nowrap;
-  }
-
-  // Bloc trop court pour trois lignes ou colonne de moins de 130 px : le globe seul, à la suite
-  // des heures ; le texte reste lu (nom accessible du lien).
-  @container (max-width: 129px) or (max-height: 60px) {
-    .online-mark {
-      display: inline-flex;
-      margin-left: 4px;
-      vertical-align: middle;
-    }
-
-    .online-text {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
-    }
-  }
-
-  // Liste : la mention en texte après le statut, en pastille info.
-  .online-pill {
-    display: inline-flex;
-    gap: 6px;
-    align-items: center;
-    margin-left: 8px;
-    padding: 2px 10px;
-    border-radius: 999px;
-    background: var(--info-bg);
-    color: var(--info);
-    font: 600 12px/1.4 var(--font-ui);
-    white-space: nowrap;
-  }
-
   // Indisponibilité externe : hachures 135°, bordure fine, 11 px.
   .fc-bg-event.busy {
     overflow: hidden;

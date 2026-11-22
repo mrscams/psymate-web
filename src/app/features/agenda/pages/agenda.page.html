@@ -23,12 +23,11 @@
     #requestsButton
     type="button"
     class="tb-btn requests"
-    [attr.aria-label]="requestsName()"
     [attr.aria-expanded]="requestsShown()"
     [attr.aria-controls]="requestsIds.panel"
     (click)="toggleRequests()"
   >
-    {{ requestsLabel }}
+    {{ requestsLabel }}<span class="sr-only">{{ requestsSuffix() }}</span>
     @if (store.requestCount(); as count) {
       <span class="count" aria-hidden="true">{{ count }}</span>
     }
