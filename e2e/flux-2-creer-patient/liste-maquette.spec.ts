@@ -5,13 +5,12 @@ import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { shoot } from '../support/captures';
 import { keyboardOnly } from '../support/clavier';
+import { API } from '../support/env';
 
 // UX-S7 : liste des patients fidèle à la proposition 01 et aux décisions du 14 novembre 2026
 // (dix patients par page avec Précédent / Suivant, date seule, archivés par GET ?archived=true,
 // aucun chiffre que le serveur ne sert pas). Contre l'API locale, jamais de mock : chaque test crée
 // son compte jetable et ses patients (le résumé de chaque ligne vient de GET /overview).
-
-const API = 'http://localhost:8080';
 
 async function createPatient(
   api: APIRequestContext,

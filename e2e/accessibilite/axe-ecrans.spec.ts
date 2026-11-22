@@ -16,8 +16,7 @@ import { confirmEmail, register } from '../support/accounts';
 import { ADMIN_AVAILABLE, ADMIN_MISSING } from '../support/admin';
 import { themeFolder } from '../theme/theme-support';
 import { axeScreen, expectTheme, settled, shoot, Theme, THEMES } from './a11y-support';
-
-const API = 'http://localhost:8080';
+import { API } from '../support/env';
 
 // axe-core sur chaque écran V1, dans les deux thèmes (M7-04, C5 « aucune violation sérieuse sur
 // les 13 écrans », B7 ; liste des écrans : docs/couverture-ecrans.md). Contre l'API locale (seed

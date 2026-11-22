@@ -44,6 +44,8 @@ règle que `tools/serve-dist.mjs`.
 | `pnpm extract-i18n` | Régénère `src/locale/messages.fr.xlf` (source) ; reporter les nouveaux messages en anglais |
 | `pnpm format`       | Prettier sur tout le dépôt                                                                 |
 
+Adresses des e2e (`e2e/support/env.ts`), pour jouer contre une seconde pile locale : `E2E_API_URL` (défaut `http://localhost:8080`), `E2E_MAILPIT_URL` (défaut `http://localhost:8025`), `E2E_WEB_URL` (défaut `http://localhost:4200`, son port sert aussi à `tools/serve-dist.mjs`).
+
 ## Arborescence
 
 Voir `docs/handbook/architecture-frontend.html` §3.

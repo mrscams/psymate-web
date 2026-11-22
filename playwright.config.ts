@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
+import { API, WEB } from './e2e/support/env';
+
 /**
  * e2e Playwright contre l'API réelle (CLAUDE.md, handbook §10) : jamais de mock du backend.
  *
@@ -8,10 +10,11 @@ import { defineConfig, devices } from '@playwright/test';
  *   make seed SIZE=small ; en CI, le job e2e). Playwright attend /actuator/health.
  * - l'application construite (pnpm build), servie avec ses deux langues sous /fr/ et /en/
  *   et le proxy /api → :8080 par tools/serve-dist.mjs. pnpm e2e reconstruit avant de lancer.
+ * Adresses : E2E_API_URL, E2E_MAILPIT_URL, E2E_WEB_URL (e2e/support/env.ts).
  */
 const CI = !!process.env['CI'];
-const API_HEALTH = 'http://localhost:8080/actuator/health';
-const WEB = 'http://localhost:4200';
+const API_HEALTH = `${API}/actuator/health`;
+const WEB_PORT = new URL(WEB).port || '80';
 
 export default defineConfig({
   testDir: 'e2e',
@@ -42,6 +45,7 @@ export default defineConfig({
     {
       name: 'psymate-web',
       command: 'node tools/serve-dist.mjs',
+      env: { PORT: WEB_PORT, API_URL: API },
       url: `${WEB}/fr/`,
       reuseExistingServer: !CI,
       timeout: 30_000,

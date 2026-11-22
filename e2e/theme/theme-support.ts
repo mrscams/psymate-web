@@ -5,11 +5,10 @@ import AxeBuilder from '@axe-core/playwright';
 import { APIRequestContext, expect, Page, TestInfo } from '@playwright/test';
 
 import { daysAgo, entry, intakeOf, pastSession } from '../flux-5-timeline/timeline-data';
+import { API } from '../support/env';
 
 // Outils des e2e du thème (M6-04, étude couleurs §6), contre l'API réelle (jamais de mock) : dossier
 // écrit par l'API dans un compte jetable, captures pleine page, état « sans rechargement ».
-
-const API = 'http://localhost:8080';
 
 /** Fond de page (body : --mat-sys-surface = --surface-raised) dans chaque thème, en rgb(). */
 export const SURFACE_RAISED = {

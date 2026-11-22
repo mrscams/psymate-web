@@ -10,14 +10,13 @@ import {
 import { createAccount, signIn } from '../preferences/accounts';
 import { SEED } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { API } from '../support/env';
 
 // Profil 360 en lecture (M13-06, fiche 30, G Q53, Q55, Q56) : contre l'API locale et le seed small,
 // jamais de mock du backend. Le premier test lit un patient du seed (compte de Claire) et compare
 // l'écran à la réponse de l'API ; le second crée un compte et un patient jetables (profil vide, puis
 // quelques informations écrites par l'API dans la préparation du test) pour l'état vide, le thème
 // sombre et la largeur étroite. L'écran lui-même n'écrit jamais rien.
-
-const API = 'http://localhost:8080';
 
 type Category = 'history' | 'family' | 'health' | 'values_goals';
 

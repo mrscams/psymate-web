@@ -4,12 +4,11 @@ import { createPatient, daysAgo, entry, intakeOf } from '../flux-5-timeline/time
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { tabTo } from '../support/clavier';
+import { API } from '../support/env';
 
 // Mode séance et panneau de clôture (UX-S3, propositions 04 et 04b : états 2 à 6) : contre l'API
 // locale (seed small, Mailpit), jamais de mock du backend. Chaque test crée son compte et son
 // dossier ; les séances démarrées ou clôturées ici ne touchent aucun patient du seed.
-
-const API = 'http://localhost:8080';
 
 /** Instant ISO il y a `minutes` minutes. */
 function minutesAgo(minutes: number): string {
