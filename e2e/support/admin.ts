@@ -1,8 +1,7 @@
 import { APIRequestContext, expect, request as playwrightRequest } from '@playwright/test';
 
 import { totp, totpStep } from './totp';
-
-const API = 'http://localhost:8080';
+import { API } from './env';
 
 /**
  * Administrateur local pour les e2e qui suspendent un compte (fiche 27, M1-18). Il n'existe pas

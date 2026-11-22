@@ -19,13 +19,12 @@ import {
   sinceFacts,
   windowSelector,
 } from './overview-data';
+import { API } from '../support/env';
 
 // Vue d'ensemble unifiée (UX-S6, proposition propositions-2026-11/02-vue-ensemble ; fiche 02,
 // B3 flux 6, B4 écran 2), contre l'API locale (seed small, Mailpit), jamais de mock du backend.
 // Chaque test crée son compte jetable et ses dossiers par l'API ; axe-core (WCAG 2.0/2.1 A et AA)
 // dans chaque test.
-
-const API = 'http://localhost:8080';
 
 /** « 4 novembre » : le jour d'une date dans le fuseau des tests, comme la bande « Depuis ». */
 function longDay(iso: string): string {

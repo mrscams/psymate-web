@@ -10,13 +10,13 @@ import {
 import { createAccount, signIn } from '../preferences/accounts';
 import { SEED } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { API } from '../support/env';
 
 // B3 flux 3, partie éditeur d'entrée (M1-08, fiche 05) : contre l'API locale (seed small, Mailpit),
 // jamais de mock du backend. Les comptes jetables portent les patients créés ici ; la correction
 // hors fenêtre de grâce prend une entrée ancienne du seed (claire.seed), seule source d'une entrée
 // enregistrée il y a plus de 1 h 15.
 
-const API = 'http://localhost:8080';
 /** Grâce de G Q31 (versioning.grace-period = 75m). */
 const GRACE_MS = 75 * 60_000;
 

@@ -4,6 +4,7 @@ import { setPreferences } from '../flux-6-vue-ensemble/overview-data';
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { shoot } from '../support/captures';
+import { API } from '../support/env';
 
 // UX-S10 : fiche patient fidèle à la proposition 16 (docs/design/propositions-2026-11) : page en
 // pleine largeur, rail collant à gauche (aperçu de l'en-tête, sections, Enregistrer toujours
@@ -11,8 +12,6 @@ import { shoot } from '../support/captures';
 // historique dans l'en-tête ; sur mobile, puces des sections en haut et barre d'enregistrement en
 // bas. Contre l'API locale (seed small), jamais de mock du backend : compte jetable, patient créé
 // par l'API.
-
-const API = 'http://localhost:8080';
 
 async function createTag(api: APIRequestContext, label: string): Promise<void> {
   const response = await api.post(`${API}/api/tags`, { data: { label } });

@@ -2,14 +2,13 @@ import { APIRequestContext, expect, Page, Request, test } from '@playwright/test
 
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { API } from '../support/env';
 
 // Profil 360 en écriture (M13-07, fiche 30, G Q54, Q55) : contre l'API locale, jamais de mock du
 // backend. Chaque test crée un compte et un patient jetables (comme lecture.spec.ts) : les
 // informations écrites par les tests ne touchent jamais les patients du seed. Le panneau latéral
 // ajoute, modifie et retire ; après chaque écriture, le profil est relu (GET), jamais corrigé
 // localement. Aucune requête de séance, d'entrée ou de lien pendant ces parcours.
-
-const API = 'http://localhost:8080';
 
 type Category = 'history' | 'family' | 'health' | 'values_goals';
 

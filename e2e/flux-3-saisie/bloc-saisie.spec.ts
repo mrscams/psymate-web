@@ -3,12 +3,11 @@ import { APIRequestContext, APIResponse, expect, Page, Response, test } from '@p
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { block, settled } from './bloc-support';
+import { API } from '../support/env';
 
 // B3 flux 3, bloc de saisie structuré (UX-S1, décision du 12 novembre 2026 ; propositions 04b « Le
 // champ de saisie ») : contre l'API locale (seed small, Mailpit), jamais de mock du backend. Chaque
 // test crée son compte et son patient.
-
-const API = 'http://localhost:8080';
 
 interface LinkDto {
   sourceId: string;

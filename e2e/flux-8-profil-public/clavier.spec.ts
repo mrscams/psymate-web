@@ -4,14 +4,13 @@ import { ADMIN_AVAILABLE, ADMIN_MISSING } from '../support/admin';
 import { expectNoAxeViolations } from '../support/axe';
 import { keyboardOnly, tabTo } from '../support/clavier';
 import { approvedAccount, expectSaved, pendingAccount, signIn } from './helpers';
+import { API } from '../support/env';
 
 // B3 flux 8 au clavier seul (M7-04, B7, fiche 10) : Mon compte depuis le menu de l'avatar, « Profil
 // public » dans la navigation, le profil rempli champ par champ, l'aperçu rafraîchi ; la
 // publication refusée tant que le dossier n'est pas approuvé (motif et lien atteignables au
 // clavier) ; avec un dossier approuvé (administrateur e2e), publier puis retirer à l'Espace.
 // Aucun geste de pointeur après la connexion (keyboardOnly). Contre l'API réelle, jamais de mock.
-
-const API = 'http://localhost:8080';
 
 /** Avatar (Tab, Entrée) → « Mon compte » (Entrée) → « Profil public » (Tab, Entrée). */
 async function openProfileByKeyboard(page: Page): Promise<void> {

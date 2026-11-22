@@ -1,11 +1,12 @@
 import { APIRequestContext, expect } from '@playwright/test';
 
 import { createPatient, daysAgo, entry, intakeOf } from './timeline-data';
+import { API } from '../support/env';
 
 // Données des e2e des filtres et du mode par séance (M3-03), écrites par l'API réelle (jamais de
 // mock) dans un compte jetable.
 
-export const API = 'http://localhost:8080';
+export { API };
 
 /** Préférence `timeline.groupBy` du compte (PATCH /api/me/preferences). */
 export async function setGroupBy(

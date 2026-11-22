@@ -7,11 +7,10 @@ import {
   intakeOf,
   pastSession,
 } from '../flux-5-timeline/timeline-data';
+import { API } from '../support/env';
 
 // Données et outils des e2e de la vue d'ensemble (M4-05), écrites par l'API réelle (jamais de
 // mock) dans un compte jetable.
-
-const API = 'http://localhost:8080';
 
 export interface OverviewFolder {
   patientId: string;

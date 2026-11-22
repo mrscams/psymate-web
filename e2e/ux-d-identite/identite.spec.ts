@@ -2,6 +2,7 @@ import { APIRequestContext, expect, Page, test } from '@playwright/test';
 
 import { confirmEmail, register } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { API, MAILPIT } from '../support/env';
 
 // UX-D1 à UX-D5 (audit UX du 9 novembre 2026, fiches 11, 12, 25, 26, 27) : connexion, inscription,
 // confirmation d'e-mail, mot de passe oublié (étapes 1 et 2), compte suspendu. Mesures de l'audit :
@@ -9,8 +10,6 @@ import { expectNoAxeViolations } from '../support/axe';
 // étape 2 du mot de passe oublié avec un vrai jeton lu dans Mailpit. Contre l'API locale (seed
 // small), jamais de mock du backend.
 
-const API = 'http://localhost:8080';
-const MAILPIT = 'http://localhost:8025';
 // Lien de l'e-mail de réinitialisation (psymate-api, AuthMailer) : <web>/reset-password?token=…
 const RESET_TOKEN = /reset-password\?token=([A-Za-z0-9_.~%-]+)/;
 
