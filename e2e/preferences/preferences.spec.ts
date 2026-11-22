@@ -8,6 +8,8 @@ import { API } from '../support/env';
 // crée son compte jetable : les préférences sont par compte et les tests tournent en parallèle.
 
 const PREFERENCES = '/fr/mon-compte/preferences';
+// Deux interrupteurs sur la page depuis M14-11 (type médicament, prise de rendez-vous en ligne).
+const MEDICATION = 'Afficher le type médicament dans la saisie et la timeline';
 const PATCH = (response: { url(): string; request(): { method(): string } }): boolean =>
   response.url().endsWith('/api/me/preferences') && response.request().method() === 'PATCH';
 
@@ -119,7 +121,7 @@ test('coach nouvellement inscrit : « client » et type médicament masqué sans
   );
   // Le pipe subjectLabel suit la préférence : l'aide de la ligne parle de « clients ».
   await expect(page.locator('#subject-help')).toContainText('« clients »');
-  await expect(page.getByRole('switch')).not.toBeChecked();
+  await expect(page.getByRole('switch', { name: MEDICATION })).not.toBeChecked();
   await expect(page.getByRole('spinbutton', { name: 'Durée de séance par défaut' })).toHaveValue(
     '60',
   );
@@ -230,7 +232,7 @@ test('parcours clavier et axe-core', async ({ page, request }) => {
   const account = await createAccount(request, 'm1-16.a11y', 'psychiatrist');
   await signIn(page, account);
   await openPreferences(page);
-  await expect(page.getByRole('switch')).toBeChecked();
+  await expect(page.getByRole('switch', { name: MEDICATION })).toBeChecked();
   await expectNoAxeViolations(page);
 
   // Au clavier : focus sur « 90 j », Tab vers « 1 an », puis Entrée enregistre.
