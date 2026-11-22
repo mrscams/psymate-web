@@ -1,9 +1,7 @@
 import { request as playwrightRequest } from '@playwright/test';
 
 import { uniqueEmail } from './accounts';
-
-const API = 'http://localhost:8080';
-const MAILPIT = 'http://localhost:8025';
+import { API, MAILPIT } from './env';
 
 /**
  * Barrière « l'API a rattrapé son travail en différé » (M7-04, stabilisation des e2e).

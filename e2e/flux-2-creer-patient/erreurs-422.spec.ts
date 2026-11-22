@@ -2,13 +2,12 @@ import { expect, test } from '@playwright/test';
 
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { API } from '../support/env';
 
 // UX-A7 (planche 29, fiche 16) : un 422 de l'API sur la fiche patient s'affiche dans le résumé
 // pm-form-errors en tête de la page, qui prend le focus ; son lien mène au premier champ fautif.
 // Le rail (proposition 16, UX-S10) reste visible pendant l'erreur. Contre l'API locale (seed
 // small), jamais de mock du backend.
-
-const API = 'http://localhost:8080';
 
 test('422 sur la fiche patient : résumé en tête avec focus, lien vers le champ fautif', async ({
   page,

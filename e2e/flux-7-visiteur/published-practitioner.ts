@@ -2,8 +2,7 @@ import { APIRequestContext, expect, request as playwrightRequest } from '@playwr
 
 import { confirmEmail, register } from '../support/accounts';
 import { adminContext } from '../support/admin';
-
-const API = 'http://localhost:8080';
+import { API } from '../support/env';
 
 /** Praticien publié pour le flux 7 : nom, adresse publique et e-mail de réception. */
 export interface PublishedPractitioner {

@@ -3,6 +3,7 @@ import { APIRequestContext, expect, Page, test } from '@playwright/test';
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { keyboardOnly } from '../support/clavier';
+import { API } from '../support/env';
 
 // UX-B6 (audit UX du 9 nov. 2026, fiche 05 §4 et état A de la maquette) : la combobox d'émotion de
 // l'éditeur d'entrée, au clavier seul, contre l'API locale (seed small), jamais de mock du backend.
@@ -10,8 +11,6 @@ import { keyboardOnly } from '../support/clavier';
 // personnalisée « … » » avec choix de famille (POST /api/me/emotions), émotion créée proposée au
 // ressenti suivant sans rechargement, 409 EMOTION_LABEL_EXISTS sous le champ ; curseur à 5 par
 // défaut ; pas de débordement à 375 px. axe à 0 liste ouverte et fieldset de famille ouvert.
-
-const API = 'http://localhost:8080';
 
 async function createPatient(api: APIRequestContext, displayName: string): Promise<string> {
   const response = await api.post(`${API}/api/patients`, { data: { displayName } });

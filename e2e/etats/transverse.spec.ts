@@ -3,8 +3,7 @@ import { APIRequestContext, expect, Page, test } from '@playwright/test';
 import { createPatient, intakeOf } from '../flux-5-timeline/timeline-data';
 import { expectNoAxeViolations } from '../support/axe';
 import { practitioner, shareSession, shoot } from './etats-support';
-
-const API = 'http://localhost:8080';
+import { API } from '../support/env';
 
 // Planche 29 (M6-03) : état transverse hors ligne et raccourcis de B2 (1 2 3, M, N, L,
 // Échap, /) branchés et inactifs dans un champ, contre l'API réelle sur un compte jetable. Le 429

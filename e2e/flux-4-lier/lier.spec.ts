@@ -2,12 +2,11 @@ import { APIRequestContext, expect, Locator, Page, test } from '@playwright/test
 
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { API } from '../support/env';
 
 // B3 flux 4 (M2-04, fiche 06) : lier deux entrées existantes, contre l'API locale (seed small,
 // Mailpit), jamais de mock du backend. Chaque test crée son compte, son patient et ses entrées par
 // l'API ; le panneau s'ouvre par ?link=<entryId> (ou L depuis l'éditeur d'entrée).
-
-const API = 'http://localhost:8080';
 
 async function ok<T>(response: Promise<import('@playwright/test').APIResponse>): Promise<T> {
   const res = await response;

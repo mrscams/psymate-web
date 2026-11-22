@@ -3,12 +3,12 @@ import { APIRequestContext, expect, Page, request as playwrightRequest } from '@
 import { TestAccount } from '../support/accounts';
 import { apiDrained } from '../support/api-drain';
 import { exclusive } from '../support/exclusif';
+import { API } from '../support/env';
 
 // Données des e2e de la timeline (M3-02), écrites par l'API réelle (jamais de mock) dans un compte
 // jetable : un patient « récit » (situations, séances passées, entrées d'avant le suivi) et un
 // patient « volume » (2 000 entrées) pour le défilement et les fenêtres.
 
-const API = 'http://localhost:8080';
 const DAY = 86_400_000;
 
 /** Limite de débit de l'API : 600 requêtes par minute et par session (G Q24) ; 450 par session ici. */

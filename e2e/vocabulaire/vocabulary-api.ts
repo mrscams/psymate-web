@@ -1,4 +1,5 @@
 import { APIRequestContext, expect } from '@playwright/test';
+import { API } from '../support/env';
 
 /**
  * Mise en place par l'API réelle pour les e2e du vocabulaire (M1-09) : le `request` de Playwright
@@ -6,7 +7,6 @@ import { APIRequestContext, expect } from '@playwright/test';
  * test a son compte : fusionner des tags ou des émotions du seed serait irréversible (la fusion de
  * tags ne s'annule pas) et ferait échouer la suite au passage suivant.
  */
-const API = 'http://localhost:8080';
 
 async function ok<T>(response: Promise<import('@playwright/test').APIResponse>, status = 201) {
   const done = await response;

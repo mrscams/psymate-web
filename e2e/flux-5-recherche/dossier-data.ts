@@ -2,11 +2,12 @@ import { APIRequestContext, expect } from '@playwright/test';
 
 import { createAccount } from '../preferences/accounts';
 import { TestAccount } from '../support/accounts';
+import { API } from '../support/env';
 
 // Dossier « Marie D. » de la fiche 07 (recherche), écrit par l'API réelle dans un compte jetable :
 // partagé par les e2e du flux 5 (recherche.spec.ts, clavier.spec.ts).
 
-export const API = 'http://localhost:8080';
+export { API };
 
 export interface Dossier {
   account: TestAccount;
