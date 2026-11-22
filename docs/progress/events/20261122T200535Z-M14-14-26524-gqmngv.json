@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-22T20:05:35.209Z",
+  "task": "M14-14",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR #110 fusionnée en squash (7044074) : demandes en ligne dans l'agenda",
+  "pr": "https://github.com/mrscams/psymate-web/pull/110",
+  "branch": "suivi-m14-web",
+  "checkout": "suivi-m14-web"
+}
