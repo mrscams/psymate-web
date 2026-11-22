@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { DirectoryPage } from './pages/directory.page';
 import { HowItWorksPage } from './pages/how-it-works.page';
 import { PractitionerPage } from './pages/practitioner.page';
+import { BOOKING_LINK_SEGMENTS } from './public-paths';
 
 /**
  * Pages publiques (fiches 08, 09, 24), montées à la racine par app.routes.ts avec le layout public,
@@ -30,6 +31,21 @@ export const PUBLIC_ROUTES: Routes = [
     loadComponent: () => import('./pages/booking.page').then((m) => m.BookingPage),
     data: { wide: true },
     title: $localize`:Titre d'onglet de la prise de rendez-vous@@public.booking.pageTitle:Prendre rendez-vous · PsyMate`,
+  },
+  // Pages par lien de la prise de rendez-vous (fiche 32, G Q60, Q62) : ouvertes depuis un e-mail,
+  // chargées à la demande, non prérendues (app.routes.server.ts : '**' en rendu client), noindex,
+  // referrer no-referrer. Le jeton n'est lu que dans le chemin.
+  {
+    path: `${BOOKING_LINK_SEGMENTS.verify}/:token`,
+    loadComponent: () => import('./pages/booking-verify.page').then((m) => m.BookingVerifyPage),
+    data: { wide: true },
+    title: $localize`:Titre d'onglet de la vérification d'une demande de rendez-vous@@public.bookingLink.verify.pageTitle:Votre demande de rendez-vous · PsyMate`,
+  },
+  {
+    path: `${BOOKING_LINK_SEGMENTS.manage}/:token`,
+    loadComponent: () => import('./pages/booking-manage.page').then((m) => m.BookingManagePage),
+    data: { wide: true },
+    title: $localize`:Titre d'onglet de la gestion d'un rendez-vous@@public.bookingLink.manage.pageTitle:Votre rendez-vous · PsyMate`,
   },
   {
     path: 'comment-ca-marche',

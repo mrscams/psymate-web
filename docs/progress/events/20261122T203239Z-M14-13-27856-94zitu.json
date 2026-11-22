@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-22T20:32:39.024Z",
+  "task": "M14-13",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Pages /rendez-vous/confirmer/:token et /rendez-vous/gerer/:token (fiche 32) : verify, manage, annulation avec dialogue et relecture, noindex et referrer no-referrer, 29 vues de la maquette ; Vitest et e2e (deux créations)",
+  "notes": "Referer du GET /api/auth/me du démarrage (core/auth) porte encore le jeton : politique de referrer à poser dans index.html ou en-tête HTTP, tâche dédiée",
+  "pr": "https://github.com/mrscams/psymate-web/pull/112",
+  "branch": "M14-13-rendez-vous-par-lien",
+  "checkout": "agent-a66b3deb7f8ef786d"
+}

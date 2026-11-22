@@ -59,3 +59,29 @@ export interface BookingRequest {
 
 /** Limites du contrat (CreateBookingRequest). */
 export const BOOKING_LIMITS = { firstName: 100, lastName: 100, email: 320, phone: 30 } as const;
+
+/**
+ * État d'un rendez-vous pris en ligne, côté demandeur (fiche 32) : pending (en attente de la
+ * réponse du praticien), confirmed (à venir ou en cours), cancelled, past.
+ */
+export type PublicAppointmentStatus = 'pending' | 'confirmed' | 'cancelled' | 'past';
+
+/** Qui a annulé (status = cancelled) : le demandeur, le praticien (refus ou annulation), l'expiration. */
+export type CancelledBy = 'visitor' | 'practitioner' | 'expired';
+
+/**
+ * PublicAppointmentDto (verify, manage, manage/cancel), sans rien du demandeur. `slug` et
+ * `displayName` valent null quand la fiche n'est plus publiée ; `manageToken` n'est renvoyé que par
+ * la première vérification réussie.
+ */
+export interface PublicAppointment {
+  status: PublicAppointmentStatus;
+  cancelledBy: CancelledBy | null;
+  startsAt: string;
+  endsAt: string;
+  durationMin: number;
+  modality: BookingModality;
+  practitioner: { slug: string | null; displayName: string | null };
+  canCancel: boolean;
+  manageToken: string | null;
+}
