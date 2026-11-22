@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-22T20:36:30.873Z",
+  "task": "M14-15",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Agenda : Rattacher à un patient dans le détail d'un invité non purgé (sélecteur du panneau 15b extrait en ui/patient-picker, case includeSameGuest, phrase sur l'arrêt des e-mails), POST attach-patient puis relecture de la plage et des demandes, 409 et 422 PATIENT_ARCHIVED sur place, 403/404 patient en toast",
+  "notes": "Vitest 208 fichiers / 2490 tests ; e2e/agenda 12 tests verts deux fois de suite contre la pile de test (:8081) ; e2e sans route publique, rendez-vous invités créés par la session de claire et annulés en fin de test ; action offerte aussi pour un invité annulé ou fait (l'API l'accepte) ; captures dans docs/design/captures-m14-15",
+  "next": "Jalon M14 web terminé après fusion de M14-13 et M14-15",
+  "pr": "https://github.com/mrscams/psymate-web/pull/113",
+  "branch": "M14-15-agenda-rattacher-invite",
+  "checkout": "agent-a282863566f0f93d5"
+}
