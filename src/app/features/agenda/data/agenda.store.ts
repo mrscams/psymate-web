@@ -326,6 +326,20 @@ export const AgendaStore = signalStore(
       confirm(id: string): Promise<WriteResult<Appointment>> {
         return write(async () => ({ value: await api.confirm(id), conflicts: [] }));
       },
+      /**
+       * « Rattacher à un patient » : `POST …/attach-patient`, puis relecture de la plage et des
+       * demandes (le détail montre alors le patient) ; rien n'est corrigé localement.
+       */
+      attachPatient(
+        id: string,
+        patientId: string,
+        includeSameGuest: boolean,
+      ): Promise<WriteResult<Appointment[]>> {
+        return write(async () => ({
+          value: await api.attachPatient(id, patientId, includeSameGuest),
+          conflicts: [],
+        }));
+      },
       cancelSeries(seriesId: string): Promise<WriteResult<Appointment[]>> {
         return write(async () => ({ value: await api.cancelSeries(seriesId), conflicts: [] }));
       },

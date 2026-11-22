@@ -136,6 +136,23 @@ export class AgendaApi {
     return toAppointment(await firstValueFrom(this.appointments.confirmAppointment(id)));
   }
 
+  /**
+   * `POST /api/appointments/{id}/attach-patient` : rattache un rendez-vous invité à un patient du
+   * praticien, non archivé ; avec `includeSameGuest`, aussi les autres rendez-vous du même invité
+   * (mêmes nom, prénom et téléphone). Rend les rendez-vous rattachés, triés par début. Erreurs :
+   * 403 PATIENT_FORBIDDEN, 404, 409 APPOINTMENT_NOT_ACTIVE, 422 PATIENT_ARCHIVED.
+   */
+  async attachPatient(
+    id: string,
+    patientId: string,
+    includeSameGuest: boolean,
+  ): Promise<Appointment[]> {
+    const dto = await firstValueFrom(
+      this.appointments.attachPatient(id, { patientId, includeSameGuest }),
+    );
+    return (dto.appointments ?? []).map(toAppointment);
+  }
+
   /** `POST /api/appointments/series/{seriesId}/cancel` : « Annuler » du toast après une série. */
   async cancelSeries(seriesId: string, reason?: string): Promise<Appointment[]> {
     const body = reason ? { reason } : {};

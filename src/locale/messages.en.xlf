@@ -29319,6 +29319,114 @@
         </context-group>
         <note priority="1" from="description">Toast quand un rendez-vous en ligne était déjà annulé par le demandeur</note>
       </trans-unit>
+      <trans-unit id="agenda.detail.attach" datatype="html">
+        <source> Rattacher à un patient </source>
+        <target state="translated"> Link to a patient </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">401,404</context>
+        </context-group>
+        <note priority="1" from="description">Action Rattacher à un patient du détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.attach.title" datatype="html">
+        <source> Rattacher à un patient </source>
+        <target state="translated"> Link to a patient </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">214,218</context>
+        </context-group>
+        <note priority="1" from="description">Titre du formulaire Rattacher à un patient</note>
+      </trans-unit>
+      <trans-unit id="agenda.attach.patient" datatype="html">
+        <source>Patient</source>
+        <target state="translated">Patient</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">220,223</context>
+        </context-group>
+        <note priority="1" from="description">Champ patient du rattachement</note>
+      </trans-unit>
+      <trans-unit id="agenda.attach.includeSameGuest" datatype="html">
+        <source>Rattacher aussi les autres rendez-vous de cette personne</source>
+        <target state="translated">Also link this person's other appointments</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">240,244</context>
+        </context-group>
+        <note priority="1" from="description">Case du rattachement, includeSameGuest</note>
+      </trans-unit>
+      <trans-unit id="agenda.attach.stopsEmails" datatype="html">
+        <source>Après le rattachement, le demandeur ne recevra plus d&apos;e-mails automatiques.</source>
+        <target state="translated">Once linked, the requester will no longer receive automatic emails.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">496</context>
+        </context-group>
+        <note priority="1" from="description">Rattachement d&apos;une demande en ligne, fin des e-mails au demandeur</note>
+      </trans-unit>
+      <trans-unit id="agenda.attach.submit" datatype="html">
+        <source> Rattacher </source>
+        <target state="translated"> Link </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">256,259</context>
+        </context-group>
+        <note priority="1" from="description">Valider le rattachement</note>
+      </trans-unit>
+      <trans-unit id="agenda.attach.cancel" datatype="html">
+        <source> Annuler </source>
+        <target state="translated"> Cancel </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">263,266</context>
+        </context-group>
+        <note priority="1" from="description">Renoncer au rattachement</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.attached" datatype="html">
+        <source>Rendez-vous rattaché : <x id="name" equiv-text="name"/></source>
+        <target state="translated">Appointment linked: <x id="name" equiv-text="name"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">549</context>
+        </context-group>
+        <note priority="1" from="description">Toast après le rattachement d&apos;un rendez-vous invité à un patient</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.attachedMany" datatype="html">
+        <source><x id="count" equiv-text="count"/> rendez-vous rattachés : <x id="name" equiv-text="name"/></source>
+        <target state="translated"><x id="count" equiv-text="count"/> appointments linked: <x id="name" equiv-text="name"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">550</context>
+        </context-group>
+        <note priority="1" from="description">Toast après le rattachement de plusieurs rendez-vous d&apos;un invité à un patient</note>
+      </trans-unit>
+      <trans-unit id="agenda.attach.notActive" datatype="html">
+        <source>Ce rendez-vous ne peut plus être rattaché : il vise déjà un patient, ou les coordonnées de l&apos;invité ont été effacées.</source>
+        <target state="translated">This appointment can no longer be linked: it already belongs to a patient, or the guest details have been erased.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">561</context>
+        </context-group>
+        <note priority="1" from="description">Rattachement refusé, le rendez-vous vise déjà un patient ou l&apos;invité est purgé</note>
+      </trans-unit>
+      <trans-unit id="agenda.attach.archived" datatype="html">
+        <source>Ce patient est archivé : choisissez un patient actif.</source>
+        <target state="translated">This patient is archived: choose an active patient.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">567</context>
+        </context-group>
+        <note priority="1" from="description">Rattachement refusé, patient archivé</note>
+      </trans-unit>
+      <trans-unit id="agenda.attach.patientUnavailable" datatype="html">
+        <source>Ce patient n&apos;est plus accessible : choisissez-en un autre.</source>
+        <target state="translated">This patient is no longer accessible: choose another one.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">575</context>
+        </context-group>
+        <note priority="1" from="description">Rattachement refusé, patient inaccessible</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

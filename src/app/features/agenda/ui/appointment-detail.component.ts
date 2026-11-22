@@ -13,6 +13,7 @@ import {
   output,
   signal,
   untracked,
+  viewChild,
 } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -29,6 +30,7 @@ import {
   CANCEL_REASON_MAX,
   DURATIONS_MIN,
   isActive,
+  PatientOption,
   PLANNING_NOTE_MAX,
   toIsoDay,
 } from '../data/agenda.model';
@@ -45,12 +47,16 @@ import {
   onlineMention,
 } from './agenda-format';
 import { OnlineGlobeComponent } from './online-globe.component';
+import { PatientPickerComponent } from './patient-picker.component';
 
 /** Champ du contrat (errors[].field d'un 422 du PATCH) → contrôle du formulaire Déplacer. */
 const MOVE_FIELDS: Record<string, string> = { startsAt: 'start', durationMin: 'duration' };
 
-/** Ce que le détail a ouvert sous l'en-tête : rien, le formulaire Déplacer, ou l'annulation. */
-type Mode = 'idle' | 'move' | 'cancel';
+/**
+ * Ce que le détail a ouvert sous l'en-tête : rien, le formulaire Déplacer, l'annulation, ou
+ * « Rattacher à un patient » (invité non purgé).
+ */
+type Mode = 'idle' | 'move' | 'cancel' | 'attach';
 
 type NoteStatus = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -62,6 +68,19 @@ export function isWithdrawn(problem: ApiProblem): boolean {
 /** Deux motifs d'annulation identiques (absent, vide et null se valent). */
 export function sameReason(a: string | null | undefined, b: string | null | undefined): boolean {
   return (a?.trim() || null) === (b?.trim() || null);
+}
+
+/** `422 PATIENT_ARCHIVED` du rattachement : code du problème, ou d'une erreur de champ. */
+export function isPatientArchived(problem: ApiProblem): boolean {
+  return (
+    problem.code === 'PATIENT_ARCHIVED' ||
+    (problem.errors ?? []).some((error) => error.code === 'PATIENT_ARCHIVED')
+  );
+}
+
+/** Le patient choisi n'est plus accessible au rattachement : `403` ou `404` du patient. */
+export function isPatientUnavailable(problem: ApiProblem): boolean {
+  return problem.code === 'PATIENT_FORBIDDEN' || problem.code === 'PATIENT_NOT_FOUND';
 }
 
 /** Message d'un problème d'écriture : le `detail` du serveur, sinon une phrase générique. */
@@ -92,6 +111,10 @@ export function problemText(problem: ApiProblem): string {
  * à la confirmation d'une demande en attente (le demandeur vient d'annuler) : toast, relecture,
  * détail fermé. Au refus ou à l'annulation, l'API répond 200 sur un rendez-vous déjà annulé : un
  * motif renvoyé différent de celui envoyé le révèle (toast neutre, relecture, détail fermé).
+ * Invité non purgé (M14-15, K3.2 étape 5) : « Rattacher à un patient » ouvre sur place le
+ * sélecteur de patient du panneau 15b et la case « Rattacher aussi les autres rendez-vous de cette
+ * personne » (`includeSameGuest`) ; `POST …/attach-patient`, relecture, le détail montre le
+ * patient. 409 et 422 PATIENT_ARCHIVED en message sur place ; 403 / 404 du patient en toast.
  */
 @Component({
   selector: 'pm-appointment-detail',
@@ -102,6 +125,7 @@ export function problemText(problem: ApiProblem): string {
     DateFieldComponent,
     FieldErrorsComponent,
     OnlineGlobeComponent,
+    PatientPickerComponent,
   ],
   templateUrl: './appointment-detail.component.html',
   styleUrl: './appointment-detail.component.scss',
@@ -141,6 +165,11 @@ export class AppointmentDetailComponent {
     cancelForm: uniqueId('agenda-cancel-form'),
     moveButton: uniqueId('agenda-move-button'),
     cancelButton: uniqueId('agenda-cancel-button'),
+    attachForm: uniqueId('agenda-attach-form'),
+    attachButton: uniqueId('agenda-attach-button'),
+    attachPatient: uniqueId('agenda-attach-patient'),
+    attachHint: uniqueId('agenda-attach-hint'),
+    patientLink: uniqueId('agenda-patient-link'),
   };
   protected readonly reasonMax = CANCEL_REASON_MAX;
   protected readonly noteMax = PLANNING_NOTE_MAX;
@@ -189,6 +218,16 @@ export class AppointmentDetailComponent {
   protected readonly cancelForm = this.fb.group({
     reason: ['', Validators.maxLength(CANCEL_REASON_MAX)],
   });
+  /** « Rattacher à un patient » : le patient choisi (seul son identifiant part) et la case. */
+  protected readonly attachForm = this.fb.group({
+    patientId: ['', Validators.required],
+    includeSameGuest: [false],
+  });
+  /** Patient choisi dans le sélecteur, montré en carte. */
+  protected readonly attachChosen = signal<PatientOption | null>(null);
+  private readonly picker = viewChild(PatientPickerComponent);
+  /** Rattachement réussi : le lien du dossier prend le focus dès que le patient est affiché. */
+  private readonly focusPatientLink = signal(false);
 
   private readonly itemId = computed(() => this.appointment()?.id ?? null);
   /** Patient du rendez-vous ouvert ; null pour un invité ; undefined sans rendez-vous. */
@@ -206,6 +245,15 @@ export class AppointmentDetailComponent {
         this.actionError.set(null);
         this.noteStatus.set('idle');
         this.noteDirty = false;
+        this.focusPatientLink.set(false);
+      });
+    });
+    // Après un rattachement, la relecture apporte le patient : son lien prend le focus.
+    effect(() => {
+      if (!this.focusPatientLink() || !this.appointment()?.patient) return;
+      untracked(() => {
+        this.focusPatientLink.set(false);
+        this.focusAfterRender(this.ids.patientLink);
       });
     });
     // Contexte du patient (bloc « Préparer », rythme) : lu une fois par patient ; aucun pour un
@@ -323,11 +371,7 @@ export class AppointmentDetailComponent {
       return $localize`:Rendez-vous invité (personne sans dossier patient), dans le détail@@agenda.detail.guest:invité`;
     }
     const parts: string[] = [];
-    if (item.patient.age !== null) {
-      parts.push(
-        $localize`:Âge du patient dans le détail@@agenda.detail.age:${item.patient.age}:age: ans`,
-      );
-    }
+    if (item.patient.age !== null) parts.push(this.ageText(item.patient.age));
     const since = this.context()?.preparation.data?.followedSince;
     if (since) {
       const month = formatMonthYear(since, this.locale);
@@ -342,6 +386,10 @@ export class AppointmentDetailComponent {
     }
     return parts.join(' · ');
   });
+
+  private ageText(age: number): string {
+    return $localize`:Âge du patient dans le détail@@agenda.detail.age:${age}:age: ans`;
+  }
 
   protected readonly dateLabel = computed(() => {
     const item = this.appointment();
@@ -426,6 +474,118 @@ export class AppointmentDetailComponent {
     return [...list].sort((a, b) => a - b);
   });
 
+  // --- Rattacher à un patient ----------------------------------------------------------------
+
+  /**
+   * Invité non purgé : l'action « Rattacher à un patient » est offerte, quel que soit le statut
+   * (l'API rattache aussi un rendez-vous annulé ou fait ; elle refuse un patient ou un purgé).
+   */
+  protected readonly attachable = computed(() => {
+    const item = this.appointment();
+    return !!item && !item.patient && !!item.guest && !item.guest.purgedAt;
+  });
+  /** Ligne sous le nom du patient choisi : son âge, s'il est connu. */
+  protected readonly attachMeta = computed(() => {
+    const age = this.attachChosen()?.age;
+    return age === null || age === undefined ? '' : this.ageText(age);
+  });
+  /**
+   * Demande en ligne dont l'invité a un e-mail : le rattachement efface les coordonnées de
+   * l'invité, et les e-mails automatiques au demandeur s'arrêtent (K3.4).
+   */
+  protected readonly attachStopsEmails = $localize`:Rattachement d'une demande en ligne, fin des e-mails au demandeur@@agenda.attach.stopsEmails:Après le rattachement, le demandeur ne recevra plus d'e-mails automatiques.`;
+
+  protected openAttach(): void {
+    this.attachForm.reset({ patientId: '', includeSameGuest: false });
+    this.attachChosen.set(null);
+    this.actionError.set(null);
+    this.mode.set('attach');
+    this.focusAfterRender(this.ids.attachPatient);
+  }
+
+  protected chooseAttach(patient: PatientOption): void {
+    this.attachChosen.set(patient);
+    this.attachForm.controls.patientId.setValue(patient.id);
+    this.actionError.set(null);
+  }
+
+  /**
+   * Échap dans le formulaire « Rattacher » : le formulaire se ferme et rend le focus à l'action (le
+   * détail reste ouvert). La liste des patients ouverte prend Échap avant lui.
+   */
+  protected escapeAttach(event: Event): void {
+    if (event.defaultPrevented) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (!this.busy()) this.closeForm();
+  }
+
+  /**
+   * « Rattacher » : `POST …/attach-patient`, relecture de la plage et des demandes. Succès : toast,
+   * le détail montre le patient et son lien (focus posé dessus). 409 et 422 PATIENT_ARCHIVED :
+   * message sur place ; 403 / 404 du patient : toast, choix effacé ; autre échec (réseau) : message
+   * sur place, saisie gardée, action rejouable.
+   */
+  protected async submitAttach(): Promise<void> {
+    const item = this.appointment();
+    if (!item || this.busy()) return;
+    if (this.attachForm.invalid) {
+      this.attachForm.markAllAsTouched();
+      this.picker()?.focus();
+      return;
+    }
+    const { patientId, includeSameGuest } = this.attachForm.getRawValue();
+    const chosen = this.attachChosen();
+    this.busy.set(true);
+    this.actionError.set(null);
+    const result = await this.store.attachPatient(item.id, patientId, includeSameGuest);
+    this.busy.set(false);
+    if (result.ok) {
+      this.mode.set('idle');
+      const count = Math.max(result.value.length, 1);
+      const name = result.value[0]?.patient?.displayName || chosen?.displayName || '';
+      this.toasts.success(
+        count === 1
+          ? $localize`:Toast après le rattachement d'un rendez-vous invité à un patient@@agenda.toast.attached:Rendez-vous rattaché : ${name}:name:`
+          : $localize`:Toast après le rattachement de plusieurs rendez-vous d'un invité à un patient@@agenda.toast.attachedMany:${count}:count: rendez-vous rattachés : ${name}:name:`,
+      );
+      this.focusPatientLink.set(true);
+      return;
+    }
+    this.showAttachProblem(result.problem);
+  }
+
+  private showAttachProblem(problem: ApiProblem): void {
+    if (problem.status === 409 && problem.code === 'APPOINTMENT_NOT_ACTIVE') {
+      this.actionError.set(
+        $localize`:Rattachement refusé, le rendez-vous vise déjà un patient ou l'invité est purgé@@agenda.attach.notActive:Ce rendez-vous ne peut plus être rattaché : il vise déjà un patient, ou les coordonnées de l'invité ont été effacées.`,
+      );
+      return;
+    }
+    if (problem.status === 422 && isPatientArchived(problem)) {
+      this.actionError.set(
+        $localize`:Rattachement refusé, patient archivé@@agenda.attach.archived:Ce patient est archivé : choisissez un patient actif.`,
+      );
+      return;
+    }
+    if (isPatientUnavailable(problem)) {
+      this.attachChosen.set(null);
+      this.attachForm.controls.patientId.setValue('');
+      this.toasts.warning(
+        $localize`:Rattachement refusé, patient inaccessible@@agenda.attach.patientUnavailable:Ce patient n'est plus accessible : choisissez-en un autre.`,
+      );
+      this.focusAfterRender(this.ids.attachPatient);
+      return;
+    }
+    if (problem.status === 403 || problem.status === 404) {
+      // Le rendez-vous lui-même n'est plus accessible : la relecture a mis le détail à jour.
+      this.mode.set('idle');
+      this.toasts.warning(problemText(problem));
+      return;
+    }
+    this.actionError.set(problemText(problem));
+  }
+
   // --- Note de planification ------------------------------------------------------------------
 
   protected readonly noteStatusText = computed(() => {
@@ -492,7 +652,13 @@ export class AppointmentDetailComponent {
 
   /** « Annuler » / « Garder » : le formulaire se ferme, le focus revient au bouton d'origine. */
   protected closeForm(): void {
-    const origin = this.mode() === 'cancel' ? this.ids.cancelButton : this.ids.moveButton;
+    const origins: Record<Mode, string> = {
+      idle: this.ids.moveButton,
+      move: this.ids.moveButton,
+      cancel: this.ids.cancelButton,
+      attach: this.ids.attachButton,
+    };
+    const origin = origins[this.mode()];
     this.mode.set('idle');
     this.actionError.set(null);
     this.focusAfterRender(origin);
