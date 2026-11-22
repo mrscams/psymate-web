@@ -32,11 +32,14 @@ import { PatientShellStore } from '../../patient-shell';
 import {
   DEFAULT_DEPTH,
   GRAPH_DEPTHS,
+  GRAPH_DIRECTIONS,
   GRAPH_PERIODS,
+  GRAPH_READINGS,
   GraphDepth,
+  GraphDirection,
   GraphPeriod,
-  GraphPositionsChange,
   GraphQuery,
+  GraphReading,
   GraphViewportChange,
   hasGraphParams,
   isEmptyGraph,
@@ -54,19 +57,22 @@ import { LinkTypeCode } from '../data/link.model';
 import { openLinkEditor } from '../link-editor.launcher';
 import { GraphCanvasComponent } from '../ui/graph-canvas.component';
 import { GraphDetailComponent } from '../ui/graph-detail.component';
-import { GraphElementLabels, labelsShown } from '../ui/graph-elements';
 import {
+  columnLabel,
+  directionLabel,
   graphProblemMessage,
   graphProblemTitle,
   groupLabel,
   isRetryable,
   isRootProblem,
+  monthLabel,
   nodeDate,
-  nodeLabel,
   nodeName,
   periodLabel,
+  readingLabel,
 } from '../ui/graph-labels';
 import { GraphLegendComponent } from '../ui/graph-legend.component';
+import { GraphCanvasLabels, labelsShown } from '../ui/graph-scene';
 import { GraphLinksTableComponent } from '../ui/graph-links-table.component';
 import { RootChoice, RootOption, RootPickerComponent } from '../ui/root-picker.component';
 
@@ -75,12 +81,12 @@ const ROOT_SEARCH_DEBOUNCE_MS = 250;
 
 /**
  * Onglet 3 du dossier, /patients/:id/graph?root=&depth= (fiche 04, B4 écran 4) : barre d'outils
- * (centré sur, profondeur 1–3, types d'entrées, liens, période, compteur, Recentrer, liste des
- * liens, Lier L), canevas Cytoscape chargé en @defer, panneau de détail du nœud sélectionné et liste
+ * (centré sur, profondeur 1–3, lecture, sens, nom des liens, types d'entrées, liens, période, compteur, Recentrer, liste des
+ * liens, Lier L), canevas chargé en @defer, panneau de détail du nœud sélectionné et liste
  * équivalente des liens (B7). Sans ?root=, le graphe se centre sur la situation en cours la plus
  * liée, en profondeur 2 (UX-B3) ; « Tout le dossier » s'écrit ?root=all. Glisser un nœud sur un autre ouvre l'éditeur de lien prérempli ;
  * double-clic : la timeline sur l'entrée (B2) ; un super-nœud se déplie. Racine, profondeur et
- * filtres vivent dans l'URL ; zoom, positions et sélection sont rangés dans le shell au départ.
+ * filtres vivent dans l'URL ; zoom et sélection sont rangés dans le shell au départ.
  */
 @Component({
   selector: 'pm-graph-page',
@@ -111,13 +117,17 @@ export class GraphPage {
 
   protected readonly depths = GRAPH_DEPTHS;
   protected readonly periods = GRAPH_PERIODS;
+  protected readonly readings = GRAPH_READINGS;
+  protected readonly directions = GRAPH_DIRECTIONS;
+  protected readonly readingLabel = readingLabel;
+  protected readonly directionLabel = directionLabel;
   protected readonly entryTypes = ENTRY_TYPES;
   protected readonly typeLabel = entryTypeLabel;
   protected readonly periodLabel = periodLabel;
 
   /** Liste équivalente des liens affichée (état d'écran). */
   protected readonly listOpen = signal(false);
-  /** Incrémenté par « Recentrer » : le canevas relance le layout. */
+  /** Incrémenté par « Recentrer » : le canevas ajuste le graphe à la zone. */
   protected readonly relayoutCount = signal(0);
   /** Page quittée : un éditeur fermé ensuite ne relit plus le graphe. */
   private destroyed = false;
@@ -151,11 +161,17 @@ export class GraphPage {
     return names;
   });
 
-  protected readonly canvasLabels = computed<GraphElementLabels>(() => {
+  protected readonly canvasLabels = computed<GraphCanvasLabels>(() => {
     const labels = this.store.emotionLabels();
+    const linkLabels = this.linkTypeLabels();
     return {
-      node: (node) => nodeLabel(node, labels, this.locale),
+      name: (node) => nodeName(node, labels, this.locale),
+      date: (node) => nodeDate(node.occurred, this.locale),
+      type: entryTypeLabel,
       group: (group) => groupLabel(group, labels),
+      link: (code) => linkLabels[code] ?? code,
+      column: columnLabel,
+      month: (key) => monthLabel(key, this.locale),
       proposed: $localize`:Étiquette d'un lien proposé (V2)@@graph.proposed:suggéré`,
     };
   });
@@ -217,6 +233,15 @@ export class GraphPage {
     if (this.store.query().root || !view || labelsShown(view)) return null;
     const count = view.nodes.length + view.superNodes.length;
     return $localize`:Avertissement du graphe de tout le dossier@@graph.wholeFolder.note:Tout le dossier : ${count}:count: nœuds, étiquettes masquées. Choisissez une entrée dans « Centré sur » pour lire le graphe.`;
+  });
+
+  /**
+   * La case « Nom des liens » n'a d'effet que si les noms se lisent : au-delà de LABELS_MAX_NODES
+   * nœuds ils sont masqués d'office (UX-B3), la case est alors inactive.
+   */
+  protected readonly linkNamesAvailable = computed(() => {
+    const view = this.store.view();
+    return !!view && labelsShown(view);
   });
 
   /** Source de « Lier » : l'entrée sélectionnée, sinon la racine. */
@@ -372,6 +397,8 @@ export class GraphPage {
   protected readonly canvasFailedTitle = $localize`:Le moteur du graphe ne s'est pas chargé@@graph.canvas.failed:Impossible d'afficher le graphe`;
   protected readonly canvasFailedMessage = $localize`:Que faire quand le moteur du graphe manque@@graph.canvas.failedMessage:Rechargez la page pour réessayer. La liste des liens reste disponible (bouton « Liste des liens »).`;
   protected readonly depthLabelId = 'graph-depth-label';
+  protected readonly readingLabelId = 'graph-reading-label';
+  protected readonly directionLabelId = 'graph-direction-label';
 
   constructor() {
     // Haut de l'onglet dans le document (en-tête, et en séance la barre de séance et le bloc de
@@ -476,7 +503,7 @@ export class GraphPage {
       ),
     );
 
-    // Départ de l'onglet : requête, graphe, zoom, positions et sélection rangés dans le shell (B2).
+    // Départ de l'onglet : requête, graphe, zoom et sélection rangés dans le shell (B2).
     destroyRef.onDestroy(() => {
       this.destroyed = true;
       if (this.searchTimer) clearTimeout(this.searchTimer);
@@ -517,6 +544,20 @@ export class GraphPage {
     this.update({ depth });
   }
 
+  /** Lecture et sens : affichage seulement, le graphe reçu est redisposé sans nouvelle requête. */
+  protected setReading(reading: GraphReading): void {
+    if (reading !== this.store.query().reading) this.update({ reading });
+  }
+
+  protected setDirection(direction: GraphDirection): void {
+    if (direction !== this.store.query().direction) this.update({ direction });
+  }
+
+  /** Case « Nom des liens » : affichage seulement, écrit dans l'URL comme la lecture et le sens. */
+  protected onLinkNames(event: Event): void {
+    this.update({ linkNames: (event.target as HTMLInputElement).checked });
+  }
+
   protected setPeriod(period: GraphPeriod): void {
     if (period !== this.store.query().period) this.update({ period });
   }
@@ -553,7 +594,7 @@ export class GraphPage {
     this.update({ linkTypes });
   }
 
-  /** « Recentrer » : le layout repart (positions de cette racine oubliées). */
+  /** « Recentrer » : le graphe est ajusté à la zone (le zoom rangé pour cette racine est oublié). */
   protected relayout(): void {
     this.store.forgetLayout(this.store.key());
     this.relayoutCount.update((n) => n + 1);
@@ -583,11 +624,6 @@ export class GraphPage {
   /** Zoom et position, rangés sous la racine du graphe dessiné (pas celle d'une lecture en cours). */
   protected onViewport(change: GraphViewportChange): void {
     this.store.rememberViewport(change.key, change.viewport);
-  }
-
-  /** Positions, rangées sous la racine du layout qui les a produites. */
-  protected onPositions(change: GraphPositionsChange): void {
-    this.store.rememberPositions(change.key, change.positions);
   }
 
   // ── Panneau de détail et liste équivalente ──────────────────────────────────────────

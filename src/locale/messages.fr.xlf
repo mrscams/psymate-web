@@ -11982,6 +11982,110 @@
         </context-group>
         <note priority="1" from="description">Profondeur du graphe</note>
       </trans-unit>
+      <trans-unit id="graph.reading.label" datatype="html">
+        <source>Lecture</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
+          <context context-type="linenumber">40,43</context>
+        </context-group>
+        <note priority="1" from="description">Lecture du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.reading.causal" datatype="html">
+        <source>Chaîne causale</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <note priority="1" from="description">Lecture du graphe, la place vient des liens</note>
+      </trans-unit>
+      <trans-unit id="graph.reading.type" datatype="html">
+        <source>Colonnes par type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <note priority="1" from="description">Lecture du graphe, une colonne par nature d&apos;entrée</note>
+      </trans-unit>
+      <trans-unit id="graph.reading.time" datatype="html">
+        <source>Chronologie</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+        <note priority="1" from="description">Lecture du graphe, une colonne par mois</note>
+      </trans-unit>
+      <trans-unit id="graph.direction.label" datatype="html">
+        <source>Sens</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
+          <context context-type="linenumber">61,64</context>
+        </context-group>
+        <note priority="1" from="description">Sens de lecture du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.linkNames" datatype="html">
+        <source>Nom des liens</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
+          <context context-type="linenumber">85,89</context>
+        </context-group>
+        <note priority="1" from="description">Case qui affiche le nom des liens sur le graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.direction.right" datatype="html">
+        <source>Gauche → droite</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+        <note priority="1" from="description">Sens de lecture du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.direction.down" datatype="html">
+        <source>Haut → bas</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+        <note priority="1" from="description">Sens de lecture du graphe</note>
+      </trans-unit>
+      <trans-unit id="graph.column.events" datatype="html">
+        <source>Événements</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du graphe en lecture par type</note>
+      </trans-unit>
+      <trans-unit id="graph.column.situations" datatype="html">
+        <source>Situations</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du graphe en lecture par type</note>
+      </trans-unit>
+      <trans-unit id="graph.column.feelings" datatype="html">
+        <source>Ressentis et notes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du graphe en lecture par type</note>
+      </trans-unit>
+      <trans-unit id="graph.column.responses" datatype="html">
+        <source>Réponses · traitements, séances</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du graphe en lecture par type</note>
+      </trans-unit>
+      <trans-unit id="graph.month.none" datatype="html">
+        <source>Sans date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+        <note priority="1" from="description">Colonne du graphe des entrées sans date</note>
+      </trans-unit>
       <trans-unit id="graph.filter.allTypes" datatype="html">
         <source>Tous les types</source>
         <context-group purpose="location">

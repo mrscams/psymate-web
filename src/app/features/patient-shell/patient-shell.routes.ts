@@ -28,8 +28,8 @@ export const PATIENT_SHELL_ROUTES: Routes = [
       {
         path: 'session',
         loadComponent: () => import('./pages/session-tab.page').then((m) => m.SessionTabPage),
-        // UX-S5 : l'onglet Séance occupe toute la largeur (propositions 04 et 04b) ; Graphe et
-        // Recherche gardent les 1 120 px jusqu'à leur propre tâche.
+        // UX-S5 : l'onglet Séance occupe toute la largeur (propositions 04 et 04b) ; la Recherche
+        // garde les 1 120 px jusqu'à sa propre tâche.
         data: { tab: 'session', contentWidth: 'full' },
         title: $localize`:Titre d'onglet du dossier@@patientShell.session.pageTitle:Séance · PsyMate`,
       },
@@ -43,7 +43,8 @@ export const PATIENT_SHELL_ROUTES: Routes = [
       {
         path: 'graph',
         loadComponent: () => import('../graph').then((m) => m.loadGraphPage()),
-        data: { tab: 'graph' },
+        // Le graphe en pleine largeur, comme les autres onglets du dossier (22 novembre 2026).
+        data: { tab: 'graph', contentWidth: 'full' },
         title: $localize`:Titre d'onglet du dossier@@patientShell.graph.pageTitle:Graphe · PsyMate`,
       },
       {

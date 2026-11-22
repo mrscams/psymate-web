@@ -2,7 +2,14 @@
 // problèmes de lecture.
 import { ApiProblem } from '../../../core/http';
 import { EntryType, entryTitle } from '../../../shared/ui';
-import { GraphNode, GraphPeriod, GraphSuperNode } from '../data/graph.model';
+import {
+  GraphDirection,
+  GraphNode,
+  GraphPeriod,
+  GraphReading,
+  GraphSuperNode,
+} from '../data/graph.model';
+import { NO_DATE, TypeColumn } from './graph-layout';
 
 /**
  * Nom d'une entrée du graphe (UX-A5, titre de repli partagé) : son titre ; sans titre, « Anxiété
@@ -39,20 +46,6 @@ export function nodeDate(occurred: string | null, locale: string, now = new Date
   }).format(date);
 }
 
-/**
- * Étiquette sous le nœud (fiche 04) : « titre · date courte » ; une entrée sans titre porte déjà sa
- * date dans son nom de repli (« Note · 24 oct. »).
- */
-export function nodeLabel(
-  node: GraphNode,
-  emotionLabels: Record<string, string>,
-  locale: string,
-): string {
-  if (!node.title) return nodeName(node, emotionLabels, locale);
-  const date = nodeDate(node.occurred, locale);
-  return date ? `${node.title} · ${date}` : node.title;
-}
-
 /** Type d'entrée au pluriel, en minuscules (« 12 ressentis »). */
 export function typePlural(type: EntryType): string {
   switch (type) {
@@ -82,6 +75,53 @@ export function groupLabel(group: GraphSuperNode, emotionLabels: Record<string, 
     base +
     ' · ' +
     $localize`:Émotion la plus fréquente d'un super-nœud@@graph.group.emotion:${emotion}:emotion: majoritaire`
+  );
+}
+
+/** Lecture du graphe, dans la barre d'outils. */
+export function readingLabel(reading: GraphReading): string {
+  switch (reading) {
+    case 'causal':
+      return $localize`:Lecture du graphe, la place vient des liens@@graph.reading.causal:Chaîne causale`;
+    case 'type':
+      return $localize`:Lecture du graphe, une colonne par nature d'entrée@@graph.reading.type:Colonnes par type`;
+    case 'time':
+      return $localize`:Lecture du graphe, une colonne par mois@@graph.reading.time:Chronologie`;
+  }
+}
+
+/** Sens de lecture du graphe, dans la barre d'outils. */
+export function directionLabel(direction: GraphDirection): string {
+  switch (direction) {
+    case 'right':
+      return $localize`:Sens de lecture du graphe@@graph.direction.right:Gauche → droite`;
+    case 'down':
+      return $localize`:Sens de lecture du graphe@@graph.direction.down:Haut → bas`;
+  }
+}
+
+/** Titre d'une colonne de la lecture par type. */
+export function columnLabel(column: TypeColumn): string {
+  switch (column) {
+    case 'events':
+      return $localize`:Colonne du graphe en lecture par type@@graph.column.events:Événements`;
+    case 'situations':
+      return $localize`:Colonne du graphe en lecture par type@@graph.column.situations:Situations`;
+    case 'feelings':
+      return $localize`:Colonne du graphe en lecture par type@@graph.column.feelings:Ressentis et notes`;
+    case 'responses':
+      return $localize`:Colonne du graphe en lecture par type@@graph.column.responses:Réponses · traitements, séances`;
+  }
+}
+
+/** Titre d'une colonne de la lecture par mois : « oct. 2026 », ou « Sans date ». */
+export function monthLabel(key: string, locale: string): string {
+  if (key === NO_DATE) {
+    return $localize`:Colonne du graphe des entrées sans date@@graph.month.none:Sans date`;
+  }
+  const [year, month] = key.split('-').map(Number);
+  return new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(
+    new Date(year, month - 1, 1),
   );
 }
 

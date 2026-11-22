@@ -583,7 +583,8 @@ test('UX-S2 : en séance à 1440 × 900, la timeline garde 480 px de cartes et l
 
   // Graphe : le plateau mesure le haut de son onglet (--graph-top) : il prend exactement la hauteur
   // restante de la fenêtre, 480 px au moins (sous la barre de séance, la page défile alors du
-  // strict nécessaire, plus de décalage fixe de 340 px).
+  // strict nécessaire, plus de décalage fixe de 340 px). Onglet en pleine largeur depuis le
+  // 22 novembre 2026 : la marge basse du contenu est de 40 px, comme pour la timeline.
   await page.keyboard.press('3');
   await expect(page).toHaveURL(/\/graph/);
   const board = page.locator('pm-graph-page .board');
@@ -593,15 +594,15 @@ test('UX-S2 : en séance à 1440 × 900, la timeline garde 480 px de cartes et l
   const boardTop = boardBox.y + (await page.evaluate(() => window.scrollY));
   expect(boardBox.height, 'plateau du graphe en séance').toBeGreaterThanOrEqual(480);
   expect(
-    Math.abs(boardBox.height - Math.max(480, 900 - boardTop - 24)),
-    'hauteur du plateau = max(480, fenêtre − haut mesuré − 24)',
+    Math.abs(boardBox.height - Math.max(480, 900 - boardTop - 40)),
+    'hauteur du plateau = max(480, fenêtre − haut mesuré − 40)',
   ).toBeLessThanOrEqual(2);
   // Rien d'autre que le plateau ne fait défiler la page.
   const overflow = await page.evaluate(
     () => document.documentElement.scrollHeight - document.documentElement.clientHeight,
   );
   expect(overflow, 'défilement de la page au-delà du plateau').toBeLessThanOrEqual(
-    Math.max(0, boardTop + boardBox.height + 24 - 900) + 2,
+    Math.max(0, boardTop + boardBox.height + 40 - 900) + 2,
   );
   await expectNoAxeViolations(page);
 });

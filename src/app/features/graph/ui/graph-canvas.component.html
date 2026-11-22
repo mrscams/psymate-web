@@ -1,0 +1,147 @@
+<div
+  #viewport
+  class="viewport"
+  role="group"
+  [attr.aria-label]="label()"
+  [class.panning]="panning()"
+  (wheel)="onWheel($event)"
+  (pointerdown)="onPointerDown($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerup)="onPointerUp($event)"
+  (pointercancel)="onPointerUp($event)"
+>
+  @if (scene(); as scene) {
+    <div
+      class="world"
+      [class.animated]="animated()"
+      [class.rearranging]="rearranging()"
+      [style.transform]="worldTransform()"
+    >
+      @for (band of scene.bands; track band.key) {
+        <div
+          class="band"
+          [class.alt]="band.alt"
+          [style.transform]="'translate(' + band.box.x + 'px, ' + band.box.y + 'px)'"
+          [style.width.px]="band.box.width"
+          [style.height.px]="band.box.height"
+        ></div>
+        <span
+          class="band-label"
+          [class.beside]="!scene.horizontal"
+          [style.left.px]="band.labelAt.x"
+          [style.top.px]="band.labelAt.y"
+          >{{ band.label }}</span
+        >
+      }
+
+      @for (frame of scene.frames; track frame.id) {
+        <div
+          class="frame"
+          [style.transform]="'translate(' + frame.box.x + 'px, ' + frame.box.y + 'px)'"
+          [style.width.px]="frame.box.width"
+          [style.height.px]="frame.box.height"
+        ></div>
+      }
+
+      <svg class="links" aria-hidden="true" focusable="false">
+        <defs>
+          @for (marker of markers; track marker) {
+            <marker
+              [attr.id]="marker"
+              viewBox="0 0 10 10"
+              refX="9.5"
+              refY="5"
+              markerWidth="10"
+              markerHeight="10"
+              markerUnits="userSpaceOnUse"
+              orient="auto-start-reverse"
+            >
+              <path [class]="marker" d="M0 1 L10 5 L0 9 z" />
+            </marker>
+          }
+        </defs>
+        @for (link of scene.links; track link.id) {
+          <g
+            class="link"
+            [class]="'line-' + link.line"
+            [class.proposed]="link.proposed"
+            [class.thread]="link.state === 'thread'"
+            [class.dim]="link.state === 'dim'"
+          >
+            <path class="line" [attr.d]="link.path" />
+            @if (link.line === 'double') {
+              <path class="inner" [attr.d]="link.path" />
+            }
+            @if (link.arrow) {
+              <path
+                class="arrow"
+                [attr.d]="link.arrowPath"
+                [attr.marker-start]="link.arrow === 'start' ? markerOf(link) : null"
+                [attr.marker-end]="link.arrow === 'end' ? markerOf(link) : null"
+              />
+            }
+          </g>
+        }
+      </svg>
+
+      @for (link of scene.links; track link.id) {
+        @if (link.name; as name) {
+          <span
+            class="link-name"
+            [class.thread]="link.state === 'thread'"
+            [style.left.px]="name.x"
+            [style.top.px]="name.y"
+            >{{ name.text }}</span
+          >
+        }
+      }
+
+      @for (card of scene.cards; track card.id) {
+        <button
+          type="button"
+          class="card"
+          tabindex="-1"
+          [class.group]="card.kind === 'group'"
+          [class.root]="card.root"
+          [class.selected]="card.selected"
+          [class.thread]="card.state === 'thread' && !card.selected"
+          [class.dim]="card.state === 'dim'"
+          [class.dragging]="drag()?.id === card.id"
+          [class.drop-target]="drag()?.target === card.id"
+          [attr.data-node-id]="card.id"
+          [attr.aria-pressed]="card.selected"
+          [style.transform]="cardTransform(card)"
+          [style.width.px]="card.box.width"
+          [style.height.px]="card.box.height"
+          (click)="select(card.id)"
+          (dblclick)="nodeActivated.emit(card.id)"
+        >
+          <pm-graph-glyph
+            [type]="card.type"
+            [intensity]="card.intensity"
+            [dim]="card.state === 'dim'"
+          />
+          <span class="text">
+            <span class="title">{{ card.title }}</span>
+            @if (card.sub) {
+              <span class="sub">{{ card.sub }}</span>
+            }
+          </span>
+        </button>
+      }
+    </div>
+  }
+</div>
+
+@if (failed()) {
+  <pm-state kind="error" [title]="failedTitle" class="failed" />
+}
+
+<div class="zoom" role="group" [attr.aria-label]="zoomGroupLabel">
+  <button type="button" class="zoom-button" [attr.aria-label]="zoomInLabel" (click)="zoomBy(1.25)">
+    <span aria-hidden="true">+</span>
+  </button>
+  <button type="button" class="zoom-button" [attr.aria-label]="zoomOutLabel" (click)="zoomBy(0.8)">
+    <span aria-hidden="true">−</span>
+  </button>
+</div>

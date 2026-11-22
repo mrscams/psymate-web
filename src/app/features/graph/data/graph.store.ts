@@ -7,7 +7,6 @@ import { GraphApi } from './graph.api';
 import {
   DEFAULT_QUERY,
   GraphNode,
-  GraphPositions,
   GraphQuery,
   GraphSuperNode,
   GraphView,
@@ -30,8 +29,8 @@ export interface NodeDetail {
 
 /**
  * L'état rangé dans le shell (rememberTab) au départ de l'onglet et repris au retour (B2 : « Onglet
- * Graphe (zoom conservé) ») : la requête, le graphe reçu et ses dépliages, la sélection, le zoom et
- * les positions par racine.
+ * Graphe (zoom conservé) ») : la requête, le graphe reçu et ses dépliages, la sélection, le zoom
+ * par racine.
  */
 export interface GraphSnapshot {
   patientId: string;
@@ -40,7 +39,6 @@ export interface GraphSnapshot {
   expanded: string[];
   selectedId: string | null;
   viewports: Record<string, GraphViewport>;
-  positions: Record<string, GraphPositions>;
 }
 
 interface GraphState {
@@ -49,7 +47,7 @@ interface GraphState {
   graph: Loadable<GraphView>;
   /**
    * Racine (layoutKey) du graphe reçu : pendant la lecture d'une autre racine, le canevas garde
-   * l'ancien graphe sous son ancienne clé, et ne repart d'un layout qu'à l'arrivée du nouveau.
+   * l'ancien graphe sous son ancienne clé, et ne le redispose qu'à l'arrivée du nouveau.
    */
   graphKey: string | null;
   /** Super-nœuds dépliés (POST …/graph/expand), redépliés après une relecture. */
@@ -65,8 +63,6 @@ interface GraphState {
   expandProblem: ApiProblem | null;
   /** Zoom et position du canevas par racine (layoutKey). */
   viewports: Record<string, GraphViewport>;
-  /** Positions des nœuds par racine : le layout ne bouge pas à chaque lien ajouté (fiche 04). */
-  positions: Record<string, GraphPositions>;
   /**
    * Recherche de « Centré sur » dans tout le dossier (GET /api/patients/{id}/search, une page) :
    * idle sans texte, le sélecteur montre alors les entrées du graphe reçu.
@@ -87,21 +83,20 @@ const initialState: GraphState = {
   expandingId: null,
   expandProblem: null,
   viewports: {},
-  positions: {},
   rootSearch: idle(),
 };
 
 /**
  * La vue graphe d'un dossier (fiche 04, B4 écran 4), fournie par la page : le voisinage reçu du
  * serveur (jamais recalculé ici), le filtre local des types d'entrées, la sélection et son détail,
- * le dépliage des super-nœuds, le zoom et les positions mémorisés par racine. Après une écriture
+ * le dépliage des super-nœuds, le zoom mémorisé par racine. Après une écriture
  * (lien, correction), le graphe est relu (`refresh`), le dernier graphe reste affiché pendant ce
  * temps et en cas d'erreur.
  */
 export const GraphStore = signalStore(
   withState(initialState),
   withComputed((store) => ({
-    /** Clé des positions et du zoom : celle du graphe affiché, sinon celle de la requête. */
+    /** Clé du zoom : celle du graphe affiché, sinon celle de la requête. */
     key: computed(() => store.graphKey() ?? layoutKey(store.query())),
     /** Le graphe montré : celui reçu, filtré par types d'entrées (la racine reste). */
     view: computed<GraphView | null>(() => {
@@ -136,7 +131,6 @@ export const GraphStore = signalStore(
       return root ? (store.nodeIndex().get(root) ?? null) : null;
     }),
     currentViewport: computed(() => store.viewports()[store.key()] ?? null),
-    currentPositions: computed(() => store.positions()[store.key()] ?? null),
     lineStyles: computed(() => {
       const styles: Partial<Record<string, LinkTypeOption['lineStyle']>> = {};
       for (const type of store.catalog().data ?? []) styles[type.code] = type.lineStyle;
@@ -284,7 +278,7 @@ export const GraphStore = signalStore(
       },
 
       /**
-       * Reprend l'état rangé dans le shell au retour sur l'onglet : rien ne bouge (zoom, positions,
+       * Reprend l'état rangé dans le shell au retour sur l'onglet : rien ne bouge (zoom,
        * sélection), puis le graphe est relu sans être vidé (un lien posé ailleurs apparaît).
        */
       async restore(snapshot: GraphSnapshot): Promise<void> {
@@ -298,7 +292,6 @@ export const GraphStore = signalStore(
           expanded: snapshot.expanded,
           selectedId: snapshot.selectedId,
           viewports: snapshot.viewports,
-          positions: snapshot.positions,
         });
         void loadCatalog();
         void loadEmotions();
@@ -372,21 +365,11 @@ export const GraphStore = signalStore(
         patchState(store, { viewports: { ...store.viewports(), [key]: viewport } });
       },
 
-      /** Positions des nœuds pour une racine (après le layout, après un glisser). */
-      rememberPositions(key: string, positions: GraphPositions): void {
-        const previous = store.positions()[key] ?? {};
-        patchState(store, {
-          positions: { ...store.positions(), [key]: { ...previous, ...positions } },
-        });
-      },
-
-      /** « Recentrer » : les positions de la racine sont oubliées, le layout repart. */
+      /** « Recentrer » : le zoom rangé pour la racine est oublié, le graphe est ajusté à la zone. */
       forgetLayout(key: string): void {
-        const positions = { ...store.positions() };
         const viewports = { ...store.viewports() };
-        delete positions[key];
         delete viewports[key];
-        patchState(store, { positions, viewports });
+        patchState(store, { viewports });
       },
 
       /** L'état à ranger dans le shell (rememberTab) au départ de l'onglet. */
@@ -400,7 +383,6 @@ export const GraphStore = signalStore(
           expanded: store.expanded(),
           selectedId: store.selectedId(),
           viewports: store.viewports(),
-          positions: store.positions(),
         };
       },
     };

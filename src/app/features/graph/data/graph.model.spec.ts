@@ -24,7 +24,9 @@ describe('graph.model', () => {
     expect(parseQuery(params(''))).toEqual(DEFAULT_QUERY);
     expect(
       parseQuery(
-        params('root=e-1&depth=3&linkTypes=triggers,bogus,triggers&types=feeling,x&period=90d'),
+        params(
+          'root=e-1&depth=3&linkTypes=triggers,bogus,triggers&types=feeling,x&period=90d&reading=type&direction=down',
+        ),
       ),
     ).toEqual({
       root: 'e-1',
@@ -32,7 +34,12 @@ describe('graph.model', () => {
       linkTypes: ['triggers'],
       types: ['feeling'],
       period: '90d',
+      reading: 'type',
+      direction: 'down',
+      linkNames: true,
     });
+    // Lecture ou sens inconnus : chaîne causale, de gauche à droite.
+    expect(parseQuery(params('reading=spiral&direction=up'))).toEqual(DEFAULT_QUERY);
     expect(parseQuery(params('depth=7&period=2y')).depth).toBe(2);
     expect(parseQuery(params('depth=7&period=2y')).period).toBe('all');
   });
@@ -52,6 +59,9 @@ describe('graph.model', () => {
       linkTypes: null,
       types: null,
       period: null,
+      reading: null,
+      direction: null,
+      names: null,
     });
     const query = {
       root: 'e-1',
@@ -59,6 +69,9 @@ describe('graph.model', () => {
       linkTypes: ['worsens' as const, 'treats' as const],
       types: ['feeling' as const],
       period: '12m' as const,
+      reading: 'time' as const,
+      direction: 'down' as const,
+      linkNames: false,
     };
     const url = new URLSearchParams(
       Object.entries(toQueryParams(query)).filter((entry): entry is [string, string] => !!entry[1]),
@@ -75,6 +88,12 @@ describe('graph.model', () => {
     expect(sameQuery(a, { ...b, types: ['note'] })).toBe(false);
     expect(sameServerQuery(a, { ...b, types: ['note'] })).toBe(true);
     expect(sameServerQuery(a, { ...b, depth: 3 })).toBe(false);
+    // Lecture et sens : affichage seulement, pas de nouvelle requête.
+    expect(sameQuery(a, { ...b, reading: 'time' })).toBe(false);
+    expect(sameServerQuery(a, { ...b, reading: 'time', direction: 'down' })).toBe(true);
+    expect(parseQuery(params('names=off')).linkNames).toBe(false);
+    expect(sameQuery(a, { ...b, linkNames: false })).toBe(false);
+    expect(sameServerQuery(a, { ...b, linkNames: false })).toBe(true);
   });
 
   it('periodFrom : borne basse UTC, rien pour toute la période', () => {

@@ -175,17 +175,11 @@ describe('GraphStore', () => {
     expect(store.selectedId()).toBeNull();
   });
 
-  it('zoom et positions par racine ; snapshot puis restore sans rien déplacer', async () => {
+  it('zoom par racine ; snapshot puis restore sans rien déplacer', async () => {
     const { store, graphApi } = setup();
     await store.load('p-1', rooted);
     store.rememberViewport('e-situation', { zoom: 1.5, pan: { x: 10, y: 20 } });
-    store.rememberPositions('e-situation', { 'e-feeling': { x: 1, y: 2 } });
-    store.rememberPositions('e-situation', { 'e-event': { x: 3, y: 4 } });
     expect(store.currentViewport()).toEqual({ zoom: 1.5, pan: { x: 10, y: 20 } });
-    expect(store.currentPositions()).toEqual({
-      'e-feeling': { x: 1, y: 2 },
-      'e-event': { x: 3, y: 4 },
-    });
     store.select('e-feeling');
     await flush();
 
@@ -201,7 +195,6 @@ describe('GraphStore', () => {
     const again = setup();
     await again.store.restore(snapshot!);
     expect(again.store.currentViewport()?.zoom).toBe(1.5);
-    expect(again.store.currentPositions()?.['e-event']).toEqual({ x: 3, y: 4 });
     expect(again.store.selectedId()).toBe('e-feeling');
     expect(again.store.graph().data?.nodes).toHaveLength(4);
     // Relu en arrière-plan sans vider.
@@ -210,7 +203,6 @@ describe('GraphStore', () => {
 
     again.store.forgetLayout('e-situation');
     expect(again.store.currentViewport()).toBeNull();
-    expect(again.store.currentPositions()).toBeNull();
   });
 
   it('autre racine : la clé du canevas suit le graphe reçu, pas la requête en cours', async () => {

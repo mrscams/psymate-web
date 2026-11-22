@@ -5,11 +5,277 @@
   min-height: 420px;
 }
 
-.canvas {
+// Zone du graphe : on la déplace en glissant le fond, on zoome à la molette.
+.viewport {
   position: absolute;
   inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+
+  &.panning {
+    cursor: grabbing;
+  }
 }
 
+.world {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+
+  &.animated {
+    transition: transform 0.35s ease;
+  }
+}
+
+// Colonne des lectures par type et par mois (une rangée, de haut en bas), et son titre.
+.band {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 8px;
+  background: var(--surface-ground);
+  opacity: 0.55;
+
+  &.alt {
+    opacity: 0.15;
+  }
+}
+
+.band-label {
+  position: absolute;
+  color: var(--text-secondary);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 16px;
+  white-space: nowrap;
+
+  // De haut en bas : le titre est à gauche de sa rangée, aligné sur elle.
+  &.beside {
+    transform: translateX(-100%);
+  }
+}
+
+// Cadre d'un bloc d'entrées sœurs (même pivot, même lien).
+.frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  background: var(--surface-ground);
+}
+
+// ── Liens ────────────────────────────────────────────────────────────────────────────
+.links {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.link {
+  transition: opacity 0.2s;
+
+  &.dim {
+    opacity: 0.16;
+  }
+}
+
+.line {
+  fill: none;
+  stroke: var(--link);
+  stroke-width: 1.5;
+}
+
+.inner {
+  fill: none;
+  stroke: var(--surface-raised);
+  stroke-width: 2;
+}
+
+.arrow {
+  fill: none;
+  stroke: none;
+}
+
+// Un trait par style du catalogue (étude couleurs §4), les mêmes que la légende.
+.line-long_dash .line {
+  stroke-dasharray: 9 5;
+}
+
+.line-short_dash .line {
+  stroke-dasharray: 4 4;
+}
+
+.line-dotted .line {
+  stroke-dasharray: 1.5 3;
+}
+
+.line-thin .line {
+  stroke-width: 1;
+}
+
+.line-double .line {
+  stroke-width: 5;
+}
+
+.line-group .line {
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+
+.proposed .line {
+  stroke: var(--link-proposed);
+  stroke-dasharray: 1.5 3;
+}
+
+.thread .line {
+  stroke: var(--primary);
+}
+
+.pm-graph-arrow {
+  fill: var(--link);
+}
+
+.pm-graph-arrow-thread {
+  fill: var(--primary);
+}
+
+.pm-graph-arrow-proposed {
+  fill: var(--link-proposed);
+}
+
+.link-name {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 0 6px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  line-height: 17px;
+  white-space: nowrap;
+  pointer-events: none;
+
+  &.thread {
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 600;
+  }
+}
+
+// ── Cartes ───────────────────────────────────────────────────────────────────────────
+.card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px 0 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  // Nouvelle disposition : la carte glisse vers sa nouvelle place.
+  .rearranging & {
+    transition:
+      transform 0.35s ease,
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+
+  &:hover {
+    border-color: var(--primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  &.root {
+    border: 2px solid var(--primary);
+    background: var(--primary-tint);
+  }
+
+  &.group {
+    border-style: dashed;
+    background: var(--surface-sunken);
+  }
+
+  &.thread,
+  &.drop-target {
+    border-color: var(--primary);
+  }
+
+  &.selected,
+  &.drop-target {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-tint);
+  }
+
+  // Hors du fil : la carte s'efface sans que son texte perde son contraste (pas d'opacité).
+  &.dim {
+    border-color: var(--border-subtle);
+
+    .title {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+  }
+
+  // Glissée vers une autre carte : elle suit le pointeur et laisse voir la carte dessous.
+  &.dragging {
+    z-index: 1;
+    opacity: 0.85;
+    pointer-events: none;
+    transition: none;
+  }
+}
+
+.text {
+  display: grid;
+  min-width: 0;
+}
+
+.title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.sub {
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ── Zoom et échec ────────────────────────────────────────────────────────────────────
 .failed {
   position: absolute;
   inset: 0;
@@ -48,5 +314,13 @@
   &:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: -2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world.animated,
+  .card,
+  .link {
+    transition: none;
   }
 }
