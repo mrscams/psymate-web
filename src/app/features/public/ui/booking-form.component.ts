@@ -24,7 +24,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatRadioModule } from '@angular/material/radio';
 import { RouterLink } from '@angular/router';
 
 import { ApiProblem, FieldProblem } from '../../../core/http';
@@ -102,7 +101,6 @@ export type BookingSendStatus = 'idle' | 'sending' | 'invalid' | 'rate-limited' 
     MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
-    MatRadioModule,
     NgTemplateOutlet,
     FormErrorsComponent,
     BookingBarComponent,

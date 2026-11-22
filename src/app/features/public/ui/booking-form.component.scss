@@ -59,7 +59,24 @@ legend {
 .choices {
   display: flex;
   flex-wrap: wrap;
-  gap: 0 24px;
+  gap: 8px 24px;
+}
+
+// Libellé englobant : cible de 24 px au moins ; case native à 18 px, couleur primaire.
+.choice {
+  display: inline-flex;
+  gap: 8px;
+  align-items: flex-start;
+  min-height: 24px;
+  cursor: pointer;
+
+  input {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin: 1px 0 0;
+    accent-color: var(--primary);
+  }
 }
 
 .consent {

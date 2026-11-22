@@ -62,7 +62,8 @@ async function fill(el: HTMLElement, harness: RouterTestingHarness): Promise<voi
   type(el, 'field-firstName', 'Sara');
   type(el, 'field-lastName', 'Benali');
   type(el, 'field-email', 'sara.benali@example.test');
-  el.querySelector<HTMLInputElement>('#field-modality input[value="video"]')?.click();
+  // Deuxième modalité de Claire Martin : « En visio ».
+  el.querySelectorAll<HTMLInputElement>('#field-modality input[type="radio"]')[1]?.click();
   el.querySelector<HTMLInputElement>('#field-consent input[type="checkbox"]')?.click();
   await settle(harness);
 }

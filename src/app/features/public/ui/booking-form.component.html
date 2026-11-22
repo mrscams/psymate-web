@@ -96,11 +96,15 @@
         [attr.aria-describedby]="showError('modality', ngForm.submitted) ? 'modality-error' : null"
       >
         <legend i18n="Groupe modalité@@public.booking.field.modality">Modalité</legend>
-        <mat-radio-group class="choices" formControlName="modality">
+        <!-- Boutons radio natifs (maquette 31, « choice ») : flèches pour choisir, aucune présélection. -->
+        <div class="choices">
           @for (modality of modalities(); track modality) {
-            <mat-radio-button [value]="modality">{{ modalityLabel(modality) }}</mat-radio-button>
+            <label class="choice">
+              <input type="radio" name="modality" formControlName="modality" [value]="modality" />
+              <span>{{ modalityLabel(modality) }}</span>
+            </label>
           }
-        </mat-radio-group>
+        </div>
         @if (showError('modality', ngForm.submitted)) {
           <p id="modality-error" class="error">
             <ng-container *ngTemplateOutlet="warn" />
