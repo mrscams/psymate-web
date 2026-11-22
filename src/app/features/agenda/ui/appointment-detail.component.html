@@ -11,6 +11,15 @@
         ×
       </button>
     </div>
+    <!-- Demande en ligne : pastille sous l'étiquette, pictogramme décoratif et texte. -->
+    @if (online()) {
+      <p class="online">
+        <span class="pill info">
+          <pm-online-globe />
+          {{ onlineLabel }}
+        </span>
+      </p>
+    }
     <div class="patient">
       <!-- Invité : ni initiales ni lien, il n'a pas de dossier. -->
       @if (item.patient) {
@@ -35,6 +44,27 @@
         <span>{{ fact }}</span>
       }
     </div>
+    <!-- Contact de l'invité : e-mail puis téléphone, chacun sur sa ligne, absent s'il est inconnu. -->
+    @if (contact(); as contact) {
+      <dl class="contact">
+        @if (contact.email; as email) {
+          <dt i18n="Libellé de l'e-mail de l'invité dans le détail@@agenda.detail.contactEmail">
+            E-mail
+          </dt>
+          <dd>
+            <a [href]="'mailto:' + email">{{ email }}</a>
+          </dd>
+        }
+        @if (contact.phone; as phone) {
+          <dt i18n="Libellé du téléphone de l'invité dans le détail@@agenda.detail.contactPhone">
+            Téléphone
+          </dt>
+          <dd>
+            <a [href]="contact.phoneHref">{{ phone }}</a>
+          </dd>
+        }
+      </dl>
+    }
     @if (cancelledLabel(); as cancelled) {
       <p class="cancelled">{{ cancelled }}</p>
     }
@@ -101,6 +131,9 @@
             />
           </div>
         </div>
+        @if (notifiesRequester()) {
+          <p class="hint">{{ notifiedText }}</p>
+        }
         @if (actionError(); as error) {
           <p class="error" role="alert">{{ error }}</p>
         }
@@ -133,9 +166,7 @@
         (ngSubmit)="submitCancel()"
         novalidate
       >
-        <h2 i18n="Titre de la confirmation d'annulation@@agenda.detail.cancelTitle">
-          Annuler ce rendez-vous ?
-        </h2>
+        <h2>{{ cancelTexts().title }}</h2>
         <div class="field">
           <label [for]="ids.reason" i18n="Champ motif d'annulation@@agenda.detail.cancelReason"
             >Motif (facultatif)</label
@@ -145,19 +176,18 @@
             rows="2"
             formControlName="reason"
             [attr.maxlength]="reasonMax"
+            [attr.aria-describedby]="cancelTexts().hint ? ids.reasonHint : null"
           ></textarea>
         </div>
+        @if (cancelTexts().hint; as hint) {
+          <p class="hint" [id]="ids.reasonHint">{{ hint }}</p>
+        }
         @if (actionError(); as error) {
           <p class="error" role="alert">{{ error }}</p>
         }
         <div class="form-actions">
-          <button
-            type="submit"
-            class="danger-fill"
-            [disabled]="busy()"
-            i18n="Confirmer l'annulation@@agenda.detail.cancelSubmit"
-          >
-            Annuler le rendez-vous
+          <button type="submit" class="danger-fill" [disabled]="busy()">
+            {{ cancelTexts().submit }}
           </button>
           <button
             type="button"
@@ -293,7 +323,19 @@
           Dupliquer
         </button>
       }
-      @if (active()) {
+      <!-- Demande en attente : « Refuser », bouton neutre, ouvre l'annulation sous son titre. -->
+      @if (pendingRequest()) {
+        <button
+          type="button"
+          [id]="ids.cancelButton"
+          [attr.aria-expanded]="mode() === 'cancel'"
+          [attr.aria-controls]="ids.cancelForm"
+          (click)="openCancel()"
+          i18n="Action Refuser d'une demande en ligne dans le détail@@agenda.detail.refuse"
+        >
+          Refuser
+        </button>
+      } @else if (active()) {
         <button
           type="button"
           class="danger"

@@ -214,6 +214,32 @@ describe('AgendaApi · requêtes', () => {
     expect(data.appointments.map((a) => a.id)).toEqual(['a-1']);
   });
 
+  it('requests : GET /api/agenda/requests, rendez-vous dans l’ordre de l’API, sans filtre', async () => {
+    const { api, http } = setup();
+    const pending = api.requests();
+    const req = http.expectOne((r) => r.url === '/api/agenda/requests' && r.method === 'GET');
+    const online = (id: string, startsAt: string) => ({
+      ...dto,
+      id,
+      patient: undefined,
+      guest: { firstName: 'Sara', lastName: 'Benali', email: 'sara@example.test' },
+      origin: 'online',
+      startsAt,
+    });
+    req.flush({
+      appointments: [online('r-2', '2026-11-26T09:00:00Z'), online('r-1', '2026-11-25T09:00:00Z')],
+    });
+    const list = await pending;
+    expect(list.map((a) => [a.id, a.origin, a.guest?.email])).toEqual([
+      ['r-2', 'online', 'sara@example.test'],
+      ['r-1', 'online', 'sara@example.test'],
+    ]);
+
+    const empty = api.requests();
+    http.expectOne('/api/agenda/requests').flush({});
+    expect(await empty).toEqual([]);
+  });
+
   it('freeBusy : créneau, fuseau et voisinage', async () => {
     const { api, http } = setup();
     const pending = api.freeBusy(

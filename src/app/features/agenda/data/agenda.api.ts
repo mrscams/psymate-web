@@ -67,6 +67,16 @@ export class AgendaApi {
     return toAgendaData(dto);
   }
 
+  /**
+   * `GET /api/agenda/requests` : demandes en ligne en attente (origine `online`, à confirmer, à
+   * venir), triées par début, 100 au plus. Leur nombre est le compteur de « Demandes » : rien n'est
+   * compté ni filtré côté client (fiche 15, demandes en ligne).
+   */
+  async requests(): Promise<Appointment[]> {
+    const dto = await firstValueFrom(this.agenda.pendingRequests());
+    return (dto.appointments ?? []).map(toAppointment);
+  }
+
   /** `GET /api/agenda/freebusy` : conflits et voisinage d'un créneau. */
   async freeBusy(
     from: Date,

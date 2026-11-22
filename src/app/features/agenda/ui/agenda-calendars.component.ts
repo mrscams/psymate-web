@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 import { CALENDAR_KEYS, CalendarKey } from '../data/agenda.model';
-import { calendarLabel } from './agenda-format';
+import { calendarLabel, onlineMention } from './agenda-format';
+import { OnlineGlobeComponent } from './online-globe.component';
 
 /**
  * Carte « Mes agendas » du rail gauche (fiche 15 §3, maquette) : trois cases pour les séances au
@@ -11,6 +12,7 @@ import { calendarLabel } from './agenda-format';
  */
 @Component({
   selector: 'pm-agenda-calendars',
+  imports: [OnlineGlobeComponent],
   template: `
     <div class="card">
       <h2 i18n="Titre de la carte des agendas@@agenda.calendars.mine">Mes agendas</h2>
@@ -43,6 +45,10 @@ import { calendarLabel } from './agenda-format';
           >À confirmer</ng-container
         >
       </li>
+      <li>
+        <pm-online-globe />
+        {{ onlineLabel }}
+      </li>
     </ul>
   `,
   styleUrl: './agenda-calendars.component.scss',
@@ -55,4 +61,5 @@ export class AgendaCalendarsComponent {
   protected readonly mine = CALENDAR_KEYS;
   protected readonly legendLabel = $localize`:Nom de la légende de l'agenda@@agenda.legend.label:Légende`;
   protected readonly label = calendarLabel;
+  protected readonly onlineLabel = onlineMention();
 }

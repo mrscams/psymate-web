@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-22T19:22:32.149Z",
+  "task": "M14-14",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Agenda : entrée Demandes avec compteur de GET /api/agenda/requests, panneau des demandes en ligne, mention Demande en ligne (grille, liste, mois, légende), Contact de l'invité, Confirmer et Refuser avec relecture, 409 de la demande annulée",
+  "notes": "Vitest 204 fichiers / 2394 tests ; e2e/agenda 10 tests verts deux fois de suite contre la pile de test (seconde fois par création publique) ; zéro création en CI ; mention de la grille dans agenda-calendar.online.scss (budget 8 kB)",
+  "next": "M14-15 : Rattacher à un patient, dans la rangée .actions du détail",
+  "pr": "https://github.com/mrscams/psymate-web/pull/110",
+  "branch": "M14-14-agenda-demandes-en-ligne",
+  "checkout": "agent-adde871ad185b71ab"
+}
