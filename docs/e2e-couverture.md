@@ -236,6 +236,8 @@ Six écrans par thème sont écrits mais ignorés sans administrateur, et n'ont 
 | 26 | mot de passe oublié | `etats/public-auth.spec.ts` |
 | 27 | compte suspendu (sans session) | `compte-suspendu/compte-suspendu.spec.ts:143` |
 | 18 C | première connexion de l'administrateur (étape 1) | `securite/premiere-connexion.spec.ts:19` |
+| 31 | prise de rendez-vous publique : créneaux, coordonnées, écran d'attente (jalon M14, **à écrire par M14-12**) | `prise-de-rendez-vous/*` : parcours contre l'API réelle et le seed (`claire-martin` en mode manuel, `karim-haddad` en mode automatique), e-mail lu dans Mailpit, stockage et URL sans identité, clavier, axe-core deux thèmes, 390 px et zoom 200 % |
+| 32 | rendez-vous par lien : vérification, gestion, annulation (jalon M14, **à écrire par M14-13**) | `prise-de-rendez-vous/*` : lien de vérification et lien de gestion lus dans Mailpit, rechargement sans second rendez-vous, annulation avec confirmation, jeton absent du stockage et des URL de requête, axe-core deux thèmes |
 
 ### Administration et états
 
@@ -290,4 +292,5 @@ Les captures ne sont écrites que si `PSYMATE_E2E_CAPTURES` désigne un dossier,
   - UC-02 A2 (nom dupliqué) ;
   - UC-04 A1 (séance saisie a posteriori) et A2 (rappel de clôture oubliée) ;
   - UC-06 A2 (auto-lien refusé, seulement par l'API).
+- **Prise de rendez-vous en ligne (jalon M14).** Les fiches 31 et 32 et les compléments des fiches 09, 14 et 15 sont écrits (M14-09), leurs e2e ne le sont pas encore : `prise-de-rendez-vous/*` (M14-12, M14-13), `preferences/prise-de-rendez-vous` (M14-11), `agenda/demandes-en-ligne` (M14-14). Les réponses d'erreur que le seed ne produit pas (`409`, `410`, `429`) sont couvertes par des tests de store et de page avec un service simulé, pas par un backend fabriqué.
 - **États en sombre.** La planche 29 (`etats/*`) n'est vérifiée qu'en thème clair. Les écrans à l'état chargé, eux, le sont dans les deux thèmes.

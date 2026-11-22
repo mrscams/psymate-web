@@ -1,0 +1,1190 @@
+<!-- Maquette statique autonome · habillage Fluent 2 (valeurs de docs/design/fluent2.md embarquées, thèmes clair et sombre) · fiche docs/design/31-prise-de-rendez-vous-publique.md · M14-09, 22 novembre 2026. Bandeau et pied : shared/ui/public-layout (fiche 00 §4). Une vue par état ; la barre sombre du haut choisit la vue et le thème et ne fait pas partie de l'écran. Aucun champ « motif », aucun champ libre. -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Prendre rendez-vous · PsyMate (maquette 31)</title>
+<style>
+/* ---------- Tokens Fluent 2 (docs/design/fluent2.md), thèmes clair et sombre ---------- */
+:root{
+  color-scheme:light;
+  --surface-ground:#F5F5F5;--surface-raised:#FFFFFF;--surface-sunken:#EBEBEB;
+  --border-subtle:#E0E0E0;--border-strong:#D1D1D1;--border-accessible:#616161;
+  --text-primary:#242424;--text-secondary:#616161;--text-disabled:#8A8A8A;
+  --primary:#0F6CBD;--primary-hover:#115EA3;--primary-tint:#EBF3FC;--primary-on:#FFFFFF;
+  --focus-outer:#000000;--focus-inner:#FFFFFF;--scrim:rgba(0,0,0,.4);
+  --danger:#B10E1C;--danger-bg:#FDF3F4;--warning:#BC4B09;--warning-bg:#FFF9F5;
+  --success:#0E700E;--success-bg:#F1FAF1;--info:#115EA3;--info-bg:#EBF3FC;
+  --entry-session:#038387;--entry-note:#69797E;
+  --shadow-key:rgba(0,0,0,.14);--shadow-ambient:rgba(0,0,0,.12);
+  --admin-bar-bg:#1A1A1A;--admin-bar-text:#FFFFFF;--admin-bar-muted:#ADADAD;--admin-bar-line:#3D3D3D;--admin-focus:#FFFFFF;
+  --radius-sm:2px;--radius-md:4px;--radius-xl:8px;--radius-pill:9999px;
+  --shadow-2:0 0 2px var(--shadow-ambient),0 1px 2px var(--shadow-key);
+  --shadow-8:0 0 2px var(--shadow-ambient),0 4px 8px var(--shadow-key);
+  --shadow-16:0 0 2px var(--shadow-ambient),0 8px 16px var(--shadow-key);
+  --shadow-64:0 0 8px var(--shadow-ambient),0 32px 64px var(--shadow-key);
+  --font-ui:'Segoe UI Variable Text','Segoe UI','Segoe UI Web (West European)',-apple-system,BlinkMacSystemFont,Roboto,'Helvetica Neue',sans-serif;
+  --font-mono:'Cascadia Mono',Consolas,'Courier New',Courier,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --surface-ground:#1F1F1F;--surface-raised:#292929;--surface-sunken:#333333;
+    --border-subtle:#525252;--border-strong:#666666;--border-accessible:#ADADAD;
+    --text-primary:#FFFFFF;--text-secondary:#ADADAD;--text-disabled:#808080;
+    --primary:#479EF5;--primary-hover:#62ABF5;--primary-tint:#082338;--primary-on:#242424;
+    --focus-outer:#FFFFFF;--focus-inner:#000000;--scrim:rgba(0,0,0,.5);
+    --danger:#E37D80;--danger-bg:#3B0509;--warning:#FAA06B;--warning-bg:#4A1E04;
+    --success:#54B054;--success-bg:#052505;--info:#62ABF5;--info-bg:#082338;
+    --entry-session:#4CB4B7;--entry-note:#A0ADB2;
+    --shadow-key:rgba(0,0,0,.28);--shadow-ambient:rgba(0,0,0,.24);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --surface-ground:#1F1F1F;--surface-raised:#292929;--surface-sunken:#333333;
+  --border-subtle:#525252;--border-strong:#666666;--border-accessible:#ADADAD;
+  --text-primary:#FFFFFF;--text-secondary:#ADADAD;--text-disabled:#808080;
+  --primary:#479EF5;--primary-hover:#62ABF5;--primary-tint:#082338;--primary-on:#242424;
+  --focus-outer:#FFFFFF;--focus-inner:#000000;--scrim:rgba(0,0,0,.5);
+  --danger:#E37D80;--danger-bg:#3B0509;--warning:#FAA06B;--warning-bg:#4A1E04;
+  --success:#54B054;--success-bg:#052505;--info:#62ABF5;--info-bg:#082338;
+  --entry-session:#4CB4B7;--entry-note:#A0ADB2;
+  --shadow-key:rgba(0,0,0,.28);--shadow-ambient:rgba(0,0,0,.24);
+}
+
+/* ---------- Base ---------- */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--surface-ground);color:var(--text-primary);font:400 14px/20px var(--font-ui)}
+h1,h2,h3,h4,p,ul,ol,dl,dd,fieldset{margin:0;padding:0}
+ul,ol{list-style:none}
+fieldset{border:0;min-width:0}
+a{color:var(--primary)}
+a:hover{color:var(--primary-hover)}
+button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.mono{font-family:var(--font-mono)}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+:focus-visible{outline:2px solid var(--focus-outer);outline-offset:2px;box-shadow:0 0 0 2px var(--focus-inner)}
+
+/* Boutons Fluent 2 : 32 px, rayon 4, libellé 14 px semi-gras */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:5px 12px;border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--surface-raised);color:var(--text-primary);font:600 14px/20px var(--font-ui);text-decoration:none;cursor:pointer}
+.btn:hover{border-color:var(--border-accessible);color:var(--text-primary)}
+.btn.primary{border-color:var(--primary);background:var(--primary);color:var(--primary-on)}
+.btn.primary:hover{border-color:var(--primary-hover);background:var(--primary-hover);color:var(--primary-on)}
+.btn.danger{border-color:var(--danger);background:var(--danger);color:var(--primary-on)}
+.btn.text{border-color:transparent;background:transparent;color:var(--primary)}
+.btn.large{min-height:40px;padding:9px 16px}
+.btn[disabled],.btn[aria-disabled="true"]{border-color:var(--border-subtle);background:var(--surface-sunken);color:var(--text-secondary);cursor:not-allowed}
+.btn .ic{width:16px;height:16px}
+
+/* Champs : contour, 40 px, rayon 4 */
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label,.field .label{font:600 14px/20px var(--font-ui)}
+.field .optional{font-weight:400;color:var(--text-secondary)}
+.input{width:100%;height:40px;padding:0 12px;border:1px solid var(--border-accessible);border-radius:var(--radius-md);background:var(--surface-raised);color:var(--text-primary)}
+textarea.input{height:auto;padding:8px 12px;resize:vertical}
+.input:hover{border-color:var(--text-primary)}
+.input[aria-invalid="true"]{border-color:var(--danger);border-width:2px}
+.hint{color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+.error{display:flex;gap:6px;align-items:flex-start;color:var(--danger);font:400 12px/16px var(--font-ui)}
+.error .ic{width:14px;height:14px;margin-top:1px}
+
+/* Bandeaux (message bar) : statut porté par le fond, l'icône et le texte */
+.bar{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);color:var(--text-primary)}
+.bar .ic{margin-top:0}
+.bar.info{background:var(--info-bg)}.bar.info>.ic{color:var(--info)}
+.bar.warning{background:var(--warning-bg)}.bar.warning>.ic{color:var(--warning)}
+.bar.danger{background:var(--danger-bg)}.bar.danger>.ic{color:var(--danger)}
+.bar.success{background:var(--success-bg)}.bar.success>.ic{color:var(--success)}
+.bar a{color:var(--text-primary);font-weight:600}
+.bar p+p{margin-top:2px}
+
+.card{border:1px solid var(--border-subtle);border-radius:var(--radius-xl);background:var(--surface-raised);box-shadow:var(--shadow-2)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:var(--radius-pill);font:600 12px/16px var(--font-ui);white-space:nowrap}
+.pill .ic{width:14px;height:14px}
+.pill.info{background:var(--info-bg);color:var(--info)}
+.pill.success{background:var(--success-bg);color:var(--success)}
+.pill.neutral{background:var(--surface-sunken);color:var(--text-primary)}
+.pill.count{min-width:20px;justify-content:center;padding:2px 6px;background:var(--primary);color:var(--primary-on)}
+
+/* Squelettes et états (shared/ui/state) */
+.skel{display:block;height:14px;border-radius:var(--radius-md);background:var(--surface-sunken)}
+.state{display:flex;flex-direction:column;align-items:center;gap:8px;padding:32px 16px;text-align:center}
+.state .ic{width:32px;height:32px;color:var(--text-secondary)}
+.state.error .ic{color:var(--danger)}
+.state h2,.state h3,.state .state-title{font:600 16px/22px var(--font-ui)}
+.state p{max-width:44ch;color:var(--text-secondary)}
+.state .btn{margin-top:8px}
+
+/* ---------- Barre de maquette : hors de l'écran dessiné ---------- */
+.mq-bar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:8px 16px;border-bottom:1px solid var(--admin-bar-line);background:var(--admin-bar-bg);color:var(--admin-bar-text);font:400 12px/16px var(--font-ui)}
+.mq-bar strong{font-weight:600}
+.mq-bar .mq-note{color:var(--admin-bar-muted)}
+.mq-bar label{display:inline-flex;flex:1 1 auto;gap:6px;align-items:center;min-width:0}
+.mq-bar select,.mq-bar button{height:28px;padding:0 8px;border:1px solid var(--admin-bar-muted);border-radius:var(--radius-md);background:var(--admin-bar-bg);color:var(--admin-bar-text);font:600 12px/16px var(--font-ui);cursor:pointer}
+.mq-bar select{width:100%;min-width:0;max-width:320px}
+.mq-bar button[aria-pressed="true"]{background:var(--admin-bar-text);color:var(--admin-bar-bg)}
+.mq-bar :focus-visible{outline-color:var(--admin-focus);box-shadow:none}
+.mq-bar .mq-group{display:inline-flex;gap:4px;align-items:center;min-width:0;max-width:100%}
+.mq-bar .mq-spacer{flex:1 1 0}
+.mq-legende{margin:0;padding:6px 16px;border-bottom:1px solid var(--admin-bar-line);background:var(--admin-bar-bg);color:var(--admin-bar-muted);font:400 12px/16px var(--font-mono)}
+.mq-legende strong{color:var(--admin-bar-text);font-weight:600}
+.mq-note-inline{padding:8px 12px;border:1px dashed var(--border-accessible);border-radius:var(--radius-md);color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+
+/* ---------- Layout public (fiche 00 §4 : bandeau et pied de shared/ui/public-layout) ---------- */
+.public-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 24px;min-height:56px;padding:8px 24px;border-bottom:1px solid var(--border-subtle);background:var(--surface-raised)}
+.brand{display:inline-flex;align-items:baseline;gap:8px;color:var(--text-primary);font:600 16px/22px var(--font-ui);text-decoration:none}
+.brand .logo{align-self:center;width:22px;height:22px;fill:none;stroke:var(--primary);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.brand .tagline{color:var(--text-secondary);font:400 14px/20px var(--font-ui)}
+.public-header .links{display:flex;gap:16px;margin-left:auto}
+.public-header .links a{padding:6px 0;border-bottom:2px solid transparent;color:var(--text-secondary);font:600 14px/20px var(--font-ui);text-decoration:none}
+.locale-switch{color:var(--primary);font:600 14px/20px var(--font-ui);text-decoration:none}
+.public-main{width:100%;max-width:1120px;margin:0 auto;padding:32px 24px}
+.public-footer{padding:16px 24px;border-top:1px solid var(--border-subtle);color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+.public-footer nav{display:flex;flex-wrap:wrap;gap:16px}
+.public-footer a{color:var(--text-secondary)}
+@media (max-width:600px){
+  .public-header{padding:8px 16px}
+  .public-header .links{margin-left:0;order:3;width:100%}
+  .public-header .locale-switch{margin-left:auto}
+  .public-main{padding:24px 16px}
+  .public-footer{padding:16px}
+}
+
+/* Mention d'urgence (G Q63) */
+.urgence{margin:0}
+.urgence strong{font-weight:600}
+
+/* ---------- Coquille praticien (fiche 00 §1 et §9 : barre d'application, rail) ---------- */
+.app-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;height:48px;padding:0 16px;border-bottom:1px solid var(--border-subtle);background:var(--surface-raised)}
+.app-bar .menu{display:none;width:32px;height:32px;padding:0;border:0;border-radius:var(--radius-md);background:transparent;color:var(--text-primary);cursor:pointer;align-items:center;justify-content:center}
+.app-bar .section{display:inline-flex;gap:8px;color:var(--text-secondary)}
+.app-bar .spacer{flex:1 1 0}
+.app-bar .search{display:flex;align-items:center;gap:6px;width:min(320px,32vw);height:32px;padding:0 8px 0 10px;border:1px solid var(--border-strong);border-bottom-color:var(--border-accessible);border-radius:var(--radius-md);background:var(--surface-raised);color:var(--text-secondary)}
+.app-bar .search .ic{width:16px;height:16px}
+.app-bar .search input{flex:1;min-width:0;height:100%;border:0;background:transparent;outline:0}
+.app-bar .search input::placeholder{color:var(--text-secondary);opacity:1}
+.app-bar kbd,.kbd{padding:0 5px;border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--surface-ground);color:var(--text-secondary);font:400 12px/16px var(--font-mono)}
+.app-bar .avatar{width:32px;height:32px;padding:0;border:0;border-radius:var(--radius-pill);background:var(--primary-tint);color:var(--primary);font:600 12px/16px var(--font-ui);cursor:pointer}
+.shell{display:flex;align-items:stretch;min-height:calc(100vh - 120px)}
+.nav-rail{flex:none;width:56px;padding:8px 6px;border-right:1px solid var(--border-subtle);background:var(--surface-raised)}
+.nav-rail ul{display:flex;flex-direction:column;gap:4px}
+.nav-rail a,.nav-rail span.tile{display:flex;align-items:center;justify-content:center;height:44px;border-left:3px solid transparent;border-radius:var(--radius-md);color:var(--text-secondary)}
+.nav-rail .ic{width:22px;height:22px}
+.nav-rail a[aria-current="page"]{border-left-color:var(--primary);background:var(--surface-sunken);color:var(--text-primary)}
+.nav-rail span.tile{color:var(--text-disabled)}
+.shell>main{flex:1 1 0;min-width:0}
+@media (max-width:899.98px){
+  .app-bar .menu{display:inline-flex}
+  .nav-rail{display:none}
+}
+@media (max-width:600px){
+  .app-bar{row-gap:8px;height:auto;min-height:48px;padding:8px 16px}
+  .app-bar .section{display:none}
+  .app-bar .search{order:5;width:100%}
+}
+
+/* ---------- Fiche 31 : /praticiens/:slug/rendez-vous ---------- */
+.booking{display:flex;flex-direction:column;gap:16px;max-width:720px;margin:0 auto}
+.crumbs ol{display:flex;flex-wrap:wrap;gap:4px 8px;color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+.crumbs li+li::before{content:'›';margin-right:8px}
+.crumbs a{display:inline-block;padding:4px 0}
+.head-card,.step{display:flex;flex-direction:column;gap:16px;padding:24px}
+.head-card h1,.step h1{font:600 24px/32px var(--font-ui)}
+.facts{display:flex;flex-wrap:wrap;gap:4px 8px;color:var(--text-secondary)}
+.facts li+li::before{content:'·';margin-right:8px}
+.step-kicker{color:var(--text-secondary);font:600 12px/16px var(--font-ui)}
+.step h2{font:600 20px/28px var(--font-ui)}
+.step-head{display:flex;flex-direction:column;gap:2px}
+.period{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.period-text{display:flex;flex-direction:column;gap:2px}
+.period-text strong{font-weight:600}
+.period-text span{color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+.period-nav{display:flex;flex-wrap:wrap;gap:8px}
+.day{display:grid;grid-template-columns:168px 1fr;gap:8px 16px;padding:12px 0;border-top:1px solid var(--border-subtle)}
+.day:last-child{padding-bottom:0}
+.day h3{padding-top:10px;font:600 14px/20px var(--font-ui)}
+.slots{display:flex;flex-wrap:wrap;gap:8px}
+.slot{min-width:72px;height:40px;padding:0 12px;border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--surface-raised);color:var(--text-primary);font:600 14px/20px var(--font-mono);cursor:pointer}
+.slot:hover{border-color:var(--border-accessible)}
+.slot[aria-pressed="true"]{border-color:var(--primary);background:var(--primary);color:var(--primary-on)}
+.recap{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding:12px;border-radius:var(--radius-md);background:var(--surface-ground)}
+.recap-text{display:flex;flex-direction:column;gap:2px}
+.recap-text span:first-child{color:var(--text-secondary);font:400 12px/16px var(--font-ui)}
+.recap-text strong{font-weight:600}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-grid .wide{grid-column:1/-1}
+.choices{display:flex;flex-wrap:wrap;gap:8px 24px}
+.choice{display:inline-flex;gap:8px;align-items:flex-start;min-height:24px;cursor:pointer}
+.choice input{flex:none;width:18px;height:18px;margin:1px 0 0;accent-color:var(--primary)}
+legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
+.actions{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.sending{color:var(--text-secondary)}
+.trap{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.form-errors{padding:12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);background:var(--danger-bg)}
+.form-errors p{font-weight:600}
+.form-errors ul{margin-top:4px;padding-left:18px;list-style:disc}
+.form-errors a{color:var(--text-primary)}
+.sent{align-items:flex-start}
+.badge-icon{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:var(--radius-xl);background:var(--info-bg);color:var(--info)}
+.badge-icon .ic{width:24px;height:24px}
+.sent ul.next{display:flex;flex-direction:column;gap:8px;color:var(--text-secondary)}
+.state.warning .ic{color:var(--warning)}
+.skel-rows{display:flex;flex-direction:column;gap:16px}
+.skel-row{display:grid;grid-template-columns:168px 1fr;gap:16px;align-items:center}
+.skel-slots{display:flex;gap:8px}
+.skel-slots .skel{width:72px;height:40px}
+/* Extrait de la fiche 09 (carte identité) */
+.identity{display:flex;gap:20px;padding:24px}
+.identity .avatar-lg{flex:none;display:inline-flex;align-items:center;justify-content:center;width:96px;height:96px;border-radius:var(--radius-xl);background:var(--primary-tint);color:var(--primary);font:600 28px/36px var(--font-ui)}
+.identity-body{display:flex;flex:1;flex-direction:column;gap:10px;min-width:0}
+.name-row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.name-row h1{font:600 28px/36px var(--font-ui)}
+.profession-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;color:var(--text-secondary)}
+.identity .list{display:flex;flex-direction:column;gap:2px;color:var(--text-secondary)}
+.extracts{display:flex;flex-direction:column;gap:16px;max-width:760px;margin:0 auto}
+@media (max-width:600px){
+  .head-card,.step,.identity{padding:16px}
+  .day,.skel-row{grid-template-columns:1fr}
+  .day h3{padding-top:0}
+  .form-grid{grid-template-columns:1fr}
+  .identity{flex-direction:column}
+  .identity .actions .btn,.step .actions .btn,.period-nav .btn{width:100%}
+  .period-nav{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="mq-bar" role="region" aria-label="Barre de maquette (ne fait pas partie de l'écran)">
+  <strong>Maquette 31 · Prise de rendez-vous publique</strong>
+  <span class="mq-group">
+    <button type="button" id="mq-prev" aria-label="Vue précédente">‹</button>
+    <label><span>Vue</span>
+      <select id="mq-vue">
+        <option value="fiche">1. Fiche du praticien : bouton « Prendre rendez-vous »</option>
+        <option value="creneaux">2. Étape 1 · créneaux (mode manuel)</option>
+        <option value="coordonnees">3. Étape 2 · coordonnées (mode manuel)</option>
+        <option value="coordonnees-auto">4. Étape 2 · mode automatique, une seule modalité</option>
+        <option value="champs">5. Champs à corriger (forme)</option>
+        <option value="champs-422">6. Champs refusés par le serveur</option>
+        <option value="envoi">7. Envoi en cours</option>
+        <option value="plafond">8. Plafond atteint</option>
+        <option value="echec">9. Échec d'envoi</option>
+        <option value="indisponible">10. Créneau plus disponible</option>
+        <option value="aucun">11. Aucun créneau</option>
+        <option value="chargement">12. Chargement</option>
+        <option value="erreur">13. Erreur de chargement</option>
+        <option value="plafond-lecture">14. Plafond atteint en lecture (créneaux)</option>
+        <option value="plafond-reglages">15. Plafond atteint en lecture (réglages)</option>
+        <option value="boite-mail">16. Consultez votre boîte mail</option>
+        <option value="toutes">Toutes les vues à la suite</option>
+      </select>
+    </label>
+    <button type="button" id="mq-next" aria-label="Vue suivante">›</button>
+  </span>
+  <span class="mq-group" role="group" aria-label="Thème">
+    <button type="button" data-mq-theme="system" aria-pressed="true">Système</button>
+    <button type="button" data-mq-theme="light" aria-pressed="false">Clair</button>
+    <button type="button" data-mq-theme="dark" aria-pressed="false">Sombre</button>
+  </span>
+  <span class="mq-spacer"></span>
+  <span class="mq-note">Barre de maquette : elle ne fait pas partie de l'écran.</span>
+</div>
+<section class="vue" id="fiche" aria-label="Vue 1 : Fiche du praticien : bouton « Prendre rendez-vous »">
+<p class="mq-legende"><strong>Vue 1 sur 16 · Fiche du praticien : bouton « Prendre rendez-vous »</strong> · GET /api/public/booking/practitioners/{slug} → 200, ou 404 BOOKING_NOT_AVAILABLE</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="extracts">
+<p class="mq-note-inline">Extrait de la fiche 09 (/praticiens/:slug) : seule la rangée d'actions de la carte identité change. Réponse 200 : « Prendre rendez-vous » est le bouton plein, « Prendre contact » passe en contour.</p>
+<section class="card identity" aria-label="Carte identité de la fiche, prise de rendez-vous offerte">
+  <span class="avatar-lg" aria-hidden="true">CM</span>
+  <div class="identity-body">
+    <div class="name-row"><h1>Claire Martin</h1><span class="pill success"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/></svg>Profil vérifié</span></div>
+    <p class="profession-row"><span class="pill info">Psychologue</span><span>Psychologue clinicienne</span></p>
+    <ul class="list"><li>Lyon · Au cabinet, en visio</li><li>Répond en général sous 48 h</li><li>Accepte de nouveaux patients</li></ul>
+    <div class="actions">
+      <a class="btn primary" href="#vue=creneaux">Prendre rendez-vous</a><a class="btn" href="#">Prendre contact</a>
+      <button type="button" class="btn">Partager</button>
+    </div>
+  </div>
+</section>
+<p class="mq-note-inline">Réponse 404 BOOKING_NOT_AVAILABLE, appel en cours ou en échec : pas de bouton, rien d'autre ne change. C'est aussi vers cette fiche que /praticiens/:slug/rendez-vous redirige quand la prise de rendez-vous n'est pas offerte.</p>
+<section class="card identity" aria-label="Carte identité de la fiche, prise de rendez-vous non offerte">
+  <span class="avatar-lg" aria-hidden="true">CM</span>
+  <div class="identity-body">
+    <div class="name-row"><h1>Claire Martin</h1><span class="pill success"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/></svg>Profil vérifié</span></div>
+    <p class="profession-row"><span class="pill info">Psychologue</span><span>Psychologue clinicienne</span></p>
+    <ul class="list"><li>Lyon · Au cabinet, en visio</li><li>Répond en général sous 48 h</li><li>Accepte de nouveaux patients</li></ul>
+    <div class="actions">
+      <a class="btn primary" href="#">Prendre contact</a>
+      <button type="button" class="btn">Partager</button>
+    </div>
+  </div>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="creneaux" aria-label="Vue 2 : Étape 1 · créneaux (mode manuel)">
+<p class="mq-legende"><strong>Vue 2 sur 16 · Étape 1 · créneaux (mode manuel)</strong> · GET …/practitioners/claire-martin → 200 (manual) ; GET …/slots → 200</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Claire Martin</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card head-card" aria-labelledby="titre-page-2">
+  <h1 id="titre-page-2">Prendre rendez-vous avec Claire Martin</h1>
+  <ul class="facts"><li>Créneaux de 60 min</li><li>Au cabinet ou en visio</li></ul>
+  <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step" aria-labelledby="titre-etape-1">
+  <div class="step-head"><span class="step-kicker">Étape 1 sur 2</span><h2 id="titre-etape-1" tabindex="-1">Choisissez un créneau</h2></div>
+  
+  <div class="period">
+    <p class="period-text"><strong>Du lundi 23 novembre au dimanche 6 décembre 2026</strong><span>Heures du praticien : Europe/Paris (heure normale d’Europe centrale)</span></p>
+    <div class="period-nav">
+      <button type="button" class="btn" disabled><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 6-6 6 6 6"/></svg>Semaines précédentes</button>
+      <button type="button" class="btn">Semaines suivantes<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m10 6 6 6-6 6"/></svg></button>
+    </div>
+  </div>
+  <div class="days"><section class="day" aria-label="mardi 24 novembre">
+      <h3>mardi 24 novembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 24 novembre, 16:00 à 17:00">16:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 24 novembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="mercredi 25 novembre">
+      <h3>mercredi 25 novembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 25 novembre, 09:00 à 10:00">09:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 25 novembre, 10:00 à 11:00">10:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 25 novembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 25 novembre, 14:00 à 15:00">14:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 25 novembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 25 novembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="jeudi 26 novembre">
+      <h3>jeudi 26 novembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 26 novembre, 09:00 à 10:00">09:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 26 novembre, 10:00 à 11:00">10:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 26 novembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 26 novembre, 14:00 à 15:00">14:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 26 novembre, 16:00 à 17:00">16:00</button></li></ul>
+    </section>
+<section class="day" aria-label="vendredi 27 novembre">
+      <h3>vendredi 27 novembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 27 novembre, 10:00 à 11:00">10:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 27 novembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 27 novembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 27 novembre, 16:00 à 17:00">16:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 27 novembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="lundi 30 novembre">
+      <h3>lundi 30 novembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 09:00 à 10:00">09:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 10:00 à 11:00">10:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 14:00 à 15:00">14:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 16:00 à 17:00">16:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="mardi 1er décembre">
+      <h3>mardi 1er décembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 1er décembre, 09:00 à 10:00">09:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 1er décembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 1er décembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 1er décembre, 16:00 à 17:00">16:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 1er décembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="mercredi 2 décembre">
+      <h3>mercredi 2 décembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 09:00 à 10:00">09:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 10:00 à 11:00">10:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 14:00 à 15:00">14:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 16:00 à 17:00">16:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="jeudi 3 décembre">
+      <h3>jeudi 3 décembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 3 décembre, 10:00 à 11:00">10:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 3 décembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 3 décembre, 14:00 à 15:00">14:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 3 décembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 3 décembre, 16:00 à 17:00">16:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 3 décembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="vendredi 4 décembre">
+      <h3>vendredi 4 décembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 4 décembre, 09:00 à 10:00">09:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 4 décembre, 10:00 à 11:00">10:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 4 décembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 4 décembre, 14:00 à 15:00">14:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 4 décembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 4 décembre, 16:00 à 17:00">16:00</button></li></ul>
+    </section></div>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="coordonnees" aria-label="Vue 3 : Étape 2 · coordonnées (mode manuel)">
+<p class="mq-legende"><strong>Vue 3 sur 16 · Étape 2 · coordonnées (mode manuel)</strong> · créneau choisi, formulaire vide</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Claire Martin</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card head-card" aria-labelledby="titre-page-3">
+  <h1 id="titre-page-3">Prendre rendez-vous avec Claire Martin</h1>
+  <ul class="facts"><li>Créneaux de 60 min</li><li>Au cabinet ou en visio</li></ul>
+  <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step" aria-labelledby="titre-etape-a">
+  <div class="step-head"><span class="step-kicker">Étape 2 sur 2</span><h2 id="titre-etape-a" tabindex="-1">Vos coordonnées</h2></div>
+  <div class="recap">
+    <p class="recap-text"><span>Créneau choisi</span><strong>jeudi 26 novembre 2026 · <span class="mono">10:00 – 11:00</span></strong><span>Europe/Paris (heure normale d’Europe centrale)</span></p>
+    <button type="button" class="btn">Changer de créneau</button>
+  </div>
+  <form novalidate aria-labelledby="titre-etape-a">
+    <div class="form-grid">
+      
+      <p class="hint wide">Tous les champs sont obligatoires, sauf le téléphone.</p>
+      <div class="field">
+    <label for="prenom-a">Prénom</label>
+    <input class="input" id="prenom-a" type="text" value="" autocomplete="given-name" required>
+    
+  </div>
+      <div class="field">
+    <label for="nom-a">Nom</label>
+    <input class="input" id="nom-a" type="text" value="" autocomplete="family-name" required>
+    
+  </div>
+      <div class="field">
+    <label for="email-a">E-mail</label>
+    <input class="input" id="email-a" type="email" value="" autocomplete="email" required aria-describedby="email-a-hint">
+    <p class="hint" id="email-a-hint">Un lien de vérification sera envoyé à cette adresse.</p>
+  </div>
+      <div class="field">
+    <label for="tel-a">Téléphone <span class="optional">(facultatif)</span></label>
+    <input class="input" id="tel-a" type="tel" value="" autocomplete="tel">
+    
+  </div>
+      <fieldset class="wide">
+      <legend>Modalité</legend>
+      <div class="choices"><label class="choice"><input type="radio" name="modalite-a" required><span>Au cabinet</span></label><label class="choice"><input type="radio" name="modalite-a" required><span>En visio</span></label></div>
+      
+    </fieldset>
+      <div class="trap" aria-hidden="true"><label for="website-a">Website</label><input id="website-a" type="text" tabindex="-1" autocomplete="off"></div>
+      <div class="field wide">
+        <label class="choice"><input type="checkbox" required><span>J'accepte que mes coordonnées soient transmises à Claire Martin pour traiter ma demande de rendez-vous. <a href="#">En savoir plus sur la protection des données<span class="sr-only"> (nouvel onglet)</span></a>.</span></label>
+        
+      </div>
+      
+      <div class="bar info wide" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+      <div class="actions wide">
+        <button type="submit" class="btn primary large">Envoyer ma demande</button>
+        
+      </div>
+    </div>
+  </form>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="coordonnees-auto" aria-label="Vue 4 : Étape 2 · mode automatique, une seule modalité">
+<p class="mq-legende"><strong>Vue 4 sur 16 · Étape 2 · mode automatique, une seule modalité</strong> · GET …/practitioners/karim-haddad → 200 (auto)</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Karim Haddad</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card head-card" aria-labelledby="titre-page-4">
+  <h1 id="titre-page-4">Prendre rendez-vous avec Karim Haddad</h1>
+  <ul class="facts"><li>Créneaux de 45 min</li><li>Au cabinet</li></ul>
+  <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Votre rendez-vous sera confirmé dès que vous aurez validé votre adresse e-mail.</p></div>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step" aria-labelledby="titre-etape-b">
+  <div class="step-head"><span class="step-kicker">Étape 2 sur 2</span><h2 id="titre-etape-b" tabindex="-1">Vos coordonnées</h2></div>
+  <div class="recap">
+    <p class="recap-text"><span>Créneau choisi</span><strong>jeudi 26 novembre 2026 · <span class="mono">10:00 – 10:45</span></strong><span>Europe/Paris (heure normale d’Europe centrale)</span></p>
+    <button type="button" class="btn">Changer de créneau</button>
+  </div>
+  <form novalidate aria-labelledby="titre-etape-b">
+    <div class="form-grid">
+      
+      <p class="hint wide">Tous les champs sont obligatoires, sauf le téléphone.</p>
+      <div class="field">
+    <label for="prenom-b">Prénom</label>
+    <input class="input" id="prenom-b" type="text" value="Sara" autocomplete="given-name" required>
+    
+  </div>
+      <div class="field">
+    <label for="nom-b">Nom</label>
+    <input class="input" id="nom-b" type="text" value="Benali" autocomplete="family-name" required>
+    
+  </div>
+      <div class="field">
+    <label for="email-b">E-mail</label>
+    <input class="input" id="email-b" type="email" value="sara.benali@example.test" autocomplete="email" required aria-describedby="email-b-hint">
+    <p class="hint" id="email-b-hint">Un lien de vérification sera envoyé à cette adresse.</p>
+  </div>
+      <div class="field">
+    <label for="tel-b">Téléphone <span class="optional">(facultatif)</span></label>
+    <input class="input" id="tel-b" type="tel" value="06 12 34 56 78" autocomplete="tel">
+    
+  </div>
+      <p class="wide"><strong>Modalité :</strong> au cabinet</p>
+      <div class="trap" aria-hidden="true"><label for="website-b">Website</label><input id="website-b" type="text" tabindex="-1" autocomplete="off"></div>
+      <div class="field wide">
+        <label class="choice"><input type="checkbox" checked required><span>J'accepte que mes coordonnées soient transmises à Karim Haddad pour traiter ma demande de rendez-vous. <a href="#">En savoir plus sur la protection des données<span class="sr-only"> (nouvel onglet)</span></a>.</span></label>
+        
+      </div>
+      
+      <div class="bar info wide" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Votre rendez-vous sera confirmé dès que vous aurez validé votre adresse e-mail.</p></div>
+      <div class="actions wide">
+        <button type="submit" class="btn primary large">Réserver ce créneau</button>
+        
+      </div>
+    </div>
+  </form>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="champs" aria-label="Vue 5 : Champs à corriger (forme)">
+<p class="mq-legende"><strong>Vue 5 sur 16 · Champs à corriger (forme)</strong> · aucune requête</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Claire Martin</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card head-card" aria-labelledby="titre-page-5">
+  <h1 id="titre-page-5">Prendre rendez-vous avec Claire Martin</h1>
+  <ul class="facts"><li>Créneaux de 60 min</li><li>Au cabinet ou en visio</li></ul>
+  <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step" aria-labelledby="titre-etape-c">
+  <div class="step-head"><span class="step-kicker">Étape 2 sur 2</span><h2 id="titre-etape-c" tabindex="-1">Vos coordonnées</h2></div>
+  <div class="recap">
+    <p class="recap-text"><span>Créneau choisi</span><strong>jeudi 26 novembre 2026 · <span class="mono">10:00 – 11:00</span></strong><span>Europe/Paris (heure normale d’Europe centrale)</span></p>
+    <button type="button" class="btn">Changer de créneau</button>
+  </div>
+  <form novalidate aria-labelledby="titre-etape-c">
+    <div class="form-grid">
+      
+      <p class="hint wide">Tous les champs sont obligatoires, sauf le téléphone.</p>
+      <div class="field">
+    <label for="prenom-c">Prénom</label>
+    <input class="input" id="prenom-c" type="text" value="Sara" autocomplete="given-name" required>
+    
+  </div>
+      <div class="field">
+    <label for="nom-c">Nom</label>
+    <input class="input" id="nom-c" type="text" value="" autocomplete="family-name" required aria-invalid="true" aria-describedby="nom-c-error">
+    <p class="error" id="nom-c-error"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>Ce champ est obligatoire.</span></p>
+  </div>
+      <div class="field">
+    <label for="email-c">E-mail</label>
+    <input class="input" id="email-c" type="email" value="sara.benali" autocomplete="email" required aria-invalid="true" aria-describedby="email-c-error">
+    <p class="error" id="email-c-error"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>Adresse e-mail invalide.</span></p>
+  </div>
+      <div class="field">
+    <label for="tel-c">Téléphone <span class="optional">(facultatif)</span></label>
+    <input class="input" id="tel-c" type="tel" value="" autocomplete="tel">
+    
+  </div>
+      <fieldset class="wide" aria-describedby="modalite-c-error">
+      <legend>Modalité</legend>
+      <div class="choices"><label class="choice"><input type="radio" name="modalite-c" required><span>Au cabinet</span></label><label class="choice"><input type="radio" name="modalite-c" required><span>En visio</span></label></div>
+      <p class="error" id="modalite-c-error"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>Choisissez une modalité.</span></p>
+    </fieldset>
+      <div class="trap" aria-hidden="true"><label for="website-c">Website</label><input id="website-c" type="text" tabindex="-1" autocomplete="off"></div>
+      <div class="field wide">
+        <label class="choice"><input type="checkbox" required aria-describedby="consent-c-error"><span>J'accepte que mes coordonnées soient transmises à Claire Martin pour traiter ma demande de rendez-vous. <a href="#">En savoir plus sur la protection des données<span class="sr-only"> (nouvel onglet)</span></a>.</span></label>
+        <p class="error" id="consent-c-error"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>Cochez cette case pour envoyer votre demande.</span></p>
+      </div>
+      
+      <div class="bar info wide" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+      <div class="actions wide">
+        <button type="submit" class="btn primary large">Envoyer ma demande</button>
+        
+      </div>
+    </div>
+  </form>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="champs-422" aria-label="Vue 6 : Champs refusés par le serveur">
+<p class="mq-legende"><strong>Vue 6 sur 16 · Champs refusés par le serveur</strong> · POST …/requests → 422 VALIDATION_FAILED</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Claire Martin</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card head-card" aria-labelledby="titre-page-6">
+  <h1 id="titre-page-6">Prendre rendez-vous avec Claire Martin</h1>
+  <ul class="facts"><li>Créneaux de 60 min</li><li>Au cabinet ou en visio</li></ul>
+  <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step" aria-labelledby="titre-etape-d">
+  <div class="step-head"><span class="step-kicker">Étape 2 sur 2</span><h2 id="titre-etape-d" tabindex="-1">Vos coordonnées</h2></div>
+  <div class="recap">
+    <p class="recap-text"><span>Créneau choisi</span><strong>jeudi 26 novembre 2026 · <span class="mono">10:00 – 11:00</span></strong><span>Europe/Paris (heure normale d’Europe centrale)</span></p>
+    <button type="button" class="btn">Changer de créneau</button>
+  </div>
+  <form novalidate aria-labelledby="titre-etape-d">
+    <div class="form-grid">
+      <div class="form-errors wide" role="alert" tabindex="-1"><p>2 champs à corriger</p><ul><li><a href="#email-d">E-mail : une adresse de la forme nom@domaine.fr est attendue.</a></li><li><a href="#tel-d">Téléphone : format invalide.</a></li></ul></div>
+      <p class="hint wide">Tous les champs sont obligatoires, sauf le téléphone.</p>
+      <div class="field">
+    <label for="prenom-d">Prénom</label>
+    <input class="input" id="prenom-d" type="text" value="Sara" autocomplete="given-name" required>
+    
+  </div>
+      <div class="field">
+    <label for="nom-d">Nom</label>
+    <input class="input" id="nom-d" type="text" value="Benali" autocomplete="family-name" required>
+    
+  </div>
+      <div class="field">
+    <label for="email-d">E-mail</label>
+    <input class="input" id="email-d" type="email" value="sara.benali@example" autocomplete="email" required aria-invalid="true" aria-describedby="email-d-error">
+    <p class="error" id="email-d-error"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>E-mail invalide : une adresse de la forme nom@domaine.fr est attendue.</span></p>
+  </div>
+      <div class="field">
+    <label for="tel-d">Téléphone <span class="optional">(facultatif)</span></label>
+    <input class="input" id="tel-d" type="tel" value="zéro six" autocomplete="tel" aria-invalid="true" aria-describedby="tel-d-error">
+    <p class="error" id="tel-d-error"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><span>Format invalide.</span></p>
+  </div>
+      <fieldset class="wide">
+      <legend>Modalité</legend>
+      <div class="choices"><label class="choice"><input type="radio" name="modalite-d" checked required><span>Au cabinet</span></label><label class="choice"><input type="radio" name="modalite-d" required><span>En visio</span></label></div>
+      
+    </fieldset>
+      <div class="trap" aria-hidden="true"><label for="website-d">Website</label><input id="website-d" type="text" tabindex="-1" autocomplete="off"></div>
+      <div class="field wide">
+        <label class="choice"><input type="checkbox" checked required><span>J'accepte que mes coordonnées soient transmises à Claire Martin pour traiter ma demande de rendez-vous. <a href="#">En savoir plus sur la protection des données<span class="sr-only"> (nouvel onglet)</span></a>.</span></label>
+        
+      </div>
+      
+      <div class="bar info wide" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+      <div class="actions wide">
+        <button type="submit" class="btn primary large">Envoyer ma demande</button>
+        
+      </div>
+    </div>
+  </form>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="envoi" aria-label="Vue 7 : Envoi en cours">
+<p class="mq-legende"><strong>Vue 7 sur 16 · Envoi en cours</strong> · POST …/requests parti</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Claire Martin</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card head-card" aria-labelledby="titre-page-7">
+  <h1 id="titre-page-7">Prendre rendez-vous avec Claire Martin</h1>
+  <ul class="facts"><li>Créneaux de 60 min</li><li>Au cabinet ou en visio</li></ul>
+  <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step" aria-labelledby="titre-etape-e">
+  <div class="step-head"><span class="step-kicker">Étape 2 sur 2</span><h2 id="titre-etape-e" tabindex="-1">Vos coordonnées</h2></div>
+  <div class="recap">
+    <p class="recap-text"><span>Créneau choisi</span><strong>jeudi 26 novembre 2026 · <span class="mono">10:00 – 11:00</span></strong><span>Europe/Paris (heure normale d’Europe centrale)</span></p>
+    <button type="button" class="btn">Changer de créneau</button>
+  </div>
+  <form novalidate aria-labelledby="titre-etape-e">
+    <div class="form-grid">
+      
+      <p class="hint wide">Tous les champs sont obligatoires, sauf le téléphone.</p>
+      <div class="field">
+    <label for="prenom-e">Prénom</label>
+    <input class="input" id="prenom-e" type="text" value="Sara" autocomplete="given-name" required>
+    
+  </div>
+      <div class="field">
+    <label for="nom-e">Nom</label>
+    <input class="input" id="nom-e" type="text" value="Benali" autocomplete="family-name" required>
+    
+  </div>
+      <div class="field">
+    <label for="email-e">E-mail</label>
+    <input class="input" id="email-e" type="email" value="sara.benali@example.test" autocomplete="email" required aria-describedby="email-e-hint">
+    <p class="hint" id="email-e-hint">Un lien de vérification sera envoyé à cette adresse.</p>
+  </div>
+      <div class="field">
+    <label for="tel-e">Téléphone <span class="optional">(facultatif)</span></label>
+    <input class="input" id="tel-e" type="tel" value="06 12 34 56 78" autocomplete="tel">
+    
+  </div>
+      <fieldset class="wide">
+      <legend>Modalité</legend>
+      <div class="choices"><label class="choice"><input type="radio" name="modalite-e" checked required><span>Au cabinet</span></label><label class="choice"><input type="radio" name="modalite-e" required><span>En visio</span></label></div>
+      
+    </fieldset>
+      <div class="trap" aria-hidden="true"><label for="website-e">Website</label><input id="website-e" type="text" tabindex="-1" autocomplete="off"></div>
+      <div class="field wide">
+        <label class="choice"><input type="checkbox" checked required><span>J'accepte que mes coordonnées soient transmises à Claire Martin pour traiter ma demande de rendez-vous. <a href="#">En savoir plus sur la protection des données<span class="sr-only"> (nouvel onglet)</span></a>.</span></label>
+        
+      </div>
+      
+      <div class="bar info wide" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+      <div class="actions wide">
+        <button type="submit" class="btn primary large" disabled>Envoyer ma demande</button>
+        <span class="sending" role="status">Envoi en cours…</span>
+      </div>
+    </div>
+  </form>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="plafond" aria-label="Vue 8 : Plafond atteint">
+<p class="mq-legende"><strong>Vue 8 sur 16 · Plafond atteint</strong> · POST …/requests → 429 RATE_LIMITED (retryAfterSeconds)</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Claire Martin</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card head-card" aria-labelledby="titre-page-8">
+  <h1 id="titre-page-8">Prendre rendez-vous avec Claire Martin</h1>
+  <ul class="facts"><li>Créneaux de 60 min</li><li>Au cabinet ou en visio</li></ul>
+  <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step" aria-labelledby="titre-etape-f">
+  <div class="step-head"><span class="step-kicker">Étape 2 sur 2</span><h2 id="titre-etape-f" tabindex="-1">Vos coordonnées</h2></div>
+  <div class="recap">
+    <p class="recap-text"><span>Créneau choisi</span><strong>jeudi 26 novembre 2026 · <span class="mono">10:00 – 11:00</span></strong><span>Europe/Paris (heure normale d’Europe centrale)</span></p>
+    <button type="button" class="btn">Changer de créneau</button>
+  </div>
+  <form novalidate aria-labelledby="titre-etape-f">
+    <div class="form-grid">
+      
+      <p class="hint wide">Tous les champs sont obligatoires, sauf le téléphone.</p>
+      <div class="field">
+    <label for="prenom-f">Prénom</label>
+    <input class="input" id="prenom-f" type="text" value="Sara" autocomplete="given-name" required>
+    
+  </div>
+      <div class="field">
+    <label for="nom-f">Nom</label>
+    <input class="input" id="nom-f" type="text" value="Benali" autocomplete="family-name" required>
+    
+  </div>
+      <div class="field">
+    <label for="email-f">E-mail</label>
+    <input class="input" id="email-f" type="email" value="sara.benali@example.test" autocomplete="email" required aria-describedby="email-f-hint">
+    <p class="hint" id="email-f-hint">Un lien de vérification sera envoyé à cette adresse.</p>
+  </div>
+      <div class="field">
+    <label for="tel-f">Téléphone <span class="optional">(facultatif)</span></label>
+    <input class="input" id="tel-f" type="tel" value="06 12 34 56 78" autocomplete="tel">
+    
+  </div>
+      <fieldset class="wide">
+      <legend>Modalité</legend>
+      <div class="choices"><label class="choice"><input type="radio" name="modalite-f" checked required><span>Au cabinet</span></label><label class="choice"><input type="radio" name="modalite-f" required><span>En visio</span></label></div>
+      
+    </fieldset>
+      <div class="trap" aria-hidden="true"><label for="website-f">Website</label><input id="website-f" type="text" tabindex="-1" autocomplete="off"></div>
+      <div class="field wide">
+        <label class="choice"><input type="checkbox" checked required><span>J'accepte que mes coordonnées soient transmises à Claire Martin pour traiter ma demande de rendez-vous. <a href="#">En savoir plus sur la protection des données<span class="sr-only"> (nouvel onglet)</span></a>.</span></label>
+        
+      </div>
+      <div class="bar warning wide" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p>Trop de demandes envoyées depuis votre connexion. Réessayez dans 42 min.</p></div>
+      <div class="bar info wide" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+      <div class="actions wide">
+        <button type="submit" class="btn primary large">Envoyer ma demande</button>
+        
+      </div>
+    </div>
+  </form>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="echec" aria-label="Vue 9 : Échec d'envoi">
+<p class="mq-legende"><strong>Vue 9 sur 16 · Échec d'envoi</strong> · POST …/requests → réseau, 5xx, 400</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Claire Martin</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card head-card" aria-labelledby="titre-page-9">
+  <h1 id="titre-page-9">Prendre rendez-vous avec Claire Martin</h1>
+  <ul class="facts"><li>Créneaux de 60 min</li><li>Au cabinet ou en visio</li></ul>
+  <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step" aria-labelledby="titre-etape-g">
+  <div class="step-head"><span class="step-kicker">Étape 2 sur 2</span><h2 id="titre-etape-g" tabindex="-1">Vos coordonnées</h2></div>
+  <div class="recap">
+    <p class="recap-text"><span>Créneau choisi</span><strong>jeudi 26 novembre 2026 · <span class="mono">10:00 – 11:00</span></strong><span>Europe/Paris (heure normale d’Europe centrale)</span></p>
+    <button type="button" class="btn">Changer de créneau</button>
+  </div>
+  <form novalidate aria-labelledby="titre-etape-g">
+    <div class="form-grid">
+      
+      <p class="hint wide">Tous les champs sont obligatoires, sauf le téléphone.</p>
+      <div class="field">
+    <label for="prenom-g">Prénom</label>
+    <input class="input" id="prenom-g" type="text" value="Sara" autocomplete="given-name" required>
+    
+  </div>
+      <div class="field">
+    <label for="nom-g">Nom</label>
+    <input class="input" id="nom-g" type="text" value="Benali" autocomplete="family-name" required>
+    
+  </div>
+      <div class="field">
+    <label for="email-g">E-mail</label>
+    <input class="input" id="email-g" type="email" value="sara.benali@example.test" autocomplete="email" required aria-describedby="email-g-hint">
+    <p class="hint" id="email-g-hint">Un lien de vérification sera envoyé à cette adresse.</p>
+  </div>
+      <div class="field">
+    <label for="tel-g">Téléphone <span class="optional">(facultatif)</span></label>
+    <input class="input" id="tel-g" type="tel" value="06 12 34 56 78" autocomplete="tel">
+    
+  </div>
+      <fieldset class="wide">
+      <legend>Modalité</legend>
+      <div class="choices"><label class="choice"><input type="radio" name="modalite-g" checked required><span>Au cabinet</span></label><label class="choice"><input type="radio" name="modalite-g" required><span>En visio</span></label></div>
+      
+    </fieldset>
+      <div class="trap" aria-hidden="true"><label for="website-g">Website</label><input id="website-g" type="text" tabindex="-1" autocomplete="off"></div>
+      <div class="field wide">
+        <label class="choice"><input type="checkbox" checked required><span>J'accepte que mes coordonnées soient transmises à Claire Martin pour traiter ma demande de rendez-vous. <a href="#">En savoir plus sur la protection des données<span class="sr-only"> (nouvel onglet)</span></a>.</span></label>
+        
+      </div>
+      <div class="bar danger wide" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p>La demande n'a pas pu être envoyée. Votre saisie est conservée : réessayez dans un instant.</p></div>
+      <div class="bar info wide" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+      <div class="actions wide">
+        <button type="submit" class="btn primary large">Envoyer ma demande</button>
+        
+      </div>
+    </div>
+  </form>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="indisponible" aria-label="Vue 10 : Créneau plus disponible">
+<p class="mq-legende"><strong>Vue 10 sur 16 · Créneau plus disponible</strong> · POST …/requests → 409 SLOT_NOT_AVAILABLE, puis GET …/slots</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Claire Martin</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card head-card" aria-labelledby="titre-page-11">
+  <h1 id="titre-page-11">Prendre rendez-vous avec Claire Martin</h1>
+  <ul class="facts"><li>Créneaux de 60 min</li><li>Au cabinet ou en visio</li></ul>
+  <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step" aria-labelledby="titre-etape-10">
+  <div class="step-head"><span class="step-kicker">Étape 1 sur 2</span><h2 id="titre-etape-10" tabindex="-1">Choisissez un créneau</h2></div>
+  <div class="bar warning" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>Ce créneau n'est plus disponible.</strong> Choisissez-en un autre : vos coordonnées sont conservées.</p></div>
+  <div class="period">
+    <p class="period-text"><strong>Du lundi 23 novembre au dimanche 6 décembre 2026</strong><span>Heures du praticien : Europe/Paris (heure normale d’Europe centrale)</span></p>
+    <div class="period-nav">
+      <button type="button" class="btn" disabled><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 6-6 6 6 6"/></svg>Semaines précédentes</button>
+      <button type="button" class="btn">Semaines suivantes<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m10 6 6 6-6 6"/></svg></button>
+    </div>
+  </div>
+  <div class="days"><section class="day" aria-label="mardi 24 novembre">
+      <h3>mardi 24 novembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 24 novembre, 16:00 à 17:00">16:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 24 novembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="mercredi 25 novembre">
+      <h3>mercredi 25 novembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 25 novembre, 09:00 à 10:00">09:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 25 novembre, 10:00 à 11:00">10:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 25 novembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 25 novembre, 14:00 à 15:00">14:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 25 novembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 25 novembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="jeudi 26 novembre">
+      <h3>jeudi 26 novembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 26 novembre, 09:00 à 10:00">09:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 26 novembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 26 novembre, 14:00 à 15:00">14:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 26 novembre, 16:00 à 17:00">16:00</button></li></ul>
+    </section>
+<section class="day" aria-label="vendredi 27 novembre">
+      <h3>vendredi 27 novembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 27 novembre, 10:00 à 11:00">10:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 27 novembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 27 novembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 27 novembre, 16:00 à 17:00">16:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 27 novembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="lundi 30 novembre">
+      <h3>lundi 30 novembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 09:00 à 10:00">09:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 10:00 à 11:00">10:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 14:00 à 15:00">14:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 16:00 à 17:00">16:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="lundi 30 novembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="mardi 1er décembre">
+      <h3>mardi 1er décembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 1er décembre, 09:00 à 10:00">09:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 1er décembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 1er décembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 1er décembre, 16:00 à 17:00">16:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mardi 1er décembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="mercredi 2 décembre">
+      <h3>mercredi 2 décembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 09:00 à 10:00">09:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 10:00 à 11:00">10:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 14:00 à 15:00">14:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 16:00 à 17:00">16:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="mercredi 2 décembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="jeudi 3 décembre">
+      <h3>jeudi 3 décembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 3 décembre, 10:00 à 11:00">10:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 3 décembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 3 décembre, 14:00 à 15:00">14:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 3 décembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 3 décembre, 16:00 à 17:00">16:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="jeudi 3 décembre, 17:00 à 18:00">17:00</button></li></ul>
+    </section>
+<section class="day" aria-label="vendredi 4 décembre">
+      <h3>vendredi 4 décembre</h3>
+      <ul class="slots"><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 4 décembre, 09:00 à 10:00">09:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 4 décembre, 10:00 à 11:00">10:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 4 décembre, 11:00 à 12:00">11:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 4 décembre, 14:00 à 15:00">14:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 4 décembre, 15:00 à 16:00">15:00</button></li><li><button type="button" class="slot" aria-pressed="false" aria-label="vendredi 4 décembre, 16:00 à 17:00">16:00</button></li></ul>
+    </section></div>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="aucun" aria-label="Vue 11 : Aucun créneau">
+<p class="mq-legende"><strong>Vue 11 sur 16 · Aucun créneau</strong> · GET …/slots → 200, slots: []</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Claire Martin</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card head-card" aria-labelledby="titre-page-13">
+  <h1 id="titre-page-13">Prendre rendez-vous avec Claire Martin</h1>
+  <ul class="facts"><li>Créneaux de 60 min</li><li>Au cabinet ou en visio</li></ul>
+  <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step" aria-labelledby="titre-etape-12">
+  <div class="step-head"><span class="step-kicker">Étape 1 sur 2</span><h2 id="titre-etape-12" tabindex="-1">Choisissez un créneau</h2></div>
+  
+  <div class="period">
+    <p class="period-text"><strong>Du lundi 23 novembre au dimanche 6 décembre 2026</strong><span>Heures du praticien : Europe/Paris (heure normale d’Europe centrale)</span></p>
+    <div class="period-nav">
+      <button type="button" class="btn" disabled><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 6-6 6 6 6"/></svg>Semaines précédentes</button>
+      <button type="button" class="btn">Semaines suivantes<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m10 6 6 6-6 6"/></svg></button>
+    </div>
+  </div>
+  <div class="state"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><h3>Aucun créneau disponible pour l'instant</h3><p>Vous pouvez écrire au praticien pour convenir d'un rendez-vous.</p><a class="btn" href="#">Prendre contact</a></div>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="chargement" aria-label="Vue 12 : Chargement">
+<p class="mq-legende"><strong>Vue 12 sur 16 · Chargement</strong> · GET …/practitioners/{slug} et GET …/slots en cours</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking" aria-busy="true">
+<section class="card head-card" role="status" aria-label="Chargement de la prise de rendez-vous"><span class="skel" style="width:62%;height:28px"></span><span class="skel" style="width:38%"></span><span class="skel" style="height:40px"></span></section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step"><span class="skel" style="width:30%;height:24px"></span><div class="skel-rows"><div class="skel-row"><span class="skel" style="width:120px"></span><div class="skel-slots"><span class="skel"></span><span class="skel"></span><span class="skel"></span><span class="skel"></span></div></div><div class="skel-row"><span class="skel" style="width:120px"></span><div class="skel-slots"><span class="skel"></span><span class="skel"></span><span class="skel"></span><span class="skel"></span></div></div><div class="skel-row"><span class="skel" style="width:120px"></span><div class="skel-slots"><span class="skel"></span><span class="skel"></span><span class="skel"></span><span class="skel"></span></div></div><div class="skel-row"><span class="skel" style="width:120px"></span><div class="skel-slots"><span class="skel"></span><span class="skel"></span><span class="skel"></span></div></div></div></section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="erreur" aria-label="Vue 13 : Erreur de chargement">
+<p class="mq-legende"><strong>Vue 13 sur 16 · Erreur de chargement</strong> · GET …/slots → réseau, 5xx</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Claire Martin</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card head-card" aria-labelledby="titre-page-15">
+  <h1 id="titre-page-15">Prendre rendez-vous avec Claire Martin</h1>
+  <ul class="facts"><li>Créneaux de 60 min</li><li>Au cabinet ou en visio</li></ul>
+  <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step" aria-labelledby="titre-etape-14">
+  <div class="step-head"><span class="step-kicker">Étape 1 sur 2</span><h2 id="titre-etape-14" tabindex="-1">Choisissez un créneau</h2></div>
+  
+  <div class="period">
+    <p class="period-text"><strong>Du lundi 23 novembre au dimanche 6 décembre 2026</strong><span>Heures du praticien : Europe/Paris (heure normale d’Europe centrale)</span></p>
+    <div class="period-nav">
+      <button type="button" class="btn" disabled><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 6-6 6 6 6"/></svg>Semaines précédentes</button>
+      <button type="button" class="btn">Semaines suivantes<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m10 6 6 6-6 6"/></svg></button>
+    </div>
+  </div>
+  <div class="state error" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><h3>Les créneaux n'ont pas pu être chargés.</h3><p>Vérifiez votre connexion, puis réessayez.</p><button type="button" class="btn">Réessayer</button></div>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="plafond-lecture" aria-label="Vue 14 : Plafond atteint en lecture (créneaux)">
+<p class="mq-legende"><strong>Vue 14 sur 16 · Plafond atteint en lecture (créneaux)</strong> · GET …/slots → 429 RATE_LIMITED (retryAfterSeconds)</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Claire Martin</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card head-card" aria-labelledby="titre-page-17">
+  <h1 id="titre-page-17">Prendre rendez-vous avec Claire Martin</h1>
+  <ul class="facts"><li>Créneaux de 60 min</li><li>Au cabinet ou en visio</li></ul>
+  <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step" aria-labelledby="titre-etape-16">
+  <div class="step-head"><span class="step-kicker">Étape 1 sur 2</span><h2 id="titre-etape-16" tabindex="-1">Choisissez un créneau</h2></div>
+  
+  <div class="period">
+    <p class="period-text"><strong>Du lundi 23 novembre au dimanche 6 décembre 2026</strong><span>Heures du praticien : Europe/Paris (heure normale d’Europe centrale)</span></p>
+    <div class="period-nav">
+      <button type="button" class="btn" disabled><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 6-6 6 6 6"/></svg>Semaines précédentes</button>
+      <button type="button" class="btn">Semaines suivantes<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m10 6 6 6-6 6"/></svg></button>
+    </div>
+  </div>
+  <div class="state warning" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><h3>Les créneaux n'ont pas pu être chargés.</h3><p>Trop de requêtes depuis votre connexion. Réessayez dans 1 min.</p><button type="button" class="btn">Réessayer</button></div>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="plafond-reglages" aria-label="Vue 15 : Plafond atteint en lecture (réglages)">
+<p class="mq-legende"><strong>Vue 15 sur 16 · Plafond atteint en lecture (réglages)</strong> · GET …/practitioners/{slug} → 429 RATE_LIMITED ; le nom du praticien n’est pas connu</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol><li><a href="#">Annuaire</a></li><li aria-current="page">Prendre rendez-vous</li></ol></nav>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step"><div class="state warning" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><h1>La prise de rendez-vous n'a pas pu être chargée.</h1><p>Trop de requêtes depuis votre connexion. Réessayez dans 1 min.</p><button type="button" class="btn">Réessayer</button></div></section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="boite-mail" aria-label="Vue 16 : Consultez votre boîte mail">
+<p class="mq-legende"><strong>Vue 16 sur 16 · Consultez votre boîte mail</strong> · POST …/requests → 202 (même écran quel que soit le sort de la demande)</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Claire Martin</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card step sent" aria-labelledby="titre-envoi">
+  <span class="badge-icon" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
+  <h1 id="titre-envoi" tabindex="-1">Consultez votre boîte mail</h1>
+  <p>Le lien est valable 30 minutes.</p>
+  <div class="recap" style="align-self:stretch"><p class="recap-text"><span>Créneau demandé</span><strong>jeudi 26 novembre 2026 · <span class="mono">10:00 – 11:00</span> · au cabinet</strong><span>Europe/Paris (heure normale d’Europe centrale)</span></p></div>
+  <ul class="next">
+    <li>Tant que vous n'avez pas ouvert ce lien, rien n'est transmis au praticien.</li>
+    <li>Rien reçu ? Regardez dans le courrier indésirable, puis refaites une demande.</li>
+  </ul>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<p><a class="btn" href="#vue=fiche">Revenir à la fiche de Claire Martin</a></p>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<script>
+(function () {
+  var root = document.documentElement;
+  var vues = Array.prototype.slice.call(document.querySelectorAll('.vue'));
+  var select = document.getElementById('mq-vue');
+  var themeButtons = Array.prototype.slice.call(document.querySelectorAll('[data-mq-theme]'));
+  function show(id) {
+    var all = id === 'toutes';
+    vues.forEach(function (vue) { vue.hidden = !(all || vue.id === id); });
+    select.value = id;
+    window.scrollTo(0, 0);
+  }
+  function fromHash() {
+    var id = decodeURIComponent(location.hash.replace(/^#(vue=)?/, ''));
+    if (id !== 'toutes' && !document.getElementById(id)) id = vues[0].id;
+    show(id);
+  }
+  function setTheme(theme) {
+    if (theme === 'light' || theme === 'dark') root.setAttribute('data-theme', theme);
+    else root.removeAttribute('data-theme');
+    themeButtons.forEach(function (button) {
+      button.setAttribute('aria-pressed', String(button.getAttribute('data-mq-theme') === (theme || 'system')));
+    });
+  }
+  select.addEventListener('change', function () { location.hash = 'vue=' + select.value; });
+  document.getElementById('mq-prev').addEventListener('click', function () { step(-1); });
+  document.getElementById('mq-next').addEventListener('click', function () { step(1); });
+  function step(delta) {
+    var index = Math.max(0, vues.findIndex(function (vue) { return vue.id === select.value; }));
+    location.hash = 'vue=' + vues[(index + delta + vues.length) % vues.length].id;
+  }
+  themeButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      var theme = button.getAttribute('data-mq-theme');
+      setTheme(theme === 'system' ? '' : theme);
+    });
+  });
+  window.addEventListener('hashchange', fromHash);
+  var asked = /[?&]theme=(light|dark)/.exec(location.search);
+  setTheme(asked ? asked[1] : '');
+  fromHash();
+})();
+</script>
+</body>
+</html>

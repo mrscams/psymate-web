@@ -30,6 +30,7 @@ G l'emporte sur tout autre document ; le contrat l'emporte sur une fiche.
 - Après une écriture, on relit les projections (vue d'ensemble, recherche), on ne recalcule pas localement.
 - authorType en lecture seule, place réservée, jamais dessiné (A11). Agenda (G Q25 amendée le 15 nov. 2026) : feature `agenda`, rendu sur données de démonstration tant que le contrat ne porte pas l'agenda, aucune synchronisation Google. Signalements : aucune route (G Q26).
 - Profil 360 : feature profile360, fiche 30, docs/J-plan-profil-360-web.md ; titre et détail seulement, relecture après écriture.
+- Prise de rendez-vous en ligne : pages publiques dans public, réglages dans account, demandes dans agenda ; fiches 31 et 32, docs/K-plan-prise-de-rendez-vous.md ; rien du demandeur dans le navigateur (G Q62).
 
 ## Conventions
 Nommage : x.page.ts (PageX), x.component.ts (XComponent, sélecteur pm-x), x.store.ts (XStore), x.api.ts (XApi), x.routes.ts, x.guard.ts, x.interceptor.ts. Dossiers par feature : index.ts, routes, pages/, ui/, data/ (panels/ pour les panneaux).
