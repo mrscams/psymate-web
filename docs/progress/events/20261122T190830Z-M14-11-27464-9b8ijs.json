@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-22T19:08:30.251Z",
+  "task": "M14-11",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Section Prise de rendez-vous en ligne de la page Préférences : activation, mode, éditeur de plages, durée, délai, horizon, modalités, fuseau ; 422 sous le réglage, relecture après écriture ; Vitest et e2e verts",
+  "pr": "https://github.com/mrscams/psymate-web/pull/108",
+  "branch": "M14-11-preferences-prise-rdv",
+  "checkout": "agent-a8349f0824c3e9f9f"
+}
