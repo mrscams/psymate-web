@@ -2,11 +2,10 @@ import { APIRequestContext, expect, Page, test } from '@playwright/test';
 
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { API } from '../support/env';
 
 // Flux 2 (B3) et fiches 01, 16 (M1-06) : contre l'API locale (seed small, Mailpit), jamais de mock
 // du backend. Chaque test crée son compte jetable : la liste de ses patients ne dépend que de lui.
-
-const API = 'http://localhost:8080';
 
 /** Patient créé directement par l'API (session du compte jetable portée par `request`). */
 async function createPatient(api: APIRequestContext, displayName: string): Promise<string> {

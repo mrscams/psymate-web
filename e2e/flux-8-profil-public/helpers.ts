@@ -2,8 +2,7 @@ import { APIRequestContext, expect, Locator, Page } from '@playwright/test';
 
 import { confirmEmail, register, TestAccount } from '../support/accounts';
 import { adminContext } from '../support/admin';
-
-const API = 'http://localhost:8080';
+import { API } from '../support/env';
 
 const PDF = Buffer.from(
   '%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[]/Count 0>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF',

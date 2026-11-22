@@ -3,6 +3,7 @@ import { APIRequestContext, expect, Page, test } from '@playwright/test';
 import { ADMIN_AVAILABLE, ADMIN_MISSING } from '../support/admin';
 import { expectNoAxeViolations } from '../support/axe';
 import { publishPsychologistInParis, PublishedPractitioner } from './published-practitioner';
+import { MAILPIT } from '../support/env';
 
 // B3 flux 7 (M5-05, fiches 08, 09, 24) : un visiteur, sans compte ni connexion, trouve une
 // psychologue à Paris, filtre par spécialité, ouvre sa fiche et lui écrit ; le message arrive dans
@@ -13,7 +14,6 @@ import { publishPsychologistInParis, PublishedPractitioner } from './published-p
 // par lancement, flux-7-visiteur/clavier.spec.ts un troisième : au-delà d'une passe complète avec
 // administrateur dans l'heure, l'API répond 429 (attendu, pas un bug).
 
-const MAILPIT = 'http://localhost:8025';
 const EMERGENCY = /3114|\bSAMU\b|numéros? d.urgence/i;
 
 /** Messages Mailpit qui contiennent ce texte (recherche plein texte). */

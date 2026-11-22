@@ -1,4 +1,5 @@
 import { APIRequestContext, expect } from '@playwright/test';
+import { API, MAILPIT } from './env';
 
 /**
  * Comptes pour les e2e, contre l'API réelle (jamais de mock). Les comptes du seed
@@ -10,8 +11,6 @@ export const SEED = {
   claire: { email: 'claire.seed@example.test', password: 'Donnees-Fictives-2026' },
 } as const;
 
-const API = 'http://localhost:8080';
-const MAILPIT = 'http://localhost:8025';
 const TOKEN = /confirmer-email\/([A-Za-z0-9_.~%-]+)/;
 
 export interface TestAccount {

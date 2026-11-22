@@ -3,14 +3,13 @@ import { APIRequestContext, expect, Page, test } from '@playwright/test';
 import { createAccount, signIn } from '../preferences/accounts';
 import { uniqueEmail } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { API, MAILPIT } from '../support/env';
 
 // B3 flux 1, première connexion (M7-03, planche 29 §2 et §6, C5 « première entrée en moins de
 // 3 minutes ») : contre l'API locale (seed small, Mailpit), jamais de mock du backend. Chaque test
 // crée son compte et ses patients : aucune donnée partagée, rien ne dépend du seed demo (absent en
 // CI) ; le patient « DEMO · … » est créé par POST /api/patients avec le préfixe exact du seed.
 
-const API = 'http://localhost:8080';
-const MAILPIT = 'http://localhost:8025';
 const TOKEN = /confirmer-email\/([A-Za-z0-9_.~%-]+)/;
 const PASSWORD = 'Vendôme-Lyon-2026!x';
 /** C5 : un nouveau praticien saisit sa première entrée en moins de 3 minutes. */
