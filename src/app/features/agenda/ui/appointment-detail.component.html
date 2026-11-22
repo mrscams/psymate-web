@@ -27,7 +27,7 @@
       }
       <div class="identity">
         @if (item.patient) {
-          <a class="name" [routerLink]="patientLink()">{{ name() }}</a>
+          <a class="name" [id]="ids.patientLink" [routerLink]="patientLink()">{{ name() }}</a>
         } @else {
           <span class="name">{{ name() }}</span>
         }
@@ -200,6 +200,73 @@
       </form>
     }
 
+    <!-- Rattacher à un patient (invité non purgé) : sélecteur du panneau 15b, case, sur place. -->
+    @if (mode() === 'attach') {
+      <form
+        class="inline"
+        [id]="ids.attachForm"
+        [formGroup]="attachForm"
+        (ngSubmit)="submitAttach()"
+        (keydown.escape)="escapeAttach($event)"
+        novalidate
+      >
+        <h2 i18n="Titre du formulaire Rattacher à un patient@@agenda.attach.title">
+          Rattacher à un patient
+        </h2>
+        <div class="field">
+          <label
+            [for]="ids.attachPatient"
+            i18n="Champ patient du rattachement@@agenda.attach.patient"
+            >Patient</label
+          >
+          <pm-patient-picker
+            [inputId]="ids.attachPatient"
+            [chosen]="attachChosen()"
+            [meta]="attachMeta()"
+            [invalid]="
+              attachForm.controls.patientId.invalid && attachForm.controls.patientId.touched
+            "
+            (picked)="chooseAttach($event)"
+          />
+          <pm-field-errors
+            [control]="attachForm.controls.patientId"
+            [id]="ids.attachPatient + '-error'"
+          />
+        </div>
+        <label class="check">
+          <input type="checkbox" formControlName="includeSameGuest" />
+          <ng-container
+            i18n="Case du rattachement, includeSameGuest@@agenda.attach.includeSameGuest"
+            >Rattacher aussi les autres rendez-vous de cette personne</ng-container
+          >
+        </label>
+        @if (notifiesRequester()) {
+          <p class="hint" [id]="ids.attachHint">{{ attachStopsEmails }}</p>
+        }
+        @if (actionError(); as error) {
+          <p class="error" role="alert">{{ error }}</p>
+        }
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="primary"
+            [disabled]="busy()"
+            [attr.aria-describedby]="notifiesRequester() ? ids.attachHint : null"
+            i18n="Valider le rattachement@@agenda.attach.submit"
+          >
+            Rattacher
+          </button>
+          <button
+            type="button"
+            (click)="closeForm()"
+            i18n="Renoncer au rattachement@@agenda.attach.cancel"
+          >
+            Annuler
+          </button>
+        </div>
+      </form>
+    }
+
     <!-- Préparer : vue d'ensemble du patient ; jamais bloquant (erreur : les liens seuls) ; aucun
          pour un invité, sans dossier. -->
     @if (item.patient) {
@@ -321,6 +388,18 @@
           i18n="Action Dupliquer du détail@@agenda.detail.duplicate"
         >
           Dupliquer
+        </button>
+      } @else if (attachable()) {
+        <!-- Invité non purgé : « Rattacher à un patient » à la place de « Dupliquer » (M14-15). -->
+        <button
+          type="button"
+          [id]="ids.attachButton"
+          [attr.aria-expanded]="mode() === 'attach'"
+          [attr.aria-controls]="ids.attachForm"
+          (click)="openAttach()"
+          i18n="Action Rattacher à un patient du détail@@agenda.detail.attach"
+        >
+          Rattacher à un patient
         </button>
       }
       <!-- Demande en attente : « Refuser », bouton neutre, ouvre l'annulation sous son titre. -->

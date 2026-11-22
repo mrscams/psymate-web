@@ -4,17 +4,9 @@ import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { ApiProblem, asProblem } from '../../../core/http';
 import { failed, idle, Loadable, loaded, loading } from '../../../shared/util';
 import { AgendaApi } from './agenda.api';
-import {
-  CreatedAppointments,
-  FreeBusy,
-  NewAppointment,
-  PatientAppointments,
-  PatientOption,
-} from './agenda.model';
+import { CreatedAppointments, FreeBusy, NewAppointment, PatientAppointments } from './agenda.model';
 
 interface NewAppointmentState {
-  /** Résultats de la recherche de patient (idle tant que rien n'est tapé). */
-  results: Loadable<PatientOption[]>;
   /** Défauts et rendez-vous à venir du patient choisi. */
   patient: Loadable<PatientAppointments>;
   /** Conflits et voisinage du créneau ; null tant qu'inconnu (silencieux en cas d'erreur). */
@@ -24,7 +16,6 @@ interface NewAppointmentState {
 }
 
 const initialState: NewAppointmentState = {
-  results: idle(),
   patient: idle(),
   freeBusy: null,
   submitting: false,
@@ -32,36 +23,18 @@ const initialState: NewAppointmentState = {
 };
 
 /**
- * État serveur du panneau « Nouveau rendez-vous » (fiche 15b), fourni par le panneau : recherche des
- * patients actifs, défauts du patient choisi, conflits et voisinage du créneau, création. Chaque
- * lecture ignore les réponses dépassées par une plus récente.
+ * État serveur du panneau « Nouveau rendez-vous » (fiche 15b), fourni par le panneau : défauts du
+ * patient choisi, conflits et voisinage du créneau, création (la recherche des patients est celle de
+ * `pm-patient-picker`, PatientSearchStore). Chaque lecture ignore les réponses dépassées par une
+ * plus récente.
  */
 export const NewAppointmentStore = signalStore(
   withState(initialState),
   withMethods((store, api = inject(AgendaApi)) => {
-    let searchTicket = 0;
     let patientTicket = 0;
     let slotTicket = 0;
 
     return {
-      async search(query: string): Promise<void> {
-        const ticket = ++searchTicket;
-        if (!query.trim()) {
-          patchState(store, { results: idle() });
-          return;
-        }
-        patchState(store, { results: loading(store.results()) });
-        try {
-          const results = await api.searchPatients(query);
-          if (ticket === searchTicket) patchState(store, { results: loaded(results) });
-        } catch (error) {
-          if (ticket === searchTicket) patchState(store, { results: failed(asProblem(error)) });
-        }
-      },
-      clearResults(): void {
-        searchTicket++;
-        patchState(store, { results: idle() });
-      },
       /** Patient choisi : ses défauts (durée, modalité, rythme) et ses rendez-vous à venir. */
       async loadPatient(patientId: string | null): Promise<PatientAppointments | null> {
         const ticket = ++patientTicket;
