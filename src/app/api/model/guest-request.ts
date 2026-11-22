@@ -10,9 +10,13 @@
 
 
 /**
- * Invité : personne qui n\'a pas encore de fiche patient (G Q60). Nom obligatoire, prénom et téléphone facultatifs. Ses données ne vivent que dans le rendez-vous, avec les mêmes règles d\'accès qu\'un patient, et sont purgées 6 mois après la fin (ou l\'annulation) du rendez-vous.
+ * Invité : personne qui n\'a pas encore de fiche patient (G Q60). Nom obligatoire, prénom, téléphone et e-mail facultatifs. Ses données ne vivent que dans le rendez-vous, avec les mêmes règles d\'accès qu\'un patient, et sont purgées 6 mois après la fin (ou l\'annulation) du rendez-vous.
  */
 export interface GuestRequest { 
+    /**
+     * E-mail, 320 caractères au plus (OUT_OF_RANGE sinon) : une seule @, au moins un point après elle, aucun espace (INVALID_FORMAT sinon) ; chaîne vide : aucun e-mail.
+     */
+    email?: string;
     /**
      * Prénom, 100 caractères au plus.
      */

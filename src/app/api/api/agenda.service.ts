@@ -19,6 +19,8 @@ import { OpenApiHttpParams, QueryParamStyle } from '../query.params';
 // @ts-ignore
 import { AgendaWindowDto } from '../model/agenda-window-dto';
 // @ts-ignore
+import { BookingRequestsDto } from '../model/booking-requests-dto';
+// @ts-ignore
 import { FreeBusyDto } from '../model/free-busy-dto';
 // @ts-ignore
 import { PatientAppointmentsDto } from '../model/patient-appointments-dto';
@@ -212,6 +214,60 @@ export class AgendaService extends BaseService implements AgendaServiceInterface
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters.toHttpParams(),
+                responseType: <any>responseType_,
+                ...(withCredentials ? { withCredentials } : {}),
+                headers: localVarHeaders,
+                observe: observe,
+                ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Liste les demandes de rendez-vous en ligne en attente
+     * Session praticien. Demandes en ligne qui attendent une réponse (G Q74) : rendez-vous du praticien courant d\&#39;origine online au statut tentative qui commencent au plus tôt maintenant, triés par début puis identifiant, 100 au plus. Un rendez-vous à confirmer posé par le praticien (origin practitioner), une demande déjà confirmée (planned), annulée ou passée n\&#39;y figurent pas. Le praticien confirme une demande par POST /api/appointments/{id}/confirm et la refuse par POST /api/appointments/{id}/cancel.
+     * @endpoint get /api/agenda/requests
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public pendingRequests(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<BookingRequestsDto>;
+    public pendingRequests(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<BookingRequestsDto>>;
+    public pendingRequests(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<BookingRequestsDto>>;
+    public pendingRequests(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*' | 'application/problem+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+
+        let localVarHeaders = this.defaultHeaders;
+
+        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            '*/*',
+            'application/problem+json'
+        ]);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/agenda/requests`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<BookingRequestsDto>('get', `${basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 ...(withCredentials ? { withCredentials } : {}),
                 headers: localVarHeaders,

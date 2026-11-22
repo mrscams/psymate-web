@@ -12,6 +12,7 @@ import { HttpHeaders }                                       from '@angular/comm
 import { Observable }                                        from 'rxjs';
 
 import { AgendaWindowDto } from '../model/models';
+import { BookingRequestsDto } from '../model/models';
 import { FreeBusyDto } from '../model/models';
 import { PatientAppointmentsDto } from '../model/models';
 import { ProblemDetail } from '../model/models';
@@ -45,6 +46,13 @@ export interface AgendaServiceInterface {
      * @param limit Nombre maximal de rendez-vous, de 1 à 100. Défaut : 20.
      */
     ofPatient(id: string, from?: string, limit?: number, extraHttpRequestParams?: any): Observable<PatientAppointmentsDto>;
+
+    /**
+     * Liste les demandes de rendez-vous en ligne en attente
+     * Session praticien. Demandes en ligne qui attendent une réponse (G Q74) : rendez-vous du praticien courant d\&#39;origine online au statut tentative qui commencent au plus tôt maintenant, triés par début puis identifiant, 100 au plus. Un rendez-vous à confirmer posé par le praticien (origin practitioner), une demande déjà confirmée (planned), annulée ou passée n\&#39;y figurent pas. Le praticien confirme une demande par POST /api/appointments/{id}/confirm et la refuse par POST /api/appointments/{id}/cancel.
+     * @endpoint get /api/agenda/requests
+     */
+    pendingRequests(extraHttpRequestParams?: any): Observable<BookingRequestsDto>;
 
     /**
      * Liste les rendez-vous du praticien sur une fenêtre de dates

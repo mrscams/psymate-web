@@ -40,6 +40,8 @@ api/patients.service.ts
 api/patients.serviceInterface.ts
 api/preferences.service.ts
 api/preferences.serviceInterface.ts
+api/prise-de-rendez-vous-en-ligne.service.ts
+api/prise-de-rendez-vous-en-ligne.serviceInterface.ts
 api/profil-annuaire.service.ts
 api/profil-annuaire.serviceInterface.ts
 api/profil360.service.ts
@@ -99,6 +101,9 @@ model/appointment-series-dto.ts
 model/appointment-updated-dto.ts
 model/attach-patient-request.ts
 model/attached-appointments-dto.ts
+model/booking-requests-dto.ts
+model/booking-token-request.ts
+model/booking-window.ts
 model/cancel-appointment-request.ts
 model/card.ts
 model/change-link-type-request.ts
@@ -107,6 +112,7 @@ model/conflict-dto.ts
 model/consents.ts
 model/contact-dto.ts
 model/create-appointment-request.ts
+model/create-booking-request.ts
 model/create-emotion-request.ts
 model/create-entry-request.ts
 model/create-link-request.ts
@@ -202,7 +208,12 @@ model/problem-detail.ts
 model/professional-info-dto.ts
 model/professional-info-request.ts
 model/profile-dto.ts
+model/public-appointment-dto.ts
+model/public-appointment-practitioner-dto.ts
+model/public-booking-dto.ts
 model/public-profile.ts
+model/public-slot-dto.ts
+model/public-slots-dto.ts
 model/queue-dto.ts
 model/queue-item-dto.ts
 model/reactivate-dto.ts

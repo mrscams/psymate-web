@@ -25,14 +25,14 @@ export interface PreferencesServiceInterface {
 
     /**
      * Préférences du compte (valeurs stockées complétées par les défauts)
-     * Session praticien. Renvoie toujours les 13 clés : la valeur enregistrée si elle est valide, sinon le défaut calculé selon la profession (coach : vocabulary.subjectLabel &#x3D; client et entryTypes.medicationVisible &#x3D; false ; psychiatre : entryTypes.medicationVisible &#x3D; true). Les clés inconnues stockées ne sont pas renvoyées.
+     * Session praticien. Renvoie toujours les 21 clés : la valeur enregistrée si elle est valide, sinon le défaut calculé selon la profession (coach : vocabulary.subjectLabel &#x3D; client et entryTypes.medicationVisible &#x3D; false ; psychiatre : entryTypes.medicationVisible &#x3D; true). Les clés inconnues stockées ne sont pas renvoyées.
      * @endpoint get /api/me/preferences
      */
     getPreferences(extraHttpRequestParams?: any): Observable<Preferences>;
 
     /**
      * Modifie les préférences (merge-patch RFC 7396, null &#x3D; retour au défaut)
-     * Session praticien. Corps JSON plat (application/json ou application/merge-patch+json) avec seulement les clés à changer : les autres sont conservées. null remet la clé à son défaut ; une clé inconnue est ignorée sans erreur. Une seule valeur hors domaine rejette toute la requête (422, errors[].field &#x3D; clé fautive) et rien n\&#39;est appliqué. Renvoie les 13 préférences effectives après fusion ; un PATCH qui ne change rien est un succès.
+     * Session praticien. Corps JSON plat (application/json ou application/merge-patch+json) avec seulement les clés à changer : les autres sont conservées. null remet la clé à son défaut ; une clé inconnue est ignorée sans erreur. Une seule valeur hors domaine rejette toute la requête (422, errors[].field &#x3D; clé fautive) et rien n\&#39;est appliqué. Renvoie les 21 préférences effectives après fusion ; un PATCH qui ne change rien est un succès.
      * @endpoint patch /api/me/preferences
      * @param preferences Clés à modifier ; toutes optionnelles.
      */

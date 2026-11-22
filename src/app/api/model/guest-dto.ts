@@ -10,9 +10,13 @@
 
 
 /**
- * Invité du rendez-vous : personne sans fiche patient (G Q60). Après la purge (6 mois après la fin ou l\'annulation du rendez-vous), firstName, lastName et phone sont null et purgedAt est renseigné.
+ * Invité du rendez-vous : personne sans fiche patient (G Q60). Après la purge (6 mois après la fin ou l\'annulation du rendez-vous ; 30 jours après l\'annulation d\'un rendez-vous en ligne qui n\'a pas eu lieu), firstName, lastName, phone et email sont null et purgedAt est renseigné.
  */
 export interface GuestDto { 
+    /**
+     * E-mail. Null si inconnu ou purgé.
+     */
+    email?: string;
     /**
      * Prénom. Null si inconnu ou purgé.
      */
