@@ -310,6 +310,31 @@ describe('AgendaApi · requêtes', () => {
     expect((await series).map((a) => a.status)).toEqual(['cancelled']);
   });
 
+  it('attachPatient : POST …/attach-patient avec patientId et includeSameGuest ; rend les rendez-vous rattachés', async () => {
+    const { api, http } = setup();
+    const pending = api.attachPatient('g-1', 'p-9', true);
+    const req = http.expectOne('/api/appointments/g-1/attach-patient');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ patientId: 'p-9', includeSameGuest: true });
+    req.flush({
+      appointments: [
+        { ...dto, id: 'g-1', patient: { id: 'p-9', displayName: 'Quentin S.' }, guest: null },
+        { ...dto, id: 'g-2', patient: { id: 'p-9', displayName: 'Quentin S.' }, guest: null },
+      ],
+    });
+    const attached = await pending;
+    expect(attached.map((a) => [a.id, a.patient?.id, a.guest])).toEqual([
+      ['g-1', 'p-9', null],
+      ['g-2', 'p-9', null],
+    ]);
+
+    const single = api.attachPatient('g-3', 'p-9', false);
+    const one = http.expectOne('/api/appointments/g-3/attach-patient');
+    expect(one.request.body).toEqual({ patientId: 'p-9', includeSameGuest: false });
+    one.flush({});
+    expect(await single).toEqual([]);
+  });
+
   it('searchPatients : patients actifs, triés par nom, archivés écartés', async () => {
     const { api, http } = setup();
     const pending = api.searchPatients(' mar ');

@@ -5,7 +5,7 @@
       <p class="form-message" role="alert">{{ text }}</p>
     }
 
-    <!-- Patient : carte du patient choisi, recherche parmi les patients actifs. -->
+    <!-- Patient : carte du patient choisi, recherche parmi les patients actifs (pm-patient-picker). -->
     <section class="section">
       <label
         class="label"
@@ -13,85 +13,14 @@
         i18n="Section patient du panneau@@agenda.new.patient"
         >Patient</label
       >
-      @if (chosen(); as patient) {
-        <div class="patient-card">
-          <span class="avatar" aria-hidden="true">{{ patientInitials() }}</span>
-          <div class="who">
-            <span class="name">{{ patient.displayName }}</span>
-            @if (patientMeta(); as meta) {
-              <span class="meta">{{ meta }}</span>
-            }
-          </div>
-          <button
-            type="button"
-            class="change"
-            cdkFocusInitial
-            (click)="changePatient()"
-            i18n="Bouton Changer de patient@@agenda.new.change"
-          >
-            Changer
-          </button>
-        </div>
-      }
-      <div class="combo">
-        <input
-          #search
-          [id]="fieldId('patientId')"
-          type="search"
-          class="search"
-          role="combobox"
-          aria-autocomplete="list"
-          [attr.aria-expanded]="listOpen()"
-          [attr.aria-controls]="listboxId"
-          [attr.aria-activedescendant]="activeId()"
-          [attr.aria-invalid]="invalid('patientId')"
-          [attr.aria-describedby]="fieldId('patientId') + '-error'"
-          [attr.cdkFocusInitial]="chosen() ? null : ''"
-          [placeholder]="chosen() ? otherPlaceholder : searchPlaceholder"
-          [formControl]="searchControl"
-          autocomplete="off"
-          (keydown)="onSearchKey($event)"
-        />
-        @if (listOpen()) {
-          @let results = store.results();
-          <ul class="options" role="listbox" [id]="listboxId" [attr.aria-label]="searchPlaceholder">
-            @for (option of results.data ?? []; track option.id; let index = $index) {
-              <li
-                role="option"
-                [id]="listboxId + '-' + index"
-                [attr.aria-selected]="index === activeIndex()"
-                [class.active]="index === activeIndex()"
-                tabindex="-1"
-                (mousedown)="$event.preventDefault()"
-                (click)="choose(option)"
-                (keydown.enter)="choose(option)"
-              >
-                <span class="name">{{ option.displayName }}</span>
-                @if (option.age !== null) {
-                  {{ ' ' }}
-                  <span class="meta" i18n="Âge d'un patient dans la recherche@@agenda.new.optionAge"
-                    >{{ option.age }} ans</span
-                  >
-                }
-              </li>
-            } @empty {
-              <li class="empty" role="option" aria-disabled="true" aria-selected="false">
-                @switch (results.status) {
-                  @case ('error') {
-                    {{ searchFailed }}
-                  }
-                  @case ('loaded') {
-                    {{ noResults }}
-                  }
-                  @default {
-                    {{ searching }}
-                  }
-                }
-              </li>
-            }
-          </ul>
-        }
-      </div>
+      <pm-patient-picker
+        [inputId]="fieldId('patientId')"
+        [chosen]="chosen()"
+        [meta]="patientMeta()"
+        [invalid]="invalid('patientId')"
+        [focusInitial]="true"
+        (picked)="choose($event)"
+      />
       <pm-field-errors [control]="form.controls.patientId" [id]="fieldId('patientId') + '-error'" />
     </section>
 

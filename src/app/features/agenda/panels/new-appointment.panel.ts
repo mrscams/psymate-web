@@ -3,19 +3,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  ElementRef,
   inject,
   LOCALE_ID,
   signal,
-  viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  NonNullableFormBuilder,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs';
 
 import { FieldProblem } from '../../../core/http';
@@ -24,7 +17,6 @@ import { PreferencesStore } from '../../../core/preferences';
 import { applyProblem, FieldErrorsComponent, fieldId } from '../../../shared/forms';
 import { FormErrorsComponent, SidePanelComponent } from '../../../shared/ui';
 import { DateFieldComponent } from '../../../shared/ui/date-field';
-import { initials } from '../../../shared/util';
 import {
   addDays,
   APPOINTMENT_MODALITIES,
@@ -51,6 +43,9 @@ import {
   formatWeekdayDate,
   modalityTitle,
 } from '../ui/agenda-format';
+import { INPUT_DEBOUNCE_MS, PatientPickerComponent } from '../ui/patient-picker.component';
+
+export { INPUT_DEBOUNCE_MS };
 
 /** Ce que la page donne au panneau (fiche 15b) : le créneau, et de quoi préremplir. */
 export interface NewAppointmentData {
@@ -78,9 +73,6 @@ export interface NewAppointmentResult {
 /** Nombres de répétitions proposés : de 2 à 26 fois. */
 const COUNTS: readonly number[] = Array.from({ length: MAX_OCCURRENCES - 1 }, (_, i) => i + 2);
 
-/** Délai des lectures déclenchées par la saisie (recherche, conflits), fiche 15b. */
-export const INPUT_DEBOUNCE_MS = 300;
-
 /** Champ du contrat (errors[].field d'un 422) → contrôle du formulaire. */
 const FIELD_CONTROLS: Record<string, string> = {
   patientId: 'patientId',
@@ -99,8 +91,8 @@ const FIELD_CONTROLS: Record<string, string> = {
 type RepeatEvery = 0 | RepeatWeeks;
 
 /**
- * Panneau « Nouveau rendez-vous » (fiche 15b, maquette) : patient (carte, recherche parmi les
- * patients actifs en liste `listbox` au clavier), créneau (date, début, durée ; fin et voisinage),
+ * Panneau « Nouveau rendez-vous » (fiche 15b, maquette) : patient (`pm-patient-picker` : carte,
+ * recherche parmi les patients actifs en liste `listbox` au clavier), créneau (date, début, durée ; fin et voisinage),
  * modalité (segments `aria-pressed`), répéter (listes natives : toutes les 1 / 2 / 4 semaines, de 2
  * à 26 fois ou jusqu'à une date), note, avertissement de chevauchement (ambre, `aria-live`), pied
  * « Planifier n rendez-vous » + « À confirmer » + Annuler. Le patient choisi donne durée, modalité
@@ -116,6 +108,7 @@ type RepeatEvery = 0 | RepeatWeeks;
     DateFieldComponent,
     FormErrorsComponent,
     FieldErrorsComponent,
+    PatientPickerComponent,
   ],
   providers: [NewAppointmentStore],
   templateUrl: './new-appointment.panel.html',
@@ -130,20 +123,16 @@ export class NewAppointmentPanel {
   private readonly preferences = inject(PreferencesStore);
   private readonly vocabulary = inject(SubjectVocabulary);
   protected readonly store = inject(NewAppointmentStore);
-  private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('search');
   private readonly timeZone = browserTimeZone();
 
   protected readonly fieldId = fieldId;
   protected readonly formId = 'agenda-new-form';
-  protected readonly listboxId = 'agenda-new-patients';
   protected readonly title = $localize`:Titre du panneau Nouveau rendez-vous@@agenda.new.title:Nouveau rendez-vous`;
   protected readonly subtitle = $localize`:Sous-titre du panneau, créneau cliqué@@agenda.new.subtitle:Créneau cliqué : ${formatWeekdayDate(this.data.slot, this.locale, false)}:date:, ${formatTime(this.data.slot, this.locale)}:time:`;
   protected readonly modalities = APPOINTMENT_MODALITIES;
   protected readonly counts = COUNTS;
   protected readonly noteMax = PLANNING_NOTE_MAX;
   protected readonly modalityTitle = modalityTitle;
-  protected readonly searchPlaceholder = $localize`:Champ de recherche d'un patient@@agenda.new.searchPlaceholder:Rechercher un patient…`;
-  protected readonly otherPlaceholder = $localize`:Champ de recherche d'un autre patient@@agenda.new.searchOther:Ou rechercher un autre patient…`;
   protected readonly countAriaLabel = $localize`:Liste du nombre de répétitions@@agenda.new.countLabel:Nombre de répétitions`;
   protected readonly notePlaceholder = $localize`:Exemple de note de planification@@agenda.new.notePlaceholder:ex. apporter le carnet du soir`;
   protected readonly startPlaceholder = $localize`:Exemple d'heure de début du rendez-vous@@agenda.new.startPlaceholder:10:00`;
@@ -152,9 +141,6 @@ export class NewAppointmentPanel {
     const subject = subjectLabel(this.vocabulary.label(), 'one');
     return $localize`:Case À confirmer du panneau@@agenda.new.toConfirm:À confirmer avec le ${subject}:subject:`;
   });
-  protected readonly noResults = $localize`:Recherche de patient sans résultat@@agenda.new.noResults:Aucun patient actif ne correspond.`;
-  protected readonly searching = $localize`:Recherche de patient en cours@@agenda.new.searching:Recherche…`;
-  protected readonly searchFailed = $localize`:Recherche de patient en erreur@@agenda.new.searchFailed:La recherche n'a pas abouti. Réessayez.`;
   protected readonly fieldLabels: Record<string, string> = {
     patientId: $localize`:Champ patient, résumé des erreurs@@agenda.new.field.patient:Patient`,
     date: $localize`:Champ date, résumé des erreurs@@agenda.new.field.date:Date`,
@@ -170,7 +156,6 @@ export class NewAppointmentPanel {
 
   /** Patient choisi (carte), null tant qu'aucun ne l'est. */
   protected readonly chosen = signal<PatientOption | null>(this.data.patient);
-  protected readonly patientInitials = computed(() => initials(this.chosen()?.displayName ?? ''));
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     patientId: [this.data.patient?.id ?? '', Validators.required],
@@ -187,11 +172,6 @@ export class NewAppointmentPanel {
     note: [this.data.prefill?.planningNote ?? '', Validators.maxLength(PLANNING_NOTE_MAX)],
     toConfirm: [false],
   });
-
-  /** Recherche de patient : hors du formulaire (seul l'identifiant choisi part au serveur). */
-  protected readonly searchControl = new FormControl('', { nonNullable: true });
-  protected readonly listOpen = signal(false);
-  protected readonly activeIndex = signal(-1);
 
   /** Erreurs d'un 422 pour le résumé ; message général pour 403, 404 et le reste. */
   protected readonly errors = signal<FieldProblem[]>([]);
@@ -221,16 +201,6 @@ export class NewAppointmentPanel {
     repeat.valueChanges.pipe(takeUntilDestroyed()).subscribe(syncUntil);
     count.valueChanges.pipe(takeUntilDestroyed()).subscribe(syncUntil);
 
-    this.searchControl.valueChanges
-      .pipe(debounceTime(INPUT_DEBOUNCE_MS), takeUntilDestroyed())
-      .subscribe((query) => {
-        this.activeIndex.set(-1);
-        void this.store.search(query);
-      });
-    this.searchControl.valueChanges.pipe(takeUntilDestroyed()).subscribe((query) => {
-      this.listOpen.set(query.trim().length > 0);
-    });
-
     // Conflits et voisinage du premier créneau, 300 ms après la dernière modification.
     this.form.valueChanges
       .pipe(
@@ -259,12 +229,6 @@ export class NewAppointmentPanel {
   }
 
   // --- Patient --------------------------------------------------------------------------------
-
-  protected readonly results = computed(() => this.store.results().data ?? []);
-  protected readonly activeId = computed(() => {
-    const index = this.activeIndex();
-    return index >= 0 && this.listOpen() ? `${this.listboxId}-${index}` : null;
-  });
 
   /** « 34 ans · rythme toutes les 2 semaines · prochain rendez-vous le 12 nov. à 10:00 ». */
   protected readonly patientMeta = computed(() => {
@@ -299,51 +263,11 @@ export class NewAppointmentPanel {
   protected async choose(patient: PatientOption): Promise<void> {
     this.chosen.set(patient);
     this.form.controls.patientId.setValue(patient.id);
-    this.searchControl.setValue('', { emitEvent: false });
-    this.listOpen.set(false);
-    this.activeIndex.set(-1);
-    this.store.clearResults();
     const details = await this.store.loadPatient(patient.id);
     if (!details || this.chosen()?.id !== patient.id) return;
     const { duration, modality } = this.form.controls;
     if (!duration.dirty) duration.setValue(details.defaults.durationMin);
     if (!modality.dirty) modality.setValue(details.defaults.modality);
-  }
-
-  /** « Changer » : la recherche reprend le focus. */
-  protected changePatient(): void {
-    this.searchInput()?.nativeElement.focus();
-  }
-
-  /** Clavier de la recherche : ↓ ↑ parcourent la liste, Entrée choisit, Échap la ferme. */
-  protected onSearchKey(event: KeyboardEvent): void {
-    const count = this.results().length;
-    switch (event.key) {
-      case 'ArrowDown':
-        if (count === 0) return;
-        event.preventDefault();
-        this.listOpen.set(true);
-        this.activeIndex.update((index) => (index + 1) % count);
-        return;
-      case 'ArrowUp':
-        if (count === 0) return;
-        event.preventDefault();
-        this.activeIndex.update((index) => (index <= 0 ? count - 1 : index - 1));
-        return;
-      case 'Enter': {
-        const option = this.results()[this.activeIndex()];
-        if (!this.listOpen() || !option) return;
-        event.preventDefault();
-        void this.choose(option);
-        return;
-      }
-      case 'Escape':
-        if (!this.listOpen()) return;
-        event.preventDefault();
-        event.stopPropagation();
-        this.listOpen.set(false);
-        return;
-    }
   }
 
   // --- Créneau, répétition, chevauchements ----------------------------------------------------

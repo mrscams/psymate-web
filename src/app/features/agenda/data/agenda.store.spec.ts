@@ -217,6 +217,33 @@ describe('AgendaStore', () => {
     expect(load).toHaveBeenCalledTimes(5);
   });
 
+  it('rattacher un invité : POST attach-patient, puis relecture de la plage et des demandes ; erreur rendue, relecture quand même', async () => {
+    const guest = guestAppointmentOf({ id: 'g-1', startsAt: '2026-10-27T09:00:00Z' });
+    const attached = appointmentOf({ id: 'g-1', startsAt: guest.startsAt });
+    const attachPatient = vi
+      .fn()
+      .mockResolvedValueOnce([attached])
+      .mockRejectedValueOnce(problem(422, 'PATIENT_ARCHIVED', 'Le patient est archivé.'));
+    const { store, load, api } = setup({ attachPatient });
+    await store.show('week', d('2026-10-26'));
+    expect(load).toHaveBeenCalledTimes(1);
+    expect(api.requests).toHaveBeenCalledTimes(1);
+
+    const done = await store.attachPatient('g-1', 'p-1', true);
+    expect(attachPatient).toHaveBeenCalledWith('g-1', 'p-1', true);
+    expect(done).toEqual({ ok: true, value: [attached], conflicts: [] });
+    expect(load).toHaveBeenCalledTimes(2);
+    expect(api.requests).toHaveBeenCalledTimes(2);
+
+    const refused = await store.attachPatient('g-1', 'p-2', false);
+    expect(refused).toEqual({
+      ok: false,
+      problem: { status: 422, code: 'PATIENT_ARCHIVED', detail: 'Le patient est archivé.' },
+    });
+    expect(load).toHaveBeenCalledTimes(3);
+    expect(api.requests).toHaveBeenCalledTimes(3);
+  });
+
   it('contexte du patient : vue d’ensemble et rythme, une fois par patient ; erreur silencieuse', async () => {
     const { store, api } = setup();
     await store.loadContext('p-1');
