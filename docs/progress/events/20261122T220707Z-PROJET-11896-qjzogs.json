@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-22T22:07:07.048Z",
+  "task": "PROJET",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "Correctif hors plan de l'agenda : la grille FullCalendar se remesure (ResizeObserver + updateSize) quand le panneau Demandes ou le détail s'ouvre ou se ferme ; samedi et dimanche ne sont plus coupés, plus de vide blanc à droite.",
+  "pr": "https://github.com/mrscams/psymate-web/pull/115",
+  "branch": "fix/agenda-demandes-largeur",
+  "checkout": "psymate-web"
+}

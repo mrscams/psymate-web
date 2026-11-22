@@ -1,9 +1,11 @@
 import { LocationStrategy } from '@angular/common';
 import {
+  afterNextRender,
   afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   ElementRef,
   inject,
   input,
@@ -309,6 +311,29 @@ export class AgendaCalendarComponent {
       if (!api) return;
       if (api.view.type !== view) api.changeView(view, anchor);
       else api.gotoDate(anchor);
+    });
+    // FullCalendar fixe en pixels la largeur de ses tableaux et ne la remesure qu'au
+    // redimensionnement de la fenêtre. Quand la colonne de droite (détail, demandes) s'ouvre ou se
+    // ferme, la vue change de largeur sans que la fenêtre bouge : sans ce relevé, la grille garde
+    // l'ancienne largeur (samedi et dimanche coupés, ou un vide blanc à droite).
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => {
+      if (typeof ResizeObserver === 'undefined') return;
+      let width = this.element.nativeElement.clientWidth;
+      let frame = 0;
+      const observer = new ResizeObserver(() => {
+        const next = this.element.nativeElement.clientWidth;
+        // Seule la largeur compte : la hauteur suit le contenu (height 'auto') et bouge à chaque rendu.
+        if (next === width) return;
+        width = next;
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => this.calendar()?.getApi().updateSize());
+      });
+      observer.observe(this.element.nativeElement);
+      destroyRef.onDestroy(() => {
+        cancelAnimationFrame(frame);
+        observer.disconnect();
+      });
     });
   }
 

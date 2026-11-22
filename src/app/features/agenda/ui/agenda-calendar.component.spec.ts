@@ -268,4 +268,51 @@ describe('AgendaCalendarComponent (FullCalendar)', () => {
     expect(events.some((item) => item.classNames?.includes('selected'))).toBe(false);
     expect(el.querySelector('full-calendar')).not.toBeNull();
   });
+
+  it('la colonne change de largeur (détail, demandes) : FullCalendar se remesure, une fois par largeur', async () => {
+    let notify: () => void = () => undefined;
+    const disconnect = vi.fn();
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        constructor(callback: () => void) {
+          notify = callback;
+        }
+        observe = vi.fn();
+        disconnect = disconnect;
+      },
+    );
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
+      callback(0);
+      return 1;
+    });
+    try {
+      let width = 1100;
+      const { fixture, el } = await render(null);
+      Object.defineProperty(el, 'clientWidth', { configurable: true, get: () => width });
+      const api = (
+        fixture.componentInstance as unknown as {
+          calendar: () => { getApi: () => { updateSize: () => void } };
+        }
+      )
+        .calendar()
+        .getApi();
+      const updateSize = vi.spyOn(api, 'updateSize');
+
+      width = 764;
+      notify();
+      expect(updateSize).toHaveBeenCalledTimes(1);
+      // Même largeur (la hauteur seule a bougé) : rien.
+      notify();
+      expect(updateSize).toHaveBeenCalledTimes(1);
+      width = 1100;
+      notify();
+      expect(updateSize).toHaveBeenCalledTimes(2);
+
+      fixture.destroy();
+      expect(disconnect).toHaveBeenCalled();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
 });
