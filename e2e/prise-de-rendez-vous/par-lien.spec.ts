@@ -7,13 +7,12 @@ import { expectNoHorizontalScroll } from './page-publique-support';
 import {
   agendaAppointmentsOf,
   ApiCall,
-  cancelByLink,
-  createRequest,
   CreatedRequest,
   expectedDetail,
   expectTokensNowhere,
-  linkToken,
   MODALITY_LABELS,
+  Parcours,
+  ParcoursState,
   recordApiCalls,
 } from './par-lien-support';
 
@@ -23,7 +22,8 @@ import {
 // la suite depuis une seule IP (page-publique.spec.ts en consomme une). Ce fichier en fait DEUX : une
 // chez claire-martin (mode manuel), une chez karim-haddad (mode automatique), chacune dans son
 // parcours en série. Chaque parcours se termine par l'annulation de son rendez-vous (afterAll en
-// filet) pour libérer le créneau. Les autres états (410, 409, 422, 429, pannes, passé, fiche
+// filet) pour libérer le créneau. Au second essai (retries de la CI), un parcours reprend la demande
+// du premier essai (fichier de reprise dans test-results/, classe Parcours) : aucune création de plus. Les autres états (410, 409, 422, 429, pannes, passé, fiche
 // dépubliée) sont couverts par les tests Vitest des pages et du store (service simulé). Un jeton
 // inventé donne un vrai 404 sans rien créer : il est joué ici.
 
@@ -57,7 +57,14 @@ async function precedes(page: Page, a: string, b: string): Promise<boolean> {
   );
 }
 
+/** Page quittée : la balise no-referrer est retirée, la politique strict-origin d'index.html revient. */
+async function expectBaseReferrer(page: Page): Promise<void> {
+  await expect(page.locator('meta[name="referrer"]')).toHaveCount(1);
+  await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content', 'strict-origin');
+}
+
 async function expectMeta(page: Page): Promise<void> {
+  await expect(page.locator('meta[name="referrer"]')).toHaveCount(1);
   await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content', 'no-referrer');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
 }
@@ -136,7 +143,7 @@ test.describe('pages par lien, jeton inconnu (fiche 32, aucune création)', () =
       // Quitter la page retire la balise referrer.
       await directory.click();
       await expect(page).toHaveURL(/\/fr\/annuaire$/);
-      await expect(page.locator('meta[name="referrer"]')).toHaveCount(0);
+      await expectBaseReferrer(page);
     });
 
     test(`gestion : 404 → « Ce lien n'est plus valable », jamais « expiré », thème ${theme}`, async ({
@@ -165,35 +172,78 @@ test.describe('pages par lien, jeton inconnu (fiche 32, aucune création)', () =
   }
 });
 
+/**
+ * Vérification rejouée sur une demande déjà vérifiée (rechargement, ou reprise au second essai) :
+ * même état, sans lien de gestion (`manageToken: null`), phrase de repli.
+ */
+async function expectVerifiedAgain(page: Page, state: ParcoursState, title: string): Promise<void> {
+  const again = await openVerify(page, state.verifyToken!);
+  expect(again.status).toBe(200);
+  expect(again.body).toEqual({ token: state.verifyToken });
+  expect(again.manageToken).toBeNull();
+  const heading = page.getByRole('heading', { level: 1 });
+  if (state.cancelled) {
+    await expect(heading).toHaveText('Ce rendez-vous est annulé');
+    await expect(page.locator('.text')).toHaveText('Vous avez annulé ce rendez-vous.');
+  } else {
+    await expect(heading).toHaveText(title);
+    await expect(page.locator('.secondary')).toHaveText(FALLBACK);
+  }
+  await expect(page.locator('a[href*="/rendez-vous/gerer/"]')).toHaveCount(0);
+  await expectDetail(page, state.request);
+}
+
+/** État final d'un parcours dont l'annulation est déjà enregistrée (reprise au second essai). */
+async function expectCancelledByVisitor(page: Page, state: ParcoursState): Promise<void> {
+  const loaded = page.waitForResponse(isPost(MANAGE));
+  await page.goto(`/fr/rendez-vous/gerer/${state.manageToken}`);
+  expect((await loaded).status()).toBe(200);
+  await expect(page.locator('.pill')).toHaveText('Annulé');
+  await expect(page.locator('.text')).toHaveText('Vous avez annulé ce rendez-vous.');
+  await expect(page.getByRole('button', { name: /Annuler/ })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Choisir un autre créneau' })).toHaveAttribute(
+    'href',
+    `/fr/praticiens/${state.request.slug}/rendez-vous`,
+  );
+  await expectNoAxeViolations(page);
+}
+
 test.describe('parcours réel, mode manuel (claire-martin) : demande transmise, gestion, annulation', () => {
   test.describe.configure({ mode: 'serial' });
 
-  let request: CreatedRequest;
-  let verifyToken: string;
-  let manageToken: string | null = null;
+  const parcours = new Parcours('manuel');
+  let state: ParcoursState;
+  let completed = false;
 
-  test.afterAll(async ({ playwright }) => {
-    if (!manageToken) return;
+  test.afterAll(async ({ playwright }, info) => {
     const api = await playwright.request.newContext();
-    await cancelByLink(api, manageToken);
+    await parcours.finish(api, info, completed);
     await api.dispose();
   });
 
   test('demande créée, lien lu dans Mailpit : « Votre demande est transmise », détail, « Gérer ma demande »', async ({
     page,
     request: api,
-  }) => {
+  }, info) => {
     test.setTimeout(90_000);
-    request = await createRequest(api, MANUAL, 'm14-13.manuel');
-    verifyToken = await linkToken(api, request.email, 'confirmer');
-
+    ({ state } = await parcours.start(api, info, MANUAL, 'm14-13.manuel'));
     const calls = recordApiCalls(page);
-    const verified = await openVerify(page, verifyToken);
+
+    if (state.manageToken) {
+      // Reprise : la première vérification a eu lieu à l'essai précédent.
+      await expectVerifiedAgain(page, state, 'Votre demande est transmise');
+      await expectTokensNowhere(page, calls, [state.verifyToken!, state.manageToken]);
+      return;
+    }
+
+    const verified = await openVerify(page, state.verifyToken!);
     expect(verified.status).toBe(200);
     // Le jeton voyage dans le corps de POST …/verify, jamais dans l'URL.
-    expect(verified.body).toEqual({ token: verifyToken });
+    expect(verified.body).toEqual({ token: state.verifyToken });
     expect(verified.manageToken).toBeTruthy();
-    manageToken = verified.manageToken;
+    state.manageToken = verified.manageToken;
+    parcours.save(info, state);
+    const manageToken = state.manageToken!;
 
     await expect(page).toHaveTitle('Votre demande de rendez-vous · PsyMate');
     const title = page.getByRole('heading', { level: 1 });
@@ -203,7 +253,7 @@ test.describe('parcours réel, mode manuel (claire-martin) : demande transmise, 
     await expect(page.locator('.text p').first()).toHaveText(
       "Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.",
     );
-    await expectDetail(page, request);
+    await expectDetail(page, state.request);
     const manage = page.getByRole('link', { name: 'Gérer ma demande' });
     await expect(manage).toHaveAttribute('href', `/fr/rendez-vous/gerer/${manageToken}`);
     await expect(manage).toHaveAttribute('rel', 'noreferrer');
@@ -227,7 +277,7 @@ test.describe('parcours réel, mode manuel (claire-martin) : demande transmise, 
     await expect(page.getByRole('button', { name: 'Annuler ma demande' })).toBeVisible();
     await expectMeta(page);
     await expectNoAxeViolations(page);
-    await expectTokensNowhere(page, calls, [verifyToken, manageToken!]);
+    await expectTokensNowhere(page, calls, [state.verifyToken!, manageToken]);
   });
 
   test('recharger la vérification : même état, sans lien de gestion, un seul rendez-vous dans l’agenda', async ({
@@ -235,31 +285,39 @@ test.describe('parcours réel, mode manuel (claire-martin) : demande transmise, 
     request: api,
   }) => {
     const calls = recordApiCalls(page);
-    const again = await openVerify(page, verifyToken);
-    expect(again.status).toBe(200);
-    expect(again.manageToken).toBeNull();
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Votre demande est transmise');
-    await expect(page.locator('.secondary')).toHaveText(FALLBACK);
-    await expect(page.getByRole('link', { name: 'Gérer ma demande' })).toHaveCount(0);
+    await expectVerifiedAgain(page, state, 'Votre demande est transmise');
 
     // Rechargement du navigateur : même appel, même état.
     const reloaded = page.waitForResponse(isPost(VERIFY));
     await page.reload();
     expect((await reloaded).status()).toBe(200);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Votre demande est transmise');
-    await expect(page.locator('.secondary')).toHaveText(FALLBACK);
-    await expectDetail(page, request);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      state.cancelled ? 'Ce rendez-vous est annulé' : 'Votre demande est transmise',
+    );
+    await expectDetail(page, state.request);
 
-    // Un seul rendez-vous en ligne pour cette adresse, à confirmer.
-    const appointments = await agendaAppointmentsOf(api, SEED.claire, request.email, request.slot);
+    // Un seul rendez-vous en ligne pour cette adresse, à confirmer (annulé si l'essai précédent
+    // est allé jusque-là).
+    const appointments = await agendaAppointmentsOf(
+      api,
+      SEED.claire,
+      state.request.email,
+      state.request.slot,
+    );
     expect(appointments).toHaveLength(1);
-    expect(appointments[0].status).toBe('tentative');
-    await expectTokensNowhere(page, calls, [verifyToken, manageToken!]);
+    expect(appointments[0].status).toBe(state.cancelled ? 'cancelled' : 'tentative');
+    await expectTokensNowhere(page, calls, [state.verifyToken!, state.manageToken!]);
   });
 
   test('gestion : « Garder » n’envoie rien ; confirmer annule puis relit, la pastille devient « Annulé »', async ({
     page,
-  }) => {
+  }, info) => {
+    const manageToken = state.manageToken!;
+    if (state.cancelled) {
+      await expectCancelledByVisitor(page, state);
+      completed = true;
+      return;
+    }
     await page.setViewportSize({ width: 390, height: 900 });
     const calls = recordApiCalls(page);
     const loaded = page.waitForResponse(isPost(MANAGE));
@@ -267,7 +325,7 @@ test.describe('parcours réel, mode manuel (claire-martin) : demande transmise, 
     expect((await loaded).status()).toBe(200);
     await expect(page.locator('.pill')).toHaveText('En attente de réponse');
     await expect(page.locator('.text')).toHaveText('Le praticien vous répondra par e-mail.');
-    await expectDetail(page, request);
+    await expectDetail(page, state.request);
     await expectNoHorizontalScroll(page);
     await expectNoAxeViolations(page);
     await page.setViewportSize({ width: 720, height: 900 });
@@ -293,6 +351,8 @@ test.describe('parcours réel, mode manuel (claire-martin) : demande transmise, 
     await page.getByRole('dialog').getByRole('button', { name: 'Annuler la demande' }).click();
     const cancelResponse = await cancelled;
     expect(cancelResponse.status()).toBe(200);
+    state.cancelled = true;
+    parcours.save(info, state);
     expect(cancelResponse.request().postDataJSON()).toEqual({ token: manageToken });
     expect((await reread).status()).toBe(200);
     await expect(page.locator('.pill')).toHaveText('Annulé');
@@ -306,16 +366,16 @@ test.describe('parcours réel, mode manuel (claire-martin) : demande transmise, 
       .map((c) => new URL(c.url).pathname)
       .slice(-2);
     expect(order).toEqual([CANCEL, MANAGE]);
-    await expectTokensNowhere(page, calls, [verifyToken, manageToken!]);
+    await expectTokensNowhere(page, calls, [state.verifyToken!, manageToken]);
 
-    // « Choisir un autre créneau » mène aux créneaux du praticien ; la balise referrer disparaît.
+    // « Choisir un autre créneau » mène aux créneaux du praticien ; la politique d'index.html revient.
     const rebook = page.getByRole('link', { name: 'Choisir un autre créneau' });
     await expect(rebook).toHaveAttribute('href', `/fr/praticiens/${MANUAL}/rendez-vous`);
     await expect(rebook).toHaveAttribute('rel', 'noreferrer');
     await rebook.click();
     await expect(page).toHaveURL(new RegExp(`/fr/praticiens/${MANUAL}/rendez-vous$`));
-    await expect(page.locator('meta[name="referrer"]')).toHaveCount(0);
-    manageToken = null;
+    await expectBaseReferrer(page);
+    completed = true;
   });
 });
 
@@ -323,32 +383,39 @@ test.describe('parcours réel, mode automatique (karim-haddad) : rendez-vous con
   test.describe.configure({ mode: 'serial' });
   test.use({ colorScheme: 'dark' });
 
-  let request: CreatedRequest;
-  let verifyToken: string;
-  let manageToken: string | null = null;
+  const parcours = new Parcours('auto');
+  let state: ParcoursState;
+  let completed = false;
 
-  test.afterAll(async ({ playwright }) => {
-    if (!manageToken) return;
+  test.afterAll(async ({ playwright }, info) => {
     const api = await playwright.request.newContext();
-    await cancelByLink(api, manageToken);
+    await parcours.finish(api, info, completed);
     await api.dispose();
   });
 
   test('demande créée, lien lu dans Mailpit : « Votre rendez-vous est confirmé » (thème sombre, 390 px)', async ({
     page,
     request: api,
-  }) => {
+  }, info) => {
     test.setTimeout(90_000);
-    request = await createRequest(api, AUTO, 'm14-13.auto');
-    verifyToken = await linkToken(api, request.email, 'confirmer');
-
+    ({ state } = await parcours.start(api, info, AUTO, 'm14-13.auto'));
     await page.setViewportSize({ width: 390, height: 900 });
     const calls = recordApiCalls(page);
-    const verified = await openVerify(page, verifyToken);
+
+    if (state.manageToken) {
+      // Reprise : la première vérification a eu lieu à l'essai précédent.
+      await expectVerifiedAgain(page, state, 'Votre rendez-vous est confirmé');
+      await expectTokensNowhere(page, calls, [state.verifyToken!, state.manageToken]);
+      return;
+    }
+
+    const verified = await openVerify(page, state.verifyToken!);
     expect(verified.status).toBe(200);
-    expect(verified.body).toEqual({ token: verifyToken });
-    manageToken = verified.manageToken;
-    expect(manageToken).toBeTruthy();
+    expect(verified.body).toEqual({ token: state.verifyToken });
+    expect(verified.manageToken).toBeTruthy();
+    state.manageToken = verified.manageToken;
+    parcours.save(info, state);
+    const manageToken = state.manageToken!;
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     const title = page.getByRole('heading', { level: 1 });
     await expect(title).toHaveText('Votre rendez-vous est confirmé');
@@ -356,7 +423,7 @@ test.describe('parcours réel, mode automatique (karim-haddad) : rendez-vous con
     await expect(page.locator('.text p').first()).toHaveText(
       'Vous recevez un e-mail de confirmation avec le lien pour le gérer.',
     );
-    await expectDetail(page, request);
+    await expectDetail(page, state.request);
     await expect(page.getByRole('link', { name: 'Gérer mon rendez-vous' })).toHaveAttribute(
       'href',
       `/fr/rendez-vous/gerer/${manageToken}`,
@@ -366,32 +433,42 @@ test.describe('parcours réel, mode automatique (karim-haddad) : rendez-vous con
     await expectNoAxeViolations(page);
     await page.setViewportSize({ width: 720, height: 900 });
     await expectNoHorizontalScroll(page);
-    await expectTokensNowhere(page, calls, [verifyToken, manageToken!]);
+    await expectTokensNowhere(page, calls, [state.verifyToken!, manageToken]);
   });
 
   test('recharger : même état, phrase de repli, un seul rendez-vous planifié dans l’agenda', async ({
     page,
     request: api,
   }) => {
-    await openVerify(page, verifyToken);
+    await expectVerifiedAgain(page, state, 'Votre rendez-vous est confirmé');
     const reloaded = page.waitForResponse(isPost(VERIFY));
     await page.reload();
     const response = await reloaded;
     expect(response.status()).toBe(200);
     expect(((await response.json()) as { manageToken?: string | null }).manageToken).toBeNull();
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'Votre rendez-vous est confirmé',
+      state.cancelled ? 'Ce rendez-vous est annulé' : 'Votre rendez-vous est confirmé',
     );
-    await expect(page.locator('.secondary')).toHaveText(FALLBACK);
     await expect(page.getByRole('link', { name: 'Gérer mon rendez-vous' })).toHaveCount(0);
-    const appointments = await agendaAppointmentsOf(api, KARIM, request.email, request.slot);
+    const appointments = await agendaAppointmentsOf(
+      api,
+      KARIM,
+      state.request.email,
+      state.request.slot,
+    );
     expect(appointments).toHaveLength(1);
-    expect(appointments[0].status).toBe('planned');
+    expect(appointments[0].status).toBe(state.cancelled ? 'cancelled' : 'planned');
   });
 
   test('annulation au clavier seul : h1, praticien, 112, 3114, bouton ; dialogue piégé ; Échap ; Entrée', async ({
     page,
-  }) => {
+  }, info) => {
+    if (state.cancelled) {
+      await expectCancelledByVisitor(page, state);
+      completed = true;
+      return;
+    }
+    const manageToken = state.manageToken!;
     const guard = await keyboardOnly(page);
     const calls = recordApiCalls(page);
     const loaded = page.waitForResponse(isPost(MANAGE));
@@ -412,7 +489,7 @@ test.describe('parcours réel, mode automatique (karim-haddad) : rendez-vous con
       await page.keyboard.press('Tab');
       order.push(await focused());
     }
-    expect(order).toEqual([request.displayName, '112', '3114', 'Annuler mon rendez-vous']);
+    expect(order).toEqual([state.request.displayName, '112', '3114', 'Annuler mon rendez-vous']);
 
     // Entrée ouvre le dialogue, le focus y entre et n'en sort pas.
     await page.keyboard.press('Enter');
@@ -443,13 +520,15 @@ test.describe('parcours réel, mode automatique (karim-haddad) : rendez-vous con
     const reread = page.waitForResponse(isPost(MANAGE));
     await page.keyboard.press('Enter');
     expect((await cancelled).status()).toBe(200);
+    state.cancelled = true;
+    parcours.save(info, state);
     expect((await reread).status()).toBe(200);
     await expect(page.locator('.pill')).toHaveText('Annulé');
     await expect(title).toBeFocused();
     await expect(page.locator('.text')).toHaveText('Vous avez annulé ce rendez-vous.');
     guard.expectNoPointer();
     await expectNoAxeViolations(page);
-    await expectTokensNowhere(page, calls, [verifyToken, manageToken!]);
-    manageToken = null;
+    await expectTokensNowhere(page, calls, [state.verifyToken!, manageToken]);
+    completed = true;
   });
 });

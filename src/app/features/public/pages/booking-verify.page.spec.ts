@@ -92,6 +92,27 @@ describe('BookingVerifyPage (fiche 32)', () => {
     expect(doc.head.querySelector('meta[name="robots"]')).toBeNull();
   });
 
+  it('politique strict-origin du document (index.html) : remplacée par no-referrer sur la page, rétablie en la quittant', async () => {
+    // Le document de TestBed est le document global : la balise d'index.html y est posée avant.
+    const doc = document;
+    const base = doc.createElement('meta');
+    base.setAttribute('name', 'referrer');
+    base.setAttribute('content', 'strict-origin');
+    doc.head.appendChild(base);
+    try {
+      const { harness } = await render();
+      const tags = () =>
+        [...doc.head.querySelectorAll('meta[name="referrer"]')].map((n) =>
+          n.getAttribute('content'),
+        );
+      expect(tags()).toEqual(['no-referrer']);
+      await harness.navigateByUrl('/annuaire');
+      expect(tags()).toEqual(['strict-origin']);
+    } finally {
+      doc.head.querySelectorAll('meta[name="referrer"]').forEach((n) => n.remove());
+    }
+  });
+
   it('demande transmise (pending) : titre, phrase du mode manuel, détail, urgence puis « Gérer ma demande » ; focus sur le h1', async () => {
     const { el } = await render();
     const title = el.querySelector('h1')!;

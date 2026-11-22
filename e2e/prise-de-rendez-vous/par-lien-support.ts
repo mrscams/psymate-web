@@ -1,4 +1,7 @@
-import { APIRequestContext, expect, Page, Request } from '@playwright/test';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+
+import { APIRequestContext, expect, Page, Request, TestInfo } from '@playwright/test';
 
 import { uniqueEmail } from '../support/accounts';
 import { API, MAILPIT } from '../support/env';
@@ -123,6 +126,79 @@ export async function linkToken(
 }
 
 /**
+ * Reprise d'un parcours au second essai de Playwright (retries de la CI), sans nouvelle création :
+ * la demande créée au premier essai, ses jetons et l'étape atteinte sont écrits dans un petit
+ * fichier du dossier de sortie de Playwright (test-results/, vidé à chaque lancement). Données de
+ * test seulement (adresses example.test). Le fichier est supprimé à la fin du parcours.
+ */
+export interface ParcoursState {
+  request: CreatedRequest;
+  verifyToken: string | null;
+  manageToken: string | null;
+  /** Annulation déjà enregistrée par l'API (200 sur manage/cancel). */
+  cancelled: boolean;
+}
+
+export class Parcours {
+  constructor(private readonly key: string) {}
+
+  private file(info: TestInfo): string {
+    return join(info.project.outputDir, `par-lien-${this.key}.json`);
+  }
+
+  read(info: TestInfo): ParcoursState | null {
+    const file = this.file(info);
+    return existsSync(file) ? (JSON.parse(readFileSync(file, 'utf8')) as ParcoursState) : null;
+  }
+
+  save(info: TestInfo, state: ParcoursState): void {
+    const file = this.file(info);
+    mkdirSync(dirname(file), { recursive: true });
+    writeFileSync(file, JSON.stringify(state));
+  }
+
+  remove(info: TestInfo): void {
+    rmSync(this.file(info), { force: true });
+  }
+
+  /**
+   * La demande du parcours : relue si un essai précédent l'a créée, sinon créée (une seule
+   * création par parcours et par lancement), puis son lien de vérification lu dans Mailpit.
+   */
+  async start(
+    api: APIRequestContext,
+    info: TestInfo,
+    slug: string,
+    prefix: string,
+  ): Promise<{ state: ParcoursState; resumed: boolean }> {
+    const previous = this.read(info);
+    if (previous?.verifyToken) return { state: previous, resumed: true };
+    const state: ParcoursState = previous ?? {
+      request: await createRequest(api, slug, prefix),
+      verifyToken: null,
+      manageToken: null,
+      cancelled: false,
+    };
+    this.save(info, state);
+    state.verifyToken = await linkToken(api, state.request.email, 'confirmer');
+    this.save(info, state);
+    return { state, resumed: previous !== null };
+  }
+
+  /**
+   * Fin d'un parcours (afterAll) : s'il a abouti, ou si c'était le dernier essai, le rendez-vous est
+   * annulé (créneau libéré) et le fichier supprimé ; sinon tout est gardé pour l'essai suivant.
+   */
+  async finish(api: APIRequestContext, info: TestInfo, completed: boolean): Promise<void> {
+    const state = this.read(info);
+    if (!state) return;
+    if (!completed && info.retry < info.project.retries) return;
+    if (state.manageToken && !state.cancelled) await cancelByLink(api, state.manageToken);
+    this.remove(info);
+  }
+}
+
+/**
  * Rendez-vous en ligne de `email` dans l'agenda du praticien (GET /api/agenda, session ouverte par
  * POST /api/auth/login). Le cookie de session est marqué Secure : il est renvoyé à la main.
  */
@@ -141,7 +217,7 @@ export async function agendaAppointmentsOf(
   const from = new Date(Date.parse(slot.startsAt) - 86_400_000).toISOString();
   const to = new Date(Date.parse(slot.endsAt) + 86_400_000).toISOString();
   const agenda = await api.get(`${API}/api/agenda`, {
-    params: { from, to },
+    params: { from, to, includeCancelled: 'true' },
     headers: { Cookie: `SESSION=${session}` },
   });
   expect(agenda.status(), await agenda.text()).toBe(200);
@@ -196,19 +272,10 @@ export function recordApiCalls(page: Page): ApiCall[] {
 }
 
 /**
- * GET /api/auth/me du démarrage de l'application (core/auth, session.initializer) : il part avant
- * que la page ne soit créée, donc avant sa balise referrer, et porte le chemin complet dans son
- * Referer (même origine). Le corriger demande une politique de referrer posée avant le démarrage
- * (index.html ou en-tête HTTP), hors de features/public : écart signalé dans la PR de M14-13. Son
- * URL reste vérifiée ; seul son Referer est mis à part.
- */
-function isStartupSession(call: ApiCall): boolean {
-  return call.method === 'GET' && new URL(call.url).pathname === '/api/auth/me';
-}
-
-/**
  * Aucun jeton dans l'URL d'une requête /api, ni dans son en-tête Referer, ni dans localStorage ou
- * sessionStorage (G Q62, fiche 32).
+ * sessionStorage (G Q62, fiche 32). Toutes les requêtes /api sont contrôlées, y compris le
+ * GET /api/auth/me du démarrage : la politique strict-origin de src/index.html, posée avant le
+ * démarrage, n'y laisse partir que l'origine.
  */
 export async function expectTokensNowhere(
   page: Page,
@@ -220,7 +287,6 @@ export async function expectTokensNowhere(
   for (const call of calls) {
     for (const token of tokens) {
       expect(call.url, `${call.method} ${call.url}`).not.toContain(token);
-      if (isStartupSession(call)) continue;
       expect(call.referer ?? '', `Referer de ${call.method} ${call.url}`).not.toContain(token);
     }
   }
