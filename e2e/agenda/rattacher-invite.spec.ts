@@ -99,10 +99,19 @@ async function getAppointment(api: APIRequestContext, id: string): Promise<Appoi
 
 /** Remise en état : chaque rendez-vous créé est annulé (idempotent). */
 async function cancelAll(api: APIRequestContext, ids: readonly string[]): Promise<void> {
+  // Chaque annulation est tentée, même si une précédente échoue ; les échecs sont signalés à la fin.
+  const failures: string[] = [];
   for (const id of ids) {
-    const res = await api.post(`/api/appointments/${id}/cancel`, { data: {} });
-    expect([200, 404], await res.text()).toContain(res.status());
+    try {
+      const res = await api.post(`/api/appointments/${id}/cancel`, { data: {} });
+      if (![200, 404].includes(res.status())) {
+        failures.push(`${id} → ${res.status()} ${await res.text()}`);
+      }
+    } catch (error) {
+      failures.push(`${id} → ${String(error)}`);
+    }
   }
+  expect(failures, 'annulations de remise en état en échec').toEqual([]);
 }
 
 function isAttach(id: string) {

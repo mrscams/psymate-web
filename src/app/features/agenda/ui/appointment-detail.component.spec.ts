@@ -801,6 +801,30 @@ describe('AppointmentDetailComponent (fiche 15 §5)', () => {
       expect(ctx.el.querySelector('a.name')).toBeNull();
     });
 
+    it('422 dont errors[0] porte PATIENT_ARCHIVED sur patientId (code général VALIDATION_FAILED) : même message dans le panneau', async () => {
+      const ctx = await render(invite);
+      ctx.store.attachPatient.mockReturnValueOnce(
+        Promise.resolve({
+          ok: false,
+          problem: {
+            status: 422,
+            code: 'VALIDATION_FAILED',
+            errors: [
+              { field: 'patientId', code: 'PATIENT_ARCHIVED', message: 'Le patient est archivé.' },
+            ],
+          },
+        }) as never,
+      );
+      await openAndChoose(ctx);
+      submit(ctx.el).click();
+      await settle(ctx.fixture);
+      expect(text(ctx.el.querySelector('.inline .error'))).toBe(
+        'Ce patient est archivé : choisissez un patient actif.',
+      );
+      expect(text(ctx.el.querySelector('.inline .patient-card .name'))).toBe('Quentin S.');
+      expect(ctx.toasts.toasts()).toEqual([]);
+    });
+
     it('409 APPOINTMENT_NOT_ACTIVE : message dans le panneau', async () => {
       const ctx = await render(invite);
       ctx.store.attachPatient.mockReturnValueOnce(failure(409, 'APPOINTMENT_NOT_ACTIVE'));
