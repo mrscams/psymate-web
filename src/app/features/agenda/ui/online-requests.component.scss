@@ -1,0 +1,103 @@
+// Panneau « Demandes en ligne » : la carte du détail (320–360 px, rayon 12), bande supérieure 4 px
+// en primaire, titre 16 px, phrase du compteur, puis une liste de boutons séparés par un filet.
+:host {
+  display: flex;
+  flex: 1 1 320px;
+  flex-direction: column;
+  max-width: 360px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px 14px;
+  border-top: 4px solid var(--primary);
+  border-bottom: 1px solid var(--surface-sunken);
+}
+
+.kicker-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+h2 {
+  margin: 0;
+  font: 600 16px/1.4 var(--font-ui);
+}
+
+.close {
+  width: 28px;
+  height: 28px;
+  margin: -6px -6px 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 16px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-sunken);
+  }
+}
+
+.count-line {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.req-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.req {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 12px 18px;
+  border: 0;
+  border-bottom: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-ground);
+  }
+}
+
+.when {
+  font-weight: 600;
+}
+
+.who {
+  color: var(--text-secondary);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+pm-state {
+  display: block;
+  padding: 16px 18px;
+}

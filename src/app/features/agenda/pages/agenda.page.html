@@ -18,6 +18,20 @@
       </button>
     }
   </div>
+  <!-- Demandes en ligne : compteur de GET /api/agenda/requests, pastille dès une demande. -->
+  <button
+    #requestsButton
+    type="button"
+    class="tb-btn requests"
+    [attr.aria-expanded]="requestsShown()"
+    [attr.aria-controls]="requestsIds.panel"
+    (click)="toggleRequests()"
+  >
+    {{ requestsLabel }}<span class="sr-only">{{ requestsSuffix() }}</span>
+    @if (store.requestCount(); as count) {
+      <span class="count" aria-hidden="true">{{ count }}</span>
+    }
+  </button>
   <button type="button" class="tb-btn primary" (click)="newAppointment()">{{ newLabel }}</button>
 </header>
 
@@ -71,6 +85,15 @@
       [state]="store.detailState()"
       (closed)="closeDetail($event)"
       (duplicated)="duplicate($event)"
+    />
+  } @else if (requestsOpen()) {
+    <pm-online-requests
+      [id]="requestsIds.panel"
+      [titleId]="requestsIds.title"
+      [requests]="store.requests()"
+      (closed)="closeRequests()"
+      (picked)="pickRequest($event)"
+      (retried)="store.reloadRequests()"
     />
   }
 </div>

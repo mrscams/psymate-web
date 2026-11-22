@@ -108,6 +108,11 @@ h2,
   }
 }
 
+// « Demande en ligne » : le globe à la largeur de la vignette « À confirmer ».
+pm-online-globe {
+  --globe-size: 14px;
+}
+
 .key {
   width: 14px;
   height: 10px;

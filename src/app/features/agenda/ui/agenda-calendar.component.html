@@ -28,12 +28,24 @@
         @if (props.suffixKind === 'status') {
           <span class="status">· {{ props.suffix }}</span>
         }
+        <!-- Vue Liste : la mention en texte, après le statut. -->
+        @if (props.online) {
+          <span class="online-pill"><pm-online-globe />{{ onlineLabel }}</span>
+        }
       </span>
     } @else if (arg.view.type === 'dayGridMonth') {
       <span class="chip-time mono">{{ props.startTime }}</span>
       <span class="chip-name">{{ props.name }}</span>
       <span class="sr-only"> · {{ props.modality }}</span>
+      <!-- Vue Mois : le pictogramme seul, nommé pour le lecteur d'écran. -->
+      @if (props.online) {
+        <pm-online-globe /><span class="sr-only"> · {{ onlineLabel }}</span>
+      }
     } @else {
+      <!-- Place du globe en coin, réservée sur la première ligne quand le bloc est compact. -->
+      @if (props.online) {
+        <span class="online-slot"></span>
+      }
       <span class="name">{{ props.name }}</span>
       @if (props.suffix; as suffix) {
         <span class="suffix" [class.status]="props.suffixKind === 'status'"> · {{ suffix }}</span>
@@ -41,6 +53,13 @@
         <span class="sr-only"> · {{ props.modality }}</span>
       }
       <br /><span class="time mono">{{ props.time }}</span>
+      <!-- Grille : une ligne « Demande en ligne » ; bloc court ou colonne étroite : le globe seul. -->
+      @if (props.online) {
+        <span class="sr-only">, </span
+        ><span class="online-mark"
+          ><pm-online-globe /><span class="online-text">{{ onlineLabel }}</span></span
+        >
+      }
     }
   </ng-template>
 
