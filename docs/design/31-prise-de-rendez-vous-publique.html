@@ -234,6 +234,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
 .badge-icon{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:var(--radius-xl);background:var(--info-bg);color:var(--info)}
 .badge-icon .ic{width:24px;height:24px}
 .sent ul.next{display:flex;flex-direction:column;gap:8px;color:var(--text-secondary)}
+.state.warning .ic{color:var(--warning)}
 .skel-rows{display:flex;flex-direction:column;gap:16px}
 .skel-row{display:grid;grid-template-columns:168px 1fr;gap:16px;align-items:center}
 .skel-slots{display:flex;gap:8px}
@@ -278,7 +279,9 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
         <option value="aucun">11. Aucun créneau</option>
         <option value="chargement">12. Chargement</option>
         <option value="erreur">13. Erreur de chargement</option>
-        <option value="boite-mail">14. Consultez votre boîte mail</option>
+        <option value="plafond-lecture">14. Plafond atteint en lecture (créneaux)</option>
+        <option value="plafond-reglages">15. Plafond atteint en lecture (réglages)</option>
+        <option value="boite-mail">16. Consultez votre boîte mail</option>
         <option value="toutes">Toutes les vues à la suite</option>
       </select>
     </label>
@@ -293,7 +296,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
   <span class="mq-note">Barre de maquette : elle ne fait pas partie de l'écran.</span>
 </div>
 <section class="vue" id="fiche" aria-label="Vue 1 : Fiche du praticien : bouton « Prendre rendez-vous »">
-<p class="mq-legende"><strong>Vue 1 sur 14 · Fiche du praticien : bouton « Prendre rendez-vous »</strong> · GET /api/public/booking/practitioners/{slug} → 200, ou 404 BOOKING_NOT_AVAILABLE</p>
+<p class="mq-legende"><strong>Vue 1 sur 16 · Fiche du praticien : bouton « Prendre rendez-vous »</strong> · GET /api/public/booking/practitioners/{slug} → 200, ou 404 BOOKING_NOT_AVAILABLE</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -333,7 +336,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
 </footer>
 </section>
 <section class="vue" id="creneaux" aria-label="Vue 2 : Étape 1 · créneaux (mode manuel)">
-<p class="mq-legende"><strong>Vue 2 sur 14 · Étape 1 · créneaux (mode manuel)</strong> · GET …/practitioners/claire-martin → 200 (manual) ; GET …/slots → 200</p>
+<p class="mq-legende"><strong>Vue 2 sur 16 · Étape 1 · créneaux (mode manuel)</strong> · GET …/practitioners/claire-martin → 200 (manual) ; GET …/slots → 200</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -403,7 +406,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
 </footer>
 </section>
 <section class="vue" id="coordonnees" aria-label="Vue 3 : Étape 2 · coordonnées (mode manuel)">
-<p class="mq-legende"><strong>Vue 3 sur 14 · Étape 2 · coordonnées (mode manuel)</strong> · créneau choisi, formulaire vide</p>
+<p class="mq-legende"><strong>Vue 3 sur 16 · Étape 2 · coordonnées (mode manuel)</strong> · créneau choisi, formulaire vide</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -475,7 +478,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
 </footer>
 </section>
 <section class="vue" id="coordonnees-auto" aria-label="Vue 4 : Étape 2 · mode automatique, une seule modalité">
-<p class="mq-legende"><strong>Vue 4 sur 14 · Étape 2 · mode automatique, une seule modalité</strong> · GET …/practitioners/karim-haddad → 200 (auto)</p>
+<p class="mq-legende"><strong>Vue 4 sur 16 · Étape 2 · mode automatique, une seule modalité</strong> · GET …/practitioners/karim-haddad → 200 (auto)</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -543,7 +546,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
 </footer>
 </section>
 <section class="vue" id="champs" aria-label="Vue 5 : Champs à corriger (forme)">
-<p class="mq-legende"><strong>Vue 5 sur 14 · Champs à corriger (forme)</strong> · aucune requête</p>
+<p class="mq-legende"><strong>Vue 5 sur 16 · Champs à corriger (forme)</strong> · aucune requête</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -615,7 +618,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
 </footer>
 </section>
 <section class="vue" id="champs-422" aria-label="Vue 6 : Champs refusés par le serveur">
-<p class="mq-legende"><strong>Vue 6 sur 14 · Champs refusés par le serveur</strong> · POST …/requests → 422 VALIDATION_FAILED</p>
+<p class="mq-legende"><strong>Vue 6 sur 16 · Champs refusés par le serveur</strong> · POST …/requests → 422 VALIDATION_FAILED</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -687,7 +690,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
 </footer>
 </section>
 <section class="vue" id="envoi" aria-label="Vue 7 : Envoi en cours">
-<p class="mq-legende"><strong>Vue 7 sur 14 · Envoi en cours</strong> · POST …/requests parti</p>
+<p class="mq-legende"><strong>Vue 7 sur 16 · Envoi en cours</strong> · POST …/requests parti</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -759,7 +762,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
 </footer>
 </section>
 <section class="vue" id="plafond" aria-label="Vue 8 : Plafond atteint">
-<p class="mq-legende"><strong>Vue 8 sur 14 · Plafond atteint</strong> · POST …/requests → 429 RATE_LIMITED (retryAfterSeconds)</p>
+<p class="mq-legende"><strong>Vue 8 sur 16 · Plafond atteint</strong> · POST …/requests → 429 RATE_LIMITED (retryAfterSeconds)</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -831,7 +834,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
 </footer>
 </section>
 <section class="vue" id="echec" aria-label="Vue 9 : Échec d'envoi">
-<p class="mq-legende"><strong>Vue 9 sur 14 · Échec d'envoi</strong> · POST …/requests → réseau, 5xx, 400</p>
+<p class="mq-legende"><strong>Vue 9 sur 16 · Échec d'envoi</strong> · POST …/requests → réseau, 5xx, 400</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -903,7 +906,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
 </footer>
 </section>
 <section class="vue" id="indisponible" aria-label="Vue 10 : Créneau plus disponible">
-<p class="mq-legende"><strong>Vue 10 sur 14 · Créneau plus disponible</strong> · POST …/requests → 409 SLOT_NOT_AVAILABLE, puis GET …/slots</p>
+<p class="mq-legende"><strong>Vue 10 sur 16 · Créneau plus disponible</strong> · POST …/requests → 409 SLOT_NOT_AVAILABLE, puis GET …/slots</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -973,7 +976,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
 </footer>
 </section>
 <section class="vue" id="aucun" aria-label="Vue 11 : Aucun créneau">
-<p class="mq-legende"><strong>Vue 11 sur 14 · Aucun créneau</strong> · GET …/slots → 200, slots: []</p>
+<p class="mq-legende"><strong>Vue 11 sur 16 · Aucun créneau</strong> · GET …/slots → 200, slots: []</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -1000,7 +1003,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
       <button type="button" class="btn">Semaines suivantes<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m10 6 6 6-6 6"/></svg></button>
     </div>
   </div>
-  <div class="state"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><h3>Aucun créneau disponible pour l'instant</h3><p>Vous pouvez écrire au praticien pour convenir d'un rendez-vous.</p><a class="btn" href="#">Écrire au praticien</a></div>
+  <div class="state"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><h3>Aucun créneau disponible pour l'instant</h3><p>Vous pouvez écrire au praticien pour convenir d'un rendez-vous.</p><a class="btn" href="#">Prendre contact</a></div>
 </section>
 </div></main>
 <footer class="public-footer">
@@ -1008,7 +1011,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
 </footer>
 </section>
 <section class="vue" id="chargement" aria-label="Vue 12 : Chargement">
-<p class="mq-legende"><strong>Vue 12 sur 14 · Chargement</strong> · GET …/practitioners/{slug} et GET …/slots en cours</p>
+<p class="mq-legende"><strong>Vue 12 sur 16 · Chargement</strong> · GET …/practitioners/{slug} et GET …/slots en cours</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -1025,7 +1028,7 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
 </footer>
 </section>
 <section class="vue" id="erreur" aria-label="Vue 13 : Erreur de chargement">
-<p class="mq-legende"><strong>Vue 13 sur 14 · Erreur de chargement</strong> · GET …/slots → réseau, 5xx</p>
+<p class="mq-legende"><strong>Vue 13 sur 16 · Erreur de chargement</strong> · GET …/slots → réseau, 5xx</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -1059,8 +1062,60 @@ legend{margin-bottom:6px;font:600 14px/20px var(--font-ui)}
   <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
 </footer>
 </section>
-<section class="vue" id="boite-mail" aria-label="Vue 14 : Consultez votre boîte mail">
-<p class="mq-legende"><strong>Vue 14 sur 14 · Consultez votre boîte mail</strong> · POST …/requests → 202 (même écran quel que soit le sort de la demande)</p>
+<section class="vue" id="plafond-lecture" aria-label="Vue 14 : Plafond atteint en lecture (créneaux)">
+<p class="mq-legende"><strong>Vue 14 sur 16 · Plafond atteint en lecture (créneaux)</strong> · GET …/slots → 429 RATE_LIMITED (retryAfterSeconds)</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol>
+  <li><a href="#">Annuaire</a></li><li><a href="#">Claire Martin</a></li><li aria-current="page">Prendre rendez-vous</li>
+</ol></nav>
+<section class="card head-card" aria-labelledby="titre-page-17">
+  <h1 id="titre-page-17">Prendre rendez-vous avec Claire Martin</h1>
+  <ul class="facts"><li>Créneaux de 60 min</li><li>Au cabinet ou en visio</li></ul>
+  <div class="bar info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><p>Le praticien vous répondra par e-mail. Votre demande n'est pas encore un rendez-vous.</p></div>
+</section>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step" aria-labelledby="titre-etape-16">
+  <div class="step-head"><span class="step-kicker">Étape 1 sur 2</span><h2 id="titre-etape-16" tabindex="-1">Choisissez un créneau</h2></div>
+  
+  <div class="period">
+    <p class="period-text"><strong>Du lundi 23 novembre au dimanche 6 décembre 2026</strong><span>Heures du praticien : Europe/Paris (heure normale d’Europe centrale)</span></p>
+    <div class="period-nav">
+      <button type="button" class="btn" disabled><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 6-6 6 6 6"/></svg>Semaines précédentes</button>
+      <button type="button" class="btn">Semaines suivantes<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m10 6 6 6-6 6"/></svg></button>
+    </div>
+  </div>
+  <div class="state warning" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><h3>Les créneaux n'ont pas pu être chargés.</h3><p>Trop de requêtes depuis votre connexion. Réessayez dans 1 min.</p><button type="button" class="btn">Réessayer</button></div>
+</section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="plafond-reglages" aria-label="Vue 15 : Plafond atteint en lecture (réglages)">
+<p class="mq-legende"><strong>Vue 15 sur 16 · Plafond atteint en lecture (réglages)</strong> · GET …/practitioners/{slug} → 429 RATE_LIMITED ; le nom du praticien n’est pas connu</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main"><div class="booking">
+<nav class="crumbs" aria-label="Fil d'Ariane"><ol><li><a href="#">Annuaire</a></li><li aria-current="page">Prendre rendez-vous</li></ol></nav>
+<div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+<section class="card step"><div class="state warning" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><h1>La prise de rendez-vous n'a pas pu être chargée.</h1><p>Trop de requêtes depuis votre connexion. Réessayez dans 1 min.</p><button type="button" class="btn">Réessayer</button></div></section>
+</div></main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="boite-mail" aria-label="Vue 16 : Consultez votre boîte mail">
+<p class="mq-legende"><strong>Vue 16 sur 16 · Consultez votre boîte mail</strong> · POST …/requests → 202 (même écran quel que soit le sort de la demande)</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>

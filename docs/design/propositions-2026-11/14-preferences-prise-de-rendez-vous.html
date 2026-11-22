@@ -289,8 +289,9 @@ select.native{max-width:100%}
         <option value="premiere-activation">3. Première activation, sans plage</option>
         <option value="non-publie">4. Profil public non publié</option>
         <option value="modification">5. Plages modifiées, pas encore enregistrées</option>
-        <option value="erreurs">6. Erreurs de forme (aucune requête)</option>
-        <option value="erreur-serveur">7. Refus du serveur</option>
+        <option value="vingt-et-une">6. 21 plages : ajout inactif</option>
+        <option value="erreurs">7. Erreurs de forme (aucune requête)</option>
+        <option value="erreur-serveur">8. Refus du serveur</option>
         <option value="toutes">Toutes les vues à la suite</option>
       </select>
     </label>
@@ -305,7 +306,7 @@ select.native{max-width:100%}
   <span class="mq-note">Barre de maquette : elle ne fait pas partie de l'écran.</span>
 </div>
 <section class="vue" id="desactivee" aria-label="Vue 1 : Désactivée (valeurs par défaut)">
-<p class="mq-legende"><strong>Vue 1 sur 7 · Désactivée (valeurs par défaut)</strong> · GET /api/me/preferences → booking.enabled false, booking.windows []</p>
+<p class="mq-legende"><strong>Vue 1 sur 8 · Désactivée (valeurs par défaut)</strong> · GET /api/me/preferences → booking.enabled false, booking.windows []</p>
 <header class="app-bar">
   <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
@@ -469,7 +470,7 @@ select.native{max-width:100%}
 </div>
 </section>
 <section class="vue" id="offerte" aria-label="Vue 2 : Activée et offerte (mode manuel)">
-<p class="mq-legende"><strong>Vue 2 sur 7 · Activée et offerte (mode manuel)</strong> · booking.enabled true, 10 plages, profil publié</p>
+<p class="mq-legende"><strong>Vue 2 sur 8 · Activée et offerte (mode manuel)</strong> · booking.enabled true, 10 plages, profil publié, praticien approuvé (statut de vérification de la session)</p>
 <header class="app-bar">
   <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
@@ -738,7 +739,7 @@ select.native{max-width:100%}
 </div>
 </section>
 <section class="vue" id="premiere-activation" aria-label="Vue 3 : Première activation, sans plage">
-<p class="mq-legende"><strong>Vue 3 sur 7 · Première activation, sans plage</strong> · PATCH { &quot;booking.enabled&quot;: true } puis relecture ; fuseau du navigateur proposé, rien enregistré sans geste</p>
+<p class="mq-legende"><strong>Vue 3 sur 8 · Première activation, sans plage</strong> · PATCH { &quot;booking.enabled&quot;: true } puis relecture ; fuseau du navigateur proposé, rien enregistré sans geste</p>
 <header class="app-bar">
   <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
@@ -902,7 +903,7 @@ select.native{max-width:100%}
 </div>
 </section>
 <section class="vue" id="non-publie" aria-label="Vue 4 : Profil public non publié">
-<p class="mq-legende"><strong>Vue 4 sur 7 · Profil public non publié</strong> · profil non publié : bandeau, réglages toujours modifiables</p>
+<p class="mq-legende"><strong>Vue 4 sur 8 · Profil public non publié</strong> · profil non publié : bandeau, réglages toujours modifiables</p>
 <header class="app-bar">
   <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
@@ -1171,7 +1172,7 @@ select.native{max-width:100%}
 </div>
 </section>
 <section class="vue" id="modification" aria-label="Vue 5 : Plages modifiées, pas encore enregistrées">
-<p class="mq-legende"><strong>Vue 5 sur 7 · Plages modifiées, pas encore enregistrées</strong> · aucune requête avant « Enregistrer les plages » ; puis PATCH { &quot;booking.windows&quot;: […] } et relecture</p>
+<p class="mq-legende"><strong>Vue 5 sur 8 · Plages modifiées, pas encore enregistrées</strong> · aucune requête avant « Enregistrer les plages » ; puis PATCH { &quot;booking.windows&quot;: […] } et relecture</p>
 <header class="app-bar">
   <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
@@ -1449,8 +1450,396 @@ select.native{max-width:100%}
 </main>
 </div>
 </section>
-<section class="vue" id="erreurs" aria-label="Vue 6 : Erreurs de forme (aucune requête)">
-<p class="mq-legende"><strong>Vue 6 sur 7 · Erreurs de forme (aucune requête)</strong> · fin avant début, chevauchement, format, bornes, aucune modalité</p>
+<section class="vue" id="vingt-et-une" aria-label="Vue 6 : 21 plages : ajout inactif">
+<p class="mq-legende"><strong>Vue 6 sur 8 · 21 plages : ajout inactif</strong> · booking.windows compte 21 plages (maximum du contrat)</p>
+<header class="app-bar">
+  <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
+  <span class="section" aria-current="location"><span aria-hidden="true">·</span> Mon compte</span>
+  <div class="spacer"></div>
+  <form class="search" role="search"><label class="sr-only" for="app-bar-search-vingt-et-une">Rechercher</label><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="app-bar-search-vingt-et-une" type="search" placeholder="Rechercher un patient" autocomplete="off"><kbd aria-hidden="true">/</kbd></form>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <button type="button" class="avatar" aria-haspopup="menu"><span aria-hidden="true">CM</span><span class="sr-only">Claire Martin, menu du compte</span></button>
+</header>
+<div class="shell">
+<nav class="nav-rail" aria-label="Navigation"><ul>
+  <li><a href="#" aria-label="Patients" title="Patients"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-4 3-6 6.5-6s6 2 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.5 0 4.2 1.5 4.7 4.5"/></svg></a></li>
+  <li><a href="#" aria-label="Agenda" title="Agenda"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></a></li>
+  <li><span class="tile" role="link" aria-disabled="true" aria-label="Facture, à réaliser" title="Facture, à réaliser"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></svg></span></li>
+</ul></nav>
+<main>
+<div class="account">
+<nav class="account-nav" aria-label="Mon compte">
+  <p class="who"><strong>Claire Martin</strong><span>Psychologue · Lyon</span></p>
+  <ul>
+    <li><a href="#"><span>Profil public</span><span class="pill success">publié</span></a></li>
+    <li><a href="#" aria-current="page"><span>Préférences</span></a></li>
+    <li><a href="#"><span>Émotions personnalisées</span></a></li>
+    <li><a href="#"><span>Dossier professionnel</span><span class="pill success">approuvé</span></a></li>
+    <li><a href="#"><span>Compte et sécurité</span></a></li>
+    <li><a href="#"><span>Données et export</span></a></li>
+  </ul>
+</nav>
+<div class="content">
+  <header class="page-header">
+    <h1>Préférences</h1>
+    <p class="intro">Mémorisées sur votre compte : vous les retrouvez sur tous vos appareils. Chaque changement est enregistré immédiatement.</p>
+    <p class="saved"><span role="status">Enregistré</span> · il y a 12 s</p>
+  </header>
+  <section class="card stub" aria-labelledby="vingt-et-une-9"><h2 id="vingt-et-une-9">Affichage</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="vingt-et-une-21"><h2 id="vingt-et-une-21">Vocabulaire et saisie</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card" aria-labelledby="vingt-et-une-titre">
+  <div class="card-header">
+    <h2 id="vingt-et-une-titre">Prise de rendez-vous en ligne</h2>
+    <a href="#">Voir ma page de rendez-vous<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr-only"> (nouvel onglet)</span></a>
+  </div>
+  <p class="section-status" role="status">Proposée sur votre fiche publique.</p>
+  
+  <div class="rows">
+    <div class="row">
+      <div class="row-text"><span class="label" id="vingt-et-une-activation-label">Activation</span><span class="help" id="vingt-et-une-activation-help">Ajoute le bouton « Prendre rendez-vous » à votre fiche publique.</span></div>
+      <div class="control column"><label class="switch"><input type="checkbox" role="switch" checked aria-describedby="vingt-et-une-activation-help"><span class="track" aria-hidden="true"></span><span>Proposer la prise de rendez-vous en ligne</span></label></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="vingt-et-une-mode-label">Confirmation des demandes</span><span class="help">Le mode est annoncé au demandeur avant l'envoi.</span></div>
+      <fieldset class="control column" aria-labelledby="vingt-et-une-mode-label">
+        <div class="options">
+          <label class="option"><input type="radio" name="vingt-et-une-mode" checked aria-describedby="vingt-et-une-mode-manual"><span class="text"><strong>Je valide chaque demande</strong><span id="vingt-et-une-mode-manual">Chaque demande attend votre réponse dans l'agenda. Sans réponse sous 72 h, elle est annulée et le demandeur est prévenu.</span></span></label>
+          <label class="option"><input type="radio" name="vingt-et-une-mode" aria-describedby="vingt-et-une-mode-auto"><span class="text"><strong>Acceptation automatique dans mes plages</strong><span id="vingt-et-une-mode-auto">Le rendez-vous est confirmé dès que le demandeur a validé son adresse e-mail.</span></span></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="row full">
+      <div class="row-text" style="grid-column:1/-1"><span class="label">Plages ouvertes</span><span class="help">Les créneaux proposés sont découpés dans ces plages, à partir de leur début. Les plages s'enregistrent avec leur bouton ; les autres réglages, dès que vous les changez.</span></div>
+      <div class="control column"><div class="editor">
+      <div class="wd-day" role="group" aria-labelledby="vingt-et-une-jour-0">
+        <h3 id="vingt-et-une-jour-0">Lundi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-0-0">Début de la plage 1 du lundi</label>
+              <input class="native time" id="vingt-et-une-debut-0-0" type="text" inputmode="numeric" maxlength="5" value="08:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-0-0">Fin de la plage 1 du lundi</label>
+              <input class="native time" id="vingt-et-une-fin-0-0" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du lundi, 08:00 à 10:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-0-1">Début de la plage 2 du lundi</label>
+              <input class="native time" id="vingt-et-une-debut-0-1" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-0-1">Fin de la plage 2 du lundi</label>
+              <input class="native time" id="vingt-et-une-fin-0-1" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du lundi, 10:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-0-2">Début de la plage 3 du lundi</label>
+              <input class="native time" id="vingt-et-une-debut-0-2" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-0-2">Fin de la plage 3 du lundi</label>
+              <input class="native time" id="vingt-et-une-fin-0-2" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du lundi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add" disabled><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="vingt-et-une-jour-1">
+        <h3 id="vingt-et-une-jour-1">Mardi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-1-0">Début de la plage 1 du mardi</label>
+              <input class="native time" id="vingt-et-une-debut-1-0" type="text" inputmode="numeric" maxlength="5" value="08:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-1-0">Fin de la plage 1 du mardi</label>
+              <input class="native time" id="vingt-et-une-fin-1-0" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mardi, 08:00 à 10:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-1-1">Début de la plage 2 du mardi</label>
+              <input class="native time" id="vingt-et-une-debut-1-1" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-1-1">Fin de la plage 2 du mardi</label>
+              <input class="native time" id="vingt-et-une-fin-1-1" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mardi, 10:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-1-2">Début de la plage 3 du mardi</label>
+              <input class="native time" id="vingt-et-une-debut-1-2" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-1-2">Fin de la plage 3 du mardi</label>
+              <input class="native time" id="vingt-et-une-fin-1-2" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mardi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add" disabled><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="vingt-et-une-jour-2">
+        <h3 id="vingt-et-une-jour-2">Mercredi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-2-0">Début de la plage 1 du mercredi</label>
+              <input class="native time" id="vingt-et-une-debut-2-0" type="text" inputmode="numeric" maxlength="5" value="08:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-2-0">Fin de la plage 1 du mercredi</label>
+              <input class="native time" id="vingt-et-une-fin-2-0" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mercredi, 08:00 à 10:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-2-1">Début de la plage 2 du mercredi</label>
+              <input class="native time" id="vingt-et-une-debut-2-1" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-2-1">Fin de la plage 2 du mercredi</label>
+              <input class="native time" id="vingt-et-une-fin-2-1" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mercredi, 10:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-2-2">Début de la plage 3 du mercredi</label>
+              <input class="native time" id="vingt-et-une-debut-2-2" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-2-2">Fin de la plage 3 du mercredi</label>
+              <input class="native time" id="vingt-et-une-fin-2-2" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du mercredi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add" disabled><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="vingt-et-une-jour-3">
+        <h3 id="vingt-et-une-jour-3">Jeudi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-3-0">Début de la plage 1 du jeudi</label>
+              <input class="native time" id="vingt-et-une-debut-3-0" type="text" inputmode="numeric" maxlength="5" value="08:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-3-0">Fin de la plage 1 du jeudi</label>
+              <input class="native time" id="vingt-et-une-fin-3-0" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du jeudi, 08:00 à 10:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-3-1">Début de la plage 2 du jeudi</label>
+              <input class="native time" id="vingt-et-une-debut-3-1" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-3-1">Fin de la plage 2 du jeudi</label>
+              <input class="native time" id="vingt-et-une-fin-3-1" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du jeudi, 10:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-3-2">Début de la plage 3 du jeudi</label>
+              <input class="native time" id="vingt-et-une-debut-3-2" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-3-2">Fin de la plage 3 du jeudi</label>
+              <input class="native time" id="vingt-et-une-fin-3-2" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du jeudi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add" disabled><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="vingt-et-une-jour-4">
+        <h3 id="vingt-et-une-jour-4">Vendredi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-4-0">Début de la plage 1 du vendredi</label>
+              <input class="native time" id="vingt-et-une-debut-4-0" type="text" inputmode="numeric" maxlength="5" value="08:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-4-0">Fin de la plage 1 du vendredi</label>
+              <input class="native time" id="vingt-et-une-fin-4-0" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du vendredi, 08:00 à 10:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-4-1">Début de la plage 2 du vendredi</label>
+              <input class="native time" id="vingt-et-une-debut-4-1" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-4-1">Fin de la plage 2 du vendredi</label>
+              <input class="native time" id="vingt-et-une-fin-4-1" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du vendredi, 10:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-4-2">Début de la plage 3 du vendredi</label>
+              <input class="native time" id="vingt-et-une-debut-4-2" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-4-2">Fin de la plage 3 du vendredi</label>
+              <input class="native time" id="vingt-et-une-fin-4-2" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du vendredi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add" disabled><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="vingt-et-une-jour-5">
+        <h3 id="vingt-et-une-jour-5">Samedi</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-5-0">Début de la plage 1 du samedi</label>
+              <input class="native time" id="vingt-et-une-debut-5-0" type="text" inputmode="numeric" maxlength="5" value="08:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-5-0">Fin de la plage 1 du samedi</label>
+              <input class="native time" id="vingt-et-une-fin-5-0" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du samedi, 08:00 à 10:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-5-1">Début de la plage 2 du samedi</label>
+              <input class="native time" id="vingt-et-une-debut-5-1" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-5-1">Fin de la plage 2 du samedi</label>
+              <input class="native time" id="vingt-et-une-fin-5-1" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du samedi, 10:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-5-2">Début de la plage 3 du samedi</label>
+              <input class="native time" id="vingt-et-une-debut-5-2" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-5-2">Fin de la plage 3 du samedi</label>
+              <input class="native time" id="vingt-et-une-fin-5-2" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du samedi, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add" disabled><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+<div class="wd-day" role="group" aria-labelledby="vingt-et-une-jour-6">
+        <h3 id="vingt-et-une-jour-6">Dimanche</h3>
+        <div class="wd-body">
+          <ul class="wd-body"><li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-6-0">Début de la plage 1 du dimanche</label>
+              <input class="native time" id="vingt-et-une-debut-6-0" type="text" inputmode="numeric" maxlength="5" value="08:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-6-0">Fin de la plage 1 du dimanche</label>
+              <input class="native time" id="vingt-et-une-fin-6-0" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du dimanche, 08:00 à 10:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-6-1">Début de la plage 2 du dimanche</label>
+              <input class="native time" id="vingt-et-une-debut-6-1" type="text" inputmode="numeric" maxlength="5" value="10:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-6-1">Fin de la plage 2 du dimanche</label>
+              <input class="native time" id="vingt-et-une-fin-6-1" type="text" inputmode="numeric" maxlength="5" value="12:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du dimanche, 10:00 à 12:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li>
+<li>
+            <div class="wd-range">
+              <label class="sr-only" for="vingt-et-une-debut-6-2">Début de la plage 3 du dimanche</label>
+              <input class="native time" id="vingt-et-une-debut-6-2" type="text" inputmode="numeric" maxlength="5" value="14:00">
+              <span class="dash" aria-hidden="true">–</span>
+              <label class="sr-only" for="vingt-et-une-fin-6-2">Fin de la plage 3 du dimanche</label>
+              <input class="native time" id="vingt-et-une-fin-6-2" type="text" inputmode="numeric" maxlength="5" value="18:00">
+              <button type="button" class="icon-btn" aria-label="Retirer la plage du dimanche, 14:00 à 18:00" title="Retirer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+            </div>
+            
+          </li></ul>
+          <button type="button" class="btn text wd-add" disabled><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>Ajouter une plage</button>
+        </div>
+      </div>
+      <div class="wd-foot">
+        <span class="count">21 plages sur 21 · <strong role="status">21 plages au plus.</strong></span>
+        <span class="buttons">
+          <span class="saved-flag" role="status">Enregistré</span>
+          <button type="button" class="btn primary" disabled>Enregistrer les plages</button>
+        </span>
+      </div>
+    </div>
+    
+    </div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="vingt-et-une-duree-label">Durée d'un créneau</span><span class="help" id="vingt-et-une-duree-help">De 15 à 180 minutes, par pas de 5.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="60" aria-labelledby="vingt-et-une-duree-label" aria-describedby="vingt-et-une-duree-help">
+        <span class="unit">min</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="vingt-et-une-delai-label">Délai minimal</span><span class="help" id="vingt-et-une-delai-help">Temps entre la demande et le début du créneau, de 1 à 168 heures.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="24" aria-labelledby="vingt-et-une-delai-label" aria-describedby="vingt-et-une-delai-help">
+        <span class="unit">h</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="vingt-et-une-horizon-label">Horizon</span><span class="help" id="vingt-et-une-horizon-help">Aucun créneau n'est proposé au-delà, de 7 à 90 jours.</span></div>
+      <div class="control column"><span class="control">
+        <input class="native number" type="number" inputmode="numeric" value="28" aria-labelledby="vingt-et-une-horizon-label" aria-describedby="vingt-et-une-horizon-help">
+        <span class="unit">jours</span>
+      </span></div>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="vingt-et-une-modalites-label">Modalités proposées</span><span class="help">Le demandeur choisit parmi celles-ci. Au moins une.</span></div>
+      <fieldset class="control column" aria-labelledby="vingt-et-une-modalites-label">
+        <div class="checks"><label class="check"><input type="checkbox" checked><span>Au cabinet</span></label><label class="check"><input type="checkbox" checked><span>En visio</span></label><label class="check"><input type="checkbox"><span>Par téléphone</span></label></div>
+        
+      </fieldset>
+    </div>
+    <div class="row">
+      <div class="row-text"><span class="label" id="vingt-et-une-fuseau-label">Fuseau horaire</span><span class="help" id="vingt-et-une-fuseau-help">Les heures des plages sont celles de ce fuseau.</span></div>
+      <div class="control column"><span class="control"><select class="native" aria-labelledby="vingt-et-une-fuseau-label" aria-describedby="vingt-et-une-fuseau-help"><option>America/Montreal</option><option>Europe/Brussels</option><option selected>Europe/Paris</option><option>Europe/Zurich</option></select></span>
+      </div>
+    </div>
+  </div>
+</section>
+  <section class="card stub" aria-labelledby="vingt-et-une-23"><h2 id="vingt-et-une-23">Émotions personnalisées</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+  <section class="card stub" aria-labelledby="vingt-et-une-18"><h2 id="vingt-et-une-18">Compte et sécurité</h2><span class="mq-note-inline">Section inchangée (fiche 14)</span></section>
+</div>
+</div>
+</main>
+</div>
+</section>
+<section class="vue" id="erreurs" aria-label="Vue 7 : Erreurs de forme (aucune requête)">
+<p class="mq-legende"><strong>Vue 7 sur 8 · Erreurs de forme (aucune requête)</strong> · fin avant début, chevauchement, format, bornes, aucune modalité</p>
 <header class="app-bar">
   <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>
@@ -1718,8 +2107,8 @@ select.native{max-width:100%}
 </main>
 </div>
 </section>
-<section class="vue" id="erreur-serveur" aria-label="Vue 7 : Refus du serveur">
-<p class="mq-legende"><strong>Vue 7 sur 7 · Refus du serveur</strong> · PATCH /api/me/preferences → 422 VALIDATION_FAILED, errors[].field = booking.windows (message du serveur)</p>
+<section class="vue" id="erreur-serveur" aria-label="Vue 8 : Refus du serveur">
+<p class="mq-legende"><strong>Vue 8 sur 8 · Refus du serveur</strong> · PATCH /api/me/preferences → 422 VALIDATION_FAILED, errors[].field = booking.windows (message du serveur)</p>
 <header class="app-bar">
   <button type="button" class="menu" aria-label="Ouvrir la navigation" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span></a>

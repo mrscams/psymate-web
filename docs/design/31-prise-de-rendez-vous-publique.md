@@ -60,9 +60,10 @@ Colonne unique centrée de **720 px** au plus dans le layout public (16 px de ma
 | --- | --- | --- |
 | Chargement | réglages ou créneaux en cours | `shared/ui/state` `loading` : squelette de la carte d'en-tête et de quatre lignes de créneaux, `aria-busy` |
 | Créneaux | `slots` non vide | étape 1 |
-| Aucun créneau | `slots: []` | dans la carte de l'étape 1 : « Aucun créneau disponible pour l'instant », « Vous pouvez écrire au praticien pour convenir d'un rendez-vous. », lien « Écrire au praticien » vers `/praticiens/:slug#contact` ; les boutons de période restent |
+| Aucun créneau | `slots: []` | dans la carte de l'étape 1 : « Aucun créneau disponible pour l'instant », « Vous pouvez écrire au praticien pour convenir d'un rendez-vous. », lien « Prendre contact » vers `/praticiens/:slug#contact` (le nom du bouton de la fiche 09) ; les boutons de période restent |
 | Fonction non offerte | `404 BOOKING_NOT_AVAILABLE` (réglages, créneaux ou envoi) | **redirection** vers `/praticiens/:slug`, sans message : la fiche affiche son propre état (elle peut elle-même répondre 404) |
 | Erreur de chargement | réseau, `5xx`, `422` de la fenêtre | `shared/ui/state` `error` : « Les créneaux n'ont pas pu être chargés. », « Vérifiez votre connexion, puis réessayez. », bouton « Réessayer » |
+| Plafond atteint en lecture | `429 RATE_LIMITED` sur les créneaux ou sur les réglages | même bloc que l'erreur de chargement, au niveau avertissement (`warning`, `role="alert"`) : « Les créneaux n'ont pas pu être chargés. » (créneaux) ou « La prise de rendez-vous n'a pas pu être chargée. » (réglages), puis « Trop de requêtes depuis votre connexion. Réessayez dans {n} min. » (`retryAfterSeconds` arrondi à la minute supérieure), bouton « Réessayer » |
 | Créneau plus disponible | `409 SLOT_NOT_AVAILABLE` à l'envoi | retour à l'étape 1, créneaux **relus**, avertissement en tête de carte : « Ce créneau n'est plus disponible. Choisissez-en un autre : vos coordonnées sont conservées. » ; la saisie est gardée dans le composant et réapparaît à l'étape 2 |
 | Champs à corriger | validation de forme, ou `422` | message sous chaque champ ; pour un `422`, résumé `pm-form-errors` en tête du formulaire, qui reçoit le focus |
 | Plafond atteint | `429` à l'envoi | sous le formulaire : « Trop de demandes envoyées depuis votre connexion. Réessayez dans {n} min. » (`retryAfterSeconds` arrondi à la minute supérieure) ; saisie conservée |
@@ -70,11 +71,14 @@ Colonne unique centrée de **720 px** au plus dans le layout public (16 px de ma
 | Échec d'envoi | réseau, `5xx`, `400` | « La demande n'a pas pu être envoyée. Votre saisie est conservée : réessayez dans un instant. » |
 | Envoyée | `202` | écran d'attente, identique quel que soit le sort de la demande |
 
+Quand ce sont les **réglages** qui ne se chargent pas (erreur ou plafond), le nom du praticien n'est pas connu : le bloc occupe la colonne à la place de la carte d'en-tête et des étapes, son titre est le `<h1>` (« La prise de rendez-vous n'a pas pu être chargée. »), le fil d'Ariane se réduit à « Annuaire › Prendre rendez-vous » et la mention d'urgence reste au-dessus du bouton « Réessayer ».
+
 Messages de forme (ceux de `shared/forms`) : « Ce champ est obligatoire. », « Adresse e-mail invalide. », « Au plus {n} caractères. », « Format invalide. » (téléphone) ; consentement : « Cochez cette case pour envoyer votre demande. » ; modalité non choisie : « Choisissez une modalité. ».
 
 ## Interactions
 - **Fenêtre de créneaux** : deux semaines à la fois. Première fenêtre : d'aujourd'hui (dans `timezone`) à aujourd'hui + 13 jours. « Semaines suivantes » avance de 14 jours ; il est inactif quand le premier jour de la fenêtre suivante dépasse aujourd'hui + `horizonDays`. « Semaines précédentes » est inactif sur la première fenêtre. Une fenêtre ne dépasse jamais 31 jours. Chaque changement de fenêtre relit les créneaux.
-- **Choisir un créneau** : passe à l'étape 2 et porte le focus sur le titre de l'étape. `formShownAt` est l'instant où le formulaire s'affiche.
+- **Choisir un créneau** : passe à l'étape 2 et porte le focus sur le titre de l'étape.
+- **`formShownAt`** : l'instant du **premier** affichage du formulaire de coordonnées. Il est conservé après un `409`, un `422` ou « Changer de créneau », et n'est jamais remis à zéro tant que la page n'est pas rechargée. Raison : l'API ignore en silence, sous un `202`, une demande envoyée moins de 3 s après `formShownAt` ; un visiteur qui revient au formulaire avec sa saisie conservée peut renvoyer en moins de 3 s, et sa demande disparaîtrait sans qu'il le sache si l'instant avait été remis à zéro.
 - **Changer de créneau** : revient à l'étape 1, saisie conservée.
 - **Envoi** : la forme est vérifiée d'abord (aucune requête si un champ obligatoire est vide, si l'e-mail est mal formé ou si le consentement n'est pas coché) ; le focus va sur le premier champ en erreur.
 - **Après un `409`** : la liste est relue, jamais corrigée localement ; le créneau perdu n'y figure plus.
@@ -94,7 +98,7 @@ Messages de forme (ceux de `shared/forms`) : « Ce champ est obligatoire. », «
 - Le fuseau est écrit en toutes lettres, jamais donné par une icône seule.
 - Formulaire : `<label for>` sur chaque champ, `autocomplete` (`given-name`, `family-name`, `email`, `tel`), erreurs reliées par `aria-describedby`, `fieldset` + `legend` pour la modalité ; l'avertissement « Ce créneau n'est plus disponible » et le message de plafond sont en `role="alert"`.
 - Mention d'urgence : `role="note"`, lisible avant l'action principale dans l'ordre du document.
-- Tout se fait au clavier ; cibles de 24 px au moins ; tient à 390 px et à 200 % de zoom, sans défilement horizontal.
+- Tout se fait au clavier (ordre et touches : critères d'acceptation) ; cibles de 24 px au moins ; à 390 px et à 720 px de large (l'équivalent d'un zoom de 200 % sur 1440 px), aucun défilement horizontal : `scrollWidth <= clientWidth` sur l'élément racine.
 
 ## Critères d'acceptation
 - [ ] Sur `/praticiens/claire-martin`, « Prendre rendez-vous » mène à `/praticiens/claire-martin/rendez-vous` ; la page porte `noindex` et le titre « Prendre rendez-vous · PsyMate ».
@@ -102,7 +106,7 @@ Messages de forme (ceux de `shared/forms`) : « Ce champ est obligatoire. », «
 - [ ] La phrase du mode est celle de `manual` sur `claire-martin` et celle de `auto` sur `karim-haddad`, avec les textes exacts de G Q61 ; le bouton d'envoi dit « Envoyer ma demande » puis « Réserver ce créneau ».
 - [ ] La mention « PsyMate n'est pas un service d'urgence » et les numéros 112 et 3114 précèdent, dans le document, les boutons de créneau, le bouton d'envoi et le lien de l'écran d'attente.
 - [ ] « Semaines précédentes » est inactif sur la première fenêtre ; « Semaines suivantes » l'est quand la fenêtre suivante commencerait après aujourd'hui + `horizonDays` ; chaque fenêtre demandée fait 14 jours.
-- [ ] Une fenêtre sans créneau affiche « Aucun créneau disponible pour l'instant » et le lien vers `/praticiens/:slug#contact`.
+- [ ] Une fenêtre sans créneau affiche « Aucun créneau disponible pour l'instant » et le lien « Prendre contact » vers `/praticiens/:slug#contact`.
 - [ ] `404 BOOKING_NOT_AVAILABLE` (slug sans prise de rendez-vous) redirige vers `/praticiens/:slug`.
 - [ ] Envoi complet : la requête porte `startsAt` (celui du créneau choisi), `modality`, `firstName`, `lastName`, `email`, `consent = true`, `formShownAt`, `locale`, et `website` vide ; l'écran d'attente s'affiche ; un e-mail arrive dans Mailpit.
 - [ ] Champ obligatoire vide, e-mail mal formé ou consentement non coché : aucune requête, message sous le champ, focus sur le premier champ en erreur.
@@ -110,7 +114,11 @@ Messages de forme (ceux de `shared/forms`) : « Ce champ est obligatoire. », «
 - [ ] `422` simulé sur `email` : message sous le champ et résumé en tête ; `429` simulé : message avec le délai, saisie conservée.
 - [ ] Après l'envoi, ni `localStorage`, ni `sessionStorage`, ni l'URL ne contiennent le prénom, le nom, l'e-mail ou le téléphone saisis (e2e).
 - [ ] Le formulaire n'a ni champ « motif » ni zone de texte libre (le test compte les champs).
-- [ ] Trois états du bloc des créneaux (chargement, vide, erreur avec « Réessayer ») ; parcours complet au clavier ; axe-core 0 violation, thèmes clair et sombre, 390 px et zoom 200 %.
+- [ ] Deux envois successifs séparés par un `409` simulé, puis par « Changer de créneau », portent le même `formShownAt` (test de la page, service simulé).
+- [ ] `429` simulé sur `GET …/slots` : « Les créneaux n'ont pas pu être chargés. », le délai en minutes et « Réessayer » ; sur `GET …/practitioners/{slug}` : « La prise de rendez-vous n'a pas pu être chargée. », sans carte d'en-tête.
+- [ ] Trois états du bloc des créneaux (chargement, vide, erreur avec « Réessayer »).
+- [ ] Parcours au clavier seul (garde `keyboardOnly`, aucun geste de pointeur), dans cet ordre : Tab depuis le haut de la page atteint le lien d'évitement, le bandeau public, le fil d'Ariane, les liens 112 et 3114, « Semaines suivantes » (« Semaines précédentes », inactif, est sauté), puis le premier créneau ; Entrée ou Espace sur un créneau affiche l'étape 2 et pose le focus sur son titre « Vos coordonnées » ; Tab parcourt ensuite « Changer de créneau », Prénom, Nom, E-mail, Téléphone, le groupe Modalité (flèches pour choisir), la case de consentement (Espace pour cocher), le lien de confidentialité, puis le bouton d'envoi ; Entrée sur le bouton avec un champ invalide pose le focus sur le premier champ en erreur ; après un envoi réussi, le focus est sur le titre « Consultez votre boîte mail ».
+- [ ] axe-core 0 violation, thèmes clair et sombre ; à 390 px et à 720 px de large (équivalent 200 % sur 1440), aucun défilement horizontal : `scrollWidth <= clientWidth`.
 
 ## Points ouverts (repris de K10)
 - **Numéros d'urgence** : 112 (urgences, Europe) et 3114 (numéro national français de prévention du suicide), posés par M14-09, **à valider par l'utilisateur**, comme la liste par pays ; ils vivent dans `public-facts.ts`.
@@ -120,11 +128,11 @@ Messages de forme (ceux de `shared/forms`) : « Ce champ est obligatoire. », «
 
 ## Écarts entre K et le contrat `0.15.0`
 - K3.1 écrivait « Ce créneau vient d'être pris » : le texte est « Ce créneau n'est plus disponible » (`409` sert aussi quand le créneau n'est plus offert pour une autre raison).
-- K3.1 nomme le bouton voisin « Écrire au praticien » : dans l'application, il s'appelle « Prendre contact » (fiche 09) ; le lien de l'état vide garde « Écrire au praticien ».
+- K3.1 nommait le bouton voisin « Écrire au praticien » : dans l'application, il s'appelle « Prendre contact » (fiche 09). K est aligné, et le lien de l'état vide porte le même nom.
 - K5.1 ne citait ni le `400 MALFORMED_REQUEST` de l'envoi, ni le `429` des deux lectures, ni les `422` de la fenêtre (`INVALID_VALUE`, `INVALID_FORMAT`) : ils existent dans le contrat.
 - `404 BOOKING_NOT_AVAILABLE` couvre aussi « aucune plage ouverte ».
 - Une fenêtre passée ou au-delà de l'horizon rend `slots: []`, pas une erreur.
-- Le prompt de M14-12 écrit « Semaine précédente » : la fenêtre recule de deux semaines, le bouton dit « Semaines précédentes ».
+- Le prompt de M14-12 écrivait « Semaine précédente » : la fenêtre recule de deux semaines, le bouton dit « Semaines précédentes » (K aligné).
 
 ## Hors périmètre V1
 Compte patient ; choix d'un motif ou d'un type de consultation ; paiement ; liste d'attente ; plusieurs lieux ; déplacement du rendez-vous par le demandeur ; affichage des créneaux pris ; rappel par SMS ; carte ou itinéraire.

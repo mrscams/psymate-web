@@ -50,10 +50,11 @@ Complément de M14-09 (plan `docs/K-plan-prise-de-rendez-vous.md` K3.2 étape 1,
 
 ### Structure de la section
 Carte `aria-labelledby`, même gabarit que les autres sections (lignes libellé + aide à gauche, contrôle à droite ; empilées sous 760 px).
-1. **En-tête de carte** : titre « Prise de rendez-vous en ligne » ; à droite, lien « Voir ma page de rendez-vous » vers `/praticiens/<slug>/rendez-vous` (nouvel onglet annoncé), **visible seulement quand la fonction est offerte** (activée, au moins une plage, profil publié).
+1. **En-tête de carte** : titre « Prise de rendez-vous en ligne » ; à droite, lien « Voir ma page de rendez-vous » vers `/praticiens/<slug>/rendez-vous` (nouvel onglet annoncé), **visible seulement quand la fonction est offerte**. Elle l'est quand **quatre** conditions sont vraies : `booking.enabled`, au moins une plage enregistrée, profil public publié, **praticien approuvé**. L'écran lit « approuvé » dans le statut de vérification de la session (`verificationStatus = approved`, `SessionStore` de `core/auth`, déjà chargé), sans nouvel appel.
 2. **Ligne d'état** (`role="status"`), une phrase :
    - désactivée : « Désactivée : votre fiche publique n'a pas de bouton « Prendre rendez-vous ». »
-   - offerte : « Proposée sur votre fiche publique. »
+   - offerte (les quatre conditions) : « Proposée sur votre fiche publique. »
+   - activée, avec des plages, profil publié, praticien non approuvé : pas de ligne d'état ni de lien ; le bandeau d'état global de la fiche 00 §1 dit déjà où en est le dossier professionnel.
    - activée sans plage : « La prise de rendez-vous n'est pas proposée tant qu'il n'y a pas de plage. »
    - activée, avec des plages, profil non publié : pas de ligne d'état, le bandeau ci-dessous la remplace.
 3. **Bandeau « profil non publié »** (information, quand le profil public n'est pas publié, que la fonction soit activée ou non) : « Votre profil public n'est pas publié : la prise de rendez-vous ne sera proposée qu'une fois le profil publié. » + lien « Mon profil public » (`/mon-compte/profil-public`). **Tous les réglages restent modifiables**, l'interrupteur compris (G Q64).
@@ -84,7 +85,7 @@ Carte `aria-labelledby`, même gabarit que les autres sections (lignes libellé 
   - une valeur numérique sort de ses bornes : « Entre 15 et 180, par pas de 5. », « Entre 1 et 168. », « Entre 7 et 90. » ;
   - aucune modalité n'est cochée : « Gardez au moins une modalité. » (la dernière case cochée ne se décoche pas sans ce message).
   Le message s'affiche sous la plage ou sous le réglage concerné.
-- À 21 plages, « Ajouter une plage » est inactif et l'éditeur dit « 21 plages au plus. »
+- À 21 plages, « Ajouter une plage » est inactif sur les sept jours et le pied de l'éditeur dit « 21 plages sur 21 · 21 plages au plus. » (vue « 21 plages » de la maquette).
 - Une erreur `422` du serveur (`errors[].field` = la clé, codes `INVALID_VALUE` ou `OUT_OF_RANGE`) s'affiche sous le réglage de cette clé, avec le message du serveur ; pour `booking.windows`, sous l'éditeur. La valeur affichée revient à celle du serveur après relecture.
 
 ### Accessibilité de la section
@@ -125,6 +126,8 @@ Carte `aria-labelledby`, même gabarit que les autres sections (lignes libellé 
 - [ ] (M14) Une erreur `422` simulée sur `booking.windows` (test du composant, service simulé) s'affiche sous l'éditeur ; sur `booking.slotDurationMin`, sous ce réglage.
 - [ ] (M14) Retirer la dernière plage et enregistrer : la ligne d'état dit « La prise de rendez-vous n'est pas proposée tant qu'il n'y a pas de plage. » et le lien « Voir ma page de rendez-vous » disparaît.
 - [ ] (M14) Profil non publié : le bandeau et le lien « Mon profil public » apparaissent, l'interrupteur et les réglages restent utilisables.
+- [ ] (M14) Statut de vérification autre que `approved` (test de la page, session simulée), fonction activée, plages et profil publié : ni « Proposée sur votre fiche publique. » ni « Voir ma page de rendez-vous » ne s'affichent.
+- [ ] (M14) À 21 plages, les sept boutons « Ajouter une plage » sont inactifs et « 21 plages au plus. » est affiché ; retirer une plage les réactive.
 - [ ] (M14) Avec le compte `claire.seed@example.test` du seed, « Voir ma page de rendez-vous » mène à `/praticiens/claire-martin/rendez-vous`.
 - [ ] (M14) Chaque réglage numérique refuse une valeur hors bornes sans requête (durée 10, délai 0, horizon 91) ; décocher la dernière modalité n'envoie rien.
 - [ ] (M14) La section se parcourt et se règle au clavier ; axe-core 0 violation, thèmes clair et sombre ; mise en page tenue à 390 px et à 200 % de zoom ; les autres sections de la page n'ont pas changé (leurs e2e restent verts).

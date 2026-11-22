@@ -1,4 +1,4 @@
-<!-- Maquette statique autonome · habillage Fluent 2 (valeurs de docs/design/fluent2.md embarquées, thèmes clair et sombre) · fiche docs/design/32-rendez-vous-par-lien.md · M14-09, 22 novembre 2026. Bandeau et pied : shared/ui/public-layout (fiche 00 §4). Vues c-… : /rendez-vous/confirmer/:token ; vues g-… : /rendez-vous/gerer/:token. Une vue par réponse de l'API ; la barre sombre du haut choisit la vue et le thème et ne fait pas partie de l'écran. -->
+<!-- Maquette statique autonome · habillage Fluent 2 (valeurs de docs/design/fluent2.md embarquées, thèmes clair et sombre) · fiche docs/design/32-rendez-vous-par-lien.md · M14-09, 22 novembre 2026. Bandeau et pied : shared/ui/public-layout (fiche 00 §4). Vues c-… : /rendez-vous/confirmer/:token ; vues g-… : /rendez-vous/gerer/:token. Une vue par réponse de l'API. Les deux pages posent la balise meta referrer à no-referrer et les liens de la carte portent rel=noreferrer : le jeton du chemin ne part dans aucun en-tête Referer. La barre sombre du haut choisit la vue et le thème et ne fait pas partie de l'écran. -->
 <!doctype html>
 <html lang="fr">
 <head>
@@ -212,6 +212,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 .dialog h2{font:600 20px/28px var(--font-ui)}
 .dialog .actions{justify-content:flex-end}
 .skel-card{display:flex;flex-direction:column;gap:12px}
+.bar-body{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
 @media (max-width:600px){
   .link-card{padding:20px 16px}
   .detail{grid-template-columns:1fr;gap:2px}
@@ -251,9 +252,12 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
         <option value="g-passe">21. Gestion : passé</option>
         <option value="g-sans-praticien">22. Gestion : fiche du praticien dépubliée</option>
         <option value="g-trop-tard">23. Gestion : trop tard pour annuler</option>
-        <option value="g-inconnu">24. Gestion : lien inconnu</option>
-        <option value="g-plafond">25. Gestion : plafond atteint</option>
-        <option value="g-erreur">26. Gestion : erreur</option>
+        <option value="g-annulation-echec">24. Gestion : l'annulation n'a pas abouti</option>
+        <option value="g-annulation-plafond">25. Gestion : plafond atteint à l'annulation</option>
+        <option value="g-annulation-lien">26. Gestion : lien remplacé au moment d'annuler</option>
+        <option value="g-inconnu">27. Gestion : lien inconnu</option>
+        <option value="g-plafond">28. Gestion : plafond atteint</option>
+        <option value="g-erreur">29. Gestion : erreur</option>
         <option value="toutes">Toutes les vues à la suite</option>
       </select>
     </label>
@@ -268,7 +272,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   <span class="mq-note">Barre de maquette : elle ne fait pas partie de l'écran.</span>
 </div>
 <section class="vue" id="c-verification" aria-label="Vue 1 : Vérification en cours">
-<p class="mq-legende"><strong>Vue 1 sur 26 · Vérification en cours</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify parti</p>
+<p class="mq-legende"><strong>Vue 1 sur 29 · Vérification en cours</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify parti</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -292,7 +296,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="c-transmise" aria-label="Vue 2 : Demande transmise (mode manuel)">
-<p class="mq-legende"><strong>Vue 2 sur 26 · Demande transmise (mode manuel)</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, status pending, manageToken</p>
+<p class="mq-legende"><strong>Vue 2 sur 29 · Demande transmise (mode manuel)</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, status pending, manageToken</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -309,14 +313,14 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   </div>
   
   <dl class="detail">
-    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
     <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
     <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
     <dt>Durée</dt><dd>60 min</dd>
     <dt>Modalité</dt><dd>Au cabinet</dd>
   </dl>
   <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
-  <div class="actions"><a class="btn primary large" href="#">Gérer ma demande</a></div>
+  <div class="actions"><a class="btn primary large" href="#" rel="noreferrer">Gérer ma demande</a></div>
 </section>
 
 </main>
@@ -325,7 +329,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="c-confirme" aria-label="Vue 3 : Rendez-vous confirmé (mode automatique)">
-<p class="mq-legende"><strong>Vue 3 sur 26 · Rendez-vous confirmé (mode automatique)</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, status confirmed, manageToken</p>
+<p class="mq-legende"><strong>Vue 3 sur 29 · Rendez-vous confirmé (mode automatique)</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, status confirmed, manageToken</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -342,14 +346,14 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   </div>
   
   <dl class="detail">
-    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
     <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
     <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
     <dt>Durée</dt><dd>60 min</dd>
     <dt>Modalité</dt><dd>Au cabinet</dd>
   </dl>
   <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
-  <div class="actions"><a class="btn primary large" href="#">Gérer mon rendez-vous</a></div>
+  <div class="actions"><a class="btn primary large" href="#" rel="noreferrer">Gérer mon rendez-vous</a></div>
 </section>
 
 </main>
@@ -358,7 +362,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="c-rechargee" aria-label="Vue 4 : Page rechargée : même état, sans lien de gestion">
-<p class="mq-legende"><strong>Vue 4 sur 26 · Page rechargée : même état, sans lien de gestion</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, manageToken: null (même après les 30 minutes)</p>
+<p class="mq-legende"><strong>Vue 4 sur 29 · Page rechargée : même état, sans lien de gestion</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, manageToken: null (même après les 30 minutes)</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -375,7 +379,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   </div>
   
   <dl class="detail">
-    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
     <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
     <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
     <dt>Durée</dt><dd>60 min</dd>
@@ -391,7 +395,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="c-annule" aria-label="Vue 5 : Lien rouvert : rendez-vous annulé">
-<p class="mq-legende"><strong>Vue 5 sur 26 · Lien rouvert : rendez-vous annulé</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, status cancelled, cancelledBy practitioner</p>
+<p class="mq-legende"><strong>Vue 5 sur 29 · Lien rouvert : rendez-vous annulé</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, status cancelled, cancelledBy practitioner</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -408,14 +412,14 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   </div>
   
   <dl class="detail">
-    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
     <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
     <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
     <dt>Durée</dt><dd>60 min</dd>
     <dt>Modalité</dt><dd>Au cabinet</dd>
   </dl>
   <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
-  <div class="actions"><a class="btn " href="#">Choisir un autre créneau</a></div>
+  <div class="actions"><a class="btn " href="#" rel="noreferrer">Choisir un autre créneau</a></div>
 </section>
 
 </main>
@@ -424,7 +428,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="c-passe" aria-label="Vue 6 : Lien rouvert : rendez-vous passé">
-<p class="mq-legende"><strong>Vue 6 sur 26 · Lien rouvert : rendez-vous passé</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, status past</p>
+<p class="mq-legende"><strong>Vue 6 sur 29 · Lien rouvert : rendez-vous passé</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 200, status past</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -441,7 +445,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   </div>
   
   <dl class="detail">
-    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
     <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
     <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
     <dt>Durée</dt><dd>60 min</dd>
@@ -457,7 +461,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="c-expire" aria-label="Vue 7 : Lien expiré">
-<p class="mq-legende"><strong>Vue 7 sur 26 · Lien expiré</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 410 BOOKING_TOKEN_EXPIRED</p>
+<p class="mq-legende"><strong>Vue 7 sur 29 · Lien expiré</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 410 BOOKING_TOKEN_EXPIRED</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -475,7 +479,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   
   
   <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
-  <div class="actions"><a class="btn " href="#">Retrouver le praticien dans l'annuaire</a></div>
+  <div class="actions"><a class="btn " href="#" rel="noreferrer">Retrouver le praticien dans l'annuaire</a></div>
 </section>
 
 </main>
@@ -484,7 +488,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="c-inconnu" aria-label="Vue 8 : Lien inconnu">
-<p class="mq-legende"><strong>Vue 8 sur 26 · Lien inconnu</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 404 BOOKING_TOKEN_INVALID (ou 422 sur token)</p>
+<p class="mq-legende"><strong>Vue 8 sur 29 · Lien inconnu</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 404 BOOKING_TOKEN_INVALID (ou 422 sur token)</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -502,7 +506,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   
   
   <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
-  <div class="actions"><a class="btn " href="#">Retrouver le praticien dans l'annuaire</a></div>
+  <div class="actions"><a class="btn " href="#" rel="noreferrer">Retrouver le praticien dans l'annuaire</a></div>
 </section>
 
 </main>
@@ -511,7 +515,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="c-indisponible" aria-label="Vue 9 : Créneau plus disponible">
-<p class="mq-legende"><strong>Vue 9 sur 26 · Créneau plus disponible</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 409 SLOT_TAKEN</p>
+<p class="mq-legende"><strong>Vue 9 sur 29 · Créneau plus disponible</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 409 SLOT_TAKEN</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -529,7 +533,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   
   
   <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
-  <div class="actions"><a class="btn " href="#">Retrouver le praticien dans l'annuaire</a></div>
+  <div class="actions"><a class="btn " href="#" rel="noreferrer">Retrouver le praticien dans l'annuaire</a></div>
 </section>
 
 </main>
@@ -538,7 +542,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="c-deja-actif" aria-label="Vue 10 : Rendez-vous déjà actif">
-<p class="mq-legende"><strong>Vue 10 sur 26 · Rendez-vous déjà actif</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 409 BOOKING_ALREADY_ACTIVE</p>
+<p class="mq-legende"><strong>Vue 10 sur 29 · Rendez-vous déjà actif</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 409 BOOKING_ALREADY_ACTIVE</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -565,7 +569,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="c-fermee" aria-label="Vue 11 : Fonction fermée">
-<p class="mq-legende"><strong>Vue 11 sur 26 · Fonction fermée</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 404 BOOKING_NOT_AVAILABLE</p>
+<p class="mq-legende"><strong>Vue 11 sur 29 · Fonction fermée</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 404 BOOKING_NOT_AVAILABLE</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -583,7 +587,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   
   
   <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
-  <div class="actions"><a class="btn " href="#">Retrouver le praticien dans l'annuaire</a></div>
+  <div class="actions"><a class="btn " href="#" rel="noreferrer">Retrouver le praticien dans l'annuaire</a></div>
 </section>
 
 </main>
@@ -592,7 +596,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="c-plafond" aria-label="Vue 12 : Plafond atteint (vérification)">
-<p class="mq-legende"><strong>Vue 12 sur 26 · Plafond atteint (vérification)</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 429 RATE_LIMITED</p>
+<p class="mq-legende"><strong>Vue 12 sur 29 · Plafond atteint (vérification)</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → 429 RATE_LIMITED</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -619,7 +623,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="c-erreur" aria-label="Vue 13 : Erreur (vérification)">
-<p class="mq-legende"><strong>Vue 13 sur 26 · Erreur (vérification)</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → réseau, 5xx</p>
+<p class="mq-legende"><strong>Vue 13 sur 29 · Erreur (vérification)</strong> · /rendez-vous/confirmer/:token · POST /api/public/booking/requests/verify → réseau, 5xx</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -646,7 +650,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="g-chargement" aria-label="Vue 14 : Gestion : chargement">
-<p class="mq-legende"><strong>Vue 14 sur 26 · Gestion : chargement</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage parti</p>
+<p class="mq-legende"><strong>Vue 14 sur 29 · Gestion : chargement</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage parti</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -670,7 +674,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="g-attente" aria-label="Vue 15 : Gestion : en attente de réponse">
-<p class="mq-legende"><strong>Vue 15 sur 26 · Gestion : en attente de réponse</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, status pending, canCancel</p>
+<p class="mq-legende"><strong>Vue 15 sur 29 · Gestion : en attente de réponse</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, status pending, canCancel</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -687,7 +691,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   </div>
   
   <dl class="detail">
-    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
     <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
     <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
     <dt>Durée</dt><dd>60 min</dd>
@@ -703,7 +707,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="g-confirme" aria-label="Vue 16 : Gestion : confirmé">
-<p class="mq-legende"><strong>Vue 16 sur 26 · Gestion : confirmé</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, status confirmed, canCancel</p>
+<p class="mq-legende"><strong>Vue 16 sur 29 · Gestion : confirmé</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, status confirmed, canCancel</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -720,7 +724,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   </div>
   
   <dl class="detail">
-    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
     <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
     <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
     <dt>Durée</dt><dd>60 min</dd>
@@ -736,7 +740,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="g-dialogue" aria-label="Vue 17 : Gestion : confirmation d'annulation">
-<p class="mq-legende"><strong>Vue 17 sur 26 · Gestion : confirmation d'annulation</strong> · dialogue partagé (shared/ui/confirm-dialog), aucun motif demandé</p>
+<p class="mq-legende"><strong>Vue 17 sur 29 · Gestion : confirmation d'annulation</strong> · dialogue partagé (shared/ui/confirm-dialog), aucun motif demandé</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -753,7 +757,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   </div>
   
   <dl class="detail">
-    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
     <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
     <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
     <dt>Durée</dt><dd>60 min</dd>
@@ -773,7 +777,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="g-annule-visiteur" aria-label="Vue 18 : Gestion : annulé par le demandeur">
-<p class="mq-legende"><strong>Vue 18 sur 26 · Gestion : annulé par le demandeur</strong> · POST …/manage/cancel → 200, puis /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, cancelled, cancelledBy visitor</p>
+<p class="mq-legende"><strong>Vue 18 sur 29 · Gestion : annulé par le demandeur</strong> · POST …/manage/cancel → 200, puis /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, cancelled, cancelledBy visitor</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -790,14 +794,14 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   </div>
   
   <dl class="detail">
-    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
     <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
     <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
     <dt>Durée</dt><dd>60 min</dd>
     <dt>Modalité</dt><dd>Au cabinet</dd>
   </dl>
   <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
-  <div class="actions"><a class="btn " href="#">Choisir un autre créneau</a></div>
+  <div class="actions"><a class="btn " href="#" rel="noreferrer">Choisir un autre créneau</a></div>
 </section>
 
 </main>
@@ -806,7 +810,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="g-annule-praticien" aria-label="Vue 19 : Gestion : annulé par le praticien">
-<p class="mq-legende"><strong>Vue 19 sur 26 · Gestion : annulé par le praticien</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, cancelled, cancelledBy practitioner (refus ou annulation)</p>
+<p class="mq-legende"><strong>Vue 19 sur 29 · Gestion : annulé par le praticien</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, cancelled, cancelledBy practitioner (refus ou annulation)</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -823,14 +827,14 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   </div>
   
   <dl class="detail">
-    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
     <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
     <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
     <dt>Durée</dt><dd>60 min</dd>
     <dt>Modalité</dt><dd>Au cabinet</dd>
   </dl>
   <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
-  <div class="actions"><a class="btn " href="#">Choisir un autre créneau</a></div>
+  <div class="actions"><a class="btn " href="#" rel="noreferrer">Choisir un autre créneau</a></div>
 </section>
 
 </main>
@@ -839,7 +843,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="g-annule-expire" aria-label="Vue 20 : Gestion : demande expirée">
-<p class="mq-legende"><strong>Vue 20 sur 26 · Gestion : demande expirée</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, cancelled, cancelledBy expired</p>
+<p class="mq-legende"><strong>Vue 20 sur 29 · Gestion : demande expirée</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, cancelled, cancelledBy expired</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -856,14 +860,14 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   </div>
   
   <dl class="detail">
-    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
     <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
     <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
     <dt>Durée</dt><dd>60 min</dd>
     <dt>Modalité</dt><dd>Au cabinet</dd>
   </dl>
   <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
-  <div class="actions"><a class="btn " href="#">Choisir un autre créneau</a></div>
+  <div class="actions"><a class="btn " href="#" rel="noreferrer">Choisir un autre créneau</a></div>
 </section>
 
 </main>
@@ -872,7 +876,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="g-passe" aria-label="Vue 21 : Gestion : passé">
-<p class="mq-legende"><strong>Vue 21 sur 26 · Gestion : passé</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, status past, canCancel false</p>
+<p class="mq-legende"><strong>Vue 21 sur 29 · Gestion : passé</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, status past, canCancel false</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -889,7 +893,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   </div>
   
   <dl class="detail">
-    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
     <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
     <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
     <dt>Durée</dt><dd>60 min</dd>
@@ -905,7 +909,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="g-sans-praticien" aria-label="Vue 22 : Gestion : fiche du praticien dépubliée">
-<p class="mq-legende"><strong>Vue 22 sur 26 · Gestion : fiche du praticien dépubliée</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, practitioner { slug: null, displayName: null }</p>
+<p class="mq-legende"><strong>Vue 22 sur 29 · Gestion : fiche du praticien dépubliée</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 200, practitioner { slug: null, displayName: null }</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -938,7 +942,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </footer>
 </section>
 <section class="vue" id="g-trop-tard" aria-label="Vue 23 : Gestion : trop tard pour annuler">
-<p class="mq-legende"><strong>Vue 23 sur 26 · Gestion : trop tard pour annuler</strong> · POST …/manage/cancel → 409 APPOINTMENT_NOT_ACTIVE, puis état relu</p>
+<p class="mq-legende"><strong>Vue 23 sur 29 · Gestion : trop tard pour annuler</strong> · POST …/manage/cancel → 409 APPOINTMENT_NOT_ACTIVE, puis état relu</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -955,7 +959,7 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   </div>
   <div class="bar warning" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p>Ce rendez-vous a commencé ou est terminé : il ne peut plus être annulé.</p></div>
   <dl class="detail">
-    <dt>Praticien</dt><dd><a href="#">Claire Martin</a></dd>
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
     <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
     <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
     <dt>Durée</dt><dd>60 min</dd>
@@ -970,8 +974,8 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
 </footer>
 </section>
-<section class="vue" id="g-inconnu" aria-label="Vue 24 : Gestion : lien inconnu">
-<p class="mq-legende"><strong>Vue 24 sur 26 · Gestion : lien inconnu</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 404 BOOKING_TOKEN_INVALID (ou 422 sur token)</p>
+<section class="vue" id="g-annulation-echec" aria-label="Vue 24 : Gestion : l'annulation n'a pas abouti">
+<p class="mq-legende"><strong>Vue 24 sur 29 · Gestion : l'annulation n'a pas abouti</strong> · POST …/manage/cancel → réseau, 5xx ; l’état affiché ne change pas</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -980,16 +984,22 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </header>
 <main class="public-main link-main">
 <section class="card link-card" aria-labelledby="titre-22">
-  <div class="link-head" role="alert">
-    <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/><path d="m4 4 16 16"/></svg></span>
-    <h1 id="titre-22" tabindex="-1">Ce lien n'est plus valable</h1>
+  <div class="link-head" role="status">
+    <span class="badge-icon ok" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/></svg></span>
+    <h1 id="titre-22" tabindex="-1">Votre rendez-vous</h1>
+    <span class="pill success">Confirmé</span>
     
-    <div class="link-text"><p>Utilisez le lien du dernier e-mail reçu.</p></div>
   </div>
-  
-  
+  <div class="bar danger" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><div class="bar-body"><p>L'annulation n'a pas pu être enregistrée.</p><button type="button" class="btn ">Réessayer</button></div></div>
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
   <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
-  <div class="actions"><a class="btn " href="#">Retrouver le praticien dans l'annuaire</a></div>
+  <div class="actions"><button type="button" class="btn ">Annuler mon rendez-vous</button></div>
 </section>
 
 </main>
@@ -997,8 +1007,8 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
 </footer>
 </section>
-<section class="vue" id="g-plafond" aria-label="Vue 25 : Gestion : plafond atteint">
-<p class="mq-legende"><strong>Vue 25 sur 26 · Gestion : plafond atteint</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 429 RATE_LIMITED</p>
+<section class="vue" id="g-annulation-plafond" aria-label="Vue 25 : Gestion : plafond atteint à l'annulation">
+<p class="mq-legende"><strong>Vue 25 sur 29 · Gestion : plafond atteint à l'annulation</strong> · POST …/manage/cancel → 429 RATE_LIMITED ; l’état affiché ne change pas</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -1007,9 +1017,96 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
 </header>
 <main class="public-main link-main">
 <section class="card link-card" aria-labelledby="titre-23">
+  <div class="link-head" role="status">
+    <span class="badge-icon ok" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/></svg></span>
+    <h1 id="titre-23" tabindex="-1">Votre rendez-vous</h1>
+    <span class="pill success">Confirmé</span>
+    
+  </div>
+  <div class="bar warning" role="alert"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p>L'annulation n'a pas pu être enregistrée. Trop de tentatives depuis votre connexion : réessayez dans 1 min.</p></div>
+  <dl class="detail">
+    <dt>Praticien</dt><dd><a href="#" rel="noreferrer">Claire Martin</a></dd>
+    <dt>Date</dt><dd>jeudi 26 novembre 2026</dd>
+    <dt>Heure</dt><dd><span class="mono">10:00 – 11:00</span><span class="tz">heure de votre appareil, Europe/Paris</span></dd>
+    <dt>Durée</dt><dd>60 min</dd>
+    <dt>Modalité</dt><dd>Au cabinet</dd>
+  </dl>
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><button type="button" class="btn ">Annuler mon rendez-vous</button></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-annulation-lien" aria-label="Vue 26 : Gestion : lien remplacé au moment d'annuler">
+<p class="mq-legende"><strong>Vue 26 sur 29 · Gestion : lien remplacé au moment d'annuler</strong> · POST …/manage/cancel → 404 BOOKING_TOKEN_INVALID</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-24">
+  <div class="link-head" role="alert">
+    <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/><path d="m4 4 16 16"/></svg></span>
+    <h1 id="titre-24" tabindex="-1">Ce lien n'est plus valable</h1>
+    
+    <div class="link-text"><p>Votre rendez-vous n'a pas été annulé depuis cette page. Utilisez le lien du dernier e-mail reçu.</p></div>
+  </div>
+  
+  
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><a class="btn " href="#" rel="noreferrer">Retrouver le praticien dans l'annuaire</a></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-inconnu" aria-label="Vue 27 : Gestion : lien inconnu">
+<p class="mq-legende"><strong>Vue 27 sur 29 · Gestion : lien inconnu</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 404 BOOKING_TOKEN_INVALID (ou 422 sur token)</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-25">
+  <div class="link-head" role="alert">
+    <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/><path d="m4 4 16 16"/></svg></span>
+    <h1 id="titre-25" tabindex="-1">Ce lien n'est plus valable</h1>
+    
+    <div class="link-text"><p>Utilisez le lien du dernier e-mail reçu.</p></div>
+  </div>
+  
+  
+  <div class="bar warning urgence" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg><p><strong>PsyMate n'est pas un service d'urgence.</strong> En cas d'urgence, appelez le <a href="tel:112">112</a> (urgences) ou le <a href="tel:3114">3114</a> (prévention du suicide).</p></div>
+  <div class="actions"><a class="btn " href="#" rel="noreferrer">Retrouver le praticien dans l'annuaire</a></div>
+</section>
+
+</main>
+<footer class="public-footer">
+  <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
+</footer>
+</section>
+<section class="vue" id="g-plafond" aria-label="Vue 28 : Gestion : plafond atteint">
+<p class="mq-legende"><strong>Vue 28 sur 29 · Gestion : plafond atteint</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → 429 RATE_LIMITED</p>
+<header class="public-header">
+  <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
+  <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
+  <a class="locale-switch" href="#" hreflang="en" lang="en">English</a>
+  <a class="btn" href="#">Espace praticien</a>
+</header>
+<main class="public-main link-main">
+<section class="card link-card" aria-labelledby="titre-26">
   <div class="link-head" role="alert">
     <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg></span>
-    <h1 id="titre-23" tabindex="-1">Votre rendez-vous n'a pas pu être chargé</h1>
+    <h1 id="titre-26" tabindex="-1">Votre rendez-vous n'a pas pu être chargé</h1>
     
     
   </div>
@@ -1024,8 +1121,8 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   <nav aria-label="Informations légales"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Accessibilité</a></nav>
 </footer>
 </section>
-<section class="vue" id="g-erreur" aria-label="Vue 26 : Gestion : erreur">
-<p class="mq-legende"><strong>Vue 26 sur 26 · Gestion : erreur</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → réseau, 5xx</p>
+<section class="vue" id="g-erreur" aria-label="Vue 29 : Gestion : erreur">
+<p class="mq-legende"><strong>Vue 29 sur 29 · Gestion : erreur</strong> · /rendez-vous/gerer/:token · POST /api/public/booking/manage → réseau, 5xx</p>
 <header class="public-header">
   <a class="brand" href="#"><svg class="logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 16V8h4.5a3 3 0 0 1 0 6H8"/></svg><span class="brand-name">PsyMate</span><span class="tagline">Annuaire des praticiens</span></a>
   <nav class="links" aria-label="Site"><a href="#">Annuaire</a><a href="#">Comment ça marche</a></nav>
@@ -1033,10 +1130,10 @@ textarea.input{height:auto;padding:8px 12px;resize:vertical}
   <a class="btn" href="#">Espace praticien</a>
 </header>
 <main class="public-main link-main">
-<section class="card link-card" aria-labelledby="titre-24">
+<section class="card link-card" aria-labelledby="titre-27">
   <div class="link-head" role="alert">
     <span class="badge-icon warn" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v5M12 17.5v.5"/></svg></span>
-    <h1 id="titre-24" tabindex="-1">Votre rendez-vous n'a pas pu être chargé</h1>
+    <h1 id="titre-27" tabindex="-1">Votre rendez-vous n'a pas pu être chargé</h1>
     
     <div class="link-text"><p>Vérifiez votre connexion, puis réessayez.</p></div>
   </div>
