@@ -76,9 +76,13 @@ describe('BookingManagePage (fiche 32)', () => {
       api: { manage: vi.fn().mockReturnValue(new Promise(() => undefined)) },
     });
     expect(el.querySelector('section[aria-busy="true"]')).not.toBeNull();
-    expect(el.querySelector('[role="status"]')?.getAttribute('aria-label')).toBe(
-      'Chargement de votre rendez-vous…',
-    );
+    // Le texte lisible est dans la zone status (annoncé pendant la requête) ; le squelette est muet.
+    const status = el.querySelector('[role="status"]')!;
+    expect(status.getAttribute('aria-label')).toBeNull();
+    expect(text(status)).toBe('Chargement de votre rendez-vous…');
+    const skeleton = [...status.querySelectorAll('.skel')];
+    expect(skeleton).toHaveLength(4);
+    for (const piece of skeleton) expect(piece.getAttribute('aria-hidden')).toBe('true');
     expect(el.querySelector('pm-emergency-note')).not.toBeNull();
   });
 

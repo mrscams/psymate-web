@@ -61,10 +61,13 @@ describe('BookingVerifyPage (fiche 32)', () => {
   it('vérification en cours : squelette annoncé « Vérification de votre adresse… », mention d’urgence', async () => {
     const { el } = await render({ verify: vi.fn().mockReturnValue(new Promise(() => undefined)) });
     expect(el.querySelector('section[aria-busy="true"]')).not.toBeNull();
-    expect(el.querySelector('[role="status"]')?.getAttribute('aria-label')).toBe(
-      'Vérification de votre adresse…',
-    );
-    expect(text(el.querySelector('.sr-only'))).toBe('Vérification de votre adresse…');
+    // Le texte lisible est dans la zone status (annoncé pendant la requête) ; le squelette est muet.
+    const status = el.querySelector('[role="status"]')!;
+    expect(status.getAttribute('aria-label')).toBeNull();
+    expect(text(status)).toBe('Vérification de votre adresse…');
+    const skeleton = [...status.querySelectorAll('.skel')];
+    expect(skeleton).toHaveLength(4);
+    for (const piece of skeleton) expect(piece.getAttribute('aria-hidden')).toBe('true');
     expect(el.querySelector('pm-emergency-note')).not.toBeNull();
     expect(el.querySelector('h1')).toBeNull();
   });

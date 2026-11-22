@@ -116,13 +116,14 @@ import { EmergencyNoteComponent } from './emergency-note.component';
       </section>
     } @else {
       <section class="card" aria-busy="true">
-        <div class="skeleton" role="status" [attr.aria-label]="loadingLabel()">
-          <span class="skel badge"></span>
-          <span class="skel title"></span>
-          <span class="skel line"></span>
-          <span class="skel block"></span>
+        <!-- Le texte lisible est dans la zone status (annoncé), le squelette est décoratif. -->
+        <div class="skeleton" role="status">
+          <span class="sr-only">{{ loadingLabel() }}</span>
+          <span class="skel badge" aria-hidden="true"></span>
+          <span class="skel title" aria-hidden="true"></span>
+          <span class="skel line" aria-hidden="true"></span>
+          <span class="skel block" aria-hidden="true"></span>
         </div>
-        <p class="sr-only">{{ loadingLabel() }}</p>
         <pm-emergency-note />
       </section>
     }

@@ -93,15 +93,23 @@ async function expectDetail(page: Page, request: CreatedRequest): Promise<void> 
   await expect(values.nth(4)).toHaveText(MODALITY_LABELS[request.modality]);
 }
 
-/** Ouvre la page de vérification et rend la réponse de POST …/requests/verify. */
+/**
+ * Ouvre la page de vérification et rend la réponse de POST …/requests/verify. `onManageToken` est
+ * appelé dès l'arrivée de la réponse, avant toute assertion et même si la navigation échoue ensuite :
+ * l'API ne renvoie le jeton de gestion qu'une fois, il doit rejoindre le fichier de reprise aussitôt.
+ */
 async function openVerify(
   page: Page,
   token: string,
+  onManageToken?: (manageToken: string) => void,
 ): Promise<{ body: unknown; manageToken: string | null; status: number }> {
-  const answered = page.waitForResponse(isPost(VERIFY));
+  const answered = page.waitForResponse(isPost(VERIFY)).then(async (response) => {
+    const json = (await response.json().catch(() => ({}))) as { manageToken?: string | null };
+    if (json.manageToken) onManageToken?.(json.manageToken);
+    return { response, json };
+  });
   await page.goto(`/fr/rendez-vous/confirmer/${token}`);
-  const response = await answered;
-  const json = (await response.json()) as { manageToken?: string | null };
+  const { response, json } = await answered;
   return {
     body: response.request().postDataJSON(),
     manageToken: json.manageToken ?? null,
@@ -191,6 +199,29 @@ async function expectVerifiedAgain(page: Page, state: ParcoursState, title: stri
   }
   await expect(page.locator('a[href*="/rendez-vous/gerer/"]')).toHaveCount(0);
   await expectDetail(page, state.request);
+  await expectMeta(page);
+  await expectNoAxeViolations(page);
+}
+
+/**
+ * Page de gestion rejouée à la reprise (second essai) avec le jeton de gestion enregistré : l'état
+ * lu par POST …/manage (en attente, confirmé, ou annulé si l'annulation a déjà eu lieu), le bouton
+ * d'annulation tant qu'elle est possible, axe-core.
+ */
+async function expectManagePage(page: Page, state: ParcoursState, pill: string): Promise<void> {
+  const loaded = page.waitForResponse(isPost(MANAGE));
+  await page.goto(`/fr/rendez-vous/gerer/${state.manageToken}`);
+  const response = await loaded;
+  expect(response.status()).toBe(200);
+  expect(response.request().postDataJSON()).toEqual({ token: state.manageToken });
+  await expect(page).toHaveTitle('Votre rendez-vous · PsyMate');
+  await expect(page.locator('.pill')).toHaveText(state.cancelled ? 'Annulé' : pill);
+  await expect(
+    page.getByRole('button', { name: /^Annuler mon rendez-vous$|^Annuler ma demande$/ }),
+  ).toHaveCount(state.cancelled ? 0 : 1);
+  await expectDetail(page, state.request);
+  await expectMeta(page);
+  await expectNoAxeViolations(page);
 }
 
 /** État final d'un parcours dont l'annulation est déjà enregistrée (reprise au second essai). */
@@ -205,6 +236,18 @@ async function expectCancelledByVisitor(page: Page, state: ParcoursState): Promi
     'href',
     `/fr/praticiens/${state.request.slug}/rendez-vous`,
   );
+  // Ordre au clavier depuis le titre : praticien, 112, 3114, puis l'action de l'état annulé.
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused();
+  const order: string[] = [];
+  for (let i = 0; i < 4; i++) {
+    await page.keyboard.press('Tab');
+    order.push(
+      await page.evaluate(
+        () => document.activeElement?.textContent?.replace(/\s+/g, ' ').trim() ?? '',
+      ),
+    );
+  }
+  expect(order).toEqual([state.request.displayName, '112', '3114', 'Choisir un autre créneau']);
   await expectNoAxeViolations(page);
 }
 
@@ -230,19 +273,23 @@ test.describe('parcours réel, mode manuel (claire-martin) : demande transmise, 
     const calls = recordApiCalls(page);
 
     if (state.manageToken) {
-      // Reprise : la première vérification a eu lieu à l'essai précédent.
+      // Reprise : la première vérification a eu lieu à l'essai précédent. Tout ce qui peut l'être
+      // est rejoué : vérification (vue de repli), puis page de gestion par le jeton enregistré.
       await expectVerifiedAgain(page, state, 'Votre demande est transmise');
+      await expectManagePage(page, state, 'En attente de réponse');
       await expectTokensNowhere(page, calls, [state.verifyToken!, state.manageToken]);
       return;
     }
 
-    const verified = await openVerify(page, state.verifyToken!);
+    // Le jeton de gestion rejoint le fichier de reprise dès l'arrivée de la réponse.
+    const verified = await openVerify(page, state.verifyToken!, (manageToken) => {
+      state.manageToken = manageToken;
+      parcours.save(info, state);
+    });
     expect(verified.status).toBe(200);
     // Le jeton voyage dans le corps de POST …/verify, jamais dans l'URL.
     expect(verified.body).toEqual({ token: state.verifyToken });
     expect(verified.manageToken).toBeTruthy();
-    state.manageToken = verified.manageToken;
-    parcours.save(info, state);
     const manageToken = state.manageToken!;
 
     await expect(page).toHaveTitle('Votre demande de rendez-vous · PsyMate');
@@ -306,6 +353,7 @@ test.describe('parcours réel, mode manuel (claire-martin) : demande transmise, 
     );
     expect(appointments).toHaveLength(1);
     expect(appointments[0].status).toBe(state.cancelled ? 'cancelled' : 'tentative');
+    await expectNoAxeViolations(page);
     await expectTokensNowhere(page, calls, [state.verifyToken!, state.manageToken!]);
   });
 
@@ -403,18 +451,22 @@ test.describe('parcours réel, mode automatique (karim-haddad) : rendez-vous con
     const calls = recordApiCalls(page);
 
     if (state.manageToken) {
-      // Reprise : la première vérification a eu lieu à l'essai précédent.
+      // Reprise : la première vérification a eu lieu à l'essai précédent. Tout ce qui peut l'être
+      // est rejoué : vérification (vue de repli), puis page de gestion par le jeton enregistré.
       await expectVerifiedAgain(page, state, 'Votre rendez-vous est confirmé');
+      await expectManagePage(page, state, 'Confirmé');
       await expectTokensNowhere(page, calls, [state.verifyToken!, state.manageToken]);
       return;
     }
 
-    const verified = await openVerify(page, state.verifyToken!);
+    // Le jeton de gestion rejoint le fichier de reprise dès l'arrivée de la réponse.
+    const verified = await openVerify(page, state.verifyToken!, (manageToken) => {
+      state.manageToken = manageToken;
+      parcours.save(info, state);
+    });
     expect(verified.status).toBe(200);
     expect(verified.body).toEqual({ token: state.verifyToken });
     expect(verified.manageToken).toBeTruthy();
-    state.manageToken = verified.manageToken;
-    parcours.save(info, state);
     const manageToken = state.manageToken!;
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     const title = page.getByRole('heading', { level: 1 });
@@ -458,6 +510,7 @@ test.describe('parcours réel, mode automatique (karim-haddad) : rendez-vous con
     );
     expect(appointments).toHaveLength(1);
     expect(appointments[0].status).toBe(state.cancelled ? 'cancelled' : 'planned');
+    await expectNoAxeViolations(page);
   });
 
   test('annulation au clavier seul : h1, praticien, 112, 3114, bouton ; dialogue piégé ; Échap ; Entrée', async ({
