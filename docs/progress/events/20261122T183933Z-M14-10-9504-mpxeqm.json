@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-22T18:39:33.495Z",
+  "task": "M14-10",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR #104 fusionnée en squash (091adb4) : contrat 0.15.0, préférences booking.*, modèles de l'agenda",
+  "pr": "https://github.com/mrscams/psymate-web/pull/104",
+  "branch": "suivi-m14-web",
+  "checkout": "suivi-m14-web"
+}
