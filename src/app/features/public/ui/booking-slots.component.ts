@@ -13,7 +13,7 @@ import { RouterLink } from '@angular/router';
 import { StateAction, StateComponent } from '../../../shared/ui';
 import { Loadable, stateKind } from '../../../shared/util';
 import { BookingSlot, SlotList, SlotWindow } from '../data/booking.models';
-import { groupByDay, periodLabel, retryMinutes, zoneLabel } from './booking-format';
+import { groupByDay, periodLabel, retryMinutes, windowZoneLabel } from './booking-format';
 
 /**
  * Étape 1 de la prise de rendez-vous (fiche 31, maquette vues 2, 10 à 14) : période affichée et
@@ -48,7 +48,7 @@ export class BookingSlotsComponent {
 
   protected readonly period = computed(() => periodLabel(this.window(), this.locale));
   protected readonly zone = computed(() =>
-    zoneLabel(this.zoneOf(), this.locale, new Date(`${this.window().from}T12:00:00Z`)),
+    windowZoneLabel(this.zoneOf(), this.locale, this.window()),
   );
   protected readonly kind = computed(() =>
     stateKind(this.slots(), (list) => list.slots.length === 0),

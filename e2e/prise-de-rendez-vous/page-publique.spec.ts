@@ -58,7 +58,13 @@ test.describe('prise de rendez-vous publique (fiche 31)', () => {
       await expectNoAxeViolations(page);
 
       const first = nextSlots(page, MANUAL);
+      const settings = page.waitForResponse(
+        (r) =>
+          r.request().method() === 'GET' &&
+          new URL(r.url()).pathname.endsWith(`/api/public/booking/practitioners/${MANUAL}`),
+      );
       await booking.click();
+      const { horizonDays } = (await (await settings).json()) as { horizonDays: number };
       await expect(page).toHaveURL(new RegExp(`/fr/praticiens/${MANUAL}/rendez-vous$`));
       await expect(page).toHaveTitle('Prendre rendez-vous · PsyMate');
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
@@ -119,7 +125,8 @@ test.describe('prise de rendez-vous publique (fiche 31)', () => {
         }
         await expect(previous).toBeEnabled();
       }
-      expect(windows).toBe(2);
+      // Fenêtres suivantes tant que leur premier jour ne dépasse pas aujourd'hui + horizonDays.
+      expect(windows).toBe(Math.floor(horizonDays / 14));
       await expectNoAxeViolations(page);
     });
   });
@@ -130,6 +137,7 @@ test.describe('prise de rendez-vous publique (fiche 31)', () => {
     await page.goto('/fr/praticiens/aucune-fiche-m14-12/rendez-vous');
     await expect(page).toHaveURL(/\/fr\/praticiens\/aucune-fiche-m14-12$/);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Fiche introuvable');
+    await expectNoAxeViolations(page);
   });
 
   test('mode automatique : phrase de G Q61, « Réserver ce créneau » ; forme invalide : aucune requête', async ({
@@ -253,6 +261,7 @@ test.describe('prise de rendez-vous publique (fiche 31)', () => {
     await expect(page.getByLabel('E-mail')).toBeFocused();
     expect(sent()).toBe(0);
     guard.expectNoPointer();
+    await expectNoAxeViolations(page);
   });
 
   for (const theme of ['light', 'dark'] as const) {

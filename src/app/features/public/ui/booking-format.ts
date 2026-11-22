@@ -79,6 +79,36 @@ export function zoneLabel(timeZone: string, locale: string, at: Date = new Date(
   }
 }
 
+/** Décalage d'un fuseau à un instant (« GMT+01:00 »). */
+function offsetAt(timeZone: string, at: Date): string {
+  return (
+    new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'longOffset' })
+      .formatToParts(at)
+      .find((part) => part.type === 'timeZoneName')?.value ?? ''
+  );
+}
+
+/**
+ * Fuseau nommé d'une fenêtre de créneaux. Si le décalage change entre le premier et le dernier jour
+ * (passage à l'heure d'été ou d'hiver), le nom générique (« heure d’Europe centrale »), sinon le nom
+ * du jour (« heure normale d’Europe centrale »).
+ */
+export function windowZoneLabel(timeZone: string, locale: string, window: SlotWindow): string {
+  const first = new Date(`${window.from}T12:00:00Z`);
+  const last = new Date(`${window.to}T12:00:00Z`);
+  try {
+    if (offsetAt(timeZone, first) === offsetAt(timeZone, last)) {
+      return zoneLabel(timeZone, locale, first);
+    }
+    const name = new Intl.DateTimeFormat(locale, { timeZone, timeZoneName: 'longGeneric' })
+      .formatToParts(first)
+      .find((part) => part.type === 'timeZoneName')?.value;
+    return name ? `${timeZone} (${name})` : timeZone;
+  } catch {
+    return timeZone;
+  }
+}
+
 /** « Du lundi 23 novembre au dimanche 6 décembre 2026 » (l'année au début aussi si elle change). */
 export function periodLabel(window: SlotWindow, locale: string): string {
   const sameYear = window.from.slice(0, 4) === window.to.slice(0, 4);

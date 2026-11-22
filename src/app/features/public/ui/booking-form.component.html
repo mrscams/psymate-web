@@ -136,7 +136,7 @@
       <mat-checkbox
         id="field-consent"
         formControlName="consent"
-        [attr.aria-describedby]="showError('consent', ngForm.submitted) ? 'consent-error' : null"
+        [aria-describedby]="showError('consent', ngForm.submitted) ? 'consent-error' : ''"
         i18n="Consentement de la demande de rendez-vous@@public.booking.consent"
         >J'accepte que mes coordonnées soient transmises à {{ practitionerName() }} pour traiter ma
         demande de rendez-vous.

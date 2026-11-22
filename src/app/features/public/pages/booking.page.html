@@ -153,6 +153,7 @@
               <button
                 mat-stroked-button
                 type="button"
+                [disabled]="sendStatus() === 'sending'"
                 (click)="changeSlot()"
                 i18n="Bouton Changer de créneau@@public.booking.changeSlot"
               >

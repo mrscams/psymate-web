@@ -1,4 +1,4 @@
-import { computed, inject } from '@angular/core';
+import { computed, DestroyRef, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 
 import { ApiProblem, asProblem } from '../../../core/http';
@@ -18,10 +18,11 @@ export const BOOKING_MIN_DELAY_MS = 3500;
  * Issue d'un envoi, pour l'écran (l'état de l'envoi est de l'état d'écran, fiche 31) :
  * `sent` : 202 (enregistrée ou ignorée en silence, rien ne le distingue) ; `slot-gone` : 409, les
  * créneaux sont relus ; `invalid` : 422, errors[] à poser sur les champs ; `rate-limited` : 429 ;
- * `not-available` : 404, l'écran renvoie vers la fiche ; `error` : réseau, 5xx, 400.
+ * `not-available` : 404, l'écran renvoie vers la fiche ; `error` : réseau, 5xx, 400 ;
+ * `cancelled` : la page a été quittée pendant l'attente des 3,5 s, aucune requête n'est partie.
  */
 export type BookingOutcome =
-  'sent' | 'slot-gone' | 'invalid' | 'rate-limited' | 'not-available' | 'error';
+  'sent' | 'slot-gone' | 'invalid' | 'rate-limited' | 'not-available' | 'error' | 'cancelled';
 
 export interface BookingResult {
   outcome: BookingOutcome;
@@ -68,6 +69,15 @@ export const BookingStore = signalStore(
   })),
   withMethods((store, api = inject(BookingApi)) => {
     let slotsRequest = 0;
+    /**
+     * Le store est fourni par la page : il est détruit avec elle. Un envoi encore dans l'attente
+     * des 3,5 s ne part alors pas, et aucune lecture en cours ne réécrit l'état.
+     */
+    let destroyed = false;
+    inject(DestroyRef).onDestroy(() => {
+      destroyed = true;
+      slotsRequest++;
+    });
 
     async function fetchSlots(window: SlotWindow): Promise<void> {
       const slug = store.slug();
@@ -127,6 +137,7 @@ export const BookingStore = signalStore(
         if (!slug) return { outcome: 'error', problem: null };
         const elapsed = now - Date.parse(request.formShownAt);
         if (elapsed < BOOKING_MIN_DELAY_MS) await wait(BOOKING_MIN_DELAY_MS - elapsed);
+        if (destroyed) return { outcome: 'cancelled', problem: null };
         try {
           await api.request(slug, request);
           return { outcome: 'sent', problem: null };

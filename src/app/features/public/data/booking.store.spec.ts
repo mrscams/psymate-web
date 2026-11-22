@@ -121,6 +121,18 @@ describe('BookingStore', () => {
     expect(api.request).toHaveBeenCalledTimes(1);
   });
 
+  it('store détruit pendant l’attente des 3,5 s : cancelled, aucune requête', async () => {
+    vi.useFakeTimers();
+    const { store, api } = setup({});
+    await store.load('claire-martin', NOW);
+    const shownAt = Date.now();
+    const pending = store.send(bookingRequest(shownAt), shownAt);
+    TestBed.resetTestingModule();
+    await vi.advanceTimersByTimeAsync(BOOKING_MIN_DELAY_MS + 10);
+    await expect(pending).resolves.toEqual({ outcome: 'cancelled', problem: null });
+    expect(api.request).not.toHaveBeenCalled();
+  });
+
   it('409 SLOT_NOT_AVAILABLE : slot-gone, et les créneaux sont relus par un nouveau GET', async () => {
     const fresh = { ...SLOTS, slots: SLOTS.slots.slice(1) };
     const slots = vi.fn().mockResolvedValueOnce(SLOTS).mockResolvedValueOnce(fresh);

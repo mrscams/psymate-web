@@ -93,12 +93,6 @@
   &:hover {
     border-color: var(--text-secondary);
   }
-
-  &[aria-pressed='true'] {
-    border-color: var(--primary);
-    background: var(--primary);
-    color: var(--primary-on);
-  }
 }
 
 .empty {

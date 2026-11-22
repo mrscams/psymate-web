@@ -111,6 +111,8 @@ export class BookingPage {
    */
   private readonly formShownAt = signal<string | null>(null);
   /** Créneau et modalité demandés, pour l'écran d'attente (jamais le nom ni l'adresse). */
+  /** Posé à la destruction de la page : rien ne navigue ni ne prend le focus après. */
+  private destroyed = false;
   protected readonly sent = signal<{ slot: BookingSlot; modality: BookingModality } | null>(null);
 
   protected readonly settings = computed(() => this.store.settings().data);
@@ -164,6 +166,7 @@ export class BookingPage {
   });
 
   constructor() {
+    this.destroyRef.onDestroy(() => (this.destroyed = true));
     // Données publiques sans session, réponses no-store : jamais au prérendu.
     if (this.browser) {
       effect(() => {
@@ -211,6 +214,8 @@ export class BookingPage {
 
   /** Choisir un créneau : étape 2, focus sur son titre « Vos coordonnées ». */
   protected pick(slot: BookingSlot): void {
+    // Pendant un envoi (attente des 3,5 s comprise), aucun autre créneau : un seul POST à la fois.
+    if (this.sendStatus() === 'sending') return;
     this.chosen.set(slot);
     this.slotGone.set(false);
     this.sendStatus.set('idle');
@@ -222,6 +227,7 @@ export class BookingPage {
 
   /** « Changer de créneau » : retour à l'étape 1, saisie conservée. */
   protected changeSlot(): void {
+    if (this.sendStatus() === 'sending') return;
     this.step.set('slots');
     this.focus(TITLES.slots);
   }
@@ -247,6 +253,8 @@ export class BookingPage {
       website: value.website,
       formShownAt: shownAt,
     });
+    // Page quittée pendant l'envoi : ni navigation, ni focus, ni état à écrire.
+    if (this.destroyed || result.outcome === 'cancelled') return;
     switch (result.outcome) {
       case 'sent':
         this.sent.set({ slot, modality });
@@ -273,10 +281,12 @@ export class BookingPage {
   }
 
   private toPractitioner(): void {
+    if (this.destroyed) return;
     void this.router.navigateByUrl(practitionerPath(this.slug()), { replaceUrl: true });
   }
 
   private focus(id: string): void {
+    if (this.destroyed) return;
     afterNextRender(() => this.document.getElementById(id)?.focus(), {
       injector: this.injector,
     });

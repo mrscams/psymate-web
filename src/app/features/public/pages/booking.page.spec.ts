@@ -300,7 +300,11 @@ describe('BookingPage (fiche 31)', () => {
     await settle(harness);
     await submit(el, harness);
     expect(api.request).not.toHaveBeenCalled();
-    expect(TestBed.inject(DOCUMENT).activeElement?.getAttribute('type')).toBe('checkbox');
+    const box = TestBed.inject(DOCUMENT).activeElement;
+    expect(box?.getAttribute('type')).toBe('checkbox');
+    // Le message est relié à la case native elle-même, pas à l'hôte mat-checkbox.
+    expect(box?.getAttribute('aria-describedby') ?? '').toContain('consent-error');
+    expect(el.querySelector('mat-checkbox')?.hasAttribute('aria-describedby')).toBe(false);
   });
 
   it('envoi complet : corps du contrat, écran d’attente, focus sur son titre, ni nom ni adresse', async () => {
@@ -458,6 +462,83 @@ describe('BookingPage (fiche 31)', () => {
     await settle(harness);
     await submit(el, harness);
     expect(sentBody(api).modality).toBe('in_person');
+  });
+
+  it('les créneaux sont des boutons d’action, pas des bascules (pas d’aria-pressed)', async () => {
+    const { el } = await render();
+    expect(slotButtons(el).length).toBeGreaterThan(0);
+    expect(slotButtons(el).some((b) => b.hasAttribute('aria-pressed'))).toBe(false);
+  });
+
+  it('pendant un envoi : « Changer de créneau » inactif, aucun second POST par ce chemin', async () => {
+    const request = vi.fn().mockReturnValue(new Promise(() => undefined));
+    const { el, api, harness } = await render({ request });
+    slotButtons(el)[0].click();
+    await settle(harness);
+    await fill(el, harness);
+    await submit(el, harness);
+    expect(api.request).toHaveBeenCalledTimes(1);
+    expect(text(el)).toContain('Envoi en cours…');
+    const [change] = buttons(el, 'Changer de créneau');
+    expect(change.disabled).toBe(true);
+    change.click();
+    await settle(harness);
+    // Toujours à l'étape 2 : aucun créneau ne peut être choisi, le formulaire ne repart pas.
+    expect(el.querySelector('#booking-step-details')).not.toBeNull();
+    expect(slotButtons(el)).toHaveLength(0);
+    el.querySelector<HTMLFormElement>('form')!.dispatchEvent(new Event('submit'));
+    await settle(harness);
+    expect(api.request).toHaveBeenCalledTimes(1);
+  });
+
+  it('page quittée pendant l’attente des 3,5 s : aucun appel, aucune navigation, aucune erreur', async () => {
+    const errors = vi.spyOn(console, 'error');
+    const { el, api, harness } = await render();
+    slotButtons(el)[0].click();
+    await settle(harness);
+    await fill(el, harness);
+    // Horloge non avancée : l'envoi attend les 3,5 s.
+    el.querySelector<HTMLFormElement>('form')!.dispatchEvent(new Event('submit'));
+    await settle(harness);
+    const router = TestBed.inject(Router);
+    await harness.navigateByUrl('/praticiens/claire-martin');
+    const navigate = vi.spyOn(router, 'navigateByUrl');
+    await new Promise((resolve) => setTimeout(resolve, 3800));
+    await harness.fixture.whenStable();
+    expect(api.request).not.toHaveBeenCalled();
+    expect(navigate).not.toHaveBeenCalled();
+    expect(router.url).toBe('/praticiens/claire-martin');
+    expect(errors).not.toHaveBeenCalled();
+  }, 10_000);
+
+  it.each([
+    ['400 MALFORMED_REQUEST', { status: 400, code: 'MALFORMED_REQUEST' }],
+    ['échec réseau', { status: 0, code: 'NETWORK_ERROR' }],
+  ])('%s à l’envoi : message d’échec, saisie conservée', async (_, problem) => {
+    const { el, harness } = await render({ request: vi.fn().mockRejectedValue(problem) });
+    slotButtons(el)[0].click();
+    await settle(harness);
+    await fill(el, harness);
+    await submit(el, harness);
+    expect(text(el.querySelector('form [role="alert"]'))).toBe(
+      "La demande n'a pas pu être envoyée. Votre saisie est conservée : réessayez dans un instant.",
+    );
+    expect(el.querySelector<HTMLInputElement>('#field-firstName')?.value).toBe('Sara');
+    expect(el.querySelector<HTMLInputElement>('#field-email')?.value).toBe(
+      'sara.benali@example.test',
+    );
+  });
+
+  it('404 BOOKING_NOT_AVAILABLE à l’envoi : redirection vers la fiche', async () => {
+    const { el, harness } = await render({
+      request: vi.fn().mockRejectedValue({ status: 404, code: 'BOOKING_NOT_AVAILABLE' }),
+    });
+    slotButtons(el)[0].click();
+    await settle(harness);
+    await fill(el, harness);
+    await submit(el, harness);
+    await settle(harness);
+    expect(TestBed.inject(Router).url).toBe('/praticiens/claire-martin');
   });
 });
 
