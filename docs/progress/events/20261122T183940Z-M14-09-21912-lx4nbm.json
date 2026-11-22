@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-22T18:39:40.891Z",
+  "task": "M14-09",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR #105 fusionnée en squash (04974cb) : décisions Q60 à Q66, fiches 31 et 32, maquettes",
+  "pr": "https://github.com/mrscams/psymate-web/pull/105",
+  "branch": "suivi-m14-web",
+  "checkout": "suivi-m14-web"
+}

@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-22T21:25:13.461Z",
+  "task": "M14-13",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR #112 fusionnée en squash (f6bac13) : pages par lien, vérification et gestion ; jalon M14 Prise de rendez-vous en ligne (web) terminé",
+  "next": "Fusion de Fluent 2 ; validation des numéros d'urgence et du texte de consentement ; nom d'expéditeur des e-mails ; APP_BOOKING_HASH_SECRET en production",
+  "pr": "https://github.com/mrscams/psymate-web/pull/112",
+  "branch": "suivi-m14-web",
+  "checkout": "suivi-m14-web"
+}

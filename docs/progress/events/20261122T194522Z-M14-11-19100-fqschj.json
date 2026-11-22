@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-22T19:45:22.392Z",
+  "task": "M14-11",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR #108 fusionnée en squash (ae34f7f) : section Prise de rendez-vous en ligne des préférences",
+  "pr": "https://github.com/mrscams/psymate-web/pull/108",
+  "branch": "suivi-m14-web",
+  "checkout": "suivi-m14-web"
+}

@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-22T19:45:37.430Z",
+  "task": "M14-12",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR #109 fusionnée en squash : page publique de prise de rendez-vous",
+  "pr": "https://github.com/mrscams/psymate-web/pull/109",
+  "branch": "suivi-m14-web",
+  "checkout": "suivi-m14-web"
+}
