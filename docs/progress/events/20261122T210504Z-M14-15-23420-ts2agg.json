@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-22T21:05:04.584Z",
+  "task": "M14-15",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "PR #113 fusionnée en squash : rattacher un invité à un patient",
+  "pr": "https://github.com/mrscams/psymate-web/pull/113",
+  "branch": "suivi-m14-web",
+  "checkout": "suivi-m14-web"
+}
