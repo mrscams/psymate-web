@@ -14,7 +14,13 @@ import { shoot } from '../support/captures';
  * fiches ou plus, mesure exacte : on retire la place des fiches au-delà de la dixième. Avant UX-G2a,
  * le pas entre les deux premières fiches servait pour toutes : le résultat dépendait de l'ordre des
  * fiches (une fiche courte publiée par un autre e2e en tête donnait 2 453 px au lieu de 2 273).
- * Sous 10 fiches, extrapolation par le plus grand pas observé (hypothèse la plus défavorable).
+ * Sous 10 fiches, extrapolation : la colonne des résultats s'allonge de (10 − n) pas moyens (hauteur
+ * moyenne des n fiches affichées, la dernière comprise, plus l'écart entre deux fiches), et la page
+ * ne grandit que de ce qui dépasse le bas de la colonne de filtres. Avant, on ajoutait (10 − n) fois
+ * le plus grand pas à la hauteur de la page : à 1440 px, avec 2 fiches (seed de l'API), la page avait
+ * la hauteur des filtres et l'espace vide sous la liste était compté deux fois (2 575 px extrapolés
+ * sous Windows pour 2 136 px mesurés avec 10 fiches). Sous 760 px, les filtres sont repliés (boîte
+ * nulle) : seule la liste compte.
  */
 async function heightForTenCards(page: Page): Promise<number | null> {
   return page.evaluate(() => {
@@ -26,8 +32,14 @@ async function heightForTenCards(page: Page): Promise<number | null> {
     if (cards.length >= 10) {
       return Math.round(total - (cards[cards.length - 1].bottom - cards[9].bottom));
     }
-    const stride = Math.max(...cards.slice(1).map((card, i) => card.top - cards[i].top));
-    return Math.round(total + (10 - cards.length) * stride);
+    const last = cards[cards.length - 1];
+    const gap = cards[1].top - cards[0].bottom;
+    const pitch = (last.bottom - cards[0].top + gap) / cards.length;
+    const results = document.querySelector('section.results')!.getBoundingClientRect().bottom;
+    const filters =
+      document.querySelector('#directory-filters')?.getBoundingClientRect().bottom ?? 0;
+    const growth = results + (10 - cards.length) * pitch - Math.max(results, filters);
+    return Math.round(total + Math.max(0, growth));
   });
 }
 
