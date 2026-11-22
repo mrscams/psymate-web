@@ -29,7 +29,7 @@ import {
 } from '../data/directory.models';
 import { PractitionerStore } from '../data/practitioner.store';
 import { VocabularyStore } from '../data/vocabulary.store';
-import { PUBLIC_FEATURE_PATHS } from '../public-paths';
+import { bookingPath, PUBLIC_FEATURE_PATHS } from '../public-paths';
 import { parseBio } from '../ui/bio';
 import { ContactFormComponent } from '../ui/contact-form.component';
 import { professionLabel, professionPlural, vocabularyLabel, VocabularyKind } from '../ui/labels';
@@ -83,6 +83,8 @@ export class PractitionerPage {
   protected readonly paths = PUBLIC_FEATURE_PATHS;
   protected readonly stateKind = stateKind;
   protected readonly profile = computed(() => this.store.profile().data);
+  /** /praticiens/{slug}/rendez-vous (fiche 31) : lien du bouton « Prendre rendez-vous ». */
+  protected readonly bookingLink = computed(() => bookingPath(this.slug()));
 
   protected readonly retry: StateAction = {
     label: $localize`:Bouton de l'erreur de la fiche@@public.practitioner.error.retry:Réessayer`,
@@ -157,7 +159,11 @@ export class PractitionerPage {
       void this.vocabularyStore.ensureLoaded();
       effect(() => {
         const slug = this.slug();
-        untracked(() => void this.store.load(slug));
+        untracked(() => {
+          void this.store.load(slug);
+          // Appel indépendant de la fiche : son échec ne la casse pas (fiche 09, M14).
+          void this.store.checkBooking(slug);
+        });
       });
     }
     // #contact : le formulaire n'existe qu'une fois la fiche chargée ; on y va à ce moment-là.

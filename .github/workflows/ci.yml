@@ -76,8 +76,14 @@ jobs:
         run: ./mvnw -B -q -DskipTests -Dspotless.check.skip=true package
       - name: Démarrage de l'API (profil local)
         working-directory: psymate-api
+        # Toute la suite e2e part d'une seule adresse IP, en parallèle : le plafond général des routes
+        # publiques (60 requêtes par minute et par IP, G Q24) y est relevé, sinon l'annuaire, la fiche
+        # et la prise de rendez-vous se partagent ce budget et leurs pages attendent le rejeu des 429.
+        # Les plafonds par action restent ceux de la production (5 messages de contact et 5 demandes
+        # de rendez-vous par heure et par IP) : les tests qui les vérifient en dépendent.
         run: |
-          nohup java -jar target/psymate-api-*-SNAPSHOT.jar --spring.profiles.active=local > api.log 2>&1 &
+          nohup java -jar target/psymate-api-*-SNAPSHOT.jar --spring.profiles.active=local \
+            --app.rate-limits.rules.public-directory.limit=6000 > api.log 2>&1 &
           timeout 180 bash -c 'until curl -sf http://localhost:8080/actuator/health; do sleep 3; done'
       - name: Seed small
         working-directory: psymate-api

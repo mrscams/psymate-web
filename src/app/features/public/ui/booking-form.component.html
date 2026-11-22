@@ -1,0 +1,198 @@
+<form
+  [formGroup]="form()"
+  (ngSubmit)="submit()"
+  novalidate
+  [attr.aria-labelledby]="labelledBy()"
+  #ngForm="ngForm"
+>
+  <div class="form-grid">
+    @if (serverErrors().length) {
+      <pm-form-errors
+        class="wide"
+        [errors]="serverErrors()"
+        [labels]="fieldLabels"
+        [unmatched]="unmatched"
+      />
+    }
+    <p class="hint wide" i18n="Champs obligatoires@@public.booking.required">
+      Tous les champs sont obligatoires, sauf le téléphone.
+    </p>
+
+    <div class="field">
+      <label for="field-firstName" i18n="Champ prénom@@public.booking.field.firstName"
+        >Prénom</label
+      >
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <input
+          matInput
+          id="field-firstName"
+          formControlName="firstName"
+          autocomplete="given-name"
+          required
+        />
+        @if (errorsOf('firstName'); as errors) {
+          <mat-error><ng-container *ngTemplateOutlet="warn" />{{ message(errors) }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="field">
+      <label for="field-lastName" i18n="Champ nom@@public.booking.field.lastName">Nom</label>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <input
+          matInput
+          id="field-lastName"
+          formControlName="lastName"
+          autocomplete="family-name"
+          required
+        />
+        @if (errorsOf('lastName'); as errors) {
+          <mat-error><ng-container *ngTemplateOutlet="warn" />{{ message(errors) }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="field">
+      <label for="field-email" i18n="Champ e-mail@@public.booking.field.email">E-mail</label>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <input
+          matInput
+          id="field-email"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          required
+        />
+        <mat-hint i18n="Aide du champ e-mail@@public.booking.field.email.hint"
+          >Un lien de vérification sera envoyé à cette adresse.</mat-hint
+        >
+        @if (errorsOf('email'); as errors) {
+          <mat-error><ng-container *ngTemplateOutlet="warn" />{{ message(errors) }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="field">
+      <label for="field-phone" i18n="Champ téléphone@@public.booking.field.phoneOptional"
+        >Téléphone <span class="optional">(facultatif)</span></label
+      >
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <input matInput id="field-phone" type="tel" formControlName="phone" autocomplete="tel" />
+        @if (errorsOf('phone'); as errors) {
+          <mat-error><ng-container *ngTemplateOutlet="warn" />{{ message(errors) }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    @if (singleModality(); as single) {
+      <p class="wide">
+        <strong i18n="Modalité unique@@public.booking.modality.single">Modalité :</strong>
+        {{ single }}
+      </p>
+    } @else {
+      <fieldset
+        class="wide"
+        id="field-modality"
+        [attr.aria-describedby]="showError('modality', ngForm.submitted) ? 'modality-error' : null"
+      >
+        <legend i18n="Groupe modalité@@public.booking.field.modality">Modalité</legend>
+        <!-- Boutons radio natifs (maquette 31, « choice ») : flèches pour choisir, aucune présélection. -->
+        <div class="choices">
+          @for (modality of modalities(); track modality) {
+            <label class="choice">
+              <input type="radio" name="modality" formControlName="modality" [value]="modality" />
+              <span>{{ modalityLabel(modality) }}</span>
+            </label>
+          }
+        </div>
+        @if (showError('modality', ngForm.submitted)) {
+          <p id="modality-error" class="error">
+            <ng-container *ngTemplateOutlet="warn" />
+            @if (errorsOf('modality')?.['server']; as server) {
+              <span>{{ server }}</span>
+            } @else {
+              <span i18n="Modalité non choisie@@public.booking.modality.required"
+                >Choisissez une modalité.</span
+              >
+            }
+          </p>
+        }
+      </fieldset>
+    }
+
+    <!-- Piège à robots (honeypot) : invisible et hors tabulation ; un humain ne le remplit jamais. -->
+    <div class="trap" aria-hidden="true">
+      <label for="booking-website">Website</label>
+      <input
+        id="booking-website"
+        type="text"
+        formControlName="website"
+        tabindex="-1"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="field wide consent">
+      <mat-checkbox
+        id="field-consent"
+        formControlName="consent"
+        [aria-describedby]="showError('consent', ngForm.submitted) ? 'consent-error' : ''"
+        i18n="Consentement de la demande de rendez-vous@@public.booking.consent"
+        >J'accepte que mes coordonnées soient transmises à {{ practitionerName() }} pour traiter ma
+        demande de rendez-vous.
+        <a class="privacy" [routerLink]="privacyPath" target="_blank" rel="noopener"
+          >En savoir plus sur la protection des données<span class="sr-only">
+            (nouvel onglet)</span
+          ></a
+        >.</mat-checkbox
+      >
+      @if (showError('consent', ngForm.submitted)) {
+        <p id="consent-error" class="error">
+          <ng-container *ngTemplateOutlet="warn" />
+          <span i18n="Consentement manquant@@public.booking.consent.required"
+            >Cochez cette case pour envoyer votre demande.</span
+          >
+        </p>
+      }
+    </div>
+
+    @switch (status()) {
+      @case ('rate-limited') {
+        <pm-booking-bar class="wide" level="warning" role="alert">
+          <ng-container i18n="Demande de rendez-vous, 429@@public.booking.rateLimited"
+            >Trop de demandes envoyées depuis votre connexion. Réessayez dans
+            {{ retryMinutes() }} min.</ng-container
+          >
+        </pm-booking-bar>
+      }
+      @case ('error') {
+        <pm-booking-bar class="wide" level="danger" role="alert">
+          <ng-container i18n="Demande de rendez-vous, échec d'envoi@@public.booking.error"
+            >La demande n'a pas pu être envoyée. Votre saisie est conservée : réessayez dans un
+            instant.</ng-container
+          >
+        </pm-booking-bar>
+      }
+    }
+
+    <pm-booking-bar class="wide mode" level="info" role="note">{{ mode() }}</pm-booking-bar>
+
+    <div class="actions wide">
+      <button mat-flat-button type="submit" [disabled]="status() === 'sending'">
+        {{ submitLabel() }}
+      </button>
+      @if (status() === 'sending') {
+        <span class="sending" role="status" i18n="Envoi en cours@@public.booking.sending"
+          >Envoi en cours…</span
+        >
+      }
+    </div>
+  </div>
+</form>
+
+<ng-template #warn>
+  <svg class="warn" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M12 3.5 2.5 20h19L12 3.5Z" />
+    <path d="M12 10v5M12 17.5v.5" />
+  </svg>
+</ng-template>

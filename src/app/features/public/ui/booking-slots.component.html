@@ -1,0 +1,80 @@
+<div class="period">
+  <p class="period-text">
+    <strong>{{ period() }}</strong>
+    <span i18n="Fuseau des créneaux@@public.booking.zone">Heures du praticien : {{ zone() }}</span>
+  </p>
+  <div class="period-nav">
+    <button mat-stroked-button type="button" [disabled]="!canPrevious()" (click)="previous.emit()">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="m14 6-6 6 6 6" />
+      </svg>
+      <ng-container i18n="Fenêtre de créneaux précédente@@public.booking.previous"
+        >Semaines précédentes</ng-container
+      >
+    </button>
+    <button mat-stroked-button type="button" [disabled]="!canNext()" (click)="next.emit()">
+      <ng-container i18n="Fenêtre de créneaux suivante@@public.booking.next"
+        >Semaines suivantes</ng-container
+      >
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="m10 6 6 6-6 6" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+@switch (kind()) {
+  @case ('loading') {
+    <pm-state kind="loading" skeleton="row" [lines]="4" />
+  }
+  @case ('error') {
+    <pm-state
+      kind="error"
+      title="Les créneaux n'ont pas pu être chargés."
+      i18n-title="Créneaux, erreur de chargement@@public.booking.slots.error.title"
+      [message]="errorMessage()"
+      [action]="retryAction"
+    />
+  }
+  @case ('empty') {
+    <div class="empty">
+      <pm-state
+        kind="empty"
+        title="Aucun créneau disponible pour l'instant"
+        i18n-title="Aucun créneau@@public.booking.slots.empty.title"
+        message="Vous pouvez écrire au praticien pour convenir d'un rendez-vous."
+        i18n-message="Aucun créneau, suite@@public.booking.slots.empty.message"
+      />
+      <a
+        mat-stroked-button
+        [routerLink]="practitionerLink()"
+        fragment="contact"
+        i18n="Lien vers le formulaire de contact@@public.booking.slots.empty.contact"
+        >Prendre contact</a
+      >
+    </div>
+  }
+  @default {
+    <div class="days">
+      @for (day of days(); track day.key) {
+        <section class="day" [attr.aria-label]="day.label">
+          <h3>{{ day.label }}</h3>
+          <ul class="slots">
+            @for (view of day.slots; track view.slot.startsAt) {
+              <li>
+                <button
+                  type="button"
+                  class="slot"
+                  [attr.aria-label]="view.label"
+                  (click)="pick.emit(view.slot)"
+                >
+                  {{ view.start }}
+                </button>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+  }
+}
