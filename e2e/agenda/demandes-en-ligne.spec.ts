@@ -130,16 +130,31 @@ async function getAppointment(api: APIRequestContext, id: string): Promise<Appoi
 }
 
 /**
- * Une demande en attente, autre que celles d'`exclude` : celle du seed si elle reste, sinon une
- * demande créée par le parcours public (rejeu local, second essai).
+ * Demandes en attente du seed (psymate-api, tools/seed, BookingScenario : Inès Fabre et Hugo
+ * Lenoir chez claire-martin), reconnues par l'e-mail de l'invité.
  */
-async function pendingRequest(
-  api: APIRequestContext,
-  exclude: readonly string[] = [],
-): Promise<Appointment> {
-  const left = (await pendingRequests(api)).filter((item) => !exclude.includes(item.id));
-  const withPhone = left.find((item) => item.guest?.phone);
-  return withPhone ?? left[0] ?? (await createOnlineRequest(api));
+const SEED_REQUEST_EMAILS = ['ines.fabre.rdv@example.test', 'hugo.lenoir.rdv@example.test'];
+
+/** Préfixe des adresses des demandes créées par ce fichier (rejeu). */
+const OWN_PREFIX = 'agenda-e2e.';
+
+/**
+ * Une demande qui appartient à ce fichier : du seed, ou créée ici. Les demandes des autres e2e
+ * (pages publiques M14-12, M14-13…) créées chez claire en parallèle ne sont jamais touchées.
+ */
+function isOurs(item: Appointment): boolean {
+  const email = item.guest?.email?.toLowerCase() ?? '';
+  return SEED_REQUEST_EMAILS.includes(email) || email.startsWith(OWN_PREFIX);
+}
+
+/**
+ * Une demande en attente à nous : celle du seed si elle reste, sinon une demande créée par le
+ * parcours public (rejeu local, second essai). Toute autre demande en attente est ignorée.
+ */
+async function pendingRequest(api: APIRequestContext): Promise<Appointment> {
+  const ours = (await pendingRequests(api)).filter(isOurs);
+  const withPhone = ours.find((item) => item.guest?.phone);
+  return withPhone ?? ours[0] ?? (await createOnlineRequest(api));
 }
 
 /** Jeton du lien de vérification reçu par `email` dans Mailpit (attend jusqu'à 15 s). */
@@ -187,7 +202,7 @@ async function createOnlineRequest(api: APIRequestContext): Promise<Appointment>
     // Un créneau au hasard : deux rejeux simultanés ne visent pas le même.
     const shuffled = [...slots].sort(() => Math.random() - 0.5).slice(0, 3);
     for (const slot of shuffled) {
-      const email = uniqueEmail('m14-14.demande');
+      const email = uniqueEmail(OWN_PREFIX.slice(0, -1));
       const formShownAt = new Date().toISOString();
       await new Promise((resolve) => setTimeout(resolve, 3_100));
       const sent = await visitor.post(`/api/public/booking/practitioners/${SLUG}/requests`, {

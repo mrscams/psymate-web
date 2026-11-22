@@ -15,10 +15,7 @@
     @if (online()) {
       <p class="online">
         <span class="pill info">
-          <svg class="globe" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <circle cx="12" cy="12" r="9" />
-            <path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18" />
-          </svg>
+          <pm-online-globe />
           {{ onlineLabel }}
         </span>
       </p>

@@ -28039,6 +28039,24 @@
         </context-group>
         <note priority="1" from="description">Suite masquée du nom de l&apos;entrée Demandes (« Demandes en ligne, 2 en attente »)</note>
       </trans-unit>
+      <trans-unit id="agenda.toast.alreadyCancelledRequest" datatype="html">
+        <source>Cette demande était déjà annulée.</source>
+        <target state="translated">This request had already been cancelled.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">577</context>
+        </context-group>
+        <note priority="1" from="description">Toast quand une demande en ligne refusée était déjà annulée par le demandeur</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.alreadyCancelled" datatype="html">
+        <source>Ce rendez-vous était déjà annulé.</source>
+        <target state="translated">This appointment had already been cancelled.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">578</context>
+        </context-group>
+        <note priority="1" from="description">Toast quand un rendez-vous en ligne était déjà annulé par le demandeur</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

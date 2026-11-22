@@ -227,15 +227,8 @@ textarea {
   }
 }
 
-.globe {
-  flex: none;
-  width: 14px;
-  height: 14px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.pill pm-online-globe {
+  --globe-size: 14px;
 }
 
 // Contact de l'invité : libellé à gauche, valeur à droite, une ligne par moyen.

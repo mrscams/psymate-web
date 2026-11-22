@@ -352,6 +352,7 @@ describe('AppointmentDetailComponent (fiche 15 §5)', () => {
       ok: false,
       problem: { status: 409, code: 'APPOINTMENT_NOT_ACTIVE', detail: 'Rendez-vous annulé.' },
     });
+    const network = Promise.resolve({ ok: false, problem: { status: 0, code: 'NETWORK_ERROR' } });
 
     it('en attente : pastille « Demande en ligne », invité, Contact (e-mail puis téléphone), Confirmer et Refuser neutre', async () => {
       const { el, button } = await render(request);
@@ -404,6 +405,9 @@ describe('AppointmentDetailComponent (fiche 15 §5)', () => {
       await settle(fixture);
       el.querySelector<HTMLTextAreaElement>('.inline textarea')!.value = 'créneau réservé';
       el.querySelector('.inline textarea')!.dispatchEvent(new Event('input'));
+      store.cancel.mockReturnValueOnce(
+        ok({ ...request, status: 'cancelled', cancelReason: 'créneau réservé' }) as never,
+      );
       button('Refuser la demande')!.click();
       await settle(fixture);
       expect(store.cancel).toHaveBeenCalledWith('req-1', 'créneau réservé');
@@ -424,29 +428,111 @@ describe('AppointmentDetailComponent (fiche 15 §5)', () => {
       expect(closed).not.toHaveBeenCalled();
     });
 
-    it('409 APPOINTMENT_NOT_ACTIVE (le demandeur vient d’annuler) : toast d’avertissement, détail fermé, à la confirmation comme au refus', async () => {
-      const confirmCase = await render(request);
-      confirmCase.store.confirm.mockReturnValueOnce(withdrawn as never);
-      confirmCase.button('Confirmer le rendez-vous')!.click();
-      await settle(confirmCase.fixture);
-      expect(confirmCase.toasts.toasts().map((t) => [t.level, t.message])).toEqual([
+    it('Confirmer → 409 APPOINTMENT_NOT_ACTIVE (le demandeur vient d’annuler) : toast d’avertissement, détail fermé', async () => {
+      const { fixture, button, store, toasts, closed } = await render(request);
+      store.confirm.mockReturnValueOnce(withdrawn as never);
+      button('Confirmer le rendez-vous')!.click();
+      await settle(fixture);
+      expect(toasts.toasts().map((t) => [t.level, t.message])).toEqual([
         ['warning', "Cette demande n'est plus en attente : elle vient d'être annulée."],
       ]);
-      expect(confirmCase.closed).toHaveBeenCalledWith(request);
-      TestBed.resetTestingModule();
+      expect(closed).toHaveBeenCalledWith(request);
+    });
 
-      const refuseCase = await render(request);
-      refuseCase.store.cancel.mockReturnValueOnce(withdrawn as never);
-      refuseCase.button('Refuser')!.click();
-      await settle(refuseCase.fixture);
-      refuseCase.button('Refuser la demande')!.click();
-      await settle(refuseCase.fixture);
-      expect(refuseCase.toasts.toasts().at(-1)).toMatchObject({
-        level: 'warning',
-        message: "Cette demande n'est plus en attente : elle vient d'être annulée.",
-      });
-      expect(refuseCase.closed).toHaveBeenCalledWith(request);
-      expect(refuseCase.el.querySelector('.inline .error')).toBeNull();
+    it('Refuser une demande déjà annulée par le demandeur : 200 idempotent avec un autre motif → toast neutre sans e-mail, détail fermé', async () => {
+      const { fixture, el, button, store, toasts, closed } = await render(request);
+      // L'API rend le rendez-vous tel qu'il était : annulé, sans le motif que l'on vient d'envoyer.
+      store.cancel.mockReturnValueOnce(
+        ok({ ...request, status: 'cancelled', cancelReason: null }) as never,
+      );
+      button('Refuser')!.click();
+      await settle(fixture);
+      el.querySelector<HTMLTextAreaElement>('.inline textarea')!.value = 'complet';
+      el.querySelector('.inline textarea')!.dispatchEvent(new Event('input'));
+      button('Refuser la demande')!.click();
+      await settle(fixture);
+      expect(store.cancel).toHaveBeenCalledWith('req-1', 'complet');
+      expect(toasts.toasts().map((t) => [t.level, t.message])).toEqual([
+        ['info', 'Cette demande était déjà annulée.'],
+      ]);
+      expect(toasts.toasts().some((t) => t.message.includes('e-mail'))).toBe(false);
+      expect(closed).toHaveBeenCalledWith(request);
+    });
+
+    it('Refuser sans motif : motif renvoyé vide ou null = identique → toast du refus', async () => {
+      const { fixture, button, store, toasts } = await render(request);
+      store.cancel.mockReturnValueOnce(ok({ ...request, status: 'cancelled' }) as never);
+      button('Refuser')!.click();
+      await settle(fixture);
+      button('Refuser la demande')!.click();
+      await settle(fixture);
+      expect(store.cancel).toHaveBeenCalledWith('req-1', undefined);
+      expect(toasts.toasts().map((t) => t.message)).toEqual([
+        'Demande refusée. Le demandeur est prévenu par e-mail.',
+      ]);
+    });
+
+    it('Annuler un rendez-vous en ligne confirmé déjà annulé par le demandeur : toast neutre, détail fermé', async () => {
+      const planned = { ...request, status: 'planned' as const };
+      const { fixture, el, button, store, toasts, closed } = await render(planned);
+      store.cancel.mockReturnValueOnce(
+        ok({ ...planned, status: 'cancelled', cancelReason: null }) as never,
+      );
+      button('Annuler')!.click();
+      await settle(fixture);
+      el.querySelector<HTMLTextAreaElement>('.inline textarea')!.value = 'empêchement';
+      el.querySelector('.inline textarea')!.dispatchEvent(new Event('input'));
+      button('Annuler le rendez-vous')!.click();
+      await settle(fixture);
+      expect(toasts.toasts().map((t) => [t.level, t.message])).toEqual([
+        ['info', 'Ce rendez-vous était déjà annulé.'],
+      ]);
+      expect(closed).toHaveBeenCalledWith(planned);
+    });
+
+    it('échec réseau (status 0) sur Confirmer : message, détail ouvert, action rejouable', async () => {
+      const { fixture, button, store, toasts, closed } = await render(request);
+      store.confirm.mockReturnValueOnce(network as never);
+      button('Confirmer le rendez-vous')!.click();
+      await settle(fixture);
+      expect(toasts.toasts().map((t) => [t.level, t.message])).toEqual([
+        ['warning', "L'action n'a pas abouti. Réessayez dans un instant."],
+      ]);
+      expect(closed).not.toHaveBeenCalled();
+      const again = button('Confirmer le rendez-vous')!;
+      expect(again.disabled).toBe(false);
+      again.click();
+      await settle(fixture);
+      expect(store.confirm).toHaveBeenCalledTimes(2);
+    });
+
+    it('échec réseau (status 0) sur Refuser : message dans le formulaire, formulaire et motif gardés, action rejouable', async () => {
+      const { fixture, el, button, store, toasts, closed } = await render(request);
+      store.cancel.mockReturnValueOnce(network as never);
+      button('Refuser')!.click();
+      await settle(fixture);
+      el.querySelector<HTMLTextAreaElement>('.inline textarea')!.value = 'complet';
+      el.querySelector('.inline textarea')!.dispatchEvent(new Event('input'));
+      button('Refuser la demande')!.click();
+      await settle(fixture);
+      expect(text(el.querySelector('.inline .error'))).toBe(
+        "L'action n'a pas abouti. Réessayez dans un instant.",
+      );
+      expect(el.querySelector<HTMLTextAreaElement>('.inline textarea')!.value).toBe('complet');
+      expect(toasts.toasts()).toEqual([]);
+      expect(closed).not.toHaveBeenCalled();
+      store.cancel.mockReturnValueOnce(
+        ok({ ...request, status: 'cancelled', cancelReason: 'complet' }) as never,
+      );
+      const submit = button('Refuser la demande')!;
+      expect(submit.disabled).toBe(false);
+      submit.click();
+      await settle(fixture);
+      expect(store.cancel).toHaveBeenCalledTimes(2);
+      expect(toasts.toasts().map((t) => t.message)).toEqual([
+        'Demande refusée. Le demandeur est prévenu par e-mail.',
+      ]);
+      expect(closed).toHaveBeenCalledWith(request);
     });
 
     it('confirmée (planned) : mention gardée, « Annuler » rouge ; Annuler et Déplacer disent que le demandeur sera prévenu', async () => {

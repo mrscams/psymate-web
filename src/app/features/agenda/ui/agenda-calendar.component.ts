@@ -1,4 +1,4 @@
-import { LocationStrategy, NgTemplateOutlet } from '@angular/common';
+import { LocationStrategy } from '@angular/common';
 import {
   afterRenderEffect,
   ChangeDetectionStrategy,
@@ -49,6 +49,7 @@ import {
   onlineMention,
   statusLabel,
 } from './agenda-format';
+import { OnlineGlobeComponent } from './online-globe.component';
 
 /** Vue de la barre d'outils → vue FullCalendar (la liste couvre 30 jours, fiche 15). */
 const FC_VIEWS: Record<AgendaView, string> = {
@@ -110,7 +111,7 @@ function hourTime(hour: number): string {
  */
 @Component({
   selector: 'pm-agenda-calendar',
-  imports: [FullCalendarModule, NgTemplateOutlet],
+  imports: [FullCalendarModule, OnlineGlobeComponent],
   templateUrl: './agenda-calendar.component.html',
   // La mention « Demande en ligne » a sa feuille (M14-14) : chaque feuille reste sous 8 kB.
   styleUrls: ['./agenda-calendar.component.scss', './agenda-calendar.online.scss'],

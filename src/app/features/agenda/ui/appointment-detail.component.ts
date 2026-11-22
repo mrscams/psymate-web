@@ -44,6 +44,7 @@ import {
   modalityTitle,
   onlineMention,
 } from './agenda-format';
+import { OnlineGlobeComponent } from './online-globe.component';
 
 /** Champ du contrat (errors[].field d'un 422 du PATCH) → contrôle du formulaire Déplacer. */
 const MOVE_FIELDS: Record<string, string> = { startsAt: 'start', durationMin: 'duration' };
@@ -56,6 +57,11 @@ type NoteStatus = 'idle' | 'saving' | 'saved' | 'error';
 /** Le demandeur vient d'annuler sa demande : `409 APPOINTMENT_NOT_ACTIVE` sur une demande en attente. */
 export function isWithdrawn(problem: ApiProblem): boolean {
   return problem.status === 409 && problem.code === 'APPOINTMENT_NOT_ACTIVE';
+}
+
+/** Deux motifs d'annulation identiques (absent, vide et null se valent). */
+export function sameReason(a: string | null | undefined, b: string | null | undefined): boolean {
+  return (a?.trim() || null) === (b?.trim() || null);
 }
 
 /** Message d'un problème d'écriture : le `detail` du serveur, sinon une phrase générique. */
@@ -83,7 +89,9 @@ export function problemText(problem: ApiProblem): string {
  * ligne » ; en attente, « Refuser » (neutre) remplace « Annuler » et ouvre le formulaire
  * d'annulation sous le titre « Refuser cette demande ? » ; quand l'invité a un e-mail, les
  * formulaires disent que le demandeur sera prévenu (jamais du motif). `409 APPOINTMENT_NOT_ACTIVE`
- * sur une demande en attente (le demandeur vient d'annuler) : toast, relecture, détail fermé.
+ * à la confirmation d'une demande en attente (le demandeur vient d'annuler) : toast, relecture,
+ * détail fermé. Au refus ou à l'annulation, l'API répond 200 sur un rendez-vous déjà annulé : un
+ * motif renvoyé différent de celui envoyé le révèle (toast neutre, relecture, détail fermé).
  */
 @Component({
   selector: 'pm-appointment-detail',
@@ -93,6 +101,7 @@ export function problemText(problem: ApiProblem): string {
     StateComponent,
     DateFieldComponent,
     FieldErrorsComponent,
+    OnlineGlobeComponent,
   ],
   templateUrl: './appointment-detail.component.html',
   styleUrl: './appointment-detail.component.scss',
@@ -549,16 +558,26 @@ export class AppointmentDetailComponent {
     }
     const reason = this.cancelForm.getRawValue().reason.trim();
     const refusing = this.pendingRequest();
+    const online = this.online();
     const notifies = this.notifiesRequester();
     this.busy.set(true);
     const result = await this.store.cancel(item.id, reason || undefined);
     this.busy.set(false);
     if (!result.ok) {
-      if (refusing && isWithdrawn(result.problem)) {
-        this.withdrawn(item);
-        return;
-      }
       this.actionError.set(problemText(result.problem));
+      return;
+    }
+    // `POST …/cancel` est idempotent : sur un rendez-vous déjà annulé (le demandeur vient
+    // d'annuler), il répond 200 avec le motif d'origine. Un motif renvoyé différent de celui
+    // envoyé dit que rien n'a changé : aucun e-mail n'est parti, le motif n'est pas enregistré.
+    if (online && !sameReason(result.value.cancelReason, reason)) {
+      this.mode.set('idle');
+      this.toasts.info(
+        refusing
+          ? $localize`:Toast quand une demande en ligne refusée était déjà annulée par le demandeur@@agenda.toast.alreadyCancelledRequest:Cette demande était déjà annulée.`
+          : $localize`:Toast quand un rendez-vous en ligne était déjà annulé par le demandeur@@agenda.toast.alreadyCancelled:Ce rendez-vous était déjà annulé.`,
+      );
+      this.closed.emit(item);
       return;
     }
     if (refusing && notifies) {

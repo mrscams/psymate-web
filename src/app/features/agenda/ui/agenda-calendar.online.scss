@@ -3,16 +3,9 @@
 // `.pm-calendar` comme le reste du calendrier. Jamais par la couleur seule : un texte, ou un globe
 // décoratif dont le texte reste dans le nom accessible du lien.
 .pm-calendar {
-  .globe {
-    flex: none;
-    width: 12px;
-    height: 12px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.7;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    vertical-align: -2px;
+  // Le globe (pm-online-globe) : 12 px dans la grille et le mois, 14 px dans la pastille de liste.
+  .fc-daygrid-event pm-online-globe {
+    align-self: center;
   }
 
   // Grille : une ligne sous les heures ; le bloc est le conteneur mesuré (largeur et hauteur).
@@ -70,10 +63,6 @@
     color: var(--info);
     font: 600 12px/1.4 var(--font-ui);
     white-space: nowrap;
-
-    .globe {
-      width: 14px;
-      height: 14px;
-    }
+    --globe-size: 14px;
   }
 }
