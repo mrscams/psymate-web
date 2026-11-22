@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-22T18:05:31.836Z",
+  "task": "M14-09",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Prise de rendez-vous en ligne : G12 (Q60 à Q66), plan K sur main, fiches 31 et 32, compléments des fiches 09, 14 et 15, quatre maquettes HTML Fluent 2 (62 vues, deux thèmes)",
+  "notes": "Documentation seulement, pnpm lint vert ; maquettes vérifiées vue par vue à 1440 et 390 px, clair et sombre (aucun débordement, axe-core 0 violation) ; numéros d'urgence 112 et 3114 à valider par l'utilisateur ; les réponses d'erreur ne portent pas le slug du praticien (lien vers l'annuaire) ; check:tokens, test, build et e2e non lancés (aucune source touchée)",
+  "next": "M14-10 (contrat 0.15.0), puis M14-11, M14-12 et M14-14 en parallèle sur les maquettes publiées",
+  "pr": "https://github.com/mrscams/psymate-web/pull/105",
+  "branch": "M14-09-prise-rdv-fiches-maquettes",
+  "checkout": "agent-a70df34fd7efd3db6"
+}
