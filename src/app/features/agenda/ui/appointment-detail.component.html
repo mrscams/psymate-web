@@ -251,6 +251,7 @@
             type="submit"
             class="primary"
             [disabled]="busy()"
+            [attr.aria-describedby]="notifiesRequester() ? ids.attachHint : null"
             i18n="Valider le rattachement@@agenda.attach.submit"
           >
             Rattacher

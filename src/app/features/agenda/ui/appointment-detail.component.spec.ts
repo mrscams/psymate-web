@@ -712,9 +712,13 @@ describe('AppointmentDetailComponent (fiche 15 §5)', () => {
       const { fixture, el } = await render(request);
       attachButton(el)!.click();
       await settle(fixture);
-      expect(text(el.querySelector('.inline .hint'))).toBe(
+      const hint = el.querySelector('.inline .hint')!;
+      expect(text(hint)).toBe(
         "Après le rattachement, le demandeur ne recevra plus d'e-mails automatiques.",
       );
+      expect(
+        el.querySelector('.inline button[type=submit]')!.getAttribute('aria-describedby'),
+      ).toBe(hint.id);
       TestBed.resetTestingModule();
 
       const silent = await render({ ...request, guest: guestOf({ email: null }) });
