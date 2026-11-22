@@ -5,6 +5,7 @@ import {
   CreateBookingRequestLocaleEnum,
   CreateBookingRequestModalityEnum,
   PriseDeRendezVousEnLigneService,
+  PublicAppointmentDto,
   PublicBookingDto,
   PublicSlotsDto,
 } from '../../../api';
@@ -12,6 +13,9 @@ import {
   BOOKING_MODALITIES,
   BookingModality,
   BookingRequest,
+  CancelledBy,
+  PublicAppointment,
+  PublicAppointmentStatus,
   PublicBooking,
   SlotList,
   SlotWindow,
@@ -70,6 +74,55 @@ export class BookingApi {
       }),
     );
   }
+
+  /**
+   * POST /api/public/booking/requests/verify (fiche 32) : le jeton du lien voyage dans le corps,
+   * jamais dans l'URL. Idempotent pour une demande déjà vérifiée (même après les 30 minutes) ;
+   * `manageToken` seulement à la première vérification. 404, 409, 410, 422, 429 en ApiProblem.
+   */
+  async verify(token: string): Promise<PublicAppointment> {
+    return toAppointment(await firstValueFrom(this.booking.verifyBookingRequest({ token })));
+  }
+
+  /** POST /api/public/booking/manage : état du rendez-vous par le lien de gestion (jeton dans le corps). */
+  async manage(token: string): Promise<PublicAppointment> {
+    return toAppointment(await firstValueFrom(this.booking.getManagedBooking({ token })));
+  }
+
+  /**
+   * POST /api/public/booking/manage/cancel : annule (idempotent sur un rendez-vous déjà annulé) ;
+   * 409 APPOINTMENT_NOT_ACTIVE si le rendez-vous a commencé ou est terminé.
+   */
+  async cancel(token: string): Promise<PublicAppointment> {
+    return toAppointment(await firstValueFrom(this.booking.cancelManagedBooking({ token })));
+  }
+}
+
+const APPOINTMENT_STATUSES: readonly PublicAppointmentStatus[] = [
+  'pending',
+  'confirmed',
+  'cancelled',
+  'past',
+];
+const CANCELLED_BY: readonly CancelledBy[] = ['visitor', 'practitioner', 'expired'];
+
+function toAppointment(dto: PublicAppointmentDto): PublicAppointment {
+  const status = APPOINTMENT_STATUSES.find((value) => value === dto.status) ?? 'pending';
+  const [modality] = toModalities(dto.modality ? [dto.modality] : []);
+  return {
+    status,
+    cancelledBy: CANCELLED_BY.find((value) => value === dto.cancelledBy) ?? null,
+    startsAt: dto.startsAt ?? '',
+    endsAt: dto.endsAt ?? '',
+    durationMin: dto.durationMin ?? 0,
+    modality: modality ?? 'in_person',
+    practitioner: {
+      slug: dto.practitioner?.slug || null,
+      displayName: dto.practitioner?.displayName || null,
+    },
+    canCancel: dto.canCancel === true,
+    manageToken: dto.manageToken || null,
+  };
 }
 
 function toModalities(values: string[] | undefined): BookingModality[] {

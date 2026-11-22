@@ -14,6 +14,8 @@ describe('routes publiques : largeur du contenu (UX-A9c)', () => {
   it.each([
     'praticiens/:slug',
     'praticiens/:slug/rendez-vous',
+    'rendez-vous/confirmer/:token',
+    'rendez-vous/gerer/:token',
     'comment-ca-marche',
     'mentions-legales',
     'confidentialite',
@@ -31,5 +33,17 @@ describe('prise de rendez-vous (fiche 31)', () => {
     expect(route?.loadComponent).toBeDefined();
     expect(route?.component).toBeUndefined();
     expect(route?.title).toBe('Prendre rendez-vous · PsyMate');
+  });
+});
+
+describe('pages par lien (fiche 32)', () => {
+  it.each([
+    ['rendez-vous/confirmer/:token', 'Votre demande de rendez-vous · PsyMate'],
+    ['rendez-vous/gerer/:token', 'Votre rendez-vous · PsyMate'],
+  ])('%s : chargée à la demande, titre « %s »', (path, title) => {
+    const route = PUBLIC_ROUTES.find((r) => r.path === path);
+    expect(route?.loadComponent).toBeDefined();
+    expect(route?.component).toBeUndefined();
+    expect(route?.title).toBe(title);
   });
 });

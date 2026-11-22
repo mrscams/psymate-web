@@ -17,6 +17,11 @@ export interface PublicPageMeta {
   ogType?: 'website' | 'profile';
   /** Données structurées JSON-LD (fiche 09 : Person minimal), ou null. */
   jsonLd?: Record<string, unknown> | null;
+  /**
+   * `<meta name="referrer">` (fiche 32) : no-referrer sur les pages dont le chemin porte un jeton,
+   * pour qu'il ne parte dans aucun en-tête Referer ; absent : aucune balise.
+   */
+  referrer?: 'no-referrer';
 }
 
 const MANAGED_SELECTOR = '[data-pm-public-meta]';
@@ -54,12 +59,14 @@ export class PublicMeta {
     this.tag('property', 'og:site_name', 'PsyMate');
     this.links(page.canonicalPath);
     this.jsonLd(page.jsonLd ?? null);
+    if (page.referrer) this.tag('name', 'referrer', page.referrer);
+    else this.meta.removeTag('name="referrer"');
     destroyRef?.onDestroy(() => this.clear());
   }
 
   /** Retire toutes les balises posées par `apply`. */
   clear(): void {
-    for (const name of ['description', 'robots']) this.meta.removeTag(`name="${name}"`);
+    for (const name of ['description', 'robots', 'referrer']) this.meta.removeTag(`name="${name}"`);
     for (const property of ['og:title', 'og:description', 'og:type', 'og:site_name']) {
       this.meta.removeTag(`property="${property}"`);
     }

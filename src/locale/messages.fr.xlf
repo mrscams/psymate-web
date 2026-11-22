@@ -26124,6 +26124,502 @@
         </context-group>
         <note priority="1" from="description">Plages enregistrées</note>
       </trans-unit>
+      <trans-unit id="public.bookingLink.manage.cancelRetry" datatype="html">
+        <source> Réessayer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/booking-manage.page.ts</context>
+          <context context-type="linenumber">67,71</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Réessayer de l&apos;annulation</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.loading" datatype="html">
+        <source>Chargement de votre rendez-vous…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/booking-manage.page.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+        <note priority="1" from="description">Annonce pendant le chargement du rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.meta.description" datatype="html">
+        <source>État de votre rendez-vous pris en ligne avec un praticien de l&apos;annuaire PsyMate.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/booking-manage.page.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+        <note priority="1" from="description">Description de la page de gestion d&apos;un rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.dialog.requestTitle" datatype="html">
+        <source>Annuler cette demande ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/booking-manage.page.ts</context>
+          <context context-type="linenumber">175</context>
+        </context-group>
+        <note priority="1" from="description">Titre du dialogue d&apos;annulation d&apos;une demande</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.dialog.appointmentTitle" datatype="html">
+        <source>Annuler ce rendez-vous ?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/booking-manage.page.ts</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+        <note priority="1" from="description">Titre du dialogue d&apos;annulation d&apos;un rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.dialog.text" datatype="html">
+        <source>Le praticien sera prévenu par e-mail. Pour un autre créneau, il faudra refaire une demande.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/booking-manage.page.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <note priority="1" from="description">Texte du dialogue d&apos;annulation</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.dialog.confirmRequest" datatype="html">
+        <source>Annuler la demande</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/booking-manage.page.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation de l&apos;annulation d&apos;une demande</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.dialog.confirmAppointment" datatype="html">
+        <source>Annuler le rendez-vous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/booking-manage.page.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+        <note priority="1" from="description">Confirmation de l&apos;annulation d&apos;un rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.dialog.keep" datatype="html">
+        <source>Garder</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/booking-manage.page.ts</context>
+          <context context-type="linenumber">181</context>
+        </context-group>
+        <note priority="1" from="description">Bouton qui garde le rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.loading" datatype="html">
+        <source>Vérification de votre adresse…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/booking-verify.page.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <note priority="1" from="description">Annonce pendant la vérification de l&apos;e-mail</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.meta.description" datatype="html">
+        <source>Vérification de votre adresse e-mail pour une demande de rendez-vous en ligne PsyMate.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/pages/booking-verify.page.ts</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <note priority="1" from="description">Description de la page de vérification d&apos;une demande de rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.pageTitle" datatype="html">
+        <source>Votre demande de rendez-vous · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/public.routes.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de la vérification d&apos;une demande de rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.pageTitle" datatype="html">
+        <source>Votre rendez-vous · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/public.routes.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de la gestion d&apos;un rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.rebook" datatype="html">
+        <source>Choisir un autre créneau</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-card.component.ts</context>
+          <context context-type="linenumber">78,82</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers les créneaux du praticien</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.directory" datatype="html">
+        <source>Retrouver le praticien dans l&apos;annuaire</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-card.component.ts</context>
+          <context context-type="linenumber">88,91</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers l&apos;annuaire</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.retry" datatype="html">
+        <source> Réessayer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-card.component.ts</context>
+          <context context-type="linenumber">98,101</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Réessayer d&apos;une page par lien</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.detail.practitioner" datatype="html">
+        <source>Praticien</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-detail.component.ts</context>
+          <context context-type="linenumber">28,30</context>
+        </context-group>
+        <note priority="1" from="description">Terme du détail, praticien</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.detail.date" datatype="html">
+        <source>Date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-detail.component.ts</context>
+          <context context-type="linenumber">33,35</context>
+        </context-group>
+        <note priority="1" from="description">Terme du détail, date</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.detail.time" datatype="html">
+        <source>Heure</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-detail.component.ts</context>
+          <context context-type="linenumber">35,38</context>
+        </context-group>
+        <note priority="1" from="description">Terme du détail, heure</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.detail.durationTerm" datatype="html">
+        <source>Durée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-detail.component.ts</context>
+          <context context-type="linenumber">40,42</context>
+        </context-group>
+        <note priority="1" from="description">Terme du détail, durée</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.detail.modality" datatype="html">
+        <source>Modalité</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-detail.component.ts</context>
+          <context context-type="linenumber">42,47</context>
+        </context-group>
+        <note priority="1" from="description">Terme du détail, modalité</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.detail.zone" datatype="html">
+        <source>heure de votre appareil, <x id="zone" equiv-text="timeZone"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-format.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <note priority="1" from="description">Fuseau des heures d&apos;un rendez-vous par lien</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.detail.duration" datatype="html">
+        <source><x id="minutes" equiv-text="appointment.durationMin"/> min</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-format.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <note priority="1" from="description">Durée d&apos;un rendez-vous par lien</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.invalid.title" datatype="html">
+        <source>Ce lien n&apos;est plus valable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">Titre, lien plus valable</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.rateLimited" datatype="html">
+        <source>Trop de tentatives depuis votre connexion. Réessayez dans <x id="minutes" equiv-text="minutes"/> min.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <note priority="1" from="description">Plafond atteint (429) sur une page par lien</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.cause.visitor" datatype="html">
+        <source>Vous avez annulé ce rendez-vous.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Cause d&apos;une annulation, le demandeur</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.cause.practitioner" datatype="html">
+        <source>Le praticien a annulé ce rendez-vous.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <note priority="1" from="description">Cause d&apos;une annulation, le praticien</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.cause.expired" datatype="html">
+        <source>La demande a expiré : le praticien n&apos;a pas répondu à temps.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <note priority="1" from="description">Cause d&apos;une annulation, expiration</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.manageFallback" datatype="html">
+        <source>Pour suivre ou annuler votre demande, utilisez le lien de l&apos;e-mail que nous vous avons envoyé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Repli quand le lien de gestion n&apos;est pas renvoyé</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.pending.title" datatype="html">
+        <source>Votre demande est transmise</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <note priority="1" from="description">Titre, demande transmise</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.manageRequest" datatype="html">
+        <source>Gérer ma demande</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la gestion d&apos;une demande</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.confirmed.title" datatype="html">
+        <source>Votre rendez-vous est confirmé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+        <note priority="1" from="description">Titre, rendez-vous confirmé</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.confirmed.text" datatype="html">
+        <source>Vous recevez un e-mail de confirmation avec le lien pour le gérer.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <note priority="1" from="description">Texte, rendez-vous confirmé</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.manageAppointment" datatype="html">
+        <source>Gérer mon rendez-vous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+        <note priority="1" from="description">Lien vers la gestion d&apos;un rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.cancelled.title" datatype="html">
+        <source>Ce rendez-vous est annulé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+        <note priority="1" from="description">Titre, lien rouvert sur un rendez-vous annulé</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.past.title" datatype="html">
+        <source>Ce rendez-vous est passé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+        <note priority="1" from="description">Titre, lien rouvert sur un rendez-vous passé</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.expired.text" datatype="html">
+        <source>Le lien de vérification est valable <x id="minutes" equiv-text="minutes"/> minutes : celui-ci a expiré. Aucune demande n&apos;a été transmise au praticien.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">170</context>
+        </context-group>
+        <note priority="1" from="description">Texte, lien de vérification expiré (410)</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.closed.title" datatype="html">
+        <source>Ce praticien ne propose plus la prise de rendez-vous en ligne</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+        <note priority="1" from="description">Titre, prise de rendez-vous fermée (404 BOOKING_NOT_AVAILABLE)</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.closed.text" datatype="html">
+        <source>Aucun rendez-vous n&apos;a été créé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+        <note priority="1" from="description">Texte, aucun rendez-vous créé</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.unknown.text" datatype="html">
+        <source>Nous ne reconnaissons pas ce lien : il est peut-être incomplet, ou la demande a été effacée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">194</context>
+        </context-group>
+        <note priority="1" from="description">Texte, lien de vérification inconnu (404, 422)</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.alreadyActive.title" datatype="html">
+        <source>Vous avez déjà un rendez-vous à venir avec ce praticien</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">204</context>
+        </context-group>
+        <note priority="1" from="description">Titre, rendez-vous déjà actif (409 BOOKING_ALREADY_ACTIVE)</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.alreadyActive.text" datatype="html">
+        <source>Aucune nouvelle demande n&apos;a été créée. Pour suivre ou annuler votre rendez-vous, utilisez le lien du dernier e-mail reçu.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+        <note priority="1" from="description">Texte, rendez-vous déjà actif</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.slotTaken.title" datatype="html">
+        <source>Ce créneau n&apos;est plus disponible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">215</context>
+        </context-group>
+        <note priority="1" from="description">Titre, créneau plus disponible (409 SLOT_TAKEN)</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.slotTaken.text" datatype="html">
+        <source>Aucun rendez-vous n&apos;a été créé. Choisissez un autre créneau sur la page du praticien.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">217</context>
+        </context-group>
+        <note priority="1" from="description">Texte, créneau plus disponible</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.failed.title" datatype="html">
+        <source>La vérification n&apos;a pas abouti</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">222</context>
+        </context-group>
+        <note priority="1" from="description">Titre, vérification en échec</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.verify.error.text" datatype="html">
+        <source>Vérifiez votre connexion, puis réessayez : votre lien reste valable.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">239</context>
+        </context-group>
+        <note priority="1" from="description">Texte, vérification en échec (réseau, 5xx)</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.title" datatype="html">
+        <source>Votre rendez-vous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">249</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la page de gestion</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.pending.title" datatype="html">
+        <source>Votre demande de rendez-vous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">260</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la page de gestion, demande en attente</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.pending.pill" datatype="html">
+        <source>En attente de réponse</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">263</context>
+        </context-group>
+        <note priority="1" from="description">Pastille, en attente</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.pending.text" datatype="html">
+        <source>Le praticien vous répondra par e-mail.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">266</context>
+        </context-group>
+        <note priority="1" from="description">Texte, demande en attente</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.cancelRequest" datatype="html">
+        <source>Annuler ma demande</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">272</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;annulation d&apos;une demande</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.confirmed.pill" datatype="html">
+        <source>Confirmé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">285</context>
+        </context-group>
+        <note priority="1" from="description">Pastille, confirmé</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.cancelAppointment" datatype="html">
+        <source>Annuler mon rendez-vous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">291</context>
+        </context-group>
+        <note priority="1" from="description">Bouton d&apos;annulation d&apos;un rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.cancelled.pill" datatype="html">
+        <source>Annulé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">305</context>
+        </context-group>
+        <note priority="1" from="description">Pastille, annulé</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.past.pill" datatype="html">
+        <source>Passé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">321</context>
+        </context-group>
+        <note priority="1" from="description">Pastille, passé</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.lastEmail" datatype="html">
+        <source>Utilisez le lien du dernier e-mail reçu.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">328</context>
+        </context-group>
+        <note priority="1" from="description">Renvoi vers le dernier e-mail</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.failed.title" datatype="html">
+        <source>Votre rendez-vous n&apos;a pas pu être chargé</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">343</context>
+        </context-group>
+        <note priority="1" from="description">Titre, rendez-vous non chargé</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.error.text" datatype="html">
+        <source>Vérifiez votre connexion, puis réessayez.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">360</context>
+        </context-group>
+        <note priority="1" from="description">Texte, rendez-vous non chargé (réseau, 5xx)</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.cancelLinkInvalid.text" datatype="html">
+        <source>Votre rendez-vous n&apos;a pas été annulé depuis cette page. Utilisez le lien du dernier e-mail reçu.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">374</context>
+        </context-group>
+        <note priority="1" from="description">Texte, lien remplacé au moment d&apos;annuler</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.tooLate" datatype="html">
+        <source>Ce rendez-vous a commencé ou est terminé : il ne peut plus être annulé.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">387</context>
+        </context-group>
+        <note priority="1" from="description">Annulation refusée, rendez-vous commencé (409)</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.cancelRateLimited" datatype="html">
+        <source>L&apos;annulation n&apos;a pas pu être enregistrée. Trop de tentatives depuis votre connexion : réessayez dans <x id="minutes" equiv-text="minutes"/> min.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">390</context>
+        </context-group>
+        <note priority="1" from="description">Annulation, plafond atteint (429)</note>
+      </trans-unit>
+      <trans-unit id="public.bookingLink.manage.cancelError" datatype="html">
+        <source>L&apos;annulation n&apos;a pas pu être enregistrée.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
+          <context context-type="linenumber">393</context>
+        </context-group>
+        <note priority="1" from="description">Annulation en échec (réseau, 5xx)</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

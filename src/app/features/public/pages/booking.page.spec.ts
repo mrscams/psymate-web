@@ -19,6 +19,9 @@ async function render(api: Partial<Mock> = {}) {
     settings: vi.fn().mockResolvedValue(CLAIRE_BOOKING),
     slots: vi.fn().mockResolvedValue(SLOTS),
     request: vi.fn().mockResolvedValue(undefined),
+    verify: vi.fn(),
+    manage: vi.fn(),
+    cancel: vi.fn(),
     ...api,
   };
   TestBed.configureTestingModule({
