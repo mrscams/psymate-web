@@ -273,10 +273,6 @@
     }
   }
 
-  .fc-daygrid-event .globe {
-    align-self: center;
-  }
-
   // Liste : la mention en texte après le statut, en pastille info.
   .online-pill {
     display: inline-flex;
@@ -289,11 +285,6 @@
     color: var(--info);
     font: 600 12px/1.4 var(--font-ui);
     white-space: nowrap;
-
-    .globe {
-      width: 14px;
-      height: 14px;
-    }
   }
 
   // Indisponibilité externe : hachures 135°, bordure fine, 11 px.
