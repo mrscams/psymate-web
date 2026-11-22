@@ -153,8 +153,9 @@ export const GraphStore = signalStore(
       }
     }
 
-    async function loadEmotions(): Promise<void> {
-      if (Object.keys(store.emotionLabels()).length) return;
+    /** `force` : relecture après une écriture (une émotion personnalisée a pu être créée). */
+    async function loadEmotions(force = false): Promise<void> {
+      if (!force && Object.keys(store.emotionLabels()).length) return;
       try {
         patchState(store, { emotionLabels: await api.emotionLabels() });
       } catch {
@@ -304,6 +305,7 @@ export const GraphStore = signalStore(
       async refresh(): Promise<void> {
         const selected = store.selectedId();
         if (selected && !isSuperNodeId(selected)) void loadDetail(selected);
+        void loadEmotions(true);
         await fetchGraph();
       },
 

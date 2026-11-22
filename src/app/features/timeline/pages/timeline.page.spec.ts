@@ -32,10 +32,14 @@ async function flush(): Promise<void> {
 }
 
 function shellMock(snapshot?: TimelineSnapshot) {
+  // Compteur des écritures du dossier : noteWrite l'avance, comme le vrai PatientShellStore.
+  const revision = signal(0);
   return {
     patient: signal({ id: 'p-1', displayName: 'Lina T.', followedSince: '2025-03-04' }),
     recallTab: vi.fn().mockReturnValue(snapshot),
     rememberTab: vi.fn(),
+    revision,
+    noteWrite: vi.fn(() => revision.update((value) => value + 1)),
   };
 }
 
@@ -851,5 +855,21 @@ describe('TimelinePage', () => {
     expect(instance.store.selectedId()).toBe('e-3');
     navigate.mockRestore();
     info.mockRestore();
+  });
+
+  it('écriture ailleurs dans le dossier (revision du shell) : la chronologie est relue sans changer d’onglet', async () => {
+    const page = vi
+      .fn()
+      .mockResolvedValueOnce(timelinePage({ items: items(2) }))
+      .mockResolvedValue(timelinePage({ items: items(3) }));
+    const shell = shellMock();
+    const { el, fixture } = await render(page, shell);
+    expect(el.querySelectorAll('pm-timeline-card')).toHaveLength(2);
+    // N (nouvelle entrée), séance clôturée depuis la barre, lien : le shell note l'écriture.
+    shell.noteWrite();
+    await flush();
+    await fixture.whenStable();
+    expect(page).toHaveBeenCalledTimes(2);
+    expect(el.querySelectorAll('pm-timeline-card')).toHaveLength(3);
   });
 });

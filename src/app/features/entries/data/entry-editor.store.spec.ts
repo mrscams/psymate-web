@@ -87,10 +87,36 @@ describe('EntryEditorStore', () => {
     expect(store.tags().data).toEqual(TAGS);
     expect(api.get).not.toHaveBeenCalled();
 
-    // Le vocabulaire est gardé d'une ouverture à l'autre.
+    // Le vocabulaire est gardé d'une ouverture à l'autre, et relu en silence.
     await store.open({ patientId: 'p-marie' });
-    expect(api.emotions).toHaveBeenCalledTimes(1);
+    expect(api.emotions).toHaveBeenCalledTimes(2);
+    expect(api.tagLabels).toHaveBeenCalledTimes(2);
     expect(api.currentSession).toHaveBeenCalledTimes(2);
+  });
+
+  it('réouverture : émotions et tags relus sans vider la liste (vocabulaire modifié dans Mon compte)', async () => {
+    const { store, api } = setup();
+    await store.open({ patientId: 'p-marie' });
+    const renamed = [...EMOTIONS, { ...EMOTIONS[0], code: 'custom-relief', label: 'Soulagement' }];
+    let release: () => void = () => undefined;
+    vi.mocked(api.emotions!).mockImplementationOnce(
+      () => new Promise((resolve) => (release = () => resolve(renamed))),
+    );
+    vi.mocked(api.tagLabels!).mockResolvedValueOnce([...TAGS, 'reprise']);
+    const reopened = store.open({ patientId: 'p-marie' });
+    // Pendant la relecture : la liste connue reste proposée, l'état reste « lu ».
+    expect(store.emotions().status).toBe('loaded');
+    expect(store.emotions().data).toHaveLength(EMOTIONS.length);
+    release();
+    await reopened;
+    expect(store.emotions().data?.some((emotion) => emotion.label === 'Soulagement')).toBe(true);
+    expect(store.tags().data).toContain('reprise');
+
+    // Relecture en échec : la liste connue reste, sans état d'erreur.
+    vi.mocked(api.emotions!).mockRejectedValueOnce({ status: 503, code: 'INTERNAL_ERROR' });
+    await store.open({ patientId: 'p-marie' });
+    expect(store.emotions().status).toBe('loaded');
+    expect(store.emotions().data).toHaveLength(EMOTIONS.length + 1);
   });
 
   it('nom du patient (sous-titre) : lu une fois par patient, oublié au changement, vide en erreur', async () => {

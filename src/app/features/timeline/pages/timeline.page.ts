@@ -410,6 +410,16 @@ export class TimelinePage {
       });
     });
 
+    // Une écriture dans le dossier (PatientShellStore.revision : entrée créée par N ou corrigée,
+    // lien posé, séance clôturée depuis la barre) : la chronologie est relue, d'où qu'elle vienne.
+    let seen = untracked(() => this.shell.revision());
+    effect(() => {
+      const revision = this.shell.revision();
+      if (revision === seen) return;
+      seen = revision;
+      untracked(() => this.reread());
+    });
+
     // Après un double-clic sur un mois, Échap revient à l'agrégat (un panneau ouvert ensuite prend
     // Échap au-dessus, et le rend à sa fermeture).
     effect((onCleanup) => {
@@ -1008,7 +1018,7 @@ export class TimelinePage {
     this.store.select(item.id);
     const ref = openEntryEditor(patientId, { entryId: item.id, injector: this.injector });
     void ref?.closed.then((saved) => {
-      if (saved) this.reread();
+      if (saved) this.shell.noteWrite();
     });
   }
 
@@ -1018,28 +1028,29 @@ export class TimelinePage {
     if (!patientId) return;
     const ref = openEntryEditor(patientId, { entryId: sessionId, injector: this.injector });
     void ref?.closed.then((saved) => {
-      if (saved) this.reread();
+      if (saved) this.shell.noteWrite();
     });
   }
 
   /**
    * « Lier » (menu, touche L sur une carte) : l'éditeur de lien (features/graph) s'ouvre sur
-   * l'entrée, empilé sur l'éditeur d'entrée s'il est ouvert. À sa fermeture, la timeline relit ses
-   * projections (nombre de liens des cartes) : on ne sait pas toujours si un lien a été posé (après
-   * « … et lier une autre », le panneau se ferme sans résultat), on relit donc à chaque fermeture.
+   * l'entrée, empilé sur l'éditeur d'entrée s'il est ouvert. À sa fermeture (`?link=` retiré de
+   * l'URL), le shell note une écriture et la timeline relit ses projections (nombre de liens des
+   * cartes) : on ne sait pas toujours si un lien a été posé (après « … et lier une autre », le
+   * panneau se ferme sans résultat), on relit donc à chaque fermeture.
    */
   protected link(item: TimelineItem): void {
     this.store.select(item.id);
-    const ref = openLinkEditor(item.id, {
+    openLinkEditor(item.id, {
       injector: this.injector,
       patientName: this.shell.patient()?.displayName ?? null,
     });
-    // Un lien ne change que les projections de la chronologie (nombre de liens) : ni l'index des
-    // séances, ni leur détail.
-    void ref?.closed.then(() => this.store.refresh({ side: false }));
   }
 
-  /** Après une écriture : on relit la chronologie et le détail des séances dépliées. */
+  /**
+   * Après une écriture dans le dossier (PatientShellStore.revision) : on relit la chronologie et le
+   * détail des séances dépliées.
+   */
   private reread(): void {
     void this.store.refresh();
     void this.sessionDetails.refresh();

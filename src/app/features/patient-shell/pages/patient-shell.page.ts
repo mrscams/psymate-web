@@ -324,12 +324,11 @@ export class PatientShellPage {
     });
     // La saisie est dans le brouillon de l'éditeur : le bloc se vide (pas de doublon à la 2e Entrée).
     if (ref && prefill) this.captureBar()?.clear();
-    // Une séance créée depuis l'éditeur s'ouvre : l'en-tête relit la séance courante. Toute
-    // entrée enregistrée est une écriture : les projections (vue d'ensemble, onglet Séance) se relisent.
+    // Toute entrée enregistrée est une écriture : les projections (vue d'ensemble, onglet Séance,
+    // timeline, graphe, recherche) se relisent, et l'en-tête relit la séance courante (une séance
+    // créée depuis l'éditeur s'ouvre).
     void ref?.closed.then((saved) => {
-      if (!saved) return;
-      this.store.noteWrite();
-      if (saved.type === 'session') void this.store.refreshSession();
+      if (saved) this.store.noteWrite();
     });
   }
 
@@ -399,10 +398,7 @@ export class PatientShellPage {
   private editClosed(sessionId: string): void {
     const ref = openEntryEditor(this.id(), { entryId: sessionId, injector: this.injector });
     void ref?.closed.then((saved) => {
-      if (saved) {
-        this.store.noteWrite();
-        void this.store.refreshSession();
-      }
+      if (saved) this.store.noteWrite();
     });
   }
 

@@ -29,11 +29,15 @@ async function render(
       api.sessions ??
       vi.fn().mockResolvedValue([{ id: 's-17oct', startedAt: '2026-10-17T08:00:00Z' }]),
   };
+  // Compteur des écritures du dossier : noteWrite l'avance, comme le vrai PatientShellStore.
+  const revision = signal(0);
   const shell = {
     patientId: signal('8943f30b-07b2-4933-8a06-7bb3ac736ea7'),
     patient: signal({ id: '8943f30b-07b2-4933-8a06-7bb3ac736ea7', displayName: 'Marie D.' }),
     recallTab: vi.fn().mockReturnValue(undefined),
     rememberTab: vi.fn(),
+    revision,
+    noteWrite: vi.fn(() => revision.update((value) => value + 1)),
   };
   TestBed.configureTestingModule({
     providers: [
@@ -347,5 +351,14 @@ describe('PatientSearchPage', () => {
     expect(text(el.querySelector('button.more'))).toBe(
       'Afficher les 20 résultats suivants (43 restants)',
     );
+  });
+
+  it('écriture ailleurs dans le dossier (revision du shell) : la recherche est relue', async () => {
+    const find = vi.fn().mockResolvedValue(searchPage());
+    const { harness, shell } = await render({ find });
+    expect(find).toHaveBeenCalledTimes(1);
+    shell.noteWrite();
+    await settle(harness);
+    expect(find).toHaveBeenCalledTimes(2);
   });
 });

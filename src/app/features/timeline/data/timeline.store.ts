@@ -298,16 +298,15 @@ export const TimelineStore = signalStore(
       }
     }
 
-    /** Index des séances et noms d'émotions : utiles mais jamais bloquants. */
+    /**
+     * Index des séances et noms d'émotions : utiles mais jamais bloquants. Les deux sont relus à
+     * chaque fois (une émotion personnalisée créée en notant doit porter son nom) ; un échec garde
+     * ce qui est connu.
+     */
     async function loadSide(gen: number): Promise<void> {
       const id = store.patientId();
       if (!id) return;
-      const [sessions, vocabulary] = await Promise.allSettled([
-        api.sessions(id),
-        Object.keys(store.emotionLabels()).length
-          ? Promise.resolve({ labels: store.emotionLabels(), families: store.emotionFamilies() })
-          : api.emotions(),
-      ]);
+      const [sessions, vocabulary] = await Promise.allSettled([api.sessions(id), api.emotions()]);
       if (gen !== generation) return;
       if (sessions.status === 'fulfilled') patchState(store, { sessions: sessions.value });
       if (vocabulary.status === 'fulfilled')

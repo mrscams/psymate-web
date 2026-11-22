@@ -178,33 +178,55 @@ export const EntryEditorStore = signalStore(
       session = inject(SessionStore),
       prefs = inject(PreferencesStore),
     ) => {
+      /** Dernière lecture demandée du vocabulaire et des tags : une réponse plus ancienne est ignorée. */
+      let emotionsSeq = 0;
+      let tagsSeq = 0;
+
       /** Un autre compte : vocabulaire, tags et brouillons du précédent sont oubliés. */
       function checkOwner(): void {
         const owner = session.me()?.id ?? null;
-        if (store.ownerId() !== owner) patchState(store, { ...initialState, ownerId: owner });
+        if (store.ownerId() === owner) return;
+        emotionsSeq++;
+        tagsSeq++;
+        patchState(store, { ...initialState, ownerId: owner });
       }
 
       function defaultVisibility(): EntryVisibility {
         return prefs.defaultVisibility() === 'private' ? 'private' : 'clinical';
       }
 
+      /**
+       * Le vocabulaire des émotions. Déjà lu : il reste proposé tel quel et il est relu en silence
+       * (une émotion ajoutée, renommée ou fusionnée dans Mon compte, ou créée depuis le bloc de
+       * saisie, arrive sans recharger la page) ; un échec de cette relecture garde la liste connue.
+       * `force` : relecture visible (émotion créée ici, Réessayer). Seule la dernière lecture compte.
+       */
       async function loadEmotions(force = false): Promise<void> {
-        if (!force && store.emotions().status === 'loaded') return;
-        patchState(store, { emotions: loading(store.emotions()) });
+        const seq = ++emotionsSeq;
+        const silent = !force && store.emotions().status === 'loaded';
+        if (!silent) patchState(store, { emotions: loading(store.emotions()) });
         try {
-          patchState(store, { emotions: loaded(await api.emotions()) });
+          const emotions = await api.emotions();
+          if (seq === emotionsSeq) patchState(store, { emotions: loaded(emotions) });
         } catch (error) {
-          patchState(store, { emotions: failed(asProblem(error), store.emotions()) });
+          if (seq === emotionsSeq && !silent) {
+            patchState(store, { emotions: failed(asProblem(error), store.emotions()) });
+          }
         }
       }
 
+      /** Les tags du praticien : même règle que le vocabulaire (relus en silence une fois lus). */
       async function loadTags(): Promise<void> {
-        if (store.tags().status === 'loaded') return;
-        patchState(store, { tags: loading(store.tags()) });
+        const seq = ++tagsSeq;
+        const silent = store.tags().status === 'loaded';
+        if (!silent) patchState(store, { tags: loading(store.tags()) });
         try {
-          patchState(store, { tags: loaded(await api.tagLabels()) });
+          const tags = await api.tagLabels();
+          if (seq === tagsSeq) patchState(store, { tags: loaded(tags) });
         } catch (error) {
-          patchState(store, { tags: failed(asProblem(error), store.tags()) });
+          if (seq === tagsSeq && !silent) {
+            patchState(store, { tags: failed(asProblem(error), store.tags()) });
+          }
         }
       }
 
@@ -310,7 +332,7 @@ export const EntryEditorStore = signalStore(
          * Ouvre l'éditeur sur une cible. Création : le brouillon du patient s'il existe (le texte de
          * la barre de capture s'y ajoute si son texte est vide), sinon un brouillon vide du type
          * demandé ; correction : l'entrée et son historique. Le vocabulaire et les tags sont gardés
-         * d'une ouverture à l'autre ; les séances sont relues à chaque ouverture.
+         * d'une ouverture à l'autre et relus en silence ; les séances sont relues à chaque ouverture.
          */
         async open(target: EditorTarget): Promise<void> {
           checkOwner();

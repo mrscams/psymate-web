@@ -509,4 +509,28 @@ describe('TimelineStore', () => {
     await flush();
     expect(sessions).toHaveBeenCalledTimes(1);
   });
+
+  it('refresh : les noms d’émotions sont relus (émotion personnalisée créée en notant)', async () => {
+    const emotions = vi
+      .fn()
+      .mockResolvedValue({ labels: { anxiety: 'Anxiété' }, families: { anxiety: 'fear' } });
+    const { page } = paged(3);
+    const { store } = setup({ page, emotions });
+    await store.load('p-1', null);
+    await flush();
+    emotions.mockResolvedValue({
+      labels: { anxiety: 'Anxiété', 'custom-relief': 'Soulagement' },
+      families: { anxiety: 'fear', 'custom-relief': 'joy' },
+    });
+    await store.refresh();
+    await flush();
+    expect(emotions).toHaveBeenCalledTimes(2);
+    expect(store.emotionLabels()['custom-relief']).toBe('Soulagement');
+
+    // Relecture en échec : les noms connus restent.
+    emotions.mockRejectedValue(serverError);
+    await store.refresh();
+    await flush();
+    expect(store.emotionLabels()['custom-relief']).toBe('Soulagement');
+  });
 });
