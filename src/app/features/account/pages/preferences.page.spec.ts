@@ -7,6 +7,8 @@ import { PreferencesApi } from '../../../core/preferences/data/preferences.api';
 import { LocaleNavigator } from '../../../core/preferences/locale-navigator';
 import { defaultPreferences, Preferences } from '../../../core/preferences/preferences.model';
 import { ConfirmDialogService, ToastService } from '../../../shared/ui';
+import { ProfileApi } from '../data/profile.api';
+import { PROFILE } from '../data/profile.fixtures';
 import { SecurityApi } from '../data/security.api';
 import { manySessions, OVERVIEW } from '../data/security.fixtures';
 import { PreferencesPage } from './preferences.page';
@@ -46,17 +48,24 @@ function securityApi(overrides: Partial<Record<keyof SecurityApi, unknown>> = {}
   };
 }
 
+/** GET /api/me/profile simulé : seuls `published` et `slug` servent à la page. */
+function profileApi(published: boolean) {
+  return { load: vi.fn().mockResolvedValue({ ...PROFILE, published }) };
+}
+
 async function render(
   api: Api,
   user: SessionUser = claire,
   security = securityApi(),
   confirm = vi.fn().mockResolvedValue(true),
+  profile: { load: ReturnType<typeof vi.fn> } = profileApi(true),
 ) {
   TestBed.configureTestingModule({
     imports: [PreferencesPage],
     providers: [
       provideRouter([]),
       { provide: PreferencesApi, useValue: api },
+      { provide: ProfileApi, useValue: profile },
       { provide: SessionApi, useValue: {} },
       { provide: LocaleNavigator, useValue: { current: 'fr', goTo: vi.fn() } },
       { provide: SecurityApi, useValue: security },
@@ -130,7 +139,7 @@ describe('PreferencesPage', () => {
     await settle(fixture);
     expect(api.get).toHaveBeenCalledTimes(2);
     expect(el.querySelector('pm-state .error')).toBeNull();
-    expect(el.querySelectorAll('section.card')).toHaveLength(4);
+    expect(el.querySelectorAll('section.card')).toHaveLength(5);
   });
 
   it('chargé : quatre sections, valeurs serveur reflétées, résumé sécurité', async () => {
@@ -142,7 +151,7 @@ describe('PreferencesPage', () => {
     });
     const { el } = await render(api, { ...claire, twoFactorEnabled: true });
     expect(el.querySelector('h1')?.textContent).toBe('Préférences');
-    expect(el.querySelectorAll('section.card')).toHaveLength(4);
+    expect(el.querySelectorAll('section.card')).toHaveLength(5);
     expect(pressed(el, 'overview-window')).toEqual(['1 an']);
     // UX-S6 : plus de réglage « Vue d'ensemble par défaut » (Simple / Complète), une seule vue.
     expect(el.querySelector('#overview-view-label')).toBeNull();
@@ -332,3 +341,358 @@ describe('PreferencesPage', () => {
     expect(el.querySelector('select[aria-labelledby="locale-label"]')).not.toBeNull();
   });
 });
+
+// Prise de rendez-vous en ligne (M14-11, fiche 14, section du même nom).
+describe('PreferencesPage · Prise de rendez-vous en ligne', () => {
+  const MONDAY = { day: 1, start: '09:00', end: '12:00' } as const;
+
+  beforeEach(() => localStorage.clear());
+  afterEach(() => {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.clear();
+    TestBed.inject(ToastService).clear();
+    document.body.replaceChildren();
+  });
+
+  function section(el: HTMLElement): HTMLElement {
+    const found = el.querySelector<HTMLElement>('section[aria-labelledby="h-booking"]');
+    if (!found) throw new Error('section Prise de rendez-vous absente');
+    return found;
+  }
+
+  function status(el: HTMLElement): string | null {
+    return section(el).querySelector('.section-status')?.textContent?.trim() ?? null;
+  }
+
+  function pageLink(el: HTMLElement): HTMLAnchorElement | null {
+    return (
+      Array.from(section(el).querySelectorAll<HTMLAnchorElement>('a')).find((a) =>
+        a.textContent?.includes('Voir ma page de rendez-vous'),
+      ) ?? null
+    );
+  }
+
+  function numberInput(el: HTMLElement, id: string): HTMLInputElement {
+    const input = section(el).querySelector<HTMLInputElement>(
+      `input[aria-labelledby="${id}-label"]`,
+    );
+    if (!input) throw new Error(`champ absent : ${id}`);
+    return input;
+  }
+
+  async function change(
+    fixture: ComponentFixture<unknown>,
+    input: HTMLInputElement,
+    value: string,
+  ): Promise<void> {
+    input.value = value;
+    input.dispatchEvent(new Event('change'));
+    await settle(fixture);
+  }
+
+  function withBooking(changes: Partial<Preferences>): Api {
+    return serverFor({ ...defaultPreferences('psychologist'), ...changes });
+  }
+
+  it('place et ordre : entre « Vocabulaire et saisie » et « Émotions personnalisées »', async () => {
+    const { el } = await render(withBooking({}));
+    const titles = Array.from(el.querySelectorAll('section.card h2')).map((h) =>
+      h.textContent?.trim(),
+    );
+    expect(titles).toEqual([
+      'Affichage',
+      'Vocabulaire et saisie',
+      'Prise de rendez-vous en ligne',
+      'Émotions personnalisées',
+      'Compte et sécurité',
+    ]);
+  });
+
+  it('désactivée (défauts) : phrase d’état, réglages visibles et valeurs par défaut, ni lien ni bandeau', async () => {
+    const { el } = await render(withBooking({}));
+    expect(status(el)).toBe(
+      "Désactivée : votre fiche publique n'a pas de bouton « Prendre rendez-vous ».",
+    );
+    expect(pageLink(el)).toBeNull();
+    expect(section(el).querySelector('.bar')).toBeNull();
+    const toggle = section(el).querySelector('mat-slide-toggle button');
+    expect(toggle?.getAttribute('aria-checked')).toBe('false');
+    expect(section(el).querySelector('mat-slide-toggle')?.textContent).toContain(
+      'Proposer la prise de rendez-vous en ligne',
+    );
+    expect(
+      section(el).querySelector<HTMLInputElement>('input[name=booking-mode][value=manual]')
+        ?.checked,
+    ).toBe(true);
+    expect(numberInput(el, 'booking-duration').value).toBe('60');
+    expect(numberInput(el, 'booking-notice').value).toBe('24');
+    expect(numberInput(el, 'booking-horizon').value).toBe('28');
+    const checks = Array.from(
+      section(el).querySelectorAll<HTMLInputElement>('.checks input[type=checkbox]'),
+    ).map((box) => [box.parentElement?.textContent?.trim(), box.checked]);
+    expect(checks).toEqual([
+      ['Au cabinet', true],
+      ['En visio', false],
+      ['Par téléphone', false],
+    ]);
+    expect(
+      section(el).querySelector<HTMLSelectElement>(
+        'select[aria-labelledby="booking-timezone-label"]',
+      )?.value,
+    ).toBe('Europe/Paris');
+    expect(section(el).querySelectorAll('pm-booking-windows-editor [role=group]')).toHaveLength(7);
+  });
+
+  it('offerte (activée, plages, publié, approuvé) : « Proposée… » et lien vers la page de rendez-vous', async () => {
+    const { el } = await render(
+      withBooking({ 'booking.enabled': true, 'booking.windows': [MONDAY] }),
+    );
+    expect(status(el)).toBe('Proposée sur votre fiche publique.');
+    const link = pageLink(el);
+    expect(link?.getAttribute('href')).toMatch(/\/praticiens\/claire-martin\/rendez-vous$/);
+    expect(link?.getAttribute('target')).toBe('_blank');
+    expect(link?.textContent).toContain('(nouvel onglet)');
+    expect(section(el).querySelector('.bar')).toBeNull();
+  });
+
+  it('praticien non approuvé (session simulée) : ni « Proposée… » ni lien, aucune ligne d’état', async () => {
+    const { el } = await render(
+      withBooking({ 'booking.enabled': true, 'booking.windows': [MONDAY] }),
+      { ...claire, verificationStatus: 'under_review' },
+    );
+    expect(status(el)).toBeNull();
+    expect(pageLink(el)).toBeNull();
+    expect(el.textContent).not.toContain('Proposée sur votre fiche publique.');
+  });
+
+  it('profil non publié : bandeau et lien « Mon profil public », interrupteur utilisable', async () => {
+    const api = withBooking({ 'booking.windows': [MONDAY] });
+    const { fixture, el } = await render(
+      api,
+      claire,
+      securityApi(),
+      vi.fn().mockResolvedValue(true),
+      profileApi(false),
+    );
+    const bar = section(el).querySelector('.bar[role=note]');
+    expect(bar?.textContent).toContain(
+      "Votre profil public n'est pas publié : la prise de rendez-vous ne sera proposée qu'une fois le profil publié.",
+    );
+    expect(bar?.querySelector('a')?.getAttribute('href')).toBe('/mon-compte/profil-public');
+    expect(bar?.querySelector('a')?.textContent?.trim()).toBe('Mon profil public');
+
+    section(el).querySelector<HTMLButtonElement>('mat-slide-toggle button')?.click();
+    await settle(fixture);
+    expect(api.patch).toHaveBeenCalledWith({ 'booking.enabled': true }, expect.anything());
+    // Activée, avec des plages, profil non publié : le bandeau remplace la ligne d'état.
+    expect(status(el)).toBeNull();
+    expect(pageLink(el)).toBeNull();
+  });
+
+  it('activée sans plage : phrase d’état, invitation sous l’éditeur, fuseau du navigateur proposé', async () => {
+    const browser = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const other = browser === 'Pacific/Fiji' ? 'Europe/Paris' : 'Pacific/Fiji';
+    const api = withBooking({ 'booking.enabled': true, 'booking.timezone': other });
+    const { fixture, el } = await render(api);
+    expect(status(el)).toBe(
+      "La prise de rendez-vous n'est pas proposée tant qu'il n'y a pas de plage.",
+    );
+    expect(section(el).querySelector('.row-full .bar')?.textContent?.trim()).toBe(
+      'Ajoutez au moins une plage pour que la prise de rendez-vous soit proposée.',
+    );
+    expect(section(el).textContent).toContain(`Votre navigateur est réglé sur ${browser}.`);
+    // Rien n'est enregistré sans le geste.
+    expect(api.patch).not.toHaveBeenCalled();
+    buttonIn(section(el), 'Utiliser ce fuseau').click();
+    await settle(fixture);
+    expect(api.patch).toHaveBeenCalledWith({ 'booking.timezone': browser }, expect.anything());
+    expect(section(el).textContent).not.toContain('Votre navigateur est réglé sur');
+  });
+
+  it('mode automatique : PATCH de booking.confirmation seul', async () => {
+    const api = withBooking({});
+    const { fixture, el } = await render(api);
+    const auto = section(el).querySelector<HTMLInputElement>(
+      'input[name=booking-mode][value=auto]',
+    );
+    expect(auto?.getAttribute('aria-describedby')).toBe('booking-mode-auto');
+    auto?.click();
+    await settle(fixture);
+    expect(api.patch).toHaveBeenCalledWith({ 'booking.confirmation': 'auto' }, expect.anything());
+    expect(auto?.checked).toBe(true);
+  });
+
+  it('plages : rien ne part avant « Enregistrer les plages », puis PATCH de la liste et relecture', async () => {
+    const api = withBooking({ 'booking.enabled': true });
+    const { fixture, el } = await render(api);
+    const monday = section(el).querySelector<HTMLElement>('[aria-label="Plages du lundi"]');
+    if (!monday) throw new Error('lundi absent');
+    buttonIn(monday, 'Ajouter une plage').click();
+    await settle(fixture);
+    const [start, end] = Array.from(monday.querySelectorAll<HTMLInputElement>('input.time'));
+    for (const [input, value] of [
+      [start, '09:00'],
+      [end, '12:00'],
+    ] as const) {
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+    }
+    await settle(fixture);
+    expect(api.patch).not.toHaveBeenCalled();
+    buttonIn(section(el), 'Enregistrer les plages').click();
+    await settle(fixture);
+    expect(api.patch).toHaveBeenCalledTimes(1);
+    expect(api.patch).toHaveBeenCalledWith({ 'booking.windows': [MONDAY] }, expect.anything());
+    expect(status(el)).toBe('Proposée sur votre fiche publique.');
+    expect(section(el).querySelector('.saved-flag')?.textContent?.trim()).toBe('Enregistré');
+  });
+
+  it('retirer la dernière plage et enregistrer : « pas proposée… », le lien disparaît', async () => {
+    const api = withBooking({ 'booking.enabled': true, 'booking.windows': [MONDAY] });
+    const { fixture, el } = await render(api);
+    expect(pageLink(el)).not.toBeNull();
+    section(el)
+      .querySelector<HTMLButtonElement>('[aria-label="Retirer la plage du lundi, 09:00 à 12:00"]')
+      ?.click();
+    await settle(fixture);
+    buttonIn(section(el), 'Enregistrer les plages').click();
+    await settle(fixture);
+    expect(api.patch).toHaveBeenCalledWith({ 'booking.windows': [] }, expect.anything());
+    expect(status(el)).toBe(
+      "La prise de rendez-vous n'est pas proposée tant qu'il n'y a pas de plage.",
+    );
+    expect(pageLink(el)).toBeNull();
+  });
+
+  it('422 sur booking.windows : message du serveur sous l’éditeur, préférences relues', async () => {
+    const api = withBooking({ 'booking.enabled': true });
+    api.patch.mockRejectedValueOnce({
+      status: 422,
+      code: 'VALIDATION_FAILED',
+      errors: [
+        {
+          field: 'booking.windows',
+          code: 'INVALID_VALUE',
+          message: 'Plages invalides : deux plages du même jour se chevauchent.',
+        },
+      ],
+    });
+    const { fixture, el, toasts } = await render(api);
+    const monday = section(el).querySelector<HTMLElement>('[aria-label="Plages du lundi"]');
+    if (!monday) throw new Error('lundi absent');
+    buttonIn(monday, 'Ajouter une plage').click();
+    await settle(fixture);
+    const [start, end] = Array.from(monday.querySelectorAll<HTMLInputElement>('input.time'));
+    start.value = '09:00';
+    start.dispatchEvent(new Event('input'));
+    end.value = '12:00';
+    end.dispatchEvent(new Event('input'));
+    await settle(fixture);
+    const gets = api.get.mock.calls.length;
+    buttonIn(section(el), 'Enregistrer les plages').click();
+    await settle(fixture);
+    expect(
+      section(el).querySelector('pm-booking-windows-editor .error.server')?.textContent?.trim(),
+    ).toBe('Plages invalides : deux plages du même jour se chevauchent.');
+    expect(api.get.mock.calls.length).toBe(gets + 1);
+    expect(toasts.toasts()).toHaveLength(0);
+    // Le brouillon reste à l'écran ; le serveur, lui, n'a pas de plage.
+    expect(start.value).toBe('09:00');
+    expect(status(el)).toBe(
+      "La prise de rendez-vous n'est pas proposée tant qu'il n'y a pas de plage.",
+    );
+  });
+
+  it('422 sur booking.slotDurationMin : message sous ce réglage, valeur du serveur rétablie', async () => {
+    const api = withBooking({});
+    api.patch.mockRejectedValueOnce({
+      status: 422,
+      code: 'VALIDATION_FAILED',
+      errors: [
+        {
+          field: 'booking.slotDurationMin',
+          code: 'OUT_OF_RANGE',
+          message: 'Une durée entre 15 et 180 minutes est attendue.',
+        },
+      ],
+    });
+    const { fixture, el } = await render(api);
+    const duration = numberInput(el, 'booking-duration');
+    await change(fixture, duration, '90');
+    expect(api.patch).toHaveBeenCalledWith({ 'booking.slotDurationMin': 90 }, expect.anything());
+    const error = section(el).querySelector('#booking-duration-error');
+    expect(error?.textContent?.trim()).toBe('Une durée entre 15 et 180 minutes est attendue.');
+    expect(error?.getAttribute('role')).toBe('alert');
+    expect(duration.getAttribute('aria-describedby')).toBe(
+      'booking-duration-help booking-duration-error',
+    );
+    expect(duration.value).toBe('60');
+  });
+
+  it('bornes : durée 10, délai 0, horizon 91 refusés sans requête, message sous chaque réglage', async () => {
+    const api = withBooking({});
+    const { fixture, el } = await render(api);
+    await change(fixture, numberInput(el, 'booking-duration'), '10');
+    await change(fixture, numberInput(el, 'booking-notice'), '0');
+    await change(fixture, numberInput(el, 'booking-horizon'), '91');
+    expect(api.patch).not.toHaveBeenCalled();
+    expect(section(el).querySelector('#booking-duration-error')?.textContent?.trim()).toBe(
+      'Entre 15 et 180, par pas de 5.',
+    );
+    expect(section(el).querySelector('#booking-notice-error')?.textContent?.trim()).toBe(
+      'Entre 1 et 168.',
+    );
+    expect(section(el).querySelector('#booking-horizon-error')?.textContent?.trim()).toBe(
+      'Entre 7 et 90.',
+    );
+    expect(numberInput(el, 'booking-horizon').value).toBe('91');
+    expect(numberInput(el, 'booking-horizon').getAttribute('aria-invalid')).toBe('true');
+    // Pas de 5 : 62 est refusé aussi ; une valeur correcte part et efface le message.
+    await change(fixture, numberInput(el, 'booking-duration'), '62');
+    expect(api.patch).not.toHaveBeenCalled();
+    await change(fixture, numberInput(el, 'booking-duration'), '45');
+    expect(api.patch).toHaveBeenCalledWith({ 'booking.slotDurationMin': 45 }, expect.anything());
+    expect(section(el).querySelector('#booking-duration-error')).toBeNull();
+  });
+
+  it('modalités : décocher la dernière n’envoie rien et affiche le message ; en cocher une l’envoie', async () => {
+    const api = withBooking({});
+    const { fixture, el } = await render(api);
+    const [inPerson, video] = Array.from(
+      section(el).querySelectorAll<HTMLInputElement>('.checks input[type=checkbox]'),
+    );
+    inPerson.click();
+    await settle(fixture);
+    expect(api.patch).not.toHaveBeenCalled();
+    expect(section(el).querySelector('#booking-modalities-error')?.textContent?.trim()).toBe(
+      'Gardez au moins une modalité.',
+    );
+    video.click();
+    await settle(fixture);
+    expect(api.patch).toHaveBeenCalledWith({ 'booking.modalities': ['video'] }, expect.anything());
+    expect(section(el).querySelector('#booking-modalities-error')).toBeNull();
+    expect(inPerson.checked).toBe(false);
+    expect(video.checked).toBe(true);
+  });
+
+  it('profil illisible : ni bandeau ni « Proposée… », les réglages restent là', async () => {
+    const { el } = await render(
+      withBooking({ 'booking.enabled': true, 'booking.windows': [MONDAY] }),
+      claire,
+      securityApi(),
+      vi.fn().mockResolvedValue(true),
+      { load: vi.fn().mockRejectedValue({ status: 500, code: 'INTERNAL_ERROR' }) },
+    );
+    expect(section(el).querySelector('.bar')).toBeNull();
+    expect(status(el)).toBeNull();
+    expect(section(el).querySelector('pm-booking-windows-editor')).not.toBeNull();
+  });
+});
+
+function buttonIn(scope: HTMLElement, text: string): HTMLButtonElement {
+  const found = Array.from(scope.querySelectorAll<HTMLButtonElement>('button')).find(
+    (candidate) => candidate.textContent?.trim() === text,
+  );
+  if (!found) throw new Error(`bouton absent : ${text}`);
+  return found;
+}
