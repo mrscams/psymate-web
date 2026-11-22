@@ -87,6 +87,8 @@ export const SESSION_DURATION_MIN = 15;
 export const SESSION_DURATION_MAX = 180;
 
 /** Bornes des réglages `booking.*` (G Q75 de l'API, contrat 0.15.0). */
+/** Pas, en minutes, de la durée d'un créneau et des heures de début et de fin des plages. */
+export const BOOKING_MINUTE_STEP = 5;
 export const BOOKING_SLOT_DURATION_MIN = 15;
 export const BOOKING_SLOT_DURATION_MAX = 180;
 export const BOOKING_MIN_NOTICE_HOURS_MIN = 1;
@@ -170,7 +172,7 @@ export function isValidPreference<K extends PreferenceKey>(
     case 'booking.slotDurationMin':
       return (
         isIntegerIn(value, BOOKING_SLOT_DURATION_MIN, BOOKING_SLOT_DURATION_MAX) &&
-        (value as number) % 5 === 0
+        (value as number) % BOOKING_MINUTE_STEP === 0
       );
     case 'booking.minNoticeHours':
       return isIntegerIn(value, BOOKING_MIN_NOTICE_HOURS_MIN, BOOKING_MIN_NOTICE_HOURS_MAX);
@@ -196,8 +198,15 @@ function isIntegerIn(value: unknown, min: number, max: number): boolean {
   return typeof value === 'number' && Number.isInteger(value) && value >= min && value <= max;
 }
 
-/** `HH:mm` de 00:00 à 23:55, minutes multiples de 5 (comparable comme chaîne). */
-const WINDOW_TIME = /^([01]\d|2[0-3]):[0-5][05]$/;
+/** `HH:mm` de 00:00 à 23:59 (comparable comme chaîne) ; le pas des minutes est vérifié à part. */
+const WINDOW_TIME = /^([01]\d|2[0-3]):([0-5]\d)$/;
+
+/** Heure de plage : `HH:mm` et minutes multiples de `BOOKING_MINUTE_STEP` (00:00 à 23:55). */
+function isWindowTime(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  const match = WINDOW_TIME.exec(value);
+  return match !== null && Number(match[2]) % BOOKING_MINUTE_STEP === 0;
+}
 
 /**
  * Plages `booking.windows` : 21 au plus, chacune exactement `{ day, start, end }` bien formée, fin
@@ -223,14 +232,7 @@ function isBookingWindow(value: unknown): value is BookingWindow {
   const keys = Object.keys(value);
   if (keys.length !== 3) return false;
   const { day, start, end } = value as Record<string, unknown>;
-  return (
-    isIntegerIn(day, 1, 7) &&
-    typeof start === 'string' &&
-    typeof end === 'string' &&
-    WINDOW_TIME.test(start) &&
-    WINDOW_TIME.test(end) &&
-    start < end
-  );
+  return isIntegerIn(day, 1, 7) && isWindowTime(start) && isWindowTime(end) && start < end;
 }
 
 /**

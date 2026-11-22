@@ -1,4 +1,5 @@
 import {
+  BOOKING_MINUTE_STEP,
   completePreferences,
   defaultPreferences,
   isValidPreference,
@@ -130,6 +131,18 @@ describe('preferences.model · clés booking.*', () => {
     expect(
       completePreferences({ 'booking.slotDurationMin': value })['booking.slotDurationMin'],
     ).toBe(60);
+  });
+
+  it('pas de 5 minutes : durée d’un créneau et minutes des plages', () => {
+    expect(BOOKING_MINUTE_STEP).toBe(5);
+    expect(isValidPreference('booking.slotDurationMin', 15 + BOOKING_MINUTE_STEP)).toBe(true);
+    expect(isValidPreference('booking.slotDurationMin', 15 + BOOKING_MINUTE_STEP - 1)).toBe(false);
+    expect(isValidPreference('booking.windows', [{ day: 1, start: '09:55', end: '23:55' }])).toBe(
+      true,
+    );
+    expect(isValidPreference('booking.windows', [{ day: 1, start: '09:00', end: '23:59' }])).toBe(
+      false,
+    );
   });
 
   it('booking.slotDurationMin : 15 et 180 admis', () => {
