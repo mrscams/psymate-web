@@ -1366,7 +1366,7 @@
         <note priority="1" from="description">Champ e-mail de la connexion</note>
       </trans-unit>
       <trans-unit id="auth.login.email.required" datatype="html">
-        <source>Saisissez votre adresse e-mail.</source>
+        <source> Saisissez votre adresse e-mail. </source>
         <target state="translated">Enter your email address.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
@@ -1379,7 +1379,7 @@
         <note priority="1" from="description">E-mail manquant</note>
       </trans-unit>
       <trans-unit id="auth.login.email.invalid" datatype="html">
-        <source>Cette adresse e-mail n&apos;est pas valide.</source>
+        <source> Cette adresse e-mail n&apos;est pas valide. </source>
         <target state="translated">This email address is not valid.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
@@ -1401,7 +1401,7 @@
         <note priority="1" from="description">Champ mot de passe de la connexion</note>
       </trans-unit>
       <trans-unit id="auth.login.password.required" datatype="html">
-        <source>Saisissez votre mot de passe.</source>
+        <source> Saisissez votre mot de passe. </source>
         <target state="translated">Enter your password.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
@@ -1428,7 +1428,7 @@
         <note priority="1" from="description">Champ code de vérification</note>
       </trans-unit>
       <trans-unit id="auth.login.otp.recoveryHint" datatype="html">
-        <source>Un de vos 10 codes de secours ; il ne servira qu&apos;une fois.</source>
+        <source> Un de vos 10 codes de secours ; il ne servira qu&apos;une fois. </source>
         <target state="translated">One of your 10 recovery codes; it works only once.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/login.page.html</context>
@@ -1854,7 +1854,7 @@
         <note priority="1" from="description">Titre de la colonne Ensuite</note>
       </trans-unit>
       <trans-unit id="auth.register.next.step1" datatype="html">
-        <source>Confirmez votre e-mail.</source>
+        <source> Confirmez votre e-mail. </source>
         <target state="translated">Confirm your e-mail.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
@@ -1890,7 +1890,7 @@
         <note priority="1" from="description">Étape 4 après l&apos;inscription</note>
       </trans-unit>
       <trans-unit id="auth.register.data.title" datatype="html">
-        <source>Vos données</source>
+        <source> Vos données </source>
         <target state="translated">Your data</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
@@ -1908,7 +1908,7 @@
         <note priority="1" from="description">Texte du bloc Vos données</note>
       </trans-unit>
       <trans-unit id="auth.register.beta" datatype="html">
-        <source>Bêta : vos retours façonnent la V1.</source>
+        <source> Bêta : vos retours façonnent la V1. </source>
         <target state="translated">Beta: your feedback shapes V1.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/register.page.html</context>
@@ -3164,8 +3164,8 @@
         <note priority="1" from="description">Option Français</note>
       </trans-unit>
       <trans-unit id="preferences.locale.en" datatype="html">
-        <source> English · traduction partielle </source>
-        <target state="translated">English · partial translation</target>
+        <source>English</source>
+        <target state="translated">English</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
           <context context-type="linenumber">105,108</context>
@@ -3191,7 +3191,9 @@
         <note priority="1" from="description">Réglage de la désignation</note>
       </trans-unit>
       <trans-unit id="preferences.subject.help" datatype="html">
-        <source>Les coachs préfèrent souvent « client ». Actuellement : « <x id="INTERPOLATION" equiv-text="{{ &apos;many&apos; | subjectLabel }}"/> ».</source>
+        <source>Les coachs préfèrent souvent « client ». Actuellement : « <x id="INTERPOLATION" equiv-text="{{
+              &apos;many&apos; | subjectLabel
+            }}"/> ».</source>
         <target state="translated">Coaches often prefer “client”. Currently: “<x id="INTERPOLATION" equiv-text="{{ &apos;many&apos; | subjectLabel }}"/>”.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
@@ -3362,7 +3364,7 @@
         <note priority="1" from="description">E-mail de connexion</note>
       </trans-unit>
       <trans-unit id="preferences.security.twoFactor" datatype="html">
-        <source>Double authentification</source>
+        <source> Double authentification </source>
         <target state="translated">Two-factor authentication</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
@@ -4030,7 +4032,7 @@
         <note priority="1" from="description">Possibilité 3, titre</note>
       </trans-unit>
       <trans-unit id="auth.suspended.can.protected.body" datatype="html">
-        <source>Rien n&apos;est supprimé pendant la suspension. En cas de clôture définitive, vous aurez 90 jours pour récupérer vos données.</source>
+        <source>Rien n&apos;est supprimé pendant la suspension. En cas de clôture définitive, vos données restent conservées 90 jours avant toute purge.</source>
         <target state="translated">Nothing is deleted during the suspension. If the account is closed for good, your data is kept for 90 days before any purge.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/suspended.page.html</context>
@@ -4214,7 +4216,7 @@
         <note priority="1" from="description">Titre du recours</note>
       </trans-unit>
       <trans-unit id="auth.suspended.appeal.closedAccount" datatype="html">
-        <source> Un compte clos ne peut plus déposer de recours. L&apos;export de vos dossiers reste possible pendant 90 jours. </source>
+        <source> Un compte clos ne peut plus déposer de recours ni lancer d&apos;export depuis cette page : écrivez à l&apos;adresse indiquée dans l&apos;e-mail de décision. </source>
         <target state="translated"> A closed account can no longer file an appeal or start an export from this page: write to the address given in the decision email. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/suspended.page.html</context>
@@ -4961,7 +4963,7 @@
         <note priority="1" from="description">Confirmation avant déconnexion des autres appareils</note>
       </trans-unit>
       <trans-unit id="account.security.sessions.confirmBody" datatype="html">
-        <source>Cet appareil reste connecté. Les autres devront se reconnecter ; l&apos;opération est consignée dans votre journal de sécurité.</source>
+        <source>Cet appareil reste connecté. Les autres devront se reconnecter ; l&apos;opération est consignée côté serveur.</source>
         <target state="translated">This device stays signed in. The others will have to sign in again; the operation is recorded server-side.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
@@ -6234,7 +6236,7 @@
         <note priority="1" from="description">Sélecteur de tri des résultats</note>
       </trans-unit>
       <trans-unit id="public.results.sort.relevance" datatype="html">
-        <source>Pertinence</source>
+        <source> Pertinence </source>
         <target state="translated">Relevance</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
@@ -6243,7 +6245,7 @@
         <note priority="1" from="description">Tri par pertinence</note>
       </trans-unit>
       <trans-unit id="public.results.sort.name" datatype="html">
-        <source>Nom</source>
+        <source> Nom </source>
         <target state="translated">Name</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/pages/directory.page.html</context>
@@ -7540,7 +7542,7 @@
         <note priority="1" from="description">Liste des spécialités d&apos;une fiche résumée</note>
       </trans-unit>
       <trans-unit id="public.card.audiences" datatype="html">
-        <source>Publics</source>
+        <source> Publics </source>
         <target state="translated">Audiences</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/practitioner-card.component.html</context>
@@ -7549,7 +7551,7 @@
         <note priority="1" from="description">Publics accueillis, fiche résumée</note>
       </trans-unit>
       <trans-unit id="public.card.modalities" datatype="html">
-        <source>Modalités</source>
+        <source> Modalités </source>
         <target state="translated">Consultation modes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/practitioner-card.component.html</context>
@@ -7567,7 +7569,7 @@
         <note priority="1" from="description">Ville, fiche résumée</note>
       </trans-unit>
       <trans-unit id="public.card.languages" datatype="html">
-        <source>Langues</source>
+        <source> Langues </source>
         <target state="translated">Languages</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/practitioner-card.component.html</context>
@@ -8557,7 +8559,7 @@
         <note priority="1" from="description">Lien vers le dossier professionnel</note>
       </trans-unit>
       <trans-unit id="profile.publish.unpublishNote" datatype="html">
-        <source>Désactiver retire la fiche immédiatement de l&apos;annuaire.</source>
+        <source> Désactiver retire la fiche immédiatement de l&apos;annuaire. </source>
         <target state="translated">Turning this off removes the page from the directory immediately.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
@@ -10255,8 +10257,7 @@
         <note priority="1" from="description">Toast après le démarrage d&apos;une séance</note>
       </trans-unit>
       <trans-unit id="patientShell.close.title" datatype="html">
-        <source> Clôturer la séance
-</source>
+        <source>Clôturer la séance</source>
         <target state="translated">Close the session</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.dialog.html</context>
@@ -10274,8 +10275,8 @@
         <note priority="1" from="description">Champ du dialogue de clôture</note>
       </trans-unit>
       <trans-unit id="patientShell.close.summary" datatype="html">
-        <source>Compte rendu (facultatif)</source>
-        <target state="translated">Summary (optional)</target>
+        <source>Compte rendu</source>
+        <target state="translated">Summary</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.dialog.html</context>
           <context context-type="linenumber">44,48</context>
@@ -10283,7 +10284,7 @@
         <note priority="1" from="description">Champ du dialogue de clôture</note>
       </trans-unit>
       <trans-unit id="patientShell.close.cancel" datatype="html">
-        <source> Annuler </source>
+        <source>Annuler</source>
         <target state="translated">Cancel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.dialog.html</context>
@@ -10292,8 +10293,8 @@
         <note priority="1" from="description">Bouton du dialogue de clôture</note>
       </trans-unit>
       <trans-unit id="patientShell.close.confirm" datatype="html">
-        <source> Clôturer </source>
-        <target state="translated">Close</target>
+        <source>Clôturer la séance</source>
+        <target state="translated">Close the session</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.dialog.html</context>
           <context context-type="linenumber">73,77</context>
@@ -13550,7 +13551,11 @@
         </context-group>
       </trans-unit>
       <trans-unit id="vocabulary.journal.meta" datatype="html">
-        <source><x id="ICU" equiv-text="{row.entry.merge.affectedCount, plural, =0 {aucun ressenti} =1 {1 ressenti} other {{{row.entry.merge.affectedCount}} ressentis}}" xid="1847635703379406991"/> · le <x id="INTERPOLATION_1" equiv-text="{{ row.mergedAt }}"/></source>
+        <source><x id="ICU" equiv-text="{row.entry.merge.affectedCount, plural,
+                    =0 {aucun ressenti}
+                    =1 {1 ressenti}
+                    other {{{row.entry.merge.affectedCount}} ressentis}
+                  }" xid="1847635703379406991"/> · le <x id="INTERPOLATION_1" equiv-text="{{ row.mergedAt }}"/></source>
         <target state="translated"><x id="ICU" equiv-text="{row.entry.merge.affectedCount, plural, =0 {aucun ressenti} =1 {1 ressenti} other {{{row.entry.merge.affectedCount}} ressentis}}" xid="1847635703379406991"/> · on <x id="INTERPOLATION_1" equiv-text="{{ row.mergedAt }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
@@ -13703,7 +13708,11 @@
         <note priority="1" from="description">Question de la fusion de tag</note>
       </trans-unit>
       <trans-unit id="vocabulary.tags.merge.preview" datatype="html">
-        <source> Réétiquette <x id="ICU" equiv-text="{tag.usageCount, plural, =0 {les patients et les entrées} =1 {1 usage (patient ou entrée)} other {{{tag.usageCount}} usages (patients et entrées)}}" xid="2428451736813176020"/> : ils porteront « <x id="INTERPOLATION_1" equiv-text="{{ target.label }}"/> », et « <x id="INTERPOLATION_2" equiv-text="{{ tag.label }}"/> » disparaît de vos tags. Cette fusion ne s&apos;annule pas.</source>
+        <source> Réétiquette <x id="ICU" equiv-text="{tag.usageCount, plural,
+                      =0 {les patients et les entrées}
+                      =1 {1 usage (patient ou entrée)}
+                      other {{{tag.usageCount}} usages (patients et entrées)}
+                    }" xid="2428451736813176020"/> : ils porteront « <x id="INTERPOLATION_1" equiv-text="{{ target.label }}"/> », et « <x id="INTERPOLATION_2" equiv-text="{{ tag.label }}"/> » disparaît de vos tags. Cette fusion ne s&apos;annule pas.</source>
         <target state="translated">Relabels <x id="ICU" equiv-text="{tag.usageCount, plural, =0 {les patients et les entrées} =1 {1 usage (patient ou entrée)} other {{{tag.usageCount}} usages (patients et entrées)}}" xid="2428451736813176020"/>: they will carry “<x id="INTERPOLATION_1" equiv-text="{{ target.label }}"/>”, and “<x id="INTERPOLATION_2" equiv-text="{{ tag.label }}"/>” disappears from your tags. This merge cannot be undone.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
@@ -16720,7 +16729,7 @@
         <note priority="1" from="description">Texte de la timeline vide avec des filtres</note>
       </trans-unit>
       <trans-unit id="timeline.status.partial" datatype="html">
-        <source>Regroupement des <x id="INTERPOLATION" equiv-text="{{ headSize }}"/> entrées les plus récentes : réduisez la période pour les plus anciennes.</source>
+        <source> Regroupement des <x id="INTERPOLATION" equiv-text="{{ headSize }}"/> entrées les plus récentes : réduisez la période pour les plus anciennes. </source>
         <target state="translated">Grouping the <x id="INTERPOLATION" equiv-text="{{ headSize }}"/> most recent entries: narrow the period to see older ones.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
@@ -16792,7 +16801,7 @@
         <note priority="1" from="description">Puce de tous les types de la timeline</note>
       </trans-unit>
       <trans-unit id="timeline.filters.drafts" datatype="html">
-        <source> Brouillons seulement </source>
+        <source>Brouillons seulement</source>
         <target state="translated"> Drafts only </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
@@ -16936,7 +16945,7 @@
         <note priority="1" from="description">Erreur du détail d&apos;une séance</note>
       </trans-unit>
       <trans-unit id="timeline.session.open" datatype="html">
-        <source> Ouvrir </source>
+        <source>Ouvrir</source>
         <target state="translated"> Open </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
@@ -18304,7 +18313,7 @@
         <note priority="1" from="description">Aide des champs Période et Année</note>
       </trans-unit>
       <trans-unit id="profile360.panel.remove" datatype="html">
-        <source>Retirer du profil</source>
+        <source> Retirer du profil </source>
         <target state="translated">Remove from profile</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
@@ -18313,7 +18322,7 @@
         <note priority="1" from="description">Bouton Retirer du profil du panneau</note>
       </trans-unit>
       <trans-unit id="profile360.panel.cancel" datatype="html">
-        <source>Annuler</source>
+        <source> Annuler </source>
         <target state="translated">Cancel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
@@ -24497,8 +24506,8 @@
         <note priority="1" from="description">Moment : hier</note>
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.title" datatype="html">
-        <source> Raccourcis en séance </source>
-        <target state="translated">Shortcuts in session</target>
+        <source> Raccourcis dans le texte </source>
+        <target state="translated">Shortcuts in the text</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
           <context context-type="linenumber">82,85</context>
@@ -24506,7 +24515,7 @@
         <note priority="1" from="description">Titre du bloc des raccourcis en séance</note>
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.link" datatype="html">
-        <source>lier</source>
+        <source>lien</source>
         <target state="translated">link</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
@@ -25471,6 +25480,7 @@
       </trans-unit>
       <trans-unit id="overview.side.frame.sheet" datatype="html">
         <source>Fiche</source>
+        <target state="translated">Record</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">82</context>
@@ -25479,6 +25489,7 @@
       </trans-unit>
       <trans-unit id="overview.side.frame.sheetLink" datatype="html">
         <source>Modifier la fiche</source>
+        <target state="translated">Edit the record</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">82</context>
@@ -26214,6 +26225,1599 @@
           <context context-type="linenumber">149</context>
         </context-group>
         <note priority="1" from="description">Séance ouverte depuis longtemps, séparateur de la timeline</note>
+      </trans-unit>
+      <trans-unit id="agenda.pageTitle" datatype="html">
+        <source>Agenda · PsyMate</source>
+        <target state="translated">Calendar · PsyMate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/agenda.routes.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de l&apos;agenda</note>
+      </trans-unit>
+      <trans-unit id="agenda.title" datatype="html">
+        <source>Agenda</source>
+        <target state="translated">Calendar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la page Agenda</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.today" datatype="html">
+        <source>Aujourd&apos;hui</source>
+        <target state="translated">Today</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Aujourd&apos;hui de l&apos;agenda</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.new" datatype="html">
+        <source>+ Rendez-vous</source>
+        <target state="translated">+ Appointment</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+        <note priority="1" from="description">Bouton + Rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.views" datatype="html">
+        <source>Vue</source>
+        <target state="translated">View</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">158</context>
+        </context-group>
+        <note priority="1" from="description">Nom du groupe de vues</note>
+      </trans-unit>
+      <trans-unit id="agenda.rail.label" datatype="html">
+        <source>Navigation de l&apos;agenda</source>
+        <target state="translated">Calendar navigation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
+        <note priority="1" from="description">Nom du rail gauche de l&apos;agenda</note>
+      </trans-unit>
+      <trans-unit id="agenda.shortcut.escape" datatype="html">
+        <source>Fermer le détail du rendez-vous</source>
+        <target state="translated">Close the appointment details</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis, Échap dans l&apos;agenda</note>
+      </trans-unit>
+      <trans-unit id="agenda.shortcut.arrows" datatype="html">
+        <source>Rendez-vous précédent / suivant du jour</source>
+        <target state="translated">Previous / next appointment of the day</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">161</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis, flèches dans l&apos;agenda</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.prevDay" datatype="html">
+        <source>Jour précédent</source>
+        <target state="translated">Previous day</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+        <note priority="1" from="description">Bouton ‹ en vue jour</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.nextDay" datatype="html">
+        <source>Jour suivant</source>
+        <target state="translated">Next day</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+        <note priority="1" from="description">Bouton › en vue jour</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.prevMonth" datatype="html">
+        <source>Mois précédent</source>
+        <target state="translated">Previous month</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">184</context>
+        </context-group>
+        <note priority="1" from="description">Bouton ‹ en vue mois</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.nextMonth" datatype="html">
+        <source>Mois suivant</source>
+        <target state="translated">Next month</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
+        <note priority="1" from="description">Bouton › en vue mois</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.prevPeriod" datatype="html">
+        <source>Période précédente</source>
+        <target state="translated">Previous period</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+        <note priority="1" from="description">Bouton ‹ en vue liste</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.nextPeriod" datatype="html">
+        <source>Période suivante</source>
+        <target state="translated">Next period</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">190</context>
+        </context-group>
+        <note priority="1" from="description">Bouton › en vue liste</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.prevWeek" datatype="html">
+        <source>Semaine précédente</source>
+        <target state="translated">Previous week</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">194</context>
+        </context-group>
+        <note priority="1" from="description">Bouton ‹ en vue semaine</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.nextWeek" datatype="html">
+        <source>Semaine suivante</source>
+        <target state="translated">Next week</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">195</context>
+        </context-group>
+        <note priority="1" from="description">Bouton › en vue semaine</note>
+      </trans-unit>
+      <trans-unit id="agenda.view.day" datatype="html">
+        <source>Jour</source>
+        <target state="translated">Day</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">202</context>
+        </context-group>
+        <note priority="1" from="description">Vue Jour</note>
+      </trans-unit>
+      <trans-unit id="agenda.view.week" datatype="html">
+        <source>Semaine</source>
+        <target state="translated">Week</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">204</context>
+        </context-group>
+        <note priority="1" from="description">Vue Semaine</note>
+      </trans-unit>
+      <trans-unit id="agenda.view.month" datatype="html">
+        <source>Mois</source>
+        <target state="translated">Month</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+        <note priority="1" from="description">Vue Mois</note>
+      </trans-unit>
+      <trans-unit id="agenda.view.list" datatype="html">
+        <source>Liste</source>
+        <target state="translated">List</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">208</context>
+        </context-group>
+        <note priority="1" from="description">Vue Liste</note>
+      </trans-unit>
+      <trans-unit id="agenda.list.emptyTitle" datatype="html">
+        <source>Aucun rendez-vous dans les 30 prochains jours</source>
+        <target state="translated">No appointments in the next 30 days</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">221</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;état vide de la vue liste</note>
+      </trans-unit>
+      <trans-unit id="agenda.list.emptyMessage" datatype="html">
+        <source>Cliquez sur un créneau de la semaine ou sur « + Rendez-vous » pour en planifier un.</source>
+        <target state="translated">Click a slot in the week or “+ Appointment” to schedule one.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">222</context>
+        </context-group>
+        <note priority="1" from="description">Phrase de l&apos;état vide de la vue liste</note>
+      </trans-unit>
+      <trans-unit id="agenda.retry" datatype="html">
+        <source>Réessayer</source>
+        <target state="translated">Retry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">224</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Réessayer de l&apos;agenda</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.undo" datatype="html">
+        <source>Annuler</source>
+        <target state="translated">Undo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">390</context>
+        </context-group>
+        <note priority="1" from="description">Action Annuler du toast de création</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.createdMany" datatype="html">
+        <source><x id="count" equiv-text="count"/> rendez-vous planifiés</source>
+        <target state="translated"><x id="count" equiv-text="count"/> appointments scheduled</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">401</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une création, plusieurs rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.createdOne" datatype="html">
+        <source>Rendez-vous planifié</source>
+        <target state="translated">Appointment scheduled</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">402</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une création, un rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.createdOverlaps" datatype="html">
+        <source><x id="base" equiv-text="base"/>, <x id="count" equiv-text="overlaps"/> chevauchements</source>
+        <target state="translated"><x id="base" equiv-text="base"/>, <x id="count" equiv-text="overlaps"/> overlaps</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">406</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une création avec chevauchements</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.createdOverlap" datatype="html">
+        <source><x id="base" equiv-text="base"/>, 1 chevauchement</source>
+        <target state="translated"><x id="base" equiv-text="base"/>, 1 overlap</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">407</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une création avec un chevauchement</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.undone" datatype="html">
+        <source>Planification annulée.</source>
+        <target state="translated">Scheduling undone.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">417</context>
+        </context-group>
+        <note priority="1" from="description">Toast après l&apos;annulation d&apos;une création</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.patient" datatype="html">
+        <source>Patient</source>
+        <target state="translated">Patient</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">14,17</context>
+        </context-group>
+        <note priority="1" from="description">Section patient du panneau</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.change" datatype="html">
+        <source> Changer </source>
+        <target state="translated">Change</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">32,36</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Changer de patient</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.optionAge" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ option.age }}"/> ans</source>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ option.age }}"/> years old</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">73,74</context>
+        </context-group>
+        <note priority="1" from="description">Âge d&apos;un patient dans la recherche</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.slot" datatype="html">
+        <source>Créneau</source>
+        <target state="translated">Time slot</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">100,102</context>
+        </context-group>
+        <note priority="1" from="description">Section créneau du panneau</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.date" datatype="html">
+        <source>Date</source>
+        <target state="translated">Date</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">103,104</context>
+        </context-group>
+        <note priority="1" from="description">Champ date du créneau</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.start" datatype="html">
+        <source>Début</source>
+        <target state="translated">Start</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">109,112</context>
+        </context-group>
+        <note priority="1" from="description">Champ heure de début</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.duration" datatype="html">
+        <source>Durée</source>
+        <target state="translated">Duration</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">125,127</context>
+        </context-group>
+        <note priority="1" from="description">Champ durée</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.durationOption" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ minutes }}"/> min </source>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ minutes }}"/> min</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">136,137</context>
+        </context-group>
+        <note priority="1" from="description">Option de durée du rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.endsAt" datatype="html">
+        <source>Se termine à <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono dark&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ endLabel() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">Ends at <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono dark&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ endLabel() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">148,149</context>
+        </context-group>
+        <note priority="1" from="description">Heure de fin du créneau</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.modality" datatype="html">
+        <source>Modalité</source>
+        <target state="translated">Mode</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">173,177</context>
+        </context-group>
+        <note priority="1" from="description">Section modalité du panneau</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.repeat" datatype="html">
+        <source>Répéter</source>
+        <target state="translated">Repeat</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">202,205</context>
+        </context-group>
+        <note priority="1" from="description">Section répéter du panneau</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.repeat.none" datatype="html">
+        <source> Ne pas répéter </source>
+        <target state="translated">Do not repeat</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">207,209</context>
+        </context-group>
+        <note priority="1" from="description">Option de récurrence</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.repeat.weekly" datatype="html">
+        <source> Toutes les semaines </source>
+        <target state="translated">Every week</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">210,212</context>
+        </context-group>
+        <note priority="1" from="description">Option de récurrence</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.repeat.biweekly" datatype="html">
+        <source> Toutes les 2 semaines </source>
+        <target state="translated">Every 2 weeks</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">213,215</context>
+        </context-group>
+        <note priority="1" from="description">Option de récurrence</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.repeat.monthly" datatype="html">
+        <source> Toutes les 4 semaines </source>
+        <target state="translated">Every 4 weeks</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">216,219</context>
+        </context-group>
+        <note priority="1" from="description">Option de récurrence</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.untilOption" datatype="html">
+        <source> Jusqu&apos;à une date… </source>
+        <target state="translated">Until a date…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">230,233</context>
+        </context-group>
+        <note priority="1" from="description">Option de fin de série</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.until" datatype="html">
+        <source>Jusqu&apos;au</source>
+        <target state="translated">Until</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">239,242</context>
+        </context-group>
+        <note priority="1" from="description">Champ date de fin de série</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.repeatHint" datatype="html">
+        <source>Chaque occurrence est un rendez-vous distinct ; vous pourrez en déplacer une sans toucher aux autres.</source>
+        <target state="translated">Each occurrence is a separate appointment; you can move one without affecting the others.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">254,260</context>
+        </context-group>
+        <note priority="1" from="description">Aide sur les occurrences</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.note" datatype="html">
+        <source>Note de planification</source>
+        <target state="translated">Scheduling note</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">266,270</context>
+        </context-group>
+        <note priority="1" from="description">Champ note de planification du panneau</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.cancel" datatype="html">
+        <source>Annuler</source>
+        <target state="translated">Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">290,292</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Annuler du panneau</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.title" datatype="html">
+        <source>Nouveau rendez-vous</source>
+        <target state="translated">New appointment</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+        <note priority="1" from="description">Titre du panneau Nouveau rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.subtitle" datatype="html">
+        <source>Créneau cliqué : <x id="date" equiv-text="formatWeekdayDate(this.data.slot, this.locale, false)"/>, <x id="time" equiv-text="formatTime(this.data.slot, this.locale)"/></source>
+        <target state="translated">Clicked slot: <x id="date" equiv-text="formatWeekdayDate(this.data.slot, this.locale, false)"/>, <x id="time" equiv-text="formatTime(this.data.slot, this.locale)"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+        <note priority="1" from="description">Sous-titre du panneau, créneau cliqué</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.searchPlaceholder" datatype="html">
+        <source>Rechercher un patient…</source>
+        <target state="translated">Search for a patient…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche d&apos;un patient</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.searchOther" datatype="html">
+        <source>Ou rechercher un autre patient…</source>
+        <target state="translated">Or search for another patient…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">145</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche d&apos;un autre patient</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.countLabel" datatype="html">
+        <source>Nombre de répétitions</source>
+        <target state="translated">Number of repetitions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
+        <note priority="1" from="description">Liste du nombre de répétitions</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.notePlaceholder" datatype="html">
+        <source>ex. apporter le carnet du soir</source>
+        <target state="translated">e.g. bring the evening notebook</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+        <note priority="1" from="description">Exemple de note de planification</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.startPlaceholder" datatype="html">
+        <source>10:00</source>
+        <target state="translated">10:00</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+        <note priority="1" from="description">Exemple d&apos;heure de début du rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.toConfirm" datatype="html">
+        <source>À confirmer avec le <x id="subject" equiv-text="subject"/></source>
+        <target state="translated">To be confirmed with the <x id="subject" equiv-text="subject"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+        <note priority="1" from="description">Case À confirmer du panneau</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.noResults" datatype="html">
+        <source>Aucun patient actif ne correspond.</source>
+        <target state="translated">No active patient matches.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">154</context>
+        </context-group>
+        <note priority="1" from="description">Recherche de patient sans résultat</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.searching" datatype="html">
+        <source>Recherche…</source>
+        <target state="translated">Searching…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+        <note priority="1" from="description">Recherche de patient en cours</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.searchFailed" datatype="html">
+        <source>La recherche n&apos;a pas abouti. Réessayez.</source>
+        <target state="translated">The search did not complete. Try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+        <note priority="1" from="description">Recherche de patient en erreur</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.field.patient" datatype="html">
+        <source>Patient</source>
+        <target state="translated">Patient</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">158</context>
+        </context-group>
+        <note priority="1" from="description">Champ patient, résumé des erreurs</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.field.date" datatype="html">
+        <source>Date</source>
+        <target state="translated">Date</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
+        <note priority="1" from="description">Champ date, résumé des erreurs</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.field.start" datatype="html">
+        <source>Début</source>
+        <target state="translated">Start</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+        <note priority="1" from="description">Champ début, résumé des erreurs</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.field.duration" datatype="html">
+        <source>Durée</source>
+        <target state="translated">Duration</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">161</context>
+        </context-group>
+        <note priority="1" from="description">Champ durée, résumé des erreurs</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.field.modality" datatype="html">
+        <source>Modalité</source>
+        <target state="translated">Mode</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">162</context>
+        </context-group>
+        <note priority="1" from="description">Champ modalité, résumé des erreurs</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.field.repeat" datatype="html">
+        <source>Répéter</source>
+        <target state="translated">Repeat</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+        <note priority="1" from="description">Champ répéter, résumé des erreurs</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.field.count" datatype="html">
+        <source>Répétitions</source>
+        <target state="translated">Repetitions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">164</context>
+        </context-group>
+        <note priority="1" from="description">Champ répétitions, résumé des erreurs</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.field.until" datatype="html">
+        <source>Jusqu&apos;au</source>
+        <target state="translated">Until</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">165</context>
+        </context-group>
+        <note priority="1" from="description">Champ fin de série, résumé des erreurs</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.field.note" datatype="html">
+        <source>Note de planification</source>
+        <target state="translated">Scheduling note</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">166</context>
+        </context-group>
+        <note priority="1" from="description">Champ note, résumé des erreurs</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.field.toConfirm" datatype="html">
+        <source>À confirmer</source>
+        <target state="translated">To be confirmed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+        <note priority="1" from="description">Champ à confirmer, résumé des erreurs</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.age" datatype="html">
+        <source><x id="age" equiv-text="patient.age"/> ans</source>
+        <target state="translated"><x id="age" equiv-text="patient.age"/> years old</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">274</context>
+        </context-group>
+        <note priority="1" from="description">Âge du patient dans la carte</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.rhythm" datatype="html">
+        <source>rythme <x id="rhythm" equiv-text="rhythm"/></source>
+        <target state="translated">frequency: <x id="rhythm" equiv-text="rhythm"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">280</context>
+        </context-group>
+        <note priority="1" from="description">Rythme dans la carte patient</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.nextAppointment" datatype="html">
+        <source>prochain rendez-vous le <x id="date" equiv-text="date"/> à <x id="time" equiv-text="time"/></source>
+        <target state="translated">next appointment on <x id="date" equiv-text="date"/> at <x id="time" equiv-text="time"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">288</context>
+        </context-group>
+        <note priority="1" from="description">Prochain rendez-vous du patient dans la carte</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.tooMany" datatype="html">
+        <source>Au-delà de <x id="max" equiv-text="MAX_OCCURRENCES"/> rendez-vous, la série sera refusée : choisissez une date de fin plus proche.</source>
+        <target state="translated">Beyond <x id="max" equiv-text="MAX_OCCURRENCES"/> appointments, the series will be rejected: choose an earlier end date.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">385</context>
+        </context-group>
+        <note priority="1" from="description">Série trop longue</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.previous" datatype="html">
+        <source>précédent : <x id="name" equiv-text="name"/> à <x id="time" equiv-text="at"/></source>
+        <target state="translated">previous: <x id="name" equiv-text="name"/> at <x id="time" equiv-text="at"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">401</context>
+        </context-group>
+        <note priority="1" from="description">Rendez-vous précédent du créneau</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.next" datatype="html">
+        <source>suivant : <x id="name" equiv-text="name"/> à <x id="time" equiv-text="at"/></source>
+        <target state="translated">next: <x id="name" equiv-text="name"/> at <x id="time" equiv-text="at"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">408</context>
+        </context-group>
+        <note priority="1" from="description">Rendez-vous suivant du créneau</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.noOverlap" datatype="html">
+        <source>pas de chevauchement</source>
+        <target state="translated">no overlap</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">412</context>
+        </context-group>
+        <note priority="1" from="description">Aucun chevauchement sur le créneau</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.conflict" datatype="html">
+        <source>Chevauche le rendez-vous de <x id="name" equiv-text="name"/> (<x id="range" equiv-text="range"/>). Il sera créé quand même ; vous pourrez le déplacer depuis l&apos;agenda.</source>
+        <target state="translated">Overlaps the appointment with <x id="name" equiv-text="name"/> (<x id="range" equiv-text="range"/>). It will be created anyway; you can move it from the calendar.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">423</context>
+        </context-group>
+        <note priority="1" from="description">Avertissement de chevauchement</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.count" datatype="html">
+        <source><x id="count" equiv-text="count"/> fois</source>
+        <target state="translated"><x id="count" equiv-text="count"/> times</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">430</context>
+        </context-group>
+        <note priority="1" from="description">Nombre de répétitions</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.countUntil" datatype="html">
+        <source><x id="count" equiv-text="count"/> fois (jusqu&apos;au <x id="date" equiv-text="last"/>)</source>
+        <target state="translated"><x id="count" equiv-text="count"/> times (until <x id="date" equiv-text="last"/>)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">432</context>
+        </context-group>
+        <note priority="1" from="description">Nombre de répétitions avec la date de la dernière</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.submitMany" datatype="html">
+        <source>Planifier <x id="count" equiv-text="count"/> rendez-vous</source>
+        <target state="translated">Schedule <x id="count" equiv-text="count"/> appointments</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">438</context>
+        </context-group>
+        <note priority="1" from="description">Bouton principal, plusieurs rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.submitOne" datatype="html">
+        <source>Planifier le rendez-vous</source>
+        <target state="translated">Schedule the appointment</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">439</context>
+        </context-group>
+        <note priority="1" from="description">Bouton principal, un rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.patientUnavailable" datatype="html">
+        <source>Ce patient n&apos;est plus accessible : choisissez-en un autre.</source>
+        <target state="translated">This patient is no longer accessible: choose another one.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">529</context>
+        </context-group>
+        <note priority="1" from="description">Création refusée, patient inaccessible</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.failed" datatype="html">
+        <source>Les rendez-vous n&apos;ont pas pu être planifiés. Réessayez dans un instant.</source>
+        <target state="translated">The appointments could not be scheduled. Try again in a moment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">530</context>
+        </context-group>
+        <note priority="1" from="description">Création en échec</note>
+      </trans-unit>
+      <trans-unit id="agenda.grid.off" datatype="html">
+        <source>non travaillé</source>
+        <target state="translated">non-working</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendar.component.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+        <note priority="1" from="description">Colonne d&apos;un jour non travaillé</note>
+      </trans-unit>
+      <trans-unit id="agenda.busy.title" datatype="html">
+        <source>Occupé · <x id="calendar" equiv-text="block.calendar"/></source>
+        <target state="translated">Busy · <x id="calendar" equiv-text="block.calendar"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendar.component.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;une indisponibilité externe dans la grille</note>
+      </trans-unit>
+      <trans-unit id="agenda.month.more" datatype="html">
+        <source>+ <x id="count" equiv-text="count"/> autres</source>
+        <target state="translated">+ <x id="count" equiv-text="count"/> more</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendar.component.ts</context>
+          <context context-type="linenumber">323</context>
+        </context-group>
+        <note priority="1" from="description">Vue mois, rendez-vous non affichés dans la case</note>
+      </trans-unit>
+      <trans-unit id="agenda.calendars.mine" datatype="html">
+        <source>Mes agendas</source>
+        <target state="translated">My calendars</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendars.component.ts</context>
+          <context context-type="linenumber">16,18</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la carte des agendas</note>
+      </trans-unit>
+      <trans-unit id="agenda.calendars.google" datatype="html">
+        <source>Google Agenda</source>
+        <target state="translated">Google Calendar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendars.component.ts</context>
+          <context context-type="linenumber">32,34</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la section Google Agenda du rail</note>
+      </trans-unit>
+      <trans-unit id="agenda.calendars.later" datatype="html">
+        <source>à venir</source>
+        <target state="translated">coming soon</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendars.component.ts</context>
+          <context context-type="linenumber">35,39</context>
+        </context-group>
+        <note priority="1" from="description">Google Agenda, intégration à venir</note>
+      </trans-unit>
+      <trans-unit id="agenda.legend.tentative" datatype="html">
+        <source>À confirmer</source>
+        <target state="translated">To be confirmed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendars.component.ts</context>
+          <context context-type="linenumber">43,48</context>
+        </context-group>
+        <note priority="1" from="description">Légende de l&apos;agenda, à confirmer</note>
+      </trans-unit>
+      <trans-unit id="agenda.legend.label" datatype="html">
+        <source>Légende</source>
+        <target state="translated">Legend</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendars.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la légende de l&apos;agenda</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.week" datatype="html">
+        <source>semaine <x id="week" equiv-text="isoWeek(range.from)"/></source>
+        <target state="translated">week <x id="week" equiv-text="isoWeek(range.from)"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+        <note priority="1" from="description">Numéro de semaine ISO dans la barre d&apos;outils de l&apos;agenda</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.listPeriod" datatype="html">
+        <source><x id="days" equiv-text="LIST_DAYS"/> prochains jours</source>
+        <target state="translated">next <x id="days" equiv-text="LIST_DAYS"/> days</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <note priority="1" from="description">Vue liste de l&apos;agenda, période couverte</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.sessions.none" datatype="html">
+        <source>aucune séance</source>
+        <target state="translated">no session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+        <note priority="1" from="description">Aucune séance dans la plage affichée</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.sessions.one" datatype="html">
+        <source>1 séance</source>
+        <target state="translated">1 session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+        <note priority="1" from="description">Une séance dans la plage affichée</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.sessions.many" datatype="html">
+        <source><x id="count" equiv-text="count"/> séances</source>
+        <target state="translated"><x id="count" equiv-text="count"/> sessions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+        <note priority="1" from="description">Nombre de séances de la plage affichée</note>
+      </trans-unit>
+      <trans-unit id="agenda.guest.purged" datatype="html">
+        <source>Invité purgé</source>
+        <target state="translated">Purged guest</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+        <note priority="1" from="description">Nom d&apos;un invité dont l&apos;identité a été purgée (six mois après le rendez-vous)</note>
+      </trans-unit>
+      <trans-unit id="agenda.modality.inPerson" datatype="html">
+        <source>Cabinet</source>
+        <target state="translated">In person</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+        <note priority="1" from="description">Segment de modalité, cabinet</note>
+      </trans-unit>
+      <trans-unit id="agenda.modality.video" datatype="html">
+        <source>Visio</source>
+        <target state="translated">Video</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+        <note priority="1" from="description">Segment de modalité, visio</note>
+      </trans-unit>
+      <trans-unit id="agenda.modality.phone" datatype="html">
+        <source>Téléphone</source>
+        <target state="translated">Phone</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+        <note priority="1" from="description">Segment de modalité, téléphone</note>
+      </trans-unit>
+      <trans-unit id="agenda.status.tentative" datatype="html">
+        <source>à confirmer</source>
+        <target state="translated">to be confirmed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">181</context>
+        </context-group>
+        <note priority="1" from="description">Rendez-vous à confirmer, après le nom</note>
+      </trans-unit>
+      <trans-unit id="agenda.status.cancelled" datatype="html">
+        <source>annulé</source>
+        <target state="translated">cancelled</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+        <note priority="1" from="description">Rendez-vous annulé</note>
+      </trans-unit>
+      <trans-unit id="agenda.status.done" datatype="html">
+        <source>fait</source>
+        <target state="translated">done</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
+        <note priority="1" from="description">Rendez-vous fait (séance démarrée)</note>
+      </trans-unit>
+      <trans-unit id="agenda.calendars.inPerson" datatype="html">
+        <source>Séances au cabinet</source>
+        <target state="translated">In-person sessions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">195</context>
+        </context-group>
+        <note priority="1" from="description">Case du rail de l&apos;agenda</note>
+      </trans-unit>
+      <trans-unit id="agenda.calendars.video" datatype="html">
+        <source>Séances en visio</source>
+        <target state="translated">Video sessions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+        <note priority="1" from="description">Case du rail de l&apos;agenda</note>
+      </trans-unit>
+      <trans-unit id="agenda.calendars.phone" datatype="html">
+        <source>Contacts (appels)</source>
+        <target state="translated">Contacts (calls)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+        <note priority="1" from="description">Case du rail de l&apos;agenda</note>
+      </trans-unit>
+      <trans-unit id="agenda.busy.name" datatype="html">
+        <source>Indisponible de <x id="from" equiv-text="from"/> à <x id="to" equiv-text="to"/>, agenda <x id="calendar" equiv-text="calendar"/></source>
+        <target state="translated">Unavailable from <x id="from" equiv-text="from"/> to <x id="to" equiv-text="to"/>, calendar <x id="calendar" equiv-text="calendar"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">212</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible d&apos;un bloc occupé externe</note>
+      </trans-unit>
+      <trans-unit id="agenda.conflict.many" datatype="html">
+        <source>Chevauche le rendez-vous de <x id="name" equiv-text="name"/> à <x id="time" equiv-text="at"/> et <x id="count" equiv-text="others"/> autre(s).</source>
+        <target state="translated">Overlaps the appointment with <x id="name" equiv-text="name"/> at <x id="time" equiv-text="at"/> and <x id="count" equiv-text="others"/> other(s).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+        <note priority="1" from="description">Toast, plusieurs chevauchements</note>
+      </trans-unit>
+      <trans-unit id="agenda.conflict.one" datatype="html">
+        <source>Chevauche le rendez-vous de <x id="name" equiv-text="name"/> à <x id="time" equiv-text="at"/>.</source>
+        <target state="translated">Overlaps the appointment with <x id="name" equiv-text="name"/> at <x id="time" equiv-text="at"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">227</context>
+        </context-group>
+        <note priority="1" from="description">Toast, un chevauchement</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.moveTitle" datatype="html">
+        <source> Déplacer le rendez-vous </source>
+        <target state="translated">Move the appointment</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">47,50</context>
+        </context-group>
+        <note priority="1" from="description">Titre du formulaire Déplacer</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.moveDate" datatype="html">
+        <source>Date</source>
+        <target state="translated">Date</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">52,54</context>
+        </context-group>
+        <note priority="1" from="description">Champ date du formulaire Déplacer</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.moveStart" datatype="html">
+        <source>Début</source>
+        <target state="translated">Start</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">61,65</context>
+        </context-group>
+        <note priority="1" from="description">Champ heure du formulaire Déplacer</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.moveDuration" datatype="html">
+        <source>Durée</source>
+        <target state="translated">Duration</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">78,81</context>
+        </context-group>
+        <note priority="1" from="description">Champ durée du formulaire Déplacer</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.durationOption" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ minutes }}"/> min </source>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ minutes }}"/> min</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">87,88</context>
+        </context-group>
+        <note priority="1" from="description">Option de durée</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.moveSubmit" datatype="html">
+        <source> Déplacer </source>
+        <target state="translated">Move</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">107,110</context>
+        </context-group>
+        <note priority="1" from="description">Valider le déplacement</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.formCancel" datatype="html">
+        <source> Annuler </source>
+        <target state="translated">Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">114,118</context>
+        </context-group>
+        <note priority="1" from="description">Renoncer au déplacement</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.cancelTitle" datatype="html">
+        <source> Annuler ce rendez-vous ? </source>
+        <target state="translated">Cancel this appointment?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">130,133</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la confirmation d&apos;annulation</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.cancelReason" datatype="html">
+        <source>Motif (facultatif)</source>
+        <target state="translated">Reason (optional)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">134,137</context>
+        </context-group>
+        <note priority="1" from="description">Champ motif d&apos;annulation</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.cancelSubmit" datatype="html">
+        <source> Annuler le rendez-vous </source>
+        <target state="translated">Cancel the appointment</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">153,156</context>
+        </context-group>
+        <note priority="1" from="description">Confirmer l&apos;annulation</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.cancelKeep" datatype="html">
+        <source> Garder </source>
+        <target state="translated">Keep</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">160,163</context>
+        </context-group>
+        <note priority="1" from="description">Garder le rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.prepare" datatype="html">
+        <source>Préparer</source>
+        <target state="translated">Prepare</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">168,171</context>
+        </context-group>
+        <note priority="1" from="description">Titre du bloc Préparer du détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.lastSession" datatype="html">
+        <source>Dernière séance le <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ last }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <target state="translated">Last session on <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ last }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">177,178</context>
+        </context-group>
+        <note priority="1" from="description">Dernière séance du patient</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.since.text" datatype="html">
+        <source>depuis : <x id="INTERPOLATION" equiv-text="{{ since }}"/></source>
+        <target state="translated">since then: <x id="INTERPOLATION" equiv-text="{{ since }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">182,183</context>
+        </context-group>
+        <note priority="1" from="description">Ce qui s&apos;est passé depuis</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.since.none" datatype="html">
+        <source>rien de nouveau depuis</source>
+        <target state="translated">nothing new since then</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">187,190</context>
+        </context-group>
+        <note priority="1" from="description">Rien depuis la dernière séance</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.noSession" datatype="html">
+        <source>Aucune séance clôturée pour l&apos;instant.</source>
+        <target state="translated">No closed session yet.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">192,196</context>
+        </context-group>
+        <note priority="1" from="description">Aucune séance clôturée</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.overview" datatype="html">
+        <source>Vue d&apos;ensemble</source>
+        <target state="translated">Overview</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">203,207</context>
+        </context-group>
+        <note priority="1" from="description">Lien du détail vers la vue d&apos;ensemble</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.timeline" datatype="html">
+        <source>Timeline</source>
+        <target state="translated">Timeline</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">209,214</context>
+        </context-group>
+        <note priority="1" from="description">Lien du détail vers la timeline</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.note" datatype="html">
+        <source>Note de planification</source>
+        <target state="translated">Scheduling note</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">217,221</context>
+        </context-group>
+        <note priority="1" from="description">Champ note de planification</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.noteHint" datatype="html">
+        <source>Visible seulement dans l&apos;agenda.</source>
+        <target state="translated">Visible only in the calendar.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">232,234</context>
+        </context-group>
+        <note priority="1" from="description">Aide de la note de planification</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.confirm" datatype="html">
+        <source> Confirmer le rendez-vous </source>
+        <target state="translated">Confirm the appointment</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">259,263</context>
+        </context-group>
+        <note priority="1" from="description">Action Confirmer du détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.move" datatype="html">
+        <source> Déplacer </source>
+        <target state="translated">Move</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">273,277</context>
+        </context-group>
+        <note priority="1" from="description">Action Déplacer du détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.duplicate" datatype="html">
+        <source> Dupliquer </source>
+        <target state="translated">Duplicate</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">281,285</context>
+        </context-group>
+        <note priority="1" from="description">Action Dupliquer du détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.cancel" datatype="html">
+        <source> Annuler </source>
+        <target state="translated">Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">293,297</context>
+        </context-group>
+        <note priority="1" from="description">Action Annuler du détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.help" datatype="html">
+        <source>Glisser le rendez-vous dans la grille ou « Déplacer » · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Échap<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> ferme le détail</source>
+        <target state="translated">Drag the appointment in the grid or use “Move” · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Esc<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> closes the details</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">298,300</context>
+        </context-group>
+        <note priority="1" from="description">Aide clavier du détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.failed" datatype="html">
+        <source>L&apos;action n&apos;a pas abouti. Réessayez dans un instant.</source>
+        <target state="translated">The action did not complete. Try again in a moment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">Échec d&apos;une action de l&apos;agenda, sans détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.label" datatype="html">
+        <source>Détail du rendez-vous</source>
+        <target state="translated">Appointment details</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+        <note priority="1" from="description">Nom de la zone de détail du rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.close" datatype="html">
+        <source>Fermer le détail</source>
+        <target state="translated">Close details</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <note priority="1" from="description">Croix du détail du rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.start" datatype="html">
+        <source>Démarrer la séance</source>
+        <target state="translated">Start the session</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <note priority="1" from="description">Bouton principal du détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.missing" datatype="html">
+        <source>Rendez-vous introuvable</source>
+        <target state="translated">Appointment not found</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <note priority="1" from="description">Détail, rendez-vous introuvable</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.retry" datatype="html">
+        <source>Réessayer</source>
+        <target state="translated">Retry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Réessayer du détail en erreur</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.missingMessage" datatype="html">
+        <source>Il a peut-être été supprimé, ou il appartient à un autre compte.</source>
+        <target state="translated">It may have been deleted, or it belongs to another account.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <note priority="1" from="description">Détail, rendez-vous introuvable, explication</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.later" datatype="html">
+        <source><x id="action" equiv-text="this.startLabel"/> · à venir</source>
+        <target state="translated"><x id="action" equiv-text="this.startLabel"/> · coming soon</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+        <note priority="1" from="description">Action du détail non encore disponible</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.kicker.tentative" datatype="html">
+        <source>À confirmer · <x id="modality" equiv-text="modality"/></source>
+        <target state="translated">To be confirmed · <x id="modality" equiv-text="modality"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">199</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du détail, à confirmer</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.kicker.cancelled" datatype="html">
+        <source>Annulé · <x id="modality" equiv-text="modality"/></source>
+        <target state="translated">Cancelled · <x id="modality" equiv-text="modality"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du détail, annulé</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.kicker.done" datatype="html">
+        <source>Séance faite · <x id="modality" equiv-text="modality"/></source>
+        <target state="translated">Session done · <x id="modality" equiv-text="modality"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du détail, séance faite</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.kicker.planned" datatype="html">
+        <source>Séance planifiée · <x id="modality" equiv-text="modality"/></source>
+        <target state="translated">Session scheduled · <x id="modality" equiv-text="modality"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">205</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette du détail, séance planifiée</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.guest" datatype="html">
+        <source>invité</source>
+        <target state="translated">guest</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">247</context>
+        </context-group>
+        <note priority="1" from="description">Rendez-vous invité (personne sans dossier patient), dans le détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.age" datatype="html">
+        <source><x id="age" equiv-text="item.patient.age"/> ans</source>
+        <target state="translated"><x id="age" equiv-text="item.patient.age"/> years old</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+        <note priority="1" from="description">Âge du patient dans le détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.since" datatype="html">
+        <source>suivi depuis <x id="month" equiv-text="month"/></source>
+        <target state="translated">followed since <x id="month" equiv-text="month"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">237</context>
+        </context-group>
+        <note priority="1" from="description">Début du suivi dans le détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.archived" datatype="html">
+        <source>dossier archivé</source>
+        <target state="translated">archived record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">242</context>
+        </context-group>
+        <note priority="1" from="description">Patient archivé, dans le détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.duration" datatype="html">
+        <source><x id="minutes" equiv-text="item.durationMin"/> min</source>
+        <target state="translated"><x id="minutes" equiv-text="item.durationMin"/> min</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">263</context>
+        </context-group>
+        <note priority="1" from="description">Durée du rendez-vous dans le détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.rhythm" datatype="html">
+        <source>Rythme : <x id="rhythm" equiv-text="rhythm"/></source>
+        <target state="translated">Frequency: <x id="rhythm" equiv-text="rhythm"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">268</context>
+        </context-group>
+        <note priority="1" from="description">Rythme du suivi dans le détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.cancelledAt" datatype="html">
+        <source>Annulé le <x id="date" equiv-text="date"/> à <x id="time" equiv-text="time"/></source>
+        <target state="translated">Cancelled on <x id="date" equiv-text="date"/> at <x id="time" equiv-text="time"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">281</context>
+        </context-group>
+        <note priority="1" from="description">Rendez-vous annulé, date</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.cancelledReason" datatype="html">
+        <source><x id="base" equiv-text="base"/> (<x id="reason" equiv-text="reason"/>)</source>
+        <target state="translated"><x id="base" equiv-text="base"/> (<x id="reason" equiv-text="reason"/>)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">284</context>
+        </context-group>
+        <note priority="1" from="description">Rendez-vous annulé, date et motif</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.feelings.one" datatype="html">
+        <source>1 ressenti</source>
+        <target state="translated">1 feeling</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">302</context>
+        </context-group>
+        <note priority="1" from="description">Un ressenti depuis la dernière séance</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.feelings.many" datatype="html">
+        <source><x id="count" equiv-text="prep.feelings"/> ressentis</source>
+        <target state="translated"><x id="count" equiv-text="prep.feelings"/> feelings</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">303</context>
+        </context-group>
+        <note priority="1" from="description">Ressentis depuis la dernière séance</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.events.one" datatype="html">
+        <source>1 événement</source>
+        <target state="translated">1 event</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">309</context>
+        </context-group>
+        <note priority="1" from="description">Un événement depuis la dernière séance</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.events.many" datatype="html">
+        <source><x id="count" equiv-text="prep.events"/> événements</source>
+        <target state="translated"><x id="count" equiv-text="prep.events"/> events</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">310</context>
+        </context-group>
+        <note priority="1" from="description">Événements depuis la dernière séance</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.others.one" datatype="html">
+        <source>1 autre entrée</source>
+        <target state="translated">1 other entry</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">316</context>
+        </context-group>
+        <note priority="1" from="description">Une autre entrée depuis la dernière séance</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.others.many" datatype="html">
+        <source><x id="count" equiv-text="prep.others"/> autres entrées</source>
+        <target state="translated"><x id="count" equiv-text="prep.others"/> other entries</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">317</context>
+        </context-group>
+        <note priority="1" from="description">Autres entrées depuis la dernière séance</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.noteSaving" datatype="html">
+        <source>Enregistrement…</source>
+        <target state="translated">Saving…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">336</context>
+        </context-group>
+        <note priority="1" from="description">Note en cours d&apos;enregistrement</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.noteSaved" datatype="html">
+        <source>Enregistré</source>
+        <target state="translated">Saved</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">338</context>
+        </context-group>
+        <note priority="1" from="description">Note enregistrée</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.noteError" datatype="html">
+        <source>Non enregistré, réessayez.</source>
+        <target state="translated">Not saved, try again.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">340</context>
+        </context-group>
+        <note priority="1" from="description">Note non enregistrée</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.moved" datatype="html">
+        <source>Rendez-vous déplacé.</source>
+        <target state="translated">Appointment moved.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">433</context>
+        </context-group>
+        <note priority="1" from="description">Toast après un déplacement</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.cancelled" datatype="html">
+        <source>Rendez-vous annulé.</source>
+        <target state="translated">Appointment cancelled.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">470</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une annulation</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.confirmed" datatype="html">
+        <source>Rendez-vous confirmé.</source>
+        <target state="translated">Appointment confirmed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">484</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une confirmation</note>
+      </trans-unit>
+      <trans-unit id="agenda.miniMonth.prev" datatype="html">
+        <source>Mois précédent</source>
+        <target state="translated">Previous month</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/mini-month.component.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+        <note priority="1" from="description">Mini-mois, mois précédent</note>
+      </trans-unit>
+      <trans-unit id="agenda.miniMonth.next" datatype="html">
+        <source>Mois suivant</source>
+        <target state="translated">Next month</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/mini-month.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Mini-mois, mois suivant</note>
+      </trans-unit>
+      <trans-unit id="agenda.miniMonth.today" datatype="html">
+        <source>Aujourd&apos;hui, <x id="date" equiv-text="name"/></source>
+        <target state="translated">Today, <x id="date" equiv-text="name"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/mini-month.component.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <note priority="1" from="description">Mini-mois, jour d&apos;aujourd&apos;hui</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.escapeKey" datatype="html">
+        <source>Échap</source>
+        <target state="translated">Esc</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">291,295</context>
+        </context-group>
+        <note priority="1" from="description">Touche Échap du bouton Annuler</note>
+      </trans-unit>
+      <trans-unit id="search.help.example.tag" datatype="html">
+        <source>tag:travail</source>
+        <target state="translated">tag:work</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
+          <context context-type="linenumber">17,19</context>
+        </context-group>
+        <note priority="1" from="description">Exemple de jeton tag</note>
+      </trans-unit>
+      <trans-unit id="search.help.example.emotion" datatype="html">
+        <source>émotion:anxiété</source>
+        <target state="translated">emotion:anxiety</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
+          <context context-type="linenumber">26,29</context>
+        </context-group>
+        <note priority="1" from="description">Exemple de jeton émotion (emotion: accepté par l’API)</note>
+      </trans-unit>
+      <trans-unit id="search.help.example.before" datatype="html">
+        <source>avant:2026-09</source>
+        <target state="translated">before:2026-09</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
+          <context context-type="linenumber">35,38</context>
+        </context-group>
+        <note priority="1" from="description">Exemple de jeton avant (before: accepté par l’API)</note>
+      </trans-unit>
+      <trans-unit id="search.help.example.after" datatype="html">
+        <source>après:2026-06</source>
+        <target state="translated">after:2026-06</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
+          <context context-type="linenumber">43,46</context>
+        </context-group>
+        <note priority="1" from="description">Exemple de jeton après (after: accepté par l’API)</note>
+      </trans-unit>
+      <trans-unit id="search.help.example.phrase" datatype="html">
+        <source>&quot;mot exact&quot;</source>
+        <target state="translated">"exact phrase"</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
+          <context context-type="linenumber">50,52</context>
+        </context-group>
+        <note priority="1" from="description">Exemple d’expression exacte</note>
+      </trans-unit>
+      <trans-unit id="search.help.example.exclude" datatype="html">
+        <source>-mot</source>
+        <target state="translated">-word</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
+          <context context-type="linenumber">56,58</context>
+        </context-group>
+        <note priority="1" from="description">Exemple de mot exclu</note>
       </trans-unit>
     </body>
   </file>

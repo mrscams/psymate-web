@@ -144,7 +144,7 @@ footer{color:var(--text2);font-size:13px;border-top:1px solid var(--border);padd
 <div class="arrowdown">▼ méthodes générées, un fichier par tag OpenAPI</div>
 <div class="layer l5"><b>5 · Client généré</b><span class="what"><code>openapi-generator</code> (typescript-angular) depuis <code>docs/contract/openapi.yaml</code>. Regénéré par <code>pnpm contract:pull</code>, commité, <b>jamais édité</b>.</span><span class="where mono">src/app/api/** (généré)</span></div>
 <div class="arrowdown">▼ HttpClient + intercepteurs</div>
-<div class="layer l6"><b>6 · Transport</b><span class="what">Intercepteurs dans <code>core/http</code> : cookie de session (<code>withCredentials</code>), erreurs <code>application/problem+json</code>, 401 → connexion, 403 d'état → redirections, 429 → <code>Retry-After</code>, hors ligne. Proxy <code>/api</code> → <code>:8080</code> en dev.</span><span class="where mono">core/http/*.interceptor.ts</span></div>
+<div class="layer l6"><b>6 · Transport</b><span class="what">Intercepteurs dans <code>core/http</code> : cookie de session (<code>withCredentials</code>), langue de l'application (<code>Accept-Language</code> : le serveur écrit ses messages dans la langue de l'écran), erreurs <code>application/problem+json</code>, 401 → connexion, 403 d'état → redirections, 429 → <code>Retry-After</code>, hors ligne. Proxy <code>/api</code> → <code>:8080</code> en dev.</span><span class="where mono">core/http/*.interceptor.ts</span></div>
 </div>
 <div class="callout p"><b>Pourquoi pas plus simple ?</b> Sans la couche 4, le store importe le client généré et chaque régénération du contrat casse vingt fichiers. Sans la couche 3, l'état se disperse dans les composants et deux onglets ne se parlent plus. Six couches, c'est le minimum pour qu'une feature se lise de haut en bas.</div>
 
@@ -158,7 +158,7 @@ footer{color:var(--text2);font-size:13px;border-top:1px solid var(--border);padd
 ├── <span class="d">src/app/</span>
 │   ├── <span class="d">core/</span>                  <span class="c">transverse, chargé une fois, aucune UI métier</span>
 │   │   ├── auth/              <span class="c">SessionStore (GET /api/auth/me), authGuard, roleGuard, redirections d'état</span>
-│   │   ├── http/              <span class="c">intercepteurs : credentials, problem+json, 401/403/429, hors ligne</span>
+│   │   ├── http/              <span class="c">intercepteurs : credentials, langue, problem+json, 401/403/429, hors ligne</span>
 │   │   ├── preferences/       <span class="c">PreferencesStore (fiche 14), cache localStorage</span>
 │   │   ├── shortcuts/         <span class="c">raccourcis globaux N / L 1 2 3 M Échap ?</span>
 │   │   ├── i18n/              <span class="c">locale, subjectLabel patient/client, formats Intl</span>
