@@ -108,6 +108,18 @@ h2,
   }
 }
 
+// « Demande en ligne » : le globe à la largeur de la vignette « À confirmer ».
+.globe {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .key {
   width: 14px;
   height: 10px;

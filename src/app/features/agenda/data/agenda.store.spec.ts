@@ -4,6 +4,7 @@ import { ApiProblem } from '../../../core/http';
 import {
   appointmentOf,
   guestAppointmentOf,
+  onlineRequestOf,
   PURGED_GUEST,
   weekAgenda,
 } from '../testing/agenda.testing';
@@ -23,6 +24,7 @@ function setup(api: Partial<Record<keyof AgendaApi, ReturnType<typeof vi.fn>>> =
   const load = vi.fn((range: AgendaRange) => Promise.resolve(weekAgenda(range)));
   const mock = {
     load,
+    requests: vi.fn().mockResolvedValue([]),
     get: vi.fn(),
     update: vi.fn(),
     cancel: vi.fn(),
@@ -308,5 +310,96 @@ describe('AgendaStore', () => {
     expect(store.stepped(1).getMonth()).toBe(10);
     expect(store.stepped(-1).getMonth()).toBe(8);
     expect(store.date()).toBe('2026-10-26');
+  });
+
+  describe('demandes en ligne', () => {
+    const first = onlineRequestOf({ id: 'req-1', startsAt: '2026-11-26T09:00:00Z' });
+    const second = onlineRequestOf({ id: 'req-2', startsAt: '2026-12-01T13:00:00Z' });
+
+    it('lues avec la plage : liste dans l’ordre de l’API, compteur = sa longueur, rien de compté côté client', async () => {
+      // L'API renvoie une demande hors de la semaine affichée ; la plage contient en plus un
+      // rendez-vous en ligne à confirmer qui n'est pas dans la réponse : il ne compte pas.
+      const inWindow = onlineRequestOf({ id: 'dans-la-plage', startsAt: '2026-10-27T09:00:00Z' });
+      const load = vi.fn((range: AgendaRange) => {
+        const week = weekAgenda(range);
+        return Promise.resolve({ ...week, appointments: [...week.appointments, inWindow] });
+      });
+      const requests = vi.fn().mockResolvedValue([second, first]);
+      const { store } = setup({ load, requests });
+      expect(store.requestCount()).toBeNull();
+      expect(store.requests().status).toBe('idle');
+      await store.show('week', d('2026-10-26'));
+      expect(requests).toHaveBeenCalledTimes(1);
+      expect(store.requests().status).toBe('loaded');
+      expect(store.requests().data?.map((a) => a.id)).toEqual(['req-2', 'req-1']);
+      expect(store.requestCount()).toBe(2);
+    });
+
+    it('relues à chaque rechargement de la plage et après confirmer, refuser, déplacer', async () => {
+      const requests = vi
+        .fn()
+        .mockResolvedValueOnce([first, second])
+        .mockResolvedValueOnce([first, second])
+        .mockResolvedValueOnce([second])
+        .mockResolvedValue([]);
+      const { store } = setup({
+        requests,
+        confirm: vi.fn().mockResolvedValue({ ...first, status: 'planned' }),
+        cancel: vi.fn().mockResolvedValue({ ...second, status: 'cancelled' }),
+        update: vi.fn().mockResolvedValue({ appointment: second, conflicts: [] }),
+      });
+      await store.show('week', d('2026-10-26'));
+      await store.show('week', d('2026-11-02'));
+      expect(requests).toHaveBeenCalledTimes(2);
+      await store.confirm('req-1');
+      expect(requests).toHaveBeenCalledTimes(3);
+      expect(store.requestCount()).toBe(1);
+      await store.move('req-2', '2026-12-01T14:00:00.000Z', 60);
+      expect(requests).toHaveBeenCalledTimes(4);
+      await store.cancel('req-2');
+      expect(requests).toHaveBeenCalledTimes(5);
+      expect(store.requestCount()).toBe(0);
+      expect(store.requests().status).toBe('loaded');
+    });
+
+    it('trois états : chargement (liste gardée pendant une relecture), erreur, Réessayer relit la liste seule', async () => {
+      let release!: (list: unknown) => void;
+      const requests = vi
+        .fn()
+        .mockRejectedValueOnce(problem(0, 'NETWORK_ERROR'))
+        .mockResolvedValueOnce([first])
+        .mockImplementationOnce(() => new Promise((resolve) => (release = resolve)));
+      const { store, load } = setup({ requests });
+      await store.show('week', d('2026-10-26'));
+      expect(store.requests().status).toBe('error');
+      expect(store.requests().problem?.code).toBe('NETWORK_ERROR');
+      expect(store.requestCount()).toBeNull();
+      expect(store.data().status).toBe('loaded');
+
+      await store.reloadRequests();
+      expect(load).toHaveBeenCalledTimes(1);
+      expect(store.requestCount()).toBe(1);
+
+      const pending = store.reloadRequests();
+      expect(store.requests().status).toBe('loading');
+      expect(store.requestCount()).toBe(1);
+      release([]);
+      await pending;
+      expect(store.requestCount()).toBe(0);
+    });
+
+    it('une réponse dépassée par une relecture plus récente est ignorée', async () => {
+      let resolveOld!: (list: unknown) => void;
+      const requests = vi
+        .fn()
+        .mockImplementationOnce(() => new Promise((resolve) => (resolveOld = resolve)))
+        .mockResolvedValueOnce([first]);
+      const { store } = setup({ requests });
+      const old = store.reloadRequests();
+      await store.reloadRequests();
+      resolveOld([first, second]);
+      await old;
+      expect(store.requestCount()).toBe(1);
+    });
   });
 });

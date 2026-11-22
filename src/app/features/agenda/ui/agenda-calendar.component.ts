@@ -1,4 +1,4 @@
-import { LocationStrategy } from '@angular/common';
+import { LocationStrategy, NgTemplateOutlet } from '@angular/common';
 import {
   afterRenderEffect,
   ChangeDetectionStrategy,
@@ -46,6 +46,7 @@ import {
   formatWeekdayDate,
   formatWeekdayShort,
   modalityLabel,
+  onlineMention,
   statusLabel,
 } from './agenda-format';
 
@@ -84,6 +85,8 @@ interface EventProps {
   startTime: string;
   /** Titre d'une indisponibilité (« Occupé · Google Pro »). */
   busyTitle?: string;
+  /** Rendez-vous d'origine `online` : mention « Demande en ligne » (texte ou pictogramme nommé). */
+  online?: boolean;
 }
 
 /** `HH:00:00` pour une heure de 0 à 24. */
@@ -107,7 +110,7 @@ function hourTime(hour: number): string {
  */
 @Component({
   selector: 'pm-agenda-calendar',
-  imports: [FullCalendarModule],
+  imports: [FullCalendarModule, NgTemplateOutlet],
   templateUrl: './agenda-calendar.component.html',
   styleUrl: './agenda-calendar.component.scss',
   // Styles globaux sous `.pm-calendar` : FullCalendar rend hors de la vue Angular.
@@ -139,6 +142,7 @@ export class AgendaCalendarComponent {
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
 
   protected readonly offLabel = $localize`:Colonne d'un jour non travaillé@@agenda.grid.off:non travaillé`;
+  protected readonly onlineLabel = onlineMention();
 
   /** Rendez-vous et indisponibilités en événements FullCalendar. */
   protected readonly events = computed<EventInput[]>(() => {
@@ -153,6 +157,7 @@ export class AgendaCalendarComponent {
         'rdv',
         appointment.modality,
         appointment.status,
+        ...(appointment.origin === 'online' ? ['origin-online'] : []),
         ...(appointment.id === selected ? ['selected'] : []),
       ],
       extendedProps: this.propsOf(appointment),
@@ -337,6 +342,7 @@ export class AgendaCalendarComponent {
       modality,
       time: formatTimeRange(appointment.startsAt, appointment.endsAt, this.locale),
       startTime: formatTime(appointment.startsAt, this.locale),
+      online: appointment.origin === 'online',
     };
   }
 

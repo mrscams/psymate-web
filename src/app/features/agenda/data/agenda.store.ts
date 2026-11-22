@@ -57,6 +57,12 @@ interface AgendaState {
   selectedId: string | null;
   fetched: Fetched | null;
   context: PatientContext | null;
+  /**
+   * Demandes en ligne en attente (`GET /api/agenda/requests`), même hors de la plage affichée,
+   * dans l'ordre de l'API. Leur nombre est le compteur de « Demandes » ; relues à chaque lecture de
+   * la plage, donc après chaque écriture.
+   */
+  requests: Loadable<Appointment[]>;
 }
 
 const initialState: AgendaState = {
@@ -67,6 +73,7 @@ const initialState: AgendaState = {
   selectedId: null,
   fetched: null,
   context: null,
+  requests: idle(),
 };
 
 /**
@@ -78,7 +85,7 @@ const initialState: AgendaState = {
  */
 export const AgendaStore = signalStore(
   withState(initialState),
-  withComputed(({ view, date, data, hidden, selectedId, fetched }) => {
+  withComputed(({ view, date, data, hidden, selectedId, fetched, requests }) => {
     const anchor = computed(() => fromIsoDay(date()) ?? startOfDay(new Date()));
     const range = computed(() => rangeFor(view(), anchor()));
     const appointments = computed<Appointment[]>(() => {
@@ -117,6 +124,11 @@ export const AgendaStore = signalStore(
         if (other?.id !== id) return 'loading';
         return other.status === 'loaded' ? 'none' : other.status;
       }),
+      /**
+       * Compteur de « Demandes » : la longueur de la liste renvoyée par l'API, jamais un comptage de
+       * la plage affichée ; null tant que la liste n'a pas été lue.
+       */
+      requestCount: computed<number | null>(() => requests().data?.length ?? null),
       /** Les rendez-vous visibles du jour du rendez-vous ouvert (↑ ↓ passent de l'un à l'autre). */
       selectedDaySiblings: computed(() => {
         const current = appointments().find((item) => item.id === selectedId());
@@ -130,6 +142,24 @@ export const AgendaStore = signalStore(
     let request = 0;
     let fetchTicket = 0;
     let contextTicket = 0;
+    let requestsTicket = 0;
+
+    /**
+     * Relit les demandes en attente ; la liste affichée reste pendant la relecture (le compteur ne
+     * clignote pas). Seule la dernière lecture lancée compte.
+     */
+    async function loadRequests(): Promise<void> {
+      const ticket = ++requestsTicket;
+      patchState(store, { requests: loading(store.requests()) });
+      try {
+        const list = await api.requests();
+        if (ticket !== requestsTicket) return;
+        patchState(store, { requests: loaded(list) });
+      } catch (error) {
+        if (ticket !== requestsTicket) return;
+        patchState(store, { requests: failed(asProblem(error), store.requests()) });
+      }
+    }
 
     /**
      * Le rendez-vous ouvert n'est pas dans la plage lue (lien direct, autre plage) : lecture à part.
@@ -157,11 +187,16 @@ export const AgendaStore = signalStore(
     }
 
     /**
-     * Lit la plage courante. `keep` garde la donnée affichée pendant la relecture (Réessayer, après
-     * une écriture) ; une autre plage repart de zéro, pour que l'erreur et le compte ne portent
-     * jamais sur l'ancienne plage.
+     * Lit la plage courante et, en même temps, les demandes en attente (fiche 15 : relues à chaque
+     * rechargement de la fenêtre). `keep` garde la donnée affichée pendant la relecture (Réessayer,
+     * après une écriture) ; une autre plage repart de zéro, pour que l'erreur et le compte ne
+     * portent jamais sur l'ancienne plage.
      */
     async function load(keep: boolean): Promise<void> {
+      await Promise.all([loadWindow(keep), loadRequests()]);
+    }
+
+    async function loadWindow(keep: boolean): Promise<void> {
       const ticket = ++request;
       const range = store.range();
       patchState(store, { data: keep ? loading(store.data()) : loading() });
@@ -214,6 +249,8 @@ export const AgendaStore = signalStore(
       },
       reload: () => load(true),
       refresh,
+      /** « Réessayer » du panneau « Demandes en ligne » : relit la liste seule. */
+      reloadRequests: () => loadRequests(),
       /** Date d'ancrage après ‹ › dans la vue courante. */
       stepped(direction: 1 | -1): Date {
         return stepDate(store.view(), store.anchor(), direction);

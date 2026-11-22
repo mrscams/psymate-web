@@ -1,0 +1,36 @@
+<div class="head">
+  <div class="kicker-row">
+    <h2 [id]="titleId()" tabindex="-1">{{ title }}</h2>
+    <button type="button" class="close" [attr.aria-label]="closeLabel" (click)="closed.emit()">
+      ×
+    </button>
+  </div>
+  @if (countLine(); as line) {
+    <p class="count-line" role="status">{{ line }}</p>
+  }
+</div>
+
+@if (kind(); as kind) {
+  <pm-state
+    [kind]="kind"
+    skeleton="row"
+    [lines]="3"
+    compact
+    [title]="kind === 'empty' ? emptyTitle : kind === 'error' ? errorTitle : undefined"
+    [message]="kind === 'empty' ? emptyMessage : kind === 'error' ? '' : undefined"
+    [action]="kind === 'error' ? retry : undefined"
+  />
+} @else {
+  <ul class="req-list">
+    @for (row of rows(); track row.appointment.id) {
+      <li>
+        <button type="button" class="req" (click)="picked.emit(row.appointment)">
+          <span class="when"
+            >{{ row.date }} · <span class="mono">{{ row.time }}</span></span
+          >
+          <span class="who">{{ row.who }}</span>
+        </button>
+      </li>
+    }
+  </ul>
+}

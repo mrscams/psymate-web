@@ -27819,6 +27819,226 @@
         </context-group>
         <note priority="1" from="description">Exemple de mot exclu</note>
       </trans-unit>
+      <trans-unit id="agenda.toolbar.requests" datatype="html">
+        <source>Demandes</source>
+        <target state="translated">Requests</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+        <note priority="1" from="description">Entrée Demandes de la barre d&apos;outils de l&apos;agenda</note>
+      </trans-unit>
+      <trans-unit id="agenda.requests.close" datatype="html">
+        <source>Fermer les demandes</source>
+        <target state="translated">Close requests</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">184</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <note priority="1" from="description">Croix du panneau des demandes en ligne</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.requestsName" datatype="html">
+        <source>Demandes en ligne</source>
+        <target state="translated">Online requests</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible de l&apos;entrée Demandes, compteur pas encore lu</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.requestsNone" datatype="html">
+        <source>Demandes en ligne, aucune en attente</source>
+        <target state="translated">Online requests, none pending</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">196</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible de l&apos;entrée Demandes, aucune demande</note>
+      </trans-unit>
+      <trans-unit id="agenda.toolbar.requestsCount" datatype="html">
+        <source>Demandes en ligne, <x id="count" equiv-text="count"/> en attente</source>
+        <target state="translated">Online requests, <x id="count" equiv-text="count"/> pending</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+        <note priority="1" from="description">Nom accessible de l&apos;entrée Demandes, avec le compteur</note>
+      </trans-unit>
+      <trans-unit id="agenda.online.mention" datatype="html">
+        <source>Demande en ligne</source>
+        <target state="translated">Online request</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
+          <context context-type="linenumber">222</context>
+        </context-group>
+        <note priority="1" from="description">Mention d&apos;un rendez-vous demandé depuis la page publique de prise de rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.contactEmail" datatype="html">
+        <source> E-mail </source>
+        <target state="translated"> Email </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">55,58</context>
+        </context-group>
+        <note priority="1" from="description">Libellé de l&apos;e-mail de l&apos;invité dans le détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.contactPhone" datatype="html">
+        <source> Téléphone </source>
+        <target state="translated"> Phone </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">63,66</context>
+        </context-group>
+        <note priority="1" from="description">Libellé du téléphone de l&apos;invité dans le détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.refuse" datatype="html">
+        <source> Refuser </source>
+        <target state="translated"> Decline </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">339,343</context>
+        </context-group>
+        <note priority="1" from="description">Action Refuser d&apos;une demande en ligne dans le détail</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.refuseTitle" datatype="html">
+        <source>Refuser cette demande ?</source>
+        <target state="translated">Decline this request?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">244</context>
+        </context-group>
+        <note priority="1" from="description">Titre de la confirmation du refus d&apos;une demande en ligne</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.refuseSubmit" datatype="html">
+        <source>Refuser la demande</source>
+        <target state="translated">Decline the request</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">245</context>
+        </context-group>
+        <note priority="1" from="description">Confirmer le refus d&apos;une demande en ligne</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.refuseHint" datatype="html">
+        <source>Le demandeur sera prévenu par e-mail. Le motif reste dans votre agenda : il ne lui est jamais transmis.</source>
+        <target state="translated">The requester will be notified by email. The reason stays in your calendar: it is never sent to them.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">247</context>
+        </context-group>
+        <note priority="1" from="description">Refus d&apos;une demande en ligne, ce que reçoit le demandeur</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.cancelReasonPrivate" datatype="html">
+        <source>Le motif ne lui est jamais transmis.</source>
+        <target state="translated">The reason is never sent to them.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">255</context>
+        </context-group>
+        <note priority="1" from="description">Annulation d&apos;un rendez-vous en ligne, le motif</note>
+      </trans-unit>
+      <trans-unit id="agenda.detail.requesterNotified" datatype="html">
+        <source>Le demandeur sera prévenu par e-mail.</source>
+        <target state="translated">The requester will be notified by email.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">260</context>
+        </context-group>
+        <note priority="1" from="description">Rendez-vous en ligne, le demandeur reçoit un e-mail</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.refused" datatype="html">
+        <source>Demande refusée. Le demandeur est prévenu par e-mail.</source>
+        <target state="translated">Request declined. The requester has been notified by email.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">566</context>
+        </context-group>
+        <note priority="1" from="description">Toast après le refus d&apos;une demande en ligne</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.withdrawn" datatype="html">
+        <source>Cette demande n&apos;est plus en attente : elle vient d&apos;être annulée.</source>
+        <target state="translated">This request is no longer pending: it has just been cancelled.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">583</context>
+        </context-group>
+        <note priority="1" from="description">Toast quand une demande en ligne vient d&apos;être annulée par le demandeur</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.confirmedRequest" datatype="html">
+        <source>Rendez-vous confirmé. Le demandeur est prévenu par e-mail.</source>
+        <target state="translated">Appointment confirmed. The requester has been notified by email.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">600</context>
+        </context-group>
+        <note priority="1" from="description">Toast après la confirmation d&apos;une demande en ligne</note>
+      </trans-unit>
+      <trans-unit id="agenda.requests.title" datatype="html">
+        <source>Demandes en ligne</source>
+        <target state="translated">Online requests</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">Titre du panneau des demandes de rendez-vous en ligne</note>
+      </trans-unit>
+      <trans-unit id="agenda.requests.emptyTitle" datatype="html">
+        <source>Aucune demande en attente</source>
+        <target state="translated">No pending requests</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">État vide du panneau des demandes en ligne</note>
+      </trans-unit>
+      <trans-unit id="agenda.requests.emptyMessage" datatype="html">
+        <source>Les demandes faites depuis votre page de rendez-vous arrivent ici.</source>
+        <target state="translated">Requests made from your booking page arrive here.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">État vide du panneau des demandes en ligne, explication</note>
+      </trans-unit>
+      <trans-unit id="agenda.requests.errorTitle" datatype="html">
+        <source>Les demandes n&apos;ont pas pu être chargées.</source>
+        <target state="translated">The requests could not be loaded.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">État erreur du panneau des demandes en ligne</note>
+      </trans-unit>
+      <trans-unit id="agenda.requests.retry" datatype="html">
+        <source>Réessayer</source>
+        <target state="translated">Try again</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <note priority="1" from="description">Bouton Réessayer du panneau des demandes en ligne</note>
+      </trans-unit>
+      <trans-unit id="agenda.requests.countOne" datatype="html">
+        <source>1 demande attend votre réponse.</source>
+        <target state="translated">1 request awaits your reply.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <note priority="1" from="description">Panneau des demandes en ligne, une demande</note>
+      </trans-unit>
+      <trans-unit id="agenda.requests.countMany" datatype="html">
+        <source><x id="count" equiv-text="count"/> demandes attendent votre réponse.</source>
+        <target state="translated"><x id="count" equiv-text="count"/> requests await your reply.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+        <note priority="1" from="description">Panneau des demandes en ligne, plusieurs demandes</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

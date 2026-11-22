@@ -4,7 +4,12 @@ import { provideRouter } from '@angular/router';
 import { CalendarOptions, EventInput, EventMountArg, MoreLinkArg } from '@fullcalendar/core';
 
 import { AgendaHours, Appointment, BusyBlock, fromIsoDay, rangeFor } from '../data/agenda.model';
-import { guestAppointmentOf, PURGED_GUEST, weekAgenda } from '../testing/agenda.testing';
+import {
+  guestAppointmentOf,
+  onlineRequestOf,
+  PURGED_GUEST,
+  weekAgenda,
+} from '../testing/agenda.testing';
 import { AgendaCalendarComponent } from './agenda-calendar.component';
 
 const week = weekAgenda(rangeFor('week', fromIsoDay('2026-10-26')!));
@@ -16,6 +21,18 @@ const busy: BusyBlock[] = [
     endsAt: new Date(2026, 9, 26, 16, 0).toISOString(),
   },
 ];
+
+function text(el: Element | null | undefined): string {
+  return (el?.textContent ?? '').replace(/\s+/g, ' ').trim();
+}
+
+/** FullCalendar rend après le cycle Angular : on attend que le DOM attendu apparaisse. */
+async function waitFor(ready: () => boolean): Promise<void> {
+  for (let i = 0; i < 50 && !ready(); i++) {
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
+  expect(ready()).toBe(true);
+}
 
 async function render(
   selectedId: string | null = null,
@@ -177,6 +194,73 @@ describe('AgendaCalendarComponent (FullCalendar)', () => {
     expect(opened).toEqual([]);
     dblclick(events.find((item) => item.title === 'Omar B.')!);
     expect(opened.map((item) => item.patient?.displayName)).toEqual(['Omar B.']);
+  });
+
+  it('demande en ligne : classe origin-online et mention ; un « à confirmer » du praticien n’en a pas', async () => {
+    const request = onlineRequestOf({
+      id: 'demande',
+      startsAt: new Date(2026, 9, 29, 10, 0).toISOString(),
+      durationMin: 60,
+    });
+    const confirmed = onlineRequestOf({
+      id: 'confirmee',
+      startsAt: new Date(2026, 9, 28, 16, 0).toISOString(),
+      status: 'planned',
+    });
+    const { events, el, fixture } = await render(null, undefined, [
+      ...week.appointments,
+      request,
+      confirmed,
+    ]);
+    const pending = events.find((item) => item.id === 'demande')!;
+    expect(pending.classNames).toEqual(['rdv', 'in_person', 'tentative', 'origin-online']);
+    expect(pending.extendedProps).toMatchObject({
+      online: true,
+      suffix: 'à confirmer',
+      name: 'Sara Benali',
+    });
+    const planned = events.find((item) => item.id === 'confirmee')!;
+    expect(planned.classNames).toEqual(['rdv', 'in_person', 'planned', 'origin-online']);
+    expect(planned.extendedProps).toMatchObject({ online: true });
+    const yanis = events.find((item) => item.title === 'Yanis M.')!;
+    expect(yanis.classNames).not.toContain('origin-online');
+    expect(yanis.extendedProps).toMatchObject({ online: false, suffixKind: 'status' });
+
+    // Rendu (FullCalendar dessine aussi sous jsdom) : la mention est un texte dans le lien, avec
+    // un globe décoratif ; jamais sur un rendez-vous posé par le praticien.
+    const link = (id: string) =>
+      el.querySelector<HTMLAnchorElement>(`a.fc-event[href="/agenda/rdv/${id}"]`)!;
+    await waitFor(() => link('demande') !== null);
+    for (const id of ['demande', 'confirmee']) {
+      const mark = link(id).querySelector('.online-mark')!;
+      expect(text(mark)).toBe('Demande en ligne');
+      expect(mark.querySelector('svg')!.getAttribute('aria-hidden')).toBe('true');
+      expect(text(link(id))).toContain('Demande en ligne');
+    }
+    const ownTentative = el.querySelector('a.fc-event.tentative:not(.origin-online)')!;
+    expect(text(ownTentative)).toContain('Yanis M.');
+    expect(ownTentative.querySelector('.online-mark')).toBeNull();
+
+    // Vue Liste : la mention en texte (pastille) après le statut.
+    fixture.componentRef.setInput('view', 'list');
+    await waitFor(() => el.querySelector('.fc-list-event') !== null);
+    const row = [...el.querySelectorAll('.fc-list-event')].find((item) =>
+      text(item).includes('Sara Benali cabinet · à confirmer'),
+    );
+    expect(text(row?.querySelector('.list-meta .online-pill'))).toBe('Demande en ligne');
+    expect(
+      [...el.querySelectorAll('.fc-list-event')].filter((item) =>
+        item.querySelector('.online-pill'),
+      ),
+    ).toHaveLength(2);
+
+    // Vue Mois : le globe seul, nommé pour le lecteur d'écran.
+    fixture.componentRef.setInput('view', 'month');
+    await waitFor(() => el.querySelector('.fc-daygrid-event') !== null);
+    const chip = el.querySelector<HTMLElement>('a.fc-daygrid-event.origin-online')!;
+    expect(chip.querySelector('svg.globe')!.getAttribute('aria-hidden')).toBe('true');
+    expect(text(chip)).toContain('· Demande en ligne');
+    expect(text(chip.querySelector('.sr-only:last-child'))).toBe('· Demande en ligne');
   });
 
   it('sans sélection, aucun événement ne porte la classe selected ; le calendrier est monté', async () => {

@@ -11,6 +11,7 @@ import {
   LOCALE_ID,
   signal,
   untracked,
+  viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -19,7 +20,7 @@ import { filter, map, startWith } from 'rxjs';
 import { PreferencesStore } from '../../../core/preferences';
 import { ShortcutService } from '../../../core/shortcuts';
 import { SidePanelService, StateComponent, ToastService } from '../../../shared/ui';
-import { stateKind } from '../../../shared/util';
+import { stateKind, uniqueId } from '../../../shared/util';
 import {
   addDays,
   AGENDA_VIEWS,
@@ -51,6 +52,7 @@ import {
 } from '../ui/agenda-format';
 import { AppointmentDetailComponent, problemText } from '../ui/appointment-detail.component';
 import { MiniMonthComponent } from '../ui/mini-month.component';
+import { OnlineRequestsComponent } from '../ui/online-requests.component';
 
 /** Paramètres de l'URL (fiche 15) : `?view=day|week|month|list&date=yyyy-MM-dd`, `/agenda/rdv/:id`. */
 export const VIEW_PARAM = 'view';
@@ -75,6 +77,9 @@ export const UNDO_TOAST_MS = 10_000;
  * `/agenda/rdv/:id`. Clavier : Échap ferme le détail, ↑ ↓ passent au rendez-vous précédent /
  * suivant du jour ; double-clic → dossier patient. Glisser-déposer et étirement → `PATCH` puis
  * relecture ; la création (panneau 15b) relit la plage et ouvre la première occurrence.
+ * « Demandes » (fiche 15, demandes en ligne) : entrée de la barre d'outils avec le compteur renvoyé
+ * par `GET /api/agenda/requests` ; elle ouvre, à la place du détail, le panneau des demandes en
+ * attente ; choisir une demande amène la grille à sa date et ouvre son détail.
  */
 @Component({
   selector: 'pm-agenda-page',
@@ -84,6 +89,7 @@ export const UNDO_TOAST_MS = 10_000;
     AgendaCalendarsComponent,
     AgendaCalendarComponent,
     AppointmentDetailComponent,
+    OnlineRequestsComponent,
   ],
   providers: [AgendaStore],
   templateUrl: './agenda.page.html',
@@ -124,6 +130,14 @@ export class AgendaPage {
     { initialValue: this.readUrl() },
   );
 
+  /** Panneau « Demandes en ligne » ouvert (état d'écran) ; un détail ouvert prend sa place. */
+  protected readonly requestsOpen = signal(false);
+  protected readonly requestsIds = {
+    panel: uniqueId('agenda-requests'),
+    title: uniqueId('agenda-requests-title'),
+  };
+  private readonly requestsButton = viewChild<ElementRef<HTMLButtonElement>>('requestsButton');
+
   constructor() {
     effect(() => {
       const { view, date, id } = this.location();
@@ -132,6 +146,8 @@ export class AgendaPage {
       untracked(() => {
         void this.store.show(view ?? fallback, date);
         this.store.select(id);
+        // Un rendez-vous ouvert prend la colonne de droite : le panneau des demandes se ferme.
+        if (id !== null) this.requestsOpen.set(false);
       });
     });
 
@@ -149,9 +165,37 @@ export class AgendaPage {
       ];
       onCleanup(() => releases.forEach((release) => release()));
     });
+
+    // Panneau des demandes ouvert (sans détail) : Échap le ferme et rend le focus à l'entrée.
+    effect((onCleanup) => {
+      if (!this.requestsShown()) return;
+      const release = this.shortcuts.register(
+        'Escape',
+        () => this.closeRequests(),
+        this.requestsCloseHelp,
+      );
+      onCleanup(release);
+    });
   }
 
   // --- Barre d'outils -------------------------------------------------------------------------
+
+  protected readonly requestsLabel = $localize`:Entrée Demandes de la barre d'outils de l'agenda@@agenda.toolbar.requests:Demandes`;
+  private readonly requestsCloseHelp = $localize`:Croix du panneau des demandes en ligne@@agenda.requests.close:Fermer les demandes`;
+  /** Le panneau est visible : ouvert, et aucun détail ne prend sa place. */
+  protected readonly requestsShown = computed(
+    () => this.requestsOpen() && this.store.detailState() === 'none',
+  );
+  /** Nom accessible de l'entrée : « Demandes en ligne, 2 en attente » (le compteur de l'API). */
+  protected readonly requestsName = computed(() => {
+    const count = this.store.requestCount();
+    if (count === null) {
+      return $localize`:Nom accessible de l'entrée Demandes, compteur pas encore lu@@agenda.toolbar.requestsName:Demandes en ligne`;
+    }
+    return count === 0
+      ? $localize`:Nom accessible de l'entrée Demandes, aucune demande@@agenda.toolbar.requestsNone:Demandes en ligne, aucune en attente`
+      : $localize`:Nom accessible de l'entrée Demandes, avec le compteur@@agenda.toolbar.requestsCount:Demandes en ligne, ${count}:count: en attente`;
+  });
 
   protected readonly title = $localize`:Titre de la page Agenda@@agenda.title:Agenda`;
   protected readonly todayLabel = $localize`:Bouton Aujourd'hui de l'agenda@@agenda.toolbar.today:Aujourd'hui`;
@@ -321,6 +365,45 @@ export class AgendaPage {
     }
     const conflicts = conflictMessage(result.conflicts, this.locale);
     if (conflicts) this.toasts.info(conflicts);
+  }
+
+  // --- Demandes en ligne ----------------------------------------------------------------------
+
+  /** « Demandes » : ouvre le panneau à la place du détail (qui se ferme), ou le referme. */
+  protected toggleRequests(): void {
+    if (this.requestsShown()) {
+      this.requestsOpen.set(false);
+      return;
+    }
+    this.requestsOpen.set(true);
+    if (this.store.selectedId()) {
+      void this.router.navigate(['/agenda'], { queryParamsHandling: 'preserve' });
+    }
+  }
+
+  protected closeRequests(): void {
+    this.requestsOpen.set(false);
+    afterNextRender(() => this.requestsButton()?.nativeElement.focus(), {
+      injector: this.injector,
+    });
+  }
+
+  /**
+   * Une demande choisie : la grille va à sa date (même vue) et son détail s'ouvre à la place du
+   * panneau ; le focus passe au détail. Les demandes hors de la plage affichée sont atteignables.
+   */
+  protected async pickRequest(request: Appointment): Promise<void> {
+    this.requestsOpen.set(false);
+    await this.router.navigate(['/agenda', 'rdv', request.id], {
+      queryParams: {
+        [VIEW_PARAM]: this.store.view(),
+        [DATE_PARAM]: toIsoDay(new Date(request.startsAt)),
+      },
+    });
+    afterNextRender(
+      () => this.host.nativeElement.querySelector<HTMLElement>('pm-appointment-detail')?.focus(),
+      { injector: this.injector },
+    );
   }
 
   /** Double-clic sur un rendez-vous : le dossier du patient ; un invité n'en a pas. */

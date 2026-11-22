@@ -14,6 +14,14 @@
     }
   </ng-template>
 
+  <!-- Globe décoratif de la mention « Demande en ligne » (le texte la porte, jamais la couleur). -->
+  <ng-template #globe>
+    <svg class="globe" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18" />
+    </svg>
+  </ng-template>
+
   <!-- Événement : rendez-vous (nom, suffixe, heures) ou indisponibilité externe hachurée. -->
   <ng-template #eventContent let-arg>
     @let props = propsFrom(arg);
@@ -28,11 +36,21 @@
         @if (props.suffixKind === 'status') {
           <span class="status">· {{ props.suffix }}</span>
         }
+        <!-- Vue Liste : la mention en texte, après le statut. -->
+        @if (props.online) {
+          <span class="online-pill"
+            ><ng-container [ngTemplateOutlet]="globe" />{{ onlineLabel }}</span
+          >
+        }
       </span>
     } @else if (arg.view.type === 'dayGridMonth') {
       <span class="chip-time mono">{{ props.startTime }}</span>
       <span class="chip-name">{{ props.name }}</span>
       <span class="sr-only"> · {{ props.modality }}</span>
+      <!-- Vue Mois : le pictogramme seul, nommé pour le lecteur d'écran. -->
+      @if (props.online) {
+        <ng-container [ngTemplateOutlet]="globe" /><span class="sr-only"> · {{ onlineLabel }}</span>
+      }
     } @else {
       <span class="name">{{ props.name }}</span>
       @if (props.suffix; as suffix) {
@@ -41,6 +59,15 @@
         <span class="sr-only"> · {{ props.modality }}</span>
       }
       <br /><span class="time mono">{{ props.time }}</span>
+      <!-- Grille : une ligne « Demande en ligne » ; bloc court ou colonne étroite : le globe seul. -->
+      @if (props.online) {
+        <span class="sr-only">, </span
+        ><span class="online-mark"
+          ><ng-container [ngTemplateOutlet]="globe" /><span class="online-text">{{
+            onlineLabel
+          }}</span></span
+        >
+      }
     }
   </ng-template>
 

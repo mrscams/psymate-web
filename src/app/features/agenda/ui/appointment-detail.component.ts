@@ -42,6 +42,7 @@ import {
   formatWeekdayDate,
   modalityLabel,
   modalityTitle,
+  onlineMention,
 } from './agenda-format';
 
 /** Champ du contrat (errors[].field d'un 422 du PATCH) → contrôle du formulaire Déplacer. */
@@ -51,6 +52,11 @@ const MOVE_FIELDS: Record<string, string> = { startsAt: 'start', durationMin: 'd
 type Mode = 'idle' | 'move' | 'cancel';
 
 type NoteStatus = 'idle' | 'saving' | 'saved' | 'error';
+
+/** Le demandeur vient d'annuler sa demande : `409 APPOINTMENT_NOT_ACTIVE` sur une demande en attente. */
+export function isWithdrawn(problem: ApiProblem): boolean {
+  return problem.status === 409 && problem.code === 'APPOINTMENT_NOT_ACTIVE';
+}
 
 /** Message d'un problème d'écriture : le `detail` du serveur, sinon une phrase générique. */
 export function problemText(problem: ApiProblem): string {
@@ -71,8 +77,13 @@ export function problemText(problem: ApiProblem): string {
  * Annuler (motif facultatif). Un rendez-vous annulé ou fait ne se déplace ni ne s'annule plus. Sans
  * rendez-vous (lecture à part, 404, erreur), l'état est montré dans la carte. Rendez-vous invité
  * (contrat 0.13.0) : « Prénom Nom » ou « Invité purgé » en texte, sans initiales, lien, âge, « suivi
- * depuis », rythme ni bloc « Préparer » (tout cela vient du dossier) ; déplacer, annuler, confirmer
- * et la note fonctionnent comme pour un patient.
+ * depuis », rythme ni bloc « Préparer » (tout cela vient du dossier), avec un bloc Contact (e-mail,
+ * téléphone) ; déplacer, annuler, confirmer et la note fonctionnent comme pour un patient.
+ * Demande en ligne (origine `online`, fiche 15 « Demandes en ligne ») : pastille « Demande en
+ * ligne » ; en attente, « Refuser » (neutre) remplace « Annuler » et ouvre le formulaire
+ * d'annulation sous le titre « Refuser cette demande ? » ; quand l'invité a un e-mail, les
+ * formulaires disent que le demandeur sera prévenu (jamais du motif). `409 APPOINTMENT_NOT_ACTIVE`
+ * sur une demande en attente (le demandeur vient d'annuler) : toast, relecture, détail fermé.
  */
 @Component({
   selector: 'pm-appointment-detail',
@@ -88,6 +99,8 @@ export function problemText(problem: ApiProblem): string {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'complementary',
+    // Reçoit le focus quand une demande est choisie dans le panneau « Demandes en ligne ».
+    tabindex: '-1',
     '[attr.aria-label]': 'panelLabel',
     '[class]': 'appointment()?.modality ?? ""',
   },
@@ -114,6 +127,7 @@ export class AppointmentDetailComponent {
     start: uniqueId('agenda-move-start'),
     duration: uniqueId('agenda-move-duration'),
     reason: uniqueId('agenda-cancel-reason'),
+    reasonHint: uniqueId('agenda-cancel-hint'),
     moveForm: uniqueId('agenda-move-form'),
     cancelForm: uniqueId('agenda-cancel-form'),
     moveButton: uniqueId('agenda-move-button'),
@@ -193,6 +207,58 @@ export class AppointmentDetailComponent {
     });
   }
 
+  /** Rendez-vous pris en ligne (origine `online`), confirmé ou non. */
+  protected readonly online = computed(() => this.appointment()?.origin === 'online');
+  /** Demande en ligne qui attend la réponse du praticien : « Refuser » à la place d'« Annuler ». */
+  protected readonly pendingRequest = computed(
+    () => this.online() && this.appointment()?.status === 'tentative',
+  );
+  /**
+   * Le serveur prévient le demandeur par e-mail (rendez-vous en ligne dont l'invité a un e-mail) :
+   * plus rien ne part après une purge ou un rattachement à un patient.
+   */
+  protected readonly notifiesRequester = computed(
+    () => this.online() && !!this.appointment()?.guest?.email,
+  );
+
+  protected readonly onlineLabel = onlineMention();
+
+  /** Contact de l'invité (e-mail, téléphone), chacun absent quand il est inconnu ou purgé. */
+  protected readonly contact = computed(() => {
+    const guest = this.appointment()?.guest;
+    if (!guest || guest.purgedAt) return null;
+    const email = guest.email;
+    const phone = guest.phone;
+    if (!email && !phone) return null;
+    return {
+      email,
+      phone,
+      phoneHref: phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : null,
+    };
+  });
+
+  /** Textes du formulaire d'annulation : « Refuser cette demande ? » pour une demande en attente. */
+  protected readonly cancelTexts = computed(() => {
+    if (this.pendingRequest()) {
+      return {
+        title: $localize`:Titre de la confirmation du refus d'une demande en ligne@@agenda.detail.refuseTitle:Refuser cette demande ?`,
+        submit: $localize`:Confirmer le refus d'une demande en ligne@@agenda.detail.refuseSubmit:Refuser la demande`,
+        hint: this.notifiesRequester()
+          ? $localize`:Refus d'une demande en ligne, ce que reçoit le demandeur@@agenda.detail.refuseHint:Le demandeur sera prévenu par e-mail. Le motif reste dans votre agenda : il ne lui est jamais transmis.`
+          : null,
+      };
+    }
+    return {
+      title: $localize`:Titre de la confirmation d'annulation@@agenda.detail.cancelTitle:Annuler ce rendez-vous ?`,
+      submit: $localize`:Confirmer l'annulation@@agenda.detail.cancelSubmit:Annuler le rendez-vous`,
+      hint: this.notifiesRequester()
+        ? `${this.notifiedText} ${$localize`:Annulation d'un rendez-vous en ligne, le motif@@agenda.detail.cancelReasonPrivate:Le motif ne lui est jamais transmis.`}`
+        : null,
+    };
+  });
+  /** « Le demandeur sera prévenu par e-mail. » (Déplacer, Annuler d'un rendez-vous en ligne). */
+  protected readonly notifiedText = $localize`:Rendez-vous en ligne, le demandeur reçoit un e-mail@@agenda.detail.requesterNotified:Le demandeur sera prévenu par e-mail.`;
+
   protected readonly active = computed(() => {
     const item = this.appointment();
     return item !== null && isActive(item);
@@ -244,8 +310,8 @@ export class AppointmentDetailComponent {
     if (!item) return '';
     if (!item.patient) {
       if (!item.guest || item.guest.purgedAt) return '';
-      const guest = $localize`:Rendez-vous invité (personne sans dossier patient), dans le détail@@agenda.detail.guest:invité`;
-      return item.guest.phone ? `${guest} · ${item.guest.phone}` : guest;
+      // Le téléphone et l'e-mail sont dans le bloc Contact.
+      return $localize`:Rendez-vous invité (personne sans dossier patient), dans le détail@@agenda.detail.guest:invité`;
     }
     const parts: string[] = [];
     if (item.patient.age !== null) {
@@ -482,15 +548,39 @@ export class AppointmentDetailComponent {
       return;
     }
     const reason = this.cancelForm.getRawValue().reason.trim();
+    const refusing = this.pendingRequest();
+    const notifies = this.notifiesRequester();
     this.busy.set(true);
     const result = await this.store.cancel(item.id, reason || undefined);
     this.busy.set(false);
     if (!result.ok) {
+      if (refusing && isWithdrawn(result.problem)) {
+        this.withdrawn(item);
+        return;
+      }
       this.actionError.set(problemText(result.problem));
       return;
     }
-    this.toasts.success(
-      $localize`:Toast après une annulation@@agenda.toast.cancelled:Rendez-vous annulé.`,
+    if (refusing && notifies) {
+      this.toasts.success(
+        $localize`:Toast après le refus d'une demande en ligne@@agenda.toast.refused:Demande refusée. Le demandeur est prévenu par e-mail.`,
+      );
+    } else {
+      this.toasts.success(
+        $localize`:Toast après une annulation@@agenda.toast.cancelled:Rendez-vous annulé.`,
+      );
+    }
+    this.closed.emit(item);
+  }
+
+  /**
+   * La demande n'est plus en attente : le demandeur vient de l'annuler. La plage et les demandes
+   * ont été relues par le store ; le détail se ferme.
+   */
+  private withdrawn(item: Appointment): void {
+    this.mode.set('idle');
+    this.toasts.warning(
+      $localize`:Toast quand une demande en ligne vient d'être annulée par le demandeur@@agenda.toast.withdrawn:Cette demande n'est plus en attente : elle vient d'être annulée.`,
     );
     this.closed.emit(item);
   }
@@ -499,13 +589,19 @@ export class AppointmentDetailComponent {
   protected async confirm(): Promise<void> {
     const item = this.appointment();
     if (!item || this.busy()) return;
+    const request = this.pendingRequest();
+    const notifies = this.notifiesRequester();
     this.busy.set(true);
     const result = await this.store.confirm(item.id);
     this.busy.set(false);
     if (result.ok) {
       this.toasts.success(
-        $localize`:Toast après une confirmation@@agenda.toast.confirmed:Rendez-vous confirmé.`,
+        request && notifies
+          ? $localize`:Toast après la confirmation d'une demande en ligne@@agenda.toast.confirmedRequest:Rendez-vous confirmé. Le demandeur est prévenu par e-mail.`
+          : $localize`:Toast après une confirmation@@agenda.toast.confirmed:Rendez-vous confirmé.`,
       );
+    } else if (request && isWithdrawn(result.problem)) {
+      this.withdrawn(item);
     } else {
       this.toasts.warning(problemText(result.problem));
     }

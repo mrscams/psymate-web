@@ -10,6 +10,7 @@ import {
   appointmentOf,
   guestAppointmentOf,
   guestOf,
+  onlineRequestOf,
   PURGED_GUEST,
 } from '../testing/agenda.testing';
 import { AppointmentDetailComponent } from './appointment-detail.component';
@@ -268,7 +269,12 @@ describe('AppointmentDetailComponent (fiche 15 §5)', () => {
     expect(el.querySelector('a.name')).toBeNull();
     expect(el.querySelector('a[href^="/patients"]')).toBeNull();
     expect(text(el.querySelector('.name'))).toBe('Sara Benali');
-    expect(text(el.querySelector('.meta'))).toBe('invité · +33 6 12 34 56 78');
+    // Le téléphone a quitté la ligne « invité » pour le bloc Contact (fiche 15, demandes en ligne).
+    expect(text(el.querySelector('.meta'))).toBe('invité');
+    expect([...el.querySelectorAll('.contact dt')].map((dt) => text(dt))).toEqual(['Téléphone']);
+    expect(el.querySelector('.contact a')!.getAttribute('href')).toBe('tel:+33612345678');
+    expect(text(el.querySelector('.contact a'))).toBe('+33 6 12 34 56 78');
+    expect(el.querySelector('.online')).toBeNull();
     expect(el.textContent).not.toContain('Préparer');
     expect(el.textContent).not.toContain('suivi depuis');
     expect(el.textContent).not.toContain('Rythme');
@@ -281,6 +287,7 @@ describe('AppointmentDetailComponent (fiche 15 §5)', () => {
     });
     expect(text(lastNameOnly.el.querySelector('.name'))).toBe('Benali');
     expect(text(lastNameOnly.el.querySelector('.meta'))).toBe('invité');
+    expect(lastNameOnly.el.querySelector('.contact')).toBeNull();
   });
 
   it('invité : Déplacer et Annuler comme pour un patient, pas de Dupliquer', async () => {
@@ -314,6 +321,7 @@ describe('AppointmentDetailComponent (fiche 15 §5)', () => {
     expect(el.querySelector('a.name')).toBeNull();
     expect(el.querySelector('.avatar')).toBeNull();
     expect(el.querySelector('.meta')).toBeNull();
+    expect(el.querySelector('.contact')).toBeNull();
     expect(el.textContent).not.toContain('Préparer');
     expect(text(el.querySelector('.kicker'))).toBe('Annulé · cabinet');
   });
@@ -332,5 +340,177 @@ describe('AppointmentDetailComponent (fiche 15 §5)', () => {
     const failed = await render(null, 'error');
     failed.el.querySelector<HTMLButtonElement>('pm-state button')!.click();
     expect(failed.store.retrySelected).toHaveBeenCalled();
+  });
+
+  describe('demande en ligne (origine online)', () => {
+    const request = onlineRequestOf({
+      id: 'req-1',
+      startsAt: new Date(2026, 10, 26, 10, 0).toISOString(),
+      durationMin: 60,
+    });
+    const withdrawn = Promise.resolve({
+      ok: false,
+      problem: { status: 409, code: 'APPOINTMENT_NOT_ACTIVE', detail: 'Rendez-vous annulé.' },
+    });
+
+    it('en attente : pastille « Demande en ligne », invité, Contact (e-mail puis téléphone), Confirmer et Refuser neutre', async () => {
+      const { el, button } = await render(request);
+      expect(text(el.querySelector('.kicker'))).toBe('À confirmer · cabinet');
+      expect(text(el.querySelector('.online .pill'))).toBe('Demande en ligne');
+      expect(el.querySelector('.online svg')!.getAttribute('aria-hidden')).toBe('true');
+      expect(text(el.querySelector('.name'))).toBe('Sara Benali');
+      expect(text(el.querySelector('.meta'))).toBe('invité');
+      expect([...el.querySelectorAll('.contact dt')].map((dt) => text(dt))).toEqual([
+        'E-mail',
+        'Téléphone',
+      ]);
+      const links = [...el.querySelectorAll('.contact a')];
+      expect(links.map((a) => a.getAttribute('href'))).toEqual([
+        'mailto:sara.benali@example.test',
+        'tel:+33612345678',
+      ]);
+      expect(button('Confirmer le rendez-vous')).toBeDefined();
+      expect([...el.querySelectorAll('.actions button')].map((b) => text(b))).toEqual([
+        'Déplacer',
+        'Refuser',
+      ]);
+      // « Refuser » est un bouton neutre : pas le style danger d'« Annuler ».
+      expect(button('Refuser')!.classList.contains('danger')).toBe(false);
+    });
+
+    it('Refuser : formulaire sur place, phrase sur l’e-mail et le motif ; Garder n’envoie rien ; « Refuser la demande » → cancel, toast, fermeture', async () => {
+      const { fixture, el, button, store, toasts, closed } = await render(request);
+      button('Refuser')!.click();
+      await settle(fixture);
+      expect(button('Refuser')!.getAttribute('aria-expanded')).toBe('true');
+      expect(text(el.querySelector('.inline h2'))).toBe('Refuser cette demande ?');
+      const reason = el.querySelector<HTMLTextAreaElement>('.inline textarea')!;
+      expect(document.activeElement).toBe(reason);
+      const hint = el.querySelector('.inline .hint')!;
+      expect(text(hint)).toBe(
+        'Le demandeur sera prévenu par e-mail. Le motif reste dans votre agenda : il ne lui est jamais transmis.',
+      );
+      expect(reason.getAttribute('aria-describedby')).toBe(hint.id);
+      const submit = el.querySelector<HTMLButtonElement>('.inline button[type=submit]')!;
+      expect(text(submit)).toBe('Refuser la demande');
+      expect(submit.classList.contains('danger-fill')).toBe(true);
+
+      button('Garder')!.click();
+      await settle(fixture);
+      expect(el.querySelector('.inline')).toBeNull();
+      expect(store.cancel).not.toHaveBeenCalled();
+
+      button('Refuser')!.click();
+      await settle(fixture);
+      el.querySelector<HTMLTextAreaElement>('.inline textarea')!.value = 'créneau réservé';
+      el.querySelector('.inline textarea')!.dispatchEvent(new Event('input'));
+      button('Refuser la demande')!.click();
+      await settle(fixture);
+      expect(store.cancel).toHaveBeenCalledWith('req-1', 'créneau réservé');
+      expect(toasts.toasts().map((t) => [t.level, t.message])).toEqual([
+        ['success', 'Demande refusée. Le demandeur est prévenu par e-mail.'],
+      ]);
+      expect(closed).toHaveBeenCalledWith(request);
+    });
+
+    it('Confirmer : toast qui dit que le demandeur est prévenu', async () => {
+      const { fixture, button, store, toasts, closed } = await render(request);
+      button('Confirmer le rendez-vous')!.click();
+      await settle(fixture);
+      expect(store.confirm).toHaveBeenCalledWith('req-1');
+      expect(toasts.toasts().map((t) => t.message)).toEqual([
+        'Rendez-vous confirmé. Le demandeur est prévenu par e-mail.',
+      ]);
+      expect(closed).not.toHaveBeenCalled();
+    });
+
+    it('409 APPOINTMENT_NOT_ACTIVE (le demandeur vient d’annuler) : toast d’avertissement, détail fermé, à la confirmation comme au refus', async () => {
+      const confirmCase = await render(request);
+      confirmCase.store.confirm.mockReturnValueOnce(withdrawn as never);
+      confirmCase.button('Confirmer le rendez-vous')!.click();
+      await settle(confirmCase.fixture);
+      expect(confirmCase.toasts.toasts().map((t) => [t.level, t.message])).toEqual([
+        ['warning', "Cette demande n'est plus en attente : elle vient d'être annulée."],
+      ]);
+      expect(confirmCase.closed).toHaveBeenCalledWith(request);
+      TestBed.resetTestingModule();
+
+      const refuseCase = await render(request);
+      refuseCase.store.cancel.mockReturnValueOnce(withdrawn as never);
+      refuseCase.button('Refuser')!.click();
+      await settle(refuseCase.fixture);
+      refuseCase.button('Refuser la demande')!.click();
+      await settle(refuseCase.fixture);
+      expect(refuseCase.toasts.toasts().at(-1)).toMatchObject({
+        level: 'warning',
+        message: "Cette demande n'est plus en attente : elle vient d'être annulée.",
+      });
+      expect(refuseCase.closed).toHaveBeenCalledWith(request);
+      expect(refuseCase.el.querySelector('.inline .error')).toBeNull();
+    });
+
+    it('confirmée (planned) : mention gardée, « Annuler » rouge ; Annuler et Déplacer disent que le demandeur sera prévenu', async () => {
+      const { fixture, el, button } = await render({ ...request, status: 'planned' });
+      expect(text(el.querySelector('.kicker'))).toBe('Séance planifiée · cabinet');
+      expect(text(el.querySelector('.online .pill'))).toBe('Demande en ligne');
+      expect(button('Confirmer le rendez-vous')).toBeUndefined();
+      expect([...el.querySelectorAll('.actions button')].map((b) => text(b))).toEqual([
+        'Déplacer',
+        'Annuler',
+      ]);
+      expect(button('Annuler')!.classList.contains('danger')).toBe(true);
+
+      button('Annuler')!.click();
+      await settle(fixture);
+      expect(text(el.querySelector('.inline h2'))).toBe('Annuler ce rendez-vous ?');
+      expect(text(el.querySelector('.inline .hint'))).toBe(
+        'Le demandeur sera prévenu par e-mail. Le motif ne lui est jamais transmis.',
+      );
+      expect(button('Annuler le rendez-vous')).toBeDefined();
+      button('Garder')!.click();
+      await settle(fixture);
+
+      button('Déplacer')!.click();
+      await settle(fixture);
+      expect(text(el.querySelector('.inline .hint'))).toBe('Le demandeur sera prévenu par e-mail.');
+    });
+
+    it('invité sans e-mail (purgé ou rattaché) : aucune phrase sur l’e-mail', async () => {
+      const silent = { ...request, status: 'planned' as const, guest: guestOf({ email: null }) };
+      const { fixture, el, button } = await render(silent);
+      expect(text(el.querySelector('.online .pill'))).toBe('Demande en ligne');
+      button('Annuler')!.click();
+      await settle(fixture);
+      expect(el.querySelector('.inline .hint')).toBeNull();
+      button('Garder')!.click();
+      await settle(fixture);
+      button('Déplacer')!.click();
+      await settle(fixture);
+      expect(el.querySelector('.inline .hint')).toBeNull();
+    });
+
+    it('à confirmer posé par le praticien : ni mention, ni « Refuser », ni phrase ; toast habituel', async () => {
+      const own = guestAppointmentOf({
+        id: 'own',
+        startsAt: new Date(2026, 10, 27, 9, 0).toISOString(),
+        status: 'tentative',
+        guest: guestOf({ email: 'sara.benali@example.test' }),
+      });
+      const { fixture, el, button, toasts } = await render(own);
+      expect(el.querySelector('.online')).toBeNull();
+      expect([...el.querySelectorAll('.actions button')].map((b) => text(b))).toEqual([
+        'Déplacer',
+        'Annuler',
+      ]);
+      button('Annuler')!.click();
+      await settle(fixture);
+      expect(text(el.querySelector('.inline h2'))).toBe('Annuler ce rendez-vous ?');
+      expect(el.querySelector('.inline .hint')).toBeNull();
+      button('Garder')!.click();
+      await settle(fixture);
+      button('Confirmer le rendez-vous')!.click();
+      await settle(fixture);
+      expect(toasts.toasts().map((t) => t.message)).toEqual(['Rendez-vous confirmé.']);
+    });
   });
 });
