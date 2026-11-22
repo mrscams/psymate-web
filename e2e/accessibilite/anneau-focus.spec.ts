@@ -7,6 +7,7 @@ import { ADMIN_AVAILABLE, ADMIN_MISSING } from '../support/admin';
 import { expectNoAxeViolations } from '../support/axe';
 import { tabTo } from '../support/clavier';
 import { expectTheme, settled, Theme, THEMES } from './a11y-support';
+import { API } from '../support/env';
 
 // Anneau de focus des contrôles natifs et de la barre d'administration (UX-A2, WCAG 1.4.11 : 3:1
 // contre les couleurs adjacentes). Le focus est atteint par de vrais appuis sur Tab (:focus-visible),
@@ -14,8 +15,6 @@ import { expectTheme, settled, Theme, THEMES } from './a11y-support';
 // et contre le halo qu'il borde. Mesures de départ (audit UX du 9 nov. 2026) : select « Tous les
 // types » de l'éditeur de lien 1,21:1 (outline primary-tint seul), onglet « Praticiens » 2,71:1
 // (cobalt sur la barre sombre). Contre l'API locale, jamais de mock du backend.
-
-const API = 'http://localhost:8080';
 
 async function ok<T>(response: Promise<APIResponse>): Promise<T> {
   const res = await response;

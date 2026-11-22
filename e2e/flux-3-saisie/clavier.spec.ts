@@ -3,6 +3,7 @@ import { APIRequestContext, APIResponse, expect, test } from '@playwright/test';
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { keyboardOnly, tabTo } from '../support/clavier';
+import { API } from '../support/env';
 
 // B3 flux 3 au clavier seul (M7-04, B5, B7 ; bloc de saisie UX-S1) : « Démarrer la séance » au
 // clavier, le bloc de saisie prend le focus, « /res anxiété 8 n'a pas dormi », Tab jusqu'à la rangée
@@ -10,8 +11,6 @@ import { keyboardOnly, tabTo } from '../support/clavier';
 // final ; l'entrée apparaît dans l'activité récente, le bloc est vide et garde le focus ; Ctrl+S
 // enregistre un brouillon ; Clôturer la séance au clavier. Aucun geste de pointeur (keyboardOnly).
 // Contre l'API locale (seed small, Mailpit), jamais de mock du backend.
-
-const API = 'http://localhost:8080';
 
 async function ok<T>(response: Promise<APIResponse>): Promise<T> {
   const res = await response;

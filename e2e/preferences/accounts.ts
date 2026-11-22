@@ -1,8 +1,7 @@
 import { APIRequestContext, expect, Page } from '@playwright/test';
 
 import { confirmEmail, TestAccount, uniqueEmail } from '../support/accounts';
-
-const API = 'http://localhost:8080';
+import { API } from '../support/env';
 
 export type Profession = 'psychologist' | 'psychiatrist' | 'coach';
 

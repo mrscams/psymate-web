@@ -2,13 +2,12 @@ import { APIRequestContext, expect, Page, test } from '@playwright/test';
 
 import { register, TestAccount, uniqueEmail } from '../support/accounts';
 import { expectNoAxeViolations } from '../support/axe';
+import { API, MAILPIT } from '../support/env';
 
 // B3 flux 9, confirmation d'e-mail (M1-18, fiche 25) : lien lu dans Mailpit, session ouverte,
 // lien réutilisé → page expirée, renvoi limité, correction de l'adresse. Contre l'API locale et
 // Mailpit, jamais de mock.
 
-const API = 'http://localhost:8080';
-const MAILPIT = 'http://localhost:8025';
 const TOKEN = /confirmer-email\/([A-Za-z0-9_.~%-]+)/;
 
 /**

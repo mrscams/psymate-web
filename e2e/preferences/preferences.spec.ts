@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, Page, test } from '@playwright/test';
 
 import { createAccount, signIn } from './accounts';
+import { API } from '../support/env';
 
 // Fiche 14, M1-16 : contre l'API locale (seed small, Mailpit), jamais de mock du backend. Chaque test
 // crée son compte jetable : les préférences sont par compte et les tests tournent en parallèle.
@@ -142,7 +143,7 @@ test('clé inconnue dans le PATCH : ignorée, 200, les clés connues renvoyées'
 }) => {
   // `request` porte la session ouverte par la confirmation d'e-mail (e2e/support/accounts.ts).
   const account = await createAccount(request, 'm1-16.inconnue', 'psychologist');
-  const response = await request.patch('http://localhost:8080/api/me/preferences', {
+  const response = await request.patch(`${API}/api/me/preferences`, {
     data: { 'overview.window': '12m', cleInconnue: 'ignorée' },
   });
   expect(response.status(), await response.text()).toBe(200);

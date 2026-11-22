@@ -4,13 +4,12 @@ import { setPreferences } from '../flux-6-vue-ensemble/overview-data';
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { shoot } from '../support/captures';
+import { API } from '../support/env';
 
 // UX-C1 à UX-C6 (audit UX du 9 nov. 2026) : les six pages de Mon compte fidèles aux maquettes 10,
 // 13, 14, 17, 18, 19. Mesures de l'audit (hauteur à 1 440 px, largeur à 375 px, axe en clair et en
 // sombre) et comportements ajoutés, contre l'API locale (compte jetable, jamais de mock). Captures
 // pleine page dans PSYMATE_E2E_CAPTURES (hors du dépôt) seulement si la variable est définie.
-
-const API = 'http://localhost:8080';
 
 const PAGES = [
   { name: '10-profil-public', url: '/fr/mon-compte/profil-public', h1: 'Profil public' },

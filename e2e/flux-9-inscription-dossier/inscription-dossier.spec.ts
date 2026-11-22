@@ -4,11 +4,11 @@ import { confirmEmail, enableTwoFactor, register, uniqueEmail } from '../support
 import { expectNoAxeViolations } from '../support/axe';
 import { totp, totpStep } from '../support/totp';
 import { expectFocus, registerByKeyboard, tabTo, tabToName } from './keyboard';
+import { API, MAILPIT } from '../support/env';
 
 // B3 flux 9 (M1-15, fiches 11, 12, 13) : inscription, confirmation par Mailpit, dossier
 // professionnel, bandeau d'état. Contre l'API locale (seed small) et Mailpit, jamais de mock.
 
-const MAILPIT = 'http://localhost:8025';
 const STRONG_PASSWORD = 'Vendôme-Lyon-2026!x';
 const COMPROMISED_PASSWORD = 'motdepasse1234';
 
@@ -259,12 +259,12 @@ test('dossier professionnel : 11 Mo refusé, .exe renommé → 415, complétude,
   await expectNoAxeViolations(page);
 
   // Le serveur confirme l'état et le verrou (409 sur un retrait forcé), et le bandeau tient sur /patients.
-  const verification = await request.get('http://localhost:8080/api/me/verification');
+  const verification = await request.get(`${API}/api/me/verification`);
   expect(verification.status()).toBe(200);
   const body = (await verification.json()) as { status: string; documents: { id: string }[] };
   expect(body.status).toBe('under_review');
   const forcedDelete = await request.delete(
-    `http://localhost:8080/api/me/verification/documents/${body.documents[0].id}`,
+    `${API}/api/me/verification/documents/${body.documents[0].id}`,
   );
   expect(forcedDelete.status()).toBe(409);
 

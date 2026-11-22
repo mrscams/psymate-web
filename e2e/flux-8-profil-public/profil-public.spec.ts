@@ -14,12 +14,11 @@ import {
   uploadedPhoto,
   watchPhotoUpload,
 } from './helpers';
+import { API } from '../support/env';
 
 // Flux 8 / fiche 10 (M5-04) : « Mon profil public ». Contre l'API locale, jamais de mock. Les
 // scénarios de publication exigent un compte approuvé, donc un administrateur local (variables
 // PSYMATE_E2E_ADMIN_*, voir e2e/support/admin.ts) ; sans lui ils sont ignorés et le disent.
-
-const API = 'http://localhost:8080';
 
 test.describe('profil public, dossier non approuvé', () => {
   test('enregistrement automatique, aperçu, liste fermée, interrupteur inactif avec motif ; axe', async ({

@@ -3,11 +3,10 @@ import { APIRequestContext, expect, Locator, Page } from '@playwright/test';
 import { createPatient, daysAgo, entry, intakeOf } from '../flux-5-timeline/timeline-data';
 import { apiDrained } from '../support/api-drain';
 import { exclusive } from '../support/exclusif';
+import { API } from '../support/env';
 
 // Données et outils des e2e du graphe (M2-06), contre l'API réelle (jamais de mock) : dossiers
 // créés par l'API dans un compte jetable, sonde du canevas, axe-core hors du canevas.
-
-const API = 'http://localhost:8080';
 
 /** La sonde posée par pm-graph-canvas sur son hôte (positions à l'écran, durée du layout). */
 interface Probe {

@@ -2,9 +2,9 @@ import { APIRequestContext, expect, Page } from '@playwright/test';
 
 import { confirmEmail, register, TestAccount } from '../support/accounts';
 import { totp, totpStep } from '../support/totp';
+import { API, MAILPIT } from '../support/env';
 
-export const API = 'http://localhost:8080';
-export const MAILPIT = 'http://localhost:8025';
+export { API, MAILPIT };
 export const SECURITY = '/fr/mon-compte/securite';
 
 /** Message unique d'un code refusé (fiche 18). */

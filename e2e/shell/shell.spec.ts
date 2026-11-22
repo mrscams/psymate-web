@@ -9,13 +9,12 @@ import {
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { themeFolder } from '../theme/theme-support';
+import { API } from '../support/env';
 
 // Page patient et en-tête permanent (M1-07, B2, fiche 00 §2 ; UX-S2 : en-tête compact, barre de
 // séance, bloc de saisie dans la colonne de contenu) : contre l'API locale (seed small, Mailpit),
 // jamais de mock du backend. Chaque test crée ses comptes jetables : les séances démarrées ou
 // clôturées ici ne touchent aucun patient du seed.
-
-const API = 'http://localhost:8080';
 
 async function createPatient(
   api: APIRequestContext,
