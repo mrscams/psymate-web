@@ -323,3 +323,27 @@ test('?focus=<id> (recherche → timeline) : l’entrée est amenée à l’écr
   await expect(page.locator('[role="dialog"]:has(pm-entry-editor-panel)')).toHaveCount(0);
   await expectNoAxeViolations(page);
 });
+
+test('nouvelle entrée par N depuis la timeline : la chronologie se relit sans changer d’onglet', async ({
+  page,
+}) => {
+  await signIn(page, account);
+  await page.goto(`/fr/patients/${story.id}/timeline?period=all`);
+  const t = timeline(page);
+  await expect(t.card('Entretien annuel')).toBeVisible();
+  const before = Number(await page.locator('.stream').getAttribute('data-total'));
+
+  // N ouvre l'éditeur du dossier (pas celui de l'onglet) : l'écriture est notée au dossier, que la
+  // timeline suit. Dernier cas du fichier : l'entrée ajoutée ne change le compte d'aucun autre.
+  await page.keyboard.press('n');
+  const editor = page.locator('[role="dialog"]:has(pm-entry-editor-panel)');
+  await expect(editor).toBeVisible();
+  await editor.getByLabel('Texte', { exact: true }).fill('Note relue sans changer d’onglet');
+  await page.keyboard.press('Control+Enter');
+  await expect(editor).toBeHidden();
+
+  // Toujours sur l'onglet : la note (sans titre, donc « Note · <jour> ») est là, le compte a suivi.
+  await expect(page).toHaveURL(new RegExp(`/patients/${story.id}/timeline`));
+  await expectCount(page, before + 1);
+  await expect(t.card('Note · ')).toBeVisible();
+});

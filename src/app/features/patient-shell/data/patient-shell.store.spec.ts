@@ -297,6 +297,17 @@ describe('PatientShellStore', () => {
       expect(store.revision()).toBe(3);
     });
 
+    it('noteWrite : la séance de l’en-tête est relue (séance corrigée depuis un onglet)', async () => {
+      const current = vi.fn().mockResolvedValue(closedSession({ durationMin: 50 }));
+      const store = await loaded(null, { current });
+      expect(store.lastSession()?.durationMin).toBe(50);
+      current.mockResolvedValue(closedSession({ durationMin: 35 }));
+      store.noteWrite();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(current).toHaveBeenCalledTimes(2);
+      expect(store.lastSession()?.durationMin).toBe(35);
+    });
+
     it('un autre dossier ne remet pas revision à zéro (jamais de faux « rien n’a changé »)', async () => {
       const store = await loaded(null);
       store.noteWrite();
@@ -636,6 +647,17 @@ describe('PatientShellStore', () => {
       expect(previous).toHaveBeenCalledTimes(2);
       expect(store.context().data?.reminders.medications[0].molecule).toBe('Sertraline');
       expect(store.context().data?.emotionLabels['anxiety']).toBe('Anxiété');
+    });
+
+    it('noteWrite : le vocabulaire des émotions est relu (émotion personnalisée créée en notant)', async () => {
+      const emotionLabels = vi.fn().mockResolvedValue({ anxiety: 'Anxiété' });
+      const store = await loaded(openSession(), { emotionLabels });
+      await store.loadContext();
+      emotionLabels.mockResolvedValue({ anxiety: 'Anxiété', 'custom-relief': 'Soulagement' });
+      store.noteWrite('e-9');
+      await tick();
+      await tick();
+      expect(store.context().data?.emotionLabels['custom-relief']).toBe('Soulagement');
     });
   });
 });

@@ -274,4 +274,15 @@ describe('GraphStore', () => {
     expect(store.viewports()).toEqual({});
     expect(store.selectedId()).toBeNull();
   });
+
+  it('refresh : les libellés d’émotions sont relus (émotion personnalisée créée en notant)', async () => {
+    const emotionLabels = vi.fn().mockResolvedValue({ anxiety: 'Anxiété' });
+    const { store } = setup({ emotionLabels });
+    await store.load('p-1', rooted);
+    emotionLabels.mockResolvedValue({ anxiety: 'Anxiété', 'custom-relief': 'Soulagement' });
+    await store.refresh();
+    await Promise.resolve();
+    expect(emotionLabels).toHaveBeenCalledTimes(2);
+    expect(store.emotionLabels()['custom-relief']).toBe('Soulagement');
+  });
 });

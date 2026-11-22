@@ -169,8 +169,6 @@ export class PatientSearchPage {
       $localize`:État vide de la recherche@@search.empty.title:Aucun résultat pour « ${this.store.effectiveQuery()}:query: »`,
   );
 
-  private destroyed = false;
-
   constructor() {
     const memory = this.shell.recallTab<SearchTabMemory>('search');
     let first = true;
@@ -193,8 +191,17 @@ export class PatientSearchPage {
       untracked(() => this.shell.rememberTab<SearchTabMemory>('search', { selectedId }));
     });
 
+    // Une écriture dans le dossier (PatientShellStore.revision : entrée créée par N ou corrigée) :
+    // la recherche en cours est relue, la sélection gardée.
+    let seen = untracked(() => this.shell.revision());
+    effect(() => {
+      const revision = this.shell.revision();
+      if (revision === seen) return;
+      seen = revision;
+      untracked(() => void this.store.refresh());
+    });
+
     const destroyRef = inject(DestroyRef);
-    destroyRef.onDestroy(() => (this.destroyed = true));
     destroyRef.onDestroy(this.bar.attach({ submit: () => this.openSelected() }));
     destroyRef.onDestroy(
       inject(ShortcutService).register(
@@ -246,13 +253,16 @@ export class PatientSearchPage {
     });
   }
 
-  /** « Modifier » : l'éditeur d'entrée (M1-08) ; après un enregistrement, la recherche est relue. */
+  /**
+   * « Modifier » : l'éditeur d'entrée (M1-08) ; l'enregistrement est noté au dossier, qui fait
+   * relire la recherche et l'en-tête.
+   */
   protected edit(entryId: string): void {
     const patientId = this.shell.patientId();
     if (!patientId) return;
     const ref = openEntryEditor(patientId, { entryId, injector: this.injector });
     void ref?.closed.then((saved) => {
-      if (saved && !this.destroyed) void this.store.refresh();
+      if (saved) this.shell.noteWrite();
     });
   }
 

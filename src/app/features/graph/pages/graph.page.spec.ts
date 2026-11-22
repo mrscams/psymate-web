@@ -24,10 +24,14 @@ const text = (el: Element | null | undefined) =>
   (el?.textContent ?? '').replace(/\s+/g, ' ').trim();
 
 function shellMock(snapshot?: GraphSnapshot) {
+  // Compteur des écritures du dossier : noteWrite l'avance, comme le vrai PatientShellStore.
+  const revision = signal(0);
   return {
     patient: signal({ id: 'p-1', displayName: 'Lina T.' }),
     recallTab: vi.fn().mockReturnValue(snapshot),
     rememberTab: vi.fn(),
+    revision,
+    noteWrite: vi.fn(() => revision.update((value) => value + 1)),
   };
 }
 
@@ -555,8 +559,18 @@ describe('GraphPage', () => {
     );
   });
 
+  it('écriture ailleurs dans le dossier (revision du shell) : le graphe est relu', async () => {
+    const shell = shellMock();
+    const { harness, graphApi } = await render({ shell });
+    expect(graphApi.neighbourhood).toHaveBeenCalledTimes(1);
+    shell.noteWrite();
+    await settle(harness);
+    expect(graphApi.neighbourhood).toHaveBeenCalledTimes(2);
+  });
+
   it('glisser A sur B : éditeur de lien prérempli (source A, cible B), graphe relu à la fermeture', async () => {
-    const { el, harness, card, linkApi, graphApi } = await render();
+    const shell = shellMock();
+    const { el, harness, card, linkApi, graphApi } = await render({ shell });
     const pointer = (type: string, x: number, y: number) =>
       new MouseEvent(type, { bubbles: true, button: 0, clientX: x, clientY: y });
     const zone = el.querySelector<HTMLElement>('pm-graph-canvas .viewport')!;
@@ -580,6 +594,11 @@ describe('GraphPage', () => {
     );
 
     document.querySelector<HTMLButtonElement>('pm-side-panel button.close')?.click();
+    await settle(harness);
+    expect(url()).not.toContain('link=');
+    // Le shell (ici simulé) note une écriture quand ?link= quitte l'URL : le graphe se relit.
+    expect(graphApi.neighbourhood).toHaveBeenCalledTimes(1);
+    shell.noteWrite();
     await settle(harness);
     expect(graphApi.neighbourhood).toHaveBeenCalledTimes(2);
   });

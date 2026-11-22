@@ -489,6 +489,18 @@ export class GraphPage {
       });
     });
 
+    // Une écriture dans le dossier (PatientShellStore.revision : entrée créée par N ou corrigée,
+    // lien posé, séance clôturée) : le graphe est relu sans être vidé, d'où qu'elle vienne.
+    let seen = untracked(() => this.shell.revision());
+    effect(() => {
+      const revision = this.shell.revision();
+      if (revision === seen) return;
+      seen = revision;
+      untracked(() => {
+        if (this.store.patientId()) void this.store.refresh();
+      });
+    });
+
     const destroyRef = inject(DestroyRef);
     // L : lie l'entrée ouverte (?entry=, comme le shell) ou, à défaut, l'entrée sélectionnée.
     destroyRef.onDestroy(
@@ -650,25 +662,28 @@ export class GraphPage {
     });
   }
 
-  /** « Lier » (M2-04) : à la fermeture de l'éditeur, le graphe est relu (projection). */
+  /**
+   * « Lier » (M2-04) : à la fermeture de l'éditeur (`?link=` retiré de l'URL), le shell note une
+   * écriture et le graphe est relu (projection).
+   */
   protected link(entryId: string, targetId: string | null = null): void {
-    const ref = openLinkEditor(entryId, {
+    openLinkEditor(entryId, {
       injector: this.injector,
       patientName: this.shell.patient()?.displayName,
       targetId,
     });
-    void ref?.closed.then(() => {
-      if (!this.destroyed) void this.store.refresh();
-    });
   }
 
-  /** « Corriger » : l'éditeur d'entrée (une correction crée une version), puis relecture. */
+  /**
+   * « Corriger » : l'éditeur d'entrée (une correction crée une version) ; l'écriture est notée au
+   * dossier, qui fait relire le graphe et l'en-tête.
+   */
   protected edit(entryId: string): void {
     const patientId = this.store.patientId();
     if (!patientId) return;
     const ref = openEntryEditor(patientId, { entryId, injector: this.injector });
     void ref?.closed.then((saved) => {
-      if (saved && !this.destroyed) void this.store.refresh();
+      if (saved) this.shell.noteWrite();
     });
   }
 

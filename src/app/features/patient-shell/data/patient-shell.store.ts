@@ -56,9 +56,10 @@ interface PatientShellState {
   /** Problème de la dernière action de séance (409, 422) : le dossier reste affiché. */
   actionProblem: ApiProblem | null;
   /**
-   * Compteur des écritures faites depuis le dossier (entrée enregistrée, séance démarrée, clôturée,
-   * contact) : les onglets qui lisent une projection (vue d'ensemble) le suivent pour la relire
-   * (handbook §6.5, règle 11 : on relit, on ne recalcule pas). Croissant, jamais remis à zéro.
+   * Compteur des écritures faites depuis le dossier (entrée enregistrée ou corrigée, lien, séance
+   * démarrée, clôturée, contact) : les onglets qui lisent une projection (vue d'ensemble, timeline,
+   * graphe, recherche) le suivent pour la relire (handbook §6.5, règle 11 : on relit, on ne
+   * recalcule pas). Croissant, jamais remis à zéro.
    */
   revision: number;
   /** Indice « notez la première entrée » : lu sur le résumé de la chronologie, jamais déduit localement. */
@@ -273,10 +274,11 @@ export const PatientShellStore = signalStore(
 
     /** Lance une action de séance ; true si elle a abouti, sinon le problème est dans actionProblem. */
     /**
-     * Après une écriture : la séance précédente (son compte rendu a pu être corrigé) et les rappels
-     * de la vue d'ensemble (un médicament, une situation notés pendant la séance) sont relus en
-     * silence, le contexte affiché restant en place ; le vocabulaire ne change pas. Un échec laisse
-     * l'ancien contexte. Rien tant que le contexte n'a pas été lu (l'onglet le lira entier).
+     * Après une écriture : la séance précédente (son compte rendu a pu être corrigé), les rappels
+     * de la vue d'ensemble (un médicament, une situation notés pendant la séance) et le vocabulaire
+     * des émotions (une émotion personnalisée a pu être créée en notant) sont relus en silence, le
+     * contexte affiché restant en place. Un échec laisse l'ancien contexte. Rien tant que le
+     * contexte n'a pas été lu (l'onglet le lira entier).
      */
     async function refreshContext(): Promise<void> {
       const patientId = store.patientId();
@@ -284,15 +286,16 @@ export const PatientShellStore = signalStore(
       const current = store.context();
       if (!patientId || !session || current.status !== 'loaded' || !current.data) return;
       try {
-        const [previous, reminders] = await Promise.all([
+        const [previous, reminders, emotionLabels] = await Promise.all([
           api.previousSession(patientId, session.id),
           api.reminders(patientId),
+          api.emotionLabels(),
         ]);
         const latest = store.context();
         if (store.notedSessionId() !== session.id || latest.status !== 'loaded' || !latest.data) {
           return;
         }
-        patchState(store, { context: loaded({ ...latest.data, previous, reminders }) });
+        patchState(store, { context: loaded({ previous, reminders, emotionLabels }) });
       } catch {
         // Relecture silencieuse : l'ancien contexte reste affiché.
       }
@@ -431,12 +434,15 @@ export const PatientShellStore = signalStore(
       },
 
       /**
-       * Une écriture a abouti hors du store (éditeur d'entrée, bloc de saisie) : les projections se
-       * relisent, dont « Noté pendant cette séance ». `entryId` : l'entrée créée, dont la ligne sera
-       * surlignée dans l'onglet Séance.
+       * Une écriture a abouti hors du store (éditeur d'entrée, éditeur de lien, bloc de saisie,
+       * depuis le shell ou depuis un onglet) : les projections se relisent, dont « Noté pendant
+       * cette séance ». La séance de l'en-tête est relue aussi : l'entrée écrite a pu être une
+       * séance (créée, ou corrigée : modalité, durée). `entryId` : l'entrée créée, dont la ligne
+       * sera surlignée dans l'onglet Séance.
        */
       noteWrite(entryId: string | null = null): void {
         patchState(store, { revision: store.revision() + 1, lastWrittenId: entryId });
+        void refreshSession();
         if (store.firstEntry() === 'pending') void checkFirstEntry();
         // Une séance ou un contact saisi à une date passée peut avancer la première séance.
         void checkFirstSession();

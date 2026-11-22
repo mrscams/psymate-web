@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-22T11:28:28.598Z",
+  "task": "PROJET",
+  "agent": "claude",
+  "status": "done",
+  "summary": "Dossier patient : relecture après écriture sur tous les onglets (timeline, graphe, recherche, en-tête, vocabulaire d'émotions et de tags)",
+  "notes": "Hors plan C, demande du 22 nov. 2026 après audit. Toute écriture du dossier passe par PatientShellStore.noteWrite() et chaque onglet suit revision. 2 306 tests Vitest verts ; e2e saisie, lier, recherche, timeline, shell verts contre l'API réelle ; graphe.spec.ts:30 (150 nœuds) rouge en local, non comparé à main ; suite e2e complète non lancée.",
+  "next": "Revue et fusion de la PR 102 ; écarts hors dossier restants : nom du praticien dans la barre, bandeau dossier professionnel, formulaire de validation admin, relectures en échec silencieuses, annuaire public",
+  "pr": "https://github.com/mrscams/psymate-web/pull/102",
+  "branch": "fix/dossier-relecture-apres-ecriture",
+  "checkout": "main-preview"
+}
