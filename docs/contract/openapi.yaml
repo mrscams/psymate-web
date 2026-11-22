@@ -744,6 +744,13 @@ components:
           - video
           - phone
           type: string
+        origin:
+          description: 'Origine (G Q74) : practitioner (posé par le praticien, seule valeur d''un rendez-vous créé par POST /api/appointments) ou online (demande en ligne d''un visiteur). Fixée par le serveur, jamais modifiable.'
+          enum:
+          - practitioner
+          - online
+          example: practitioner
+          type: string
         patient:
           $ref: '#/components/schemas/AppointmentPatientDto'
           description: Patient du rendez-vous. Null pour un rendez-vous invité.
@@ -837,6 +844,48 @@ components:
           items:
             $ref: '#/components/schemas/AppointmentDto'
           type: array
+      type: object
+    BookingRequestsDto:
+      description: 'Demandes de rendez-vous en ligne en attente de réponse (G Q74) : rendez-vous à confirmer nés d''une demande en ligne, à venir.'
+      properties:
+        appointments:
+          description: Rendez-vous du praticien courant d'origine online au statut tentative qui commencent au plus tôt maintenant, triés par début, 100 au plus.
+          items:
+            $ref: '#/components/schemas/AppointmentDto'
+          type: array
+      type: object
+    BookingTokenRequest:
+      description: 'Jeton reçu par e-mail : lien de vérification (/rendez-vous/confirmer/{jeton}) ou lien de gestion (/rendez-vous/gerer/{jeton}). Toujours envoyé dans le corps, jamais dans l''URL de l''API.'
+      properties:
+        token:
+          description: Jeton tel qu'il figure dans le lien, 200 caractères au plus. Obligatoire.
+          example: q9Xw2v0sJb3L5mK8nH1cR4tY7uE6iO0pA2sD5fG8hJk
+          maxLength: 200
+          minLength: 0
+          type: string
+      required:
+      - token
+      type: object
+    BookingWindow:
+      description: 'Plage hebdomadaire de prise de rendez-vous en ligne : exactement les trois champs day, start et end (champ manquant ou inconnu : 422 INVALID_VALUE sur booking.windows). end est strictement après start.'
+      properties:
+        day:
+          description: 'Jour de la semaine : entier de 1 (lundi) à 7 (dimanche).'
+          example: 1
+          format: int32
+          maximum: 7
+          minimum: 1
+          type: integer
+        end:
+          description: Fin de la plage, exclue, au format HH:mm (00:00 à 23:55), minutes multiples de 5, strictement après start.
+          example: 720
+          pattern: ^([01][0-9]|2[0-3]):[0-5][05]$
+          type: string
+        start:
+          description: Début de la plage, heure locale du fuseau booking.timezone, au format HH:mm (00:00 à 23:55), minutes multiples de 5.
+          example: 09:00
+          pattern: ^([01][0-9]|2[0-3]):[0-5][05]$
+          type: string
       type: object
     CancelAppointmentRequest:
       description: Annulation d'un rendez-vous. Le corps est facultatif.
@@ -1041,6 +1090,79 @@ components:
           type: string
       required:
       - durationMin
+      - modality
+      - startsAt
+      type: object
+    CreateBookingRequest:
+      description: 'Demande de rendez-vous en ligne (G Q72). Aucun champ libre : ni motif, ni message. La demande n''est rattachée à aucun dossier ; rien n''entre dans l''agenda avant la vérification de l''e-mail.'
+      properties:
+        consent:
+          description: Consentement du demandeur au traitement de sa demande ; doit valoir true (422 INVALID_VALUE sinon, REQUIRED s'il manque).
+          example: true
+          type: boolean
+        email:
+          description: 'E-mail, 320 caractères au plus (OUT_OF_RANGE sinon) : une seule @, au moins un point après elle, aucun espace (INVALID_FORMAT sinon). Obligatoire : le lien de vérification y est envoyé.'
+          example: sara.benali@example.test
+          format: email
+          maxLength: 320
+          minLength: 0
+          pattern: ([^@\s]+@[^@\s]+\.[^@\s]+)?
+          type: string
+        firstName:
+          description: Prénom, 100 caractères au plus. Obligatoire.
+          example: Sara
+          maxLength: 100
+          minLength: 0
+          type: string
+        formShownAt:
+          description: Instant d'affichage du formulaire, ISO 8601 UTC. Obligatoire. Une demande envoyée moins de 3 secondes après cet instant, ou dont l'instant est plus de 5 minutes dans le futur, est ignorée en silence (202 sans ligne ni e-mail). Jusqu'à 5 minutes dans le futur (horloge du client en avance), la demande est acceptée.
+          example: 2026-12-01T14:30:00Z
+          format: date-time
+          type: string
+        lastName:
+          description: Nom, 100 caractères au plus. Obligatoire.
+          example: Benali
+          maxLength: 100
+          minLength: 0
+          type: string
+        locale:
+          description: 'Langue des e-mails envoyés au demandeur. Défaut : fr.'
+          enum:
+          - fr
+          - en
+          example: fr
+          pattern: fr|en
+          type: string
+        modality:
+          description: Modalité, parmi celles que le praticien offre (409 SLOT_NOT_AVAILABLE sinon). Obligatoire.
+          enum:
+          - in_person
+          - video
+          - phone
+          example: in_person
+          pattern: in_person|video|phone
+          type: string
+        phone:
+          description: 'Téléphone, facultatif, 30 caractères au plus : chiffres, espaces, +, point, tiret, parenthèses, au moins un chiffre (INVALID_FORMAT sinon) ; chaîne vide : aucun téléphone.'
+          example: +33 6 12 34 56 78
+          maxLength: 30
+          minLength: 0
+          pattern: ([0-9 +.()-]*[0-9][0-9 +.()-]*)?
+          type: string
+        startsAt:
+          description: 'Début du créneau choisi, instant UTC ISO 8601 : exactement le startsAt d''un créneau offert (GET …/slots). Obligatoire.'
+          example: 2026-12-07T08:00:00Z
+          format: date-time
+          type: string
+        website:
+          description: 'Piège anti-spam (honeypot) : champ caché du formulaire, à laisser vide ; rempli, la demande est ignorée en silence (202 sans ligne ni e-mail).'
+          type: string
+      required:
+      - consent
+      - email
+      - firstName
+      - formShownAt
+      - lastName
       - modality
       - startsAt
       type: object
@@ -2767,8 +2889,12 @@ components:
           type: string
       type: object
     GuestDto:
-      description: 'Invité du rendez-vous : personne sans fiche patient (G Q60). Après la purge (6 mois après la fin ou l''annulation du rendez-vous), firstName, lastName et phone sont null et purgedAt est renseigné.'
+      description: 'Invité du rendez-vous : personne sans fiche patient (G Q60). Après la purge (6 mois après la fin ou l''annulation du rendez-vous ; 30 jours après l''annulation d''un rendez-vous en ligne qui n''a pas eu lieu), firstName, lastName, phone et email sont null et purgedAt est renseigné.'
       properties:
+        email:
+          description: E-mail. Null si inconnu ou purgé.
+          example: sara.benali@example.test
+          type: string
         firstName:
           description: Prénom. Null si inconnu ou purgé.
           example: Sara
@@ -2787,8 +2913,15 @@ components:
           type: string
       type: object
     GuestRequest:
-      description: 'Invité : personne qui n''a pas encore de fiche patient (G Q60). Nom obligatoire, prénom et téléphone facultatifs. Ses données ne vivent que dans le rendez-vous, avec les mêmes règles d''accès qu''un patient, et sont purgées 6 mois après la fin (ou l''annulation) du rendez-vous.'
+      description: 'Invité : personne qui n''a pas encore de fiche patient (G Q60). Nom obligatoire, prénom, téléphone et e-mail facultatifs. Ses données ne vivent que dans le rendez-vous, avec les mêmes règles d''accès qu''un patient, et sont purgées 6 mois après la fin (ou l''annulation) du rendez-vous.'
       properties:
+        email:
+          description: 'E-mail, 320 caractères au plus (OUT_OF_RANGE sinon) : une seule @, au moins un point après elle, aucun espace (INVALID_FORMAT sinon) ; chaîne vide : aucun e-mail.'
+          example: sara.benali@example.test
+          maxLength: 320
+          minLength: 0
+          pattern: ([^@\s]+@[^@\s]+\.[^@\s]+)?
+          type: string
         firstName:
           description: Prénom, 100 caractères au plus.
           example: Sara
@@ -3653,7 +3786,7 @@ components:
           type: string
       type: object
     Preferences:
-      description: 'Préférences à plat du compte : 13 clés connues, aux noms pointés (par exemple "overview.view"), sans objet imbriqué. En lecture, les 13 clés sont toujours présentes (valeur enregistrée, sinon défaut selon la profession). En PATCH, toutes les clés sont optionnelles : null remet la clé à son défaut, une clé inconnue est ignorée. Les bornes de la journée de l''agenda doivent rester cohérentes : agenda.dayEndHour strictement supérieur à agenda.dayStartHour, sinon 422 OUT_OF_RANGE sur agenda.dayEndHour.'
+      description: 'Préférences à plat du compte : 21 clés connues, aux noms pointés (par exemple "overview.view"), jamais imbriquées les unes dans les autres (seule la valeur de booking.windows est une liste d''objets). En lecture, les 21 clés sont toujours présentes (valeur enregistrée, sinon défaut selon la profession). En PATCH, toutes les clés sont optionnelles : null remet la clé à son défaut, une clé inconnue est ignorée. Les bornes de la journée de l''agenda doivent rester cohérentes : agenda.dayEndHour strictement supérieur à agenda.dayStartHour, sinon 422 OUT_OF_RANGE sur agenda.dayEndHour. Aucune règle croisée entre les clés booking.*.'
       properties:
         agenda.dayEndHour:
           description: 'Dernière heure affichée dans la grille de l''agenda (entier de 1 à 24), strictement supérieure à agenda.dayStartHour après fusion. Hors bornes ou non supérieure au début : 422 OUT_OF_RANGE. Défaut : 19.'
@@ -3690,6 +3823,67 @@ components:
           items:
             format: int32
             type: integer
+          type: array
+        booking.confirmation:
+          description: 'Confirmation des demandes de rendez-vous en ligne : manual = le praticien accepte chaque demande, auto = rendez-vous confirmé dès que le demandeur a vérifié son e-mail. Autre valeur : 422 INVALID_VALUE. Défaut : manual.'
+          enum:
+          - manual
+          - auto
+          example: manual
+          type: string
+        booking.enabled:
+          description: 'true si le praticien propose la prise de rendez-vous en ligne sur sa fiche publique. Elle n''est réellement offerte que s''il existe au moins une plage (booking.windows) et si le profil est publié et le praticien approuvé ; true sans plage est accepté. Autre type qu''un booléen : 422 INVALID_VALUE. Défaut : false.'
+          example: false
+          type: boolean
+        booking.horizonDays:
+          description: 'Horizon, en jours, au-delà duquel aucun créneau n''est proposé : entier de 7 à 90. Hors bornes : 422 OUT_OF_RANGE ; non entier : 422 INVALID_VALUE. Défaut : 28.'
+          example: 28
+          format: int32
+          maximum: 90
+          minimum: 7
+          type: integer
+        booking.minNoticeHours:
+          description: 'Délai minimal, en heures, entre la demande et le début du créneau : entier de 1 à 168. Hors bornes : 422 OUT_OF_RANGE ; non entier : 422 INVALID_VALUE. Défaut : 24.'
+          example: 24
+          format: int32
+          maximum: 168
+          minimum: 1
+          type: integer
+        booking.modalities:
+          description: 'Modalités proposées en ligne : liste non vide, sans doublon, parmi in_person (au cabinet), video (visio) et phone (téléphone), dans l''ordre enregistré. Liste vide, doublon, autre valeur ou autre type : 422 INVALID_VALUE. Défaut : ["in_person"].'
+          example:
+          - in_person
+          items:
+            enum:
+            - in_person
+            - video
+            - phone
+            type: string
+          maxItems: 3
+          minItems: 1
+          type: array
+          uniqueItems: true
+        booking.slotDurationMin:
+          description: 'Durée d''un créneau proposé en ligne, en minutes : entier de 15 à 180, multiple de 5. Hors bornes ou non multiple de 5 : 422 OUT_OF_RANGE ; non entier : 422 INVALID_VALUE. Défaut : 60.'
+          example: 60
+          format: int32
+          maximum: 180
+          minimum: 15
+          multipleOf: 5.0
+          type: integer
+        booking.timezone:
+          description: 'Fuseau horaire des plages : identifiant de la base IANA (tz) connu de java.time (par exemple Europe/Paris, America/Montreal). Décalage (+02:00, UTC+1), nom incomplet (Paris) ou autre type : 422 INVALID_VALUE. Défaut : Europe/Paris.'
+          example: Europe/Paris
+          type: string
+        booking.windows:
+          description: 'Plages hebdomadaires ouvertes à la prise de rendez-vous en ligne, 21 au plus, renvoyées triées par jour puis par début. Deux plages du même jour ne se chevauchent pas (09:00–12:00 puis 12:00–14:00 sont contiguës, donc admises). Plus de 21 plages : 422 OUT_OF_RANGE ; plage mal formée, champ manquant ou inconnu, chevauchement ou autre type : 422 INVALID_VALUE. Liste vide admise. Défaut : [].'
+          example:
+          - day: 1
+            end: 720
+            start: 09:00
+          items:
+            $ref: '#/components/schemas/BookingWindow'
+          maxItems: 21
           type: array
         entries.defaultVisibility:
           description: 'Visibilité proposée par défaut pour une nouvelle entrée : clinical = clinique, private = privée. Défaut : clinical.'
@@ -4000,6 +4194,121 @@ components:
           example: https://cabinet.example
           type: string
       type: object
+    PublicAppointmentDto:
+      description: Rendez-vous pris en ligne, vu par le demandeur (lien de vérification ou de gestion). Ne porte ni le nom, ni l'e-mail, ni le téléphone du demandeur, ni aucune note.
+      properties:
+        canCancel:
+          description: 'Vrai si le demandeur peut encore annuler : rendez-vous pending ou confirmed qui n''a pas commencé.'
+          example: true
+          type: boolean
+        cancelledBy:
+          description: 'Qui a annulé, quand status = cancelled : visitor (le demandeur), practitioner (refus ou annulation par le praticien), expired (demande sans réponse) ; null sinon.'
+          enum:
+          - visitor
+          - practitioner
+          - expired
+          example: visitor
+          type: string
+        durationMin:
+          description: Durée en minutes.
+          example: 60
+          format: int32
+          type: integer
+        endsAt:
+          description: Fin du rendez-vous, instant UTC.
+          example: 2026-12-07T09:00:00Z
+          format: date-time
+          type: string
+        manageToken:
+          description: 'Jeton du lien de gestion (/rendez-vous/gerer/{manageToken}). Renvoyé une seule fois, par la première vérification réussie ; null dans toute autre réponse. Seule son empreinte est gardée : il ne peut pas être renvoyé.'
+          example: Zk3vN8xQ1wE5rT7yU9iO2pA4sD6fG8hJ0kL3zX5cV7b
+          type: string
+        modality:
+          description: Modalité du rendez-vous.
+          enum:
+          - in_person
+          - video
+          - phone
+          example: in_person
+          type: string
+        practitioner:
+          $ref: '#/components/schemas/PublicAppointmentPractitionerDto'
+        startsAt:
+          description: Début du rendez-vous, instant UTC.
+          example: 2026-12-07T08:00:00Z
+          format: date-time
+          type: string
+        status:
+          description: 'État : pending (en attente de la réponse du praticien), confirmed (confirmé, à venir ou en cours), cancelled (annulé), past (passé : confirmé dont la fin est passée, ou séance tenue).'
+          enum:
+          - pending
+          - confirmed
+          - cancelled
+          - past
+          example: pending
+          type: string
+      type: object
+    PublicAppointmentPractitionerDto:
+      description: 'Praticien du rendez-vous : identité publique seulement.'
+      properties:
+        displayName:
+          description: Nom affiché sur la fiche publique ; null si la fiche n'est plus publiée ou si le praticien n'est plus approuvé.
+          example: Claire Lambert
+          type: string
+        slug:
+          description: Adresse publique (slug) du praticien ; null si sa fiche n'est plus publiée ou s'il n'est plus approuvé.
+          example: claire-lambert
+          type: string
+      type: object
+    PublicBookingDto:
+      description: 'Prise de rendez-vous en ligne offerte par un praticien et ses réglages publics (G Q75) : ni les plages ouvertes, ni les rendez-vous, ni l''amplitude de travail.'
+      properties:
+        confirmation:
+          description: 'Mode de confirmation : manual, le praticien confirme ou refuse chaque demande ; auto, le rendez-vous est confirmé dès la vérification de l''e-mail.'
+          enum:
+          - manual
+          - auto
+          example: manual
+          type: string
+        displayName:
+          description: Nom affiché sur la fiche publique.
+          example: Claire Lambert
+          type: string
+        horizonDays:
+          description: 'Horizon, en jours : aucun créneau après la fin du jour aujourd''hui + horizonDays dans le fuseau du praticien.'
+          example: 28
+          format: int32
+          type: integer
+        minNoticeHours:
+          description: Délai minimal, en heures, entre maintenant et le début d'un créneau.
+          example: 24
+          format: int32
+          type: integer
+        modalities:
+          description: Modalités offertes, jamais vide, dans l'ordre in_person, video, phone.
+          items:
+            description: Modalité de consultation.
+            enum:
+            - in_person
+            - video
+            - phone
+            example: in_person
+            type: string
+          type: array
+        slotDurationMin:
+          description: Durée d'un créneau, en minutes (15 à 180).
+          example: 60
+          format: int32
+          type: integer
+        slug:
+          description: Adresse publique (slug) du praticien.
+          example: claire-lambert
+          type: string
+        timezone:
+          description: Fuseau IANA du praticien, dans lequel les créneaux s'affichent.
+          example: Europe/Paris
+          type: string
+      type: object
     PublicProfile:
       description: Fiche publique complète d'un praticien publié. Les coordonnées (phone, email, address) et professionalNumber sont null si le praticien ne les affiche pas.
       properties:
@@ -4103,6 +4412,33 @@ components:
         websiteUrl:
           description: Site web ; null si non renseigné.
           example: https://cabinet.example
+          type: string
+      type: object
+    PublicSlotDto:
+      description: 'Créneau offert à la prise de rendez-vous en ligne : son début et sa fin, sans identifiant, sans raison ni nombre de places. Seuls les créneaux libres sont publiés.'
+      properties:
+        endsAt:
+          description: 'Fin du créneau, UTC ISO 8601 : startsAt + slotDurationMin.'
+          example: 2026-12-07T09:00:00Z
+          format: date-time
+          type: string
+        startsAt:
+          description: Début du créneau, UTC ISO 8601.
+          example: 2026-12-07T08:00:00Z
+          format: date-time
+          type: string
+      type: object
+    PublicSlotsDto:
+      description: Créneaux offerts à la prise de rendez-vous en ligne sur une fenêtre de dates (G Q76).
+      properties:
+        slots:
+          description: Créneaux offerts, instants UTC triés par début ; vide si aucun créneau n'est libre.
+          items:
+            $ref: '#/components/schemas/PublicSlotDto'
+          type: array
+        timezone:
+          description: Fuseau IANA du praticien, dans lequel les dates from et to sont lues et les créneaux s'affichent.
+          example: Europe/Paris
           type: string
       type: object
     QueueDto:
@@ -5391,7 +5727,7 @@ info:
 
     **Version du contrat** : `info.version` est incrémentée à chaque changement du contrat et un tag `contract-vX.Y.Z` est posé. Les tags regroupent les opérations par contrôleur, dans l'ordre d'usage : identité, dossier clinique, exploration, annuaire, administration.
   title: PsyMate API
-  version: 0.14.0
+  version: 0.15.0
 openapi: 3.1.0
 paths:
   /api/admin/appeals:
@@ -6753,9 +7089,47 @@ paths:
       summary: Indique les conflits et le voisinage d'un créneau
       tags:
       - Agenda
+  /api/agenda/requests:
+    get:
+      description: 'Session praticien. Demandes en ligne qui attendent une réponse (G Q74) : rendez-vous du praticien courant d''origine online au statut tentative qui commencent au plus tôt maintenant, triés par début puis identifiant, 100 au plus. Un rendez-vous à confirmer posé par le praticien (origin practitioner), une demande déjà confirmée (planned), annulée ou passée n''y figurent pas. Le praticien confirme une demande par POST /api/appointments/{id}/confirm et la refuse par POST /api/appointments/{id}/cancel.'
+      operationId: pendingRequests
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BookingRequestsDto'
+          description: Demandes en attente, à venir.
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué).'
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée.'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes).'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Liste les demandes de rendez-vous en ligne en attente
+      tags:
+      - Agenda
   /api/appointments:
     post:
-      description: 'Session praticien, propriétaire du patient. Le praticien et le cabinet viennent de la session. Le rendez-vous vise exactement un de patientId (patient du praticien, non archivé) et guest (invité, G Q60 : personne sans fiche patient, décrite par nom, prénom et téléphone, purgée 6 mois après la fin ou l''annulation du rendez-vous ; elle n''apparaît ni dans les patients, ni dans la recherche). La fin vaut startsAt + durationMin. Statut planned, ou tentative si tentative = true (« À confirmer »). Les rendez-vous actifs du praticien qui chevauchent le créneau sont renvoyés dans conflicts sans empêcher la création ; un rendez-vous annulé ne compte pas. Avec recurrence (G Q55), une ligne par occurrence est créée dans la même transaction, toutes avec le même seriesId, le même statut et la même note, toutes les everyWeeks semaines à la même heure locale dans le fuseau tz (défaut Europe/Paris), count fois ou jusqu''à until inclus ; au-delà de 26 occurrences, rien n''est créé (422 TOO_MANY_OCCURRENCES). conflicts agrège alors les chevauchements de chaque occurrence, occurrenceStartsAt indiquant laquelle. Chaque occurrence se déplace et s''annule ensuite seule ; aucune règle de répétition n''est stockée. status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).'
+      description: 'Session praticien, propriétaire du patient. Le praticien et le cabinet viennent de la session. Le rendez-vous vise exactement un de patientId (patient du praticien, non archivé) et guest (invité, G Q60 : personne sans fiche patient, décrite par nom, prénom, téléphone et e-mail, purgée 6 mois après la fin ou l''annulation du rendez-vous ; elle n''apparaît ni dans les patients, ni dans la recherche). La fin vaut startsAt + durationMin. Statut planned, ou tentative si tentative = true (« À confirmer »). Les rendez-vous actifs du praticien qui chevauchent le créneau sont renvoyés dans conflicts sans empêcher la création ; un rendez-vous annulé ne compte pas. Avec recurrence (G Q55), une ligne par occurrence est créée dans la même transaction, toutes avec le même seriesId, le même statut et la même note, toutes les everyWeeks semaines à la même heure locale dans le fuseau tz (défaut Europe/Paris), count fois ou jusqu''à until inclus ; au-delà de 26 occurrences, rien n''est créé (422 TOO_MANY_OCCURRENCES). conflicts agrège alors les chevauchements de chaque occurrence, occurrenceStartsAt indiquant laquelle. Chaque occurrence se déplace et s''annule ensuite seule ; aucune règle de répétition n''est stockée. L''origine du rendez-vous créé est toujours practitioner. status, origin, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).'
       operationId: createAppointment
       requestBody:
         content:
@@ -6805,7 +7179,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-          description: 'PATIENT_ARCHIVED (errors[0].field = patientId) : patient archivé ; TOO_MANY_OCCURRENCES (errors[0].field = recurrence) : plus de 26 occurrences, rien n''est créé ; VALIDATION_FAILED avec errors[] : patientId REQUIRED (ni patientId ni guest) ; guest INVALID_VALUE (patientId et guest ensemble) ; guest.lastName REQUIRED ; guest.firstName, guest.lastName OUT_OF_RANGE (plus de 100 caractères) ; guest.phone OUT_OF_RANGE (plus de 30 caractères) ou INVALID_FORMAT (autre chose que chiffres, espaces, +, point, tiret, parenthèses) ; startsAt, durationMin, modality ou recurrence.everyWeeks REQUIRED ; durationMin OUT_OF_RANGE (hors 5 à 600) ; modality INVALID_VALUE (hors in_person, video, phone) ; planningNote OUT_OF_RANGE (plus de 2 000 caractères) ; recurrence.everyWeeks INVALID_VALUE (hors 1, 2, 4) ; recurrence.count OUT_OF_RANGE (moins de 1) ; recurrence REQUIRED (ni count ni until) ou INVALID_VALUE (count et until ensemble) ; recurrence.until INVALID_VALUE (avant le premier rendez-vous) ; tz INVALID_VALUE (fuseau inconnu) ; INVALID_FORMAT (date ou UUID illisible) ; UNKNOWN_FIELD (champ refusé).'
+          description: 'PATIENT_ARCHIVED (errors[0].field = patientId) : patient archivé ; TOO_MANY_OCCURRENCES (errors[0].field = recurrence) : plus de 26 occurrences, rien n''est créé ; VALIDATION_FAILED avec errors[] : patientId REQUIRED (ni patientId ni guest) ; guest INVALID_VALUE (patientId et guest ensemble) ; guest.lastName REQUIRED ; guest.firstName, guest.lastName OUT_OF_RANGE (plus de 100 caractères) ; guest.phone OUT_OF_RANGE (plus de 30 caractères) ou INVALID_FORMAT (autre chose que chiffres, espaces, +, point, tiret, parenthèses) ; guest.email OUT_OF_RANGE (plus de 320 caractères) ou INVALID_FORMAT (pas une adresse e-mail) ; startsAt, durationMin, modality ou recurrence.everyWeeks REQUIRED ; durationMin OUT_OF_RANGE (hors 5 à 600) ; modality INVALID_VALUE (hors in_person, video, phone) ; planningNote OUT_OF_RANGE (plus de 2 000 caractères) ; recurrence.everyWeeks INVALID_VALUE (hors 1, 2, 4) ; recurrence.count OUT_OF_RANGE (moins de 1) ; recurrence REQUIRED (ni count ni until) ou INVALID_VALUE (count et until ensemble) ; recurrence.until INVALID_VALUE (avant le premier rendez-vous) ; tz INVALID_VALUE (fuseau inconnu) ; INVALID_FORMAT (date ou UUID illisible) ; UNKNOWN_FIELD (champ refusé).'
         '429':
           content:
             application/problem+json:
@@ -6951,7 +7325,7 @@ paths:
       tags:
       - Rendez-vous
     patch:
-      description: 'Session praticien. Fusion partielle : startsAt déplace le rendez-vous en gardant sa durée, durationMin la change en gardant le début, modality et planningNote se remplacent ; un champ absent reste inchangé, planningNote à null efface la note. guest corrige l''identité d''un rendez-vous invité (G Q60) : lastName obligatoire et remplacé, firstName et phone absents restent inchangés, une chaîne vide les efface ; 422 INVALID_VALUE sur guest si le rendez-vous vise un patient ou si l''invité est purgé. Refusé si le rendez-vous est annulé ou terminé (409). Les chevauchements du nouveau créneau sont renvoyés dans conflicts sans empêcher la modification. patientId, tentative (passer par /confirm), recurrence, status, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).'
+      description: 'Session praticien. Fusion partielle : startsAt déplace le rendez-vous en gardant sa durée, durationMin la change en gardant le début, modality et planningNote se remplacent ; un champ absent reste inchangé, planningNote à null efface la note. guest corrige l''identité d''un rendez-vous invité (G Q60) : lastName obligatoire et remplacé, firstName, phone et email absents restent inchangés, une chaîne vide les efface ; 422 INVALID_VALUE sur guest si le rendez-vous vise un patient ou si l''invité est purgé. Refusé si le rendez-vous est annulé ou terminé (409). Les chevauchements du nouveau créneau sont renvoyés dans conflicts sans empêcher la modification. patientId, tentative (passer par /confirm), recurrence, status, origin, practitionerId, tenantId, sessionEntryId, authorType et submissionId sont refusés (UNKNOWN_FIELD).'
       operationId: updateAppointment
       parameters:
       - description: Identifiant du rendez-vous.
@@ -7010,7 +7384,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-          description: 'VALIDATION_FAILED avec errors[] : durationMin OUT_OF_RANGE (hors 5 à 600) ; modality INVALID_VALUE ; planningNote OUT_OF_RANGE (plus de 2 000 caractères) ; guest INVALID_VALUE (rendez-vous patient ou invité purgé) ; guest.lastName REQUIRED ; guest.phone INVALID_FORMAT ; guest.* OUT_OF_RANGE ; INVALID_FORMAT (date illisible) ; UNKNOWN_FIELD (champ refusé).'
+          description: 'VALIDATION_FAILED avec errors[] : durationMin OUT_OF_RANGE (hors 5 à 600) ; modality INVALID_VALUE ; planningNote OUT_OF_RANGE (plus de 2 000 caractères) ; guest INVALID_VALUE (rendez-vous patient ou invité purgé) ; guest.lastName REQUIRED ; guest.phone, guest.email INVALID_FORMAT ; guest.* OUT_OF_RANGE ; INVALID_FORMAT (date illisible) ; UNKNOWN_FIELD (champ refusé).'
         '429':
           content:
             application/problem+json:
@@ -8924,7 +9298,7 @@ paths:
       - Export de compte
   /api/me/preferences:
     get:
-      description: 'Session praticien. Renvoie toujours les 13 clés : la valeur enregistrée si elle est valide, sinon le défaut calculé selon la profession (coach : vocabulary.subjectLabel = client et entryTypes.medicationVisible = false ; psychiatre : entryTypes.medicationVisible = true). Les clés inconnues stockées ne sont pas renvoyées.'
+      description: 'Session praticien. Renvoie toujours les 21 clés : la valeur enregistrée si elle est valide, sinon le défaut calculé selon la profession (coach : vocabulary.subjectLabel = client et entryTypes.medicationVisible = false ; psychiatre : entryTypes.medicationVisible = true). Les clés inconnues stockées ne sont pas renvoyées.'
       operationId: getPreferences
       responses:
         '200':
@@ -8932,7 +9306,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Preferences'
-          description: Les 13 préférences effectives du compte.
+          description: Les 21 préférences effectives du compte.
         '401':
           content:
             application/problem+json:
@@ -8961,7 +9335,7 @@ paths:
       tags:
       - Préférences
     patch:
-      description: 'Session praticien. Corps JSON plat (application/json ou application/merge-patch+json) avec seulement les clés à changer : les autres sont conservées. null remet la clé à son défaut ; une clé inconnue est ignorée sans erreur. Une seule valeur hors domaine rejette toute la requête (422, errors[].field = clé fautive) et rien n''est appliqué. Renvoie les 13 préférences effectives après fusion ; un PATCH qui ne change rien est un succès.'
+      description: 'Session praticien. Corps JSON plat (application/json ou application/merge-patch+json) avec seulement les clés à changer : les autres sont conservées. null remet la clé à son défaut ; une clé inconnue est ignorée sans erreur. Une seule valeur hors domaine rejette toute la requête (422, errors[].field = clé fautive) et rien n''est appliqué. Renvoie les 21 préférences effectives après fusion ; un PATCH qui ne change rien est un succès.'
       operationId: updatePreferences
       requestBody:
         content:
@@ -8979,7 +9353,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Preferences'
-          description: Les 13 préférences effectives après fusion.
+          description: Les 21 préférences effectives après fusion.
         '401':
           content:
             application/problem+json:
@@ -8997,7 +9371,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-          description: 'VALIDATION_FAILED avec errors[] {field, code, message} : code INVALID_VALUE, field = la clé fautive (par exemple overview.window) ; valeurs admises dans message ; rien n''est appliqué.'
+          description: 'VALIDATION_FAILED avec errors[] {field, code, message} : field = la clé fautive (par exemple overview.window ou booking.windows), code INVALID_VALUE (valeur hors domaine ou mal formée) ou OUT_OF_RANGE (nombre hors bornes, par exemple booking.slotDurationMin, ou plus de 21 plages dans booking.windows) ; valeurs admises dans message ; rien n''est appliqué, même pour les clés valides du même PATCH.'
         '429':
           content:
             application/problem+json:
@@ -11945,6 +12319,500 @@ paths:
       summary: Liste l'historique des versions de la fiche d'un patient
       tags:
       - Patients
+  /api/public/booking/manage:
+    post:
+      description: 'Public, sans session ni cookie ; 60 requêtes par minute et par IP ; Cache-Control: no-store. Le jeton du lien de gestion (/rendez-vous/gerer/{jeton}) voyage dans le corps. Rend l''état du rendez-vous (pending, confirmed, cancelled avec cancelledBy, past), ses horaires, sa modalité et le praticien ; jamais le nom, l''e-mail ni le téléphone du demandeur. Le lien reste valable même si le praticien a désactivé la prise de rendez-vous ou dépublié sa fiche (slug et displayName valent alors null).'
+      operationId: getManagedBooking
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingTokenRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PublicAppointmentDto'
+          description: État du rendez-vous (manageToken toujours null).
+          headers:
+            Cache-Control:
+              description: no-store.
+              schema:
+                type: string
+              style: simple
+        '404':
+          content:
+            application/problem+json:
+              examples:
+                BOOKING_TOKEN_INVALID:
+                  description: BOOKING_TOKEN_INVALID
+                  value:
+                    code: BOOKING_TOKEN_INVALID
+                    detail: Ce lien n'est pas valable.
+                    instance: /api/public/booking
+                    status: 404
+                    title: Not Found
+                    type: about:blank
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'BOOKING_TOKEN_INVALID : jeton inconnu (jamais émis, remplacé, ou demande purgée).'
+        '422':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'VALIDATION_FAILED avec errors[] {field, code, message} : token REQUIRED (absent ou vide) ou OUT_OF_RANGE (plus de 200 caractères).'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : plus de 60 requêtes par minute depuis cette adresse IP sur les routes publiques ; en-tête Retry-After et champ retryAfterSeconds en secondes.'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Lit l'état d'un rendez-vous pris en ligne, par son lien de gestion
+      tags:
+      - Prise de rendez-vous en ligne
+  /api/public/booking/manage/cancel:
+    post:
+      description: 'Public, sans session ni cookie ; 60 requêtes par minute et par IP ; Cache-Control: no-store. Le jeton du lien de gestion voyage dans le corps. Annulation ordinaire : le rendez-vous passe à cancelled (cancelledBy = visitor) et le praticien est prévenu par e-mail. Idempotente : sur un rendez-vous déjà annulé, quelle que soit la cause, rend son état sans rien changer ni envoyer. 409 APPOINTMENT_NOT_ACTIVE si le rendez-vous a commencé ou est terminé.'
+      operationId: cancelManagedBooking
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingTokenRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PublicAppointmentDto'
+          description: Rendez-vous annulé (ou déjà annulé) ; manageToken toujours null.
+          headers:
+            Cache-Control:
+              description: no-store.
+              schema:
+                type: string
+              style: simple
+        '404':
+          content:
+            application/problem+json:
+              examples:
+                BOOKING_TOKEN_INVALID:
+                  description: BOOKING_TOKEN_INVALID
+                  value:
+                    code: BOOKING_TOKEN_INVALID
+                    detail: Ce lien n'est pas valable.
+                    instance: /api/public/booking
+                    status: 404
+                    title: Not Found
+                    type: about:blank
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'BOOKING_TOKEN_INVALID : jeton inconnu (jamais émis, remplacé, ou demande purgée).'
+        '409':
+          content:
+            application/problem+json:
+              examples:
+                APPOINTMENT_NOT_ACTIVE:
+                  description: APPOINTMENT_NOT_ACTIVE
+                  value:
+                    code: APPOINTMENT_NOT_ACTIVE
+                    detail: 'Ce rendez-vous a commencé ou est terminé : il ne peut plus être annulé.'
+                    instance: /api/public/booking
+                    status: 409
+                    title: Conflict
+                    type: about:blank
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'APPOINTMENT_NOT_ACTIVE : le rendez-vous a commencé ou est terminé ; il ne peut plus être annulé.'
+        '422':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'VALIDATION_FAILED avec errors[] {field, code, message} : token REQUIRED (absent ou vide) ou OUT_OF_RANGE (plus de 200 caractères).'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : plus de 60 requêtes par minute depuis cette adresse IP sur les routes publiques ; en-tête Retry-After et champ retryAfterSeconds en secondes.'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Annule un rendez-vous pris en ligne, par son lien de gestion
+      tags:
+      - Prise de rendez-vous en ligne
+  /api/public/booking/practitioners/{slug}:
+    get:
+      description: 'Public, sans session ni cookie ; 60 requêtes par minute et par IP ; Cache-Control: no-store. La prise de rendez-vous est offerte si la fiche du praticien est publiée, le praticien approuvé, la fonction activée (booking.enabled) et au moins une plage ouverte. La réponse donne le mode de confirmation, la durée d''un créneau, les modalités, le fuseau, le délai minimal et l''horizon ; jamais les plages ouvertes ni les rendez-vous. Sinon 404 BOOKING_NOT_AVAILABLE, même corps quelle que soit la cause.'
+      operationId: getPublicBooking
+      parameters:
+      - description: Adresse publique (slug) du praticien.
+        example: claire-lambert
+        in: path
+        name: slug
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PublicBookingDto'
+          description: Prise de rendez-vous offerte ; réglages publics.
+          headers:
+            Cache-Control:
+              description: no-store.
+              schema:
+                type: string
+              style: simple
+        '404':
+          content:
+            application/problem+json:
+              examples:
+                BOOKING_NOT_AVAILABLE:
+                  description: BOOKING_NOT_AVAILABLE
+                  value:
+                    code: BOOKING_NOT_AVAILABLE
+                    detail: Prise de rendez-vous en ligne indisponible à cette adresse.
+                    instance: /api/public/booking
+                    status: 404
+                    title: Not Found
+                    type: about:blank
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'BOOKING_NOT_AVAILABLE : prise de rendez-vous non offerte à cette adresse. Même corps pour toutes les causes, sans les distinguer (G Q78) : slug inconnu, fiche non publiée, praticien non approuvé (suspendu, rejeté, clos), fonction désactivée, aucune plage ouverte.'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : plus de 60 requêtes par minute depuis cette adresse IP sur les routes publiques ; en-tête Retry-After et champ retryAfterSeconds en secondes.'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Dit si la prise de rendez-vous en ligne est offerte, et avec quels réglages
+      tags:
+      - Prise de rendez-vous en ligne
+  /api/public/booking/practitioners/{slug}/requests:
+    post:
+      description: 'Public, sans session ni cookie ; 5 demandes par heure et par IP (429 RATE_LIMITED avec Retry-After), en plus de 60 requêtes par minute et par IP ; Cache-Control: no-store. Vérifications dans cet ordre : forme du corps (422 par champ) ; 404 BOOKING_NOT_AVAILABLE si la prise de rendez-vous n''est pas offerte ; 409 SLOT_NOT_AVAILABLE si startsAt n''est pas exactement le début d''un créneau offert (même calcul que GET …/slots) ou si la modalité n''est pas offerte. Sinon 202 sans corps, quelle que soit l''adresse saisie (G Q78) : la demande est enregistrée et un lien de vérification, valable 30 minutes, part par e-mail après la réponse ; ou bien elle est ignorée en silence, sans trace ni e-mail (pot de miel rempli, formulaire envoyé moins de 3 secondes après son affichage, ou affiché plus de 5 minutes dans le futur, déjà 3 demandes dans l''heure pour cette adresse). Rien n''est réservé et le praticien n''est pas prévenu avant la vérification ; une demande jamais vérifiée est effacée après 24 heures. Un échec d''envoi de l''e-mail ne change pas la réponse.'
+      operationId: createBookingRequest
+      parameters:
+      - description: Adresse publique (slug) du praticien.
+        example: claire-lambert
+        in: path
+        name: slug
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingRequest'
+        required: true
+      responses:
+        '202':
+          description: Demande acceptée, ou ignorée en silence ; aucun corps.
+          headers:
+            Cache-Control:
+              description: no-store.
+              schema:
+                type: string
+              style: simple
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'MALFORMED_REQUEST : corps JSON illisible sans champ identifiable.'
+        '404':
+          content:
+            application/problem+json:
+              examples:
+                BOOKING_NOT_AVAILABLE:
+                  description: BOOKING_NOT_AVAILABLE
+                  value:
+                    code: BOOKING_NOT_AVAILABLE
+                    detail: Prise de rendez-vous en ligne indisponible à cette adresse.
+                    instance: /api/public/booking
+                    status: 404
+                    title: Not Found
+                    type: about:blank
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'BOOKING_NOT_AVAILABLE : prise de rendez-vous non offerte à cette adresse. Même corps pour toutes les causes, sans les distinguer (G Q78) : slug inconnu, fiche non publiée, praticien non approuvé (suspendu, rejeté, clos), fonction désactivée, aucune plage ouverte.'
+        '409':
+          content:
+            application/problem+json:
+              examples:
+                SLOT_NOT_AVAILABLE:
+                  description: SLOT_NOT_AVAILABLE
+                  value:
+                    code: SLOT_NOT_AVAILABLE
+                    detail: Ce créneau n'est pas proposé à la réservation.
+                    instance: /api/public/booking
+                    status: 409
+                    title: Conflict
+                    type: about:blank
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'SLOT_NOT_AVAILABLE : startsAt n''est pas le début d''un créneau offert (pris, hors plage, trop proche, au-delà de l''horizon), ou la modalité n''est pas offerte. Relire les créneaux.'
+        '422':
+          content:
+            application/problem+json:
+              examples:
+                INVALID_FORMAT:
+                  description: INVALID_FORMAT
+                  value:
+                    code: VALIDATION_FAILED
+                    detail: Certains champs sont invalides.
+                    errors:
+                    - code: INVALID_FORMAT
+                      field: email
+                      message: 'E-mail invalide : une adresse de la forme nom@domaine.fr est attendue.'
+                    instance: /api/public/booking
+                    status: 422
+                    title: Requête invalide
+                    type: about:blank
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'VALIDATION_FAILED avec errors[] {field, code, message} : startsAt, modality, firstName, lastName, email, consent, formShownAt REQUIRED (absents ou vides) ; firstName, lastName (100), email (320), phone (30) OUT_OF_RANGE ; email, phone, startsAt, formShownAt INVALID_FORMAT ; modality, locale INVALID_VALUE (valeur non admise) ; consent INVALID_VALUE (différent de true).'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : plus de 5 demandes par heure, ou plus de 60 requêtes par minute, depuis cette adresse IP ; en-tête Retry-After et champ retryAfterSeconds en secondes.'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Demande un rendez-vous en ligne ; un lien de vérification part par e-mail
+      tags:
+      - Prise de rendez-vous en ligne
+  /api/public/booking/practitioners/{slug}/slots:
+    get:
+      description: 'Public, sans session ni cookie ; 60 requêtes par minute et par IP ; Cache-Control: no-store. from et to sont des dates AAAA-MM-JJ dans le fuseau du praticien (timezone de la réponse), to inclus ; from absent = aujourd''hui dans ce fuseau, to absent = from + 13 jours ; 31 jours au plus. Chaque plage ouverte est découpée en créneaux de slotDurationMin minutes à partir de son début (le reste en fin de plage est ignoré). Un créneau est offert s''il commence au plus tôt maintenant + minNoticeHours, au plus tard le jour aujourd''hui + horizonDays, s''il ne chevauche aucun rendez-vous actif du praticien, et si aucun changement d''heure ne le traverse (une heure locale qui n''existe pas n''est jamais offerte, une heure répétée l''est une fois). Seuls les créneaux offerts sont publiés, en instants UTC triés par début : jamais un créneau pris, ni sa raison, ni un identifiant. Les vérifications se font dans cet ordre : 404, to avant from, fenêtre trop large.'
+      operationId: listPublicBookingSlots
+      parameters:
+      - description: Adresse publique (slug) du praticien.
+        example: claire-lambert
+        in: path
+        name: slug
+        required: true
+        schema:
+          type: string
+      - description: 'Premier jour, inclus, AAAA-MM-JJ dans le fuseau du praticien. Défaut : aujourd''hui dans ce fuseau.'
+        example: 2026-12-07T00:00:00Z
+        in: query
+        name: from
+        required: false
+        schema:
+          format: date
+          type: string
+      - description: 'Dernier jour, inclus, AAAA-MM-JJ dans le fuseau du praticien, au plus 30 jours après from. Défaut : from + 13 jours.'
+        example: 2026-12-20T00:00:00Z
+        in: query
+        name: to
+        required: false
+        schema:
+          format: date
+          type: string
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PublicSlotsDto'
+          description: Créneaux offerts de la fenêtre (liste vide si aucun n'est libre).
+          headers:
+            Cache-Control:
+              description: no-store.
+              schema:
+                type: string
+              style: simple
+        '404':
+          content:
+            application/problem+json:
+              examples:
+                BOOKING_NOT_AVAILABLE:
+                  description: BOOKING_NOT_AVAILABLE
+                  value:
+                    code: BOOKING_NOT_AVAILABLE
+                    detail: Prise de rendez-vous en ligne indisponible à cette adresse.
+                    instance: /api/public/booking
+                    status: 404
+                    title: Not Found
+                    type: about:blank
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'BOOKING_NOT_AVAILABLE : prise de rendez-vous non offerte à cette adresse. Même corps pour toutes les causes, sans les distinguer (G Q78) : slug inconnu, fiche non publiée, praticien non approuvé (suspendu, rejeté, clos), fonction désactivée, aucune plage ouverte.'
+        '422':
+          content:
+            application/problem+json:
+              examples:
+                WINDOW_TOO_LARGE:
+                  description: WINDOW_TOO_LARGE
+                  value:
+                    code: WINDOW_TOO_LARGE
+                    detail: La fenêtre demandée dépasse 31 jours.
+                    errors:
+                    - code: WINDOW_TOO_LARGE
+                      field: to
+                      message: La fenêtre demandée dépasse 31 jours.
+                    instance: /api/public/booking
+                    status: 422
+                    title: Unprocessable Content
+                    type: about:blank
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'VALIDATION_FAILED avec errors[] {field, code, message} : to INVALID_VALUE (to précède from) ; from ou to INVALID_FORMAT (date illisible, AAAA-MM-JJ attendu). WINDOW_TOO_LARGE avec errors[0].field = to : plus de 31 jours, to inclus.'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : plus de 60 requêtes par minute depuis cette adresse IP sur les routes publiques ; en-tête Retry-After et champ retryAfterSeconds en secondes.'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Liste les créneaux offerts d'un praticien sur une fenêtre de dates
+      tags:
+      - Prise de rendez-vous en ligne
+  /api/public/booking/requests/verify:
+    post:
+      description: 'Public, sans session ni cookie ; 60 requêtes par minute et par IP ; Cache-Control: no-store. Le jeton du lien de vérification (/rendez-vous/confirmer/{jeton}) voyage dans le corps. À la première vérification réussie, le rendez-vous est créé : en attente de la réponse du praticien (status pending) si le praticien valide chaque demande, confirmé (status confirmed) en acceptation automatique ; le mode appliqué est celui du moment de la vérification. La réponse porte alors manageToken, le jeton du lien de gestion, renvoyé cette seule fois ; un e-mail le rappelle au demandeur et le praticien est prévenu. Un second appel avec le même jeton rend l''état courant du même rendez-vous, sans manageToken et sans nouvel e-mail. Le premier e-mail vérifié obtient le créneau : 409 SLOT_TAKEN s''il n''est plus offert, 409 BOOKING_ALREADY_ACTIVE si cette adresse a déjà un rendez-vous en ligne actif et à venir avec ce praticien ; dans ces deux cas rien n''est créé. Vérifications dans cet ordre : jeton inconnu (404), déjà vérifié (200), expiré (410), prise de rendez-vous plus offerte (404), rendez-vous déjà actif (409), créneau pris (409).'
+      operationId: verifyBookingRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingTokenRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PublicAppointmentDto'
+          description: Rendez-vous créé (avec manageToken), ou déjà créé par ce jeton (sans manageToken).
+          headers:
+            Cache-Control:
+              description: no-store.
+              schema:
+                type: string
+              style: simple
+        '404':
+          content:
+            application/problem+json:
+              examples:
+                BOOKING_NOT_AVAILABLE:
+                  description: BOOKING_NOT_AVAILABLE
+                  value:
+                    code: BOOKING_NOT_AVAILABLE
+                    detail: Prise de rendez-vous en ligne indisponible à cette adresse.
+                    instance: /api/public/booking
+                    status: 404
+                    title: Not Found
+                    type: about:blank
+                BOOKING_TOKEN_INVALID:
+                  description: BOOKING_TOKEN_INVALID
+                  value:
+                    code: BOOKING_TOKEN_INVALID
+                    detail: Ce lien n'est pas valable.
+                    instance: /api/public/booking
+                    status: 404
+                    title: Not Found
+                    type: about:blank
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'BOOKING_TOKEN_INVALID : jeton inconnu (jamais émis, remplacé, ou demande purgée). Ou BOOKING_NOT_AVAILABLE : la prise de rendez-vous n''est plus offerte par ce praticien (fonction désactivée, fiche dépubliée, praticien non approuvé).'
+        '409':
+          content:
+            application/problem+json:
+              examples:
+                BOOKING_ALREADY_ACTIVE:
+                  description: BOOKING_ALREADY_ACTIVE
+                  value:
+                    code: BOOKING_ALREADY_ACTIVE
+                    detail: Vous avez déjà un rendez-vous à venir avec ce praticien.
+                    instance: /api/public/booking
+                    status: 409
+                    title: Conflict
+                    type: about:blank
+                SLOT_TAKEN:
+                  description: SLOT_TAKEN
+                  value:
+                    code: SLOT_TAKEN
+                    detail: Ce créneau n'est plus disponible.
+                    instance: /api/public/booking
+                    status: 409
+                    title: Conflict
+                    type: about:blank
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'SLOT_TAKEN : le créneau n''est plus offert (pris entre-temps, plus proposé, ou modalité plus offerte). BOOKING_ALREADY_ACTIVE : cette adresse a déjà un rendez-vous en ligne actif et à venir avec ce praticien. Rien n''est créé.'
+        '410':
+          content:
+            application/problem+json:
+              examples:
+                BOOKING_TOKEN_EXPIRED:
+                  description: BOOKING_TOKEN_EXPIRED
+                  value:
+                    code: BOOKING_TOKEN_EXPIRED
+                    detail: Ce lien a expiré.
+                    instance: /api/public/booking
+                    status: 410
+                    title: Gone
+                    type: about:blank
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'BOOKING_TOKEN_EXPIRED : lien de vérification expiré (30 minutes) sans avoir été suivi ; il faut refaire la demande.'
+        '422':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'VALIDATION_FAILED avec errors[] {field, code, message} : token REQUIRED (absent ou vide) ou OUT_OF_RANGE (plus de 200 caractères).'
+        '429':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          description: 'RATE_LIMITED : plus de 60 requêtes par minute depuis cette adresse IP sur les routes publiques ; en-tête Retry-After et champ retryAfterSeconds en secondes.'
+          headers:
+            Retry-After:
+              description: Secondes avant nouvel essai.
+              schema:
+                format: int32
+                type: integer
+      summary: Vérifie l'e-mail d'une demande et crée le rendez-vous
+      tags:
+      - Prise de rendez-vous en ligne
   /api/public/directory:
     get:
       description: 'Public, sans session ; limité à 60 requêtes par minute et par IP (429 RATE_LIMITED). Ne rend que les profils publiés d''un praticien approuvé (suspendu, clos ou rejeté : ni listé, ni trouvé par q, ni compté). Les filtres se cumulent ; pour specialties, modalities, audiences et languages une fiche est retenue si elle a au moins une des valeurs demandées. Réponse paginée par page de 20 (page, totalPages) ; au plus 500 fiches sont examinées avant pagination : total et compteurs de toutes les facettes sont exacts jusqu''à 500 fiches, au-delà ils portent sur les 500 premières dans l''ordre du tri (G Q48). La facette specialties ignore le filtre specialties (compteur d''un code = résultats qu''il donnerait seul). 200 avec Cache-Control: max-age=60, public.'
@@ -12707,7 +13575,7 @@ tags:
   name: Authentification
 - description: Activation, désactivation et codes de secours de la double authentification TOTP du praticien connecté.
   name: Double authentification
-- description: 'Préférences d''affichage et de saisie du praticien connecté, mémorisées par compte : treize clés plates (affichage, saisie, agenda), modifiées par merge-patch (RFC 7396).'
+- description: 'Préférences d''affichage et de saisie du praticien connecté, mémorisées par compte : vingt et une clés plates (affichage, saisie, agenda, prise de rendez-vous en ligne), modifiées par merge-patch (RFC 7396).'
   name: Préférences
 - description: 'Dossier professionnel du praticien connecté : justificatifs, informations professionnelles, soumission du dossier à l''examen de l''administration.'
   name: Vérification du praticien
@@ -12757,6 +13625,8 @@ tags:
   name: 'Administration : vocabulaire de l''annuaire'
 - description: 'Agenda du praticien : rendez-vous planifiés, fenêtre de la grille, conflits d''un créneau et rendez-vous d''un patient. Dates en UTC ISO 8601 ; le client convertit dans le fuseau du praticien. Aucune synchronisation externe dans cette version.'
   name: Agenda
+- description: 'Pages publiques de prise de rendez-vous d''un praticien, sans compte ni session : réglages publics, créneaux offerts, demande de rendez-vous, vérification de l''e-mail par un lien à usage unique, puis suivi et annulation par un lien de gestion personnel. Aucune réponse ne révèle un rendez-vous, un nom ou un créneau pris ; « non offerte » a une seule réponse, quelle qu''en soit la cause, et la réponse à une demande ne dépend jamais de l''adresse saisie.'
+  name: Prise de rendez-vous en ligne
 - description: 'Ce qui décrit la personne elle-même, hors séance, rangé en quatre rubriques (history, family, health, values_goals) : lecture de tout le profil, ajout, correction sur place et retrait d''une information. Une information n''appartient à aucune séance et n''a pas d''historique de versions.'
   name: Profil 360
 - description: 'Rendez-vous de l''agenda du praticien : création depuis un créneau, détail, déplacement, annulation et confirmation. Un chevauchement n''est jamais bloquant : il est signalé dans conflicts. Un rendez-vous ne se supprime jamais.'

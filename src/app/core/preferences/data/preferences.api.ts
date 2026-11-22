@@ -6,8 +6,8 @@ import { completePreferences, Preferences } from '../preferences.model';
 
 /**
  * Service de données des préférences : seul fichier de core/preferences qui parle au client généré.
- * Le serveur renvoie toujours les 9 clés effectives ; on les complète quand même par les défauts
- * (clé absente ou hors domaine → défaut), sans jamais en inventer.
+ * Le serveur renvoie toujours ses 21 clés effectives (contrat 0.15.0) ; on les complète quand même
+ * par les défauts (clé absente ou hors domaine → défaut), sans jamais en inventer.
  */
 @Injectable({ providedIn: 'root' })
 export class PreferencesApi {
@@ -20,7 +20,7 @@ export class PreferencesApi {
 
   /**
    * PATCH /api/me/preferences (merge-patch RFC 7396) : seulement les clés passées, les autres sont
-   * conservées côté serveur. Renvoie les 9 préférences après fusion. Un 422 VALIDATION_FAILED
+   * conservées côté serveur. Renvoie les préférences après fusion. Un 422 VALIDATION_FAILED
    * (errors[].field = la clé fautive) arrive en ApiProblem.
    */
   async patch(changes: Partial<Preferences>, defaults: Preferences): Promise<Preferences> {

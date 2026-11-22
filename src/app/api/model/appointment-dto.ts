@@ -48,6 +48,10 @@ export interface AppointmentDto {
      */
     modality?: AppointmentDtoModalityEnum;
     /**
+     * Origine (G Q74) : practitioner (posé par le praticien, seule valeur d\'un rendez-vous créé par POST /api/appointments) ou online (demande en ligne d\'un visiteur). Fixée par le serveur, jamais modifiable.
+     */
+    origin?: AppointmentDtoOriginEnum;
+    /**
      * Patient du rendez-vous. Null pour un rendez-vous invité.
      */
     patient?: AppointmentPatientDto;
@@ -80,6 +84,10 @@ export enum AppointmentDtoModalityEnum {
     InPerson = 'in_person',
     Video = 'video',
     Phone = 'phone'
+};
+export enum AppointmentDtoOriginEnum {
+    Practitioner = 'practitioner',
+    Online = 'online'
 };
 export enum AppointmentDtoStatusEnum {
     Planned = 'planned',

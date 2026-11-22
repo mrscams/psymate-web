@@ -41,6 +41,7 @@ describe('AgendaApi · traduction des DTO', () => {
       cancelReason: null,
       cancelledAt: null,
       sessionEntryId: null,
+      origin: 'practitioner',
     });
     expect(view.patient).toMatchObject({ id: 'p-1', displayName: 'Marie D.', archived: false });
     expect(view.patient?.age).toBeGreaterThanOrEqual(34);
@@ -67,25 +68,79 @@ describe('AgendaApi · traduction des DTO', () => {
       firstName: 'Sara',
       lastName: 'Benali',
       phone: null,
+      email: null,
       purgedAt: null,
     });
 
     const purged = toAppointment({
       ...dto,
       patient: undefined,
-      guest: { firstName: null, lastName: null, phone: null, purgedAt: '2027-05-01T03:30:00Z' },
+      guest: {
+        firstName: null,
+        lastName: null,
+        phone: null,
+        email: null,
+        purgedAt: '2027-05-01T03:30:00Z',
+      },
     } as never);
     expect(purged.patient).toBeNull();
     expect(purged.guest).toEqual({
       firstName: null,
       lastName: null,
       phone: null,
+      email: null,
       purgedAt: '2027-05-01T03:30:00Z',
     });
 
     const neither = toAppointment({ ...dto, patient: null } as never);
     expect(neither.patient).toBeNull();
     expect(neither.guest).toBeNull();
+  });
+
+  it('demande en ligne (contrat 0.15.0) : origine online, invité avec e-mail', () => {
+    const online = toAppointment({
+      ...dto,
+      patient: null,
+      origin: 'online',
+      status: 'tentative',
+      guest: {
+        firstName: 'Sara',
+        lastName: 'Benali',
+        phone: null,
+        email: 'sara.benali@example.test',
+        purgedAt: null,
+      },
+    } as never);
+    expect(online.origin).toBe('online');
+    expect(online.status).toBe('tentative');
+    expect(online.guest).toEqual({
+      firstName: 'Sara',
+      lastName: 'Benali',
+      phone: null,
+      email: 'sara.benali@example.test',
+      purgedAt: null,
+    });
+  });
+
+  it('origine : practitioner lue telle quelle ; absente ou inconnue → practitioner', () => {
+    expect(toAppointment({ ...dto, origin: 'practitioner' } as never).origin).toBe('practitioner');
+    expect(toAppointment({ ...dto, origin: 'phone_call' } as never).origin).toBe('practitioner');
+  });
+
+  it('invité avec e-mail saisi par le praticien : e-mail lu, blanc → null', () => {
+    const withEmail = toAppointment({
+      ...dto,
+      patient: null,
+      guest: { lastName: 'Benali', email: 'sara.benali@example.test' },
+    } as never);
+    expect(withEmail.origin).toBe('practitioner');
+    expect(withEmail.guest?.email).toBe('sara.benali@example.test');
+    const blank = toAppointment({
+      ...dto,
+      patient: null,
+      guest: { lastName: 'Benali', email: '  ' },
+    } as never);
+    expect(blank.guest?.email).toBeNull();
   });
 
   it('vue d’ensemble → bloc Préparer : dernière séance, entrées depuis par nature, suivi depuis', () => {

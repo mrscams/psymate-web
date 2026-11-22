@@ -69,6 +69,7 @@ export function appointmentOf(partial: Partial<Appointment> & { startsAt: string
       archived: false,
     },
     guest: null,
+    origin: 'practitioner',
     seriesId: null,
     endsAt: new Date(new Date(partial.startsAt).getTime() + durationMin * 60_000).toISOString(),
     durationMin,
@@ -88,16 +89,18 @@ export function guestOf(partial: Partial<AppointmentGuest> = {}): AppointmentGue
     firstName: 'Sara',
     lastName: 'Benali',
     phone: '+33 6 12 34 56 78',
+    email: null,
     purgedAt: null,
     ...partial,
   };
 }
 
-/** Invité purgé : nom, prénom et téléphone effacés, `purgedAt` renseigné. */
+/** Invité purgé : nom, prénom, téléphone et e-mail effacés, `purgedAt` renseigné. */
 export const PURGED_GUEST: AppointmentGuest = {
   firstName: null,
   lastName: null,
   phone: null,
+  email: null,
   purgedAt: '2027-05-01T03:30:00Z',
 };
 
@@ -106,6 +109,19 @@ export function guestAppointmentOf(
   partial: Partial<Appointment> & { startsAt: string },
 ): Appointment {
   return appointmentOf({ patient: null, guest: guestOf(), ...partial });
+}
+
+/**
+ * Une demande en ligne (contrat 0.15.0) : rendez-vous invité d'origine `online`, à confirmer,
+ * l'invité avec son e-mail, à compléter par les champs donnés.
+ */
+export function onlineRequestOf(partial: Partial<Appointment> & { startsAt: string }): Appointment {
+  return guestAppointmentOf({
+    origin: 'online',
+    status: 'tentative',
+    guest: guestOf({ email: 'sara.benali@example.test' }),
+    ...partial,
+  });
 }
 
 function at(day: Date, time: string): Date {

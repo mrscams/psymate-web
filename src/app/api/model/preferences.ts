@@ -7,10 +7,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { BookingWindow } from './booking-window';
 
 
 /**
- * Préférences à plat du compte : 13 clés connues, aux noms pointés (par exemple \"overview.view\"), sans objet imbriqué. En lecture, les 13 clés sont toujours présentes (valeur enregistrée, sinon défaut selon la profession). En PATCH, toutes les clés sont optionnelles : null remet la clé à son défaut, une clé inconnue est ignorée. Les bornes de la journée de l\'agenda doivent rester cohérentes : agenda.dayEndHour strictement supérieur à agenda.dayStartHour, sinon 422 OUT_OF_RANGE sur agenda.dayEndHour.
+ * Préférences à plat du compte : 21 clés connues, aux noms pointés (par exemple \"overview.view\"), jamais imbriquées les unes dans les autres (seule la valeur de booking.windows est une liste d\'objets). En lecture, les 21 clés sont toujours présentes (valeur enregistrée, sinon défaut selon la profession). En PATCH, toutes les clés sont optionnelles : null remet la clé à son défaut, une clé inconnue est ignorée. Les bornes de la journée de l\'agenda doivent rester cohérentes : agenda.dayEndHour strictement supérieur à agenda.dayStartHour, sinon 422 OUT_OF_RANGE sur agenda.dayEndHour. Aucune règle croisée entre les clés booking.*.
  */
 export interface Preferences { 
     /**
@@ -29,6 +30,38 @@ export interface Preferences {
      * Jours travaillés affichés dans l\'agenda : tableau d\'entiers de 1 (lundi) à 7 (dimanche), sans doublon, au moins un jour, dans l\'ordre enregistré (jour hors 1–7 : 422 OUT_OF_RANGE ; doublon, liste vide ou autre type : 422 INVALID_VALUE). Défaut : [1,2,3,4,5,6].
      */
     'agenda.workingDays'?: Array<number>;
+    /**
+     * Confirmation des demandes de rendez-vous en ligne : manual = le praticien accepte chaque demande, auto = rendez-vous confirmé dès que le demandeur a vérifié son e-mail. Autre valeur : 422 INVALID_VALUE. Défaut : manual.
+     */
+    'booking.confirmation'?: PreferencesBookingConfirmationEnum;
+    /**
+     * true si le praticien propose la prise de rendez-vous en ligne sur sa fiche publique. Elle n\'est réellement offerte que s\'il existe au moins une plage (booking.windows) et si le profil est publié et le praticien approuvé ; true sans plage est accepté. Autre type qu\'un booléen : 422 INVALID_VALUE. Défaut : false.
+     */
+    'booking.enabled'?: boolean;
+    /**
+     * Horizon, en jours, au-delà duquel aucun créneau n\'est proposé : entier de 7 à 90. Hors bornes : 422 OUT_OF_RANGE ; non entier : 422 INVALID_VALUE. Défaut : 28.
+     */
+    'booking.horizonDays'?: number;
+    /**
+     * Délai minimal, en heures, entre la demande et le début du créneau : entier de 1 à 168. Hors bornes : 422 OUT_OF_RANGE ; non entier : 422 INVALID_VALUE. Défaut : 24.
+     */
+    'booking.minNoticeHours'?: number;
+    /**
+     * Modalités proposées en ligne : liste non vide, sans doublon, parmi in_person (au cabinet), video (visio) et phone (téléphone), dans l\'ordre enregistré. Liste vide, doublon, autre valeur ou autre type : 422 INVALID_VALUE. Défaut : [\"in_person\"].
+     */
+    'booking.modalities'?: Set<PreferencesBookingModalitiesEnum>;
+    /**
+     * Durée d\'un créneau proposé en ligne, en minutes : entier de 15 à 180, multiple de 5. Hors bornes ou non multiple de 5 : 422 OUT_OF_RANGE ; non entier : 422 INVALID_VALUE. Défaut : 60.
+     */
+    'booking.slotDurationMin'?: number;
+    /**
+     * Fuseau horaire des plages : identifiant de la base IANA (tz) connu de java.time (par exemple Europe/Paris, America/Montreal). Décalage (+02:00, UTC+1), nom incomplet (Paris) ou autre type : 422 INVALID_VALUE. Défaut : Europe/Paris.
+     */
+    'booking.timezone'?: string;
+    /**
+     * Plages hebdomadaires ouvertes à la prise de rendez-vous en ligne, 21 au plus, renvoyées triées par jour puis par début. Deux plages du même jour ne se chevauchent pas (09:00–12:00 puis 12:00–14:00 sont contiguës, donc admises). Plus de 21 plages : 422 OUT_OF_RANGE ; plage mal formée, champ manquant ou inconnu, chevauchement ou autre type : 422 INVALID_VALUE. Liste vide admise. Défaut : [].
+     */
+    'booking.windows'?: Array<BookingWindow>;
     /**
      * Visibilité proposée par défaut pour une nouvelle entrée : clinical = clinique, private = privée. Défaut : clinical.
      */
@@ -71,6 +104,15 @@ export enum PreferencesAgendaDefaultViewEnum {
     Week = 'week',
     Month = 'month',
     List = 'list'
+};
+export enum PreferencesBookingConfirmationEnum {
+    Manual = 'manual',
+    Auto = 'auto'
+};
+export enum PreferencesBookingModalitiesEnum {
+    InPerson = 'in_person',
+    Video = 'video',
+    Phone = 'phone'
 };
 export enum PreferencesEntriesDefaultVisibilityEnum {
     Clinical = 'clinical',

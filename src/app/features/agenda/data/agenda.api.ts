@@ -26,10 +26,12 @@ import {
   Appointment,
   AppointmentGuest,
   AppointmentModality,
+  AppointmentOrigin,
   AppointmentPatch,
   AppointmentPreparation,
   AppointmentStatus,
   APPOINTMENT_MODALITIES,
+  APPOINTMENT_ORIGINS,
   Conflict,
   CreatedAppointments,
   FreeBusy,
@@ -46,7 +48,7 @@ const STATUSES: readonly AppointmentStatus[] = ['planned', 'tentative', 'cancell
 
 /**
  * Service de données de features/agenda (handbook §2, couche 4) : seul fichier de la feature qui
- * importe `src/app/api` (contrat `contract-v0.14.0`, module `agenda` de psymate-api). Il traduit
+ * importe `src/app/api` (contrat `contract-v0.15.0`, module `agenda` de psymate-api). Il traduit
  * les DTO en modèle de vue (agenda.model.ts) et rend des promesses ; les erreurs arrivent déjà en
  * ApiProblem (problem.interceptor). Dates en UTC ISO à l'aller comme au retour.
  */
@@ -161,6 +163,13 @@ function modalityOf(value: unknown): AppointmentModality {
     : 'in_person';
 }
 
+/** Origine inconnue ou absente : posé par le praticien, la seule origine d'avant 0.15.0. */
+function originOf(value: unknown): AppointmentOrigin {
+  return APPOINTMENT_ORIGINS.includes(value as AppointmentOrigin)
+    ? (value as AppointmentOrigin)
+    : 'practitioner';
+}
+
 function statusOf(value: unknown): AppointmentStatus {
   return STATUSES.includes(value as AppointmentStatus) ? (value as AppointmentStatus) : 'planned';
 }
@@ -176,6 +185,7 @@ export function toGuest(dto: GuestDto): AppointmentGuest {
     firstName: textOrNull(dto.firstName),
     lastName: textOrNull(dto.lastName),
     phone: textOrNull(dto.phone),
+    email: textOrNull(dto.email),
     purgedAt: dto.purgedAt ?? null,
   };
 }
@@ -202,6 +212,7 @@ export function toAppointment(dto: AppointmentDto): Appointment {
         }
       : null,
     guest: !dto.patient && dto.guest ? toGuest(dto.guest) : null,
+    origin: originOf(dto.origin),
     seriesId: dto.seriesId ?? null,
     startsAt,
     endsAt,

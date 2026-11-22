@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-22T17:38:49.099Z",
+  "task": "M14-10",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Contrat contract-v0.15.0 épinglé et client regénéré ; huit clés booking.* dans core/preferences (défauts, retour au défaut d'une valeur invalide, BookingWindow) ; Appointment.origin et guest.email dans l'agenda (data, testing). Aucun écran.",
+  "next": "M14-11 (réglages, fiche 14) ; e2e agenda et préférences à confirmer par la CI",
+  "pr": "https://github.com/mrscams/psymate-web/pull/104",
+  "branch": "M14-10-contrat-0.15.0",
+  "checkout": "agent-a14a387e348509ec3"
+}
