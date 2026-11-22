@@ -6,6 +6,7 @@ import { SessionApi } from '../../../core/auth/data/session.api';
 import { PreferencesApi } from '../../../core/preferences/data/preferences.api';
 import { LocaleNavigator } from '../../../core/preferences/locale-navigator';
 import { defaultPreferences, Preferences } from '../../../core/preferences/preferences.model';
+import { PreferencesStore } from '../../../core/preferences';
 import { ConfirmDialogService, ToastService } from '../../../shared/ui';
 import { ProfileApi } from '../data/profile.api';
 import { PROFILE } from '../data/profile.fixtures';
@@ -142,7 +143,7 @@ describe('PreferencesPage', () => {
     expect(el.querySelectorAll('section.card')).toHaveLength(5);
   });
 
-  it('chargé : quatre sections, valeurs serveur reflétées, résumé sécurité', async () => {
+  it('chargé : cinq sections, valeurs serveur reflétées, résumé sécurité', async () => {
     const api = serverFor({
       ...defaultPreferences('psychologist'),
       'overview.window': '12m',
@@ -440,7 +441,9 @@ describe('PreferencesPage · Prise de rendez-vous en ligne', () => {
         'select[aria-labelledby="booking-timezone-label"]',
       )?.value,
     ).toBe('Europe/Paris');
-    expect(section(el).querySelectorAll('pm-booking-windows-editor [role=group]')).toHaveLength(7);
+    expect(
+      section(el).querySelectorAll('pm-booking-windows-editor .wd-day[role=group]'),
+    ).toHaveLength(7);
   });
 
   it('offerte (activée, plages, publié, approuvé) : « Proposée… » et lien vers la page de rendez-vous', async () => {
@@ -686,6 +689,97 @@ describe('PreferencesPage · Prise de rendez-vous en ligne', () => {
     expect(section(el).querySelector('.bar')).toBeNull();
     expect(status(el)).toBeNull();
     expect(section(el).querySelector('pm-booking-windows-editor')).not.toBeNull();
+  });
+
+  it('revue : « Proposée… » et le lien attendent la réponse du PATCH, et restent absents après un échec', async () => {
+    const api = withBooking({ 'booking.windows': [MONDAY] });
+    let reject: (reason: unknown) => void = () => undefined;
+    api.patch.mockImplementationOnce(() => new Promise((_, fail) => (reject = fail)));
+    const { fixture, el } = await render(api);
+    section(el).querySelector<HTMLButtonElement>('mat-slide-toggle button')?.click();
+    await settle(fixture);
+    // PATCH en vol : l'interrupteur est déjà coché (optimiste), la fonction n'est pas encore offerte.
+    expect(section(el).querySelector('mat-slide-toggle button')?.getAttribute('aria-checked')).toBe(
+      'true',
+    );
+    expect(pageLink(el)).toBeNull();
+    expect(el.textContent).not.toContain('Proposée sur votre fiche publique.');
+
+    reject({ status: 0, code: 'NETWORK_ERROR' });
+    await settle(fixture);
+    await settle(fixture);
+    expect(pageLink(el)).toBeNull();
+    expect(el.textContent).not.toContain('Proposée sur votre fiche publique.');
+    expect(section(el).querySelector('mat-slide-toggle button')?.getAttribute('aria-checked')).toBe(
+      'false',
+    );
+  });
+
+  it('revue : « Gardez au moins une modalité. » disparaît quand une relecture recoche la case', async () => {
+    const api = withBooking({});
+    const { fixture, el } = await render(api);
+    const inPerson = section(el).querySelector<HTMLInputElement>('.checks input[type=checkbox]');
+    inPerson?.click();
+    await settle(fixture);
+    expect(section(el).querySelector('#booking-modalities-error')?.textContent?.trim()).toBe(
+      'Gardez au moins une modalité.',
+    );
+    await TestBed.inject(PreferencesStore).load();
+    await settle(fixture);
+    expect(inPerson?.checked).toBe(true);
+    expect(section(el).querySelector('#booking-modalities-error')).toBeNull();
+    expect(api.patch).not.toHaveBeenCalled();
+  });
+
+  it('revue : erreurs 422 reliées à leur contrôle (mode, activation, éditeur de plages)', async () => {
+    const api = withBooking({ 'booking.enabled': true });
+    const refuse = (field: string) => ({
+      status: 422,
+      code: 'VALIDATION_FAILED',
+      errors: [{ field, code: 'INVALID_VALUE', message: `Refus ${field}` }],
+    });
+    api.patch
+      .mockRejectedValueOnce(refuse('booking.confirmation'))
+      .mockRejectedValueOnce(refuse('booking.enabled'))
+      .mockRejectedValueOnce(refuse('booking.windows'));
+    const { fixture, el } = await render(api);
+
+    section(el).querySelector<HTMLInputElement>('input[name=booking-mode][value=auto]')?.click();
+    await settle(fixture);
+    const modeError = section(el).querySelector('#booking-confirmation-error');
+    expect(modeError?.textContent?.trim()).toBe('Refus booking.confirmation');
+    expect(
+      section(el)
+        .querySelector('fieldset[aria-labelledby="booking-mode-label"]')
+        ?.getAttribute('aria-describedby'),
+    ).toBe('booking-confirmation-error');
+
+    section(el).querySelector<HTMLButtonElement>('mat-slide-toggle button')?.click();
+    await settle(fixture);
+    expect(section(el).querySelector('#booking-enabled-error')?.textContent?.trim()).toBe(
+      'Refus booking.enabled',
+    );
+    expect(
+      section(el).querySelector('mat-slide-toggle button')?.getAttribute('aria-describedby'),
+    ).toContain('booking-enabled-error');
+
+    const monday = section(el).querySelector<HTMLElement>('[aria-label="Plages du lundi"]');
+    if (!monday) throw new Error('lundi absent');
+    buttonIn(monday, 'Ajouter une plage').click();
+    await settle(fixture);
+    const [start, end] = Array.from(monday.querySelectorAll<HTMLInputElement>('input.time'));
+    start.value = '09:00';
+    start.dispatchEvent(new Event('input'));
+    end.value = '12:00';
+    end.dispatchEvent(new Event('input'));
+    await settle(fixture);
+    buttonIn(section(el), 'Enregistrer les plages').click();
+    await settle(fixture);
+    const editor = section(el).querySelector('pm-booking-windows-editor .editor[role=group]');
+    expect(editor?.getAttribute('aria-labelledby')).toBe('booking-windows-label');
+    const serverError = section(el).querySelector('pm-booking-windows-editor .error.server');
+    expect(serverError?.textContent?.trim()).toBe('Refus booking.windows');
+    expect(editor?.getAttribute('aria-describedby')).toBe(serverError?.id);
   });
 });
 

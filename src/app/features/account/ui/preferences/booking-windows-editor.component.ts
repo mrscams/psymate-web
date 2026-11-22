@@ -49,7 +49,14 @@ let nextEditorId = 0;
   selector: 'pm-booking-windows-editor',
   imports: [MatButtonModule],
   template: `
-    <div class="editor" tabindex="-1" #box>
+    <div
+      class="editor"
+      tabindex="-1"
+      role="group"
+      [attr.aria-labelledby]="labelledBy()"
+      [attr.aria-describedby]="shownServerError() ? uid + '-server-error' : null"
+      #box
+    >
       @for (day of days; track day) {
         <div class="wd-day" role="group" [attr.aria-label]="groupLabel(day)">
           <h3>{{ dayTitle(day) }}</h3>
@@ -183,7 +190,7 @@ let nextEditorId = 0;
         </span>
       </div>
     </div>
-    @if (serverError(); as message) {
+    @if (shownServerError(); as message) {
       <p class="error server" role="alert" [id]="uid + '-server-error'">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path d="M12 3.5 2.5 20h19L12 3.5Z" />
@@ -370,6 +377,8 @@ export class BookingWindowsEditorComponent {
   readonly saving = input(false);
   /** Message d'un refus du serveur (422 sur `booking.windows`), affiché sous l'éditeur. */
   readonly serverError = input<string | null>(null);
+  /** Id du libellé de la ligne (« Plages ouvertes ») : nom du groupe de l'éditeur. */
+  readonly labelledBy = input<string | null>(null);
 
   /** La liste complète, bien formée, à enregistrer. */
   readonly save = output<BookingWindow[]>();
@@ -383,6 +392,9 @@ export class BookingWindowsEditorComponent {
   protected readonly maxText = $localize`:Plafond des plages atteint@@preferences.booking.window.max:${BOOKING_WINDOWS_MAX}:max: plages au plus.`;
 
   private nextKey = 0;
+
+  /** Refus du serveur affiché ; « Annuler les modifications » l'efface avec le brouillon. */
+  protected readonly shownServerError = linkedSignal(() => this.serverError());
 
   /** Les plages du serveur, égales par contenu : un relu identique ne remet pas le brouillon à zéro. */
   private readonly saved = computed(() => sortWindows(this.windows()), { equal: sameWindows });
@@ -490,6 +502,7 @@ export class BookingWindowsEditorComponent {
       })),
     );
     this.touched.set(new Set());
+    this.shownServerError.set(null);
     this.box().nativeElement.focus();
   }
 

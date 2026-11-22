@@ -28226,8 +28226,8 @@
         <note priority="1" from="description">Nom du bouton qui retire une plage</note>
       </trans-unit>
       <trans-unit id="preferences.booking.window.error.format" datatype="html">
-        <source>Heure attendue au format HH:MM, minutes de 5 en 5.</source>
-        <target state="translated">Time expected as HH:MM, minutes in steps of 5.</target>
+        <source>Heure attendue au format HH:MM, minutes de <x id="step" equiv-text="step"/> en <x id="step" equiv-text="step"/>.</source>
+        <target state="translated">Time expected as HH:MM, minutes in steps of <x id="step" equiv-text="step"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/preferences/booking-labels.ts</context>
           <context context-type="linenumber">73</context>

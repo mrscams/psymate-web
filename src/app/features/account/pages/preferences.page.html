@@ -289,7 +289,13 @@
             help="Le mode est annoncé au demandeur avant l'envoi."
             i18n-help="Aide du mode de confirmation@@preferences.booking.mode.help"
           >
-            <fieldset class="options" aria-labelledby="booking-mode-label">
+            <fieldset
+              class="options"
+              aria-labelledby="booking-mode-label"
+              [attr.aria-describedby]="
+                bookingError('booking.confirmation') ? 'booking-confirmation-error' : null
+              "
+            >
               <label class="option">
                 <input
                   type="radio"
@@ -333,7 +339,7 @@
                 </span>
               </label>
               @if (bookingError('booking.confirmation'); as message) {
-                <p class="error" role="alert">
+                <p class="error" role="alert" id="booking-confirmation-error">
                   <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                     <path d="M12 3.5 2.5 20h19L12 3.5Z" />
                     <path d="M12 10v5M12 17.5v.5" />
@@ -362,6 +368,7 @@
               >
             </div>
             <pm-booking-windows-editor
+              labelledBy="booking-windows-label"
               [windows]="savedWindows()"
               [saving]="windowsSaving()"
               [serverError]="bookingError('booking.windows')"

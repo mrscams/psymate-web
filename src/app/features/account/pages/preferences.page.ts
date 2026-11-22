@@ -255,6 +255,10 @@ export class PreferencesPage {
     () => this.prefs.server()?.['booking.windows'] ?? this.prefs.values()['booking.windows'],
   );
   protected readonly bookingEnabled = computed(() => this.prefs.values()['booking.enabled']);
+  /** Activation enregistrée par le serveur : « Proposée… » et le lien n'anticipent pas le PATCH. */
+  private readonly savedEnabled = computed(
+    () => this.prefs.server()?.['booking.enabled'] ?? this.prefs.values()['booking.enabled'],
+  );
   protected readonly bookingMode = computed(() => this.prefs.values()['booking.confirmation']);
   /** Vrai, faux, ou null tant que le profil n'est pas lu (ni bandeau ni « Proposée » alors). */
   protected readonly published = computed<boolean | null>(
@@ -265,7 +269,7 @@ export class PreferencesPage {
   /** Offerte : activée, au moins une plage enregistrée, profil publié, praticien approuvé (Q75). */
   protected readonly bookingOffered = computed(
     () =>
-      this.bookingEnabled() &&
+      this.savedEnabled() &&
       this.savedWindows().length > 0 &&
       this.published() === true &&
       this.approved(),
@@ -330,6 +334,9 @@ export class PreferencesPage {
   }
 
   protected bookingError(key: PreferenceKey): string | null {
+    if (key === 'booking.modalities' && this.modalityDraft().length === 0) {
+      return $localize`:Erreur, aucune modalité cochée@@preferences.booking.modalities.error:Gardez au moins une modalité.`;
+    }
     return this.bookingErrors()[key] ?? null;
   }
 
@@ -370,14 +377,10 @@ export class PreferencesPage {
     const next = BOOKING_MODALITIES.filter((candidate) =>
       candidate === modality ? checked : current.includes(candidate),
     );
+    // Aucune case cochée : le message vient de l'état des cases (bookingError) et s'efface dès
+    // qu'une case est recochée, par le praticien ou par une relecture.
     this.modalityDraft.set(next);
-    if (next.length === 0) {
-      this.setBookingError(
-        'booking.modalities',
-        $localize`:Erreur, aucune modalité cochée@@preferences.booking.modalities.error:Gardez au moins une modalité.`,
-      );
-      return;
-    }
+    if (next.length === 0) return;
     void this.applyBooking('booking.modalities', next).then((problem) => {
       if (problem) this.modalityDraft.set(this.prefs.values()['booking.modalities']);
     });

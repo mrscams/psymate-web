@@ -69,8 +69,10 @@ export function removeLabel(day: WeekDay, start: string, end: string): string {
 
 export function faultMessage(fault: WindowFault): string {
   switch (fault) {
-    case 'format':
-      return $localize`:Erreur de plage, heure mal formée@@preferences.booking.window.error.format:Heure attendue au format HH:MM, minutes de 5 en 5.`;
+    case 'format': {
+      const step = BOOKING_MINUTE_STEP;
+      return $localize`:Erreur de plage, heure mal formée@@preferences.booking.window.error.format:Heure attendue au format HH:MM, minutes de ${step}:step: en ${step}:step:.`;
+    }
     case 'order':
       return $localize`:Erreur de plage, fin avant le début@@preferences.booking.window.error.order:La fin doit être après le début.`;
     case 'overlap':

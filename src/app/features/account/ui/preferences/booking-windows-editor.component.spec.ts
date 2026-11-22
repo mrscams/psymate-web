@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BookingWindow } from '../../../../core/preferences';
+import { BOOKING_MINUTE_STEP, BookingWindow } from '../../../../core/preferences';
 import { BookingWindowsEditorComponent } from './booking-windows-editor.component';
 import { windowFaults } from './booking-windows';
 
@@ -82,7 +82,7 @@ describe('BookingWindowsEditorComponent', () => {
 
   it('vide : sept jours « Aucune plage », « 0 plage sur 21 », enregistrement inactif', async () => {
     const { el } = await render();
-    expect(el.querySelectorAll('[role="group"]')).toHaveLength(7);
+    expect(el.querySelectorAll('.wd-day[role="group"]')).toHaveLength(7);
     expect(Array.from(el.querySelectorAll('h3')).map((h) => h.textContent?.trim())).toEqual([
       'Lundi',
       'Mardi',
@@ -254,5 +254,30 @@ describe('BookingWindowsEditorComponent', () => {
     expect(el.querySelector('.error.server')).toBeNull();
     expect(el.querySelector('.saved-flag')?.textContent?.trim()).toBe('Enregistré');
     expect(saveButton(el).disabled).toBe(true);
+  });
+
+  it('revue : « Annuler les modifications » efface aussi le refus du serveur', async () => {
+    const { fixture, el } = await render([MONDAY_MORNING], 'Plages invalides.');
+    el.querySelector<HTMLButtonElement>(
+      '[aria-label="Retirer la plage du lundi, 09:00 à 12:00"]',
+    )?.click();
+    await fixture.whenStable();
+    const group = el.querySelector('.editor[role=group]');
+    expect(group?.getAttribute('aria-describedby')).toBe(el.querySelector('.error.server')?.id);
+    button(el, 'Annuler les modifications').click();
+    await fixture.whenStable();
+    expect(el.querySelector('.error.server')).toBeNull();
+    expect(group?.getAttribute('aria-describedby')).toBeNull();
+    expect(field(el, 'Début de la plage 1 du lundi').value).toBe('09:00');
+  });
+
+  it('revue : le message de format suit le pas des minutes du contrat', async () => {
+    const { fixture, el } = await render();
+    button(day(el, 'lundi'), 'Ajouter une plage').click();
+    await fixture.whenStable();
+    await type(fixture, field(el, 'Début de la plage 1 du lundi'), '09:03');
+    expect(day(el, 'lundi').querySelector('[role="alert"]')?.textContent?.trim()).toBe(
+      `Heure attendue au format HH:MM, minutes de ${BOOKING_MINUTE_STEP} en ${BOOKING_MINUTE_STEP}.`,
+    );
   });
 });
