@@ -13,27 +13,48 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     </p>
     <dl class="syntax">
       <div>
-        <dt><code>tag:travail</code></dt>
+        <dt>
+          <code i18n="Exemple de jeton tag@@search.help.example.tag">tag:travail</code>
+        </dt>
         <dd i18n="Aide de la syntaxe@@search.help.tag">entrées portant ce tag</dd>
       </div>
       <div>
-        <dt><code>émotion:anxiété</code></dt>
+        <dt>
+          <code
+            i18n="
+              Exemple de jeton émotion (emotion: accepté par l’API)@@search.help.example.emotion"
+            >émotion:anxiété</code
+          >
+        </dt>
         <dd i18n="Aide de la syntaxe@@search.help.emotion">ressentis de cette émotion</dd>
       </div>
       <div>
-        <dt><code>avant:2026-09</code></dt>
+        <dt>
+          <code
+            i18n="Exemple de jeton avant (before: accepté par l’API)@@search.help.example.before"
+            >avant:2026-09</code
+          >
+        </dt>
         <dd i18n="Aide de la syntaxe@@search.help.before">avant septembre 2026</dd>
       </div>
       <div>
-        <dt><code>après:2026-06</code></dt>
+        <dt>
+          <code i18n="Exemple de jeton après (after: accepté par l’API)@@search.help.example.after"
+            >après:2026-06</code
+          >
+        </dt>
         <dd i18n="Aide de la syntaxe@@search.help.after">à partir de juillet 2026</dd>
       </div>
       <div>
-        <dt><code>"mot exact"</code></dt>
+        <dt>
+          <code i18n="Exemple d’expression exacte@@search.help.example.phrase">"mot exact"</code>
+        </dt>
         <dd i18n="Aide de la syntaxe@@search.help.phrase">expression exacte</dd>
       </div>
       <div>
-        <dt><code>-mot</code></dt>
+        <dt>
+          <code i18n="Exemple de mot exclu@@search.help.example.exclude">-mot</code>
+        </dt>
         <dd i18n="Aide de la syntaxe@@search.help.exclude">exclut ce mot</dd>
       </div>
     </dl>

@@ -103,7 +103,9 @@ export function weekdayInitials(locale: string): string[] {
 /**
  * Plage de la barre d'outils (fiche 15 §2) : « 26 octobre – 1er novembre 2026 » pour la semaine
  * et la liste (« 2 – 8 novembre 2026 » dans un même mois, chaque borne datée si l'année change),
- * « lundi 26 octobre 2026 » pour le jour, « Octobre 2026 » pour le mois.
+ * « lundi 26 octobre 2026 » pour le jour, « Octobre 2026 » pour le mois. Hors du français, la
+ * plage suit l'ordre de la langue (Intl formatRange) : « November 16 – 22, 2026 » en anglais, où
+ * le jour seul ne peut pas précéder le mois.
  */
 export function rangeSegments(view: AgendaView, range: AgendaRange, locale: string): DateSegment[] {
   const from = range.from;
@@ -126,6 +128,14 @@ export function rangeSegments(view: AgendaView, range: AgendaRange, locale: stri
       // La plage du mois commence au lundi de sa première semaine : le milieu est dans le mois.
       return [{ text: formatMonthTitle(new Date((from.getTime() + last.getTime()) / 2), locale) }];
     default: {
+      if (!locale.startsWith('fr')) {
+        const format = new Intl.DateTimeFormat(locale, {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        });
+        return [{ text: format.formatRange(from, last) }];
+      }
       const sameYear = from.getFullYear() === last.getFullYear();
       const sameMonth = sameYear && from.getMonth() === last.getMonth();
       const start = sameMonth

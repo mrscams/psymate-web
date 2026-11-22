@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-22T13:14:50.842Z",
+  "task": "PROJET",
+  "agent": "claude",
+  "status": "review",
+  "summary": "Anglais complet : messages.en.xlf à parité (3 028 unités), agenda traduit, Accept-Language envoyé à l'API (locale.interceptor)",
+  "notes": "Hors plan C. 2 314 tests Vitest verts ; e2e ciblés 44 verts, 3 ignorés ; suite e2e complète non lancée. core/http modifié (intercepteur transversal). messages.fr.xlf régénéré par extract-i18n.",
+  "next": "Relecture puis fusion ; décider si G Q23 doit être amendée (parité EN bloquante ou non)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/103",
+  "branch": "i18n-anglais",
+  "checkout": "i18n-anglais"
+}
