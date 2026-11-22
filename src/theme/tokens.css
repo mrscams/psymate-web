@@ -3,7 +3,7 @@
  * Source : docs/Etude-couleurs-Nordique.md §8 (variables CSS) et §6 (mode sombre, contraste doux).
  *
  * Seule source de vérité des couleurs : lue par le thème Angular Material (src/theme/material.scss),
- * par les composants maison, et par Cytoscape (graphe) et ECharts (courbe), qui relisent les
+ * par les composants maison, et par ECharts (courbe), qui relit les
  * variables par getComputedStyle à chaque changement de ThemeService.resolved().
  * Ne pas « ajuster » une valeur : pnpm check:tokens vérifie chaque couple déclaré
  * (tools/check-tokens.mjs), et aucune couleur en dur n'est permise ailleurs (règle no-hardcoded-color).

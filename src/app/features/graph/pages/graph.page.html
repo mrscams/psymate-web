@@ -35,6 +35,57 @@
       </div>
     </div>
 
+    <div class="field choice" role="group" [attr.aria-labelledby]="readingLabelId">
+      <span class="field-label" [id]="readingLabelId" i18n="Lecture du graphe@@graph.reading.label"
+        >Lecture</span
+      >
+      <div class="segmented">
+        @for (reading of readings; track reading) {
+          <button
+            type="button"
+            class="segment wide"
+            [attr.aria-pressed]="store.query().reading === reading"
+            (click)="setReading(reading)"
+          >
+            {{ readingLabel(reading) }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="field choice" role="group" [attr.aria-labelledby]="directionLabelId">
+      <span
+        class="field-label"
+        [id]="directionLabelId"
+        i18n="Sens de lecture du graphe@@graph.direction.label"
+        >Sens</span
+      >
+      <div class="segmented">
+        @for (direction of directions; track direction) {
+          <button
+            type="button"
+            class="segment wide"
+            [attr.aria-pressed]="store.query().direction === direction"
+            (click)="setDirection(direction)"
+          >
+            {{ directionLabel(direction) }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <label class="names-toggle" [class.unavailable]="!linkNamesAvailable()">
+      <input
+        type="checkbox"
+        [checked]="store.query().linkNames"
+        [disabled]="!linkNamesAvailable()"
+        (change)="onLinkNames($event)"
+      />
+      <span i18n="Case qui affiche le nom des liens sur le graphe@@graph.linkNames"
+        >Nom des liens</span
+      >
+    </label>
+
     <button type="button" class="filter" [matMenuTriggerFor]="typesMenu">
       {{ typesText() }}
       <svg class="chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
@@ -214,17 +265,18 @@
               [root]="store.query().root"
               [selectedId]="store.selectedId()"
               [layoutKey]="store.key()"
-              [positions]="store.currentPositions()"
               [viewport]="store.currentViewport()"
               [lineStyles]="store.lineStyles()"
               [labels]="canvasLabels()"
+              [reading]="store.query().reading"
+              [direction]="store.query().direction"
+              [linkNames]="store.query().linkNames"
               [relayout]="relayoutCount()"
               [label]="canvasLabel()"
               (nodeSelected)="onSelect($event)"
               (nodeActivated)="onActivate($event)"
               (linkDropped)="onLinkDrop($event)"
               (viewportChanged)="onViewport($event)"
-              (positionsChanged)="onPositions($event)"
             />
           } @placeholder {
             <pm-state kind="loading" [title]="loadingCanvasTitle" skeleton="block" [lines]="4" />

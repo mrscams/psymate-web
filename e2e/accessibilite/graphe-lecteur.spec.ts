@@ -24,9 +24,9 @@ test('graphe : canevas nommé, liste des liens en tableau, détail et liens en p
   await page.goto(`/fr/patients/${folder.patientId}/graph?root=${folder.situation}`);
   await graphReady(page, { count: 4 });
 
-  // Le canevas est une image nommée qui renvoie à sa version texte ; le compteur est annoncé.
+  // Le canevas est un groupe nommé qui renvoie à sa version texte ; le compteur est annoncé.
   await expect(
-    page.getByRole('img', {
+    page.getByRole('group', {
       name: 'Graphe des liens : 4 nœuds, 3 liens. Le bouton « Liste des liens » en donne la version texte.',
     }),
   ).toBeVisible();

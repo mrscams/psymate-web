@@ -201,7 +201,7 @@
 // moins la marge basse du contenu ; 480 px au moins (UX-G2c).
 .board {
   position: relative;
-  height: max(480px, calc(100dvh - var(--graph-top, 340px) - 24px));
+  height: max(480px, calc(100dvh - var(--graph-top, 340px) - 40px));
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
   background: var(--surface-raised);
@@ -220,7 +220,7 @@
 }
 
 .detail {
-  height: max(480px, calc(100dvh - var(--graph-top, 340px) - 24px));
+  height: max(480px, calc(100dvh - var(--graph-top, 340px) - 40px));
 }
 
 .list {
@@ -234,5 +234,61 @@
 
   .detail {
     height: auto;
+  }
+}
+
+// Lecture et sens : mêmes segments que la profondeur, larges comme leur texte.
+.segment.wide {
+  width: auto;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
+// Écran étroit : le libellé passe au-dessus, les segments se partagent toute la largeur.
+@media (max-width: 600px) {
+  .field.choice {
+    flex-wrap: wrap;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .field.choice .segmented {
+    display: flex;
+    width: 100%;
+  }
+
+  .segment.wide {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0 6px;
+    white-space: normal;
+  }
+}
+
+// Case « Nom des liens » : même hauteur que les autres contrôles de la barre.
+.names-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  color: var(--text-primary);
+  font: var(--mat-sys-body-small);
+  white-space: nowrap;
+  cursor: pointer;
+  // La barre passe à la ligne plutôt que d'écraser le libellé.
+  flex: none;
+
+  input {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--primary);
+  }
+
+  // Au-delà de 60 nœuds les noms sont masqués d'office : la case est inactive.
+  &.unavailable {
+    color: var(--text-secondary);
+    cursor: default;
   }
 }

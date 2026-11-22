@@ -15,6 +15,23 @@ export const DEFAULT_DEPTH: GraphDepth = 2;
 export type GraphPeriod = 'all' | '30d' | '90d' | '12m';
 export const GRAPH_PERIODS: readonly GraphPeriod[] = ['all', '30d', '90d', '12m'];
 
+/**
+ * Lecture du graphe (G Q58) : ce qui décide de la place d'une carte. causal : les liens (ce qui
+ * déclenche, puis ce qui en découle, puis ce qui y répond) ; type : une colonne par nature d'entrée ;
+ * time : une colonne par mois.
+ */
+export type GraphReading = 'causal' | 'type' | 'time';
+export const GRAPH_READINGS: readonly GraphReading[] = ['causal', 'type', 'time'];
+export const DEFAULT_READING: GraphReading = 'causal';
+
+/** Sens de lecture du graphe : de gauche à droite, ou de haut en bas. */
+export type GraphDirection = 'right' | 'down';
+export const GRAPH_DIRECTIONS: readonly GraphDirection[] = ['right', 'down'];
+export const DEFAULT_DIRECTION: GraphDirection = 'right';
+
+/** Valeur de `?names=` quand le nom des liens est masqué ; sans paramètre, il est affiché. */
+export const LINK_NAMES_OFF = 'off';
+
 export const LINK_TYPE_CODES: readonly LinkTypeCode[] = [
   'triggers',
   'caused_by',
@@ -33,6 +50,9 @@ export const GRAPH_PARAMS = {
   linkTypes: 'linkTypes',
   types: 'types',
   period: 'period',
+  reading: 'reading',
+  direction: 'direction',
+  linkNames: 'names',
 } as const;
 
 /**
@@ -55,6 +75,11 @@ export interface GraphQuery {
    */
   types: EntryType[];
   period: GraphPeriod;
+  /** Lecture et sens : affichage seulement, sans nouvelle requête (comme `types`). */
+  reading: GraphReading;
+  direction: GraphDirection;
+  /** Nom des liens posé sur les traits (case de la barre d'outils) ; affichage seulement. */
+  linkNames: boolean;
 }
 
 export const DEFAULT_QUERY: GraphQuery = {
@@ -63,6 +88,9 @@ export const DEFAULT_QUERY: GraphQuery = {
   linkTypes: [],
   types: [],
   period: 'all',
+  reading: DEFAULT_READING,
+  direction: DEFAULT_DIRECTION,
+  linkNames: true,
 };
 
 /** Une entrée non archivée du dossier, nœud du graphe. */
@@ -135,15 +163,6 @@ export interface LinkDrop {
   targetId: string;
 }
 
-/** Positions des nœuds par identifiant, pour une racine (layout stable, fiche 04). */
-export type GraphPositions = Record<string, Point>;
-
-/** Positions remontées par le canevas, avec la racine (layoutKey) du layout qui les a produites. */
-export interface GraphPositionsChange {
-  key: string;
-  positions: GraphPositions;
-}
-
 /** Zoom et position remontés par le canevas, avec la racine du graphe dessiné. */
 export interface GraphViewportChange {
   key: string;
@@ -172,6 +191,8 @@ export function parseQuery(params: ParamReader): GraphQuery {
   const root = raw === ROOT_ALL ? null : raw;
   const depth = Number(params.get(GRAPH_PARAMS.depth));
   const period = params.get(GRAPH_PARAMS.period) as GraphPeriod | null;
+  const reading = params.get(GRAPH_PARAMS.reading) as GraphReading | null;
+  const direction = params.get(GRAPH_PARAMS.direction) as GraphDirection | null;
   return {
     root,
     depth: GRAPH_DEPTHS.includes(depth as GraphDepth) ? (depth as GraphDepth) : DEFAULT_DEPTH,
@@ -186,6 +207,9 @@ export function parseQuery(params: ParamReader): GraphQuery {
       ),
     ),
     period: period && GRAPH_PERIODS.includes(period) ? period : 'all',
+    reading: reading && GRAPH_READINGS.includes(reading) ? reading : DEFAULT_READING,
+    direction: direction && GRAPH_DIRECTIONS.includes(direction) ? direction : DEFAULT_DIRECTION,
+    linkNames: params.get(GRAPH_PARAMS.linkNames) !== LINK_NAMES_OFF,
   };
 }
 
@@ -202,6 +226,9 @@ export function toQueryParams(query: GraphQuery): Record<string, string | null> 
     [GRAPH_PARAMS.linkTypes]: query.linkTypes.length ? query.linkTypes.join(',') : null,
     [GRAPH_PARAMS.types]: query.types.length ? query.types.join(',') : null,
     [GRAPH_PARAMS.period]: query.period !== 'all' ? query.period : null,
+    [GRAPH_PARAMS.reading]: query.reading !== DEFAULT_READING ? query.reading : null,
+    [GRAPH_PARAMS.direction]: query.direction !== DEFAULT_DIRECTION ? query.direction : null,
+    [GRAPH_PARAMS.linkNames]: query.linkNames ? null : LINK_NAMES_OFF,
   };
 }
 
@@ -225,14 +252,26 @@ export function sameQuery(a: GraphQuery, b: GraphQuery): boolean {
     a.root === b.root &&
     a.depth === b.depth &&
     a.period === b.period &&
+    a.reading === b.reading &&
+    a.direction === b.direction &&
+    a.linkNames === b.linkNames &&
     sameList(a.linkTypes, b.linkTypes) &&
     sameList(a.types, b.types)
   );
 }
 
-/** Ce qui change la requête au serveur (le filtre des types d'entrées reste local). */
+/**
+ * Ce qui change la requête au serveur : le filtre des types d'entrées, la lecture, le sens et le nom
+ * des liens restent locaux.
+ */
 export function sameServerQuery(a: GraphQuery, b: GraphQuery): boolean {
-  return sameQuery({ ...a, types: [] }, { ...b, types: [] });
+  const local = {
+    types: [],
+    reading: DEFAULT_READING,
+    direction: DEFAULT_DIRECTION,
+    linkNames: true,
+  };
+  return sameQuery({ ...a, ...local }, { ...b, ...local });
 }
 
 const DAY_MS = 86_400_000;
@@ -246,7 +285,7 @@ export function periodFrom(period: GraphPeriod, now: Date): string | null {
   return from.toISOString();
 }
 
-/** Clé des positions et du zoom mémorisés : une par racine (« positions mémorisées par root »). */
+/** Clé du zoom mémorisé : une par racine. */
 export function layoutKey(query: Pick<GraphQuery, 'root'>): string {
   return query.root ?? '*';
 }
@@ -303,8 +342,8 @@ export function mergeExpansion(
 }
 
 /**
- * Au-delà de ce nombre de nœuds, les étiquettes « titre · date » se masquent (UX-B3) : elles ne se
- * lisent plus et chevauchent tout. La racine et le nœud sélectionné gardent la leur.
+ * Au-delà de ce nombre de nœuds, les noms des liens se masquent (UX-B3) : ils ne se lisent plus et
+ * chevauchent tout. Ceux du fil de l'entrée sélectionnée restent.
  */
 export const LABELS_MAX_NODES = 60;
 

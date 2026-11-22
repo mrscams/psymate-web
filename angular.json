@@ -43,7 +43,7 @@
             "polyfills": ["@angular/localize/init"],
             "localize": true,
             "i18nMissingTranslation": "warning",
-            "allowedCommonJsDependencies": ["qrcode-generator"],
+            "allowedCommonJsDependencies": ["elkjs", "qrcode-generator"],
             "assets": [
               {
                 "glob": "**/*",

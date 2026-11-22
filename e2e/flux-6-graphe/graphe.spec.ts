@@ -81,16 +81,20 @@ test.describe('vue graphe', () => {
     await page.mouse.move(spot.x - 120, spot.y - 40, { steps: 40 });
     await page.mouse.up();
     const before = await zoom(page);
+    let zoomedIn = before;
     for (let i = 0; i < 12; i++) {
       await page.mouse.wheel(0, i < 6 ? -120 : 120);
       await page.waitForTimeout(30);
+      if (i === 5) zoomedIn = await zoom(page);
     }
     const frames = await page.evaluate(() => {
       const w = window as unknown as { pmFrames: number[]; pmRecording: boolean };
       w.pmRecording = false;
       return w.pmFrames.slice(1);
     });
-    expect(await zoom(page)).not.toBe(before);
+    // Six crans avant zooment ; les six crans arrière ramènent exactement au zoom de départ.
+    expect(zoomedIn).toBeGreaterThan(before);
+    expect(await zoom(page)).toBeCloseTo(before, 6);
     const sorted = [...frames].sort((a, b) => a - b);
     const median = sorted[Math.floor(sorted.length / 2)];
     const p95 = sorted[Math.floor(sorted.length * 0.95)];
@@ -259,6 +263,70 @@ test.describe('vue graphe', () => {
     await expect(page.getByRole('complementary', { name: 'Surcharge au travail' })).toBeVisible();
 
     await expectNoAxeViolations(page);
+  });
+
+  test('lecture, sens et nom des liens : colonnes par type, de haut en bas, chronologie ; choix gardés dans l’URL', async ({
+    page,
+    request,
+  }) => {
+    const account = await createAccount(request, 'q58.lecture', 'psychologist');
+    const folder = await smallFolder(request);
+    await enableProbe(page);
+    await signIn(page, account);
+    await page.goto(`/fr/patients/${folder.patientId}/graph?root=${folder.situation}`);
+    await graphReady(page, { count: 4 });
+    const titles = page.locator('pm-graph-canvas .band-label');
+    const choice = (name: string) => page.getByRole('button', { name, exact: true });
+    await expect(choice('Chaîne causale')).toHaveAttribute('aria-pressed', 'true');
+    await expect(choice('Gauche → droite')).toHaveAttribute('aria-pressed', 'true');
+    await expect(titles).toHaveCount(0);
+
+    // Colonnes par type : toujours dans le même ordre, l'événement à gauche du médicament.
+    await choice('Colonnes par type').click();
+    await expect(page).toHaveURL(/reading=type/);
+    await expect(titles).toHaveText([
+      'Événements',
+      'Situations',
+      'Ressentis et notes',
+      'Réponses · traitements, séances',
+    ]);
+    await expect
+      .poll(
+        async () => (await point(page, folder.event)).x < (await point(page, folder.medication)).x,
+      )
+      .toBe(true);
+
+    // Haut → bas : les colonnes deviennent des rangées, l'événement au-dessus du médicament.
+    await choice('Haut → bas').click();
+    await expect(page).toHaveURL(/direction=down/);
+    await expect
+      .poll(
+        async () => (await point(page, folder.event)).y < (await point(page, folder.medication)).y,
+      )
+      .toBe(true);
+
+    // « Nom des liens » : cochée à l'arrivée, un nom par lien ; décochée, plus aucun nom.
+    const names = page.locator('pm-graph-canvas .link-name');
+    const linkNames = page.getByRole('checkbox', { name: 'Nom des liens' });
+    await expect(linkNames).toBeChecked();
+    await expect(names).toHaveCount(3);
+    await linkNames.uncheck();
+    await expect(page).toHaveURL(/names=off/);
+    await expect(names).toHaveCount(0);
+
+    await choice('Chronologie').click();
+    await expect(page).toHaveURL(/reading=time/);
+    await expect(titles).not.toHaveCount(0);
+    await expect(page.locator('.count')).toHaveText('4 nœuds · 3 liens');
+    await expectNoAxeViolations(page);
+
+    // Rechargement : lecture et sens sont repris de l'URL.
+    await page.reload();
+    await graphReady(page, { count: 4 });
+    await expect(choice('Chronologie')).toHaveAttribute('aria-pressed', 'true');
+    await expect(choice('Haut → bas')).toHaveAttribute('aria-pressed', 'true');
+    await expect(linkNames).not.toBeChecked();
+    await expect(names).toHaveCount(0);
   });
 
   test('super-nœud : au-delà de 150 nœuds, les ressentis sont regroupés et se déplient', async ({

@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-22T01:29:32.113Z",
+  "task": "PROJET",
+  "agent": "claude",
+  "status": "done",
+  "summary": "Graphe patient en lecture dirigée (G Q58) : cartes et traits disposés par elkjs, Lecture, Sens et Nom des liens dans la barre, onglet en pleine largeur",
+  "notes": "elkjs 0.12.1 ajoutée (EPL-2.0, morceau à la demande de 344 kB), cytoscape et cytoscape-cose-bilkent retirées. 2 298 tests Vitest verts ; e2e graphe, accessibilité, zoom 200 %, lier et shell verts contre l'API réelle ; suite e2e complète non lancée. 150 nœuds : disposition en 0,4 à 0,75 s. Trois assertions e2e adaptées (rôle du canevas, zoom à la molette, marge basse du plateau).",
+  "next": "Revue et fusion de la PR 101 ; A, B4 et l'étude couleurs citent encore Cytoscape (G5) ; la maquette de travail propositions-2026-11/05-graphe-elk.html n'est pas suivie par git",
+  "pr": "https://github.com/mrscams/psymate-web/pull/101",
+  "branch": "graphe-elk",
+  "checkout": "psymate-web"
+}

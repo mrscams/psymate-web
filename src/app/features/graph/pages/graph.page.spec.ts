@@ -4,7 +4,6 @@ import { LOCALE_ID, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import cytoscape, { Core, CytoscapeOptions } from 'cytoscape';
 
 import { SessionStore } from '../../../core/auth';
 import { PreferencesStore } from '../../../core/preferences';
@@ -15,7 +14,7 @@ import { GraphView } from '../data/graph.model';
 import { GraphSnapshot } from '../data/graph.store';
 import { LinkApi } from '../data/link.api';
 import { CATALOG, link, source } from '../data/link.fixtures';
-import { GRAPH_RENDERER } from '../ui/graph-canvas.component';
+import { provideTestLayout } from '../ui/graph-layout.fixtures';
 import { GraphPage } from './graph.page';
 
 const serverError = { status: 500, code: 'INTERNAL_ERROR' };
@@ -42,7 +41,6 @@ interface Setup {
 }
 
 async function render(setup: Setup = {}) {
-  let cy: Core | null = null;
   const graphApi = {
     neighbourhood: vi.fn(setup.neighbourhood ?? (() => Promise.resolve(graphView()))),
     expand: vi.fn(setup.expand ?? (() => Promise.resolve(expansion()))),
@@ -80,17 +78,7 @@ async function render(setup: Setup = {}) {
         provide: PreferencesStore,
         useValue: { defaultVisibility: signal('clinical'), medicationVisible: signal(true) },
       },
-      {
-        provide: GRAPH_RENDERER,
-        useValue: () =>
-          Promise.resolve({
-            create: (options: CytoscapeOptions) => {
-              cy = cytoscape({ ...options, headless: true, styleEnabled: true });
-              return cy;
-            },
-            layout: 'grid',
-          }),
-      },
+      provideTestLayout(),
       provideHttpClient(),
       provideHttpClientTesting(),
     ],
@@ -101,11 +89,14 @@ async function render(setup: Setup = {}) {
   const el = harness.fixture.nativeElement as HTMLElement;
   const button = (label: string) =>
     [...el.querySelectorAll('button')].find((b) => text(b) === label) as HTMLButtonElement;
-  return { harness, el, graphApi, linkApi, shell, button, cy: () => cy as unknown as Core };
+  /** La carte d'une entrée (ou d'un super-nœud) dans le canevas. */
+  const card = (id: string) => el.querySelector<HTMLElement>(`[data-node-id="${id}"]`)!;
+  const cards = () => el.querySelectorAll('[data-node-id]');
+  return { harness, el, graphApi, linkApi, shell, button, card, cards };
 }
 
 async function settle(harness: RouterTestingHarness): Promise<void> {
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 10; i++) {
     await tick();
     harness.fixture.detectChanges();
     await harness.fixture.whenStable();
@@ -257,9 +248,9 @@ describe('GraphPage', () => {
   });
 
   it('chargé : canevas en @defer, compteur, légende, profondeur dans l’URL', async () => {
-    const { el, harness, graphApi, cy } = await render();
+    const { el, harness, graphApi, cards } = await render();
     expect(el.querySelector('pm-graph-canvas')).not.toBeNull();
-    expect(cy().nodes()).toHaveLength(4);
+    expect(cards()).toHaveLength(4);
     expect(text(el.querySelector('.count'))).toBe('4 nœuds · 3 liens');
     expect(el.querySelector('pm-graph-legend')).not.toBeNull();
     expect(graphApi.neighbourhood).toHaveBeenCalledWith('p-1', {
@@ -278,6 +269,61 @@ describe('GraphPage', () => {
       expect.objectContaining({ depth: 3 }),
     );
     expect(depth3.getAttribute('aria-pressed')).toBe('true');
+  });
+
+  it('lecture et sens : écrits dans l’URL, le graphe reçu est redisposé sans nouvelle requête', async () => {
+    const { el, harness, graphApi, button } = await render();
+    const titles = () => [...el.querySelectorAll('pm-graph-canvas .band-label')].map(text);
+    expect(button('Chaîne causale').getAttribute('aria-pressed')).toBe('true');
+    expect(button('Gauche → droite').getAttribute('aria-pressed')).toBe('true');
+    expect(titles()).toEqual([]);
+
+    button('Colonnes par type').click();
+    await settle(harness);
+    expect(url()).toBe('/patients/p-1/graph?root=e-situation&reading=type');
+    expect(button('Colonnes par type').getAttribute('aria-pressed')).toBe('true');
+    expect(titles()).toEqual([
+      'Événements',
+      'Situations',
+      'Ressentis et notes',
+      'Réponses · traitements, séances',
+    ]);
+
+    button('Haut → bas').click();
+    await settle(harness);
+    expect(url()).toBe('/patients/p-1/graph?root=e-situation&reading=type&direction=down');
+
+    button('Chronologie').click();
+    await settle(harness);
+    expect(url()).toBe('/patients/p-1/graph?root=e-situation&reading=time&direction=down');
+    expect(titles()).toEqual(['mars 2026']);
+
+    button('Chaîne causale').click();
+    await settle(harness);
+    button('Gauche → droite').click();
+    await settle(harness);
+    expect(url()).toBe('/patients/p-1/graph?root=e-situation');
+    expect(graphApi.neighbourhood).toHaveBeenCalledTimes(1);
+  });
+
+  it('« Nom des liens » : décoché, les noms quittent les traits, l’URL le retient, aucune requête', async () => {
+    const { el, harness, graphApi } = await render();
+    const box = el.querySelector<HTMLInputElement>('.names-toggle input')!;
+    const names = () => el.querySelectorAll('pm-graph-canvas .link-name').length;
+    expect(box.checked).toBe(true);
+    expect(box.disabled).toBe(false);
+    expect(names()).toBe(3);
+
+    box.click();
+    await settle(harness);
+    expect(url()).toBe('/patients/p-1/graph?root=e-situation&names=off');
+    expect(names()).toBe(0);
+
+    box.click();
+    await settle(harness);
+    expect(url()).toBe('/patients/p-1/graph?root=e-situation');
+    expect(names()).toBe(3);
+    expect(graphApi.neighbourhood).toHaveBeenCalledTimes(1);
   });
 
   it('sans racine : profondeur désactivée ; période dans l’URL et en requête', async () => {
@@ -435,17 +481,17 @@ describe('GraphPage', () => {
   });
 
   it('graphe tronqué : mention ; super-nœud : double-clic le déplie', async () => {
-    const { el, harness, graphApi, cy } = await render({
+    const { el, harness, graphApi, card, cards } = await render({
       neighbourhood: () =>
         Promise.resolve(graphView({ superNodes: [superNode()], truncated: true })),
     });
     expect(text(el.querySelector('.note'))).toContain('Graphe partiel');
     expect(text(el.querySelector('.count'))).toBe('5 nœuds · 3 liens');
-    cy().getElementById('sn:e-situation:feeling').emit('dbltap');
+    card('sn:e-situation:feeling').dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
     await settle(harness);
     expect(graphApi.expand).toHaveBeenCalledWith('p-1', 'sn:e-situation:feeling');
     expect(text(el.querySelector('.count'))).toBe('7 nœuds · 6 liens');
-    expect(cy().nodes()).toHaveLength(7);
+    expect(cards()).toHaveLength(7);
   });
 
   it('liste équivalente : les super-nœuds y sont, « Déplier » depuis le tableau des groupes', async () => {
@@ -466,10 +512,10 @@ describe('GraphPage', () => {
   });
 
   it('super-nœud sélectionné : panneau avec « Déplier »', async () => {
-    const { el, harness, graphApi, cy, button } = await render({
+    const { el, harness, graphApi, card, button } = await render({
       neighbourhood: () => Promise.resolve(graphView({ superNodes: [superNode()] })),
     });
-    cy().getElementById('sn:e-situation:feeling').emit('tap');
+    card('sn:e-situation:feeling').click();
     await settle(harness);
     expect(text(el.querySelector('pm-graph-detail h2'))).toBe(
       '3 ressentis regroupés · anxiété majoritaire',
@@ -484,8 +530,8 @@ describe('GraphPage', () => {
   });
 
   it('double-clic sur une entrée : la timeline positionnée dessus', async () => {
-    const { harness, cy } = await render();
-    cy().getElementById('e-event').emit('dbltap');
+    const { harness, card } = await render();
+    card('e-event').dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
     await settle(harness);
     expect(url()).toBe('/patients/p-1/timeline?focus=e-event');
   });
@@ -510,20 +556,20 @@ describe('GraphPage', () => {
   });
 
   it('glisser A sur B : éditeur de lien prérempli (source A, cible B), graphe relu à la fermeture', async () => {
-    const { harness, cy, linkApi, graphApi } = await render();
-    // Headless, la grille n'a pas de taille : on écarte les nœuds à la main.
-    ['e-situation', 'e-feeling', 'e-event', 'e-med'].forEach((id, i) =>
-      cy()
-        .getElementById(id)
-        .position({ x: i * 300, y: 0 }),
-    );
-    const event = cy().getElementById('e-event');
-    const start = { ...event.position() };
-    event.emit('grab');
-    event.position({ x: 902, y: 3 });
-    event.emit('dragfree');
+    const { el, harness, card, linkApi, graphApi } = await render();
+    const pointer = (type: string, x: number, y: number) =>
+      new MouseEvent(type, { bubbles: true, button: 0, clientX: x, clientY: y });
+    const zone = el.querySelector<HTMLElement>('pm-graph-canvas .viewport')!;
+    const start = card('e-event').style.transform;
+    // jsdom ne sait pas ce qui est sous le pointeur : la carte du médicament.
+    const doc = document as { elementFromPoint?: unknown };
+    doc.elementFromPoint = () => card('e-med');
+    card('e-event').dispatchEvent(pointer('pointerdown', 10, 10));
+    zone.dispatchEvent(pointer('pointermove', 90, 30));
+    zone.dispatchEvent(pointer('pointerup', 90, 30));
+    delete doc.elementFromPoint;
     await settle(harness);
-    expect(event.position()).toEqual(start);
+    expect(card('e-event').style.transform).toBe(start);
     const panel = document.querySelector('pm-link-editor-panel');
     expect(panel).not.toBeNull();
     expect(url()).toContain('link=e-event');
@@ -540,7 +586,7 @@ describe('GraphPage', () => {
 
   it('départ : l’état est rangé dans le shell ; retour sans paramètres : repris tel quel', async () => {
     const first = await render();
-    first.cy().getElementById('e-feeling').emit('tap');
+    first.card('e-feeling').click();
     await settle(first.harness);
     await first.harness.navigateByUrl('/patients/p-1/timeline');
     const snapshot = first.shell.rememberTab.mock.calls.at(-1)?.[1] as GraphSnapshot;
@@ -550,16 +596,17 @@ describe('GraphPage', () => {
       query: { root: 'e-situation' },
       selectedId: 'e-feeling',
     });
-    expect(Object.keys(snapshot.positions['e-situation'] ?? {})).toHaveLength(4);
+    expect(snapshot.viewports['e-situation']).toBeDefined();
 
     TestBed.resetTestingModule();
     const again = await render({ shell: shellMock(snapshot), url: '/patients/p-1/graph' });
     expect(url()).toBe('/patients/p-1/graph?root=e-situation');
     expect(text(again.el.querySelector('pm-graph-detail h2'))).toMatch(/^Anxiété 8\/10/);
     expect(again.shell.rememberTab).toHaveBeenCalledWith('graph', undefined);
-    // Positions reprises : pas de layout, le nœud est là où il était.
-    expect(again.cy().getElementById('e-med').position()).toEqual(
-      snapshot.positions['e-situation']['e-med'],
+    // Vue reprise : le zoom rangé pour la racine.
+    const { zoom, pan } = snapshot.viewports['e-situation'];
+    expect(again.el.querySelector<HTMLElement>('pm-graph-canvas .world')!.style.transform).toBe(
+      `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
     );
   });
 });

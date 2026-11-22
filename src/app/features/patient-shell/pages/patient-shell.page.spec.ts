@@ -533,8 +533,10 @@ describe('PatientShellPage', () => {
     expect(el.querySelector('pm-graph-page')).not.toBeNull();
     expect(counter(el)).toBeNull();
     expect(el.querySelector('.view-toggle')).toBeNull();
-    // Graphe : largeur bornée, pas de pleine largeur (sa propre tâche).
-    expect(el.querySelector('pm-patient-shell-page')!.classList.contains('full-bleed')).toBe(false);
+    // Graphe : pleine largeur, comme les autres onglets du dossier.
+    expect(el.querySelector('pm-patient-shell-page')!.classList.contains('full-bleed')).toBe(true);
+    const graph = PATIENT_SHELL_ROUTES[0].children!.find((r) => r.path === 'graph')!;
+    expect(graph.data).toEqual({ tab: 'graph', contentWidth: 'full' });
 
     await harness.navigateByUrl('/patients/p-marie');
     await settle(harness);
