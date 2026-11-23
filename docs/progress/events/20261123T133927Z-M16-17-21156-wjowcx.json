@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T13:39:27.466Z",
+  "task": "M16-17",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Timeline de droite à gauche : propriétés logiques (38 déclarations), formatLocale, catalogLabel, flèches de la barre d'outils inversées, dir=auto sur le contenu saisi, vue décennie gardée de gauche à droite ; e2e/arabe/timeline.spec.ts",
+  "pr": "https://github.com/mrscams/psymate-web/pull/123",
+  "branch": "M16-17-timeline-rtl",
+  "checkout": "agent-a8840f00281e66b98"
+}
