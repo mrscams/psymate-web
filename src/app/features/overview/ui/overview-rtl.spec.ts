@@ -44,8 +44,8 @@ registerLocaleData(localeAr, 'ar');
 /** Chiffres arabo-indiens (U+0660–0669) et persans (U+06F0–06F9) : jamais à l'écran (Q71 point 2). */
 const NON_LATIN_DIGITS = /[٠-٩۰-۹]/;
 const ARABIC_LETTER = /[ء-ي]/;
-const FSI = '⁨';
-const PDI = '⁩';
+const FSI = '\u2068';
+const PDI = '\u2069';
 
 function text(el: Element | null | undefined): string {
   return (el?.textContent ?? '').replace(/\s+/g, ' ').trim();
@@ -281,6 +281,14 @@ describe('page en /ar/ : contenu saisi et récit du serveur dans leur sens (Q77)
         '’',
         "'",
       ),
+    );
+    // Sans normalisation : le texte brut des lignes, espaces comprises, le même qu'avant les <bdi>
+    // (relevé sur origin/main ; la double espace de la ligne de médicament y était déjà, fusionnée
+    // à l'affichage).
+    const flag = el.querySelectorAll('pm-overview-side .line')[1].children[1];
+    expect(flag.textContent).toBe('À surveiller depuis le 3 oct. · Sommeil · modifier');
+    expect(medication.textContent).toBe(
+      'Sertraline 75 mg  matin · depuis le 12 sept. · Dr Lemaire',
     );
   });
 });

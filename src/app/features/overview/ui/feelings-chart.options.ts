@@ -232,6 +232,7 @@ export function feelingsChartOptions(
     emphasis: { scale: 1.3 },
     label: {
       show: false,
+      // Coordonnée du dessin, pas de la mise en page : la courbe reste de gauche à droite (Q71).
       position: 'right',
       distance: 4,
       color: tokens.text,
@@ -293,7 +294,8 @@ export function feelingsChartOptions(
         },
       })),
     tooltip: {
-      formatter: (params: unknown) => escapeHtml((params as { name?: string }).name ?? ''),
+      formatter: (params: unknown) =>
+        tooltipLines([escapeHtml((params as { name?: string }).name ?? '')], labels),
     },
   };
 

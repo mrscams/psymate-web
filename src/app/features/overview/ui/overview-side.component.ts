@@ -90,17 +90,9 @@ const EMPTY: Record<SideBlock, (view: OverviewView) => boolean> = {
               <span class="chip flag">{{ flagLabel(flag.kind) }}</span>
               <!-- « depuis le 12 nov. · sommeil très dégradé » : la raison, saisie, dans son sens (Q77). -->
               @if (flag.setAt || flag.reason) {
-                &ngsp;<span class="muted">
-                  @if (flag.setAt) {
-                    {{ flagSince(flag.setAt) }}
-                  }
-                  @if (flag.setAt && flag.reason) {
-                    ·
-                  }
-                  @if (flag.reason) {
-                    <bdi>{{ flag.reason }}</bdi>
-                  }
-                </span>
+                &ngsp;<span class="muted"
+                  >{{ flagSince(flag.setAt, flag.reason) }}<bdi>{{ flag.reason }}</bdi></span
+                >
               }
               ·
               <a
@@ -597,10 +589,15 @@ export class OverviewSideComponent {
     return formatMonth(value, this.locale, true);
   }
 
-  /** « depuis le 12 nov. » : date de pose du drapeau (sa raison suit, isolée dans le gabarit). */
-  protected flagSince(setAt: string): string {
+  /**
+   * « depuis le 12 nov. · » : date de pose du drapeau, et le séparateur si une raison suit (la
+   * raison, saisie, est isolée dans le gabarit par un <bdi>, Q77). Vide sans date.
+   */
+  protected flagSince(setAt: string | null, reason: string | null): string {
+    if (!setAt) return '';
     const date = this.day(setAt);
-    return $localize`:Date de pose d'un drapeau, dans le cadre du suivi@@overview.side.frame.flagSince:depuis le ${date}:date:`;
+    const since = $localize`:Date de pose d'un drapeau, dans le cadre du suivi@@overview.side.frame.flagSince:depuis le ${date}:date:`;
+    return reason ? `${since} · ` : since;
   }
 
   protected familyColor(code: string): string {

@@ -17,6 +17,7 @@ import {
 import { createAccount, signIn } from '../preferences/accounts';
 import { expectNoAxeViolations } from '../support/axe';
 import { shoot } from '../support/captures';
+import { API } from '../support/env';
 
 // M16-16, vue d'ensemble en /ar/ (G Q71 point 4, Q73 à Q77 ; docs/design/arabe.md §1, §3, §5, §9 ;
 // fiche 02) : la page se lit de droite à gauche (colonne latérale à gauche de la colonne de
@@ -50,12 +51,22 @@ test.describe('vue d’ensemble en /ar/', () => {
     const account = await createAccount(api, 'm16-16.overview', 'psychologist');
     folder = await risingFolder(api);
     await notedSince(api, folder.patientId);
+    // « Noté depuis » exclut les entrées de la dernière séance clôturée : la note arabe est
+    // rattachée à la séance d'accueil, lue dans les séances récentes comme le fait notedSince
+    // (sessions/current renvoie ici la séance passée).
+    const response = await api.get(`${API}/api/patients/${folder.patientId}/overview?window=90d`);
+    expect(response.status(), await response.text()).toBe(200);
+    const { recentSessions } = (await response.json()) as {
+      recentSessions: { entryId: string; kind: string }[];
+    };
+    const intake = recentSessions.find((session) => session.kind === 'intake')?.entryId;
+    expect(intake, JSON.stringify(recentSessions)).toBeTruthy();
     await entry(api, folder.patientId, {
       type: 'note',
       title: ARABIC_TITLE,
       body: 'نص الملاحظة.',
       occurred: { from: daysAgo(1, 10) },
-      sessionId: folder.session,
+      sessionId: intake,
     });
     empty = await emptyPatient(api);
     // Page partagée : mêmes réglages que la configuration (adresse, langue du navigateur). Contexte
@@ -183,7 +194,7 @@ test.describe('vue d’ensemble en /ar/', () => {
       }
       return [...root.querySelectorAll('text')]
         .map((label) => ({
-          text: (label.textContent ?? '').replace(/[⁦-⁩]/g, '').trim(),
+          text: (label.textContent ?? '').replace(/[\u2066-\u2069]/g, '').trim(),
           x: label.getBoundingClientRect().x + label.getBoundingClientRect().width / 2,
         }))
         .filter((label) => days.has(label.text))
