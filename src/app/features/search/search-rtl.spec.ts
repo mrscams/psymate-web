@@ -14,7 +14,7 @@ import { PatientSearchPage } from './pages/patient-search.page';
 import { DossierSearchBar } from './search-bar';
 import { hasRtlLetter, isolate } from './ui/bidi';
 import { MarkedTextComponent } from './ui/marked-text.component';
-import { formatDateTime, formatDay, sessionLabel, summaryText } from './ui/search-labels';
+import { formatDateTime, formatDay, sessionLabel } from './ui/search-labels';
 
 // M16-21, recherche de droite à gauche (G Q71, Q73, Q76, Q77 ; docs/design/arabe.md) : dates par
 // la locale de formatage (chiffres latins), valeurs saisies isolées dans leur phrase (<bdi> dans les
@@ -146,32 +146,39 @@ describe('search-labels : formats par la locale de formatage (Q73)', () => {
   }
 });
 
-describe('summaryText : terme isolé, pluriels inchangés en français', () => {
-  it('fr : avec un terme latin, isolate ne change rien pour 0, 1, 2 et 5 résultats', () => {
-    for (const total of [0, 1, 2, 5]) {
-      for (const approximate of [0, 1, 2, 5]) {
-        expect(summaryText(total, approximate, isolate('entretien', 'fr'), 12)).toBe(
-          summaryText(total, approximate, 'entretien', 12),
-        );
-      }
+describe('synthèse rendue en /fr/ et /en/ : texte inchangé pour un terme latin', () => {
+  const hits = (count: number) =>
+    Array.from({ length: count }, (_, i) => hit({ entryId: `e-${i}` }));
+  const expected: [number, number, string][] = [
+    [0, 0, 'Aucun résultat pour « entretien »'],
+    [1, 0, '1 résultat pour « entretien » · sans accents ni casse · 42 ms'],
+    [2, 0, '2 résultats pour « entretien » · sans accents ni casse · 42 ms'],
+    [5, 0, '5 résultats pour « entretien » · sans accents ni casse · 42 ms'],
+    [0, 1, 'Aucun résultat exact pour « entretien » · 1 résultat approché (trigrammes) · 42 ms'],
+    [0, 2, 'Aucun résultat exact pour « entretien » · 2 résultats approchés (trigrammes) · 42 ms'],
+    [0, 5, 'Aucun résultat exact pour « entretien » · 5 résultats approchés (trigrammes) · 42 ms'],
+  ];
+  // Les tests chargent les messages sources (français) : en /en/, seule la locale change, et le
+  // texte rendu doit rester celui d'avant, sans caractère d'isolement.
+  for (const locale of ['fr', 'en']) {
+    for (const [total, approximate, summary] of expected) {
+      it(`${locale} : ${total} exact(s), ${approximate} approché(s)`, async () => {
+        const page = searchPage({
+          exact: hits(total),
+          total,
+          approximate: hits(approximate).map((item) => ({
+            ...item,
+            entryId: `a-${item.entryId}`,
+            approximate: true,
+          })),
+        });
+        const { el } = await render(locale, { find: vi.fn().mockResolvedValue(page) });
+        const rendered = el.querySelector('.summary')?.textContent ?? '';
+        expect(rendered.trim()).toBe(summary);
+        expect(rendered).not.toMatch(/[⁦-⁩]/);
+      });
     }
-    expect(summaryText(0, 0, 'entretien', 12)).toBe('Aucun résultat pour « entretien »');
-    expect(summaryText(1, 0, 'entretien', 12)).toBe(
-      '1 résultat pour « entretien » · sans accents ni casse · 12 ms',
-    );
-    expect(summaryText(2, 0, 'entretien', 12)).toBe(
-      '2 résultats pour « entretien » · sans accents ni casse · 12 ms',
-    );
-    expect(summaryText(5, 0, 'entretien', 12)).toBe(
-      '5 résultats pour « entretien » · sans accents ni casse · 12 ms',
-    );
-    expect(summaryText(0, 1, 'entretien', 12)).toBe(
-      'Aucun résultat exact pour « entretien » · 1 résultat approché (trigrammes) · 12 ms',
-    );
-    expect(summaryText(0, 5, 'entretien', 12)).toBe(
-      'Aucun résultat exact pour « entretien » · 5 résultats approchés (trigrammes) · 12 ms',
-    );
-  });
+  }
 });
 
 describe('MarkedTextComponent : surlignage et liaison des lettres', () => {
@@ -283,7 +290,9 @@ describe('PatientSearchPage en /ar/', () => {
     expect(item?.querySelector('button.title')?.getAttribute('dir')).toBe('auto');
     expect(item?.querySelector('.snippet')?.getAttribute('dir')).toBe('auto');
     expect(item?.querySelector('.context span[dir="auto"]')?.textContent).toBe('#عمل');
-    for (const mark of item?.querySelectorAll('mark') ?? []) {
+    const marks = item?.querySelectorAll('mark') ?? [];
+    expect(marks.length).toBeGreaterThan(0);
+    for (const mark of marks) {
       expect(mark.classList.contains('joined')).toBe(true);
     }
     const when = item?.querySelector('.meta .mono');

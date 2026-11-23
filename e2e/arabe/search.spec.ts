@@ -194,12 +194,16 @@ test.describe('recherche dans le dossier en /ar/', () => {
     const marked = [found?.snippet, found?.title].some((fragment) =>
       (fragment ?? '').includes('<mark>'),
     );
-    test.skip(
-      !found || !marked,
-      found
-        ? `le serveur trouve la note pour « ${ARABIC_WORD} » mais n'y surligne aucun mot : surlignage non vérifiable`
-        : `le serveur ne trouve pas la note pour le mot arabe exact « ${ARABIC_WORD} » (plein texte en français) : surlignage non vérifiable`,
-    );
+    // Titre et corps indexés de façon synchrone, websearch_to_tsquery('french', f_unaccent(..))
+    // laisse le mot arabe intact : un échec ici est un écart de l'API, à remonter.
+    expect(
+      found,
+      `écart d'API : le serveur ne trouve pas la note pour le mot arabe exact « ${ARABIC_WORD} »`,
+    ).toBeTruthy();
+    expect(
+      marked,
+      `écart d'API : le serveur trouve la note pour « ${ARABIC_WORD} » mais n'y pose aucun <mark>`,
+    ).toBe(true);
 
     await openSearch(ARABIC_WORD);
     const item = page.locator(`pm-search-results li[data-entry-id="${arabicId}"]`);

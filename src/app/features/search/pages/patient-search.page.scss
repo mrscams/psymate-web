@@ -35,7 +35,8 @@ kbd {
   padding: 1px 6px;
   border: 1px solid var(--border-subtle);
   border-radius: 4px;
-  font-family: var(--font-mono);
+  /* « Échap », « Esc » : des lettres, chasse fixe des textes (Q76). */
+  font-family: var(--font-mono-text);
   font-size: 11px;
 }
 
