@@ -26732,6 +26732,7 @@
       </trans-unit>
       <trans-unit id="entry.type.note" datatype="html">
         <source>Note</source>
+        <target state="translated">ملاحظة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-icon.component.ts</context>
           <context context-type="linenumber">18</context>
@@ -26740,6 +26741,7 @@
       </trans-unit>
       <trans-unit id="entry.type.event" datatype="html">
         <source>Événement</source>
+        <target state="translated">حدث</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-icon.component.ts</context>
           <context context-type="linenumber">20</context>
@@ -26748,6 +26750,7 @@
       </trans-unit>
       <trans-unit id="entry.type.situation" datatype="html">
         <source>Situation</source>
+        <target state="translated">وضعية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-icon.component.ts</context>
           <context context-type="linenumber">22</context>
@@ -26756,6 +26759,7 @@
       </trans-unit>
       <trans-unit id="entry.type.feeling" datatype="html">
         <source>Ressenti</source>
+        <target state="translated">شعور</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-icon.component.ts</context>
           <context context-type="linenumber">24</context>
@@ -26764,6 +26768,7 @@
       </trans-unit>
       <trans-unit id="entry.type.session" datatype="html">
         <source>Séance</source>
+        <target state="translated">جلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-icon.component.ts</context>
           <context context-type="linenumber">26</context>
@@ -26772,6 +26777,7 @@
       </trans-unit>
       <trans-unit id="entry.type.medication" datatype="html">
         <source>Médicament</source>
+        <target state="translated">دواء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-icon.component.ts</context>
           <context context-type="linenumber">28</context>
@@ -26780,6 +26786,7 @@
       </trans-unit>
       <trans-unit id="entry.title.typeDate" datatype="html">
         <source><x id="label" equiv-text="label"/> · <x id="date" equiv-text="date"/></source>
+        <target state="translated"><x id="label" equiv-text="label"/> · <x id="date" equiv-text="date"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-title.ts</context>
           <context context-type="linenumber">56</context>
@@ -26788,6 +26795,7 @@
       </trans-unit>
       <trans-unit id="entry.title.feeling" datatype="html">
         <source><x id="emotion" equiv-text="emotion"/> <x id="intensity" equiv-text="intensity"/>/10</source>
+        <target state="translated"><x id="emotion" equiv-text="emotion"/> <x id="intensity" equiv-text="intensity"/>/10</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/entry-icon/entry-title.ts</context>
           <context context-type="linenumber">65</context>
