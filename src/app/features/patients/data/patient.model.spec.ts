@@ -178,4 +178,42 @@ describe('patient.model', () => {
   ])('highlightParts(%s, %s)', (text, query, expected) => {
     expect(highlightParts(text, query)).toEqual(expected);
   });
+
+  describe('normalizeText en arabe (M16-14)', () => {
+    it.each([
+      ['أحمد', 'احمد'],
+      ['إيمان', 'ايمان'],
+      ['آمنة', 'امنه'],
+      ['ٱلله', 'الله'],
+      ['فاطمة', 'فاطمه'],
+      ['ليلى', 'ليلي'],
+      ['مـحـمـد', 'محمد'],
+      ['أَحْمَد', 'احمد'],
+    ])('normalizeText(%s) = %s', (input, expected) => {
+      expect(normalizeText(input)).toBe(expected);
+    });
+
+    it('« احمد » trouve « أحمد », « فاطمه » trouve « فاطمة », « ليلي » trouve « ليلى »', () => {
+      expect(normalizeText('أحمد بن علي')).toContain(normalizeText('احمد'));
+      expect(normalizeText('فاطمة الزهراء')).toContain(normalizeText('فاطمه'));
+      expect(normalizeText('ليلى')).toContain(normalizeText('ليلي'));
+    });
+
+    it('un texte latin ne change pas', () => {
+      expect(normalizeText('  Éloïse   Ç. ')).toBe(' eloise c. ');
+      expect(normalizeText('Zoë-Anne DUPONT')).toBe('zoe-anne dupont');
+    });
+
+    it('surligne le nom arabe d’origine, voyelles brèves et tatweel compris', () => {
+      expect(highlightParts('أحمد بن علي', 'احمد')).toEqual([
+        { text: 'أحمد', match: true },
+        { text: ' بن علي', match: false },
+      ]);
+      expect(highlightParts('أَحْمَد علي', 'احمد')).toEqual([
+        { text: 'أَحْمَد', match: true },
+        { text: ' علي', match: false },
+      ]);
+      expect(highlightParts('مـحـمـد', 'محمد')).toEqual([{ text: 'مـحـمـد', match: true }]);
+    });
+  });
 });

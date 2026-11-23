@@ -48,6 +48,7 @@ const featureIndex = { type: 'feature', fileInternalPath: 'index.ts' };
 const LOGICAL_DIRECTION_ZONES = [
   'src/app/shared',
   'src/app/app.component',
+  'src/app/features/patients',
   'src/theme',
   'src/styles',
 ];

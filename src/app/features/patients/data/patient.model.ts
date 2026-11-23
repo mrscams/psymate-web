@@ -509,11 +509,37 @@ export function versionDiffs(versions: PatientVersion[]): VersionDiff[] {
 }
 
 /**
+ * Variantes d'écriture arabe ramenées à une forme (docs/design/arabe.md, M16-14) : alif avec
+ * hamza, madda ou wasla → alif (les formes à hamza et madda se décomposent déjà en NFD, la wasla
+ * non), ta marbuta → ha, alif maqsura → ya. Une lettre pour une lettre : le surlignage garde la
+ * correspondance avec le texte d'origine.
+ */
+const ARABIC_VARIANTS: Readonly<Record<string, string>> = {
+  آ: 'ا', // آ → ا
+  أ: 'ا', // أ → ا
+  إ: 'ا', // إ → ا
+  ٱ: 'ا', // ٱ → ا
+  ة: 'ه', // ة → ه
+  ى: 'ي', // ى → ي
+};
+const ARABIC_VARIANT = /[آأإٱةى]/g;
+const TATWEEL = /ـ/g;
+
+/**
  * Minuscules sans accents, espaces réduits : la même normalisation que le filtre q de l'API
- * (insensible à la casse et aux accents), pour surligner ce qui correspond.
+ * (insensible à la casse et aux accents), pour surligner ce qui correspond. En arabe, en plus :
+ * voyelles brèves retirées (marques combinantes), variantes de lettres unifiées et tatweel (ـ)
+ * retiré, pour que « احمد » trouve « أحمد ». Un texte latin donne le même résultat qu'avant.
+ * `toLowerCase` sans locale : la casse de ces trois langues ne dépend pas de la locale.
  */
 export function normalizeText(text: string): string {
-  return text.normalize('NFD').replace(/\p{M}/gu, '').toLocaleLowerCase().replace(/\s+/g, ' ');
+  return text
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .replace(TATWEEL, '')
+    .replace(ARABIC_VARIANT, (letter) => ARABIC_VARIANTS[letter])
+    .toLowerCase()
+    .replace(/\s+/g, ' ');
 }
 
 /**

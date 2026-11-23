@@ -19,7 +19,7 @@
           <span class="when mono">{{ entry.when }}</span>
         </h3>
         @if (entry.reason) {
-          <p class="reason">{{ entry.reason }}</p>
+          <p class="reason" dir="auto">{{ entry.reason }}</p>
         }
         @if (entry.baseUnknown) {
           <p class="note" i18n="Version sans état précédent@@patients.history.baseUnknown">
@@ -32,10 +32,10 @@
               <dt>{{ row.label }}</dt>
               <dd>
                 @if (row.before !== null) {
-                  <del>{{ row.before }}</del>
-                  <span class="arrow" aria-hidden="true">→</span>
+                  <del dir="auto">{{ row.before }}</del>
+                  <span class="arrow pm-flip-rtl" aria-hidden="true">→</span>
                 }
-                <ins>{{ row.after }}</ins>
+                <ins dir="auto">{{ row.after }}</ins>
               </dd>
             </div>
           }

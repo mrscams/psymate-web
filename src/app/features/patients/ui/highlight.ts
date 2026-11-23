@@ -23,6 +23,11 @@ export function highlightParts(text: string, query: string): { text: string; mat
     for (let i = from; i < from + needle.length; i++) marks[origin[i]] = true;
     from = haystack.indexOf(needle, from + needle.length);
   }
+  // Un caractère que la normalisation efface (voyelle brève arabe, tatweel, accent décomposé)
+  // suit la lettre qui le précède : un mot surligné n'est pas coupé en morceaux.
+  chars.forEach((char, index) => {
+    if (index > 0 && !origin.includes(index)) marks[index] = marks[index - 1];
+  });
   const parts: { text: string; match: boolean }[] = [];
   chars.forEach((char, index) => {
     const last = parts.at(-1);

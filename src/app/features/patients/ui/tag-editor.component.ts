@@ -19,7 +19,7 @@ import { normalizeText, PractitionerTag } from '../data/patient.model';
         <ul class="chips" [attr.aria-label]="listLabel">
           @for (tag of tags(); track tag) {
             <li class="chip">
-              <span>#{{ tag }}</span>
+              <span dir="auto">#{{ tag }}</span>
               <button
                 type="button"
                 class="remove"
@@ -38,6 +38,7 @@ import { normalizeText, PractitionerTag } from '../data/patient.model';
       <input
         id="field-tags"
         type="text"
+        dir="auto"
         list="patient-tag-suggestions"
         autocomplete="off"
         enterkeyhint="done"

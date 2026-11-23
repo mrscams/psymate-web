@@ -20,6 +20,7 @@ import { Router, RouterLink } from '@angular/router';
 import {
   ageInYears,
   formatDate,
+  formatLocale,
   formatRelativeDay,
   subjectLabel,
   SubjectVocabulary,
@@ -65,6 +66,7 @@ import { FlagFieldsComponent } from '../ui/flag-fields.component';
 import { HeaderPreviewComponent } from '../ui/header-preview.component';
 import { buildPatientForm, readPatientForm, toFormProblem } from '../ui/patient-form';
 import {
+  archiveConfirmLabel,
   archivedMessage,
   fieldLabel,
   modalityLabel,
@@ -130,7 +132,8 @@ export class PatientFormPage {
   private readonly vocabulary = inject(SubjectVocabulary);
   private readonly document = inject(DOCUMENT);
   private readonly injector = inject(Injector);
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   private readonly location = inject(Location);
   private readonly panels = inject(SidePanelService);
   private readonly preferences = inject(PreferencesStore);
@@ -502,11 +505,10 @@ export class PatientFormPage {
   protected async archive(): Promise<void> {
     const patient = this.patient();
     if (!patient) return;
-    const subject = subjectLabel(this.vocabulary.label(), 'one');
     const confirmed = await this.confirm.confirm({
       title: $localize`:Titre de la confirmation d'archivage@@patients.archive.confirmTitle:Archiver ${patient.displayName}:name: ?`,
       description: $localize`:Explication de l'archivage@@patients.archive.confirmText:Le dossier disparaît de la liste ; rien n'est supprimé et vous pourrez le restaurer.`,
-      confirmLabel: $localize`:Bouton de confirmation d'archivage@@patients.archive.confirm:Archiver ce ${subject}:subject:`,
+      confirmLabel: archiveConfirmLabel(this.vocabulary.label()),
       destructive: true,
       confirmWord: patient.displayName,
     });

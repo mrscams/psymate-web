@@ -17943,15 +17943,19 @@
         </context-group>
         <note priority="1" from="description">Explication de l&apos;archivage</note>
       </trans-unit>
-      <trans-unit id="patients.archive.confirm" datatype="html">
-        <source>Archiver ce <x id="subject" equiv-text="subject"/></source>
+      <trans-unit id="patients.archive.confirmClient" datatype="html">
+        <source>Archiver ce client</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
-          <context context-type="linenumber">509</context>
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">161</context>
         </context-group>
+        <note priority="1" from="description">Bouton de confirmation d&apos;archivage (coach)</note>
+      </trans-unit>
+      <trans-unit id="patients.archive.confirmPatient" datatype="html">
+        <source>Archiver ce patient</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">274</context>
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <note priority="1" from="description">Bouton de confirmation d&apos;archivage</note>
       </trans-unit>
@@ -18299,11 +18303,19 @@
         </context-group>
         <note priority="1" from="description">Pied de la liste, plusieurs lignes</note>
       </trans-unit>
-      <trans-unit id="patients.footer.shownOne" datatype="html">
-        <source><x id="count" equiv-text="count"/> <x id="subjects" equiv-text="subjects"/> affiché</source>
+      <trans-unit id="patients.footer.shownOneClient" datatype="html">
+        <source><x id="count" equiv-text="count"/> client affiché</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+        <note priority="1" from="description">Pied de la liste, une ligne ou aucune (coach)</note>
+      </trans-unit>
+      <trans-unit id="patients.footer.shownOnePatient" datatype="html">
+        <source><x id="count" equiv-text="count"/> patient affiché</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
+          <context context-type="linenumber">172</context>
         </context-group>
         <note priority="1" from="description">Pied de la liste, une ligne ou aucune</note>
       </trans-unit>
@@ -19151,6 +19163,22 @@
         </context-group>
         <note priority="1" from="description">Après le nombre d&apos;entrées depuis la séance, plusieurs</note>
       </trans-unit>
+      <trans-unit id="patients.card.sinceOne" datatype="html">
+        <source><x id="count" equiv-text="count"/> entrée</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
+          <context context-type="linenumber">209</context>
+        </context-group>
+        <note priority="1" from="description">Entrées depuis la séance, carte mobile, une</note>
+      </trans-unit>
+      <trans-unit id="patients.card.sinceMany" datatype="html">
+        <source><x id="count" equiv-text="count"/> entrées</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
+          <context context-type="linenumber">210</context>
+        </context-group>
+        <note priority="1" from="description">Entrées depuis la séance, carte mobile, plusieurs</note>
+      </trans-unit>
       <trans-unit id="patients.since.strongest" datatype="html">
         <source><x id="emotion" equiv-text="name"/> <x id="intensity" equiv-text="intensity"/>/10</source>
         <context-group purpose="location">
@@ -19182,6 +19210,30 @@
           <context context-type="linenumber">233</context>
         </context-group>
         <note priority="1" from="description">Émotion dominante stable (lecteur d&apos;écran)</note>
+      </trans-unit>
+      <trans-unit id="patients.dominant.upShort" datatype="html">
+        <source><x id="emotion" equiv-text="name"/> ↑</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
+          <context context-type="linenumber">231</context>
+        </context-group>
+        <note priority="1" from="description">Émotion dominante en hausse, colonne de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.dominant.downShort" datatype="html">
+        <source><x id="emotion" equiv-text="name"/> ↓</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
+          <context context-type="linenumber">237</context>
+        </context-group>
+        <note priority="1" from="description">Émotion dominante en baisse, colonne de la liste</note>
+      </trans-unit>
+      <trans-unit id="patients.dominant.stableShort" datatype="html">
+        <source><x id="emotion" equiv-text="name"/> =</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
+          <context context-type="linenumber">242</context>
+        </context-group>
+        <note priority="1" from="description">Émotion dominante stable, colonne de la liste</note>
       </trans-unit>
       <trans-unit id="patients.table.draftOne" datatype="html">
         <source>1 brouillon</source>

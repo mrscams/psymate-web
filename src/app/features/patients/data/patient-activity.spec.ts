@@ -98,7 +98,20 @@ describe('toActivity (GET /overview?window=30d → ligne de la liste)', () => {
   });
 
   it('en anglais : libellés anglais des émotions', () => {
-    expect(toActivity(overview, true).since.strongest?.label).toBe('Anxiety');
+    expect(toActivity(overview, 'en').since.strongest?.label).toBe('Anxiety');
+  });
+
+  it('en arabe : libellé arabe absent de la série, repli sur le français (Q78) ; le code sinon', () => {
+    expect(toActivity(overview, 'ar').since.strongest?.label).toBe('Anxiété');
+    expect(toActivity(overview, 'ar').dominant?.label).toBe('Anticipation');
+    const bare = toActivity(
+      {
+        ...overview,
+        feelings: { ...overview.feelings, series: [{ emotionCode: 'anxiety' }] },
+      },
+      'ar',
+    );
+    expect(bare.since.strongest?.label).toBe('anxiety');
   });
 
   it('séance clôturée avec un compte rendu : rien à écrire ; séance non clôturée (accueil) non plus', () => {

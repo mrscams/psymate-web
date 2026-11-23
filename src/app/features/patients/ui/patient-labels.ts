@@ -1,3 +1,4 @@
+import { SubjectLabel } from '../../../core/i18n';
 import {
   FlagKind,
   Modality,
@@ -149,6 +150,26 @@ export function restoredMessage(name: string, pronoun: string | null): string {
     default:
       return $localize`:Toast après restauration, accord inclusif@@patients.restored.toast.n:${name}:name: restauré·e`;
   }
+}
+
+/**
+ * Bouton de la confirmation d'archivage (liste et fiche) : un message entier par désignation, pour
+ * que chaque langue accorde le mot (en arabe, « ce patient » demande l'article : M16-14).
+ */
+export function archiveConfirmLabel(subject: SubjectLabel): string {
+  return subject === 'client'
+    ? $localize`:Bouton de confirmation d'archivage (coach)@@patients.archive.confirmClient:Archiver ce client`
+    : $localize`:Bouton de confirmation d'archivage@@patients.archive.confirmPatient:Archiver ce patient`;
+}
+
+/**
+ * Pied de la liste, une ligne ou aucune (« 1 patient affiché ») : un message entier par
+ * désignation, comme archiveConfirmLabel. Le cas de plusieurs lignes garde son message.
+ */
+export function shownOneLabel(subject: SubjectLabel, count: number): string {
+  return subject === 'client'
+    ? $localize`:Pied de la liste, une ligne ou aucune (coach)@@patients.footer.shownOneClient:${count}:count: client affiché`
+    : $localize`:Pied de la liste, une ligne ou aucune@@patients.footer.shownOnePatient:${count}:count: patient affiché`;
 }
 
 export const RESTORE_LABEL = (): string =>
