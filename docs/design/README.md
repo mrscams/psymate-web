@@ -75,6 +75,8 @@ Ajoutés le 22 novembre 2026 (M14-09 ; maquettes `.html` en Fluent 2, publiées 
 | 32 | Rendez-vous par lien (vérification de l'e-mail, gestion et annulation) | — | `agenda` (M14, routes `/api/public/booking/requests/verify`, `/manage`, `/manage/cancel`) | `public` (M14-13, C12) |
 | 09, 14, 15 | Compléments M14 : bouton « Prendre rendez-vous » (09) ; section « Prise de rendez-vous en ligne » des préférences (14, maquette `propositions-2026-11/14-preferences-prise-de-rendez-vous.html`) ; demandes en ligne dans l'agenda (15, maquette `propositions-2026-11/15-agenda-demandes-en-ligne.html`) | — | `agenda`, `identity` (préférences `booking.*`) | `public` (M14-12), `account` (M14-11), `agenda` (M14-14, M14-15) |
 
+Ajoutés le 23 novembre 2026 (M16-07, version arabe, G14) : `arabe.md`, règles d'habillage de droite à gauche valables pour toutes les fiches en `/ar/` ; `arabe-glossaire.md`, termes métier proposés en arabe, non relus ; `arabe/polices.html`, comparaison des polices (IBM Plex Sans Arabic retenue, G Q71). Aucune fiche d'écran n'est ajoutée : chaque écran garde sa fiche, retournée selon `arabe.md`.
+
 Encore à faire : déclinaison mobile (après V1). Les sept fiches du 2 novembre n'ont pas de `.png` (la maquette `.html` suffit). Les écarts avec le contrat relevés par ces fiches sont les tâches **M10** de `C-plan.md` C9. Les anciens canevas de `UI/` (timeline, saisie en séance, annuaire) sont remplacés par 03, 05 et 08.
 
 ## Parcours praticien (décision du 25 oct.)
@@ -86,7 +88,7 @@ Encore à faire : déclinaison mobile (après V1). Les sept fiches du 2 novembre
 - Formes par type d'entrée : note rectangle, événement losange, situation barre, ressenti cercle, séance carré arrondi, médicament capsule.
 - Le lavande `#8B7BD6` est réservé aux ressentis ; les couleurs de familles d'émotions servent uniquement aux courbes et pastilles de famille.
 - Préférences par compte (`practitioner.preferences` JSONB) : une seule source de vérité pour les bascules présentes sur plusieurs écrans (`14-preferences-praticien.md`).
-- Textes : français d'abord (G Q23) ; les fichiers de traduction EN peuvent suivre sans bloquer une tâche. Pas de pied de page « numéros d'urgence » sur les pages publiques (G Q20) ; les trois pages de prise de rendez-vous (fiches 31 et 32) portent, dans leur contenu, la mention d'urgence de G Q63.
+- Textes : français d'abord (G Q23) ; les fichiers de traduction EN peuvent suivre sans bloquer une tâche. Arabe (G14) : propriétés logiques seulement, `dir="auto"` sur le contenu saisi, termes du glossaire (`arabe.md`, `arabe-glossaire.md`). Pas de pied de page « numéros d'urgence » sur les pages publiques (G Q20) ; les trois pages de prise de rendez-vous (fiches 31 et 32) portent, dans leur contenu, la mention d'urgence de G Q63.
 - Textes et exemples (Marie D., Claire Moreau, Dr Lenoir…) sont des données de seed fictives ; `[TARIF]`, `[TÉLÉPHONE]`, `[E-MAIL]` sont des champs à renseigner.
 
 ## Prompt type pour un agent frontend
