@@ -1,4 +1,4 @@
-<pm-side-panel [title]="title" [subtitle]="subtitle">
+<pm-side-panel [title]="title" [subject]="subject" [subtitle]="subtitle">
   <form class="recap" [formGroup]="form" (ngSubmit)="submit()" novalidate>
     @if (generalError(); as message) {
       <p class="general-error" role="alert">{{ message }}</p>
@@ -19,6 +19,7 @@
           inputmode="numeric"
           autocomplete="off"
           class="duration"
+          dir="ltr"
           formControlName="durationMin"
           [attr.aria-invalid]="invalid(form.controls.durationMin)"
           [attr.aria-describedby]="fid('durationMin') + '-hint ' + fid('durationMin') + '-error'"
@@ -116,6 +117,8 @@
         <textarea
           [id]="fid('summary')"
           rows="6"
+          dir="auto"
+          placeholder=" "
           formControlName="summary"
           [attr.aria-invalid]="invalid(form.controls.summary)"
           [attr.aria-describedby]="fid('summary') + '-error'"
@@ -158,6 +161,8 @@
               <input
                 type="text"
                 [id]="'next-time-' + $index"
+                dir="auto"
+                placeholder=" "
                 [value]="line"
                 [attr.aria-label]="lineLabel($index)"
                 (input)="setLine($index, $any($event.target).value)"
@@ -177,6 +182,7 @@
             <input
               type="text"
               id="next-time-new"
+              dir="auto"
               [value]="newLine()"
               placeholder="Ajouter une ligne…"
               i18n-placeholder="
@@ -215,7 +221,8 @@
       >
     </button>
     <span class="hints">
-      <kbd i18n="Touche Échap, pied du panneau de clôture@@patientShell.close.escapeKey">Échap</kbd
+      <kbd dir="ltr" i18n="Touche Échap, pied du panneau de clôture@@patientShell.close.escapeKey"
+        >Échap</kbd
       >&ngsp;<span i18n="Rappel du pied du panneau de clôture@@patientShell.close.escapeHint"
         >garde le brouillon</span
       >

@@ -1,5 +1,5 @@
 import { ApiProblem } from '../../../core/http';
-import { formatDate } from '../../../core/i18n';
+import { AppLocale, formatDate, formatLocale, textDirection } from '../../../core/i18n';
 import { PatientHeaderInfo, sessionModalityLabel } from '../../../shared/ui';
 import { CAPTURE_PREFIXES, CaptureEntryType } from '../../capture';
 import { FlagKind, SessionModality, ShellPatient } from '../data/patient-shell.model';
@@ -23,14 +23,17 @@ export function formatClock(value: string | null, locale: string): string {
   if (!value) return '';
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '';
-  return new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(date);
+  return new Intl.DateTimeFormat(formatLocale(locale), {
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
 }
 
 /** « jeudi 12 novembre » (l'année si ce n'est pas l'année en cours). */
 export function formatLongDay(value: string, locale: string, now: Date = new Date()): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '';
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat(formatLocale(locale), {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -42,7 +45,9 @@ export function formatLongDay(value: string, locale: string, now: Date = new Dat
 export function formatShortDay(value: string, locale: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '';
-  return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(date);
+  return new Intl.DateTimeFormat(formatLocale(locale), { day: 'numeric', month: 'short' }).format(
+    date,
+  );
 }
 
 /** Le patient du store et le début de suivi retenu (store.followedSince) → pm-patient-header. */
@@ -111,18 +116,42 @@ export function closedToastText(durationMin: number | null, withSummary: boolean
     : $localize`:Toast après la clôture d'une séance, sans compte rendu@@patientShell.session.closedNoSummary:Séance clôturée · ${duration}:minutes: min · sans compte rendu`;
 }
 
-/** « Dernière séance : 17 oct. 2026 » n'est pas ici : l'en-tête partagé le dit. Sous-titre du panneau. */
+/** Une lettre d'une écriture de droite à gauche (hébreu, arabe, syriaque, thaana, formes A et B). */
+const RTL_LETTER = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
+
+/**
+ * Valeur insérée dans une phrase assemblée en TypeScript (sous-titre du panneau, toast, nom
+ * accessible), où un `<bdi>` est impossible (Q77) : isolée par les caractères de contrôle Unicode,
+ * U+2068 … U+2069 (sens de la valeur) ou U+2066 … U+2069 (de gauche à droite : « 09:08 → 09:56 »,
+ * heure de début à gauche de la flèche). En arabe, toujours ; en français et en anglais, seulement
+ * une valeur écrite de droite à gauche : une valeur en lettres latines y reste inchangée, caractère
+ * pour caractère. Pour l'affichage seulement : rien d'isolé ne part vers l'API ni dans un champ.
+ * Même technique que features/agenda (agenda-format.ts), qu'une feature ne peut pas importer.
+ */
+export function isolate(value: string, locale: string, direction: 'auto' | 'ltr' = 'auto'): string {
+  if (textDirection(locale) !== 'rtl' && (direction === 'ltr' || !RTL_LETTER.test(value))) {
+    return value;
+  }
+  return `${direction === 'ltr' ? '\u2066' : '\u2068'}${value}\u2069`;
+}
+
+/**
+ * « Dernière séance : 17 oct. 2026 » n'est pas ici : l'en-tête partagé le dit. Sous-titre du panneau,
+ * sans le nom du patient : pm-side-panel le reçoit par `subject` (isolé dans un <bdi>) et rend
+ * « nom · sous-titre », le même texte qu'avant.
+ */
 export function closePanelSubtitle(
-  patientName: string,
   startedAt: string,
   modality: SessionModality | null,
   locale: string,
   now: Date,
 ): string {
-  const parts = [patientName, formatLongDay(startedAt, locale, now)];
+  const parts = [formatLongDay(startedAt, locale, now)];
   const where = sessionModalityLabel(modality);
   if (where) parts.push(where);
-  parts.push(`${formatClock(startedAt, locale)} → ${formatClock(now.toISOString(), locale)}`);
+  // La flèche va du début à la fin : la plage se lit de gauche à droite, même en arabe.
+  const range = `${formatClock(startedAt, locale)} → ${formatClock(now.toISOString(), locale)}`;
+  parts.push(isolate(range, locale, 'ltr'));
   return parts.filter((part) => !!part).join(' · ');
 }
 
@@ -148,12 +177,17 @@ export interface TextShortcutRow {
 /**
  * « Raccourcis dans le texte » de la colonne latérale en séance (proposition 04b, état 3) : ce que la
  * grammaire du bloc de saisie reconnaît. Les préfixes viennent du parseur (CAPTURE_PREFIXES).
+ * En arabe, l'aide ne promet que ce qui marche : ni dates (Q81, l'analyseur n'en lit aucune en
+ * arabe), ni ressenti (une émotion écrite en arabe n'est pas reconnue avant M16-25) ; préfixes et
+ * lien restent. Français et anglais : toutes les rangées, inchangées.
  */
-export function textShortcutRows(): TextShortcutRow[] {
+export function textShortcutRows(locale: AppLocale): TextShortcutRow[] {
   const prefix = (type: CaptureEntryType): string =>
     CAPTURE_PREFIXES.find((entry) => entry.type === type)?.prefix ?? '';
-  return [
+  const arabic = locale === 'ar';
+  const rows: (TextShortcutRow & { unrecognizedInArabic?: boolean })[] = [
     {
+      unrecognizedInArabic: true,
       tokens: [
         $localize`:Exemple de ressenti dans la grammaire@@patientShell.ctx.shortcuts.feelingExample:anx 7`,
       ],
@@ -173,6 +207,7 @@ export function textShortcutRows(): TextShortcutRow[] {
     },
     { tokens: [prefix('note')], label: '' },
     {
+      unrecognizedInArabic: true,
       tokens: [
         $localize`:Exemple de date dans la grammaire@@patientShell.ctx.shortcuts.dateYesterday:hier`,
         $localize`:Exemple de date dans la grammaire@@patientShell.ctx.shortcuts.dateDay:12 mars`,
@@ -187,4 +222,7 @@ export function textShortcutRows(): TextShortcutRow[] {
       label: $localize`:Raccourci dans le texte@@patientShell.ctx.shortcuts.link:lien`,
     },
   ];
+  return rows
+    .filter((row) => !(arabic && row.unrecognizedInArabic))
+    .map(({ tokens, label }) => ({ tokens, label }));
 }

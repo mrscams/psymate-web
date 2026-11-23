@@ -28,7 +28,7 @@ import { formatClock } from './shell-labels';
         <li class="entry" [class.fresh]="entry.id === highlightedId()">
           <pm-entry-icon [type]="entry.type" [size]="12" />
           <span class="t">
-            <span class="name">{{ name(entry) }}</span>
+            <span class="name" dir="auto">{{ name(entry) }}</span>
             @if (scale(entry); as cells) {
               <span class="scale" role="img" [attr.aria-label]="intensityLabel(entry)">
                 @for (on of cells; track $index) {
@@ -49,7 +49,7 @@ import { formatClock } from './shell-labels';
               >
             }
             @if (sentence(entry); as text) {
-              <span class="text">{{ text }}</span>
+              <span class="text" dir="auto">{{ text }}</span>
             }
           </span>
           <span class="when">

@@ -37,7 +37,7 @@ export interface SessionTabState {
             [checked]="isTicked(line)"
             (change)="toggle(line)"
           />
-          <label [for]="'planned-' + $index">{{ line }}</label>
+          <label [for]="'planned-' + $index" dir="auto">{{ line }}</label>
           <button type="button" class="ghost" (click)="note(line)">
             <ng-container i18n="Bouton noter d'un point prévu@@patientShell.planned.note"
               >Noter</ng-container

@@ -9,6 +9,7 @@ import {
   untracked,
 } from '@angular/core';
 
+import { toAppLocale } from '../../../core/i18n';
 import { EntryIconComponent, StateAction, StateComponent } from '../../../shared/ui';
 import { StateKind, stateKind } from '../../../shared/util';
 import { splitNextTime } from '../data/next-time';
@@ -72,7 +73,7 @@ export class SessionContextComponent {
   });
 
   /** « Raccourcis dans le texte » (04b, état 3) : la grammaire du bloc de saisie. */
-  protected readonly textShortcuts = textShortcutRows();
+  protected readonly textShortcuts = textShortcutRows(toAppLocale(this.locale));
   protected readonly flagLabel = flagLabel;
 
   constructor() {

@@ -42,12 +42,16 @@ export interface ShortcutsHelpData {
           @for (row of rows; track row.keys.join('+')) {
             <tr [class.unavailable]="!row.available">
               <th scope="row" class="keys">
-                @for (key of row.keys; track $index) {
-                  @if ($index > 0 && row.combo) {
-                    <span class="plus">+</span>
+                <!-- Combinaison (Ctrl + B) : se lit de gauche à droite, comme sur le clavier, même en
+                     arabe ; touches alternatives (1 2 3) : dans le sens de la page, comme les onglets. -->
+                <span [attr.dir]="row.combo ? 'ltr' : null">
+                  @for (key of row.keys; track $index) {
+                    @if ($index > 0 && row.combo) {
+                      <span class="plus">+</span>
+                    }
+                    <kbd dir="ltr">{{ key }}</kbd>
                   }
-                  <kbd>{{ key }}</kbd>
-                }
+                </span>
               </th>
               <td>
                 {{ row.label }}
@@ -80,7 +84,7 @@ export interface ShortcutsHelpData {
     td {
       padding: 8px 0;
       border-bottom: 1px solid var(--border-subtle);
-      text-align: left;
+      text-align: start;
       vertical-align: top;
     }
 
@@ -93,18 +97,25 @@ export interface ShortcutsHelpData {
 
     .keys {
       width: 132px;
-      padding-right: 12px;
+      padding-inline-end: 12px;
       font-weight: 400;
       white-space: nowrap;
     }
 
     kbd + kbd,
     .plus + kbd {
-      margin-left: 4px;
+      margin-inline-start: 4px;
+    }
+
+    /* Touches alternatives dans une page de droite à gauche : chaque <kbd> est en dir="ltr", sa
+       marge de début serait à gauche ; l'écart se met du côté de la touche précédente (à droite). */
+    .keys > span:dir(rtl) > kbd + kbd {
+      margin-inline-start: 0;
+      margin-inline-end: 4px;
     }
 
     .plus {
-      margin-left: 4px;
+      margin-inline-start: 4px;
       color: var(--text-secondary);
     }
 

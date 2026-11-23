@@ -29,7 +29,7 @@
       <div class="block">
         <h3>{{ previousTitle() }}</h3>
         @if (previousBody()) {
-          <p class="summary">{{ previousBody() }}</p>
+          <p class="summary" dir="auto">{{ previousBody() }}</p>
         } @else {
           <p
             class="faint"
@@ -49,7 +49,7 @@
           <p class="line">
             <span class="chip flag">{{ flagLabel(flag.kind) }}</span>
             @if (flag.reason) {
-              <span class="muted">{{ flag.reason }}</span>
+              <span class="muted" dir="auto">{{ flag.reason }}</span>
             }
           </p>
         }
@@ -57,10 +57,12 @@
           <p class="line">
             <pm-entry-icon type="medication" [size]="12" />
             <span>
-              <strong>{{ medication.molecule }}</strong>
-              @if (medication.dosage) {
-                {{ medication.dosage }}
-              }
+              <bdi
+                ><strong>{{ medication.molecule }}</strong>
+                @if (medication.dosage) {
+                  {{ medication.dosage }}
+                }
+              </bdi>
               @if (medication.since) {
                 <span
                   class="muted"
@@ -77,7 +79,9 @@
             <pm-entry-icon type="situation" [size]="12" />
             <span>
               @if (situation.title) {
-                {{ situation.title }}
+                <!-- Espaces gardées : le texte brut reste celui d'avant le <bdi>. -->
+                &ngsp;<bdi>{{ situation.title }}</bdi
+                >&ngsp;
               } @else {
                 <ng-container
                   i18n="Situation sans titre dans les rappels@@patientShell.reminders.untitled"
@@ -104,7 +108,7 @@
         @for (row of textShortcuts; track row.tokens.join('|'); let last = $last) {
           <span class="shortcut">
             @for (token of row.tokens; track token; let lastToken = $last) {
-              <b>{{ token }}</b>
+              <b dir="auto">{{ token }}</b>
               @if (!lastToken) {
                 <span>,&ngsp;</span>
               }

@@ -70,7 +70,7 @@
                   @for (entry of sinceEntries(); track entry.entryId) {
                     <li>
                       <pm-entry-icon [type]="entry.type" [size]="12" />
-                      <span>{{ sinceName(entry) }}</span>
+                      <span dir="auto">{{ sinceName(entry) }}</span>
                     </li>
                   }
                 </ul>

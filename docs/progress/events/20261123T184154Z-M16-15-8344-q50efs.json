@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T18:41:54.862Z",
+  "task": "M16-15",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "patient-shell de droite à gauche : propriétés logiques, formatLocale, catalogLabel, contenu saisi en dir=auto ou bdi, nom par subject, touches en ltr, aide sans dates ni ressenti en /ar/ ; e2e/arabe/patient-shell.spec.ts",
+  "pr": "https://github.com/mrscams/psymate-web/pull/143",
+  "branch": "M16-15-patient-shell-rtl",
+  "checkout": "agent-a79b9be43a8693159"
+}
