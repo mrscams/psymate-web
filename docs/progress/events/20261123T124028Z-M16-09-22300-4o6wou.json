@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-23T12:40:28.964Z",
+  "task": "M16-09",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Socle visuel : IBM Plex Sans Arabic 1.1.0 (OFL) limitée à l'écriture arabe, règles :lang(ar), règle ESLint no-physical-direction, shared/ui et coquille en propriétés logiques, e2e/arabe/socle",
+  "notes": "Budget initial à 999,75 kB pour 1 MB : à décider",
+  "pr": "https://github.com/mrscams/psymate-web/pull/120",
+  "branch": "M16-09-socle-visuel",
+  "checkout": "psymate-ux-audit-design-b1ba83"
+}
