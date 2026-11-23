@@ -9479,6 +9479,15 @@
         </context-group>
         <note priority="1" from="description">Toast après une création de plusieurs rendez-vous avec chevauchements</note>
       </trans-unit>
+      <trans-unit id="agenda.toast.createdOneOverlaps" datatype="html">
+        <source>Rendez-vous planifié, <x id="overlaps" equiv-text="overlaps"/> chevauchements</source>
+        <target state="translated">تم تحديد الموعد، التعارضات: <x id="overlaps" equiv-text="overlaps"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">506</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une création d&apos;un rendez-vous avec chevauchements</note>
+      </trans-unit>
       <trans-unit id="agenda.toast.createdManyOverlap" datatype="html">
         <source><x id="count" equiv-text="count"/> rendez-vous planifiés, 1 chevauchement</source>
         <target state="translated">المواعيد المحدَّدة: <x id="count" equiv-text="count"/>، تعارض واحد</target>
