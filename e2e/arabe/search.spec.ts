@@ -25,7 +25,8 @@ import { API } from '../support/env';
 // promet rien pour un mot arabe (normalisation, racines). Le test cherche le mot exact, isolé par des
 // espaces, d'une note qu'il a créée ; il lit d'abord la réponse de l'API et n'affirme dans l'écran
 // que ce que le contrat garantit (un <mark> autour d'un mot trouvé). Si le serveur ne trouve pas le
-// mot, la vérification du surlignage est sautée avec une raison explicite, sans échec d'interface.
+// mot, le test échoue sur la réponse de l'API avec un message « écart d'API », avant toute attente
+// d'interface.
 
 /** « قلق » (anxiété) : mot cherché, entouré d'espaces dans le texte de la note. */
 const ARABIC_WORD = 'قلق';
@@ -152,7 +153,8 @@ test.describe('recherche dans le dossier en /ar/', () => {
     await expect(page.locator('.scope bdi')).toHaveText('سلمى ب.');
     // Chiffres latins (Q71 point 2) dans les dates des résultats et de l'aperçu.
     expect(await item.locator('.meta').textContent()).not.toMatch(/[٠-٩۰-۹]/);
-    expect(await preview.locator('dl').textContent()).not.toMatch(/[٠-٩۰-۹]/);
+    // L'aside porte deux listes : les dates de l'entrée, puis l'aide de syntaxe (dl.syntax).
+    expect(await preview.locator('dl:not(.syntax)').textContent()).not.toMatch(/[٠-٩۰-۹]/);
     await expectRtlPage(page);
     await shoot(page, 'arabe-recherche-resultats');
 
