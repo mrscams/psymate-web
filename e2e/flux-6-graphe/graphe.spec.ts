@@ -88,10 +88,13 @@ test.describe('vue graphe', () => {
     await page.mouse.move(spot.x + 160, spot.y + 60, { steps: 40 });
     await page.mouse.move(spot.x - 120, spot.y - 40, { steps: 40 });
     await page.mouse.up();
-    // Le glisser du fond a déplacé la vue du geste exactement.
-    const panEnd = await pagePoint(page, anchor);
-    expect(panEnd.x - panStart.x).toBeCloseTo(-120, 0);
-    expect(panEnd.y - panStart.y).toBeCloseTo(-40, 0);
+    // Le glisser du fond a déplacé la vue du geste exactement. Attente du rendu : sous charge, la
+    // dernière position n'est pas encore peinte au retour de mouse.up (−113 lu pour −120 en CI).
+    const panned = async () => {
+      const at = await pagePoint(page, anchor);
+      return { dx: Math.round(at.x - panStart.x), dy: Math.round(at.y - panStart.y) };
+    };
+    await expect.poll(panned, { timeout: 5_000 }).toEqual({ dx: -120, dy: -40 });
     expect(await onCanvasZone(page, { x: spot.x - 120, y: spot.y - 40 })).toBe(true);
     const before = await zoom(page);
     let zoomedIn = before;
