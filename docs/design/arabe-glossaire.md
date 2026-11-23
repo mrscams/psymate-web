@@ -200,6 +200,19 @@ Autres termes des liens :
 | `links.editor.relation` | Relation (type de lien choisi) | Relation | العلاقة | نوع الرابط | | |
 | `links.rationale.title` | Pourquoi (justification du lien) | Why | السبب | المبرّر | | |
 | `graph.legend.group` | Groupe d'entrées | Entry group | مجموعة مُدخَلات | — | Bloc d'entrées sœurs (G Q58). | |
+| `graph.*` | nœud, nœuds | node, nodes | عقدة، عُقد | — | Employé par M16-27 ; le nombre suit une étiquette (« العُقد: 12 ») pour éviter l'accord. | |
+| `graph.root.label` | Centré sur (sélecteur de la racine) | Centred on | المركز | — | Employé par M16-27 ; un nom plutôt qu'un participe, pour éviter l'accord. | |
+| `graph.detail.expand`, `graph.table.expand` | Déplier (un groupe) | Expand | توسيع | — | Employé par M16-27 ; « à déplier » : « قابلة للتوسيع ». | |
+| `graph.reading.label`, `graph.direction.label` | Lecture, Sens (du graphe) | Reading, Direction | القراءة، الاتجاه | — | Employé par M16-27. | |
+| `graph.legend.toggle` | Légende | Legend | مفتاح الرسم | — | Employé par M16-27, comme dans la timeline (M16-27, première moitié). | |
+| `graph.legend.*Name` | trait plein, tirets longs, tirets courts, pointillé, trait fin, trait double | solid, long dash, short dash, dotted, thin, double | خط متّصل، شرطات طويلة، شرطات قصيرة، خط منقّط، خط رفيع، خط مزدوج | — | Employé par M16-27 ; « flèche vers la cible » : « سهم نحو الهدف ». | |
+| `graph.table.provenance`, `graph.provenance.*` | Provenance : manuel, suggéré, suggéré et confirmé | Provenance | الأصل: يدوي، مقترح، مقترح ومؤكَّد | — | Employé par M16-27 ; « المصدر » est déjà pris par la source du lien. | |
+| `graph.table.status`, `graph.status.*` | Statut : accepté, suggéré | Status | الحالة: مقبول، مقترح | — | Employé par M16-27 (accord avec « الرابط », masculin). | |
+| `graph.column.responses` | Réponses (traitements, séances) | Responses | الاستجابات | — | Employé par M16-27 (colonne de la lecture par type). | |
+| `graph.group.emotion` | majoritaire (émotion d'un groupe) | dominant | الغالب: … | — | Employé par M16-27 ; l'étiquette précède l'émotion pour éviter l'accord. | |
+| `links.leave.*` | Abandonner (un lien en cours) | Discard | تجاهل | — | Employé par M16-27 ; « إلغاء » reste réservé à Annuler. | |
+| `links.saved.undo` | Annuler (défaire, dans un toast) | Undo | تراجع | — | Employé par M16-27 ; « Lien annulé » : « تم التراجع عن الرابط ». | |
+| `links.editor.*` | Éditeur de lien | Link editor | محرّر الروابط | — | Employé par M16-27. | |
 
 ## 7. Dossier, séance et suivi
 
@@ -275,6 +288,21 @@ Autres termes des liens :
 | `timeline.decade.*` | Agrégat par mois | Monthly aggregate | التجميع الشهري | — | Employé par M16-27 (vue décennie). | |
 | `timeline.*` | Zoom avant, zoom arrière | Zoom in, zoom out | تكبير، تصغير | — | Employé par M16-27. | |
 | — | min (abréviation de durée) | min | د | — | Employé par M16-27 dans les puces et les barres étroites (règle 10) ; évite l'accord du nom après le nombre. | |
+| `entries.*`, `capture.*`, `search.*` | Visibilité (d'une entrée) | Visibility | الظهور | — | Employé par M16-27 ; valeurs « سريري »، « خاص » au masculin, accordées à « المُدخَل ». | |
+| `entries.*`, `capture.*` | Éditeur (d'entrée) | Editor | المحرّر | محرّر المُدخَل | Employé par M16-27. | |
+| `entries.*`, `capture.*`, `patientShell.*` | Barre de capture, barre de saisie | Capture bar | شريط الإدخال | — | Employé par M16-27 (les deux moitiés). | |
+| `capture.*`, `entries.rail.*` | Lié à… (rangée des liens) | Linked to… | مرتبط بـ… | — | Employé par M16-27 ; masculin, accordé à « المُدخَل ». | |
+| `capture.warning.*` | Préfixe (de saisie : /evt, /sit, /med) | Prefix | البادئة | — | Employé par M16-27 ; les préfixes restent en caractères latins. | |
+| `capture.precision.*`, `entries.precision.*` | Précision : exacte, au jour, au mois, à l'année | Precision | الدقّة: دقيق، يوم، شهر، سنة ؛ « على مستوى اليوم » dans l'aperçu | — | Employé par M16-27. | |
+| `entries.grace.*` | Fenêtre de grâce (1 h 15) | Grace period | مهلة التصحيح | — | Employé par M16-27, forme courte de « مهلة التصحيح دون نسخة جديدة » (section 11). | |
+| `entries.reason.label` | Motif de la correction | Reason for correction | سبب التصحيح | — | Employé par M16-27. | |
+| `entries.emotion.level*` | faible, forte (niveau d'une émotion) | low, high | شدّة منخفضة، شدّة عالية | — | Employé par M16-27 ; un nom plutôt qu'un adjectif, pour éviter l'accord. | |
+| `entries.emotion.customTag` | personnalisée (émotion) | custom | مخصّص | — | Employé par M16-27, accordé à « شعور ». | |
+| `search.*` | Aperçu (de l'entrée sélectionnée) | Preview | معاينة | — | Employé par M16-27. | |
+| `search.preview.recorded` | Saisi (date d'enregistrement) | Recorded | تاريخ الإدخال | — | Employé par M16-27. | |
+| `search.*` | trigrammes ; sans accents ni casse | trigrams | مقاطع ثلاثية ؛ دون اعتبار للنبرات ولا لحالة الأحرف | — | Employé par M16-27. Ne promet pas que l'API ignore les voyelles brèves de l'arabe (تشكيل) : non vérifié. | |
+| `search.help.example.*` | Jetons de recherche (tag:, émotion:, avant:, après:) | Search tokens | tag:، emotion:، before:، after: | — | Employé par M16-27 : les jetons restent en caractères latins, sous leur forme anglaise acceptée par l'API ; l'exemple d'émotion emploie le code (« emotion:anxiety »). | |
+| `profile360.*` | Profil (forme courte de Profil 360) | Profile | الملف الشامل | — | Employé par M16-27. | |
 
 ## 8. Profil 360
 

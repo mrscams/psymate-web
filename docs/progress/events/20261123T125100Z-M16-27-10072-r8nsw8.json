@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T12:51:00.257Z",
+  "task": "M16-27",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Traduction arabe du dossier patient, seconde moitié : graph, links, entries, entry, capture, search, profile360 (603 unités et 2 sous-messages ICU) ; glossaire enrichi ; textes de capture décrivant la détection listés pour M16-20",
+  "pr": "https://github.com/mrscams/psymate-web/pull/121",
+  "branch": "M16-27b-traduction-dossier",
+  "checkout": "agent-afc419d83f0c9a8be"
+}
