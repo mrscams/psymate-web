@@ -1,4 +1,4 @@
-<pm-side-panel [title]="title" [subtitle]="subtitle">
+<pm-side-panel [title]="title" [subject]="subject" [subtitle]="subtitle">
   <form class="recap" [formGroup]="form" (ngSubmit)="submit()" novalidate>
     @if (generalError(); as message) {
       <p class="general-error" role="alert">{{ message }}</p>

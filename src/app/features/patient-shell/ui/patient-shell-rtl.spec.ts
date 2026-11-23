@@ -45,9 +45,9 @@ registerLocaleData(localeAr, 'ar');
 /** Chiffres arabo-indiens (U+0660–0669) et persans (U+06F0–06F9) : jamais à l'écran (Q71 point 2). */
 const NON_LATIN_DIGITS = /[٠-٩۰-۹]/;
 const ARABIC_LETTER = /[ء-ي]/;
-const FSI = '⁨';
-const LRI = '⁦';
-const PDI = '⁩';
+const FSI = '\u2068';
+const LRI = '\u2066';
+const PDI = '\u2069';
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 function text(el: Element | null | undefined): string {
@@ -105,20 +105,18 @@ describe('closePanelSubtitle (sous-titre du panneau de clôture)', () => {
   const start = new Date(2026, 10, 12, 9, 8).toISOString();
   const now = new Date(2026, 10, 12, 9, 56);
 
-  it('en arabe : nom isolé dans son sens, plage horaire de gauche à droite', () => {
-    const subtitle = closePanelSubtitle('Lou P.', start, 'video', 'ar', now);
-    expect(subtitle.startsWith(`${FSI}Lou P.${PDI} · `)).toBe(true);
+  it('en arabe : plage horaire de gauche à droite (le nom passe par `subject`)', () => {
+    const subtitle = closePanelSubtitle(start, 'video', 'ar', now);
+    expect(subtitle).not.toContain('Lou P.');
     expect(subtitle.endsWith(` · ${LRI}09:08 → 09:56${PDI}`)).toBe(true);
     expect(subtitle).not.toMatch(NON_LATIN_DIGITS);
   });
 
-  it('en français : la phrase d’avant, caractère pour caractère', () => {
-    expect(closePanelSubtitle('Lou P.', start, 'video', 'fr', now)).toBe(
-      'Lou P. · jeudi 12 novembre · visio · 09:08 → 09:56',
+  it('en français : la phrase d’avant sans le nom, caractère pour caractère', () => {
+    expect(closePanelSubtitle(start, 'video', 'fr', now)).toBe(
+      'jeudi 12 novembre · visio · 09:08 → 09:56',
     );
-    expect(closePanelSubtitle('', start, null, 'fr', now)).toBe(
-      'jeudi 12 novembre · 09:08 → 09:56',
-    );
+    expect(closePanelSubtitle(start, null, 'fr', now)).toBe('jeudi 12 novembre · 09:08 → 09:56');
   });
 });
 
@@ -324,23 +322,34 @@ describe('« Prévu la dernière fois »', () => {
   });
 });
 
-describe('panneau de clôture en /ar/', () => {
+describe('panneau de clôture', () => {
   afterEach(() => TestBed.inject(SidePanelService).closeAll?.());
 
-  it('champs libres en dir="auto", durée en dir="ltr", touche en dir="ltr", nom isolé', async () => {
-    const store = await shellStore('ar');
+  async function openPanel(locale: string): Promise<HTMLElement> {
+    const store = await shellStore(locale);
     TestBed.inject(SidePanelService).open<CloseSessionPanel, CloseSessionPanelData>(
       CloseSessionPanel,
       { data: { store, unclosedAfterMin: 180 }, width: 520 },
     );
     await tick();
-    const panel = document.querySelector<HTMLElement>('pm-close-session-panel')!;
+    return document.querySelector<HTMLElement>('pm-close-session-panel')!;
+  }
+
+  it('/ar/ : champs libres en dir="auto", durée et touche en dir="ltr", nom dans un <bdi>', async () => {
+    const panel = await openPanel('ar');
     expect(panel.querySelector('textarea')?.getAttribute('dir')).toBe('auto');
     expect(panel.querySelector('#next-time-new')?.getAttribute('dir')).toBe('auto');
     expect(panel.querySelector('input.duration')?.getAttribute('dir')).toBe('ltr');
     expect(panel.querySelector('.hints kbd')?.getAttribute('dir')).toBe('ltr');
-    const dialog = panel.closest('[role="dialog"]') ?? document.body;
-    expect(dialog.textContent).toContain(`${FSI}Lou P.${PDI} · `);
+    expect(text(panel.querySelector('.subtitle bdi'))).toBe('Lou P.');
+    expect(panel.querySelector('.subtitle')?.textContent).toMatch(/^Lou P\. · .*\u2066.*\u2069$/);
+  });
+
+  it('/fr/ : sous-titre au même texte qu’avant (« Lou P. · jour · lieu · heures »)', async () => {
+    const panel = await openPanel('fr');
+    const subtitle = panel.querySelector('.subtitle')?.textContent ?? '';
+    expect(subtitle).toMatch(/^Lou P\. · \S+ \d+ \S+ · cabinet · \d\d:\d\d → \d\d:\d\d$/);
+    expect(subtitle).not.toMatch(/[\u2066-\u2069]/);
   });
 });
 

@@ -117,7 +117,7 @@ export function closedToastText(durationMin: number | null, withSummary: boolean
 }
 
 /** Une lettre d'une écriture de droite à gauche (hébreu, arabe, syriaque, thaana, formes A et B). */
-const RTL_LETTER = /[֐-ࣿיִ-﷿ﹰ-﻿]/;
+const RTL_LETTER = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
 
 /**
  * Valeur insérée dans une phrase assemblée en TypeScript (sous-titre du panneau, toast, nom
@@ -132,21 +132,21 @@ export function isolate(value: string, locale: string, direction: 'auto' | 'ltr'
   if (textDirection(locale) !== 'rtl' && (direction === 'ltr' || !RTL_LETTER.test(value))) {
     return value;
   }
-  return `${direction === 'ltr' ? '⁦' : '⁨'}${value}⁩`;
+  return `${direction === 'ltr' ? '\u2066' : '\u2068'}${value}\u2069`;
 }
 
-/** « Dernière séance : 17 oct. 2026 » n'est pas ici : l'en-tête partagé le dit. Sous-titre du panneau. */
+/**
+ * « Dernière séance : 17 oct. 2026 » n'est pas ici : l'en-tête partagé le dit. Sous-titre du panneau,
+ * sans le nom du patient : pm-side-panel le reçoit par `subject` (isolé dans un <bdi>) et rend
+ * « nom · sous-titre », le même texte qu'avant.
+ */
 export function closePanelSubtitle(
-  patientName: string,
   startedAt: string,
   modality: SessionModality | null,
   locale: string,
   now: Date,
 ): string {
-  const parts = [
-    patientName ? isolate(patientName, locale) : '',
-    formatLongDay(startedAt, locale, now),
-  ];
+  const parts = [formatLongDay(startedAt, locale, now)];
   const where = sessionModalityLabel(modality);
   if (where) parts.push(where);
   // La flèche va du début à la fin : la plage se lit de gauche à droite, même en arabe.

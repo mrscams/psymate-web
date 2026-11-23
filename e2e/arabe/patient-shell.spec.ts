@@ -34,7 +34,7 @@ const ARABIC_SUMMARY = 'تحدثنا عن النوم والعمل.';
 /** Chiffres arabo-indiens (U+0660 à U+0669) et persans : jamais affichés (G Q71 point 2). */
 const NON_LATIN_DIGITS = /[٠-٩۰-۹]/;
 /** Caractères d'isolation Unicode (U+2066 à U+2069) : jamais envoyés à l'API. */
-const ISOLATES = /[⁦-⁩]/;
+const ISOLATES = /[\u2066-\u2069]/;
 const DESKTOP = { width: 1440, height: 900 };
 const PHONE = { width: 390, height: 844 };
 
@@ -307,8 +307,10 @@ test.describe('dossier patient en /ar/', () => {
     await expect(dialog).toBeVisible();
     await settled(dialog);
 
-    // Sous-titre : le nom latin isolé (U+2068 … U+2069), jamais « .Lou P ».
-    expect(await dialog.textContent()).toContain(`⁨${LATIN_NAME}⁩`);
+    // Sous-titre : le nom latin isolé dans un <bdi> (pm-side-panel, `subject`), jamais « .Lou P ».
+    const subject = dialog.locator('.subtitle bdi');
+    await expect(subject).toHaveText(LATIN_NAME);
+    expect(await subject.evaluate((el) => getComputedStyle(el).direction)).toBe('ltr');
     const summary = dialog.locator('textarea');
     await expect(summary).toHaveAttribute('dir', 'auto');
     await expect(dialog.locator('input.duration')).toHaveAttribute('dir', 'ltr');
