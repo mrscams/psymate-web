@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-23T10:24:25.841Z",
+  "task": "M16-07",
+  "agent": "claude",
+  "status": "done",
+  "summary": "Version arabe : Q72 à Q81 (proposées, non relues), C14 à huit colonnes, design/arabe.md, glossaire arabe proposé, renvois CLAUDE.md et README",
+  "next": "M16-08 socle de langue",
+  "pr": "https://github.com/mrscams/psymate-web/pull/116",
+  "branch": "claude/priceless-montalcini-f36e8d",
+  "checkout": "psymate-ux-audit-design-b1ba83"
+}

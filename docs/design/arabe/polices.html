@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PsyMate en arabe : choix de la police</title>
+    <!-- Maquette seulement : dans l'application, une police retenue serait hébergée avec le site, sans appel à un tiers. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Valeurs copiées de src/theme/tokens.css (thème clair, Fluent 2). */
+      :root {
+        color-scheme: light;
+        --surface-ground: #f5f5f5;
+        --surface-raised: #ffffff;
+        --surface-sunken: #ebebeb;
+        --border-subtle: #e0e0e0;
+        --border-strong: #d1d1d1;
+        --border-accessible: #616161;
+        --text-primary: #242424;
+        --text-secondary: #616161;
+        --text-disabled: #8a8a8a;
+        --primary: #0f6cbd;
+        --primary-hover: #115ea3;
+        --primary-tint: #ebf3fc;
+        --primary-on: #ffffff;
+        --feeling-tint: #e7e4fb;
+        --feeling-text: #5649b0;
+        --entry-note: #69797e;
+        --entry-event: #0f6cbd;
+        --entry-feeling: #7160e8;
+        --entry-session: #038387;
+        --entry-medication: #986f0b;
+        --danger: #b10e1c;
+        --danger-bg: #fdf3f4;
+        --danger-on: #ffffff;
+        --success: #0e700e;
+        --success-bg: #f1faf1;
+        --warning: #bc4b09;
+        --warning-bg: #fff9f5;
+        --admin-bar-bg: #1a1a1a;
+        --admin-bar-text: #ffffff;
+        --shadow-ambient: rgba(0, 0, 0, 0.12);
+        --shadow-key: rgba(0, 0, 0, 0.14);
+        --shadow-2: 0 0 2px var(--shadow-ambient), 0 1px 2px var(--shadow-key);
+        --shadow-16: 0 0 2px var(--shadow-ambient), 0 8px 16px var(--shadow-key);
+        --radius-md: 4px;
+        --radius-xl: 8px;
+        --radius-pill: 9999px;
+        --font-ui:
+          'Segoe UI Variable Text', 'Segoe UI', 'Segoe UI Web (West European)', -apple-system,
+          BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+        --font-mono: 'Cascadia Mono', Consolas, 'Courier New', Courier, monospace;
+      }
+
+      /*
+       * Les lettres latines et les chiffres restent en Segoe UI dans les trois options, comme dans les
+       * bundles français et anglais : seule l'écriture arabe change d'une option à l'autre.
+       */
+      @font-face {
+        font-family: 'PM Latin';
+        font-weight: 400 500;
+        src: local('Segoe UI');
+        unicode-range: U+0020-007E, U+00A0-024F, U+2010-2027, U+20AC;
+      }
+      @font-face {
+        font-family: 'PM Latin';
+        font-weight: 600;
+        src: local('Segoe UI Semibold');
+        unicode-range: U+0020-007E, U+00A0-024F, U+2010-2027, U+20AC;
+      }
+      @font-face {
+        font-family: 'PM Latin';
+        font-weight: 700;
+        src: local('Segoe UI Bold');
+        unicode-range: U+0020-007E, U+00A0-024F, U+2010-2027, U+20AC;
+      }
+
+      .f-system { --f: var(--font-ui); }
+      .f-plex { --f: 'PM Latin', 'IBM Plex Sans Arabic', 'Segoe UI', sans-serif; }
+      .f-noto { --f: 'PM Latin', 'Noto Sans Arabic', 'Segoe UI', sans-serif; }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--surface-ground); color: var(--text-primary); font: 400 14px/20px var(--font-ui); -webkit-font-smoothing: antialiased; }
+      h1, h2, h3, p { margin: 0; }
+      button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+      a { color: var(--primary); }
+
+      /* Habillage du document (français). */
+      .doc { max-width: 1320px; margin: 0 auto; padding: 24px 16px 80px; }
+      .doc > h1 { font: 600 28px/36px var(--font-ui); margin-bottom: 6px; }
+      .doc > h2 { font: 600 20px/28px var(--font-ui); margin: 40px 0 6px; }
+      .doc .lede { font: 400 16px/22px var(--font-ui); color: var(--text-secondary); max-width: 90ch; }
+      .doc .note { color: var(--text-secondary); max-width: 100ch; margin: 4px 0 14px; }
+      .doc code { font: 400 12px/1 var(--font-mono); background: var(--surface-sunken); padding: 2px 5px; border-radius: var(--radius-md); }
+      .status { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+      .status span { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: var(--radius-pill); background: var(--surface-sunken); color: var(--text-secondary); font-size: 12px; }
+      .status span.ok { background: var(--success-bg); color: var(--success); }
+      .status span.ko { background: var(--warning-bg); color: var(--warning); }
+
+      .switch { display: inline-flex; padding: 2px; margin: 4px 0 14px; border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: var(--surface-raised); }
+      .switch button { height: 30px; padding: 0 14px; border-radius: 3px; color: var(--text-secondary); font-weight: 600; }
+      .switch button[aria-pressed='true'] { background: var(--primary); color: var(--primary-on); }
+      .switch button:focus-visible, .btn:focus-visible { outline: 2px solid #000; outline-offset: 1px; }
+
+      /* Application (arabe, droite à gauche) : propriétés logiques uniquement. */
+      .ar { font-family: var(--f); }
+      .frame { border: 1px solid var(--border-strong); border-radius: var(--radius-xl); overflow: hidden; background: var(--surface-ground); box-shadow: var(--shadow-16); }
+      .appbar { display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 16px; background: var(--surface-raised); border-bottom: 1px solid var(--border-subtle); }
+      .brand { display: inline-flex; align-items: center; gap: 8px; font: 600 16px/22px var(--f); }
+      .brand svg { width: 22px; height: 22px; fill: none; stroke: var(--primary); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+      .crumb { color: var(--text-secondary); white-space: nowrap; }
+      .crumb b { color: var(--text-primary); font-weight: 400; }
+      .search { display: flex; align-items: center; gap: 6px; width: 320px; height: 32px; padding-inline: 10px 8px; border: 1px solid var(--border-strong); border-radius: var(--radius-md); color: var(--text-secondary); margin-inline-start: auto; }
+      .search kbd { margin-inline-start: auto; font: 400 12px/1 var(--font-mono); padding: 2px 5px; border: 1px solid var(--border-strong); border-radius: 3px; }
+      .ic { flex: none; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+      .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary-tint); color: var(--primary-hover); display: grid; place-items: center; font: 600 14px/1 var(--f); }
+      .shell { display: grid; grid-template-columns: 56px minmax(0, 1fr); }
+      .rail { padding: 8px 6px; background: var(--surface-raised); border-inline-end: 1px solid var(--border-subtle); }
+      .rail .item { position: relative; display: flex; align-items: center; height: 44px; padding: 0 11px; border-radius: var(--radius-md); color: var(--text-secondary); }
+      .rail .item svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+      .rail .item.active { background: var(--surface-sunken); color: var(--primary); }
+      .rail .item.active::before { content: ''; position: absolute; inset-inline-start: 0; inset-block: 12px; width: 3px; border-radius: var(--radius-pill); background: var(--primary); }
+      .mhead { padding: 14px 24px 0; background: var(--surface-raised); border-bottom: 1px solid var(--border-subtle); }
+      .mhead-row { display: flex; align-items: center; gap: 14px; min-height: 44px; }
+      .mhead h3 { font: 600 20px/28px var(--f); }
+      .meta { color: var(--text-secondary); }
+      .end { margin-inline-start: auto; display: flex; gap: 10px; align-items: center; }
+      .tabs { display: flex; gap: 4px; margin-top: 10px; }
+      .tabs a { position: relative; display: inline-flex; align-items: center; height: 38px; padding: 0 12px; color: var(--text-secondary); white-space: nowrap; text-decoration: none; }
+      .tabs a::after { content: ''; position: absolute; inset-inline: 12px; bottom: 0; height: 3px; border-radius: var(--radius-pill); background: transparent; }
+      .tabs a[aria-current='page'] { color: var(--text-primary); font-weight: 600; }
+      .tabs a[aria-current='page']::after { background: var(--primary); }
+      .page { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr); gap: 16px; padding: 20px 24px 28px; align-items: start; }
+      .stack { display: grid; gap: 16px; min-width: 0; }
+      .stack > .panel { min-width: 0; overflow-x: auto; }
+
+      .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 32px; padding: 0 12px; border: 1px solid transparent; border-radius: var(--radius-md); font: 600 14px/1 var(--f); white-space: nowrap; }
+      .btn.primary { background: var(--primary); color: var(--primary-on); }
+      .btn.primary:hover { background: var(--primary-hover); }
+      .btn.outline { border-color: var(--border-strong); background: var(--surface-raised); }
+      .btn.outline:hover { background: var(--surface-sunken); }
+      .btn.ghost { color: var(--primary); }
+      .btn.danger { background: var(--danger); color: var(--danger-on); }
+      .btn.off { background: var(--surface-sunken); color: var(--text-disabled); cursor: default; }
+      .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+      .panel { background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); box-shadow: var(--shadow-2); }
+      .panel-head { display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-bottom: 1px solid var(--border-subtle); }
+      .panel-head h4 { margin: 0; font: 600 16px/22px var(--f); }
+      .pad { padding: 16px 18px; }
+      .table { width: 100%; border-collapse: collapse; }
+      .table th { padding: 8px 12px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); font: 600 12px/16px var(--f); text-align: start; white-space: nowrap; }
+      .table td { height: 52px; padding: 8px 12px; border-bottom: 1px solid var(--border-subtle); vertical-align: middle; }
+      .table tbody tr:last-child td { border-bottom: 0; }
+      .table tbody tr:hover td { background: color-mix(in srgb, var(--primary-tint) 45%, transparent); }
+      .nm { font-weight: 600; }
+      .sub { color: var(--text-secondary); font-size: 12px; line-height: 16px; }
+      .nowrap { white-space: nowrap; }
+      .chip { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: var(--radius-pill); background: var(--surface-sunken); color: var(--text-secondary); font: 500 12px/1 var(--f); white-space: nowrap; }
+      .chip i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+      .chip.session { color: var(--entry-session); }
+      .chip.note { color: var(--entry-note); }
+      .chip.event { color: var(--entry-event); }
+      .chip.feel { color: var(--entry-feeling); }
+      .chip.med { color: var(--entry-medication); }
+      .chip.feeling { background: var(--feeling-tint); color: var(--feeling-text); font-weight: 600; }
+
+      .lbl { display: block; margin-bottom: 4px; font: 600 14px/20px var(--f); }
+      .field { display: flex; align-items: center; gap: 8px; min-height: 32px; padding: 5px 10px; border: 1px solid var(--border-strong); border-bottom-color: var(--border-accessible); border-radius: var(--radius-md); background: var(--surface-raised); }
+      .field.area { align-items: flex-start; min-height: 104px; }
+      .field.bad { border-color: var(--danger); }
+      .err { display: flex; align-items: center; gap: 6px; margin-top: 4px; color: var(--danger); font-size: 12px; line-height: 16px; }
+      .form { display: grid; gap: 14px; }
+      .toast { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: var(--radius-md); background: var(--admin-bar-bg); color: var(--admin-bar-text); box-shadow: var(--shadow-16); width: fit-content; }
+      .toast button { color: #9cc8f5; font-weight: 600; }
+
+      /* Trois colonnes. */
+      .three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+      .col-head { margin-bottom: 8px; }
+      .col-head b { display: block; font: 600 16px/22px var(--font-ui); }
+      .col-head span { color: var(--text-secondary); font-size: 12px; line-height: 16px; }
+      .spec { display: grid; gap: 14px; }
+      .t28 { font: 600 28px/36px var(--f); }
+      .t20 { font: 600 20px/28px var(--f); }
+      .t14 { font: 400 14px/20px var(--f); }
+      .t12 { font: 400 12px/16px var(--f); color: var(--text-secondary); }
+      .weights span { display: block; font-size: 16px; line-height: 26px; }
+      hr { border: 0; border-top: 1px solid var(--border-subtle); margin: 0; }
+
+      /* Réglages. */
+      .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+      .demo { display: grid; grid-template-columns: 110px 1fr; gap: 8px 16px; align-items: baseline; }
+      .demo .k { color: var(--text-secondary); font-size: 12px; }
+      .caps { font: 600 12px/16px var(--f); color: var(--text-secondary); }
+      .caps.spaced { letter-spacing: 0.12em; }
+      .mono { font-family: var(--font-mono); }
+      .tnum { font-variant-numeric: tabular-nums; }
+      .t15 { font: 400 15px/24px var(--f); }
+
+      @media (max-width: 980px) {
+        .three, .two, .page { grid-template-columns: 1fr; }
+        .search { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="doc">
+      <h1>PsyMate en arabe : choix de la police</h1>
+      <p class="lede">
+        Le même écran et les mêmes composants, dans trois polices : celle du système (aucun fichier à
+        charger) et deux polices à embarquer. Les textes arabes sont des exemples rédigés pour la
+        maquette, pas la traduction définitive.
+      </p>
+      <div class="status" id="status" aria-live="polite">
+        <span>Vérification du chargement des polices…</span>
+      </div>
+
+      <h2>1. Le même écran, une police à la fois</h2>
+      <p class="note">
+        Lettres latines et chiffres restent en Segoe UI dans les trois cas, comme en français ; seule
+        l'écriture arabe change.
+      </p>
+      <div class="switch" role="group" aria-label="Police de l'écran">
+        <button type="button" data-font="f-system" aria-pressed="true">Système</button>
+        <button type="button" data-font="f-plex" aria-pressed="false">IBM Plex Sans Arabic</button>
+        <button type="button" data-font="f-noto" aria-pressed="false">Noto Sans Arabic</button>
+      </div>
+
+      <div class="frame ar f-system" id="screen" lang="ar" dir="rtl">
+        <header class="appbar">
+          <span class="brand">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a7 7 0 0 0-7 7c0 2.6 1.4 4.3 2.5 5.6.8 1 1.5 1.9 1.5 3.4h6c0-1.5.7-2.4 1.5-3.4C17.600 14.300 19 12.600 19 10a7 7 0 0 0-7-7zM9.500 21h5" /></svg>
+            PsyMate
+          </span>
+          <span class="crumb">المرضى ‹ <b>سلمى بن علي</b></span>
+          <span class="search">
+            <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.500" /><path d="M10.500 10.500 14 14" /></svg>
+            البحث في الملف
+            <kbd>Ctrl K</kbd>
+          </span>
+          <span class="avatar" aria-label="نادية الفاسي">ن</span>
+        </header>
+        <div class="shell">
+          <nav class="rail" aria-label="التنقل الرئيسي">
+            <span class="item active"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.500" /><path d="M2.500 20c.6-3.600 3.200-5.500 6.500-5.500s5.900 1.900 6.500 5.500M16 4.800a3.500 3.500 0 0 1 0 6.400M18.500 14.800c1.700.8 2.700 2.500 3 5.200" /></svg></span>
+            <span class="item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="5" width="17" height="15" rx="2" /><path d="M3.500 10h17M8 3v4M16 3v4" /></svg></span>
+            <span class="item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c.8-4.200 4-6.500 8-6.500s7.200 2.300 8 6.500" /></svg></span>
+          </nav>
+          <div>
+            <div class="mhead">
+              <div class="mhead-row">
+                <h3>سلمى بن علي</h3>
+                <span class="meta">34 سنة · بداية المتابعة: مارس 2025</span>
+                <span class="end">
+                  <button type="button" class="btn outline">مدخل جديد</button>
+                  <button type="button" class="btn primary">بدء جلسة</button>
+                </span>
+              </div>
+              <nav class="tabs" aria-label="أقسام الملف">
+                <a href="#screen" aria-current="page">نظرة عامة</a>
+                <a href="#screen">الخط الزمني</a>
+                <a href="#screen">شبكة الروابط</a>
+                <a href="#screen">الملف 360</a>
+                <a href="#screen">البحث</a>
+              </nav>
+            </div>
+            <div class="page">
+              <div class="stack">
+                <section class="panel">
+                  <div class="panel-head"><h4>في سطور</h4></div>
+                  <p class="pad">
+                    12 جلسة منذ مارس 2025. الشعور الغالب خلال آخر 30 يومًا هو القلق، بمتوسط شدة 6 من 10.
+                    آخر جلسة كانت قبل 5 أيام، وتناولت صعوبات النوم والضغط المهني.
+                  </p>
+                </section>
+                <section class="panel">
+                  <div class="panel-head">
+                    <h4>آخر المدخلات</h4>
+                    <span class="end"><button type="button" class="btn ghost">عرض الكل</button></span>
+                  </div>
+                  <table class="table">
+                    <thead>
+                      <tr><th>النوع</th><th>العنوان</th><th>التاريخ</th><th>الشعور</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><span class="chip session"><i></i>جلسة</span></td>
+                        <td><div class="nm">الجلسة رقم 12: صعوبات النوم والقلق المهني</div><div class="sub">50 دقيقة · في العيادة</div></td>
+                        <td class="nowrap">17 نوفمبر 2026</td>
+                        <td><span class="chip feeling">قلق 7/10</span></td>
+                      </tr>
+                      <tr>
+                        <td><span class="chip note"><i></i>ملاحظة</span></td>
+                        <td><div class="nm">متابعة يوميات النوم</div><div class="sub">استيقاظ متكرر بين الساعة 3 و4 صباحًا</div></td>
+                        <td class="nowrap">10 نوفمبر 2026</td>
+                        <td class="meta">—</td>
+                      </tr>
+                      <tr>
+                        <td><span class="chip event"><i></i>حدث</span></td>
+                        <td><div class="nm">تغيير في منصب العمل</div><div class="sub">مسؤوليات جديدة وفريق أكبر</div></td>
+                        <td class="nowrap">2 نوفمبر 2026</td>
+                        <td><span class="chip feeling">توتر 5/10</span></td>
+                      </tr>
+                      <tr>
+                        <td><span class="chip feel"><i></i>شعور</span></td>
+                        <td><div class="nm">ارتياح بعد الحديث مع الأسرة</div></td>
+                        <td class="nowrap">28 أكتوبر 2026</td>
+                        <td><span class="chip feeling">ارتياح 6/10</span></td>
+                      </tr>
+                      <tr>
+                        <td><span class="chip med"><i></i>دواء</span></td>
+                        <td><div class="nm">سيرترالين 50 ملغ</div><div class="sub">مرة واحدة في اليوم، صباحًا</div></td>
+                        <td class="nowrap">20 أكتوبر 2026</td>
+                        <td class="meta">—</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+              </div>
+              <div class="stack">
+                <section class="panel">
+                  <div class="panel-head"><h4>مدخل جديد</h4></div>
+                  <div class="pad form">
+                    <div>
+                      <span class="lbl">العنوان</span>
+                      <div class="field">تمرين التنفس اليومي</div>
+                    </div>
+                    <div>
+                      <span class="lbl">النص</span>
+                      <div class="field area">
+                        تحدثت المريضة عن صعوبات في النوم منذ ثلاثة أسابيع، مع قلق متزايد قبل الاجتماعات
+                        المهنية. اتفقنا على تمرين تنفس يومي ومتابعة يوميات النوم حتى الجلسة القادمة.
+                      </div>
+                    </div>
+                    <div>
+                      <span class="lbl">تاريخ الحدث</span>
+                      <div class="field bad">3 ديسمبر 2026</div>
+                      <div class="err">
+                        <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" /><path d="M8 5v3.500M8 11h.01" /></svg>
+                        لا يمكن أن يكون التاريخ في المستقبل.
+                      </div>
+                    </div>
+                    <div>
+                      <span class="lbl">الوسوم</span>
+                      <div class="row"><span class="chip">النوم</span><span class="chip">العمل</span><span class="chip">القلق</span></div>
+                    </div>
+                    <div class="row">
+                      <button type="button" class="btn primary">حفظ</button>
+                      <button type="button" class="btn outline">إلغاء</button>
+                      <button type="button" class="btn ghost">حفظ كمسودة</button>
+                    </div>
+                  </div>
+                </section>
+                <div class="toast" role="status">تم حفظ المدخل. <button type="button">تراجع</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2>2. Côte à côte</h2>
+      <p class="note">Les mêmes composants et les mêmes tailles que l'application (28, 20, 14 et 12 px).</p>
+      <div class="three" id="columns"></div>
+
+      <template id="specimen">
+        <div class="panel pad spec">
+          <p class="t28">متابعة سريرية أوضح</p>
+          <p class="t20">نظرة عامة على الملف</p>
+          <p class="t14">
+            تحدثت المريضة عن صعوبات في النوم منذ ثلاثة أسابيع، مع قلق متزايد قبل الاجتماعات المهنية.
+            اتفقنا على تمرين تنفس يومي ومتابعة يوميات النوم حتى الجلسة القادمة.
+          </p>
+          <p class="t12">آخر تعديل: 17 نوفمبر 2026، 14:03 · 12 جلسة · 48 مدخلًا</p>
+          <hr />
+          <div class="weights">
+            <span style="font-weight: 400">عادي 400 : الملف السريري للمريض</span>
+            <span style="font-weight: 600">شبه عريض 600 : الملف السريري للمريض</span>
+            <span style="font-weight: 700">عريض 700 : الملف السريري للمريض</span>
+          </div>
+          <hr />
+          <div class="row">
+            <button type="button" class="btn primary">إضافة مريض</button>
+            <button type="button" class="btn outline">إلغاء</button>
+            <button type="button" class="btn danger">حذف</button>
+            <button type="button" class="btn off" aria-disabled="true">أرشفة</button>
+          </div>
+          <div>
+            <span class="lbl">البريد الإلكتروني</span>
+            <div class="field bad"><span dir="ltr">salma@example</span></div>
+            <div class="err">عنوان البريد الإلكتروني غير صالح.</div>
+          </div>
+          <div class="row">
+            <span class="chip session"><i></i>جلسة</span>
+            <span class="chip note"><i></i>ملاحظة</span>
+            <span class="chip feeling">قلق 7/10</span>
+            <span class="chip">مؤرشف</span>
+          </div>
+          <hr />
+          <p class="t14">مع التشكيل: مُتابَعة، مَريض، قَلَق، جَلسة، مُدخَل.</p>
+          <p class="t14">نص مختلط: العلاج المعرفي السلوكي (<bdi>TCC</bdi>) في <bdi>PsyMate</bdi>، 3 جلسات في الأسبوع.</p>
+        </div>
+      </template>
+
+      <h2>3. Réglages à prévoir, quelle que soit la police</h2>
+      <p class="note">Ces exemples suivent la police choisie dans le sélecteur de la section 1.</p>
+      <div class="two ar f-system" id="tuning" lang="ar" dir="rtl">
+        <section class="panel pad">
+          <div class="demo">
+            <span class="k" lang="fr" dir="ltr">Interlettrage actuel</span>
+            <span class="caps spaced">الحالة السريرية · آخر جلسة</span>
+            <span class="k" lang="fr" dir="ltr">Sans interlettrage</span>
+            <span class="caps">الحالة السريرية · آخر جلسة</span>
+            <span class="k" lang="fr" dir="ltr">Date en police à chasse fixe</span>
+            <span class="mono">17 نوفمبر 2026، 14:03</span>
+            <span class="k" lang="fr" dir="ltr">Date en police d'interface</span>
+            <span class="tnum">17 نوفمبر 2026، 14:03</span>
+          </div>
+        </section>
+        <section class="panel pad">
+          <div class="demo">
+            <span class="k" lang="fr" dir="ltr">Corps 14 / 20 (actuel)</span>
+            <span class="t14">تحدثت المريضة عن صعوبات في النوم منذ ثلاثة أسابيع، مع قلق متزايد قبل الاجتماعات المهنية.</span>
+            <span class="k" lang="fr" dir="ltr">Corps 15 / 24</span>
+            <span class="t15">تحدثت المريضة عن صعوبات في النوم منذ ثلاثة أسابيع، مع قلق متزايد قبل الاجتماعات المهنية.</span>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const OPTIONS = [
+        { cls: 'f-system', name: 'Système', family: null, info: 'Segoe UI sous Windows ; police arabe du système ailleurs. Rien à charger.' },
+        { cls: 'f-plex', name: 'IBM Plex Sans Arabic', family: 'IBM Plex Sans Arabic', info: 'Licence libre OFL. Graisses fixes de 100 à 700.' },
+        { cls: 'f-noto', name: 'Noto Sans Arabic', family: 'Noto Sans Arabic', info: 'Licence libre OFL. Police variable, graisses de 100 à 900.' },
+      ];
+
+      const columns = document.getElementById('columns');
+      const specimen = document.getElementById('specimen');
+      for (const option of OPTIONS) {
+        const column = document.createElement('div');
+        const head = document.createElement('div');
+        head.className = 'col-head';
+        const title = document.createElement('b');
+        title.textContent = option.name;
+        const info = document.createElement('span');
+        info.textContent = option.info;
+        head.append(title, info);
+        const body = document.createElement('div');
+        body.className = `ar ${option.cls}`;
+        body.lang = 'ar';
+        body.dir = 'rtl';
+        body.append(specimen.content.cloneNode(true));
+        column.append(head, body);
+        columns.append(column);
+      }
+
+      const followers = [document.getElementById('screen'), document.getElementById('tuning')];
+      const buttons = [...document.querySelectorAll('.switch button')];
+      for (const button of buttons) {
+        button.addEventListener('click', () => {
+          for (const other of buttons) other.setAttribute('aria-pressed', String(other === button));
+          for (const target of followers) {
+            for (const option of OPTIONS) target.classList.remove(option.cls);
+            target.classList.add(button.dataset.font);
+          }
+        });
+      }
+
+      // Dit franchement si une police proposée n'a pas pu être chargée : sinon on comparerait un repli.
+      const status = document.getElementById('status');
+      Promise.all(
+        OPTIONS.filter((option) => option.family).map(async (option) => {
+          let loaded = false;
+          try {
+            const faces = await document.fonts.load(`600 16px "${option.family}"`, 'متابعة');
+            loaded = faces.length > 0;
+          } catch {
+            loaded = false;
+          }
+          return { option, loaded };
+        }),
+      ).then((results) => {
+        status.replaceChildren(
+          ...results.map(({ option, loaded }) => {
+            const pill = document.createElement('span');
+            pill.className = loaded ? 'ok' : 'ko';
+            pill.textContent = loaded
+              ? `${option.name} : chargée`
+              : `${option.name} : non chargée (hors ligne ?), l'écran montre la police du système`;
+            return pill;
+          }),
+        );
+      });
+    </script>
+  </body>
+</html>

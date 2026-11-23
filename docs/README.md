@@ -30,6 +30,11 @@ Copie, le 2 novembre 2026, des documents de `psymate-api/docs/` dont un agent fr
 | `couverture-ecrans.md` | Quels écrans V1 ont une fiche et une maquette, lesquels manquent, et si cela peut attendre |
 | `H-runbook-agents-frontend.md` | **Le mode opératoire du frontend** : préparation du dépôt, puis 8 lots avec le prompt exact à coller pour chacune des 30 tâches web |
 | `handbook/architecture-frontend.html` | **Comment on construit le frontend** : six couches, arborescence, frontières entre features, communication avec le backend (contrat, session, erreurs), état et signaux, tests, les 14 règles |
+| `M-plan-version-arabe.md` | **Version arabe, jalon M16** : périmètre, décisions (G14 : Q71 tranchée par l'utilisateur, Q72 à Q81 proposées et non relues), tâches M16-01 à M16-33, règles communes, prompts, revue. Fait foi pour toute tâche M16 |
+| `Etude-traduction-arabe.md` | Étude du 22 novembre 2026 qui a mené au plan M : ce qui se traduit, ce qui demande du code, ce qui demande l'API |
+| `design/arabe.md` | Règles d'habillage de droite à gauche : propriétés logiques (table physique → logique), ce qui se retourne, police et règles `:lang(ar)`, `dir="auto"` et `<bdi>`, clavier, formats, tests |
+| `design/arabe-glossaire.md` | Glossaire arabe proposé, non relu : termes métier (personnes, types d'entrée, émotions, types de lien, statuts, écrans, annuaire) et règles de registre ; employé par les tâches de traduction de l'API et du web |
+| `design/arabe/polices.html` | Comparaison des polices arabes ; IBM Plex Sans Arabic retenue (G Q71) |
 
 Hors V1, conservée pour plus tard : `design/23-admin-signalements.md` (V1.1, G Q26) ; rien de cette fiche ne s'implémente. Les fiches `design/15-agenda.md` et `15b-nouveau-rendez-vous.md`, hors V1 à l'origine, sont entrées en V1 le 15 novembre 2026 (G Q25 amendée) : écrans livrés sur données de démonstration, API en cours (jalon M11 de psymate-api), synchronisation Google toujours hors V1.
 
