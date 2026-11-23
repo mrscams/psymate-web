@@ -2,6 +2,7 @@
 // fonctions pures qui transforment la saisie interprétée par le parseur (M6-01) en aperçu, puis en
 // préremplissage de l'éditeur d'entrée ou en corps de POST (features/entries). Aucun DOM, aucun HTTP.
 
+import { formatLocale } from '../../../core/i18n';
 import { EntryType } from '../../../shared/ui';
 import {
   candidateName,
@@ -267,10 +268,13 @@ export function replaceWord(input: string, word: string, label: string): string 
   return parts.join('');
 }
 
-/** Libellé proposé pour l'émotion à créer : le mot saisi, première lettre en capitale. */
-export function emotionLabelOf(word: string): string {
+/**
+ * Libellé proposé pour l'émotion à créer : le mot saisi, première lettre en capitale dans la locale
+ * de formatage (Q73). Un mot arabe n'a pas de capitale : il reste tel que saisi.
+ */
+export function emotionLabelOf(word: string, locale = 'fr'): string {
   const text = word.trim();
-  return text ? text.charAt(0).toLocaleUpperCase('fr') + text.slice(1) : '';
+  return text ? text.charAt(0).toLocaleUpperCase(formatLocale(locale)) + text.slice(1) : '';
 }
 
 // Bloc de saisie structuré (UX-S1, décision du 12 novembre 2026 : propositions-2026-11/04b et 04c) --

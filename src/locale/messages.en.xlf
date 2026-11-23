@@ -20676,8 +20676,8 @@
         <note priority="1" from="description">Texte indicatif du bloc de saisie</note>
       </trans-unit>
       <trans-unit id="capture.bar.keys" datatype="html">
-        <source><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> détaille · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+S<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> brouillon</source>
-        <target state="translated"><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> details · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+S<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> draft</target>
+        <source><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd dir=&quot;ltr&quot;&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> détaille · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd dir=&quot;ltr&quot;&gt;"/>Ctrl+S<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> brouillon</source>
+        <target state="translated"><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd dir=&quot;ltr&quot;&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> details · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd dir=&quot;ltr&quot;&gt;"/>Ctrl+S<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> draft</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
           <context context-type="linenumber">444,446</context>
@@ -20757,11 +20757,11 @@
         <note priority="1" from="description">Bouton de création d&apos;une émotion depuis la barre</note>
       </trans-unit>
       <trans-unit id="capture.emotion.proposal" datatype="html">
-        <source>Créer l&apos;émotion personnalisée « <x id="label" equiv-text="label"/> »</source>
-        <target state="translated">Create the custom emotion “<x id="label" equiv-text="label"/>”</target>
+        <source>Créer l&apos;émotion personnalisée « <x id="START_TAG_BDI" ctype="x-bdi" equiv-text="&lt;bdi&gt;"/><x id="INTERPOLATION" equiv-text="{{ emotionLabel() }}"/><x id="CLOSE_TAG_BDI" ctype="x-bdi" equiv-text="&lt;/bdi&gt;"/> »</source>
+        <target state="translated">Create the custom emotion “<x id="START_TAG_BDI" ctype="x-bdi" equiv-text="&lt;bdi&gt;"/><x id="INTERPOLATION" equiv-text="{{ emotionLabel() }}"/><x id="CLOSE_TAG_BDI" ctype="x-bdi" equiv-text="&lt;/bdi&gt;"/>”</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/emotion-proposal.component.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">37,39</context>
         </context-group>
         <note priority="1" from="description">Proposition de la barre de commande</note>
       </trans-unit>
@@ -24813,11 +24813,11 @@
         <note priority="1" from="description">Bouton d&apos;enregistrement du bloc</note>
       </trans-unit>
       <trans-unit id="capture.emotion.createOption" datatype="html">
-        <source>Créer l&apos;émotion « <x id="label" equiv-text="name"/> »</source>
-        <target state="translated">Create the emotion “<x id="label" equiv-text="name"/>”</target>
+        <source>Créer l&apos;émotion « <x id="START_TAG_BDI" ctype="x-bdi" equiv-text="&lt;bdi&gt;"/><x id="INTERPOLATION" equiv-text="{{ createName(option.label) }}"/><x id="CLOSE_TAG_BDI" ctype="x-bdi" equiv-text="&lt;/bdi&gt;"/> »</source>
+        <target state="translated">Create the emotion “<x id="START_TAG_BDI" ctype="x-bdi" equiv-text="&lt;bdi&gt;"/><x id="INTERPOLATION" equiv-text="{{ createName(option.label) }}"/><x id="CLOSE_TAG_BDI" ctype="x-bdi" equiv-text="&lt;/bdi&gt;"/>”</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-emotion-field.component.ts</context>
-          <context context-type="linenumber">330</context>
+          <context context-type="linenumber">106,107</context>
         </context-group>
         <note priority="1" from="description">Dernière ligne de la liste des émotions du bloc</note>
       </trans-unit>

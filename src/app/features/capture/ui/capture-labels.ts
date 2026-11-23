@@ -2,6 +2,7 @@
 // paramètres, jamais de texte), problèmes de cible, précisions, problèmes d'enregistrement.
 
 import { ApiProblem, FieldProblem } from '../../../core/http';
+import { formatLocale, textDirection } from '../../../core/i18n';
 import { EntryType, entryTypeLabel } from '../../../shared/ui';
 import { OccurredPrecision } from '../../../shared/util';
 import {
@@ -14,9 +15,9 @@ import {
 } from '../data/capture.model';
 import { CaptureEntryType, ParseWarning } from '../parser/parse.types';
 
-/** Une liste lisible (« a, b et c ») dans la langue de l'interface. */
-function list(items: readonly string[], locale: string): string {
-  return new Intl.ListFormat(locale, { type: 'conjunction' }).format(items);
+/** Une liste lisible (« a, b et c ») dans la locale de formatage (Q73). */
+export function list(items: readonly string[], locale: string): string {
+  return new Intl.ListFormat(formatLocale(locale), { type: 'conjunction' }).format(items);
 }
 
 /** Texte d'un avertissement du parseur (un message d'aide par code, PARSE_HINTS). */
@@ -92,18 +93,34 @@ function emptyTextHint(type: CaptureEntryType): string {
   }
 }
 
+/** Une lettre d'une écriture de droite à gauche (hébreu, arabe, syriaque, thaana, formes A et B). */
+const RTL_LETTER = /[֐-ࣿיִ-﷿ﹰ-﻿]/;
+
+/**
+ * Valeur saisie insérée dans une phrase qui reste une chaîne (message sous un champ, toast), où un
+ * `<bdi>` est impossible (Q77) : isolée par U+2068 … U+2069. En arabe, toujours ; en français et en
+ * anglais, seulement une valeur écrite de droite à gauche : une valeur en lettres latines y reste
+ * inchangée, caractère pour caractère. Pour l'affichage seulement, jamais pour l'API, un champ ou
+ * une comparaison. Même aide que isolate() de features/agenda (M16-23) : à monter dans core/i18n.
+ */
+export function isolate(value: string, locale: string): string {
+  if (textDirection(locale) !== 'rtl' && !RTL_LETTER.test(value)) return value;
+  return `⁨${value}⁩`;
+}
+
 /** La cible du `>` introuvable ou incompatible (bloquant). */
-export function targetIssueText(issue: TargetIssue, entryType: EntryType): string {
+export function targetIssueText(issue: TargetIssue, entryType: EntryType, locale: string): string {
   if (issue.code === 'RAIL_UNAVAILABLE') {
     return $localize`:Problème de cible dans la barre de commande@@capture.target.railUnavailable:Les entrées à lier n'ont pas pu être chargées : réessayez, ou retirez « > ».`;
   }
   if (issue.code === 'TARGET_NOT_FOUND') {
-    const query = issue.query;
+    const query = isolate(issue.query, locale);
     return $localize`:Problème de cible dans la barre de commande@@capture.target.notFound:Aucune entrée récente ne commence par « ${query}:query: » : choisissez la cible dans « Lié à… » ou retirez « > ».`;
   }
-  const name = issue.name;
-  const target = entryTypeLabel(issue.targetType).toLocaleLowerCase();
-  const type = entryTypeLabel(entryType).toLocaleLowerCase();
+  const name = isolate(issue.name, locale);
+  const lower = formatLocale(locale);
+  const target = entryTypeLabel(issue.targetType).toLocaleLowerCase(lower);
+  const type = entryTypeLabel(entryType).toLocaleLowerCase(lower);
   return $localize`:Problème de cible dans la barre de commande@@capture.target.notAllowed:Aucun type de lien ne relie « ${name}:name: » (${target}:target:) à cette entrée (${type}:type:) : choisissez une autre cible ou retirez « > ».`;
 }
 

@@ -958,4 +958,136 @@ export const PARSE_CASES: readonly ParseCase[] = [
     options: { locale: 'en' },
     expected: result({ type: 'event', text: 'surgery on 20/12' }),
   },
+
+  // Arabe (Q81, M16-20) : aucune date, quelle que soit la langue du texte ; aucune émotion inconnue
+  // devinée ; préfixes, cible, guillemets et émotions du vocabulaire restent lus.
+  {
+    rule: 'ar : texte arabe, nombre suivi d’une unité arabe → note, sans date ni émotion inconnue',
+    input: 'نمت 8 ساعات أمس',
+    options: { locale: 'ar' },
+    expected: result({ type: 'note', text: 'نمت 8 ساعات أمس' }),
+  },
+  {
+    rule: 'ar : mot arabe inconnu suivi d’une intensité → note, rien à créer',
+    input: 'قلق 7 قبل الامتحان',
+    options: { locale: 'ar' },
+    expected: result({ type: 'note', text: 'قلق 7 قبل الامتحان' }),
+  },
+  {
+    rule: 'ar : date en chiffres JJ/MM/AAAA dans un texte arabe → aucune date',
+    input: '/evt موعد مع الطبيب في 12/03/2024',
+    options: { locale: 'ar' },
+    expected: result({ type: 'event', text: 'موعد مع الطبيب في 12/03/2024' }),
+  },
+  {
+    rule: 'ar : date ISO et année dans un texte arabe → aucune date',
+    input: '/sit ضغط في العمل منذ 2019 وحتى 2024-03-12',
+    options: { locale: 'ar' },
+    expected: result({ type: 'situation', text: 'ضغط في العمل منذ 2019 وحتى 2024-03-12' }),
+  },
+  {
+    rule: 'ar : mois translittérés du français (مارس، أبريل) et durée arabe → aucune date',
+    input: '/sit إرهاق منذ مارس، قبل 3 أيام ساء في أبريل 2024',
+    options: { locale: 'ar' },
+    expected: result({ type: 'situation', text: 'إرهاق منذ مارس، قبل 3 أيام ساء في أبريل 2024' }),
+  },
+  {
+    rule: 'ar : dates françaises tapées en /ar/ → aucune date',
+    input: '/evt dispute hier, il y a 3 jours, depuis mars, 12 mars 2024, le 12/03',
+    options: { locale: 'ar' },
+    expected: result({
+      type: 'event',
+      text: 'dispute hier, il y a 3 jours, depuis mars, 12 mars 2024, le 12/03',
+    }),
+  },
+  {
+    rule: 'ar : dates anglaises tapées en /ar/ → aucune date',
+    input: '/note relapse yesterday, 3 days ago, since march',
+    options: { locale: 'ar' },
+    expected: result({ type: 'note', text: 'relapse yesterday, 3 days ago, since march' }),
+  },
+  {
+    rule: 'ar : locale de formatage arabe (Q73) → aucune date',
+    input: '/evt خلاف مع المدير aujourd’hui',
+    options: { locale: 'ar-u-ca-gregory-hc-h23-nu-latn' },
+    expected: result({ type: 'event', text: 'خلاف مع المدير aujourd’hui' }),
+  },
+  {
+    rule: 'ar : fuseau inconnu sans effet (aucune date à lire)',
+    input: 'ملاحظة قصيرة',
+    options: { locale: 'ar', timeZone: 'Mars/Olympus' },
+    expected: result({ type: 'note', text: 'ملاحظة قصيرة' }),
+  },
+  {
+    rule: 'ar : émotion du vocabulaire et intensité, texte arabe, date laissée dans le texte',
+    input: 'anx 8 لم ينم البارحة',
+    options: { locale: 'ar' },
+    expected: result({
+      type: 'feeling',
+      emotionCode: 'anxiety',
+      intensity: 8,
+      text: 'لم ينم البارحة',
+    }),
+  },
+  {
+    rule: 'ar : libellé français d’une émotion, « hier » reste dans le texte',
+    input: 'Anxiété 7 hier',
+    options: { locale: 'ar' },
+    expected: result({ type: 'feeling', emotionCode: 'anxiety', intensity: 7, text: 'hier' }),
+  },
+  {
+    rule: 'ar : mot inconnu latin suivi d’une intensité → note',
+    input: 'stress 7',
+    options: { locale: 'ar' },
+    expected: result({ type: 'note', text: 'stress 7' }),
+  },
+  {
+    rule: 'ar : émotion sans intensité → note, ressenti possible',
+    input: 'anx لم ينم',
+    options: { locale: 'ar' },
+    expected: result({
+      type: 'note',
+      text: 'anx لم ينم',
+      warnings: [warn('POSSIBLE_FEELING', { word: 'anx', candidates: ['anxiety'] })],
+    }),
+  },
+  {
+    rule: 'ar : intensité hors bornes',
+    input: 'anx 12 نوبة',
+    options: { locale: 'ar' },
+    expected: result({
+      type: 'feeling',
+      emotionCode: 'anxiety',
+      text: 'نوبة',
+      warnings: [warn('INTENSITY_OUT_OF_RANGE', { value: 12, min: 0, max: 10 })],
+    }),
+  },
+  {
+    rule: 'ar : cible du lien après « > »',
+    input: 'نوبة هلع > اجتماع',
+    options: { locale: 'ar' },
+    expected: result({ type: 'note', text: 'نوبة هلع', target: { query: 'اجتماع' } }),
+  },
+  {
+    rule: 'ar : préfixe inconnu',
+    input: '/حدث شجار',
+    options: { locale: 'ar' },
+    expected: result({
+      type: 'note',
+      text: 'شجار',
+      warnings: [warn('UNKNOWN_PREFIX', { prefix: '/حدث', known: KNOWN_PREFIXES })],
+    }),
+  },
+  {
+    rule: 'ar : /med sans molécule',
+    input: '/med',
+    options: { locale: 'ar' },
+    expected: result({ type: 'medication', warnings: [EMPTY_TEXT] }),
+  },
+  {
+    rule: 'ar : guillemets arabes, texte littéral',
+    input: '«قالت: أمس كان صعباً» بعد الجلسة',
+    options: { locale: 'ar' },
+    expected: result({ type: 'note', text: '«قالت: أمس كان صعباً» بعد الجلسة' }),
+  },
 ];

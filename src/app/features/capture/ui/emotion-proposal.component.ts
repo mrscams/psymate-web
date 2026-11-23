@@ -1,5 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  LOCALE_ID,
+  output,
+  signal,
+} from '@angular/core';
 
+import { formatLocale } from '../../../core/i18n';
 import { uniqueId } from '../../../shared/util';
 import { EMOTION_FAMILIES, EmotionFamily, familyLabel } from '../../entries';
 import { emotionLabelOf } from '../data/capture.model';
@@ -20,7 +30,12 @@ export interface EmotionRequest {
   selector: 'pm-emotion-proposal',
   template: `
     <div class="proposal" role="group" [attr.aria-labelledby]="titleId">
-      <span class="title" [id]="titleId">{{ title() }}</span>
+      <span
+        class="title"
+        [id]="titleId"
+        i18n="Proposition de la barre de commande@@capture.emotion.proposal"
+        >Créer l'émotion personnalisée « <bdi>{{ emotionLabel() }}</bdi> »</span
+      >
       <label
         class="family-label"
         [for]="familyId"
@@ -138,11 +153,8 @@ export class EmotionProposalComponent {
   protected readonly family = signal<EmotionFamily | null>(null);
   protected readonly missing = signal(false);
 
-  protected readonly emotionLabel = computed(() => emotionLabelOf(this.word()));
-  protected readonly title = computed(() => {
-    const label = this.emotionLabel();
-    return $localize`:Proposition de la barre de commande@@capture.emotion.proposal:Créer l'émotion personnalisée « ${label}:label: »`;
-  });
+  private readonly locale = formatLocale(inject(LOCALE_ID));
+  protected readonly emotionLabel = computed(() => emotionLabelOf(this.word(), this.locale));
   protected readonly message = computed(() => {
     if (this.missing()) {
       return $localize`:Famille manquante@@capture.emotion.familyRequired:Choisissez la famille de l'émotion.`;

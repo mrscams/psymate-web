@@ -35,6 +35,24 @@ class SubtitledPanel {
   readonly data = inject<{ title: string; subtitle: WritableSignal<string | null> }>(DIALOG_DATA);
 }
 
+@Component({
+  selector: 'pm-test-subject-panel',
+  imports: [SidePanelComponent],
+  template: `
+    <pm-side-panel [title]="data.title" [subject]="data.subject()" [subtitle]="data.subtitle()">
+      <label>Texte <input type="text" /></label>
+    </pm-side-panel>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class SubjectPanel {
+  readonly data = inject<{
+    title: string;
+    subject: WritableSignal<string | null>;
+    subtitle: WritableSignal<string | null>;
+  }>(DIALOG_DATA);
+}
+
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
 const dialogs = () => [...document.querySelectorAll<HTMLElement>('[role="dialog"]')];
 const escape = () =>
@@ -180,6 +198,44 @@ describe('SidePanelService', () => {
     );
 
     subtitle.set(null);
+    await vi.waitFor(() => expect(dialog.querySelector('.subtitle')).toBeNull());
+    await tick();
+    expect(dialog.hasAttribute('aria-describedby')).toBe(false);
+  });
+
+  it('M16-09B : sous-titre sans subject, même texte qu’avant, rien d’isolé', async () => {
+    const subtitle = signal<string | null>('Marie D.');
+    service.open(SubtitledPanel, { data: { title: 'Nouvelle entrée', subtitle } });
+    await tick();
+    await tick();
+    const text = dialogs()[0].querySelector<HTMLElement>('p.subtitle')!;
+    expect(text.textContent).toBe('Marie D.');
+    expect(text.querySelector('bdi')?.textContent).toBe('');
+  });
+
+  it('M16-09B : subject isolé dans un <bdi>, même texte qu’un sous-titre composé à la main', async () => {
+    const subject = signal<string | null>('Marie D.');
+    const subtitle = signal<string | null>('préremplie depuis la barre de capture');
+    service.open(SubjectPanel, { data: { title: 'Nouvelle entrée', subject, subtitle } });
+    await tick();
+    await tick();
+    const [dialog] = dialogs();
+    const text = dialog.querySelector<HTMLElement>('header.panel-header > .heading > p.subtitle')!;
+    // Texte en /fr/ identique à « Marie D. · préremplie depuis la barre de capture » passé dans
+    // subtitle (entries) : espaces comprises, rien autour.
+    expect(text.textContent).toBe('Marie D. · préremplie depuis la barre de capture');
+    expect(text.querySelector('bdi')?.textContent).toBe('Marie D.');
+    expect(text.firstElementChild?.tagName).toBe('BDI');
+    expect(dialog.getAttribute('aria-describedby')).toBe(text.id);
+
+    // Le nom seul : rien d'autre que lui, isolé.
+    subtitle.set(null);
+    await vi.waitFor(() => expect(text.textContent).toBe('Marie D.'));
+    expect(text.querySelector('bdi')?.textContent).toBe('Marie D.');
+    expect(dialog.getAttribute('aria-describedby')).toBe(text.id);
+
+    // Ni l'un ni l'autre : plus de ligne, plus de description.
+    subject.set(null);
     await vi.waitFor(() => expect(dialog.querySelector('.subtitle')).toBeNull());
     await tick();
     expect(dialog.hasAttribute('aria-describedby')).toBe(false);
