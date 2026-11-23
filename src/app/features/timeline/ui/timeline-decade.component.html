@@ -74,10 +74,10 @@
         }
 
         <!-- Graphique temporel : le passé reste à gauche dans les trois langues (G Q71 point 4, Q75).
-             Ses coordonnées (LEFT, RIGHT, text-anchor) sont celles d'un dessin de gauche à droite. -->
+             Ses coordonnées (LEFT, RIGHT, text-anchor) sont celles d'un dessin de gauche à droite :
+             direction: ltr dans la feuille de style (l'attribut dir n'a pas d'effet sur un svg). -->
         <svg
           class="chart"
-          dir="ltr"
           role="img"
           focusable="false"
           [attr.aria-label]="ariaLabel()"

@@ -349,11 +349,14 @@
 
 // Nom de la bande, écrit à la verticale et centré dans sa colonne : les propriétés logiques d'un
 // élément en writing-mode vertical suivent son propre sens (inline = vertical), donc le centrage
-// passe par des retraits et des marges symétriques, identiques dans les deux sens de lecture.
+// passe par des retraits et des marges symétriques, identiques dans les deux sens de lecture. La
+// boîte (20 px, l'interligne hérité) est plus large que la colonne (14 px) : les retraits négatifs
+// lui laissent la place d'être centrée par les marges automatiques (sinon la marge de début tombe
+// à 0 et le libellé glisse de 3 px).
 .lane-label {
   position: absolute;
   z-index: 1;
-  inset: 12px 0 auto;
+  inset: 12px -20px auto;
   width: fit-content;
   margin: 0 auto;
   overflow: hidden;

@@ -57,14 +57,14 @@ export interface SegmentOption<T extends string> {
       min-height: 36px;
       padding: 4px 14px;
       border: 0;
-      border-left: 1px solid var(--border-subtle);
+      border-inline-start: 1px solid var(--border-subtle);
       background: transparent;
       color: var(--text-secondary);
       font: var(--mat-sys-label-large);
       cursor: pointer;
     }
     button:first-child {
-      border-left: 0;
+      border-inline-start: 0;
     }
     button.pressed {
       background: var(--primary-tint);

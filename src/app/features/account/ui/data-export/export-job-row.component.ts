@@ -88,7 +88,7 @@ import { ExportRowKind } from '../../data/export.store';
               >Échec</span
             >
             @if (data.error) {
-              <span class="detail mono">{{ data.error }}</span>
+              <span class="detail mono" dir="auto">{{ data.error }}</span>
             }
             <button
               mat-stroked-button
@@ -123,8 +123,10 @@ import { ExportRowKind } from '../../data/export.store';
       border: 1px solid var(--border-subtle);
       border-radius: 10px;
     }
+    /* Dates à nom de mois et motif d'échec : des lettres, police d'interface en arabe (Q76). */
     .mono {
-      font-family: var(--font-mono);
+      font-family: var(--font-mono-text);
+      font-variant-numeric: tabular-nums;
     }
     .detail {
       flex: 1 1 200px;
@@ -132,10 +134,10 @@ import { ExportRowKind } from '../../data/export.store';
       font: var(--mat-sys-body-medium);
     }
     .detail.mono {
-      font-family: var(--font-mono);
+      font-family: var(--font-mono-text);
     }
     .action {
-      margin-left: auto;
+      margin-inline-start: auto;
     }
     .pill {
       display: inline-block;
