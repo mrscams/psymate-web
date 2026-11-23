@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, LOCALE_ID } from '@
 import { MatButtonModule } from '@angular/material/button';
 
 import { HttpNotice, HttpNotices } from '../../../core/http';
-import { formatDelay } from '../../../core/i18n';
+import { formatDelay, formatLocale } from '../../../core/i18n';
 import { Toast, ToastLevel, ToastService } from './toast.service';
 
 /**
@@ -20,7 +20,7 @@ import { Toast, ToastLevel, ToastService } from './toast.service';
 export class ToastOutletComponent {
   protected readonly toasts = inject(ToastService);
   private readonly notices = inject(HttpNotices);
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   private lastSeq = 0;
 
   protected readonly closeLabel = $localize`:Bouton de fermeture d'un toast@@toast.close:Fermer`;

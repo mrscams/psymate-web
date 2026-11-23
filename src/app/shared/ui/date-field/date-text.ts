@@ -6,6 +6,13 @@
 
 export type DateGranularity = 'day' | 'month';
 
+/**
+ * Marques de sens (LRM, RLM, ALM) qu'Intl glisse entre les parties d'une date en arabe
+ * (« 28\u200f/07\u200f/2003 ») : retirées du texte du champ et ignorées à la lecture. Aucune en
+ * fr ni en en.
+ */
+const BIDI_MARKS = /[\u200e\u200f\u061c]/g;
+
 type Part = 'day' | 'month' | 'year';
 
 /** Ordre des parties d'une date numérique pour la locale : fr → jour, mois, année ; en → mois, jour, année. */
@@ -16,13 +23,13 @@ export function datePartOrder(locale: string): Part[] {
     .filter((type): type is Part => type === 'day' || type === 'month' || type === 'year');
 }
 
-/** « 28/07/2003 » (fr), « 07/28/2003 » (en) ; en mois : « 07/2003 ». */
+/** « 28/07/2003 » (fr, ar), « 07/28/2003 » (en) ; en mois : « 07/2003 ». */
 export function formatDateText(date: Date, locale: string, granularity: DateGranularity): string {
   const options: Intl.DateTimeFormatOptions =
     granularity === 'day'
       ? { day: '2-digit', month: '2-digit', year: 'numeric' }
       : { month: '2-digit', year: 'numeric' };
-  return new Intl.DateTimeFormat(locale, options).format(date);
+  return new Intl.DateTimeFormat(locale, options).format(date).replace(BIDI_MARKS, '');
 }
 
 const ISO = /^(\d{4})-(\d{1,2})(?:-(\d{1,2}))?$/;
@@ -38,7 +45,7 @@ export function parseDateText(
   locale: string,
   granularity: DateGranularity,
 ): Date | null {
-  const value = text.trim();
+  const value = text.replace(BIDI_MARKS, '').trim();
   if (!value) return null;
 
   const iso = ISO.exec(value);

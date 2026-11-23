@@ -1,3 +1,4 @@
+import { formatLocale } from '../../../core/i18n';
 import { EntryType, entryTypeLabel } from './entry-icon.component';
 
 /** Longueur de l'extrait qui nomme une entrée sans titre (comme la phrase des liens du serveur). */
@@ -96,7 +97,7 @@ const GRAPHEME_FALLBACK =
 /** Caractères affichés du texte : Intl.Segmenter par graphèmes, sinon le repli ci-dessus. */
 function graphemes(text: string, locale: string): string[] {
   if (typeof Intl.Segmenter === 'function') {
-    const segmenter = new Intl.Segmenter(locale, { granularity: 'grapheme' });
+    const segmenter = new Intl.Segmenter(formatLocale(locale), { granularity: 'grapheme' });
     return Array.from(segmenter.segment(text), (part) => part.segment);
   }
   return text.match(GRAPHEME_FALLBACK) ?? [];
@@ -115,7 +116,8 @@ function shortDate(
   const year = (d: Date): string =>
     new Intl.DateTimeFormat('en', { year: 'numeric', timeZone }).format(d);
   const withYear = year(date) !== year(options.now ?? new Date());
-  return new Intl.DateTimeFormat(locale, {
+  // Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe.
+  return new Intl.DateTimeFormat(formatLocale(locale), {
     day: 'numeric',
     month: 'short',
     ...(withYear ? { year: 'numeric' } : {}),

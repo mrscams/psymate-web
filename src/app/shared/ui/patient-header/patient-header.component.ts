@@ -12,7 +12,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
-import { ageInYears, formatDate } from '../../../core/i18n';
+import { ageInYears, formatDate, formatLocale } from '../../../core/i18n';
 import { ShortcutService } from '../../../core/shortcuts';
 import { StateKind } from '../../util';
 import { StateComponent } from '../state/state.component';
@@ -134,7 +134,8 @@ export class PatientHeaderComponent {
   readonly startSession = output<void>();
   readonly retry = output<void>();
 
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   private readonly router = inject(Router);
   private readonly shortcuts = inject(ShortcutService);
   private readonly now = signal(Date.now());

@@ -4,7 +4,7 @@
 
 .skip-link {
   position: absolute;
-  left: 8px;
+  inset-inline-start: 8px;
   top: -48px;
   z-index: 1200;
   padding: 8px 12px;
@@ -56,7 +56,7 @@
 .links {
   display: flex;
   gap: 16px;
-  margin-left: auto;
+  margin-inline-start: auto;
 
   a {
     color: var(--text-secondary);

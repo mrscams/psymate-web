@@ -1,7 +1,7 @@
-<h2 mat-dialog-title class="title">{{ options.title }}</h2>
+<h2 mat-dialog-title class="title" dir="auto">{{ options.title }}</h2>
 <mat-dialog-content>
   @if (options.description) {
-    <p class="description">{{ options.description }}</p>
+    <p class="description" dir="auto">{{ options.description }}</p>
   }
   @if (options.confirmWord) {
     <mat-form-field class="word" appearance="outline">
@@ -9,6 +9,7 @@
       <input
         matInput
         type="text"
+        dir="auto"
         autocomplete="off"
         cdkFocusInitial
         [ngModel]="typed()"

@@ -93,7 +93,7 @@
   flex: none;
   align-items: center;
   gap: 10px;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .session-text {
@@ -129,7 +129,7 @@
 
   /* En séance (04b) : « Vue d'ensemble » à droite des onglets, même hauteur, sans touche. */
   .overview-link {
-    margin-left: auto;
+    margin-inline-start: auto;
   }
 
   a {
@@ -190,7 +190,7 @@
   }
   .right {
     flex-wrap: wrap;
-    margin-left: 0;
+    margin-inline-start: 0;
   }
   .meta {
     white-space: normal;

@@ -1,3 +1,5 @@
+import { formatLocale } from '../../core/i18n';
+
 /** Précision du moment d'une entrée (EntryOccurredDto.precision du contrat). */
 export type OccurredPrecision = 'exact' | 'day' | 'month' | 'year' | 'period' | 'life_phase';
 
@@ -31,9 +33,11 @@ export interface FormatOccurredOptions {
  */
 export function formatOccurred(
   occurred: Occurred,
-  locale: string,
+  localeId: string,
   options: FormatOccurredOptions = {},
 ): string {
+  // Locale de formatage (Q73) : en arabe, chiffres latins, calendrier grégorien, heures sur 24 h.
+  const locale = formatLocale(localeId);
   const precision = occurred.precision ?? 'exact';
   const from = parse(occurred.from);
   const to = parse(occurred.to);

@@ -48,7 +48,7 @@ export class SidePanelRef<R = unknown> {
 
 /**
  * Panneau latéral (fiche 00 §6, B2) sur le Dialog du CDK : `role="dialog"`, `aria-modal`, ancré à
- * droite sur toute la hauteur, page visible derrière un voile, piège de focus, retour du focus à
+ * droite (à gauche en arabe) sur toute la hauteur, page visible derrière un voile, piège de focus, retour du focus à
  * l'élément déclencheur, `Échap` et clic sur le voile ferment (le brouillon reste au store de la
  * feature), le reste de la page passe en `aria-hidden`. Le contenu est un composant de la feature,
  * qui pose `<pm-side-panel title>` pour l'en-tête, le corps et le pied.
@@ -84,7 +84,8 @@ export class SidePanelService {
       width: `${width}px`,
       maxWidth: '100vw',
       height: '100%',
-      positionStrategy: this.overlay.position().global().right('0').top('0'),
+      // end : à droite, à gauche en arabe (le CDK lit le sens de Directionality).
+      positionStrategy: this.overlay.position().global().end('0').top('0'),
       panelClass: ['pm-side-panel-pane', `pm-side-panel-pane--${width}`],
       backdropClass: 'pm-side-panel-veil',
       hasBackdrop: true,

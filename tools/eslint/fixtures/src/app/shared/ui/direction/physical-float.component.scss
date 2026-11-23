@@ -1,0 +1,5 @@
+// expect: psymate/no-physical-direction
+// Violation : float physique (float: inline-end attendu).
+.badge {
+  float: right;
+}

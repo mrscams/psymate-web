@@ -1,0 +1,5 @@
+// expect: psymate/no-physical-direction
+// Violation : raccourci à quatre valeurs, droite (8px) différente de gauche (10px).
+.search {
+  padding: 0 8px 0 10px;
+}

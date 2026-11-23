@@ -10,7 +10,7 @@ import { relative } from 'node:path';
 import { ESLint } from 'eslint';
 
 const eslint = new ESLint({ ignore: false });
-const results = await eslint.lintFiles(['tools/eslint/fixtures/src/**/*.{ts,html,scss}']);
+const results = await eslint.lintFiles(['tools/eslint/fixtures/src/**/*.{ts,html,scss,css}']);
 
 let failures = 0;
 for (const result of results) {

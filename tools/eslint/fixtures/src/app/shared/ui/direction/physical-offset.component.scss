@@ -1,0 +1,7 @@
+// expect: psymate/no-physical-direction
+// Violation : position physique (inset-inline-end attendu).
+.close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+}

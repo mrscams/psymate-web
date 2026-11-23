@@ -18,7 +18,7 @@
       <span class="level" [class.sr-only]="toast.level === 'success'"
         >{{ levelLabel(toast.level) }} ·
       </span>
-      <span class="message">{{ toast.message }}</span>
+      <span class="message" dir="auto">{{ toast.message }}</span>
       @if (toast.action; as action) {
         <button mat-button type="button" class="action" (click)="act(toast)">
           {{ action.label }}

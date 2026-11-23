@@ -7,7 +7,7 @@ import { NAV_DRAWER_WIDTH, NavRailComponent } from './nav-rail.component';
 
 /**
  * Tiroir de navigation (UX-S8, sous 900 px) : le rail, libellés d'emblée, dans un dialogue du CDK
- * ancré à gauche sur toute la hauteur, par-dessus la page et la barre, derrière un voile léger. Même
+ * ancré à gauche (à droite en arabe) sur toute la hauteur, par-dessus la page et la barre, derrière un voile léger. Même
  * patron que le panneau latéral (fiche 00 §6) : `role="dialog"`, `aria-modal`, piège de focus,
  * retour du focus au déclencheur (le bouton ☰), `Échap`, clic sur le voile et la croix ferment.
  */
@@ -27,7 +27,8 @@ export class NavDrawerService {
       width: `${NAV_DRAWER_WIDTH}px`,
       maxWidth: '100vw',
       height: '100%',
-      positionStrategy: this.overlay.position().global().left('0').top('0'),
+      // start : à gauche, à droite en arabe (le CDK lit le sens de Directionality).
+      positionStrategy: this.overlay.position().global().start('0').top('0'),
       panelClass: 'pm-nav-drawer-pane',
       backdropClass: 'pm-nav-drawer-veil',
       hasBackdrop: true,

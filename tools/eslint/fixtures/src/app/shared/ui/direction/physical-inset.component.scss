@@ -1,0 +1,6 @@
+// expect: psymate/no-physical-direction
+// Violation : inset à quatre valeurs, droite (auto) différente de gauche (0).
+.rail {
+  position: absolute;
+  inset: 0 auto 0 0;
+}

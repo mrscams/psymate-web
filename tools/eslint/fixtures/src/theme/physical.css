@@ -1,0 +1,6 @@
+/* expect: psymate/no-physical-direction */
+/* Violation : position physique dans une feuille du thème (src/theme est une zone convertie). */
+.sr-only {
+  position: absolute;
+  left: 0;
+}

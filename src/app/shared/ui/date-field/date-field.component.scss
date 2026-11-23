@@ -9,7 +9,8 @@
 .date-input {
   width: 100%;
   min-height: 44px;
-  padding: 0 52px 0 12px;
+  padding-block: 0;
+  padding-inline: 12px 52px;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   background: var(--surface-raised);
@@ -40,7 +41,7 @@
 .toggle {
   position: absolute;
   top: 50%;
-  right: 2px;
+  inset-inline-end: 2px;
   transform: translateY(-50%);
   color: var(--text-secondary);
 }
