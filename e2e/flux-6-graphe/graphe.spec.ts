@@ -28,114 +28,118 @@ import { API } from '../support/env';
 test.describe('vue graphe', () => {
   test.describe.configure({ timeout: 120_000 });
 
-  test('150 nœuds du seed : layout et pan/zoom mesurés (fluide), axe sur toute la page', async ({
-    page,
-  }) => {
-    // Le patient du seed dont le graphe (sans racine) est le plus grand : 150 nœuds en seed small.
-    const api = await signedInContext(SEED.claire);
-    const patients = (
-      (await (await api.get(`${API}/api/patients`)).json()) as {
-        items: { id: string }[];
+  // @mesure : joué seul sur la machine, un worker (tools/e2e.mjs). En parallèle, layoutMs suivait la
+  // charge des workers voisins (883 à 3 375 ms en CI pour le même code), pas l'application.
+  test(
+    '150 nœuds du seed : layout et pan/zoom mesurés (fluide), axe sur toute la page',
+    { tag: '@mesure' },
+    async ({ page }) => {
+      // Le patient du seed dont le graphe (sans racine) est le plus grand : 150 nœuds en seed small.
+      const api = await signedInContext(SEED.claire);
+      const patients = (
+        (await (await api.get(`${API}/api/patients`)).json()) as {
+          items: { id: string }[];
+        }
+      ).items;
+      let biggest = { id: '', nodes: 0 };
+      for (const patient of patients) {
+        const graph = (await (await api.get(`${API}/api/patients/${patient.id}/graph`)).json()) as {
+          nodes: unknown[];
+        };
+        if (graph.nodes.length > biggest.nodes)
+          biggest = { id: patient.id, nodes: graph.nodes.length };
       }
-    ).items;
-    let biggest = { id: '', nodes: 0 };
-    for (const patient of patients) {
-      const graph = (await (await api.get(`${API}/api/patients/${patient.id}/graph`)).json()) as {
-        nodes: unknown[];
+      await api.dispose();
+      expect(biggest.nodes).toBeGreaterThanOrEqual(140);
+
+      // Sans animation (prefers-reduced-motion) : la durée mesurée est celle du calcul du layout.
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await enableProbe(page);
+      await signIn(page, SEED.claire);
+      const started = Date.now();
+      // « Tout le dossier » : choix explicite (?root=all), plus l'arrivée par défaut (UX-B3).
+      await page.goto(`/fr/patients/${biggest.id}/graph?root=all`);
+      await graphReady(page, { count: biggest.nodes });
+      const ready = Date.now() - started;
+      const layout = (await layoutMs(page)) ?? -1;
+      await expect(page.locator('.count')).toContainText(`${biggest.nodes} nœuds`);
+      await expect(page.locator('.warning-note')).toContainText('étiquettes masquées');
+
+      // Images pendant un déplacement (glisser le fond) puis un zoom à la molette.
+      await page.evaluate(() => {
+        const w = window as unknown as { pmFrames: number[]; pmRecording: boolean };
+        w.pmFrames = [];
+        w.pmRecording = true;
+        let last = performance.now();
+        const loop = (now: number) => {
+          w.pmFrames.push(now - last);
+          last = now;
+          if (w.pmRecording) requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      });
+      // Le geste part du fond et finit, là où tourne la molette, sur la zone du canevas : ni l'un ni
+      // l'autre sous la légende ou les boutons de zoom, quelle que soit la disposition du seed.
+      const spot = await emptySpot(page, [{ dx: -120, dy: -40 }]);
+      const anchor = (await page.evaluate(() => {
+        const el = document.querySelector<HTMLElement>('pm-graph-canvas [data-node-id]');
+        return el?.dataset['nodeId'] ?? null;
+      }))!;
+      const panStart = await pagePoint(page, anchor);
+      await page.mouse.move(spot.x, spot.y);
+      await page.mouse.down();
+      await page.mouse.move(spot.x + 160, spot.y + 60, { steps: 40 });
+      await page.mouse.move(spot.x - 120, spot.y - 40, { steps: 40 });
+      await page.mouse.up();
+      // Le glisser du fond a déplacé la vue du geste exactement. Attente du rendu : sous charge, la
+      // dernière position n'est pas encore peinte au retour de mouse.up (−113 lu pour −120 en CI).
+      const panned = async () => {
+        const at = await pagePoint(page, anchor);
+        return { dx: Math.round(at.x - panStart.x), dy: Math.round(at.y - panStart.y) };
       };
-      if (graph.nodes.length > biggest.nodes)
-        biggest = { id: patient.id, nodes: graph.nodes.length };
-    }
-    await api.dispose();
-    expect(biggest.nodes).toBeGreaterThanOrEqual(140);
-
-    // Sans animation (prefers-reduced-motion) : la durée mesurée est celle du calcul du layout.
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await enableProbe(page);
-    await signIn(page, SEED.claire);
-    const started = Date.now();
-    // « Tout le dossier » : choix explicite (?root=all), plus l'arrivée par défaut (UX-B3).
-    await page.goto(`/fr/patients/${biggest.id}/graph?root=all`);
-    await graphReady(page, { count: biggest.nodes });
-    const ready = Date.now() - started;
-    const layout = (await layoutMs(page)) ?? -1;
-    await expect(page.locator('.count')).toContainText(`${biggest.nodes} nœuds`);
-    await expect(page.locator('.warning-note')).toContainText('étiquettes masquées');
-
-    // Images pendant un déplacement (glisser le fond) puis un zoom à la molette.
-    await page.evaluate(() => {
-      const w = window as unknown as { pmFrames: number[]; pmRecording: boolean };
-      w.pmFrames = [];
-      w.pmRecording = true;
-      let last = performance.now();
-      const loop = (now: number) => {
-        w.pmFrames.push(now - last);
-        last = now;
-        if (w.pmRecording) requestAnimationFrame(loop);
+      await expect.poll(panned, { timeout: 5_000 }).toEqual({ dx: -120, dy: -40 });
+      expect(await onCanvasZone(page, { x: spot.x - 120, y: spot.y - 40 })).toBe(true);
+      const before = await zoom(page);
+      let zoomedIn = before;
+      for (let i = 0; i < 12; i++) {
+        await page.mouse.wheel(0, i < 6 ? -120 : 120);
+        await page.waitForTimeout(30);
+        if (i === 5) zoomedIn = await zoom(page);
+      }
+      const frames = await page.evaluate(() => {
+        const w = window as unknown as { pmFrames: number[]; pmRecording: boolean };
+        w.pmRecording = false;
+        return w.pmFrames.slice(1);
+      });
+      // Six crans avant zooment ; les six crans arrière ramènent exactement au zoom de départ.
+      expect(zoomedIn).toBeGreaterThan(before);
+      expect(await zoom(page)).toBeCloseTo(before, 6);
+      const sorted = [...frames].sort((a, b) => a - b);
+      const median = sorted[Math.floor(sorted.length / 2)];
+      const p95 = sorted[Math.floor(sorted.length * 0.95)];
+      const fps = 1000 / (frames.reduce((sum, value) => sum + value, 0) / frames.length);
+      const measure = {
+        nodes: biggest.nodes,
+        readyMs: ready,
+        layoutMs: layout,
+        frames: frames.length,
+        medianFrameMs: Math.round(median * 10) / 10,
+        p95FrameMs: Math.round(p95 * 10) / 10,
+        maxFrameMs: Math.round(sorted.at(-1)! * 10) / 10,
+        fps: Math.round(fps),
       };
-      requestAnimationFrame(loop);
-    });
-    // Le geste part du fond et finit, là où tourne la molette, sur la zone du canevas : ni l'un ni
-    // l'autre sous la légende ou les boutons de zoom, quelle que soit la disposition du seed.
-    const spot = await emptySpot(page, [{ dx: -120, dy: -40 }]);
-    const anchor = (await page.evaluate(() => {
-      const el = document.querySelector<HTMLElement>('pm-graph-canvas [data-node-id]');
-      return el?.dataset['nodeId'] ?? null;
-    }))!;
-    const panStart = await pagePoint(page, anchor);
-    await page.mouse.move(spot.x, spot.y);
-    await page.mouse.down();
-    await page.mouse.move(spot.x + 160, spot.y + 60, { steps: 40 });
-    await page.mouse.move(spot.x - 120, spot.y - 40, { steps: 40 });
-    await page.mouse.up();
-    // Le glisser du fond a déplacé la vue du geste exactement. Attente du rendu : sous charge, la
-    // dernière position n'est pas encore peinte au retour de mouse.up (−113 lu pour −120 en CI).
-    const panned = async () => {
-      const at = await pagePoint(page, anchor);
-      return { dx: Math.round(at.x - panStart.x), dy: Math.round(at.y - panStart.y) };
-    };
-    await expect.poll(panned, { timeout: 5_000 }).toEqual({ dx: -120, dy: -40 });
-    expect(await onCanvasZone(page, { x: spot.x - 120, y: spot.y - 40 })).toBe(true);
-    const before = await zoom(page);
-    let zoomedIn = before;
-    for (let i = 0; i < 12; i++) {
-      await page.mouse.wheel(0, i < 6 ? -120 : 120);
-      await page.waitForTimeout(30);
-      if (i === 5) zoomedIn = await zoom(page);
-    }
-    const frames = await page.evaluate(() => {
-      const w = window as unknown as { pmFrames: number[]; pmRecording: boolean };
-      w.pmRecording = false;
-      return w.pmFrames.slice(1);
-    });
-    // Six crans avant zooment ; les six crans arrière ramènent exactement au zoom de départ.
-    expect(zoomedIn).toBeGreaterThan(before);
-    expect(await zoom(page)).toBeCloseTo(before, 6);
-    const sorted = [...frames].sort((a, b) => a - b);
-    const median = sorted[Math.floor(sorted.length / 2)];
-    const p95 = sorted[Math.floor(sorted.length * 0.95)];
-    const fps = 1000 / (frames.reduce((sum, value) => sum + value, 0) / frames.length);
-    const measure = {
-      nodes: biggest.nodes,
-      readyMs: ready,
-      layoutMs: layout,
-      frames: frames.length,
-      medianFrameMs: Math.round(median * 10) / 10,
-      p95FrameMs: Math.round(p95 * 10) / 10,
-      maxFrameMs: Math.round(sorted.at(-1)! * 10) / 10,
-      fps: Math.round(fps),
-    };
-    test
-      .info()
-      .annotations.push({ type: 'mesure-150-noeuds', description: JSON.stringify(measure) });
-    console.log('Mesure graphe 150 nœuds :', JSON.stringify(measure));
-    // Fluide : layout de 150 nœuds sous 2 s, une image médiane sous 34 ms (≥ 30 i/s) pendant le geste.
-    expect(layout).toBeGreaterThan(0);
-    expect(layout).toBeLessThan(2000);
-    expect(median).toBeLessThan(34);
+      test
+        .info()
+        .annotations.push({ type: 'mesure-150-noeuds', description: JSON.stringify(measure) });
+      console.log('Mesure graphe 150 nœuds :', JSON.stringify(measure));
+      // Fluide : layout de 150 nœuds sous 2 s, une image médiane sous 34 ms (≥ 30 i/s) pendant le geste.
+      expect(layout).toBeGreaterThan(0);
+      expect(layout).toBeLessThan(2000);
+      expect(median).toBeLessThan(34);
 
-    await expectNoAxeViolations(page);
-  });
+      await expectNoAxeViolations(page);
+    },
+  );
 
   test('glisser un nœud sur un autre : éditeur prérempli, lien manual/accepted, compteur à jour', async ({
     page,

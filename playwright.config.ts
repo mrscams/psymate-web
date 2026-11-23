@@ -11,6 +11,9 @@ import { API, WEB } from './e2e/support/env';
  * - l'application construite (pnpm build), servie avec ses trois langues sous /fr/, /en/ et /ar/
  *   et le proxy /api → :8080 par tools/serve-dist.mjs. pnpm e2e reconstruit avant de lancer.
  * Adresses : E2E_API_URL, E2E_MAILPIT_URL, E2E_WEB_URL (e2e/support/env.ts).
+ *
+ * pnpm e2e et la CI passent par tools/e2e.mjs : d'abord les tests étiquetés @mesure (durée mesurée
+ * dans le navigateur), seuls, un worker ; puis tout le reste avec les workers ci-dessous.
  */
 const CI = !!process.env['CI'];
 const API_HEALTH = `${API}/actuator/health`;

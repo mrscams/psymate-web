@@ -26,7 +26,7 @@
     "contract:pull": "node tools/contract-pull.mjs",
     "progress": "node tools/progress/progress.mjs build",
     "progress:log": "node tools/progress/progress.mjs add",
-    "e2e": "ng build && playwright test"
+    "e2e": "ng build && node tools/e2e.mjs"
   },
   "dependencies": {
     "@angular/cdk": "22.2.6",
