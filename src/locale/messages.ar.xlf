@@ -20802,6 +20802,7 @@
       </trans-unit>
       <trans-unit id="profile360.category.history" datatype="html">
         <source>Histoire et souvenirs</source>
+        <target state="translated">السيرة والذكريات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
           <context context-type="linenumber">49</context>
@@ -20810,6 +20811,7 @@
       </trans-unit>
       <trans-unit id="profile360.category.history.help" datatype="html">
         <source>Les périodes de vie, les tournants et les souvenirs qui comptent</source>
+        <target state="translated">مراحل الحياة والمنعطفات والذكريات المهمّة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
           <context context-type="linenumber">50</context>
@@ -20818,6 +20820,7 @@
       </trans-unit>
       <trans-unit id="profile360.category.family" datatype="html">
         <source>Famille et entourage</source>
+        <target state="translated">العائلة والمحيط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
           <context context-type="linenumber">54</context>
@@ -20826,6 +20829,7 @@
       </trans-unit>
       <trans-unit id="profile360.category.family.help" datatype="html">
         <source>Les personnes qui comptent</source>
+        <target state="translated">الأشخاص المهمّون</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
           <context context-type="linenumber">55</context>
@@ -20834,6 +20838,7 @@
       </trans-unit>
       <trans-unit id="profile360.category.health" datatype="html">
         <source>Santé et antécédents</source>
+        <target state="translated">الصحّة والسوابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
           <context context-type="linenumber">59</context>
@@ -20842,6 +20847,7 @@
       </trans-unit>
       <trans-unit id="profile360.category.health.help" datatype="html">
         <source>Traitements, antécédents, suivis</source>
+        <target state="translated">العلاجات، السوابق، المتابعات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
           <context context-type="linenumber">60</context>
@@ -20850,6 +20856,7 @@
       </trans-unit>
       <trans-unit id="profile360.category.values_goals" datatype="html">
         <source>Valeurs et projets</source>
+        <target state="translated">القيم والمشاريع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
           <context context-type="linenumber">64</context>
@@ -20858,6 +20865,7 @@
       </trans-unit>
       <trans-unit id="profile360.category.values_goals.help" datatype="html">
         <source>Ce vers quoi la personne veut aller</source>
+        <target state="translated">ما يسعى إليه الشخص</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
           <context context-type="linenumber">65</context>
@@ -20866,6 +20874,7 @@
       </trans-unit>
       <trans-unit id="profile360.count.one" datatype="html">
         <source>1 information</source>
+        <target state="translated">معلومة واحدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
           <context context-type="linenumber">73</context>
@@ -20874,6 +20883,7 @@
       </trans-unit>
       <trans-unit id="profile360.count.many" datatype="html">
         <source><x id="count" equiv-text="count"/> informations</source>
+        <target state="translated">عدد المعلومات: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/data/profile360.model.ts</context>
           <context context-type="linenumber">74</context>
@@ -20882,6 +20892,7 @@
       </trans-unit>
       <trans-unit id="profile360.heading" datatype="html">
         <source> Profil 360 </source>
+        <target state="translated"> الملف الشامل 360 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.html</context>
           <context context-type="linenumber">9,14</context>
@@ -20890,6 +20901,7 @@
       </trans-unit>
       <trans-unit id="profile360.error.title" datatype="html">
         <source>Le profil n&apos;a pas pu être chargé</source>
+        <target state="translated">تعذّر تحميل الملف الشامل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.html</context>
           <context context-type="linenumber">19,20</context>
@@ -20898,6 +20910,7 @@
       </trans-unit>
       <trans-unit id="profile360.empty.title" datatype="html">
         <source>Aucune information dans le profil</source>
+        <target state="translated">لا معلومات في الملف الشامل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.html</context>
           <context context-type="linenumber">29,30</context>
@@ -20906,6 +20919,7 @@
       </trans-unit>
       <trans-unit id="profile360.empty.message" datatype="html">
         <source>L&apos;histoire, la famille, la santé et les valeurs de la personne se rangent ici.</source>
+        <target state="translated">تُدوَّن هنا سيرة الشخص وعائلته وصحّته وقيمه.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.html</context>
           <context context-type="linenumber">31,32</context>
@@ -20914,6 +20928,7 @@
       </trans-unit>
       <trans-unit id="profile360.error.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.ts</context>
           <context context-type="linenumber">106</context>
@@ -20922,6 +20937,7 @@
       </trans-unit>
       <trans-unit id="profile360.toast.created" datatype="html">
         <source>Information ajoutée</source>
+        <target state="translated">تمت إضافة المعلومة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.ts</context>
           <context context-type="linenumber">165</context>
@@ -20930,6 +20946,7 @@
       </trans-unit>
       <trans-unit id="profile360.toast.updated" datatype="html">
         <source>Information modifiée</source>
+        <target state="translated">تم تعديل المعلومة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.ts</context>
           <context context-type="linenumber">170</context>
@@ -20938,6 +20955,7 @@
       </trans-unit>
       <trans-unit id="profile360.toast.removed" datatype="html">
         <source>Information retirée</source>
+        <target state="translated">تمت إزالة المعلومة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.ts</context>
           <context context-type="linenumber">175</context>
@@ -20946,6 +20964,7 @@
       </trans-unit>
       <trans-unit id="profile360.toast.gone" datatype="html">
         <source>Cette information a déjà été retirée du profil. Le profil a été relu.</source>
+        <target state="translated">سبقت إزالة هذه المعلومة من الملف الشامل. أُعيدت قراءة الملف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.ts</context>
           <context context-type="linenumber">180</context>
@@ -20954,6 +20973,7 @@
       </trans-unit>
       <trans-unit id="profile360.toast.archived" datatype="html">
         <source>Ce patient est archivé : le profil est en lecture seule.</source>
+        <target state="translated">هذا الملف مؤرشف: الملف الشامل للقراءة فقط.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/pages/profile360.page.ts</context>
           <context context-type="linenumber">185</context>
@@ -20962,6 +20982,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.category" datatype="html">
         <source>Rubrique</source>
+        <target state="translated">الباب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
           <context context-type="linenumber">9,11</context>
@@ -20970,6 +20991,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.title" datatype="html">
         <source>Information</source>
+        <target state="translated">المعلومة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
           <context context-type="linenumber">25,29</context>
@@ -20978,6 +21000,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.detail" datatype="html">
         <source>Précision</source>
+        <target state="translated">التفصيل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
           <context context-type="linenumber">49,51</context>
@@ -20986,6 +21009,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.optional" datatype="html">
         <source>(facultatif)</source>
+        <target state="translated">(اختياري)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
           <context context-type="linenumber">52,56</context>
@@ -21002,6 +21026,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.periodLabel" datatype="html">
         <source>Période</source>
+        <target state="translated">الفترة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
           <context context-type="linenumber">75,77</context>
@@ -21010,6 +21035,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.periodLabel.help" datatype="html">
         <source>Par exemple : Enfance, vers 2000, 2002 – 2009.</source>
+        <target state="translated">مثلًا: الطفولة، نحو 2000، 2002 – 2009.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
           <context context-type="linenumber">98,101</context>
@@ -21018,6 +21044,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.periodYear" datatype="html">
         <source>Année</source>
+        <target state="translated">السنة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
           <context context-type="linenumber">109,111</context>
@@ -21026,6 +21053,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.periodYear.help" datatype="html">
         <source>Période et Année n&apos;apparaissent que pour Histoire et souvenirs. L&apos;année sert à classer dans le fil : laissez-la vide si vous ne savez pas.</source>
+        <target state="translated">لا يظهر حقلا الفترة والسنة إلا في « السيرة والذكريات ». تُستعمل السنة للترتيب في التسلسل الزمني: يمكن تركها فارغة عند عدم معرفتها.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
           <context context-type="linenumber">140,147</context>
@@ -21034,6 +21062,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.remove" datatype="html">
         <source> Retirer du profil </source>
+        <target state="translated"> إزالة من الملف الشامل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
           <context context-type="linenumber">156,160</context>
@@ -21042,6 +21071,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.cancel" datatype="html">
         <source> Annuler </source>
+        <target state="translated"> إلغاء </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.html</context>
           <context context-type="linenumber">167,171</context>
@@ -21050,6 +21080,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.editTitle" datatype="html">
         <source>Modifier l&apos;information</source>
+        <target state="translated">تعديل المعلومة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
           <context context-type="linenumber">98</context>
@@ -21058,6 +21089,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.addTitle" datatype="html">
         <source>Ajouter au profil</source>
+        <target state="translated">إضافة إلى الملف الشامل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
           <context context-type="linenumber">99</context>
@@ -21066,6 +21098,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.save" datatype="html">
         <source>Enregistrer</source>
+        <target state="translated">حفظ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
           <context context-type="linenumber">101</context>
@@ -21074,6 +21107,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.create" datatype="html">
         <source>Ajouter</source>
+        <target state="translated">إضافة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
           <context context-type="linenumber">102</context>
@@ -21082,6 +21116,7 @@
       </trans-unit>
       <trans-unit id="profile360.remove.title" datatype="html">
         <source>Retirer cette information du profil ?</source>
+        <target state="translated">إزالة هذه المعلومة من الملف الشامل؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
           <context context-type="linenumber">161</context>
@@ -21090,6 +21125,7 @@
       </trans-unit>
       <trans-unit id="profile360.remove.body" datatype="html">
         <source>Elle ne sera plus affichée.</source>
+        <target state="translated">لن تُعرض بعد الآن.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
           <context context-type="linenumber">162</context>
@@ -21098,6 +21134,7 @@
       </trans-unit>
       <trans-unit id="profile360.remove.confirm" datatype="html">
         <source>Retirer</source>
+        <target state="translated">إزالة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
           <context context-type="linenumber">163</context>
@@ -21106,6 +21143,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.limit" datatype="html">
         <source>Ce profil compte déjà 500 informations. Retirez-en une avant d&apos;en ajouter.</source>
+        <target state="translated">يضمّ هذا الملف الشامل 500 معلومة. يُرجى إزالة إحداها قبل إضافة غيرها.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
           <context context-type="linenumber">219</context>
@@ -21114,6 +21152,7 @@
       </trans-unit>
       <trans-unit id="profile360.panel.failed" datatype="html">
         <source>L&apos;enregistrement n&apos;a pas abouti. Réessayez.</source>
+        <target state="translated">لم يكتمل الحفظ. يُرجى إعادة المحاولة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/panels/profile-item.panel.ts</context>
           <context context-type="linenumber">224</context>
@@ -21122,6 +21161,7 @@
       </trans-unit>
       <trans-unit id="profile360.add" datatype="html">
         <source>Ajouter au profil</source>
+        <target state="translated">إضافة إلى الملف الشامل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/ui/profile-add.component.ts</context>
           <context context-type="linenumber">28,34</context>
@@ -21130,6 +21170,7 @@
       </trans-unit>
       <trans-unit id="profile360.menu.label" datatype="html">
         <source>Rubriques du profil</source>
+        <target state="translated">أبواب الملف الشامل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/ui/profile-menu.component.ts</context>
           <context context-type="linenumber">27,28</context>
@@ -21138,6 +21179,7 @@
       </trans-unit>
       <trans-unit id="profile360.menu.title" datatype="html">
         <source> Rubriques </source>
+        <target state="translated"> الأبواب </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/ui/profile-menu.component.ts</context>
           <context context-type="linenumber">35,37</context>
@@ -21146,6 +21188,7 @@
       </trans-unit>
       <trans-unit id="profile360.menu.item" datatype="html">
         <source><x id="label" equiv-text="label"/> <x id="count" equiv-text="count"/></source>
+        <target state="translated"><x id="label" equiv-text="label"/> <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/ui/profile-menu.component.ts</context>
           <context context-type="linenumber">73</context>
@@ -21154,6 +21197,7 @@
       </trans-unit>
       <trans-unit id="profile360.rubric.empty" datatype="html">
         <source>Rien dans cette rubrique pour l&apos;instant</source>
+        <target state="translated">لا شيء في هذا الباب حتى الآن</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/ui/profile-rubric.component.html</context>
           <context context-type="linenumber">14,15</context>
