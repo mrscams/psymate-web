@@ -58,8 +58,11 @@
   font-size: 12px;
 }
 
+// Graphique de gauche à droite dans les trois langues (Q71 point 4) : sans direction: ltr, un
+// <html dir="rtl"> inverse tous les text-anchor du dessin.
 .chart {
   display: block;
+  direction: ltr;
   width: 100%;
   height: auto;
   font-family: var(--font-ui);

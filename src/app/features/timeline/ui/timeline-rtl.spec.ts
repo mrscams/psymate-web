@@ -96,13 +96,22 @@ describe('vue décennie : graphique de gauche à droite dans les trois langues (
     return fixture.nativeElement as HTMLElement;
   }
 
-  afterEach(() => TestBed.resetTestingModule());
+  afterEach(() => {
+    TestBed.resetTestingModule();
+    document.documentElement.removeAttribute('dir');
+  });
 
   for (const locale of ['fr', 'ar']) {
-    it(`${locale} : le SVG est en dir="ltr", l'année la plus ancienne à gauche`, async () => {
+    it(`${locale} : le graphique se calcule de gauche à droite, l'année la plus ancienne à gauche`, async () => {
+      // Le bundle arabe pose dir="rtl" sur <html> : la direction calculée du SVG doit rester ltr
+      // (l'attribut dir n'a pas d'effet sur un élément SVG, d'où direction: ltr en CSS).
+      document.documentElement.setAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
       const el = await render(locale);
+      document.body.append(el);
       const svg = el.querySelector('svg.chart')!;
-      expect(svg.getAttribute('dir')).toBe('ltr');
+      expect(getComputedStyle(svg).direction).toBe('ltr');
+      expect(getComputedStyle(svg.querySelector('text.tick')!).direction).toBe('ltr');
+      el.remove();
       const years = [...svg.querySelectorAll('text.year-label')].map((label) => ({
         year: Number(text(label)),
         x: Number(label.getAttribute('x')),
