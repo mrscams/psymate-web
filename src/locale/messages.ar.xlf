@@ -219,6 +219,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.pageTitle" datatype="html">
         <source>Émotions personnalisées · PsyMate</source>
+        <target state="translated">المشاعر المخصّصة · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
           <context context-type="linenumber">33</context>
@@ -227,6 +228,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.pageTitle" datatype="html">
         <source>Tags · PsyMate</source>
+        <target state="translated">الوسوم · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
           <context context-type="linenumber">38</context>
@@ -918,6 +920,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.title" datatype="html">
         <source> Émotions personnalisées </source>
+        <target state="translated"> المشاعر المخصّصة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
           <context context-type="linenumber">11,13</context>
@@ -926,6 +929,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.intro" datatype="html">
         <source> Le vocabulaire global (29 émotions, inspiré de Plutchik) couvre l&apos;essentiel. Quand il manque un mot à votre pratique, ajoutez-le ici : il sera proposé dans la saisie, marqué « perso », et rattaché à une famille pour entrer dans les courbes et le graphe. </source>
+        <target state="translated"> المفردات العامة (29 شعورًا، مستوحاة من نموذج بلوتشيك) تغطّي الأساسي. عند غياب كلمة تحتاجها ممارستك، يمكن إضافتها هنا: ستُقترح عند الإدخال، مع علامة « مخصّص »، وترتبط بفئة لتدخل في المنحنيات وفي شبكة الروابط. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
           <context context-type="linenumber">14,20</context>
@@ -934,6 +938,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tagsLink" datatype="html">
         <source>Gérer mes tags</source>
+        <target state="translated">إدارة وسومي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
           <context context-type="linenumber">23,28</context>
@@ -942,6 +947,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.mine.title" datatype="html">
         <source> Mes émotions · <x id="INTERPOLATION" equiv-text="{{ store.customs().length }}"/> </source>
+        <target state="translated"> مشاعري · <x id="INTERPOLATION" equiv-text="{{ store.customs().length }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
           <context context-type="linenumber">38,40</context>
@@ -950,6 +956,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.mine.hint" datatype="html">
         <source> Une émotion utilisée ne se supprime pas : elle se fusionne. </source>
+        <target state="translated"> الشعور المستخدَم لا يُحذف: بل يُدمج. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
           <context context-type="linenumber">41,45</context>
@@ -958,6 +965,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.journal.title" datatype="html">
         <source> Journal des fusions </source>
+        <target state="translated"> سجلّ الدمج </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
           <context context-type="linenumber">69,72</context>
@@ -966,6 +974,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.global.title" datatype="html">
         <source> Vocabulaire global · <x id="INTERPOLATION" equiv-text="{{ store.globals().length }}"/> émotions </source>
+        <target state="translated"> المفردات العامة · المشاعر: <x id="INTERPOLATION" equiv-text="{{ store.globals().length }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
           <context context-type="linenumber">81,83</context>
@@ -974,6 +983,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.global.hint" datatype="html">
         <source> Géré par la plateforme, en lecture seule. </source>
+        <target state="translated"> تديرها المنصّة، للقراءة فقط. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.html</context>
           <context context-type="linenumber">84,87</context>
@@ -982,6 +992,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.mine.errorTitle" datatype="html">
         <source>Impossible de charger vos émotions personnalisées</source>
+        <target state="translated">تعذّر تحميل مشاعرك المخصّصة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
           <context context-type="linenumber">65</context>
@@ -990,6 +1001,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.mine.emptyTitle" datatype="html">
         <source>Aucune émotion personnalisée</source>
+        <target state="translated">لا توجد مشاعر مخصّصة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
           <context context-type="linenumber">68</context>
@@ -998,6 +1010,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.mine.emptyMessage" datatype="html">
         <source>Ajoutez-en une avec le formulaire ci-dessus quand le vocabulaire global ne suffit pas.</source>
+        <target state="translated">يمكن إضافة شعور عبر النموذج أعلاه عندما لا تكفي المفردات العامة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
           <context context-type="linenumber">69</context>
@@ -1006,6 +1019,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
           <context context-type="linenumber">73</context>
@@ -1014,6 +1028,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.add.done" datatype="html">
         <source>« <x id="label" equiv-text="created.labelFr"/> » ajoutée à votre vocabulaire.</source>
+        <target state="translated">تمت إضافة « <x id="label" equiv-text="created.labelFr"/> » إلى مفرداتك.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
           <context context-type="linenumber">90</context>
@@ -1022,6 +1037,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.done.one" datatype="html">
         <source>« <x id="source" equiv-text="source"/> » fusionnée dans « <x id="target" equiv-text="target"/> » : <x id="count" equiv-text="count"/> ressenti déplacé.</source>
+        <target state="translated">تم دمج « <x id="source" equiv-text="source"/> » في « <x id="target" equiv-text="target"/> ». المشاعر المنقولة: <x id="count" equiv-text="count"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
           <context context-type="linenumber">108</context>
@@ -1030,6 +1046,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.done" datatype="html">
         <source>« <x id="source" equiv-text="source"/> » fusionnée dans « <x id="target" equiv-text="target"/> » : <x id="count" equiv-text="count"/> ressentis déplacés.</source>
+        <target state="translated">تم دمج « <x id="source" equiv-text="source"/> » في « <x id="target" equiv-text="target"/> ». المشاعر المنقولة: <x id="count" equiv-text="count"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
           <context context-type="linenumber">109</context>
@@ -1038,6 +1055,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.undo" datatype="html">
         <source>Annuler</source>
+        <target state="translated">تراجع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
           <context context-type="linenumber">111</context>
@@ -1046,6 +1064,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.journal.undoDone" datatype="html">
         <source>Fusion annulée : « <x id="source" equiv-text="entry.sourceLabel"/> » est de retour avec ses ressentis.</source>
+        <target state="translated">تم التراجع عن الدمج: عاد « <x id="source" equiv-text="entry.sourceLabel"/> » مع المشاعر المدوَّنة به.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/emotions.page.ts</context>
           <context context-type="linenumber">123</context>
@@ -2807,6 +2826,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.title" datatype="html">
         <source>Tags</source>
+        <target state="translated">الوسوم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/tags.page.html</context>
           <context context-type="linenumber">10,11</context>
@@ -2815,6 +2835,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.intro" datatype="html">
         <source> Vos mots-clés libres, posés sur les patients et les entrées. Renommer un tag le change partout ; fusionner deux tags réétiquette tout ce qui portait le premier. </source>
+        <target state="translated"> كلماتك المفتاحية الحرّة، الموضوعة على المرضى والمُدخَلات. إعادة تسمية وسم تغيّره في كل مكان؛ ودمج وسمين يُعيد وسم كل ما كان يحمل الأول. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/tags.page.html</context>
           <context context-type="linenumber">12,17</context>
@@ -2823,6 +2844,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.emotionsLink" datatype="html">
         <source>Émotions personnalisées</source>
+        <target state="translated">المشاعر المخصّصة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/tags.page.html</context>
           <context context-type="linenumber">19,25</context>
@@ -2831,6 +2853,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.list.title" datatype="html">
         <source> Mes tags · <x id="INTERPOLATION" equiv-text="{{ store.list().length }}"/> </source>
+        <target state="translated"> وسومي · <x id="INTERPOLATION" equiv-text="{{ store.list().length }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/tags.page.html</context>
           <context context-type="linenumber">30,32</context>
@@ -2839,6 +2862,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.errorTitle" datatype="html">
         <source>Impossible de charger vos tags</source>
+        <target state="translated">تعذّر تحميل وسومك</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/tags.page.ts</context>
           <context context-type="linenumber">45</context>
@@ -2847,6 +2871,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.emptyTitle" datatype="html">
         <source>Aucun tag</source>
+        <target state="translated">لا توجد وسوم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/tags.page.ts</context>
           <context context-type="linenumber">48</context>
@@ -2855,6 +2880,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.emptyMessage" datatype="html">
         <source>Créez-en un ci-dessus, ou depuis la fiche d&apos;un patient.</source>
+        <target state="translated">يمكن إنشاء وسم أعلاه، أو من بطاقة أحد المرضى.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/tags.page.ts</context>
           <context context-type="linenumber">49</context>
@@ -2863,6 +2889,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/tags.page.ts</context>
           <context context-type="linenumber">53</context>
@@ -2871,6 +2898,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.add.done" datatype="html">
         <source>Tag « <x id="label" equiv-text="created.label"/> » créé.</source>
+        <target state="translated">تم إنشاء الوسم « <x id="label" equiv-text="created.label"/> ».</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/tags.page.ts</context>
           <context context-type="linenumber">65</context>
@@ -2879,6 +2907,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.merge.done" datatype="html">
         <source>« <x id="source" equiv-text="source"/> » fusionné dans « <x id="target" equiv-text="target.label"/> ». Patients et entrées sont réétiquetés en arrière-plan : un écran déjà ouvert peut montrer l&apos;ancien libellé quelques secondes.</source>
+        <target state="translated">تم دمج « <x id="source" equiv-text="source"/> » في « <x id="target" equiv-text="target.label"/> ». يُعاد وسم المرضى والمُدخَلات في الخلفية: قد تعرض شاشة مفتوحة من قبل التسمية القديمة لبضع ثوانٍ.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/tags.page.ts</context>
           <context context-type="linenumber">80</context>
@@ -5663,6 +5692,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.table.caption" datatype="html">
         <source> Mes émotions personnalisées </source>
+        <target state="translated"> مشاعري المخصّصة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">6,10</context>
@@ -5671,6 +5701,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.table.emotion" datatype="html">
         <source>Émotion</source>
+        <target state="translated">الشعور</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">10,11</context>
@@ -5679,6 +5710,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.table.family" datatype="html">
         <source>Famille</source>
+        <target state="translated">الفئة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">11,12</context>
@@ -5687,6 +5719,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.table.actions" datatype="html">
         <source> Actions </source>
+        <target state="translated"> الإجراءات </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">13,18</context>
@@ -5699,6 +5732,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.rename.label" datatype="html">
         <source>Nouveau libellé de « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> »</source>
+        <target state="translated">التسمية الجديدة لـ « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> »</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">24,25</context>
@@ -5707,6 +5741,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.badge.custom" datatype="html">
         <source>perso</source>
+        <target state="translated">مخصّص</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">41,46</context>
@@ -5715,6 +5750,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.rename.save" datatype="html">
         <source> Enregistrer </source>
+        <target state="translated"> حفظ </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">65,68</context>
@@ -5727,6 +5763,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.rename.cancel" datatype="html">
         <source> Annuler </source>
+        <target state="translated"> إلغاء </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">73,76</context>
@@ -5739,6 +5776,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.rename" datatype="html">
         <source>Renommer</source>
+        <target state="translated">إعادة التسمية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">84,85</context>
@@ -5751,6 +5789,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.open" datatype="html">
         <source>Fusionner…</source>
+        <target state="translated">دمج…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">94,95</context>
@@ -5763,6 +5802,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.title" datatype="html">
         <source>Fusionner « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> » dans une autre émotion</source>
+        <target state="translated">دمج « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> » في شعور آخر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">119,120</context>
@@ -5771,6 +5811,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.target" datatype="html">
         <source>Fusionner dans</source>
+        <target state="translated">الدمج في</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">125,128</context>
@@ -5783,6 +5824,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.choose" datatype="html">
         <source> Choisir une émotion… </source>
+        <target state="translated"> اختيار شعور… </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">135,137</context>
@@ -5791,6 +5833,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.groupGlobal" datatype="html">
         <source>Vocabulaire global</source>
+        <target state="translated">المفردات العامة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">139,140</context>
@@ -5799,6 +5842,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.groupCustom" datatype="html">
         <source>Mes émotions</source>
+        <target state="translated">مشاعري</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">151,152</context>
@@ -5807,6 +5851,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.allFamilies" datatype="html">
         <source>Proposer les autres familles</source>
+        <target state="translated">اقتراح الفئات الأخرى</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">169,174</context>
@@ -5815,6 +5860,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.question" datatype="html">
         <source>Fusionner « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> » dans « <x id="INTERPOLATION_1" equiv-text="{{ target.labelFr }}"/> » ?</source>
+        <target state="translated">دمج « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> » في « <x id="INTERPOLATION_1" equiv-text="{{ target.labelFr }}"/> »؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">177,178</context>
@@ -5823,6 +5869,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.preview" datatype="html">
         <source> Les ressentis qui portent « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> » gardent leur intensité et leur texte ; l&apos;émotion affichée devient « <x id="INTERPOLATION_1" equiv-text="{{ target.labelFr }}"/> ». Opération réversible pendant 30 jours depuis le journal des fusions.</source>
+        <target state="translated"> المشاعر المدوَّنة باسم « <x id="INTERPOLATION" equiv-text="{{ emotion.labelFr }}"/> » تحتفظ بشدّتها وبنصّها؛ ويصبح الشعور المعروض « <x id="INTERPOLATION_1" equiv-text="{{ target.labelFr }}"/> ». يمكن التراجع عن العملية خلال 30 يومًا من سجلّ الدمج.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">180,182</context>
@@ -5831,6 +5878,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.familyChange" datatype="html">
         <source>« <x id="INTERPOLATION" equiv-text="{{ target.labelFr }}"/> » est dans la famille <x id="INTERPOLATION_1" equiv-text="{{ familyLabel(target.family) }}"/>, pas <x id="INTERPOLATION_2" equiv-text="{{ familyLabel(emotion.family) }}"/> : les courbes de ces ressentis changeront de couleur. Je confirme.</source>
+        <target state="translated">« <x id="INTERPOLATION" equiv-text="{{ target.labelFr }}"/> » ضمن فئة <x id="INTERPOLATION_1" equiv-text="{{ familyLabel(target.family) }}"/>، لا <x id="INTERPOLATION_2" equiv-text="{{ familyLabel(emotion.family) }}"/>: سيتغيّر لون منحنيات هذه المشاعر. أؤكّد ذلك.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">194,196</context>
@@ -5839,6 +5887,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.confirm" datatype="html">
         <source> Fusionner </source>
+        <target state="translated"> دمج </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">210,212</context>
@@ -5851,6 +5900,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.merge.cancel" datatype="html">
         <source> Annuler </source>
+        <target state="translated"> إلغاء </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.html</context>
           <context context-type="linenumber">218,220</context>
@@ -5863,6 +5913,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.rename.required" datatype="html">
         <source>Saisissez un libellé.</source>
+        <target state="translated">يُرجى إدخال تسمية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/custom-emotions.component.ts</context>
           <context context-type="linenumber">135</context>
@@ -5875,6 +5926,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.add.title" datatype="html">
         <source> Ajouter une émotion </source>
+        <target state="translated"> إضافة شعور </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
           <context context-type="linenumber">30,34</context>
@@ -5883,6 +5935,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.add.label" datatype="html">
         <source>Libellé</source>
+        <target state="translated">التسمية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
           <context context-type="linenumber">35,37</context>
@@ -5891,6 +5944,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.add.nearGlobal" datatype="html">
         <source>Proche de « <x id="INTERPOLATION" equiv-text="{{ near.labelFr }}"/> » (vocabulaire global). Vérifiez que ce n&apos;est pas la même chose.</source>
+        <target state="translated">قريب من « <x id="INTERPOLATION" equiv-text="{{ near.labelFr }}"/> » (المفردات العامة). يُرجى التحقّق من أنه ليس الشيء نفسه.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
           <context context-type="linenumber">57,58</context>
@@ -5899,6 +5953,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.add.nearCustom" datatype="html">
         <source>Proche de « <x id="INTERPOLATION" equiv-text="{{ near.labelFr }}"/> » (vos émotions). Vérifiez que ce n&apos;est pas la même chose.</source>
+        <target state="translated">قريب من « <x id="INTERPOLATION" equiv-text="{{ near.labelFr }}"/> » (مشاعرك). يُرجى التحقّق من أنه ليس الشيء نفسه.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
           <context context-type="linenumber">63,64</context>
@@ -5907,6 +5962,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.add.family" datatype="html">
         <source>Famille</source>
+        <target state="translated">الفئة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
           <context context-type="linenumber">77,78</context>
@@ -5915,6 +5971,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.add.familyHint" datatype="html">
         <source> · détermine la couleur des courbes et la place dans le graphe</source>
+        <target state="translated"> · تحدّد لون المنحنيات والموضع في شبكة الروابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
           <context context-type="linenumber">80,83</context>
@@ -5923,6 +5980,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.add.submit" datatype="html">
         <source>Ajouter à mon vocabulaire</source>
+        <target state="translated">إضافة إلى مفرداتي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
           <context context-type="linenumber">102,105</context>
@@ -5931,6 +5989,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.add.visibility" datatype="html">
         <source> Visible de vous seul·e ; proposée dans la saisie des ressentis dès la prochaine entrée. </source>
+        <target state="translated"> مرئي لك وحدك؛ يُقترح عند إدخال المشاعر بدءًا من المُدخَل التالي. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
           <context context-type="linenumber">106,110</context>
@@ -5939,6 +5998,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.add.failed" datatype="html">
         <source> L&apos;émotion n&apos;a pas été ajoutée. Vérifiez la connexion puis réessayez. </source>
+        <target state="translated"> لم تتم إضافة الشعور. يُرجى التحقّق من الاتصال ثم إعادة المحاولة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/emotion-form.component.ts</context>
           <context context-type="linenumber">111,116</context>
@@ -5947,6 +6007,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.journal.empty" datatype="html">
         <source> Aucune fusion faite depuis ce navigateur. Une fusion reste annulable pendant 30 jours. </source>
+        <target state="translated"> لم يُجرَ أي دمج من هذا المتصفح. يبقى التراجع عن الدمج ممكنًا لمدة 30 يومًا. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
           <context context-type="linenumber">35,39</context>
@@ -5955,6 +6016,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.journal.into" datatype="html">
         <source>fusionnée dans</source>
+        <target state="translated">دُمج في</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
           <context context-type="linenumber">48,50</context>
@@ -5979,6 +6041,11 @@
                     =1 {1 ressenti}
                     other {{{row.entry.merge.affectedCount}} ressentis}
                   }" xid="1847635703379406991"/> · le <x id="INTERPOLATION_1" equiv-text="{{ row.mergedAt }}"/></source>
+        <target state="translated"><x id="ICU" equiv-text="{row.entry.merge.affectedCount, plural,
+                    =0 {aucun ressenti}
+                    =1 {1 ressenti}
+                    other {{{row.entry.merge.affectedCount}} ressentis}
+                  }" xid="1847635703379406991"/> · بتاريخ <x id="INTERPOLATION_1" equiv-text="{{ row.mergedAt }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
           <context context-type="linenumber">54,60</context>
@@ -5987,6 +6054,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.journal.until" datatype="html">
         <source>· annulable jusqu&apos;au <x id="INTERPOLATION" equiv-text="{{ row.until }}"/></source>
+        <target state="translated">· التراجع ممكن حتى <x id="INTERPOLATION" equiv-text="{{ row.until }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
           <context context-type="linenumber">64,65</context>
@@ -5995,6 +6063,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.journal.undone" datatype="html">
         <source>· annulée le <x id="INTERPOLATION" equiv-text="{{ row.undoneAt }}"/></source>
+        <target state="translated">· تم التراجع عنه في <x id="INTERPOLATION" equiv-text="{{ row.undoneAt }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
           <context context-type="linenumber">69,70</context>
@@ -6003,6 +6072,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.journal.expired" datatype="html">
         <source>· délai d&apos;annulation dépassé</source>
+        <target state="translated">· انقضت مهلة التراجع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
           <context context-type="linenumber">74,77</context>
@@ -6011,6 +6081,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.journal.undo" datatype="html">
         <source>Annuler la fusion</source>
+        <target state="translated">التراجع عن الدمج</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
           <context context-type="linenumber">88,90</context>
@@ -6019,6 +6090,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.add.title" datatype="html">
         <source> Ajouter un tag </source>
+        <target state="translated"> إضافة وسم </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-form.component.ts</context>
           <context context-type="linenumber">22,25</context>
@@ -6027,6 +6099,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.add.label" datatype="html">
         <source>Libellé du tag</source>
+        <target state="translated">تسمية الوسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-form.component.ts</context>
           <context context-type="linenumber">27,30</context>
@@ -6035,6 +6108,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.add.submit" datatype="html">
         <source>Créer le tag</source>
+        <target state="translated">إنشاء الوسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-form.component.ts</context>
           <context context-type="linenumber">41,44</context>
@@ -6043,6 +6117,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.add.help" datatype="html">
         <source> Un mot-clé libre pour regrouper patients et entrées (« # » facultatif). Un ressenti se note avec une émotion, pas avec un tag. </source>
+        <target state="translated"> كلمة مفتاحية حرّة لتجميع المرضى والمُدخَلات (« # » اختياري). الشعور يُدوَّن بشعور من المفردات، لا بوسم. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-form.component.ts</context>
           <context context-type="linenumber">52,57</context>
@@ -6051,6 +6126,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.add.required" datatype="html">
         <source>Saisissez un libellé.</source>
+        <target state="translated">يُرجى إدخال تسمية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-form.component.ts</context>
           <context context-type="linenumber">72</context>
@@ -6059,6 +6135,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.caption" datatype="html">
         <source> Mes tags </source>
+        <target state="translated"> وسومي </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
           <context context-type="linenumber">3,7</context>
@@ -6067,6 +6144,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.col.tag" datatype="html">
         <source>Tag</source>
+        <target state="translated">الوسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
           <context context-type="linenumber">8</context>
@@ -6075,6 +6153,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.col.created" datatype="html">
         <source>Créé le</source>
+        <target state="translated">تاريخ الإنشاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
           <context context-type="linenumber">8,9</context>
@@ -6083,6 +6162,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.rename.label" datatype="html">
         <source>Nouveau libellé de « <x id="INTERPOLATION" equiv-text="{{ tag.label }}"/> »</source>
+        <target state="translated">التسمية الجديدة لـ « <x id="INTERPOLATION" equiv-text="{{ tag.label }}"/> »</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
           <context context-type="linenumber">21,22</context>
@@ -6091,6 +6171,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.merge.title" datatype="html">
         <source>Fusionner « <x id="INTERPOLATION" equiv-text="{{ tag.label }}"/> » dans un autre tag</source>
+        <target state="translated">دمج « <x id="INTERPOLATION" equiv-text="{{ tag.label }}"/> » في وسم آخر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
           <context context-type="linenumber">103,104</context>
@@ -6099,6 +6180,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.merge.choose" datatype="html">
         <source> Choisir un tag… </source>
+        <target state="translated"> اختيار وسم… </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
           <context context-type="linenumber">122,124</context>
@@ -6107,6 +6189,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.merge.question" datatype="html">
         <source>Fusionner « <x id="INTERPOLATION" equiv-text="{{ tag.label }}"/> » dans « <x id="INTERPOLATION_1" equiv-text="{{ target.label }}"/> » ?</source>
+        <target state="translated">دمج « <x id="INTERPOLATION" equiv-text="{{ tag.label }}"/> » في « <x id="INTERPOLATION_1" equiv-text="{{ target.label }}"/> »؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
           <context context-type="linenumber">132,133</context>
@@ -6119,6 +6202,11 @@
                       =1 {1 usage (patient ou entrée)}
                       other {{{tag.usageCount}} usages (patients et entrées)}
                     }" xid="2428451736813176020"/> : ils porteront « <x id="INTERPOLATION_1" equiv-text="{{ target.label }}"/> », et « <x id="INTERPOLATION_2" equiv-text="{{ tag.label }}"/> » disparaît de vos tags. Cette fusion ne s&apos;annule pas.</source>
+        <target state="translated"> يُعاد الوسم في <x id="ICU" equiv-text="{tag.usageCount, plural,
+                      =0 {les patients et les entrées}
+                      =1 {1 usage (patient ou entrée)}
+                      other {{{tag.usageCount}} usages (patients et entrées)}
+                    }" xid="2428451736813176020"/>: ستحمل « <x id="INTERPOLATION_1" equiv-text="{{ target.label }}"/> »، ويختفي « <x id="INTERPOLATION_2" equiv-text="{{ tag.label }}"/> » من وسومك. لا يمكن التراجع عن هذا الدمج.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
           <context context-type="linenumber">135,142</context>
@@ -6127,6 +6215,7 @@
       </trans-unit>
       <trans-unit id="3449268335038653757" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {les patients et les entrées} =1 {1 usage (patient ou entrée)} other {<x id="INTERPOLATION"/> usages (patients et entrées)}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {المرضى والمُدخَلات} one {موضع استخدام واحد (مريض أو مُدخَل)} two {موضعَي استخدام (مرضى أو مُدخَلات)} few {<x id="INTERPOLATION"/> مواضع استخدام (مرضى ومُدخَلات)} many {<x id="INTERPOLATION"/> موضع استخدام (مرضى ومُدخَلات)} other {<x id="INTERPOLATION"/> موضع استخدام (مرضى ومُدخَلات)}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/tag-table.component.html</context>
           <context context-type="linenumber">136,139</context>
@@ -6134,6 +6223,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.family.joy" datatype="html">
         <source>Joie</source>
+        <target state="translated">الفرح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
           <context context-type="linenumber">7</context>
@@ -6142,6 +6232,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.family.trust" datatype="html">
         <source>Confiance</source>
+        <target state="translated">الثقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
           <context context-type="linenumber">9</context>
@@ -6150,6 +6241,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.family.fear" datatype="html">
         <source>Peur</source>
+        <target state="translated">الخوف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
           <context context-type="linenumber">11</context>
@@ -6158,6 +6250,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.family.surprise" datatype="html">
         <source>Surprise</source>
+        <target state="translated">المفاجأة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
           <context context-type="linenumber">13</context>
@@ -6166,6 +6259,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.family.sadness" datatype="html">
         <source>Tristesse</source>
+        <target state="translated">الحزن</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
           <context context-type="linenumber">15</context>
@@ -6174,6 +6268,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.family.disgust" datatype="html">
         <source>Dégoût</source>
+        <target state="translated">الاشمئزاز</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
           <context context-type="linenumber">17</context>
@@ -6182,6 +6277,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.family.anger" datatype="html">
         <source>Colère</source>
+        <target state="translated">الغضب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
           <context context-type="linenumber">19</context>
@@ -6190,6 +6286,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.family.anticipation" datatype="html">
         <source>Anticipation</source>
+        <target state="translated">الترقّب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-labels.ts</context>
           <context context-type="linenumber">21</context>
@@ -6198,6 +6295,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.isEmotion" datatype="html">
         <source>Ce libellé est déjà une émotion : utiliser l&apos;émotion <x id="emotion" equiv-text="emotion.labelFr"/> ? Les émotions se notent en ressentis dans le dossier, pas en tags.</source>
+        <target state="translated">هذه التسمية شعور موجود بالفعل: استخدام الشعور <x id="emotion" equiv-text="emotion.labelFr"/>؟ المشاعر تُدوَّن في الملف كمُدخَلات من نوع شعور، لا كوسوم.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
           <context context-type="linenumber">15</context>
@@ -6206,6 +6304,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.isEmotionPlain" datatype="html">
         <source>Ce libellé est déjà une émotion : notez-le en ressenti dans le dossier, pas en tag.</source>
+        <target state="translated">هذه التسمية شعور موجود بالفعل: يُرجى تدوينه في الملف كمُدخَل من نوع شعور، لا كوسم.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
           <context context-type="linenumber">16</context>
@@ -6214,6 +6313,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.exists" datatype="html">
         <source>Un de vos tags porte déjà ce libellé (sans compter la casse, les accents ni « # »).</source>
+        <target state="translated">أحد وسومك يحمل هذه التسمية بالفعل (دون اعتبار لحالة الأحرف ولا للنبرات ولا لـ « # »).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
           <context context-type="linenumber">19</context>
@@ -6222,6 +6322,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.tags.notFound" datatype="html">
         <source>Tag introuvable : il a peut-être été fusionné depuis un autre onglet. La liste a été rechargée.</source>
+        <target state="translated">الوسم غير موجود: ربما دُمج من علامة تبويب أخرى. أُعيد تحميل القائمة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
           <context context-type="linenumber">21</context>
@@ -6230,6 +6331,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.add.exists" datatype="html">
         <source>Ce libellé existe déjà dans le vocabulaire global ou dans vos émotions.</source>
+        <target state="translated">هذه التسمية موجودة بالفعل في المفردات العامة أو في مشاعرك.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
           <context context-type="linenumber">31</context>
@@ -6238,6 +6340,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.row.inactive" datatype="html">
         <source>Cette émotion a déjà été fusionnée. La liste a été rechargée.</source>
+        <target state="translated">سبق دمج هذا الشعور. أُعيد تحميل القائمة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
           <context context-type="linenumber">33</context>
@@ -6246,6 +6349,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.row.notFound" datatype="html">
         <source>Émotion introuvable : elle a peut-être été fusionnée depuis un autre onglet.</source>
+        <target state="translated">الشعور غير موجود: ربما دُمج من علامة تبويب أخرى.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
           <context context-type="linenumber">35</context>
@@ -6254,6 +6358,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.row.invalid" datatype="html">
         <source>Saisie refusée par le serveur.</source>
+        <target state="translated">رفض الخادم الإدخال.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
           <context context-type="linenumber">47</context>
@@ -6262,6 +6367,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.row.failed" datatype="html">
         <source>L&apos;opération a échoué. Vérifiez la connexion puis réessayez.</source>
+        <target state="translated">فشلت العملية. يُرجى التحقّق من الاتصال ثم إعادة المحاولة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
           <context context-type="linenumber">48</context>
@@ -6270,6 +6376,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.journal.error.expired" datatype="html">
         <source>Le délai de 30 jours est dépassé : cette fusion ne s&apos;annule plus.</source>
+        <target state="translated">انقضت مهلة الثلاثين يومًا: لم يعد التراجع عن هذا الدمج ممكنًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
           <context context-type="linenumber">55</context>
@@ -6278,6 +6385,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.journal.error.undone" datatype="html">
         <source>Cette fusion a déjà été annulée.</source>
+        <target state="translated">سبق التراجع عن هذا الدمج.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
           <context context-type="linenumber">57</context>
@@ -6286,6 +6394,7 @@
       </trans-unit>
       <trans-unit id="vocabulary.journal.error.notFound" datatype="html">
         <source>Fusion introuvable : elle a été retirée du journal.</source>
+        <target state="translated">الدمج غير موجود: أُزيل من السجلّ.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/vocabulary-messages.ts</context>
           <context context-type="linenumber">59</context>
