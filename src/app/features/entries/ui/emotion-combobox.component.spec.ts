@@ -248,10 +248,8 @@ describe('EmotionComboboxComponent, version arabe (M16-19)', () => {
     await fixture.whenStable();
     const create = el.querySelector('[role="option"].create .label')!;
     expect(create.querySelector('bdi')?.textContent).toBe('قلق');
-    // Le <bdi> ne mange aucune espace de la phrase.
-    expect(create.textContent?.replace(/\s+/g, ' ').trim()).toBe(
-      "Créer l'émotion personnalisée « قلق »",
-    );
+    // Le <bdi> ne mange aucune espace de la phrase : texte comparé tel quel, espaces comprises.
+    expect(create.textContent).toBe("Créer l'émotion personnalisée « قلق »");
     // Libellé d'émotion (une émotion personnalisée est saisie) : isolé, aligné avec sa ligne.
     type(input, 'anx');
     await fixture.whenStable();

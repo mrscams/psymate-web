@@ -40,11 +40,14 @@ const text = (element: Element | null | undefined) =>
   (element?.textContent ?? '').replace(/\s+/g, ' ').trim();
 
 describe('LinkRailComponent', () => {
-  it('nom de la cible (titre saisi) isolé dans sa ligne (Q77, M16-19)', () => {
+  it('nom de la cible (titre saisi) dans son sens, ellipse en fin de titre (Q77, M16-19)', () => {
     const { row } = setup();
-    expect(row('Entretien annuel').querySelector('.name bdi')?.textContent).toBe(
-      'Entretien annuel',
-    );
+    const name = row('Entretien annuel').querySelector('.name')!;
+    // dir="auto" sur la ligne du nom (pas de <bdi> : un isolat ltr dans une boîte rtl à ellipse
+    // serait tronqué par son début).
+    expect(name.getAttribute('dir')).toBe('auto');
+    expect(name.querySelector('bdi')).toBeNull();
+    expect(name.textContent).toBe('Entretien annuel');
   });
 
   it('une case avec label par cible, nom, contexte et type proposé par la matrice (pointillé)', () => {
