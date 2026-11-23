@@ -307,18 +307,21 @@ test.describe('barre d’administration en /ar/', () => {
 
   test('validation, clair et sombre', async ({ page, context }) => {
     const admin = await adminApi();
-    await shareSession(admin, context);
-    await page.goto('/ar/admin/validation');
-    await expect(page.locator('pm-admin-bar header')).toBeVisible();
-    await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 20_000 });
-    for (const theme of THEMES) {
-      await useTheme(page, theme);
-      await expectRtlPage(page);
-      const bar = await boxOf(page, 'pm-admin-bar header');
-      const brand = await boxOf(page, 'pm-admin-bar .brand');
-      expect(brand.x + brand.width).toBeGreaterThan(bar.x + bar.width - 40);
-      await shoot(page, `arabe-socle-admin-${theme}`);
+    try {
+      await shareSession(admin, context);
+      await page.goto('/ar/admin/validation');
+      await expect(page.locator('pm-admin-bar header')).toBeVisible();
+      await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 20_000 });
+      for (const theme of THEMES) {
+        await useTheme(page, theme);
+        await expectRtlPage(page);
+        const bar = await boxOf(page, 'pm-admin-bar header');
+        const brand = await boxOf(page, 'pm-admin-bar .brand');
+        expect(brand.x + brand.width).toBeGreaterThan(bar.x + bar.width - 40);
+        await shoot(page, `arabe-socle-admin-${theme}`);
+      }
+    } finally {
+      await admin.dispose();
     }
-    await admin.dispose();
   });
 });

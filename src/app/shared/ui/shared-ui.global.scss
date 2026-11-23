@@ -41,9 +41,11 @@ kbd {
   border-bottom-width: 2px;
   border-radius: 4px;
 
-  // Seulement de droite à gauche : en /fr/ et en /en/, rien n'est ajouté au rendu.
+  // Seulement de droite à gauche : en /fr/ et en /en/, rien n'est ajouté au rendu. Le contenu
+  // (touches en caractères latins) se lit de gauche à droite, mais l'élément garde le sens de la
+  // page : ses marges logiques (margin-inline-*) tombent du bon côté.
   &:dir(rtl) {
-    direction: ltr;
+    unicode-bidi: plaintext;
   }
 }
 
