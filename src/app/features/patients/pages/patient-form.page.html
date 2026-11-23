@@ -5,9 +5,9 @@
     </li>
     @if (patient(); as p) {
       <li>
-        <a class="pm-link-target" [routerLink]="['/patients', p.id, 'overview']">{{
-          p.displayName
-        }}</a>
+        <a class="pm-link-target" [routerLink]="['/patients', p.id, 'overview']"
+          ><bdi>{{ p.displayName }}</bdi></a
+        >
       </li>
       <li aria-current="page" i18n="Fil d'Ariane, fiche@@patients.form.crumbs.sheet">Fiche</li>
     } @else {
@@ -123,6 +123,7 @@
               <input
                 [id]="fid('displayName')"
                 type="text"
+                dir="auto"
                 formControlName="displayName"
                 autocomplete="off"
                 required
@@ -143,6 +144,7 @@
               <input
                 [id]="fid('firstName')"
                 type="text"
+                dir="auto"
                 formControlName="firstName"
                 autocomplete="off"
                 [attr.aria-invalid]="invalid(form.controls.firstName)"
@@ -162,6 +164,7 @@
               <input
                 [id]="fid('lastName')"
                 type="text"
+                dir="auto"
                 formControlName="lastName"
                 autocomplete="off"
                 placeholder="Nom de famille"
@@ -221,6 +224,7 @@
               <input
                 [id]="fid('phone')"
                 type="tel"
+                dir="ltr"
                 class="mono"
                 formControlName="phone"
                 autocomplete="off"
@@ -238,6 +242,7 @@
               <input
                 [id]="fid('email')"
                 type="email"
+                dir="ltr"
                 formControlName="email"
                 autocomplete="off"
                 placeholder="prenom@exemple.fr"
@@ -278,7 +283,12 @@
                 i18n="Champ de la fiche patient@@patients.field.situation"
                 >Situation</label
               >
-              <input [id]="fid('context.situation')" type="text" formControlName="situation" />
+              <input
+                [id]="fid('context.situation')"
+                type="text"
+                dir="auto"
+                formControlName="situation"
+              />
             </div>
             <div class="f">
               <label
@@ -286,7 +296,12 @@
                 i18n="Champ de la fiche patient@@patients.field.activity"
                 >Activité</label
               >
-              <input [id]="fid('context.activity')" type="text" formControlName="activity" />
+              <input
+                [id]="fid('context.activity')"
+                type="text"
+                dir="auto"
+                formControlName="activity"
+              />
             </div>
             <div class="f">
               <label
@@ -294,7 +309,12 @@
                 i18n="Champ de la fiche patient@@patients.field.referredBy"
                 >Adressé·e par</label
               >
-              <input [id]="fid('context.referredBy')" type="text" formControlName="referredBy" />
+              <input
+                [id]="fid('context.referredBy')"
+                type="text"
+                dir="auto"
+                formControlName="referredBy"
+              />
             </div>
             <div class="f">
               <label
@@ -305,6 +325,7 @@
               <input
                 [id]="fid('context.initialReason')"
                 type="text"
+                dir="auto"
                 formControlName="initialReason"
               />
             </div>
@@ -316,6 +337,7 @@
               >
               <textarea
                 [id]="fid('context.history')"
+                dir="auto"
                 rows="3"
                 formControlName="history"
                 placeholder="Texte libre, visible dans la vue d'ensemble."
@@ -429,6 +451,7 @@
               <input
                 [id]="fid('followUp.fee')"
                 type="text"
+                dir="ltr"
                 class="mono"
                 formControlName="fee"
                 placeholder="70 €"
@@ -444,6 +467,7 @@
               <input
                 [id]="fid('followUp.prescriber')"
                 type="text"
+                dir="auto"
                 formControlName="prescriber"
                 placeholder="Dr …"
                 i18n-placeholder="

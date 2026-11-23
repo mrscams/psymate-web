@@ -8,7 +8,7 @@ import {
   output,
 } from '@angular/core';
 
-import { formatDate, formatDateTime, formatMonthYear } from '../../../core/i18n';
+import { formatDate, formatDateTime, formatLocale, formatMonthYear } from '../../../core/i18n';
 import { StateAction, StateComponent } from '../../../shared/ui';
 import { StateKind } from '../../../shared/util';
 import {
@@ -40,7 +40,8 @@ export class VersionHistoryComponent {
   readonly state = input<StateKind | null>(null);
   readonly retry = output<void>();
 
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
 
   protected readonly retryAction: StateAction = {
     label: $localize`:Bouton de l'état erreur@@state.error.retry:Réessayer`,

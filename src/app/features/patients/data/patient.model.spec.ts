@@ -5,6 +5,7 @@ import {
   emptyForm,
   normalizeText,
   PatientFormValue,
+  searchKey,
   toCreateInput,
   toFormValue,
   versionDiffs,
@@ -177,5 +178,50 @@ describe('patient.model', () => {
     ['Léa', '', [{ text: 'Léa', match: false }]],
   ])('highlightParts(%s, %s)', (text, query, expected) => {
     expect(highlightParts(text, query)).toEqual(expected);
+  });
+
+  describe('searchKey : recherche locale en arabe (M16-14)', () => {
+    it.each([
+      ['أحمد', 'احمد'],
+      ['إيمان', 'ايمان'],
+      ['آمنة', 'امنه'],
+      ['ٱلله', 'الله'],
+      ['فاطمة', 'فاطمه'],
+      ['ليلى', 'ليلي'],
+      ['مـحـمـد', 'محمد'],
+      ['أَحْمَد', 'احمد'],
+    ])('searchKey(%s) = %s', (input, expected) => {
+      expect(searchKey(input)).toBe(expected);
+    });
+
+    it('« احمد » trouve « أحمد », « فاطمه » trouve « فاطمة », « ليلي » trouve « ليلى »', () => {
+      expect(searchKey('أحمد بن علي')).toContain(searchKey('احمد'));
+      expect(searchKey('فاطمة الزهراء')).toContain(searchKey('فاطمه'));
+      expect(searchKey('ليلى')).toContain(searchKey('ليلي'));
+    });
+
+    it('un texte latin : même clé que normalizeText', () => {
+      for (const text of ['  Éloïse   Ç. ', 'Zoë-Anne DUPONT', 'Marié']) {
+        expect(searchKey(text)).toBe(normalizeText(text));
+      }
+    });
+
+    it('identité des tags (normalizeText) : aucun repli arabe, « على » et « علي » restent distincts', () => {
+      expect(normalizeText('على')).not.toBe(normalizeText('علي'));
+      expect(normalizeText('فاطمة')).not.toBe(normalizeText('فاطمه'));
+      expect(normalizeText('مـحـمـد')).not.toBe(normalizeText('محمد'));
+    });
+
+    it('surligne le nom arabe d’origine, voyelles brèves et tatweel compris', () => {
+      expect(highlightParts('أحمد بن علي', 'احمد')).toEqual([
+        { text: 'أحمد', match: true },
+        { text: ' بن علي', match: false },
+      ]);
+      expect(highlightParts('أَحْمَد علي', 'احمد')).toEqual([
+        { text: 'أَحْمَد', match: true },
+        { text: ' علي', match: false },
+      ]);
+      expect(highlightParts('مـحـمـد', 'محمد')).toEqual([{ text: 'مـحـمـد', match: true }]);
+    });
   });
 });

@@ -1,17 +1,17 @@
 // Surlignage des correspondances du filtre (fiche 01 : --search-highlight).
 
-import { normalizeText } from '../data/patient.model';
+import { searchKey } from '../data/patient.model';
 
 /** Découpe un nom en morceaux surlignés ou non selon la recherche (accents et casse ignorés). */
 export function highlightParts(text: string, query: string): { text: string; match: boolean }[] {
-  const needle = normalizeText(query.trim());
+  const needle = searchKey(query.trim());
   if (!needle) return [{ text, match: false }];
   // Normalise caractère par caractère pour garder la correspondance avec le texte d'origine.
   const chars = [...text];
   const normalized: string[] = [];
   const origin: number[] = [];
   chars.forEach((char, index) => {
-    for (const piece of normalizeText(char)) {
+    for (const piece of searchKey(char)) {
       normalized.push(piece);
       origin.push(index);
     }
@@ -23,6 +23,11 @@ export function highlightParts(text: string, query: string): { text: string; mat
     for (let i = from; i < from + needle.length; i++) marks[origin[i]] = true;
     from = haystack.indexOf(needle, from + needle.length);
   }
+  // Un caractère que la normalisation efface (voyelle brève arabe, tatweel, accent décomposé)
+  // suit la lettre qui le précède : un mot surligné n'est pas coupé en morceaux.
+  chars.forEach((char, index) => {
+    if (index > 0 && !origin.includes(index)) marks[index] = marks[index - 1];
+  });
   const parts: { text: string; match: boolean }[] = [];
   chars.forEach((char, index) => {
     const last = parts.at(-1);

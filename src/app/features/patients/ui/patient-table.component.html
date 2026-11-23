@@ -41,7 +41,7 @@
                 @if (row.demo) {
                   <span class="demo-badge">DEMO</span><span class="sr-only"> · </span>
                 }
-                <span class="nm">
+                <span class="nm" dir="auto">
                   @for (part of row.name; track $index) {
                     @if (part.match) {
                       <mark>{{ part.text }}</mark>
@@ -155,7 +155,7 @@
               {{ situations.count }}
               @if (situations.first) {
                 <span class="sub first" [attr.title]="situations.first">
-                  · {{ situations.first }}</span
+                  · <bdi>{{ situations.first }}</bdi></span
                 >
               }
             } @else {
@@ -312,7 +312,7 @@
               @if (row.demo) {
                 <span class="demo-badge">DEMO</span><span class="sr-only"> · </span>
               }
-              <span class="nm">
+              <span class="nm" dir="auto">
                 @for (part of row.name; track $index) {
                   @if (part.match) {
                     <mark>{{ part.text }}</mark>
