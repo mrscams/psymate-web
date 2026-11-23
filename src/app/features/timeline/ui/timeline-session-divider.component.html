@@ -11,7 +11,7 @@
     >
       <span class="chevron" [class.down]="expanded()" aria-hidden="true"></span>
       <pm-entry-icon type="session" [size]="12" />
-      <span class="label" dir="auto">{{ label() }}</span>
+      <span class="label">{{ label() }}</span>
     </button>
     <span class="sum">
       @if (entriesText(); as text) {
@@ -62,7 +62,7 @@
   >
     <span class="marker" aria-hidden="true"><pm-entry-icon type="session" [size]="10" /></span>
     <pm-entry-icon type="session" [size]="12" />
-    <span class="label" dir="auto">{{ label() }}</span>
+    <span class="label">{{ label() }}</span>
     <span class="sum">
       @if (entriesText(); as text) {
         <span>{{ text }}</span>
