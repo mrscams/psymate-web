@@ -10,6 +10,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 
+import { formatLocale } from '../../../core/i18n';
 import { StateAction, StateComponent } from '../../../shared/ui';
 import { Loadable, stateKind } from '../../../shared/util';
 import { BookingSlot, SlotList, SlotWindow } from '../data/booking.models';
@@ -44,7 +45,7 @@ export class BookingSlotsComponent {
   readonly pick = output<BookingSlot>();
   readonly retry = output<void>();
 
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
 
   protected readonly period = computed(() => periodLabel(this.window(), this.locale));
   protected readonly zone = computed(() =>

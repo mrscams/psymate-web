@@ -113,10 +113,11 @@ mat-error {
   stroke-linejoin: round;
 }
 
-// Hors écran, pas display:none : certains robots ne remplissent que les champs « visibles ».
+// Hors écran, pas display:none : certains robots ne remplissent que les champs « visibles ». Côté
+// début de ligne (à gauche en LTR, à droite en RTL) : un débord de ce côté-là ne fait pas défiler.
 .trap {
   position: absolute;
-  left: -10000px;
+  inset-inline-start: -10000px;
   width: 1px;
   height: 1px;
   overflow: hidden;

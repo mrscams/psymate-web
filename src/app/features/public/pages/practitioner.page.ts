@@ -17,7 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
-import { formatDate, toAppLocale } from '../../../core/i18n';
+import { formatDate, formatLocale, toAppLocale } from '../../../core/i18n';
 import { StateAction, StateComponent, ToastService } from '../../../shared/ui';
 import { stateKind } from '../../../shared/util';
 import { paramsFromQuery } from '../data/directory-query';
@@ -108,7 +108,7 @@ export class PractitionerPage {
   protected readonly offeredModalities = computed(() =>
     this.modalities()
       .filter((modality) => modality.offered)
-      .map((modality) => modality.label.toLocaleLowerCase(this.locale))
+      .map((modality) => modality.label.toLocaleLowerCase(formatLocale(this.locale)))
       .join(', '),
   );
   protected readonly bio = computed(() => parseBio(this.profile()?.bio ?? null));

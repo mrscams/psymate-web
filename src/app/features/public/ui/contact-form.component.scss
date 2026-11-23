@@ -25,7 +25,7 @@ form {
   font: 500 13px/1.4 var(--font-ui);
 }
 
-// Aide à gauche (elle passe à la ligne), compteur mono à droite sur une seule ligne.
+// Aide en début de ligne (elle passe à la ligne), compteur mono en fin, sur une seule ligne.
 .help {
   flex: 1 1 auto;
   min-width: 0;
@@ -33,15 +33,16 @@ form {
 
 .length {
   flex: none;
-  padding-left: 16px;
+  padding-inline-start: 16px;
   font-family: var(--font-mono);
   white-space: nowrap;
 }
 
-// Hors écran, pas display:none : certains robots ne remplissent que les champs « visibles ».
+// Hors écran, pas display:none : certains robots ne remplissent que les champs « visibles ». Côté
+// début de ligne (à gauche en LTR, à droite en RTL) : un débord de ce côté-là ne fait pas défiler.
 .trap {
   position: absolute;
-  left: -10000px;
+  inset-inline-start: -10000px;
   width: 1px;
   height: 1px;
   overflow: hidden;
@@ -73,7 +74,8 @@ form {
 }
 
 .error {
-  margin: 0 0 0 40px;
+  margin-block: 0;
+  margin-inline: 40px 0;
   color: var(--danger);
   font: var(--mat-sys-body-small);
 }
@@ -90,7 +92,7 @@ form {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .sending {

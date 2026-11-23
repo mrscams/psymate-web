@@ -27,7 +27,7 @@ h1 {
 .pending {
   margin: 0;
   padding: 12px 16px;
-  border-left: 4px solid var(--warning);
+  border-inline-start: 4px solid var(--warning);
   border-radius: 8px;
   background: var(--warning-bg);
   color: var(--text-primary);
@@ -52,7 +52,7 @@ section {
   }
 
   ul {
-    padding-left: 20px;
+    padding-inline-start: 20px;
   }
 }
 

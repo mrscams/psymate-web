@@ -102,8 +102,11 @@
       De l'inscription à la fiche publique, en quatre étapes
     </h2>
     <p class="sub" i18n="Sous-titre des quatre étapes@@public.how.steps.sub">
-      La vérification prend au plus {{ facts.verificationBusinessDays }} jours ouvrés. Elle ne
-      bloque pas l'usage de l'outil de suivi.
+      La vérification prend au plus
+      {facts.verificationBusinessDays, plural,
+        other {{{ facts.verificationBusinessDays }} jours ouvrés}
+
+      }. Elle ne bloque pas l'usage de l'outil de suivi.
     </p>
     <ol>
       <li>
@@ -117,8 +120,9 @@
         <span class="number" aria-hidden="true">02</span>
         <h3 i18n="Étape 2@@public.how.step2.title">Confirmer l'e-mail</h3>
         <p i18n="Étape 2, texte@@public.how.step2.text">
-          Un lien valable {{ facts.emailConfirmationHours }} h. Dès ce clic, l'outil de suivi est
-          ouvert : vous pouvez créer vos premiers dossiers.
+          Un lien valable
+          {facts.emailConfirmationHours, plural, other {{{ facts.emailConfirmationHours }} h}}. Dès
+          ce clic, l'outil de suivi est ouvert : vous pouvez créer vos premiers dossiers.
         </p>
       </li>
       <li>
@@ -133,9 +137,12 @@
         <span class="number" aria-hidden="true">04</span>
         <h3 i18n="Étape 4@@public.how.step4.title">Vérification humaine</h3>
         <p i18n="Étape 4, texte@@public.how.step4.text">
-          Un membre de l'équipe examine le dossier sous {{ facts.verificationBusinessDays }} jours
-          ouvrés. Approuvé : fiche publique et badge activés. Pièce manquante : on vous dit
-          précisément laquelle.
+          Un membre de l'équipe examine le dossier sous
+          {facts.verificationBusinessDays, plural,
+            other {{{ facts.verificationBusinessDays }} jours ouvrés}
+
+          }. Approuvé : fiche publique et badge activés. Pièce manquante : on vous dit précisément
+          laquelle.
         </p>
       </li>
     </ol>
@@ -167,7 +174,9 @@
         >
         <span i18n="Garantie contact relayé, texte@@public.how.never.contact.text"
           >Le message part chez le praticien ; il n'est rattaché à aucun dossier et il est effacé
-          après {{ facts.contactRetentionDays }} jours.</span
+          après
+          {facts.contactRetentionDays, plural, other {{{ facts.contactRetentionDays }} jours}
+          }.</span
         >
       </li>
       <li>
@@ -176,7 +185,8 @@
         >
         <span i18n="Garantie justificatifs, texte@@public.how.never.documents.text"
           >Les scans de diplômes et de pièces d'identité sont supprimés
-          {{ facts.documentsPurgeDays }} jours après la décision.</span
+          {facts.documentsPurgeDays, plural, other {{{ facts.documentsPurgeDays }} jours}}
+          après la décision.</span
         >
       </li>
     </ul>

@@ -34,7 +34,7 @@ ul {
 
   li + li::before {
     content: '›';
-    margin-right: 8px;
+    margin-inline-end: 8px;
   }
 
   a {
@@ -75,7 +75,7 @@ h1 {
 
   li + li::before {
     content: '·';
-    margin-right: 8px;
+    margin-inline-end: 8px;
   }
 }
 

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 
-import { AppLocale } from '../../../core/i18n';
+import { AppLocale, formatLocale } from '../../../core/i18n';
 import { DirectoryVocabulary, PractitionerCard } from '../data/directory.models';
 import { practitionerPath } from '../public-paths';
 import { plainText } from './bio';
@@ -49,7 +49,10 @@ export class PractitionerCardComponent {
     const title = this.card().titleLabel?.trim() ?? '';
     const excerpt = plainText(this.card().bioExcerpt);
     // Un extrait qui commence déjà par le titre ne le répète pas.
-    if (!title || excerpt.toLocaleLowerCase().startsWith(title.toLocaleLowerCase())) return excerpt;
+    const tag = formatLocale(this.locale());
+    if (!title || excerpt.toLocaleLowerCase(tag).startsWith(title.toLocaleLowerCase(tag))) {
+      return excerpt;
+    }
     return excerpt ? `${title} · ${excerpt}` : title;
   });
 

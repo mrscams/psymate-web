@@ -6,6 +6,15 @@
   font-family: var(--font-mono);
 }
 
+// Texte à lettres en chasse fixe (prochain créneau « 1 décembre 2026 », tarifs saisis) :
+// --font-mono-text vaut --font-mono en français et en anglais, la police d'interface en arabe
+// (docs/design/arabe.md §4), chiffres tabulaires.
+.facts .mono,
+.fees {
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
+}
+
 .crumbs ol {
   display: flex;
   flex-wrap: wrap;
@@ -18,7 +27,7 @@
 
   li + li::before {
     content: '›';
-    margin-right: 6px;
+    margin-inline-end: 6px;
   }
 
   a {
