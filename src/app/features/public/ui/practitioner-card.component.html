@@ -3,7 +3,9 @@
   <div class="body">
     <div class="identity">
       <h3 class="name">
-        <a class="name-link pm-link-target" [routerLink]="link()">{{ card().displayName }}</a>
+        <a class="name-link pm-link-target" dir="auto" [routerLink]="link()">{{
+          card().displayName
+        }}</a>
       </h3>
       <pm-profession-chip [profession]="card().profession" />
       @if (card().verified) {
@@ -12,7 +14,7 @@
       <pm-availability class="availability-slot" [availability]="card().availability" />
     </div>
     @if (summary()) {
-      <p class="excerpt">{{ summary() }}</p>
+      <p class="excerpt" dir="auto">{{ summary() }}</p>
     }
     @if (specialties().length) {
       <ul
@@ -35,7 +37,7 @@
               <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
               <circle cx="12" cy="10" r="3" />
             </svg>
-            {{ card().city }}
+            <bdi>{{ card().city }}</bdi>
           </dd>
         </div>
       }

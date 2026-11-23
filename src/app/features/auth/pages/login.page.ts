@@ -83,7 +83,7 @@ export class LoginPage {
     return until === null ? 0 : Math.max(0, Math.ceil((until - this.now()) / 1000));
   });
   protected readonly locked = computed(() => this.lockSeconds() > 0);
-  protected readonly lockDelay = computed(() => formatDelay(this.lockSeconds()));
+  protected readonly lockDelay = computed(() => formatCountdown(this.lockSeconds()));
   protected readonly message = computed(() => errorMessage(this.store.problem()));
 
   /** Arrivée depuis l'étape 2 du mot de passe oublié : le mot de passe vient d'être remplacé. */
@@ -163,7 +163,8 @@ export class LoginPage {
   }
 }
 
-function formatDelay(seconds: number): string {
+/** « 2:05 » : compte à rebours du verrou en minutes:secondes, chiffres latins par construction. */
+function formatCountdown(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
   const rest = seconds % 60;
   return `${minutes}:${String(rest).padStart(2, '0')}`;

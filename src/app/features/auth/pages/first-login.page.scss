@@ -13,7 +13,7 @@
 .skip-link {
   position: absolute;
   top: -100px;
-  left: 16px;
+  inset-inline-start: 16px;
   z-index: 10;
   padding: 8px 12px;
   border-radius: 8px;
@@ -279,4 +279,11 @@ input {
   .layout {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+// Valeur sans sens de lecture (Q77, docs/design/arabe.md §5) : e-mail, mot de passe, code et numéro
+// en dir="ltr", donc affichés dans l'ordre de frappe, mais alignés du côté de début de la page
+// (à droite en arabe). En /fr/ et /en/, rien ne change.
+:host:dir(rtl) input[dir='ltr'] {
+  text-align: end;
 }

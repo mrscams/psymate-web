@@ -5,7 +5,7 @@ import { dayLabel, modalityLabel, timeLabel } from './booking-format';
 /**
  * Détail d'un rendez-vous des pages par lien (fiche 32). PublicAppointmentDto ne porte pas de
  * fuseau : date et heures sont dans le fuseau du navigateur, nommé à l'écran (« heure de votre
- * appareil, Europe/Paris »). Intl avec la locale de l'application.
+ * appareil, Europe/Paris »). Intl avec la locale de formatage (booking-format, Q73).
  */
 export interface AppointmentDetail {
   /** Lien vers la fiche ; null quand la fiche n'est plus publiée (ligne « Praticien » absente). */

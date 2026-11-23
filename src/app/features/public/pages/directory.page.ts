@@ -27,7 +27,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { HttpNotices } from '../../../core/http';
-import { toAppLocale } from '../../../core/i18n';
+import { catalogLabel, toAppLocale } from '../../../core/i18n';
 import { StateAction, StateComponent } from '../../../shared/ui';
 import { isRefreshing, stateKind } from '../../../shared/util';
 import {
@@ -49,7 +49,7 @@ import { DirectoryStore } from '../data/directory.store';
 import { VocabularyStore } from '../data/vocabulary.store';
 import { PUBLIC_FEATURE_PATHS } from '../public-paths';
 import { DirectoryFiltersComponent, FilterToggle } from '../ui/directory-filters.component';
-import { itemLabel, professionLabel, vocabularyLabel } from '../ui/labels';
+import { professionLabel, vocabularyLabel } from '../ui/labels';
 import { PaginationComponent } from '../ui/pagination.component';
 import { PractitionerCardComponent } from '../ui/practitioner-card.component';
 import { PublicMeta } from './page-meta';
@@ -150,7 +150,7 @@ export class DirectoryPage {
     const counts = this.store.facets()?.specialties ?? [];
     return (this.vocabulary()?.specialties ?? []).map((item) => ({
       code: item.code,
-      label: itemLabel(item, this.locale),
+      label: catalogLabel(item, this.locale),
       count: counts.find((facet) => facet.code === item.code)?.count ?? 0,
     }));
   });

@@ -38,7 +38,7 @@
   min-width: 0;
   padding: 40px 56px;
   background: var(--surface-raised);
-  border-right: 1px solid var(--border-subtle);
+  border-inline-end: 1px solid var(--border-subtle);
 }
 
 .logo {
@@ -108,7 +108,7 @@
   gap: 10px;
 
   &--child {
-    padding-left: 18px;
+    padding-inline-start: 18px;
   }
 }
 
@@ -168,7 +168,7 @@
 
   &--date {
     width: 48px;
-    margin-left: auto;
+    margin-inline-start: auto;
   }
 
   &--feeling {
@@ -326,7 +326,7 @@ input[type='password'] {
 .password {
   display: flex;
   align-items: center;
-  padding-right: 6px;
+  padding-inline-end: 6px;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   background: var(--surface-raised);
@@ -450,7 +450,8 @@ input[type='password'] {
     height: 16px;
     // La maquette ne déclare pas de marge mais garde celle du navigateur (3px 3px 3px 4px) : la case y
     // est à 4 px du bord du label (mesuré, x = 892 pour un label à 888). Même retrait ici.
-    margin: 0 0 0 4px;
+    margin-block: 0;
+    margin-inline: 4px 0;
     accent-color: var(--primary);
   }
 }
@@ -515,7 +516,7 @@ input[type='password'] {
   .panel-foot {
     padding: 0 56px 40px;
     background: var(--surface-raised);
-    border-right: 1px solid var(--border-subtle);
+    border-inline-end: 1px solid var(--border-subtle);
     text-align: start;
   }
 
@@ -530,4 +531,11 @@ input[type='password'] {
   .preview {
     display: none;
   }
+}
+
+// Valeur sans sens de lecture (Q77, docs/design/arabe.md §5) : e-mail, mot de passe, code et numéro
+// en dir="ltr", donc affichés dans l'ordre de frappe, mais alignés du côté de début de la page
+// (à droite en arabe). En /fr/ et /en/, rien ne change.
+:host:dir(rtl) input[dir='ltr']:not(.otp-input) {
+  text-align: end;
 }

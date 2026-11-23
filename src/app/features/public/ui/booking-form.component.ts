@@ -27,6 +27,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 
 import { ApiProblem, FieldProblem } from '../../../core/http';
+import { formatLocale } from '../../../core/i18n';
 import {
   applyProblem,
   fieldId,
@@ -124,7 +125,7 @@ export class BookingFormComponent {
 
   private readonly document = inject(DOCUMENT);
   private readonly injector = inject(Injector);
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
 
   protected readonly limits = BOOKING_LIMITS;
   protected readonly message = firstMessage;

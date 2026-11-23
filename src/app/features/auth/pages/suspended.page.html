@@ -5,7 +5,7 @@
         <span i18n="Bandeau : qui est connecté@@auth.confirm.signedInAs"
           >Connecté·e en tant que</span
         >
-        <span class="mono">{{ me.email }}</span>
+        <span class="mono email" dir="ltr">{{ me.email }}</span>
         <span aria-hidden="true">·</span>
         <button
           type="button"
@@ -144,6 +144,7 @@
             <input
               [id]="fieldId('email')"
               type="email"
+              dir="ltr"
               formControlName="email"
               autocomplete="username"
               required
@@ -162,6 +163,7 @@
             <input
               [id]="fieldId('password')"
               type="password"
+              dir="ltr"
               formControlName="password"
               autocomplete="current-password"
               required
@@ -181,6 +183,7 @@
               <input
                 [id]="fieldId('otp')"
                 type="text"
+                dir="ltr"
                 formControlName="otp"
                 autocomplete="one-time-code"
                 inputmode="numeric"
@@ -325,7 +328,7 @@
                 <span class="pill danger" i18n="État du job : échec@@auth.suspended.export.failed"
                   >Échec</span
                 >
-                <span class="mono">{{ store.exportStatus().data?.error }}</span>
+                <span class="mono" dir="auto">{{ store.exportStatus().data?.error }}</span>
                 <button
                   mat-stroked-button
                   type="button"
@@ -398,6 +401,7 @@
                 <textarea
                   [id]="fieldId('message')"
                   formControlName="message"
+                  dir="auto"
                   rows="5"
                   required
                   [attr.minlength]="appealMin"
@@ -408,8 +412,9 @@
                   [attr.aria-describedby]="fieldId('message') + '-error message-count'"
                 ></textarea>
                 <p id="message-count" class="count mono">
-                  {{ messageLength() }} / {{ appealMax }}
-                  <span i18n="Minimum du message de recours@@auth.suspended.appeal.min"
+                  <!-- Compteur isolé de gauche à droite (« 12 / 4000 » et non « 4000 / 12 » en arabe). -->
+                  <bdi dir="ltr">{{ messageLength() }} / {{ appealMax }}</bdi
+                  >&ngsp;<span i18n="Minimum du message de recours@@auth.suspended.appeal.min"
                     >· {{ appealMin }} caractères au moins</span
                   >
                 </p>

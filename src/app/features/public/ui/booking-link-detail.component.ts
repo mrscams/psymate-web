@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { formatLocale } from '../../../core/i18n';
 import { PublicAppointment } from '../data/booking.models';
 import { practitionerPath } from '../public-paths';
 import { appointmentDetail } from './booking-link-format';
@@ -27,14 +28,14 @@ import { appointmentDetail } from './booking-link-format';
       @if (d.practitioner; as p) {
         <dt i18n="Terme du détail, praticien@@public.bookingLink.detail.practitioner">Praticien</dt>
         <dd>
-          <a [routerLink]="practitionerLink(p.slug)" rel="noreferrer">{{ p.name }}</a>
+          <a [routerLink]="practitionerLink(p.slug)" rel="noreferrer" dir="auto">{{ p.name }}</a>
         </dd>
       }
       <dt i18n="Terme du détail, date@@public.bookingLink.detail.date">Date</dt>
       <dd>{{ d.day }}</dd>
       <dt i18n="Terme du détail, heure@@public.bookingLink.detail.time">Heure</dt>
       <dd>
-        <span class="mono">{{ d.hours }}</span
+        <span class="mono" dir="ltr">{{ d.hours }}</span
         ><span class="tz">{{ d.zone }}</span>
       </dd>
       <dt i18n="Terme du détail, durée@@public.bookingLink.detail.durationTerm">Durée</dt>
@@ -103,7 +104,7 @@ import { appointmentDetail } from './booking-link-format';
 export class BookingLinkDetailComponent {
   readonly appointment = input.required<PublicAppointment>();
 
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   protected readonly detail = computed(() => appointmentDetail(this.appointment(), this.locale));
   protected readonly practitionerLink = practitionerPath;
 }

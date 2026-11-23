@@ -2,7 +2,7 @@
   @if (session.me(); as me) {
     <p class="who">
       <span i18n="Bandeau : qui est connecté@@auth.confirm.signedInAs">Connecté·e en tant que</span>
-      <span class="mono">{{ me.email }}</span>
+      <span class="mono" dir="ltr">{{ me.email }}</span>
       <span aria-hidden="true">·</span>
       <button
         type="button"
@@ -74,6 +74,7 @@
           <input
             [id]="fieldId('email')"
             type="email"
+            dir="ltr"
             formControlName="email"
             autocomplete="username"
             required
@@ -166,6 +167,7 @@
             <input
               [id]="fieldId('email')"
               type="email"
+              dir="ltr"
               formControlName="email"
               autocomplete="username"
               required
@@ -248,6 +250,7 @@
             <input
               [id]="fieldId('password')"
               type="password"
+              dir="ltr"
               formControlName="password"
               autocomplete="current-password"
               required
@@ -266,6 +269,7 @@
             <input
               [id]="fieldId('newEmail')"
               type="email"
+              dir="ltr"
               formControlName="newEmail"
               autocomplete="email"
               required

@@ -37,9 +37,9 @@
   gap: 6px 8px;
 }
 
-// Disponibilité poussée à droite de la ligne d'identité (maquette : margin-left auto).
+// Disponibilité poussée en fin de ligne d'identité (maquette : margin-left auto ; à gauche en RTL).
 .availability-slot {
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .name {
@@ -96,8 +96,10 @@
 }
 
 // Ligne de méta : éléments séparés par un point médian (non lu : texte alternatif vide). Chaque
-// élément porte son point à gauche ; la liste est décalée de sa largeur et rognée d'autant, si bien
-// que le point du premier élément de chaque ligne (y compris après un retour à la ligne) est caché.
+// élément porte son point en début de ligne (à gauche, à droite en RTL) ; la liste est décalée de
+// sa largeur et rognée d'autant de ce côté, si bien que le point du premier élément de chaque ligne
+// (y compris après un retour à la ligne) est caché. clip-path n'a pas de forme logique : le côté
+// rogné suit le sens par :dir(rtl).
 $meta-separator: 18px;
 
 .meta {
@@ -105,10 +107,15 @@ $meta-separator: 18px;
   flex-wrap: wrap;
   align-items: center;
   gap: 4px 0;
-  margin: 0 0 0 (-$meta-separator);
+  margin-block: 0;
+  margin-inline: (-$meta-separator) 0;
   clip-path: inset(0 0 0 $meta-separator);
   color: var(--text-secondary);
   font: 13px/1.5 var(--font-ui);
+
+  &:dir(rtl) {
+    clip-path: inset(0 $meta-separator 0 0);
+  }
 
   div {
     display: inline-flex;
@@ -195,7 +202,7 @@ $meta-separator: 18px;
   }
 
   .availability-slot {
-    margin-left: 0;
+    margin-inline-start: 0;
   }
 
   .tags li {

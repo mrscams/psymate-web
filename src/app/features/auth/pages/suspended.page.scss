@@ -229,12 +229,21 @@ legend {
 .count {
   margin: 0;
   font-size: 12px;
-  text-align: right;
+  text-align: end;
 }
 
+// Dates à nom de mois, compteur du recours (avec sa phrase) : --font-mono-text, police d'interface
+// en arabe (Q76) ; isolés dans la phrase qui les contient, comme un <bdi>.
 .mono {
-  font-family: var(--font-mono);
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
   font-size: 13px;
+  unicode-bidi: isolate;
+}
+
+// Adresse e-mail (dir="ltr") : chasse fixe dans les trois langues.
+.email {
+  font-family: var(--font-mono);
 }
 
 .actions {
@@ -319,7 +328,7 @@ button[aria-disabled='true'] {
 
     a {
       color: var(--danger);
-      margin-left: 6px;
+      margin-inline-start: 6px;
     }
   }
 
@@ -357,4 +366,11 @@ a,
     margin: 0 -20px 20px;
     padding: 12px 20px;
   }
+}
+
+// Valeur sans sens de lecture (Q77, docs/design/arabe.md §5) : e-mail, mot de passe, code et numéro
+// en dir="ltr", donc affichés dans l'ordre de frappe, mais alignés du côté de début de la page
+// (à droite en arabe). En /fr/ et /en/, rien ne change.
+:host:dir(rtl) input[dir='ltr'] {
+  text-align: end;
 }

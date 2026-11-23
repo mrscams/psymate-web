@@ -15,12 +15,18 @@
       </li>
       @for (crumb of crumbs(); track crumb.label) {
         <li>
-          <a class="pm-link-target" [routerLink]="paths.directory" [queryParams]="crumb.params">{{
-            crumb.label
-          }}</a>
+          <a
+            class="pm-link-target"
+            dir="auto"
+            [routerLink]="paths.directory"
+            [queryParams]="crumb.params"
+            >{{ crumb.label }}</a
+          >
         </li>
       }
-      <li aria-current="page">{{ p.displayName }}</li>
+      <li aria-current="page">
+        <bdi>{{ p.displayName }}</bdi>
+      </li>
     </ol>
   </nav>
 
@@ -30,7 +36,7 @@
         <pm-practitioner-avatar [name]="p.displayName" [large]="true" />
         <div class="identity-body">
           <div class="name-row">
-            <h1 id="practitioner-name">{{ p.displayName }}</h1>
+            <h1 id="practitioner-name" dir="auto">{{ p.displayName }}</h1>
             @if (p.verified) {
               <pm-verified-badge />
             }
@@ -38,19 +44,19 @@
           <p class="profession-row">
             <pm-profession-chip [profession]="p.profession" />
             @if (p.titleLabel) {
-              <span>{{ p.titleLabel }}</span>
+              <span dir="auto">{{ p.titleLabel }}</span>
             }
             @if (p.professionalNumber) {
               <span class="mono"
-                ><span i18n="Préfixe du numéro professionnel@@public.practitioner.number">n°</span>
-                {{ p.professionalNumber }}</span
+                ><span i18n="Préfixe du numéro professionnel@@public.practitioner.number">n°</span
+                >&ngsp;<span dir="ltr">{{ p.professionalNumber }}</span></span
               >
             }
           </p>
           <ul class="facts">
             @if (p.city || offeredModalities()) {
               <li>
-                {{ p.city }}
+                <bdi>{{ p.city }}</bdi>
                 @if (p.city && offeredModalities()) {
                   ·
                 }
@@ -117,7 +123,7 @@
           </h2>
           @for (block of bio(); track $index) {
             @if (block.kind === 'paragraph') {
-              <p>
+              <p dir="auto">
                 @for (span of block.spans; track $index) {
                   @if (span.strong) {
                     <strong>{{ span.text }}</strong>
@@ -127,7 +133,7 @@
                 }
               </p>
             } @else {
-              <ul>
+              <ul dir="auto">
                 @for (item of block.items; track $index) {
                   <li>
                     @for (span of item; track $index) {
@@ -203,7 +209,7 @@
                 <p>{{ languages() }}</p>
               }
               @if (p.fees) {
-                <p class="mono fees">{{ p.fees }}</p>
+                <p class="mono fees" dir="auto">{{ p.fees }}</p>
               }
             </div>
           }
@@ -216,11 +222,11 @@
           tabindex="-1"
           i18n="Titre du formulaire de contact@@public.contact.title"
         >
-          Envoyer un message à {{ p.displayName }}
+          Envoyer un message à <bdi>{{ p.displayName }}</bdi>
         </h2>
         <p class="lead" i18n="Introduction du formulaire de contact@@public.contact.lead">
-          Votre message est transmis par e-mail à {{ p.displayName }}. Il n'est rattaché à aucun
-          dossier patient.
+          Votre message est transmis par e-mail à <bdi>{{ p.displayName }}</bdi
+          >. Il n'est rattaché à aucun dossier patient.
         </p>
         <pm-contact-form
           [practitionerName]="p.displayName"
@@ -251,7 +257,9 @@
               <div>
                 <dt i18n="Téléphone du praticien@@public.practitioner.phone">Téléphone</dt>
                 <dd>
-                  <a class="mono pm-link-target" [href]="'tel:' + p.phone">{{ p.phone }}</a>
+                  <a class="mono pm-link-target" dir="ltr" [href]="'tel:' + p.phone">{{
+                    p.phone
+                  }}</a>
                 </dd>
               </div>
             }
@@ -259,7 +267,7 @@
               <div>
                 <dt i18n="E-mail du praticien@@public.practitioner.email">E-mail</dt>
                 <dd>
-                  <a class="pm-link-target" [href]="'mailto:' + p.email">{{ p.email }}</a>
+                  <a class="pm-link-target" dir="ltr" [href]="'mailto:' + p.email">{{ p.email }}</a>
                 </dd>
               </div>
             }
@@ -269,6 +277,7 @@
                 <dd>
                   <a
                     class="pm-link-target"
+                    dir="ltr"
                     [href]="p.websiteUrl"
                     rel="noopener nofollow"
                     target="_blank"
@@ -292,7 +301,7 @@
           <h2 id="practitioner-office" i18n="Titre du cabinet@@public.practitioner.office">
             Cabinet
           </h2>
-          <address>
+          <address dir="auto">
             {{ p.address }}<br />
             @if (p.postalCode || p.city) {
               {{ p.postalCode }} {{ p.city }}
