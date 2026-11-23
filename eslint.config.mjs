@@ -177,6 +177,33 @@ export default defineConfig([
     },
   },
 
+  // Paquet initial (M16-09B) : ces fichiers importent shared/ui par chemin direct, jamais par son
+  // barrel. Pourquoi et mesures : commentaire des imports de src/app/app.component.ts.
+  {
+    files: [
+      'src/app/app.component.ts',
+      'src/app/features/patient-shell/shortcuts-help.ts',
+      'src/app/features/patient-shell/data/patient-shell.api.ts',
+      'src/app/features/search/data/search.model.ts',
+      'tools/eslint/fixtures/src/app/app.component.ts',
+    ],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: '(^|/)shared/ui(/index(\.ts)?)?/?$',
+              allowTypeImports: true,
+              message:
+                "Fichier du paquet initial : importer shared/ui par chemin direct (ex. './shared/ui/app-bar/app-bar.component'), pas par son barrel, qui tire dans le paquet initial tout ce qu'il réexporte (voir app.component.ts, M16-09B).",
+            },
+          ],
+        },
+      ],
+    },
+  },
+
   // Feuilles de style lues comme du texte par les règles psymate (ESLint ne sait pas lire le SCSS).
   {
     files: ['src/**/*.{scss,css}', 'tools/eslint/fixtures/src/**/*.{scss,css}'],
