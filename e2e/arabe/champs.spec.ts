@@ -128,6 +128,7 @@ test.describe('interlettrage (Q76)', () => {
     expect(measures['ar'].placeholder).toBe(measures['fr'].placeholder);
     expect(measures['fr'].label).not.toBe('normal');
     expect(measures['ar'].label).toBe('normal');
+    await expectNoAxeViolations(page);
   });
 });
 
@@ -175,6 +176,7 @@ test.describe('champ vide en dir="auto" (Q77)', () => {
       expectLeft(await inkOf(page, field, true), 'curseur du champ vide');
       // placeholder=" " : rien à lire de plus pour un lecteur d'écran.
       await expect(field).toHaveAccessibleDescription('');
+      await expectNoAxeViolations(page);
     });
   }
 
@@ -198,6 +200,7 @@ test.describe('champ vide en dir="auto" (Q77)', () => {
     await page.keyboard.type('Claire');
     expect((await styleOf(field)).direction).toBe('ltr');
     expectLeft(await inkOf(page, field), 'texte latin');
+    await expectNoAxeViolations(page);
   });
 });
 

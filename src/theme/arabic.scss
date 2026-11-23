@@ -49,8 +49,8 @@
 // composant : pas d'interlettrage (il casse la liaison des lettres), pas de capitales forcées (sans
 // effet sur l'arabe, mais elles touchent un mot latin inséré), pas d'italique (synthétisé, il penche
 // les lettres ; la mise en relief passe par la graisse ou la couleur). !important : ces règles
-// l'emportent sur celles des composants (classe et attribut d'encapsulation), dans le seul bundle
-// arabe ; un élément en lang="fr" (feuille de facture) garde les siennes.
+// l'emportent sur celles des composants (classe et attribut d'encapsulation) ; la feuille est la même
+// dans les trois bundles, :lang(ar) et :dir(rtl) confinent ces règles à l'arabe ; un élément en lang="fr" (feuille de facture) garde les siennes.
 // Exclus (M16-09B) : les champs de saisie en dir="ltr" et leur texte indicatif (code à six chiffres,
 // code de secours, mot de passe, e-mail, numéros) ; leur contenu est latin, leur interlettrage reste
 // celui de /fr/ (0.25em du champ code). L'exclusion vise le champ lui-même (input[dir='ltr'] ;
