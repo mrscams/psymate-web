@@ -108,7 +108,7 @@
         @for (row of textShortcuts; track row.tokens.join('|'); let last = $last) {
           <span class="shortcut">
             @for (token of row.tokens; track token; let lastToken = $last) {
-              <b>{{ token }}</b>
+              <b dir="auto">{{ token }}</b>
               @if (!lastToken) {
                 <span>,&ngsp;</span>
               }

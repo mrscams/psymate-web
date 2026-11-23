@@ -254,6 +254,9 @@ describe('colonne de contexte en séance', () => {
     expect(shortcuts).not.toContain('anx 7');
     expect(shortcuts).not.toContain('12 mars');
     expect(shortcuts).toContain('/evt');
+    for (const token of el.querySelectorAll('.shortcuts b')) {
+      expect(token.getAttribute('dir')).toBe('auto');
+    }
     expect(text(el)).not.toMatch(NON_LATIN_DIGITS);
   });
 
@@ -338,6 +341,8 @@ describe('panneau de clôture', () => {
   it('/ar/ : champs libres en dir="auto", durée et touche en dir="ltr", nom dans un <bdi>', async () => {
     const panel = await openPanel('ar');
     expect(panel.querySelector('textarea')?.getAttribute('dir')).toBe('auto');
+    // Champ vide en dir="auto" : placeholder=" " pour prendre le sens de la page (thème arabe).
+    expect(panel.querySelector('textarea')?.getAttribute('placeholder')).toBe(' ');
     expect(panel.querySelector('#next-time-new')?.getAttribute('dir')).toBe('auto');
     expect(panel.querySelector('input.duration')?.getAttribute('dir')).toBe('ltr');
     expect(panel.querySelector('.hints kbd')?.getAttribute('dir')).toBe('ltr');

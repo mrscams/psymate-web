@@ -35,6 +35,8 @@ const ARABIC_SUMMARY = 'تحدثنا عن النوم والعمل.';
 const NON_LATIN_DIGITS = /[٠-٩۰-۹]/;
 /** Caractères d'isolation Unicode (U+2066 à U+2069) : jamais envoyés à l'API. */
 const ISOLATES = /[\u2066-\u2069]/;
+/** Situation en cours, lue par la colonne de contexte dans la projection « vue d'ensemble ». */
+const SITUATION_TITLE = 'Réorganisation du service de nuit';
 const DESKTOP = { width: 1440, height: 900 };
 const PHONE = { width: 390, height: 844 };
 
@@ -159,10 +161,26 @@ test.describe('dossier patient en /ar/', () => {
     });
     await createEntry(api, busy, {
       type: 'situation',
-      title: 'Réorganisation du service de nuit',
+      title: SITUATION_TITLE,
       occurred: { from: new Date(Date.now() - 20 * 86_400_000).toISOString() },
       sessionId: current,
     });
+
+    // La colonne de contexte lit la projection « vue d'ensemble », qui peut être calculée en différé :
+    // on attend que la situation y figure avant d'ouvrir le dossier.
+    await expect
+      .poll(
+        async () => {
+          const response = await api.get(`${API}/api/patients/${busy}/overview?window=90d`);
+          if (response.status() !== 200) return [];
+          const { activeSituations } = (await response.json()) as {
+            activeSituations?: { title?: string }[];
+          };
+          return (activeSituations ?? []).map((situation) => situation.title);
+        },
+        { timeout: 30_000 },
+      )
+      .toContain(SITUATION_TITLE);
 
     // Contexte créé explicitement, réglages du projet : axe-core refuse browser.newPage().
     context = await browser.newContext({
@@ -230,6 +248,10 @@ test.describe('dossier patient en /ar/', () => {
 
     // « Raccourcis dans le texte » : ni dates ni ressenti en /ar/ (Q81), préfixes et lien seulement.
     await expect(side.locator('.shortcuts .shortcut')).toHaveCount(5);
+    // Préfixes en dir="auto" : « /evt » se lit de gauche à droite, comme dans le bloc de saisie.
+    const evt = side.locator('.shortcuts .shortcut b').first();
+    await expect(evt).toHaveAttribute('dir', 'auto');
+    expect(await evt.evaluate((el) => getComputedStyle(el).direction)).toBe('ltr');
     const tokens = await side.locator('.shortcuts .shortcut b').allTextContents();
     expect(tokens.slice(0, 4).map((token) => token.trim())).toEqual([
       '/evt',
@@ -313,6 +335,9 @@ test.describe('dossier patient en /ar/', () => {
     expect(await subject.evaluate((el) => getComputedStyle(el).direction)).toBe('ltr');
     const summary = dialog.locator('textarea');
     await expect(summary).toHaveAttribute('dir', 'auto');
+    // Vide, il prend le sens de la page (placeholder=" ", règle du thème arabe) ; rempli, le sien.
+    await expect(summary).toHaveValue('');
+    expect(await summary.evaluate((el) => getComputedStyle(el).direction)).toBe('rtl');
     await expect(dialog.locator('input.duration')).toHaveAttribute('dir', 'ltr');
     await expect(dialog.locator('#next-time-new')).toHaveAttribute('dir', 'auto');
     await expect(dialog.locator('.hints kbd')).toHaveAttribute('dir', 'ltr');
