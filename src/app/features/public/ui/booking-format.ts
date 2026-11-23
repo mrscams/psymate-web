@@ -1,10 +1,12 @@
+import { formatLocale } from '../../../core/i18n';
 import { BookingModality, BookingSlot, SlotWindow } from '../data/booking.models';
 import { dateKey } from '../data/booking-window';
 
 /**
  * Libellés et formats de la prise de rendez-vous (fiche 31). Les heures sont toujours celles du
  * fuseau du praticien (`timezone` de la réponse), quelle que soit l'heure du navigateur ; Intl avec
- * la locale de l'application. Aucun créneau n'est calculé ici : on ne fait que les afficher.
+ * la locale de formatage (core/i18n, Q73 : chiffres latins et 24 h en arabe), quelle que soit la
+ * locale reçue. Aucun créneau n'est calculé ici : on ne fait que les afficher.
  */
 
 /** Modalité en clair, en tête de phrase (« Au cabinet », « En visio », « Par téléphone »). */
@@ -21,7 +23,7 @@ export function modalityLabel(modality: BookingModality): string {
 
 /** Modalité dans une phrase (« au cabinet »). */
 export function modalityInline(modality: BookingModality, locale: string): string {
-  return modalityLabel(modality).toLocaleLowerCase(locale);
+  return modalityLabel(modality).toLocaleLowerCase(formatLocale(locale));
 }
 
 /** « Au cabinet ou en visio » : les modalités offertes, dans l'ordre du contrat. */
@@ -29,7 +31,7 @@ export function modalitiesSentence(modalities: BookingModality[], locale: string
   if (!modalities.length) return '';
   const [first, ...rest] = modalities;
   const words = [modalityLabel(first), ...rest.map((m) => modalityInline(m, locale))];
-  return new Intl.ListFormat(locale, { type: 'disjunction' }).format(words);
+  return new Intl.ListFormat(formatLocale(locale), { type: 'disjunction' }).format(words);
 }
 
 /** Midi UTC d'un jour calendaire : son nom ne dépend d'aucun fuseau. */
@@ -47,7 +49,7 @@ function withOrdinal(parts: Intl.DateTimeFormatPart[], locale: string): string {
 
 /** « mardi 24 novembre » (avec l'année : « jeudi 26 novembre 2026 ») d'un jour AAAA-MM-JJ. */
 export function dayLabel(day: string, locale: string, withYear = false): string {
-  const format = new Intl.DateTimeFormat(locale, {
+  const format = new Intl.DateTimeFormat(formatLocale(locale), {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -59,7 +61,7 @@ export function dayLabel(day: string, locale: string, withYear = false): string 
 
 /** « 10:00 » : heure d'un instant dans le fuseau du praticien. */
 export function timeLabel(instant: string, timeZone: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat(formatLocale(locale), {
     hour: '2-digit',
     minute: '2-digit',
     hourCycle: 'h23',
@@ -70,7 +72,7 @@ export function timeLabel(instant: string, timeZone: string, locale: string): st
 /** « Europe/Paris (heure normale d’Europe centrale) » : le fuseau nommé en toutes lettres. */
 export function zoneLabel(timeZone: string, locale: string, at: Date = new Date()): string {
   try {
-    const name = new Intl.DateTimeFormat(locale, { timeZone, timeZoneName: 'long' })
+    const name = new Intl.DateTimeFormat(formatLocale(locale), { timeZone, timeZoneName: 'long' })
       .formatToParts(at)
       .find((part) => part.type === 'timeZoneName')?.value;
     return name ? `${timeZone} (${name})` : timeZone;
@@ -100,7 +102,10 @@ export function windowZoneLabel(timeZone: string, locale: string, window: SlotWi
     if (offsetAt(timeZone, first) === offsetAt(timeZone, last)) {
       return zoneLabel(timeZone, locale, first);
     }
-    const name = new Intl.DateTimeFormat(locale, { timeZone, timeZoneName: 'longGeneric' })
+    const name = new Intl.DateTimeFormat(formatLocale(locale), {
+      timeZone,
+      timeZoneName: 'longGeneric',
+    })
       .formatToParts(first)
       .find((part) => part.type === 'timeZoneName')?.value;
     return name ? `${timeZone} (${name})` : timeZone;

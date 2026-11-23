@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 
-import { AppLocale } from '../../../core/i18n';
+import { AppLocale, formatLocale } from '../../../core/i18n';
 import { DirectoryVocabulary, PractitionerCard } from '../data/directory.models';
 import { practitionerPath } from '../public-paths';
 import { plainText } from './bio';
-import { vocabularyLabel, VocabularyKind } from './labels';
+import { joinLabels, vocabularyLabel, VocabularyKind } from './labels';
 import {
   AvailabilityComponent,
   PractitionerAvatarComponent,
@@ -49,7 +49,10 @@ export class PractitionerCardComponent {
     const title = this.card().titleLabel?.trim() ?? '';
     const excerpt = plainText(this.card().bioExcerpt);
     // Un extrait qui commence déjà par le titre ne le répète pas.
-    if (!title || excerpt.toLocaleLowerCase().startsWith(title.toLocaleLowerCase())) return excerpt;
+    const tag = formatLocale(this.locale());
+    if (!title || excerpt.toLocaleLowerCase(tag).startsWith(title.toLocaleLowerCase(tag))) {
+      return excerpt;
+    }
     return excerpt ? `${title} · ${excerpt}` : title;
   });
 
@@ -57,13 +60,13 @@ export class PractitionerCardComponent {
     this.labels('specialties', this.card().specialties.slice(0, CARD_SPECIALTIES_MAX)),
   );
   protected readonly audiences = computed(() =>
-    this.labels('audiences', this.card().audiences).join(', '),
+    joinLabels(this.labels('audiences', this.card().audiences), this.locale()),
   );
   protected readonly modalities = computed(() =>
-    this.labels('modalities', this.card().modalities).join(', '),
+    joinLabels(this.labels('modalities', this.card().modalities), this.locale()),
   );
   protected readonly languages = computed(() =>
-    this.labels('languages', this.card().languages).join(', '),
+    joinLabels(this.labels('languages', this.card().languages), this.locale()),
   );
 
   private labels(kind: VocabularyKind, codes: string[]): string[] {

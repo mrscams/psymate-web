@@ -378,3 +378,10 @@ input[type='password'] {
     padding: 16px;
   }
 }
+
+// Valeur sans sens de lecture (Q77, docs/design/arabe.md §5) : e-mail, mot de passe, code et numéro
+// en dir="ltr", donc affichés dans l'ordre de frappe, mais alignés du côté de début de la page
+// (à droite en arabe). En /fr/ et /en/, rien ne change.
+:host:dir(rtl) input[dir='ltr'] {
+  text-align: end;
+}

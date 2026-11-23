@@ -15,7 +15,9 @@
           >
         </li>
         <li>
-          <a class="pm-link-target" [routerLink]="practitionerLink()">{{ s.displayName }}</a>
+          <a class="pm-link-target" dir="auto" [routerLink]="practitionerLink()">{{
+            s.displayName
+          }}</a>
         </li>
         <li aria-current="page" i18n="Fil d'Ariane, page courante@@public.booking.crumbs.current">
           Prendre rendez-vous
@@ -39,7 +41,7 @@
           Consultez votre boîte mail
         </h1>
         <p i18n="Validité du lien de vérification@@public.booking.sent.validity">
-          Le lien est valable {{ linkMinutes }} minutes.
+          Le lien est valable {linkMinutes, plural, other {{{ linkMinutes }} minutes}}.
         </p>
         @if (recap(); as r) {
           <div class="recap">
@@ -48,7 +50,7 @@
                 >Créneau demandé</span
               >
               <strong
-                >{{ r.day }} · <span class="mono">{{ r.hours }}</span> ·
+                >{{ r.day }} · <span class="mono" dir="ltr">{{ r.hours }}</span> ·
                 {{ sentModality() }}</strong
               >
               <span>{{ r.zone }}</span>
@@ -70,13 +72,13 @@
           mat-stroked-button
           [routerLink]="practitionerLink()"
           i18n="Lien de retour vers la fiche@@public.booking.sent.back"
-          >Revenir à la fiche de {{ s.displayName }}</a
+          >Revenir à la fiche de <bdi>{{ s.displayName }}</bdi></a
         >
       </p>
     } @else {
       <section class="card head-card" aria-labelledby="booking-title">
         <h1 id="booking-title" i18n="Titre de la page de rendez-vous@@public.booking.title">
-          Prendre rendez-vous avec {{ s.displayName }}
+          Prendre rendez-vous avec <bdi>{{ s.displayName }}</bdi>
         </h1>
         <ul class="facts">
           @for (fact of facts(); track fact) {
@@ -146,7 +148,7 @@
                   >Créneau choisi</span
                 >
                 <strong
-                  >{{ r.day }} · <span class="mono">{{ r.hours }}</span></strong
+                  >{{ r.day }} · <span class="mono" dir="ltr">{{ r.hours }}</span></strong
                 >
                 <span>{{ r.zone }}</span>
               </p>
@@ -207,7 +209,7 @@
         @if (settingsRateLimited()) {
           <p i18n="Réglages, 429@@public.booking.settings.rateLimited">
             Trop de requêtes depuis votre connexion. Réessayez dans
-            {{ settingsRetryMinutes() }} min.
+            {settingsRetryMinutes(), plural, other {{{ settingsRetryMinutes() }} min}}.
           </p>
         } @else {
           <p i18n="Réglages, erreur de chargement@@public.booking.settings.error.message">

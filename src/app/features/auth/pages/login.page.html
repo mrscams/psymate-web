@@ -94,6 +94,7 @@
         <input
           id="login-email"
           type="email"
+          dir="ltr"
           formControlName="email"
           autocomplete="username"
           required
@@ -137,6 +138,7 @@
           <input
             #passwordInput
             id="login-password"
+            dir="ltr"
             [type]="showPassword() ? 'text' : 'password'"
             [class.masked]="!showPassword()"
             formControlName="password"
@@ -203,6 +205,7 @@
               #otpInput
               id="login-otp"
               class="otp-input"
+              dir="ltr"
               [class.recovery]="recoveryCode()"
               type="text"
               [attr.inputmode]="recoveryCode() ? 'text' : 'numeric'"

@@ -28,6 +28,7 @@
           id="directory-q"
           name="q"
           type="search"
+          dir="auto"
           [maxlength]="textMax"
           [ngModel]="qText()"
           (ngModelChange)="qText.set($event)"
@@ -49,6 +50,7 @@
           id="directory-city"
           name="city"
           type="text"
+          dir="auto"
           autocomplete="address-level2"
           [maxlength]="textMax"
           [ngModel]="cityText()"
@@ -122,7 +124,7 @@
 
   @if (rateLimited()) {
     <p class="rate-limited" role="alert" i18n="Annuaire, 429@@public.directory.rateLimited">
-      Trop de recherches, réessayez dans {{ retrySeconds() }} s.
+      Trop de recherches, réessayez dans {retrySeconds(), plural, other {{{ retrySeconds() }} s}}.
     </p>
   }
 
@@ -218,7 +220,9 @@
                   =1 {1 praticien}
                   other {{{ data.total }} praticiens}
                 }</strong
-                >&ngsp;<span class="where">à {{ searchedCity() }}</span></ng-container
+                >&ngsp;<span class="where"
+                  >à <bdi>{{ searchedCity() }}</bdi></span
+                ></ng-container
               >
             } @else {
               <strong i18n="Nombre de résultats@@public.results.count">{data.total, plural,
@@ -285,7 +289,7 @@
             <h3>
               @if (searchedCity()) {
                 <ng-container i18n="Aucun résultat dans une ville@@public.results.empty.city"
-                  >Aucun praticien à {{ searchedCity() }} pour ces critères</ng-container
+                  >Aucun praticien à <bdi>{{ searchedCity() }}</bdi> pour ces critères</ng-container
                 >
               } @else {
                 <ng-container i18n="Aucun résultat@@public.results.empty"
@@ -307,7 +311,7 @@
                       [disabled]="rateLimited()"
                       (click)="removeChip(chip)"
                     >
-                      {{ chip.label }}
+                      <bdi>{{ chip.label }}</bdi>
                       <span
                         class="sr-only"
                         i18n="Action d'une puce de filtre@@public.results.chip.remove"
@@ -339,7 +343,7 @@
                   (click)="removeChip(chip)"
                   i18n="Suggestion : retirer le dernier filtre@@public.results.suggest.removeLast"
                 >
-                  Retirer « {{ chip.label }} »
+                  Retirer « <bdi>{{ chip.label }}</bdi> »
                 </button>
               }
               @if (canIncludeVideo()) {

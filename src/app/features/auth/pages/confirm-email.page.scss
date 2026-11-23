@@ -70,7 +70,11 @@ h2 {
   margin: 0 0 16px;
 }
 
+// Adresse e-mail ou compte à rebours inséré dans une phrase : isolé et de gauche à droite, comme
+// un <bdi dir="ltr"> (Q77), sans toucher au message à traduire.
 .mono {
+  direction: ltr;
+  unicode-bidi: isolate;
   font-family: var(--font-mono);
   font-size: 13px;
   color: var(--text-primary);
@@ -78,7 +82,7 @@ h2 {
 
 .steps {
   margin: 0 0 20px;
-  padding-left: 22px;
+  padding-inline-start: 22px;
   display: grid;
   gap: 6px;
   color: var(--text-primary);
@@ -215,4 +219,11 @@ a,
 pm-state {
   display: block;
   margin: 8px 0;
+}
+
+// Valeur sans sens de lecture (Q77, docs/design/arabe.md §5) : e-mail, mot de passe, code et numéro
+// en dir="ltr", donc affichés dans l'ordre de frappe, mais alignés du côté de début de la page
+// (à droite en arabe). En /fr/ et /en/, rien ne change.
+:host:dir(rtl) input[dir='ltr'] {
+  text-align: end;
 }

@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T16:04:29.495Z",
+  "task": "M16-11",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "features/public de droite à gauche : 17 déclarations en propriétés logiques, formats par formatLocale, catalogLabel, contenu saisi isolé, pluriels ICU, e2e/arabe/public.spec.ts",
+  "pr": "https://github.com/mrscams/psymate-web/pull/133",
+  "branch": "M16-11-public-rtl",
+  "checkout": "agent-abe60eaaccf4c10f4"
+}

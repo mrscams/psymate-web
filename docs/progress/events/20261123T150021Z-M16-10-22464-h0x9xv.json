@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T15:00:21.058Z",
+  "task": "M16-10",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "features/auth de droite à gauche : 11 déclarations en propriétés logiques, champs ltr alignés au début de la page, nom et recours en dir=auto, flèche de retour retournée ; /fr/ et /en/ identiques au pixel ; e2e/arabe/auth",
+  "pr": "https://github.com/mrscams/psymate-web/pull/130",
+  "branch": "M16-10-auth-rtl",
+  "checkout": "agent-a2c36d6ed481843da"
+}

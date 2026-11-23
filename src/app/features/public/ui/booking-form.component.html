@@ -27,6 +27,7 @@
           matInput
           id="field-firstName"
           formControlName="firstName"
+          dir="auto"
           autocomplete="given-name"
           required
         />
@@ -43,6 +44,7 @@
           matInput
           id="field-lastName"
           formControlName="lastName"
+          dir="auto"
           autocomplete="family-name"
           required
         />
@@ -59,6 +61,7 @@
           matInput
           id="field-email"
           type="email"
+          dir="ltr"
           formControlName="email"
           autocomplete="email"
           required
@@ -77,7 +80,14 @@
         >Téléphone <span class="optional">(facultatif)</span></label
       >
       <mat-form-field appearance="outline" subscriptSizing="dynamic">
-        <input matInput id="field-phone" type="tel" formControlName="phone" autocomplete="tel" />
+        <input
+          matInput
+          id="field-phone"
+          type="tel"
+          dir="ltr"
+          formControlName="phone"
+          autocomplete="tel"
+        />
         @if (errorsOf('phone'); as errors) {
           <mat-error><ng-container *ngTemplateOutlet="warn" />{{ message(errors) }}</mat-error>
         }
@@ -138,8 +148,8 @@
         formControlName="consent"
         [aria-describedby]="showError('consent', ngForm.submitted) ? 'consent-error' : ''"
         i18n="Consentement de la demande de rendez-vous@@public.booking.consent"
-        >J'accepte que mes coordonnées soient transmises à {{ practitionerName() }} pour traiter ma
-        demande de rendez-vous.
+        >J'accepte que mes coordonnées soient transmises à <bdi>{{ practitionerName() }}</bdi> pour
+        traiter ma demande de rendez-vous.
         <a class="privacy" [routerLink]="privacyPath" target="_blank" rel="noopener"
           >En savoir plus sur la protection des données<span class="sr-only">
             (nouvel onglet)</span
@@ -161,7 +171,7 @@
         <pm-booking-bar class="wide" level="warning" role="alert">
           <ng-container i18n="Demande de rendez-vous, 429@@public.booking.rateLimited"
             >Trop de demandes envoyées depuis votre connexion. Réessayez dans
-            {{ retryMinutes() }} min.</ng-container
+            {retryMinutes(), plural, other {{{ retryMinutes() }} min}}.</ng-container
           >
         </pm-booking-bar>
       }

@@ -71,7 +71,7 @@ h2 {
 
   ul {
     margin: 0;
-    padding-left: 20px;
+    padding-inline-start: 20px;
   }
 }
 
@@ -169,8 +169,8 @@ h2 {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    padding-left: 18px;
-    border-left: 3px solid var(--primary-tint);
+    padding-inline-start: 18px;
+    border-inline-start: 3px solid var(--primary-tint);
   }
 
   // Texte secondaire en clair plein (fiche 24 : ≥ 7:1 ; le gris atténué de la barre fait 6,7:1).
