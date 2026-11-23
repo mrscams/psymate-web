@@ -15872,6 +15872,7 @@
       </trans-unit>
       <trans-unit id="overview.heading" datatype="html">
         <source> Vue d&apos;ensemble </source>
+        <target state="translated"> نظرة عامة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
           <context context-type="linenumber">4,8</context>
@@ -15880,6 +15881,7 @@
       </trans-unit>
       <trans-unit id="overview.reloadFailed.title" datatype="html">
         <source>La synthèse n&apos;a pas pu être relue</source>
+        <target state="translated">تعذّرت إعادة قراءة الخلاصة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
           <context context-type="linenumber">13,14</context>
@@ -15888,6 +15890,7 @@
       </trans-unit>
       <trans-unit id="overview.reloadFailed.message" datatype="html">
         <source>Les chiffres affichés sont ceux de la lecture précédente.</source>
+        <target state="translated">الأرقام المعروضة هي أرقام القراءة السابقة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
           <context context-type="linenumber">15,16</context>
@@ -15896,6 +15899,7 @@
       </trans-unit>
       <trans-unit id="overview.side.label" datatype="html">
         <source>Cadre du suivi</source>
+        <target state="translated">إطار المتابعة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.html</context>
           <context context-type="linenumber">59,60</context>
@@ -15904,6 +15908,7 @@
       </trans-unit>
       <trans-unit id="overview.reloadFailed.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/pages/overview.page.ts</context>
           <context context-type="linenumber">87</context>
@@ -15912,6 +15917,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.failed" datatype="html">
         <source>Graphe indisponible</source>
+        <target state="translated">الرسم غير متاح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/feelings-chart.component.ts</context>
           <context context-type="linenumber">47</context>
@@ -15924,6 +15930,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.failed.message" datatype="html">
         <source>Le graphe n&apos;a pas pu s&apos;afficher ; les ressentis restent lisibles dans « Voir les données ».</source>
+        <target state="translated">تعذّر عرض الرسم؛ تبقى المشاعر مقروءة في « عرض البيانات ».</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/feelings-chart.component.ts</context>
           <context context-type="linenumber">48</context>
@@ -15932,6 +15939,7 @@
       </trans-unit>
       <trans-unit id="overview.feelings.heading" datatype="html">
         <source>Comment évoluent les ressentis</source>
+        <target state="translated">كيف تتطوّر المشاعر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">42,43</context>
@@ -15940,6 +15948,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.empty.title" datatype="html">
         <source>Pas encore de ressentis sur cette période</source>
+        <target state="translated">لا مشاعر بعد في هذه الفترة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">45,46</context>
@@ -15948,6 +15957,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.empty.message" datatype="html">
         <source>Chaque ressenti noté apparaîtra ici, avec son intensité sur 10.</source>
+        <target state="translated">سيظهر هنا كل شعور مدوَّن، مع شدّته من 10.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">47,48</context>
@@ -15956,6 +15966,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.error" datatype="html">
         <source>Ressentis indisponibles</source>
+        <target state="translated">المشاعر غير متاحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">49,50</context>
@@ -15964,6 +15975,7 @@
       </trans-unit>
       <trans-unit id="overview.feelings.count" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ period() }}"/> · <x id="ICU" equiv-text="{count(), plural, =0 {aucun ressenti} =1 {1 ressenti} other {{{count()}} ressentis}}" xid="1847635703379406991"/> · chaque point est une entrée</source>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ period() }}"/> · <x id="ICU" equiv-text="{count(), plural, =0 {aucun ressenti} =1 {1 ressenti} other {{{count()}} ressentis}}" xid="1847635703379406991"/> · كل نقطة مُدخَل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">57,61</context>
@@ -15972,6 +15984,7 @@
       </trans-unit>
       <trans-unit id="overview.feelings.dataHide" datatype="html">
         <source>Masquer les données</source>
+        <target state="translated">إخفاء البيانات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">73,77</context>
@@ -15980,6 +15993,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.data" datatype="html">
         <source>Voir les données</source>
+        <target state="translated">عرض البيانات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">79,85</context>
@@ -15988,6 +16002,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.legend" datatype="html">
         <source>Légende</source>
+        <target state="translated">مفتاح الرسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">103</context>
@@ -15996,6 +16011,7 @@
       </trans-unit>
       <trans-unit id="overview.feelings.legend.session" datatype="html">
         <source>séance</source>
+        <target state="translated">جلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">115,119</context>
@@ -16004,6 +16020,7 @@
       </trans-unit>
       <trans-unit id="overview.feelings.legend.medication" datatype="html">
         <source>traitement</source>
+        <target state="translated">علاج</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">125,130</context>
@@ -16012,6 +16029,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.data.caption" datatype="html">
         <source> Ressentis notés sur la période </source>
+        <target state="translated"> المشاعر المدوَّنة خلال الفترة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">137,141</context>
@@ -16021,6 +16039,7 @@
       </trans-unit>
       <trans-unit id="overview.trend.data.date" datatype="html">
         <source> Date </source>
+        <target state="translated"> التاريخ </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">142,145</context>
@@ -16029,6 +16048,7 @@
       </trans-unit>
       <trans-unit id="overview.trend.data.emotion" datatype="html">
         <source> Émotion </source>
+        <target state="translated"> الشعور </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">148,151</context>
@@ -16037,6 +16057,7 @@
       </trans-unit>
       <trans-unit id="overview.trend.data.intensity" datatype="html">
         <source> Intensité </source>
+        <target state="translated"> الشدّة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">154,157</context>
@@ -16045,6 +16066,7 @@
       </trans-unit>
       <trans-unit id="overview.feelings.average" datatype="html">
         <source>Moyenne sur 7 jours</source>
+        <target state="translated">المتوسّط على 7 أيام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">336</context>
@@ -16053,6 +16075,7 @@
       </trans-unit>
       <trans-unit id="overview.trend.session" datatype="html">
         <source>Séance</source>
+        <target state="translated">جلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">337</context>
@@ -16061,6 +16084,7 @@
       </trans-unit>
       <trans-unit id="overview.trend.medicationStart" datatype="html">
         <source>Début de traitement</source>
+        <target state="translated">بداية العلاج</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">338</context>
@@ -16069,6 +16093,7 @@
       </trans-unit>
       <trans-unit id="overview.trend.medicationEnd" datatype="html">
         <source>Fin de traitement</source>
+        <target state="translated">نهاية العلاج</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-feelings.component.ts</context>
           <context context-type="linenumber">339</context>
@@ -16077,6 +16102,7 @@
       </trans-unit>
       <trans-unit id="overview.window.30d" datatype="html">
         <source>30 j</source>
+        <target state="translated">30 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">18</context>
@@ -16085,6 +16111,7 @@
       </trans-unit>
       <trans-unit id="overview.window.90d" datatype="html">
         <source>90 j</source>
+        <target state="translated">90 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">20</context>
@@ -16093,6 +16120,7 @@
       </trans-unit>
       <trans-unit id="overview.window.12m" datatype="html">
         <source>1 an</source>
+        <target state="translated">سنة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">22</context>
@@ -16101,6 +16129,7 @@
       </trans-unit>
       <trans-unit id="overview.window.30d.long" datatype="html">
         <source>30 jours</source>
+        <target state="translated">30 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">30</context>
@@ -16109,6 +16138,7 @@
       </trans-unit>
       <trans-unit id="overview.window.90d.long" datatype="html">
         <source>90 jours</source>
+        <target state="translated">90 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">32</context>
@@ -16117,6 +16147,7 @@
       </trans-unit>
       <trans-unit id="overview.window.12m.long" datatype="html">
         <source>12 mois</source>
+        <target state="translated">12 شهرًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">34</context>
@@ -16125,6 +16156,7 @@
       </trans-unit>
       <trans-unit id="overview.flag.watch" datatype="html">
         <source>À surveiller</source>
+        <target state="translated">للمتابعة الدقيقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">41</context>
@@ -16133,6 +16165,7 @@
       </trans-unit>
       <trans-unit id="overview.flag.risk" datatype="html">
         <source>Risque</source>
+        <target state="translated">خطر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">43</context>
@@ -16141,6 +16174,7 @@
       </trans-unit>
       <trans-unit id="overview.flag.sharedCare" datatype="html">
         <source>Suivi conjoint</source>
+        <target state="translated">متابعة مشتركة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">45</context>
@@ -16149,6 +16183,7 @@
       </trans-unit>
       <trans-unit id="overview.session.kind.intake" datatype="html">
         <source>Accueil</source>
+        <target state="translated">استقبال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">52</context>
@@ -16157,6 +16192,7 @@
       </trans-unit>
       <trans-unit id="overview.session.kind.session" datatype="html">
         <source>Séance</source>
+        <target state="translated">جلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">54</context>
@@ -16165,6 +16201,7 @@
       </trans-unit>
       <trans-unit id="overview.session.kind.contact" datatype="html">
         <source>Contact</source>
+        <target state="translated">تواصل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">56</context>
@@ -16173,6 +16210,7 @@
       </trans-unit>
       <trans-unit id="overview.sessions.duration" datatype="html">
         <source><x id="minutes" equiv-text="session.durationMin"/> min</source>
+        <target state="translated"><x id="minutes" equiv-text="session.durationMin"/> د</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">117</context>
@@ -16181,6 +16219,7 @@
       </trans-unit>
       <trans-unit id="overview.emotions.up" datatype="html">
         <source><x id="count" equiv-text="delta"/> de plus que les <x id="period" equiv-text="period"/> précédents</source>
+        <target state="translated">أكثر بـ<x id="count" equiv-text="delta"/> مقارنةً بالفترة السابقة (<x id="period" equiv-text="period"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">184</context>
@@ -16189,6 +16228,7 @@
       </trans-unit>
       <trans-unit id="overview.emotions.down" datatype="html">
         <source><x id="count" equiv-text="count"/> de moins que les <x id="period" equiv-text="period"/> précédents</source>
+        <target state="translated">أقل بـ<x id="count" equiv-text="count"/> مقارنةً بالفترة السابقة (<x id="period" equiv-text="period"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">188</context>
@@ -16197,6 +16237,7 @@
       </trans-unit>
       <trans-unit id="overview.emotions.same" datatype="html">
         <source>autant que les <x id="period" equiv-text="period"/> précédents</source>
+        <target state="translated">بالقدر نفسه مقارنةً بالفترة السابقة (<x id="period" equiv-text="period"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">190</context>
@@ -16205,6 +16246,7 @@
       </trans-unit>
       <trans-unit id="overview.trend.summary.counts" datatype="html">
         <source>Ressentis sur la période : <x id="feelings" equiv-text="feelingCount"/> ; séances : <x id="sessions" equiv-text="sessions"/> ; repères de médicament : <x id="medications" equiv-text="medications"/>.</source>
+        <target state="translated">المشاعر خلال الفترة: <x id="feelings" equiv-text="feelingCount"/>؛ الجلسات: <x id="sessions" equiv-text="sessions"/>؛ علامات الدواء: <x id="medications" equiv-text="medications"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">208</context>
@@ -16213,6 +16255,7 @@
       </trans-unit>
       <trans-unit id="overview.trend.summary.none" datatype="html">
         <source>Intensité des ressentis sur <x id="period" equiv-text="period"/> : aucune moyenne.</source>
+        <target state="translated">شدّة المشاعر خلال <x id="period" equiv-text="period"/>: لا يوجد متوسّط.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">211</context>
@@ -16221,6 +16264,7 @@
       </trans-unit>
       <trans-unit id="overview.trend.summary" datatype="html">
         <source>Intensité moyenne des ressentis sur <x id="period" equiv-text="period"/> (moyenne glissante sur 7 jours) : de <x id="min" equiv-text="min"/> à <x id="max" equiv-text="max"/> sur 10, dernière valeur <x id="last" equiv-text="last"/>.</source>
+        <target state="translated">متوسّط شدّة المشاعر خلال <x id="period" equiv-text="period"/> (متوسّط متحرّك على 7 أيام): من <x id="min" equiv-text="min"/> إلى <x id="max" equiv-text="max"/> من 10، وآخر قيمة <x id="last" equiv-text="last"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">220</context>
@@ -16229,6 +16273,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.summary.one" datatype="html">
         <source><x id="emotion" equiv-text="label"/> (ressentis : <x id="count" equiv-text="count"/>) à <x id="value" equiv-text="min"/> sur 10</source>
+        <target state="translated"><x id="emotion" equiv-text="label"/> (عدد المشاعر: <x id="count" equiv-text="count"/>) بشدّة <x id="value" equiv-text="min"/> من 10</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">245</context>
@@ -16237,6 +16282,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.summary.range" datatype="html">
         <source><x id="emotion" equiv-text="label"/> (ressentis : <x id="count" equiv-text="count"/>) de <x id="min" equiv-text="min"/> à <x id="max" equiv-text="max"/> sur 10</source>
+        <target state="translated"><x id="emotion" equiv-text="label"/> (عدد المشاعر: <x id="count" equiv-text="count"/>) من <x id="min" equiv-text="min"/> إلى <x id="max" equiv-text="max"/> من 10</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">246</context>
@@ -16245,6 +16291,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.summary.counts" datatype="html">
         <source>Jours de séance : <x id="sessions" equiv-text="sessions"/> ; repères de médicament : <x id="medications" equiv-text="medications"/>.</source>
+        <target state="translated">أيام الجلسات: <x id="sessions" equiv-text="sessions"/>؛ علامات الدواء: <x id="medications" equiv-text="medications"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">251</context>
@@ -16253,6 +16300,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.summary.none" datatype="html">
         <source>Ressentis notés sur <x id="period" equiv-text="period"/>, une valeur par point. <x id="counts" equiv-text="counts"/></source>
+        <target state="translated">المشاعر المدوَّنة خلال <x id="period" equiv-text="period"/>، قيمة واحدة لكل نقطة. <x id="counts" equiv-text="counts"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">253</context>
@@ -16261,6 +16309,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.summary.separator" datatype="html">
         <source> ; </source>
+        <target state="translated">؛ </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">255</context>
@@ -16269,6 +16318,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.feelings.summary" datatype="html">
         <source>Ressentis notés sur <x id="period" equiv-text="period"/>, une valeur par point : <x id="details" equiv-text="details"/>. <x id="counts" equiv-text="counts"/></source>
+        <target state="translated">المشاعر المدوَّنة خلال <x id="period" equiv-text="period"/>، قيمة واحدة لكل نقطة: <x id="details" equiv-text="details"/>. <x id="counts" equiv-text="counts"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">257</context>
@@ -16277,6 +16327,7 @@
       </trans-unit>
       <trans-unit id="overview.saveRejected" datatype="html">
         <source>Réglage non enregistré : <x id="reason" equiv-text="fieldMessage"/></source>
+        <target state="translated">لم يُحفظ الإعداد: <x id="reason" equiv-text="fieldMessage"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">318</context>
@@ -16285,6 +16336,7 @@
       </trans-unit>
       <trans-unit id="overview.saveFailed" datatype="html">
         <source>Impossible d&apos;enregistrer ce réglage. La valeur précédente est rétablie.</source>
+        <target state="translated">تعذّر حفظ هذا الإعداد. أُعيدت القيمة السابقة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-labels.ts</context>
           <context context-type="linenumber">319</context>
@@ -16293,6 +16345,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.since.empty.title" datatype="html">
         <source>Rien de noté depuis</source>
+        <target state="translated">لم يُدوَّن شيء منذ ذلك الحين</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-noted.component.ts</context>
           <context context-type="linenumber">37,38</context>
@@ -16301,6 +16354,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.since.empty.message" datatype="html">
         <source>Les entrées notées après la dernière séance clôturée apparaîtront ici.</source>
+        <target state="translated">ستظهر هنا المُدخَلات المدوَّنة بعد آخر جلسة منتهية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-noted.component.ts</context>
           <context context-type="linenumber">39,40</context>
@@ -16309,6 +16363,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.since.error" datatype="html">
         <source>Entrées indisponibles</source>
+        <target state="translated">المُدخَلات غير متاحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-noted.component.ts</context>
           <context context-type="linenumber">41,42</context>
@@ -16333,6 +16388,11 @@
             =1 {1 brouillon}
             other {{{drafts()}} brouillons}
           }" xid="6136728017708253914"/></source>
+        <target state="translated"><x id="ICU" equiv-text="{total(), plural, =1 {1 entrée} other {{{total()}} entrées}}" xid="7995041518217856986"/> · <x id="ICU_1" equiv-text="{drafts(), plural,
+            =0 {aucun brouillon}
+            =1 {1 brouillon}
+            other {{{drafts()}} brouillons}
+          }" xid="6136728017708253914"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-noted.component.ts</context>
           <context context-type="linenumber">49,57</context>
@@ -16349,6 +16409,7 @@
       </trans-unit>
       <trans-unit id="overview.noted.all" datatype="html">
         <source>Tout dans la timeline</source>
+        <target state="translated">الكل في الخط الزمني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-noted.component.ts</context>
           <context context-type="linenumber">62,67</context>
@@ -16357,6 +16418,7 @@
       </trans-unit>
       <trans-unit id="overview.activity.draft" datatype="html">
         <source>brouillon</source>
+        <target state="translated">مسودّة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-noted.component.ts</context>
           <context context-type="linenumber">96,99</context>
@@ -16365,6 +16427,7 @@
       </trans-unit>
       <trans-unit id="overview.noted.headingOpening" datatype="html">
         <source>Noté depuis l&apos;ouverture du dossier</source>
+        <target state="translated">ما دُوِّن منذ فتح الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-noted.component.ts</context>
           <context context-type="linenumber">276</context>
@@ -16373,6 +16436,7 @@
       </trans-unit>
       <trans-unit id="overview.noted.heading" datatype="html">
         <source>Noté depuis la dernière séance</source>
+        <target state="translated">ما دُوِّن منذ آخر جلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-noted.component.ts</context>
           <context context-type="linenumber">277</context>
@@ -16381,6 +16445,7 @@
       </trans-unit>
       <trans-unit id="overview.block.busy" datatype="html">
         <source>mise à jour…</source>
+        <target state="translated">جارٍ التحديث…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-section.component.ts</context>
           <context context-type="linenumber">33,36</context>
@@ -16389,6 +16454,7 @@
       </trans-unit>
       <trans-unit id="overview.block.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-section.component.ts</context>
           <context context-type="linenumber">120</context>
@@ -16401,6 +16467,7 @@
       </trans-unit>
       <trans-unit id="overview.sessions.heading" datatype="html">
         <source>Dernières séances</source>
+        <target state="translated">آخر الجلسات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
           <context context-type="linenumber">37,38</context>
@@ -16409,6 +16476,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.lastSession.empty.title" datatype="html">
         <source>Aucune séance</source>
+        <target state="translated">لا جلسات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
           <context context-type="linenumber">40,41</context>
@@ -16417,6 +16485,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.lastSession.empty.message" datatype="html">
         <source>La dernière séance et son compte rendu apparaîtront ici dès la première, démarrée depuis l&apos;en-tête.</source>
+        <target state="translated">ستظهر هنا آخر جلسة ومحضرها بدءًا من الجلسة الأولى، التي تبدأ من ترويسة الملف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
           <context context-type="linenumber">42,43</context>
@@ -16425,6 +16494,7 @@
       </trans-unit>
       <trans-unit id="overview.sessions.error" datatype="html">
         <source>Séances indisponibles</source>
+        <target state="translated">الجلسات غير متاحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
           <context context-type="linenumber">44,45</context>
@@ -16433,6 +16503,7 @@
       </trans-unit>
       <trans-unit id="overview.sessions.count" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ inWindow() }}"/> sur <x id="INTERPOLATION_1" equiv-text="{{ period() }}"/> · <x id="INTERPOLATION_2" equiv-text="{{ v.facts.sessionCount }}"/> au total</source>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ inWindow() }}"/> خلال <x id="INTERPOLATION_1" equiv-text="{{ period() }}"/> · المجموع <x id="INTERPOLATION_2" equiv-text="{{ v.facts.sessionCount }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
           <context context-type="linenumber">51,53</context>
@@ -16441,6 +16512,7 @@
       </trans-unit>
       <trans-unit id="overview.sessions.all" datatype="html">
         <source>Toutes les séances</source>
+        <target state="translated">كل الجلسات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
           <context context-type="linenumber">60,64</context>
@@ -16449,6 +16521,7 @@
       </trans-unit>
       <trans-unit id="overview.sessions.entryCount" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {aucune entrée} =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا مُدخَلات} one {مُدخَل واحد} two {مُدخَلان} few {<x id="INTERPOLATION"/> مُدخَلات} many {<x id="INTERPOLATION"/> مُدخَلًا} other {<x id="INTERPOLATION"/> مُدخَل}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-sessions.component.ts</context>
           <context context-type="linenumber">76,80</context>
@@ -16457,6 +16530,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.frame.heading" datatype="html">
         <source>Cadre du suivi</source>
+        <target state="translated">إطار المتابعة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">63,64</context>
@@ -16465,6 +16539,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.frame.empty.title" datatype="html">
         <source>Cadre non renseigné</source>
+        <target state="translated">إطار المتابعة غير محدَّد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">66,67</context>
@@ -16473,6 +16548,7 @@
       </trans-unit>
       <trans-unit id="overview.side.frame.empty.message" datatype="html">
         <source>Le début du suivi et les drapeaux du dossier apparaîtront ici.</source>
+        <target state="translated">ستظهر هنا بداية المتابعة وعلامات التنبيه في الملف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">68,69</context>
@@ -16481,6 +16557,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.frame.error" datatype="html">
         <source>Cadre indisponible</source>
+        <target state="translated">إطار المتابعة غير متاح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">70,71</context>
@@ -16489,6 +16566,7 @@
       </trans-unit>
       <trans-unit id="overview.side.frame.followUp" datatype="html">
         <source>Suivi</source>
+        <target state="translated">المتابعة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">79,82</context>
@@ -16497,6 +16575,7 @@
       </trans-unit>
       <trans-unit id="overview.side.frame.flag" datatype="html">
         <source>Drapeau</source>
+        <target state="translated">علامة تنبيه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">86,89</context>
@@ -16505,6 +16584,7 @@
       </trans-unit>
       <trans-unit id="overview.side.frame.edit" datatype="html">
         <source>modifier</source>
+        <target state="translated">تعديل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">97,102</context>
@@ -16513,6 +16593,7 @@
       </trans-unit>
       <trans-unit id="overview.side.frame.sheet" datatype="html">
         <source>Fiche</source>
+        <target state="translated">البطاقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">105,108</context>
@@ -16521,6 +16602,7 @@
       </trans-unit>
       <trans-unit id="overview.side.frame.sheetLink" datatype="html">
         <source>Modifier la fiche</source>
+        <target state="translated">تعديل البطاقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">112,119</context>
@@ -16529,6 +16611,7 @@
       </trans-unit>
       <trans-unit id="overview.side.medications.heading" datatype="html">
         <source>Traitement en cours</source>
+        <target state="translated">علاج جارٍ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">120,121</context>
@@ -16537,6 +16620,7 @@
       </trans-unit>
       <trans-unit id="overview.medications.empty.title" datatype="html">
         <source>Aucun traitement en cours</source>
+        <target state="translated">لا علاج جارٍ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">123,124</context>
@@ -16545,6 +16629,7 @@
       </trans-unit>
       <trans-unit id="overview.medications.empty.message" datatype="html">
         <source>Les médicaments notés dans le dossier, sans date de fin passée, apparaîtront ici.</source>
+        <target state="translated">ستظهر هنا الأدوية المدوَّنة في الملف التي لم يمضِ تاريخ نهايتها.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">125,126</context>
@@ -16553,6 +16638,7 @@
       </trans-unit>
       <trans-unit id="overview.medications.error" datatype="html">
         <source>Traitement indisponible</source>
+        <target state="translated">العلاج غير متاح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">127,128</context>
@@ -16561,6 +16647,7 @@
       </trans-unit>
       <trans-unit id="overview.side.medications.since" datatype="html">
         <source>· depuis le <x id="INTERPOLATION" equiv-text="{{ day(from) }}"/></source>
+        <target state="translated">· منذ <x id="INTERPOLATION" equiv-text="{{ day(from) }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">146,147</context>
@@ -16569,6 +16656,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.situations.heading" datatype="html">
         <source>Situations en cours</source>
+        <target state="translated">وضعيات جارية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">160,161</context>
@@ -16577,6 +16665,7 @@
       </trans-unit>
       <trans-unit id="overview.situations.empty.title" datatype="html">
         <source>Aucune situation en cours</source>
+        <target state="translated">لا وضعيات جارية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">163,164</context>
@@ -16585,6 +16674,7 @@
       </trans-unit>
       <trans-unit id="overview.situations.empty.message" datatype="html">
         <source>Les situations sans fin connue apparaîtront ici, avec leurs ressentis liés.</source>
+        <target state="translated">ستظهر هنا الوضعيات التي لا نهاية معروفة لها، مع المشاعر المرتبطة بها.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">165,166</context>
@@ -16593,6 +16683,7 @@
       </trans-unit>
       <trans-unit id="overview.situations.error" datatype="html">
         <source>Situations indisponibles</source>
+        <target state="translated">الوضعيات غير متاحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">167,168</context>
@@ -16601,6 +16692,7 @@
       </trans-unit>
       <trans-unit id="overview.side.situations.since" datatype="html">
         <source>depuis <x id="INTERPOLATION" equiv-text="{{ month(situation.since) }}"/></source>
+        <target state="translated">منذ <x id="INTERPOLATION" equiv-text="{{ month(situation.since) }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">184,185</context>
@@ -16609,6 +16701,7 @@
       </trans-unit>
       <trans-unit id="overview.side.situations.feelings" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {aucun ressenti lié} =1 {1 ressenti lié} other {<x id="INTERPOLATION"/> ressentis liés}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا مشاعر مرتبطة} one {شعور واحد مرتبط} two {شعوران مرتبطان} few {<x id="INTERPOLATION"/> مشاعر مرتبطة} many {<x id="INTERPOLATION"/> شعورًا مرتبطًا} other {<x id="INTERPOLATION"/> شعور مرتبط}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">190,193</context>
@@ -16618,6 +16711,8 @@
       <trans-unit id="overview.side.situations.graph" datatype="html">
         <source>voir dans le graphe<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> : <x id="INTERPOLATION" equiv-text="{{ situation.title ?? untitledSituation }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span
                 &gt;"/></source>
+        <target state="translated">عرض في شبكة الروابط<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/>: <x id="INTERPOLATION" equiv-text="{{ situation.title ?? untitledSituation }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span
+                &gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">203,206</context>
@@ -16627,6 +16722,7 @@
       </trans-unit>
       <trans-unit id="overview.emotions.empty.title" datatype="html">
         <source>Aucune émotion sur la période</source>
+        <target state="translated">لا مشاعر في هذه الفترة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">217,218</context>
@@ -16635,6 +16731,7 @@
       </trans-unit>
       <trans-unit id="overview.side.emotions.empty.message" datatype="html">
         <source>Les émotions des ressentis de la période apparaîtront ici.</source>
+        <target state="translated">ستظهر هنا المشاعر التي دُوِّنت في هذه الفترة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">219,220</context>
@@ -16643,6 +16740,7 @@
       </trans-unit>
       <trans-unit id="overview.emotions.error" datatype="html">
         <source>Émotions indisponibles</source>
+        <target state="translated">المشاعر غير متاحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">221,222</context>
@@ -16651,6 +16749,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.todo.heading" datatype="html">
         <source>À compléter</source>
+        <target state="translated">يحتاج إلى استكمال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">252,253</context>
@@ -16659,6 +16758,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.todo.empty.title" datatype="html">
         <source>Rien à compléter</source>
+        <target state="translated">لا شيء يحتاج إلى استكمال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">255,256</context>
@@ -16667,6 +16767,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.todo.empty.message" datatype="html">
         <source>Les brouillons et les séances non clôturées apparaîtront ici.</source>
+        <target state="translated">ستظهر هنا المسودّات والجلسات التي لم تُنهَ.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">257,258</context>
@@ -16675,6 +16776,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.todo.error" datatype="html">
         <source>À compléter indisponible</source>
+        <target state="translated">قائمة الاستكمال غير متاحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">259,260</context>
@@ -16683,6 +16785,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.todo.drafts" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {1 brouillon à relire} other {<x id="INTERPOLATION"/> brouillons à relire}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا مسودّات للمراجعة} one {مسودّة واحدة للمراجعة} two {مسودّتان للمراجعة} few {<x id="INTERPOLATION"/> مسودّات للمراجعة} many {<x id="INTERPOLATION"/> مسودّة للمراجعة} other {<x id="INTERPOLATION"/> مسودّة للمراجعة}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">271,275</context>
@@ -16691,6 +16794,7 @@
       </trans-unit>
       <trans-unit id="overview.side.todo.open" datatype="html">
         <source>ouvrir</source>
+        <target state="translated">فتح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">277,281</context>
@@ -16703,6 +16807,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.todo.openSession" datatype="html">
         <source>Séance du <x id="INTERPOLATION" equiv-text="{{ day(open.startedAt) }}"/> à clôturer</source>
+        <target state="translated">جلسة <x id="INTERPOLATION" equiv-text="{{ day(open.startedAt) }}"/> بانتظار الإنهاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">288,289</context>
@@ -16711,6 +16816,7 @@
       </trans-unit>
       <trans-unit id="overview.updating" datatype="html">
         <source>Mise à jour de la synthèse…</source>
+        <target state="translated">جارٍ تحديث الخلاصة…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">303,306</context>
@@ -16719,6 +16825,7 @@
       </trans-unit>
       <trans-unit id="overview.side.updated" datatype="html">
         <source>Synthèse calculée par le serveur · mise à jour <x id="INTERPOLATION" equiv-text="{{ at }}"/></source>
+        <target state="translated">خلاصة يحسبها الخادم · آخر تحديث <x id="INTERPOLATION" equiv-text="{{ at }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">307,309</context>
@@ -16727,6 +16834,7 @@
       </trans-unit>
       <trans-unit id="overview.situations.untitled" datatype="html">
         <source>Situation sans titre</source>
+        <target state="translated">وضعية بلا عنوان</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">510</context>
@@ -16735,6 +16843,7 @@
       </trans-unit>
       <trans-unit id="overview.side.frame.habits" datatype="html">
         <source><x id="modality" equiv-text="modality"/>, <x id="minutes" equiv-text="duration"/> min</source>
+        <target state="translated"><x id="modality" equiv-text="modality"/>، <x id="minutes" equiv-text="duration"/> د</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">531</context>
@@ -16743,6 +16852,7 @@
       </trans-unit>
       <trans-unit id="overview.side.frame.since" datatype="html">
         <source>depuis <x id="date" equiv-text="since"/></source>
+        <target state="translated">منذ <x id="date" equiv-text="since"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">538</context>
@@ -16751,6 +16861,7 @@
       </trans-unit>
       <trans-unit id="overview.side.emotions.heading" datatype="html">
         <source>Émotions · <x id="period" equiv-text="windowLongLabel(this.view()?.window ?? &apos;90d&apos;)"/></source>
+        <target state="translated">المشاعر · <x id="period" equiv-text="windowLongLabel(this.view()?.window ?? &apos;90d&apos;)"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">545</context>
@@ -16759,6 +16870,7 @@
       </trans-unit>
       <trans-unit id="overview.side.frame.flagSince" datatype="html">
         <source>depuis le <x id="date" equiv-text="date"/></source>
+        <target state="translated">منذ <x id="date" equiv-text="date"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-side.component.ts</context>
           <context context-type="linenumber">588</context>
@@ -16767,6 +16879,7 @@
       </trans-unit>
       <trans-unit id="overview.simple.attention.label" datatype="html">
         <source>Point d&apos;attention :</source>
+        <target state="translated">نقطة تستدعي الانتباه:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-since.component.ts</context>
           <context context-type="linenumber">54,58</context>
@@ -16775,6 +16888,7 @@
       </trans-unit>
       <trans-unit id="overview.since.fact.feelings" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {ressenti} =1 {ressenti} other {ressentis}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {مشاعر} one {شعور} two {مشاعر} few {مشاعر} many {شعورًا} other {شعور}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-since.component.ts</context>
           <context context-type="linenumber">66,70</context>
@@ -16783,6 +16897,7 @@
       </trans-unit>
       <trans-unit id="overview.since.fact.intensity" datatype="html">
         <source>intensité · 7 j</source>
+        <target state="translated">الشدّة · 7 أيام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-since.component.ts</context>
           <context context-type="linenumber">78,81</context>
@@ -16791,6 +16906,7 @@
       </trans-unit>
       <trans-unit id="overview.since.fact.drafts" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {brouillon} =1 {brouillon} other {brouillons}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {مسودّات} one {مسودّة} two {مسودّات} few {مسودّات} many {مسودّة} other {مسودّة}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-since.component.ts</context>
           <context context-type="linenumber">89,94</context>
@@ -16799,6 +16915,7 @@
       </trans-unit>
       <trans-unit id="overview.since.headingOpening" datatype="html">
         <source>Depuis l&apos;ouverture du dossier</source>
+        <target state="translated">منذ فتح الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-since.component.ts</context>
           <context context-type="linenumber">214</context>
@@ -16807,6 +16924,7 @@
       </trans-unit>
       <trans-unit id="overview.since.heading" datatype="html">
         <source>Depuis la séance du <x id="date" equiv-text="date"/></source>
+        <target state="translated">منذ جلسة <x id="date" equiv-text="date"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-since.component.ts</context>
           <context context-type="linenumber">221</context>
@@ -16815,6 +16933,7 @@
       </trans-unit>
       <trans-unit id="overview.since.fact.up" datatype="html">
         <source>en hausse depuis la séance</source>
+        <target state="translated">في ارتفاع منذ الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-since.component.ts</context>
           <context context-type="linenumber">260</context>
@@ -16823,6 +16942,7 @@
       </trans-unit>
       <trans-unit id="overview.since.fact.down" datatype="html">
         <source>en baisse depuis la séance</source>
+        <target state="translated">في انخفاض منذ الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-since.component.ts</context>
           <context context-type="linenumber">262</context>
@@ -16831,6 +16951,7 @@
       </trans-unit>
       <trans-unit id="overview.since.fact.flat" datatype="html">
         <source>stable depuis la séance</source>
+        <target state="translated">مستقرّة منذ الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-since.component.ts</context>
           <context context-type="linenumber">264</context>
@@ -16839,6 +16960,7 @@
       </trans-unit>
       <trans-unit id="overview.since.error" datatype="html">
         <source>Synthèse indisponible</source>
+        <target state="translated">الخلاصة غير متاحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-since.component.ts</context>
           <context context-type="linenumber">270</context>
@@ -16847,6 +16969,7 @@
       </trans-unit>
       <trans-unit id="overview.window.label" datatype="html">
         <source>Fenêtre</source>
+        <target state="translated">الفترة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-window.component.ts</context>
           <context context-type="linenumber">21,23</context>
