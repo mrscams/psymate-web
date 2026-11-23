@@ -5656,7 +5656,7 @@
       </trans-unit>
       <trans-unit id="account.verification.progress.validation" datatype="html">
         <source>Validation</source>
-        <target state="translated">القبول</target>
+        <target state="translated">التحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">167</context>
