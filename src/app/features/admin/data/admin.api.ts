@@ -252,6 +252,7 @@ export class AdminApi {
   /** POST : 201 entrée active ; 409 VOCABULARY_EXISTS ; 422 par champ. */
   async createEntry(input: VocabularyCreateInput): Promise<VocabularyEntry> {
     const labelEn = input.labelEn?.trim();
+    const labelAr = input.labelAr?.trim();
     return toEntry(
       await firstValueFrom(
         this.vocabularyApi.createAdminDirectoryVocabulary({
@@ -259,6 +260,7 @@ export class AdminApi {
           code: input.code.trim(),
           labelFr: input.labelFr.trim(),
           ...(labelEn ? { labelEn } : {}),
+          ...(labelAr ? { labelAr } : {}),
         }),
       ),
     );
@@ -395,6 +397,7 @@ function toEntry(dto: ItemDto): VocabularyEntry {
     code: dto.code ?? '',
     labelFr: dto.labelFr ?? '',
     labelEn: dto.labelEn ?? null,
+    labelAr: dto.labelAr ?? null,
     sortOrder: dto.sortOrder ?? 0,
     active: dto.active ?? true,
     usedByPublishedProfiles: dto.usedByPublishedProfiles ?? 0,
@@ -402,5 +405,10 @@ function toEntry(dto: ItemDto): VocabularyEntry {
 }
 
 function toFixed(item: Item): FixedEntry {
-  return { code: item.code ?? '', labelFr: item.labelFr ?? '', labelEn: item.labelEn ?? null };
+  return {
+    code: item.code ?? '',
+    labelFr: item.labelFr ?? '',
+    labelEn: item.labelEn ?? null,
+    labelAr: item.labelAr ?? null,
+  };
 }

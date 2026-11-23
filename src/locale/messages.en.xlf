@@ -11842,6 +11842,14 @@
         </context-group>
         <note priority="1" from="description">Champ libellé anglais facultatif</note>
       </trans-unit>
+      <trans-unit id="admin.vocabulary.labelArOptional" datatype="html">
+        <source>Libellé AR (facultatif)</source>
+        <target state="translated">Arabic label (optional)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
+        </context-group>
+        <note priority="1" from="description">Champ libellé arabe facultatif</note>
+      </trans-unit>
       <trans-unit id="admin.vocabulary.rules" datatype="html">
         <source> Code : minuscules, chiffres et soulignés, 2 à 40 caractères, commence par une lettre ; il ne change plus ensuite. Libellés : 120 caractères au plus. </source>
         <target state="translated">Code: lowercase letters, digits and underscores, 2 to 40 characters, starting with a letter; it never changes afterwards. Labels: 120 characters at most.</target>
@@ -12975,6 +12983,14 @@
           <context context-type="linenumber">37,40</context>
         </context-group>
         <note priority="1" from="description">Champ libellé anglais</note>
+      </trans-unit>
+      <trans-unit id="admin.vocabulary.labelAr" datatype="html">
+        <source>Libellé AR (vide = effacé)</source>
+        <target state="translated">Arabic label (empty = removed)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/admin/ui/rename-panel.component.ts</context>
+        </context-group>
+        <note priority="1" from="description">Champ libellé arabe</note>
       </trans-unit>
       <trans-unit id="admin.vocabulary.order" datatype="html">
         <source>Ordre</source>

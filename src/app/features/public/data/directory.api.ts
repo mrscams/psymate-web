@@ -102,6 +102,7 @@ function toItem(item: Item): VocabularyItem {
     code: item.code ?? '',
     labelFr: item.labelFr ?? item.code ?? '',
     labelEn: item.labelEn ?? null,
+    labelAr: item.labelAr ?? null,
   };
 }
 

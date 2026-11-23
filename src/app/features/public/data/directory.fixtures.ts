@@ -17,22 +17,22 @@ export const NO_FACETS: DirectoryFacets = {
 
 export const VOCABULARY: DirectoryVocabulary = {
   specialties: [
-    { code: 'anxiety', labelFr: 'Anxiété', labelEn: 'Anxiety' },
-    { code: 'burnout', labelFr: 'Burn-out', labelEn: 'Burnout' },
-    { code: 'grief', labelFr: 'Deuil', labelEn: null },
+    { code: 'anxiety', labelFr: 'Anxiété', labelEn: 'Anxiety', labelAr: null },
+    { code: 'burnout', labelFr: 'Burn-out', labelEn: 'Burnout', labelAr: null },
+    { code: 'grief', labelFr: 'Deuil', labelEn: null, labelAr: null },
   ],
   audiences: [
-    { code: 'adults', labelFr: 'Adultes', labelEn: 'Adults' },
-    { code: 'children', labelFr: 'Enfants', labelEn: 'Children' },
+    { code: 'adults', labelFr: 'Adultes', labelEn: 'Adults', labelAr: null },
+    { code: 'children', labelFr: 'Enfants', labelEn: 'Children', labelAr: null },
   ],
   modalities: [
-    { code: 'in_person', labelFr: 'Au cabinet', labelEn: 'In person' },
-    { code: 'video', labelFr: 'En visio', labelEn: 'Video' },
-    { code: 'home', labelFr: 'À domicile', labelEn: 'At home' },
+    { code: 'in_person', labelFr: 'Au cabinet', labelEn: 'In person', labelAr: null },
+    { code: 'video', labelFr: 'En visio', labelEn: 'Video', labelAr: null },
+    { code: 'home', labelFr: 'À domicile', labelEn: 'At home', labelAr: null },
   ],
   languages: [
-    { code: 'fr', labelFr: 'Français', labelEn: 'French' },
-    { code: 'en', labelFr: 'Anglais', labelEn: 'English' },
+    { code: 'fr', labelFr: 'Français', labelEn: 'French', labelAr: null },
+    { code: 'en', labelFr: 'Anglais', labelEn: 'English', labelAr: null },
   ],
 };
 

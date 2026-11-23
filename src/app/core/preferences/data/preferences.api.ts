@@ -6,7 +6,7 @@ import { completePreferences, Preferences } from '../preferences.model';
 
 /**
  * Service de données des préférences : seul fichier de core/preferences qui parle au client généré.
- * Le serveur renvoie toujours ses 21 clés effectives (contrat 0.15.0) ; on les complète quand même
+ * Le serveur renvoie toujours ses 21 clés effectives (contrat 0.16.0) ; on les complète quand même
  * par les défauts (clé absente ou hors domaine → défaut), sans jamais en inventer.
  */
 @Injectable({ providedIn: 'root' })

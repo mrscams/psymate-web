@@ -202,12 +202,21 @@ describe('preferences.model · clés booking.*', () => {
   });
 });
 
-/** Langue du compte (M16-08, Q80) : fr ou en, jamais ar avant le contrat 0.16.0 (M16-25). */
+/** Langue du compte (M16-25, contrat 0.16.0) : fr, en ou ar ; aucun écran ne propose ar (Q80). */
 describe('preferences.model · locale', () => {
-  it('admet fr et en, refuse ar (le contrat 0.15.0 le refuserait)', () => {
+  it('admet fr, en et ar ; une valeur ar lue est gardée telle quelle', () => {
     expect(isValidPreference('locale', 'fr')).toBe(true);
     expect(isValidPreference('locale', 'en')).toBe(true);
-    expect(isValidPreference('locale', 'ar')).toBe(false);
-    expect(completePreferences({ locale: 'ar' }).locale).toBe('fr');
+    expect(isValidPreference('locale', 'ar')).toBe(true);
+    expect(completePreferences({ locale: 'ar' }).locale).toBe('ar');
+    expect(completePreferences({ locale: 'en' }).locale).toBe('en');
+    expect(completePreferences({ locale: 'fr' }).locale).toBe('fr');
+  });
+
+  it('refuse toute autre langue (défaut fr)', () => {
+    for (const value of ['de', 'AR', 'ar-MA', '', null, 3]) {
+      expect(isValidPreference('locale', value)).toBe(false);
+      expect(completePreferences({ locale: value }).locale).toBe('fr');
+    }
   });
 });

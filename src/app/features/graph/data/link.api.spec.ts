@@ -45,6 +45,25 @@ describe('LinkApi · toLinkType (Q78, plus de booléen english)', () => {
     });
   });
 
+  it('M16-25 : arabe, labelAr et inverseLabelAr s’ils existent ; vides ou absents, le français', () => {
+    const arabic = { ...view, labelAr: 'يُثير', inverseLabelAr: 'يُثيره' } as View;
+    expect(toLinkType(arabic, 'ar')).toMatchObject({ label: 'يُثير', inverseLabel: 'يُثيره' });
+    expect(toLinkType({ ...arabic, labelAr: '', inverseLabelAr: '' }, 'ar')).toMatchObject({
+      label: 'déclenche',
+      inverseLabel: 'déclenché par',
+    });
+    expect(toLinkType({ ...view, inverseLabelAr: 'يُثيره' }, 'ar')).toMatchObject({
+      label: 'déclenche',
+      inverseLabel: 'يُثيره',
+    });
+  });
+
+  it('M16-25 : français et anglais inchangés par la présence de libellés arabes', () => {
+    const arabic = { ...view, labelAr: 'يُثير', inverseLabelAr: 'يُثيره' } as View;
+    expect(toLinkType(arabic, 'fr')).toEqual(toLinkType(view, 'fr'));
+    expect(toLinkType(arabic, 'en')).toEqual(toLinkType(view, 'en'));
+  });
+
   it('sans verbe inverse (lien symétrique) : null ; sans libellé : le code', () => {
     const symmetric = {
       code: 'co_occurs',

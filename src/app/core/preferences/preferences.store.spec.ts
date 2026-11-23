@@ -263,6 +263,15 @@ describe('PreferencesStore', () => {
       expect(navigator.goTo).toHaveBeenCalledWith('en');
     });
 
+    it('M16-25 : une langue ar renvoyée par le serveur est gardée, ni rejetée ni réécrite', async () => {
+      const { store, arrive, navigator } = setup({
+        api: fakeServer({ ...serverPrefs, locale: 'ar' }),
+      });
+      await arrive();
+      expect(store.values().locale).toBe('ar');
+      expect(navigator.goTo).toHaveBeenCalledWith('ar');
+    });
+
     it('démarrage avec une session déjà ouverte : garde le bundle de l’URL', async () => {
       const { arrive, navigator } = setup({
         api: fakeServer({ ...serverPrefs, locale: 'en' }),

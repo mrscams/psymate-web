@@ -79,6 +79,27 @@ describe('EntriesApi : libellés de catalogue dans la langue du bundle (Q78, M16
     ]);
   });
 
+  it('M16-25 : types de lien, labelAr et inverseLabelAr en arabe ; fr et en inchangés', async () => {
+    const arabic = [
+      { ...LINK_TYPES[0], labelAr: 'يُثير', inverseLabelAr: 'يُثيره' },
+      { ...LINK_TYPES[1], labelAr: '' },
+    ];
+    async function labels(locale: string): Promise<(string | null)[][]> {
+      const { api, http } = setup(locale);
+      const pending = api.linkTypes();
+      http.expectOne('/api/vocabulary/link-types').flush(arabic);
+      const list = await pending;
+      http.verify();
+      return list.map((type) => [type.label, type.inverseLabel]);
+    }
+    expect(await labels('ar')).toEqual([
+      ['يُثير', 'يُثيره'],
+      ['en lien avec', null],
+    ]);
+    expect(await labels('fr')).toEqual(await linkLabels('fr'));
+    expect(await labels('en')).toEqual(await linkLabels('en'));
+  });
+
   it('arabe : labelAr s’il existe, sinon le français, jamais l’anglais', async () => {
     expect(await emotionLabels('ar')).toEqual(['قلق', 'Joie', 'Trac', 'unnamed']);
     expect(await linkLabels('ar')).toEqual([

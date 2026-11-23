@@ -8,7 +8,8 @@ import { EditableKind, VocabularyCreateInput } from '../data/admin.model';
 import { applyVocabularyProblem, CODE_PATTERN, LABEL_MAX } from './vocabulary-forms';
 
 /**
- * « Ajouter une spécialité / un public » (fiche 28) : code, libellé FR, libellé EN facultatif,
+ * « Ajouter une spécialité / un public » (fiche 28) : code, libellé FR, libellés EN et AR facultatifs
+ * (le libellé arabe se saisit de droite à gauche, contrat 0.16.0),
  * bouton cobalt, rappel des règles de format. 409 VOCABULARY_EXISTS sous le champ code, 422 champ
  * par champ ; le formulaire est conservé en cas d'erreur et vidé après un ajout.
  */
@@ -69,6 +70,25 @@ import { applyVocabularyProblem, CODE_PATTERN, LABEL_MAX } from './vocabulary-fo
           />
           <pm-field-errors [control]="form.controls.labelEn" [id]="id('labelEn') + '-error'" />
         </div>
+        <div class="field">
+          <label
+            [for]="id('labelAr')"
+            i18n="Champ libellé arabe facultatif@@admin.vocabulary.labelArOptional"
+            >Libellé AR (facultatif)</label
+          >
+          <input
+            [id]="id('labelAr')"
+            type="text"
+            formControlName="labelAr"
+            dir="rtl"
+            lang="ar"
+            [attr.aria-invalid]="
+              (form.controls.labelAr.invalid && form.controls.labelAr.touched) || null
+            "
+            [attr.aria-describedby]="id('labelAr') + '-error'"
+          />
+          <pm-field-errors [control]="form.controls.labelAr" [id]="id('labelAr') + '-error'" />
+        </div>
         <button mat-flat-button type="submit" [disabled]="sending()">{{ submitLabel }}</button>
       </div>
       <p class="rules" [id]="id('rules')" i18n="Règles de format du code@@admin.vocabulary.rules">
@@ -98,6 +118,10 @@ export class AddEntryFormComponent {
       validators: [Validators.required, Validators.maxLength(LABEL_MAX)],
     }),
     labelEn: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.maxLength(LABEL_MAX)],
+    }),
+    labelAr: new FormControl('', {
       nonNullable: true,
       validators: [Validators.maxLength(LABEL_MAX)],
     }),

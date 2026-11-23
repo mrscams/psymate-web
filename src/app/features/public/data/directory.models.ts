@@ -94,6 +94,7 @@ export interface VocabularyItem {
   code: string;
   labelFr: string;
   labelEn: string | null;
+  labelAr: string | null;
 }
 
 /** Listes fermées de l'annuaire (GET /api/public/directory/vocabulary). */

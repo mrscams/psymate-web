@@ -236,6 +236,7 @@ export interface VocabularyEntry {
   code: string;
   labelFr: string;
   labelEn: string | null;
+  labelAr: string | null;
   sortOrder: number;
   active: boolean;
   usedByPublishedProfiles: number;
@@ -246,6 +247,7 @@ export interface FixedEntry {
   code: string;
   labelFr: string;
   labelEn: string | null;
+  labelAr: string | null;
 }
 
 export interface FixedVocabulary {
@@ -258,11 +260,14 @@ export interface VocabularyCreateInput {
   code: string;
   labelFr: string;
   labelEn?: string;
+  labelAr?: string;
 }
 
 export interface VocabularyPatch {
   labelFr?: string;
   labelEn?: string;
+  /** Chaîne vide : efface le libellé arabe (contrat 0.16.0). */
+  labelAr?: string;
   sortOrder?: number;
   active?: boolean;
 }

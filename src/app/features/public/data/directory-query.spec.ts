@@ -12,12 +12,12 @@ import { DirectoryVocabulary, EMPTY_QUERY } from './directory.models';
 
 const vocabulary: DirectoryVocabulary = {
   specialties: [
-    { code: 'anxiety', labelFr: 'Anxiété', labelEn: 'Anxiety' },
-    { code: 'burnout', labelFr: 'Burn-out', labelEn: 'Burnout' },
+    { code: 'anxiety', labelFr: 'Anxiété', labelEn: 'Anxiety', labelAr: null },
+    { code: 'burnout', labelFr: 'Burn-out', labelEn: 'Burnout', labelAr: null },
   ],
-  audiences: [{ code: 'adults', labelFr: 'Adultes', labelEn: 'Adults' }],
+  audiences: [{ code: 'adults', labelFr: 'Adultes', labelEn: 'Adults', labelAr: null }],
   modalities: [],
-  languages: [{ code: 'fr', labelFr: 'français', labelEn: 'French' }],
+  languages: [{ code: 'fr', labelFr: 'français', labelEn: 'French', labelAr: null }],
 };
 
 describe('directory-query', () => {

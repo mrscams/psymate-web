@@ -203,6 +203,127 @@ describe('VocabularyPage', () => {
     expect(vocabulary).toHaveBeenCalledTimes(2);
   });
 
+  describe('libellé arabe (M16-25, contrat 0.16.0)', () => {
+    function arabicInput(root: Element): HTMLInputElement {
+      return root.querySelector<HTMLInputElement>('input[formcontrolname="labelAr"]')!;
+    }
+    function type(input: HTMLInputElement, value: string): void {
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+    }
+    async function openRename(entries = ENTRIES, patchEntry = vi.fn()) {
+      const vocabulary = vi.fn().mockResolvedValue(entries);
+      const rendered = await render({ vocabulary, patchEntry });
+      const rename = [...rendered.el.querySelectorAll<HTMLButtonElement>('tbody button')].find(
+        (b) => b.textContent?.includes('Renommer'),
+      )!;
+      rename.click();
+      await settle(rendered.fixture);
+      const panel = rendered.el.querySelector(`#${rename.getAttribute('aria-controls')}`)!;
+      return { ...rendered, panel, patchEntry, vocabulary };
+    }
+
+    it('Ajouter : champ à côté du libellé anglais, de droite à gauche, étiqueté, envoyé', async () => {
+      const createEntry = vi.fn().mockResolvedValue(entry({ code: 'sleep' }));
+      const { fixture, el } = await render({
+        vocabulary: vi.fn().mockResolvedValue(ENTRIES),
+        createEntry,
+      });
+      const form = el.querySelector('pm-add-entry-form')!;
+      const inputs = [...form.querySelectorAll<HTMLInputElement>('input')];
+      const arabic = arabicInput(form);
+      expect(inputs.indexOf(arabic)).toBe(inputs.length - 1);
+      expect(inputs[inputs.indexOf(arabic) - 1].getAttribute('formcontrolname')).toBe('labelEn');
+      expect(arabic.getAttribute('dir')).toBe('rtl');
+      expect(arabic.getAttribute('lang')).toBe('ar');
+      expect(form.querySelector(`label[for="${arabic.id}"]`)?.textContent).toContain(
+        'Libellé AR (facultatif)',
+      );
+      const [code, labelFr] = inputs;
+      type(code, 'sleep');
+      type(labelFr, 'Sommeil');
+      type(arabic, 'النوم');
+      form.querySelector('form')!.dispatchEvent(new Event('submit'));
+      await settle(fixture);
+      expect(createEntry).toHaveBeenCalledWith({
+        kind: 'specialty',
+        code: 'sleep',
+        labelFr: 'Sommeil',
+        labelEn: '',
+        labelAr: 'النوم',
+      });
+    });
+
+    it('Ajouter : plus de 120 caractères refusé avant envoi, comme le libellé anglais', async () => {
+      const createEntry = vi.fn();
+      const { fixture, el } = await render({
+        vocabulary: vi.fn().mockResolvedValue(ENTRIES),
+        createEntry,
+      });
+      const form = el.querySelector('pm-add-entry-form')!;
+      const [code, labelFr] = [...form.querySelectorAll<HTMLInputElement>('input')];
+      type(code, 'sleep');
+      type(labelFr, 'Sommeil');
+      type(arabicInput(form), 'ن'.repeat(121));
+      form.querySelector('form')!.dispatchEvent(new Event('submit'));
+      await settle(fixture);
+      expect(createEntry).not.toHaveBeenCalled();
+      expect(arabicInput(form).getAttribute('aria-invalid')).toBe('true');
+      expect(form.querySelector('#add-field-labelAr-error')?.textContent?.trim()).not.toBe('');
+    });
+
+    it('Renommer : champ prérempli, envoyé quand il change', async () => {
+      const arabicEntry = entry({ labelAr: 'القلق' });
+      const patchEntry = vi.fn().mockResolvedValue(entry({ labelAr: 'قلق' }));
+      const { fixture, panel } = await openRename([arabicEntry], patchEntry);
+      const arabic = arabicInput(panel);
+      expect(arabic.value).toBe('القلق');
+      expect(arabic.getAttribute('dir')).toBe('rtl');
+      expect(panel.querySelector(`label[for="${arabic.id}"]`)?.textContent).toContain(
+        'Libellé AR (vide = effacé)',
+      );
+      type(arabic, ' قلق ');
+      panel.querySelector('form')!.dispatchEvent(new Event('submit'));
+      await settle(fixture);
+      expect(patchEntry).toHaveBeenCalledWith('specialty', 'anxiety', {
+        labelFr: 'Anxiété',
+        labelEn: 'Anxiety',
+        labelAr: 'قلق',
+        sortOrder: 1,
+      });
+    });
+
+    it('Renommer : vidé, il est effacé (chaîne vide envoyée)', async () => {
+      const patchEntry = vi.fn().mockResolvedValue(entry());
+      const { fixture, panel } = await openRename([entry({ labelAr: 'القلق' })], patchEntry);
+      type(arabicInput(panel), '');
+      panel.querySelector('form')!.dispatchEvent(new Event('submit'));
+      await settle(fixture);
+      expect(patchEntry).toHaveBeenCalledWith(
+        'specialty',
+        'anxiety',
+        expect.objectContaining({ labelAr: '' }),
+      );
+    });
+
+    it('Renommer : 422 TOO_LONG sur labelAr affiché sous le champ, saisie conservée', async () => {
+      const patchEntry = vi.fn().mockRejectedValue({
+        status: 422,
+        code: 'VALIDATION_FAILED',
+        errors: [{ field: 'labelAr', code: 'TOO_LONG', message: '120 caractères au plus.' }],
+      });
+      const { fixture, panel } = await openRename([entry()], patchEntry);
+      type(arabicInput(panel), 'اضطرابات النوم');
+      panel.querySelector('form')!.dispatchEvent(new Event('submit'));
+      await settle(fixture);
+      const arabic = arabicInput(panel);
+      expect(arabic.value).toBe('اضطرابات النوم');
+      expect(arabic.getAttribute('aria-invalid')).toBe('true');
+      expect(panel.querySelector(`#${arabic.id}-error`)?.textContent?.trim()).not.toBe('');
+      expect(panel.querySelector('p.error')).toBeNull();
+    });
+  });
+
   it('Ajouter : 409 VOCABULARY_EXISTS sous le champ code, saisie conservée', async () => {
     const { fixture, el } = await render({
       vocabulary: vi.fn().mockResolvedValue(ENTRIES),

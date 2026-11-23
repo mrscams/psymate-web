@@ -1,5 +1,5 @@
 import { Profession } from '../auth';
-import { OfferedLocale, SubjectLabel } from '../i18n';
+import { AppLocale, SubjectLabel } from '../i18n';
 import { ThemePreference } from '../theme';
 
 /** Modalité proposée en ligne (`booking.modalities`). */
@@ -28,10 +28,11 @@ export interface Preferences {
   'timeline.groupBy': 'session' | 'month' | 'chronological';
   theme: ThemePreference;
   /**
-   * Langue du compte : fr ou en, les seules que le contrat admet (0.15.0) et que l'écran propose.
-   * L'arabe n'est ni envoyé ni accepté avant le contrat 0.16.0 (M16-25) et l'ouverture (M16-29).
+   * Langue du compte : fr, en ou ar (contrat 0.16.0). Une valeur ar renvoyée par le serveur est
+   * lue et gardée telle quelle ; l'écran des préférences ne propose encore que fr et en (Q80,
+   * l'arabe y entre à l'ouverture, M16-29).
    */
-  locale: OfferedLocale;
+  locale: AppLocale;
   'vocabulary.subjectLabel': SubjectLabel;
   'entryTypes.medicationVisible': boolean;
   'entries.defaultVisibility': 'clinical' | 'private';
@@ -107,7 +108,7 @@ const ENUMS: { [K in PreferenceKey]?: readonly Preferences[K][] } = {
   'overview.window': ['30d', '90d', '12m'],
   'timeline.groupBy': ['session', 'month', 'chronological'],
   theme: ['light', 'soft', 'dark', 'system'],
-  locale: ['fr', 'en'],
+  locale: ['fr', 'en', 'ar'],
   'vocabulary.subjectLabel': ['patient', 'client'],
   'entries.defaultVisibility': ['clinical', 'private'],
   'agenda.defaultView': ['day', 'week', 'month', 'list'],

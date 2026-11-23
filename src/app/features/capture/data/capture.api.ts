@@ -167,7 +167,8 @@ export function toEmotion(dto: EmotionView, locale: AppLocale): CaptureEmotion {
     code: dto.code ?? '',
     labelFr,
     labelEn: dto.labelEn ?? null,
-    label: catalogLabel({ labelFr, labelEn: dto.labelEn }, locale),
+    labelAr: dto.labelAr ?? null,
+    label: catalogLabel({ labelFr, labelEn: dto.labelEn, labelAr: dto.labelAr }, locale),
     family: EMOTION_FAMILIES.find((item) => item === dto.family) ?? null,
     custom: dto.scope === 'custom',
   };
@@ -240,11 +241,15 @@ function entryTypes(values: string[] | undefined): EntryType[] {
 /** Libellés dans la langue de l'interface, sinon en français (Q78). */
 export function toLinkType(view: LinkTypeView, locale: AppLocale): LinkTypeOption {
   const label = catalogLabel(
-    { labelFr: view.labelFr ?? view.code ?? '', labelEn: view.labelEn },
+    { labelFr: view.labelFr ?? view.code ?? '', labelEn: view.labelEn, labelAr: view.labelAr },
     locale,
   );
   const inverse = catalogLabel(
-    { labelFr: view.inverseLabelFr ?? '', labelEn: view.inverseLabelEn },
+    {
+      labelFr: view.inverseLabelFr ?? '',
+      labelEn: view.inverseLabelEn,
+      labelAr: view.inverseLabelAr,
+    },
     locale,
   );
   return {

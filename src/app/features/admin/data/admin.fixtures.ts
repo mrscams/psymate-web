@@ -146,6 +146,7 @@ export function entry(overrides: Partial<VocabularyEntry> = {}): VocabularyEntry
     code: 'anxiety',
     labelFr: 'Anxiété',
     labelEn: 'Anxiety',
+    labelAr: null,
     sortOrder: 1,
     active: true,
     usedByPublishedProfiles: 0,

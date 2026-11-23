@@ -33,6 +33,27 @@ describe('GraphApi · toEmotionLabels (Q78, plus de booléen english)', () => {
   });
 });
 
+describe('GraphApi · toEmotionLabels, libellé arabe du catalogue (M16-25, contrat 0.16.0)', () => {
+  const list = [
+    { code: 'anxiety', labelFr: 'Anxiété', labelEn: 'Anxiety', labelAr: 'قلق' },
+    { code: 'joy', labelFr: 'Joie', labelEn: 'Joy', labelAr: '' },
+    { code: 'shame', labelFr: 'Honte', labelEn: 'Shame' },
+  ];
+
+  it('arabe : labelAr s’il existe ; vide ou absent, le français, jamais l’anglais', () => {
+    expect(toEmotionLabels(list, 'ar')).toEqual({ anxiety: 'قلق', joy: 'Joie', shame: 'Honte' });
+  });
+
+  it('français et anglais inchangés par la présence d’un libellé arabe', () => {
+    expect(toEmotionLabels(list, 'fr')).toEqual({
+      anxiety: 'Anxiété',
+      joy: 'Joie',
+      shame: 'Honte',
+    });
+    expect(toEmotionLabels(list, 'en')).toEqual({ anxiety: 'Anxiety', joy: 'Joy', shame: 'Shame' });
+  });
+});
+
 describe('GraphApi · mostLinkedSituation (racine par défaut)', () => {
   it('la situation en cours la plus liée (triées par le serveur), reliée au moins une fois', () => {
     expect(
