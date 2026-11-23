@@ -1,6 +1,7 @@
 // Textes de la vue graphe (fiche 04) : étiquettes des nœuds et des super-nœuds, périodes,
 // problèmes de lecture.
 import { ApiProblem } from '../../../core/http';
+import { formatLocale } from '../../../core/i18n';
 import { EntryType, entryTitle } from '../../../shared/ui';
 import {
   GraphDirection,
@@ -39,7 +40,8 @@ export function nodeDate(occurred: string | null, locale: string, now = new Date
   const date = new Date(occurred);
   if (Number.isNaN(date.getTime())) return '';
   const sameYear = date.getFullYear() === now.getFullYear();
-  return new Intl.DateTimeFormat(locale, {
+  // Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe.
+  return new Intl.DateTimeFormat(formatLocale(locale), {
     day: 'numeric',
     month: 'short',
     ...(sameYear ? {} : { year: 'numeric' }),
@@ -120,7 +122,7 @@ export function monthLabel(key: string, locale: string): string {
     return $localize`:Colonne du graphe des entrées sans date@@graph.month.none:Sans date`;
   }
   const [year, month] = key.split('-').map(Number);
-  return new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(
+  return new Intl.DateTimeFormat(formatLocale(locale), { month: 'short', year: 'numeric' }).format(
     new Date(year, month - 1, 1),
   );
 }

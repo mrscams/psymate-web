@@ -44,6 +44,21 @@ describe('TagStore', () => {
     if (creations) expect(store.tags().data?.map((t) => t.label)).toContain('famille');
   });
 
+  it('« #علي » ne réutilise pas « على » : le serveur les tient pour distincts (M16-14)', async () => {
+    const createTag = vi
+      .fn()
+      .mockResolvedValue({ id: 't-ali', label: 'علي', normalizedLabel: 'علي' });
+    const { store } = setup({
+      listTags: vi.fn().mockResolvedValue([{ id: 't-ala', label: 'على', normalizedLabel: 'على' }]),
+      createTag,
+    });
+    await store.load();
+    expect((await store.resolve('#علي'))?.id).toBe('t-ali');
+    expect(createTag).toHaveBeenCalledTimes(1);
+    expect((await store.resolve('على'))?.id).toBe('t-ala');
+    expect(createTag).toHaveBeenCalledTimes(1);
+  });
+
   it('TAG_IS_EMOTION : refus gardé avec le message du serveur, effacé par clearProblem', async () => {
     const { store } = setup({
       listTags: vi.fn().mockResolvedValue(TAGS),

@@ -18,7 +18,8 @@ import { LinkTypeChipsComponent } from './link-type-chips.component';
     <ul class="links">
       @for (link of items(); track link.id) {
         <li [class.removed]="link.removed" [attr.data-link-id]="link.id">
-          <p class="sentence" [id]="link.sentenceId">
+          <!-- Phrase rendue par le serveur dans sa langue (Q77). -->
+          <p class="sentence" dir="auto" [id]="link.sentenceId">
             @if (link.removed) {
               <s>{{ link.sentence }}</s>
               &ngsp;<span class="badge" i18n="Marque d'un lien retiré@@links.placed.removedBadge"
@@ -29,7 +30,7 @@ import { LinkTypeChipsComponent } from './link-type-chips.component';
             }
           </p>
           @if (link.rationale) {
-            <p class="rationale">{{ link.rationale }}</p>
+            <p class="rationale" dir="auto">{{ link.rationale }}</p>
           }
           @if (!link.removed) {
             <div class="actions">

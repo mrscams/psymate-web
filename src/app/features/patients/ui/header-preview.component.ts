@@ -7,7 +7,7 @@ import {
   LOCALE_ID,
 } from '@angular/core';
 
-import { ageInYears, formatMonthYear } from '../../../core/i18n';
+import { ageInYears, formatLocale, formatMonthYear } from '../../../core/i18n';
 import { FlagKind, monthToDate, PatientFlagView } from '../data/patient.model';
 import { flagLabel } from './patient-labels';
 
@@ -28,7 +28,7 @@ const HEADER_ORDER: readonly FlagKind[] = ['risk', 'watch', 'shared_care'];
         Aperçu de l'en-tête
       </h2>
       @if (name()) {
-        <p class="nm">{{ name() }}</p>
+        <p class="nm" dir="auto">{{ name() }}</p>
       } @else {
         <p class="nm placeholder" i18n="Aperçu sans nom@@patients.preview.noName">Nom affiché</p>
       }
@@ -41,7 +41,9 @@ const HEADER_ORDER: readonly FlagKind[] = ['risk', 'watch', 'shared_care'];
             <li class="chip">
               {{ chip.text }}
               @if (chip.reason) {
-                <span class="sr-only">: {{ chip.reason }}</span>
+                <span class="sr-only"
+                  >: <bdi>{{ chip.reason }}</bdi></span
+                >
               }
             </li>
           }
@@ -116,7 +118,8 @@ export class HeaderPreviewComponent {
   readonly since = input('');
   readonly flags = input<PatientFlagView[]>([]);
 
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
 
   protected readonly flagsLabel = $localize`:Étiquette de la liste des drapeaux d'un patient@@patients.flags.list:Drapeaux`;
 

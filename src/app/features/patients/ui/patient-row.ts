@@ -1,8 +1,8 @@
 // Ligne de la liste des patients préparée pour l'affichage (maquette 01, UX-S7) : table, cartes
 // mobiles et bande « Aujourd'hui » lisent les mêmes textes. Fonctions pures, locale et instant en
-// argument.
+// argument : la locale est la locale de formatage de core/i18n (Q73), jamais LOCALE_ID brut.
 
-import { ageInYears, formatRelativeDay, minutesBetween } from '../../../core/i18n';
+import { ageInYears, formatLocale, formatRelativeDay, minutesBetween } from '../../../core/i18n';
 import { sessionModalityLabel } from '../../../shared/ui';
 import { initials } from '../../../shared/util';
 import {
@@ -120,7 +120,7 @@ function cardLine(view: Omit<RowView, 'cardLine'>): string {
   const parts: string[] = [];
   if (view.lastDate && view.liveMinutes === null) parts.push(view.lastDate);
   if (view.sinceCount) {
-    parts.push(`${view.sinceCount} ${view.sinceWord}`);
+    parts.push(sinceText(view.sinceCount));
     if (view.strongest) parts.push(view.strongest);
   }
   if (view.drafts) parts.push(view.drafts);
@@ -139,14 +139,17 @@ export function shortDate(value: string, locale: string, now: Date): string {
   if (Number.isNaN(date.getTime())) return '';
   const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
   if (date.getFullYear() !== now.getFullYear()) options.year = 'numeric';
-  return new Intl.DateTimeFormat(locale, options).format(date);
+  return new Intl.DateTimeFormat(formatLocale(locale), options).format(date);
 }
 
 /** « 09:45 ». */
 export function clockTime(value: string, locale: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '';
-  return new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(date);
+  return new Intl.DateTimeFormat(formatLocale(locale), {
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
 }
 
 /** « en cours · 12 min » (colonne Dernière séance). */
@@ -183,7 +186,7 @@ function detail(
   if (since) {
     const date = new Date(since);
     if (!Number.isNaN(date.getTime())) {
-      const month = new Intl.DateTimeFormat(locale, {
+      const month = new Intl.DateTimeFormat(formatLocale(locale), {
         month: 'short',
         year: 'numeric',
         timeZone: 'UTC',
@@ -200,6 +203,13 @@ function sinceCount(activity: PatientActivity): string {
   return activity.since.capped ? `${activity.since.entries}+` : `${activity.since.entries}`;
 }
 
+/** « 2 entrées » (carte mobile) : le nombre et le mot dans un seul message (M4.4 point 9). */
+function sinceText(count: string): string {
+  return count === '1'
+    ? $localize`:Entrées depuis la séance, carte mobile, une@@patients.card.sinceOne:${count}:count: entrée`
+    : $localize`:Entrées depuis la séance, carte mobile, plusieurs@@patients.card.sinceMany:${count}:count: entrées`;
+}
+
 function entriesWord(count: number): string {
   return count === 1
     ? $localize`:Après le nombre d'entrées depuis la séance, une@@patients.since.entry:entrée`
@@ -207,7 +217,7 @@ function entriesWord(count: number): string {
 }
 
 function feelingText(label: string, intensity: number, locale: string): string {
-  const name = label.toLocaleLowerCase(locale);
+  const name = label.toLocaleLowerCase(formatLocale(locale));
   return $localize`:Ressenti le plus fort depuis la séance (« anxiété 7/10 »)@@patients.since.strongest:${name}:emotion: ${intensity}:intensity:/10`;
 }
 
@@ -215,21 +225,21 @@ function dominantText(
   dominant: { label: string; delta: number },
   locale: string,
 ): { text: string; spoken: string } {
-  const name = dominant.label.toLocaleLowerCase(locale);
+  const name = dominant.label.toLocaleLowerCase(formatLocale(locale));
   if (dominant.delta > 0) {
     return {
-      text: `${name} ↑`,
+      text: $localize`:Émotion dominante en hausse, colonne de la liste@@patients.dominant.upShort:${name}:emotion: ↑`,
       spoken: $localize`:Émotion dominante en hausse (lecteur d'écran)@@patients.dominant.up:${name}:emotion: en hausse`,
     };
   }
   if (dominant.delta < 0) {
     return {
-      text: `${name} ↓`,
+      text: $localize`:Émotion dominante en baisse, colonne de la liste@@patients.dominant.downShort:${name}:emotion: ↓`,
       spoken: $localize`:Émotion dominante en baisse (lecteur d'écran)@@patients.dominant.down:${name}:emotion: en baisse`,
     };
   }
   return {
-    text: `${name} =`,
+    text: $localize`:Émotion dominante stable, colonne de la liste@@patients.dominant.stableShort:${name}:emotion: =`,
     spoken: $localize`:Émotion dominante stable (lecteur d'écran)@@patients.dominant.stable:${name}:emotion: stable`,
   };
 }
@@ -261,7 +271,7 @@ export function sparkline(activity: PatientActivity, locale: string): Sparkline 
     .join(' ');
   const first = points[0].value;
   const last = points[points.length - 1];
-  const number = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
+  const number = new Intl.NumberFormat(formatLocale(locale), { maximumFractionDigits: 1 });
   const from = number.format(first);
   const to = number.format(last.value);
   return {

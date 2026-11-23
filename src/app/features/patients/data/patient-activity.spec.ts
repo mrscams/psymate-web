@@ -98,8 +98,44 @@ describe('toActivity (GET /overview?window=30d → ligne de la liste)', () => {
   });
 
   it('en anglais : libellés anglais des émotions', () => {
-    expect(toActivity(overview, true).since.strongest?.label).toBe('Anxiety');
+    expect(toActivity(overview, 'en').since.strongest?.label).toBe('Anxiety');
   });
+
+  it('en arabe : libellé arabe absent de la série, repli sur le français (Q78) ; le code sinon', () => {
+    expect(toActivity(overview, 'ar').since.strongest?.label).toBe('Anxiété');
+    expect(toActivity(overview, 'ar').dominant?.label).toBe('Anticipation');
+    const bare = toActivity(
+      {
+        ...overview,
+        feelings: { ...overview.feelings, series: [{ emotionCode: 'anxiety' }] },
+      },
+      'ar',
+    );
+    expect(bare.since.strongest?.label).toBe('anxiety');
+  });
+
+  it.each(['fr', 'en', 'ar'] as const)(
+    'série sans libellé (%s) : la dominante garde top.label, pas le code',
+    (locale) => {
+      const view = toActivity(
+        {
+          ...overview,
+          feelings: { ...overview.feelings, series: [{ emotionCode: 'anticipation' }] },
+        },
+        locale,
+      );
+      expect(view.dominant?.label).toBe('Anticipation');
+      const coded = toActivity(
+        {
+          ...overview,
+          emotions: { top: [{ code: 'serenity', delta: 0 }] },
+          feelings: { ...overview.feelings, series: [{ emotionCode: 'serenity' }] },
+        },
+        locale,
+      );
+      expect(coded.dominant?.label).toBe('serenity');
+    },
+  );
 
   it('séance clôturée avec un compte rendu : rien à écrire ; séance non clôturée (accueil) non plus', () => {
     const written = toActivity({

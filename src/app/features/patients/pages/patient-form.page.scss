@@ -31,7 +31,7 @@
 
   li + li::before {
     content: '/';
-    margin-right: 6px;
+    margin-inline-end: 6px;
   }
 
   a {
@@ -199,7 +199,7 @@ form {
 
   // La légende sort du bord du fieldset : elle devient le premier bloc de la section.
   legend {
-    float: left;
+    float: inline-start;
     width: 100%;
     margin: 0 0 4px;
     padding: 0;
@@ -314,6 +314,12 @@ input.mono {
   font-size: 13px;
 }
 
+// Téléphone, e-mail, tarif en dir="ltr" (Q77) : dans une page de droite à gauche, le texte reste
+// aligné du côté de début de la page (à droite).
+.f:dir(rtl) input[dir='ltr'] {
+  text-align: end;
+}
+
 // Champs date et mois partagés (pm-date-field) : même hauteur et même rayon que les champs voisins.
 :host ::ng-deep :is(pm-date-field, pm-month-field) {
   .date-input {
@@ -333,16 +339,17 @@ input.mono {
   position: relative;
 
   input {
-    padding-right: 44px;
+    padding-inline-end: 44px;
   }
 
   .unit {
     position: absolute;
     top: 50%;
-    right: 12px;
+    inset-inline-end: 12px;
     transform: translateY(-50%);
     color: var(--text-secondary);
-    font: 400 13px/1 var(--font-mono);
+    // L'unité est un mot (« min », « دقيقة ») : --font-mono-text, police d'interface en /ar/ (Q76).
+    font: 400 13px/1 var(--font-mono-text);
     pointer-events: none;
   }
 }

@@ -74,7 +74,7 @@
 .popup {
   position: absolute;
   top: calc(100% + 4px);
-  left: 0;
+  inset-inline-start: 0;
   z-index: 20;
   display: flex;
   flex-direction: column;
@@ -176,8 +176,10 @@
   font: var(--mat-sys-body-small);
 }
 
+// Date à nom de mois : chasse fixe en français et en anglais, police d'interface en arabe (Q76).
 .mono {
-  font-family: var(--font-mono);
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
 }
 
 .warning {
