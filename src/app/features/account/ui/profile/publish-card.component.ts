@@ -91,7 +91,7 @@ export interface ChecklistItem {
         <p class="url-line">
           <span i18n="Libellé de l'adresse publique@@profile.publish.urlLabel"
             >Adresse publique :</span
-          >&ngsp;<span class="url" [attr.title]="publicUrl()">{{ displayUrl() }}</span>
+          >&ngsp;<span class="url" dir="ltr" [attr.title]="publicUrl()">{{ displayUrl() }}</span>
         </p>
         <p i18n="Effet de la dépublication@@profile.publish.unpublishNote">
           Désactiver retire la fiche immédiatement de l'annuaire.
@@ -299,7 +299,7 @@ export interface ChecklistItem {
     }
     .refused ul {
       margin: 0;
-      padding-left: 18px;
+      padding-inline-start: 18px;
     }
     .link {
       padding: 0;
@@ -307,7 +307,7 @@ export interface ChecklistItem {
       background: none;
       color: var(--primary);
       font: inherit;
-      text-align: left;
+      text-align: start;
       text-decoration: underline;
       cursor: pointer;
     }

@@ -35,6 +35,17 @@ describe('ProfilePreviewComponent', () => {
     expect(el.textContent).toContain('60 € la séance');
   });
 
+  it('tarif et site web : une espace entre le libellé et la valeur isolée (<bdi>)', async () => {
+    const { el } = await render(
+      fields({ fees: '60 € la séance', websiteUrl: 'https://claire.example.test' }),
+    );
+    const lines = Array.from(el.querySelectorAll('.line')).map((line) =>
+      (line.textContent ?? '').replace(/\s+/g, ' ').trim(),
+    );
+    expect(lines).toContain('Tarif : 60 € la séance');
+    expect(lines).toContain('Site web : https://claire.example.test');
+  });
+
   it('contacts : seulement ceux dont l’interrupteur « Afficher » est actif ; site web à part', async () => {
     const { el } = await render(
       fields({
@@ -85,5 +96,32 @@ describe('ProfilePreviewComponent', () => {
     expect(refresh.textContent?.trim()).toBe("Rafraîchir l'aperçu");
     refresh.click();
     expect(document.activeElement).toBe(card);
+  });
+
+  it('M16-12 : texte saisi en dir="auto", ville isolée, téléphone, e-mail et site en dir="ltr"', async () => {
+    const { el } = await render(
+      fields({
+        titleLabel: 'Psychologue clinicienne',
+        bio: 'مرحبا',
+        city: 'Lyon',
+        modalities: ['in_person'],
+        contactPhone: '04 00 00 00 00',
+        showPhone: true,
+        contactEmail: 'cabinet@example.test',
+        showEmail: true,
+        address: '12 rue Vendôme',
+        showAddress: true,
+        websiteUrl: 'https://claire.example.test',
+      }),
+    );
+    expect(el.querySelector('.name')?.getAttribute('dir')).toBe('auto');
+    expect(el.querySelector('.bio')?.getAttribute('dir')).toBe('auto');
+    expect(el.querySelector('.who bdi')?.textContent).toBe('Lyon');
+    const contacts = [...el.querySelectorAll('.contact bdi')].map((b) => b.getAttribute('dir'));
+    expect(contacts).toEqual(['ltr', 'ltr', 'auto']);
+    expect(el.querySelector('bdi[dir="ltr"]')?.textContent).toBe('04 00 00 00 00');
+    expect(
+      [...el.querySelectorAll('bdi')].some((b) => b.textContent === 'https://claire.example.test'),
+    ).toBe(true);
   });
 });

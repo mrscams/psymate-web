@@ -78,20 +78,41 @@ export async function point(page: Page, id: string): Promise<{ x: number; y: num
 /**
  * Un point du canevas loin de tout nœud (pour un glisser de fond = déplacement de la vue) : le
  * point d'une grille le plus éloigné des nœuds dessinés, hors des boutons et de la légende.
+ *
+ * « Hors de » se vérifie à l'écran (elementFromPoint), pas par la place supposée des éléments : la
+ * légende, dépliée à l'arrivée en bas à droite, couvre une partie de la grille, et le coin le plus
+ * vide du graphe dépend de la disposition du seed. Un point sous la légende ne déplaçait pas la vue
+ * et la molette y faisait défiler la page au lieu de zoomer (CI du 23 nov. 2026). `along` : les
+ * décalages du geste prévu (fin du glisser, où tourne la molette), qui doivent eux aussi tomber
+ * dans la fenêtre, sur la zone du canevas et pas sur un élément posé par-dessus.
  */
-export async function emptySpot(page: Page): Promise<{ x: number; y: number }> {
-  return canvas(page).evaluate((el: WithProbe) => {
+export async function emptySpot(
+  page: Page,
+  along: { dx: number; dy: number }[] = [],
+): Promise<{ x: number; y: number }> {
+  const found = await canvas(page).evaluate((el: WithProbe, offsets) => {
     const probe = el.pmGraphProbe!;
+    const zone = el.querySelector('.viewport');
     const box = el.getBoundingClientRect();
     const points = probe
       .nodeIds()
       .map((id) => probe.point(id))
       .filter((p): p is { x: number; y: number } => !!p);
-    let best = { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+    // Sur la zone du canevas (ou une carte du dessin), dans la fenêtre, sous aucun autre élément.
+    const onZone = (x: number, y: number) => {
+      if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) return null;
+      const under = document.elementFromPoint(x, y);
+      return under && zone?.contains(under) ? under : null;
+    };
+    let best: { x: number; y: number } | null = null;
     let bestDistance = -1;
     for (let gx = 0.2; gx <= 0.8; gx += 0.05) {
       for (let gy = 0.15; gy <= 0.7; gy += 0.05) {
         const candidate = { x: box.left + box.width * gx, y: box.top + box.height * gy };
+        // Le point pressé est sur le fond (pas une carte : ce serait un glisser de carte).
+        const under = onZone(candidate.x, candidate.y);
+        if (!under || under.closest('[data-node-id]')) continue;
+        if (offsets.some(({ dx, dy }) => !onZone(candidate.x + dx, candidate.y + dy))) continue;
         const distance = Math.min(
           ...points.map((p) => Math.hypot(p.x - candidate.x, p.y - candidate.y)),
         );
@@ -102,7 +123,24 @@ export async function emptySpot(page: Page): Promise<{ x: number; y: number }> {
       }
     }
     return best;
-  });
+  }, along);
+  expect(found, 'aucun point du fond du canevas libre pour le geste').not.toBeNull();
+  return found!;
+}
+
+/** L'élément sous (x, y) est dans la zone du canevas (pas la légende, ni les boutons de zoom). */
+export function onCanvasZone(page: Page, at: { x: number; y: number }): Promise<boolean> {
+  return canvas(page).evaluate((el, { x, y }) => {
+    const under = document.elementFromPoint(x, y);
+    return !!under && !!el.querySelector('.viewport')?.contains(under);
+  }, at);
+}
+
+/** Position d'une carte dans la page (indépendante du défilement de la fenêtre). */
+export async function pagePoint(page: Page, id: string): Promise<{ x: number; y: number }> {
+  const at = await point(page, id);
+  const scroll = await page.evaluate(() => ({ x: scrollX, y: scrollY }));
+  return { x: at.x + scroll.x, y: at.y + scroll.y };
 }
 
 async function ok<T>(response: Promise<import('@playwright/test').APIResponse>): Promise<T> {

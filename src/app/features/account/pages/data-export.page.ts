@@ -7,6 +7,7 @@ import {
   effect,
   inject,
   Injector,
+  LOCALE_ID,
   signal,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +15,7 @@ import { RouterLink } from '@angular/router';
 
 import { SessionStore } from '../../../core/auth';
 import { ApiProblem } from '../../../core/http';
-import { subjectLabel, SubjectVocabulary } from '../../../core/i18n';
+import { subjectLabel, SubjectVocabulary, toAppLocale } from '../../../core/i18n';
 import {
   AccountNavComponent,
   ConfirmDialogService,
@@ -75,6 +76,12 @@ export class DataExportPage {
   private readonly injector = inject(Injector);
 
   protected readonly formats = FORMATS;
+  /**
+   * Document exporté dans la langue de l'interface en français et en anglais ; en arabe, il reste
+   * en français (psymate-api Q102, second temps M16-31) : le rappel le dit au lieu de promettre
+   * un export en arabe.
+   */
+  protected readonly exportInFrench = toAppLocale(inject(LOCALE_ID)) === 'ar';
   protected readonly howItWorksPath = PUBLIC_PATHS.howItWorks;
 
   protected readonly displayName = computed(() => this.session.me()?.displayName ?? '');

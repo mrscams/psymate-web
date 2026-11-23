@@ -185,7 +185,7 @@
       }
     </mat-menu>
 
-    <!-- À droite (maquette 04) ; passe à la ligne d'un bloc, aligné à droite. -->
+    <!-- En fin de ligne (maquette 04 : à droite ; à gauche en arabe) ; passe à la ligne d'un bloc, aligné en fin. -->
     <div class="tools">
       <span class="count" aria-live="polite" [class.refreshing]="refreshing()">{{
         countText()
@@ -216,11 +216,19 @@
         [attr.title]="linkSource() ? null : linkDisabledHint"
         (click)="linkFromToolbar()"
       >
-        <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+        <!-- Flèche « vers » : retournée en arabe (docs/design/arabe.md §3). -->
+        <svg
+          class="pm-flip-rtl"
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          aria-hidden="true"
+          focusable="false"
+        >
           <path d="M1 6h8M6 3l3 3-3 3" />
         </svg>
         <span i18n="Bouton Lier de la barre du graphe@@graph.toolbar.link">Lier</span>
-        <kbd aria-hidden="true">L</kbd>
+        <kbd dir="ltr" aria-hidden="true">L</kbd>
       </button>
     </div>
   </div>

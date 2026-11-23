@@ -255,4 +255,11 @@ describe('SecurityPage', () => {
       el.querySelector('section[aria-labelledby="h-email"] [aria-live]')?.textContent,
     ).toContain('nouvelle@example.test');
   });
+
+  it('M16-12 : adresse de connexion en dir="ltr", dates hors de la chasse fixe des chiffres', async () => {
+    const { el } = await render({ loadSecurity: vi.fn().mockResolvedValue(OVERVIEW) });
+    expect(el.querySelector('.value .mono')?.getAttribute('dir')).toBe('ltr');
+    expect(el.querySelector('section[aria-labelledby="h-last-login"] .mono.date')).not.toBeNull();
+    expect(el.querySelector('ul.sessions .session-times .mono.date')).not.toBeNull();
+  });
 });

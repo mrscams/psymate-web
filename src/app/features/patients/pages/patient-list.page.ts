@@ -27,10 +27,12 @@ import { PatientListStore } from '../data/patient-list.store';
 import { exportErrorText } from '../ui/export-menu.component';
 import { OnboardingComponent } from '../ui/onboarding.component';
 import {
+  archiveConfirmLabel,
   archivedMessage,
   quickFilterLabel,
   RESTORE_LABEL,
   restoredMessage,
+  shownOneLabel,
 } from '../ui/patient-labels';
 import { PatientFiltersComponent } from '../ui/patient-filters.component';
 import { PatientTableComponent, RowExport } from '../ui/patient-table.component';
@@ -149,10 +151,10 @@ export class PatientListPage {
   /** Pied : « 10 patients affichés » (les lignes de la page affichée, filtre rapide compris). */
   protected readonly shown = computed(() => {
     const count = this.store.rows().length;
-    const subjects = subjectLabel(this.vocabulary.label(), count > 1 ? 'many' : 'one');
-    return count > 1
-      ? $localize`:Pied de la liste, plusieurs lignes@@patients.footer.shownMany:${count}:count: ${subjects}:subjects: affichés`
-      : $localize`:Pied de la liste, une ligne ou aucune@@patients.footer.shownOne:${count}:count: ${subjects}:subjects: affiché`;
+    const label = this.vocabulary.label();
+    if (count <= 1) return shownOneLabel(label, count);
+    const subjects = subjectLabel(label, 'many');
+    return $localize`:Pied de la liste, plusieurs lignes@@patients.footer.shownMany:${count}:count: ${subjects}:subjects: affichés`;
   });
 
   /**
@@ -267,11 +269,10 @@ export class PatientListPage {
    * relecture de la page ; toast « Restaurer » (10 s), sinon restauration depuis les archivés.
    */
   protected async archive(patient: PatientView): Promise<void> {
-    const subject = subjectLabel(this.vocabulary.label(), 'one');
     const confirmed = await this.confirm.confirm({
       title: $localize`:Titre de la confirmation d'archivage@@patients.archive.confirmTitle:Archiver ${patient.displayName}:name: ?`,
       description: $localize`:Explication de l'archivage@@patients.archive.confirmText:Le dossier disparaît de la liste ; rien n'est supprimé et vous pourrez le restaurer.`,
-      confirmLabel: $localize`:Bouton de confirmation d'archivage@@patients.archive.confirm:Archiver ce ${subject}:subject:`,
+      confirmLabel: archiveConfirmLabel(this.vocabulary.label()),
       destructive: true,
       confirmWord: patient.displayName,
     });

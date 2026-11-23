@@ -3,6 +3,7 @@ import { firstValueFrom } from 'rxjs';
 
 import {
   ActiveSituationDto,
+  EmotionView,
   GraphDto,
   GraphEdgeDto,
   GrapheService,
@@ -11,6 +12,7 @@ import {
   VocabulaireService,
   VueDensembleService,
 } from '../../../api';
+import { AppLocale, catalogLabel, toAppLocale } from '../../../core/i18n';
 import { ENTRY_TYPES, EntryType } from '../../../shared/ui';
 import { GraphDepth, GraphEdge, GraphNode, GraphSuperNode, GraphView } from './graph.model';
 import { LinkTypeCode } from './link.model';
@@ -34,7 +36,7 @@ export class GraphApi {
   private readonly graph = inject(GrapheService);
   private readonly vocabulary = inject(VocabulaireService);
   private readonly overview = inject(VueDensembleService);
-  private readonly english = inject(LOCALE_ID).startsWith('en');
+  private readonly locale = toAppLocale(inject(LOCALE_ID));
 
   /**
    * GET /api/patients/{id}/graph : voisinage de la racine à `depth` sauts, ou sans racine les
@@ -73,15 +75,24 @@ export class GraphApi {
 
   /** GET /api/vocabulary/emotions : code → libellé dans la langue de l'interface. */
   async emotionLabels(): Promise<Record<string, string>> {
-    const list = await firstValueFrom(this.vocabulary.emotions());
-    const labels: Record<string, string> = {};
-    for (const emotion of list) {
-      if (!emotion.code) continue;
-      labels[emotion.code] =
-        (this.english ? emotion.labelEn : null) || emotion.labelFr || emotion.code;
-    }
-    return labels;
+    return toEmotionLabels(await firstValueFrom(this.vocabulary.emotions()), this.locale);
   }
+}
+
+/** Code → libellé de la langue de l'interface, sinon le français (Q78), sinon le code. */
+export function toEmotionLabels(
+  list: readonly EmotionView[],
+  locale: AppLocale,
+): Record<string, string> {
+  const labels: Record<string, string> = {};
+  for (const emotion of list) {
+    if (!emotion.code) continue;
+    labels[emotion.code] = catalogLabel(
+      { labelFr: emotion.labelFr || emotion.code, labelEn: emotion.labelEn },
+      locale,
+    );
+  }
+  return labels;
 }
 
 /**

@@ -23,6 +23,7 @@
             </label>
             <input
               class="inline-input"
+              dir="auto"
               type="text"
               [id]="'tag-rename-input-' + tag.id"
               [ngModel]="draft()"
@@ -33,7 +34,9 @@
               [attr.aria-describedby]="rowError() ? 'tag-row-error-' + tag.id : null"
             />
           } @else {
-            <span class="name"><span class="hash" aria-hidden="true">#</span>{{ tag.label }}</span>
+            <span class="name" dir="auto"
+              ><span class="hash" aria-hidden="true">#</span>{{ tag.label }}</span
+            >
           }
         </td>
         <td class="mono">{{ created(tag) }}</td>

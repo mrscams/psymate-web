@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T14:09:21.119Z",
+  "task": "M16-28",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Traduction arabe, seconde moitié : administration, agenda et socle (598 unités). messages.ar.xlf a 3 266 cibles pour 3 266 unités, mêmes identifiants que le français ; glossaire enrichi ; 18 messages incertains et 6 points d'agenda à reprendre dans le code (M16-23) listés dans la PR.",
+  "pr": "https://github.com/mrscams/psymate-web/pull/125",
+  "branch": "M16-28b-traduction-admin-agenda",
+  "checkout": "agent-a3846914160622d97"
+}

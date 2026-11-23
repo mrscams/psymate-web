@@ -112,7 +112,7 @@ h2 {
     cursor: pointer;
 
     & + button {
-      border-left: 1px solid var(--border-strong);
+      border-inline-start: 1px solid var(--border-strong);
     }
 
     &[aria-pressed='true'] {
@@ -199,7 +199,7 @@ h2 {
   }
 
   a {
-    margin-left: 4px;
+    margin-inline-start: 4px;
     color: var(--primary);
   }
 }

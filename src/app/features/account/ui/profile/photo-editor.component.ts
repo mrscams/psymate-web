@@ -98,7 +98,10 @@ import {
         </label>
         <label class="range">
           <span i18n="Curseur de position horizontale@@profile.photo.x">Position horizontale</span>
+          <!-- Coordonnée de l'image (0 = bord gauche de la photo) : le curseur ne se retourne pas en
+               arabe, sinon le pouce irait à l'opposé du cadrage (docs/design/arabe.md §2). -->
           <input
+            dir="ltr"
             type="range"
             min="0"
             max="1"
@@ -200,7 +203,7 @@ import {
       .button {
         min-height: 32px;
         white-space: normal;
-        text-align: left;
+        text-align: start;
       }
     }
     .note,
@@ -211,7 +214,7 @@ import {
       text-align: center;
     }
     .help {
-      text-align: left;
+      text-align: start;
     }
     .cropper {
       display: flex;

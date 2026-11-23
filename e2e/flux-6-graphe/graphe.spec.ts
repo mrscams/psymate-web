@@ -13,6 +13,8 @@ import {
   layoutMs,
   linksOf,
   nodeCount,
+  onCanvasZone,
+  pagePoint,
   point,
   smallFolder,
   zoom,
@@ -73,12 +75,27 @@ test.describe('vue graphe', () => {
       };
       requestAnimationFrame(loop);
     });
-    const spot = await emptySpot(page);
+    // Le geste part du fond et finit, là où tourne la molette, sur la zone du canevas : ni l'un ni
+    // l'autre sous la légende ou les boutons de zoom, quelle que soit la disposition du seed.
+    const spot = await emptySpot(page, [{ dx: -120, dy: -40 }]);
+    const anchor = (await page.evaluate(() => {
+      const el = document.querySelector<HTMLElement>('pm-graph-canvas [data-node-id]');
+      return el?.dataset['nodeId'] ?? null;
+    }))!;
+    const panStart = await pagePoint(page, anchor);
     await page.mouse.move(spot.x, spot.y);
     await page.mouse.down();
     await page.mouse.move(spot.x + 160, spot.y + 60, { steps: 40 });
     await page.mouse.move(spot.x - 120, spot.y - 40, { steps: 40 });
     await page.mouse.up();
+    // Le glisser du fond a déplacé la vue du geste exactement. Attente du rendu : sous charge, la
+    // dernière position n'est pas encore peinte au retour de mouse.up (−113 lu pour −120 en CI).
+    const panned = async () => {
+      const at = await pagePoint(page, anchor);
+      return { dx: Math.round(at.x - panStart.x), dy: Math.round(at.y - panStart.y) };
+    };
+    await expect.poll(panned, { timeout: 5_000 }).toEqual({ dx: -120, dy: -40 });
+    expect(await onCanvasZone(page, { x: spot.x - 120, y: spot.y - 40 })).toBe(true);
     const before = await zoom(page);
     let zoomedIn = before;
     for (let i = 0; i < 12; i++) {

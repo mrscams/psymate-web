@@ -52,16 +52,20 @@ const SPECIALTIES_SHOWN = 3;
         </div>
         <div class="who">
           @if (fields().displayName.trim(); as name) {
-            <p class="name">{{ name }}</p>
+            <p class="name" dir="auto">{{ name }}</p>
           }
           @if (profession(); as label) {
             <span class="profession">{{ label }}</span>
           }
           @if (fields().titleLabel.trim(); as title) {
-            <p class="line">{{ title }}</p>
+            <p class="line" dir="auto">{{ title }}</p>
           }
-          @if (placeLine(); as place) {
-            <p class="line">{{ place }}</p>
+          @if (placeCity() || placeModalities()) {
+            <!-- Ville saisie isolée (<bdi>) : elle garde son sens à côté des modalités. -->
+            <p class="line">
+              <bdi>{{ placeCity() }}</bdi
+              >{{ placeSeparator() }}{{ placeModalities() }}
+            </p>
           }
           @if (availability(); as text) {
             <p class="availability" [class]="fields().availability">
@@ -72,7 +76,7 @@ const SPECIALTIES_SHOWN = 3;
       </div>
 
       @if (bioExcerpt(); as bio) {
-        <p class="bio">{{ bio }}</p>
+        <p class="bio" dir="auto">{{ bio }}</p>
       }
 
       @if (specialties().length > 0) {
@@ -88,8 +92,8 @@ const SPECIALTIES_SHOWN = 3;
 
       @if (fields().fees.trim(); as fees) {
         <p class="line">
-          <span class="key" i18n="Tarif dans l'aperçu@@profile.preview.fees">Tarif :</span>
-          {{ fees }}
+          <span class="key" i18n="Tarif dans l'aperçu@@profile.preview.fees">Tarif :</span
+          >&ngsp;<bdi>{{ fees }}</bdi>
         </p>
       }
 
@@ -98,16 +102,18 @@ const SPECIALTIES_SHOWN = 3;
           <p class="key" i18n="Contacts affichés dans l'aperçu@@profile.preview.contacts">
             Contact affiché
           </p>
-          @for (contact of contacts(); track contact) {
-            <p class="contact">{{ contact }}</p>
+          @for (c of contacts(); track c.text) {
+            <p class="contact" [class.address]="c.dir === 'auto'">
+              <bdi [dir]="c.dir">{{ c.text }}</bdi>
+            </p>
           }
         </div>
       }
 
       @if (fields().websiteUrl.trim(); as website) {
         <p class="line">
-          <span class="key" i18n="Site web dans l'aperçu@@profile.preview.website">Site web :</span>
-          {{ website }}
+          <span class="key" i18n="Site web dans l'aperçu@@profile.preview.website">Site web :</span
+          >&ngsp;<bdi dir="ltr">{{ website }}</bdi>
         </p>
       }
 
@@ -279,6 +285,10 @@ const SPECIALTIES_SHOWN = 3;
       color: var(--text-primary);
       font-family: var(--font-mono);
     }
+    /* Adresse saisie : des lettres, donc la chasse fixe des textes (police d'interface en arabe). */
+    .contact.address {
+      font-family: var(--font-mono-text);
+    }
     .cta {
       display: block;
       padding: 10px;
@@ -307,11 +317,14 @@ export class ProfilePreviewComponent {
 
   protected readonly initials = computed(() => initialsOf(this.fields().displayName));
 
-  protected readonly placeLine = computed(() => {
-    const fields = this.fields();
-    const modalities = labelsOf(fields.modalities, this.vocabulary()?.modalities, this.locale);
-    return [fields.city.trim(), modalities.join(', ')].filter(Boolean).join(' · ');
-  });
+  /** Ligne « ville · modalités » : la ville (saisie) et les modalités (liste fermée). */
+  protected readonly placeCity = computed(() => this.fields().city.trim());
+  protected readonly placeModalities = computed(() =>
+    labelsOf(this.fields().modalities, this.vocabulary()?.modalities, this.locale).join(', '),
+  );
+  protected readonly placeSeparator = computed(() =>
+    this.placeCity() && this.placeModalities() ? ' · ' : '',
+  );
 
   protected readonly availability = computed(() => {
     const value = this.fields().availability;
@@ -334,18 +347,25 @@ export class ProfilePreviewComponent {
     Math.max(0, this.specialties().length - SPECIALTIES_SHOWN),
   );
 
-  /** Moyens de contact affichés (contrat : téléphone, e-mail, adresse avec leur interrupteur). */
+  /**
+   * Moyens de contact affichés (contrat : téléphone, e-mail, adresse avec leur interrupteur).
+   * Téléphone et e-mail de gauche à droite, adresse saisie dans son propre sens (Q77).
+   */
   protected readonly contacts = computed(() => {
     const fields = this.fields();
-    const contacts: string[] = [];
-    if (fields.showPhone && fields.contactPhone.trim()) contacts.push(fields.contactPhone.trim());
-    if (fields.showEmail && fields.contactEmail.trim()) contacts.push(fields.contactEmail.trim());
+    const contacts: { text: string; dir: 'ltr' | 'auto' }[] = [];
+    const phone = fields.contactPhone.trim();
+    const email = fields.contactEmail.trim();
+    if (fields.showPhone && phone) contacts.push({ text: phone, dir: 'ltr' });
+    if (fields.showEmail && email) contacts.push({ text: email, dir: 'ltr' });
     if (fields.showAddress && fields.address.trim()) {
-      contacts.push(
-        [fields.address.trim(), [fields.postalCode.trim(), fields.city.trim()].join(' ').trim()]
-          .filter(Boolean)
-          .join(', '),
-      );
+      const text = [
+        fields.address.trim(),
+        [fields.postalCode.trim(), fields.city.trim()].join(' ').trim(),
+      ]
+        .filter(Boolean)
+        .join(', ');
+      contacts.push({ text, dir: 'auto' });
     }
     return contacts;
   });

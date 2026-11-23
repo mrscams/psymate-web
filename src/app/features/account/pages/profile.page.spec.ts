@@ -284,4 +284,14 @@ describe('ProfilePage', () => {
     expect(el.querySelector('pm-chip-picker')).toBeNull();
     expect(input(el, 'displayName')).toBeTruthy();
   });
+
+  it('M16-12 : texte saisi en dir="auto" ; téléphone, e-mail, site et code postal en dir="ltr"', async () => {
+    const { el } = await render(fakeApi());
+    for (const id of ['displayName', 'titleLabel', 'bio', 'fees', 'address', 'city']) {
+      expect(el.querySelector(`#field-${id}`)?.getAttribute('dir')).toBe('auto');
+    }
+    for (const id of ['contactPhone', 'contactEmail', 'websiteUrl', 'postalCode']) {
+      expect(el.querySelector(`#field-${id}`)?.getAttribute('dir')).toBe('ltr');
+    }
+  });
 });

@@ -29,7 +29,7 @@
           >
         </div>
         <div class="value">
-          <span class="mono">{{ email() }}</span>
+          <span class="mono" dir="ltr">{{ email() }}</span>
           @if (emailConfirmed()) {
             <span
               class="badge badge--success"
@@ -253,7 +253,9 @@
             [attr.aria-expanded]="showOlder()"
             (click)="showOlder.set(!showOlder())"
           >
-            <span class="chevron" aria-hidden="true">{{ showOlder() ? '▾' : '▸' }}</span>
+            <span class="chevron pm-flip-rtl" aria-hidden="true">{{
+              showOlder() ? '▾' : '▸'
+            }}</span>
             @if (showOlder()) {
               <span i18n="Replier les sessions plus anciennes@@account.security.sessions.hideOlder"
                 >Masquer
@@ -361,14 +363,18 @@
               >
             }
             @if (s.city) {
-              <span>· {{ s.city }}</span>
+              <span
+                >· <bdi>{{ s.city }}</bdi></span
+              >
             }
           </p>
           <p class="session-times">
             <span i18n="Dernier appel de la session@@account.security.sessions.lastActivity"
               >Dernière activité {{ ago(s.lastAccessAt) }}</span
             >
-            <span class="mono" i18n="Expiration de la session@@account.security.sessions.expiresOn"
+            <span
+              class="mono date"
+              i18n="Expiration de la session@@account.security.sessions.expiresOn"
               >expire le {{ formatDate(s.expiresAt) }}</span
             >
           </p>
@@ -412,10 +418,12 @@
         />
       } @else if (store.lastLogin(); as last) {
         <p class="value last-login">
-          <span class="mono">{{ formatDate(last.at) }}</span>
+          <span class="mono date">{{ formatDate(last.at) }}</span>
           <span class="help">· {{ deviceLabel(last.device) }}</span>
           @if (last.city) {
-            <span class="help">· {{ last.city }}</span>
+            <span class="help"
+              >· <bdi>{{ last.city }}</bdi></span
+            >
           }
         </p>
       } @else {

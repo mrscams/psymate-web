@@ -30,7 +30,7 @@ th {
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-secondary);
   font: 600 12px/1.3 var(--font-ui);
-  text-align: left;
+  text-align: start;
   white-space: nowrap;
 }
 
@@ -186,7 +186,7 @@ mark {
 
 // `.since b` : 15 px, chiffres tabulaires.
 .since b {
-  margin-right: 4px;
+  margin-inline-end: 4px;
   font-size: 15px;
   font-variant-numeric: tabular-nums;
 }
@@ -233,7 +233,8 @@ mark {
 }
 
 .att .chip {
-  margin: 2px 6px 2px 0;
+  margin-block: 2px;
+  margin-inline: 0 6px;
 }
 
 // `.chip.flag` : ambre, carré de 7 px (jamais de rouge sur un patient, fiche 00).
@@ -278,7 +279,7 @@ mark {
 
 .col-acts {
   width: 1%;
-  text-align: right;
+  text-align: end;
   white-space: nowrap;
 }
 

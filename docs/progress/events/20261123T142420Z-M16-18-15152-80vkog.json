@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T14:24:20.337Z",
+  "task": "M16-18",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "features/graph de droite à gauche : graphe lu vers la gauche en arabe (elk LEFT), propriétés logiques, dir=auto, catalogLabel, listes Intl, e2e arabe",
+  "pr": "https://github.com/mrscams/psymate-web/pull/127",
+  "branch": "M16-18-graph-rtl",
+  "checkout": "agent-a0e3792982442bae2"
+}

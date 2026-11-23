@@ -415,6 +415,17 @@ Autres termes des liens :
 | `preferences.booking.*` | Demandeur (personne qui demande un rendez-vous en ligne) | Requester | مقدّم الطلب | صاحب الطلب | Employé par M16-28 ; masculin générique (règle 4). | |
 | `preferences.booking.*` | Plage, plages ouvertes | Booking window | فترة إتاحة، فترات الإتاحة | — | Employé par M16-28 sous la forme indéfinie « فترة إتاحة » pour la distinguer du créneau (« فترة زمنية »). | |
 | `public.*` | PsyMate n'est pas un service d'urgence | PsyMate is not an emergency service | PsyMate ليس خدمة طوارئ | — | Les numéros d'urgence restent en chiffres latins. | |
+| `agenda.new.note`, `agenda.detail.note` | Note de planification | Scheduling note | ملاحظة الموعد | ملاحظة التخطيط | Employé par M16-28 ; distincte du type d'entrée « ملاحظة ». | |
+| `agenda.new.count*`, `agenda.new.countLabel` | Nombre de répétitions, « 5 fois » | Occurrences | عدد المرات، « عدد المرات: 5 » | — | Employé par M16-28 : le code n'a pas de message ICU, le nombre suit une étiquette (règle 6). | |
+| `agenda.new.repeat.*` | Toutes les semaines, toutes les 2 semaines, toutes les 4 semaines | Weekly, every 2 weeks | كل أسبوع، كل أسبوعين، كل 4 أسابيع | — | Employé par M16-28. | |
+| `agenda.detail.duplicate` | Dupliquer (un rendez-vous) | Duplicate | إنشاء نسخة | — | Employé par M16-28 ; « تكرار » reste réservé à la récurrence. | |
+| `agenda.detail.cancelKeep` | Garder (le rendez-vous) | Keep | الإبقاء على الموعد | — | Employé par M16-28. | |
+| `agenda.detail.kicker.*`, `agenda.status.done` | Séance planifiée, séance faite ; fait | Planned, done | جلسة مقرَّرة، جلسة منجزة ؛ منجز | — | Employé par M16-28 ; « منجز » s'accorde à « الموعد ». | |
+| `agenda.detail.prepare` | Préparer (bloc du détail) | Prepare | التحضير | — | Employé par M16-28. | |
+| `agenda.busy.*` | Occupé, indisponible (agenda externe) | Busy | وقت مشغول، فترة انشغال | — | Employé par M16-28 ; un nom plutôt qu'un adjectif accordé au praticien. | |
+| `agenda.grid.off` | Non travaillé (jour) | Day off | يوم عطلة | — | Employé par M16-28. | |
+| `agenda.calendars.*` | Mes agendas, Google Agenda | My calendars, Google Calendar | تقاويمي، تقويم Google | — | Employé par M16-28 ; « Google » en caractères latins. | |
+| `agenda.calendars.phone` | Contacts (appels) | Contacts (calls) | التواصل (مكالمات) | — | Employé par M16-28, comme la nature de séance « تواصل ». | |
 
 Jours de la semaine, du lundi au dimanche : الاثنين، الثلاثاء، الأربعاء، الخميس، الجمعة، السبت، الأحد. Les noms de mois viennent d'`Intl` avec la locale de formatage (يناير، فبراير، مارس…) ; l'usage levantin (كانون الثاني، شباط…) et l'usage maghrébin (جانفي، فيفري…) ne sont pas employés, faute de variante par pays (Q72). À confirmer par le relecteur.
 
@@ -494,6 +505,21 @@ Jours de la semaine, du lundi au dimanche : الاثنين، الثلاثاء، 
 | `account.verification.progress.validation` | Validation (jalon du dossier) | Validation | التحقّق | — | Employé par M16-28, comme `adminBar.tab.validation`. | |
 | `account.verification.*` | Profession déclarée | Declared profession | المهنة المصرَّح بها | — | Employé par M16-28. | |
 | `admin.*` | Libellé FR, libellé EN, libellé AR | FR label | التسمية بالفرنسية، بالإنجليزية، بالعربية | — | Champ ajouté par M16-25. | |
+| `admin.appeals.*`, `admin.decision.appeal*` | Accepter, écarter un recours ; recours accepté, écarté | Accept, dismiss an appeal | قبول التظلّم، رفض التظلّم | ردّ التظلّم (écarter) | Employé par M16-28. | |
+| `admin.journal.kind.appealDecided`, `admin.reason.*` | Recours tranché ; examiner un recours | Appeal decided ; review | البتّ في تظلّم ؛ دراسة التظلّم | — | Employé par M16-28, « دراسة » comme dans `auth.suspended.*`. | |
+| `admin.status.*` | Suspendu, clos, e-mail à confirmer | Suspended, closed | موقوف، مغلق، بانتظار تأكيد البريد الإلكتروني | — | Employé par M16-28 ; accordés à « الحساب » (masculin), comme `auth.suspended.*`. | |
+| `admin.suspend.*`, `admin.decision.effects` | Sessions révoquées (à la suspension) | Sessions revoked | تسجيل الخروج من جميع الجلسات | إبطال الجلسات | Employé par M16-28, comme `account.security.sessions.*` ; même risque de confusion avec la séance (section 14). | |
+| `admin.decision.*` | Note interne ; message au praticien | Internal note ; message | ملاحظة داخلية ؛ رسالة إلى الممارس | — | Employé par M16-28. | |
+| `admin.checklist.*`, `admin.decision.unchecked` | Point de contrôle (coché, non coché) | Checkpoint | نقطة تحقّق (مؤشَّر عليها، غير مؤشَّر عليها) | — | Employé par M16-28. | |
+| `admin.validation.reviewError` | Qualification (d'un justificatif) | Review | تقييم المستند | — | Employé par M16-28 ; valeurs « مطابق »، « غير مطابق ». | |
+| `admin.queue.overdue` | Hors délai | Overdue | تجاوز المهلة | متأخّر | Employé par M16-28. | |
+| `admin.decision.reportResolved` | Signalement (traité) | Report | بلاغ (معالجة بلاغ) | — | Employé par M16-28 ; aucun écran de signalement (G Q26). | |
+| `admin.journal.*` | Par (auteur), horodatage, journal en ajout seul | By, timestamp, append-only log | المنفِّذ، التوقيت، سجلّ للإضافة فقط | — | Employé par M16-28. | |
+| `admin.vocabulary.*` | Entrée (d'une liste du vocabulaire), désactivée, active | Item | عنصر، معطّل، نشط | — | Employé par M16-28 ; « مُدخَل » reste réservé à l'entrée du dossier. | |
+| `admin.vocabulary.*` | Code, ordre ; liste fixe | Code, order ; fixed list | الرمز، الترتيب ؛ قائمة ثابتة | — | Employé par M16-28. | |
+| `admin.*` | Purge, purgé (données, justificatif) | Purge | حذف، حُذف | — | Employé par M16-28, comme `public.how.never.*`. | |
+| `admin.checklist.*` | Registre public ; annuaire santé (RPPS) | Public registry | السجلّ العام ؛ دليل الصحة (RPPS) | — | Employé par M16-28. | |
+| `admin.viewer.*` | Pivoter ; zoom +, zoom − | Rotate ; zoom | تدوير ؛ تكبير +، تصغير − | — | Employé par M16-28. | |
 
 ## 13. Socle : états, messages, actions
 
@@ -519,6 +545,13 @@ Jours de la semaine, du lundi au dimanche : الاثنين، الثلاثاء، 
 | `forms.error.email` | Adresse e-mail invalide. | Invalid email. | عنوان البريد الإلكتروني غير صالح. | — | | |
 | `forms.summary.*` | {n} champs à corriger | {n} fields to fix | حقول تحتاج إلى تصحيح: {n} | — | Étiquette suivie du nombre, pour éviter l'accord (règle 6). | |
 | `shortcuts.escapeKey` | Échap | Esc | Esc | — | Nom de touche en caractères latins. | |
+| `navRail.label`, `appBar.navigation.open` | Navigation | Navigation | التنقّل | — | Employé par M16-28. | |
+| `navRail.later`, `agenda.calendars.later` | à réaliser, à venir (fonction pas encore disponible) | coming soon | قريبًا | — | Employé par M16-28. | |
+| `navRail.invoice` | Facture (carreau) | Invoice | الفواتير | الفوترة | Employé par M16-28 ; à revoir avec le module de facturation. | |
+| `shared.dateField.*` | Calendrier ; jj/mm/aaaa, mm/aaaa | Calendar ; dd/mm/yyyy | التقويم ؛ يوم/شهر/سنة، شهر/سنة | — | Employé par M16-28. | |
+| `state.error.details` | Détail technique | Technical details | التفاصيل التقنية | — | Employé par M16-28. | |
+| `toast.reconnected.*` | Connexion rétablie, brouillons renvoyés | Reconnected | عاد الاتصال، المسودّات المُعاد إرسالها | — | Employé par M16-28. | |
+| `confirm.word.label` | Tapez « … » pour confirmer | Type … to confirm | يُرجى كتابة « … » للتأكيد | — | Employé par M16-28. | |
 
 ## 14. Termes laissés ouverts pour le relecteur
 

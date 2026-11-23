@@ -109,6 +109,12 @@ h2 {
   font-family: var(--font-mono);
 }
 
+// Date à nom de mois : chasse fixe des textes, police d'interface en arabe (Q76).
+.mono.date {
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
+}
+
 .masked {
   letter-spacing: 0.1em;
 }
@@ -205,7 +211,7 @@ button.danger {
   margin: 0;
   color: var(--text-secondary);
   font: var(--mat-sys-body-small);
-  text-align: right;
+  text-align: end;
 
   .mono {
     font-size: 12px;
@@ -274,7 +280,7 @@ button.danger {
   gap: 4px 12px;
 
   .link {
-    margin-left: auto;
+    margin-inline-start: auto;
   }
 }
 
@@ -296,7 +302,7 @@ button.danger {
   }
   .session-times {
     align-items: flex-start;
-    text-align: left;
+    text-align: start;
   }
   .revoke {
     justify-self: start;

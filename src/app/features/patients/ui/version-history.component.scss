@@ -33,8 +33,10 @@ h3 {
   font: var(--mat-sys-body-small);
 }
 
+// Date à nom de mois : chasse fixe sans lettres arabes en /ar/ (--font-mono-text, Q76).
 .mono {
-  font-family: var(--font-mono);
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
 }
 
 .reason,
@@ -78,4 +80,10 @@ ins {
 .arrow {
   margin: 0 4px;
   color: var(--text-secondary);
+
+  // En RTL seulement, inline-block : sans lui, la transformation de .pm-flip-rtl (docs/design/
+  // arabe.md §3) ne s'applique pas à un élément en ligne ; /fr/ et /en/ gardent la boîte en ligne.
+  &:dir(rtl) {
+    display: inline-block;
+  }
 }

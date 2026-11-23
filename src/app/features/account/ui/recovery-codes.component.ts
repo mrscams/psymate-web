@@ -31,7 +31,7 @@ export const RECOVERY_CODES_FILENAME = 'psymate-codes-de-secours.txt';
     >
       @for (code of codes(); track $index) {
         <li>
-          <code>{{ code }}</code>
+          <code dir="ltr">{{ code }}</code>
         </li>
       }
     </ul>
