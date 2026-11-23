@@ -54,6 +54,7 @@ let nextId = 0;
         #field
         type="text"
         role="combobox"
+        dir="auto"
         autocomplete="off"
         aria-autocomplete="list"
         [id]="inputId()"
@@ -149,7 +150,8 @@ let nextId = 0;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 4px 6px 4px 10px;
+      padding-block: 4px;
+      padding-inline: 10px 6px;
       border-radius: 999px;
       background: var(--surface-sunken);
       color: var(--text-primary);
@@ -196,8 +198,7 @@ let nextId = 0;
       position: absolute;
       z-index: 5;
       top: calc(100% - 18px);
-      left: 0;
-      right: 0;
+      inset-inline: 0;
       max-height: 240px;
       margin: 0;
       padding: 4px;

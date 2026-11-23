@@ -68,6 +68,17 @@ async function expectRtlPage(page: Page): Promise<void> {
   await expectNoAxeViolations(page);
 }
 
+/**
+ * Thème du compte (comme e2e/arabe/socle.spec.ts) : la préférence `theme` (`light` par défaut)
+ * l'emporte sur prefers-color-scheme ; posée par l'API, page rechargée, vérifiée sur <html>.
+ */
+async function useAccountTheme(page: Page, theme: 'light' | 'dark'): Promise<void> {
+  const response = await page.request.patch('/api/me/preferences', { data: { theme } });
+  expect(response.status(), await response.text()).toBe(200);
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+}
+
 /** Boîte d'un élément, rendue. */
 async function boxOf(page: Page, selector: string) {
   const box = await page.locator(selector).first().boundingBox();
@@ -121,6 +132,41 @@ for (const size of WIDTHS) {
         expect(side.x + side.width).toBeLessThanOrEqual(stream.x + 1);
       }
       await shoot(page, `arabe-timeline-chronologique-${size.name}`);
+    });
+
+    test('nom vertical des bandes centré dans sa colonne, en /fr/ comme en /ar/', async ({
+      page,
+    }) => {
+      test.skip(!desktop, 'pas de nom vertical sur téléphone');
+      await setGroupBy(api, 'chronological');
+      await openTimeline(page, story.id);
+      for (const locale of ['fr', 'ar']) {
+        // Même mesure dans les deux sens : l'ancien centrage (left 50 %, translateX(−50 %)) aussi.
+        await page.goto(`/${locale}/patients/${story.id}/timeline`);
+        const label = page.locator('.lane-label').first();
+        await expect(label).toBeVisible();
+        const centers = await label.evaluate((el) => {
+          const own = el.getBoundingClientRect();
+          const lane = el.parentElement!.getBoundingClientRect();
+          return { label: own.x + own.width / 2, lane: lane.x + lane.width / 2 };
+        });
+        expect(Math.abs(centers.label - centers.lane), locale).toBeLessThanOrEqual(1);
+      }
+    });
+
+    test('vue chronologique en thème sombre (préférence du compte)', async ({ page }) => {
+      test.skip(!desktop, 'une largeur suffit pour le thème');
+      await setGroupBy(api, 'chronological');
+      await openTimeline(page, story.id);
+      try {
+        await useAccountTheme(page, 'dark');
+        await expect(page.locator('pm-timeline-card article').first()).toBeVisible();
+        await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 20_000 });
+        await expectRtlPage(page);
+        await shoot(page, 'arabe-timeline-chronologique-bureau-sombre');
+      } finally {
+        await useAccountTheme(page, 'light');
+      }
     });
 
     test('barre d’outils : ← va au contrôle suivant, → au précédent (Q81)', async ({ page }) => {
@@ -180,8 +226,18 @@ for (const size of WIDTHS) {
       await openTimeline(page, decade.id, '?period=all');
       const chart = page.locator('pm-timeline-decade svg[role="img"]');
       await expect(chart).toBeVisible();
-      await expect(chart).toHaveAttribute('dir', 'ltr');
       await expectRtlPage(page);
+      // Direction calculée (l'attribut dir n'a pas d'effet sur un svg) : ltr, donc les text-anchor
+      // gardent leur sens de dessin.
+      expect(await chart.evaluate((el) => getComputedStyle(el).direction)).toBe('ltr');
+      // Graduation des comptes (text-anchor « end », 6 unités avant le tracé) : entièrement à gauche
+      // du bord gauche du tracé (début de la ligne de grille), jamais dedans.
+      const tick = await chart.evaluate((el) => {
+        const grid = el.querySelector('line.grid')!.getBoundingClientRect();
+        const label = el.querySelector('text.tick:not(.intensity)')!.getBoundingClientRect();
+        return { tickRight: label.right, plotLeft: grid.left };
+      });
+      expect(tick.tickRight).toBeLessThanOrEqual(tick.plotLeft);
 
       // L'année la plus ancienne à gauche : abscisses croissantes avec les années.
       const years = await chart.locator('text.year-label').evaluateAll((labels) =>

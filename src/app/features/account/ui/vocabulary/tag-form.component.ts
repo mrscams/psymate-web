@@ -28,6 +28,7 @@ export type CreateTagFn = (label: string) => Promise<ApiProblem | null>;
           >
           <input
             id="field-tag-label"
+            dir="auto"
             name="label"
             type="text"
             autocomplete="off"

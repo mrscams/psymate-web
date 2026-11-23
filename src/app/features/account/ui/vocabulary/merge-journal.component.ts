@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 
+import { formatLocale } from '../../../../core/i18n';
 import { isUndoable, MergeJournalEntry } from '../../data/merge-journal';
 
 export type UndoMergeFn = (mergeId: string) => void;
@@ -40,14 +41,14 @@ interface JournalRow {
           <li [attr.data-merge]="row.entry.merge.id">
             <div class="journal-text">
               <p class="journal-title">
-                <span class="name">{{ row.entry.sourceLabel }}</span>
-                <span aria-hidden="true"> → </span>
+                <span class="name" dir="auto">{{ row.entry.sourceLabel }}</span>
+                <span aria-hidden="true">&ngsp;<span class="arrow pm-flip-rtl">→</span>&ngsp;</span>
                 <span
                   class="sr-only"
                   i18n="Mot entre source et cible d'une fusion@@vocabulary.journal.into"
                   >fusionnée dans</span
                 >
-                <span class="name">{{ row.entry.targetLabel }}</span>
+                <span class="name" dir="auto">{{ row.entry.targetLabel }}</span>
               </p>
               <p class="muted">
                 <span i18n="Ressentis déplacés et date d'une fusion@@vocabulary.journal.meta"
@@ -109,7 +110,7 @@ export class MergeJournalComponent {
 
   protected readonly rows = computed<JournalRow[]>(() => {
     const now = this.now() ?? Date.now();
-    const date = new Intl.DateTimeFormat(this.locale, { dateStyle: 'medium' });
+    const date = new Intl.DateTimeFormat(formatLocale(this.locale), { dateStyle: 'medium' });
     const format = (iso: string | null): string => {
       const time = iso ? Date.parse(iso) : NaN;
       return Number.isFinite(time) ? date.format(new Date(time)) : '';
