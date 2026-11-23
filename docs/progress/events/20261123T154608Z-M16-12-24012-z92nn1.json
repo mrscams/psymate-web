@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T15:46:08.100Z",
+  "task": "M16-12",
+  "agent": "frontend-feature-dev",
+  "status": "merged",
+  "summary": "Fusionnée en squash (3513e68), CI verte",
+  "pr": "https://github.com/mrscams/psymate-web/pull/126",
+  "branch": "M16-13-admin-rtl",
+  "checkout": "psymate-ux-audit-design-b1ba83"
+}

@@ -39,6 +39,7 @@ export interface ReasonDialogData {
           <textarea
             id="reason-field"
             formControlName="reason"
+            dir="auto"
             maxlength="4000"
             cdkFocusInitial
             [attr.aria-invalid]="

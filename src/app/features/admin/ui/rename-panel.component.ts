@@ -25,6 +25,7 @@ import { applyVocabularyProblem, LABEL_MAX } from './vocabulary-forms';
             [id]="id('labelFr')"
             type="text"
             formControlName="labelFr"
+            dir="auto"
             [attr.aria-invalid]="
               (form.controls.labelFr.invalid && form.controls.labelFr.touched) || null
             "
@@ -40,6 +41,7 @@ import { applyVocabularyProblem, LABEL_MAX } from './vocabulary-forms';
             [id]="id('labelEn')"
             type="text"
             formControlName="labelEn"
+            dir="auto"
             [attr.aria-invalid]="
               (form.controls.labelEn.invalid && form.controls.labelEn.touched) || null
             "

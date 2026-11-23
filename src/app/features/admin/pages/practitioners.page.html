@@ -29,7 +29,13 @@
       <label for="accounts-search" i18n="Champ de recherche des comptes@@admin.practitioners.search"
         >Rechercher (nom ou e-mail)</label
       >
-      <input id="accounts-search" type="search" [value]="query()" (input)="onQuery($event)" />
+      <input
+        id="accounts-search"
+        type="search"
+        dir="auto"
+        [value]="query()"
+        (input)="onQuery($event)"
+      />
     </div>
     <div class="field">
       <label for="accounts-profession" i18n="Filtre profession@@admin.practitioners.profession"
@@ -154,8 +160,12 @@
                 <div class="who">
                   <span class="avatar" aria-hidden="true">{{ row.initials }}</span>
                   <div>
-                    <div class="name">{{ row.displayName }}</div>
-                    <div class="secondary email" [title]="row.email">{{ row.email }}</div>
+                    <div class="name">
+                      <bdi>{{ row.displayName }}</bdi>
+                    </div>
+                    <!-- Sur une ligne : aucun blanc autour de l'adresse (texte d'avant M16-13). -->
+                    <!-- prettier-ignore -->
+                    <div class="secondary email" dir="ltr" [title]="row.email">{{ row.email }}</div>
                   </div>
                 </div>
               </td>
@@ -179,7 +189,7 @@
                   >
                 }
               </td>
-              <td class="mono nowrap">
+              <td class="mono date nowrap">
                 {{ row.created }} · {{ row.lastLogin ?? '—' }}
                 @if (row.purge) {
                   <span

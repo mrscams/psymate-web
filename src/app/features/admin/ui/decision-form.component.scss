@@ -28,7 +28,7 @@
   legend {
     @include card-title;
 
-    float: left;
+    float: inline-start;
     width: 100%;
     margin-bottom: 4px;
     padding: 0;
@@ -52,7 +52,8 @@
 }
 
 .registry {
-  margin: -4px 0 0 28px;
+  margin-block: -4px 0;
+  margin-inline: 28px 0;
   color: var(--primary-hover);
   font: var(--mat-sys-body-small);
 }
