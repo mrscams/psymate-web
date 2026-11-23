@@ -199,6 +199,12 @@ export class GraphCanvasComponent {
   private rearrangeTimer: ReturnType<typeof setTimeout> | null = null;
   private viewportTimer: ReturnType<typeof setTimeout> | null = null;
   private destroyed = false;
+  /**
+   * Largeur de la zone à laquelle la position courante se rapporte (posée par l'ajustement, la
+   * reprise d'une vue rangée et l'observateur de largeur) : de droite à gauche, le graphe est tenu
+   * par rapport au bord droit, à cette distance du bord gauche du repère.
+   */
+  private zoneWidth = 0;
 
   constructor() {
     // Données, racine, « Recentrer » : la disposition est recalculée.
@@ -275,8 +281,10 @@ export class GraphCanvasComponent {
     this.busy = false;
 
     // Même racine, mêmes cartes (un lien ajouté ou retiré) : la vue de l'utilisateur ne bouge pas.
-    if (saved) this.moveTo({ x: saved.pan.x, y: saved.pan.y, k: saved.zoom }, false);
-    else if (refit) this.fit(this.scene(), !first);
+    if (saved) {
+      this.zoneWidth = this.viewportEl().nativeElement.clientWidth;
+      this.moveTo({ x: saved.pan.x + this.readingStart(), y: saved.pan.y, k: saved.zoom }, false);
+    } else if (refit) this.fit(this.scene(), !first);
     this.emitViewport();
   }
 
@@ -286,6 +294,9 @@ export class GraphCanvasComponent {
     const width = zone.clientWidth;
     const height = zone.clientHeight;
     const bounds = scene?.bounds;
+    // La position qui suit se rapporte à cette largeur : une notification de l'observateur qui
+    // arriverait après, pour la même largeur, ne décale plus rien.
+    this.zoneWidth = width;
     if (!width || !height || !bounds?.width || !bounds.height) {
       this.moveTo({ x: FIT_PADDING, y: FIT_PADDING, k: 1 }, false);
       return;
@@ -316,11 +327,10 @@ export class GraphCanvasComponent {
   private keepReadingStart(destroyRef: DestroyRef): void {
     if (this.textDirection !== 'rtl' || typeof ResizeObserver === 'undefined') return;
     const zone = this.viewportEl().nativeElement;
-    let width = zone.clientWidth;
     const observer = new ResizeObserver(() => {
       const next = zone.clientWidth;
-      const shift = next - width;
-      width = next;
+      const shift = next - this.zoneWidth;
+      this.zoneWidth = next;
       if (!shift || !this.placed() || this.destroyed) return;
       const current = this.transform();
       this.moveTo({ ...current, x: current.x + shift }, false);
@@ -328,6 +338,15 @@ export class GraphCanvasComponent {
     });
     observer.observe(zone);
     destroyRef.onDestroy(() => observer.disconnect());
+  }
+
+  /**
+   * Bord d'où la vue rangée est comptée : le bord gauche de gauche à droite (0), le bord droit de
+   * droite à gauche (la largeur de la zone). La vue rangée par racine ne dépend donc pas de l'état
+   * du panneau de détail au moment où elle est rangée.
+   */
+  private readingStart(): number {
+    return this.textDirection === 'rtl' ? this.zoneWidth : 0;
   }
 
   /** Les cartes ne s'animent que le temps d'une nouvelle disposition (une carte lâchée revient d'un coup). */
@@ -383,7 +402,10 @@ export class GraphCanvasComponent {
     this.viewportTimer = null;
     if (!this.builtKey || this.destroyed) return;
     const { x, y, k } = this.transform();
-    this.viewportChanged.emit({ key: this.builtKey, viewport: { zoom: k, pan: { x, y } } });
+    this.viewportChanged.emit({
+      key: this.builtKey,
+      viewport: { zoom: k, pan: { x: x - this.readingStart(), y } },
+    });
   }
 
   // ── Sélection, déplacement de la vue, glisser d'une carte sur une autre ─────────────

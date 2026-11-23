@@ -154,6 +154,7 @@ export interface Point {
 /** Zoom et position du canevas, rangés dans le shell (B2 : « Onglet Graphe (zoom conservé) »). */
 export interface GraphViewport {
   zoom: number;
+  /** Décalage du repère : depuis le bord gauche de la zone, depuis son bord droit en arabe (canevas). */
   pan: Point;
 }
 

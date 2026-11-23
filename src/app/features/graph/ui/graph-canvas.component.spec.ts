@@ -304,9 +304,22 @@ describe('GraphCanvasComponent', () => {
   });
 
   describe('/ar/ (Q75)', () => {
-    async function renderArabic() {
+    async function renderArabic(options: Parameters<typeof render>[0] = {}) {
       TestBed.configureTestingModule({ providers: [{ provide: LOCALE_ID, useValue: 'ar' }] });
-      return render();
+      return render(options);
+    }
+
+    /** Largeur de la zone du canevas (jsdom n'en calcule aucune). */
+    function zoneWidth(width: number): () => void {
+      const inherited = Object.getOwnPropertyDescriptor(Element.prototype, 'clientWidth');
+      Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
+        configurable: true,
+        get(this: HTMLElement) {
+          if (this.classList.contains('viewport')) return width;
+          return inherited?.get?.call(this) ?? 0;
+        },
+      });
+      return () => delete (HTMLElement.prototype as { clientWidth?: number }).clientWidth;
     }
 
     it('le graphe se lit vers la gauche : la cause à droite, l’effet à gauche', async () => {
@@ -341,6 +354,48 @@ describe('GraphCanvasComponent', () => {
         expect(worldX(host)).toBe(before + 1000);
       } finally {
         observer.restore();
+      }
+    });
+
+    it('notification de l’observateur après l’ajustement, même largeur : aucun second décalage', async () => {
+      const observer = stubResizeObserver();
+      const restoreWidth = zoneWidth(640);
+      try {
+        const { fixture, host, zone } = await renderArabic();
+        // La zone passe à 800 px et « Recentrer » ajuste le graphe avant que l'observateur ne
+        // soit prévenu : l'ajustement a déjà lu 800 px.
+        Object.defineProperty(zone, 'clientWidth', { configurable: true, value: 800 });
+        fixture.componentRef.setInput('relayout', 1);
+        await settle(fixture);
+        const fitted = worldX(host);
+        observer.fire();
+        await settle(fixture);
+        expect(worldX(host)).toBe(fitted);
+      } finally {
+        restoreWidth();
+        observer.restore();
+      }
+    });
+
+    it('vue rangée : comptée depuis le bord droit, reprise à la même distance de ce bord', async () => {
+      const restoreWidth = zoneWidth(1000);
+      try {
+        const viewport = { zoom: 1.2, pan: { x: -300, y: 20 } };
+        const { host, events } = await renderArabic({ viewport });
+        // 1000 px de large : le repère part à 700 px du bord gauche, à 300 px du bord droit.
+        expect(worldX(host)).toBe(700);
+        expect(events.viewports.at(-1)!.viewport.pan).toEqual({ x: -300, y: 20 });
+      } finally {
+        restoreWidth();
+      }
+      TestBed.resetTestingModule();
+      const narrower = zoneWidth(640);
+      try {
+        const { host } = await renderArabic({ viewport: { zoom: 1.2, pan: { x: -300, y: 20 } } });
+        // Panneau de détail ouvert (zone de 640 px) : même distance au bord droit.
+        expect(worldX(host)).toBe(340);
+      } finally {
+        narrower();
       }
     });
 
