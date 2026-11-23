@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { MatMenu } from '@angular/material/menu';
 
+import { formatLocale } from '../../../core/i18n';
 import { StateAction, StateComponent } from '../../../shared/ui';
 import { SessionDetail, SessionDetailState, SessionGroup } from '../data/timeline-sessions.model';
 import { TimelineItem } from '../data/timeline.model';
@@ -69,7 +70,7 @@ export class TimelineSessionsComponent {
   /** « clôturer » d'une séance ouverte. */
   readonly closeSession = output<void>();
 
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   private readonly number = new Intl.NumberFormat(this.locale);
   private readonly open = signal<ReadonlySet<string>>(new Set());
   private initialized = false;

@@ -100,7 +100,7 @@
   top: -4px;
   width: 12px;
   height: 12px;
-  margin-left: -6px;
+  margin-inline-start: -6px;
   border-radius: 50%;
   background: var(--primary);
 }
@@ -222,7 +222,7 @@
 
 .band-link {
   flex: none;
-  margin-left: auto;
+  margin-inline-start: auto;
   color: var(--primary);
   text-decoration: none;
 
@@ -253,7 +253,7 @@
   display: grid;
   grid-template-columns: calc(var(--lanes, 0) * var(--lane-width)) minmax(0, 1fr);
   box-sizing: border-box;
-  padding-right: 4px;
+  padding-inline-end: 4px;
 
   &.before .cell {
     background: var(--surface-sunken);
@@ -277,7 +277,8 @@
 
 // Intertitre de mois (maquette `.month-hd`) : 12/600 secondaire, aligné sur la colonne des lignes.
 .month-hd {
-  margin: 0 0 0 126px;
+  margin-block: 0;
+  margin-inline: 126px 0;
   padding: 14px 0 4px;
   color: var(--text-secondary);
   font-size: 12px;
@@ -303,13 +304,14 @@
 .items {
   position: relative;
   min-width: 0;
-  padding-left: 18px;
-  border-left: 2px solid var(--border-subtle);
+  padding-inline-start: 18px;
+  border-inline-start: 2px solid var(--border-subtle);
 }
 
 .foot {
   flex: none;
-  margin: 0 0 0 126px;
+  margin-block: 0;
+  margin-inline: 126px 0;
   padding-top: 14px;
   color: var(--text-secondary);
   font-size: 12.5px;
@@ -332,30 +334,35 @@
   }
 }
 
+// Pointe d'une situation en cours, centrée dans sa colonne (marges automatiques : même place dans
+// les deux sens de lecture).
 .arrow {
   position: absolute;
   top: 0;
-  left: 50%;
+  inset-inline: 0;
   width: 0;
   height: 0;
-  border-right: 5px solid transparent;
+  margin-inline: auto;
   border-bottom: 7px solid var(--entry-situation);
-  border-left: 5px solid transparent;
-  transform: translateX(-50%);
+  border-inline: 5px solid transparent;
 }
 
+// Nom de la bande, écrit à la verticale et centré dans sa colonne : les propriétés logiques d'un
+// élément en writing-mode vertical suivent son propre sens (inline = vertical), donc le centrage
+// passe par des retraits et des marges symétriques, identiques dans les deux sens de lecture.
 .lane-label {
   position: absolute;
   z-index: 1;
-  top: 12px;
-  left: 50%;
+  inset: 12px 0 auto;
+  width: fit-content;
+  margin: 0 auto;
   overflow: hidden;
   color: var(--entry-situation);
   font-size: 11px;
   font-weight: 500;
   white-space: nowrap;
   text-overflow: ellipsis;
-  transform: translateX(-50%) rotate(180deg);
+  transform: rotate(180deg);
   writing-mode: vertical-rl;
 }
 
@@ -365,7 +372,8 @@
   flex: none;
   gap: 12px;
   align-items: baseline;
-  margin: 12px 0 8px 126px;
+  margin-block: 12px 8px;
+  margin-inline: 126px 0;
   padding-top: 6px;
   border-top: 2px solid var(--border-strong);
   overflow: hidden;
@@ -375,8 +383,10 @@
   white-space: nowrap;
 }
 
+// Date à nom de mois : --font-mono-text (police d'interface en arabe, Q76).
 .follow-start-text {
-  font-family: var(--font-mono);
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
   font-size: 12px;
   font-weight: 400;
 }
@@ -396,8 +406,7 @@
 .sticky-day {
   position: absolute;
   z-index: 2;
-  right: 0;
-  left: 0;
+  inset-inline: 0;
   padding: 6px 0 4px;
   background: var(--surface-ground);
   pointer-events: none;
@@ -415,7 +424,7 @@
 
 .menu-hint {
   color: var(--text-secondary);
-  font-family: var(--font-mono);
+  font-family: var(--font-mono-text);
   font-size: 12px;
 }
 
@@ -431,14 +440,14 @@
   }
 
   .items {
-    padding-left: 0;
-    border-left: 0;
+    padding-inline-start: 0;
+    border-inline-start: 0;
   }
 
   .month-hd,
   .foot,
   .follow-start {
-    margin-left: 0;
+    margin-inline-start: 0;
   }
 
   .lane-label {

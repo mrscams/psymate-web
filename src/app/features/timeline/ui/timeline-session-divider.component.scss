@@ -1,5 +1,5 @@
 // Séparateur de séance (proposition 03, `.session-head`) : fond session-tint (success-bg dans les
-// tokens), rayon 8, 10 × 12, texte success 600/13,5, carré de séance en contour ; à droite, en 500,
+// tokens), rayon 8, 10 × 12, texte success 600/13,5, carré de séance en contour ; en fin de ligne, en 500,
 // le nombre d'entrées et « compte rendu ↓ ». Sous lui, la première ligne du compte rendu (13 px,
 // secondaire). Hauteur fixe (40 px + marges, LAYOUT.session) : le défilement virtuel la connaît.
 :host {
@@ -48,7 +48,7 @@ button.head {
   background: transparent;
   color: inherit;
   font: inherit;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
 
   &:focus-visible {
@@ -58,23 +58,34 @@ button.head {
   }
 }
 
+// Chevron de dépliage, dessiné par deux bordures : il pointe vers la fin de ligne (à droite, à
+// gauche en arabe), puis vers le bas une fois déplié. La bordure de fin de ligne passe à gauche en
+// arabe : la rotation s'inverse pour garder la pointe (icône de direction, arabe.md §3).
 .chevron {
   width: 7px;
   height: 7px;
   flex: none;
-  border-right: 2px solid currentColor;
+  border-inline-end: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
   transform: rotate(-45deg);
 
   &.down {
     transform: rotate(45deg);
   }
+
+  &:dir(rtl) {
+    transform: rotate(45deg);
+
+    &.down {
+      transform: rotate(-45deg);
+    }
+  }
 }
 
 .marker {
   position: absolute;
   top: 50%;
-  left: var(--marker-x);
+  inset-inline-start: var(--marker-x);
   display: inline-flex;
   width: 10px;
   height: 10px;
@@ -100,7 +111,7 @@ button.head {
   flex: none;
   align-items: center;
   gap: 6px;
-  margin-left: auto;
+  margin-inline-start: auto;
   font-weight: 500;
   white-space: nowrap;
 }

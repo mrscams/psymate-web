@@ -20,7 +20,7 @@
   <!-- Marqueur du type sur l'axe (maquette 03 : la bordure gauche devient un point sur l'axe). -->
   <span class="marker" aria-hidden="true"><pm-entry-icon [type]="item().type" [size]="10" /></span>
   <div class="ttl">
-    <span class="title">{{ title() }}</span>
+    <span class="title" dir="auto">{{ title() }}</span>
     @if (intensity() !== null) {
       @let value = intensity() ?? 0;
       <span class="scale" aria-hidden="true">
@@ -44,7 +44,7 @@
         <span class="emotion">{{ emotionLabel() }}</span>
       }
       @for (tag of tags(); track tag) {
-        <span class="tag">#{{ tag }}</span>
+        <span class="tag" dir="auto">#{{ tag }}</span>
       }
       @if (moreTags() > 0) {
         <span class="tag more-tags">{{ moreTagsText(moreTags()) }}</span>

@@ -7,13 +7,14 @@ import {
   LOCALE_ID,
 } from '@angular/core';
 
+import { formatLocale } from '../../../core/i18n';
 import { Occurred } from '../../../shared/util';
 import { TimelineZoom } from '../data/timeline.model';
 import { anchorLabel } from './timeline-labels';
 
 /**
- * Ancre d'un jour du flux (proposition 03, `.day .date`, UX-S9) : le jour écrit une fois, à gauche
- * de l'axe, aligné à droite (« Jeudi 12 » en 600/13,5, dessous « aujourd'hui », « hier », « séance »
+ * Ancre d'un jour du flux (proposition 03, `.day .date`, UX-S9) : le jour écrit une fois, avant
+ * l'axe, aligné du côté de l'axe (à droite, à gauche en arabe) (« Jeudi 12 » en 600/13,5, dessous « aujourd'hui », « hier », « séance »
  * ou « il y a 4 j » en 12 secondaire). Sur téléphone (`narrow`), un en-tête au-dessus des lignes,
  * en capitales 12/600 (« JEUDI 12 · AUJOURD'HUI »). Zoom semaine ou mois : la semaine ou le mois ;
  * date moins précise : sa propre forme (mois, année, période).
@@ -23,14 +24,16 @@ import { anchorLabel } from './timeline-labels';
   template: `
     @if (narrow()) {
       <p class="day-head">
-        {{ label().main }}
+        <bdi>{{ label().main }}</bdi>
         @if (label().sub) {
-          <span aria-hidden="true">·</span> {{ label().sub }}
+          &ngsp;<span aria-hidden="true">·</span> {{ label().sub }}
         }
       </p>
     } @else {
       <p class="date" [attr.title]="label().main">
-        <b>{{ label().main }}</b>
+        <b
+          ><bdi>{{ label().main }}</bdi></b
+        >
         @if (label().sub) {
           <span>{{ label().sub }}</span>
         }
@@ -49,7 +52,7 @@ import { anchorLabel } from './timeline-labels';
 
     .date {
       padding-top: 12px;
-      text-align: right;
+      text-align: end;
 
       b,
       span {
@@ -93,7 +96,7 @@ export class TimelineDayComponent {
   readonly today = input<Date>(new Date());
   readonly narrow = input(false);
 
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
 
   protected readonly label = computed(() =>
     anchorLabel(this.occurred(), this.zoom(), this.locale, this.today(), this.session()),

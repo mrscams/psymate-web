@@ -10,6 +10,7 @@ import {
   TimelinePeriodDto,
   VocabulaireService,
 } from '../../../api';
+import { catalogLabel, toAppLocale } from '../../../core/i18n';
 import { ENTRY_TYPES, EntryType } from '../../../shared/ui';
 import { OccurredPrecision } from '../../../shared/util';
 import { DecadeRange, periodMonth, TimelinePeriod } from './timeline-decade.model';
@@ -44,7 +45,7 @@ export class TimelineApi {
   private readonly timeline = inject(ChronologieService);
   private readonly entries = inject(EntreesService);
   private readonly vocabulary = inject(VocabulaireService);
-  private readonly english = inject(LOCALE_ID).startsWith('en');
+  private readonly locale = toAppLocale(inject(LOCALE_ID));
 
   /**
    * GET /api/patients/{id}/timeline : une fenêtre (page keyset) de la chronologie filtrée (types,
@@ -140,8 +141,10 @@ export class TimelineApi {
     const families: Record<string, EmotionFamily> = {};
     for (const emotion of list) {
       if (!emotion.code) continue;
+      // Libellé dans la langue du bundle (Q78), repli sur le français ; le code si l'API n'en
+      // donne aucun.
       labels[emotion.code] =
-        (this.english ? emotion.labelEn : null) || emotion.labelFr || emotion.code;
+        catalogLabel({ ...emotion, labelFr: emotion.labelFr ?? '' }, this.locale) || emotion.code;
       const family = EMOTION_FAMILIES.find((value) => value === emotion.family);
       if (family) families[emotion.code] = family;
     }

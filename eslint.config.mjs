@@ -49,6 +49,7 @@ const LOGICAL_DIRECTION_ZONES = [
   'src/app/shared',
   'src/app/app.component',
   'src/app/features/patients',
+  'src/app/features/timeline',
   'src/theme',
   'src/styles',
 ];
