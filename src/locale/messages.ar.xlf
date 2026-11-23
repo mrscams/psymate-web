@@ -23790,6 +23790,7 @@
       </trans-unit>
       <trans-unit id="timeline.heading" datatype="html">
         <source> Timeline </source>
+        <target state="translated"> الخط الزمني </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">12,15</context>
@@ -23798,6 +23799,7 @@
       </trans-unit>
       <trans-unit id="timeline.toolbar" datatype="html">
         <source>Affichage de la timeline</source>
+        <target state="translated">خيارات عرض الخط الزمني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">20,21</context>
@@ -23806,6 +23808,7 @@
       </trans-unit>
       <trans-unit id="timeline.zoomGroup" datatype="html">
         <source>Zoom</source>
+        <target state="translated">التكبير والتصغير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">64</context>
@@ -23814,6 +23817,7 @@
       </trans-unit>
       <trans-unit id="timeline.error.title" datatype="html">
         <source>Impossible de charger la timeline</source>
+        <target state="translated">تعذّر تحميل الخط الزمني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">109,110</context>
@@ -23822,6 +23826,7 @@
       </trans-unit>
       <trans-unit id="timeline.empty.filtered.title" datatype="html">
         <source>Aucune entrée pour ces filtres</source>
+        <target state="translated">لا مُدخَلات وفق عوامل التصفية هذه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">118,120</context>
@@ -23830,6 +23835,7 @@
       </trans-unit>
       <trans-unit id="timeline.empty.filtered.message" datatype="html">
         <source>Retirez un filtre ou élargissez la période.</source>
+        <target state="translated">يمكن إزالة أحد عوامل التصفية أو توسيع الفترة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">121,123</context>
@@ -23838,6 +23844,7 @@
       </trans-unit>
       <trans-unit id="timeline.empty.period.title" datatype="html">
         <source>Aucune entrée sur cette période</source>
+        <target state="translated">لا مُدخَلات في هذه الفترة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">129,131</context>
@@ -23846,6 +23853,7 @@
       </trans-unit>
       <trans-unit id="timeline.empty.period.message" datatype="html">
         <source>Les entrées plus anciennes restent visibles avec la période « Tout ».</source>
+        <target state="translated">تبقى المُدخَلات الأقدم ظاهرة عند اختيار الفترة « الكل ».</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">132,134</context>
@@ -23854,6 +23862,7 @@
       </trans-unit>
       <trans-unit id="timeline.empty.title" datatype="html">
         <source>Aucune entrée pour l&apos;instant</source>
+        <target state="translated">لا مُدخَلات حتى الآن</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">139,140</context>
@@ -23862,6 +23871,7 @@
       </trans-unit>
       <trans-unit id="timeline.empty.message" datatype="html">
         <source>Notez la première dans la barre de capture, en haut du dossier (N).</source>
+        <target state="translated">يمكن تدوين أول مُدخَل في شريط الإدخال أعلى الملف (N).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">141,142</context>
@@ -23870,6 +23880,7 @@
       </trans-unit>
       <trans-unit id="timeline.status.partial" datatype="html">
         <source> Regroupement des <x id="INTERPOLATION" equiv-text="{{ headSize }}"/> entrées les plus récentes : réduisez la période pour les plus anciennes. </source>
+        <target state="translated"> التجميع مقتصر على أحدث المُدخَلات (<x id="INTERPOLATION" equiv-text="{{ headSize }}"/>)؛ ولعرض الأقدم منها يمكن تضييق الفترة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">153,155</context>
@@ -23878,6 +23889,7 @@
       </trans-unit>
       <trans-unit id="timeline.window.error" datatype="html">
         <source>Cette partie de la timeline n&apos;a pas pu être chargée.</source>
+        <target state="translated">تعذّر تحميل هذا الجزء من الخط الزمني.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">162,163</context>
@@ -23890,6 +23902,7 @@
       </trans-unit>
       <trans-unit id="timeline.bands" datatype="html">
         <source>Situations sur la période</source>
+        <target state="translated">الوضعيات خلال الفترة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">203,204</context>
@@ -23898,6 +23911,7 @@
       </trans-unit>
       <trans-unit id="timeline.band.graph" datatype="html">
         <source>voir dans le graphe</source>
+        <target state="translated">عرض في شبكة الروابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">221,226</context>
@@ -23906,6 +23920,7 @@
       </trans-unit>
       <trans-unit id="timeline.beforeZone" datatype="html">
         <source>Avant le suivi</source>
+        <target state="translated">قبل المتابعة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">288,291</context>
@@ -23914,6 +23929,7 @@
       </trans-unit>
       <trans-unit id="timeline.side" datatype="html">
         <source>Résumé de la période</source>
+        <target state="translated">ملخّص الفترة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">381,382</context>
@@ -23922,6 +23938,7 @@
       </trans-unit>
       <trans-unit id="timeline.menu.open" datatype="html">
         <source>Ouvrir</source>
+        <target state="translated">فتح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">403,405</context>
@@ -23930,6 +23947,7 @@
       </trans-unit>
       <trans-unit id="timeline.menu.openHint" datatype="html">
         <source>Entrée</source>
+        <target state="translated">Enter</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">406,410</context>
@@ -23938,6 +23956,7 @@
       </trans-unit>
       <trans-unit id="timeline.menu.edit" datatype="html">
         <source>Corriger</source>
+        <target state="translated">تصحيح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">413,415</context>
@@ -23946,6 +23965,7 @@
       </trans-unit>
       <trans-unit id="timeline.menu.editHint" datatype="html">
         <source>crée une version</source>
+        <target state="translated">يُنشئ نسخة جديدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">416,420</context>
@@ -23954,6 +23974,7 @@
       </trans-unit>
       <trans-unit id="timeline.menu.link" datatype="html">
         <source>Lier</source>
+        <target state="translated">ربط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">424,426</context>
@@ -23962,6 +23983,7 @@
       </trans-unit>
       <trans-unit id="timeline.menu.linkKey" datatype="html">
         <source>L</source>
+        <target state="translated">L</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">427,429</context>
@@ -23970,6 +23992,7 @@
       </trans-unit>
       <trans-unit id="timeline.menu.graph" datatype="html">
         <source>Voir dans le graphe</source>
+        <target state="translated">عرض في شبكة الروابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">434,436</context>
@@ -23978,6 +24001,7 @@
       </trans-unit>
       <trans-unit id="timeline.menu.graphHint" datatype="html">
         <source>onglet 3</source>
+        <target state="translated">علامة التبويب 3</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.html</context>
           <context context-type="linenumber">437,443</context>
@@ -23986,6 +24010,7 @@
       </trans-unit>
       <trans-unit id="timeline.empty.clear" datatype="html">
         <source>Effacer les filtres</source>
+        <target state="translated">مسح عوامل التصفية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">260</context>
@@ -23994,6 +24019,7 @@
       </trans-unit>
       <trans-unit id="timeline.empty.showAll" datatype="html">
         <source>Afficher tout</source>
+        <target state="translated">عرض الكل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">266</context>
@@ -24002,6 +24028,7 @@
       </trans-unit>
       <trans-unit id="timeline.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">271</context>
@@ -24018,6 +24045,7 @@
       </trans-unit>
       <trans-unit id="timeline.period.custom" datatype="html">
         <source>Du <x id="start" equiv-text="start"/> au <x id="end" equiv-text="end"/></source>
+        <target state="translated">من <x id="start" equiv-text="start"/> إلى <x id="end" equiv-text="end"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">298</context>
@@ -24030,6 +24058,7 @@
       </trans-unit>
       <trans-unit id="timeline.foot.one" datatype="html">
         <source>1 entrée sur <x id="span" equiv-text="span"/></source>
+        <target state="translated">مُدخَل واحد خلال <x id="span" equiv-text="span"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">311</context>
@@ -24038,6 +24067,7 @@
       </trans-unit>
       <trans-unit id="timeline.foot.many" datatype="html">
         <source><x id="count" equiv-text="count"/> entrées sur <x id="span" equiv-text="span"/></source>
+        <target state="translated">المُدخَلات: <x id="count" equiv-text="count"/> خلال <x id="span" equiv-text="span"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">312</context>
@@ -24046,6 +24076,7 @@
       </trans-unit>
       <trans-unit id="timeline.followStart" datatype="html">
         <source>Début du suivi · <x id="date" equiv-text="date"/></source>
+        <target state="translated">بداية المتابعة · <x id="date" equiv-text="date"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">334</context>
@@ -24054,6 +24085,7 @@
       </trans-unit>
       <trans-unit id="timeline.list" datatype="html">
         <source>Entrées du patient, de la plus récente à la plus ancienne</source>
+        <target state="translated">مُدخَلات الملف، من الأحدث إلى الأقدم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">346</context>
@@ -24062,6 +24094,7 @@
       </trans-unit>
       <trans-unit id="timeline.zoomIn" datatype="html">
         <source>Zoom avant (+)</source>
+        <target state="translated">تكبير (+)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">347</context>
@@ -24070,6 +24103,7 @@
       </trans-unit>
       <trans-unit id="timeline.zoomOut" datatype="html">
         <source>Zoom arrière (−)</source>
+        <target state="translated">تصغير (−)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">348</context>
@@ -24078,6 +24112,7 @@
       </trans-unit>
       <trans-unit id="timeline.modeShortcut" datatype="html">
         <source>Chronologique ou par séance</source>
+        <target state="translated">حسب التسلسل الزمني أو حسب الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">349</context>
@@ -24086,6 +24121,7 @@
       </trans-unit>
       <trans-unit id="timeline.filtersShortcut" datatype="html">
         <source>Aller aux filtres de la timeline</source>
+        <target state="translated">الانتقال إلى عوامل تصفية الخط الزمني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">350</context>
@@ -24094,6 +24130,7 @@
       </trans-unit>
       <trans-unit id="timeline.mode.decadeBlocked" datatype="html">
         <source>Vue décennie : revenez au détail (zoom avant, +) pour regrouper par séance.</source>
+        <target state="translated">عرض العَقد: يلزم الرجوع إلى العرض التفصيلي (تكبير، +) للتجميع حسب الجلسة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">351</context>
@@ -24102,6 +24139,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.back" datatype="html">
         <source>Revenir à l&apos;agrégat par mois</source>
+        <target state="translated">العودة إلى التجميع الشهري</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">352</context>
@@ -24110,6 +24148,7 @@
       </trans-unit>
       <trans-unit id="timeline.focus.periodWidened" datatype="html">
         <source>Période élargie à « Tout » pour afficher l&apos;entrée demandée.</source>
+        <target state="translated">وُسِّعت الفترة إلى « الكل » لعرض المُدخَل المطلوب.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">634</context>
@@ -24118,6 +24157,7 @@
       </trans-unit>
       <trans-unit id="timeline.focus.filtersCleared" datatype="html">
         <source>Filtres retirés pour afficher l&apos;entrée demandée.</source>
+        <target state="translated">أُزيلت عوامل التصفية لعرض المُدخَل المطلوب.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">644</context>
@@ -24126,6 +24166,7 @@
       </trans-unit>
       <trans-unit id="timeline.mode.notSaved" datatype="html">
         <source>Mode appliqué à cet écran seulement : la préférence n&apos;a pas pu être enregistrée.</source>
+        <target state="translated">طُبِّقت طريقة العرض على هذه الشاشة فقط: تعذّر حفظ التفضيل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">822</context>
@@ -24134,6 +24175,7 @@
       </trans-unit>
       <trans-unit id="timeline.lane.ongoing" datatype="html">
         <source><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/> · en cours</source>
+        <target state="translated"><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/> · جارية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">1078</context>
@@ -24142,6 +24184,7 @@
       </trans-unit>
       <trans-unit id="timeline.lane.closed" datatype="html">
         <source><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/></source>
+        <target state="translated"><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">1079</context>
@@ -24150,6 +24193,7 @@
       </trans-unit>
       <trans-unit id="timeline.band.sinceOngoing" datatype="html">
         <source><x id="since" equiv-text="since"/> · en cours</source>
+        <target state="translated"><x id="since" equiv-text="since"/> · جارية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">1096</context>
@@ -24158,6 +24202,7 @@
       </trans-unit>
       <trans-unit id="timeline.band.ongoing" datatype="html">
         <source>Situation <x id="title" equiv-text="title"/>, <x id="when" equiv-text="when"/>, en cours</source>
+        <target state="translated">وضعية <x id="title" equiv-text="title"/>، <x id="when" equiv-text="when"/>، جارية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">1103</context>
@@ -24166,6 +24211,7 @@
       </trans-unit>
       <trans-unit id="timeline.band.closed" datatype="html">
         <source>Situation <x id="title" equiv-text="title"/>, <x id="when" equiv-text="when"/>, terminée</source>
+        <target state="translated">وضعية <x id="title" equiv-text="title"/>، <x id="when" equiv-text="when"/>، منتهية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/pages/timeline.page.ts</context>
           <context context-type="linenumber">1104</context>
@@ -24174,6 +24220,7 @@
       </trans-unit>
       <trans-unit id="timeline.card.draft" datatype="html">
         <source>brouillon</source>
+        <target state="translated">مسودّة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
           <context context-type="linenumber">131</context>
@@ -24182,6 +24229,7 @@
       </trans-unit>
       <trans-unit id="timeline.card.ongoing" datatype="html">
         <source>en cours</source>
+        <target state="translated">جارية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
           <context context-type="linenumber">132</context>
@@ -24190,6 +24238,7 @@
       </trans-unit>
       <trans-unit id="timeline.card.edit" datatype="html">
         <source>Corriger</source>
+        <target state="translated">تصحيح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
           <context context-type="linenumber">133</context>
@@ -24198,6 +24247,7 @@
       </trans-unit>
       <trans-unit id="timeline.card.linkAction" datatype="html">
         <source>Lier (L)</source>
+        <target state="translated">ربط (L)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
           <context context-type="linenumber">134</context>
@@ -24206,6 +24256,7 @@
       </trans-unit>
       <trans-unit id="timeline.card.menu" datatype="html">
         <source>Actions sur « <x id="title" equiv-text="this.title()"/> » (Maj+F10)</source>
+        <target state="translated">إجراءات « <x id="title" equiv-text="this.title()"/> » (Shift+F10)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
           <context context-type="linenumber">138</context>
@@ -24218,6 +24269,7 @@
       </trans-unit>
       <trans-unit id="timeline.card.said" datatype="html">
         <source>dit en séance du <x id="date" equiv-text="date"/></source>
+        <target state="translated">ذُكر في جلسة <x id="date" equiv-text="date"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
           <context context-type="linenumber">142</context>
@@ -24226,6 +24278,7 @@
       </trans-unit>
       <trans-unit id="timeline.card.link" datatype="html">
         <source>1 lien</source>
+        <target state="translated">رابط واحد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
           <context context-type="linenumber">147</context>
@@ -24234,6 +24287,7 @@
       </trans-unit>
       <trans-unit id="timeline.card.links" datatype="html">
         <source><x id="count" equiv-text="count"/> liens</source>
+        <target state="translated">الروابط: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
           <context context-type="linenumber">148</context>
@@ -24242,6 +24296,7 @@
       </trans-unit>
       <trans-unit id="timeline.card.moreTags" datatype="html">
         <source>+<x id="count" equiv-text="count"/></source>
+        <target state="translated">+<x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-card.component.ts</context>
           <context context-type="linenumber">152</context>
@@ -24250,6 +24305,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.error.title" datatype="html">
         <source>Impossible de charger l&apos;agrégat par mois</source>
+        <target state="translated">تعذّر تحميل التجميع الشهري</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">10,11</context>
@@ -24258,6 +24314,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.empty.title" datatype="html">
         <source>Aucune entrée sur cette plage</source>
+        <target state="translated">لا مُدخَلات في هذا النطاق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">17,18</context>
@@ -24266,6 +24323,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.empty.message" datatype="html">
         <source>Élargissez la période, ou revenez au détail avec le zoom avant (+).</source>
+        <target state="translated">يمكن توسيع الفترة، أو الرجوع إلى العرض التفصيلي بالتكبير (+).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">19,20</context>
@@ -24274,6 +24332,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.badge" datatype="html">
         <source>Agrégé par mois · double-clic pour zoomer</source>
+        <target state="translated">تجميع شهري · نقر مزدوج للتكبير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">33,36</context>
@@ -24282,6 +24341,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.years" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {1 an} other {<x id="INTERPOLATION"/> ans}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا سنوات} one {سنة واحدة} two {سنتان} few {<x id="INTERPOLATION"/> سنوات} many {<x id="INTERPOLATION"/> سنة} other {<x id="INTERPOLATION"/> سنة}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">41,45</context>
@@ -24290,6 +24350,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.months" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {1 mois} other {<x id="INTERPOLATION"/> mois}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا أشهر} one {شهر واحد} two {شهران} few {<x id="INTERPOLATION"/> أشهر} many {<x id="INTERPOLATION"/> شهرًا} other {<x id="INTERPOLATION"/> شهر}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">47,50</context>
@@ -24298,6 +24359,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.monthsCount" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ monthCount() }}"/> mois · <x id="INTERPOLATION_1" equiv-text="{{ filled().length }}"/> non vides ·</source>
+        <target state="translated">عدد الأشهر: <x id="INTERPOLATION" equiv-text="{{ monthCount() }}"/> · غير الفارغة منها: <x id="INTERPOLATION_1" equiv-text="{{ filled().length }}"/> ·</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">51,52</context>
@@ -24306,6 +24368,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.entries" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا مُدخَلات} one {مُدخَل واحد} two {مُدخَلان} few {<x id="INTERPOLATION"/> مُدخَلات} many {<x id="INTERPOLATION"/> مُدخَلًا} other {<x id="INTERPOLATION"/> مُدخَل}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">55,58</context>
@@ -24314,6 +24377,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.outside" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {1 entrée hors plage} other {<x id="INTERPOLATION"/> entrées hors plage}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا مُدخَلات خارج النطاق} one {مُدخَل واحد خارج النطاق} two {مُدخَلان خارج النطاق} few {<x id="INTERPOLATION"/> مُدخَلات خارج النطاق} many {<x id="INTERPOLATION"/> مُدخَلًا خارج النطاق} other {<x id="INTERPOLATION"/> مُدخَل خارج النطاق}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">60,65</context>
@@ -24322,6 +24386,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.partial" datatype="html">
         <source> Les filtres d&apos;émotion, de tag et de brouillon ne s&apos;appliquent pas à l&apos;agrégat par mois ; les types et la période, si. </source>
+        <target state="translated"> لا تنطبق عوامل تصفية الشعور والوسم والمسودّات على التجميع الشهري؛ أما الأنواع والفترة فتنطبق عليه. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">71,77</context>
@@ -24330,6 +24395,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.legend" datatype="html">
         <source>Légende</source>
+        <target state="translated">مفتاح الرسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">198</context>
@@ -24338,6 +24404,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.legend.intensity" datatype="html">
         <source>Intensité moyenne des ressentis (axe droit, 0–10)</source>
+        <target state="translated">متوسّط شدّة المشاعر (المحور الأيمن، 0–10)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">207,211</context>
@@ -24346,6 +24413,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.legend.bands" datatype="html">
         <source>Situations longues</source>
+        <target state="translated">وضعيات طويلة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">215,220</context>
@@ -24354,6 +24422,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.hint" datatype="html">
         <source> Survoler un mois : détail des comptes · double-clic : timeline au zoom « semaine » sur ce mois · Échap : retour </source>
+        <target state="translated"> تمرير المؤشر على شهر: تفاصيل الأعداد · نقر مزدوج: الخط الزمني بتكبير « أسبوع » على هذا الشهر · Esc: رجوع </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">221,226</context>
@@ -24362,6 +24431,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.table" datatype="html">
         <source> Tableau des mois non vides (<x id="INTERPOLATION" equiv-text="{{ filled().length }}"/>) · Entrée ouvre le détail d&apos;un mois </source>
+        <target state="translated"> جدول الأشهر غير الفارغة (<x id="INTERPOLATION" equiv-text="{{ filled().length }}"/>) · مفتاح Enter يفتح تفاصيل الشهر </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">227,228</context>
@@ -24370,6 +24440,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.caption" datatype="html">
         <source> Nombre d&apos;entrées par type et intensité moyenne des ressentis, mois par mois </source>
+        <target state="translated"> عدد المُدخَلات حسب النوع ومتوسّط شدّة المشاعر، شهرًا بشهر </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">235,239</context>
@@ -24378,6 +24449,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.month" datatype="html">
         <source> Mois </source>
+        <target state="translated"> الشهر </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">240,242</context>
@@ -24386,6 +24458,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.average" datatype="html">
         <source> Intensité moyenne </source>
+        <target state="translated"> متوسّط الشدّة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">250,253</context>
@@ -24394,6 +24467,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.noFeeling" datatype="html">
         <source>aucun ressenti</source>
+        <target state="translated">لا مشاعر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.html</context>
           <context context-type="linenumber">280,283</context>
@@ -24402,6 +24476,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.followStart" datatype="html">
         <source>début du suivi · <x id="month" equiv-text="month"/></source>
+        <target state="translated">بداية المتابعة · <x id="month" equiv-text="month"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">169</context>
@@ -24410,6 +24485,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.chartLabel" datatype="html">
         <source>Agrégats par mois de <x id="start" equiv-text="start"/> à <x id="end" equiv-text="end"/> : <x id="entries" equiv-text="entries"/> entrées sur <x id="months" equiv-text="months"/> mois non vides, barres empilées par type.</source>
+        <target state="translated">تجميع شهري من <x id="start" equiv-text="start"/> إلى <x id="end" equiv-text="end"/>: عدد المُدخَلات <x id="entries" equiv-text="entries"/> موزَّعة على الأشهر غير الفارغة (<x id="months" equiv-text="months"/>)، بأعمدة مكدّسة حسب النوع.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">179</context>
@@ -24418,6 +24494,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.chartIntensity" datatype="html">
         <source>Intensité moyenne des ressentis de <x id="min" equiv-text="min"/> à <x id="max" equiv-text="max"/><x id="trend" equiv-text="trend"/>.</source>
+        <target state="translated">متوسّط شدّة المشاعر من <x id="min" equiv-text="min"/> إلى <x id="max" equiv-text="max"/><x id="trend" equiv-text="trend"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">189</context>
@@ -24426,6 +24503,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.chartBands" datatype="html">
         <source>Situations longues : <x id="count" equiv-text="count"/>.</source>
+        <target state="translated">الوضعيات الطويلة: <x id="count" equiv-text="count"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">196</context>
@@ -24434,6 +24512,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.trend.up" datatype="html">
         <source>, en hausse</source>
+        <target state="translated">، في ارتفاع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">205</context>
@@ -24442,6 +24521,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.trend.down" datatype="html">
         <source>, en baisse</source>
+        <target state="translated">، في انخفاض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">207</context>
@@ -24450,6 +24530,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.trend.flat" datatype="html">
         <source>, stable</source>
+        <target state="translated">، مستقرّة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">209</context>
@@ -24458,6 +24539,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.openMonth" datatype="html">
         <source><x id="month" equiv-text="label"/>, voir le détail</source>
+        <target state="translated"><x id="month" equiv-text="label"/>، عرض التفاصيل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">224</context>
@@ -24466,6 +24548,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.monthEmpty" datatype="html">
         <source><x id="month" equiv-text="label"/> : aucune entrée</source>
+        <target state="translated"><x id="month" equiv-text="label"/>: لا مُدخَلات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">235</context>
@@ -24474,6 +24557,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.typeCount" datatype="html">
         <source><x id="type" equiv-text="type"/> <x id="count" equiv-text="count"/></source>
+        <target state="translated"><x id="type" equiv-text="type"/> <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">241</context>
@@ -24482,6 +24566,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.monthCounts" datatype="html">
         <source><x id="month" equiv-text="label"/> : <x id="counts" equiv-text="counts"/></source>
+        <target state="translated"><x id="month" equiv-text="label"/>: <x id="counts" equiv-text="counts"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">246</context>
@@ -24490,6 +24575,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.monthTitle" datatype="html">
         <source><x id="month" equiv-text="label"/> : <x id="counts" equiv-text="counts"/> · intensité moyenne <x id="value" equiv-text="value"/></source>
+        <target state="translated"><x id="month" equiv-text="label"/>: <x id="counts" equiv-text="counts"/> · متوسّط الشدّة <x id="value" equiv-text="value"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">249</context>
@@ -24498,6 +24584,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.bandName" datatype="html">
         <source><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/></source>
+        <target state="translated"><x id="title" equiv-text="title"/> · <x id="when" equiv-text="when"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">268</context>
@@ -24506,6 +24593,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.bandOngoing" datatype="html">
         <source><x id="name" equiv-text="name"/> · en cours</source>
+        <target state="translated"><x id="name" equiv-text="name"/> · جارية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">271</context>
@@ -24514,6 +24602,7 @@
       </trans-unit>
       <trans-unit id="timeline.filters.types" datatype="html">
         <source>Types</source>
+        <target state="translated">الأنواع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
           <context context-type="linenumber">5</context>
@@ -24522,6 +24611,7 @@
       </trans-unit>
       <trans-unit id="timeline.filters.allTypes" datatype="html">
         <source>Tout</source>
+        <target state="translated">الكل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
           <context context-type="linenumber">9,12</context>
@@ -24530,6 +24620,7 @@
       </trans-unit>
       <trans-unit id="timeline.filters.label" datatype="html">
         <source>Filtres</source>
+        <target state="translated">عوامل التصفية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
           <context context-type="linenumber">46,48</context>
@@ -24538,6 +24629,7 @@
       </trans-unit>
       <trans-unit id="timeline.filters.offer" datatype="html">
         <source>· émotion, tag, brouillons</source>
+        <target state="translated">· الشعور، الوسم، المسودّات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
           <context context-type="linenumber">53,60</context>
@@ -24546,6 +24638,7 @@
       </trans-unit>
       <trans-unit id="timeline.filters.panel" datatype="html">
         <source>Filtres de la timeline</source>
+        <target state="translated">عوامل تصفية الخط الزمني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
           <context context-type="linenumber">72,73</context>
@@ -24554,6 +24647,7 @@
       </trans-unit>
       <trans-unit id="timeline.filters.emotionsHeading" datatype="html">
         <source> Émotions </source>
+        <target state="translated"> المشاعر </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
           <context context-type="linenumber">85,89</context>
@@ -24562,6 +24656,7 @@
       </trans-unit>
       <trans-unit id="timeline.filters.noEmotion" datatype="html">
         <source> Aucune émotion notée sur la période. </source>
+        <target state="translated"> لم تُدوَّن أي مشاعر في هذه الفترة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
           <context context-type="linenumber">110,114</context>
@@ -24570,6 +24665,7 @@
       </trans-unit>
       <trans-unit id="timeline.filters.tagsHeading" datatype="html">
         <source> Tags </source>
+        <target state="translated"> الوسوم </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
           <context context-type="linenumber">120,124</context>
@@ -24578,6 +24674,7 @@
       </trans-unit>
       <trans-unit id="timeline.filters.noTag" datatype="html">
         <source> Aucun tag sur la période. </source>
+        <target state="translated"> لا وسوم في هذه الفترة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
           <context context-type="linenumber">141,146</context>
@@ -24586,6 +24683,7 @@
       </trans-unit>
       <trans-unit id="timeline.filters.drafts" datatype="html">
         <source>Brouillons seulement</source>
+        <target state="translated">المسودّات فقط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.html</context>
           <context context-type="linenumber">153,159</context>
@@ -24594,6 +24692,7 @@
       </trans-unit>
       <trans-unit id="timeline.filters.buttonActive" datatype="html">
         <source>Filtres · <x id="count" equiv-text="count"/> actifs</source>
+        <target state="translated">عوامل التصفية · المفعّلة: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.ts</context>
           <context context-type="linenumber">120</context>
@@ -24602,6 +24701,7 @@
       </trans-unit>
       <trans-unit id="timeline.filters.button" datatype="html">
         <source>Filtres · émotion, tag, brouillons</source>
+        <target state="translated">عوامل التصفية · الشعور، الوسم، المسودّات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-filters.component.ts</context>
           <context context-type="linenumber">121</context>
@@ -24610,6 +24710,7 @@
       </trans-unit>
       <trans-unit id="timeline.precision.exact" datatype="html">
         <source>exacte</source>
+        <target state="translated">دقيق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">14</context>
@@ -24618,6 +24719,7 @@
       </trans-unit>
       <trans-unit id="timeline.precision.day" datatype="html">
         <source>jour</source>
+        <target state="translated">يوم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">16</context>
@@ -24626,6 +24728,7 @@
       </trans-unit>
       <trans-unit id="timeline.precision.month" datatype="html">
         <source>mois</source>
+        <target state="translated">شهر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">18</context>
@@ -24634,6 +24737,7 @@
       </trans-unit>
       <trans-unit id="timeline.precision.year" datatype="html">
         <source>année</source>
+        <target state="translated">سنة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">20</context>
@@ -24642,6 +24746,7 @@
       </trans-unit>
       <trans-unit id="timeline.precision.period" datatype="html">
         <source>période</source>
+        <target state="translated">فترة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">22</context>
@@ -24650,6 +24755,7 @@
       </trans-unit>
       <trans-unit id="timeline.precision.lifePhase" datatype="html">
         <source>phase de vie</source>
+        <target state="translated">مرحلة عمرية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">24</context>
@@ -24658,6 +24764,7 @@
       </trans-unit>
       <trans-unit id="timeline.zoom.day" datatype="html">
         <source>Jour</source>
+        <target state="translated">يوم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">32</context>
@@ -24666,6 +24773,7 @@
       </trans-unit>
       <trans-unit id="timeline.zoom.week" datatype="html">
         <source>Semaine</source>
+        <target state="translated">أسبوع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">34</context>
@@ -24674,6 +24782,7 @@
       </trans-unit>
       <trans-unit id="timeline.zoom.month" datatype="html">
         <source>Mois</source>
+        <target state="translated">شهر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">36</context>
@@ -24682,6 +24791,7 @@
       </trans-unit>
       <trans-unit id="timeline.axis.week" datatype="html">
         <source>sem. du <x id="day" equiv-text="day"/></source>
+        <target state="translated">أسبوع <x id="day" equiv-text="day"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">88</context>
@@ -24690,6 +24800,7 @@
       </trans-unit>
       <trans-unit id="timeline.mode.chronological" datatype="html">
         <source>Chronologique</source>
+        <target state="translated">حسب التسلسل الزمني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">113</context>
@@ -24698,6 +24809,7 @@
       </trans-unit>
       <trans-unit id="timeline.mode.session" datatype="html">
         <source>Par séance</source>
+        <target state="translated">حسب الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">115</context>
@@ -24706,6 +24818,7 @@
       </trans-unit>
       <trans-unit id="timeline.period.30d" datatype="html">
         <source>30 j</source>
+        <target state="translated">30 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">123</context>
@@ -24714,6 +24827,7 @@
       </trans-unit>
       <trans-unit id="timeline.period.90d" datatype="html">
         <source>90 j</source>
+        <target state="translated">90 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">125</context>
@@ -24722,6 +24836,7 @@
       </trans-unit>
       <trans-unit id="timeline.period.1y" datatype="html">
         <source>1 an</source>
+        <target state="translated">سنة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">127</context>
@@ -24730,6 +24845,7 @@
       </trans-unit>
       <trans-unit id="timeline.period.all" datatype="html">
         <source>Tout</source>
+        <target state="translated">الكل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">129</context>
@@ -24738,6 +24854,7 @@
       </trans-unit>
       <trans-unit id="timeline.period.30d.name" datatype="html">
         <source>30 derniers jours</source>
+        <target state="translated">آخر 30 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">137</context>
@@ -24746,6 +24863,7 @@
       </trans-unit>
       <trans-unit id="timeline.period.90d.name" datatype="html">
         <source>90 derniers jours</source>
+        <target state="translated">آخر 90 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">139</context>
@@ -24754,6 +24872,7 @@
       </trans-unit>
       <trans-unit id="timeline.period.1y.name" datatype="html">
         <source>12 derniers mois</source>
+        <target state="translated">آخر 12 شهرًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">141</context>
@@ -24762,6 +24881,7 @@
       </trans-unit>
       <trans-unit id="timeline.period.all.name" datatype="html">
         <source>Toute la période</source>
+        <target state="translated">الفترة كاملة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">143</context>
@@ -24770,6 +24890,7 @@
       </trans-unit>
       <trans-unit id="timeline.modalityShort.inPerson" datatype="html">
         <source>cabinet</source>
+        <target state="translated">حضوريًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">151</context>
@@ -24778,6 +24899,7 @@
       </trans-unit>
       <trans-unit id="timeline.modalityShort.video" datatype="html">
         <source>visio</source>
+        <target state="translated">عبر الفيديو</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">153</context>
@@ -24786,6 +24908,7 @@
       </trans-unit>
       <trans-unit id="timeline.modalityShort.phone" datatype="html">
         <source>téléphone</source>
+        <target state="translated">عبر الهاتف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">155</context>
@@ -24794,6 +24917,7 @@
       </trans-unit>
       <trans-unit id="timeline.modalityShort.email" datatype="html">
         <source>e-mail</source>
+        <target state="translated">عبر البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">157</context>
@@ -24802,6 +24926,7 @@
       </trans-unit>
       <trans-unit id="timeline.sessionKind.intake" datatype="html">
         <source>Séance d&apos;accueil</source>
+        <target state="translated">جلسة استقبال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">167</context>
@@ -24810,6 +24935,7 @@
       </trans-unit>
       <trans-unit id="timeline.sessionKind.contact" datatype="html">
         <source>Contact</source>
+        <target state="translated">تواصل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">169</context>
@@ -24818,6 +24944,7 @@
       </trans-unit>
       <trans-unit id="timeline.sessionKind.session" datatype="html">
         <source>Séance</source>
+        <target state="translated">جلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">171</context>
@@ -24826,6 +24953,7 @@
       </trans-unit>
       <trans-unit id="timeline.session.duration" datatype="html">
         <source><x id="value" equiv-text="value"/> min</source>
+        <target state="translated"><x id="value" equiv-text="value"/> د</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">178</context>
@@ -24834,6 +24962,7 @@
       </trans-unit>
       <trans-unit id="timeline.zoom.decade" datatype="html">
         <source>Décennie</source>
+        <target state="translated">العَقد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">193</context>
@@ -24842,6 +24971,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.type.note" datatype="html">
         <source>Notes</source>
+        <target state="translated">ملاحظات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">200</context>
@@ -24850,6 +24980,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.type.event" datatype="html">
         <source>Événements</source>
+        <target state="translated">أحداث</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">202</context>
@@ -24858,6 +24989,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.type.situation" datatype="html">
         <source>Situations</source>
+        <target state="translated">وضعيات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">204</context>
@@ -24866,6 +24998,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.type.feeling" datatype="html">
         <source>Ressentis</source>
+        <target state="translated">مشاعر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">206</context>
@@ -24874,6 +25007,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.type.session" datatype="html">
         <source>Séances</source>
+        <target state="translated">جلسات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">208</context>
@@ -24882,6 +25016,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.type.medication" datatype="html">
         <source>Médicaments</source>
+        <target state="translated">أدوية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">210</context>
@@ -24890,6 +25025,7 @@
       </trans-unit>
       <trans-unit id="timeline.day.session" datatype="html">
         <source>séance</source>
+        <target state="translated">جلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">301</context>
@@ -24898,6 +25034,7 @@
       </trans-unit>
       <trans-unit id="timeline.day.today" datatype="html">
         <source>aujourd&apos;hui</source>
+        <target state="translated">اليوم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">307</context>
@@ -24906,6 +25043,7 @@
       </trans-unit>
       <trans-unit id="timeline.day.yesterday" datatype="html">
         <source>hier</source>
+        <target state="translated">أمس</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">309</context>
@@ -24914,6 +25052,7 @@
       </trans-unit>
       <trans-unit id="timeline.day.ago" datatype="html">
         <source>il y a <x id="days" equiv-text="days"/> j</source>
+        <target state="translated">قبل <x id="days" equiv-text="days"/> أيام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">312</context>
@@ -24922,6 +25061,7 @@
       </trans-unit>
       <trans-unit id="timeline.band.since" datatype="html">
         <source>depuis <x id="when" equiv-text="when"/></source>
+        <target state="translated">منذ <x id="when" equiv-text="when"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">348</context>
@@ -24930,6 +25070,7 @@
       </trans-unit>
       <trans-unit id="timeline.span.30d" datatype="html">
         <source>30 jours</source>
+        <target state="translated">30 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">355</context>
@@ -24938,6 +25079,7 @@
       </trans-unit>
       <trans-unit id="timeline.span.90d" datatype="html">
         <source>90 jours</source>
+        <target state="translated">90 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">357</context>
@@ -24946,6 +25088,7 @@
       </trans-unit>
       <trans-unit id="timeline.span.1y" datatype="html">
         <source>1 an</source>
+        <target state="translated">سنة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">359</context>
@@ -24954,6 +25097,7 @@
       </trans-unit>
       <trans-unit id="timeline.span.all" datatype="html">
         <source>tout le dossier</source>
+        <target state="translated">كامل الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-labels.ts</context>
           <context context-type="linenumber">361</context>
@@ -24962,6 +25106,7 @@
       </trans-unit>
       <trans-unit id="timeline.modeGroup" datatype="html">
         <source>Mode d&apos;affichage (M)</source>
+        <target state="translated">طريقة العرض (M)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-mode.component.ts</context>
           <context context-type="linenumber">21,22</context>
@@ -24970,6 +25115,7 @@
       </trans-unit>
       <trans-unit id="timeline.mode.decadeHint" datatype="html">
         <source>Revenez au détail (zoom avant, +) pour regrouper par séance</source>
+        <target state="translated">يلزم الرجوع إلى العرض التفصيلي (تكبير، +) للتجميع حسب الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-mode.component.ts</context>
           <context context-type="linenumber">102</context>
@@ -24978,6 +25124,7 @@
       </trans-unit>
       <trans-unit id="timeline.filters.period" datatype="html">
         <source>Période</source>
+        <target state="translated">الفترة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-period.component.ts</context>
           <context context-type="linenumber">33</context>
@@ -24986,6 +25133,7 @@
       </trans-unit>
       <trans-unit id="timeline.divider.notedOne" datatype="html">
         <source>1 entrée notée</source>
+        <target state="translated">مُدخَل واحد مدوَّن</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-session-divider.component.ts</context>
           <context context-type="linenumber">136</context>
@@ -24994,6 +25142,7 @@
       </trans-unit>
       <trans-unit id="timeline.divider.notedNone" datatype="html">
         <source>aucune entrée notée</source>
+        <target state="translated">لا مُدخَلات مدوَّنة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-session-divider.component.ts</context>
           <context context-type="linenumber">138</context>
@@ -25002,6 +25151,7 @@
       </trans-unit>
       <trans-unit id="timeline.divider.noted" datatype="html">
         <source><x id="count" equiv-text="value"/> entrées notées</source>
+        <target state="translated">المُدخَلات المدوَّنة: <x id="count" equiv-text="value"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-session-divider.component.ts</context>
           <context context-type="linenumber">139</context>
@@ -25010,6 +25160,7 @@
       </trans-unit>
       <trans-unit id="timeline.card.entry" datatype="html">
         <source>1 entrée</source>
+        <target state="translated">مُدخَل واحد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-session-divider.component.ts</context>
           <context context-type="linenumber">141</context>
@@ -25018,6 +25169,7 @@
       </trans-unit>
       <trans-unit id="timeline.card.noEntry" datatype="html">
         <source>aucune entrée</source>
+        <target state="translated">لا مُدخَلات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-session-divider.component.ts</context>
           <context context-type="linenumber">143</context>
@@ -25026,6 +25178,7 @@
       </trans-unit>
       <trans-unit id="timeline.card.entries" datatype="html">
         <source><x id="count" equiv-text="value"/> entrées</source>
+        <target state="translated">المُدخَلات: <x id="count" equiv-text="value"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-session-divider.component.ts</context>
           <context context-type="linenumber">144</context>
@@ -25034,6 +25187,7 @@
       </trans-unit>
       <trans-unit id="timeline.divider.unclosed" datatype="html">
         <source>non clôturée</source>
+        <target state="translated">لم تُنهَ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-session-divider.component.ts</context>
           <context context-type="linenumber">155</context>
@@ -25042,6 +25196,7 @@
       </trans-unit>
       <trans-unit id="timeline.divider.report" datatype="html">
         <source>compte rendu</source>
+        <target state="translated">محضر الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-session-divider.component.ts</context>
           <context context-type="linenumber">156</context>
@@ -25050,6 +25205,7 @@
       </trans-unit>
       <trans-unit id="timeline.divider.close" datatype="html">
         <source>clôturer</source>
+        <target state="translated">إنهاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-session-divider.component.ts</context>
           <context context-type="linenumber">157</context>
@@ -25058,6 +25214,7 @@
       </trans-unit>
       <trans-unit id="timeline.divider.closeName" datatype="html">
         <source>Clôturer la séance (onglet Séance)</source>
+        <target state="translated">إنهاء الجلسة (علامة تبويب الجلسة)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-session-divider.component.ts</context>
           <context context-type="linenumber">158</context>
@@ -25066,6 +25223,7 @@
       </trans-unit>
       <trans-unit id="timeline.session.open" datatype="html">
         <source>Ouvrir</source>
+        <target state="translated">فتح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-session-divider.component.ts</context>
           <context context-type="linenumber">159</context>
@@ -25074,6 +25232,7 @@
       </trans-unit>
       <trans-unit id="timeline.divider.running" datatype="html">
         <source>en cours depuis <x id="duration" equiv-text="duration"/></source>
+        <target state="translated">جارية منذ <x id="duration" equiv-text="duration"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-session-divider.component.ts</context>
           <context context-type="linenumber">166</context>
@@ -25082,6 +25241,7 @@
       </trans-unit>
       <trans-unit id="timeline.session.outside" datatype="html">
         <source>Hors séance</source>
+        <target state="translated">خارج الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
           <context context-type="linenumber">60,63</context>
@@ -25090,6 +25250,7 @@
       </trans-unit>
       <trans-unit id="timeline.session.entries" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {aucune entrée} =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا مُدخَلات} one {مُدخَل واحد} two {مُدخَلان} few {<x id="INTERPOLATION"/> مُدخَلات} many {<x id="INTERPOLATION"/> مُدخَلًا} other {<x id="INTERPOLATION"/> مُدخَل}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
           <context context-type="linenumber">65,68</context>
@@ -25098,6 +25259,7 @@
       </trans-unit>
       <trans-unit id="timeline.session.error" datatype="html">
         <source>Le détail de la séance n&apos;a pas pu être chargé.</source>
+        <target state="translated">تعذّر تحميل تفاصيل الجلسة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
           <context context-type="linenumber">89,90</context>
@@ -25106,6 +25268,7 @@
       </trans-unit>
       <trans-unit id="timeline.session.outsideNote" datatype="html">
         <source> Entrées dont la séance n&apos;est pas affichée (séance privée, ou en dehors des séances lues). </source>
+        <target state="translated"> مُدخَلات لا تظهر جلستها (جلسة خاصة، أو خارج الجلسات المقروءة). </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
           <context context-type="linenumber">101,105</context>
@@ -25114,6 +25277,7 @@
       </trans-unit>
       <trans-unit id="timeline.session.noEntries" datatype="html">
         <source> Aucune entrée rattachée pour ces filtres. </source>
+        <target state="translated"> لا مُدخَلات مرتبطة بالجلسة وفق عوامل التصفية هذه. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
           <context context-type="linenumber">127,130</context>
@@ -25122,6 +25286,7 @@
       </trans-unit>
       <trans-unit id="timeline.sessions.more" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {Afficher la séance plus ancienne} other {Afficher les <x id="INTERPOLATION"/> séances plus anciennes}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا جلسات أقدم} one {عرض الجلسة الأقدم} two {عرض الجلستين الأقدم} few {عرض <x id="INTERPOLATION"/> جلسات أقدم} many {عرض <x id="INTERPOLATION"/> جلسة أقدم} other {عرض <x id="INTERPOLATION"/> جلسة أقدم}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.html</context>
           <context context-type="linenumber">143,151</context>
@@ -25130,6 +25295,7 @@
       </trans-unit>
       <trans-unit id="timeline.sessions.list" datatype="html">
         <source>Séances, de la plus récente à la plus ancienne</source>
+        <target state="translated">الجلسات، من الأحدث إلى الأقدم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.ts</context>
           <context context-type="linenumber">161</context>
@@ -25138,6 +25304,7 @@
       </trans-unit>
       <trans-unit id="timeline.session.entriesList" datatype="html">
         <source>Entrées de la séance</source>
+        <target state="translated">مُدخَلات الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-sessions.component.ts</context>
           <context context-type="linenumber">162</context>
@@ -25146,6 +25313,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.error" datatype="html">
         <source>Résumé de la période indisponible.</source>
+        <target state="translated">ملخّص الفترة غير متاح.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.html</context>
           <context context-type="linenumber">13,14</context>
@@ -25154,6 +25322,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.emotions" datatype="html">
         <source> Émotions notées </source>
+        <target state="translated"> المشاعر المدوَّنة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.html</context>
           <context context-type="linenumber">42,45</context>
@@ -25162,6 +25331,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.emotionsHint" datatype="html">
         <source> Cliquer une émotion filtre la timeline. </source>
+        <target state="translated"> النقر على شعور يصفّي الخط الزمني. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.html</context>
           <context context-type="linenumber">66,72</context>
@@ -25170,6 +25340,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.keys" datatype="html">
         <source> Raccourcis </source>
+        <target state="translated"> الاختصارات </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.html</context>
           <context context-type="linenumber">78,82</context>
@@ -25178,6 +25349,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.keys.browse" datatype="html">
         <source>parcourir</source>
+        <target state="translated">تصفّح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.html</context>
           <context context-type="linenumber">82,84</context>
@@ -25186,6 +25358,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.keys.open" datatype="html">
         <source>ouvrir</source>
+        <target state="translated">فتح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.html</context>
           <context context-type="linenumber">84,85</context>
@@ -25194,6 +25367,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.keys.link" datatype="html">
         <source>lier</source>
+        <target state="translated">ربط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.html</context>
           <context context-type="linenumber">85,86</context>
@@ -25202,6 +25376,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.keys.mode" datatype="html">
         <source>mode</source>
+        <target state="translated">طريقة العرض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.html</context>
           <context context-type="linenumber">86,88</context>
@@ -25210,6 +25385,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.keys.zoom" datatype="html">
         <source>zoom</source>
+        <target state="translated">التكبير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.html</context>
           <context context-type="linenumber">88,89</context>
@@ -25218,6 +25394,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.keys.all" datatype="html">
         <source>tout</source>
+        <target state="translated">الكل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.html</context>
           <context context-type="linenumber">89,92</context>
@@ -25226,6 +25403,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.entry" datatype="html">
         <source>1 entrée</source>
+        <target state="translated">مُدخَل واحد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.ts</context>
           <context context-type="linenumber">68</context>
@@ -25234,6 +25412,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.entries" datatype="html">
         <source><x id="count" equiv-text="entries"/> entrées</source>
+        <target state="translated">المُدخَلات: <x id="count" equiv-text="entries"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.ts</context>
           <context context-type="linenumber">69</context>
@@ -25242,6 +25421,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.noSession" datatype="html">
         <source>aucune séance</source>
+        <target state="translated">لا جلسات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.ts</context>
           <context context-type="linenumber">72</context>
@@ -25250,6 +25430,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.session" datatype="html">
         <source>1 séance</source>
+        <target state="translated">جلسة واحدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.ts</context>
           <context context-type="linenumber">74</context>
@@ -25258,6 +25439,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.sessions" datatype="html">
         <source><x id="count" equiv-text="sessions"/> séances</source>
+        <target state="translated">الجلسات: <x id="count" equiv-text="sessions"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.ts</context>
           <context context-type="linenumber">75</context>
@@ -25266,6 +25448,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.period" datatype="html">
         <source>Sur la période · <x id="span" equiv-text="this.span()"/></source>
+        <target state="translated">خلال الفترة · <x id="span" equiv-text="this.span()"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.ts</context>
           <context context-type="linenumber">111</context>
@@ -25274,6 +25457,7 @@
       </trans-unit>
       <trans-unit id="timeline.side.periodNone" datatype="html">
         <source>Sur la période</source>
+        <target state="translated">خلال الفترة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-side.component.ts</context>
           <context context-type="linenumber">112</context>
