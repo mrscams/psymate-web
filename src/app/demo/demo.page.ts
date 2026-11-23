@@ -13,7 +13,13 @@ import { MatInputModule } from '@angular/material/input';
 
 import { VerificationStatus } from '../core/auth';
 import { ApiProblem, HttpNotices } from '../core/http';
-import { SubjectLabelPipe, SubjectVocabulary, toAppLocale } from '../core/i18n';
+import {
+  LocaleLink,
+  SubjectLabelPipe,
+  SubjectVocabulary,
+  switchLocales,
+  toAppLocale,
+} from '../core/i18n';
 import { ShortcutService } from '../core/shortcuts';
 import { THEME_PREFERENCES, ThemePreference, ThemeService } from '../core/theme';
 import { applyProblem, FieldErrorsComponent, fieldId, PmValidators } from '../shared/forms';
@@ -94,7 +100,10 @@ export class DemoPage {
   protected readonly entryTypes = ENTRY_TYPES;
   protected readonly entryTypeLabel = entryTypeLabel;
   protected readonly switchLang = this.locale === 'fr' ? 'en' : 'fr';
-  protected readonly switchHref = `/${this.switchLang}/_demo`;
+  protected readonly localeLinks: LocaleLink[] = switchLocales(this.locale).map((locale) => ({
+    locale,
+    href: `/${locale}/_demo`,
+  }));
 
   protected readonly verificationStatus = signal<VerificationStatus>('under_review');
   protected readonly sessionCurrent = signal(false);

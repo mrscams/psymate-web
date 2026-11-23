@@ -117,10 +117,10 @@ export const PreferencesStore = signalStore(
       };
 
       /**
-       * Suit la langue du compte, si elle est proposée. Une langue que le contrat admet mais
-       * qu'aucun sélecteur ne propose encore (ar, Q80) est gardée telle quelle dans les valeurs,
-       * sans navigation : on reste dans le bundle courant, sans repli forcé vers /fr/. M16-29
-       * (ouverture de l'arabe) lèvera la condition en ajoutant ar à OFFERED_LOCALES.
+       * Suit la langue du compte, si elle est proposée : depuis l'ouverture de l'arabe (M16-29,
+       * Q80), fr, en et ar, donc toute langue que le contrat admet. La condition reste pour une
+       * langue future, construite avant d'être proposée (comme ar pendant le jalon M16) : elle est
+       * gardée telle quelle dans les valeurs, sans navigation, sans repli forcé vers /fr/.
        */
       const followLocale = (locale: AppLocale): void => {
         if ((OFFERED_LOCALES as readonly AppLocale[]).includes(locale)) {

@@ -29,20 +29,27 @@ function links(baseHref: string) {
   return result;
 }
 
-describe('PublicMeta : URL canonique et alternatives de langue (M16-08, G Q80)', () => {
+describe('PublicMeta : URL canonique et alternatives de langue (M16-08, M16-29, G Q80)', () => {
   const ALTERNATES = [
     ['fr', '/fr/comment-ca-marche'],
     ['en', '/en/comment-ca-marche'],
+    ['ar', '/ar/comment-ca-marche'],
   ];
 
   it.each([
     ['/fr/', '/fr/comment-ca-marche'],
     ['/en/', '/en/comment-ca-marche'],
-  ])('base %s : canonique %s, alternatives fr et en seulement', (base, canonical) => {
-    expect(links(base)).toEqual({ canonical, alternates: ALTERNATES });
+    ['/ar/', '/ar/comment-ca-marche'],
+    ['/ar', '/ar/comment-ca-marche'],
+    ['/app/ar/', '/app/ar/comment-ca-marche'],
+  ])('base %s : canonique %s, alternatives fr, en et ar', (base, canonical) => {
+    const alternates = base.startsWith('/app/')
+      ? ALTERNATES.map(([locale, href]) => [locale, `/app${href}`])
+      : ALTERNATES;
+    expect(links(base)).toEqual({ canonical, alternates });
   });
 
-  it('base /ar/ (construit, pas proposé) : aucun hreflang ar, canonique en français', () => {
-    expect(links('/ar/')).toEqual({ canonical: '/fr/comment-ca-marche', alternates: ALTERNATES });
+  it('base sans langue : canonique en français', () => {
+    expect(links('/').canonical).toBe('/fr/comment-ca-marche');
   });
 });

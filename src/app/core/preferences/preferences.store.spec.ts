@@ -263,13 +263,13 @@ describe('PreferencesStore', () => {
       expect(navigator.goTo).toHaveBeenCalledWith('en');
     });
 
-    it('M16-25 : une langue ar renvoyée par le serveur est gardée, sans navigation (Q80)', async () => {
+    it('M16-29 : une langue ar renvoyée par le serveur est suivie, rechargement sous /ar/ (Q80)', async () => {
       const { store, arrive, navigator } = setup({
         api: fakeServer({ ...serverPrefs, locale: 'ar' }),
       });
       await arrive();
       expect(store.values().locale).toBe('ar');
-      expect(navigator.goTo).not.toHaveBeenCalled();
+      expect(navigator.goTo).toHaveBeenCalledWith('ar');
     });
 
     it('M16-25 : une langue proposée (en) est suivie comme avant', async () => {
@@ -393,6 +393,28 @@ describe('PreferencesStore', () => {
       await arrive();
       await store.set('locale', 'en');
       expect(navigator.goTo).toHaveBeenCalledWith('en');
+    });
+
+    it('M16-29 : choisir l’arabe enregistre ar (PATCH, réponse du serveur) puis recharge sous /ar/', async () => {
+      const { store, arrive, navigator, api } = setup();
+      await arrive();
+      await store.set('locale', 'ar');
+      expect(api.patch).toHaveBeenCalledWith({ locale: 'ar' }, expect.anything());
+      expect(store.locale()).toBe('ar');
+      expect(navigator.goTo).toHaveBeenCalledWith('ar');
+    });
+
+    it('M16-29 : la navigation suit la réponse du serveur, pas la valeur demandée', async () => {
+      const api = {
+        get: vi.fn(async () => ({ ...serverPrefs })),
+        patch: vi.fn(async () => ({ ...serverPrefs, locale: 'fr' as const })),
+      };
+      const { store, arrive, navigator } = setup({ api });
+      await arrive();
+      await store.set('locale', 'ar');
+      expect(store.locale()).toBe('fr');
+      expect(navigator.goTo).toHaveBeenCalledWith('fr');
+      expect(navigator.goTo).not.toHaveBeenCalledWith('ar');
     });
   });
 

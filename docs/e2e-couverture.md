@@ -192,6 +192,24 @@ Un e2e par flux, sans aucun geste de pointeur (`keyboardOnly`) et avec axe-core 
 10. **Flux 10, valider un praticien.** `flux-10-admin/clavier.spec.ts:50` **(admin)**. Ce parcours n'existe que sous administrateur ; la CI n'en fournit pas et il n'a jamais été exécuté.
     - Parcours : connexion 2FA au clavier, la file, les cases « Conforme », la liste de contrôle, « Demander un complément » qui attend un message, puis « Approuver ».
 
+## Version arabe (`/ar/`, jalon M16)
+
+`e2e/arabe/` (18 specs) ouvre les écrans en `/ar/` : `<html lang="ar" dir="rtl">`, aucun défilement horizontal, axe-core sans violation (mêmes règles qu'ailleurs), rendu mesuré (boîtes, sens calculé) plutôt que déduit d'un attribut. Colonne « Arabe » des tableaux ci-dessous : la spec qui couvre l'écran en `/ar/`. L'arabe est proposé par les sélecteurs depuis M16-29 (23 novembre 2026, G Q80), sans relecture arabophone des traductions.
+
+**Parcours de B3 en `/ar/`** (`arabe/parcours.spec.ts`, M16-29), à la souris, axe-core à chaque écran, chaque écriture vérifiée sur le corps envoyé (contrat) et relue par l'API :
+
+1. **Connexion** (flux 1, sans l'inscription ni la démo) : `/ar/connexion` par les ids du formulaire, liste des patients en `/ar/`.
+2. **Créer un patient** (flux 2) : N, nom arabe, Ctrl+Entrée, dossier ouvert (`POST /api/patients` puis `GET`).
+3. **Capture en séance** (flux 3) : « Démarrer la séance », un événement, puis un ressenti (émotion, intensité 6 au clavier) lié à l'événement dans le rail ; liens relus (`GET /api/entries/{id}/links`). Ni brouillon (Ctrl+S) ni clôture.
+4. **Lier deux entrées** (flux 4) : une note, l'éditeur de lien ouvert par `?link=`, cible et type `follows`, enregistré et relu. Ni inversion ni variante graphe.
+5. **Retrouver** (flux 5) : la timeline (les trois entrées), puis / et un mot latin du titre arabe ; extrait surligné. Ni facettes, ni aperçu, ni Échap.
+6. **Vue d'ensemble** (flux 6) : projection attendue (`expect.poll`), lien « Vue d'ensemble » de la séance, courbe dessinée. Ni séance dépliée ni graphe centré.
+7. **Profil 360** (fiche 30) : état vide, une information ajoutée par le panneau, relue.
+8. **Annuaire et fiche** (flux 7, sans contact) : `/ar/annuaire`, puis la fiche du premier praticien par son nom ; sauté si l'API publique plafonne (429).
+9. **Langue** (fiche 14) : liens de la barre d'application dans les deux bundles ; préférences fr → ar (rechargé sous `/ar/` sur la même route), déconnexion, reconnexion depuis `/fr/connexion` qui revient en `/ar/`, puis ar → fr, fr → en, en → ar, ar → en.
+
+Flux 8 à 10 en `/ar/` : écrans couverts un à un (`arabe/account`, `arabe/auth`, `arabe/admin` **(admin)**), sans parcours enchaîné. Les liens de langue du bandeau public (alternatives `hreflang`, fr → ar → en → fr) : `arabe/public.spec.ts` « arabe proposé ». `arabe/parcours.spec.ts` n'a pas été joué en local par M16-29 (pas d'API sur le poste) : la CI le joue contre l'API réelle.
+
 ## Écrans V1 → axe-core, deux thèmes
 
 `accessibilite/axe-ecrans.spec.ts` passe tous les écrans en clair (`:50`, `:261`) puis en sombre (les mêmes tests, dans le bloc « thème sombre »). Les fiches publiées (`:370`) et l'administration (`:396`) demandent l'administrateur.
@@ -206,46 +224,46 @@ Six écrans par thème sont écrits mais ignorés sans administrateur, et n'ont 
 
 ### Écrans praticien
 
-| Fiche | Écran (étape du test) | Autres e2e avec axe |
-| --- | --- | --- |
-| 01 | liste des patients ; aide des raccourcis (?) | `flux-2-creer-patient/*`, `flux-1-premiere-connexion/*`, `theme/theme.spec.ts` |
-| 16 | nouveau patient, fiche patient | `flux-2-creer-patient/creer-patient.spec.ts:23` |
-| 02 / 02b | vue d'ensemble complète, vue simple | `flux-6-vue-ensemble/*` (sombre compris) |
-| 05 | barre de commande (aperçu ouvert), éditeur d'entrée (correction), nouvelle entrée (combobox des émotions ouverte) | `flux-3-saisie/*` |
-| 03 | timeline (séance dépliée) | `flux-5-timeline/*` |
-| 04 | graphe (canevas compris), liste équivalente avec détail | `flux-6-graphe/graphe.spec.ts`, `accessibilite/graphe-lecteur.spec.ts` |
-| 06 | éditeur de lien | `flux-4-lier/*` |
-| 07 | recherche | `flux-5-recherche/*` |
-| 14 | préférences, tags | `preferences/preferences.spec.ts`, `vocabulaire/*` |
-| 17 | émotions personnalisées | `vocabulaire/*` |
-| 13 | dossier professionnel | `flux-9-inscription-dossier/*` |
-| 10 | mon profil public | `flux-8-profil-public/*` |
-| 18 | compte et sécurité ; panneau 2FA (QR) | `securite/*` |
-| 19 | données et export | `export/export.spec.ts` |
-| 30 | Profil 360 : quatrième onglet (clic, touche `4`, `aria-current`, pas de bloc de saisie, hors séance et en séance ; squelette en chargement, M13-05, thème clair) | `shell/shell.spec.ts` « quatrième onglet » ; lecture, deux thèmes et sous 820 px : `profil-360/lecture.spec.ts` (M13-06) ; bouton « Ajouter au profil » sur l'onglet 4 seulement, `?ajouter=1`, ajouter, modifier, retirer (confirmation, annulation), relecture, Échap et focus rendu, patient archivé en lecture seule, axe-core panneau ouvert en clair et en sombre : `profil-360/ecriture.spec.ts` (M13-07) |
+| Fiche | Écran (étape du test) | Autres e2e avec axe | Arabe (`e2e/arabe/`) |
+| --- | --- | --- | --- |
+| 01 | liste des patients ; aide des raccourcis (?) | `flux-2-creer-patient/*`, `flux-1-premiere-connexion/*`, `theme/theme.spec.ts` | `arabe/patients.spec.ts`, `arabe/parcours.spec.ts` |
+| 16 | nouveau patient, fiche patient | `flux-2-creer-patient/creer-patient.spec.ts:23` | `arabe/patients.spec.ts` (création, modification), `arabe/parcours.spec.ts` (création) |
+| 02 / 02b | vue d'ensemble complète, vue simple | `flux-6-vue-ensemble/*` (sombre compris) | `arabe/overview.spec.ts` (deux thèmes), `arabe/parcours.spec.ts` ; 02b retirée (UX-S6) |
+| 05 | barre de commande (aperçu ouvert), éditeur d'entrée (correction), nouvelle entrée (combobox des émotions ouverte) | `flux-3-saisie/*` | `arabe/entries.spec.ts`, `arabe/capture.spec.ts`, `arabe/parcours.spec.ts` |
+| 03 | timeline (séance dépliée) | `flux-5-timeline/*` | `arabe/timeline.spec.ts`, `arabe/parcours.spec.ts` |
+| 04 | graphe (canevas compris), liste équivalente avec détail | `flux-6-graphe/graphe.spec.ts`, `accessibilite/graphe-lecteur.spec.ts` | `arabe/graph.spec.ts` |
+| 06 | éditeur de lien | `flux-4-lier/*` | `arabe/graph.spec.ts` (ouvert), `arabe/parcours.spec.ts` (enregistré) |
+| 07 | recherche | `flux-5-recherche/*` | `arabe/search.spec.ts`, `arabe/parcours.spec.ts` |
+| 14 | préférences, tags | `preferences/preferences.spec.ts`, `vocabulaire/*` | `arabe/account.spec.ts`, `arabe/parcours.spec.ts` (choix de langue) |
+| 17 | émotions personnalisées | `vocabulaire/*` | `arabe/account.spec.ts` |
+| 13 | dossier professionnel | `flux-9-inscription-dossier/*` | `arabe/account.spec.ts` |
+| 10 | mon profil public | `flux-8-profil-public/*` | `arabe/account.spec.ts` |
+| 18 | compte et sécurité ; panneau 2FA (QR) | `securite/*` | `arabe/account.spec.ts` |
+| 19 | données et export | `export/export.spec.ts` | `arabe/account.spec.ts` |
+| 30 | Profil 360 : quatrième onglet (clic, touche `4`, `aria-current`, pas de bloc de saisie, hors séance et en séance ; squelette en chargement, M13-05, thème clair) | `shell/shell.spec.ts` « quatrième onglet » ; lecture, deux thèmes et sous 820 px : `profil-360/lecture.spec.ts` (M13-06) ; bouton « Ajouter au profil » sur l'onglet 4 seulement, `?ajouter=1`, ajouter, modifier, retirer (confirmation, annulation), relecture, Échap et focus rendu, patient archivé en lecture seule, axe-core panneau ouvert en clair et en sombre : `profil-360/ecriture.spec.ts` (M13-07) | `arabe/profile360.spec.ts`, `arabe/parcours.spec.ts` |
 
 ### Pages publiques et d'authentification
 
-| Fiche | Écran (étape du test) | Autres e2e avec axe |
-| --- | --- | --- |
-| 08 | annuaire ; résultats **(admin)** | `etats/public-auth.spec.ts`, `flux-7-visiteur/*` |
-| 09 | fiche introuvable ; fiche publiée **(admin)** | `etats/public-auth.spec.ts`, `flux-7-visiteur/visiteur.spec.ts:227` |
-| 24 | comment ça marche | `flux-7-visiteur/visiteur.spec.ts:236` |
-| 11 | connexion ; bloc code 2FA | `flux-9-inscription-dossier/inscription-dossier.spec.ts:277` |
-| 12 | inscription ; erreurs (résumé et champs) | `flux-9-inscription-dossier/*` |
-| 25 | confirmation d'e-mail, lien expiré | `flux-9-confirmation/*` |
-| 26 | mot de passe oublié | `etats/public-auth.spec.ts` |
-| 27 | compte suspendu (sans session) | `compte-suspendu/compte-suspendu.spec.ts:143` |
-| 18 C | première connexion de l'administrateur (étape 1) | `securite/premiere-connexion.spec.ts:19` |
-| 31 | prise de rendez-vous publique : créneaux, coordonnées, écran d'attente (jalon M14, écrits par M14-12, PR #109) | `prise-de-rendez-vous/*` : parcours contre l'API réelle et le seed (`claire-martin` en mode manuel, `karim-haddad` en mode automatique), e-mail lu dans Mailpit, stockage et URL sans identité, clavier, axe-core deux thèmes, 390 px et zoom 200 % |
-| 32 | rendez-vous par lien : vérification, gestion, annulation (jalon M14, écrits par M14-13, PR #112) | `prise-de-rendez-vous/*` : lien de vérification et lien de gestion lus dans Mailpit, rechargement sans second rendez-vous, annulation avec confirmation, jeton absent du stockage et des URL de requête, axe-core deux thèmes |
+| Fiche | Écran (étape du test) | Autres e2e avec axe | Arabe (`e2e/arabe/`) |
+| --- | --- | --- | --- |
+| 08 | annuaire ; résultats **(admin)** | `etats/public-auth.spec.ts`, `flux-7-visiteur/*` | `arabe/public.spec.ts`, `arabe/parcours.spec.ts` |
+| 09 | fiche introuvable ; fiche publiée **(admin)** | `etats/public-auth.spec.ts`, `flux-7-visiteur/visiteur.spec.ts:227` | `arabe/public.spec.ts`, `arabe/parcours.spec.ts` |
+| 24 | comment ça marche | `flux-7-visiteur/visiteur.spec.ts:236` | `arabe/public.spec.ts` |
+| 11 | connexion ; bloc code 2FA | `flux-9-inscription-dossier/inscription-dossier.spec.ts:277` | `arabe/auth.spec.ts`, `arabe/parcours.spec.ts` |
+| 12 | inscription ; erreurs (résumé et champs) | `flux-9-inscription-dossier/*` | `arabe/auth.spec.ts` |
+| 25 | confirmation d'e-mail, lien expiré | `flux-9-confirmation/*` | `arabe/auth.spec.ts` |
+| 26 | mot de passe oublié | `etats/public-auth.spec.ts` | `arabe/auth.spec.ts` |
+| 27 | compte suspendu (sans session) | `compte-suspendu/compte-suspendu.spec.ts:143` | `arabe/auth.spec.ts` |
+| 18 C | première connexion de l'administrateur (étape 1) | `securite/premiere-connexion.spec.ts:19` | `arabe/auth.spec.ts` (première connexion) |
+| 31 | prise de rendez-vous publique : créneaux, coordonnées, écran d'attente (jalon M14, écrits par M14-12, PR #109) | `prise-de-rendez-vous/*` : parcours contre l'API réelle et le seed (`claire-martin` en mode manuel, `karim-haddad` en mode automatique), e-mail lu dans Mailpit, stockage et URL sans identité, clavier, axe-core deux thèmes, 390 px et zoom 200 % | `arabe/public.spec.ts` (créneaux, coordonnées ; pas d'écran d'attente) |
+| 32 | rendez-vous par lien : vérification, gestion, annulation (jalon M14, écrits par M14-13, PR #112) | `prise-de-rendez-vous/*` : lien de vérification et lien de gestion lus dans Mailpit, rechargement sans second rendez-vous, annulation avec confirmation, jeton absent du stockage et des URL de requête, axe-core deux thèmes | non couvert |
 
 ### Administration et états
 
-| Fiche | Écran | e2e |
-| --- | --- | --- |
-| 20, 21, 22, 28 | validation, praticiens, journal, vocabulaire **(admin)** | `flux-10-admin/*`, `etats/admin.spec.ts`, `theme/theme.spec.ts` (sombre) |
-| 29 | états vide, chargement et erreur de chaque écran ; hors ligne | `etats/*` (thème clair) |
+| Fiche | Écran | e2e | Arabe (`e2e/arabe/`) |
+| --- | --- | --- | --- |
+| 20, 21, 22, 28 | validation, praticiens, journal, vocabulaire **(admin)** | `flux-10-admin/*`, `etats/admin.spec.ts`, `theme/theme.spec.ts` (sombre) | `arabe/admin.spec.ts` **(admin)**, `arabe/libelles-catalogue.spec.ts` **(admin)** |
+| 29 | états vide, chargement et erreur de chaque écran ; hors ligne | `etats/*` (thème clair) | `arabe/socle.spec.ts` (`/_demo`, deux thèmes) |
 
 ## Zoom 200 %
 

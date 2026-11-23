@@ -341,6 +341,57 @@ describe('PreferencesPage', () => {
     expect(el.querySelectorAll('input[type=radio][name=theme]')).toHaveLength(4);
     expect(el.querySelector('select[aria-labelledby="locale-label"]')).not.toBeNull();
   });
+
+  describe('langue (M16-29, ouverture de l’arabe)', () => {
+    const select = (el: HTMLElement) =>
+      el.querySelector<HTMLSelectElement>('select[aria-labelledby="locale-label"]')!;
+
+    it('trois langues, chacune écrite dans sa langue ; l’arabe porte lang="ar" et dir="rtl"', async () => {
+      const { el } = await render(serverFor(defaultPreferences('psychologist')));
+      const options = [...select(el).options].map((option) => [
+        option.value,
+        option.text.trim(),
+        option.getAttribute('lang'),
+        option.getAttribute('dir'),
+      ]);
+      expect(options).toEqual([
+        ['fr', 'Français', null, null],
+        ['en', 'English', null, null],
+        ['ar', 'العربية', 'ar', 'rtl'],
+      ]);
+      expect(select(el).value).toBe('fr');
+    });
+
+    it('un compte en arabe voit l’option arabe choisie', async () => {
+      const { el } = await render(
+        serverFor({ ...defaultPreferences('psychologist'), locale: 'ar' }),
+      );
+      expect(select(el).value).toBe('ar');
+      expect(select(el).selectedOptions[0]?.text.trim()).toBe('العربية');
+    });
+
+    it('choisir l’arabe enregistre locale = ar et recharge sous /ar/', async () => {
+      const api = serverFor(defaultPreferences('psychologist'));
+      const { fixture, el } = await render(api);
+      const navigator = TestBed.inject(LocaleNavigator);
+      select(el).value = 'ar';
+      select(el).dispatchEvent(new Event('change'));
+      await settle(fixture);
+      expect(api.patch).toHaveBeenCalledWith({ locale: 'ar' }, expect.anything());
+      expect(navigator.goTo).toHaveBeenCalledWith('ar');
+    });
+
+    it('depuis l’arabe, revenir au français enregistre locale = fr et recharge sous /fr/', async () => {
+      const api = serverFor({ ...defaultPreferences('psychologist'), locale: 'ar' });
+      const { fixture, el } = await render(api);
+      const navigator = TestBed.inject(LocaleNavigator);
+      select(el).value = 'fr';
+      select(el).dispatchEvent(new Event('change'));
+      await settle(fixture);
+      expect(api.patch).toHaveBeenCalledWith({ locale: 'fr' }, expect.anything());
+      expect(navigator.goTo).toHaveBeenCalledWith('fr');
+    });
+  });
 });
 
 // Prise de rendez-vous en ligne (M14-11, fiche 14, section du même nom).

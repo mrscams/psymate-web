@@ -292,19 +292,34 @@ describe('AppComponent', () => {
     );
   });
 
-  it('en français, propose la même page en anglais', async () => {
+  /** Liens de langue de la barre ou du bandeau : [href, hreflang, lang, dir, texte]. */
+  const localeLinks = (el: HTMLElement) =>
+    [...el.querySelectorAll<HTMLAnchorElement>('a.locale-switch')].map((link) => [
+      link.getAttribute('href'),
+      link.getAttribute('hreflang'),
+      link.getAttribute('lang'),
+      link.getAttribute('dir'),
+      link.textContent?.trim(),
+    ]);
+
+  it('en français, propose la même page en anglais, puis en arabe (M16-29)', async () => {
     const base = document.createElement('base');
     base.href = '/fr/';
     document.head.append(base);
 
     const { el } = await render('fr', { url: '/patients' });
+    // Le premier lien est celui d'avant l'ouverture de l'arabe, inchangé.
     const link = el.querySelector<HTMLAnchorElement>('a.locale-switch');
     expect(link?.getAttribute('href')).toBe('/en/patients');
     expect(link?.getAttribute('hreflang')).toBe('en');
     expect(link?.getAttribute('lang')).toBe('en');
+    expect(localeLinks(el)).toEqual([
+      ['/en/patients', 'en', 'en', 'ltr', 'English'],
+      ['/ar/patients', 'ar', 'ar', 'rtl', 'العربية'],
+    ]);
   });
 
-  it('en anglais, propose la même page en français', async () => {
+  it('en anglais, propose la même page en français, puis en arabe (M16-29)', async () => {
     const base = document.createElement('base');
     base.href = '/en/';
     document.head.append(base);
@@ -313,21 +328,22 @@ describe('AppComponent', () => {
     const link = el.querySelector<HTMLAnchorElement>('a.locale-switch');
     expect(link?.getAttribute('href')).toBe('/fr/connexion');
     expect(link?.getAttribute('hreflang')).toBe('fr');
+    expect(localeLinks(el)).toEqual([
+      ['/fr/connexion', 'fr', 'fr', 'ltr', 'Français'],
+      ['/ar/connexion', 'ar', 'ar', 'rtl', 'العربية'],
+    ]);
   });
 
-  it('en arabe (construit, pas encore proposé : Q80), le lien mène à l’anglais, jamais à l’arabe', async () => {
+  it('en arabe, propose la même page en français et en anglais (M16-29)', async () => {
     const base = document.createElement('base');
     base.href = '/ar/';
     document.head.append(base);
 
-    const { el } = await render('ar', { url: '/connexion' });
-    const links = [...el.querySelectorAll<HTMLAnchorElement>('a.locale-switch')];
-    expect(links.length).toBeGreaterThan(0);
-    for (const link of links) {
-      expect(link.getAttribute('href')).toBe('/en/connexion');
-      expect(link.getAttribute('hreflang')).toBe('en');
-    }
-    expect(el.querySelector('[hreflang="ar"]')).toBeNull();
+    const { el } = await render('ar', { url: '/patients' });
+    expect(localeLinks(el)).toEqual([
+      ['/fr/patients', 'fr', 'fr', 'ltr', 'Français'],
+      ['/en/patients', 'en', 'en', 'ltr', 'English'],
+    ]);
   });
 
   describe('UX-A10 : la page n’est créée qu’une fois', () => {

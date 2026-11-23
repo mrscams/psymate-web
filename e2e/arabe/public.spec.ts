@@ -334,28 +334,82 @@ test('prise de rendez-vous : créneaux ou « aucun créneau », chevrons retourn
   expect(sends()).toBe(0);
 });
 
-test.describe('arabe non proposé (Q80)', () => {
+test.describe('arabe proposé (Q80, ouverture M16-29)', () => {
+  /** Les autres langues du bandeau, dans l'ordre fr, en, ar, chacune écrite dans sa langue. */
+  const OTHERS = {
+    fr: [
+      ['en', 'ltr', 'English'],
+      ['ar', 'rtl', 'العربية'],
+    ],
+    en: [
+      ['fr', 'ltr', 'Français'],
+      ['ar', 'rtl', 'العربية'],
+    ],
+    ar: [
+      ['fr', 'ltr', 'Français'],
+      ['en', 'ltr', 'English'],
+    ],
+  } as const;
+
   for (const locale of ['fr', 'en', 'ar'] as const) {
-    test(`/${locale}/ : aucun hreflang="ar"${locale === 'ar' ? '' : ', aucun lien vers /ar/'}`, async ({
+    test(`/${locale}/ : alternatives fr, en, ar ; liens vers les deux autres langues`, async ({
       page,
     }) => {
       await page.goto(`/${locale}/comment-ca-marche`);
       await expect(page.locator('main h1')).toBeVisible();
-      // Les alternatives hreflang existent (fr, en), jamais l'arabe.
-      await expect(page.locator('link[rel="alternate"]').first()).toBeAttached();
-      await expect(page.locator('[hreflang="ar"]')).toHaveCount(0);
-      if (locale !== 'ar') {
-        // Ni sélecteur de langue ni lien vers le bundle arabe (en /ar/, les liens internes y mènent).
-        const toArabic = await page.evaluate(
-          () =>
-            [...document.querySelectorAll('a[href]')].filter((a) =>
-              new URL((a as HTMLAnchorElement).href).pathname.startsWith('/ar/'),
-            ).length,
+      // URL canonique dans la langue de la page ; une alternative hreflang par langue proposée.
+      const origin = new URL(page.url()).origin;
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+        'href',
+        `${origin}/${locale}/comment-ca-marche`,
+      );
+      for (const other of ['fr', 'en', 'ar']) {
+        await expect(page.locator(`link[rel="alternate"][hreflang="${other}"]`)).toHaveAttribute(
+          'href',
+          `${origin}/${other}/comment-ca-marche`,
         );
-        expect(toArabic).toBe(0);
       }
+      // Sélecteur du bandeau : un lien par autre langue, même route, lang et dir de sa langue.
+      const links = page.locator('header nav.locale a');
+      await expect(links).toHaveCount(2);
+      const seen = await links.evaluateAll((anchors) =>
+        anchors.map((a) => [
+          a.getAttribute('hreflang'),
+          a.getAttribute('lang'),
+          a.getAttribute('dir'),
+          a.textContent?.trim(),
+          new URL((a as HTMLAnchorElement).href).pathname,
+        ]),
+      );
+      expect(seen).toEqual(
+        OTHERS[locale].map(([other, dir, name]) => [
+          other,
+          other,
+          dir,
+          name,
+          `/${other}/comment-ca-marche`,
+        ]),
+      );
+      await expectNoAxeViolations(page);
     });
   }
+
+  test('/fr/ → العربية → English → Français : même route, sens de la page suivi', async ({
+    page,
+  }) => {
+    await page.goto('/fr/comment-ca-marche');
+    await expect(page.locator('main h1')).toBeVisible();
+    await page.locator('header nav.locale a[hreflang="ar"]').click();
+    await expect(page).toHaveURL(/\/ar\/comment-ca-marche$/);
+    await expectRtlPage(page);
+    await page.locator('header nav.locale a[hreflang="en"]').click();
+    await expect(page).toHaveURL(/\/en\/comment-ca-marche$/);
+    await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
+    await page.locator('header nav.locale a[hreflang="fr"]').click();
+    await expect(page).toHaveURL(/\/fr\/comment-ca-marche$/);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
+    await expectNoAxeViolations(page);
+  });
 });
 
 test.describe('messages au pluriel ICU : texte inchangé en français et en anglais', () => {

@@ -25,14 +25,13 @@
   <section class="block" aria-labelledby="h-appbar">
     <h2 id="h-appbar">1 · Barre d'application</h2>
     <p class="caption">Sans session</p>
-    <pm-app-bar [switchHref]="switchHref" [switchLang]="switchLang" />
+    <pm-app-bar [localeLinks]="localeLinks" />
     <p class="caption">Avec session, section et fil d'Ariane ; <kbd>/</kbd> ouvre la recherche</p>
     <pm-app-bar
       section="Patients"
       crumb="Marie D."
       [user]="{ displayName: 'Claire Moreau' }"
-      [switchHref]="switchHref"
-      [switchLang]="switchLang"
+      [localeLinks]="localeLinks"
     />
     <p class="caption">Bandeau d'état global (tant que le dossier n'est pas approuvé)</p>
     <div class="row">
@@ -110,7 +109,7 @@
   <section class="block" aria-labelledby="h-public">
     <h2 id="h-public">4 · Layout public</h2>
     <div class="frame">
-      <pm-public-layout [narrow]="true" [switchHref]="switchHref" [switchLang]="switchLang">
+      <pm-public-layout [narrow]="true" [localeLinks]="localeLinks">
         <h3>Connexion</h3>
         <p>Conteneur centré 480 px des formulaires publics.</p>
       </pm-public-layout>

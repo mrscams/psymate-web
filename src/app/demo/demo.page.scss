@@ -61,7 +61,7 @@ h3 {
 }
 
 .resolved {
-  margin-left: auto;
+  margin-inline-start: auto;
   font: 12px/18px var(--font-mono);
   color: var(--text-secondary);
 }
@@ -164,7 +164,7 @@ h3 {
   margin: 8px 0 16px;
 
   caption {
-    text-align: left;
+    text-align: start;
     color: var(--text-secondary);
     padding-bottom: 6px;
   }
@@ -173,7 +173,7 @@ h3 {
   td {
     padding: 6px 12px;
     border-bottom: 1px solid var(--border-subtle);
-    text-align: left;
+    text-align: start;
   }
 
   code {

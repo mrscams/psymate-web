@@ -14,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
 
-import { AppLocale } from '../../../core/i18n';
+import { LocaleLink, localeName, textDirection } from '../../../core/i18n';
 import { ShortcutService } from '../../../core/shortcuts';
 import { initials } from '../../util';
 
@@ -36,9 +36,10 @@ export const ACCOUNT_PATHS = {
 /**
  * Barre d'application du praticien (fiche 00 §1) : 48 px, logo + PsyMate, section courante, champ
  * de recherche ouvert par `/` (recherche globale, ou du dossier sur un écran patient : la feature
- * décide ce qu'elle fait de `search`), bouton de langue FR / EN, avatar avec menu (Mon compte,
- * Déconnexion). Lien « Aller au contenu » vers #main. Composant bête : la coquille lui passe la
- * session et reçoit `logout`.
+ * décide ce qu'elle fait de `search`), liens de langue (les autres langues, chacune écrite dans sa
+ * propre langue : Français, English, العربية), avatar avec menu (Mon compte, Déconnexion). Lien
+ * « Aller au contenu » vers #main. Composant bête : la coquille lui passe la session et les liens de
+ * langue, et reçoit `logout`.
  *
  * UX-S8 : avec `navigation`, un bouton ☰ à gauche du logo, visible seulement sous 900 px (le rail
  * de navigation disparaît) ; il émet `navigationToggle` et la coquille ouvre le tiroir de
@@ -57,9 +58,11 @@ export class AppBarComponent {
   /** Fil d'Ariane sous la section (nom du patient, « Recherche »). */
   readonly crumb = input<string>();
   readonly user = input<AppBarUser | null>(null);
-  /** Lien vers la même page dans l'autre langue (core/i18n localeSwitchHref). */
-  readonly switchHref = input.required<string>();
-  readonly switchLang = input.required<AppLocale>();
+  /**
+   * Liens vers la même page dans chacune des autres langues (core/i18n localeSwitchHref), dans
+   * l'ordre où les afficher ; chacun est nommé dans sa propre langue (M16-29).
+   */
+  readonly localeLinks = input.required<readonly LocaleLink[]>();
   readonly showSearch = input(true);
   /** Bouton ☰ du tiroir de navigation, sous 900 px (UX-S8). */
   readonly navigation = input(false);
@@ -81,6 +84,14 @@ export class AppBarComponent {
   protected readonly homePath = '/patients';
   protected readonly accountPath = ACCOUNT_PATHS.profile;
   protected readonly initials = computed(() => initials(this.user()?.displayName ?? ''));
+  /** Liens de langue avec leur nom et leur sens de lecture (`lang` et `dir` de la langue visée). */
+  protected readonly locales = computed(() =>
+    this.localeLinks().map((link) => ({
+      ...link,
+      name: localeName(link.locale),
+      dir: textDirection(link.locale),
+    })),
+  );
   protected readonly placeholder = computed(
     () =>
       this.searchPlaceholder() ??

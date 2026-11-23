@@ -67,14 +67,16 @@
     aria-label="Langue"
     i18n-aria-label="Étiquette de la navigation de langue@@app.localeNav.label"
   >
-    <a
-      class="locale-switch pm-link-target"
-      [href]="switchHref()"
-      [attr.hreflang]="switchLang()"
-      [attr.lang]="switchLang()"
-      i18n="Lien vers l'autre langue, écrit dans cette autre langue@@app.localeSwitch"
-      >English</a
-    >
+    @for (link of locales(); track link.locale) {
+      <a
+        class="locale-switch pm-link-target"
+        [href]="link.href"
+        [attr.hreflang]="link.locale"
+        [attr.lang]="link.locale"
+        [attr.dir]="link.dir"
+        >{{ link.name }}</a
+      >
+    }
   </nav>
 
   @if (user(); as me) {

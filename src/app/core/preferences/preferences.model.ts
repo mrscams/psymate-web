@@ -28,9 +28,8 @@ export interface Preferences {
   'timeline.groupBy': 'session' | 'month' | 'chronological';
   theme: ThemePreference;
   /**
-   * Langue du compte : fr, en ou ar (contrat 0.16.0). Une valeur ar renvoyée par le serveur est
-   * lue et gardée telle quelle ; l'écran des préférences ne propose encore que fr et en (Q80,
-   * l'arabe y entre à l'ouverture, M16-29).
+   * Langue du compte : fr, en ou ar (contrat 0.16.0), les trois proposées par l'écran des
+   * préférences depuis l'ouverture de l'arabe (Q80, M16-29).
    */
   locale: AppLocale;
   'vocabulary.subjectLabel': SubjectLabel;

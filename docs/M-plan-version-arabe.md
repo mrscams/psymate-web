@@ -162,7 +162,7 @@ Consigne de l'utilisateur, le 23 novembre 2026 : `main` des deux dépôts mis à
 3. **Fusion** : en squash, par la session orchestratrice, dès que la CI est verte et que `reviewer` n'a rien laissé de bloquant, depuis un dossier neutre (`gh pr merge <n> --squash --delete-branch --repo mrscams/<dépôt>`). L'orchestratrice relit le diff après coup et fait corriger dans la PR suivante.
 4. **Vérification toutes les dix minutes** par l'orchestratrice : tâches finies, PR vertes non fusionnées, sessions ou worktrees arrêtés ou bloqués, tâche suivante à lancer.
 5. **Ce qui n'attend plus l'utilisateur** : la relecture des décisions proposées (Q72 à Q81, Q96 à Q102), qui restent marquées « proposées, non relues » dans les deux G, et la validation du glossaire, dont les termes sont proposés par l'agent.
-6. **Le seul arrêt qui attend l'utilisateur** : l'ouverture (M16-29). Elle exige la relecture du glossaire et des traductions par une personne arabophone. Tant qu'elle n'est pas faite, `/ar/` reste construit et testé, mais aucun sélecteur de langue ne le propose.
+6. **Le seul arrêt qui attend l'utilisateur** : l'ouverture (M16-29). Elle exigeait la relecture du glossaire et des traductions par une personne arabophone ; tant qu'elle n'était pas faite, `/ar/` restait construit et testé, mais aucun sélecteur de langue ne le proposait. **Levé par l'utilisateur le 23 novembre 2026** : informé que personne n'avait relu le glossaire ni les traductions, il a ordonné « Lance le M16-29. ». L'ouverture se fait donc sans relecture arabophone (G Q80) ; la relecture reste à faire après coup, et ses corrections passeront par une tâche de traduction.
 7. **Arrêt sur blocage réel seulement** : CI rouge non expliquée, conflit non trivial, infrastructure tombée, décision produit à prendre. L'orchestratrice le dit alors clairement.
 
 Phrase de lancement d'une tâche (dans le dépôt de la tâche) : « Exécute la tâche M16-NN : ton prompt est le bloc M16-NN de `docs/M-plan-version-arabe.md` ; applique aussi M4.3 (API) ou M4.4 (tâches de feature), et M4.5 pour la fin de tâche. »
@@ -904,7 +904,7 @@ Avant chaque fusion : sous-agent `reviewer` dans la session de la tâche, CI ver
 2. Les captures françaises existantes : inchangées. Une tâche M16 ne modifie jamais le rendu de `/fr/` ni de `/en/`.
 3. Pour une tâche de traduction (M16-04, M16-26 à M16-28) : la liste des messages incertains, gardée pour le relecteur arabophone.
 
-Avant l'ouverture (M16-29) : relecture du glossaire et des traductions par une personne arabophone, idéalement un clinicien, sur écran et sur un dossier de démonstration. C'est le seul point du jalon qui attend l'utilisateur.
+Avant l'ouverture (M16-29) : relecture du glossaire et des traductions par une personne arabophone, idéalement un clinicien, sur écran et sur un dossier de démonstration. C'est le seul point du jalon qui attend l'utilisateur. Le 23 novembre 2026, l'utilisateur a levé ce préalable (M4.5 point 6, G Q80) : la relecture se fera après l'ouverture.
 
 ## M8. Second temps (proposé, à confirmer)
 
@@ -1000,7 +1000,7 @@ Livrable : PR « M16-33 Saisie libre : dates en arabe », puis pnpm progress:log
 
 ## M9. Ce qui reste ouvert
 
-- **Qui traduit, qui valide.** L'agent propose le glossaire (M16-07) et les traductions (M16-04, M16-26 à M16-28), fusionnés sans attendre. La relecture par une personne arabophone reste à organiser par l'utilisateur ; elle conditionne l'ouverture (M16-29) et rien d'autre. Si un traducteur professionnel est retenu, il corrige le fichier livré.
+- **Qui traduit, qui valide.** L'agent propose le glossaire (M16-07) et les traductions (M16-04, M16-26 à M16-28), fusionnés sans attendre. La relecture par une personne arabophone reste à organiser par l'utilisateur ; elle conditionnait l'ouverture (M16-29), que l'utilisateur a décidée sans elle le 23 novembre 2026 (G Q80) : elle se fera après coup. Si un traducteur professionnel est retenu, il corrige le fichier livré.
 - **Décisions proposées** (Q72 à Q81, Q96 à Q102, dont l'arabe standard moderne) : inscrites comme proposées, non relues par l'utilisateur.
 - **Second temps** (M8) : à confirmer, avec ce que voit le praticien en attendant.
 - **Émotions créées par un praticien** : elles n'ont qu'un libellé, rangé dans `labelFr` quelle que soit la langue de saisie. Rien ne change ici ; à renommer un jour côté API si cela gêne.

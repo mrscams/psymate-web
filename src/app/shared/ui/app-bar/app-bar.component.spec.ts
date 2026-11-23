@@ -12,8 +12,7 @@ import { AppBarComponent, AppBarUser } from './app-bar.component';
       [section]="section()"
       [crumb]="crumb()"
       [user]="user()"
-      switchHref="/en/patients"
-      switchLang="en"
+      [localeLinks]="localeLinks"
       [showSearch]="showSearch()"
       [navigation]="navigation()"
       [navigationOpen]="navigationOpen()"
@@ -26,6 +25,10 @@ import { AppBarComponent, AppBarUser } from './app-bar.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
+  readonly localeLinks = [
+    { locale: 'en', href: '/en/patients' },
+    { locale: 'ar', href: '/ar/patients' },
+  ] as const;
   readonly section = input<string>();
   readonly crumb = input<string>();
   readonly user = input<AppBarUser | null>(null);
@@ -61,6 +64,23 @@ describe('AppBarComponent', () => {
     expect(locale?.textContent).toBe('English');
     expect(el.querySelector('button.avatar')).toBeNull();
     expect(el.querySelector('header')?.querySelector('[role="search"]')).not.toBeNull();
+  });
+
+  it('M16-29 : une entrée par autre langue, nommée dans sa langue, avec lang, dir et hreflang', async () => {
+    const { el } = await render();
+    const nav = el.querySelector('nav.locale');
+    const links = [...nav!.querySelectorAll<HTMLAnchorElement>('a.locale-switch')].map((a) => [
+      a.getAttribute('href'),
+      a.getAttribute('hreflang'),
+      a.getAttribute('lang'),
+      a.getAttribute('dir'),
+      a.textContent,
+      a.classList.contains('pm-link-target'),
+    ]);
+    expect(links).toEqual([
+      ['/en/patients', 'en', 'en', 'ltr', 'English', true],
+      ['/ar/patients', 'ar', 'ar', 'rtl', 'العربية', true],
+    ]);
   });
 
   it('sans navigation : pas de bouton ☰ (habillage par défaut)', async () => {

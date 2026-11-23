@@ -98,13 +98,14 @@ test('layout public (/mentions-legales) : liens du pied et de la langue à 24 px
   await settled(page);
 
   expect(await smallTargets(page)).toEqual([]);
-  const links = ['Mentions légales', 'Confidentialité', 'Accessibilité', 'English'];
+  // M16-29 : le lien « العربية » (ouverture de l'arabe) rejoint « English » dans le bandeau.
+  const links = ['Mentions légales', 'Confidentialité', 'Accessibilité', 'English', 'العربية'];
   for (const name of links) {
     const box = await page.getByRole('link', { name, exact: true }).boundingBox();
     expect(box!.height, `hauteur de « ${name} »`).toBeGreaterThanOrEqual(24);
   }
 
-  // Témoin : sans la classe, la sonde retrouve les quatre liens du layout public.
+  // Témoin : sans la classe, la sonde retrouve les cinq liens du layout public.
   const restore = await withoutLinkTargets(page);
   const before = await smallTargets(page);
   await restore();
@@ -128,7 +129,7 @@ test('/mon-compte/emotions : liens et radios des familles à 24 px au moins', as
   await settled(page);
 
   expect(await smallTargets(page)).toEqual([]);
-  for (const name of ['Gérer mes tags', 'English', 'Voir le dossier']) {
+  for (const name of ['Gérer mes tags', 'English', 'العربية', 'Voir le dossier']) {
     const box = await page.getByRole('link', { name, exact: true }).boundingBox();
     expect(box!.height, `hauteur de « ${name} »`).toBeGreaterThanOrEqual(24);
   }
