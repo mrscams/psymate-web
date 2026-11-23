@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T14:38:38.745Z",
+  "task": "M16-14",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "features/patients de droite à gauche : propriétés logiques, locale de formatage, catalogLabel, dir auto/ltr et bdi sur le contenu saisi, messages entiers par désignation, recherche locale arabe (surlignage), e2e arabe",
+  "pr": "https://github.com/mrscams/psymate-web/pull/128",
+  "branch": "M16-14-patients-rtl",
+  "checkout": "agent-a4979b7dbc7f8a508"
+}
