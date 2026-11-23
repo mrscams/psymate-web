@@ -279,7 +279,7 @@ test('prise de rendez-vous : créneaux ou « aucun créneau », chevrons retourn
   const sends = countSends(page);
   await page.goto(`/ar/praticiens/${MANUAL}/rendez-vous`);
   const slot = page.locator('button.slot').first();
-  const none = page.locator('pm-booking-slots .empty');
+  const none = page.locator('pm-booking-slots > div.empty');
   await loaded(page, slot.or(none));
   await expectRtlPage(page);
   // Chevrons des fenêtres : retournés en RTL (« suivant » pointe vers la gauche).
