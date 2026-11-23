@@ -25593,6 +25593,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.age" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ age() }}"/> ans</source>
+        <target state="translated">العمر: <x id="INTERPOLATION" equiv-text="{{ age() }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.html</context>
           <context context-type="linenumber">20,21</context>
@@ -25601,6 +25602,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.since" datatype="html">
         <source>suivi·e depuis <x id="INTERPOLATION" equiv-text="{{ since() }}"/></source>
+        <target state="translated">بداية المتابعة: <x id="INTERPOLATION" equiv-text="{{ since() }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.html</context>
           <context context-type="linenumber">27,28</context>
@@ -25609,6 +25611,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.flags" datatype="html">
         <source>Drapeaux</source>
+        <target state="translated">علامات التنبيه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.html</context>
           <context context-type="linenumber">35,36</context>
@@ -25617,6 +25620,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.session.start" datatype="html">
         <source> Démarrer la séance </source>
+        <target state="translated"> بدء الجلسة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.html</context>
           <context context-type="linenumber">59,64</context>
@@ -25625,6 +25629,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.tabs" datatype="html">
         <source>Dossier</source>
+        <target state="translated">الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.html</context>
           <context context-type="linenumber">71</context>
@@ -25633,6 +25638,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.tab.overviewLink" datatype="html">
         <source>Vue d&apos;ensemble</source>
+        <target state="translated">نظرة عامة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.html</context>
           <context context-type="linenumber">94,100</context>
@@ -25641,6 +25647,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.tab.overview" datatype="html">
         <source>Vue d&apos;ensemble</source>
+        <target state="translated">نظرة عامة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
           <context context-type="linenumber">68</context>
@@ -25649,6 +25656,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.tab.timeline" datatype="html">
         <source>Timeline</source>
+        <target state="translated">الخط الزمني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
           <context context-type="linenumber">73</context>
@@ -25657,6 +25665,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.tab.graph" datatype="html">
         <source>Graphe</source>
+        <target state="translated">شبكة الروابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
           <context context-type="linenumber">78</context>
@@ -25665,6 +25674,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.tab.profile" datatype="html">
         <source>Profil 360</source>
+        <target state="translated">الملف الشامل 360</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
           <context context-type="linenumber">83</context>
@@ -25673,6 +25683,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.modality.inPerson" datatype="html">
         <source>cabinet</source>
+        <target state="translated">حضوريًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
           <context context-type="linenumber">91</context>
@@ -25681,6 +25692,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.modality.video" datatype="html">
         <source>visio</source>
+        <target state="translated">عبر الفيديو</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
           <context context-type="linenumber">93</context>
@@ -25689,6 +25701,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.modality.phone" datatype="html">
         <source>téléphone</source>
+        <target state="translated">عبر الهاتف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
           <context context-type="linenumber">95</context>
@@ -25697,6 +25710,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.modality.email" datatype="html">
         <source>e-mail</source>
+        <target state="translated">عبر البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
           <context context-type="linenumber">97</context>
@@ -25705,6 +25719,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.session.last" datatype="html">
         <source>Dernière séance : <x id="last" equiv-text="last"/></source>
+        <target state="translated">آخر جلسة: <x id="last" equiv-text="last"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
           <context context-type="linenumber">165</context>
@@ -25713,6 +25728,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.session.duration" datatype="html">
         <source><x id="minutes" equiv-text="minutes"/> min</source>
+        <target state="translated"><x id="minutes" equiv-text="minutes"/> د</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
           <context context-type="linenumber">172</context>
@@ -25721,6 +25737,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.error.title" datatype="html">
         <source>Impossible de charger ce dossier</source>
+        <target state="translated">تعذّر تحميل هذا الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
           <context context-type="linenumber">182</context>
@@ -25729,6 +25746,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.tab.session" datatype="html">
         <source>Séance</source>
+        <target state="translated">الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/patient-header.component.ts</context>
           <context context-type="linenumber">208</context>
@@ -25872,6 +25890,7 @@
       </trans-unit>
       <trans-unit id="patientHeader.session.close" datatype="html">
         <source>Clôturer la séance</source>
+        <target state="translated">إنهاء الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
           <context context-type="linenumber">154</context>
