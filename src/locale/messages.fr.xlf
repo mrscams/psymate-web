@@ -22504,7 +22504,7 @@
         <note priority="1" from="description">Titre de l&apos;onglet recherche</note>
       </trans-unit>
       <trans-unit id="search.scope" datatype="html">
-        <source> dans le dossier de <x id="INTERPOLATION" equiv-text="{{ patientName() }}"/> · champ de recherche en haut de page (<x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>/<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/>) </source>
+        <source> dans le dossier de <x id="START_TAG_BDI" ctype="x-bdi" equiv-text="&lt;bdi&gt;"/><x id="INTERPOLATION" equiv-text="{{ patientName() }}"/><x id="CLOSE_TAG_BDI" ctype="x-bdi" equiv-text="&lt;/bdi&gt;"/> · champ de recherche en haut de page (<x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>/<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/>) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">8,10</context>

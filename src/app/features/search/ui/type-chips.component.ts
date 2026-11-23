@@ -52,7 +52,7 @@ import { typeChipLabel } from './search-labels';
       gap: 8px;
     }
     .label {
-      margin-right: 4px;
+      margin-inline-end: 4px;
       color: var(--text-secondary);
       font: var(--mat-sys-body-medium);
     }

@@ -55,6 +55,12 @@ dd {
   font-family: var(--font-mono);
 }
 
+/* Dates à nom de mois : chasse fixe des textes, police d'interface en arabe (Q76). */
+.mono.date {
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
+}
+
 .body {
   margin: 0;
   font: var(--mat-sys-body-large);
@@ -84,7 +90,7 @@ ul {
   flex-direction: column;
   gap: 6px;
   margin: 0;
-  padding-left: 18px;
+  padding-inline-start: 18px;
   font: var(--mat-sys-body-medium);
 }
 

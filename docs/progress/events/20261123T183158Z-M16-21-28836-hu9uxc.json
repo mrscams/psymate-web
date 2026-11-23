@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T18:31:58.418Z",
+  "task": "M16-21",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "features/search de droite à gauche : propriétés logiques, formatLocale, dir=auto et bdi, terme isolé, mark sans padding en arabe, e2e/arabe/search.spec.ts",
+  "pr": "142",
+  "branch": "M16-21-search-rtl",
+  "checkout": "agent-ab36272d3a7ccbbbb"
+}

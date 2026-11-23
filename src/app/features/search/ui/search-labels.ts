@@ -1,6 +1,8 @@
-// Textes et formats de l'écran de recherche (fiche 07) : tous en $localize, dates par Intl.
+// Textes et formats de l'écran de recherche (fiche 07) : tous en $localize, dates par Intl avec la
+// locale de formatage de core/i18n (Q73 : en arabe, chiffres latins et calendrier grégorien).
 
 import { ApiProblem } from '../../../core/http';
+import { formatLocale } from '../../../core/i18n';
 import { EntryType, entryTitle } from '../../../shared/ui';
 import { formatOccurred, OccurredPrecision } from '../../../shared/util';
 import { PeriodPreset, plainText, SearchHit, SessionOption } from '../data/search.model';
@@ -59,13 +61,16 @@ export function precisionLabel(precision: OccurredPrecision): string | null {
 export function formatDay(iso: string, locale: string): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return '';
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date);
+  return new Intl.DateTimeFormat(formatLocale(locale), { dateStyle: 'medium' }).format(date);
 }
 
 export function formatDateTime(iso: string, locale: string): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return '';
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(date);
+  return new Intl.DateTimeFormat(formatLocale(locale), {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(date);
 }
 
 export function sessionLabel(session: SessionOption, locale: string): string {
@@ -110,7 +115,8 @@ export function visibilityLabel(visibility: 'private' | 'clinical'): string {
 }
 
 /**
- * Ligne de synthèse (aria-live) : nombre, requête, durée. Guillemets et pluriels dans chaque
+ * Ligne de synthèse (aria-live) : nombre, requête, durée. `text` arrive déjà isolé par l'appelant
+ * (bidi.ts, isolate) : il n'est que lu, jamais renvoyé à l'API. Guillemets et pluriels dans chaque
  * message (la langue cible choisit les siens). Les exacts viennent du plein texte sans accents ni
  * casse ; les approchés, des trigrammes.
  */
