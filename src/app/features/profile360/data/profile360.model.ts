@@ -110,7 +110,7 @@ export function groupByCategory(items: readonly ProfileItem[]): ProfileGroups {
  * l'appelant. Ce fichier n'importe pas core/i18n : il est dans le morceau du shell patient (par
  * ProfileAddComponent), et cet import y déplaçait core/i18n hors du bundle initial, au-delà du budget.
  */
-export function initialOf(title: string, locale = 'fr'): string {
+export function initialOf(title: string, locale: string): string {
   const parts = graphemesOf(title.trim(), locale);
   const letter = parts.find((part) => /\p{L}|\p{N}/u.test(part)) ?? parts[0] ?? '';
   return /\p{Script=Arabic}/u.test(letter) ? letter : letter.toLocaleUpperCase(locale);
@@ -124,10 +124,17 @@ export function initialOf(title: string, locale = 'fr'): string {
 const GRAPHEME_FALLBACK =
   /\p{RI}\p{RI}|[^\p{M}‍][\p{M}\u{1F3FB}-\u{1F3FF}\u{E0020}-\u{E007F}]*(?:‍(?:\p{RI}\p{RI}|[^\p{M}‍])?[\p{M}\u{1F3FB}-\u{1F3FF}\u{E0020}-\u{E007F}]*)*|[\s\S]/gu;
 
+/** Un découpeur par locale, créé une fois. */
+const SEGMENTERS = new Map<string, Intl.Segmenter>();
+
 /** Graphèmes du texte : Intl.Segmenter dans la locale reçue, sinon le repli ci-dessus. */
 function graphemesOf(text: string, locale: string): string[] {
   if (typeof Intl.Segmenter === 'function') {
-    const segmenter = new Intl.Segmenter(locale, { granularity: 'grapheme' });
+    let segmenter = SEGMENTERS.get(locale);
+    if (!segmenter) {
+      segmenter = new Intl.Segmenter(locale, { granularity: 'grapheme' });
+      SEGMENTERS.set(locale, segmenter);
+    }
     return Array.from(segmenter.segment(text), (part) => part.segment);
   }
   return text.match(GRAPHEME_FALLBACK) ?? [];

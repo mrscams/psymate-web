@@ -42,6 +42,15 @@ describe('ProfileRubricComponent, version arabe (M16-22)', () => {
     });
   }
 
+  it('la locale du bundle est transmise à la pastille (i turc : İ en tr, I en fr)', () => {
+    const titles = [profileItem('family', 'ilker, frère')];
+    const turkish = render('family', titles, 'tr');
+    expect(turkish.querySelector('li .av')?.textContent?.trim()).toBe('İ');
+    TestBed.resetTestingModule();
+    const french = render('family', titles, 'fr');
+    expect(french.querySelector('li .av')?.textContent?.trim()).toBe('I');
+  });
+
   it('titre et détail en dir="auto", en modification comme en lecture seule', () => {
     for (const editable of [true, false]) {
       const el = render('health', [ARABIC_FAMILY, LATIN_FAMILY], 'ar', editable);

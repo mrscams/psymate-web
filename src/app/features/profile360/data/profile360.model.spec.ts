@@ -36,10 +36,10 @@ describe('profile360.model', () => {
   });
 
   it('initialOf : première lettre du titre, en capitale, guillemets ignorés', () => {
-    expect(initialOf('Thomas, compagnon')).toBe('T');
-    expect(initialOf('« hélène », sa mère')).toBe('H');
-    expect(initialOf('élodie')).toBe('É');
-    expect(initialOf('…')).toBe('…');
+    expect(initialOf('Thomas, compagnon', 'fr')).toBe('T');
+    expect(initialOf('« hélène », sa mère', 'fr')).toBe('H');
+    expect(initialOf('élodie', 'fr')).toBe('É');
+    expect(initialOf('…', 'fr')).toBe('…');
   });
 
   it('countLabel : « 1 information », « 6 informations »', () => {
