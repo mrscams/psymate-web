@@ -116,14 +116,10 @@ export class CloseSessionPanel {
   protected readonly fromPlanned = this.elapsed > this.data.unclosedAfterMin;
 
   protected readonly title = $localize`:Titre du panneau de clôture@@patientShell.close.title:Clôturer la séance`;
+  /** Nom du patient en tête du sous-titre, isolé par pm-side-panel (Q77). */
+  protected readonly subject = this.session ? this.store.patient()?.displayName || null : null;
   protected readonly subtitle = this.session
-    ? closePanelSubtitle(
-        this.store.patient()?.displayName ?? '',
-        this.session.startedAt,
-        this.session.modality,
-        this.locale,
-        this.now,
-      )
+    ? closePanelSubtitle(this.session.startedAt, this.session.modality, this.locale, this.now)
     : null;
 
   protected readonly form = new FormGroup({
