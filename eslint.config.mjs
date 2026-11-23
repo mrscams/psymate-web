@@ -176,6 +176,34 @@ export default defineConfig([
     },
   },
 
+  // Paquet initial (M16-09B) : les fichiers du graphe initial importent shared/ui par chemin direct.
+  // Le barrel y ferait entrer tout ce qu'il réexporte et qui sert ailleurs (Material, formulaires,
+  // en-tête patient : 999,85 kB au lieu de 801,62 kB, budget d'erreur 1 MB).
+  {
+    files: [
+      'src/app/app.component.ts',
+      'src/app/features/patient-shell/shortcuts-help.ts',
+      'src/app/features/patient-shell/data/patient-shell.api.ts',
+      'src/app/features/search/data/search.model.ts',
+      'tools/eslint/fixtures/src/app/app.component.ts',
+    ],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: '(^|/)shared/ui(/index)?$',
+              allowTypeImports: true,
+              message:
+                "Fichier du paquet initial : importer shared/ui par chemin direct (ex. './shared/ui/app-bar/app-bar.component'), pas par son barrel, qui tire dans le paquet initial tout ce qu'il réexporte (voir app.component.ts, M16-09B).",
+            },
+          ],
+        },
+      ],
+    },
+  },
+
   // Feuilles de style lues comme du texte par les règles psymate (ESLint ne sait pas lire le SCSS).
   {
     files: ['src/**/*.{scss,css}', 'tools/eslint/fixtures/src/**/*.{scss,css}'],

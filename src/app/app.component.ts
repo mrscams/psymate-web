@@ -27,17 +27,20 @@ import { localeSwitchHref, switchLocales, toAppLocale } from './core/i18n';
 import { ShortcutsHelpComponent } from './features/patient-shell';
 import { DossierSearchBar } from './features/search';
 import { ThemeService } from './core/theme';
-import {
-  AdminBarComponent,
-  AppBarComponent,
-  NavDrawerService,
-  NavRailComponent,
-  NetworkBannerComponent,
-  PublicFooterComponent,
-  PublicHeaderComponent,
-  ToastOutletComponent,
-  VerificationBannerComponent,
-} from './shared/ui';
+// Paquet initial (M16-09B) : ici et dans les fichiers du graphe initial (index de features importés
+// par cette coquille), shared/ui s'importe par chemin direct, jamais par le barrel './shared/ui'.
+// esbuild place dans le paquet initial tout fichier que le barrel réexporte et qui sert ailleurs,
+// même si ce fichier n'en utilise rien : Material, formulaires, en-tête patient… Mesure : 999,85 kB
+// avec le barrel, 801,62 kB sans (budget d'erreur 1 MB). Règle ESLint dans eslint.config.mjs.
+import { AdminBarComponent } from './shared/ui/admin-bar/admin-bar.component';
+import { AppBarComponent } from './shared/ui/app-bar/app-bar.component';
+import { NavDrawerService } from './shared/ui/nav-rail/nav-drawer.service';
+import { NavRailComponent } from './shared/ui/nav-rail/nav-rail.component';
+import { PublicFooterComponent } from './shared/ui/public-layout/public-footer.component';
+import { PublicHeaderComponent } from './shared/ui/public-layout/public-header.component';
+import { NetworkBannerComponent } from './shared/ui/status-banner/network-banner.component';
+import { VerificationBannerComponent } from './shared/ui/status-banner/verification-banner.component';
+import { ToastOutletComponent } from './shared/ui/toast/toast-outlet.component';
 
 /**
  * Habillage d'une route, porté par `data.layout` (hérité des parents) :

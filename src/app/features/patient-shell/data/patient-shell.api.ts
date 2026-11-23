@@ -17,7 +17,8 @@ import {
   VueDensembleService,
 } from '../../../api';
 import { isApiProblem } from '../../../core/http';
-import { ENTRY_TYPES, EntryType } from '../../../shared/ui';
+// Graphe du paquet initial : shared/ui par chemin direct, pas par le barrel (voir app.component.ts).
+import { ENTRY_TYPES, EntryType } from '../../../shared/ui/entry-icon/entry-icon.component';
 import {
   CloseSessionInput,
   ContactInput,

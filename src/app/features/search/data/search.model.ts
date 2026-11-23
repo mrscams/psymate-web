@@ -1,7 +1,8 @@
 // Modèles de vue de features/search (handbook §2, couche 4 → 3) : la recherche dans le dossier
 // (fiche 07) telle que l'écran la lit, préparée depuis les DTO par data/search.api.ts.
 
-import { ENTRY_TYPES, EntryType } from '../../../shared/ui';
+// Graphe du paquet initial : shared/ui par chemin direct, pas par le barrel (voir app.component.ts).
+import { ENTRY_TYPES, EntryType } from '../../../shared/ui/entry-icon/entry-icon.component';
 import { OccurredPrecision } from '../../../shared/util';
 
 /** La recherche ne part qu'à partir de 2 caractères (fiche 07). */

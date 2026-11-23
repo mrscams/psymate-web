@@ -9,7 +9,8 @@ import {
 import { Router } from '@angular/router';
 
 import { globalShortcuts, ShortcutService } from '../../core/shortcuts';
-import { SidePanelRef, SidePanelService } from '../../shared/ui';
+// Graphe du paquet initial : shared/ui par chemin direct, pas par le barrel (voir app.component.ts).
+import { SidePanelRef, SidePanelService } from '../../shared/ui/side-panel/side-panel.service';
 import type { ShortcutsHelpData } from './panels/shortcuts-help.panel';
 import { HelpRow, helpRows } from './ui/shortcuts-help.model';
 
