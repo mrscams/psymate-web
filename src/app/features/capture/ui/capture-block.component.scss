@@ -33,14 +33,14 @@
 }
 
 .lbl {
-  margin-right: 4px;
+  margin-inline-end: 4px;
   color: var(--text-secondary);
   font: var(--mat-sys-body-medium);
   font-size: 12.5px;
 }
 
 .note-r {
-  margin-left: auto;
+  margin-inline-start: auto;
   color: var(--text-secondary);
   font: var(--mat-sys-label-medium);
 }
@@ -78,11 +78,6 @@
     background: var(--feeling-tint);
     color: var(--feeling-text);
   }
-
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-  }
 }
 
 .text {
@@ -109,6 +104,11 @@
   &::placeholder {
     color: var(--text-secondary);
     opacity: 1;
+  }
+
+  /* Vide, dir="auto" donnerait ltr : le texte indicatif suit le sens de la page. */
+  &:placeholder-shown {
+    direction: inherit;
   }
 }
 
@@ -220,7 +220,7 @@
 }
 
 .keys {
-  margin-right: auto;
+  margin-inline-end: auto;
   color: var(--text-secondary);
   font: var(--mat-sys-label-small);
   white-space: nowrap;
@@ -247,11 +247,6 @@
   &:hover {
     color: var(--primary-hover);
     text-decoration: underline;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
   }
 }
 
@@ -283,11 +278,14 @@
     opacity: 0.45;
     cursor: default;
   }
+}
 
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-  }
+/* Anneau de focus des puces, de Détailler et d'Enregistrer. */
+.tchip:focus-visible,
+.detail:focus-visible,
+.save:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 .alert {

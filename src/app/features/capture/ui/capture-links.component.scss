@@ -12,7 +12,7 @@
 }
 
 .lbl {
-  margin-right: 4px;
+  margin-inline-end: 4px;
   color: var(--text-secondary);
   font: var(--mat-sys-body-medium);
 }
@@ -53,7 +53,8 @@
 
 /* Puce pressée : le verbe (liste) puis la cible (bouton qui retire le lien). */
 .tchip.pressed {
-  padding: 0 4px 0 10px;
+  padding-block: 0;
+  padding-inline: 10px 4px;
   border-color: var(--primary);
   background: var(--primary-tint);
   color: var(--primary-hover);
@@ -109,7 +110,7 @@
 }
 
 .other {
-  margin-left: 4px;
+  margin-inline-start: 4px;
   padding: 2px 4px;
   border: 0;
   border-radius: 6px;
@@ -134,7 +135,7 @@
 .search {
   position: absolute;
   top: calc(100% + 6px);
-  left: 0;
+  inset-inline-start: 0;
   z-index: 30;
   box-sizing: border-box;
   width: min(520px, calc(100vw - 48px));
@@ -143,6 +144,10 @@
   border-radius: 10px;
   background: var(--surface-raised);
   box-shadow: 0 8px 24px var(--scrim);
+}
+
+.search-field:placeholder-shown {
+  direction: inherit;
 }
 
 .search-field {
@@ -175,7 +180,7 @@
     background: transparent;
     color: var(--text-primary);
     font: var(--mat-sys-body-medium);
-    text-align: left;
+    text-align: start;
     cursor: pointer;
 
     &:hover,
@@ -210,7 +215,7 @@
 }
 
 .note-r {
-  margin-left: auto;
+  margin-inline-start: auto;
   color: var(--text-secondary);
   font: var(--mat-sys-label-medium);
 }

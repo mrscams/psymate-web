@@ -2,7 +2,7 @@
 // comparaison (foldDateWord : minuscules, sans accents, sans élision). Ce sont des données d'analyse,
 // pas des textes affichés.
 
-import type { GrammarLanguage } from './normalize';
+import type { DateLanguage } from './normalize';
 
 export type TimeUnit = 'minute' | 'hour' | 'day' | 'week' | 'month' | 'year';
 
@@ -285,7 +285,8 @@ const EN: DateLexicon = {
   ],
 };
 
-export const LEXICONS: Readonly<Record<GrammarLanguage, DateLexicon>> = { fr: FR, en: EN };
+/** Une grammaire de dates par langue ; l'arabe n'en a pas (Q81) : sa barre ne lit aucune date. */
+export const LEXICONS: Readonly<Record<DateLanguage, DateLexicon>> = { fr: FR, en: EN };
 
 const ALL = Object.values(LEXICONS);
 

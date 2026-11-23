@@ -3,7 +3,8 @@ import type { EntryType } from '../../../shared/ui';
 import type { OccurredPrecision } from '../../../shared/util';
 import { matchEmotion } from './emotion-match';
 import { CAPTURE_PREFIXES, parse } from './parse';
-import { CASE_EMOTIONS, CASE_OPTIONS, caseOptions, PARSE_CASES } from './parse.cases';
+import { grammarLanguage } from './normalize';
+import { CASE_EMOTIONS, CASE_NOW, CASE_OPTIONS, caseOptions, PARSE_CASES } from './parse.cases';
 import type { CaptureEntryType, CapturePrecision } from './parse.types';
 import { BLOCKING_WARNINGS, INTENSITY_MAX, INTENSITY_MIN, PARSE_HINTS } from './parse.types';
 
@@ -11,6 +12,9 @@ import { BLOCKING_WARNINGS, INTENSITY_MAX, INTENSITY_MIN, PARSE_HINTS } from './
 // déjà employées par l'application (EntryType, OccurredPrecision).
 const typeIsContractValue: (type: CaptureEntryType) => EntryType = (type) => type;
 const precisionIsContractValue: (precision: CapturePrecision) => OccurredPrecision = (p) => p;
+
+/** Avertissements de l'étape des dates. */
+const DATE_WARNINGS = ['AMBIGUOUS_DATE', 'INVALID_DATE', 'FUTURE_DATE', 'INVALID_TIME_ZONE'];
 
 describe('parse — table de phrases', () => {
   it('couvre au moins 40 phrases', () => {
@@ -305,5 +309,55 @@ describe('parse — cas ciblés', () => {
     expect(at('/note yesterday', { locale: 'eng' }).dateExpression).toBe('yesterday');
     expect(at('/note hier', { locale: 'enfr' }).dateExpression).toBe('hier');
     expect(at('/note hier', { locale: '' }).dateExpression).toBe('hier');
+  });
+});
+
+describe('parse — arabe (Q81, M16-20)', () => {
+  const arabicCases = PARSE_CASES.filter((parseCase) =>
+    (parseCase.options?.locale ?? '').startsWith('ar'),
+  );
+
+  it('les cas arabes ne produisent aucune date', () => {
+    expect(arabicCases.length).toBeGreaterThanOrEqual(15);
+    for (const parseCase of arabicCases) {
+      const result = parse(parseCase.input, caseOptions(parseCase));
+      expect(result.occurred, parseCase.rule).toEqual({
+        from: CASE_NOW.toISOString(),
+        precision: 'exact',
+      });
+      expect(result.dateExpression, parseCase.rule).toBeUndefined();
+      const codes = result.warnings.map((warning) => warning.code);
+      for (const code of DATE_WARNINGS) expect(codes, parseCase.rule).not.toContain(code);
+      expect(codes, parseCase.rule).not.toContain('UNKNOWN_EMOTION');
+    }
+  });
+
+  it('chaque saisie française ou anglaise datée de la table reste sans date en arabe', () => {
+    const dated = PARSE_CASES.filter((parseCase) => parseCase.expected.dateExpression);
+    expect(dated.length).toBeGreaterThan(30);
+    for (const parseCase of dated) {
+      for (const locale of ['ar', 'ar-EG', 'ar-u-ca-gregory-hc-h23-nu-latn']) {
+        const result = parse(parseCase.input, { ...caseOptions(parseCase), locale });
+        expect(result.dateExpression, `${locale} ${parseCase.input}`).toBeUndefined();
+        expect(result.occurred.precision, `${locale} ${parseCase.input}`).toBe('exact');
+      }
+    }
+  });
+
+  it('même saisie arabe : les grammaires française et anglaise restent ce qu’elles étaient', () => {
+    // Le garde-fou arabe ne touche pas les autres langues : la date ISO est lue en français.
+    expect(parse('/sit ضغط منذ 2024-03-12', CASE_OPTIONS).dateExpression).toBe('2024-03-12');
+    expect(parse('قلق 7', CASE_OPTIONS).warnings[0].code).toBe('UNKNOWN_EMOTION');
+  });
+
+  it('langue de grammaire arabe : sous-étiquette primaire', () => {
+    expect(grammarLanguage('ar')).toBe('ar');
+    expect(grammarLanguage('ar-EG')).toBe('ar');
+    expect(grammarLanguage('AR_SA')).toBe('ar');
+    expect(grammarLanguage('ara')).toBe('ar');
+    expect(grammarLanguage('ar-u-ca-gregory-hc-h23-nu-latn')).toBe('ar');
+    expect(grammarLanguage('arn')).toBe('fr');
+    expect(grammarLanguage('fr')).toBe('fr');
+    expect(grammarLanguage('en-GB')).toBe('en');
   });
 });

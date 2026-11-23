@@ -1,5 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  LOCALE_ID,
+  output,
+} from '@angular/core';
 
+import { textDirection } from '../../../core/i18n';
 import { INTENSITY_MAX, INTENSITY_MIN } from '../parser/parse.types';
 
 /** Délai pour taper « 1 » puis « 0 » et obtenir 10. */
@@ -10,7 +19,9 @@ const TEN_DELAY_MS = 900;
  * de 1 à 10 en teinte ressenti, la valeur en JetBrains Mono à droite (« 7/10 »). Un seul élément
  * focalisable, `role="slider"` de 0 à 10 (bornes du contrat) : ← → ↑ ↓ ±1, Début / Fin, et les
  * chiffres (« 8 » donne 8, « 1 » puis « 0 » donne 10). Sans valeur : « non renseignée », aucune
- * case allumée. Lavande réservée au ressenti.
+ * case allumée. Lavande réservée au ressenti. En arabe (docs/design/arabe.md §3 et §6) : les cases
+ * suivent le sens de lecture, la case 1 à droite ; flèche gauche augmente, flèche droite diminue ;
+ * haut, bas, Début, Fin et les valeurs aria ne changent pas. La valeur « 7/10 » reste en `dir="ltr"`.
  */
 @Component({
   selector: 'pm-capture-scale',
@@ -38,7 +49,7 @@ const TEN_DELAY_MS = 900;
         ></i>
       }
     </div>
-    <span class="value" aria-hidden="true">
+    <span class="value" dir="ltr" aria-hidden="true">
       @if (value() === null) {
         <span class="unset">—</span>
       } @else {
@@ -105,6 +116,10 @@ export class CaptureIntensityScaleComponent {
 
   readonly changed = output<number>();
 
+  /** Flèche qui augmente la valeur : celle qui va vers la fin de la ligne (vers la gauche en RTL). */
+  private readonly increaseKey =
+    textDirection(inject(LOCALE_ID)) === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+
   protected readonly min = INTENSITY_MIN;
   protected readonly max = INTENSITY_MAX;
   protected readonly cells = Array.from({ length: INTENSITY_MAX }, (_, i) => i + 1);
@@ -129,12 +144,18 @@ export class CaptureIntensityScaleComponent {
     if (event.ctrlKey || event.metaKey || event.altKey) return;
     const current = this.value();
     let next: number | null = null;
-    switch (event.key) {
-      case 'ArrowRight':
+    const key =
+      event.key === 'ArrowLeft' || event.key === 'ArrowRight'
+        ? event.key === this.increaseKey
+          ? 'increase'
+          : 'decrease'
+        : event.key;
+    switch (key) {
+      case 'increase':
       case 'ArrowUp':
         next = (current ?? 0) + 1;
         break;
-      case 'ArrowLeft':
+      case 'decrease':
       case 'ArrowDown':
         next = (current ?? 1) - 1;
         break;
