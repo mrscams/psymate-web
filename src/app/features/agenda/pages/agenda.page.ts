@@ -500,8 +500,12 @@ export class AgendaPage {
         ? $localize`:Toast après une création de plusieurs rendez-vous avec un chevauchement@@agenda.toast.createdManyOverlap:${count}:count: rendez-vous planifiés, 1 chevauchement`
         : $localize`:Toast après une création, plusieurs rendez-vous@@agenda.toast.createdMany:${count}:count: rendez-vous planifiés`;
     }
-    // Un seul rendez-vous créé : au plus un chevauchement (le compte porte sur les rendez-vous créés).
-    return overlaps > 0
+    // Le compte porte sur les rendez-vous existants chevauchés (ConflictDto.appointmentId) : un seul
+    // rendez-vous créé peut en chevaucher plusieurs.
+    if (overlaps > 1) {
+      return $localize`:Toast après une création d'un rendez-vous avec chevauchements@@agenda.toast.createdOneOverlaps:Rendez-vous planifié, ${overlaps}:overlaps: chevauchements`;
+    }
+    return overlaps === 1
       ? $localize`:Toast après une création d'un rendez-vous avec un chevauchement@@agenda.toast.createdOneOverlap:Rendez-vous planifié, 1 chevauchement`
       : $localize`:Toast après une création, un rendez-vous@@agenda.toast.createdOne:Rendez-vous planifié`;
   }

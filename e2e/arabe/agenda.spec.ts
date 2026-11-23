@@ -129,21 +129,27 @@ async function createAppointment(
   );
 }
 
-test.beforeAll(async ({ browser }) => {
+test.beforeAll(async ({ browser }, testInfo) => {
   test.setTimeout(180_000);
   api = await playwrightRequest.newContext();
   account = await createAccount(api, 'm16-23.agenda', 'psychologist');
   const claire = await createPatient(LATIN_NAME);
   const ahmed = await createPatient(ARABIC_NAME);
-  await createAppointment(claire, at(0, 9));
+  await createAppointment(claire, at(0, 9), { planningNote: 'Apporter le carnet du soir' });
   await createAppointment(ahmed, at(0, 14), {
     modality: 'video',
     planningNote: 'إحضار دفتر المساء',
   });
   await createAppointment(claire, at(1, 10), { tentative: true });
   await createAppointment(ahmed, at(3, 11), { modality: 'phone' });
-  // Contexte créé par le fixture browser : baseURL, locale et fuseau du projet.
-  context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+  // Page partagée : mêmes réglages que la configuration (adresse, langue, fuseau du navigateur).
+  // Contexte créé explicitement : axe-core refuse une page ouverte par browser.newPage().
+  context = await browser.newContext({
+    baseURL: testInfo.project.use.baseURL,
+    locale: testInfo.project.use.locale,
+    timezoneId: testInfo.project.use.timezoneId,
+    viewport: { width: 1440, height: 1000 },
+  });
   page = await context.newPage();
   await signIn(page, account);
 });
@@ -325,6 +331,18 @@ test('détail du rendez-vous : à gauche de la grille, nom et note dans leur sen
   expect(await direction('.identity .name')).toBe('rtl');
   expect(await direction('textarea')).toBe('rtl');
   await shoot(page, 'arabe-agenda-detail');
+
+  // dir="auto" : un nom et une note en lettres latines se lisent de gauche à droite dans la page rtl.
+  await page
+    .locator('pm-agenda-calendar a.fc-timegrid-event')
+    .filter({ hasText: LATIN_NAME })
+    .filter({ hasText: '09:00' })
+    .first()
+    .click();
+  await expect(detail.locator('.identity .name')).toHaveText(LATIN_NAME);
+  await expect(detail.locator('textarea')).toHaveValue('Apporter le carnet du soir');
+  expect(await direction('.identity .name')).toBe('ltr');
+  expect(await direction('textarea')).toBe('ltr');
 });
 
 test('nouveau rendez-vous : panneau à gauche, récurrence, chevauchement de gauche à droite', async () => {
