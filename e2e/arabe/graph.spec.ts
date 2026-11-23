@@ -1,5 +1,6 @@
 import {
   APIRequestContext,
+  BrowserContext,
   expect,
   Page,
   request as playwrightRequest,
@@ -29,6 +30,7 @@ import { shoot } from '../support/captures';
 
 let api: APIRequestContext;
 let folder: SmallFolder;
+let context: BrowserContext;
 let page: Page;
 
 test.describe.configure({ mode: 'serial', timeout: 90_000 });
@@ -39,18 +41,20 @@ test.beforeAll(async ({ browser }, testInfo) => {
   const account = await createAccount(api, 'm16-18.graphe', 'psychologist');
   folder = await smallFolder(api);
   // Page partagée par la suite : mêmes réglages que la configuration (adresse, langue du navigateur).
-  page = await browser.newPage({
+  // Contexte créé explicitement : axe-core refuse une page ouverte par browser.newPage().
+  context = await browser.newContext({
     baseURL: testInfo.project.use.baseURL,
     locale: testInfo.project.use.locale,
     viewport: { width: 1440, height: 900 },
   });
+  page = await context.newPage();
   await enableProbe(page);
   // Connexion en /fr/ (libellés connus), puis /ar/ : la session garde le bundle de l'URL.
   await signIn(page, account);
 });
 
 test.afterAll(async () => {
-  await page?.close();
+  await context?.close();
   await api?.dispose();
 });
 
