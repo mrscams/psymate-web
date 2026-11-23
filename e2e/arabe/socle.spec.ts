@@ -37,6 +37,18 @@ async function useTheme(page: Page, theme: (typeof THEMES)[number]): Promise<voi
   await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
 }
 
+/**
+ * Thème d'un compte connecté : la préférence `theme` du compte (`light` par défaut,
+ * core/preferences) l'emporte sur prefers-color-scheme, qui ne joue que pour `system`. Posée par
+ * l'API dans la session du navigateur, puis page rechargée et vérifiée sur <html data-theme>.
+ */
+async function useAccountTheme(page: Page, theme: (typeof THEMES)[number]): Promise<void> {
+  const response = await page.request.patch('/api/me/preferences', { data: { theme } });
+  expect(response.status(), await response.text()).toBe(200);
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+}
+
 /** Boîte d'un élément, rendue. */
 async function boxOf(page: Page, selector: string) {
   const box = await page.locator(selector).first().boundingBox();
@@ -255,7 +267,8 @@ test.describe('coquille praticien en /ar/', () => {
       await signIn(page, account);
       await page.goto('/ar/patients');
       await expect(page).toHaveURL(/\/ar\/patients$/);
-      await useTheme(page, theme);
+      await useAccountTheme(page, theme);
+      await expect(page).toHaveURL(/\/ar\/patients$/);
       await expect(page.locator('pm-app-bar header')).toBeVisible();
       await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 20_000 });
       await expectRtlPage(page);
