@@ -201,6 +201,7 @@
       </trans-unit>
       <trans-unit id="profile.pageTitle" datatype="html">
         <source>Profil public · PsyMate</source>
+        <target state="translated">الملف العام · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
           <context context-type="linenumber">23</context>
@@ -1682,6 +1683,7 @@
       </trans-unit>
       <trans-unit id="profile.title" datatype="html">
         <source>Profil public</source>
+        <target state="translated">الملف العام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">11,12</context>
@@ -1690,6 +1692,7 @@
       </trans-unit>
       <trans-unit id="profile.intro" datatype="html">
         <source> Ce que les visiteurs de l&apos;annuaire voient. Rien n&apos;est publié sans l&apos;interrupteur « Publié ». </source>
+        <target state="translated"> ما يراه زوار دليل الممارسين. لا يُنشر شيء دون زر « منشور ». </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">13,16</context>
@@ -1698,6 +1701,7 @@
       </trans-unit>
       <trans-unit id="profile.save.error" datatype="html">
         <source>Erreur<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> d&apos;enregistrement<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>,</source>
+        <target state="translated">خطأ<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> في الحفظ<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>،</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">20,21</context>
@@ -1706,6 +1710,7 @@
       </trans-unit>
       <trans-unit id="profile.save.retry" datatype="html">
         <source> réessayer </source>
+        <target state="translated"> إعادة المحاولة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">27,29</context>
@@ -1714,6 +1719,7 @@
       </trans-unit>
       <trans-unit id="profile.section.identity" datatype="html">
         <source>Identité</source>
+        <target state="translated">الهوية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">58,60</context>
@@ -1722,6 +1728,7 @@
       </trans-unit>
       <trans-unit id="profile.displayName" datatype="html">
         <source>Nom affiché</source>
+        <target state="translated">الاسم المعروض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">72,74</context>
@@ -1730,6 +1737,7 @@
       </trans-unit>
       <trans-unit id="profile.profession" datatype="html">
         <source>Profession</source>
+        <target state="translated">المهنة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">90,91</context>
@@ -1738,6 +1746,7 @@
       </trans-unit>
       <trans-unit id="profile.profession.help" datatype="html">
         <source> Celle de votre dossier professionnel. </source>
+        <target state="translated"> المهنة المسجّلة في ملفك المهني. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">93,95</context>
@@ -1746,6 +1755,7 @@
       </trans-unit>
       <trans-unit id="profile.titleLabel" datatype="html">
         <source>Titre affiché</source>
+        <target state="translated">اللقب المعروض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">98,100</context>
@@ -1754,6 +1764,7 @@
       </trans-unit>
       <trans-unit id="profile.professionalNumber" datatype="html">
         <source>N° professionnel</source>
+        <target state="translated">الرقم المهني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">116,119</context>
@@ -1762,6 +1773,7 @@
       </trans-unit>
       <trans-unit id="profile.professionalNumber.hint" datatype="html">
         <source>(affiché si rempli)</source>
+        <target state="translated">(يُعرض إذا مُلئ)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">121,124</context>
@@ -1771,6 +1783,8 @@
       <trans-unit id="profile.showProfessionalNumberShort" datatype="html">
         <source>Afficher mon numéro<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> professionnel<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span
                     &gt;"/></source>
+        <target state="translated">إظهار الرقم<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> المهني<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span
+                    &gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">128,130</context>
@@ -1779,6 +1793,7 @@
       </trans-unit>
       <trans-unit id="profile.nextSlotAtShort" datatype="html">
         <source>Prochain créneau (facultatif)</source>
+        <target state="translated">الفترة الزمنية المتاحة القادمة (اختياري)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">137,139</context>
@@ -1787,6 +1802,7 @@
       </trans-unit>
       <trans-unit id="profile.availability" datatype="html">
         <source>Disponibilité</source>
+        <target state="translated">الإتاحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">155,157</context>
@@ -1795,6 +1811,7 @@
       </trans-unit>
       <trans-unit id="profile.section.practice" datatype="html">
         <source> Présentation et pratique </source>
+        <target state="translated"> التعريف والممارسة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">177,180</context>
@@ -1803,6 +1820,7 @@
       </trans-unit>
       <trans-unit id="profile.bio" datatype="html">
         <source>Présentation</source>
+        <target state="translated">التعريف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">181,182</context>
@@ -1811,6 +1829,7 @@
       </trans-unit>
       <trans-unit id="profile.vocabulary.errorTitle" datatype="html">
         <source>Listes de l&apos;annuaire indisponibles</source>
+        <target state="translated">قوائم دليل الممارسين غير متاحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">204,205</context>
@@ -1819,6 +1838,7 @@
       </trans-unit>
       <trans-unit id="profile.specialties" datatype="html">
         <source>Spécialités</source>
+        <target state="translated">التخصّصات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">214,215</context>
@@ -1827,6 +1847,7 @@
       </trans-unit>
       <trans-unit id="profile.specialties.help" datatype="html">
         <source>Liste commune à l&apos;annuaire.</source>
+        <target state="translated">قائمة مشتركة في دليل الممارسين.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">216,217</context>
@@ -1835,6 +1856,7 @@
       </trans-unit>
       <trans-unit id="profile.audiences" datatype="html">
         <source>Publics</source>
+        <target state="translated">الفئات المستهدفة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">232</context>
@@ -1843,6 +1865,7 @@
       </trans-unit>
       <trans-unit id="profile.audiences.help" datatype="html">
         <source>Publics que vous accueillez.</source>
+        <target state="translated">الفئات التي تستقبلها.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">233,234</context>
@@ -1851,6 +1874,7 @@
       </trans-unit>
       <trans-unit id="profile.modalities" datatype="html">
         <source>Modalités</source>
+        <target state="translated">طرق الاستشارة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">248,249</context>
@@ -1859,6 +1883,7 @@
       </trans-unit>
       <trans-unit id="profile.languages" datatype="html">
         <source>Langues</source>
+        <target state="translated">اللغات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">270</context>
@@ -1867,6 +1892,7 @@
       </trans-unit>
       <trans-unit id="profile.languages.help" datatype="html">
         <source>Langues de consultation.</source>
+        <target state="translated">لغات الاستشارة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">271,272</context>
@@ -1875,6 +1901,7 @@
       </trans-unit>
       <trans-unit id="profile.fees" datatype="html">
         <source>Tarif (facultatif)</source>
+        <target state="translated">السعر (اختياري)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">285,287</context>
@@ -1883,6 +1910,7 @@
       </trans-unit>
       <trans-unit id="profile.fees.help" datatype="html">
         <source> Texte libre, par exemple « 60 € la séance de 50 min ». Vide : rien n&apos;est affiché. </source>
+        <target state="translated"> نص حرّ، مثل « 60 € للجلسة مدّتها 50 دقيقة ». إذا تُرك فارغًا: لا يُعرض شيء. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">296,298</context>
@@ -1891,6 +1919,7 @@
       </trans-unit>
       <trans-unit id="profile.section.contact" datatype="html">
         <source> Moyens de contact </source>
+        <target state="translated"> وسائل التواصل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">306,308</context>
@@ -1899,6 +1928,7 @@
       </trans-unit>
       <trans-unit id="profile.contact.help" datatype="html">
         <source> Chaque moyen a son interrupteur « Afficher ». Le formulaire de contact de la fiche est toujours disponible et vous transmet les messages par e-mail. </source>
+        <target state="translated"> لكل وسيلة زر « إظهار » خاص بها. نموذج التواصل في البطاقة متاح دائمًا ويُحيل إليك الرسائل بالبريد الإلكتروني. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">309,312</context>
@@ -1907,6 +1937,7 @@
       </trans-unit>
       <trans-unit id="profile.contactPhone" datatype="html">
         <source>Téléphone</source>
+        <target state="translated">الهاتف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">314,316</context>
@@ -1915,6 +1946,7 @@
       </trans-unit>
       <trans-unit id="profile.showPhone" datatype="html">
         <source>Afficher<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> le téléphone<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">إظهار<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> الهاتف<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">335</context>
@@ -1923,6 +1955,7 @@
       </trans-unit>
       <trans-unit id="profile.contactEmail" datatype="html">
         <source>E-mail public</source>
+        <target state="translated">البريد الإلكتروني العام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">339,341</context>
@@ -1931,6 +1964,7 @@
       </trans-unit>
       <trans-unit id="profile.showEmail" datatype="html">
         <source>Afficher<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> l&apos;e-mail<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">إظهار<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> البريد الإلكتروني<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">361</context>
@@ -1939,6 +1973,7 @@
       </trans-unit>
       <trans-unit id="profile.websiteUrl" datatype="html">
         <source>Site web</source>
+        <target state="translated">الموقع الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">365,367</context>
@@ -1947,6 +1982,7 @@
       </trans-unit>
       <trans-unit id="profile.websiteUrl.help" datatype="html">
         <source> Adresse complète, commençant par https://. Affichée dès qu&apos;elle est remplie. </source>
+        <target state="translated"> عنوان كامل يبدأ بـ https://. يُعرض بمجرد ملئه. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">385,387</context>
@@ -1955,6 +1991,7 @@
       </trans-unit>
       <trans-unit id="profile.responseDelay" datatype="html">
         <source>Délai de réponse</source>
+        <target state="translated">مهلة الرد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">396,398</context>
@@ -1963,6 +2000,7 @@
       </trans-unit>
       <trans-unit id="profile.responseDelay.none" datatype="html">
         <source> Ne pas afficher </source>
+        <target state="translated"> عدم الإظهار </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">401,403</context>
@@ -1971,6 +2009,7 @@
       </trans-unit>
       <trans-unit id="profile.section.office" datatype="html">
         <source>Cabinet</source>
+        <target state="translated">العيادة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">413,415</context>
@@ -1979,6 +2018,7 @@
       </trans-unit>
       <trans-unit id="profile.address" datatype="html">
         <source>Adresse</source>
+        <target state="translated">العنوان</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">416,417</context>
@@ -1987,6 +2027,7 @@
       </trans-unit>
       <trans-unit id="profile.showAddressShort" datatype="html">
         <source>Afficher<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> l&apos;adresse sur la fiche<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">إظهار<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> العنوان في البطاقة<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">432</context>
@@ -1995,6 +2036,7 @@
       </trans-unit>
       <trans-unit id="profile.postalCode" datatype="html">
         <source>Code postal</source>
+        <target state="translated">الرمز البريدي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">442,445</context>
@@ -2003,6 +2045,7 @@
       </trans-unit>
       <trans-unit id="profile.city" datatype="html">
         <source>Ville</source>
+        <target state="translated">المدينة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">459,461</context>
@@ -2011,6 +2054,7 @@
       </trans-unit>
       <trans-unit id="profile.city.help" datatype="html">
         <source> Requise pour publier. </source>
+        <target state="translated"> مطلوبة للنشر. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.html</context>
           <context context-type="linenumber">474,476</context>
@@ -2019,6 +2063,7 @@
       </trans-unit>
       <trans-unit id="profile.errorTitle" datatype="html">
         <source>Impossible de charger votre profil public</source>
+        <target state="translated">تعذّر تحميل ملفك العام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">145</context>
@@ -2027,6 +2072,7 @@
       </trans-unit>
       <trans-unit id="profile.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">147</context>
@@ -2035,6 +2081,7 @@
       </trans-unit>
       <trans-unit id="profile.vocabulary.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">151</context>
@@ -2043,6 +2090,7 @@
       </trans-unit>
       <trans-unit id="profile.checklist.verified" datatype="html">
         <source>Dossier professionnel approuvé</source>
+        <target state="translated">الملف المهني مقبول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">220</context>
@@ -2051,6 +2099,7 @@
       </trans-unit>
       <trans-unit id="profile.checklist.unverified" datatype="html">
         <source>Dossier professionnel pas encore approuvé</source>
+        <target state="translated">الملف المهني لم يُقبل بعد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">221</context>
@@ -2059,6 +2108,7 @@
       </trans-unit>
       <trans-unit id="profile.checklist.identity" datatype="html">
         <source>Nom affiché, profession, ville</source>
+        <target state="translated">الاسم المعروض، المهنة، المدينة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">226</context>
@@ -2067,6 +2117,7 @@
       </trans-unit>
       <trans-unit id="profile.checklist.contact" datatype="html">
         <source>Au moins un moyen de contact affiché</source>
+        <target state="translated">وسيلة تواصل واحدة معروضة على الأقل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">231</context>
@@ -2075,6 +2126,7 @@
       </trans-unit>
       <trans-unit id="profile.checklist.photo" datatype="html">
         <source>Photo ajoutée</source>
+        <target state="translated">تمت إضافة صورة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">237</context>
@@ -2083,6 +2135,7 @@
       </trans-unit>
       <trans-unit id="profile.checklist.noPhoto" datatype="html">
         <source>Photo absente : les initiales sont affichées</source>
+        <target state="translated">لا توجد صورة: تُعرض الأحرف الأولى من الاسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">238</context>
@@ -2091,6 +2144,7 @@
       </trans-unit>
       <trans-unit id="profile.save.invalid" datatype="html">
         <source>Non enregistré : corrigez les champs signalés.</source>
+        <target state="translated">لم يُحفظ: يُرجى تصحيح الحقول المُشار إليها.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">246</context>
@@ -2099,6 +2153,7 @@
       </trans-unit>
       <trans-unit id="profile.save.saving" datatype="html">
         <source>Enregistrement…</source>
+        <target state="translated">جارٍ الحفظ…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">251</context>
@@ -2107,6 +2162,7 @@
       </trans-unit>
       <trans-unit id="profile.save.saved" datatype="html">
         <source>Enregistré</source>
+        <target state="translated">تم الحفظ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">253</context>
@@ -2115,6 +2171,7 @@
       </trans-unit>
       <trans-unit id="profile.save.idle" datatype="html">
         <source>Enregistré automatiquement</source>
+        <target state="translated">حفظ تلقائي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">257</context>
@@ -2123,6 +2180,7 @@
       </trans-unit>
       <trans-unit id="profile.save.lastChange" datatype="html">
         <source>dernière modification <x id="ago" equiv-text="ago"/></source>
+        <target state="translated">آخر تعديل <x id="ago" equiv-text="ago"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">277</context>
@@ -2131,6 +2189,7 @@
       </trans-unit>
       <trans-unit id="profile.save.errorDetail" datatype="html">
         <source>Vos dernières modifications ne sont pas enregistrées.</source>
+        <target state="translated">لم تُحفظ آخر تعديلاتك.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">283</context>
@@ -2139,6 +2198,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.fixFields" datatype="html">
         <source>Corrigez les champs signalés avant de publier.</source>
+        <target state="translated">يُرجى تصحيح الحقول المُشار إليها قبل النشر.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">337</context>
@@ -2151,6 +2211,7 @@
       </trans-unit>
       <trans-unit id="profile.published" datatype="html">
         <source>Votre fiche est publiée dans l&apos;annuaire.</source>
+        <target state="translated">بطاقتك منشورة في دليل الممارسين.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">343</context>
@@ -2159,6 +2220,7 @@
       </trans-unit>
       <trans-unit id="profile.unpublished" datatype="html">
         <source>Votre fiche est retirée de l&apos;annuaire.</source>
+        <target state="translated">سُحبت بطاقتك من دليل الممارسين.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">351</context>
@@ -2167,6 +2229,7 @@
       </trans-unit>
       <trans-unit id="profile.linkCopied" datatype="html">
         <source>Lien copié.</source>
+        <target state="translated">تم نسخ الرابط.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">359</context>
@@ -2175,6 +2238,7 @@
       </trans-unit>
       <trans-unit id="profile.linkCopyFailed" datatype="html">
         <source>Copie impossible : sélectionnez l&apos;adresse affichée.</source>
+        <target state="translated">يتعذّر النسخ: يُرجى تحديد العنوان المعروض.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">362</context>
@@ -2183,6 +2247,7 @@
       </trans-unit>
       <trans-unit id="profile.photoSaved" datatype="html">
         <source>Photo enregistrée.</source>
+        <target state="translated">تم حفظ الصورة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/profile.page.ts</context>
           <context context-type="linenumber">370</context>
@@ -4444,6 +4509,7 @@
       </trans-unit>
       <trans-unit id="profile.chips.none" datatype="html">
         <source> Pas dans la liste : seules les valeurs de l&apos;annuaire peuvent être choisies. </source>
+        <target state="translated"> غير موجود في القائمة: لا يمكن اختيار إلا قيم دليل الممارسين. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/chip-picker.component.ts</context>
           <context context-type="linenumber">105,111</context>
@@ -4452,6 +4518,7 @@
       </trans-unit>
       <trans-unit id="profile.chips.placeholder" datatype="html">
         <source>Ajouter…</source>
+        <target state="translated">إضافة…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/chip-picker.component.ts</context>
           <context context-type="linenumber">236</context>
@@ -4460,6 +4527,7 @@
       </trans-unit>
       <trans-unit id="profile.chips.full" datatype="html">
         <source>Maximum atteint</source>
+        <target state="translated">تم بلوغ الحدّ الأقصى</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/chip-picker.component.ts</context>
           <context context-type="linenumber">239</context>
@@ -4468,6 +4536,7 @@
       </trans-unit>
       <trans-unit id="profile.chips.selected" datatype="html">
         <source><x id="field" equiv-text="this.label()"/> choisies</source>
+        <target state="translated"><x id="field" equiv-text="this.label()"/> المختارة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/chip-picker.component.ts</context>
           <context context-type="linenumber">294</context>
@@ -4476,6 +4545,7 @@
       </trans-unit>
       <trans-unit id="profile.chips.remove" datatype="html">
         <source>Retirer <x id="label" equiv-text="label"/></source>
+        <target state="translated">إزالة <x id="label" equiv-text="label"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/chip-picker.component.ts</context>
           <context context-type="linenumber">318</context>
@@ -4484,6 +4554,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.stored" datatype="html">
         <source> Photo enregistrée </source>
+        <target state="translated"> الصورة محفوظة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">43,49</context>
@@ -4492,6 +4563,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.change" datatype="html">
         <source> Changer la photo </source>
+        <target state="translated"> تغيير الصورة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">62,65</context>
@@ -4500,6 +4572,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.remove" datatype="html">
         <source> Retirer la photo </source>
+        <target state="translated"> إزالة الصورة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">72,78</context>
@@ -4508,6 +4581,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.cropTitle" datatype="html">
         <source> Recadrer la photo </source>
+        <target state="translated"> قصّ الصورة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">81,83</context>
@@ -4516,6 +4590,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.cropHelp" datatype="html">
         <source> La photo est recadrée en carré et réduite à 512 px. Ses métadonnées (lieu, appareil) ne sont pas envoyées. </source>
+        <target state="translated"> تُقصّ الصورة على شكل مربّع وتُصغَّر إلى 512 px. ولا تُرسَل بياناتها الوصفية (المكان، الجهاز). </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">84,87</context>
@@ -4524,6 +4599,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.zoom" datatype="html">
         <source>Zoom</source>
+        <target state="translated">التكبير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">89,91</context>
@@ -4532,6 +4608,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.x" datatype="html">
         <source>Position horizontale</source>
+        <target state="translated">الموضع الأفقي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">100,103</context>
@@ -4540,6 +4617,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.y" datatype="html">
         <source>Position verticale</source>
+        <target state="translated">الموضع العمودي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">111,114</context>
@@ -4548,6 +4626,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.save" datatype="html">
         <source> Enregistrer la photo </source>
+        <target state="translated"> حفظ الصورة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">129,132</context>
@@ -4556,6 +4635,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.cancel" datatype="html">
         <source> Annuler </source>
+        <target state="translated"> إلغاء </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">138,144</context>
@@ -4564,6 +4644,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.badType" datatype="html">
         <source>Choisissez une image JPEG ou PNG.</source>
+        <target state="translated">يُرجى اختيار صورة JPEG أو PNG.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">332</context>
@@ -4572,6 +4653,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.unreadable" datatype="html">
         <source>Cette image n&apos;a pas pu être lue. Essayez une autre photo.</source>
+        <target state="translated">تعذّرت قراءة هذه الصورة. يُرجى تجربة صورة أخرى.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">343</context>
@@ -4580,6 +4662,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.cropFailed" datatype="html">
         <source>Le recadrage a échoué. Essayez une autre photo.</source>
+        <target state="translated">فشل قصّ الصورة. يُرجى تجربة صورة أخرى.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">362</context>
@@ -4588,6 +4671,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.tooLarge" datatype="html">
         <source>La photo dépasse 5 Mo.</source>
+        <target state="translated">تتجاوز الصورة 5 MB.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">376</context>
@@ -4596,6 +4680,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.unsupported" datatype="html">
         <source>Le serveur n&apos;accepte que les images JPEG ou PNG.</source>
+        <target state="translated">لا يقبل الخادم إلا صور JPEG أو PNG.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">378</context>
@@ -4604,6 +4689,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.tooManyPixels" datatype="html">
         <source>Cette image est trop grande (plus de 25 millions de pixels).</source>
+        <target state="translated">هذه الصورة كبيرة جدًا (أكثر من 25 مليون بكسل).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">380</context>
@@ -4612,6 +4698,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.invalid" datatype="html">
         <source>Le serveur n&apos;a pas pu lire cette image.</source>
+        <target state="translated">تعذّر على الخادم قراءة هذه الصورة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">382</context>
@@ -4620,6 +4707,7 @@
       </trans-unit>
       <trans-unit id="profile.photo.failed" datatype="html">
         <source>La photo n&apos;a pas pu être enregistrée. Réessayez.</source>
+        <target state="translated">تعذّر حفظ الصورة. يُرجى إعادة المحاولة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/photo-editor.component.ts</context>
           <context context-type="linenumber">384</context>
@@ -4628,6 +4716,7 @@
       </trans-unit>
       <trans-unit id="profile.availability.accepting" datatype="html">
         <source>Accepte de nouveaux patients</source>
+        <target state="translated">قبول مرضى جدد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">30</context>
@@ -4636,6 +4725,7 @@
       </trans-unit>
       <trans-unit id="profile.availability.waitlist" datatype="html">
         <source>Liste d&apos;attente</source>
+        <target state="translated">قائمة انتظار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">32</context>
@@ -4644,6 +4734,7 @@
       </trans-unit>
       <trans-unit id="profile.availability.closed" datatype="html">
         <source>Complet</source>
+        <target state="translated">لا أماكن متاحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">34</context>
@@ -4652,6 +4743,7 @@
       </trans-unit>
       <trans-unit id="profile.availability.unknown" datatype="html">
         <source>Non précisée</source>
+        <target state="translated">غير محدّدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">36</context>
@@ -4660,6 +4752,7 @@
       </trans-unit>
       <trans-unit id="profile.missing.verification" datatype="html">
         <source>Votre dossier professionnel doit être approuvé.</source>
+        <target state="translated">يجب قبول ملفك المهني.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">44</context>
@@ -4668,6 +4761,7 @@
       </trans-unit>
       <trans-unit id="profile.missing.displayName" datatype="html">
         <source>Renseignez le nom affiché.</source>
+        <target state="translated">يُرجى إدخال الاسم المعروض.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">46</context>
@@ -4676,6 +4770,7 @@
       </trans-unit>
       <trans-unit id="profile.missing.profession" datatype="html">
         <source>La profession de votre compte est manquante.</source>
+        <target state="translated">مهنة حسابك غير موجودة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">48</context>
@@ -4684,6 +4779,7 @@
       </trans-unit>
       <trans-unit id="profile.missing.city" datatype="html">
         <source>Renseignez la ville du cabinet.</source>
+        <target state="translated">يُرجى إدخال مدينة العيادة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">50</context>
@@ -4692,6 +4788,7 @@
       </trans-unit>
       <trans-unit id="profile.missing.contact" datatype="html">
         <source>Affichez au moins un moyen de contact renseigné (téléphone, e-mail ou adresse).</source>
+        <target state="translated">يلزم إظهار وسيلة تواصل واحدة مُدخَلة على الأقل (الهاتف أو البريد الإلكتروني أو العنوان).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">52</context>
@@ -4700,6 +4797,7 @@
       </trans-unit>
       <trans-unit id="profile.missing.specialties" datatype="html">
         <source>Une spécialité choisie n&apos;est plus proposée : retirez-la.</source>
+        <target state="translated">أحد التخصّصات المختارة لم يعد متاحًا: يلزم إزالته.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">54</context>
@@ -4708,6 +4806,7 @@
       </trans-unit>
       <trans-unit id="profile.missing.audiences" datatype="html">
         <source>Un public choisi n&apos;est plus proposé : retirez-le.</source>
+        <target state="translated">إحدى الفئات المستهدفة المختارة لم تعد متاحة: يلزم إزالتها.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">56</context>
@@ -4716,6 +4815,7 @@
       </trans-unit>
       <trans-unit id="profile.responseDelay.day" datatype="html">
         <source>Sous 24 h</source>
+        <target state="translated">خلال 24 ساعة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">63</context>
@@ -4724,6 +4824,7 @@
       </trans-unit>
       <trans-unit id="profile.responseDelay.twoDays" datatype="html">
         <source>Sous 48 h en général</source>
+        <target state="translated">خلال 48 ساعة عادةً</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">64</context>
@@ -4732,6 +4833,7 @@
       </trans-unit>
       <trans-unit id="profile.responseDelay.week" datatype="html">
         <source>Sous une semaine</source>
+        <target state="translated">خلال أسبوع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-labels.ts</context>
           <context context-type="linenumber">65</context>
@@ -4740,6 +4842,7 @@
       </trans-unit>
       <trans-unit id="profile.preview.title" datatype="html">
         <source> Aperçu · ce que voit un visiteur </source>
+        <target state="translated"> معاينة · ما يراه الزائر </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-preview.component.ts</context>
           <context context-type="linenumber">33,36</context>
@@ -4748,6 +4851,7 @@
       </trans-unit>
       <trans-unit id="profile.preview.refresh" datatype="html">
         <source> Rafraîchir l&apos;aperçu </source>
+        <target state="translated"> تحديث المعاينة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-preview.component.ts</context>
           <context context-type="linenumber">41,44</context>
@@ -4756,6 +4860,7 @@
       </trans-unit>
       <trans-unit id="profile.preview.fees" datatype="html">
         <source>Tarif :</source>
+        <target state="translated">السعر:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-preview.component.ts</context>
           <context context-type="linenumber">91,96</context>
@@ -4764,6 +4869,7 @@
       </trans-unit>
       <trans-unit id="profile.preview.contacts" datatype="html">
         <source> Contact affiché </source>
+        <target state="translated"> وسيلة التواصل المعروضة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-preview.component.ts</context>
           <context context-type="linenumber">99,101</context>
@@ -4772,6 +4878,7 @@
       </trans-unit>
       <trans-unit id="profile.preview.website" datatype="html">
         <source>Site web :</source>
+        <target state="translated">الموقع الإلكتروني:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-preview.component.ts</context>
           <context context-type="linenumber">109,114</context>
@@ -4780,6 +4887,7 @@
       </trans-unit>
       <trans-unit id="profile.preview.cta" datatype="html">
         <source>Prendre contact</source>
+        <target state="translated">التواصل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-preview.component.ts</context>
           <context context-type="linenumber">115,118</context>
@@ -4788,6 +4896,7 @@
       </trans-unit>
       <trans-unit id="profile.preview.note" datatype="html">
         <source> L&apos;aperçu se met à jour pendant la saisie. Les champs vides ne sont pas affichés sur la fiche. </source>
+        <target state="translated"> تُحدَّث المعاينة أثناء الكتابة. الحقول الفارغة لا تُعرض في البطاقة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/profile-preview.component.ts</context>
           <context context-type="linenumber">119,124</context>
@@ -4796,6 +4905,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.title" datatype="html">
         <source> Apparaître dans l&apos;annuaire </source>
+        <target state="translated"> الظهور في دليل الممارسين </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">45,47</context>
@@ -4804,6 +4914,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.toggle" datatype="html">
         <source>Publié</source>
+        <target state="translated">منشور</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">58,62</context>
@@ -4812,6 +4923,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.lockedTitle" datatype="html">
         <source>Dossier en cours de vérification.</source>
+        <target state="translated">الملف قيد التحقّق.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">65,67</context>
@@ -4820,6 +4932,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.locked" datatype="html">
         <source> Votre dossier professionnel doit être approuvé avant de publier votre fiche. Vous pouvez déjà la remplir : rien n&apos;est visible tant qu&apos;elle n&apos;est pas publiée. </source>
+        <target state="translated"> يجب قبول ملفك المهني قبل نشر بطاقتك. يمكنك ملؤها من الآن: لا يظهر شيء ما دامت غير منشورة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">68,72</context>
@@ -4828,6 +4941,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.lockedLink" datatype="html">
         <source>Voir mon dossier professionnel</source>
+        <target state="translated">عرض ملفي المهني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">75,80</context>
@@ -4836,6 +4950,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.visible" datatype="html">
         <source> Votre fiche est visible dans l&apos;annuaire. </source>
+        <target state="translated"> بطاقتك ظاهرة في دليل الممارسين. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">83,86</context>
@@ -4844,6 +4959,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.hidden" datatype="html">
         <source> Une fois publiée, votre fiche sera visible dans l&apos;annuaire. </source>
+        <target state="translated"> بعد النشر، ستظهر بطاقتك في دليل الممارسين. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">87,90</context>
@@ -4852,6 +4968,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.urlLabel" datatype="html">
         <source>Adresse publique :</source>
+        <target state="translated">العنوان العام:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">93,94</context>
@@ -4860,6 +4977,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.unpublishNote" datatype="html">
         <source> Désactiver retire la fiche immédiatement de l&apos;annuaire. </source>
+        <target state="translated"> التعطيل يسحب البطاقة فورًا من دليل الممارسين. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">97,102</context>
@@ -4868,6 +4986,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.confirm" datatype="html">
         <source> Retirer la fiche de l&apos;annuaire ? Elle disparaît immédiatement ; vos informations restent enregistrées pour une prochaine publication. </source>
+        <target state="translated"> سحب البطاقة من دليل الممارسين؟ تختفي فورًا؛ وتبقى معلوماتك محفوظة لنشر لاحق. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">104,107</context>
@@ -4876,6 +4995,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.confirmYes" datatype="html">
         <source> Retirer la fiche </source>
+        <target state="translated"> سحب البطاقة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">116,119</context>
@@ -4884,6 +5004,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.confirmNo" datatype="html">
         <source> Garder la fiche publiée </source>
+        <target state="translated"> إبقاء البطاقة منشورة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">125,130</context>
@@ -4892,6 +5013,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.refused" datatype="html">
         <source> Publication refusée. À corriger : </source>
+        <target state="translated"> رُفض النشر. ما يلزم تصحيحه: </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">134,137</context>
@@ -4900,6 +5022,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.toDossier" datatype="html">
         <source>Voir mon dossier</source>
+        <target state="translated">عرض ملفي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">144,147</context>
@@ -4908,6 +5031,7 @@
       </trans-unit>
       <trans-unit id="profile.checklist.label" datatype="html">
         <source>Liste de contrôle</source>
+        <target state="translated">قائمة التحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">161,162</context>
@@ -4916,6 +5040,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.open" datatype="html">
         <source>Ouvrir la fiche publique</source>
+        <target state="translated">فتح البطاقة العامة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">182,186</context>
@@ -4924,6 +5049,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.copy" datatype="html">
         <source> Copier le lien </source>
+        <target state="translated"> نسخ الرابط </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">191,197</context>
@@ -4932,6 +5058,7 @@
       </trans-unit>
       <trans-unit id="profile.publish.failed" datatype="html">
         <source>L&apos;opération n&apos;a pas abouti. Réessayez dans un instant.</source>
+        <target state="translated">لم تكتمل العملية. يُرجى إعادة المحاولة بعد قليل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">401</context>
@@ -4940,6 +5067,7 @@
       </trans-unit>
       <trans-unit id="profile.checklist.ok" datatype="html">
         <source>Fait :</source>
+        <target state="translated">تم:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">456</context>
@@ -4948,6 +5076,7 @@
       </trans-unit>
       <trans-unit id="profile.checklist.warning" datatype="html">
         <source>À noter :</source>
+        <target state="translated">للعلم:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">458</context>
@@ -4956,6 +5085,7 @@
       </trans-unit>
       <trans-unit id="profile.checklist.todo" datatype="html">
         <source>À faire :</source>
+        <target state="translated">مطلوب:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/profile/publish-card.component.ts</context>
           <context context-type="linenumber">460</context>
@@ -5036,6 +5166,7 @@
       </trans-unit>
       <trans-unit id="profile.save.justNow" datatype="html">
         <source>à l&apos;instant</source>
+        <target state="translated">للتو</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/relative-time.ts</context>
           <context context-type="linenumber">12</context>
