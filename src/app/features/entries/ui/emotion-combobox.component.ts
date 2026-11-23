@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { formatLocale, toAppLocale } from '../../../core/i18n';
 import { StateAction, StateComponent } from '../../../shared/ui';
 import { uniqueId } from '../../../shared/util';
 import { EntryEditorStore } from '../data/entry-editor.store';
@@ -95,6 +96,8 @@ export class EmotionComboboxComponent implements ControlValueAccessor {
   protected readonly store = inject(EntryEditorStore);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly locale = inject(LOCALE_ID);
+  /** L'arabe n'a pas de casse : le nom de famille y reste tel que traduit (docs/design/arabe.md §4). */
+  private readonly lowerCaseFamily = toAppLocale(this.locale) !== 'ar';
 
   protected readonly listId = uniqueId('pm-emotion-list');
   protected readonly familyId = uniqueId('pm-emotion-family');
@@ -187,9 +190,10 @@ export class EmotionComboboxComponent implements ControlValueAccessor {
     return familyLabel(family);
   }
 
-  /** « peur » : la famille en minuscules, pour les suffixes. */
+  /** « peur » : la famille en minuscules, pour les suffixes (sauf en arabe). */
   protected familyWord(family: EmotionFamily): string {
-    return familyLabel(family).toLocaleLowerCase(this.locale);
+    const label = familyLabel(family);
+    return this.lowerCaseFamily ? label.toLocaleLowerCase(formatLocale(this.locale)) : label;
   }
 
   /** Suffixe d'une émotion de la liste : « peur », « peur · faible », « tristesse · personnalisée ». */
@@ -231,10 +235,6 @@ export class EmotionComboboxComponent implements ControlValueAccessor {
 
   protected parts(label: string): LabelParts {
     return labelParts(label, this.query());
-  }
-
-  protected createText(label: string): string {
-    return $localize`:Dernière ligne de la liste des émotions@@entries.emotion.createOption:Créer l'émotion personnalisée « ${label}:label: »`;
   }
 
   protected onInput(value: string): void {

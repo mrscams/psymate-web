@@ -111,6 +111,7 @@
               <input
                 [id]="fid('body')"
                 type="text"
+                dir="auto"
                 formControlName="body"
                 autocomplete="off"
                 [attr.aria-invalid]="invalid('body')"
@@ -131,6 +132,7 @@
                 <input
                   [id]="fid('medication.molecule')"
                   type="text"
+                  dir="auto"
                   formControlName="molecule"
                   autocomplete="off"
                   [attr.aria-invalid]="invalid('medication.molecule')"
@@ -152,6 +154,7 @@
                   class="mono"
                   [id]="fid('medication.dosage')"
                   type="text"
+                  dir="auto"
                   formControlName="dosage"
                   autocomplete="off"
                   [attr.aria-invalid]="invalid('medication.dosage')"
@@ -233,6 +236,7 @@
               <input
                 [id]="fid('title')"
                 type="text"
+                dir="auto"
                 formControlName="title"
                 autocomplete="off"
                 [attr.aria-invalid]="invalid('title')"
@@ -256,6 +260,7 @@
           <textarea
             [id]="fid('body')"
             rows="4"
+            dir="auto"
             formControlName="body"
             [attr.aria-invalid]="invalid('body')"
             [attr.aria-describedby]="fid('body') + '-error ' + fid('body') + '-hint'"
@@ -383,7 +388,7 @@
           } @else {
             <ul class="placed">
               @for (link of store.placedLinks().data ?? []; track link.id) {
-                <li>{{ link.sentence }}</li>
+                <li dir="auto">{{ link.sentence }}</li>
               }
             </ul>
           }
@@ -408,6 +413,7 @@
             <input
               [id]="fid('reason')"
               type="text"
+              dir="auto"
               formControlName="reason"
               autocomplete="off"
               [attr.aria-invalid]="invalid('reason')"
@@ -422,7 +428,12 @@
       @if (type() !== 'session') {
         <details class="more">
           <summary>
-            <svg class="chevron" viewBox="0 0 10 10" aria-hidden="true" focusable="false">
+            <svg
+              class="chevron pm-flip-rtl"
+              viewBox="0 0 10 10"
+              aria-hidden="true"
+              focusable="false"
+            >
               <path d="M3 2l4 3-4 3" />
             </svg>
             <span i18n="Bloc replié des options@@entries.more.summary">Plus</span>
@@ -489,7 +500,7 @@
                         [checked]="selectedTags().includes(tag)"
                         (change)="toggleTag(tag, $any($event.target).checked)"
                       />
-                      <span>{{ tag }}</span>
+                      <span dir="auto">{{ tag }}</span>
                     </label>
                   }
                 </div>

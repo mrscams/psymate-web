@@ -87,4 +87,16 @@ describe('VersionHistoryPanel', () => {
     expect(text(items[0].querySelector('.unchanged'))).toBe('Inchangés : Titre');
     expect(text(items[1])).toContain("Création de l'entrée.");
   });
+
+  it('contenu saisi dans son sens (Q77) : ancien et nouveau en dir="auto", motif isolé', async () => {
+    const el = await render(vi.fn().mockResolvedValue(VERSIONS));
+    const first = el.querySelector('ol.versions > li')!;
+    expect(first.querySelector('dd s')?.getAttribute('dir')).toBe('auto');
+    expect(first.querySelector('dd .after')?.getAttribute('dir')).toBe('auto');
+    expect(first.querySelector('.reason bdi')?.textContent).toBe('Précision après la séance');
+    // Le <bdi> garde l'espace entre « Motif : » et la valeur.
+    expect(first.querySelector('.reason')?.textContent?.trim()).toBe(
+      'Motif : Précision après la séance',
+    );
+  });
 });

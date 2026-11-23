@@ -12,8 +12,8 @@
 }
 
 .section-title {
-  // Légende flottante : un bloc du flux, « Maintenant » se place à droite sur sa ligne.
-  float: left;
+  // Légende flottante : un bloc du flux, « Maintenant » se place en fin de ligne.
+  float: inline-start;
   width: 100%;
   min-height: 24px;
   margin: 0;
@@ -29,7 +29,7 @@
 .now {
   position: absolute;
   top: 0;
-  right: 0;
+  inset-inline-end: 0;
   height: 24px;
   padding: 0 8px;
   border: 0;
@@ -75,6 +75,11 @@
     background: var(--primary-tint);
     color: var(--primary-hover);
     font-weight: 600;
+  }
+  // De droite à gauche, le séparateur passe du côté de début (droite) : chaque bouton le dessine
+  // sur le précédent, peint avant lui.
+  &:dir(rtl) {
+    box-shadow: 1px -1px 0 0 var(--border-subtle);
   }
   &:focus-visible {
     position: relative;

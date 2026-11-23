@@ -26,8 +26,17 @@
   font: var(--mat-sys-label-large);
 }
 
+// « v2 · 23/11/2026, 15:41 · vous » : chaque morceau isolé, pour que le nom de version et la date
+// ne se fondent pas en une seule suite de gauche à droite dans une ligne arabe (sans effet en fr).
+.name,
 .mono {
-  font-family: var(--font-mono);
+  unicode-bidi: isolate;
+}
+
+// Date à nom de mois : chasse fixe des textes, police d'interface en arabe (Q76).
+.mono {
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
   font-size: 13px;
   color: var(--text-secondary);
 }

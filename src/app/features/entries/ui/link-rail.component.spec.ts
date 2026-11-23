@@ -40,6 +40,13 @@ const text = (element: Element | null | undefined) =>
   (element?.textContent ?? '').replace(/\s+/g, ' ').trim();
 
 describe('LinkRailComponent', () => {
+  it('nom de la cible (titre saisi) isolé dans sa ligne (Q77, M16-19)', () => {
+    const { row } = setup();
+    expect(row('Entretien annuel').querySelector('.name bdi')?.textContent).toBe(
+      'Entretien annuel',
+    );
+  });
+
   it('une case avec label par cible, nom, contexte et type proposé par la matrice (pointillé)', () => {
     const { rows, row } = setup();
     expect(rows()).toHaveLength(3);
