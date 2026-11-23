@@ -59,8 +59,10 @@ test.describe('vue graphe en /ar/', () => {
     // Sens par défaut : aucun paramètre d'URL, le premier segment du sens est enfoncé.
     expect(new URL(page.url()).searchParams.get('direction')).toBeNull();
     // Le repère du dessin reste de gauche à droite ; les cartes suivent la page.
-    await expect(page.locator('pm-graph-canvas .world')).toHaveAttribute('dir', 'ltr');
-    await expect(page.locator(`[data-node-id="${folder.event}"]`)).toHaveAttribute('dir', 'rtl');
+    // (sens calculé, pas l'attribut : dir n'agit pas sur un <svg>, qui l'hérite du repère).
+    await expect(page.locator('pm-graph-canvas .world')).toHaveCSS('direction', 'ltr');
+    await expect(page.locator('pm-graph-canvas svg.links')).toHaveCSS('direction', 'ltr');
+    await expect(page.locator(`[data-node-id="${folder.event}"]`)).toHaveCSS('direction', 'rtl');
     await shoot(page, 'arabe-graph-horizontal');
 
     // De haut en bas : le paramètre d'URL garde sa valeur, le sens vertical ne change pas.
