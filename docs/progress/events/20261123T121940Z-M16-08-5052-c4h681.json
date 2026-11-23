@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T12:19:40.187Z",
+  "task": "M16-08",
+  "agent": "frontend-feature-dev",
+  "status": "merged",
+  "summary": "Fusionnée en squash (e670b92), CI verte : socle de langue, bundle /ar/",
+  "pr": "https://github.com/mrscams/psymate-web/pull/117",
+  "branch": "M16-09-socle-visuel",
+  "checkout": "psymate-ux-audit-design-b1ba83"
+}

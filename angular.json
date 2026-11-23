@@ -51,7 +51,8 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "ignore": ["fonts/**/*.woff2"]
               }
             ],
             "styles": ["src/theme/tokens.css", "src/styles.scss"]
