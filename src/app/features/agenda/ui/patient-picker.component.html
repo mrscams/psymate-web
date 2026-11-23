@@ -2,7 +2,7 @@
   <div class="patient-card">
     <span class="avatar" aria-hidden="true">{{ patientInitials() }}</span>
     <div class="who">
-      <span class="name">{{ patient.displayName }}</span>
+      <span class="name" dir="auto">{{ patient.displayName }}</span>
       @if (meta(); as meta) {
         <span class="meta">{{ meta }}</span>
       }
@@ -32,14 +32,15 @@
     [attr.aria-invalid]="invalid()"
     [attr.aria-describedby]="inputId() + '-error'"
     [attr.cdkFocusInitial]="focusInitial() && !chosen() ? '' : null"
-    [placeholder]="chosen() ? otherPlaceholder : searchPlaceholder"
+    [placeholder]="chosen() ? texts().other : texts().search"
     [formControl]="searchControl"
     autocomplete="off"
+    dir="auto"
     (keydown)="onSearchKey($event)"
   />
   @if (listOpen()) {
     @let results = store.results();
-    <ul class="options" role="listbox" [id]="listboxId" [attr.aria-label]="searchPlaceholder">
+    <ul class="options" role="listbox" [id]="listboxId" [attr.aria-label]="texts().search">
       @for (option of results.data ?? []; track option.id; let index = $index) {
         <li
           role="option"
@@ -51,7 +52,7 @@
           (click)="choose(option)"
           (keydown.enter)="choose(option)"
         >
-          <span class="name">{{ option.displayName }}</span>
+          <span class="name" dir="auto">{{ option.displayName }}</span>
           @if (option.age !== null) {
             {{ ' ' }}
             <span class="meta" i18n="Âge d'un patient dans la recherche@@agenda.new.optionAge"
@@ -66,7 +67,7 @@
               {{ searchFailed }}
             }
             @case ('loaded') {
-              {{ noResults }}
+              {{ texts().none }}
             }
             @default {
               {{ searching }}

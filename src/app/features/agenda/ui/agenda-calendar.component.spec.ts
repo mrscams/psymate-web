@@ -10,7 +10,8 @@ import {
   PURGED_GUEST,
   weekAgenda,
 } from '../testing/agenda.testing';
-import { AgendaCalendarComponent } from './agenda-calendar.component';
+import { ARABIC_FORMAT_LOCALE } from '../../../core/i18n';
+import { AgendaCalendarComponent, calendarLocale } from './agenda-calendar.component';
 
 const week = weekAgenda(rangeFor('week', fromIsoDay('2026-10-26')!));
 const busy: BusyBlock[] = [
@@ -38,10 +39,11 @@ async function render(
   selectedId: string | null = null,
   hours?: AgendaHours,
   appointments: readonly Appointment[] = week.appointments,
+  locale = 'fr',
 ) {
   TestBed.configureTestingModule({
     imports: [AgendaCalendarComponent],
-    providers: [provideRouter([]), { provide: LOCALE_ID, useValue: 'fr' }],
+    providers: [provideRouter([]), { provide: LOCALE_ID, useValue: locale }],
   });
   const fixture = TestBed.createComponent(AgendaCalendarComponent);
   fixture.componentRef.setInput('view', 'week');
@@ -314,5 +316,51 @@ describe('AgendaCalendarComponent (FullCalendar)', () => {
     } finally {
       vi.unstubAllGlobals();
     }
+  });
+
+  it('locale FullCalendar : française, anglaise, arabe avec la locale de formatage (Q73)', () => {
+    expect(calendarLocale('fr').code).toBe('fr');
+    expect(calendarLocale('en').code).toBe('en-gb');
+    const arabic = calendarLocale('ar');
+    expect(arabic.code).toBe(ARABIC_FORMAT_LOCALE);
+    expect(arabic.direction).toBe('rtl');
+    // La locale « ar » de la bibliothèque commence au samedi : firstDay la remplace.
+    expect((arabic as { week?: { dow: number } }).week?.dow).toBe(6);
+  });
+
+  it('français : de gauche à droite, lundi premier, heures et plages inchangées', async () => {
+    const { el, options } = await render(null);
+    await waitFor(() => el.querySelectorAll('.fc-col-header-cell').length === 7);
+    expect(options()).toMatchObject({ direction: 'ltr', firstDay: 1 });
+    expect(el.querySelector('.fc')!.classList).toContain('fc-direction-ltr');
+    expect(el.querySelector('.fc-col-header-cell')!.getAttribute('data-date')).toBe('2026-10-26');
+    expect(text(el.querySelector('.fc-timegrid-slot-label[data-time="08:00:00"]'))).toBe('08:00');
+  });
+
+  it('arabe : de droite à gauche, lundi premier dans le sens de lecture, chiffres latins, 24 h', async () => {
+    const { el, options } = await render(null, undefined, week.appointments, 'ar');
+    await waitFor(() => el.querySelectorAll('.fc-timegrid-event').length > 0);
+    expect(options()).toMatchObject({ direction: 'rtl', firstDay: 1 });
+    expect(el.querySelector('.fc')!.classList).toContain('fc-direction-rtl');
+    const headers = [...el.querySelectorAll('.fc-col-header-cell')];
+    expect(headers.map((cell) => cell.getAttribute('data-date'))).toEqual([
+      '2026-10-26',
+      '2026-10-27',
+      '2026-10-28',
+      '2026-10-29',
+      '2026-10-30',
+      '2026-10-31',
+      '2026-11-01',
+    ]);
+    expect(text(headers[0].querySelector('.number'))).toBe('26');
+    expect(text(el.querySelector('.fc-timegrid-slot-label[data-time="14:00:00"]'))).toBe('14:00');
+    // Ni chiffres arabo-indiens (U+0660 à U+0669) ni persans (U+06F0 à U+06F9).
+    expect(el.textContent).not.toMatch(/[٠-٩۰-۹]/);
+    expect(el.textContent).toMatch(/\d/);
+    // Plage horaire isolée de gauche à droite ; nom saisi dans son propre sens.
+    const event = el.querySelector('.fc-timegrid-event')!;
+    expect(event.querySelector('.time')!.getAttribute('dir')).toBe('ltr');
+    expect(event.querySelector('.time')!.textContent).toMatch(/^\d{2}:\d{2}–\d{2}:\d{2}$/);
+    expect(event.querySelector('.name')!.getAttribute('dir')).toBe('auto');
   });
 });

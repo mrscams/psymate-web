@@ -12,7 +12,7 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs';
 
 import { FieldProblem } from '../../../core/http';
-import { subjectLabel, SubjectVocabulary } from '../../../core/i18n';
+import { SubjectVocabulary } from '../../../core/i18n';
 import { PreferencesStore } from '../../../core/preferences';
 import { applyProblem, FieldErrorsComponent, fieldId } from '../../../shared/forms';
 import { FormErrorsComponent, SidePanelComponent } from '../../../shared/ui';
@@ -41,6 +41,7 @@ import {
   formatTime,
   formatTimeRange,
   formatWeekdayDate,
+  isolate,
   modalityTitle,
 } from '../ui/agenda-format';
 import { INPUT_DEBOUNCE_MS, PatientPickerComponent } from '../ui/patient-picker.component';
@@ -136,13 +137,28 @@ export class NewAppointmentPanel {
   protected readonly countAriaLabel = $localize`:Liste du nombre de répétitions@@agenda.new.countLabel:Nombre de répétitions`;
   protected readonly notePlaceholder = $localize`:Exemple de note de planification@@agenda.new.notePlaceholder:ex. apporter le carnet du soir`;
   protected readonly startPlaceholder = $localize`:Exemple d'heure de début du rendez-vous@@agenda.new.startPlaceholder:10:00`;
-  /** « À confirmer avec le patient » / « … le client » (préférence `vocabulary.subjectLabel`). */
-  protected readonly confirmLabel = computed(() => {
-    const subject = subjectLabel(this.vocabulary.label(), 'one');
-    return $localize`:Case À confirmer du panneau@@agenda.new.toConfirm:À confirmer avec le ${subject}:subject:`;
-  });
-  protected readonly fieldLabels: Record<string, string> = {
-    patientId: $localize`:Champ patient, résumé des erreurs@@agenda.new.field.patient:Patient`,
+  /**
+   * Désignation de la personne suivie (préférence `vocabulary.subjectLabel`) : le panneau la suit
+   * partout où il nomme le patient, un message entier par désignation.
+   */
+  protected readonly subject = this.vocabulary.label;
+  private readonly client = computed(() => this.vocabulary.label() === 'client');
+  /** « À confirmer avec le patient » / « … le client ». */
+  protected readonly confirmLabel = computed(() =>
+    this.client()
+      ? $localize`:Case À confirmer du panneau (coach)@@agenda.new.toConfirmClient:À confirmer avec le client`
+      : $localize`:Case À confirmer du panneau@@agenda.new.toConfirmPatient:À confirmer avec le patient`,
+  );
+  /** Section « Patient » / « Client » du panneau. */
+  protected readonly patientLabel = computed(() =>
+    this.client()
+      ? $localize`:Section client du panneau (coach)@@agenda.new.client:Client`
+      : $localize`:Section patient du panneau@@agenda.new.patient:Patient`,
+  );
+  protected readonly fieldLabels = computed<Record<string, string>>(() => ({
+    patientId: this.client()
+      ? $localize`:Champ client, résumé des erreurs (coach)@@agenda.new.field.client:Client`
+      : $localize`:Champ patient, résumé des erreurs@@agenda.new.field.patient:Patient`,
     date: $localize`:Champ date, résumé des erreurs@@agenda.new.field.date:Date`,
     start: $localize`:Champ début, résumé des erreurs@@agenda.new.field.start:Début`,
     duration: $localize`:Champ durée, résumé des erreurs@@agenda.new.field.duration:Durée`,
@@ -152,7 +168,7 @@ export class NewAppointmentPanel {
     until: $localize`:Champ fin de série, résumé des erreurs@@agenda.new.field.until:Jusqu'au`,
     note: $localize`:Champ note, résumé des erreurs@@agenda.new.field.note:Note de planification`,
     toConfirm: $localize`:Champ à confirmer, résumé des erreurs@@agenda.new.field.toConfirm:À confirmer`,
-  };
+  }));
 
   /** Patient choisi (carte), null tant qu'aucun ne l'est. */
   protected readonly chosen = signal<PatientOption | null>(this.data.patient);
@@ -320,14 +336,14 @@ export class NewAppointmentPanel {
     if (!freeBusy || freeBusy.conflicts.length > 0) return null;
     const parts: string[] = [];
     if (freeBusy.previous) {
-      const name = appointmentName(freeBusy.previous);
+      const name = isolate(appointmentName(freeBusy.previous), this.locale);
       const at = formatTime(freeBusy.previous.startsAt, this.locale);
       parts.push(
         $localize`:Rendez-vous précédent du créneau@@agenda.new.previous:précédent : ${name}:name: à ${at}:time:`,
       );
     }
     if (freeBusy.next) {
-      const name = appointmentName(freeBusy.next);
+      const name = isolate(appointmentName(freeBusy.next), this.locale);
       const at = formatTime(freeBusy.next.startsAt, this.locale);
       parts.push(
         $localize`:Rendez-vous suivant du créneau@@agenda.new.next:suivant : ${name}:name: à ${at}:time:`,
@@ -343,18 +359,24 @@ export class NewAppointmentPanel {
   protected readonly conflict = computed(() => {
     const first = this.store.freeBusy()?.conflicts[0];
     if (!first) return null;
-    const name = first.patientDisplayName;
-    const range = formatTimeRange(first.startsAt, first.endsAt, this.locale);
+    const name = isolate(first.patientDisplayName, this.locale);
+    const range = isolate(
+      formatTimeRange(first.startsAt, first.endsAt, this.locale),
+      this.locale,
+      'ltr',
+    );
     return $localize`:Avertissement de chevauchement@@agenda.new.conflict:Chevauche le rendez-vous de ${name}:name: (${range}:range:). Il sera créé quand même ; vous pourrez le déplacer depuis l'agenda.`;
   });
 
-  /** « 4 fois (jusqu'au 19 déc.) » : la date de la dernière occurrence. */
-  protected countLabel(count: number): string {
+  /**
+   * « 4 fois (jusqu'au 19 déc.) » : la date de la dernière occurrence, null sans début lisible
+   * (« 4 fois »). Le gabarit écrit le nombre au pluriel (ICU, six formes en arabe).
+   */
+  protected untilLabel(count: number): string | null {
     const start = this.start();
+    if (!start) return null;
     const every = Number(this.values().repeat ?? 0) || 1;
-    if (!start) return $localize`:Nombre de répétitions@@agenda.new.count:${count}:count: fois`;
-    const last = formatDayMonth(addDays(start, 7 * every * (count - 1)), this.locale);
-    return $localize`:Nombre de répétitions avec la date de la dernière@@agenda.new.countUntil:${count}:count: fois (jusqu'au ${last}:date:)`;
+    return formatDayMonth(addDays(start, 7 * every * (count - 1)), this.locale);
   }
 
   protected readonly submitLabel = computed(() => {
@@ -451,7 +473,9 @@ export class NewAppointmentPanel {
     this.errors.set([]);
     this.message.set(
       problem.status === 403 || problem.status === 404
-        ? $localize`:Création refusée, patient inaccessible@@agenda.new.patientUnavailable:Ce patient n'est plus accessible : choisissez-en un autre.`
+        ? this.client()
+          ? $localize`:Création refusée, client inaccessible (coach)@@agenda.new.clientUnavailable:Ce client n'est plus accessible : choisissez-en un autre.`
+          : $localize`:Création refusée, patient inaccessible@@agenda.new.patientUnavailable:Ce patient n'est plus accessible : choisissez-en un autre.`
         : $localize`:Création en échec@@agenda.new.failed:Les rendez-vous n'ont pas pu être planifiés. Réessayez dans un instant.`,
     );
   }

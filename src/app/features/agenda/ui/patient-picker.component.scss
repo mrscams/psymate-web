@@ -31,8 +31,7 @@
   position: absolute;
   z-index: 1;
   top: calc(100% + 4px);
-  right: 0;
-  left: 0;
+  inset-inline: 0;
   max-height: 240px;
   margin: 0;
   padding: 4px;

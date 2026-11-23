@@ -3,6 +3,7 @@ import { LOCALE_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
+import { SubjectVocabulary } from '../../../core/i18n';
 import { PreferencesStore } from '../../../core/preferences';
 import { AgendaApi } from '../data/agenda.api';
 import { appointmentOf, guestAppointmentOf, PURGED_GUEST } from '../testing/agenda.testing';
@@ -288,5 +289,56 @@ describe('NewAppointmentPanel (fiche 15b)', () => {
     await settle(fixture);
     expect(api.create).not.toHaveBeenCalled();
     expect(text(el.querySelector('#field-patientId-error'))).toBe('Ce champ est obligatoire.');
+  });
+
+  it('répétitions au pluriel ICU : texte rendu identique au message d’avant, caractère pour caractère', async () => {
+    const { el, select, choose, type } = await render({ patient: marie });
+    await choose(select('repeat'), 'Toutes les 2 semaines');
+    const labels = () => [...select('count').options].map((option) => option.textContent);
+    expect(labels().slice(0, 2)).toEqual(["2 fois (jusqu'au 21 nov.)", "3 fois (jusqu'au 5 déc.)"]);
+    expect(labels()[24]).toBe("26 fois (jusqu'au 23 oct.)");
+    // Début illisible : « n fois » seul.
+    await type(el.querySelector<HTMLInputElement>('#field-start')!, '');
+    expect(labels().slice(0, 2)).toEqual(['2 fois', '3 fois']);
+  });
+
+  it('coach : le panneau suit la désignation « client » partout où il nomme la personne suivie', async () => {
+    const { fixture, el, api, type } = await render();
+    TestBed.inject(SubjectVocabulary).set('client');
+    await settle(fixture);
+    expect(el.querySelector('section .label')!.textContent).toBe('Client');
+    expect(el.querySelector('.confirm')!.textContent!.trim()).toBe('À confirmer avec le client');
+    const search = el.querySelector<HTMLInputElement>('#field-patientId')!;
+    expect(search.placeholder).toBe('Rechercher un client…');
+    api.searchPatients.mockResolvedValue([]);
+    await type(search, 'zz', INPUT_DEBOUNCE_MS + 50);
+    expect(text(el.querySelector('[role=listbox] .empty'))).toBe(
+      'Aucun client actif ne correspond.',
+    );
+  });
+
+  it('coach : patient inaccessible (403) → « Ce client n’est plus accessible »', async () => {
+    const create = vi.fn().mockRejectedValue({ status: 403, code: 'PATIENT_FORBIDDEN' });
+    const { fixture, el } = await render({ patient: marie }, { create });
+    TestBed.inject(SubjectVocabulary).set('client');
+    await settle(fixture);
+    expect(el.querySelector<HTMLInputElement>('#field-patientId')!.placeholder).toBe(
+      'Ou rechercher un autre client…',
+    );
+    el.querySelector<HTMLFormElement>('form')!.dispatchEvent(new Event('submit'));
+    await settle(fixture);
+    expect(text(el.querySelector('.form-message'))).toBe(
+      "Ce client n'est plus accessible : choisissez-en un autre.",
+    );
+  });
+
+  it('désignation « patient » (défaut) : textes inchangés ; note en dir="auto"', async () => {
+    const { el } = await render();
+    expect(el.querySelector('section .label')!.textContent).toBe('Patient');
+    expect(el.querySelector<HTMLInputElement>('#field-patientId')!.placeholder).toBe(
+      'Rechercher un patient…',
+    );
+    expect(el.querySelector('#field-note')!.getAttribute('dir')).toBe('auto');
+    expect(el.querySelector('#field-patientId')!.getAttribute('dir')).toBe('auto');
   });
 });

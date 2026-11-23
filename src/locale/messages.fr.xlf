@@ -8224,6 +8224,14 @@
         </context-group>
         <note priority="1" from="description">Titre d&apos;onglet de l&apos;agenda</note>
       </trans-unit>
+      <trans-unit id="agenda.toolbar.sessions" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {aucune séance} =1 {1 séance} other {<x id="INTERPOLATION"/> séances}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.html</context>
+          <context context-type="linenumber">14,16</context>
+        </context-group>
+        <note priority="1" from="description">Nombre de séances de la plage affichée</note>
+      </trans-unit>
       <trans-unit id="agenda.title" datatype="html">
         <source>Agenda</source>
         <context-group purpose="location">
@@ -8408,6 +8416,22 @@
         </context-group>
         <note priority="1" from="description">Action Annuler du toast de création</note>
       </trans-unit>
+      <trans-unit id="agenda.toast.createdManyOverlaps" datatype="html">
+        <source><x id="count" equiv-text="count"/> rendez-vous planifiés, <x id="overlaps" equiv-text="overlaps"/> chevauchements</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">497</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une création de plusieurs rendez-vous avec chevauchements</note>
+      </trans-unit>
+      <trans-unit id="agenda.toast.createdManyOverlap" datatype="html">
+        <source><x id="count" equiv-text="count"/> rendez-vous planifiés, 1 chevauchement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">500</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une création de plusieurs rendez-vous avec un chevauchement</note>
+      </trans-unit>
       <trans-unit id="agenda.toast.createdMany" datatype="html">
         <source><x id="count" equiv-text="count"/> rendez-vous planifiés</source>
         <context-group purpose="location">
@@ -8416,6 +8440,14 @@
         </context-group>
         <note priority="1" from="description">Toast après une création, plusieurs rendez-vous</note>
       </trans-unit>
+      <trans-unit id="agenda.toast.createdOneOverlap" datatype="html">
+        <source>Rendez-vous planifié, 1 chevauchement</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
+          <context context-type="linenumber">505</context>
+        </context-group>
+        <note priority="1" from="description">Toast après une création d&apos;un rendez-vous avec un chevauchement</note>
+      </trans-unit>
       <trans-unit id="agenda.toast.createdOne" datatype="html">
         <source>Rendez-vous planifié</source>
         <context-group purpose="location">
@@ -8423,22 +8455,6 @@
           <context context-type="linenumber">409</context>
         </context-group>
         <note priority="1" from="description">Toast après une création, un rendez-vous</note>
-      </trans-unit>
-      <trans-unit id="agenda.toast.createdOverlaps" datatype="html">
-        <source><x id="base" equiv-text="base"/>, <x id="count" equiv-text="overlaps"/> chevauchements</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">413</context>
-        </context-group>
-        <note priority="1" from="description">Toast après une création avec chevauchements</note>
-      </trans-unit>
-      <trans-unit id="agenda.toast.createdOverlap" datatype="html">
-        <source><x id="base" equiv-text="base"/>, 1 chevauchement</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
-          <context context-type="linenumber">414</context>
-        </context-group>
-        <note priority="1" from="description">Toast après une création avec un chevauchement</note>
       </trans-unit>
       <trans-unit id="agenda.toast.undone" datatype="html">
         <source>Planification annulée.</source>
@@ -8456,6 +8472,14 @@
         </context-group>
         <note priority="1" from="description">Section patient du panneau</note>
       </trans-unit>
+      <trans-unit id="agenda.new.field.client" datatype="html">
+        <source>Client</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+        <note priority="1" from="description">Champ client, résumé des erreurs (coach)</note>
+      </trans-unit>
       <trans-unit id="agenda.new.change" datatype="html">
         <source> Changer </source>
         <context-group purpose="location">
@@ -8471,6 +8495,30 @@
           <context context-type="linenumber">73,74</context>
         </context-group>
         <note priority="1" from="description">Âge d&apos;un patient dans la recherche</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.searchPlaceholderClient" datatype="html">
+        <source>Rechercher un client…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/patient-picker.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche d&apos;un client (coach)</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.searchOtherClient" datatype="html">
+        <source>Ou rechercher un autre client…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/patient-picker.component.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <note priority="1" from="description">Champ de recherche d&apos;un autre client (coach)</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.noResultsClient" datatype="html">
+        <source>Aucun client actif ne correspond.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/patient-picker.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <note priority="1" from="description">Recherche de client sans résultat (coach)</note>
       </trans-unit>
       <trans-unit id="agenda.new.slot" datatype="html">
         <source>Créneau</source>
@@ -8672,13 +8720,29 @@
         </context-group>
         <note priority="1" from="description">Exemple d&apos;heure de début du rendez-vous</note>
       </trans-unit>
-      <trans-unit id="agenda.new.toConfirm" datatype="html">
-        <source>À confirmer avec le <x id="subject" equiv-text="subject"/></source>
+      <trans-unit id="agenda.new.toConfirmClient" datatype="html">
+        <source>À confirmer avec le client</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+        <note priority="1" from="description">Case À confirmer du panneau (coach)</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.toConfirmPatient" datatype="html">
+        <source>À confirmer avec le patient</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">150</context>
         </context-group>
         <note priority="1" from="description">Case À confirmer du panneau</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.client" datatype="html">
+        <source>Client</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+        <note priority="1" from="description">Section client du panneau (coach)</note>
       </trans-unit>
       <trans-unit id="agenda.new.noResults" datatype="html">
         <source>Aucun patient actif ne correspond.</source>
@@ -8849,18 +8913,18 @@
         <note priority="1" from="description">Avertissement de chevauchement</note>
       </trans-unit>
       <trans-unit id="agenda.new.count" datatype="html">
-        <source><x id="count" equiv-text="count"/> fois</source>
+        <source>{VAR_PLURAL, plural, other {<x id="INTERPOLATION"/> fois}}</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
-          <context context-type="linenumber">431</context>
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">154,156</context>
         </context-group>
         <note priority="1" from="description">Nombre de répétitions</note>
       </trans-unit>
       <trans-unit id="agenda.new.countUntil" datatype="html">
-        <source><x id="count" equiv-text="count"/> fois (jusqu&apos;au <x id="date" equiv-text="last"/>)</source>
+        <source>{VAR_PLURAL, plural, other {<x id="INTERPOLATION"/> fois (jusqu&apos;au <x id="INTERPOLATION_1"/>)}}</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
-          <context context-type="linenumber">433</context>
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
+          <context context-type="linenumber">154</context>
         </context-group>
         <note priority="1" from="description">Nombre de répétitions avec la date de la dernière</note>
       </trans-unit>
@@ -8879,6 +8943,14 @@
           <context context-type="linenumber">440</context>
         </context-group>
         <note priority="1" from="description">Bouton principal, un rendez-vous</note>
+      </trans-unit>
+      <trans-unit id="agenda.new.clientUnavailable" datatype="html">
+        <source>Ce client n&apos;est plus accessible : choisissez-en un autre.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
+          <context context-type="linenumber">477</context>
+        </context-group>
+        <note priority="1" from="description">Création refusée, client inaccessible (coach)</note>
       </trans-unit>
       <trans-unit id="agenda.new.patientUnavailable" datatype="html">
         <source>Ce patient n&apos;est plus accessible : choisissez-en un autre.</source>
@@ -8975,30 +9047,6 @@
           <context context-type="linenumber">155</context>
         </context-group>
         <note priority="1" from="description">Vue liste de l&apos;agenda, période couverte</note>
-      </trans-unit>
-      <trans-unit id="agenda.toolbar.sessions.none" datatype="html">
-        <source>aucune séance</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
-          <context context-type="linenumber">164</context>
-        </context-group>
-        <note priority="1" from="description">Aucune séance dans la plage affichée</note>
-      </trans-unit>
-      <trans-unit id="agenda.toolbar.sessions.one" datatype="html">
-        <source>1 séance</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
-          <context context-type="linenumber">167</context>
-        </context-group>
-        <note priority="1" from="description">Une séance dans la plage affichée</note>
-      </trans-unit>
-      <trans-unit id="agenda.toolbar.sessions.many" datatype="html">
-        <source><x id="count" equiv-text="count"/> séances</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
-          <context context-type="linenumber">169</context>
-        </context-group>
-        <note priority="1" from="description">Nombre de séances de la plage affichée</note>
       </trans-unit>
       <trans-unit id="agenda.guest.purged" datatype="html">
         <source>Invité purgé</source>
@@ -9161,10 +9209,10 @@
         <note priority="1" from="description">Renoncer au déplacement</note>
       </trans-unit>
       <trans-unit id="agenda.detail.cancelTitle" datatype="html">
-        <source> Annuler ce rendez-vous ? </source>
+        <source>Annuler ce rendez-vous ?</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
-          <context context-type="linenumber">137,140</context>
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">309</context>
         </context-group>
         <note priority="1" from="description">Titre de la confirmation d&apos;annulation</note>
       </trans-unit>
@@ -9177,10 +9225,10 @@
         <note priority="1" from="description">Champ motif d&apos;annulation</note>
       </trans-unit>
       <trans-unit id="agenda.detail.cancelSubmit" datatype="html">
-        <source> Annuler le rendez-vous </source>
+        <source>Annuler le rendez-vous</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
-          <context context-type="linenumber">160,163</context>
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
+          <context context-type="linenumber">310</context>
         </context-group>
         <note priority="1" from="description">Confirmer l&apos;annulation</note>
       </trans-unit>
@@ -9409,10 +9457,10 @@
         <note priority="1" from="description">Rendez-vous invité (personne sans dossier patient), dans le détail</note>
       </trans-unit>
       <trans-unit id="agenda.detail.age" datatype="html">
-        <source><x id="age" equiv-text="item.patient.age"/> ans</source>
+        <source><x id="age" equiv-text="age"/> ans</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">253</context>
+          <context context-type="linenumber">391</context>
         </context-group>
         <note priority="1" from="description">Âge du patient dans le détail</note>
       </trans-unit>
@@ -9457,10 +9505,10 @@
         <note priority="1" from="description">Rendez-vous annulé, date</note>
       </trans-unit>
       <trans-unit id="agenda.detail.cancelledReason" datatype="html">
-        <source><x id="base" equiv-text="base"/> (<x id="reason" equiv-text="reason"/>)</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ cancelled.base }}"/> (<x id="START_TAG_BDI" ctype="x-bdi" equiv-text="&lt;bdi&gt;"/><x id="INTERPOLATION_1" equiv-text="{{ reason }}"/><x id="CLOSE_TAG_BDI" ctype="x-bdi" equiv-text="&lt;/bdi&gt;"/>)</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
-          <context context-type="linenumber">307</context>
+          <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <note priority="1" from="description">Rendez-vous annulé, date et motif</note>
       </trans-unit>
@@ -9583,6 +9631,14 @@
           <context context-type="linenumber">127</context>
         </context-group>
         <note priority="1" from="description">Mini-mois, jour d&apos;aujourd&apos;hui</note>
+      </trans-unit>
+      <trans-unit id="agenda.requests.count" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {1 demande attend votre réponse.} other {<x id="INTERPOLATION"/> demandes attendent votre réponse.}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.html</context>
+          <context context-type="linenumber">10,18</context>
+        </context-group>
+        <note priority="1" from="description">Panneau des demandes en ligne, nombre de demandes en attente</note>
       </trans-unit>
       <trans-unit id="auth.login.pageTitle" datatype="html">
         <source>Connexion · PsyMate</source>
@@ -26417,22 +26473,6 @@
           <context context-type="linenumber">71</context>
         </context-group>
         <note priority="1" from="description">Bouton Réessayer du panneau des demandes en ligne</note>
-      </trans-unit>
-      <trans-unit id="agenda.requests.countOne" datatype="html">
-        <source>1 demande attend votre réponse.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
-          <context context-type="linenumber">91</context>
-        </context-group>
-        <note priority="1" from="description">Panneau des demandes en ligne, une demande</note>
-      </trans-unit>
-      <trans-unit id="agenda.requests.countMany" datatype="html">
-        <source><x id="count" equiv-text="count"/> demandes attendent votre réponse.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
-          <context context-type="linenumber">92</context>
-        </context-group>
-        <note priority="1" from="description">Panneau des demandes en ligne, plusieurs demandes</note>
       </trans-unit>
       <trans-unit id="agenda.toolbar.requestsSuffix" datatype="html">
         <source> en ligne</source>

@@ -9,7 +9,9 @@
   <!-- Les segments se suivent sans espace (« 1<sup>er</sup> novembre ») : une seule ligne. -->
   <!-- prettier-ignore -->
   <span class="range" aria-live="polite">@for (segment of rangeSegments(); track $index) {@if (segment.sup) {<sup>{{ segment.text }}</sup>} @else {{{ segment.text }}}}</span>
-  <span class="meta">{{ meta() }}</span>
+  <!-- « · semaine 44 · 14 séances » : le compte au pluriel ICU, collé à ce qui le précède. -->
+  <!-- prettier-ignore -->
+  <span class="meta">{{ metaPrefix() }}@if (sessionsShown()) {<ng-container i18n="Nombre de séances de la plage affichée@@agenda.toolbar.sessions">{store.sessionCount(), plural, =0 {aucune séance} =1 {1 séance} other {{{ store.sessionCount() }} séances}}</ng-container>}</span>
   <span class="spacer"></span>
   <div role="group" [attr.aria-label]="viewsLabel" class="views">
     @for (view of views; track view) {

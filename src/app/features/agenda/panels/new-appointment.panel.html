@@ -1,20 +1,16 @@
 <pm-side-panel [title]="title" [subtitle]="subtitle">
   <form [formGroup]="form" (ngSubmit)="submit()" novalidate [id]="formId">
-    <pm-form-errors [errors]="errors()" [labels]="fieldLabels" [unmatched]="unmatched()" />
+    <pm-form-errors [errors]="errors()" [labels]="fieldLabels()" [unmatched]="unmatched()" />
     @if (message(); as text) {
       <p class="form-message" role="alert">{{ text }}</p>
     }
 
     <!-- Patient : carte du patient choisi, recherche parmi les patients actifs (pm-patient-picker). -->
     <section class="section">
-      <label
-        class="label"
-        [for]="fieldId('patientId')"
-        i18n="Section patient du panneau@@agenda.new.patient"
-        >Patient</label
-      >
+      <label class="label" [for]="fieldId('patientId')">{{ patientLabel() }}</label>
       <pm-patient-picker
         [inputId]="fieldId('patientId')"
+        [subject]="subject()"
         [chosen]="chosen()"
         [meta]="patientMeta()"
         [invalid]="invalid('patientId')"
@@ -152,8 +148,10 @@
             [attr.aria-label]="countAriaLabel"
             [attr.aria-describedby]="fieldId('count') + '-error'"
           >
+            <!-- « 4 fois (jusqu'au 19 déc.) », ou « 4 fois » sans début lisible : pluriel ICU. -->
+            <!-- prettier-ignore -->
             @for (count of counts; track count) {
-              <option [value]="'' + count">{{ countLabel(count) }}</option>
+              <option [value]="'' + count">@if (untilLabel(count); as last) {<ng-container i18n="Nombre de répétitions avec la date de la dernière@@agenda.new.countUntil">{count, plural, other {{{ count }} fois (jusqu'au {{ last }})}}</ng-container>} @else {<ng-container i18n="Nombre de répétitions@@agenda.new.count">{count, plural, other {{{ count }} fois}}</ng-container>}</option>
             }
             <option value="until" i18n="Option de fin de série@@agenda.new.untilOption">
               Jusqu'à une date…
@@ -198,6 +196,7 @@
         [id]="fieldId('note')"
         rows="2"
         formControlName="note"
+        dir="auto"
         [attr.maxlength]="noteMax"
         [placeholder]="notePlaceholder"
         [attr.aria-describedby]="fieldId('note') + '-error'"

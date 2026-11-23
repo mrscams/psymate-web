@@ -23,7 +23,9 @@ import {
   EventDropArg,
   EventInput,
   EventMountArg,
+  LocaleInput,
 } from '@fullcalendar/core';
+import arLocale from '@fullcalendar/core/locales/ar';
 import enLocale from '@fullcalendar/core/locales/en-gb';
 import frLocale from '@fullcalendar/core/locales/fr';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -31,6 +33,7 @@ import interactionPlugin, { DateClickArg, EventResizeDoneArg } from '@fullcalend
 import listPlugin from '@fullcalendar/list';
 import timeGridPlugin from '@fullcalendar/timegrid';
 
+import { formatLocale, textDirection, toAppLocale } from '../../../core/i18n';
 import {
   AgendaHours,
   AgendaView,
@@ -92,6 +95,24 @@ interface EventProps {
   online?: boolean;
 }
 
+/**
+ * Locale FullCalendar du bundle (Q73) : celle de la bibliothèque pour les textes (arabe, français,
+ * anglais britannique) ; en arabe, son code devient la locale de formatage, que FullCalendar passe
+ * à Intl : chiffres latins, calendrier grégorien, heures sur 24 h, au lieu des chiffres
+ * arabo-indiens de « ar ». Le premier jour de la semaine ne vient jamais de la locale (« ar » le met
+ * au samedi) : `firstDay: 1` le fixe au lundi (Q71 point 3).
+ */
+export function calendarLocale(localeId: string): LocaleInput {
+  switch (toAppLocale(localeId)) {
+    case 'ar':
+      return { ...arLocale, code: formatLocale(localeId) };
+    case 'en':
+      return enLocale;
+    default:
+      return frLocale;
+  }
+}
+
 /** `HH:00:00` pour une heure de 0 à 24. */
 function hourTime(hour: number): string {
   return `${String(hour).padStart(2, '0')}:00:00`;
@@ -99,7 +120,7 @@ function hourTime(hour: number): string {
 
 /**
  * Zone centrale de l'agenda sur FullCalendar (fiche 15 : cœur MIT + daygrid, timegrid, list,
- * interaction, locale fr), habillée par agenda-calendar.component.scss avec les tokens Nordique
+ * interaction, locale du bundle, de droite à gauche en arabe), habillée par agenda-calendar.component.scss avec les tokens Nordique
  * (variables `--fc-*` et surcharges) pour reproduire la maquette 15 : bornes horaires des
  * préférences `agenda.dayStartHour` / `agenda.dayEndHour` (8 h → 19 h par défaut) à 52 px par
  * heure, en-têtes « lun. 26 », événements teintés avec barre de modalité, « à confirmer » en
@@ -236,7 +257,9 @@ export class AgendaCalendarComponent {
   private buildOptions(): CalendarOptions {
     return {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
-      locale: this.locale.startsWith('en') ? enLocale : frLocale,
+      locale: calendarLocale(this.locale),
+      // De droite à gauche en arabe (Q75) : lundi dans la première colonne à droite.
+      direction: textDirection(this.locale),
       headerToolbar: false,
       initialView: FC_VIEWS[untracked(() => this.view())],
       initialDate: untracked(() => this.anchor()),

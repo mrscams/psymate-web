@@ -21,12 +21,14 @@ import {
   modalityTitle,
 } from './agenda-format';
 
-/** Une ligne de la liste : « jeu. 26 nov. », « 10:00–11:00 », « Sara Benali · Cabinet ». */
+/** Une ligne de la liste : « jeu. 26 nov. », « 10:00–11:00 », « Sara Benali », « Cabinet ». */
 interface RequestRow {
   appointment: Appointment;
   date: string;
   time: string;
-  who: string;
+  /** Nom de l'invité (saisi par le demandeur : `dir="auto"` dans le gabarit). */
+  name: string;
+  modality: string;
 }
 
 /**
@@ -83,21 +85,19 @@ export class OnlineRequestsComponent {
     return stateKind(requests);
   });
 
-  /** « 2 demandes attendent votre réponse. », « 1 demande attend votre réponse. » ; rien sans demande. */
-  protected readonly countLine = computed(() => {
-    const count = this.requests().data?.length ?? 0;
-    if (count === 0) return null;
-    return count === 1
-      ? $localize`:Panneau des demandes en ligne, une demande@@agenda.requests.countOne:1 demande attend votre réponse.`
-      : $localize`:Panneau des demandes en ligne, plusieurs demandes@@agenda.requests.countMany:${count}:count: demandes attendent votre réponse.`;
-  });
+  /**
+   * Nombre de demandes en attente : le gabarit écrit « 2 demandes attendent votre réponse. »,
+   * « 1 demande attend votre réponse. » (pluriel ICU, six formes en arabe) ; rien sans demande.
+   */
+  protected readonly count = computed(() => this.requests().data?.length ?? 0);
 
   protected readonly rows = computed<RequestRow[]>(() =>
     (this.requests().data ?? []).map((appointment) => ({
       appointment,
       date: formatShortWeekdayDate(new Date(appointment.startsAt), this.locale),
       time: formatTimeRange(appointment.startsAt, appointment.endsAt, this.locale),
-      who: `${appointmentName(appointment)} · ${modalityTitle(appointment.modality)}`,
+      name: appointmentName(appointment),
+      modality: modalityTitle(appointment.modality),
     })),
   );
 
