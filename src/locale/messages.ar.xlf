@@ -4,6 +4,7 @@
     <body>
       <trans-unit id="subject.patient.one" datatype="html">
         <source>patient</source>
+        <target state="translated">مريض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
           <context context-type="linenumber">26</context>
@@ -12,6 +13,7 @@
       </trans-unit>
       <trans-unit id="subject.patient.many" datatype="html">
         <source>patients</source>
+        <target state="translated">المرضى</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
           <context context-type="linenumber">28</context>
@@ -20,6 +22,7 @@
       </trans-unit>
       <trans-unit id="subject.patient.One" datatype="html">
         <source>Patient</source>
+        <target state="translated">مريض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
           <context context-type="linenumber">30</context>
@@ -28,6 +31,7 @@
       </trans-unit>
       <trans-unit id="subject.patient.Many" datatype="html">
         <source>Patients</source>
+        <target state="translated">المرضى</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
           <context context-type="linenumber">32</context>
@@ -36,6 +40,7 @@
       </trans-unit>
       <trans-unit id="subject.client.one" datatype="html">
         <source>client</source>
+        <target state="translated">عميل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
           <context context-type="linenumber">36</context>
@@ -44,6 +49,7 @@
       </trans-unit>
       <trans-unit id="subject.client.many" datatype="html">
         <source>clients</source>
+        <target state="translated">العملاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
           <context context-type="linenumber">38</context>
@@ -52,6 +58,7 @@
       </trans-unit>
       <trans-unit id="subject.client.One" datatype="html">
         <source>Client</source>
+        <target state="translated">عميل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
           <context context-type="linenumber">40</context>
@@ -60,6 +67,7 @@
       </trans-unit>
       <trans-unit id="subject.client.Many" datatype="html">
         <source>Clients</source>
+        <target state="translated">العملاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/i18n/subject-label.ts</context>
           <context context-type="linenumber">42</context>
