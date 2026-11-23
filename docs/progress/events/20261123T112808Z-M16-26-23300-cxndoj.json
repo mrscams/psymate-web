@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T11:28:08.368Z",
+  "task": "M16-26",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Cibles arabes pour les 621 unités public.* et auth.* de messages.ar.xlf (0 sans cible), plus les 2 sous-messages ICU de l'annuaire ; six formes de pluriel, termes du glossaire ; 8 termes manquants et 10 messages incertains listés dans la PR.",
+  "pr": "https://github.com/mrscams/psymate-web/pull/118",
+  "branch": "M16-26-traduction-public-auth",
+  "checkout": "agent-add871d336ce905f4"
+}
