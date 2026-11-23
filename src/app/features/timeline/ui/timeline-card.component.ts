@@ -12,6 +12,7 @@ import {
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { take } from 'rxjs';
 
+import { formatLocale } from '../../../core/i18n';
 import { EntryIconComponent, entryTitle, entryTypeLabel } from '../../../shared/ui';
 import { formatOccurred } from '../../../shared/util';
 import { TimelineItem } from '../data/timeline.model';
@@ -62,7 +63,7 @@ export class TimelineCardComponent {
   /** `L` ou le bouton Lier : l'éditeur de lien (fiche 06). */
   readonly linked = output<TimelineItem>();
 
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly trigger = viewChild.required(MatMenuTrigger);
 

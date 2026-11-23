@@ -8,6 +8,7 @@ import {
   output,
 } from '@angular/core';
 
+import { formatLocale } from '../../../core/i18n';
 import {
   PERIOD_PRESETS,
   PeriodPreset,
@@ -97,9 +98,11 @@ import { dayLabel, periodAccessibleLabel, periodLabel } from './timeline-labels'
       }
     }
 
+    // « Du 8 oct. 2026 au … » : lettres et noms de mois, donc --font-mono-text (Q76).
     .custom {
       color: var(--text-secondary);
-      font-family: var(--font-mono);
+      font-family: var(--font-mono-text);
+      font-variant-numeric: tabular-nums;
       font-size: 12px;
     }
   `,
@@ -110,7 +113,7 @@ export class TimelinePeriodComponent {
   readonly today = input<Date>(new Date());
   readonly filtersChange = output<TimelineFilters>();
 
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
 
   protected readonly presets = PERIOD_PRESETS;
   protected readonly preset = computed(() => presetOf(this.filters(), this.today()));
