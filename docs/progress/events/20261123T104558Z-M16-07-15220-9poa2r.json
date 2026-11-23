@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T10:45:58.522Z",
+  "task": "M16-07",
+  "agent": "claude",
+  "status": "merged",
+  "summary": "Fusionnée en squash (716d223) : plan M, étude, G14 Q71 à Q81, C14, design/arabe.md, glossaire",
+  "pr": "https://github.com/mrscams/psymate-web/pull/116",
+  "branch": "M16-08-socle-langue",
+  "checkout": "psymate-ux-audit-design-b1ba83"
+}

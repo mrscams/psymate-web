@@ -6,7 +6,7 @@
 
 La tâche M16-01 copie la moitié API dans `psymate-api/docs/M-plan-version-arabe-api.md` et inscrit les décisions dans le G de l'API. La tâche M16-07 fait le report côté web. Tant qu'elles ne sont pas fusionnées, ce document fait foi pour le jalon M16.
 
-Numéros (revérifiés le 23 novembre 2026 sur `main` des deux dépôts) : jalon **M16**. M14 est livré ; M15 (facturation) n'est pas lancé et son plan n'est pas sur `main`. Dans ce dépôt : **Q71 inscrite, Q72 à Q81 à inscrire, section G14**, section **C14** (G11 et Q59 sont des numéros déjà réservés ; G13, Q67 à Q70 et C13 à la facturation). Dans psymate-api : **Q96 à Q102, section G12, section C15** (Q83 à Q95, G11 et C14 restent réservés à la facturation). Migration : **`V16`**, le premier numéro libre. Contrat : **`0.16.0`**, la mineure qui suit `0.15.0` (tag posé par M14-08). La facturation prendra les numéros suivants pour sa migration et son contrat ; son plan devra être corrigé en conséquence.
+Numéros (revérifiés le 23 novembre 2026 sur `main` des deux dépôts) : jalon **M16**. M14 est livré ; M15 (facturation) n'est pas lancé et son plan n'est pas sur `main`. Dans ce dépôt : **Q71 inscrite, Q72 à Q81 à inscrire, section G14**, section **C14** (G11 et Q59 sont des numéros déjà réservés ; G13, Q67 à Q70 et C13 à la facturation). Dans psymate-api : **Q96 à Q102, section G12, section C15** (Q83 à Q95, G11 et C14 restent réservés à la facturation). Migrations : **`V16`** pour M16-02 (contraintes de langue en base) et **`V17`** pour les catalogues de M16-03 (constat de la session API, inscrit dans sa copie du plan le 23 novembre 2026). Contrat : **`0.16.0`**, la mineure qui suit `0.15.0` (tag posé par M14-08). La facturation prendra les numéros suivants pour sa migration et son contrat ; son plan devra être corrigé en conséquence.
 
 ## M1. Périmètre
 
@@ -51,7 +51,7 @@ Proposées à partir d'une lecture rapide de psymate-api (`main` = 4e798e7) ; M1
 | --- | --- | --- |
 | Q96 | Langues servies | `fr`, `en`, `ar`. La langue d'une requête se résout en un seul endroit de `shared` à partir d'`Accept-Language` ; les résolutions locales (« anglais, sinon français ») des modules disparaissent. Français par défaut. Aucun changement de comportement pour `fr` et `en`. |
 | Q97 | Préférence de langue | La préférence `locale` accepte `ar`. |
-| Q98 | Catalogues | Colonnes `label_ar`, et `inverse_label_ar` pour les types de lien, nulles par défaut (migration `V16`). Les vues exposent `labelAr` ; les routes d'administration l'acceptent. Repli sur le français. Les catalogues globaux reçoivent leur libellé arabe, tiré du glossaire (M16-07). |
+| Q98 | Catalogues | Colonnes `label_ar`, et `inverse_label_ar` pour les types de lien, nulles par défaut (migration `V17`). Les vues exposent `labelAr` ; les routes d'administration l'acceptent. Repli sur le français. Les catalogues globaux reçoivent leur libellé arabe, tiré du glossaire (M16-07). |
 | Q99 | Messages | `messages_ar.properties` porte toutes les clés ; un test échoue si une clé manque dans une des trois langues. |
 | Q100 | E-mails | Les e-mails partent dans la langue du destinataire, en arabe de droite à gauche. |
 | Q101 | Dates et nombres rendus par le serveur | Chiffres latins et calendrier grégorien en arabe, comme à l'écran (Q71). |
@@ -70,8 +70,8 @@ Constaté dans le code le 22 novembre 2026 : les dates, durées et listes passen
 | ID | Titre | Couloir | Dépend de | Parallèle avec |
 | --- | --- | --- | --- | --- |
 | M16-01 | Décisions Q96 à Q102 et documentation ; copie de ce plan | docs | — | M16-07 |
-| M16-02 | Langue de la requête résolue en un seul endroit ; préférence `locale` = `ar` ; dates et nombres en chiffres latins | shared + classes de messages des modules + identity (préférences) | M16-01 | — |
-| M16-03 | Catalogues : `label_ar`, `inverse_label_ar`, vues, administration, libellés des catalogues globaux | vocabulary, directory, linking, migration `V16` | M16-02, glossaire (M16-07) | M16-04 |
+| M16-02 | Langue de la requête résolue en un seul endroit ; préférence `locale` = `ar` ; dates et nombres en chiffres latins | shared + classes de messages des modules + identity (préférences), migration `V16` | M16-01 | — |
+| M16-03 | Catalogues : `label_ar`, `inverse_label_ar`, vues, administration, libellés des catalogues globaux | vocabulary, directory, linking, migration `V17` | M16-02, glossaire (M16-07) | M16-04 |
 | M16-04 | `messages_ar.properties` complet, test de parité des clés | ressources + test | M16-02, glossaire (M16-07) | M16-03 |
 | M16-05 | E-mails en arabe, de droite à gauche | services d'envoi + templates | M16-04 | — |
 | M16-06 | Seed, contrat `0.16.0`, tag, suivi | seed + contrat | M16-03, M16-05 | — |
@@ -233,7 +233,7 @@ Tâche M16-03 — Donner un libellé arabe aux catalogues (psymate-api). Utilise
 Contexte : lis CLAUDE.md, docs/M-plan-version-arabe-api.md (Q98, M4.3), ../psymate-web/docs/design/arabe-glossaire.md (emploie ses termes tels quels : ils sont proposés et seront relus par une personne arabophone avant l'ouverture), les migrations qui créent label_fr et label_en (V01, V02, V04), les vues et les routes d'administration des catalogues (émotions, types d'entrée, types de lien, vocabulaire de l'annuaire), docs/E-modele-donnees.md.
 
 Objectif :
-- Migration V16 (ou le numéro libre suivant) : label_ar nul par défaut sur chaque catalogue qui porte label_fr, inverse_label_ar sur les types de lien ; les lignes des catalogues globaux reçoivent leur libellé arabe du glossaire.
+- Migration V17 (V16 est prise par M16-02 ; sinon le numéro libre suivant) : label_ar nul par défaut sur chaque catalogue qui porte label_fr, inverse_label_ar sur les types de lien ; les lignes des catalogues globaux reçoivent leur libellé arabe du glossaire.
 - Les vues exposent labelAr (et inverseLabelAr) ; les routes d'administration l'acceptent, avec les mêmes règles que labelEn (vide = effacé, longueur maximale identique).
 - Le verbe d'un lien rendu selon la langue suit la règle de repli : arabe, sinon français.
 - Les émotions et étiquettes créées par un praticien ne changent pas : un seul libellé, celui qu'il a saisi.
@@ -1004,6 +1004,6 @@ Livrable : PR « M16-33 Saisie libre : dates en arabe », puis pnpm progress:log
 - **Décisions proposées** (Q72 à Q81, Q96 à Q102, dont l'arabe standard moderne) : inscrites comme proposées, non relues par l'utilisateur.
 - **Second temps** (M8) : à confirmer, avec ce que voit le praticien en attendant.
 - **Émotions créées par un praticien** : elles n'ont qu'un libellé, rangé dans `labelFr` quelle que soit la langue de saisie. Rien ne change ici ; à renommer un jour côté API si cela gêne.
-- **Facturation (M15)** : son plan n'est pas sur `main` et réservait `V16` et le contrat `0.16.0`, que M16 prend. À corriger dans le plan L avant son lancement.
+- **Facturation (M15)** : son plan n'est pas sur `main` et réservait `V16` et le contrat `0.16.0`, que M16 prend (avec `V17`). À corriger dans le plan L avant son lancement.
 - **Page de suivi** : sur `main`, `pnpm progress` ne lit pas encore les plans de jalon ; les tâches M16 y apparaissent par le tableau de C14 (ajouté par M16-07) et par leurs événements.
 - **Effort** : 6 PR côté API et 23 côté web jusqu'à l'ouverture, 4 de plus pour le second temps. Non chiffré en jours.
