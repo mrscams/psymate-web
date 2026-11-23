@@ -4,7 +4,6 @@ import { RouterLink } from '@angular/router';
 import {
   CATEGORY_META,
   CATEGORY_QUERY_PARAM,
-  countLabel,
   PROFILE_CATEGORIES,
   ProfileCategory,
 } from '../data/profile360.model';
@@ -66,10 +65,17 @@ export class ProfileMenuComponent {
     return { [CATEGORY_QUERY_PARAM]: category };
   }
 
-  /** « Famille et entourage 6 informations » : sans virgule, pour contenir le texte visible (axe, WCAG 2.5.3). */
+  /**
+   * « Famille et entourage 6 informations » : le nom lu commence par le texte visible, libellé puis
+   * nombre, sans virgule (axe, WCAG 2.5.3). Message entier qui porte le nombre : le compteur seul
+   * (`countLabel`) ne commence pas par le nombre dans toutes les langues (en arabe, une étiquette
+   * suivie du nombre).
+   */
   protected nameOf(category: ProfileCategory): string {
     const label = CATEGORY_META[category].label;
-    const count = countLabel(this.counts()[category]);
-    return $localize`:Nom lu d'une rubrique du menu (libellé, nombre d'informations)@@profile360.menu.item:${label}:label: ${count}:count:`;
+    const count = this.counts()[category];
+    return count === 1
+      ? $localize`:Nom lu d'une rubrique du menu, une information ; doit commencer par le libellé puis le nombre, comme le texte visible@@profile360.menu.itemOne:${label}:label: 1 information`
+      : $localize`:Nom lu d'une rubrique du menu, 0 ou plusieurs informations ; doit commencer par le libellé puis le nombre, comme le texte visible@@profile360.menu.itemMany:${label}:label: ${count}:count: informations`;
   }
 }

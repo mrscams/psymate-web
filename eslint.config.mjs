@@ -58,6 +58,7 @@ const LOGICAL_DIRECTION_ZONES = [
   'src/app/features/overview',
   'src/app/features/patient-shell',
   'src/app/features/patients',
+  'src/app/features/profile360',
   'src/app/features/public',
   'src/app/features/timeline',
   'src/theme',

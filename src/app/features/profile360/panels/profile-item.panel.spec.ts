@@ -290,3 +290,30 @@ describe('ProfileItemPanel', () => {
     expect(unchanged.dialogRef.close).toHaveBeenCalledWith();
   });
 });
+
+// M16-22 (G Q77) : les champs de texte libre prennent le sens de leur saisie (dir="auto"), dans
+// les trois langues ; Rubrique (liste) et Année (nombre) n'en ont pas. Le sens calculé est vérifié
+// dans le navigateur par e2e/arabe/profile360.spec.ts.
+describe('ProfileItemPanel, contenu saisi (M16-22)', () => {
+  it('Information, Précision et Période en dir="auto", en création comme en modification', async () => {
+    const created = await render({ category: 'history' });
+    for (const name of ['title', 'detail', 'periodLabel']) {
+      expect(field(created.el, name)?.getAttribute('dir'), name).toBe('auto');
+    }
+    expect(field(created.el, 'category')?.hasAttribute('dir')).toBe(false);
+    expect(field(created.el, 'periodYear')?.hasAttribute('dir')).toBe(false);
+    TestBed.resetTestingModule();
+
+    const item = profileItem('history', 'الطفولة في الرباط', {
+      detail: 'Souvenir partagé en séance',
+      periodLabel: 'الطفولة',
+      periodYear: 1990,
+    });
+    const edited = await render({ category: 'history', item });
+    expect(field<HTMLInputElement>(edited.el, 'title')?.value).toBe('الطفولة في الرباط');
+    expect(field<HTMLInputElement>(edited.el, 'periodLabel')?.value).toBe('الطفولة');
+    for (const name of ['title', 'detail', 'periodLabel']) {
+      expect(field(edited.el, name)?.getAttribute('dir'), name).toBe('auto');
+    }
+  });
+});

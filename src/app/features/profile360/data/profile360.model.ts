@@ -100,12 +100,44 @@ export function groupByCategory(items: readonly ProfileItem[]): ProfileGroups {
 }
 
 /**
- * La lettre de la pastille de Famille et entourage (fiche 30) : la première lettre du titre, en
- * capitale, sans les guillemets ou la ponctuation qui la précèdent ; à défaut, le premier caractère.
+ * La lettre de la pastille de Famille et entourage (fiche 30) : le premier graphème du titre qui
+ * porte une lettre ou un chiffre, sans les guillemets, la ponctuation ou l'émoji qui le précèdent ;
+ * à défaut, le premier graphème. Découpé par graphème (docs/design/arabe.md §4) : une lettre garde
+ * ses marques (accent décomposé, voyelles brèves arabes), un émoji n'est jamais coupé. Mis en
+ * capitale selon `locale`, sauf une lettre arabe : l'arabe n'a pas de capitale et la mise en
+ * capitale ne s'y applique pas (Q76).
+ * `locale` : la locale de formatage du bundle (`formatLocale` de core/i18n, Q73), fournie par
+ * l'appelant. Ce fichier n'importe pas core/i18n : il est dans le morceau du shell patient (par
+ * ProfileAddComponent), et cet import y déplaçait core/i18n hors du bundle initial, au-delà du budget.
  */
-export function initialOf(title: string): string {
-  const letter = /\p{L}|\p{N}/u.exec(title)?.[0] ?? title.trim().charAt(0);
-  return letter.toLocaleUpperCase();
+export function initialOf(title: string, locale: string): string {
+  const parts = graphemesOf(title.trim(), locale);
+  const letter = parts.find((part) => /\p{L}|\p{N}/u.test(part)) ?? parts[0] ?? '';
+  return /\p{Script=Arabic}/u.test(letter) ? letter : letter.toLocaleUpperCase(locale);
+}
+
+/**
+ * Repli sans Intl.Segmenter (même approximation que shared/ui/entry-icon/entry-title.ts) : une
+ * paire d'indicateurs régionaux, ou un caractère suivi de ses marques combinantes, sélecteurs de
+ * variante, teintes de peau, étiquettes, et des suites jointes par U+200D.
+ */
+const GRAPHEME_FALLBACK =
+  /\p{RI}\p{RI}|[^\p{M}‍][\p{M}\u{1F3FB}-\u{1F3FF}\u{E0020}-\u{E007F}]*(?:‍(?:\p{RI}\p{RI}|[^\p{M}‍])?[\p{M}\u{1F3FB}-\u{1F3FF}\u{E0020}-\u{E007F}]*)*|[\s\S]/gu;
+
+/** Un découpeur par locale, créé une fois. */
+const SEGMENTERS = new Map<string, Intl.Segmenter>();
+
+/** Graphèmes du texte : Intl.Segmenter dans la locale reçue, sinon le repli ci-dessus. */
+function graphemesOf(text: string, locale: string): string[] {
+  if (typeof Intl.Segmenter === 'function') {
+    let segmenter = SEGMENTERS.get(locale);
+    if (!segmenter) {
+      segmenter = new Intl.Segmenter(locale, { granularity: 'grapheme' });
+      SEGMENTERS.set(locale, segmenter);
+    }
+    return Array.from(segmenter.segment(text), (part) => part.segment);
+  }
+  return text.match(GRAPHEME_FALLBACK) ?? [];
 }
 
 // ---------------------------------------------------------------- écriture (M13-07, G Q54)
