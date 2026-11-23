@@ -11,6 +11,7 @@ import {
   signal,
 } from '@angular/core';
 
+import { formatLocale } from '../../../core/i18n';
 import {
   EntryIconComponent,
   entryTitle,
@@ -80,7 +81,7 @@ export class CaptureLinksComponent {
   readonly other = output<{ candidate: LinkCandidate; choice: LinkChoice }>();
   readonly retry = output<void>();
 
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly searchId = uniqueId('pm-capture-search');
   protected readonly searchOpen = signal(false);

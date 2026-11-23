@@ -20676,8 +20676,8 @@
         <note priority="1" from="description">Texte indicatif du bloc de saisie</note>
       </trans-unit>
       <trans-unit id="capture.bar.keys" datatype="html">
-        <source><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> détaille · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+S<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> brouillon</source>
-        <target state="translated"><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> details · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Ctrl+S<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> draft</target>
+        <source><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd dir=&quot;ltr&quot;&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> détaille · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd dir=&quot;ltr&quot;&gt;"/>Ctrl+S<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> brouillon</source>
+        <target state="translated"><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd dir=&quot;ltr&quot;&gt;"/>Ctrl+⏎<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> details · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd dir=&quot;ltr&quot;&gt;"/>Ctrl+S<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> draft</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-block.component.html</context>
           <context context-type="linenumber">444,446</context>

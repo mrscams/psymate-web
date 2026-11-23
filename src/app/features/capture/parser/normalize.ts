@@ -2,8 +2,14 @@
 // bord retirée. Fonctions déterministes : toLowerCase et normalize('NFD') ne dépendent pas de la
 // locale de la machine.
 
-/** Langue de grammaire des dates ; toute locale autre que l'anglais lit la grammaire française. */
-export type GrammarLanguage = 'fr' | 'en';
+/**
+ * Langue de grammaire de la barre : l'anglais lit la grammaire anglaise, l'arabe n'a aucune grammaire
+ * de dates (Q81, M16-20), toute autre locale lit la grammaire française.
+ */
+export type GrammarLanguage = 'fr' | 'en' | 'ar';
+
+/** Langues qui ont une grammaire de dates (lexicon.ts). */
+export type DateLanguage = Exclude<GrammarLanguage, 'ar'>;
 
 const COMBINING_MARKS = /\p{M}/gu;
 const APOSTROPHES = /[’ʼ`´]/g;
@@ -11,6 +17,7 @@ const EDGE_PUNCTUATION = /^[.,;:!?()[\]{}…»”]+|[.,;:!?()[\]{}…»”]+$/g;
 const ELISION = /^[ld]'/;
 const SPACES = /\s+/g;
 const ENGLISH: ReadonlySet<string> = new Set(['en', 'eng']);
+const ARABIC: ReadonlySet<string> = new Set(['ar', 'ara']);
 
 /** Minuscules, sans accents, apostrophes typographiques ramenées à « ' ». */
 export function fold(value: string): string {
@@ -46,8 +53,13 @@ export function stripElision(raw: string): string {
   return raw.replace(APOSTROPHES, "'").replace(/^[lLdD]'/, '');
 }
 
-/** Sous-étiquette de langue : « en », « en-GB », « eng » → en ; « fr », « fr-FR », « de », « enfr » → fr. */
+/**
+ * Sous-étiquette de langue : « en », « en-GB », « eng » → en ; « ar », « ar-EG »,
+ * « ar-u-ca-gregory-hc-h23-nu-latn » (locale de formatage, Q73), « ara » → ar ; « fr », « fr-FR »,
+ * « de », « enfr » → fr.
+ */
 export function grammarLanguage(locale: string): GrammarLanguage {
   const language = fold(locale.trim()).split(/[-_]/)[0];
-  return ENGLISH.has(language) ? 'en' : 'fr';
+  if (ENGLISH.has(language)) return 'en';
+  return ARABIC.has(language) ? 'ar' : 'fr';
 }

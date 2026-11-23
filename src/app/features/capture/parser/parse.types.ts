@@ -36,7 +36,10 @@ export interface ParseOptions {
   readonly emotions: readonly EmotionOption[];
   /** Horloge injectée : le parseur ne lit jamais l'heure de la machine. Date invalide : erreur levée. */
   readonly now: Date;
-  /** Locale de l'interface (« fr », « fr-FR », « en »…) : choisit la grammaire des dates. */
+  /**
+   * Locale de l'interface (« fr », « fr-FR », « en », « ar »…) : choisit la grammaire des dates ; en
+   * arabe, aucune (Q81).
+   */
   readonly locale: string;
   /**
    * Fuseau IANA du praticien (« Europe/Paris »), obligatoire : il dit quel jour civil est

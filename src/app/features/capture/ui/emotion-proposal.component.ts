@@ -1,5 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  LOCALE_ID,
+  output,
+  signal,
+} from '@angular/core';
 
+import { formatLocale } from '../../../core/i18n';
 import { uniqueId } from '../../../shared/util';
 import { EMOTION_FAMILIES, EmotionFamily, familyLabel } from '../../entries';
 import { emotionLabelOf } from '../data/capture.model';
@@ -138,7 +148,8 @@ export class EmotionProposalComponent {
   protected readonly family = signal<EmotionFamily | null>(null);
   protected readonly missing = signal(false);
 
-  protected readonly emotionLabel = computed(() => emotionLabelOf(this.word()));
+  private readonly locale = formatLocale(inject(LOCALE_ID));
+  protected readonly emotionLabel = computed(() => emotionLabelOf(this.word(), this.locale));
   protected readonly title = computed(() => {
     const label = this.emotionLabel();
     return $localize`:Proposition de la barre de commande@@capture.emotion.proposal:Créer l'émotion personnalisée « ${label}:label: »`;

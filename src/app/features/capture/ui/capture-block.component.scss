@@ -33,14 +33,14 @@
 }
 
 .lbl {
-  margin-right: 4px;
+  margin-inline-end: 4px;
   color: var(--text-secondary);
   font: var(--mat-sys-body-medium);
   font-size: 12.5px;
 }
 
 .note-r {
-  margin-left: auto;
+  margin-inline-start: auto;
   color: var(--text-secondary);
   font: var(--mat-sys-label-medium);
 }
@@ -109,6 +109,11 @@
   &::placeholder {
     color: var(--text-secondary);
     opacity: 1;
+  }
+
+  /* Vide, dir="auto" donnerait ltr : le texte indicatif suit le sens de la page. */
+  &:placeholder-shown {
+    direction: inherit;
   }
 }
 
@@ -220,7 +225,7 @@
 }
 
 .keys {
-  margin-right: auto;
+  margin-inline-end: auto;
   color: var(--text-secondary);
   font: var(--mat-sys-label-small);
   white-space: nowrap;

@@ -16,6 +16,7 @@ import {
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
+import { formatLocale } from '../../../core/i18n';
 import { PreferencesStore } from '../../../core/preferences';
 import { DateFieldComponent } from '../../../shared/ui/date-field';
 import {
@@ -133,7 +134,8 @@ export class CaptureBlockComponent {
 
   protected readonly store = inject(CaptureStore);
   private readonly prefs = inject(PreferencesStore);
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : Intl et grammaire de la barre (aucune date en arabe, Q81). */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   private readonly toast = inject(ToastService);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly injector = inject(Injector);
@@ -271,7 +273,10 @@ export class CaptureBlockComponent {
         });
       }
       if (composed.targetIssue) {
-        add('link', { text: targetIssueText(composed.targetIssue, composed.type), blocking: true });
+        add('link', {
+          text: targetIssueText(composed.targetIssue, composed.type, this.locale),
+          blocking: true,
+        });
       }
       if (this.attempted()) {
         for (const slot of composed.missing) add(slot, { text: missingText(slot), blocking: true });
@@ -709,7 +714,9 @@ export class CaptureBlockComponent {
     if (missing) return missingText(missing);
     const warning = composed.warnings.find((item) => item.warning.blocking);
     if (warning) return warningText(warning.warning, composed.type, this.emotions(), this.locale);
-    return composed.targetIssue ? targetIssueText(composed.targetIssue, composed.type) : null;
+    return composed.targetIssue
+      ? targetIssueText(composed.targetIssue, composed.type, this.locale)
+      : null;
   }
 
   /** Le champ grandit avec son texte (deux lignes au moins déplié, une repliée). */

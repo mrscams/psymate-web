@@ -6,11 +6,13 @@ import {
   ElementRef,
   inject,
   input,
+  LOCALE_ID,
   output,
   signal,
   untracked,
 } from '@angular/core';
 
+import { formatLocale } from '../../../core/i18n';
 import { uniqueId } from '../../../shared/util';
 import { CaptureEmotion, emotionLabelOf, fold } from '../data/capture.model';
 import { EmotionProposalComponent, EmotionRequest } from './emotion-proposal.component';
@@ -38,6 +40,7 @@ const CREATE_MIN = 2;
         [id]="inputId()"
         type="text"
         role="combobox"
+        dir="auto"
         autocomplete="off"
         aria-autocomplete="list"
         [attr.aria-expanded]="open()"
@@ -92,7 +95,7 @@ const CREATE_MIN = 2;
               [class]="'dot family-' + (option.emotion.family ?? 'none')"
               aria-hidden="true"
             ></span>
-            <span class="label">{{ option.emotion.label }}</span>
+            <span class="label" dir="auto">{{ option.emotion.label }}</span>
           } @else {
             <svg class="plus" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
               <path d="M8 3v10M3 8h10" />
@@ -123,7 +126,8 @@ const CREATE_MIN = 2;
       gap: 6px;
       box-sizing: border-box;
       height: 32px;
-      padding: 0 4px 0 10px;
+      padding-block: 0;
+      padding-inline: 10px 4px;
       border: 1px solid var(--border-strong);
       border-radius: 8px;
       background: var(--surface-raised);
@@ -146,6 +150,9 @@ const CREATE_MIN = 2;
       background: transparent;
       color: inherit;
       font: inherit;
+    }
+    input:placeholder-shown {
+      direction: inherit;
     }
     input::placeholder {
       color: var(--text-secondary);
@@ -205,7 +212,7 @@ const CREATE_MIN = 2;
     .list {
       position: absolute;
       top: calc(100% + 4px);
-      left: 0;
+      inset-inline-start: 0;
       z-index: 30;
       box-sizing: border-box;
       width: 280px;
@@ -274,6 +281,7 @@ export class CaptureEmotionFieldComponent {
   readonly create = output<EmotionRequest>();
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   protected readonly listId = uniqueId('pm-capture-emotions');
 
   protected readonly query = signal('');
@@ -333,7 +341,7 @@ export class CaptureEmotionFieldComponent {
   }
 
   protected createText(label: string): string {
-    const name = emotionLabelOf(label);
+    const name = emotionLabelOf(label, this.locale);
     return $localize`:Dernière ligne de la liste des émotions du bloc@@capture.emotion.createOption:Créer l'émotion « ${name}:label: »`;
   }
 
