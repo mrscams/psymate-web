@@ -67,7 +67,10 @@
 </ng-template>
 
 <ng-template #history let-item>
-  <span class="k">{{ item.periodLabel ?? '' }}</span>
+  <!-- Période saisie : isolée dans son sens (G Q77) ; la colonne garde l'alignement de la page. -->
+  <span class="k"
+    ><span dir="auto">{{ item.periodLabel ?? '' }}</span></span
+  >
   <span class="dot" aria-hidden="true"></span>
   <ng-container *ngTemplateOutlet="body; context: { $implicit: item }" />
 </ng-template>
@@ -83,9 +86,9 @@
 
 <ng-template #body let-item>
   <span class="body">
-    <span class="t">{{ item.title }}</span>
+    <span class="t" dir="auto">{{ item.title }}</span>
     @if (item.detail) {
-      <span class="d">{{ item.detail }}</span>
+      <span class="d" dir="auto">{{ item.detail }}</span>
     }
   </span>
 </ng-template>
