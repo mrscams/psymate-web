@@ -1,4 +1,4 @@
-import { formatLocale, toAppLocale } from '../../../core/i18n';
+import { formatLocale, textDirection, toAppLocale } from '../../../core/i18n';
 import {
   ActorType,
   DecisionKind,
@@ -327,7 +327,7 @@ const PDI = String.fromCharCode(0x2069);
  * l'entourent ; en français et en anglais, inchangée (rendu et textes d'avant M16-13).
  */
 export function isolated(value: string, locale: string): string {
-  return toAppLocale(locale) === 'ar' ? `${FSI}${value}${PDI}` : value;
+  return textDirection(locale) === 'rtl' ? `${FSI}${value}${PDI}` : value;
 }
 
 /** Format d'un justificatif à partir de son type MIME. */
