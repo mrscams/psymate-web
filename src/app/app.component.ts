@@ -30,7 +30,7 @@ import { ThemeService } from './core/theme';
 // Paquet initial (M16-09B) : ici et dans les fichiers du graphe initial (index de features importés
 // par cette coquille), shared/ui s'importe par chemin direct, jamais par le barrel './shared/ui'.
 // esbuild place dans le paquet initial tout fichier que le barrel réexporte et qui sert ailleurs,
-// même si ce fichier n'en utilise rien : Material, formulaires, en-tête patient… Mesure : 999,85 kB
+// même si le paquet initial n'en utilise rien : Material, formulaires, en-tête patient… Mesure : 999,85 kB
 // avec le barrel, 801,62 kB sans (budget d'erreur 1 MB). Règle ESLint dans eslint.config.mjs.
 import { AdminBarComponent } from './shared/ui/admin-bar/admin-bar.component';
 import { AppBarComponent } from './shared/ui/app-bar/app-bar.component';

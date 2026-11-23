@@ -176,9 +176,8 @@ export default defineConfig([
     },
   },
 
-  // Paquet initial (M16-09B) : les fichiers du graphe initial importent shared/ui par chemin direct.
-  // Le barrel y ferait entrer tout ce qu'il réexporte et qui sert ailleurs (Material, formulaires,
-  // en-tête patient : 999,85 kB au lieu de 801,62 kB, budget d'erreur 1 MB).
+  // Paquet initial (M16-09B) : ces fichiers importent shared/ui par chemin direct, jamais par son
+  // barrel. Pourquoi et mesures : commentaire des imports de src/app/app.component.ts.
   {
     files: [
       'src/app/app.component.ts',
@@ -193,7 +192,7 @@ export default defineConfig([
         {
           patterns: [
             {
-              regex: '(^|/)shared/ui(/index)?$',
+              regex: '(^|/)shared/ui(/index(\.ts)?)?/?$',
               allowTypeImports: true,
               message:
                 "Fichier du paquet initial : importer shared/ui par chemin direct (ex. './shared/ui/app-bar/app-bar.component'), pas par son barrel, qui tire dans le paquet initial tout ce qu'il réexporte (voir app.component.ts, M16-09B).",
