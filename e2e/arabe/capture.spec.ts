@@ -39,7 +39,7 @@ let eventId: string;
 
 test.describe.configure({ mode: 'serial', timeout: 90_000 });
 
-test.beforeAll(async ({ browser }) => {
+test.beforeAll(async ({ browser }, testInfo) => {
   test.setTimeout(180_000);
   api = await playwrightRequest.newContext();
   account = await createAccount(api, 'm16-20.capture', 'psychologist');
@@ -60,8 +60,12 @@ test.beforeAll(async ({ browser }) => {
   });
   expect(event.status(), await event.text()).toBe(201);
   eventId = ((await event.json()) as { id: string }).id;
-  // Contexte créé par le fixture browser : baseURL, locale et fuseau du projet.
-  context = await browser.newContext();
+  // Contexte neuf avec la baseURL, la locale et le fuseau du projet.
+  context = await browser.newContext({
+    baseURL: testInfo.project.use.baseURL,
+    locale: testInfo.project.use.locale,
+    timezoneId: testInfo.project.use.timezoneId,
+  });
   page = await context.newPage();
   await signIn(page, account);
 });
@@ -250,15 +254,20 @@ async function stepTo(key: 'ArrowLeft' | 'ArrowRight', target: number): Promise<
   }
 }
 
-/** Ressenti choisi à la puce, première émotion proposée pour « anx ». */
+/**
+ * Ressenti choisi à la puce, émotion « anxiety » cherchée par son code : la liste ne garde que
+ * cette émotion (et la ligne de création, exclue), quel que soit l'ordre du vocabulaire.
+ */
 async function feelingWithEmotion(): Promise<void> {
   const b = block();
   await b.chip('feeling').click();
   await expect(b.chip('feeling')).toHaveAttribute('aria-pressed', 'true');
   await b.emotion.click();
-  await b.emotion.fill('anx');
-  await b.options.first().click();
-  await expect(b.emotion).not.toHaveValue('anx');
+  await b.emotion.fill('anxiety');
+  const found = b.options.and(b.root.locator('li:not(.create)'));
+  await expect(found).toHaveCount(1);
+  await found.click();
+  await expect(b.emotion).not.toHaveValue('anxiety');
 }
 
 test('émotion et intensité : flèche gauche augmente jusqu’à 10, la case 1 est à droite ; relu par l’API', async () => {
@@ -287,7 +296,7 @@ test('émotion et intensité : flèche gauche augmente jusqu’à 10, la case 1 
   await shoot(page, 'arabe-capture-emotion-intensite');
 
   const { sent, entry } = await saveAndRead();
-  expect(sent['feeling']).toEqual({ emotionCode: expect.any(String), intensity: 10 });
+  expect(sent['feeling']).toEqual({ emotionCode: 'anxiety', intensity: 10 });
   expect(entry.feeling.intensity).toBe(10);
 });
 
@@ -308,6 +317,6 @@ test('intensité : flèche droite diminue jusqu’à 0 ; relu par l’API', asyn
   await b.input.fill('هدوء تام');
 
   const { sent, entry } = await saveAndRead();
-  expect(sent['feeling']).toEqual({ emotionCode: expect.any(String), intensity: 0 });
+  expect(sent['feeling']).toEqual({ emotionCode: 'anxiety', intensity: 0 });
   expect(entry.feeling.intensity).toBe(0);
 });

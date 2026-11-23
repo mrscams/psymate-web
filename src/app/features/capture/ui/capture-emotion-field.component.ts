@@ -100,7 +100,11 @@ const CREATE_MIN = 2;
             <svg class="plus" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
               <path d="M8 3v10M3 8h10" />
             </svg>
-            <span class="label">{{ createText(option.label) }}</span>
+            <span
+              class="label"
+              i18n="Dernière ligne de la liste des émotions du bloc@@capture.emotion.createOption"
+              >Créer l'émotion « <bdi>{{ createName(option.label) }}</bdi> »</span
+            >
           }
         </li>
       }
@@ -340,9 +344,9 @@ export class CaptureEmotionFieldComponent {
     return `${this.listId}-${index}`;
   }
 
-  protected createText(label: string): string {
-    const name = emotionLabelOf(label, this.locale);
-    return $localize`:Dernière ligne de la liste des émotions du bloc@@capture.emotion.createOption:Créer l'émotion « ${name}:label: »`;
+  /** Nom de l'émotion à créer, isolé par `<bdi>` dans la phrase du gabarit (Q77). */
+  protected createName(label: string): string {
+    return emotionLabelOf(label, this.locale);
   }
 
   protected onInput(value: string): void {

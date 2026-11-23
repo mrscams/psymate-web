@@ -78,11 +78,6 @@
     background: var(--feeling-tint);
     color: var(--feeling-text);
   }
-
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-  }
 }
 
 .text {
@@ -253,11 +248,6 @@
     color: var(--primary-hover);
     text-decoration: underline;
   }
-
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-  }
 }
 
 .save {
@@ -288,11 +278,14 @@
     opacity: 0.45;
     cursor: default;
   }
+}
 
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-  }
+/* Anneau de focus des puces, de Détailler et d'Enregistrer. */
+.tchip:focus-visible,
+.detail:focus-visible,
+.save:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 .alert {

@@ -13589,11 +13589,11 @@
         <note priority="1" from="description">Nom de la liste des émotions du bloc</note>
       </trans-unit>
       <trans-unit id="capture.emotion.createOption" datatype="html">
-        <source>Créer l&apos;émotion « <x id="label" equiv-text="name"/> »</source>
-        <target state="translated">إنشاء الشعور « <x id="label" equiv-text="name"/> »</target>
+        <source>Créer l&apos;émotion « <x id="START_TAG_BDI" ctype="x-bdi" equiv-text="&lt;bdi&gt;"/><x id="INTERPOLATION" equiv-text="{{ createName(option.label) }}"/><x id="CLOSE_TAG_BDI" ctype="x-bdi" equiv-text="&lt;/bdi&gt;"/> »</source>
+        <target state="translated">إنشاء الشعور « <x id="START_TAG_BDI" ctype="x-bdi" equiv-text="&lt;bdi&gt;"/><x id="INTERPOLATION" equiv-text="{{ createName(option.label) }}"/><x id="CLOSE_TAG_BDI" ctype="x-bdi" equiv-text="&lt;/bdi&gt;"/> »</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/capture-emotion-field.component.ts</context>
-          <context context-type="linenumber">337</context>
+          <context context-type="linenumber">106,107</context>
         </context-group>
         <note priority="1" from="description">Dernière ligne de la liste des émotions du bloc</note>
       </trans-unit>
@@ -14327,11 +14327,11 @@
         <note priority="1" from="description">Bouton de création d&apos;une émotion depuis la barre</note>
       </trans-unit>
       <trans-unit id="capture.emotion.proposal" datatype="html">
-        <source>Créer l&apos;émotion personnalisée « <x id="label" equiv-text="label"/> »</source>
-        <target state="translated">إنشاء الشعور المخصّص « <x id="label" equiv-text="label"/> »</target>
+        <source>Créer l&apos;émotion personnalisée « <x id="START_TAG_BDI" ctype="x-bdi" equiv-text="&lt;bdi&gt;"/><x id="INTERPOLATION" equiv-text="{{ emotionLabel() }}"/><x id="CLOSE_TAG_BDI" ctype="x-bdi" equiv-text="&lt;/bdi&gt;"/> »</source>
+        <target state="translated">إنشاء الشعور المخصّص « <x id="START_TAG_BDI" ctype="x-bdi" equiv-text="&lt;bdi&gt;"/><x id="INTERPOLATION" equiv-text="{{ emotionLabel() }}"/><x id="CLOSE_TAG_BDI" ctype="x-bdi" equiv-text="&lt;/bdi&gt;"/> »</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/capture/ui/emotion-proposal.component.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">37,39</context>
         </context-group>
         <note priority="1" from="description">Proposition de la barre de commande</note>
       </trans-unit>

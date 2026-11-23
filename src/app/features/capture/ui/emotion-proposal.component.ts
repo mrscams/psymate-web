@@ -30,7 +30,12 @@ export interface EmotionRequest {
   selector: 'pm-emotion-proposal',
   template: `
     <div class="proposal" role="group" [attr.aria-labelledby]="titleId">
-      <span class="title" [id]="titleId">{{ title() }}</span>
+      <span
+        class="title"
+        [id]="titleId"
+        i18n="Proposition de la barre de commande@@capture.emotion.proposal"
+        >Créer l'émotion personnalisée « <bdi>{{ emotionLabel() }}</bdi> »</span
+      >
       <label
         class="family-label"
         [for]="familyId"
@@ -150,10 +155,6 @@ export class EmotionProposalComponent {
 
   private readonly locale = formatLocale(inject(LOCALE_ID));
   protected readonly emotionLabel = computed(() => emotionLabelOf(this.word(), this.locale));
-  protected readonly title = computed(() => {
-    const label = this.emotionLabel();
-    return $localize`:Proposition de la barre de commande@@capture.emotion.proposal:Créer l'émotion personnalisée « ${label}:label: »`;
-  });
   protected readonly message = computed(() => {
     if (this.missing()) {
       return $localize`:Famille manquante@@capture.emotion.familyRequired:Choisissez la famille de l'émotion.`;

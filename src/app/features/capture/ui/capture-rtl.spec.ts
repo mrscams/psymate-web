@@ -3,12 +3,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ARABIC_FORMAT_LOCALE } from '../../../core/i18n';
 import { PreferencesStore } from '../../../core/preferences';
+import { ToastService } from '../../../shared/ui';
 import { CaptureApi, toEmotion, toLinkType } from '../data/capture.api';
-import { CANDIDATES, EMOTIONS, LINK_TYPES } from '../data/capture.fixtures';
+import { candidate, CANDIDATES, EMOTIONS, LINK_TYPES } from '../data/capture.fixtures';
 import { emotionLabelOf } from '../data/capture.model';
 import { parseWarning } from '../parser/parse.types';
 import { CaptureBlockComponent } from './capture-block.component';
-import { list, targetIssueText, warningText } from './capture-labels';
+import { isolate, list, targetIssueText, warningText } from './capture-labels';
+import { CaptureEmotionFieldComponent } from './capture-emotion-field.component';
+import { EmotionProposalComponent } from './emotion-proposal.component';
 
 // M16-20, bloc de saisie de droite à gauche (G Q71, Q73, Q77, Q78, Q81 ; docs/design/arabe.md §3,
 // §5 à §8) : aucune date lue en arabe, échelle d'intensité dans le sens de lecture, formats par la
@@ -18,7 +21,7 @@ type Api = Partial<Record<keyof CaptureApi, ReturnType<typeof vi.fn>>>;
 type EmotionDto = Parameters<typeof toEmotion>[0];
 type LinkTypeDto = Parameters<typeof toLinkType>[0];
 
-async function render(locale: string) {
+async function render(locale: string, overrides: Api = {}) {
   const api: Api = {
     emotions: vi.fn().mockResolvedValue(EMOTIONS),
     linkTypes: vi.fn().mockResolvedValue(LINK_TYPES),
@@ -32,6 +35,7 @@ async function render(locale: string) {
         status: body.status,
         sessionId: 's-open',
       })),
+    ...overrides,
   };
   TestBed.configureTestingModule({
     providers: [
@@ -199,7 +203,9 @@ describe('échelle d’intensité de droite à gauche (docs/design/arabe.md §3,
     expect(scaleView(el).now).toBe('4');
   });
 
-  it('les cases suivent le sens de lecture (aucun sens forcé) ; la valeur « 7/10 » reste en ltr', async () => {
+  // Ordre du DOM et attributs seulement (jsdom ne met rien en page) : la preuve que la case 1 est
+  // rendue à droite est dans e2e/arabe/capture.spec.ts, qui mesure la position des cases.
+  it('DOM : cases dans l’ordre 1 à 10 sans sens forcé (elles suivent celui de la page) ; « 7/10 » en ltr', async () => {
     const { el, fixture } = await render('ar');
     await type(fixture, 'anx 7');
     const slider = el.querySelector<HTMLElement>('#pm-capture-intensity')!;
@@ -300,5 +306,117 @@ describe('formats et libellés par la locale de formatage (Q73, Q78)', () => {
     });
     expect(toLinkType(coOccurs, 'en').inverseLabel).toBeNull();
     expect(toLinkType(coOccurs, 'fr').inverseLabel).toBeNull();
+  });
+});
+
+describe('valeurs saisies isolées dans une phrase (Q77)', () => {
+  const FSI = '\u2068';
+  const PDI = '\u2069';
+
+  it('isolate : un nom latin inchangé en fr et en, un nom arabe isolé partout, tout nom isolé en arabe', () => {
+    for (const locale of ['fr', 'en']) {
+      expect(isolate('Entretien annuel', locale)).toBe('Entretien annuel');
+      expect(isolate('اجتماع العمل', locale)).toBe(`${FSI}اجتماع العمل${PDI}`);
+    }
+    expect(isolate('Entretien annuel', ARABIC_FORMAT_LOCALE)).toBe(`${FSI}Entretien annuel${PDI}`);
+    expect(isolate('اجتماع', 'ar')).toBe(`${FSI}اجتماع${PDI}`);
+  });
+
+  it('cible du `>` : nom et début saisis isolés ; texte français identique pour un nom latin', () => {
+    const latin = {
+      code: 'TARGET_NOT_ALLOWED' as const,
+      name: 'Dort mal',
+      targetType: 'note' as const,
+    };
+    const arabic = { ...latin, name: 'اجتماع العمل' };
+    expect(targetIssueText(latin, 'event', 'fr')).toBe(
+      'Aucun type de lien ne relie « Dort mal » (note) à cette entrée (événement) : choisissez une autre cible ou retirez « > ».',
+    );
+    expect(targetIssueText(arabic, 'event', 'fr')).toContain(`« ${FSI}اجتماع العمل${PDI} »`);
+    expect(targetIssueText(latin, 'event', 'ar')).toContain(`« ${FSI}Dort mal${PDI} »`);
+    const notFound = (query: string, locale: string) =>
+      targetIssueText({ code: 'TARGET_NOT_FOUND', query }, 'note', locale);
+    expect(notFound('entret', 'fr')).toBe(
+      'Aucune entrée récente ne commence par « entret » : choisissez la cible dans « Lié à… » ou retirez « > ».',
+    );
+    expect(notFound('اجت', 'fr')).toContain(`« ${FSI}اجت${PDI} »`);
+    expect(notFound('entret', 'ar')).toContain(`« ${FSI}entret${PDI} »`);
+  });
+
+  it('toast de Détailler : nom de la cible hors rail isolé s’il est arabe, lien envoyé intact', async () => {
+    const { el, fixture } = await render('fr', {
+      searchEntries: vi
+        .fn()
+        .mockResolvedValue([candidate({ id: 'e-old', title: 'اجتماع التقييم' })]),
+    });
+    await type(fixture, 'dort mal');
+    el.querySelector<HTMLButtonElement>('pm-capture-links button.other')!.click();
+    await settle(fixture);
+    const search = el.querySelector<HTMLInputElement>('pm-capture-links input[type="search"]')!;
+    search.value = 'اجت';
+    search.dispatchEvent(new Event('input'));
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    await settle(fixture);
+    await press(fixture, search, 'Enter');
+    const opened: unknown[] = [];
+    fixture.componentInstance.openEditor.subscribe((prefill) => opened.push(prefill));
+    el.querySelector<HTMLButtonElement>('button.detail')!.click();
+    await settle(fixture);
+    expect(TestBed.inject(ToastService).toasts().at(-1)?.message).toBe(
+      `L'éditeur ne reprend pas le lien vers « ${FSI}اجتماع التقييم${PDI} » (à rechercher dans « Lié à… »).`,
+    );
+    expect(opened).toEqual([
+      expect.objectContaining({
+        links: [{ targetId: 'e-old', linkType: 'co_occurs', direction: 'outgoing' }],
+      }),
+    ]);
+  });
+
+  async function proposal(word: string) {
+    TestBed.configureTestingModule({ providers: [{ provide: LOCALE_ID, useValue: 'fr' }] });
+    const fixture = TestBed.createComponent(EmotionProposalComponent);
+    fixture.componentRef.setInput('word', word);
+    await fixture.whenStable();
+    const created: unknown[] = [];
+    fixture.componentInstance.create.subscribe((request) => created.push(request));
+    return { fixture, el: fixture.nativeElement as HTMLElement, created };
+  }
+
+  it('proposition de création : nom dans un <bdi>, texte identique, libellé envoyé sans isolement', async () => {
+    const latin = await proposal('stress');
+    const title = latin.el.querySelector('.title')!;
+    expect(title.textContent).toBe("Créer l'émotion personnalisée « Stress »");
+    expect(title.querySelector('bdi')?.textContent).toBe('Stress');
+    TestBed.resetTestingModule();
+
+    const arabic = await proposal('قلق');
+    expect(arabic.el.querySelector('.title bdi')?.textContent).toBe('قلق');
+    const select = arabic.el.querySelector<HTMLSelectElement>('select')!;
+    select.value = 'fear';
+    select.dispatchEvent(new Event('change'));
+    arabic.el.querySelector<HTMLButtonElement>('button.create')!.click();
+    expect(arabic.created).toEqual([{ label: 'قلق', family: 'fear' }]);
+  });
+
+  it('dernière ligne de la liste des émotions : nom dans un <bdi>, texte identique', async () => {
+    TestBed.configureTestingModule({ providers: [{ provide: LOCALE_ID, useValue: 'fr' }] });
+    const fixture = TestBed.createComponent(CaptureEmotionFieldComponent);
+    fixture.componentRef.setInput('emotions', EMOTIONS);
+    fixture.componentRef.setInput('inputId', 'pm-emotion');
+    await fixture.whenStable();
+    const el = fixture.nativeElement as HTMLElement;
+    const combo = el.querySelector<HTMLInputElement>('#pm-emotion')!;
+    const lastLine = async (value: string) => {
+      combo.value = value;
+      combo.dispatchEvent(new Event('input'));
+      await fixture.whenStable();
+      return el.querySelector('li.create .label')!;
+    };
+    const latin = await lastLine('col');
+    expect(latin.textContent).toBe("Créer l'émotion « Col »");
+    expect(latin.querySelector('bdi')?.textContent).toBe('Col');
+    const arabic = await lastLine('قلق');
+    expect(arabic.textContent).toBe("Créer l'émotion « قلق »");
+    expect(arabic.querySelector('bdi')?.textContent).toBe('قلق');
   });
 });

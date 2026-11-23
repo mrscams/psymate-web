@@ -51,6 +51,7 @@ import {
   detectedFromText,
   emotionProblemText,
   fieldErrorsBySlot,
+  isolate,
   missingText,
   savedNothingText,
   saveProblemText,
@@ -654,7 +655,7 @@ export class CaptureBlockComponent {
     }
     const link = composed.link;
     if (link && !this.candidates().some((item) => item.id === link.candidate.id)) {
-      const name = link.name;
+      const name = isolate(link.name, this.locale);
       lost.push(
         $localize`:Toast de Détailler, lien hors rail non repris@@capture.detail.linkLost:le lien vers « ${name}:name: » (à rechercher dans « Lié à… »)`,
       );
