@@ -1,3 +1,4 @@
+import { formatLocale, textDirection, toAppLocale } from '../../../core/i18n';
 import {
   ActorType,
   DecisionKind,
@@ -238,10 +239,10 @@ export function journalSummary(
   );
 }
 
-/** « 12 nov. 2026 » dans la locale de l'interface ; « — » si absent. */
+/** « 12 nov. 2026 » dans la locale de formatage de l'interface (Q73) ; « — » si absent. */
 export function formatDay(iso: string | null, locale: string): string {
   if (!iso) return '—';
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat(formatLocale(locale), {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -255,7 +256,7 @@ export function formatDay(iso: string | null, locale: string): string {
 export function formatTimestamp(iso: string, locale: string): string {
   const date = new Date(iso);
   const day = formatDay(iso, locale);
-  const time = new Intl.DateTimeFormat(locale, {
+  const time = new Intl.DateTimeFormat(formatLocale(locale), {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
@@ -266,7 +267,7 @@ export function formatTimestamp(iso: string, locale: string): string {
 
 /** Heure et minute d'un horodatage (« 11:05 »), pour la plage d'un groupe du journal. */
 export function formatMinute(iso: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat(formatLocale(locale), {
     hour: '2-digit',
     minute: '2-digit',
     hourCycle: 'h23',
@@ -277,7 +278,10 @@ export function formatMinute(iso: string, locale: string): string {
 export function formatAge(iso: string | null, locale: string, now: Date = new Date()): string {
   if (!iso) return '—';
   const seconds = Math.round((new Date(iso).getTime() - now.getTime()) / 1000);
-  const format = new Intl.RelativeTimeFormat(locale, { numeric: 'always', style: 'short' });
+  const format = new Intl.RelativeTimeFormat(formatLocale(locale), {
+    numeric: 'always',
+    style: 'short',
+  });
   const abs = Math.abs(seconds);
   if (abs < 3600) return format.format(Math.round(seconds / 60), 'minute');
   if (abs < 86_400) return format.format(Math.round(seconds / 3600), 'hour');
@@ -293,12 +297,37 @@ export function formatSize(bytes: number, locale: string): string {
     value /= 1024;
     unit++;
   }
-  return new Intl.NumberFormat(locale, {
+  return new Intl.NumberFormat(formatLocale(locale), {
     style: 'unit',
     unit: units[unit],
     unitDisplay: 'short',
     maximumFractionDigits: unit === 0 ? 0 : 1,
   }).format(value);
+}
+
+/**
+ * Liste insérée dans une phrase (« Manque : Diplôme, Pièce d'identité ») : en français et en
+ * anglais, des virgules, comme avant M16-13 ; en arabe, la liste de la locale de formatage
+ * (« و » et virgule arabe), une virgule latine n'ayant pas sa place dans une phrase arabe.
+ */
+export function listText(items: readonly string[], locale: string): string {
+  return toAppLocale(locale) === 'ar'
+    ? new Intl.ListFormat(formatLocale(locale), { type: 'conjunction' }).format(items)
+    : items.join(', ');
+}
+
+/** Isolats de sens Unicode (FIRST STRONG ISOLATE, POP DIRECTIONAL ISOLATE). */
+const FSI = String.fromCharCode(0x2068);
+const PDI = String.fromCharCode(0x2069);
+
+/**
+ * Valeur saisie (nom d'un praticien, libellé) insérée dans un texte qui ne peut pas porter de
+ * <bdi> (toast, titre de boîte de dialogue) : en arabe, isolée par FSI … PDI (U+2068, U+2069),
+ * l'équivalent Unicode de <bdi> (Q77), pour qu'un nom latin ne déplace pas les mots arabes qui
+ * l'entourent ; en français et en anglais, inchangée (rendu et textes d'avant M16-13).
+ */
+export function isolated(value: string, locale: string): string {
+  return textDirection(locale) === 'rtl' ? `${FSI}${value}${PDI}` : value;
 }
 
 /** Format d'un justificatif à partir de son type MIME. */

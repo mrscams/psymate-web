@@ -27,6 +27,7 @@ import { applyVocabularyProblem, CODE_PATTERN, LABEL_MAX } from './vocabulary-fo
             [id]="id('code')"
             type="text"
             formControlName="code"
+            dir="ltr"
             autocomplete="off"
             spellcheck="false"
             [attr.aria-invalid]="(form.controls.code.invalid && form.controls.code.touched) || null"
@@ -42,6 +43,7 @@ import { applyVocabularyProblem, CODE_PATTERN, LABEL_MAX } from './vocabulary-fo
             [id]="id('labelFr')"
             type="text"
             formControlName="labelFr"
+            dir="auto"
             [attr.aria-invalid]="
               (form.controls.labelFr.invalid && form.controls.labelFr.touched) || null
             "
@@ -59,6 +61,7 @@ import { applyVocabularyProblem, CODE_PATTERN, LABEL_MAX } from './vocabulary-fo
             [id]="id('labelEn')"
             type="text"
             formControlName="labelEn"
+            dir="auto"
             [attr.aria-invalid]="
               (form.controls.labelEn.invalid && form.controls.labelEn.touched) || null
             "

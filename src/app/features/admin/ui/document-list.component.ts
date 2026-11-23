@@ -23,7 +23,9 @@ import { documentTypeLabel, formatSize, mimeLabel, reviewedLabel } from './admin
       @for (doc of rows(); track doc.id) {
         <li [class.selected]="doc.id === selectedId()">
           <div class="what">
-            <span class="title">{{ doc.heading }}</span>
+            <span class="title"
+              ><bdi>{{ doc.heading }}</bdi></span
+            >
             <span class="meta">{{ doc.meta }}</span>
             @if (doc.purged) {
               <span class="meta" i18n="Justificatif purgé@@admin.doc.purged"

@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
 
 import { initials } from '../../../shared/util';
 import { QueueItem, QueueStatus } from '../data/admin.model';
-import { documentTypeLabel, formatAge, professionLabel } from './admin-labels';
+import { documentTypeLabel, formatAge, listText, professionLabel } from './admin-labels';
 
 /**
  * File de vérification (fiche 20) : `<ol>` étiquetée, du plus ancien au plus récent, un lien par
@@ -36,7 +36,9 @@ import { documentTypeLabel, formatAge, professionLabel } from './admin-labels';
               item.initials
             }}</span>
             <span class="who">
-              <span class="name">{{ item.displayName }}</span>
+              <span class="name"
+                ><bdi>{{ item.displayName }}</bdi></span
+              >
               <span class="meta">{{ item.meta }}</span>
               @if (item.missing) {
                 <span class="missing">{{ item.missing }}</span>
@@ -76,7 +78,7 @@ export class QueueListComponent {
     this.items().map((item) => {
       const documents = $localize`:Nombre de justificatifs d'un dossier@@admin.queue.documents:${item.documentsCount}:count: documents`;
       const parts = [professionLabel(item.profession), item.city, documents].filter(Boolean);
-      const missing = item.missingHints.map(documentTypeLabel).join(', ');
+      const missing = listText(item.missingHints.map(documentTypeLabel), this.locale);
       return {
         ...item,
         initials: initials(item.displayName),

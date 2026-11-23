@@ -22,7 +22,9 @@ import { formatAge, formatDay, professionLabel, statusLabel, statusTone } from '
     <div class="identity">
       <span class="initials" aria-hidden="true">{{ initialsText() }}</span>
       <div class="titles">
-        <h2 [id]="headingId()">{{ d.displayName }}</h2>
+        <h2 [id]="headingId()">
+          <bdi>{{ d.displayName }}</bdi>
+        </h2>
         <p class="chips">
           <span class="badge neutral">{{ profession() }}</span>
           <span class="badge" [class]="tone()">{{ status() }}</span>
@@ -38,19 +40,27 @@ import { formatAge, formatDay, professionLabel, statusLabel, statusTone } from '
     <dl>
       <div>
         <dt i18n="Coordonnée du dossier@@admin.dossier.email">E-mail</dt>
-        <dd>{{ d.email }}</dd>
+        <dd>
+          <bdi dir="ltr">{{ d.email }}</bdi>
+        </dd>
       </div>
       <div>
         <dt i18n="Coordonnée du dossier@@admin.dossier.phone">Téléphone</dt>
-        <dd>{{ d.phone ?? '—' }}</dd>
+        <dd>
+          <bdi dir="ltr">{{ d.phone ?? '—' }}</bdi>
+        </dd>
       </div>
       <div>
         <dt i18n="Coordonnée du dossier@@admin.dossier.number">N° professionnel déclaré</dt>
-        <dd class="mono">{{ d.professionalNumber ?? '—' }}</dd>
+        <dd class="mono">
+          <bdi dir="ltr">{{ d.professionalNumber ?? '—' }}</bdi>
+        </dd>
       </div>
       <div>
         <dt i18n="Coordonnée du dossier@@admin.dossier.office">Cabinet</dt>
-        <dd>{{ office() }}</dd>
+        <dd>
+          <bdi>{{ office() }}</bdi>
+        </dd>
       </div>
     </dl>
   `,

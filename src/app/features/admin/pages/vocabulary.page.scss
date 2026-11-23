@@ -38,13 +38,13 @@ pm-add-entry-form {
 }
 
 .count {
-  margin-left: 6px;
+  margin-inline-start: 6px;
   font-family: var(--font-mono);
   font-size: 12px;
 }
 
 .fixed {
-  margin-left: 6px;
+  margin-inline-start: 6px;
   color: var(--text-secondary);
   font: var(--mat-sys-label-small);
 }
@@ -72,7 +72,7 @@ td {
 }
 
 th:last-child {
-  text-align: right;
+  text-align: end;
 }
 
 .code {

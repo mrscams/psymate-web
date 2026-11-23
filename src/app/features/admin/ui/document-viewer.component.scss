@@ -21,6 +21,12 @@
   color: var(--text-secondary);
 }
 
+// Intitulé du justificatif (saisi, des lettres) : police d'interface en arabe (Q76).
+.file {
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
+}
+
 .tools {
   display: inline-flex;
   gap: 6px;

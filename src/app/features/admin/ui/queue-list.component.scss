@@ -82,8 +82,10 @@ a {
   flex-direction: column;
   align-items: flex-end;
   color: var(--text-secondary);
-  font-family: var(--font-mono);
+  // « il y a 3 j » : des lettres, donc police d'interface en arabe (Q76), chiffres tabulaires.
+  font-family: var(--font-mono-text);
   font-size: 12px;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 
   &.overdue {

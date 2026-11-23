@@ -166,7 +166,7 @@
   th {
     padding: 10px 12px;
     border-bottom: 1px solid var(--border-subtle);
-    text-align: left;
+    text-align: start;
     font: var(--mat-sys-label-medium);
     color: var(--text-secondary);
     white-space: nowrap;
@@ -183,6 +183,13 @@
     font-family: var(--font-mono);
     font-size: 13px;
     color: var(--text-secondary);
+  }
+
+  // Date à nom de mois (« 9 nov. 2026 · 11:14:46 ») : police d'interface en arabe (Q76), chiffres
+  // tabulaires ; codes, ordres et comptes gardent --font-mono.
+  .mono.date {
+    font-family: var(--font-mono-text);
+    font-variant-numeric: tabular-nums;
   }
 
   .secondary {
