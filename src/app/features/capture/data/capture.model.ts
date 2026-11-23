@@ -18,13 +18,16 @@ import { CaptureEntryType, ParsedOccurred, ParseResult, ParseWarning } from '../
 
 /**
  * Une émotion du vocabulaire (GET /api/vocabulary/emotions) : ce que le parseur compare (code,
- * labelFr, labelEn) et ce que l'aperçu et le rail affichent (label, famille pour la pastille).
+ * labelFr, labelEn), le libellé arabe (contrat 0.16.0) et ce que l'aperçu et le rail affichent
+ * (label, famille pour la pastille).
  */
 export interface CaptureEmotion {
   code: string;
   labelFr: string;
   /** Null pour une émotion personnalisée (saisie en français seulement). */
   labelEn: string | null;
+  /** Null pour une émotion personnalisée ou une globale sans libellé arabe. */
+  labelAr: string | null;
   /** Libellé dans la langue de l'interface. */
   label: string;
   family: EmotionFamily | null;

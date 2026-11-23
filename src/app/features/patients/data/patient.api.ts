@@ -254,8 +254,8 @@ export async function withoutIntakeOpenSession(
 
 /**
  * Projection vue d'ensemble → résumé d'une ligne. Les libellés d'émotion suivent la langue du
- * bundle (Q78, `catalogLabel`) : la série porte le français et l'anglais, pas encore l'arabe
- * (contrat 0.16.0, M16-25), d'où le repli sur le français en arabe ; sans libellé dans la série,
+ * bundle (Q78, `catalogLabel`) : la série porte le français et l'anglais, pas l'arabe (FeelingSeriesDto
+ * n'en a pas au contrat 0.16.0), d'où le repli sur le français en arabe ; sans libellé dans la série,
  * le libellé de la dominante (top.label), puis le code.
  */
 export function toActivity(dto: OverviewDto, locale: AppLocale = 'fr'): PatientActivity {

@@ -22,6 +22,10 @@ export interface CreateRequest {
      */
     kind: CreateRequestKindEnum;
     /**
+     * Libellé arabe, 120 caractères au plus ; vide ou absent : pas de libellé arabe.
+     */
+    labelAr?: string;
+    /**
      * Libellé anglais, 120 caractères au plus ; vide ou absent : pas de libellé anglais.
      */
     labelEn?: string;

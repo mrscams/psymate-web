@@ -26,6 +26,10 @@ export interface ItemDto {
      */
     kind?: ItemDtoKindEnum;
     /**
+     * Libellé arabe ; null s\'il n\'y en a pas.
+     */
+    labelAr?: string;
+    /**
      * Libellé anglais ; null s\'il n\'y en a pas.
      */
     labelEn?: string;

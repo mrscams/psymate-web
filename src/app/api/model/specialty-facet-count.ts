@@ -22,6 +22,10 @@ export interface SpecialtyFacetCount {
      */
     count?: number;
     /**
+     * Libellé en arabe ; peut être null pour une entrée ajoutée sans : afficher alors labelFr.
+     */
+    labelAr?: string;
+    /**
      * Libellé en anglais ; peut être null pour une entrée ajoutée sans.
      */
     labelEn?: string;

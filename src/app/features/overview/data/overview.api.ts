@@ -235,8 +235,8 @@ function toPoint(dto: FeelingPointDto): FeelingPoint {
 
 /**
  * Libellé d'une émotion dans la langue du bundle (Q78) : catalogLabel sur le français servi
- * (`label`) et la traduction des séries ; le code si rien n'est servi. Le contrat 0.15.0 n'a pas
- * encore de libellé arabe (labelAr : M16-25) : en arabe, le français.
+ * (`label`) et la traduction des séries ; le code si rien n'est servi. FeelingSeriesDto n'a pas de
+ * libellé arabe au contrat 0.16.0 (seuls les catalogues en ont) : en arabe, le français.
  */
 function emotionLabel(
   code: string,

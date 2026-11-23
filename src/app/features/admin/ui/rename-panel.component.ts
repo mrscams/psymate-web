@@ -9,7 +9,8 @@ import { applyVocabularyProblem, LABEL_MAX } from './vocabulary-forms';
 
 /**
  * Panneau « Renommer » sous une ligne (fiche 28) : libellé FR (obligatoire), libellé EN (vide =
- * effacé), ordre ; le code ne change jamais. Envoie un PATCH sur le même {kind}/{code}.
+ * effacé), libellé AR (de droite à gauche, envoyé s'il a changé, vide = effacé),
+ * ordre ; le code ne change jamais. Envoie un PATCH sur le même {kind}/{code}.
  */
 @Component({
   selector: 'pm-rename-panel',
@@ -48,6 +49,23 @@ import { applyVocabularyProblem, LABEL_MAX } from './vocabulary-forms';
             [attr.aria-describedby]="id('labelEn') + '-error'"
           />
           <pm-field-errors [control]="form.controls.labelEn" [id]="id('labelEn') + '-error'" />
+        </div>
+        <div class="field">
+          <label [for]="id('labelAr')" i18n="Champ libellé arabe@@admin.vocabulary.labelAr"
+            >Libellé AR (vide = effacé)</label
+          >
+          <input
+            [id]="id('labelAr')"
+            type="text"
+            formControlName="labelAr"
+            dir="rtl"
+            lang="ar"
+            [attr.aria-invalid]="
+              (form.controls.labelAr.invalid && form.controls.labelAr.touched) || null
+            "
+            [attr.aria-describedby]="id('labelAr') + '-error'"
+          />
+          <pm-field-errors [control]="form.controls.labelAr" [id]="id('labelAr') + '-error'" />
         </div>
         <div class="field order">
           <label [for]="id('sortOrder')" i18n="Champ ordre d'affichage@@admin.vocabulary.order"
@@ -104,6 +122,10 @@ export class RenamePanelComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.maxLength(LABEL_MAX)],
     }),
+    labelAr: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.maxLength(LABEL_MAX)],
+    }),
     sortOrder: new FormControl(0, {
       nonNullable: true,
       validators: [Validators.required, Validators.min(0), Validators.max(32767)],
@@ -119,6 +141,7 @@ export class RenamePanelComponent implements OnInit {
     this.form.setValue({
       labelFr: entry.labelFr,
       labelEn: entry.labelEn ?? '',
+      labelAr: entry.labelAr ?? '',
       sortOrder: entry.sortOrder,
     });
   }
@@ -135,10 +158,13 @@ export class RenamePanelComponent implements OnInit {
       return;
     }
     const value = this.form.getRawValue();
+    const labelAr = value.labelAr.trim();
     this.sending.set(true);
     const problem = await this.save()({
       labelFr: value.labelFr.trim(),
       labelEn: value.labelEn.trim(),
+      // PATCH partiel : le libellé arabe ne part que s'il a changé (vide = effacé).
+      ...(labelAr !== (this.entry().labelAr ?? '') ? { labelAr } : {}),
       sortOrder: Number(value.sortOrder),
     });
     this.sending.set(false);

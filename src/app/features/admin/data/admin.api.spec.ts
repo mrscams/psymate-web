@@ -106,6 +106,74 @@ describe('AdminApi', () => {
     expect((await pending).labelEn).toBeNull();
   });
 
+  it('M16-25 createEntry : libellé arabe envoyé sans blancs de bord, relu dans la réponse', async () => {
+    const { api, http } = setup();
+    const pending = api.createEntry({
+      kind: 'specialty',
+      code: 'sleep_disorders',
+      labelFr: 'Troubles du sommeil',
+      labelEn: 'Sleep disorders',
+      labelAr: ' اضطرابات النوم ',
+    });
+    const req = http.expectOne('/api/admin/vocabulary/directory');
+    expect(req.request.body).toEqual({
+      kind: 'specialty',
+      code: 'sleep_disorders',
+      labelFr: 'Troubles du sommeil',
+      labelEn: 'Sleep disorders',
+      labelAr: 'اضطرابات النوم',
+    });
+    req.flush({ ...req.request.body, active: true, sortOrder: 0, usedByPublishedProfiles: 0 });
+    expect((await pending).labelAr).toBe('اضطرابات النوم');
+  });
+
+  it('M16-25 createEntry : libellé arabe vide non envoyé, null à la lecture', async () => {
+    const { api, http } = setup();
+    const pending = api.createEntry({
+      kind: 'audience',
+      code: 'seniors',
+      labelFr: 'Seniors',
+      labelAr: '  ',
+    });
+    const req = http.expectOne('/api/admin/vocabulary/directory');
+    expect(req.request.body).toEqual({ kind: 'audience', code: 'seniors', labelFr: 'Seniors' });
+    req.flush({ kind: 'audience', code: 'seniors', labelFr: 'Seniors', active: true });
+    expect((await pending).labelAr).toBeNull();
+  });
+
+  it('M16-25 patchEntry : labelAr transmis tel quel (vide = effacé)', async () => {
+    const { api, http } = setup();
+    const pending = api.patchEntry('specialty', 'anxiety', { labelAr: '' });
+    const req = http.expectOne('/api/admin/vocabulary/directory/specialty/anxiety');
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toEqual({ labelAr: '' });
+    req.flush({ kind: 'specialty', code: 'anxiety', labelFr: 'Anxiété' });
+    expect((await pending).labelAr).toBeNull();
+  });
+
+  it('M16-25 vocabulary et fixedVocabulary : labelAr porté, null s’il manque', async () => {
+    const { api, http } = setup();
+    const entries = api.vocabulary();
+    http.expectOne('/api/admin/vocabulary/directory').flush({
+      items: [
+        { kind: 'specialty', code: 'anxiety', labelFr: 'Anxiété', labelAr: 'القلق' },
+        { kind: 'specialty', code: 'grief', labelFr: 'Deuil' },
+      ],
+    });
+    expect((await entries).map((entry) => entry.labelAr)).toEqual(['القلق', null]);
+
+    const fixed = api.fixedVocabulary();
+    http.expectOne('/api/public/directory/vocabulary').flush({
+      modalities: [
+        { code: 'video', labelFr: 'En visio', labelEn: 'Video', labelAr: 'عبر الفيديو' },
+      ],
+      languages: [{ code: 'fr', labelFr: 'Français' }],
+    });
+    const lists = await fixed;
+    expect(lists.modalities[0].labelAr).toBe('عبر الفيديو');
+    expect(lists.languages[0].labelAr).toBeNull();
+  });
+
   it('journal : filtres transmis, curseur tel quel', async () => {
     const { api, http } = setup();
     const pending = api.journal({

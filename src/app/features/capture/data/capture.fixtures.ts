@@ -47,6 +47,7 @@ export const EMOTIONS: CaptureEmotion[] = CASE_EMOTIONS.map((emotion) => ({
   code: emotion.code,
   labelFr: emotion.labelFr,
   labelEn: emotion.labelEn ?? null,
+  labelAr: null,
   label: emotion.labelFr,
   family: FAMILIES[emotion.code] ?? null,
   custom: emotion.code.startsWith('c_'),

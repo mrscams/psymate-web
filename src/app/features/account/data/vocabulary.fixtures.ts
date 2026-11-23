@@ -20,6 +20,7 @@ export const SADNESS: Emotion = {
   family: 'sadness',
   labelFr: 'Tristesse',
   labelEn: 'Sadness',
+  labelAr: null,
 };
 export const ANXIETY: Emotion = {
   code: 'anxiety',
@@ -27,6 +28,7 @@ export const ANXIETY: Emotion = {
   family: 'fear',
   labelFr: 'Anxiété',
   labelEn: 'Anxiety',
+  labelAr: null,
 };
 export const APPREHENSION: Emotion = {
   code: 'apprehension',
@@ -34,6 +36,7 @@ export const APPREHENSION: Emotion = {
   family: 'fear',
   labelFr: 'Appréhension',
   labelEn: 'Apprehension',
+  labelAr: null,
 };
 export const JOY: Emotion = {
   code: 'joy',
@@ -41,6 +44,7 @@ export const JOY: Emotion = {
   family: 'joy',
   labelFr: 'Joie',
   labelEn: 'Joy',
+  labelAr: null,
 };
 export const LASSITUDE: Emotion = {
   code: 'c_0000aaaa',
@@ -48,6 +52,7 @@ export const LASSITUDE: Emotion = {
   family: 'sadness',
   labelFr: 'Lassitude',
   labelEn: null,
+  labelAr: null,
 };
 export const MOROSITE: Emotion = {
   code: 'c_0000bbbb',
@@ -55,6 +60,7 @@ export const MOROSITE: Emotion = {
   family: 'sadness',
   labelFr: 'Morosité',
   labelEn: null,
+  labelAr: null,
 };
 
 export const EMOTIONS: Emotion[] = [SADNESS, ANXIETY, APPREHENSION, JOY, LASSITUDE, MOROSITE];

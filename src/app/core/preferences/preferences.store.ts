@@ -10,7 +10,7 @@ import {
 
 import { SessionStore } from '../auth';
 import { ApiProblem, asProblem } from '../http/api-problem';
-import { SubjectVocabulary } from '../i18n';
+import { AppLocale, OFFERED_LOCALES, SubjectVocabulary } from '../i18n';
 import { ThemeService } from '../theme';
 import { PreferencesApi } from './data/preferences.api';
 import { LocaleNavigator } from './locale-navigator';
@@ -116,6 +116,18 @@ export const PreferencesStore = signalStore(
         theme.set(store.source() === 'defaults' ? 'system' : values.theme);
       };
 
+      /**
+       * Suit la langue du compte, si elle est proposée. Une langue que le contrat admet mais
+       * qu'aucun sélecteur ne propose encore (ar, Q80) est gardée telle quelle dans les valeurs,
+       * sans navigation : on reste dans le bundle courant, sans repli forcé vers /fr/. M16-29
+       * (ouverture de l'arabe) lèvera la condition en ajoutant ar à OFFERED_LOCALES.
+       */
+      const followLocale = (locale: AppLocale): void => {
+        if ((OFFERED_LOCALES as readonly AppLocale[]).includes(locale)) {
+          localeNavigator.goTo(locale);
+        }
+      };
+
       const commit = (partial: Partial<PreferencesState>): void => {
         patchState(store, partial);
         applyToServices();
@@ -175,7 +187,7 @@ export const PreferencesStore = signalStore(
             const server = await api.get(defaults());
             acceptServer(seq, server, undefined, { status: 'idle' });
             if (store.status() === 'loading') patchState(store, { status: 'idle' });
-            if (options.followLocale) localeNavigator.goTo(server.locale);
+            if (options.followLocale) followLocale(server.locale);
           } catch (error) {
             patchState(store, { status: 'error', problem: asProblem(error) });
           }
@@ -199,7 +211,7 @@ export const PreferencesStore = signalStore(
             bump(key, -1);
             acceptServer(seq, server, key, { savedAt: Date.now() });
             if (store.savedAt() === null) patchState(store, { savedAt: Date.now() });
-            if (key === 'locale') localeNavigator.goTo(server.locale);
+            if (key === 'locale') followLocale(server.locale);
             return null;
           } catch (error) {
             bump(key, -1);

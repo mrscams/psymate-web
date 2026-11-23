@@ -34,24 +34,29 @@ export const PROFILE: Profile = {
 
 export const VOCABULARY: DirectoryVocabulary = {
   specialties: [
-    { code: 'anxiety', labelFr: 'Anxiété', labelEn: 'Anxiety' },
-    { code: 'burnout', labelFr: 'Burn-out', labelEn: 'Burnout' },
-    { code: 'grief', labelFr: 'Deuil', labelEn: 'Grief' },
-    { code: 'self_esteem', labelFr: 'Estime de soi', labelEn: 'Self-esteem' },
-    { code: 'cbt', labelFr: 'Thérapie cognitivo-comportementale (TCC)', labelEn: null },
+    { code: 'anxiety', labelFr: 'Anxiété', labelEn: 'Anxiety', labelAr: null },
+    { code: 'burnout', labelFr: 'Burn-out', labelEn: 'Burnout', labelAr: null },
+    { code: 'grief', labelFr: 'Deuil', labelEn: 'Grief', labelAr: null },
+    { code: 'self_esteem', labelFr: 'Estime de soi', labelEn: 'Self-esteem', labelAr: null },
+    {
+      code: 'cbt',
+      labelFr: 'Thérapie cognitivo-comportementale (TCC)',
+      labelEn: null,
+      labelAr: null,
+    },
   ],
   audiences: [
-    { code: 'adults', labelFr: 'Adultes', labelEn: 'Adults' },
-    { code: 'young_adults', labelFr: 'Jeunes adultes', labelEn: 'Young adults' },
+    { code: 'adults', labelFr: 'Adultes', labelEn: 'Adults', labelAr: null },
+    { code: 'young_adults', labelFr: 'Jeunes adultes', labelEn: 'Young adults', labelAr: null },
   ],
   modalities: [
-    { code: 'in_person', labelFr: 'Au cabinet', labelEn: 'In person' },
-    { code: 'video', labelFr: 'En visio', labelEn: 'Video' },
-    { code: 'home', labelFr: 'À domicile', labelEn: 'At home' },
+    { code: 'in_person', labelFr: 'Au cabinet', labelEn: 'In person', labelAr: null },
+    { code: 'video', labelFr: 'En visio', labelEn: 'Video', labelAr: null },
+    { code: 'home', labelFr: 'À domicile', labelEn: 'At home', labelAr: null },
   ],
   languages: [
-    { code: 'en', labelFr: 'anglais', labelEn: 'English' },
-    { code: 'fr', labelFr: 'français', labelEn: 'French' },
+    { code: 'en', labelFr: 'anglais', labelEn: 'English', labelAr: null },
+    { code: 'fr', labelFr: 'français', labelEn: 'French', labelAr: null },
   ],
 };
 

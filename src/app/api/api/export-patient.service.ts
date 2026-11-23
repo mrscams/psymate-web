@@ -40,7 +40,7 @@ export class ExportPatientService extends BaseService implements ExportPatientSe
 
     /**
      * Exporte le dossier du patient en Markdown ou en PDF
-     * Session praticien, propriétaire du patient. Le fichier est généré à la volée et renvoyé en pièce jointe (Content-Disposition attachment, nom export-nom-AAAAMMJJ.md ou .pdf). Il contient les séances et les entrées en ordre chronologique, avec le texte de leur version courante. Les entrées privées et archivées n\&#39;en sortent jamais, et un lien vers une entrée non exportée est omis. Langue du document : Accept-Language (français par défaut). Le PDF est au thème clair. Aucune pagination.
+     * Session praticien, propriétaire du patient. Le fichier est généré à la volée et renvoyé en pièce jointe (Content-Disposition attachment, nom export-nom-AAAAMMJJ.md ou .pdf). Il contient les séances et les entrées en ordre chronologique, avec le texte de leur version courante. Les entrées privées et archivées n\&#39;en sortent jamais, et un lien vers une entrée non exportée est omis. Langue du document : Accept-Language (français par défaut). Quand Accept-Language demande l\&#39;arabe (ar), le document est rendu en français (G Q102) ; le passage à l\&#39;arabe est proposé pour un second temps. Le PDF est au thème clair. Aucune pagination.
      * @endpoint get /api/patients/{id}/export
      * @param id Identifiant du patient.
      * @param format Format du fichier : md (Markdown, text/markdown) ou pdf (application/pdf). Obligatoire ; la casse est ignorée.

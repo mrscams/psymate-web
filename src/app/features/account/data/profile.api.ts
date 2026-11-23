@@ -84,6 +84,7 @@ export interface VocabularyItem {
   code: string;
   labelFr: string;
   labelEn: string | null;
+  labelAr: string | null;
 }
 
 /** Listes fermées de l'annuaire (GET /api/vocabulary/directory, G Q15). */
@@ -243,6 +244,7 @@ function toItem(item: Item): VocabularyItem {
     code: item.code ?? '',
     labelFr: item.labelFr ?? item.code ?? '',
     labelEn: item.labelEn ?? null,
+    labelAr: item.labelAr ?? null,
   };
 }
 

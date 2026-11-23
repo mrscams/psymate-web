@@ -30,6 +30,10 @@ export interface EmotionView {
      */
     intensityLevel?: number;
     /**
+     * Libellé arabe ; null pour une émotion personnalisée (un seul libellé, celui saisi par le praticien) ou pour une globale sans libellé arabe : afficher alors labelFr.
+     */
+    labelAr?: string;
+    /**
      * Libellé anglais ; null pour une émotion personnalisée (saisie en français seulement).
      */
     labelEn?: string;

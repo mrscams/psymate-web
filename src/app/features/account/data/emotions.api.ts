@@ -32,6 +32,8 @@ export interface Emotion {
   family: EmotionFamily;
   labelFr: string;
   labelEn: string | null;
+  /** Libellé arabe d'une globale (contrat 0.16.0) ; null pour une personnalisée ou s'il manque. */
+  labelAr: string | null;
 }
 
 /** Fusion d'une émotion personnalisée dans une autre, annulable 30 jours (MergeView). */
@@ -97,6 +99,7 @@ function toEmotion(dto: EmotionView): Emotion | null {
     family,
     labelFr: dto.labelFr ?? '',
     labelEn: dto.labelEn ?? null,
+    labelAr: dto.labelAr ?? null,
   };
 }
 
@@ -108,6 +111,7 @@ function fallback(dto: EmotionView, labelFr: string, family: EmotionFamily): Emo
     family,
     labelFr: dto.labelFr ?? labelFr,
     labelEn: null,
+    labelAr: null,
   };
 }
 

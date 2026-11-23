@@ -10,13 +10,17 @@
 
 
 /**
- * Entrée d\'une liste fermée de l\'annuaire, avec ses libellés fr et en.
+ * Entrée d\'une liste fermée de l\'annuaire, avec ses libellés fr, en et ar.
  */
 export interface Item { 
     /**
      * Code stable à envoyer dans le profil ou dans les filtres de recherche (minuscules et underscores, ou code de langue ISO 639-1).
      */
     code?: string;
+    /**
+     * Libellé en arabe ; peut être null pour une entrée ajoutée sans : afficher alors labelFr.
+     */
+    labelAr?: string;
     /**
      * Libellé en anglais ; peut être null pour une entrée ajoutée sans.
      */

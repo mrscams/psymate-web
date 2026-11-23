@@ -88,7 +88,11 @@ export function toEmotionLabels(
   for (const emotion of list) {
     if (!emotion.code) continue;
     labels[emotion.code] = catalogLabel(
-      { labelFr: emotion.labelFr || emotion.code, labelEn: emotion.labelEn },
+      {
+        labelFr: emotion.labelFr || emotion.code,
+        labelEn: emotion.labelEn,
+        labelAr: emotion.labelAr,
+      },
       locale,
     );
   }

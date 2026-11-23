@@ -31,6 +31,8 @@ describe('profile-labels', () => {
 
   it('M16-12 : itemLabel passe par catalogLabel, repli sur le français en arabe', () => {
     expect(itemLabel(VOCABULARY.specialties[0], 'ar')).toBe('Anxiété');
-    expect(itemLabel({ code: 'x', labelFr: 'Deuil', labelEn: '' }, 'en')).toBe('Deuil');
+    expect(itemLabel({ code: 'x', labelFr: 'Deuil', labelEn: '', labelAr: null }, 'en')).toBe(
+      'Deuil',
+    );
   });
 });

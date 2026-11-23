@@ -26,6 +26,10 @@ export interface EntryTypeView {
      */
     hasDuration?: boolean;
     /**
+     * Libellé arabe ; null s\'il n\'y en a pas : afficher alors labelFr.
+     */
+    labelAr?: string;
+    /**
      * Libellé anglais.
      */
     labelEn?: string;
