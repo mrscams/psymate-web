@@ -73,10 +73,20 @@ async function adminList(admin: APIRequestContext): Promise<ItemDto[]> {
   return ((await response.json()) as { items: ItemDto[] }).items;
 }
 
+/**
+ * Ménage : désactive une spécialité de test (jamais supprimée). Comme les autres specs
+ * d'administration (e2e/arabe/admin.spec.ts, e2e/flux-10-admin), un échec de nettoyage ne fait
+ * pas échouer les tests, mais il se voit dans la sortie (statut et corps de la réponse).
+ */
 async function deactivate(admin: APIRequestContext, code: string): Promise<void> {
-  await admin.patch(`${API}/api/admin/vocabulary/directory/specialty/${code}`, {
+  const response = await admin.patch(`${API}/api/admin/vocabulary/directory/specialty/${code}`, {
     data: { active: false },
   });
+  if (response.status() !== 200) {
+    console.warn(
+      `[M16-25] nettoyage : spécialité ${code} non désactivée (${response.status()}) : ${await response.text()}`,
+    );
+  }
 }
 
 test.describe('libellés arabes des catalogues (M16-25)', () => {

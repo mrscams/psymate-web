@@ -8,9 +8,9 @@ export type AppLocale = (typeof APP_LOCALES)[number];
 
 /**
  * Langues proposées : celles des sélecteurs de langue, des liens vers l'autre langue et des
- * alternatives hreflang des pages publiques, et les seules que le contrat admet pour la préférence
- * `locale` et la langue d'une demande de rendez-vous (contrat 0.15.0). L'arabe y entrera à
- * l'ouverture (M16-29, Q80), après le contrat 0.16.0 (M16-25).
+ * alternatives hreflang des pages publiques. Le contrat 0.16.0 (M16-25) admet aussi ar pour la
+ * préférence `locale` et la langue d'une demande de rendez-vous, mais l'arabe n'est proposé nulle
+ * part avant l'ouverture (M16-29, Q80).
  */
 export const OFFERED_LOCALES = ['fr', 'en'] as const satisfies readonly AppLocale[];
 

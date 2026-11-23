@@ -9,7 +9,8 @@ import { applyVocabularyProblem, LABEL_MAX } from './vocabulary-forms';
 
 /**
  * Panneau « Renommer » sous une ligne (fiche 28) : libellé FR (obligatoire), libellé EN (vide =
- * effacé), libellé AR (de droite à gauche, envoyé s'il a changé, vide = effacé), ordre ; le code ne change jamais. Envoie un PATCH sur le même {kind}/{code}.
+ * effacé), libellé AR (de droite à gauche, envoyé s'il a changé, vide = effacé),
+ * ordre ; le code ne change jamais. Envoie un PATCH sur le même {kind}/{code}.
  */
 @Component({
   selector: 'pm-rename-panel',
