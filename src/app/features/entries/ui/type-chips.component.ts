@@ -5,17 +5,20 @@ import {
   forwardRef,
   inject,
   input,
+  LOCALE_ID,
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { textDirection } from '../../../core/i18n';
 import { ENTRY_TYPES, EntryIconComponent, EntryType, entryTypeLabel } from '../../../shared/ui';
 
 /**
  * Les six types d'entrée en puces (fiche 05 §3) : forme et couleur du type (pm-entry-icon), une seule
  * pressée (`role="group"` + `aria-pressed`). Une seule puce dans l'ordre de tabulation (celle du
  * type choisi) ; ← → passent au type voisin et le choisissent. Verrouillées en correction (le type
- * ne se modifie pas) : contrôle désactivé.
+ * ne se modifie pas) : contrôle désactivé. De droite à gauche, les puces suivent le sens et ← →
+ * s'inversent : ← va au type suivant (docs/design/arabe.md §6) ; ↑ ↓ inchangés.
  */
 @Component({
   selector: 'pm-type-chips',
@@ -95,6 +98,10 @@ export class TypeChipsComponent implements ControlValueAccessor {
   protected readonly disabled = signal(false);
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  /** Flèche vers le type suivant : → de gauche à droite, ← de droite à gauche. */
+  private readonly nextKey =
+    textDirection(inject(LOCALE_ID)) === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+  private readonly previousKey = this.nextKey === 'ArrowRight' ? 'ArrowLeft' : 'ArrowRight';
   private onChange: (value: EntryType) => void = () => undefined;
   private onTouched: () => void = () => undefined;
 
@@ -111,9 +118,9 @@ export class TypeChipsComponent implements ControlValueAccessor {
 
   protected onKey(event: KeyboardEvent, type: EntryType): void {
     const step =
-      event.key === 'ArrowRight' || event.key === 'ArrowDown'
+      event.key === this.nextKey || event.key === 'ArrowDown'
         ? 1
-        : event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+        : event.key === this.previousKey || event.key === 'ArrowUp'
           ? -1
           : 0;
     if (!step || this.disabled()) return;

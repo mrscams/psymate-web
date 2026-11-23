@@ -31,8 +31,9 @@
             </p>
             @if (item.reason) {
               <p class="reason">
-                <span i18n="Motif d'une version@@entries.history.reason">Motif :</span>
-                {{ item.reason }}
+                <span i18n="Motif d'une version@@entries.history.reason">Motif :</span>&ngsp;<bdi>{{
+                  item.reason
+                }}</bdi>
               </p>
             }
             @if (item.rows.length > 0) {
@@ -40,8 +41,8 @@
                 @for (row of item.rows; track row.field) {
                   <dt>{{ row.label }}</dt>
                   <dd>
-                    <s class="before">{{ row.before || emptyValue }}</s>
-                    <span class="after">{{ row.after || emptyValue }}</span>
+                    <s class="before" dir="auto">{{ row.before || emptyValue }}</s>
+                    <span class="after" dir="auto">{{ row.after || emptyValue }}</span>
                   </dd>
                 }
               </dl>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, LOCALE_ID, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
@@ -232,6 +232,39 @@ describe('EmotionComboboxComponent', () => {
       'Une émotion porte déjà ce libellé',
     );
     expect(host.control.value).toBeNull();
+  });
+});
+
+describe('EmotionComboboxComponent, version arabe (M16-19)', () => {
+  const suffixes = (el: HTMLElement) =>
+    [...el.querySelectorAll('[role="option"] .tag')].map((tag) =>
+      (tag.textContent ?? '').replace(/\s+/g, ' ').trim(),
+    );
+
+  it('saisie en dir="auto", valeur insérée isolée par <bdi>', async () => {
+    const { fixture, el, input } = await render();
+    expect(input.getAttribute('dir')).toBe('auto');
+    type(input, 'قلق');
+    await fixture.whenStable();
+    const create = el.querySelector('[role="option"].create .label')!;
+    expect(create.querySelector('bdi')?.textContent).toBe('قلق');
+    // Le <bdi> ne mange aucune espace de la phrase : texte comparé tel quel, espaces comprises.
+    expect(create.textContent).toBe("Créer l'émotion personnalisée « قلق »");
+    // Libellé d'émotion (une émotion personnalisée est saisie) : isolé, aligné avec sa ligne.
+    type(input, 'anx');
+    await fixture.whenStable();
+    const label = el.querySelector('[role="option"] .label bdi');
+    expect(label?.textContent).toBe('Anxiété');
+    expect(label?.querySelector('mark')?.textContent).toBe('Anx');
+  });
+
+  it('famille telle quelle en ar, sans mise en minuscules (minuscules en fr : test maquette 05)', async () => {
+    TestBed.configureTestingModule({ providers: [{ provide: LOCALE_ID, useValue: 'ar' }] });
+    const { fixture, el, input } = await render();
+    type(input, 'anx');
+    await fixture.whenStable();
+    // Sans traduction chargée dans le test, le libellé source (français) reste tel que traduit.
+    expect(suffixes(el)[0]).toBe('Peur');
   });
 });
 

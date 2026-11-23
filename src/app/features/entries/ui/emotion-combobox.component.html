@@ -16,6 +16,7 @@
       [attr.aria-describedby]="errorId() || null"
       [disabled]="disabled()"
       [value]="displayQuery()"
+      dir="auto"
       placeholder="Anxiété, colère…"
       i18n-placeholder="Texte indicatif du champ émotion@@entries.emotion.placeholder"
       (input)="onInput($any($event.target).value)"
@@ -62,8 +63,10 @@
           @let label = parts(option.emotion.label);
           <span [class]="'dot family-' + (familyOf(option) ?? 'none')" aria-hidden="true"></span>
           <span class="label"
-            >{{ label.before }}<mark>{{ label.match }}</mark
-            >{{ label.after }}</span
+            ><bdi
+              >{{ label.before }}<mark>{{ label.match }}</mark
+              >{{ label.after }}</bdi
+            ></span
           >
           @if (suffixOf(option.emotion); as suffix) {
             <span class="tag">{{ suffix }}</span>
@@ -72,7 +75,11 @@
           <svg class="plus" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
             <path d="M8 3v10M3 8h10" />
           </svg>
-          <span class="label">{{ createText(option.label) }}</span>
+          <span
+            class="label"
+            i18n="Dernière ligne de la liste des émotions@@entries.emotion.createOption"
+            >Créer l'émotion personnalisée « <bdi>{{ option.label }}</bdi> »</span
+          >
           <span class="tag family-pick" aria-hidden="true"
             >{{ createSuffix() }}
             <svg viewBox="0 0 10 10" focusable="false"><path d="M2 4l3 3 3-3" /></svg>
@@ -100,7 +107,7 @@
 @if (creating(); as label) {
   <fieldset class="create" [id]="familyId">
     <legend i18n="Choix de la famille d'une nouvelle émotion@@entries.emotion.familyLegend">
-      Famille de « {{ label }} » (obligatoire)
+      Famille de « <bdi>{{ label }}</bdi> » (obligatoire)
     </legend>
     <div class="families">
       @for (item of families; track item) {

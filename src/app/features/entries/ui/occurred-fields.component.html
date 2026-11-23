@@ -44,6 +44,7 @@
         <input
           [id]="fid('occurred.label')"
           type="text"
+          dir="auto"
           formControlName="label"
           placeholder="enfance, adolescence…"
           i18n-placeholder="Exemples de phases de vie@@entries.when.lifePhaseHint"
@@ -150,6 +151,7 @@
           <input
             [id]="fid('occurred.label')"
             type="text"
+            dir="auto"
             formControlName="label"
             [attr.aria-invalid]="invalid('label')"
             [attr.aria-describedby]="fid('occurred.label') + '-error'"

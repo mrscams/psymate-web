@@ -44,7 +44,7 @@
 // Légende flottante : sortie du bord du fieldset, elle redevient un bloc du flux (le rappel à droite
 // se place alors sur sa ligne).
 legend.section-title {
-  float: left;
+  float: inline-start;
   width: 100%;
   margin-bottom: 0;
 }
@@ -54,11 +54,12 @@ legend.section-title {
   color: var(--text-secondary);
 }
 
-// « récentes et actives · Espace pour cocher », à droite du titre du rail (légende de fieldset).
+// « récentes et actives · Espace pour cocher », en fin de ligne du titre du rail (légende de
+// fieldset) : à droite, à gauche de droite à gauche.
 .rail-aside {
   position: absolute;
   top: 0;
-  right: 0;
+  inset-inline-end: 0;
   line-height: 24px;
 }
 
@@ -131,6 +132,14 @@ textarea {
 
 .mono {
   font-family: var(--font-mono);
+}
+
+// Touches et préfixes (« Ctrl+⏎ », « /evt ») : des codes en caractères latins, isolés et de gauche à
+// droite dans une phrase arabe (docs/design/arabe.md §3) ; sans effet de gauche à droite.
+span.mono,
+kbd {
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 .short {
@@ -216,6 +225,11 @@ kbd {
   &[open] .chevron {
     transform: rotate(90deg);
   }
+  // Chevron qui se déplie : il pointe dans le sens de lecture (.pm-flip-rtl), et sa rotation
+  // ouverte compose le retournement de droite à gauche (src/theme/arabic.scss).
+  &[open] .chevron:dir(rtl) {
+    transform: scaleX(-1) rotate(90deg);
+  }
   .summary-aside {
     font-weight: 400;
     color: var(--text-secondary);
@@ -224,7 +238,8 @@ kbd {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 12px 0 0 18px;
+    padding-block: 12px 0;
+    padding-inline: 18px 0;
   }
 }
 

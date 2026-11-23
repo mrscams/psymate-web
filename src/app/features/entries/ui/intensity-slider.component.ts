@@ -3,11 +3,14 @@ import {
   Component,
   computed,
   forwardRef,
+  inject,
   input,
+  LOCALE_ID,
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { textDirection } from '../../../core/i18n';
 import { INTENSITY_MAX, INTENSITY_MIN, SLIDER_MIN } from '../data/entry.model';
 
 /** Délai pour taper « 1 » puis « 0 » et obtenir 10. */
@@ -21,6 +24,9 @@ const TEN_DELAY_MS = 900;
  * l'ouverture d'un ressenti ; sans valeur (null), le curseur l'annonce « Non renseignée ». Une
  * intensité 0 venue de la barre de capture (le contrat va de 0 à 10) reste affichée telle quelle :
  * le minimum descend alors à 0. Lavande réservée au ressenti.
+ *
+ * De droite à gauche (arabe, docs/design/arabe.md §3 et §6) : le minimum est à droite et la valeur
+ * croît vers la gauche ; ← augmente, → diminue ; ↑ ↓, Page, Début, Fin et aria-value* inchangés.
  */
 @Component({
   selector: 'pm-intensity-slider',
@@ -62,15 +68,18 @@ const TEN_DELAY_MS = 900;
       <span class="track" aria-hidden="true">
         <span class="fill" [style.width.%]="percent()"></span>
         @if (value() !== null) {
-          <span class="thumb" [style.left.%]="percent()"></span>
+          <span class="thumb" [style.inset-inline-start.%]="percent()"></span>
         }
       </span>
     </div>
     <div class="ticks" aria-hidden="true">
       @for (tick of ticks(); track tick.value) {
-        <span class="tick" [class.on]="tick.value === value()" [style.left.%]="tick.left">{{
-          tick.value
-        }}</span>
+        <span
+          class="tick"
+          [class.on]="tick.value === value()"
+          [style.inset-inline-start.%]="tick.start"
+          >{{ tick.value }}</span
+        >
       }
     </div>
   `,
@@ -130,7 +139,8 @@ const TEN_DELAY_MS = 900;
     }
     .fill {
       position: absolute;
-      inset: 0 auto 0 0;
+      inset-block: 0;
+      inset-inline: 0 auto;
       border-radius: 2px;
       background: var(--feeling);
     }
@@ -146,6 +156,10 @@ const TEN_DELAY_MS = 900;
       box-shadow: 0 1px 3px var(--scrim);
       transform: translate(-50%, -50%);
     }
+    /* Centré sur sa position : le bord de début est à droite, le décalage change de signe. */
+    .thumb:dir(rtl) {
+      transform: translate(50%, -50%);
+    }
     .ticks {
       position: relative;
       height: 14px;
@@ -159,6 +173,9 @@ const TEN_DELAY_MS = 900;
       position: absolute;
       top: 0;
       transform: translateX(-50%);
+    }
+    .tick:dir(rtl) {
+      transform: translateX(50%);
     }
     .tick.on {
       font-weight: 600;
@@ -174,6 +191,7 @@ export class IntensitySliderComponent implements ControlValueAccessor {
   readonly invalid = input(false);
 
   protected readonly max = INTENSITY_MAX;
+  private readonly rtl = textDirection(inject(LOCALE_ID)) === 'rtl';
   protected readonly value = signal<number | null>(null);
   protected readonly disabled = signal(false);
   /** 1, sauf pour une intensité 0 reçue (contrat 0 à 10) : le curseur ne la travestit pas. */
@@ -186,7 +204,8 @@ export class IntensitySliderComponent implements ControlValueAccessor {
     const span = this.max - min;
     return Array.from({ length: span + 1 }, (_, i) => ({
       value: min + i,
-      left: (i / span) * 100,
+      /** Position depuis le bord de début (gauche, ou droite de droite à gauche), en %. */
+      start: (i / span) * 100,
     }));
   });
 
@@ -212,12 +231,15 @@ export class IntensitySliderComponent implements ControlValueAccessor {
     const current = this.value();
     const base = current ?? SLIDER_MIN;
     let next: number | null = null;
+    // De droite à gauche, ← et → s'inversent : la flèche vers la fin de la piste augmente.
+    const increase = this.rtl ? 'ArrowLeft' : 'ArrowRight';
+    const decrease = this.rtl ? 'ArrowRight' : 'ArrowLeft';
     switch (event.key) {
-      case 'ArrowRight':
+      case increase:
       case 'ArrowUp':
         next = current === null ? SLIDER_MIN : base + 1;
         break;
-      case 'ArrowLeft':
+      case decrease:
       case 'ArrowDown':
         next = current === null ? SLIDER_MIN : base - 1;
         break;
@@ -246,7 +268,8 @@ export class IntensitySliderComponent implements ControlValueAccessor {
     const track = (event.currentTarget as HTMLElement).querySelector('.track');
     const box = track?.getBoundingClientRect();
     if (!box || box.width === 0) return;
-    const ratio = (event.clientX - box.left) / box.width;
+    // Distance au bord de début de la piste : la droite, de droite à gauche.
+    const ratio = (this.rtl ? box.right - event.clientX : event.clientX - box.left) / box.width;
     this.set(Math.round(SLIDER_MIN + ratio * (this.max - SLIDER_MIN)));
   }
 

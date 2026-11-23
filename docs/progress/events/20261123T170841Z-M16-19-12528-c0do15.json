@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T17:08:41.580Z",
+  "task": "M16-19",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "features/entries de droite à gauche : 11 déclarations en propriétés logiques, curseur d'intensité et puces inversés en RTL (valeur enregistrée vérifiée en e2e), catalogLabel, formatLocale, dir=auto et bdi sur le contenu saisi, e2e arabe",
+  "pr": "https://github.com/mrscams/psymate-web/pull/136",
+  "branch": "M16-19-entries-rtl",
+  "checkout": "agent-a08263eaddd06c947"
+}
