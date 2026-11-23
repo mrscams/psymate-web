@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T13:22:52.088Z",
+  "task": "M16-28",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "Traduction arabe du compte (1/2) : 732 unités (account, preferences, profile, vocabulary, accountNav, profession et 6 sous-messages ICU), glossaire enrichi ; seconde moitié (admin, agenda, socle) à suivre",
+  "pr": "https://github.com/mrscams/psymate-web/pull/122",
+  "branch": "M16-28a-traduction-compte",
+  "checkout": "agent-a25e89a2dfc58b589"
+}
