@@ -6416,6 +6416,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.pageTitle" datatype="html">
         <source>Validation des praticiens · Administration · PsyMate</source>
+        <target state="translated">التحقّق من الممارسين · الإدارة · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/admin.routes.ts</context>
           <context context-type="linenumber">19</context>
@@ -6428,6 +6429,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.pageTitle" datatype="html">
         <source>Praticiens · Administration · PsyMate</source>
+        <target state="translated">الممارسون · الإدارة · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/admin.routes.ts</context>
           <context context-type="linenumber">29</context>
@@ -6436,6 +6438,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.pageTitle" datatype="html">
         <source>Journal · Administration · PsyMate</source>
+        <target state="translated">السجلّ · الإدارة · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/admin.routes.ts</context>
           <context context-type="linenumber">34</context>
@@ -6444,6 +6447,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.pageTitle" datatype="html">
         <source>Vocabulaire de l&apos;annuaire · Administration · PsyMate</source>
+        <target state="translated">مفردات دليل الممارسين · الإدارة · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/admin.routes.ts</context>
           <context context-type="linenumber">39</context>
@@ -6452,6 +6456,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.title" datatype="html">
         <source>Journal</source>
+        <target state="translated">السجلّ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">2,3</context>
@@ -6460,6 +6465,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.subtitle" datatype="html">
         <source> Décisions d&apos;administration, accès aux justificatifs et événements de sécurité des comptes ; lecture seule, jamais d&apos;adresse IP ni de donnée patient. </source>
+        <target state="translated"> قرارات الإدارة، والوصول إلى مستندات الإثبات، وأحداث أمان الحسابات؛ للاطلاع فقط، دون أي عنوان IP ودون أي بيانات للمرضى. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">4,9</context>
@@ -6468,6 +6474,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.listTitle" datatype="html">
         <source> Événements </source>
+        <target state="translated"> الأحداث </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">15,19</context>
@@ -6476,6 +6483,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.segments" datatype="html">
         <source>Type d&apos;événement</source>
+        <target state="translated">نوع الحدث</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">21,22</context>
@@ -6484,6 +6492,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.actor" datatype="html">
         <source>Par</source>
+        <target state="translated">المنفِّذ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">35,38</context>
@@ -6492,6 +6501,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.actorAll" datatype="html">
         <source> Tous </source>
+        <target state="translated"> الكل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">46,48</context>
@@ -6500,6 +6510,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.actorError" datatype="html">
         <source>Liste des administrateurs indisponible.</source>
+        <target state="translated">قائمة المسؤولين غير متاحة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">59,61</context>
@@ -6508,6 +6519,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.period" datatype="html">
         <source>Période</source>
+        <target state="translated">الفترة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">68,69</context>
@@ -6516,6 +6528,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.from" datatype="html">
         <source>Du</source>
+        <target state="translated">من</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">79,81</context>
@@ -6524,6 +6537,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.to" datatype="html">
         <source>Au</source>
+        <target state="translated">إلى</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">88,90</context>
@@ -6532,6 +6546,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.practitionerChip" datatype="html">
         <source>Compte : <x id="INTERPOLATION" equiv-text="{{ practitionerName() ?? filters().practitionerId }}"/></source>
+        <target state="translated">الحساب: <x id="INTERPOLATION" equiv-text="{{ practitionerName() ?? filters().practitionerId }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">100,102</context>
@@ -6540,6 +6555,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.practitionerClear" datatype="html">
         <source> Retirer ce filtre </source>
+        <target state="translated"> إزالة عامل التصفية هذا </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">107,113</context>
@@ -6548,6 +6564,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.stale" datatype="html">
         <source>Le journal n&apos;a pas pu être relu.</source>
+        <target state="translated">تعذّر تحديث السجلّ.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">116,118</context>
@@ -6556,6 +6573,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.error" datatype="html">
         <source>Impossible de charger le journal</source>
+        <target state="translated">تعذّر تحميل السجلّ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">130,131</context>
@@ -6564,6 +6582,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.empty" datatype="html">
         <source>Aucun événement pour ces filtres</source>
+        <target state="translated">لا أحداث مطابقة لعوامل التصفية هذه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">138,139</context>
@@ -6572,6 +6591,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.emptyHint" datatype="html">
         <source>Élargissez la période ou retirez un filtre.</source>
+        <target state="translated">يمكن توسيع الفترة أو إزالة أحد عوامل التصفية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">140,141</context>
@@ -6580,6 +6600,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.col.at" datatype="html">
         <source>Horodatage</source>
+        <target state="translated">التوقيت</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">155,156</context>
@@ -6588,6 +6609,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.col.type" datatype="html">
         <source>Type</source>
+        <target state="translated">النوع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">156,157</context>
@@ -6596,6 +6618,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.col.event" datatype="html">
         <source>Événement</source>
+        <target state="translated">الحدث</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">157,158</context>
@@ -6604,6 +6627,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.col.by" datatype="html">
         <source>Par</source>
+        <target state="translated">المنفِّذ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">159,160</context>
@@ -6612,6 +6636,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.col.context" datatype="html">
         <source>Contexte</source>
+        <target state="translated">السياق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">160,164</context>
@@ -6620,6 +6645,7 @@
       </trans-unit>
       <trans-unit id="admin.list.more" datatype="html">
         <source> Afficher plus </source>
+        <target state="translated"> عرض المزيد </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">188,190</context>
@@ -6640,6 +6666,7 @@
       </trans-unit>
       <trans-unit id="admin.list.moreError" datatype="html">
         <source> La suite de la liste n&apos;a pas pu être chargée. </source>
+        <target state="translated"> تعذّر تحميل بقية القائمة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">196,202</context>
@@ -6661,6 +6688,8 @@
       <trans-unit id="admin.journal.footnote" datatype="html">
         <source> Journal en ajout seul : aucune ligne ne se modifie ni ne se supprime. Les adresses IP ne sont jamais affichées.
 </source>
+        <target state="translated"> سجلّ للإضافة فقط: لا يُعدَّل أي سطر ولا يُحذف. لا تُعرض عناوين IP أبدًا.
+</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">205,209</context>
@@ -6669,6 +6698,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.filterBy" datatype="html">
         <source>: voir seulement ses événements</source>
+        <target state="translated">: عرض أحداث هذا الحساب فقط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">231,235</context>
@@ -6677,6 +6707,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.groupHide" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {Masquer la ligne identique} other {Masquer les <x id="INTERPOLATION"/> lignes identiques}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {إخفاء الأسطر المطابقة} one {إخفاء السطر المطابق} two {إخفاء السطرين المطابقين} few {إخفاء الأسطر المطابقة (<x id="INTERPOLATION"/>)} many {إخفاء الأسطر المطابقة (<x id="INTERPOLATION"/>)} other {إخفاء الأسطر المطابقة (<x id="INTERPOLATION"/>)}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">246,250</context>
@@ -6685,6 +6716,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.groupShow" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {Afficher 1 ligne identique} other {Afficher <x id="INTERPOLATION"/> lignes identiques}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {عرض الأسطر المطابقة} one {عرض سطر مطابق واحد} two {عرض سطرين مطابقين} few {عرض <x id="INTERPOLATION"/> أسطر مطابقة} many {عرض <x id="INTERPOLATION"/> سطرًا مطابقًا} other {عرض <x id="INTERPOLATION"/> سطر مطابق}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">254,259</context>
@@ -6693,6 +6725,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.openDossier" datatype="html">
         <source>Voir le dossier</source>
+        <target state="translated">عرض الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.html</context>
           <context context-type="linenumber">272,275</context>
@@ -6701,6 +6734,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.captionPractitioner" datatype="html">
         <source>praticien <x id="name" equiv-text="name"/></source>
+        <target state="translated">الممارس: <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
           <context context-type="linenumber">171</context>
@@ -6709,6 +6743,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.caption" datatype="html">
         <source>Journal d&apos;administration, du plus récent au plus ancien : <x id="filters" equiv-text="parts.join(&apos; · &apos;)"/></source>
+        <target state="translated">سجلّ الإدارة، من الأحدث إلى الأقدم: <x id="filters" equiv-text="parts.join(&apos; · &apos;)"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
           <context context-type="linenumber">174</context>
@@ -6717,6 +6752,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.seg.admin" datatype="html">
         <source>Décisions et actes</source>
+        <target state="translated">القرارات والإجراءات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
           <context context-type="linenumber">201</context>
@@ -6725,6 +6761,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.seg.documents" datatype="html">
         <source>Accès aux documents</source>
+        <target state="translated">الوصول إلى المستندات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
           <context context-type="linenumber">203</context>
@@ -6733,6 +6770,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.seg.appeals" datatype="html">
         <source>Recours</source>
+        <target state="translated">التظلّمات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
           <context context-type="linenumber">205</context>
@@ -6741,6 +6779,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.seg.directory" datatype="html">
         <source>Annuaire</source>
+        <target state="translated">دليل الممارسين</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
           <context context-type="linenumber">207</context>
@@ -6749,6 +6788,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.seg.all" datatype="html">
         <source>Tout</source>
+        <target state="translated">الكل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
           <context context-type="linenumber">209</context>
@@ -6757,6 +6797,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.period.7d" datatype="html">
         <source>7 derniers jours</source>
+        <target state="translated">آخر 7 أيام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
           <context context-type="linenumber">216</context>
@@ -6765,6 +6806,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.period.30d" datatype="html">
         <source>30 derniers jours</source>
+        <target state="translated">آخر 30 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
           <context context-type="linenumber">218</context>
@@ -6773,6 +6815,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.period.custom" datatype="html">
         <source>Période personnalisée</source>
+        <target state="translated">فترة مخصّصة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
           <context context-type="linenumber">220</context>
@@ -6781,6 +6824,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.period.all" datatype="html">
         <source>Depuis le début</source>
+        <target state="translated">منذ البداية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/journal.page.ts</context>
           <context context-type="linenumber">222</context>
@@ -6789,6 +6833,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.title" datatype="html">
         <source>Praticiens</source>
+        <target state="translated">الممارسون</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">2,5</context>
@@ -6797,6 +6842,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.breakdown" datatype="html">
         <source>Répartition par statut</source>
+        <target state="translated">التوزيع حسب الحالة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">6,7</context>
@@ -6805,6 +6851,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.listTitle" datatype="html">
         <source> Comptes </source>
+        <target state="translated"> الحسابات </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">25,29</context>
@@ -6813,6 +6860,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.search" datatype="html">
         <source>Rechercher (nom ou e-mail)</source>
+        <target state="translated">بحث (الاسم أو البريد الإلكتروني)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">30,32</context>
@@ -6821,6 +6869,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.profession" datatype="html">
         <source>Profession</source>
+        <target state="translated">المهنة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">36,38</context>
@@ -6829,6 +6878,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.allProfessions" datatype="html">
         <source> Toutes </source>
+        <target state="translated"> الكل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">44,46</context>
@@ -6837,6 +6887,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.role" datatype="html">
         <source>Comptes</source>
+        <target state="translated">الحسابات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">54,55</context>
@@ -6845,6 +6896,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.rolePractitioner" datatype="html">
         <source> Praticiens </source>
+        <target state="translated"> الممارسون </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">61,64</context>
@@ -6853,6 +6905,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.roleAdmin" datatype="html">
         <source> Administrateurs </source>
+        <target state="translated"> المسؤولون </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">68,71</context>
@@ -6861,6 +6914,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.roleAll" datatype="html">
         <source> Tous les comptes </source>
+        <target state="translated"> كل الحسابات </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">75,79</context>
@@ -6869,6 +6923,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.statusGroup" datatype="html">
         <source>Statut</source>
+        <target state="translated">الحالة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">83</context>
@@ -6877,6 +6932,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.stale" datatype="html">
         <source>La liste n&apos;a pas pu être relue.</source>
+        <target state="translated">تعذّر تحديث القائمة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">103,105</context>
@@ -6885,6 +6941,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.error" datatype="html">
         <source>Impossible de charger les comptes</source>
+        <target state="translated">تعذّر تحميل الحسابات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">117,118</context>
@@ -6893,6 +6950,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.empty" datatype="html">
         <source>Aucun compte ne correspond</source>
+        <target state="translated">لا حساب مطابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">125,126</context>
@@ -6901,6 +6959,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.emptyHint" datatype="html">
         <source>Modifiez la recherche ou les filtres.</source>
+        <target state="translated">يمكن تعديل البحث أو عوامل التصفية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">127,128</context>
@@ -6909,6 +6968,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.caption" datatype="html">
         <source> Comptes, du plus récemment créé au plus ancien </source>
+        <target state="translated"> الحسابات، من الأحدث إنشاءً إلى الأقدم </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">136,140</context>
@@ -6917,6 +6977,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.col.who" datatype="html">
         <source>Praticien</source>
+        <target state="translated">الممارس</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">140,141</context>
@@ -6925,6 +6986,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.col.where" datatype="html">
         <source>Profession · ville</source>
+        <target state="translated">المهنة · المدينة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">141,142</context>
@@ -6933,6 +6995,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.col.status" datatype="html">
         <source>Vérification</source>
+        <target state="translated">التحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">142,143</context>
@@ -6941,6 +7004,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.col.twoFactor" datatype="html">
         <source>2FA</source>
+        <target state="translated">2FA</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">144</context>
@@ -6949,6 +7013,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.col.dates" datatype="html">
         <source> Inscrit · dernière connexion </source>
+        <target state="translated"> التسجيل · آخر تسجيل دخول </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">145,147</context>
@@ -6957,6 +7022,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.col.actions" datatype="html">
         <source>Actions</source>
+        <target state="translated">الإجراءات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">147,150</context>
@@ -6965,6 +7031,7 @@
       </trans-unit>
       <trans-unit id="admin.queue.overdue" datatype="html">
         <source>hors délai</source>
+        <target state="translated">تجاوز المهلة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">167,170</context>
@@ -6981,6 +7048,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.twoFactorOn" datatype="html">
         <source>Activée</source>
+        <target state="translated">مفعّلة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">174,177</context>
@@ -6989,6 +7057,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.twoFactorOff" datatype="html">
         <source>Non</source>
+        <target state="translated">لا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">178,181</context>
@@ -6997,6 +7066,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.purge" datatype="html">
         <source>Purge des données le <x id="INTERPOLATION" equiv-text="{{ row.purge }}"/></source>
+        <target state="translated">حذف البيانات في <x id="INTERPOLATION" equiv-text="{{ row.purge }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">188,189</context>
@@ -7005,6 +7075,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.openDossier" datatype="html">
         <source>Ouvrir le dossier<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> · <x id="INTERPOLATION" equiv-text="{{ row.displayName }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">فتح الملف<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> · <x id="INTERPOLATION" equiv-text="{{ row.displayName }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">199,200</context>
@@ -7013,6 +7084,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.journal" datatype="html">
         <source>Journal<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> · <x id="INTERPOLATION" equiv-text="{{ row.displayName }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">السجلّ<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/> · <x id="INTERPOLATION" equiv-text="{{ row.displayName }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">206,207</context>
@@ -7021,6 +7093,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.suspend" datatype="html">
         <source>Suspendre…</source>
+        <target state="translated">إيقاف…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">211,213</context>
@@ -7029,6 +7102,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.reactivate" datatype="html">
         <source>Réactiver…</source>
+        <target state="translated">إعادة التفعيل…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">219,221</context>
@@ -7037,6 +7111,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.title" datatype="html">
         <source>Recours ouverts</source>
+        <target state="translated">التظلّمات المفتوحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">257,259</context>
@@ -7045,6 +7120,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.error" datatype="html">
         <source>Impossible de charger les recours</source>
+        <target state="translated">تعذّر تحميل التظلّمات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">267,268</context>
@@ -7053,6 +7129,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.empty" datatype="html">
         <source>Aucun recours en attente</source>
+        <target state="translated">لا تظلّمات قيد الانتظار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">276,277</context>
@@ -7064,6 +7141,10 @@
             =1 {Afficher l&apos;autre recours}
             other {Afficher les {{ hiddenAppeals() }} autres recours}
           }" xid="5070405837718736083"/> </source>
+        <target state="translated"> <x id="ICU" equiv-text="{hiddenAppeals(), plural,
+            =1 {Afficher l&apos;autre recours}
+            other {Afficher les {{ hiddenAppeals() }} autres recours}
+          }" xid="5070405837718736083"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">294,299</context>
@@ -7081,6 +7162,8 @@
       <trans-unit id="admin.practitioners.footnote" datatype="html">
         <source> Suspendre révoque toutes les sessions du compte et retire sa fiche de l&apos;annuaire ; le praticien reçoit le motif et peut déposer un recours. L&apos;administration ne voit aucune donnée patient.
 </source>
+        <target state="translated"> الإيقاف يسجّل خروج الحساب من جميع الجلسات ويسحب بطاقته من دليل الممارسين؛ ويُرسَل السبب إلى الممارس مع إمكانية تقديم تظلّم. لا ترى الإدارة أي بيانات للمرضى.
+</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">326,329</context>
@@ -7089,6 +7172,7 @@
       </trans-unit>
       <trans-unit id="admin.practitioners.all" datatype="html">
         <source>Tous</source>
+        <target state="translated">الكل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">164</context>
@@ -7097,6 +7181,7 @@
       </trans-unit>
       <trans-unit id="admin.suspend.title" datatype="html">
         <source>Suspendre <x id="name" equiv-text="account.displayName"/> ?</source>
+        <target state="translated">إيقاف حساب <x id="name" equiv-text="account.displayName"/>؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">202</context>
@@ -7105,6 +7190,7 @@
       </trans-unit>
       <trans-unit id="admin.suspend.description" datatype="html">
         <source>Toutes ses sessions sont révoquées, la connexion est bloquée et sa fiche publique est retirée de l&apos;annuaire. Le praticien reçoit le motif par e-mail et peut déposer un recours.</source>
+        <target state="translated">يُسجَّل خروج الحساب من جميع الجلسات، ويُمنع تسجيل الدخول، وتُسحب بطاقته العامة من دليل الممارسين. يُرسَل السبب إلى الممارس بالبريد الإلكتروني، مع إمكانية تقديم تظلّم.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">203</context>
@@ -7113,6 +7199,7 @@
       </trans-unit>
       <trans-unit id="admin.suspend.label" datatype="html">
         <source>Motif de la suspension</source>
+        <target state="translated">سبب الإيقاف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">204</context>
@@ -7121,6 +7208,7 @@
       </trans-unit>
       <trans-unit id="admin.suspend.confirm" datatype="html">
         <source>Suspendre le compte</source>
+        <target state="translated">إيقاف الحساب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">206</context>
@@ -7129,6 +7217,7 @@
       </trans-unit>
       <trans-unit id="admin.suspend.notice" datatype="html">
         <source>Envoyer le motif au praticien (obligatoire)</source>
+        <target state="translated">إرسال السبب إلى الممارس (إلزامي)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">208</context>
@@ -7137,6 +7226,7 @@
       </trans-unit>
       <trans-unit id="admin.suspend.toast" datatype="html">
         <source><x id="name" equiv-text="account.displayName"/> suspendu · sessions révoquées, e-mail envoyé</source>
+        <target state="translated">أُوقف حساب <x id="name" equiv-text="account.displayName"/> · سُجِّل الخروج من جميع الجلسات، وأُرسل البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">213</context>
@@ -7145,6 +7235,7 @@
       </trans-unit>
       <trans-unit id="admin.reactivate.rejected" datatype="html">
         <source>Le dossier avait été refusé : le compte revient à « justificatifs à déposer », le praticien doit redéposer ses pièces.</source>
+        <target state="translated">كان الملف مرفوضًا: يعود الحساب إلى حالة « بانتظار المستندات »، ويلزم إيداع المستندات من جديد.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">221</context>
@@ -7153,6 +7244,7 @@
       </trans-unit>
       <trans-unit id="admin.reactivate.description" datatype="html">
         <source>Le compte retrouve le statut qu&apos;il avait avant la suspension. Le praticien est prévenu par e-mail.</source>
+        <target state="translated">يستعيد الحساب الحالة التي كان عليها قبل الإيقاف. يُبلَّغ الممارس بالبريد الإلكتروني.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">222</context>
@@ -7161,6 +7253,7 @@
       </trans-unit>
       <trans-unit id="admin.reactivate.title" datatype="html">
         <source>Réactiver <x id="name" equiv-text="account.displayName"/> ?</source>
+        <target state="translated">إعادة تفعيل حساب <x id="name" equiv-text="account.displayName"/>؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">224</context>
@@ -7169,6 +7262,7 @@
       </trans-unit>
       <trans-unit id="admin.reactivate.label" datatype="html">
         <source>Motif de la réactivation</source>
+        <target state="translated">سبب إعادة التفعيل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">226</context>
@@ -7177,6 +7271,7 @@
       </trans-unit>
       <trans-unit id="admin.reactivate.confirm" datatype="html">
         <source>Réactiver le compte</source>
+        <target state="translated">إعادة تفعيل الحساب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">228</context>
@@ -7185,6 +7280,7 @@
       </trans-unit>
       <trans-unit id="admin.reactivate.toast" datatype="html">
         <source><x id="name" equiv-text="account.displayName"/> réactivé · e-mail envoyé</source>
+        <target state="translated">أُعيد تفعيل حساب <x id="name" equiv-text="account.displayName"/> · أُرسل البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">233</context>
@@ -7193,6 +7289,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.acceptTitle" datatype="html">
         <source>Accepter le recours de <x id="name" equiv-text="appeal.practitionerDisplayName"/> ?</source>
+        <target state="translated">قبول تظلّم <x id="name" equiv-text="appeal.practitionerDisplayName"/>؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">242</context>
@@ -7201,6 +7298,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.dismissTitle" datatype="html">
         <source>Écarter le recours de <x id="name" equiv-text="appeal.practitionerDisplayName"/> ?</source>
+        <target state="translated">رفض تظلّم <x id="name" equiv-text="appeal.practitionerDisplayName"/>؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">243</context>
@@ -7209,6 +7307,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.acceptDescription" datatype="html">
         <source>Le compte est réactivé (statut d&apos;avant la suspension, ou justificatifs à déposer après un refus). Votre réponse est envoyée par e-mail.</source>
+        <target state="translated">يُعاد تفعيل الحساب (الحالة السابقة للإيقاف، أو « بانتظار المستندات » بعد رفض الملف). يُرسَل ردّك بالبريد الإلكتروني.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">245</context>
@@ -7217,6 +7316,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.dismissDescription" datatype="html">
         <source>Le compte reste en l&apos;état. Votre réponse est envoyée par e-mail ; le recours est clos.</source>
+        <target state="translated">يبقى الحساب على حاله. يُرسَل ردّك بالبريد الإلكتروني؛ ويُغلق التظلّم.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">246</context>
@@ -7225,6 +7325,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.label" datatype="html">
         <source>Réponse au praticien</source>
+        <target state="translated">الرد على الممارس</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">247</context>
@@ -7233,6 +7334,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.acceptConfirm" datatype="html">
         <source>Accepter et réactiver</source>
+        <target state="translated">القبول وإعادة التفعيل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">250</context>
@@ -7241,6 +7343,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.dismissConfirm" datatype="html">
         <source>Écarter le recours</source>
+        <target state="translated">رفض التظلّم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">251</context>
@@ -7249,6 +7352,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.acceptToast" datatype="html">
         <source>Recours accepté · compte réactivé, e-mail envoyé</source>
+        <target state="translated">تم قبول التظلّم · أُعيد تفعيل الحساب، وأُرسل البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">262</context>
@@ -7257,6 +7361,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.dismissToast" datatype="html">
         <source>Recours écarté · e-mail envoyé</source>
+        <target state="translated">تم رفض التظلّم · أُرسل البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.ts</context>
           <context context-type="linenumber">263</context>
@@ -7265,6 +7370,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.filterLabel" datatype="html">
         <source>Filtrer la file</source>
+        <target state="translated">تصفية القائمة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
           <context context-type="linenumber">8,10</context>
@@ -7273,6 +7379,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.queueStale" datatype="html">
         <source>La file n&apos;a pas pu être relue.</source>
+        <target state="translated">تعذّر تحديث القائمة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
           <context context-type="linenumber">25,27</context>
@@ -7281,6 +7388,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.queueError" datatype="html">
         <source>Impossible de charger la file</source>
+        <target state="translated">تعذّر تحميل القائمة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
           <context context-type="linenumber">41,42</context>
@@ -7289,6 +7397,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.queueEmpty" datatype="html">
         <source>Aucun dossier à vérifier</source>
+        <target state="translated">لا ملفات للتحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
           <context context-type="linenumber">49,50</context>
@@ -7297,6 +7406,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.queueEmptyHint" datatype="html">
         <source>Les dossiers soumis par les praticiens apparaîtront ici, du plus ancien au plus récent.</source>
+        <target state="translated">تظهر هنا الملفات التي يرسلها الممارسون، من الأقدم إلى الأحدث.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
           <context context-type="linenumber">51,52</context>
@@ -7305,6 +7415,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.legend" datatype="html">
         <source> En rouge : au-delà du délai de 2 jours ouvrés. </source>
+        <target state="translated"> باللون الأحمر: ملفات تجاوزت مهلة يومَي العمل. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
           <context context-type="linenumber">88,94</context>
@@ -7313,6 +7424,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.noDossier" datatype="html">
         <source>Aucun dossier ouvert</source>
+        <target state="translated">لا ملف مفتوح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
           <context context-type="linenumber">104,105</context>
@@ -7321,6 +7433,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.noDossierHint" datatype="html">
         <source>Choisissez un dossier dans la file.</source>
+        <target state="translated">يُرجى اختيار ملف من القائمة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
           <context context-type="linenumber">106,107</context>
@@ -7329,6 +7442,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.documents" datatype="html">
         <source> Justificatifs · <x id="INTERPOLATION" equiv-text="{{ d.documents.length }}"/> </source>
+        <target state="translated"> مستندات الإثبات · <x id="INTERPOLATION" equiv-text="{{ d.documents.length }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
           <context context-type="linenumber">128,130</context>
@@ -7337,6 +7451,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.reviewError" datatype="html">
         <source> La qualification n&apos;a pas pu être enregistrée. Réessayez. </source>
+        <target state="translated"> تعذّر حفظ تقييم المستند. يُرجى إعادة المحاولة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
           <context context-type="linenumber">136,139</context>
@@ -7345,6 +7460,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.noDocuments" datatype="html">
         <source>Aucun justificatif déposé</source>
+        <target state="translated">لم يُودَع أي مستند إثبات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
           <context context-type="linenumber">143,144</context>
@@ -7353,6 +7469,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.sideLabel" datatype="html">
         <source>Vérification et décision</source>
+        <target state="translated">التحقّق والقرار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
           <context context-type="linenumber">171,172</context>
@@ -7361,6 +7478,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.notReviewable" datatype="html">
         <source> Ce dossier n&apos;attend pas de décision : son statut ne permet ni approbation, ni complément, ni refus. </source>
+        <target state="translated"> هذا الملف لا ينتظر قرارًا: حالته لا تسمح بالموافقة ولا بطلب استكمال ولا بالرفض. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.html</context>
           <context context-type="linenumber">186,192</context>
@@ -7369,6 +7487,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.dossierRegion" datatype="html">
         <source>Dossier ouvert</source>
+        <target state="translated">الملف المفتوح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
           <context context-type="linenumber">58</context>
@@ -7377,6 +7496,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.title" datatype="html">
         <source>À vérifier</source>
+        <target state="translated">بانتظار التحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
           <context context-type="linenumber">66</context>
@@ -7385,6 +7505,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.titleCount" datatype="html">
         <source>À vérifier · <x id="count" equiv-text="total"/></source>
+        <target state="translated">بانتظار التحقّق · <x id="count" equiv-text="total"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
           <context context-type="linenumber">67</context>
@@ -7393,6 +7514,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.notFound" datatype="html">
         <source>Ce dossier n&apos;existe pas</source>
+        <target state="translated">هذا الملف غير موجود</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
           <context context-type="linenumber">92</context>
@@ -7401,6 +7523,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.dossierError" datatype="html">
         <source>Impossible de charger ce dossier</source>
+        <target state="translated">تعذّر تحميل هذا الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
           <context context-type="linenumber">93</context>
@@ -7409,6 +7532,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.filter.needsMore" datatype="html">
         <source>Complément demandé</source>
+        <target state="translated">مطلوب استكمال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
           <context context-type="linenumber">118</context>
@@ -7417,6 +7541,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.filter.pending" datatype="html">
         <source>En attente</source>
+        <target state="translated">قيد الانتظار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
           <context context-type="linenumber">119</context>
@@ -7425,6 +7550,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.toast.approved" datatype="html">
         <source><x id="name" equiv-text="name"/> approuvé·e · e-mail envoyé</source>
+        <target state="translated">تمت الموافقة على ملف <x id="name" equiv-text="name"/> · أُرسل البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
           <context context-type="linenumber">165</context>
@@ -7433,6 +7559,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.toast.needsMore" datatype="html">
         <source>Complément demandé à <x id="name" equiv-text="name"/> · e-mail envoyé</source>
+        <target state="translated">طُلب استكمال ملف <x id="name" equiv-text="name"/> · أُرسل البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
           <context context-type="linenumber">167</context>
@@ -7441,6 +7568,7 @@
       </trans-unit>
       <trans-unit id="admin.validation.toast.rejected" datatype="html">
         <source>Dossier de <x id="name" equiv-text="name"/> refusé · compte suspendu, e-mail envoyé</source>
+        <target state="translated">رُفض ملف <x id="name" equiv-text="name"/> · أُوقف الحساب، وأُرسل البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/validation.page.ts</context>
           <context context-type="linenumber">169</context>
@@ -7449,6 +7577,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.title" datatype="html">
         <source>Vocabulaire de l&apos;annuaire</source>
+        <target state="translated">مفردات دليل الممارسين</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">2,3</context>
@@ -7457,6 +7586,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.subtitle" datatype="html">
         <source> Liste fermée vue par les praticiens dans leur profil public et par les visiteurs dans les filtres de l&apos;annuaire. On désactive une entrée, on ne la supprime jamais. </source>
+        <target state="translated"> قائمة مغلقة يراها الممارسون في ملفهم العام، ويراها الزوار في عوامل تصفية دليل الممارسين. يُعطَّل العنصر ولا يُحذف أبدًا. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">4,10</context>
@@ -7465,6 +7595,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.tabs" datatype="html">
         <source>Listes</source>
+        <target state="translated">القوائم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">15</context>
@@ -7473,6 +7604,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.fixed" datatype="html">
         <source>fixe</source>
+        <target state="translated">ثابتة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">34,39</context>
@@ -7481,6 +7613,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.showInactive" datatype="html">
         <source>Afficher les désactivées</source>
+        <target state="translated">عرض العناصر المعطّلة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">44,50</context>
@@ -7489,6 +7622,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.loadError" datatype="html">
         <source>Impossible de charger le vocabulaire</source>
+        <target state="translated">تعذّر تحميل المفردات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">62,63</context>
@@ -7497,6 +7631,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.empty" datatype="html">
         <source>Aucune entrée</source>
+        <target state="translated">لا عناصر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">70,71</context>
@@ -7505,6 +7640,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.emptyHint" datatype="html">
         <source>Ajoutez la première avec le formulaire ci-dessous.</source>
+        <target state="translated">يمكن إضافة أول عنصر عبر النموذج أدناه.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">72,73</context>
@@ -7513,6 +7649,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.col.code" datatype="html">
         <source>Code</source>
+        <target state="translated">الرمز</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">87,88</context>
@@ -7525,6 +7662,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.col.labelFr" datatype="html">
         <source> Libellé FR </source>
+        <target state="translated"> التسمية بالفرنسية </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">89,91</context>
@@ -7537,6 +7675,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.col.labelEn" datatype="html">
         <source> Libellé EN </source>
+        <target state="translated"> التسمية بالإنجليزية </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">92,94</context>
@@ -7549,6 +7688,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.col.order" datatype="html">
         <source>Ordre</source>
+        <target state="translated">الترتيب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">94,95</context>
@@ -7557,6 +7697,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.col.usage" datatype="html">
         <source> Utilisation </source>
+        <target state="translated"> الاستخدام </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">96,98</context>
@@ -7565,6 +7706,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.col.state" datatype="html">
         <source>État</source>
+        <target state="translated">الحالة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">98,99</context>
@@ -7573,6 +7715,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.col.actions" datatype="html">
         <source> Actions </source>
+        <target state="translated"> الإجراءات </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">100,103</context>
@@ -7585,6 +7728,11 @@
                       =1 {1 profil publié}
                       other {{{ entry.usedByPublishedProfiles }} profils publiés}
                     }" xid="1354918041868012746"/></source>
+        <target state="translated">الاستخدام: <x id="ICU" equiv-text="{entry.usedByPublishedProfiles, plural,
+                      =0 {aucun profil publié}
+                      =1 {1 profil publié}
+                      other {{{ entry.usedByPublishedProfiles }} profils publiés}
+                    }" xid="1354918041868012746"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">113,120</context>
@@ -7605,6 +7753,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.active" datatype="html">
         <source>Active</source>
+        <target state="translated">نشط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">125,127</context>
@@ -7613,6 +7762,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.inactive" datatype="html">
         <source>Désactivée</source>
+        <target state="translated">معطّل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">127,129</context>
@@ -7621,6 +7771,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.rename" datatype="html">
         <source>Renommer</source>
+        <target state="translated">إعادة التسمية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">140,141</context>
@@ -7629,6 +7780,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.deactivate" datatype="html">
         <source>Désactiver…</source>
+        <target state="translated">تعطيل…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">151,153</context>
@@ -7637,6 +7789,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.reactivate" datatype="html">
         <source>Réactiver</source>
+        <target state="translated">إعادة التفعيل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">159,161</context>
@@ -7646,6 +7799,8 @@
       <trans-unit id="admin.vocabulary.footnote" datatype="html">
         <source> Modalités et langues sont des listes fixes du contrat, en lecture seule. Une entrée utilisée par une fiche publiée ne peut pas être désactivée ; une entrée désactivée n&apos;est plus proposée aux praticiens ni aux visiteurs.
 </source>
+        <target state="translated"> طرق الاستشارة واللغات قوائم ثابتة يحدّدها عقد الواجهة البرمجية (API)، للاطلاع فقط. لا يمكن تعطيل عنصر تستخدمه بطاقة منشورة؛ والعنصر المعطّل لا يُعرض بعد ذلك على الممارسين ولا على الزوار.
+</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">224,228</context>
@@ -7654,6 +7809,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.addedToast" datatype="html">
         <source>Entrée ajoutée · visible immédiatement dans l&apos;annuaire</source>
+        <target state="translated">أُضيف العنصر · يظهر فورًا في دليل الممارسين</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
           <context context-type="linenumber">100</context>
@@ -7662,6 +7818,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.tab.audience" datatype="html">
         <source>Publics</source>
+        <target state="translated">الفئات المستهدفة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
           <context context-type="linenumber">119</context>
@@ -7670,6 +7827,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.tab.modality" datatype="html">
         <source>Modalités</source>
+        <target state="translated">طرق الاستشارة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
           <context context-type="linenumber">121</context>
@@ -7678,6 +7836,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.tab.language" datatype="html">
         <source>Langues</source>
+        <target state="translated">اللغات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
           <context context-type="linenumber">123</context>
@@ -7686,6 +7845,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.tab.specialty" datatype="html">
         <source>Spécialités</source>
+        <target state="translated">التخصّصات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
           <context context-type="linenumber">125</context>
@@ -7694,6 +7854,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.renamedToast" datatype="html">
         <source>Libellé mis à jour · visible immédiatement dans l&apos;annuaire</source>
+        <target state="translated">حُدّثت التسمية · تظهر فورًا في دليل الممارسين</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
           <context context-type="linenumber">207</context>
@@ -7702,6 +7863,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.reactivateError" datatype="html">
         <source>La réactivation n&apos;a pas pu être enregistrée. Rien n&apos;a été modifié.</source>
+        <target state="translated">تعذّر حفظ إعادة التفعيل. لم يتغيّر شيء.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
           <context context-type="linenumber">234</context>
@@ -7710,6 +7872,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.reactivatedToast" datatype="html">
         <source>« <x id="label" equiv-text="entry.labelFr"/> » réactivée · visible immédiatement dans l&apos;annuaire</source>
+        <target state="translated">أُعيد تفعيل « <x id="label" equiv-text="entry.labelFr"/> » · يظهر فورًا في دليل الممارسين</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.ts</context>
           <context context-type="linenumber">238</context>
@@ -7718,6 +7881,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.code" datatype="html">
         <source>Code</source>
+        <target state="translated">الرمز</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
           <context context-type="linenumber">24,27</context>
@@ -7726,6 +7890,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.labelFr" datatype="html">
         <source>Libellé FR</source>
+        <target state="translated">التسمية بالفرنسية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
           <context context-type="linenumber">39,42</context>
@@ -7738,6 +7903,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.labelEnOptional" datatype="html">
         <source>Libellé EN (facultatif)</source>
+        <target state="translated">التسمية بالإنجليزية (اختيارية)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
           <context context-type="linenumber">56,60</context>
@@ -7746,6 +7912,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.rules" datatype="html">
         <source> Code : minuscules, chiffres et soulignés, 2 à 40 caractères, commence par une lettre ; il ne change plus ensuite. Libellés : 120 caractères au plus. </source>
+        <target state="translated"> الرمز: أحرف لاتينية صغيرة وأرقام وشرطات سفلية، من 2 إلى 40 حرفًا، ويبدأ بحرف؛ ولا يتغيّر بعد ذلك. التسميات: 120 حرفًا على الأكثر. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
           <context context-type="linenumber">72,76</context>
@@ -7754,6 +7921,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.addAudience" datatype="html">
         <source>Ajouter un public</source>
+        <target state="translated">إضافة فئة مستهدفة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
           <context context-type="linenumber">108</context>
@@ -7762,6 +7930,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.addSpecialty" datatype="html">
         <source>Ajouter une spécialité</source>
+        <target state="translated">إضافة تخصّص</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
           <context context-type="linenumber">109</context>
@@ -7770,6 +7939,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.add" datatype="html">
         <source>Ajouter</source>
+        <target state="translated">إضافة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/add-entry-form.component.ts</context>
           <context context-type="linenumber">111</context>
@@ -7778,6 +7948,7 @@
       </trans-unit>
       <trans-unit id="admin.profession.psychiatrist" datatype="html">
         <source>Psychiatre</source>
+        <target state="translated">طبيب نفسي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">15</context>
@@ -7786,6 +7957,7 @@
       </trans-unit>
       <trans-unit id="admin.profession.coach" datatype="html">
         <source>Coach</source>
+        <target state="translated">مدرّب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">17</context>
@@ -7794,6 +7966,7 @@
       </trans-unit>
       <trans-unit id="admin.profession.psychologist" datatype="html">
         <source>Psychologue</source>
+        <target state="translated">أخصائي نفسي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">19</context>
@@ -7802,6 +7975,7 @@
       </trans-unit>
       <trans-unit id="admin.status.emailPending" datatype="html">
         <source>E-mail à confirmer</source>
+        <target state="translated">بانتظار تأكيد البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">26</context>
@@ -7810,6 +7984,7 @@
       </trans-unit>
       <trans-unit id="admin.status.docsPending" datatype="html">
         <source>Justificatifs à déposer</source>
+        <target state="translated">بانتظار المستندات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">28</context>
@@ -7818,6 +7993,7 @@
       </trans-unit>
       <trans-unit id="admin.status.underReview" datatype="html">
         <source>En vérification</source>
+        <target state="translated">قيد التحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">30</context>
@@ -7826,6 +8002,7 @@
       </trans-unit>
       <trans-unit id="admin.status.approved" datatype="html">
         <source>Approuvé</source>
+        <target state="translated">مقبول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">32</context>
@@ -7834,6 +8011,7 @@
       </trans-unit>
       <trans-unit id="admin.status.needsMore" datatype="html">
         <source>Complément demandé</source>
+        <target state="translated">مطلوب استكمال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">34</context>
@@ -7842,6 +8020,7 @@
       </trans-unit>
       <trans-unit id="admin.status.rejected" datatype="html">
         <source>Refusé</source>
+        <target state="translated">مرفوض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">36</context>
@@ -7850,6 +8029,7 @@
       </trans-unit>
       <trans-unit id="admin.status.suspended" datatype="html">
         <source>Suspendu</source>
+        <target state="translated">موقوف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">38</context>
@@ -7858,6 +8038,7 @@
       </trans-unit>
       <trans-unit id="admin.status.closed" datatype="html">
         <source>Clos</source>
+        <target state="translated">مغلق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">40</context>
@@ -7866,6 +8047,7 @@
       </trans-unit>
       <trans-unit id="admin.doc.diploma" datatype="html">
         <source>Diplôme</source>
+        <target state="translated">شهادة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">65</context>
@@ -7874,6 +8056,7 @@
       </trans-unit>
       <trans-unit id="admin.doc.registration" datatype="html">
         <source>Inscription au registre</source>
+        <target state="translated">شهادة تسجيل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">67</context>
@@ -7882,6 +8065,7 @@
       </trans-unit>
       <trans-unit id="admin.doc.certification" datatype="html">
         <source>Certification</source>
+        <target state="translated">شهادة اعتماد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">69</context>
@@ -7890,6 +8074,7 @@
       </trans-unit>
       <trans-unit id="admin.doc.professionalCard" datatype="html">
         <source>Carte professionnelle</source>
+        <target state="translated">بطاقة مهنية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">71</context>
@@ -7898,6 +8083,7 @@
       </trans-unit>
       <trans-unit id="admin.doc.identity" datatype="html">
         <source>Pièce d&apos;identité</source>
+        <target state="translated">وثيقة هوية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">73</context>
@@ -7906,6 +8092,7 @@
       </trans-unit>
       <trans-unit id="admin.doc.other" datatype="html">
         <source>Autre pièce</source>
+        <target state="translated">مستند آخر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">75</context>
@@ -7914,6 +8101,7 @@
       </trans-unit>
       <trans-unit id="admin.doc.conform" datatype="html">
         <source>Conforme</source>
+        <target state="translated">مطابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">82</context>
@@ -7922,6 +8110,7 @@
       </trans-unit>
       <trans-unit id="admin.doc.nonConform" datatype="html">
         <source>Non conforme</source>
+        <target state="translated">غير مطابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">84</context>
@@ -7930,6 +8119,7 @@
       </trans-unit>
       <trans-unit id="admin.doc.pending" datatype="html">
         <source>À examiner</source>
+        <target state="translated">بانتظار التحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">86</context>
@@ -7938,6 +8128,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.other" datatype="html">
         <source>Décision</source>
+        <target state="translated">قرار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">92</context>
@@ -7946,6 +8137,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.approved" datatype="html">
         <source>Dossier approuvé</source>
+        <target state="translated">الموافقة على الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">100</context>
@@ -7954,6 +8146,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.needsMore" datatype="html">
         <source>Complément demandé</source>
+        <target state="translated">طلب استكمال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">102</context>
@@ -7962,6 +8155,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.rejected" datatype="html">
         <source>Dossier refusé</source>
+        <target state="translated">رفض الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">104</context>
@@ -7970,6 +8164,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.suspended" datatype="html">
         <source>Compte suspendu</source>
+        <target state="translated">إيقاف الحساب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">106</context>
@@ -7978,6 +8173,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.reactivated" datatype="html">
         <source>Compte réactivé</source>
+        <target state="translated">إعادة تفعيل الحساب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">108</context>
@@ -7986,6 +8182,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.appealAccepted" datatype="html">
         <source>Recours accepté</source>
+        <target state="translated">قبول التظلّم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">110</context>
@@ -7994,6 +8191,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.appealRejected" datatype="html">
         <source>Recours écarté</source>
+        <target state="translated">رفض التظلّم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">112</context>
@@ -8002,6 +8200,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.reportResolved" datatype="html">
         <source>Signalement traité</source>
+        <target state="translated">معالجة بلاغ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">114</context>
@@ -8010,6 +8209,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.actor.admin" datatype="html">
         <source>administrateur</source>
+        <target state="translated">مسؤول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">124</context>
@@ -8018,6 +8218,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.actor.practitioner" datatype="html">
         <source>praticien·ne</source>
+        <target state="translated">ممارس</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">127</context>
@@ -8026,6 +8227,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.actor.system" datatype="html">
         <source>système</source>
+        <target state="translated">النظام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">129</context>
@@ -8034,6 +8236,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.type.document" datatype="html">
         <source>Accès document</source>
+        <target state="translated">الوصول إلى مستند</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">137</context>
@@ -8042,6 +8245,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.type.decision" datatype="html">
         <source>Décision</source>
+        <target state="translated">قرار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">143</context>
@@ -8050,6 +8254,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.type.appeal" datatype="html">
         <source>Recours</source>
+        <target state="translated">تظلّم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">149</context>
@@ -8058,6 +8263,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.type.directory" datatype="html">
         <source>Annuaire</source>
+        <target state="translated">دليل الممارسين</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">155</context>
@@ -8066,6 +8272,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.type.system" datatype="html">
         <source>Système</source>
+        <target state="translated">النظام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">161</context>
@@ -8074,6 +8281,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.type.security" datatype="html">
         <source>Sécurité</source>
+        <target state="translated">الأمان</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">167</context>
@@ -8082,6 +8290,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.loginOk" datatype="html">
         <source>Connexion réussie</source>
+        <target state="translated">تسجيل دخول ناجح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">178</context>
@@ -8090,6 +8299,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.loginFailed" datatype="html">
         <source>Échec de connexion</source>
+        <target state="translated">فشل تسجيل الدخول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">179</context>
@@ -8098,6 +8308,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.locked" datatype="html">
         <source>Compte verrouillé après plusieurs échecs</source>
+        <target state="translated">قفل الحساب بعد عدة محاولات فاشلة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">180</context>
@@ -8106,6 +8317,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.logout" datatype="html">
         <source>Déconnexion</source>
+        <target state="translated">تسجيل الخروج</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">181</context>
@@ -8114,6 +8326,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.emailConfirmed" datatype="html">
         <source>Adresse e-mail confirmée</source>
+        <target state="translated">تأكيد عنوان البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">182</context>
@@ -8122,6 +8335,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.emailChanged" datatype="html">
         <source>Adresse e-mail de connexion changée</source>
+        <target state="translated">تغيير البريد الإلكتروني لتسجيل الدخول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">183</context>
@@ -8130,6 +8344,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.consent" datatype="html">
         <source>Conditions d&apos;utilisation acceptées</source>
+        <target state="translated">قبول شروط الاستخدام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">184</context>
@@ -8138,6 +8353,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.passwordChanged" datatype="html">
         <source>Mot de passe changé</source>
+        <target state="translated">تغيير كلمة المرور</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">185</context>
@@ -8146,6 +8362,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.twoFactorOn" datatype="html">
         <source>Double authentification activée</source>
+        <target state="translated">تفعيل المصادقة الثنائية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">186</context>
@@ -8154,6 +8371,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.twoFactorOff" datatype="html">
         <source>Double authentification désactivée</source>
+        <target state="translated">تعطيل المصادقة الثنائية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">187</context>
@@ -8162,6 +8380,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.recoveryUsed" datatype="html">
         <source>Code de secours utilisé</source>
+        <target state="translated">استخدام رمز استرداد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">188</context>
@@ -8170,6 +8389,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.recoveryRegenerated" datatype="html">
         <source>Codes de secours régénérés</source>
+        <target state="translated">إعادة توليد رموز الاسترداد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">189</context>
@@ -8178,6 +8398,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.sessionRevoked" datatype="html">
         <source>Session révoquée</source>
+        <target state="translated">تسجيل الخروج من جلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">190</context>
@@ -8186,6 +8407,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.submitted" datatype="html">
         <source>Dossier soumis pour vérification</source>
+        <target state="translated">إرسال الملف للتحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">191</context>
@@ -8194,6 +8416,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.bootstrap" datatype="html">
         <source>Compte administrateur créé</source>
+        <target state="translated">إنشاء حساب مسؤول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">192</context>
@@ -8202,6 +8425,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.decision" datatype="html">
         <source>Décision enregistrée</source>
+        <target state="translated">تسجيل قرار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">193</context>
@@ -8210,6 +8434,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.suspend" datatype="html">
         <source>Compte suspendu</source>
+        <target state="translated">إيقاف الحساب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">194</context>
@@ -8218,6 +8443,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.reactivate" datatype="html">
         <source>Compte réactivé</source>
+        <target state="translated">إعادة تفعيل الحساب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">195</context>
@@ -8226,6 +8452,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.appealDecided" datatype="html">
         <source>Recours tranché</source>
+        <target state="translated">البتّ في تظلّم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">196</context>
@@ -8234,6 +8461,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.documentRead" datatype="html">
         <source>Ouverture d&apos;un justificatif (URL signée 5 min)</source>
+        <target state="translated">فتح مستند إثبات (رابط URL موقَّع صالح لمدة 5 دقائق)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">197</context>
@@ -8242,6 +8470,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.appealSubmitted" datatype="html">
         <source>Recours déposé</source>
+        <target state="translated">تقديم تظلّم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">198</context>
@@ -8250,6 +8479,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.decisionWithMessage" datatype="html">
         <source><x id="decision" equiv-text="decision"/> : <x id="message" equiv-text="text"/></source>
+        <target state="translated"><x id="decision" equiv-text="decision"/>: <x id="message" equiv-text="text"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">224</context>
@@ -8258,6 +8488,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.decisionOf" datatype="html">
         <source>Décision enregistrée : <x id="decision" equiv-text="decision"/></source>
+        <target state="translated">تسجيل قرار: <x id="decision" equiv-text="decision"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">231</context>
@@ -8266,6 +8497,7 @@
       </trans-unit>
       <trans-unit id="admin.journal.kind.unknown" datatype="html">
         <source>Événement non répertorié (<x id="kind" equiv-text="kind"/>)</source>
+        <target state="translated">حدث غير مُدرَج (<x id="kind" equiv-text="kind"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/admin-labels.ts</context>
           <context context-type="linenumber">237</context>
@@ -8274,6 +8506,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.accept" datatype="html">
         <source>Accepter…</source>
+        <target state="translated">قبول…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/appeal-list.component.ts</context>
           <context context-type="linenumber">37,38</context>
@@ -8282,6 +8515,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.dismiss" datatype="html">
         <source>Écarter…</source>
+        <target state="translated">رفض…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/appeal-list.component.ts</context>
           <context context-type="linenumber">45,46</context>
@@ -8290,6 +8524,7 @@
       </trans-unit>
       <trans-unit id="admin.appeals.context" datatype="html">
         <source><x id="decision" equiv-text="contested"/> contesté · déposé le <x id="date" equiv-text="when"/></source>
+        <target state="translated">القرار المعترَض عليه: <x id="decision" equiv-text="contested"/> · تاريخ التقديم: <x id="date" equiv-text="when"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/appeal-list.component.ts</context>
           <context context-type="linenumber">142</context>
@@ -8298,6 +8533,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.deactivateTitle" datatype="html">
         <source> Désactiver « <x id="INTERPOLATION" equiv-text="{{ data.entry.labelFr }}"/> » ? </source>
+        <target state="translated"> تعطيل « <x id="INTERPOLATION" equiv-text="{{ data.entry.labelFr }}"/> »؟ </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
           <context context-type="linenumber">36,38</context>
@@ -8306,6 +8542,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.deactivateDescription" datatype="html">
         <source> L&apos;entrée disparaît de la liste proposée aux praticiens et des filtres de l&apos;annuaire. Elle n&apos;est jamais supprimée : vous pourrez la réactiver. </source>
+        <target state="translated"> يختفي العنصر من القائمة المعروضة على الممارسين ومن عوامل تصفية دليل الممارسين. لا يُحذف أبدًا: تبقى إعادة تفعيله ممكنة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
           <context context-type="linenumber">43,47</context>
@@ -8318,6 +8555,11 @@
                 =1 {1 profil publié}
                 other {{{ inUse() }} profils publiés}
               }" xid="1354918041868012746"/></source>
+        <target state="translated">مستخدَم في <x id="ICU" equiv-text="{inUse(), plural,
+                =0 {aucun profil publié}
+                =1 {1 profil publié}
+                other {{{ inUse() }} profils publiés}
+              }" xid="1354918041868012746"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
           <context context-type="linenumber">50,57</context>
@@ -8326,6 +8568,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.inUse" datatype="html">
         <source>: demandez d&apos;abord aux praticiens de la retirer ou choisissez une spécialité de remplacement.</source>
+        <target state="translated">: يُرجى أولًا مطالبة الممارسين بإزالته، أو اختيار تخصّص بديل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
           <context context-type="linenumber">58,63</context>
@@ -8334,6 +8577,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.inUseLink" datatype="html">
         <source>Voir les praticiens approuvés</source>
+        <target state="translated">عرض الممارسين ذوي الملفات المقبولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
           <context context-type="linenumber">67,71</context>
@@ -8342,6 +8586,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.deactivateConfirm" datatype="html">
         <source> Désactiver </source>
+        <target state="translated"> تعطيل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
           <context context-type="linenumber">94,98</context>
@@ -8350,6 +8595,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.close" datatype="html">
         <source> Fermer </source>
+        <target state="translated"> إغلاق </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
           <context context-type="linenumber">104,107</context>
@@ -8379,6 +8625,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.deactivateError" datatype="html">
         <source>La désactivation n&apos;a pas pu être enregistrée.</source>
+        <target state="translated">تعذّر حفظ التعطيل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
           <context context-type="linenumber">171</context>
@@ -8387,6 +8634,7 @@
       </trans-unit>
       <trans-unit id="admin.checklist.title" datatype="html">
         <source>Liste de contrôle</source>
+        <target state="translated">قائمة التحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">2,4</context>
@@ -8395,6 +8643,7 @@
       </trans-unit>
       <trans-unit id="admin.checklist.registryLink" datatype="html">
         <source>Ouvrir l&apos;annuaire santé (RPPS) dans un nouvel onglet</source>
+        <target state="translated">فتح دليل الصحة (RPPS) في علامة تبويب جديدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">19,27</context>
@@ -8403,6 +8652,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.title" datatype="html">
         <source>Décision</source>
+        <target state="translated">القرار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">31,33</context>
@@ -8411,6 +8661,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.noteLabel" datatype="html">
         <source>Note interne <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;aside&quot;&gt;"/>(jamais envoyée au praticien)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">ملاحظة داخلية <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;aside&quot;&gt;"/>(لا تُرسَل إلى الممارس أبدًا)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">34,36</context>
@@ -8419,6 +8670,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.messageLabel" datatype="html">
         <source>Message au praticien <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;aside&quot;&gt;"/>(obligatoire pour un complément ou un refus)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">رسالة إلى الممارس <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;aside&quot;&gt;"/>(إلزامية لطلب الاستكمال أو للرفض)<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">53,56</context>
@@ -8427,6 +8679,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.messageHint" datatype="html">
         <source> Envoyé par e-mail avec la décision. </source>
+        <target state="translated"> تُرسَل بالبريد الإلكتروني مع القرار. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">76,81</context>
@@ -8435,6 +8688,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.unchecked" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {1 point de contrôle non coché} other {<x id="INTERPOLATION"/> points de contrôle non cochés}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا نقاط تحقّق غير مؤشَّر عليها} one {نقطة تحقّق واحدة غير مؤشَّر عليها} two {نقطتا تحقّق غير مؤشَّر عليهما} few {<x id="INTERPOLATION"/> نقاط تحقّق غير مؤشَّر عليها} many {<x id="INTERPOLATION"/> نقطة تحقّق غير مؤشَّر عليها} other {<x id="INTERPOLATION"/> نقطة تحقّق غير مؤشَّر عليها}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">88,93</context>
@@ -8443,6 +8697,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.nonConform" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {1 justificatif non marqué conforme} other {<x id="INTERPOLATION"/> justificatifs non marqués conformes}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا مستندات غير معلَّمة كمطابقة} one {مستند واحد غير معلَّم كمطابق} two {مستندان غير معلَّمين كمطابقين} few {<x id="INTERPOLATION"/> مستندات غير معلَّمة كمطابقة} many {<x id="INTERPOLATION"/> مستندًا غير معلَّم كمطابق} other {<x id="INTERPOLATION"/> مستند غير معلَّم كمطابق}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">97,102</context>
@@ -8451,6 +8706,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.confirm" datatype="html">
         <source>— approuver quand même ?</source>
+        <target state="translated">— الموافقة رغم ذلك؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">103,107</context>
@@ -8459,6 +8715,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.noteRequired" datatype="html">
         <source> Écrivez d&apos;abord une note interne : elle justifie l&apos;approbation. </source>
+        <target state="translated"> يلزم أولًا كتابة ملاحظة داخلية: فهي تبرّر الموافقة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">108,111</context>
@@ -8467,6 +8724,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.approveAnyway" datatype="html">
         <source> Approuver quand même </source>
+        <target state="translated"> الموافقة رغم ذلك </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">120,124</context>
@@ -8475,6 +8733,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.cancel" datatype="html">
         <source> Annuler </source>
+        <target state="translated"> إلغاء </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">128,134</context>
@@ -8483,6 +8742,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.approve" datatype="html">
         <source> Approuver </source>
+        <target state="translated"> موافقة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">143,146</context>
@@ -8491,6 +8751,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.askMore" datatype="html">
         <source> Demander un complément </source>
+        <target state="translated"> طلب استكمال </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">153,156</context>
@@ -8499,6 +8760,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.reject" datatype="html">
         <source> Refuser et suspendre </source>
+        <target state="translated"> الرفض والإيقاف </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">163,166</context>
@@ -8507,6 +8769,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.effects" datatype="html">
         <source> Approuver : badge actif et e-mail « dossier validé ». Complément : e-mail avec votre message, le praticien complète et resoumet. Refus : compte suspendu, sessions révoquées, e-mail avec le motif et la voie de recours. </source>
+        <target state="translated"> الموافقة: تفعيل الشارة ورسالة « تم قبول الملف ». الاستكمال: رسالة بالبريد الإلكتروني تتضمّن رسالتك، ثم استكمال الملف وإعادة إرساله من الممارس. الرفض: إيقاف الحساب، وتسجيل الخروج من جميع الجلسات، ورسالة تتضمّن السبب وطريقة التظلّم. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.html</context>
           <context context-type="linenumber">167,172</context>
@@ -8515,6 +8778,7 @@
       </trans-unit>
       <trans-unit id="admin.checklist.name" datatype="html">
         <source>Le nom concorde sur toutes les pièces</source>
+        <target state="translated">الاسم متطابق في جميع المستندات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
           <context context-type="linenumber">25</context>
@@ -8523,6 +8787,7 @@
       </trans-unit>
       <trans-unit id="admin.checklist.diploma" datatype="html">
         <source>Le diplôme correspond à la profession déclarée</source>
+        <target state="translated">الشهادة تتوافق مع المهنة المصرَّح بها</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
           <context context-type="linenumber">29</context>
@@ -8531,6 +8796,7 @@
       </trans-unit>
       <trans-unit id="admin.checklist.registry" datatype="html">
         <source>Le numéro est retrouvé dans le registre public</source>
+        <target state="translated">الرقم موجود في السجلّ العام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
           <context context-type="linenumber">33</context>
@@ -8539,6 +8805,7 @@
       </trans-unit>
       <trans-unit id="admin.checklist.readable" datatype="html">
         <source>Les documents sont lisibles et non altérés</source>
+        <target state="translated">المستندات مقروءة وغير معدَّلة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
           <context context-type="linenumber">37</context>
@@ -8547,6 +8814,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.notReviewable" datatype="html">
         <source>Ce dossier n&apos;est plus en attente de décision : il a peut-être été traité entre-temps. Rechargez la file.</source>
+        <target state="translated">هذا الملف لم يعد بانتظار قرار: ربما عولج في الأثناء. يُرجى إعادة تحميل القائمة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
           <context context-type="linenumber">177</context>
@@ -8555,6 +8823,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.notFound" datatype="html">
         <source>Ce dossier n&apos;existe plus.</source>
+        <target state="translated">هذا الملف لم يعد موجودًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
           <context context-type="linenumber">179</context>
@@ -8563,6 +8832,7 @@
       </trans-unit>
       <trans-unit id="admin.decision.error" datatype="html">
         <source>La décision n&apos;a pas pu être enregistrée. Rien n&apos;a été modifié.</source>
+        <target state="translated">تعذّر حفظ القرار. لم يتغيّر شيء.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/decision-form.component.ts</context>
           <context context-type="linenumber">183</context>
@@ -8571,6 +8841,7 @@
       </trans-unit>
       <trans-unit id="admin.doc.purged" datatype="html">
         <source>Fichier purgé : seules les informations restent.</source>
+        <target state="translated">حُذف الملف: لم تبقَ سوى المعلومات.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-list.component.ts</context>
           <context context-type="linenumber">30,33</context>
@@ -8579,6 +8850,7 @@
       </trans-unit>
       <trans-unit id="admin.doc.conformBox" datatype="html">
         <source>Conforme</source>
+        <target state="translated">مطابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-list.component.ts</context>
           <context context-type="linenumber">42,44</context>
@@ -8587,6 +8859,7 @@
       </trans-unit>
       <trans-unit id="admin.doc.show" datatype="html">
         <source>Afficher</source>
+        <target state="translated">عرض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-list.component.ts</context>
           <context context-type="linenumber">53,55</context>
@@ -8595,6 +8868,7 @@
       </trans-unit>
       <trans-unit id="admin.doc.listLabel" datatype="html">
         <source>Justificatifs du dossier</source>
+        <target state="translated">مستندات إثبات الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-list.component.ts</context>
           <context context-type="linenumber">72</context>
@@ -8603,6 +8877,7 @@
       </trans-unit>
       <trans-unit id="admin.viewer.zoomOut" datatype="html">
         <source> Zoom − </source>
+        <target state="translated"> تصغير − </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
           <context context-type="linenumber">40,42</context>
@@ -8611,6 +8886,7 @@
       </trans-unit>
       <trans-unit id="admin.viewer.zoomIn" datatype="html">
         <source> Zoom + </source>
+        <target state="translated"> تكبير + </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
           <context context-type="linenumber">49,52</context>
@@ -8619,6 +8895,7 @@
       </trans-unit>
       <trans-unit id="admin.viewer.rotate" datatype="html">
         <source> Pivoter </source>
+        <target state="translated"> تدوير </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
           <context context-type="linenumber">56,60</context>
@@ -8627,6 +8904,7 @@
       </trans-unit>
       <trans-unit id="admin.viewer.open" datatype="html">
         <source>Ouvrir dans un nouvel onglet</source>
+        <target state="translated">فتح في علامة تبويب جديدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
           <context context-type="linenumber">68,73</context>
@@ -8635,6 +8913,7 @@
       </trans-unit>
       <trans-unit id="admin.viewer.noPreview" datatype="html">
         <source> Aperçu indisponible dans ce navigateur. </source>
+        <target state="translated"> المعاينة غير متاحة في هذا المتصفح. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
           <context context-type="linenumber">92,95</context>
@@ -8643,6 +8922,7 @@
       </trans-unit>
       <trans-unit id="admin.viewer.openDocument" datatype="html">
         <source>Ouvrir le document</source>
+        <target state="translated">فتح المستند</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
           <context context-type="linenumber">101,102</context>
@@ -8651,6 +8931,7 @@
       </trans-unit>
       <trans-unit id="admin.viewer.alt" datatype="html">
         <source>Justificatif : <x id="title" equiv-text="title"/></source>
+        <target state="translated">مستند إثبات: <x id="title" equiv-text="title"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
           <context context-type="linenumber">145</context>
@@ -8659,6 +8940,7 @@
       </trans-unit>
       <trans-unit id="admin.viewer.empty" datatype="html">
         <source>Aucun justificatif affiché</source>
+        <target state="translated">لا مستند معروض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
           <context context-type="linenumber">156</context>
@@ -8667,6 +8949,7 @@
       </trans-unit>
       <trans-unit id="admin.viewer.purged" datatype="html">
         <source>Ce fichier a été purgé</source>
+        <target state="translated">حُذف هذا الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
           <context context-type="linenumber">159</context>
@@ -8675,6 +8958,7 @@
       </trans-unit>
       <trans-unit id="admin.viewer.error" datatype="html">
         <source>Impossible d&apos;afficher ce justificatif</source>
+        <target state="translated">تعذّر عرض مستند الإثبات هذا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
           <context context-type="linenumber">161</context>
@@ -8683,6 +8967,7 @@
       </trans-unit>
       <trans-unit id="admin.viewer.emptyHint" datatype="html">
         <source>Choisissez « Afficher » sur un justificatif.</source>
+        <target state="translated">يُرجى اختيار « عرض » على أحد المستندات.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/document-viewer.component.ts</context>
           <context context-type="linenumber">166</context>
@@ -8691,6 +8976,7 @@
       </trans-unit>
       <trans-unit id="admin.dossier.email" datatype="html">
         <source>E-mail</source>
+        <target state="translated">البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
           <context context-type="linenumber">40,43</context>
@@ -8699,6 +8985,7 @@
       </trans-unit>
       <trans-unit id="admin.dossier.phone" datatype="html">
         <source>Téléphone</source>
+        <target state="translated">الهاتف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
           <context context-type="linenumber">44,46</context>
@@ -8707,6 +8994,7 @@
       </trans-unit>
       <trans-unit id="admin.dossier.number" datatype="html">
         <source>N° professionnel déclaré</source>
+        <target state="translated">الرقم المهني المصرَّح به</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
           <context context-type="linenumber">48,49</context>
@@ -8715,6 +9003,7 @@
       </trans-unit>
       <trans-unit id="admin.dossier.office" datatype="html">
         <source>Cabinet</source>
+        <target state="translated">العيادة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
           <context context-type="linenumber">52,55</context>
@@ -8723,6 +9012,7 @@
       </trans-unit>
       <trans-unit id="admin.dossier.created" datatype="html">
         <source>Compte créé le <x id="date" equiv-text="created"/></source>
+        <target state="translated">أُنشئ الحساب في <x id="date" equiv-text="created"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
           <context context-type="linenumber">75</context>
@@ -8731,6 +9021,7 @@
       </trans-unit>
       <trans-unit id="admin.dossier.confirmed" datatype="html">
         <source>e-mail confirmé</source>
+        <target state="translated">البريد الإلكتروني مؤكَّد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
           <context context-type="linenumber">79</context>
@@ -8739,6 +9030,7 @@
       </trans-unit>
       <trans-unit id="admin.dossier.unconfirmed" datatype="html">
         <source>e-mail non confirmé</source>
+        <target state="translated">البريد الإلكتروني غير مؤكَّد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
           <context context-type="linenumber">80</context>
@@ -8747,6 +9039,7 @@
       </trans-unit>
       <trans-unit id="admin.dossier.submitted" datatype="html">
         <source>soumis <x id="age" equiv-text="age"/></source>
+        <target state="translated">أُرسل <x id="age" equiv-text="age"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
           <context context-type="linenumber">84</context>
@@ -8755,6 +9048,7 @@
       </trans-unit>
       <trans-unit id="admin.dossier.remote" datatype="html">
         <source>À distance uniquement</source>
+        <target state="translated">عن بُعد فقط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/dossier-header.component.ts</context>
           <context context-type="linenumber">96</context>
@@ -8763,6 +9057,7 @@
       </trans-unit>
       <trans-unit id="admin.queue.label.needsMore" datatype="html">
         <source>Dossiers en attente d&apos;un complément</source>
+        <target state="translated">الملفات بانتظار الاستكمال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/queue-list.component.ts</context>
           <context context-type="linenumber">71</context>
@@ -8771,6 +9066,7 @@
       </trans-unit>
       <trans-unit id="admin.queue.label.pending" datatype="html">
         <source>Dossiers en attente de vérification</source>
+        <target state="translated">الملفات بانتظار التحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/queue-list.component.ts</context>
           <context context-type="linenumber">72</context>
@@ -8779,6 +9075,7 @@
       </trans-unit>
       <trans-unit id="admin.queue.documents" datatype="html">
         <source><x id="count" equiv-text="item.documentsCount"/> documents</source>
+        <target state="translated">المستندات: <x id="count" equiv-text="item.documentsCount"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/queue-list.component.ts</context>
           <context context-type="linenumber">77</context>
@@ -8787,6 +9084,7 @@
       </trans-unit>
       <trans-unit id="admin.queue.missing" datatype="html">
         <source>Manque : <x id="missing" equiv-text="missing"/></source>
+        <target state="translated">الناقص: <x id="missing" equiv-text="missing"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/queue-list.component.ts</context>
           <context context-type="linenumber">85</context>
@@ -8795,6 +9093,7 @@
       </trans-unit>
       <trans-unit id="admin.reason.hint" datatype="html">
         <source>Au moins <x id="n" equiv-text="this.data.minLength"/> caractères ; enregistré au journal.</source>
+        <target state="translated">الحدّ الأدنى لعدد الأحرف: <x id="n" equiv-text="this.data.minLength"/>؛ يُسجَّل في السجلّ.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
           <context context-type="linenumber">102</context>
@@ -8803,6 +9102,7 @@
       </trans-unit>
       <trans-unit id="admin.reason.hintShort" datatype="html">
         <source>Envoyé par e-mail ; enregistré au journal.</source>
+        <target state="translated">يُرسَل بالبريد الإلكتروني؛ ويُسجَّل في السجلّ.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
           <context context-type="linenumber">103</context>
@@ -8811,6 +9111,7 @@
       </trans-unit>
       <trans-unit id="admin.reason.selfSuspend" datatype="html">
         <source>Vous ne pouvez pas suspendre votre propre compte.</source>
+        <target state="translated">لا يمكن إيقاف حسابك الخاص.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
           <context context-type="linenumber">127</context>
@@ -8819,6 +9120,7 @@
       </trans-unit>
       <trans-unit id="admin.reason.lastAdmin" datatype="html">
         <source>C&apos;est le dernier administrateur actif : il ne peut pas être suspendu.</source>
+        <target state="translated">هذا آخر مسؤول نشط: لا يمكن إيقاف حسابه.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
           <context context-type="linenumber">129</context>
@@ -8827,6 +9129,7 @@
       </trans-unit>
       <trans-unit id="admin.reason.notSuspendable" datatype="html">
         <source>Ce compte est déjà suspendu, refusé ou clos.</source>
+        <target state="translated">هذا الحساب موقوف أو مرفوض أو مغلق بالفعل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
           <context context-type="linenumber">131</context>
@@ -8835,6 +9138,7 @@
       </trans-unit>
       <trans-unit id="admin.reason.notReactivable" datatype="html">
         <source>Ce compte n&apos;est ni suspendu ni refusé : il n&apos;y a rien à réactiver.</source>
+        <target state="translated">هذا الحساب ليس موقوفًا ولا مرفوضًا: لا شيء لإعادة تفعيله.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
           <context context-type="linenumber">134</context>
@@ -8843,6 +9147,7 @@
       </trans-unit>
       <trans-unit id="admin.reason.selfReview" datatype="html">
         <source>Vous êtes l&apos;auteur de la décision contestée : un autre administrateur doit examiner ce recours.</source>
+        <target state="translated">القرار المعترَض عليه صادر عنك: يلزم أن يدرس هذا التظلّم مسؤول آخر.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
           <context context-type="linenumber">136</context>
@@ -8851,6 +9156,7 @@
       </trans-unit>
       <trans-unit id="admin.reason.alreadyDecided" datatype="html">
         <source>Ce recours a déjà été examiné.</source>
+        <target state="translated">سبقت دراسة هذا التظلّم.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
           <context context-type="linenumber">138</context>
@@ -8859,6 +9165,7 @@
       </trans-unit>
       <trans-unit id="admin.reason.error" datatype="html">
         <source>L&apos;action n&apos;a pas pu être enregistrée. Rien n&apos;a été modifié.</source>
+        <target state="translated">تعذّر حفظ الإجراء. لم يتغيّر شيء.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/reason-dialog.component.ts</context>
           <context context-type="linenumber">142</context>
@@ -8867,6 +9174,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.labelEn" datatype="html">
         <source>Libellé EN (vide = effacé)</source>
+        <target state="translated">التسمية بالإنجليزية (فارغة = محذوفة)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/rename-panel.component.ts</context>
           <context context-type="linenumber">37,40</context>
@@ -8875,6 +9183,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.order" datatype="html">
         <source>Ordre</source>
+        <target state="translated">الترتيب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/rename-panel.component.ts</context>
           <context context-type="linenumber">52,55</context>
@@ -8883,6 +9192,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.save" datatype="html">
         <source> Enregistrer </source>
+        <target state="translated"> حفظ </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/rename-panel.component.ts</context>
           <context context-type="linenumber">73,75</context>
@@ -8891,6 +9201,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.renameNote" datatype="html">
         <source> Le code ne change jamais ; les profils gardent l&apos;entrée et affichent le nouveau libellé. </source>
+        <target state="translated"> لا يتغيّر الرمز أبدًا؛ وتحتفظ الملفات بالعنصر وتعرض التسمية الجديدة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/rename-panel.component.ts</context>
           <context context-type="linenumber">80,83</context>
@@ -8899,6 +9210,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.exists" datatype="html">
         <source>Ce code existe déjà pour ce type.</source>
+        <target state="translated">هذا الرمز موجود بالفعل لهذا النوع.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/vocabulary-forms.ts</context>
           <context context-type="linenumber">20</context>
@@ -8907,6 +9219,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.notFound" datatype="html">
         <source>Cette entrée n&apos;existe plus. Rechargez la page.</source>
+        <target state="translated">هذا العنصر لم يعد موجودًا. يُرجى إعادة تحميل الصفحة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/vocabulary-forms.ts</context>
           <context context-type="linenumber">29</context>
@@ -8915,6 +9228,7 @@
       </trans-unit>
       <trans-unit id="admin.vocabulary.error" datatype="html">
         <source>La modification n&apos;a pas pu être enregistrée.</source>
+        <target state="translated">تعذّر حفظ التعديل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/vocabulary-forms.ts</context>
           <context context-type="linenumber">34</context>
@@ -27375,6 +27689,7 @@
       </trans-unit>
       <trans-unit id="adminBar.tag" datatype="html">
         <source>ADMIN</source>
+        <target state="translated">مسؤول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
           <context context-type="linenumber">7,11</context>
@@ -27383,6 +27698,7 @@
       </trans-unit>
       <trans-unit id="adminBar.nav.label" datatype="html">
         <source>Administration</source>
+        <target state="translated">الإدارة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
           <context context-type="linenumber">11,12</context>
@@ -27391,6 +27707,7 @@
       </trans-unit>
       <trans-unit id="adminBar.tab.validation" datatype="html">
         <source>Validation</source>
+        <target state="translated">التحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
           <context context-type="linenumber">15,17</context>
@@ -27399,6 +27716,7 @@
       </trans-unit>
       <trans-unit id="adminBar.tab.practitioners" datatype="html">
         <source>Praticiens</source>
+        <target state="translated">الممارسون</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
           <context context-type="linenumber">25,29</context>
@@ -27407,6 +27725,7 @@
       </trans-unit>
       <trans-unit id="adminBar.tab.journal" datatype="html">
         <source>Journal</source>
+        <target state="translated">السجلّ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
           <context context-type="linenumber">32,36</context>
@@ -27415,6 +27734,7 @@
       </trans-unit>
       <trans-unit id="adminBar.tab.vocabulary" datatype="html">
         <source>Vocabulaire</source>
+        <target state="translated">المفردات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
           <context context-type="linenumber">39,42</context>
@@ -27423,6 +27743,7 @@
       </trans-unit>
       <trans-unit id="adminBar.reminder" datatype="html">
         <source> Aucune donnée patient n&apos;est accessible depuis l&apos;administration. </source>
+        <target state="translated"> لا يمكن الوصول إلى أي بيانات للمرضى من الإدارة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
           <context context-type="linenumber">43,46</context>
