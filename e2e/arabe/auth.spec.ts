@@ -43,6 +43,12 @@ const PAGES = [
 
 /** Saisie dont l'ordre se lit dans le rendu : un chiffre (haut) puis des tirets (bas). */
 const TYPED_ORDER = '1-------';
+/**
+ * Même preuve pour le champ code (120 px de zone de texte, police à chasse fixe de 18 px) : trois
+ * caractères, 28 px d'encre mesurés sous Windows, 31 px avec une police 10 % plus large, soit 26 %
+ * de la zone du code de l'application (120 px) et 13 % de celle du code de secours (199 à 210 px).
+ */
+const TYPED_ORDER_CODE = '1--';
 const ARABIC_NAME = 'سلمى';
 const LATIN_NAME = 'Claire';
 
@@ -92,11 +98,17 @@ async function inkOf(page: Page, field: Locator): Promise<Ink> {
   // Le texte doit tenir dans le champ : sinon le champ défile, se recale au début au blur() et la
   // mesure ne dit plus rien de l'alignement (police à chasse fixe de repli plus large sous Linux).
   const fit = await field.evaluate((el) => {
+    // Zone de texte : boîte moins bordures et marges intérieures (sur un <input>, clientWidth
+    // donne déjà la zone sans les marges intérieures dans Chromium : on ne s'y fie pas).
     const style = getComputedStyle(el);
+    const insets = ['borderLeftWidth', 'borderRightWidth', 'paddingLeft', 'paddingRight'] as const;
     return {
       scrollWidth: el.scrollWidth,
       clientWidth: el.clientWidth,
-      content: el.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
+      content: insets.reduce(
+        (width, key) => width - parseFloat(style[key]),
+        el.getBoundingClientRect().width,
+      ),
     };
   });
   expect(fit.scrollWidth, 'le texte saisi déborde du champ').toBeLessThanOrEqual(fit.clientWidth);
@@ -158,11 +170,15 @@ function expectInkAtLeft(ink: Ink): void {
   expect(ink.minX, 'marge de gauche').toBeLessThan(ink.width - ink.maxX);
 }
 
-/** « 1------- » dessiné dans l'ordre de frappe : le chiffre (encre haute) à gauche des tirets. */
+/**
+ * Chiffre puis tirets (« 1-- », « 1------- ») dessinés dans l'ordre de frappe : le chiffre (encre
+ * haute) dans la moitié gauche de l'encre. Dans un champ de droite à gauche, le navigateur les
+ * réordonne (« --1 ») et le chiffre passe dans la moitié droite.
+ */
 function expectTypingOrder(ink: Ink): void {
   expect(ink.minX).toBeGreaterThanOrEqual(0);
   expect(ink.tallMaxX, 'le chiffre tapé en premier est à gauche').toBeLessThan(
-    ink.minX + (ink.maxX - ink.minX) * 0.3,
+    (ink.minX + ink.maxX) / 2,
   );
 }
 
@@ -367,13 +383,13 @@ test.describe('connexion en /ar/ : double authentification (API locale)', () => 
 
       // Code de l'application, puis code de secours : même champ, même sens.
       await code.fill('');
-      await code.pressSequentially(TYPED_ORDER);
+      await code.pressSequentially(TYPED_ORDER_CODE);
       expect(await code.evaluate((el) => getComputedStyle(el).direction)).toBe('ltr');
       expectTypingOrder(await inkOf(page, code));
 
       await page.locator('.otp-row .link-button').click();
       await expect(code).toHaveValue('');
-      await code.pressSequentially(TYPED_ORDER);
+      await code.pressSequentially(TYPED_ORDER_CODE);
       expect(await code.evaluate((el) => getComputedStyle(el).direction)).toBe('ltr');
       // Champ centré (maquette 11) : seul l'ordre de frappe est mesuré.
       expectTypingOrder(await inkOf(page, code));
