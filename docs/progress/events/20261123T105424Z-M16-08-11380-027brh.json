@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-23T10:54:24.881Z",
+  "task": "M16-08",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Socle de langue : bundle /ar/ (lang=ar dir=rtl), locale de formatage ar-u-ca-gregory-hc-h23-nu-latn, catalogLabel, Accept-Language ar, raccourcis sur la touche physique ; aucun sélecteur ne propose l'arabe",
+  "next": "M16-09 après fusion",
+  "pr": "https://github.com/mrscams/psymate-web/pull/117",
+  "branch": "M16-08-socle-langue",
+  "checkout": "psymate-ux-audit-design-b1ba83"
+}

@@ -625,8 +625,8 @@ Rappel des tâches API (le C de psymate-api fera foi, section inscrite par M16-0
 | ID | Titre | Couloir | Dépend de |
 | --- | --- | --- | --- |
 | M16-01 | Décisions Q96 à Q102 et documentation | docs | — |
-| M16-02 | Langue de la requête résolue en un seul endroit ; préférence `locale` = `ar` | shared, identity | M16-01 |
-| M16-03 | Catalogues : `label_ar`, `inverse_label_ar`, administration | vocabulary, directory, linking, `V16` | M16-02, glossaire (M16-07) |
+| M16-02 | Langue de la requête résolue en un seul endroit ; préférence `locale` = `ar` | shared, identity, `V16` | M16-01 |
+| M16-03 | Catalogues : `label_ar`, `inverse_label_ar`, administration | vocabulary, directory, linking, `V17` | M16-02, glossaire (M16-07) |
 | M16-04 | `messages_ar.properties`, test de parité | ressources | M16-02, glossaire (M16-07) |
 | M16-05 | E-mails en arabe, de droite à gauche | services d'envoi | M16-04 |
 | M16-06 | Seed, tag `contract-v0.16.0`, suivi | racine | M16-03, M16-05 |

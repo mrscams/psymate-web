@@ -35,6 +35,20 @@ describe('localeInterceptor', () => {
     backend.verify();
   });
 
+  it.each([
+    ['ar', 'ar'],
+    ['fr', 'fr'],
+    ['en', 'en'],
+  ])('trois langues (Q79, M16-08) : depuis /%s/, Accept-Language %s', (localeId, expected) => {
+    const { http, backend } = setup(localeId);
+    http.post('/api/auth/login', {}).subscribe();
+
+    const call = backend.expectOne('/api/auth/login');
+    expect(call.request.headers.get(ACCEPT_LANGUAGE)).toBe(expected);
+    call.flush({});
+    backend.verify();
+  });
+
   it('garde l’en-tête posé par l’appelant', () => {
     const { http, backend } = setup('fr');
     http.get('/api/patients/p1/export', { headers: { [ACCEPT_LANGUAGE]: 'en' } }).subscribe();

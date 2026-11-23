@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// Sert l'application construite (dist/psymate-web/browser) pour les e2e : les deux langues
-// sous /fr/ et /en/ (ng serve n'en sert qu'une à la fois), les pages prérendues
+// Sert l'application construite (dist/psymate-web/browser) pour les e2e : les trois langues
+// sous /fr/, /en/ et /ar/ (ng serve n'en sert qu'une à la fois ; /ar/ construit mais pas encore
+// proposé, G Q80), les pages prérendues
 // (<langue>/<route>/index.html, M5-05), retour sur la coquille du SPA (index.csr.html) pour les
 // autres routes, et proxy /api → psymate-api, comme proxy.conf.json en développement.
 // Usage : pnpm build, puis node tools/serve-dist.mjs (PORT=4200, API_URL=http://localhost:8080).
@@ -11,7 +12,7 @@ import { extname, join, normalize, resolve, sep } from 'node:path';
 const ROOT = resolve('dist/psymate-web/browser');
 const PORT = Number(process.env['PORT'] ?? 4200);
 const API = new URL(process.env['API_URL'] ?? 'http://localhost:8080');
-const LOCALES = ['fr', 'en'];
+const LOCALES = ['fr', 'en', 'ar'];
 const DEFAULT_LOCALE = 'fr';
 const TYPES = {
   '.css': 'text/css; charset=utf-8',
@@ -39,7 +40,7 @@ function prerenderedOf(file) {
 }
 
 if (!LOCALES.every((locale) => existsSync(shellOf(locale)))) {
-  console.error(`[serve-dist] ${ROOT} ne contient pas /fr et /en : lance d'abord pnpm build.`);
+  console.error(`[serve-dist] ${ROOT} ne contient pas /fr, /en et /ar : lance d'abord pnpm build.`);
   process.exit(1);
 }
 
@@ -102,5 +103,5 @@ const server = createServer((req, res) => {
 });
 
 server.listen(PORT, 'localhost', () => {
-  console.log(`[serve-dist] http://localhost:${PORT}/fr/ et /en/ ; /api → ${API.origin}`);
+  console.log(`[serve-dist] http://localhost:${PORT}/fr/, /en/ et /ar/ ; /api → ${API.origin}`);
 });

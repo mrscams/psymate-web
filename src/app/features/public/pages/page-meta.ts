@@ -2,7 +2,7 @@ import { DOCUMENT, isPlatformBrowser, PlatformLocation } from '@angular/common';
 import { DestroyRef, inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 
-import { APP_LOCALES } from '../../../core/i18n';
+import { APP_LOCALES, OFFERED_LOCALES } from '../../../core/i18n';
 
 export type RobotsPolicy = 'index,follow' | 'noindex,follow';
 
@@ -110,15 +110,20 @@ export class PublicMeta {
     this.meta.updateTag({ [attribute]: key, content }, `${attribute}="${key}"`);
   }
 
-  /** URL canonique et alternatives fr / en (absolues dans le navigateur, relatives au prérendu). */
+  /**
+   * URL canonique et alternatives des langues proposées, fr / en (absolues dans le navigateur,
+   * relatives au prérendu). /ar/ est construit sans être proposé (G Q80, M16-08) : aucune
+   * alternative hreflang="ar", et ses pages renvoient à la version française comme canonique.
+   */
   private links(path: string | null): void {
     this.document.head.querySelectorAll(`link${MANAGED_SELECTOR}`).forEach((node) => node.remove());
     if (path === null) return;
-    const root = this.baseHref.replace(/\/(fr|en)\/?$/, '/').replace(/\/?$/, '/');
+    const built = new RegExp(`/(${APP_LOCALES.join('|')})/?$`);
+    const root = this.baseHref.replace(built, '/').replace(/\/?$/, '/');
     const href = (locale: string) => `${this.origin}${root}${locale}${path}`;
     const current = /\/en\/?$/.test(this.baseHref) ? 'en' : 'fr';
     this.link({ rel: 'canonical', href: href(current) });
-    for (const locale of APP_LOCALES) {
+    for (const locale of OFFERED_LOCALES) {
       this.link({ rel: 'alternate', hreflang: locale, href: href(locale) });
     }
   }

@@ -315,6 +315,21 @@ describe('AppComponent', () => {
     expect(link?.getAttribute('hreflang')).toBe('fr');
   });
 
+  it('en arabe (construit, pas encore proposé : Q80), le lien mène à l’anglais, jamais à l’arabe', async () => {
+    const base = document.createElement('base');
+    base.href = '/ar/';
+    document.head.append(base);
+
+    const { el } = await render('ar', { url: '/connexion' });
+    const links = [...el.querySelectorAll<HTMLAnchorElement>('a.locale-switch')];
+    expect(links.length).toBeGreaterThan(0);
+    for (const link of links) {
+      expect(link.getAttribute('href')).toBe('/en/connexion');
+      expect(link.getAttribute('hreflang')).toBe('en');
+    }
+    expect(el.querySelector('[hreflang="ar"]')).toBeNull();
+  });
+
   describe('UX-A10 : la page n’est créée qu’une fois', () => {
     const LAYOUTS = ['public', 'admin', 'bare', 'practitioner'] as const;
     /** Chemin enregistré par `Counted` (la route admin porte la page sur un enfant ''). */

@@ -1,6 +1,10 @@
+import { formatLocale } from './locales';
+
 /**
  * Formats Intl partagés (B7 : dates relatives et formats via Intl avec la locale du praticien,
- * UTC en transit). Chaque fonction prend la locale en argument : les composants passent LOCALE_ID.
+ * UTC en transit). Chaque fonction prend la locale en argument (les composants passent LOCALE_ID)
+ * et la convertit en locale de formatage (Q73) : en arabe, chiffres latins et calendrier
+ * grégorien ; en français et en anglais, la locale reçue, inchangée.
  */
 
 export type DateStyle = 'short' | 'medium' | 'long';
@@ -14,14 +18,14 @@ export function formatDate(
 ): string {
   const date = toDate(value);
   if (!date) return '';
-  return new Intl.DateTimeFormat(locale, { dateStyle: style, timeZone }).format(date);
+  return new Intl.DateTimeFormat(formatLocale(locale), { dateStyle: style, timeZone }).format(date);
 }
 
 /** « 17 oct. 2026, 14:03 ». */
 export function formatDateTime(value: string | Date, locale: string, timeZone?: string): string {
   const date = toDate(value);
   if (!date) return '';
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat(formatLocale(locale), {
     dateStyle: 'medium',
     timeStyle: 'short',
     timeZone,
@@ -32,7 +36,11 @@ export function formatDateTime(value: string | Date, locale: string, timeZone?: 
 export function formatMonthYear(value: string | Date, locale: string, timeZone?: string): string {
   const date = toDate(value);
   if (!date) return '';
-  return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone }).format(date);
+  return new Intl.DateTimeFormat(formatLocale(locale), {
+    month: 'long',
+    year: 'numeric',
+    timeZone,
+  }).format(date);
 }
 
 const DAY_MS = 86_400_000;
@@ -50,7 +58,10 @@ export function formatRelativeDay(
   if (!date) return '';
   const days = Math.round((startOfDay(date) - startOfDay(now)) / DAY_MS);
   if (Math.abs(days) > 30) return formatDate(date, locale, 'medium');
-  const relative = new Intl.RelativeTimeFormat(locale, { numeric: 'auto', style: 'short' });
+  const relative = new Intl.RelativeTimeFormat(formatLocale(locale), {
+    numeric: 'auto',
+    style: 'short',
+  });
   return relative.format(days, 'day');
 }
 
@@ -62,7 +73,8 @@ export function minutesBetween(from: string | Date, to: Date = new Date()): numb
 }
 
 /** « 18 min », « 1 h 05 » : durée en minutes. */
-export function formatMinutes(minutes: number, locale: string): string {
+export function formatMinutes(minutes: number, localeId: string): string {
+  const locale = formatLocale(localeId);
   const safe = Math.max(0, Math.round(minutes));
   if (safe < 60) {
     return new Intl.NumberFormat(locale, {
@@ -84,7 +96,8 @@ export function formatMinutes(minutes: number, locale: string): string {
  * Délai d'attente d'un Retry-After (423, 429) : « 12 s », « 14 min 32 s », « 15 min ». Unités Intl
  * courtes, lisibles dans les deux langues.
  */
-export function formatDelay(seconds: number, locale: string): string {
+export function formatDelay(seconds: number, localeId: string): string {
+  const locale = formatLocale(localeId);
   const safe = Math.max(0, Math.ceil(seconds));
   const unit = (value: number, unitName: 'second' | 'minute'): string =>
     new Intl.NumberFormat(locale, { style: 'unit', unit: unitName, unitDisplay: 'short' }).format(

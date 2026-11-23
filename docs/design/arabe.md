@@ -98,7 +98,7 @@ Règle (Q77), dans les trois langues :
 
 ## 7. Formats
 
-- Tout `Intl.*`, tout `toLocaleString`, `toLocaleUpperCase`, `toLocaleLowerCase`, `localeCompare` et toute bibliothèque (FullCalendar, sélecteur de date Material, ECharts) reçoit la **locale de formatage** de `core/i18n` (Q73) : `ar-u-nu-latn-ca-gregory` en arabe, `LOCALE_ID` sinon. Jamais `LOCALE_ID` directement.
+- Tout `Intl.*`, tout `toLocaleString`, `toLocaleUpperCase`, `toLocaleLowerCase`, `localeCompare` et toute bibliothèque (FullCalendar, sélecteur de date Material, ECharts) reçoit la **locale de formatage** de `core/i18n` (Q73) : `ar-u-ca-gregory-hc-h23-nu-latn` en arabe, `LOCALE_ID` sinon. Jamais `LOCALE_ID` directement.
 - Résultat attendu en arabe : chiffres latins, calendrier grégorien, semaine au lundi, heures sur 24 h. Un test le vérifie dans `core/i18n` (M16-08) et chaque tâche de feature qui met une date en forme.
 - Exceptions voulues : `parser/calendar.ts` emploie `'en-US'` pour un calcul technique de jour civil (M16-20 n'y touche pas).
 

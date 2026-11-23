@@ -1,5 +1,5 @@
 import { Profession } from '../auth';
-import { AppLocale, SubjectLabel } from '../i18n';
+import { OfferedLocale, SubjectLabel } from '../i18n';
 import { ThemePreference } from '../theme';
 
 /** Modalité proposée en ligne (`booking.modalities`). */
@@ -27,7 +27,11 @@ export interface Preferences {
   'overview.window': '30d' | '90d' | '12m';
   'timeline.groupBy': 'session' | 'month' | 'chronological';
   theme: ThemePreference;
-  locale: AppLocale;
+  /**
+   * Langue du compte : fr ou en, les seules que le contrat admet (0.15.0) et que l'écran propose.
+   * L'arabe n'est ni envoyé ni accepté avant le contrat 0.16.0 (M16-25) et l'ouverture (M16-29).
+   */
+  locale: OfferedLocale;
   'vocabulary.subjectLabel': SubjectLabel;
   'entryTypes.medicationVisible': boolean;
   'entries.defaultVisibility': 'clinical' | 'private';
