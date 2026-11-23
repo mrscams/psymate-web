@@ -98,8 +98,15 @@ describe('formats Intl en arabe (Q73, G Q71 : chiffres latins, calendrier grégo
     expect(resolved.numberingSystem).toBe('latn');
   });
 
-  it('locale de formatage : ar-u-nu-latn-ca-gregory en arabe, la locale reçue sinon', () => {
-    expect(ARABIC_FORMAT_LOCALE).toBe('ar-u-nu-latn-ca-gregory');
+  it.each(['ar', 'ar-EG', 'ar-SA'])('bundle %s : heures sur 24 h', (locale) => {
+    expect(formatDateTime(instant, locale, 'UTC')).toContain('14:03');
+    expect(new Intl.DateTimeFormat(formatLocale(locale)).resolvedOptions().hourCycle ?? 'h23').toBe(
+      'h23',
+    );
+  });
+
+  it('locale de formatage : ar-u-ca-gregory-hc-h23-nu-latn en arabe, la locale reçue sinon', () => {
+    expect(ARABIC_FORMAT_LOCALE).toBe('ar-u-ca-gregory-hc-h23-nu-latn');
     expect(formatLocale('ar')).toBe(ARABIC_FORMAT_LOCALE);
     expect(formatLocale('ar-MA')).toBe(ARABIC_FORMAT_LOCALE);
     expect(formatLocale(ARABIC_FORMAT_LOCALE)).toBe(ARABIC_FORMAT_LOCALE);

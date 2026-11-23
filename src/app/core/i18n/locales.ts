@@ -41,10 +41,11 @@ export function switchLocales(current: AppLocale): OfferedLocale[] {
 
 /**
  * Locale de formatage (Q73) : celle que reçoivent Intl et les bibliothèques. En arabe, chiffres
- * latins et calendrier grégorien quel que soit le pays (G Q71) ; ailleurs, la locale reçue,
- * inchangée.
+ * latins et calendrier grégorien quel que soit le pays (G Q71), heures sur 24 h comme en français
+ * (docs/design/arabe.md §7) ; ailleurs, la locale reçue, inchangée. Forme canonique BCP 47 :
+ * clés d'extension dans l'ordre alphabétique (ca, hc, nu).
  */
-export const ARABIC_FORMAT_LOCALE = 'ar-u-nu-latn-ca-gregory';
+export const ARABIC_FORMAT_LOCALE = 'ar-u-ca-gregory-hc-h23-nu-latn';
 
 export function formatLocale(localeId: string): string {
   return toAppLocale(localeId) === 'ar' ? ARABIC_FORMAT_LOCALE : localeId;
