@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { formatLocale, textDirection } from '../../../core/i18n';
 import { StateComponent } from '../../../shared/ui';
 import { Loadable, StateKind, uniqueId } from '../../../shared/util';
 import { ENTRY_QUERY_PARAM } from '../../entries';
@@ -218,7 +219,7 @@ import { OverviewSectionComponent } from './overview-section.component';
       gap: 6px;
     }
     .legend .end {
-      margin-left: auto;
+      margin-inline-start: auto;
     }
     .emo {
       display: inline-block;
@@ -250,14 +251,15 @@ import { OverviewSectionComponent } from './overview-section.component';
       color: var(--text-primary);
     }
     caption {
-      text-align: left;
+      text-align: start;
       color: var(--text-secondary);
       padding-bottom: 4px;
     }
     th,
     td {
-      padding: 6px 8px 6px 0;
-      text-align: left;
+      padding-block: 6px;
+      padding-inline: 0 8px;
+      text-align: start;
       border-bottom: 1px solid var(--border-subtle);
     }
     a {
@@ -279,7 +281,10 @@ export class OverviewFeelingsComponent {
   /** Clic sur un point du graphe (ou une ligne du tableau) : l'entrée du ressenti. */
   readonly pointSelected = output<string>();
 
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
+  /** Sens de lecture (Q74) : textes de la courbe isolés dans leur sens en arabe. */
+  private readonly direction = textDirection(inject(LOCALE_ID));
 
   protected readonly view = computed(() => this.overview().data);
   protected readonly state = computed<StateKind | null>(() =>
@@ -341,6 +346,7 @@ export class OverviewFeelingsComponent {
     day: (value) =>
       formatShortDay(typeof value === 'number' ? localDay(value) : value, this.locale),
     intensity: (value) => formatIntensity(value, this.locale),
+    direction: this.direction,
   };
 
   protected emotion(code: string): string {

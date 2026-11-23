@@ -96,6 +96,36 @@ export interface FeelingsChartLabels {
   day: (value: string | number) => string;
   /** Valeur sur 10 (« 4,5 »). */
   intensity: (value: number) => string;
+  /**
+   * Sens de lecture de l'interface (Q74), `ltr` par défaut. Le graphe reste de gauche à droite
+   * (Q71 point 4, conteneur en dir="ltr") ; en `rtl`, ses textes (libellés d'axe, repères,
+   * infobulle) sont isolés dans leur propre sens pour se lire dans l'ordre arabe.
+   */
+  direction?: 'ltr' | 'rtl';
+}
+
+/** Isolat de premier caractère fort (U+2068 … U+2069) : le texte prend le sens de sa première lettre. */
+const FIRST_STRONG_ISOLATE = '\u2068';
+const POP_DIRECTIONAL_ISOLATE = '\u2069';
+
+/**
+ * Texte dessiné dans le SVG du graphe : en interface de droite à gauche, isolé dans son propre sens
+ * (« 15 أكتوبر » se lit de droite à gauche dans un graphe de gauche à droite) ; inchangé sinon.
+ */
+export function chartText(text: string, labels: FeelingsChartLabels): string {
+  return labels.direction === 'rtl' && text
+    ? `${FIRST_STRONG_ISOLATE}${text}${POP_DIRECTIONAL_ISOLATE}`
+    : text;
+}
+
+/**
+ * Infobulle HTML (morceaux déjà échappés) : une ligne par morceau. En interface de droite à gauche,
+ * chaque ligne prend le sens de sa première lettre (dir="auto") ; inchangée sinon (`<br>`).
+ */
+export function tooltipLines(lines: string[], labels: FeelingsChartLabels): string {
+  return labels.direction === 'rtl'
+    ? lines.map((line) => `<div dir="auto">${line}</div>`).join('')
+    : lines.join('<br>');
 }
 
 export interface FeelingsChartData {
@@ -162,6 +192,8 @@ export function feelingsChartOptions(
   // gauche de son trait, pour ne pas sortir du graphe.
   const start = from ? Date.parse(from) : NaN;
   const span = to && from ? Date.parse(to) - start : NaN;
+  // Coordonnées du dessin, pas de la mise en page : le graphe reste de gauche à droite dans les
+  // trois langues (Q71 point 4), « droite » et « gauche » y gardent leur sens (docs/design/arabe.md §2).
   const nearRight = (day: string) => span > 0 && (Date.parse(day) - start) / span > 0.6;
 
   const average: LineSeriesOption = {
@@ -182,7 +214,10 @@ export function feelingsChartOptions(
         const p = params as { value?: [string, number | null] };
         const [day, value] = p.value ?? ['', null];
         const text = value === null ? '—' : `${labels.intensity(value)}/10`;
-        return `${escapeHtml(labels.day(day))}<br>${escapeHtml(labels.average)} : ${text}`;
+        return tooltipLines(
+          [escapeHtml(labels.day(day)), `${escapeHtml(labels.average)} : ${text}`],
+          labels,
+        );
       },
     },
   };
@@ -197,6 +232,7 @@ export function feelingsChartOptions(
     emphasis: { scale: 1.3 },
     label: {
       show: false,
+      // Coordonnée du dessin, pas de la mise en page : la courbe reste de gauche à droite (Q71).
       position: 'right',
       distance: 4,
       color: tokens.text,
@@ -227,7 +263,10 @@ export function feelingsChartOptions(
         const datum = (params as { data?: FeelingDatum }).data;
         if (!datum) return '';
         const [day, intensity] = datum.value;
-        return `${escapeHtml(labels.day(day))}<br>${escapeHtml(datum.emotion)} · ${intensity}/10`;
+        return tooltipLines(
+          [escapeHtml(labels.day(day)), `${escapeHtml(datum.emotion)} · ${intensity}/10`],
+          labels,
+        );
       },
     },
   };
@@ -251,11 +290,12 @@ export function feelingsChartOptions(
           color: tokens.medication,
           fontSize: 11,
           // Fonction, pas chaîne : le texte du serveur n'est pas lu comme gabarit ECharts ({a}, {b|…}).
-          formatter: () => medicationText(marker, labels),
+          formatter: () => chartText(medicationText(marker, labels), labels),
         },
       })),
     tooltip: {
-      formatter: (params: unknown) => escapeHtml((params as { name?: string }).name ?? ''),
+      formatter: (params: unknown) =>
+        tooltipLines([escapeHtml((params as { name?: string }).name ?? '')], labels),
     },
   };
 
@@ -277,7 +317,7 @@ export function feelingsChartOptions(
       formatter: (params: unknown) => {
         const value = (params as { value?: [string, number] }).value;
         const day = value ? labels.day(value[0]) : '';
-        return `${escapeHtml(day)}<br>${escapeHtml(labels.session)}`;
+        return tooltipLines([escapeHtml(day), escapeHtml(labels.session)], labels);
       },
     },
     markLine,
@@ -287,9 +327,12 @@ export function feelingsChartOptions(
     animation: false,
     backgroundColor: 'transparent',
     textStyle: { fontFamily: tokens.font, color: tokens.textSecondary },
+    // Marges du tracé : coordonnées du dessin, comme les alignements des repères (voir nearRight).
     grid: { left: 30, right: 20, top: 12, bottom: 30 },
     tooltip: {
       trigger: 'item',
+      // L'infobulle reste dans le cadre du graphe, quel que soit le point survolé.
+      confine: true,
       backgroundColor: tokens.surface,
       borderColor: tokens.axis,
       textStyle: { color: tokens.text, fontFamily: tokens.font, fontSize: 12 },
@@ -306,7 +349,7 @@ export function feelingsChartOptions(
         fontSize: 11,
         margin: 14,
         hideOverlap: true,
-        formatter: (value: number) => labels.day(value),
+        formatter: (value: number) => chartText(labels.day(value), labels),
       },
     },
     yAxis: {

@@ -95,7 +95,10 @@ jobs:
           path: dist/
       - run: pnpm exec playwright install --with-deps chromium
       - name: e2e (Playwright + axe-core)
-        run: pnpm exec playwright test
+        # Deux passes (tools/e2e.mjs) : les tests @mesure seuls sur la machine (un worker), puis
+        # tout le reste en parallèle. Rapports dans playwright-report/<passe>, traces dans
+        # test-results/<passe>.
+        run: node tools/e2e.mjs
 
       - if: failure()
         uses: actions/upload-artifact@v7

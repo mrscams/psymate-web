@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T16:25:38.844Z",
+  "task": "M16-16",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "overview de droite à gauche : 7 déclarations en propriétés logiques, formatLocale, catalogLabel, contenu saisi en dir=auto ou bdi, courbe des ressentis gardée de gauche à droite (conteneur dir=ltr, textes isolés en arabe, infobulle confinée), e2e/arabe/overview.spec.ts",
+  "pr": "https://github.com/mrscams/psymate-web/pull/134",
+  "branch": "M16-16-overview-rtl",
+  "checkout": "agent-a13ab105e6d23dfe0"
+}

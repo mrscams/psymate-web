@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { formatLocale } from '../../../core/i18n';
 import { sessionModalityLabel } from '../../../shared/ui';
 import { Loadable, StateKind } from '../../../shared/util';
 import { ShellPatient } from '../../patient-shell';
@@ -87,8 +88,11 @@ const EMPTY: Record<SideBlock, (view: OverviewView) => boolean> = {
             >&ngsp;
             <span>
               <span class="chip flag">{{ flagLabel(flag.kind) }}</span>
-              @if (flagDetail(flag.setAt, flag.reason); as detail) {
-                &ngsp;<span class="muted">{{ detail }}</span>
+              <!-- « depuis le 12 nov. · sommeil très dégradé » : la raison, saisie, dans son sens (Q77). -->
+              @if (flag.setAt || flag.reason) {
+                &ngsp;<span class="muted"
+                  >{{ flagSince(flag.setAt, flag.reason) }}<bdi>{{ flag.reason }}</bdi></span
+                >
               }
               ·
               <a
@@ -133,13 +137,16 @@ const EMPTY: Record<SideBlock, (view: OverviewView) => boolean> = {
         @for (medication of v.facts.medications; track medication.entryId) {
           <div class="line">
             <i class="dot medication" aria-hidden="true"></i>
+            <!-- Molécule, dose, fréquence et prescripteur sont saisis : isolés dans leur sens (Q77). -->
             <span
-              ><b>{{ medication.molecule }}</b>
+              ><b dir="auto">{{ medication.molecule }}</b>
               @if (medication.dosage) {
-                {{ medication.dosage }}
+                &ngsp;<bdi>{{ medication.dosage }}</bdi
+                >&ngsp;
               }
               @if (medication.frequency) {
-                {{ medication.frequency }}
+                &ngsp;<bdi>{{ medication.frequency }}</bdi
+                >&ngsp;
               }
               @if (medication.periodFrom ?? medication.since; as from) {
                 <span class="muted" i18n="Début d'un médicament@@overview.side.medications.since"
@@ -147,7 +154,9 @@ const EMPTY: Record<SideBlock, (view: OverviewView) => boolean> = {
                 >
               }
               @if (medication.prescriber) {
-                <span class="muted"> · {{ medication.prescriber }}</span>
+                <span class="muted">
+                  · <bdi>{{ medication.prescriber }}</bdi></span
+                >
               }
             </span>
           </div>
@@ -177,7 +186,7 @@ const EMPTY: Record<SideBlock, (view: OverviewView) => boolean> = {
           <div class="sit">
             <span class="t"
               ><i class="dot situation" aria-hidden="true"></i
-              >{{ situation.title ?? untitledSituation }}</span
+              ><span dir="auto">{{ situation.title ?? untitledSituation }}</span></span
             >
             @if (situation.since) {
               <span class="r" i18n="Début d'une situation en cours@@overview.side.situations.since"
@@ -474,7 +483,7 @@ const EMPTY: Record<SideBlock, (view: OverviewView) => boolean> = {
       text-decoration: underline;
     }
     .todo .r {
-      margin-left: auto;
+      margin-inline-start: auto;
       font-weight: 600;
     }
     a:focus-visible {
@@ -503,7 +512,8 @@ export class OverviewSideComponent {
   readonly refreshing = input(false);
   readonly retry = output<void>();
 
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
 
   protected readonly view = computed(() => this.overview().data);
   protected readonly flagLabel = flagLabel;
@@ -579,17 +589,15 @@ export class OverviewSideComponent {
     return formatMonth(value, this.locale, true);
   }
 
-  /** « depuis le 12 nov. · sommeil très dégradé » : date de pose et raison du drapeau. */
-  protected flagDetail(setAt: string | null, reason: string | null): string | null {
-    const parts: string[] = [];
-    if (setAt) {
-      const date = this.day(setAt);
-      parts.push(
-        $localize`:Date de pose d'un drapeau, dans le cadre du suivi@@overview.side.frame.flagSince:depuis le ${date}:date:`,
-      );
-    }
-    if (reason) parts.push(reason);
-    return parts.length ? parts.join(' · ') : null;
+  /**
+   * « depuis le 12 nov. · » : date de pose du drapeau, et le séparateur si une raison suit (la
+   * raison, saisie, est isolée dans le gabarit par un <bdi>, Q77). Vide sans date.
+   */
+  protected flagSince(setAt: string | null, reason: string | null): string {
+    if (!setAt) return '';
+    const date = this.day(setAt);
+    const since = $localize`:Date de pose d'un drapeau, dans le cadre du suivi@@overview.side.frame.flagSince:depuis le ${date}:date:`;
+    return reason ? `${since} · ` : since;
   }
 
   protected familyColor(code: string): string {
