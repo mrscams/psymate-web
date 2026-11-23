@@ -520,8 +520,10 @@ test.describe('changement de langue des préférences : fr → ar → reconnexio
   }
 
   /**
-   * Choisit une langue : PATCH {locale} (corps du contrat), réponse du serveur relue, puis
-   * rechargement sur la même route dans le bundle de cette langue.
+   * Choisit une langue : PATCH {locale} (corps du contrat), puis rechargement sur la même route
+   * dans le bundle de cette langue. Le corps de la réponse n'est pas lu : l'application part aussitôt
+   * vers l'autre bundle (location.assign) ; la valeur du serveur est relue par le choix affiché
+   * après rechargement et par le GET final.
    */
   async function choose(page: Page, locale: 'fr' | 'en' | 'ar'): Promise<void> {
     const patched = page.waitForResponse(
@@ -530,9 +532,8 @@ test.describe('changement de langue des préférences : fr → ar → reconnexio
     );
     await select(page).selectOption(locale);
     const response = await patched;
-    expect(response.status(), await response.text()).toBe(200);
+    expect(response.status()).toBe(200);
     expect(response.request().postDataJSON()).toEqual({ locale });
-    expect(((await response.json()) as { locale: string }).locale).toBe(locale);
     await expect(page).toHaveURL(new RegExp(`/${locale}/mon-compte/preferences$`));
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(select(page)).toHaveValue(locale);
@@ -559,6 +560,7 @@ test.describe('changement de langue des préférences : fr → ar → reconnexio
             new URL((a as HTMLAnchorElement).href).pathname,
           ]),
         );
+      await expect(bar).toHaveCount(2);
       expect(await linksOf()).toEqual([
         ['en', 'en', 'ltr', '/en/patients'],
         ['ar', 'ar', 'rtl', '/ar/patients'],
@@ -569,6 +571,7 @@ test.describe('changement de langue des préférences : fr → ar → reconnexio
       await bar.nth(1).click();
       await expect(page).toHaveURL(/\/ar\/patients$/);
       await expect(page.locator('main h1').first()).toBeVisible();
+      await expect(bar).toHaveCount(2);
       expect(await linksOf()).toEqual([
         ['fr', 'fr', 'ltr', '/fr/patients'],
         ['en', 'en', 'ltr', '/en/patients'],

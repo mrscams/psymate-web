@@ -196,7 +196,7 @@ Un e2e par flux, sans aucun geste de pointeur (`keyboardOnly`) et avec axe-core 
 
 `e2e/arabe/` (18 specs) ouvre les écrans en `/ar/` : `<html lang="ar" dir="rtl">`, aucun défilement horizontal, axe-core sans violation (mêmes règles qu'ailleurs), rendu mesuré (boîtes, sens calculé) plutôt que déduit d'un attribut. Colonne « Arabe » des tableaux ci-dessous : la spec qui couvre l'écran en `/ar/`. L'arabe est proposé par les sélecteurs depuis M16-29 (23 novembre 2026, G Q80), sans relecture arabophone des traductions.
 
-**Parcours de B3 en `/ar/`** (`arabe/parcours.spec.ts`, M16-29), à la souris, axe-core à chaque écran, chaque écriture vérifiée sur le corps envoyé (contrat) et relue par l'API :
+**Parcours de B3 en `/ar/`** (`arabe/parcours.spec.ts`, M16-29), souris et clavier mêlés (N, Ctrl+Entrée, /, flèches du curseur d'intensité ; ce n'est pas un parcours au clavier seul, sans `keyboardOnly`), axe-core à chaque écran, chaque écriture vérifiée sur le corps envoyé (contrat) et relue par l'API :
 
 1. **Connexion** (flux 1, sans l'inscription ni la démo) : `/ar/connexion` par les ids du formulaire, liste des patients en `/ar/`.
 2. **Créer un patient** (flux 2) : N, nom arabe, Ctrl+Entrée, dossier ouvert (`POST /api/patients` puis `GET`).

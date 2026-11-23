@@ -41,7 +41,7 @@ Un seul endroit pour tout ce qui est mémorisé **par compte** et retrouvé sur 
 
 ## Structure
 1. **Barre d'application** + **navigation du compte** (Préférences actif).
-2. **Affichage** : vue d'ensemble par défaut (Simple / Complète), fenêtre d'analyse (30 j / 90 j / 1 an), timeline (Par séance / Par mois / Chronologique), thème (Clair / Doux / Sombre / Système, avec vignette), langue (Français ; Anglais avec la mention « traduction partielle » tant que les fichiers EN sont en retard ; العربية depuis M16-29).
+2. **Affichage** : vue d'ensemble par défaut (Simple / Complète), fenêtre d'analyse (30 j / 90 j / 1 an), timeline (Par séance / Par mois / Chronologique), thème (Clair / Doux / Sombre / Système, avec vignette), langue (Français ; English ; العربية depuis M16-29). La mention « traduction partielle » prévue pour l'anglais n'est pas affichée sur `main` (voir la note du 23 novembre 2026).
 3. **Vocabulaire et saisie** : désignation (Patient·e / Client·e), type médicament visible (interrupteur), visibilité par défaut (Clinique / Privée), durée de séance par défaut (60 min), délai de correction (lecture seule).
 3 bis. **Prise de rendez-vous en ligne** (M14) : entre « Vocabulaire et saisie » et « Émotions personnalisées ». Détail dans la section du même nom ci-dessous.
 4. **Émotions personnalisées · n** : tableau (émotion, famille avec pastille couleur, nombre d'utilisations, statut *custom*), lien « Gérer la liste complète » (page dédiée, écran 17 : ajouter, renommer, fusionner ; la promotion au vocabulaire global est V2).
