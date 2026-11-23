@@ -6,13 +6,13 @@
   @if (entry(); as entry) {
     <div class="heading">
       <pm-entry-icon [type]="entry.type" [size]="14" />
-      <h3>{{ title(entry) }}</h3>
+      <h3 dir="auto">{{ title(entry) }}</h3>
       <span class="type">{{ typeLabel(entry.type) }}</span>
     </div>
     <dl>
       <div>
         <dt i18n="Métadonnée de l'aperçu@@search.preview.when">Quand</dt>
-        <dd class="mono">{{ when(entry) }}</dd>
+        <dd class="mono date">{{ when(entry) }}</dd>
       </div>
       <div>
         <dt i18n="Métadonnée de l'aperçu@@search.preview.session">Séance</dt>
@@ -27,7 +27,7 @@
       <div>
         <dt i18n="Métadonnée de l'aperçu@@search.preview.recorded">Saisi</dt>
         <dd>
-          <span class="mono">{{ recorded(entry) }}</span> ·
+          <span class="mono date">{{ recorded(entry) }}</span> ·
           <span i18n="Numéro de version@@search.preview.version">v{{ entry.version }}</span>
         </dd>
       </div>
@@ -48,7 +48,7 @@
       }
     </dl>
     @if (entry.body) {
-      <p class="body">{{ entry.body }}</p>
+      <p class="body" dir="auto">{{ entry.body }}</p>
     }
     @if (entry.links.length > 0) {
       <div class="links">
@@ -57,7 +57,7 @@
         </h4>
         <ul>
           @for (link of entry.links; track link.id) {
-            <li>{{ link.sentence }}</li>
+            <li dir="auto">{{ link.sentence }}</li>
           }
         </ul>
       </div>

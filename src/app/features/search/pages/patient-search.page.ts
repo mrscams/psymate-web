@@ -33,6 +33,7 @@ import {
 } from '../data/search.model';
 import { SearchStore } from '../data/search.store';
 import { DossierSearchBar } from '../search-bar';
+import { isolate } from '../ui/bidi';
 import {
   canRetry,
   hitTitle,
@@ -131,10 +132,11 @@ export class PatientSearchPage {
   protected readonly summary = computed(() => {
     const page = this.store.results().data;
     if (!page || this.store.results().status === 'error') return '';
+    // Terme cherché isolé dans sa phrase (Q77) : affichage seulement, la requête part telle quelle.
     return summaryText(
       page.total,
       page.approximate.length,
-      this.store.effectiveQuery(),
+      isolate(this.store.effectiveQuery(), this.locale),
       page.tookMs,
     );
   });
@@ -160,14 +162,15 @@ export class PatientSearchPage {
     const selected = this.store.selected();
     if (!selected) return '';
     const position = hits.indexOf(selected) + 1;
-    const title = hitTitle(selected, this.locale);
+    const title = isolate(hitTitle(selected, this.locale), this.locale);
     return $localize`:Annonce du résultat sélectionné@@search.selection:Sélection : ${title}:title:, ${position}:position: sur ${hits.length}:count:`;
   });
 
-  protected readonly emptyTitle = computed(
-    () =>
-      $localize`:État vide de la recherche@@search.empty.title:Aucun résultat pour « ${this.store.effectiveQuery()}:query: »`,
-  );
+  protected readonly emptyTitle = computed(() => {
+    // Titre de pm-state (une chaîne) : pas de <bdi> possible, le terme est isolé (Q77).
+    const query = isolate(this.store.effectiveQuery(), this.locale);
+    return $localize`:État vide de la recherche@@search.empty.title:Aucun résultat pour « ${query}:query: »`;
+  });
 
   constructor() {
     const memory = this.shell.recallTab<SearchTabMemory>('search');

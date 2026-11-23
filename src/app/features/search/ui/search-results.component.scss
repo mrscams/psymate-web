@@ -84,6 +84,12 @@
   font-family: var(--font-mono);
 }
 
+/* Date à nom de mois : chasse fixe des textes, police d'interface en arabe (Q76). */
+.mono.date {
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
+}
+
 .snippet {
   margin: 0;
   color: var(--text-secondary);

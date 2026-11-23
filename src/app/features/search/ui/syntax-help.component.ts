@@ -14,13 +14,14 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     <dl class="syntax">
       <div>
         <dt>
-          <code i18n="Exemple de jeton tag@@search.help.example.tag">tag:travail</code>
+          <code dir="auto" i18n="Exemple de jeton tag@@search.help.example.tag">tag:travail</code>
         </dt>
         <dd i18n="Aide de la syntaxe@@search.help.tag">entrées portant ce tag</dd>
       </div>
       <div>
         <dt>
           <code
+            dir="auto"
             i18n="
               Exemple de jeton émotion (emotion: accepté par l’API)@@search.help.example.emotion"
             >émotion:anxiété</code
@@ -31,6 +32,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       <div>
         <dt>
           <code
+            dir="auto"
             i18n="Exemple de jeton avant (before: accepté par l’API)@@search.help.example.before"
             >avant:2026-09</code
           >
@@ -39,7 +41,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       </div>
       <div>
         <dt>
-          <code i18n="Exemple de jeton après (after: accepté par l’API)@@search.help.example.after"
+          <code
+            dir="auto"
+            i18n="Exemple de jeton après (after: accepté par l’API)@@search.help.example.after"
             >après:2026-06</code
           >
         </dt>
@@ -47,13 +51,15 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       </div>
       <div>
         <dt>
-          <code i18n="Exemple d’expression exacte@@search.help.example.phrase">"mot exact"</code>
+          <code dir="auto" i18n="Exemple d’expression exacte@@search.help.example.phrase"
+            >"mot exact"</code
+          >
         </dt>
         <dd i18n="Aide de la syntaxe@@search.help.phrase">expression exacte</dd>
       </div>
       <div>
         <dt>
-          <code i18n="Exemple de mot exclu@@search.help.example.exclude">-mot</code>
+          <code dir="auto" i18n="Exemple de mot exclu@@search.help.example.exclude">-mot</code>
         </dt>
         <dd i18n="Aide de la syntaxe@@search.help.exclude">exclut ce mot</dd>
       </div>
@@ -82,8 +88,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     dd {
       margin: 0;
     }
+    /* Exemples traduits (lettres arabes en /ar/) : chasse fixe des textes (Q76). */
     code {
-      font-family: var(--font-mono);
+      font-family: var(--font-mono-text);
+      font-variant-numeric: tabular-nums;
       color: var(--text-primary);
     }
   `,

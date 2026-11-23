@@ -12,6 +12,7 @@
         <button
           type="button"
           class="title"
+          dir="auto"
           [attr.data-entry-id]="hit.entryId"
           (click)="selectHit.emit(hit.entryId)"
           (keydown.enter)="enter($event, hit)"
@@ -24,14 +25,14 @@
           }
         </button>
         <span class="meta">
-          {{ typeLabel(hit.type) }} · <span class="mono">{{ when(hit) }}</span>
+          {{ typeLabel(hit.type) }} · <span class="mono date">{{ when(hit) }}</span>
           @if (precision(hit.precision); as precisionText) {
             · {{ precisionText }}
           }
         </span>
       </div>
       @if (hit.snippet; as snippet) {
-        <p class="snippet"><pm-marked-text [segments]="snippet" /></p>
+        <p class="snippet" dir="auto"><pm-marked-text [segments]="snippet" /></p>
       }
       @if (sessionOf(hit) || hit.tags.length > 0 || hit.archived || hit.visibility === 'private') {
         <p class="context">
@@ -39,7 +40,7 @@
             <span>{{ session }}</span>
           }
           @for (tag of hit.tags; track tag) {
-            <span>#{{ tag }}</span>
+            <span dir="auto">#{{ tag }}</span>
           }
           @if (hit.visibility === 'private') {
             <span class="badge" i18n="Mention d'une entrée privée@@search.hit.private">privée</span>
