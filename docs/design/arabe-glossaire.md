@@ -260,6 +260,21 @@ Autres termes des liens :
 | `capture.*` | Nouvelle entrée | New entry | مُدخَل جديد | — | | |
 | `search.*` | Résultats approchés | Approximate results | نتائج تقريبية | — | | |
 | `account.data.*` | Exporter, exporter le dossier | Export | تصدير، تصدير الملف | — | | |
+| `subject.*` | patient, client insérés dans une phrase | — | مريض، عميل (singulier) ; المرضى، العملاء (pluriel) | — | Employé par M16-27. Le singulier reste indéfini (« مريض جديد », « إضافة أول مريض ») ; le pluriel porte l'article, parce qu'il suit toujours un nom ou un verbe (« قائمة المرضى », « تصفية المرضى »). Capitale et minuscule identiques (règle 11). | |
+| `overview.*`, `timeline.*` | émotion (dans l'interface) | emotion | شعور، مشاعر | انفعال، انفعالات | Employé par M16-27. Le glossaire n'a qu'un terme pour « ressenti » et « émotion » (« المشاعر المخصّصة ») : les deux se confondent en arabe. « انفعال » les distinguerait ; à trancher par le relecteur. | |
+| `patientShell.*`, `timeline.*` | Clôturer (bouton court), non clôturée | Close, not closed | إنهاء، لم تُنهَ | — | Employé par M16-27, sur le modèle de « إنهاء الجلسة ». | |
+| `sessionBar.*`, `patients.*` | Reprendre (une séance ouverte) | Resume | استئناف | — | Employé par M16-27. | |
+| `patientShell.*` | Noter, noté (en séance) | Note, noted | تدوين، مدوَّن | — | Employé par M16-27, sur le modèle de « تدوين ملاحظة ». | |
+| `overview.session.kind.*`, `timeline.sessionKind.*` | Accueil, séance d'accueil ; contact | Intake ; contact | جلسة استقبال، استقبال ؛ تواصل | — | Employé par M16-27 : natures de séance. | |
+| `patientHeader.*`, `patients.preview.*` | En-tête (du dossier) | Header | الترويسة | رأس الملف | Employé par M16-27. | |
+| `patients.field.*` | Situation, activité (champs de la fiche) | Situation, occupation | الوضعية، النشاط | الوضع الاجتماعي، المهنة | Employé par M16-27. « الوضعية » reprend le type d'entrée ; à distinguer si le relecteur le juge utile. | |
+| `patients.field.history` | Histoire et éléments à garder en tête | History | السيرة وعناصر للتذكّر | — | Employé par M16-27. | |
+| `patients.field.rhythm` | Rythme habituel (hebdomadaire, mensuel, irrégulier) | Usual rhythm | الوتيرة المعتادة (أسبوعي، شهري، غير منتظم) | — | Employé par M16-27. | |
+| `patients.rail.flags.*`, `patients.form.flag.setAt` | Drapeau posé, posé le | Flag set | علامة مُفعّلة، تاريخ التفعيل | — | Employé par M16-27. | |
+| `overview.*` | Repère de médicament | Medication marker | علامة الدواء | — | Employé par M16-27 (courbe des ressentis). | |
+| `timeline.decade.*` | Agrégat par mois | Monthly aggregate | التجميع الشهري | — | Employé par M16-27 (vue décennie). | |
+| `timeline.*` | Zoom avant, zoom arrière | Zoom in, zoom out | تكبير، تصغير | — | Employé par M16-27. | |
+| — | min (abréviation de durée) | min | د | — | Employé par M16-27 dans les puces et les barres étroites (règle 10) ; évite l'accord du nom après le nombre. | |
 
 ## 8. Profil 360
 
@@ -320,6 +335,11 @@ Autres termes des liens :
 | `video` | En visio | Video | عبر الفيديو | عن بُعد بالفيديو | | |
 | `phone` | Par téléphone | Phone | عبر الهاتف | — | | |
 | `email` | Par e-mail | Email | عبر البريد الإلكتروني | — | Modalité d'une séance (V05) seulement. | |
+| `home` | À domicile | At home | في المنزل | — | Employé par M16-26 (`public.modality.home`). | |
+| `public.*` | Modalités (titre de facette ou de section) | Modalities | طرق الاستشارة | — | Employé par M16-26 ; « Modalité par défaut » de la fiche patient : « طريقة الاستشارة الافتراضية » (M16-27). | |
+| `public.*` | Publics (titre de facette ou de section) | Audiences | الفئات المستهدفة | — | Employé par M16-26. | |
+| `public.*` | Spécialités (titre) | Specialties | التخصّصات | — | Employé par M16-26. | |
+| `public.practitioner.*` | Fiche praticien | Practitioner page | بطاقة الممارس | — | Employé par M16-26, sur le modèle de « بطاقة المريض ». | |
 | `profile.availability.accepting` | Accepte de nouveaux patients | Accepting new patients | قبول مرضى جدد | يستقبل مرضى جددًا | Le nom verbal évite l'accord avec le praticien (règle 3). | |
 | `profile.availability.waitlist` | Liste d'attente | Waitlist | قائمة انتظار | — | | |
 | `profile.availability.closed` | Complet | Full | لا أماكن متاحة | مكتمل | | |
@@ -375,6 +395,9 @@ Jours de la semaine, du lundi au dimanche : الاثنين، الثلاثاء، 
 | `auth.*` | Code de vérification | Verification code | رمز التحقّق | — | | |
 | `preferences.security.sessions` | Sessions actives | Active sessions | الجلسات النشطة | الأجهزة المتّصلة | Risque de confusion avec la séance clinique (« جلسة »). | |
 | `preferences.security.revokeOthers` | Déconnecter les autres | Sign out others | تسجيل الخروج من الأجهزة الأخرى | — | | |
+| `auth.*` | Journal de sécurité | Security log | سجلّ الأمان | — | Employé par M16-26. | |
+| `auth.*` | Sessions ouvertes (connexion) | Open sessions | الجلسات المفتوحة | الجلسات النشطة | Employé par M16-26 ; même risque de confusion avec la séance que « الجلسات النشطة » (section 14). | |
+| `auth.firstLogin.*` | Mot de passe temporaire | Temporary password | كلمة المرور المؤقتة | — | Employé par M16-26. | |
 | `auth.*` | Compte suspendu | Account suspended | حساب موقوف | — | | |
 | `preferences.theme.*` | Thème : clair, doux, sombre, système | Theme | المظهر: فاتح، هادئ، داكن، حسب النظام | — | « Doux » est le contraste doux (étude couleurs). | |
 | `preferences.locale.label` | Langue | Language | اللغة | — | Chaque langue est écrite dans sa langue : Français, English, العربية (M16-29). | |
