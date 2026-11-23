@@ -11,7 +11,7 @@ import {
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
 
-import { SubjectLabelPipe } from '../../../core/i18n';
+import { formatLocale, SubjectLabelPipe } from '../../../core/i18n';
 import { PatientExportFormat } from '../data/patient-export.api';
 import { PatientSort, PatientView } from '../data/patient.model';
 import { PatientListRow } from '../data/patient-list.store';
@@ -59,7 +59,8 @@ export class PatientTableComponent {
   readonly restore = output<PatientView>();
   readonly exportFile = output<RowExport>();
 
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   protected readonly view = computed<RowView[]>(() => {

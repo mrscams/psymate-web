@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { minutesBetween } from '../../../core/i18n';
+import { formatLocale, minutesBetween } from '../../../core/i18n';
 import { initials } from '../../../shared/util';
 import { demoDisplayName } from '../data/patient.model';
 import { TodayRow } from '../data/patient-list.store';
@@ -47,7 +47,7 @@ interface TodayCard {
           <li class="tcard">
             <span class="av" aria-hidden="true">{{ card.initials }}</span>
             <span class="nm"
-              >{{ card.name }}
+              ><bdi>{{ card.name }}</bdi>
               @if (card.live) {
                 <span class="chip live">{{ card.live }}</span>
               }
@@ -72,7 +72,8 @@ export class PatientTodayComponent {
   readonly rows = input.required<TodayRow[]>();
   readonly now = input<Date>(new Date());
 
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
 
   protected readonly cards = computed<TodayCard[]>(() =>
     this.rows().map((row) => this.toCard(row, this.now())),

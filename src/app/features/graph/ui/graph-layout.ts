@@ -1,10 +1,11 @@
-// Disposition du graphe (fiche 04) : le seul fichier qui parle à elkjs. Lecture de gauche à droite,
-// en couches : ce qui déclenche ou précède, puis ce qui en découle, puis ce qui y répond. Fonctions
+// Disposition du graphe (fiche 04) : le seul fichier qui parle à elkjs. Lecture de gauche à droite
+// (vers la gauche en arabe, Q75), en couches : ce qui déclenche ou précède, puis ce qui en découle, puis ce qui y répond. Fonctions
 // pures, sauf le chargement du moteur ; la géométrie des tracés est dans graph-paths.ts, la mise en
 // forme pour le gabarit dans graph-scene.ts.
 import { InjectionToken } from '@angular/core';
 import type { ElkExtendedEdge, ElkNode } from 'elkjs/lib/elk-api';
 
+import { TextDirection } from '../../../core/i18n';
 import { EntryType } from '../../../shared/ui';
 import {
   GraphDirection,
@@ -97,8 +98,13 @@ export interface GraphLayout {
   routes: Record<string, Point[]>;
   blocks: PlacedBlock[];
   reading: GraphReading;
-  /** true : lecture de gauche à droite ; false : de haut en bas. */
+  /** true : lecture horizontale (de gauche à droite, vers la gauche en arabe) ; false : de haut en bas. */
   horizontal: boolean;
+  /**
+   * true : la lecture horizontale va vers la gauche (arabe, Q75) : la cause est à droite, l'effet à
+   * gauche, la première colonne à droite. Jamais en lecture de haut en bas.
+   */
+  leftward?: boolean;
   /** Colonnes (rangées, de haut en bas) des lectures par type et par mois ; vide en chaîne causale. */
   bands: LayoutBand[];
 }
@@ -114,6 +120,25 @@ export interface LayoutBand {
 export interface LayoutOptions {
   reading: GraphReading;
   direction: GraphDirection;
+  /**
+   * Sens de lecture de l'interface (core/i18n textDirection, Q74) ; absent : de gauche à droite. Il
+   * ne change que le sens horizontal : le paramètre d'URL `right` garde sa valeur.
+   */
+  textDirection?: TextDirection;
+}
+
+export type ElkDirection = 'RIGHT' | 'LEFT' | 'DOWN';
+
+/**
+ * Sens donné à elkjs (Q75) : « right » se lit dans le sens de lecture, de gauche à droite (RIGHT),
+ * vers la gauche en arabe (LEFT) ; « down » reste de haut en bas (DOWN) dans toutes les langues.
+ */
+export function elkDirection(
+  direction: GraphDirection,
+  textDirection: TextDirection = 'ltr',
+): ElkDirection {
+  if (direction === 'down') return 'DOWN';
+  return textDirection === 'rtl' ? 'LEFT' : 'RIGHT';
 }
 
 export const DEFAULT_LAYOUT: LayoutOptions = { reading: 'causal', direction: 'right' };
@@ -348,6 +373,7 @@ function placedBands(
   order: string[],
   boxes: Record<string, Box>,
   horizontal: boolean,
+  leftward: boolean,
 ): LayoutBand[] {
   const extents = new Map<string, { low: number; high: number }>();
   bandOf.forEach((key, id) => {
@@ -367,12 +393,16 @@ function placedBands(
     .filter((key) => extents.has(key))
     .map((key) => ({ key, ...extents.get(key)! }));
   const margin = 28;
+  // Vers la gauche, la première colonne est à droite : les voisines se prennent de gauche à droite,
+  // puis les colonnes reprennent l'ordre de lecture.
+  const placed = leftward ? [...used].reverse() : used;
   // Une colonne va du milieu de l'espace qui la sépare de la précédente au milieu du suivant.
-  return used.map((band, i) => ({
+  const bands = placed.map((band, i) => ({
     key: band.key,
-    from: i === 0 ? band.low - margin : (used[i - 1].high + band.low) / 2,
-    to: i === used.length - 1 ? band.high + margin : (band.high + used[i + 1].low) / 2,
+    from: i === 0 ? band.low - margin : (placed[i - 1].high + band.low) / 2,
+    to: i === placed.length - 1 ? band.high + margin : (band.high + placed[i + 1].low) / 2,
   }));
+  return leftward ? bands.reverse() : bands;
 }
 
 /** Calcule la place de chaque carte et le tracé de chaque lien orienté. */
@@ -382,7 +412,9 @@ export async function layoutGraph(
   root: string | null,
   options: LayoutOptions = DEFAULT_LAYOUT,
 ): Promise<GraphLayout> {
-  const horizontal = options.direction === 'right';
+  const direction = elkDirection(options.direction, options.textDirection);
+  const horizontal = direction !== 'DOWN';
+  const leftward = direction === 'LEFT';
   const bandOf = bandKeys(view, options.reading);
   const order = bandOf ? bandOrder(bandOf, options.reading) : [];
   // elkjs range les cartes d'une colonne avant celles de la suivante (« partitions »).
@@ -426,7 +458,7 @@ export async function layoutGraph(
     id: 'graph',
     layoutOptions: {
       ...LAYOUT_OPTIONS,
-      'elk.direction': horizontal ? 'RIGHT' : 'DOWN',
+      'elk.direction': direction,
       'elk.partitioning.activate': String(!!bandOf),
     },
     children,
@@ -449,8 +481,10 @@ export async function layoutGraph(
     const box = placedBoxes.get(block.id) ?? { x: 0, y: 0, ...blockSize(block.members.length) };
     const columns = blockColumns(block.members.length);
     block.members.forEach((id, index) => {
+      // Vers la gauche, la grille se remplit de droite à gauche.
+      const cell = leftward ? columns - 1 - (index % columns) : index % columns;
       boxes[id] = {
-        x: box.x + BLOCK_PADDING + (index % columns) * (CARD_SIZE.width + BLOCK_GAP),
+        x: box.x + BLOCK_PADDING + cell * (CARD_SIZE.width + BLOCK_GAP),
         y: box.y + BLOCK_PADDING + Math.floor(index / columns) * (CARD_SIZE.height + BLOCK_GAP),
         ...CARD_SIZE,
       };
@@ -466,7 +500,8 @@ export async function layoutGraph(
     blocks: placedBlocks,
     reading: options.reading,
     horizontal,
-    bands: bandOf ? placedBands(bandOf, order, boxes, horizontal) : [],
+    leftward,
+    bands: bandOf ? placedBands(bandOf, order, boxes, horizontal, leftward) : [],
   };
 }
 

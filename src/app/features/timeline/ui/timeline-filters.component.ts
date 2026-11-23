@@ -13,6 +13,7 @@ import {
   viewChild,
 } from '@angular/core';
 
+import { formatLocale } from '../../../core/i18n';
 import { EntryIconComponent, EntryType } from '../../../shared/ui';
 import {
   TimelineFilters,
@@ -60,7 +61,7 @@ export class TimelineFiltersComponent {
 
   readonly filtersChange = output<TimelineFilters>();
 
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   private readonly number = new Intl.NumberFormat(this.locale);
   private readonly button = viewChild.required<ElementRef<HTMLButtonElement>>('filtersButton');
 

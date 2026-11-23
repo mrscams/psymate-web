@@ -20,7 +20,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-left: 6px;
+  margin-inline-start: 6px;
 }
 
 .field-label {
@@ -107,15 +107,17 @@
   cursor: pointer;
 
   & + & {
-    margin-left: -1px;
+    margin-inline-start: -1px;
   }
 
   &:first-child {
-    border-radius: 8px 0 0 8px;
+    border-start-start-radius: 8px;
+    border-end-start-radius: 8px;
   }
 
   &:last-child {
-    border-radius: 0 8px 8px 0;
+    border-start-end-radius: 8px;
+    border-end-end-radius: 8px;
   }
 
   &[aria-pressed='true'] {
@@ -135,7 +137,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .count {
@@ -214,7 +216,7 @@
 
 .legend {
   position: absolute;
-  right: 12px;
+  inset-inline-end: 12px;
   bottom: 12px;
   max-width: calc(100% - 100px);
 }
@@ -249,7 +251,7 @@
   .field.choice {
     flex-wrap: wrap;
     width: 100%;
-    margin-left: 0;
+    margin-inline-start: 0;
   }
 
   .field.choice .segmented {

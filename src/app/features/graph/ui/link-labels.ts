@@ -1,10 +1,25 @@
 // Textes de l'éditeur de lien (fiche 06) : aide des types désactivés, forme du trait, problèmes.
 import { ApiProblem } from '../../../core/http';
+import { formatLocale } from '../../../core/i18n';
 import { EntryType, entryTypeLabel } from '../../../shared/ui';
 import { LinkTypeOption, TypeRefusal } from '../data/link.model';
 
-function typeList(types: readonly EntryType[]): string {
-  return types.map((type) => entryTypeLabel(type).toLowerCase()).join(', ');
+/**
+ * Liste dans la langue de l'interface (Intl.ListFormat, locale de formatage Q73) : « a, b, c » en
+ * français et en anglais (forme étroite, la même que l'ancien join(', ')), « a وb وc » en arabe, sans
+ * virgule latine dans un texte arabe.
+ */
+export function listText(items: readonly string[], locale: string): string {
+  return new Intl.ListFormat(formatLocale(locale), { type: 'conjunction', style: 'narrow' }).format(
+    items,
+  );
+}
+
+function typeList(types: readonly EntryType[], locale: string): string {
+  return listText(
+    types.map((type) => entryTypeLabel(type).toLowerCase()),
+    locale,
+  );
 }
 
 /**
@@ -12,10 +27,10 @@ function typeList(types: readonly EntryType[]): string {
  * « … seulement vers situation, séance. », et « Possible en inversant le sens. » si l'autre sens est
  * permis.
  */
-export function refusalText(type: LinkTypeOption, refusal: TypeRefusal): string {
+export function refusalText(type: LinkTypeOption, refusal: TypeRefusal, locale: string): string {
   const label = type.label;
-  const sources = typeList(type.sources);
-  const targets = typeList(type.targets);
+  const sources = typeList(type.sources, locale);
+  const targets = typeList(type.targets, locale);
   let text: string;
   if (refusal.source && refusal.target) {
     text = $localize`:Aide d'un type de lien interdit pour la source et la cible@@links.refusal.both:« ${label}:label: » : seulement de ${sources}:sources: vers ${targets}:targets:.`;

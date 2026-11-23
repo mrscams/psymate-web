@@ -17,6 +17,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatMenuModule } from '@angular/material/menu';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { formatLocale } from '../../../core/i18n';
 import { ShortcutService } from '../../../core/shortcuts';
 import {
   ENTRY_TYPES,
@@ -185,7 +186,8 @@ export class GraphPage {
     return [...(this.store.graph().data?.nodes ?? [])]
       .sort(
         (a, b) =>
-          b.degree - a.degree || (names[a.id] ?? '').localeCompare(names[b.id] ?? '', this.locale),
+          b.degree - a.degree ||
+          (names[a.id] ?? '').localeCompare(names[b.id] ?? '', formatLocale(this.locale)),
       )
       .map((node) => ({
         id: node.id,

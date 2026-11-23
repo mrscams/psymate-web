@@ -20,6 +20,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 
+import { formatLocale } from '../../../core/i18n';
 import { PreferencesStore } from '../../../core/preferences';
 import { ShortcutService } from '../../../core/shortcuts';
 import {
@@ -141,7 +142,7 @@ export class TimelinePage {
   private readonly route = inject(ActivatedRoute);
   private readonly injector = inject(Injector);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   private readonly shortcuts = inject(ShortcutService);
   private readonly viewport = viewChild(CdkVirtualScrollViewport);
   private readonly toolbar = viewChild.required(RovingToolbarDirective);

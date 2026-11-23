@@ -14,6 +14,7 @@ import {
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { take } from 'rxjs';
 
+import { formatLocale } from '../../../core/i18n';
 import { EntryIconComponent, UNCLOSED_SESSION_AFTER_MIN } from '../../../shared/ui';
 import { formatOccurred } from '../../../shared/util';
 import { SessionDetail } from '../data/timeline-sessions.model';
@@ -63,7 +64,7 @@ export class TimelineSessionDividerComponent {
   /** « clôturer » d'une séance ouverte : l'onglet Séance. */
   readonly closeRequested = output<string>();
 
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly trigger = viewChild(MatMenuTrigger);
   /** Horloge de « en cours depuis n min », relue chaque minute. */

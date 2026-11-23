@@ -51,13 +51,18 @@
   }
 }
 
+// Plage et comptes, avec des noms de mois : --font-mono-text (police d'interface en arabe, Q76).
 .facts {
-  font-family: var(--font-mono);
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
   font-size: 12px;
 }
 
+// Graphique de gauche à droite dans les trois langues (Q71 point 4) : sans direction: ltr, un
+// <html dir="rtl"> inverse tous les text-anchor du dessin.
 .chart {
   display: block;
+  direction: ltr;
   width: 100%;
   height: auto;
   font-family: var(--font-ui);
@@ -212,18 +217,21 @@
   overflow: auto;
 }
 
+// Noms de mois en tête de ligne : --font-mono-text, comme la plage.
 table {
   border-collapse: collapse;
-  font-family: var(--font-mono);
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
   font-size: 12px;
   color: var(--text-primary);
 }
 
 th,
 td {
-  padding: 2px 12px 2px 0;
+  padding-block: 2px;
+  padding-inline: 0 12px;
   border-bottom: 1px solid var(--border-subtle);
-  text-align: right;
+  text-align: end;
   white-space: nowrap;
 }
 
@@ -233,7 +241,7 @@ thead th {
 }
 
 th[scope='row'] {
-  text-align: left;
+  text-align: start;
 }
 
 .month-button {

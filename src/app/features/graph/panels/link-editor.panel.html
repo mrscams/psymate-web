@@ -35,7 +35,7 @@
         <div class="card" [attr.data-type]="entry.type">
           <pm-entry-icon [type]="entry.type" [size]="16" [labelled]="true" />
           <div class="card-text">
-            <p class="card-name">{{ entry.name }}</p>
+            <p class="card-name" dir="auto">{{ entry.name }}</p>
             <p class="card-meta">
               {{ entry.typeLabel }}
               @if (entry.when) {
@@ -71,6 +71,7 @@
               i18n-placeholder="
                 Indication du champ de recherche de source@@links.from.searchPlaceholder"
               placeholder="Rechercher la nouvelle source…"
+              dir="auto"
               (keydown.escape)="closeSourcePicker($event)"
             />
             @if (sourcesState(); as kind) {
@@ -101,7 +102,7 @@
                     >
                       <pm-entry-icon [type]="item.entry.type" [size]="14" />
                       <span class="row-text">
-                        <span class="row-name" [id]="'pm-link-source-name-' + item.id">{{
+                        <span class="row-name" dir="auto" [id]="'pm-link-source-name-' + item.id">{{
                           item.name
                         }}</span
                         >&ngsp;<span class="row-meta" [id]="'pm-link-source-' + item.id">
@@ -138,7 +139,8 @@
           [disabled]="!source()"
           (click)="invert()"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <!-- Flèche d'inversion d'un lien : retournée en arabe (docs/design/arabe.md §3). -->
+          <svg class="pm-flip-rtl" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M7 16V4m0 0L3 8m4-4 4 4M17 8v12m0 0 4-4m-4 4-4-4" />
           </svg>
           <span i18n="Bouton d'inversion du sens du lien@@links.relation.invert"
@@ -189,6 +191,7 @@
           autocomplete="off"
           i18n-placeholder="Indication du champ de recherche de cible@@links.search.placeholder"
           placeholder="Rechercher une entrée…"
+          dir="auto"
         />
         <label
           class="sr-only"
@@ -242,6 +245,7 @@
               <span class="row-text">
                 <span
                   class="row-name"
+                  dir="auto"
                   [id]="'pm-link-target-name-' + item.entry.id"
                   [attr.title]="item.name"
                   >{{ item.name }}</span
@@ -277,6 +281,7 @@
         [id]="fid('rationale')"
         formControlName="rationale"
         rows="2"
+        dir="auto"
         [attr.maxlength]="rationaleMax"
         [attr.aria-invalid]="invalid('rationale') ? 'true' : null"
         [attr.aria-describedby]="fid('rationale') + '-count ' + fid('rationale') + '-error'"
@@ -329,10 +334,14 @@
       </h3>
       <div aria-live="polite" aria-atomic="true">
         @if (sentence(); as s) {
+          <!--
+            Source, verbe, cible dans le sens de lecture (de droite à gauche en arabe) ; chaque morceau
+            est isolé (dir="auto") : titres saisis et verbe du serveur gardent leur propre sens (Q77).
+          -->
           <p class="sentence">
-            <span class="end">{{ s.from }}</span
-            >&ngsp;<strong class="verb">{{ s.verb }}</strong
-            >&ngsp;<span class="end">{{ s.to }}</span>
+            <span class="end" dir="auto">{{ s.from }}</span
+            >&ngsp;<strong class="verb" dir="auto">{{ s.verb }}</strong
+            >&ngsp;<span class="end" dir="auto">{{ s.to }}</span>
           </p>
           @if (shape()) {
             <p class="hint">{{ shape() }}</p>
@@ -348,7 +357,7 @@
         (click)="submit(false)"
       >
         <span i18n="Bouton d'enregistrement du lien@@links.save">Enregistrer le lien</span>
-        <kbd aria-hidden="true">⏎</kbd>
+        <kbd dir="ltr" aria-hidden="true">⏎</kbd>
       </button>
       <button
         type="button"

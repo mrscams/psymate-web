@@ -2,8 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   linkedSignal,
+  LOCALE_ID,
   output,
 } from '@angular/core';
 
@@ -32,6 +34,7 @@ import { refusalText } from './link-labels';
         <button
           type="button"
           class="chip"
+          dir="auto"
           [attr.data-code]="item.code"
           [attr.aria-pressed]="value() === item.code"
           [attr.aria-disabled]="item.allowed && !disabled() ? null : 'true'"
@@ -108,6 +111,7 @@ export class LinkTypeChipsComponent {
   readonly chosen = output<LinkTypeCode>();
 
   private readonly prefix = uniqueId('pm-link-type');
+  private readonly locale = inject(LOCALE_ID);
 
   protected readonly items = computed(() =>
     this.availability().map((item) => ({
@@ -115,7 +119,7 @@ export class LinkTypeChipsComponent {
       label: item.type.label,
       allowed: item.allowed,
       helpId: item.reason ? `${this.prefix}-${item.type.code}` : null,
-      help: item.reason ? refusalText(item.type, item.reason) : '',
+      help: item.reason ? refusalText(item.type, item.reason, this.locale) : '',
     })),
   );
 

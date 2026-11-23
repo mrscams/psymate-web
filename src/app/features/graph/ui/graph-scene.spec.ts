@@ -169,6 +169,48 @@ describe('buildScene', () => {
     expect(built.bounds.width).toBeGreaterThan(layout.width);
   });
 
+  it('par type, vers la gauche (arabe) : la première colonne à droite, son titre en haut à droite', async () => {
+    const view = graphView();
+    const layout = await layoutGraph(testEngine(), view, 'e-situation', {
+      reading: 'type',
+      direction: 'right',
+      textDirection: 'rtl',
+    });
+    const built = buildScene(view, layout, {
+      root: 'e-situation',
+      selectedId: null,
+      linkNames: true,
+      lineStyles: {},
+      labels,
+    });
+    expect(built.horizontal).toBe(true);
+    const [first, second] = built.bands;
+    expect(first.label).toBe('colonne:events');
+    expect(first.box.x).toBeGreaterThan(second.box.x);
+    expect(built.bands.map((band) => band.alt)).toEqual([false, true, false, true]);
+    // Le titre finit au bord droit de sa colonne (10 px avant), au-dessus d'elle.
+    expect(first.labelEnds).toBe(true);
+    expect(first.labelAt.x).toBe(first.box.x + first.box.width - 10);
+    expect(first.labelAt.y).toBeLessThan(first.box.y);
+  });
+
+  it('par type, de gauche à droite : le titre part du bord gauche de sa colonne', async () => {
+    const view = graphView();
+    const layout = await layoutGraph(testEngine(), view, 'e-situation', {
+      reading: 'type',
+      direction: 'right',
+    });
+    const built = buildScene(view, layout, {
+      root: 'e-situation',
+      selectedId: null,
+      linkNames: true,
+      lineStyles: {},
+      labels,
+    });
+    expect(built.bands[0].labelEnds).toBe(false);
+    expect(built.bands[0].labelAt.x).toBe(built.bands[0].box.x + 10);
+  });
+
   it('par mois, de haut en bas : des rangées titrées à gauche', async () => {
     const view = graphView();
     const layout = await layoutGraph(testEngine(), view, 'e-situation', {

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input, LOCALE_ID } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { formatDate } from '../../../core/i18n';
+import { formatDate, formatLocale } from '../../../core/i18n';
 import { fieldId, FieldErrorsComponent } from '../../../shared/forms';
 import { FlagKind } from '../data/patient.model';
 import { flagLabel } from './patient-labels';
@@ -60,6 +60,7 @@ export type FlagsGroup = FormGroup<{
             <input
               [id]="reasonId"
               type="text"
+              dir="auto"
               formControlName="watchReason"
               autocomplete="off"
               required
@@ -125,7 +126,8 @@ export class FlagFieldsComponent {
   /** Date de pose des drapeaux actifs de la fiche lue (ISO), absente à la création. */
   readonly setAt = input<Partial<Record<FlagKind, string | null>>>({});
 
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   protected readonly reasonId = fieldId('flags.watchReason');
   protected readonly text = {
     watch: flagLabel('watch'),

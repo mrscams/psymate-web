@@ -34,7 +34,7 @@
             >
           </span>
           <span class="facts">
-            <span class="range">{{ startText() }} → {{ endText() }}</span>
+            <span class="range">{{ startText() }} {{ rangeArrow }} {{ endText() }}</span>
             @if (years()) {
               <span
                 i18n="Années de la durée de la plage, vue décennie@@timeline.decade.years"
@@ -73,6 +73,9 @@
           </p>
         }
 
+        <!-- Graphique temporel : le passé reste à gauche dans les trois langues (G Q71 point 4, Q75).
+             Ses coordonnées (LEFT, RIGHT, text-anchor) sont celles d'un dessin de gauche à droite :
+             direction: ltr dans la feuille de style (l'attribut dir n'a pas d'effet sur un svg). -->
         <svg
           class="chart"
           role="img"

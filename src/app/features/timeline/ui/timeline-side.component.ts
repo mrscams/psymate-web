@@ -8,6 +8,7 @@ import {
   output,
 } from '@angular/core';
 
+import { formatLocale } from '../../../core/i18n';
 import { EntryIconComponent, EntryType, StateAction, StateComponent } from '../../../shared/ui';
 import { EmotionFamily, TimelineFacets } from '../data/timeline.model';
 import { typePluralLabel } from './timeline-labels';
@@ -49,7 +50,7 @@ export class TimelineSideComponent {
 
   readonly emotionToggled = output<string>();
 
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   private readonly number = new Intl.NumberFormat(this.locale);
 
   protected readonly sessions = computed(() => this.facets().types['session'] ?? 0);

@@ -1,4 +1,4 @@
-// Mode par séance (proposition 03, même grammaire que le flux) : la date à gauche de l'axe (110 px,
+// Mode par séance (proposition 03, même grammaire que le flux) : la date avant l'axe (110 px,
 // 16 px d'écart), le séparateur teinté de la séance, la première ligne du compte rendu, puis les
 // lignes des entrées sur l'axe (filet de 2 px, 18 px avant les cartes, 8 px entre deux lignes).
 :host {
@@ -23,8 +23,9 @@
 
 .items {
   min-width: 0;
-  padding: 0 0 4px 18px;
-  border-left: 2px solid var(--border-subtle);
+  padding-block: 0 4px;
+  padding-inline: 18px 0;
+  border-inline-start: 2px solid var(--border-subtle);
 }
 
 .heading {
@@ -48,11 +49,11 @@
   font: inherit;
   font-size: 13.5px;
   font-weight: 600;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
 
   .count {
-    margin-left: auto;
+    margin-inline-start: auto;
     color: var(--text-secondary);
     font-weight: 500;
   }
@@ -63,16 +64,27 @@
   }
 }
 
+// Chevron de dépliage, dessiné par deux bordures : il pointe vers la fin de ligne (à droite, à
+// gauche en arabe), puis vers le bas une fois déplié. La bordure de fin de ligne passe à gauche en
+// arabe : la rotation s'inverse pour garder la pointe (icône de direction, arabe.md §3).
 .chevron {
   width: 7px;
   height: 7px;
   flex: none;
-  border-right: 2px solid currentColor;
+  border-inline-end: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
   transform: rotate(-45deg);
 
   &.down {
     transform: rotate(45deg);
+  }
+
+  &:dir(rtl) {
+    transform: rotate(45deg);
+
+    &.down {
+      transform: rotate(-45deg);
+    }
   }
 }
 
@@ -127,14 +139,14 @@
   padding: 12px 0 4px;
 }
 
-// Téléphone : une colonne, ni dates à gauche ni axe.
+// Téléphone : une colonne, ni colonne des dates ni axe.
 .narrow {
   .day {
     grid-template-columns: minmax(0, 1fr);
   }
 
   .items {
-    padding-left: 0;
-    border-left: 0;
+    padding-inline-start: 0;
+    border-inline-start: 0;
   }
 }

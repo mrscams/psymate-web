@@ -47,7 +47,7 @@ import {
   typeAvailability,
   TypeAvailability,
 } from '../data/link.model';
-import { saveProblemText, shapeText } from '../ui/link-labels';
+import { listText, saveProblemText, shapeText } from '../ui/link-labels';
 import { LinkTypeChipsComponent } from '../ui/link-type-chips.component';
 import { PlacedLinksComponent } from '../ui/placed-links.component';
 
@@ -252,7 +252,7 @@ export class LinkEditorPanel {
         when: this.when(entry),
         linked: labels.length > 0,
         linkedText: labels.length
-          ? $localize`:Mention d'une entrée déjà liée@@links.targets.linked:déjà lié (${labels.join(', ')}:labels:)`
+          ? $localize`:Mention d'une entrée déjà liée@@links.targets.linked:déjà lié (${listText(labels, this.locale)}:labels:)`
           : '',
       };
     });

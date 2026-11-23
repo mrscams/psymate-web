@@ -13,6 +13,7 @@ import {
   RechercheService,
   VocabulaireService,
 } from '../../../api';
+import { AppLocale, catalogLabel, toAppLocale } from '../../../core/i18n';
 import { ENTRY_TYPES, EntryType } from '../../../shared/ui';
 import { OccurredPrecision } from '../../../shared/util';
 import {
@@ -46,12 +47,12 @@ export class LinkApi {
   private readonly vocabulary = inject(VocabulaireService);
   private readonly search = inject(RechercheService);
   private readonly entries = inject(EntreesService);
-  private readonly english = inject(LOCALE_ID).startsWith('en');
+  private readonly locale = toAppLocale(inject(LOCALE_ID));
 
   /** GET /api/vocabulary/link-types : les huit types et leur matrice (E5.3), dans l'ordre du catalogue. */
   async linkTypes(): Promise<LinkTypeOption[]> {
     const list = await firstValueFrom(this.vocabulary.linkTypes());
-    return list.map((view) => toLinkType(view, this.english));
+    return list.map((view) => toLinkType(view, this.locale));
   }
 
   /** GET /api/entries/{id} : l'entrée ouverte (404 ENTRY_NOT_FOUND, 403 PATIENT_FORBIDDEN). */
@@ -122,14 +123,21 @@ function entryTypes(values: string[] | undefined): EntryType[] {
   );
 }
 
-function toLinkType(view: LinkTypeView, english: boolean): LinkTypeOption {
-  const label = (english ? view.labelEn : view.labelFr) ?? view.labelFr ?? view.code ?? '';
-  const inverse = (english ? view.inverseLabelEn : view.inverseLabelFr) ?? view.inverseLabelFr;
+/** Libellés du catalogue dans la langue de l'interface, sinon en français (Q78). */
+export function toLinkType(view: LinkTypeView, locale: AppLocale): LinkTypeOption {
+  const label = catalogLabel(
+    { labelFr: view.labelFr ?? view.code ?? '', labelEn: view.labelEn },
+    locale,
+  );
+  const inverse = catalogLabel(
+    { labelFr: view.inverseLabelFr ?? '', labelEn: view.inverseLabelEn },
+    locale,
+  );
   return {
     code: view.code as LinkTypeCode,
     directed: view.directed ?? true,
     label,
-    inverseLabel: inverse ?? null,
+    inverseLabel: inverse || null,
     sources: entryTypes(view.allowedSourceTypes),
     targets: entryTypes(view.allowedTargetTypes),
     lineStyle: (view.lineStyle as LinkLineStyle | undefined) ?? 'solid',

@@ -31,9 +31,11 @@ import { documentTypeLabel, formatBytes, reviewStatusLabel } from './document-la
           }}</span>
           <div class="body">
             <p class="title">
-              {{ doc.title }}
+              <bdi>{{ doc.title }}</bdi>
               @if (doc.issuer) {
-                <span class="muted"> · {{ doc.issuer }}</span>
+                <span class="muted">
+                  · <bdi>{{ doc.issuer }}</bdi></span
+                >
               }
               @if (doc.year) {
                 <span class="muted"> · {{ doc.year }}</span>
@@ -129,8 +131,10 @@ import { documentTypeLabel, formatBytes, reviewStatusLabel } from './document-la
       color: var(--text-secondary);
       font-weight: 400;
     }
+    /* Taille : chiffres et unité (lettres), police d'interface en arabe. */
     .mono {
-      font-family: var(--font-mono);
+      font-family: var(--font-mono-text);
+      font-variant-numeric: tabular-nums;
     }
     .status {
       padding: 4px 10px;

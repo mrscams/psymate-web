@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-23T14:18:41.281Z",
+  "task": "M16-12",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "account de droite à gauche : 29 déclarations converties, dir=auto/ltr et bdi, --font-mono-text, catalogLabel, rappel d'export en français en /ar/, liste des justificatifs par Intl.ListFormat en arabe, e2e/arabe/account",
+  "notes": "Budget initial 999,85 kB pour 1 MB",
+  "pr": "https://github.com/mrscams/psymate-web/pull/126",
+  "branch": "M16-12-account-rtl",
+  "checkout": "psymate-ux-audit-design-b1ba83"
+}

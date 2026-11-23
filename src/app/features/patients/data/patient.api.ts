@@ -17,6 +17,7 @@ import {
   VersionDto,
   VueDensembleService,
 } from '../../../api';
+import { AppLocale, catalogLabel, formatLocale, toAppLocale } from '../../../core/i18n';
 import { CursorPage } from '../../../shared/util';
 import {
   FlagKind,
@@ -43,7 +44,10 @@ export class PatientApi {
   private readonly tagsApi = inject(TagsService);
   private readonly overviews = inject(VueDensembleService);
   private readonly entries = inject(EntreesService);
-  private readonly english = inject(LOCALE_ID).startsWith('en');
+  private readonly localeId = inject(LOCALE_ID);
+  private readonly locale = toAppLocale(this.localeId);
+  /** Locale de formatage (Q73) : celle des mises en minuscules. */
+  private readonly formats = formatLocale(this.localeId);
 
   /**
    * GET /api/patients : une page de PATIENT_PAGE_SIZE patients (décision 1 du 14 novembre 2026),
@@ -75,7 +79,7 @@ export class PatientApi {
       await withoutIntakeOpenSession(dto, (entryId) =>
         firstValueFrom(this.entries.getEntry(entryId)),
       ),
-      this.english,
+      this.locale,
     );
   }
 
@@ -150,12 +154,12 @@ export class PatientApi {
   /** GET /api/tags : tags actifs du praticien, pour l'autocomplétion. */
   async listTags(): Promise<PractitionerTag[]> {
     const tags = await firstValueFrom(this.tagsApi.list());
-    return tags.map(toTag);
+    return tags.map((tag) => toTag(tag, this.formats));
   }
 
   /** POST /api/tags : 422 TAG_IS_EMOTION, 409 TAG_EXISTS. */
   async createTag(label: string): Promise<PractitionerTag> {
-    return toTag(await firstValueFrom(this.tagsApi.create({ label })));
+    return toTag(await firstValueFrom(this.tagsApi.create({ label })), this.formats);
   }
 }
 
@@ -248,13 +252,21 @@ export async function withoutIntakeOpenSession(
   return { ...dto, drafts: { ...dto.drafts, openSession: undefined } };
 }
 
-export function toActivity(dto: OverviewDto, english = false): PatientActivity {
+/**
+ * Projection vue d'ensemble → résumé d'une ligne. Les libellés d'émotion suivent la langue du
+ * bundle (Q78, `catalogLabel`) : la série porte le français et l'anglais, pas encore l'arabe
+ * (contrat 0.16.0, M16-25), d'où le repli sur le français en arabe ; sans libellé dans la série,
+ * le libellé de la dominante (top.label), puis le code.
+ */
+export function toActivity(dto: OverviewDto, locale: AppLocale = 'fr'): PatientActivity {
   const series = dto.feelings?.series ?? [];
   const labels = new Map<string, string>();
   for (const entry of series) {
     if (!entry.emotionCode) continue;
-    const label = (english ? entry.labelEn : null) || entry.label || entry.emotionCode;
-    labels.set(entry.emotionCode, label);
+    // Sans libellé dans la série, pas d'entrée : chaque usage garde son propre repli (code pour le
+    // ressenti le plus fort, top.label puis code pour la dominante), comme avant M16-14.
+    const label = catalogLabel({ labelFr: entry.label ?? '', labelEn: entry.labelEn }, locale);
+    if (label) labels.set(entry.emotionCode, label);
   }
   const points = dto.feelings?.points ?? [];
   const intensityOf = new Map<string, { code: string; intensity: number }>();
@@ -307,7 +319,7 @@ export function toActivity(dto: OverviewDto, english = false): PatientActivity {
     feelingCount: points.length,
     dominant: top
       ? {
-          label: (english ? labels.get(top.code!) : null) || top.label || top.code!,
+          label: labels.get(top.code!) || top.label || top.code!,
           delta: top.delta ?? 0,
         }
       : null,
@@ -321,11 +333,11 @@ function toFlag(dto: FlagDto): PatientFlagView {
   return { kind: dto.kind as FlagKind, reason: text(dto.reason), setAt: text(dto.setAt) };
 }
 
-function toTag(dto: TagView): PractitionerTag {
+function toTag(dto: TagView, locale: string): PractitionerTag {
   return {
     id: dto.id ?? '',
     label: dto.label ?? '',
-    normalizedLabel: dto.normalizedLabel ?? (dto.label ?? '').toLocaleLowerCase(),
+    normalizedLabel: dto.normalizedLabel ?? (dto.label ?? '').toLocaleLowerCase(locale),
   };
 }
 

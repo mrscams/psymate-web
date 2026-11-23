@@ -118,7 +118,7 @@ import { saveFile } from './save-file';
       color: var(--text-primary);
     }
     .note a {
-      margin-left: 4px;
+      margin-inline-start: 4px;
       color: var(--primary);
     }
     .status,

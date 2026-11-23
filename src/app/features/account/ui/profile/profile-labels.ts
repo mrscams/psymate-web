@@ -1,11 +1,14 @@
-import { AppLocale } from '../../../../core/i18n';
+import { AppLocale, catalogLabel } from '../../../../core/i18n';
 import { Availability, DirectoryVocabulary, VocabularyItem } from '../../data/profile.api';
 import { MissingItem } from '../../data/profile.store';
 import { ChipOption } from './chip-picker.component';
 
-/** Libellé d'une entrée de la liste fermée dans la langue de l'écran (anglais absent : français). */
+/**
+ * Libellé d'une entrée de la liste fermée dans la langue de l'écran (Q78) : celle de core/i18n,
+ * repli sur le français quand la traduction manque.
+ */
 export function itemLabel(item: VocabularyItem, locale: AppLocale): string {
-  return locale === 'en' && item.labelEn ? item.labelEn : item.labelFr;
+  return catalogLabel(item, locale);
 }
 
 export function chipOptions(items: readonly VocabularyItem[], locale: AppLocale): ChipOption[] {

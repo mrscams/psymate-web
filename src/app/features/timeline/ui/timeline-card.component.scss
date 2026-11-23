@@ -3,7 +3,8 @@
 // : le défilement virtuel les connaît d'avance (LAYOUT, data/timeline-layout.model.ts).
 :host {
   display: block;
-  // Distance du marqueur à la carte : l'axe est à 20 px à gauche (maquette : left −24 px, 10 px).
+  // Distance du marqueur à la carte : l'axe est à 20 px avant le début de la ligne (maquette : left
+  // −24 px, 10 px), à droite en arabe.
   --marker-x: -24px;
 }
 
@@ -55,7 +56,7 @@
 .marker {
   position: absolute;
   top: 50%;
-  left: var(--marker-x);
+  inset-inline-start: var(--marker-x);
   display: inline-flex;
   width: 10px;
   height: 10px;
@@ -140,7 +141,9 @@
 
 .tm {
   color: var(--text-secondary);
-  font-family: var(--font-mono);
+  // Heure ou précision en lettres (« jour ») : --font-mono-text (police d'interface en arabe, Q76).
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
   font-size: 12px;
   white-space: nowrap;
 }
@@ -191,10 +194,10 @@
 .acts {
   position: absolute;
   top: 50%;
-  right: 8px;
+  inset-inline-end: 8px;
   display: none;
   gap: 2px;
-  padding-left: 8px;
+  padding-inline-start: 8px;
   transform: translateY(-50%);
   background: inherit;
 

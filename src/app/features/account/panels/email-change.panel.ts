@@ -55,6 +55,7 @@ export type EmailChangePanelResult = string;
             [id]="fieldId('newEmail')"
             type="email"
             formControlName="newEmail"
+            dir="ltr"
             autocomplete="email"
             required
             [attr.aria-invalid]="invalid(form.controls.newEmail)"
@@ -76,6 +77,7 @@ export type EmailChangePanelResult = string;
             type="password"
             class="mono"
             formControlName="password"
+            dir="ltr"
             autocomplete="current-password"
             required
             [attr.aria-invalid]="invalid(form.controls.password)"
