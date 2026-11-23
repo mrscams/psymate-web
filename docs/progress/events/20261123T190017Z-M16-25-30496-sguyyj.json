@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T19:00:17.648Z",
+  "task": "M16-25",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "Contrat contract-v0.16.0 épinglé ; labelAr et inverseLabelAr portés dans les data/*.api.ts (account, admin, capture, entries, graph, patient-shell, public) ; préférence locale ar gardée sans navigation (Q80) ; champ libellé arabe dans l'administration du vocabulaire ; e2e admin écrit, sauté sans administrateur",
+  "pr": "https://github.com/mrscams/psymate-web/pull/144",
+  "branch": "M16-25-contrat-0.16.0",
+  "checkout": "agent-aac519b4df2a16b8b"
+}
