@@ -32,13 +32,13 @@ import { fieldId } from '../../forms';
                 <a [href]="'#' + fieldId(error.field)" (click)="focusField($event, error.field)">{{
                   labelOf(error.field)
                 }}</a>
-                <span class="message"> · {{ error.message }}</span>
+                <span class="message" dir="auto"> · {{ error.message }}</span>
               </li>
             }
           </ul>
         }
         @for (error of unlinked(); track $index) {
-          <p class="message">{{ error.message }}</p>
+          <p class="message" dir="auto">{{ error.message }}</p>
         }
       </div>
     }
@@ -57,7 +57,7 @@ import { fieldId } from '../../forms';
     }
     ul {
       margin: 8px 0 0;
-      padding-left: 20px;
+      padding-inline-start: 20px;
     }
     a {
       color: var(--danger);

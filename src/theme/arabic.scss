@@ -1,0 +1,73 @@
+// Habillage arabe (G Q71, Q74 à Q77 ; docs/design/arabe.md §1 à §4), M16-09.
+//
+// Rien ne change en /fr/ ni en /en/ : chaque règle vise la langue (:lang(ar)) ou le sens (:dir(rtl)),
+// et la police arabe n'est nommée que sous :lang(ar) (--font-ui, src/theme/tokens.css) : le
+// navigateur ne la télécharge jamais ailleurs.
+
+// IBM Plex Sans Arabic 1.1.0 (IBM, SIL Open Font License 1.1 : public/fonts/ibm-plex-sans-arabic/
+// LICENSE.txt), fichiers woff2 « complete » du paquet @ibm/plex-sans-arabic, hébergés avec le site.
+// Graisses employées par l'interface (relevé du 23 nov. 2026) : 400, 500, 600 et 700 ; une graisse
+// de 650 prend le fichier 700. unicode-range : l'écriture arabe seulement (Arabic, Arabic
+// Supplement, Arabic Extended-A, formes de présentation A et B, marques de sens) ; lettres latines
+// et chiffres restent dans la police latine du thème, et une page sans arabe ne charge rien.
+// Le builder copie chaque fichier dans media/ avec une empreinte (cache) : l'url est relative.
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../public/fonts/ibm-plex-sans-arabic/IBMPlexSansArabic-Regular.woff2')
+    format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../../public/fonts/ibm-plex-sans-arabic/IBMPlexSansArabic-Medium.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../../public/fonts/ibm-plex-sans-arabic/IBMPlexSansArabic-SemiBold.woff2')
+    format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../../public/fonts/ibm-plex-sans-arabic/IBMPlexSansArabic-Bold.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
+}
+
+// Typographie de l'arabe (Q76), une fois pour toute l'application plutôt que composant par
+// composant : pas d'interlettrage (il casse la liaison des lettres), pas de capitales forcées (sans
+// effet sur l'arabe, mais elles touchent un mot latin inséré), pas d'italique (synthétisé, il penche
+// les lettres ; la mise en relief passe par la graisse ou la couleur). !important : ces règles
+// l'emportent sur celles des composants (classe et attribut d'encapsulation), dans le seul bundle
+// arabe ; un élément en lang="fr" (feuille de facture) garde les siennes.
+:lang(ar),
+:lang(ar)::before,
+:lang(ar)::after,
+:lang(ar)::placeholder {
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  font-style: normal !important;
+}
+
+// Icône de direction (flèche avant ou arrière, chevron de navigation, retour, sortie, flèche d'un
+// lien : docs/design/arabe.md §3) : retournée en arabe. Une seule classe, posée sur l'icône
+// elle-même (svg, mat-icon) ; les autres icônes ne la portent pas. Une icône déjà transformée par
+// son composant (rotation d'un chevron qui se déplie) compose elle-même scaleX(-1) sous :dir(rtl).
+.pm-flip-rtl:dir(rtl) {
+  transform: scaleX(-1);
+}

@@ -1,6 +1,6 @@
 // Rail de navigation (UX-S8, proposition 05 A). La coquille positionne l'hôte (colonne de 56 px
 // sous la barre d'application, sur toute la hauteur) ; le rail déplié déborde de l'hôte vers la
-// droite, par-dessus la page, sans jamais la décaler.
+// fin de ligne (la droite, la gauche en arabe), par-dessus la page, sans jamais la décaler.
 :host {
   display: block;
 }
@@ -11,13 +11,14 @@
 
 .rail {
   position: absolute;
-  inset: 0 auto 0 0;
+  inset-block: 0;
+  inset-inline: 0 auto;
   display: flex;
   flex-direction: column;
   width: 56px;
   padding: 8px 6px;
   background: var(--surface-raised);
-  border-right: 1px solid var(--border-subtle);
+  border-inline-end: 1px solid var(--border-subtle);
   transition:
     width 120ms ease-out,
     padding 120ms ease-out,
@@ -28,7 +29,12 @@
     padding: 8px 10px;
     // Ombre portée de la maquette (8 px 0 32 px, 14 % d'encre) : le voile à 30 %.
     box-shadow: 8px 0 32px color-mix(in srgb, var(--scrim) 30%, transparent);
-    border-right-color: var(--border-strong);
+    border-inline-end-color: var(--border-strong);
+
+    // L'ombre tombe du côté de la page : à gauche en arabe.
+    &:dir(rtl) {
+      box-shadow: -8px 0 32px color-mix(in srgb, var(--scrim) 30%, transparent);
+    }
   }
 }
 
@@ -68,7 +74,7 @@
   }
 
   small {
-    margin-left: 6px;
+    margin-inline-start: 6px;
     font-size: 11px;
     font-weight: 400;
   }
@@ -100,7 +106,7 @@
   width: 100%;
   height: 100%;
   padding: 0 10px 12px;
-  border-right: 0;
+  border-inline-end: 0;
   overflow-y: auto;
   transition: none;
 
@@ -115,7 +121,8 @@
   justify-content: space-between;
   height: 52px;
   margin-bottom: 6px;
-  padding: 0 4px 0 6px;
+  padding-block: 0;
+  padding-inline: 6px 4px;
   border-bottom: 1px solid var(--border-subtle);
 }
 

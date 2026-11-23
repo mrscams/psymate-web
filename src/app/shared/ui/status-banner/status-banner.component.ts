@@ -29,7 +29,7 @@ export type BannerLevel = 'warning' | 'success' | 'info';
         }
       </svg>
       <span class="sr-only">{{ levelLabel() }} · </span>
-      <span class="message">{{ message() }}</span>
+      <span class="message" dir="auto">{{ message() }}</span>
       @if (actionLabel(); as label) {
         @if (actionLink(); as link) {
           <a class="action pm-link-target" [routerLink]="link">{{ label }}</a>

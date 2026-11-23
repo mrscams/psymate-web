@@ -4,7 +4,7 @@
 
 .skip-link {
   position: absolute;
-  left: 8px;
+  inset-inline-start: 8px;
   top: -48px;
   z-index: 1200;
   padding: 8px 12px;
@@ -55,7 +55,7 @@
   border: 1px solid var(--admin-bar-text-muted);
   border-radius: 4px;
   color: var(--admin-bar-text-muted);
-  font: 11px/16px var(--font-mono);
+  font: 11px/16px var(--font-mono-text);
   letter-spacing: 0.08em;
 }
 

@@ -74,3 +74,16 @@ describe('formatOccurred', () => {
     expect(formatOccurred({ from: 'hier', precision: 'exact' }, 'fr')).toBe('');
   });
 });
+
+describe('formatOccurred en arabe (M16-09, Q73)', () => {
+  it('passe par la locale de formatage : chiffres latins, heures sur 24 h, année grégorienne', () => {
+    const text = formatOccurred({ from: '2026-11-17T13:03:00Z', precision: 'exact' }, 'ar', {
+      timeZone: 'UTC',
+    });
+    expect(text).toContain('13:03');
+    expect(text).toContain('2026');
+    expect(text).not.toMatch(/[٠-٩۰-۹]/);
+    // Ni « ص » ni « م » (matin, après-midi) : horloge sur 24 h.
+    expect(text).not.toMatch(/(^|\s)[صم](\s|$)/);
+  });
+});

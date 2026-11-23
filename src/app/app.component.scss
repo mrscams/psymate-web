@@ -62,7 +62,8 @@
 /*
  * Rail de navigation (UX-S8, proposition 05 A), habillage praticien, 900 px et plus : une colonne de
  * 56 px sous la barre d'application (48 px, fiche 00 §1) jusqu'au bas de la coquille. Tout ce qui
- * suit la barre (bandeaux, `<main>` y compris `.wide` et `.full`) commence à 56 px du bord gauche ;
+ * suit la barre (bandeaux, `<main>` y compris `.wide` et `.full`) commence à 56 px du bord de début
+ * (gauche, droit en arabe) ;
  * la barre garde toute la largeur. Le rail déplié (220 px) passe par-dessus, la page ne bouge pas.
  * Sous 900 px : pas de rail ni de décalage ; le bouton ☰ de la barre ouvre le tiroir.
  */
@@ -74,17 +75,17 @@
   position: absolute;
   top: 48px;
   bottom: 0;
-  left: 0;
+  inset-inline-start: 0;
   z-index: 50;
   width: 56px;
 }
 
 @media (min-width: 900px) {
   :host(.with-rail) {
-    padding-left: 56px;
+    padding-inline-start: 56px;
 
     > pm-app-bar {
-      margin-left: -56px;
+      margin-inline-start: -56px;
     }
   }
 }

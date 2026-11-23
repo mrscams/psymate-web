@@ -2,6 +2,7 @@ import { Component, LOCALE_ID, signal, Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
+import { PmDateAdapter } from './date-adapter';
 import { DateFieldComponent, MonthFieldComponent } from './date-field.component';
 import { formatDateText, fromIsoDate, parseDateText, toIsoDate } from './date-text';
 
@@ -291,5 +292,50 @@ describe('describedBy (UX-A8)', () => {
     TestBed.resetTestingModule();
     const month = await render(MonthHost, 'fr');
     expect(month.input.hasAttribute('aria-describedby')).toBe(false);
+  });
+});
+
+describe('arabe (M16-09, G Q71, Q73)', () => {
+  const july28 = new Date(2003, 6, 28);
+
+  it('date-text : jj/mm/aaaa en chiffres latins, sans marque de sens, et relue telle quelle', () => {
+    const text = formatDateText(july28, 'ar-u-ca-gregory-hc-h23-nu-latn', 'day');
+    expect(text).toBe('28/07/2003');
+    expect(parseDateText(text, 'ar-u-ca-gregory-hc-h23-nu-latn', 'day')).toEqual(july28);
+    // Texte collé depuis Intl, marques de sens comprises.
+    expect(parseDateText('28‏/07‏/2003', 'ar', 'day')).toEqual(july28);
+    expect(formatDateText(july28, 'ar', 'month')).toBe('07/2003');
+  });
+
+  it('pm-date-field en ar : 28/07/2003, saisie relue, sans erreur', async () => {
+    const { fixture, host, input, type } = await render(DayHost, 'ar');
+    host.control.setValue('2003-07-28');
+    await fixture.whenStable();
+    expect(input.value).toBe('28/07/2003');
+    await type('31/12/2025');
+    expect(host.control.value).toBe('2025-12-31');
+    expect(host.control.valid).toBe(true);
+  });
+
+  it('adaptateur : locale de formatage en ar, semaine du lundi en fr et en ar, dimanche en en', () => {
+    const adapterFor = (locale: string) => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [{ provide: LOCALE_ID, useValue: locale }, PmDateAdapter],
+      });
+      return TestBed.inject(PmDateAdapter);
+    };
+    const ar = adapterFor('ar');
+    expect(ar.getFirstDayOfWeek()).toBe(1);
+    // Chiffres latins (la locale « ar » seule donnerait ٢٠٠٣), mois grégoriens en arabe.
+    expect(ar.getYearName(july28)).toBe('2003');
+    expect(ar.getDateNames()[27]).toBe('28');
+    expect(ar.getMonthNames('long')[6]).toBe('يوليو');
+    const fr = adapterFor('fr');
+    expect(fr.getFirstDayOfWeek()).toBe(1);
+    expect(fr.getMonthNames('long')[6]).toBe('juillet');
+    const en = adapterFor('en');
+    expect(en.getFirstDayOfWeek()).toBe(0);
+    expect(en.getMonthNames('long')[6]).toBe('July');
   });
 });

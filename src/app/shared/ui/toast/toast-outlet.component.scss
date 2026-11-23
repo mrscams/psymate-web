@@ -1,6 +1,6 @@
 .toasts {
   position: fixed;
-  right: 24px;
+  inset-inline-end: 24px;
   bottom: 24px;
   z-index: 1100;
   display: flex;
@@ -13,23 +13,24 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 8px 10px 14px;
+  padding-block: 10px;
+  padding-inline: 14px 8px;
   border-radius: 8px;
   border: 1px solid var(--border-subtle);
-  border-left-width: 4px;
+  border-inline-start-width: 4px;
   background: var(--surface-raised);
   color: var(--text-primary);
   box-shadow: 0 4px 16px var(--scrim);
   font: var(--mat-sys-body-medium);
 
   &.success {
-    border-left-color: var(--success);
+    border-inline-start-color: var(--success);
   }
   &.info {
-    border-left-color: var(--info);
+    border-inline-start-color: var(--info);
   }
   &.warning {
-    border-left-color: var(--warning);
+    border-inline-start-color: var(--warning);
   }
 }
 

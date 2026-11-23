@@ -49,9 +49,9 @@
         <circle cx="12" cy="16.5" r="1.2" class="fill-danger" />
       </svg>
       <div class="body">
-        <p class="title">{{ heading() }}</p>
+        <p class="title" dir="auto">{{ heading() }}</p>
         @if (text()) {
-          <p class="message">{{ text() }}</p>
+          <p class="message" dir="auto">{{ text() }}</p>
         }
         @if (action(); as act) {
           <button mat-stroked-button type="button" class="action retry" (click)="act.handler()">

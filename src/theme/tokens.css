@@ -183,3 +183,28 @@
   --surface-ground: #f3f4f7;
   --border-subtle: #dde1e8;
 }
+
+/*
+ * Polices selon la langue (G Q71 point 5, Q76 ; docs/design/arabe.md §4, M16-09). Hors des blocs
+ * :root : ce ne sont pas des couleurs, pnpm check:tokens ne les lit pas.
+ *
+ * --font-mono-text : chasse fixe d'un texte qui contient des lettres (date à nom de mois, étiquette
+ * courte). --font-mono en fr et en en, police d'interface en arabe, où JetBrains Mono n'a pas de
+ * lettres arabes (à compléter par font-variant-numeric: tabular-nums). Une date tout en chiffres et
+ * un identifiant gardent --font-mono.
+ */
+html {
+  --font-mono-text: var(--font-mono);
+}
+
+/*
+ * Arabe : IBM Plex Sans Arabic en tête de --font-ui, puis la pile latine de :root, à l'identique
+ * (une variable ne peut pas se citer elle-même). Ses @font-face (src/theme/arabic.scss) ne couvrent
+ * que l'écriture arabe : lettres latines et chiffres restent en Inter. Rien d'autre ne change, aucune
+ * couleur.
+ */
+:lang(ar) {
+  --font-ui:
+    'IBM Plex Sans Arabic', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono-text: var(--font-ui);
+}

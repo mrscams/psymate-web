@@ -9,7 +9,7 @@
     <!-- Ligne d'identité (44 px) : nom, âge, suivi, drapeaux sur une même ligne de base. -->
     <div class="phead-row">
       <div class="who">
-        <h1 class="name">
+        <h1 class="name" dir="auto">
           {{ p.displayName }}
           <!-- Place réservée (A11, B9) : marqueur « rapporté par le patient », jamais dessiné en V1. -->
           <span class="reported-slot" aria-hidden="true"></span>
@@ -36,7 +36,7 @@
             i18n-aria-label="Étiquette de la liste des drapeaux@@patientHeader.flags"
           >
             @for (flag of flags(); track flag.code) {
-              <li class="flag">{{ flag.label }}</li>
+              <li class="flag" dir="auto">{{ flag.label }}</li>
             }
           </ul>
         }

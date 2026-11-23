@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDateFormats, NativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerIntl } from '@angular/material/datepicker';
 
-import { toAppLocale } from '../../../core/i18n';
+import { formatLocale, toAppLocale } from '../../../core/i18n';
 import { DateGranularity, formatDateText, parseDateText } from './date-text';
 
 /** Formats symboliques compris par PmDateAdapter (le reste passe à Intl comme NativeDateAdapter). */
@@ -16,12 +16,23 @@ function granularityOf(format: unknown): DateGranularity | null {
 
 /**
  * Adaptateur natif de Material (aucune dépendance de date) qui sait lire et écrire la saisie
- * numérique de la locale (MAT_DATE_LOCALE, par défaut LOCALE_ID) : « 28/07/2003 » en fr,
- * « 07/28/2003 » en en ; semaine du lundi en fr. Fourni par pm-date-field et pm-month-field
- * seulement, pas à la racine.
+ * numérique de la locale (MAT_DATE_LOCALE, par défaut LOCALE_ID) : « 28/07/2003 » en fr et en ar,
+ * « 07/28/2003 » en en ; semaine du lundi en fr et en ar (G Q71), du dimanche en en. Tout passe par
+ * la locale de formatage de core/i18n (Q73) : en arabe, chiffres latins et calendrier grégorien.
+ * Fourni par pm-date-field et pm-month-field seulement, pas à la racine.
  */
 @Injectable()
 export class PmDateAdapter extends NativeDateAdapter {
+  constructor() {
+    super();
+    this.setLocale(this.locale);
+  }
+
+  /** Locale de formatage (Q73) : `ar-u-ca-gregory-hc-h23-nu-latn` en arabe, inchangée sinon. */
+  override setLocale(locale: unknown): void {
+    super.setLocale(typeof locale === 'string' ? formatLocale(locale) : locale);
+  }
+
   override parse(value: unknown, parseFormat?: unknown): Date | null {
     const granularity = granularityOf(parseFormat);
     if (granularity && typeof value === 'string') {
@@ -40,8 +51,12 @@ export class PmDateAdapter extends NativeDateAdapter {
     return super.format(date, displayFormat);
   }
 
+  /**
+   * Lundi (1) en fr et en ar (G Q71 : Intl donnerait samedi en arabe), dimanche (0) en en, comme
+   * avant M16-09.
+   */
   override getFirstDayOfWeek(): number {
-    return toAppLocale(String(this.locale)) === 'fr' ? 1 : 0;
+    return toAppLocale(String(this.locale)) === 'en' ? 0 : 1;
   }
 }
 

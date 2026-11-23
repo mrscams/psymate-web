@@ -51,9 +51,9 @@ export function verificationBadge(
       i18n-aria-label="Étiquette de la navigation Mon compte@@accountNav.label"
     >
       <div class="who">
-        <p class="name">{{ name() }}</p>
+        <p class="name" dir="auto">{{ name() }}</p>
         @if (subtitle(); as subtitle) {
-          <p class="subtitle">{{ subtitle }}</p>
+          <p class="subtitle" dir="auto">{{ subtitle }}</p>
         }
       </div>
       <ul>

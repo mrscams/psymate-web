@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 
-import { formatDate, minutesBetween } from '../../../core/i18n';
+import { formatDate, formatLocale, minutesBetween } from '../../../core/i18n';
 import { PatientSessionInfo, sessionModalityLabel } from './patient-header.component';
 
 /** « 00:21:07 » : heures, minutes, secondes écoulées, chiffres tabulaires. */
@@ -61,7 +61,8 @@ export class SessionBarComponent {
   /** « Reprendre » de la barre grise : la feature rouvre l'onglet Séance. */
   readonly resumeSession = output<void>();
 
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   private readonly now = signal(new Date());
 
   protected readonly current = computed(() => {
