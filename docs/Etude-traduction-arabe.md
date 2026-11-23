@@ -2,7 +2,7 @@
 
 22 novembre 2026. Mesures prises sur la branche `fluent2-redesign` de psymate-web, contrat 0.14.0, et en lecture seule sur la branche `main` de psymate-api. Aucun code n'a été modifié.
 
-Depuis, `main` a reçu le jalon M14 : il porte 3 266 textes le 23 novembre 2026, et sa police latine est Inter (Segoe UI est celle de l'habillage Fluent 2, pas encore fusionné). Les ordres de grandeur ci-dessous restent valables.
+Depuis, `main` a reçu le jalon M14 : il porte 3 266 textes le 23 novembre 2026, et sa police latine est Inter (les mesures du 22 novembre ont été prises sur une branche de travail qui n'est pas en service). Les ordres de grandeur ci-dessous restent valables.
 
 Suite : le plan de réalisation est `docs/M-plan-version-arabe.md` (jalon M16). Il reprend les décisions de la section 3 et remplace l'ordre indicatif de la section 4.
 

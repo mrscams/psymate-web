@@ -22,7 +22,7 @@ Elles valent pour l'interface web, les messages de l'API et les e-mails.
 3. **Aucun accord de genre pour le praticien.** On ne s'adresse pas à lui par un verbe ou un adjectif accordé. On préfère le nom verbal, la tournure impersonnelle ou le passif : « تم الحفظ » (enregistré), « يتعذّر تحميل الملف » (impossible de charger), « يُرجى إدخال… » (veuillez saisir), « لديك 3 مواعيد » (vous avez 3 rendez-vous, « لديك » sans voyelle finale reste neutre à l'écrit). Pas de « ·e » à la française, pas de barre oblique (« مسجّل/ة »).
 4. **Aucun accord de genre pour la personne suivie.** « Suivi·e depuis » devient « بداية المتابعة » (début du suivi) ; « Archivé·e le » devient « تاريخ الأرشفة » ; « Adressé·e par » devient « جهة الإحالة ». Les désignations (« مريض », « عميل ») sont au masculin grammatical, qui sert de forme générique en arabe comme dans les formulaires administratifs ; on ne leur accorde pas de verbe quand une tournure nominale existe.
 5. **Les verbes des liens s'accordent au masculin**, parce que leur sujet grammatical est toujours « المُدخَل » (l'entrée, masculin) : « يُثير », « يُخفِّف », « يلي ». Voir section 6.
-6. **Six formes de pluriel.** Angular (ICU) et Java distinguent pour l'arabe `zero`, `one`, `two`, `few` (3 à 10), `many` (11 à 99) et `other` (100, 101, 102, nombres décimaux). Chaque message au pluriel porte les six formes, chacune juste. Exemple avec « séance » :
+6. **Six formes de pluriel.** Angular (ICU, règles CLDR) distingue pour l'arabe `zero` (0), `one` (1), `two` (2), `few` (3 à 10), `many` (11 à 99) et `other` (le reste). Le classement se fait sur les deux derniers chiffres : 103 à 110 sont `few`, 111 à 199 sont `many`, 100, 101, 102, 200… sont `other`, comme les nombres décimaux. Côté psymate-api, `messages_*.properties` emploie `{0,choice,…}` (`java.text.ChoiceFormat`), qui ne connaît pas ces catégories : M16-04 écrit les plages à la main (0, 1, 2, 3 à 10, 11 et plus, en reformulant au besoin) ou adopte un format ICU, et le dit dans sa PR. Chaque message au pluriel porte les six formes, chacune juste. Exemple avec « séance » :
 
    | Forme | Nombres | Texte |
    | --- | --- | --- |
@@ -31,7 +31,7 @@ Elles valent pour l'interface web, les messages de l'API et les e-mails.
    | `two` | 2 | جلستان |
    | `few` | 3 à 10 | {n} جلسات |
    | `many` | 11 à 99 | {n} جلسة |
-   | `other` | 100, 101, 102… | {n} جلسة |
+   | `other` | 100, 101, 102, 200… | {n} جلسة |
 
    Pour « entrée » : لا مُدخَلات · مُدخَل واحد · مُدخَلان · {n} مُدخَلات · {n} مُدخَلًا · {n} مُدخَل. Pour « jour » : لا أيام · يوم واحد · يومان · {n} أيام · {n} يومًا · {n} يوم. Quand l'accord rend une phrase lourde, on la reformule avec une étiquette : « عدد الجلسات: {n} » (nombre de séances : n).
 7. **Chiffres latins** partout (0 à 9), calendrier grégorien, semaine commençant le lundi (Q71). Les dates sont mises en forme par `Intl` avec la locale `ar-u-nu-latn-ca-gregory` (Q73) : on n'écrit jamais une date à la main dans un texte.
@@ -51,14 +51,14 @@ Elles valent pour l'interface web, les messages de l'API et les e-mails.
 | `preferences.subject.label` | Désignation des personnes suivies | — | تسمية الأشخاص المتابَعين | — | | |
 | — | personne suivie | person being followed | الشخص المتابَع | — | Forme générique, sans accord. | |
 | — | praticien, praticiens | practitioner, practitioners | الممارس، الممارسون | المختص، المختصون | Désigne ensemble psychologues, psychiatres et coachs. « مختص » est très employé au Maghreb (« مختص نفسي »). | |
-| `profession.psychologist` | Psychologue | Psychologist | أخصائي نفسي | مختص نفسي ؛ معالج نفسي | Forme masculine générique, comme dans les registres officiels. | |
+| `profession.psychologist` | Psychologue | Psychologist | أخصائي نفسي | مختص نفسي، معالج نفسي | Forme masculine générique, comme dans les registres officiels. | |
 | `profession.psychiatrist` | Psychiatre | Psychiatrist | طبيب نفسي | أخصائي الطب النفسي | | |
 | `profession.coach` | Coach | Coach | مدرّب | كوتش | « كوتش » est répandu mais emprunté ; « مدرّب » est compris partout. | |
 | — | administrateur | administrator | مسؤول | مشرف | « مسؤول النظام » si une précision est utile. | |
 | — | visiteur | visitor | زائر | — | Personne sans compte sur les pages publiques. | |
-| `agenda.guest` | invité (rendez-vous pris en ligne) | guest | ضيف | زائر | Personne sans dossier qui a demandé un rendez-vous. | |
+| `agenda.detail.guest`, `agenda.guest.purged` | invité (rendez-vous pris en ligne) | guest | ضيف | زائر | Personne sans dossier qui a demandé un rendez-vous. | |
 | — | compte | account | حساب | — | | |
-| — | espace praticien | practitioner area | فضاء الممارس | مساحة الممارس | | |
+| — | espace praticien | practitioner area | مساحة الممارس | فضاء الممارس | « فضاء » est l'usage du Maghreb. | |
 
 ## 3. Écrans, navigation et sections
 
@@ -149,10 +149,10 @@ Les libellés de famille prennent l'article (« الفرح ») ; les libellés d
 | `grief` | Chagrin | Grief | أسى | لوعة | Tristesse, niveau 3. Ne pas confondre avec le deuil de l'annuaire (« الحِداد »). | |
 | `boredom` | Ennui | Boredom | ملل | ضجر | Dégoût, niveau 1. | |
 | `disgust` | Dégoût | Disgust | اشمئزاز | — | Dégoût, niveau 2. | |
-| `loathing` | Répulsion | Loathing | نفور | تقزّز | Dégoût, niveau 3. | |
+| `loathing` | Répulsion | Loathing | نفور | تقزّز | Dégoût, niveau 3. « نفور » est aussi la variante de la famille : si le relecteur la retient pour la famille, prendre « تقزّز » ici. | |
 | `annoyance` | Agacement | Annoyance | انزعاج | ضيق | Colère, niveau 1. | |
 | `anger` | Colère | Anger | غضب | — | Colère, niveau 2. | |
-| `rage` | Rage | Rage | هياج | غضب عارم | Colère, niveau 3. | |
+| `rage` | Rage | Rage | هياج | غضب عارم | Colère, niveau 3. « هياج » tire vers l'agitation ; « غضب عارم » est plus sûr pour le sens. | |
 | `interest` | Intérêt | Interest | اهتمام | — | Anticipation, niveau 1. | |
 | `anticipation` | Anticipation | Anticipation | ترقّب | توقّع | Anticipation, niveau 2. | |
 | `vigilance` | Vigilance | Vigilance | يقظة | حذر | Anticipation, niveau 3. | |
@@ -166,11 +166,11 @@ Une émotion créée par un praticien n'a qu'un libellé, celui qu'il a saisi : 
 
 ## 6. Types de lien (catalogue global `link_type`, E5.3)
 
-Les verbes sont au présent, au masculin (règle 5). L'inverse se lit de la cible vers la source. Ils sont rendus par le serveur selon `Accept-Language` (M16-03).
+Les verbes sont au présent, au masculin (règle 5). L'inverse se lit de la cible vers la source. Ce tableau n'a pas de colonne « Remarque » : la colonne « Inverse proposé » la remplace. Ils sont rendus par le serveur selon `Accept-Language` (M16-03).
 
 | Clé | Français | Anglais | Proposition | Inverse proposé (fr : inverse) | Variante | Relu par |
 | --- | --- | --- | --- | --- | --- | --- |
-| `triggers` | déclenche | triggers | يُثير | يُثيره (déclenché par) | يُطلِق ؛ ناتج عن إثارة | |
+| `triggers` | déclenche | triggers | يُثير | يُثيره (déclenché par) | يُثار بـ (inverse) ؛ يُطلِق (sens direct) | |
 | `caused_by` | est causé par | is caused by | ناتج عن | يُسبِّب (cause) | سببه | |
 | `worsens` | aggrave | worsens | يُفاقِم | يتفاقم بسبب (aggravé par) | يزيد من حدّة | |
 | `relieves` | soulage | relieves | يُخفِّف | يخفّ بفضل (soulagé par) | يُهدّئ | |
@@ -235,6 +235,9 @@ Autres termes des liens :
 | `patients.*` | Tag, tags | Tag | وسم، وسوم | تصنيف | Étiquette libre du praticien. | |
 | `patients.*` | Archiver, archivé | Archive, archived | أرشفة، مؤرشف | — | « تاريخ الأرشفة » pour « Archivé·e le ». | |
 | `patients.*` | Restaurer | Restore | استعادة | — | | |
+| `vocabulary.merge.*` | Fusionner, fusion | Merge | دمج | — | Fusion de deux émotions ou étiquettes du praticien. | |
+| `vocabulary.journal.*` | Journal des fusions | Merge log | سجلّ الدمج | — | | |
+| `vocabulary.rename.*` | Renommer | Rename | إعادة التسمية | — | | |
 | `patients.*` | Afficher les archivés | Show archived | عرض الملفات المؤرشفة | — | | |
 | `patients.*` | Patient de démonstration | Demo patient | ملف تجريبي | ملف للعرض | Le nom « DEMO » reste en caractères latins. | |
 | `entries.*` | Brouillon | Draft | مسودّة | — | | |
@@ -366,11 +369,11 @@ Jours de la semaine, du lundi au dimanche : الاثنين، الثلاثاء، 
 | Clé | Français | Anglais | Proposition | Variante | Remarque | Relu par |
 | --- | --- | --- | --- | --- | --- | --- |
 | `auth.*` | Adresse e-mail | Email address | البريد الإلكتروني | عنوان البريد الإلكتروني | L'adresse elle-même est en `dir="ltr"`. | |
-| `auth.*` | Mot de passe, mot de passe oublié | Password, forgot password | كلمة المرور، نسيت كلمة المرور؟ | — | « نسيت » est à la première personne, donc sans genre. | |
+| `auth.*` | Mot de passe, mot de passe oublié | Password, forgot password | كلمة المرور، هل نسيت كلمة المرور؟ | استعادة كلمة المرور | « نسيت » sans voyelles reste neutre à l'écrit, comme « لديك » (règle 3) ; le nom verbal évite toute lecture genrée. | |
 | `preferences.security.twoFactor` | Double authentification | Two-factor authentication | المصادقة الثنائية | التحقّق بخطوتين | | |
 | `preferences.security.recoveryCodes` | Codes de secours | Recovery codes | رموز الاسترداد | رموز الاحتياط | Les codes restent en caractères latins, en `dir="ltr"`. | |
 | `auth.*` | Code de vérification | Verification code | رمز التحقّق | — | | |
-| `preferences.security.sessions` | Sessions actives | Active sessions | الجلسات النشطة | — | Risque de confusion avec la séance clinique (« جلسة ») : variante « أجهزة متّصلة ». | |
+| `preferences.security.sessions` | Sessions actives | Active sessions | الجلسات النشطة | الأجهزة المتّصلة | Risque de confusion avec la séance clinique (« جلسة »). | |
 | `preferences.security.revokeOthers` | Déconnecter les autres | Sign out others | تسجيل الخروج من الأجهزة الأخرى | — | | |
 | `auth.*` | Compte suspendu | Account suspended | حساب موقوف | — | | |
 | `preferences.theme.*` | Thème : clair, doux, sombre, système | Theme | المظهر: فاتح، هادئ، داكن، حسب النظام | — | « Doux » est le contraste doux (étude couleurs). | |
@@ -402,15 +405,15 @@ Jours de la semaine, du lundi au dimanche : الاثنين، الثلاثاء، 
 | `account.verification.lock.approved` | Approuvé | Approved | مقبول | تمّت الموافقة | Accordé à « الملف » (masculin). | |
 | `account.verification.lock.rejected` | Refusé | Rejected | مرفوض | — | | |
 | `account.verification.review.conform` | Conforme, non conforme | Compliant, non-compliant | مطابق، غير مطابق | — | | |
-| `admin.*` | Approuver | Approve | الموافقة | قبول | Nom verbal (règle 2). | |
-| `admin.*` | Refuser | Reject | الرفض | — | | |
+| `admin.*` | Approuver | Approve | موافقة | قبول | Nom verbal sans article (règle 2). | |
+| `admin.*` | Refuser | Reject | رفض | — | | |
 | `admin.*` | Demander un complément | Request more | طلب استكمال | — | | |
 | `admin.*` | Suspendre, suspension | Suspend | إيقاف، إيقاف الحساب | تعليق | | |
 | `admin.*` | Réactiver, réactivation | Reactivate | إعادة التفعيل | — | | |
 | `admin.*` | Recours, contester la décision | Appeal | تظلّم، الاعتراض على القرار | طعن | « طعن » est juridique ; « تظلّم » est la réclamation administrative. | |
 | `admin.*` | Motif, motif communiqué | Reason | السبب، السبب المُبلَّغ | الدافع | | |
 | `admin.*` | Décision | Decision | القرار | — | | |
-| `admin.*` | File de validation | Review queue | قائمة الانتظار للتحقّق | — | | |
+| `admin.*` | File de validation | Review queue | قائمة انتظار التحقّق | — | | |
 | `admin.*` | Visionneuse de document | Document viewer | عارض المستندات | — | | |
 | `adminBar.reminder` | Aucune donnée patient n'est accessible depuis l'administration. | — | لا يمكن الوصول إلى أي بيانات للمرضى من الإدارة. | — | | |
 | `admin.*` | Libellé FR, libellé EN, libellé AR | FR label | التسمية بالفرنسية، بالإنجليزية، بالعربية | — | Champ ajouté par M16-25. | |

@@ -1,14 +1,14 @@
 # Habillage arabe : règles de droite à gauche
 
-23 novembre 2026, tâche M16-07. Complément de la fiche 00 (composants partagés) et de `docs/Etude-couleurs-Nordique.md` pour le bundle `/ar/`. Décisions : G Q71 (tranchée par l'utilisateur le 22 novembre 2026) et Q72 à Q81 (proposées par le plan M, non relues par l'utilisateur). Plan : `docs/M-plan-version-arabe.md`. Comparaison des polices et réglages typographiques : `docs/design/arabe/polices.html` (ouvrir dans un navigateur ; ses couleurs sont celles de l'habillage Fluent 2 et ne valent pas pour `main`, seul le choix de la police compte). Termes et registre : `docs/design/arabe-glossaire.md`.
+23 novembre 2026, tâche M16-07. Complément de la fiche 00 (composants partagés) et de `docs/Etude-couleurs-Nordique.md` pour le bundle `/ar/`. Décisions : G Q71 (tranchée par l'utilisateur le 22 novembre 2026) et Q72 à Q81 (proposées par le plan M, non relues par l'utilisateur). Plan : `docs/M-plan-version-arabe.md`. Comparaison des polices et réglages typographiques : `docs/design/arabe/polices.html` (ouvrir dans un navigateur ; elle a été dessinée avec d'autres tokens : elle vaut pour le choix de la police arabe, pas pour les couleurs ni la police latine, qui sont celles de `src/theme/tokens.css`). Termes et registre : `docs/design/arabe-glossaire.md`.
 
-Ces règles s'appliquent à tout le code de `src/app`, dans les trois langues. Elles ne changent rien à l'écran en `/fr/` ni en `/en/` : une propriété logique rend exactement la même chose qu'une propriété physique quand la page est de gauche à droite.
+Ces règles s'appliquent à tout le code de `src/app`, dans les trois langues. Elles ne changent rien à l'écran en `/fr/` ni en `/en/` : une propriété logique rend exactement la même chose qu'une propriété physique quand la page est de gauche à droite. Seule exception voulue (Q77) : un texte saisi en arabe s'aligne à droite en `/fr/` et en `/en/` grâce à `dir="auto"` ; un texte saisi en caractères latins ne bouge pas.
 
 ## 1. Le sens de la page
 
-- Le build pose `lang="ar"` et `dir="rtl"` sur `<html>` pour `/ar/` (Q74) ; rien d'autre ne pose `dir` sur la page. Angular Material et le CDK lisent ce `dir` (service `Directionality`) : menus, dialogues, panneaux, infobulles et champs se retournent seuls.
+- Le build pose `lang="ar"` et `dir="rtl"` sur `<html>` pour `/ar/` (Q74) ; rien d'autre ne pose le sens de la page (les `dir="ltr"` et `dir="auto"` des sections 3 et 5 ne valent que pour leur élément). Angular Material et le CDK lisent ce `dir` (service `Directionality`) : menus, dialogues, panneaux, infobulles et champs se retournent seuls.
 - Le code qui a besoin du sens le lit dans `core/i18n` (M16-08), jamais en comparant la locale à `'ar'` dans une feature.
-- En CSS, le sens se teste par `:dir(rtl)` ou `[dir='rtl']` sur un ancêtre ; la langue par `:lang(ar)`. Les règles typographiques (section 4) visent la langue, les règles de miroir (section 3) visent le sens.
+- En CSS, le sens se teste par `:dir(rtl)` ; la langue par `:lang(ar)`. Dans les styles d'un composant (encapsulation émulée), `[dir='rtl'] .x` ne marche pas, car Angular ajoute son attribut de contenu au sélecteur de l'ancêtre et `<html>` ne le porte pas : écrire `:dir(rtl)` ou `:host-context([dir='rtl'])`. Les règles typographiques (section 4) visent la langue, les règles de miroir (section 3) visent le sens.
 
 ## 2. Propriétés logiques seulement
 
@@ -66,7 +66,7 @@ Police (Q71 point 5, Q76) :
 
 - **IBM Plex Sans Arabic**, licence SIL Open Font License 1.1, fichiers `woff2` hébergés avec le site dans `public/fonts/ibm-plex-sans-arabic/`, avec le texte de la licence. Aucun appel à un tiers.
 - **Graisses embarquées** : celles que l'interface emploie. Relevé du 23 novembre 2026 sur `main` (`font-weight` dans `src`) : 400 (25 emplois), 500 (39), 600 (130), 650 (9), 700 (7). On embarque donc Regular 400, Medium 500, SemiBold 600 et Bold 700 ; une graisse de 650 est rendue par le fichier 700 (règle de correspondance des polices du navigateur). M16-09 refait ce relevé sur sa base.
-- **`@font-face` limités à l'écriture arabe** par `unicode-range` (blocs Arabic U+0600–06FF, Arabic Supplement U+0750–077F, Arabic Extended-A U+08A0–08FF, Arabic Presentation Forms-A U+FB50–FDFF et -B U+FE70–FEFF, plus les marques de sens U+200C–200F). Conséquences : lettres latines et chiffres restent dans la police latine du thème (Inter sur `main`, Segoe UI avec l'habillage Fluent 2) ; en `/fr/` et `/en/`, aucun fichier de police arabe n'est téléchargé tant qu'aucun caractère arabe n'est à l'écran.
+- **`@font-face` limités à l'écriture arabe** par `unicode-range` (blocs Arabic U+0600–06FF, Arabic Supplement U+0750–077F, Arabic Extended-A U+08A0–08FF, Arabic Presentation Forms-A U+FB50–FDFF et -B U+FE70–FEFF, plus les marques de sens U+200C–200F). Conséquences : lettres latines et chiffres restent dans la police latine du thème (Inter, `--font-ui` de `src/theme/tokens.css`) ; en `/fr/` et `/en/`, aucun fichier de police arabe n'est téléchargé tant qu'aucun caractère arabe n'est à l'écran.
 - **`--font-ui` redéfini sous `:lang(ar)`** dans `src/theme/tokens.css` : la police arabe en tête de pile, la police latine du thème ensuite. `font-display: swap`.
 
 Règles `:lang(ar)` du thème, écrites une fois dans `src/theme` et pas composant par composant (Q76) :
@@ -77,7 +77,7 @@ Règles `:lang(ar)` du thème, écrites une fois dans `src/theme` et pas composa
 | `text-transform: none` | L'arabe n'a pas de capitales ; une mise en capitale forcée n'a pas d'effet sur l'arabe mais en a sur un mot latin inséré. |
 | `font-style: normal` | L'arabe n'a pas d'italique ; l'italique synthétisé penche les lettres et nuit à la lecture. La mise en relief passe par la graisse ou la couleur. |
 | Interligne du texte courant | L'arabe a des hampes et des points plus hauts et plus bas que le latin : M16-09 vérifie l'interligne du texte courant contre polices.html (section 3) et l'augmente sous `:lang(ar)` seulement si les lignes se touchent. |
-| Pas de `--font-mono` pour une date à nom de mois | `--font-mono` n'a pas de lettres arabes : « 17 نوفمبر 2026، 14:03 » passe dans la police d'interface avec chiffres tabulaires (`font-variant-numeric: tabular-nums`). Une date tout en chiffres et un identifiant gardent `--font-mono`. |
+| Pas de `--font-mono` pour une date à nom de mois | `--font-mono` n'a pas de lettres arabes : « 17 نوفمبر 2026، 14:03 » passe dans la police d'interface avec chiffres tabulaires (`font-variant-numeric: tabular-nums`). Une date tout en chiffres et un identifiant gardent `--font-mono`. En arabe seulement : `/fr/` et `/en/` gardent `--font-mono` partout où il est aujourd'hui. |
 
 Une mise en capitale de la première lettre (`text-transform: capitalize`, `toLocaleUpperCase` sur le premier caractère) ne s'applique pas à un texte arabe ; découper un texte par graphème (`Intl.Segmenter`), jamais par caractère.
 
