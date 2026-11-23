@@ -8,6 +8,7 @@ import {
   output,
 } from '@angular/core';
 
+import { formatLocale, textDirection } from '../../../core/i18n';
 import {
   EntryIconComponent,
   entryTitle,
@@ -76,7 +77,9 @@ export class TimelineDecadeComponent {
   readonly drill = output<number>();
   readonly retry = output<void>();
 
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
+  /** Flèche de la plage « début → fin » : vers la fin, dans le sens de lecture (arabe.md §3). */
+  protected readonly rangeArrow = textDirection(inject(LOCALE_ID)) === 'rtl' ? '←' : '→';
   private readonly number = new Intl.NumberFormat(this.locale);
   /** « Notes 2, Ressentis 1 et Séances 1 » : la liste au format de la langue. */
   private readonly list = new Intl.ListFormat(this.locale, { type: 'conjunction' });

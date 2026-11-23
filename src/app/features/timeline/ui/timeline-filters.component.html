@@ -129,7 +129,7 @@
               [attr.data-tag]="chip.value"
               (click)="toggleTag(chip.value)"
             >
-              <span class="label">{{ chip.label }}</span>
+              <span class="label" dir="auto">{{ chip.label }}</span>
               @if (counted()) {
                 <span class="n"> {{ chip.count }}</span>
               }
