@@ -18,7 +18,7 @@
   >
   <span class="bar-end">
     @if (session.me(); as me) {
-      <span class="bar-email">{{ me.email }}</span>
+      <span class="bar-email" dir="ltr">{{ me.email }}</span>
       <button
         type="button"
         class="bar-link"
@@ -117,6 +117,7 @@
             <input
               [id]="fieldId('email')"
               type="email"
+              dir="ltr"
               formControlName="email"
               autocomplete="username"
               required
@@ -138,6 +139,7 @@
               type="password"
               class="mono"
               formControlName="currentPassword"
+              dir="ltr"
               autocomplete="current-password"
               required
               [attr.aria-invalid]="invalid(form.controls.currentPassword)"
@@ -169,6 +171,7 @@
               type="password"
               class="mono"
               formControlName="newPassword"
+              dir="ltr"
               autocomplete="new-password"
               required
               minlength="12"
@@ -201,6 +204,7 @@
               type="password"
               class="mono"
               formControlName="confirm"
+              dir="ltr"
               autocomplete="new-password"
               required
               [attr.aria-invalid]="invalid(form.controls.confirm)"
@@ -226,6 +230,7 @@
                 [id]="fieldId('otp')"
                 type="text"
                 class="otp"
+                dir="ltr"
                 formControlName="otp"
                 inputmode="numeric"
                 autocomplete="one-time-code"

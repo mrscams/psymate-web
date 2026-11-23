@@ -35,6 +35,7 @@
               [id]="fieldId('firstName')"
               type="text"
               formControlName="firstName"
+              dir="auto"
               autocomplete="given-name"
               required
               [attr.aria-invalid]="isInvalid(form.controls.firstName)"
@@ -51,6 +52,7 @@
               [id]="fieldId('lastName')"
               type="text"
               formControlName="lastName"
+              dir="auto"
               autocomplete="family-name"
               required
               [attr.aria-invalid]="isInvalid(form.controls.lastName)"
@@ -68,6 +70,7 @@
             [id]="fieldId('email')"
             type="email"
             formControlName="email"
+            dir="ltr"
             autocomplete="email"
             required
             [attr.aria-invalid]="isInvalid(form.controls.email)"
@@ -138,6 +141,7 @@
               [id]="fieldId('professionalNumber')"
               type="text"
               formControlName="professionalNumber"
+              dir="ltr"
               autocomplete="off"
               class="mono"
               [attr.aria-invalid]="isInvalid(form.controls.professionalNumber)"
@@ -154,6 +158,7 @@
               [id]="fieldId('phone')"
               type="tel"
               formControlName="phone"
+              dir="ltr"
               autocomplete="tel"
               inputmode="tel"
               required
@@ -187,6 +192,7 @@
               [id]="fieldId('address.street')"
               type="text"
               formControlName="street"
+              dir="auto"
               autocomplete="street-address"
               [required]="!remoteOnly()"
               [attr.aria-invalid]="isInvalid(form.controls.address.controls.street)"
@@ -206,6 +212,7 @@
                 [id]="fieldId('address.postalCode')"
                 type="text"
                 formControlName="postalCode"
+                dir="ltr"
                 autocomplete="postal-code"
                 inputmode="numeric"
                 class="mono"
@@ -224,6 +231,7 @@
                 [id]="fieldId('address.city')"
                 type="text"
                 formControlName="city"
+                dir="auto"
                 autocomplete="address-level2"
                 [required]="!remoteOnly()"
                 [attr.aria-invalid]="isInvalid(form.controls.address.controls.city)"
@@ -285,6 +293,7 @@
               [id]="fieldId('password')"
               type="password"
               formControlName="password"
+              dir="ltr"
               autocomplete="new-password"
               required
               minlength="12"
@@ -315,6 +324,7 @@
               [id]="fieldId('passwordConfirm')"
               type="password"
               formControlName="passwordConfirm"
+              dir="ltr"
               autocomplete="new-password"
               required
               class="mono"
